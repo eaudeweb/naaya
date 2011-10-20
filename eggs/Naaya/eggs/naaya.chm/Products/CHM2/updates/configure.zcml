@@ -9,6 +9,11 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_expandable_portlets_cleanup.UpdateExpandablePortletsCleanup"
       permission="zope2.ViewManagementScreens" />
+    <utility
+      name="remove_predefined_latest_uploads.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_remove_predefined_latest_uploads.RemovePredifinedLatestUploads"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

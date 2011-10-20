@@ -1,5 +1,6 @@
 2.4.10 (unreleased)
 -------------------
+* removed admin_predefined_html (#707) [andredor]
 
 2.4.9 (2011-10-19)
 ------------------

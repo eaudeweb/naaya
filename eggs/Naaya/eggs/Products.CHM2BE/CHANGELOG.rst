@@ -1,5 +1,6 @@
 1.0.7 (unreleased)
 ------------------
+* remove admin_predefined_html [andredor]
 
 1.0.6 (2011-10-19)
 ------------------
