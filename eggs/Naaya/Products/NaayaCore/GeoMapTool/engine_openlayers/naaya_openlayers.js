@@ -69,7 +69,7 @@
     };
 
     engine.new_map = function(div_id) {
-        var map = {};
+        var map = {_move_handlers: []};
         map.olmap = engine.create_olmap(div_id);
         map.projection = map.olmap.getProjectionObject();
 
@@ -163,6 +163,18 @@
             map.olmap.addControl(mouse_position);
             mouse_position.activate();
         };
+
+        map.on_move = function(handler) {
+            map._move_handlers.push(handler);
+        };
+
+        map.olmap.events.register("moveend", null, function() {
+            var zoom = map.olmap.getZoom();
+            var center = map.to_wgs84(map.olmap.getCenter());
+            $.each(map._move_handlers, function(i, handler) {
+                handler(center.lon, center.lat, zoom);
+            });
+        });
 
         return map;
     };

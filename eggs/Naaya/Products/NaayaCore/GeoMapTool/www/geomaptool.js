@@ -19,6 +19,36 @@ function encode_form_value(value) {
     return encodeURIComponent(value).replace(/%20/g, '+');
 }
 
+function update_map_filter_values(filter) {
+    // update filters from URL hash
+
+    var form = $('form#frmFilterMap');
+
+    var geo_types_cleared = false;
+
+    $.each(filter, function(i, pair) {
+        if(pair.name == 'geo_types') {
+            var inputs = $('input[name=geo_types:list]', form);
+            if(! geo_types_cleared) {
+                geo_types_cleared = true;
+                inputs.attr('checked', null);
+            }
+            var filter = function(e) { return ($(e).val() == pair.value) }
+            $($.grep(inputs, filter)).attr('checked', 'checked');
+        }
+        if(pair.name == 'geo_query') {
+            $('input#geo_query', form)[0].onfocus();
+            $('input#geo_query', form).val(pair.value);
+        }
+        if(pair.name == 'address') {
+            $('input#address', form)[0].onfocus();
+            $('input#address', form).val(pair.value);
+        }
+    });
+
+    // no need to call map refresh, since this handler is called on page
+    // load, and the map refresh will follow shortly.
+}
 
 var _map_points_loader = {abort: function(){}};
 var _map_points_loader_delay = 200;
@@ -47,32 +77,43 @@ function load_map_points(bounds, callback) {
     _map_points_loader = loader;
 }
 
+function get_map_filter_values() {
+    // don't include bounds since this is used to set URL hash
+    var filter = [];
+    var skip = {
+        'address:ustring:utf8': naaya_map_i18n["Type location address"],
+        'geo_query:ustring:utf8': naaya_map_i18n["Type keywords"]
+    };
+    $.each($("form#frmFilterMap").serializeArray(), function(i, pair) {
+        if(skip[pair.name] == pair.value) return; // placeholder, ignore it
+        if(pair.value == "") return; // empty, ignore it
+        filter.push(pair);
+    });
+    return filter;
+}
 
 function _refresh_map_points(bounds, callback, loader) {
     clear_custom_balloon();
     setAjaxWait();
+
+    var filter = get_map_filter_values();
+    if(window.naaya_map_url_hash) {
+        var stripped_filter = $.map(filter, function(item) {
+            return {
+                name: item.name.replace(/:(utf8|ustring|list)/g, ''),
+                value: item.value
+            };
+        });
+        naaya_map_url_hash.filter_change(stripped_filter);
+    }
+
+    var method = (naaya_map_engine.config['cluster_points'] ?
+                  "xrjs_getGeoClusters" : "xrjs_getGeoPoints");
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
         '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
-    var query = document.getElementById('geo_query').value;
-    if (query === naaya_map_i18n["Type keywords"]) {
-        query = "";
-    }
-    var enc_form = $("form#frmFilterMap").serialize();
-    //don't send explanatory text
-    enc_form = enc_form.replace(encode_form_value(
-                naaya_map_i18n["Type location address"]), "");
-    enc_form = enc_form.replace(encode_form_value(
-                naaya_map_i18n["Type keywords"]), "");
-
-    var url;
-    if(naaya_map_engine.config['cluster_points']) {
-        url = portal_map_url + "/xrjs_getGeoClusters?" +
-              str_bounds + '&' + enc_form + '&geo_query=' + query;
-    }
-    else {
-        url = portal_map_url + "/xrjs_getGeoPoints?" +
-              str_bounds + '&' + enc_form + '&geo_query=' + query;
-    }
+    // TODO use zope flags!
+    var url = (portal_map_url + "/" + method + "?" +
+               str_bounds + '&' + $.param(filter, true));
 
     $.ajax({
         url: url,
@@ -331,6 +372,87 @@ function custom_balloon(lat, lon, content) {
 
     return balloon;
 }
+
+var map_url_hash = function() {
+    var hash = {
+        _filter: [],
+        _map_position: [],
+        _our_hash: null,
+        _change_handlers: []
+    };
+
+    hash.map = function(map) {
+        hash._map = map;
+        if(hash._map.on_move) {
+            hash._map.on_move(hash.map_move);
+        }
+        if(hash._map.set_zoom_and_center) {
+            hash.on_change(function(filter) {
+                var position = {};
+                $.each(filter, function(i, pair) {
+                    var name = pair.name, value = pair.value;
+                    if(name == 'lat' || name == 'lon' || name == 'zoom') {
+                        position[name] = value;
+                    }
+                });
+                hash._map.set_zoom_and_center(position);
+            });
+        }
+    };
+
+    hash.activate = function() {
+        $(window).bind("hashchange", hash._hash_changed);
+        if(location.hash) {
+            hash._hash_changed();
+        }
+    };
+
+    hash._update_url = function() {
+        var data = $.merge($.merge([], hash._filter), hash._map_position);
+        var new_hash = '#' + $.param(data);
+        if(hash._our_hash !== new_hash) {
+            hash._our_hash = new_hash;
+            location.replace(new_hash);
+        }
+    };
+
+    hash._hash_changed = function() {
+        var new_hash = location.hash;
+        if(new_hash === hash._our_hash) return;
+        var filter = [];
+        $.each(new_hash.substr(1).split('&'), function(i, pair) {
+            var split_pair = pair.split('=');
+            if(split_pair.length < 2) return;
+            var name = decodeURIComponent(split_pair[0].replace("+", " "));
+            var value = decodeURIComponent(split_pair[1].replace("+", " "));
+            filter.push({name: name, value: value});
+        });
+
+        $.each(hash._change_handlers, function(i, handler) {
+            handler(filter);
+        });
+    };
+
+    hash.on_change = function(handler) {
+        hash._change_handlers.push(handler);
+    };
+
+    hash.map_move = function(lon, lat, zoom) {
+        hash._map_position = [
+            {name: 'lat', value: Math.round(lat*10000)/10000},
+            {name: 'lon', value: Math.round(lon*10000)/10000},
+            {name: 'zoom', value: zoom}
+        ];
+        hash._update_url();
+    };
+
+    hash.filter_change = function(filter) {
+        hash._filter = filter;
+        hash._update_url();
+    };
+
+    return hash;
+};
 
 var MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD = 100;
 
