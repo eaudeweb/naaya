@@ -6,7 +6,6 @@
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
 		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
-		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_urls" title="Portal administration - urls"/>
@@ -436,10 +435,9 @@
 		<channeltype id="Miscellaneous" title="Miscellaneous"/>
 		<scriptchannel id="meetingsevents_rdf" title="Meetings and events" description="Meetings and events" language="en" type="Events" numberofitems="5" portlet="1"/>
 		<scriptchannel id="whatsnew_rdf" title="What's new" description="What's new" language="en" type="News" numberofitems="5" portlet="1"/>
-		<scriptchannel id="latestrelevantuploads_rdf" title="Selected uploads" description="Selected uploads" language="en" type="Miscellaneous" numberofitems="5" portlet="1"/>
 		<remotechannel id="biodiv_news" title="Biodiversity news" url="http://www.nlbif.nl/rss/biodiversity_news_en.xml" numbershownitems="10" />
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestphotos">
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<portlet id="portlet_calendar" title="Calendar of Events"/>
 		<portlet id="chm3_other_mainsection_image" title="[CHM3 - Other] Main section image"/>

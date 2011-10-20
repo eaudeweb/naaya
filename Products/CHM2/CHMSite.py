@@ -88,7 +88,6 @@ class CHMSite(NySite):
 
     def __init__(self, *args, **kwargs):
         """ """
-        self.predefined_latest_uploads = []
         self.show_releasedate = 1
         self.workgroups = []
         super(CHMSite, self).__init__(*args, **kwargs)
@@ -549,24 +548,6 @@ class CHMSite(NySite):
                         url_struct[p_value] = [(x, x.getParentNode())]
         return url_struct
 
-    def setPredefinedUploads(self, predefined=[], REQUEST=None):
-        """ update the predefined list of uploads """
-        urls = self.utConvertToList(predefined)
-        self.predefined_latest_uploads = urls
-        self._p_changed = 1
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/admin_predefined_html' % self.absolute_url())
-
-    def getPredefinedUploads(self):
-        """ get the predefined list of uploads """
-        buf = []
-        ba = buf.append
-        t = copy(self.predefined_latest_uploads)
-        for url in t:
-            obj = self.unrestrictedTraverse(url, None)
-            if obj: ba(obj)
-        return buf
-
     def list_glossaries(self):
         #return all the glossaries in this portal
         return self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE)
@@ -890,11 +871,6 @@ class CHMSite(NySite):
     def admin_comments_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_predefined_html')
-    def admin_predefined_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_predefined')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_usersassigned_html')
     def admin_usersassigned_html(self, REQUEST=None, RESPONSE=None):
