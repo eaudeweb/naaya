@@ -1,5 +1,10 @@
-1.0.5 (unreleased)
+1.0.6 (unreleased)
 ------------------
+
+1.0.5 (2011-10-20)
+------------------
+* bugfix: fallback lang on localprops when lang is specified
+  in params [simiamih]
 
 1.0.4 (2011-10-19)
 ------------------
