@@ -19,13 +19,36 @@ function encode_form_value(value) {
     return encodeURIComponent(value).replace(/%20/g, '+');
 }
 
-/**
- * Show on map selected types of locations.
- * Map engine independent.
- * @return Nothing
- */
+
+var _map_points_loader = {abort: function(){}};
+var _map_points_loader_delay = 200;
 
 function load_map_points(bounds, callback) {
+    // schedule a map point loading
+
+    _map_points_loader.abort();
+
+    var loader = {
+        cancelled: false
+    };
+
+    loader.run = function() {
+        _refresh_map_points(bounds, callback, loader);
+    };
+
+    loader.timeout = setTimeout(function() { loader.run(); },
+                                _map_points_loader_delay);
+
+    loader.abort = function() {
+        loader.cancelled = true;
+        clearTimeout(loader.timeout);
+    };
+
+    _map_points_loader = loader;
+}
+
+
+function _refresh_map_points(bounds, callback, loader) {
     clear_custom_balloon();
     setAjaxWait();
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
@@ -55,11 +78,13 @@ function load_map_points(bounds, callback) {
         url: url,
         dataType: 'json',
         success: function(data) {
+            if(loader.cancelled) return;
             document.body.style.cursor = "default";
             parse_response_data(data);
             callback(data.points);
         },
         error: function(req) {
+            if(loader.cancelled) return;
             document.body.style.cursor = "default";
             setRecordCounter(0);
         }
