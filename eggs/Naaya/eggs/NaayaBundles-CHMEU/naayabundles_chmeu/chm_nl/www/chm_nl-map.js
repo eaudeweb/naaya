@@ -3,7 +3,7 @@
 var engine = naaya_map_engine;
 
 $.extend(engine, {
-    cloudmade_api_key: "43055fe59bb54923869ecb3772668eaa",
+    cloudmade_api_key: "7a04ece959114c64961e522f5ab7ac7c",
     cloudmade_style_name: "CloudMade - Pale Dawn",
     cloudmade_style_id: "1714",
     cloudmade_attribution: (
