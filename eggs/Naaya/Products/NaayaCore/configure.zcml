@@ -33,6 +33,11 @@
              component=".AuthenticationTool.updates.RemoveGhostRoles"
              permission="zope2.ViewManagementScreens" />
 
+    <utility name="correct_roles_for_imported_users.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".AuthenticationTool.updates.CorrectRolesForImportedUsers"
+             permission="zope2.ViewManagementScreens" />
+
     <utility name="add_objmap_zoom.update"
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".GeoMapTool.updates.AddObjMapZoom"

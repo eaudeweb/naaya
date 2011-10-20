@@ -73,3 +73,23 @@ def _recurse(ob, meta_types):
         yield sub_ob
         for o in _recurse(sub_ob, meta_types):
             yield o
+
+class CorrectRolesForImportedUsers(UpdateScript):
+    title = 'Correct role assignment for some users (imported with "" as role)'
+    authors = ['Valentin Dumitru']
+    creation_date = 'Oct 20, 2011'
+
+    def _update(self, portal):
+        auth_tool = portal.getAuthenticationTool()
+        user_roles = auth_tool.getUsersRoles()
+        user_with_invalid_roles = [user for user, roles in user_roles.items()
+                if ([u''], '') in roles]
+        if len(user_with_invalid_roles) > 0:
+            auth_tool.admin_addroles(names=user_with_invalid_roles,
+                    roles=['Contactpersoon coalitie biodiversiteit'])
+            self.log.info('Updated roles for users: %s' % user_with_invalid_roles)
+        else:
+            self.log.info('No user roles to correct')
+        return True
+
+

@@ -1,5 +1,6 @@
 2.12.12 (unreleased)
 --------------------
+* added update for changing user roles (specific for CHM_NL) [dumitval]
 
 2.12.11 (2011-10-19)
 --------------------
