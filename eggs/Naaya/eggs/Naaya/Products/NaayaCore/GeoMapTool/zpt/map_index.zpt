@@ -135,6 +135,11 @@ if (naaya_map_engine.name == 'bing') {
     // TODO `map_engine` is for backwards compatibility because the name is
     // wrong; we should remove it at some point.
     window.map_engine = naaya_portal_map;
+
+    window.naaya_map_url_hash = map_url_hash();
+    naaya_map_url_hash.map(naaya_portal_map);
+    naaya_map_url_hash.on_change(update_map_filter_values);
+    naaya_map_url_hash.activate();
 }
 
 </script>
