@@ -178,6 +178,30 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 </form>
 
 <script type="text/javascript">
+function update_chm_nl_map_filter_values(filter) {
+    var form = $('form#frmFilterMap');
+
+    var target_group_cleared = false;
+
+    $.each(filter, function(i, pair) {
+        if(pair.name == 'target-group') {
+            var inputs = $('input[name=target-group:list]', form);
+            if(! target_group_cleared) {
+                target_group_cleared = true;
+                inputs.attr('checked', null);
+            }
+            var filter = function(e) { return ($(e).val() == pair.value) }
+            $($.grep(inputs, filter)).attr('checked', 'checked');
+        }
+        if(pair.name == 'interval_start_date') {
+            $('input[name=interval_start_date]', form).val(pair.value);
+        }
+        if(pair.name == 'interval_end_date') {
+            $('input[name=interval_end_date]', form).val(pair.value);
+        }
+    });
+}
+
 // not using document.ready because then IE6 won't load yahoo maps :(
 showPageElements();
 if (naaya_map_engine.name == 'bing') {
@@ -196,6 +220,12 @@ if (naaya_map_engine.name == 'bing') {
     // TODO `map_engine` is for backwards compatibility because the name is
     // wrong; we should remove it at some point.
     window.map_engine = naaya_portal_map;
+
+    window.naaya_map_url_hash = map_url_hash();
+    naaya_map_url_hash.map(naaya_portal_map);
+    naaya_map_url_hash.on_change(update_map_filter_values);
+    naaya_map_url_hash.on_change(update_chm_nl_map_filter_values);
+    naaya_map_url_hash.activate();
 }
 
 
