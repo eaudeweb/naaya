@@ -4,6 +4,7 @@
 1.0.6 (2011-10-19)
 ------------------
 * removed Glossaries tab from admin portal properties [dumitval]
+* fixed administration dropdown navigation issue [bogdatan]
 
 1.0.5 (2011-10-18)
 ------------------
