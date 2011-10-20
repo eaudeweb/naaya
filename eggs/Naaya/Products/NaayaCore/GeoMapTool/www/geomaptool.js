@@ -97,6 +97,8 @@ function _refresh_map_points(bounds, callback, loader) {
     setAjaxWait();
 
     var filter = get_map_filter_values();
+    var filter_dict = {};
+    $.each(filter, function(i, pair) { filter_dict[pair.name] = pair.value; });
     if(window.naaya_map_url_hash) {
         var stripped_filter = $.map(filter, function(item) {
             return {
@@ -144,7 +146,7 @@ function _refresh_map_points(bounds, callback, loader) {
             }
         });
         setRecordCounter(num_records);
-        update_locations_values(bounds, query);
+        update_locations_values(bounds, filter_dict['geo_query:ustring:utf8']);
     }
 }
 
