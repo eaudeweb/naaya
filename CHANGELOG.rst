@@ -1,4 +1,7 @@
-2.4.10 (unreleased)
+2.4.11 (unreleased)
+-------------------
+
+2.4.10 (2011-10-20)
 -------------------
 * removed admin_predefined_html (#707) [andredor]
 
