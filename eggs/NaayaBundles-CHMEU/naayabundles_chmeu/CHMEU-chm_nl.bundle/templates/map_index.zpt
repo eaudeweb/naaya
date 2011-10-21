@@ -92,7 +92,7 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 			<div class="map_filters">
                             <p id="js_links" style="display: none;">
                                     <strong id="record_counter"></strong>
-                                    <span i18n:translate="">location(s)</span>
+                                     <span i18n:translate="">location(s)</span>
                             </p>
                             <span id="map_show_filters">
                                 <a href="javascript:void(0);" onclick="jQuery('#map_collapsable_filters').show('blind', {}, 800, function(){jQuery('#map_hide_filters').show(); jQuery('#map_show_filters').hide();});">
@@ -140,14 +140,14 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox hidden"
 									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
 								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title; class string:pin" />
-								<label tal:attributes="for item/id"><span i18n:translate="" tal:content="item/title" /></label>
+								<span tal:attributes="class string:pin_text" i18n:translate="" tal:content="item/title" />
 								<ul tal:condition="children" class="category_child">
 									<li tal:repeat="child children">
 										<input type="checkbox" name="geo_types:list"
 											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" class="hidden" />
 										<img
 											tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
-										<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
+										<span tal:attributes="class string:pin_text" i18n:translate="" tal:content="child/title" />
 									</li>
 								</ul>
 							</li>

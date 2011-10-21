@@ -3,6 +3,7 @@
 * fix 'geo-tagged' disabled for Folders (#717) [andredor]
 * added update for changing user roles (specific for CHM_NL) [dumitval]
 * portal_map URL hash updated with current selection [moregale]
+* portal_map js and css fixes for IE 7-9 [simiamih]
 
 2.12.11 (2011-10-19)
 --------------------
