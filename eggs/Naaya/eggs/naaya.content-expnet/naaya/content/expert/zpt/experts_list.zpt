@@ -25,7 +25,7 @@
 			<li tal:repeat="node items">
 				<tal:block define="topic python: node.get_translation_by_language(default_lang_name)">
 				<a tal:define="url here/absolute_url"
-				   tal:attributes="href string:${url}?topic=${topic}"
+				   tal:attributes="href string:${url}?topic:utf8:ustring=${topic}"
 				   i18n:translate="" tal:content="node/title_or_id"></a>
 				<span tal:content="python:'(%s)' % len(here.items_in_topic(
 															topic))"
