@@ -1,6 +1,7 @@
 2.12.12 (unreleased)
 --------------------
 * added update for changing user roles (specific for CHM_NL) [dumitval]
+* portal_map URL hash updated with current selection [moregale]
 
 2.12.11 (2011-10-19)
 --------------------
