@@ -299,6 +299,10 @@ function showPageElements() {
 	document.getElementById('map_links_js').style.display = "block";
 	//Also place handlers on inputs:
 	jQuery('#geo_query, #address').keypress(handleKeyPress);
+	jQuery('.pin_text').click(function(ev){
+	  var checkbox = jQuery("input[type='checkbox']", this.parentNode);
+	  checkbox.click();
+	});
 }
 
 var new_naaya_map_balloon = function(options) {

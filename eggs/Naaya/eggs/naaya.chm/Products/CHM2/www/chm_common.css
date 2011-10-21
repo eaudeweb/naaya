@@ -215,17 +215,17 @@ padding: 0;
 margin: 0.5em 0 0 0;
 padding: 0;
 }
-.portalmap_portlet .map_filters ul, .portalmap_portlet .map_filters ul li.unchecked_categ ul{
+.portalmap_portlet .map_filters ul {
 padding: 0;
+margin-left: 0;
 list-style: none;
 font-size: 13px;
 font-weight: bold;
 }
-.portalmap_portlet .map_filters ul li ul {
+.portalmap_portlet .map_filters ul ul {
 margin-bottom: 1em;
-}
-.portalmap_portlet .map_filters ul ul, .portalmap_portlet .map_filters ul li.unchecked_categ ul {
 padding: 0;
+margin-left: 0;
 font-size: 11px;
 font-weight: normal;
 }
@@ -234,7 +234,7 @@ margin-top: 0;
 }
 .portalmap_portlet .map_filters ul .pin {
 	margin-right: -2px;
-	vertical-align: 1px;
+	/*vertical-align: 1px;*/
 	width: 12px;
 	height: 12px;
 }
@@ -245,7 +245,7 @@ margin-top: 0;
 .portalmap_portlet .map_filters ul li.unchecked_categ{
 	color: #999999;
 	padding-left: 13px;
-	background: transparent 0 4px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
+	background: transparent 0 5px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
 }
 .portalmap_portlet .map_filters ul li{
 	color: black;
@@ -256,7 +256,7 @@ margin-top: 0;
 	color: #999999;
 	padding-left: 13px;
 	margin-left: -13px;
-	background: transparent 0 1px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
+	background: transparent 0 3px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
 }
 .portalmap_portlet .map_filters ul li.unchecked_categ ul li{
 	color: black;
@@ -267,7 +267,7 @@ margin-top: 0;
 .portalmap_portlet .map_filters ul li ul li.unchecked_categ{
 	color: #999999;
 	padding-left: 13px;
-	background: transparent 0 1px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
+	background: transparent 0 3px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
 }
 .portalmap_portlet .map_filters ul li ul li{
 	color: black;
@@ -296,7 +296,9 @@ margin-top: 0;
 }
 
 
-
+.pin_text{
+	cursor: pointer;
+}
 .portalmap_portlet .map_right_control{
 	font-size: 10px;
 	float: right;
@@ -312,6 +314,11 @@ margin-top: 0;
     padding: 2px;
     display: inline;
 }
+
+#map-container{
+	display: inline-block;
+}
+
 /* End map styles */
 
 hr.hr_addcomment {
