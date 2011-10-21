@@ -1,5 +1,6 @@
 2.12.12 (unreleased)
 --------------------
+* fix 'geo-tagged' disabled for Folders (#717) [andredor]
 * added update for changing user roles (specific for CHM_NL) [dumitval]
 * portal_map URL hash updated with current selection [moregale]
 

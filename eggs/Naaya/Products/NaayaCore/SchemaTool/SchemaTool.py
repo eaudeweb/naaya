@@ -166,9 +166,6 @@ class SchemaTool(Folder):
         {'url': 'admin_ratings_overview_html', 'title': 'Ratings overview'}
     ]
 
-    def list_geotaggable_types(self):
-        return [item for item in self.list_content_types() if item.has_key('geo_taggable')]
-
     def list_content_types(self):
         portal_schemas = self.getSite().portal_schemas
         output = []
@@ -183,7 +180,8 @@ class SchemaTool(Folder):
                 temp_output['geo_enabled'] = False
             else:
                 temp_output['geo_taggable'] = True
-                temp_output['geo_enabled'] = geo_location.visible and geo_type.visible
+                temp_output['geo_enabled'] = (geo_location.visible
+                                              and geo_type.visible)
             if schema.is_ratable:
                 temp_output['ratable'] = True
             else:
