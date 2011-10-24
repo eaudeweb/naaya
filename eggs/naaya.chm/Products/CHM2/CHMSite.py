@@ -803,31 +803,6 @@ class CHMSite(NySite):
             self.setSessionInfoTrans("Role(s) revoked")
             return REQUEST.RESPONSE.redirect(redirect_url)
 
-    #overwrite the Naaaya processFeedbackForm function. CAPTCHA added
-    security.declareProtected(view, 'processFeedbackForm')
-    def processFeedbackForm(self, username='', email='', comments='', contact_word='', REQUEST=None):
-        """ """
-        err = []
-        if contact_word=='' or contact_word!=self.getSession('captcha', None):
-            err.append('The word you typed does not match with the one shown in the image. Please try again.')
-        if username.strip() == '':
-            err.append('The full name is required')
-        if email.strip() == '':
-            err.append('The email is required')
-        if comments.strip() == '':
-            err.append('The comments are required')
-        if err:
-            if REQUEST:
-                self.setSessionErrorsTrans(err)
-                self.setFeedbackSession(username, email, comments)
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        else:
-            self.sendFeedbackEmail(self.administrator_email, username, email, comments)
-            if REQUEST:
-                self.setSession('title', 'Thank you for your feedback')
-                self.setSession('body', 'The administrator will process your comments and get back to you.')
-                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
