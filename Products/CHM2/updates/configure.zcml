@@ -14,6 +14,11 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_remove_predefined_latest_uploads.RemovePredifinedLatestUploads"
       permission="zope2.ViewManagementScreens" />
+    <utility
+      name="helpdesk_cleanup.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_helpdesk_cleanup.UpdateHelpdeskCleanup"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

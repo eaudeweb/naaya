@@ -28,7 +28,6 @@ from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
-from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
 from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
@@ -123,8 +122,6 @@ class CHMSite(NySite):
         #set default main topics
         self.getPropertiesTool().manageMainTopics(['convention', 'cooperation', 'network', 'information'])
 
-        #create helpdesk instance
-        manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
         #create NaayaCalendar instance
         manage_addEventCalendar(self, id="portal_calendar", title='Calendar of Events', description='',
                             day_len='2', start_day='Monday', catalog=self.getCatalogTool().id, REQUEST=None)
@@ -214,7 +211,6 @@ class CHMSite(NySite):
         if len(entries) > 0: return entries[0]
         else: return None
     def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
-    def getHelpDeskAgent(self): return self._getOb(ID_HELPDESKAGENT, None)
     def getNewsArchive(self): return self._getOb('news', None)
     def getEventsArchive(self): return self._getOb('events', None)
 
