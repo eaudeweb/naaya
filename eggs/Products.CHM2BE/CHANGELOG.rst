@@ -1,5 +1,6 @@
 1.0.9 (unreleased)
 ------------------
+* update script to set reCAPTCHA keys [andredor]
 
 1.0.8 (2011-10-24)
 ------------------
