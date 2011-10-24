@@ -16,7 +16,7 @@
 	<table border="0" cellspacing="2" cellpadding="2">
 		<tr><td i18n:translate="">Full name</td><td><input type="text" name="username" size="40" value="" /></td></tr>
 		<tr><td i18n:translate="">Email address</td><td><input type="text" name="email" size="40" value="" /></td></tr>
-		<tr><td valign="top" i18n:translate="">Comments<br i18n:name="br"/>(if any)</td><td><textarea name="comments" rows="10" cols="50"></textarea></td></tr>
+		<tr><td valign="top" i18n:translate="">Comments</td><td><textarea name="comments" rows="10" cols="50"></textarea></td></tr>
 		<tal:block condition="not:here/checkPermissionPublishDirect">
 		<tr><td>&nbsp;</td>
 			<td valign="top"><img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" /></td>
