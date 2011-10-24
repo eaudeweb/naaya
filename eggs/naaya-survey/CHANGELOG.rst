@@ -1,4 +1,7 @@
-1.2.8 (unreleased)
+1.2.9 (unreleased)
+==================
+
+1.2.8 (2011-10-24)
 ==================
 * use reCAPTCHA for add forms [andredor]
 * remove show_captcha wrapper [andredor]
