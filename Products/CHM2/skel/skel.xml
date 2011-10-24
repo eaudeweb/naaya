@@ -514,4 +514,13 @@
 		<jquery.ajaxupload.min />
 		<jquery.Jcrop.min />
 	</others>
+	<map>
+		<symbol id="symbol001" title="Indoor activities" color="#2554c7"/>
+		<symbol id="symbol002" title="Outdoor activities" color="#437c17"/>
+		<symbol id="symbol003" title="Products" color="#7e2217"/>
+		<symbol id="symbol004" title="Projects" color="#9a9c00"/>
+		<symbol id="symbol005" title="Organisations" color="#603913"/>
+		<symbol id="symbol006" title="Experts" color="#00FFFF"/>
+		<symbol id="symbol007" title="Others" color="#F433FF"/>
+	</map>
 </skel>
