@@ -146,7 +146,9 @@ function _refresh_map_points(bounds, callback, loader) {
             }
         });
         setRecordCounter(num_records);
-        update_locations_values(bounds, filter_dict['geo_query:ustring:utf8']);
+        var geo_query = filter_dict['geo_query:ustring:utf8'];
+        if(! geo_query) geo_query = "";
+        update_locations_values(bounds, geo_query);
     }
 }
 
