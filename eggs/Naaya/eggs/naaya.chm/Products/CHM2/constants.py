@@ -35,9 +35,6 @@ METATYPE_CHMSITE = 'CHM Site'
 ID_LINKCHECKER = 'LinkChecker'
 TITLE_LINKCHECKER = 'URL checker'
 
-ID_HELPDESKAGENT = 'HelpDesk'
-TITLE_HELPDESKAGENT = 'Helpdesk'
-
 ID_PHOTOARCHIVE = 'PhotoArchive'
 TITLE_PHOTOARCHIVE = 'Photo archive'
 

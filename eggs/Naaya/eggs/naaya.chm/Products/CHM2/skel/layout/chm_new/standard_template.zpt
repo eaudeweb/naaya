@@ -192,7 +192,7 @@
             <div id="footer">
                 <div class="horizlist">
                     <a tal:attributes="href string:${site_url}/info/copyright" i18n:translate="">Copyright</a> |
-                    <a tal:attributes="href string:${site_url}/HelpDesk/" accesskey="9" i18n:translate="">Feedback and helpdesk</a> |
+                    <a tal:attributes="href string:${site_url}/feedback_html" accesskey="9" i18n:translate="">Feedback</a> |
                     <a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
                 </div>
             </div>
