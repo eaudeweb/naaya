@@ -1,6 +1,7 @@
 2.4.11 (unreleased)
 -------------------
 * removed dependency of Naaya Helpdesk Agent + update script [dumitval]
+* remove processFeedbackForm customization [andredor]
 * add admin_network_html to portlet_administration [andredor]
 * portal_map css fixes for IE 7-9 [simiamih]
 
