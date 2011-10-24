@@ -166,6 +166,10 @@ class SchemaTool(Folder):
         {'url': 'admin_ratings_overview_html', 'title': 'Ratings overview'}
     ]
 
+    def list_geotaggable_types(self):
+        return [ctype for ctype in self.list_content_types()
+                        if ctype['geo_taggable']]
+
     def list_content_types(self):
         portal_schemas = self.getSite().portal_schemas
         output = []
