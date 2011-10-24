@@ -1,12 +1,10 @@
-import unittest
-
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 
 def captcha_in_html(html):
-    if 'contact_word' in html:
+    if 'recaptcha_challenge_field' in html:
         return True
     else:
         return False
@@ -24,10 +22,18 @@ class SubmitterInfoTest(NaayaFunctionalTestCase):
         self.portal.myfolder._Naaya___Skip_Captcha_Permission = ['Contributor']
         self.portal.myfolder._Naaya___Add_Naaya_URL_objects_Permission = [
             'Anonymous', 'Administrator', 'Contributor']
+
+        self.recaptcha_public_key = self.portal.recaptcha_public_key
+        self.recaptcha_private_key = self.portal.recaptcha_private_key
+        self.portal.recaptcha_public_key = '1'
+        self.portal.recaptcha_private_key = '1'
+
         transaction.commit()
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
+        self.portal.recaptcha_public_key = self.recaptcha_public_key
+        self.portal.recaptcha_private_key = self.recaptcha_private_key
         transaction.commit()
 
     def test_logged_in_skipcaptcha(self):
