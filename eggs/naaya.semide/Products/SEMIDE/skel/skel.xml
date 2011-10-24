@@ -14,7 +14,6 @@
 		<form id="site_admin_template" title=""/>
 		<form id="site_index" title=""/>
 		<form id="site_login" title=""/>
-		<form id="site_requestrole" title=""/>
 		<form id="site_search" title=""/>
 		<form id="site_search_advanced" title="Portal advanced search"/>
 		<form id="site_search_google" title="Portal Google Search"/>
