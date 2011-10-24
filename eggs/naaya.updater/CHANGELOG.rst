@@ -1,5 +1,6 @@
 1.2.11 (unreleased)
 -------------------
+* updates in a single table (product is just a column) [andredor]
 
 1.2.10 (2011-10-19)
 -------------------
