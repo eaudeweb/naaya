@@ -54,7 +54,6 @@ from Products.NaayaForum.NyForum                    import addNyForum
 from Products.NaayaForum.constants                  import METATYPE_NYFORUM, METATYPE_NYFORUMTOPIC, METATYPE_NYFORUMMESSAGE
 from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCentre
 from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
-from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
 from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoGallery      import addNyPhotoGallery
 from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLERY
@@ -204,7 +203,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         #self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in [METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION]])
         self.getPortletsTool().manage_delObjects('topnav_links')
 
-        manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
         addNyPhotoGallery(self, ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE, contributor=self.getAuthenticationToolPath(1))
 
         #default RDF Calendar settings
@@ -431,7 +429,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def get_constant(self, c): return eval(c)
 
     #objects getters
-    def getHelpDeskAgent(self):             return self._getOb(ID_HELPDESKAGENT, None)
     def getPhotoArchive(self):              return self._getOb(ID_PHOTOARCHIVE, None)
     def getLinkChecker(self):               return self._getOb(ID_LINKCHECKER, None)
     def getSkinFilesPath(self):             return self.getLayoutTool().getSkinFilesPath()
