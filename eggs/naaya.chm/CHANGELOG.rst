@@ -1,4 +1,7 @@
-2.4.11 (unreleased)
+2.4.12 (unreleased)
+-------------------
+
+2.4.11 (2011-10-24)
 -------------------
 * removed dependency of Naaya Helpdesk Agent + update script [dumitval]
 * remove processFeedbackForm customization [andredor]
