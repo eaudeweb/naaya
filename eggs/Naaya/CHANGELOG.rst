@@ -1,4 +1,7 @@
-2.12.12 (unreleased)
+2.12.13 (unreleased)
+--------------------
+
+2.12.12 (2011-10-24)
 --------------------
 * remove old captcha tool [andredor]
 * using reCAPTCHA for add and feedback forms [andredor]
