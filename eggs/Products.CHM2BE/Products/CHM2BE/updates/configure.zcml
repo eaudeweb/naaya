@@ -5,5 +5,9 @@
                  provides="Products.naayaUpdater.interfaces.IUpdateScript"
                  component=".update_bundles.MigrateCHMBEToBundles"
                  permission="zope2.ViewManagementScreens" />
+        <utility name="update_recaptcha_keys.update"
+                 provides="Products.naayaUpdater.interfaces.IUpdateScript"
+                 component=".update_recaptcha_keys.UpdateRecaptchaKeys"
+                 permission="zope2.ViewManagementScreens" />
    </configure>
 </configure>
