@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.1.2 (unreleased)
+------------------
+
+1.1.1 (2011-10-24)
 ------------------
 * add forms use reCAPTCHA [andredor]
 
