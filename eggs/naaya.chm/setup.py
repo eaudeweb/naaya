@@ -13,7 +13,6 @@ setup(name='naaya.chm',
         'naaya.photoarchive',
         'Products.NaayaLinkChecker',
         'Products.NaayaNetRepository',
-        'Products.NaayaHelpDeskAgent',
         'Products.NaayaGlossary',
         'Products.NaayaCalendar',
         'Products.NaayaForum'
