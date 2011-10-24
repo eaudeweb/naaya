@@ -10,4 +10,10 @@
   <naaya:call factory=".engine_yahoo.register" />
   <naaya:call factory=".engine_bing.register" />
   <naaya:call factory=".engine_openlayers.register" />
+
+  <subscriber
+    handler=".managers.symbols_tool.handle_skel_event"
+    for="Products.Naaya.interfaces.ISkelLoad"
+    />
+
 </configure>

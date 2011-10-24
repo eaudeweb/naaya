@@ -311,3 +311,14 @@ def colored_circle(size, color, halo=False):
     data = StringIO()
     image.save(data, "PNG")
     return data.getvalue()
+
+
+def handle_skel_event(event):
+    site = event.site
+    skel_handler = event.skel_handler
+    portal_map = site.getGeoMapTool()
+    symbols = getattr(skel_handler.root.map, 'symbols', [])
+    for symbol in symbols:
+        portal_map.addSymbol(symbol.id, symbol.title, symbol.description,
+                             symbol.parent, symbol.color, symbol.picture,
+                             symbol.sortorder)
