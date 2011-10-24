@@ -7,6 +7,13 @@
 
 	<p><strong i18n:translate="">All administration functionalities are available from the right-side menu.</strong></p>
 
+	<p class="error" i18n:translate="" tal:condition="not: here/recaptcha_is_present">
+	WARNING: reCAPTCHA is not configured on this site.
+	reCAPTCHA will not be available when the user doesn't have the permission to skip captcha.
+	This means that some forms might not be protected for submission (anyone allowed to view the form will be able to submit data).
+	To configure reCAPTCHA you need to add a public/private key pair in the "Portal properties" &gt; "Other properties" page.
+	</p>
+
 	<p style="text-align: center;"><img src="misc_/Naaya/admin_schema" alt="Overview of the administrative functionality" i18n:attributes="alt"  style="text-align: center;" /></p>
 </tal:block>
 

@@ -1,5 +1,8 @@
 2.12.12 (unreleased)
 --------------------
+* remove old captcha tool [andredor]
+* using reCAPTCHA for add and feedback forms [andredor]
+* warning message if reCAPTCHA not present [andredor]
 * fix 'geo-tagged' disabled for Folders (#717) [andredor]
 * added update for changing user roles (specific for CHM_NL) [dumitval]
 * portal_map URL hash updated with current selection [moregale]

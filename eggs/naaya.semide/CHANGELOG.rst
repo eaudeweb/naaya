@@ -1,5 +1,6 @@
 1.1.2 (unreleased)
 ------------------
+* remove site_requestrole customization [andredor]
 
 1.1.1 (2011-10-14)
 ------------------

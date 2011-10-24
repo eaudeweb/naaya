@@ -1,5 +1,7 @@
 1.2.8 (unreleased)
 ==================
+* use reCAPTCHA for add forms [andredor]
+* remove show_captcha wrapper [andredor]
 
 1.2.7 (2011-10-19)
 ==================

@@ -320,17 +320,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'manage_addUser')
     def manage_addUser(self, name='', password='', confirm='', roles=[],
                 domains=[], firstname='', lastname='', email='', strict=0,
-                REQUEST=None, **kwargs):
+                REQUEST=None):
         """ """
-        # Verify captcha
-        captcha_gen_word = self.getSession('captcha', '')
-        captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
         email = email.strip()
         if not check_username(name):
             raise ValidationError, 'Username: only letters and numbers allowed'
-        if captcha_prov_word != captcha_gen_word:
-            raise ValidationError, 'The word you typed does not match with the'
-            ' one shown in the image. Please try again.'
         if not firstname:
             raise ValidationError, 'The first name must be specified'
         if not lastname:

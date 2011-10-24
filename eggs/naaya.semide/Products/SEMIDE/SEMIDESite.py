@@ -1221,43 +1221,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                 #we are not inside a main topic, so don't show any left navigation
                 return ([(x, 0) for x in self.getMainTopics()], None)
 
-    security.declareProtected(view, 'processCreateAccountForm')
-    def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
-        """ Creates an account on the local acl_users and sends an email to the maintainer
-            with the account infomation
-        """
-        #create an account without any role
-        verify_word = REQUEST.form.get('verify_word', '')
-        acl_tool = self.getAuthenticationTool()
-        try:
-            userinfo = acl_tool.manage_addUser(username, password, confirm,
-                                               [], [], firstname,lastname, email, verify_word=verify_word)
-        except Exception, error:
-            err = error
-        else:
-            err = ''
-
-        # Errors occured
-        if err:
-            if not REQUEST:
-                return err
-            self.setSessionErrorsTrans(str(err))
-            self.setCreateAccountSession(username, firstname, lastname, email, password)
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-
-        # No error occured
-        if acl_tool.emailConfirmationEnabled():
-            self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
-            message_body = 'Plase follow the link in your email in order to complete registration.'
-        else:
-            self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
-            message_body = 'You can now use this account to log in.'
-        if not REQUEST:
-            return message_body
-        self.setSession('title', 'Thank you for registering')
-        self.setSession('body', message_body)
-        REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-
     security.declareProtected(view, 'admin_welcome_page')
     def admin_welcome_page(self, REQUEST=None):
         """ redirect to welcome page """

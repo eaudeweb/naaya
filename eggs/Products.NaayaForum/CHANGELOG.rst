@@ -1,5 +1,6 @@
 1.2.7 (unreleased)
 ------------------
+* use reCAPTCHA for add forms [andredor]
 
 1.2.6 (2011-10-18)
 ------------------

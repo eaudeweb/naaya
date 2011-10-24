@@ -19,11 +19,10 @@
 		<tr><td valign="top" i18n:translate="">Comments</td><td><textarea name="comments" rows="10" cols="50"></textarea></td></tr>
 		<tal:block condition="not:here/checkPermissionPublishDirect">
 		<tr><td>&nbsp;</td>
-			<td valign="top"><img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" /></td>
-		</tr>
-		<tr><td valign="top" i18n:translate="">Word verification</td>
-			<td><input class="input" type="text" name="contact_word" id="contact_word" value="" /><span i18n:translate="">(required)</span><br />
-			<em i18n:translate="">please type the word you see in the above picture.</em></td>
+			<td valign="top">
+				<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+			</td>
 		</tr>
 		</tal:block>
 		<tr><td>&nbsp;</td><td><input type="submit" value="Send" /></td></tr>
@@ -55,11 +54,10 @@
 		<tr><td valign="top" i18n:translate="">Comments<br i18n:name="br"/>(if any)</td><td><textarea name="comments" rows="10" cols="50" tal:content="here/getSessionFeedbackComments" /></td></tr>
 		<tal:block condition="not:here/checkPermissionPublishDirect">
 		<tr><td>&nbsp;</td>
-			<td valign="top"><img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" /></td>
-		</tr>
-		<tr><td valign="top" i18n:translate="">Word verification</td>
-			<td><input class="input" type="text" name="contact_word" id="contact_word" value="" /><span i18n:translate="">(required)</span><br />
-			<em i18n:translate="">please type the word you see in the above picture.</em></td>
+			<td valign="top">
+				<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+			</td>
 		</tr>
 		</tal:block>
 		<tr><td>&nbsp;</td><td><input type="submit" value="Send" i18n:attributes="value" /></td></tr>

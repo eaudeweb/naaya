@@ -683,11 +683,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             raise NotFound("You haven't taken this survey") # TODO: replace with a proper exception/error message
         return answer.index_html(REQUEST=REQUEST)
 
-    security.declareProtected(view, 'showCaptcha')
-    def showCaptcha(self):
-        """Return HTML code for CAPTCHA"""
-        return recaptcha_utils.render_captcha(self)
-
     security.declareProtected(view_management_screens, 'manage_migrate')
     def manage_migrate(self, REQUEST, widget_id, convert_to):
         """ convert widget type """
