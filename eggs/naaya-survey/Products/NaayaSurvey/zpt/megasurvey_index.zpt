@@ -234,8 +234,8 @@
 
 			<tal:block tal:content="structure python:here.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {}))" />
 
-			<tal:block condition="not:here/checkPermissionSkipCaptcha"
-			           content="structure here/showCaptcha" />
+			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+			           content="structure python:here.show_recaptcha(here)" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">

@@ -92,9 +92,10 @@
 				</div>
 				<input id="anonymous_responder_email" type="text" size="100" tal:attributes="value request/anonymous_responder_email|here/anonymous_responder_email" name="anonymous_responder_email:utf8:ustring">
 			</div>
-			<tal:block condition="not:here/checkPermissionSkipCaptcha"
-					content="structure here/showCaptcha">
-			</tal:block>
+
+			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+
 			<div class="surveySubmit">
 				<input type="submit"
 					tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
