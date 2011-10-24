@@ -111,8 +111,10 @@
 							   rendered python:test(stype, stype.render(mode='edit', datamodel=here.getDatamodel()), 'Error');"
 					content="structure rendered">
 			</tal:block>
-			<tal:block condition="not:here/checkPermissionSkipCaptcha"
-					content="structure here/showCaptcha">
+
+			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+
 			</tal:block>
 			<div class="surveySubmit">
 				<input type="submit"
