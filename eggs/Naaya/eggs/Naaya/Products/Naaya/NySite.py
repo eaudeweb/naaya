@@ -1628,8 +1628,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         err = []
         if not self.checkPermissionPublishDirect():
-            if contact_word=='' or contact_word!=self.getSession('captcha', None):
-                err.append(('The word you typed does not match with the one shown in the image. Please try again.', ))
+            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            if captcha_errors:
+                err.extend(captcha_errors)
         if username.strip() == '':
             err.append('The full name is required')
         if email.strip() == '':
