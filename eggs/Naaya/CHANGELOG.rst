@@ -1,5 +1,6 @@
 2.12.13 (unreleased)
 --------------------
+* Create map symbols based on skel.xml [moregale]
 
 2.12.12 (2011-10-24)
 --------------------

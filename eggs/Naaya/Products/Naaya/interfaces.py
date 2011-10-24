@@ -59,3 +59,9 @@ class INyPluggableItemInstalled(Interface):
 
     context = Attribute('context', "Portal where pluggable item was installed")
     meta_type = Attribute('meta_type', "meta_type of pluggable item")
+
+class ISkelLoad(Interface):
+    """ Skel is being loaded """
+
+    site = Attribute('site', "Portal that is being created")
+    skel_handler = Attribute('skel_handler', "Instance of SkelTree")

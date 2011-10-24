@@ -43,6 +43,7 @@ TAG_MAPPING = {
     'portlets/reftree/node': {'rename': 'nodes', 'type': 'list'},
     'portlets/reftree/property': {'rename': 'properties', 'type': 'dict'},
     'emails/emailtemplate': {'rename': 'emailtemplates', 'type': 'list'},
+    'map/symbol': {'rename': 'symbols', 'type': 'list'},
 }
 
 # create secondary keys for the same dict, based on renamed path

@@ -102,7 +102,7 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
 
-from events import NyPluggableItemInstalled
+from events import NyPluggableItemInstalled, SkelLoad
 
 log = logging.getLogger(__name__)
 
@@ -644,6 +644,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 self.import_data(object)
         else:
             raise Exception, EXCEPTION_PARSINGFILE % (join(skel_path, 'skel.nyexp'), error)
+
+        notify(SkelLoad(self, skel_handler))
 
     def updatePath(self):
         """@DEPRECATED"""
