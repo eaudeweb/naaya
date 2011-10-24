@@ -1,5 +1,9 @@
-1.0.8 (unreleased)
+1.0.9 (unreleased)
 ------------------
+
+1.0.8 (2011-10-24)
+------------------
+* removed link to HelpDesk from standard_template
 
 1.0.7 (2011-10-20)
 ------------------
