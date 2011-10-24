@@ -246,7 +246,7 @@
 			<link id="13" title="Copyright &amp; Disclaimer" description="" url="/about/copyright_html" relative="1" permission="" order="2"/>
 			<link id="15" title="Webmaster" description="" url="/feedback_html" relative="1" permission="" order="4"/>
 			<link id="16" title="Contact us" description="" url="/about/contact_html" relative="1" permission="" order="5"/>
-			<link id="17" title="Feedback &amp; Helpdesk" description="" url="/HelpDesk" relative="1" permission="" order="6"/>
+			<link id="17" title="Feedback" description="" url="/feedback_html" relative="1" permission="" order="6"/>
 			<link id="18" title="Accessibility statement" description="" url="/about/accessibility" relative="1" permission="" order="7"/>
 			<link id="19" title="www.semide.org" description="" url="http://www.semide.org" relative="0" permission="" order="8"/>
 		</linkslist>
