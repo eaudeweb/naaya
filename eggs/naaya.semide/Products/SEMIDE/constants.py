@@ -47,9 +47,6 @@ TITLE_RDFCALENDAR =     'RDF Calendar'
 ID_LINKCHECKER =        'portal_linkchecker'
 TITLE_LINKCHECKER =     'Link checker'
 
-ID_HELPDESKAGENT =      'HelpDesk'
-TITLE_HELPDESKAGENT =   'Helpdesk'
-
 ID_PHOTOARCHIVE =       'photos'
 TITLE_PHOTOARCHIVE =    'Photos'
 
