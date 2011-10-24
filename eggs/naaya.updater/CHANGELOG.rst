@@ -1,4 +1,7 @@
-1.2.11 (unreleased)
+1.2.12 (unreleased)
+-------------------
+
+1.2.11 (2011-10-24)
 -------------------
 * updates in a single table (product is just a column) [andredor]
 
