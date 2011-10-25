@@ -1,4 +1,4 @@
 Changelog
 =========
 
-.. include:: ../HISTORY.rst
+.. include:: ../../CHANGELOG.rst
