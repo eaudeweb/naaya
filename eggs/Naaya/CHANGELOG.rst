@@ -1,5 +1,6 @@
 2.12.13 (unreleased)
 --------------------
+* Hide contributor and releasedate for anonymous users [nituacor]
 * Create map symbols based on skel.xml [moregale]
 
 2.12.12 (2011-10-24)
