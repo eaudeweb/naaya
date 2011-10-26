@@ -536,13 +536,12 @@ class utils:
 
     def utConvertLinesToList(self, value):
         """Takes a value from a textarea control and returns a list of values"""
-        if type(value) == type([]): return value
-        elif value == '': return []
+        if type(value) == type([]):
+            return value
+        elif value == '':
+            return []
         else:
-            values = []
-            for v in value.split('\n'):
-                if v != '': values.append(v.replace('\r', ''))
-        return values
+            return [v for v in value.replace('\r', '').split('\n') if v != '']
 
     def utSplitSequence(self, seq, size):
         """
@@ -552,17 +551,13 @@ class utils:
 
     def utNewlinetoBr(self, p_string):
         #convert new lines to <br /> for html display
-        if p_string.find('\r') >= 0: p_string = ''.join(p_string.split('\r'))
-        if p_string.find('\n') >= 0: p_string = '<br />'.join(p_string.split('\n'))
-        return p_string
+        return p_string.replace('\r', '').replace('\n', '<br />')
 
     def utListDifference(self, p_l1, p_l2):
-        #return a list with elements from p_l1 that are not in p_l2
-        return [l_e1 for l_e1 in p_l1 if l_e1 not in p_l2]
+        return list(set(p_l1) - set(p_l2))
 
     def utListIntersection(self, p_l1, p_l2):
-        #return the intersection of two lists
-        return [l_e1 for l_e1 in p_l1 if l_e1 in p_l2]
+        return list(set(p_l1) & set(p_l2))
 
     def utJoinToString(self, something, separator='/'):
         """Get a list [value1, values...], and returns a string like value1<separator>value2..."""
