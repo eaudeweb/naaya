@@ -1,6 +1,3 @@
-
-import re
-from unittest import TestSuite, makeSuite
 from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -9,7 +6,6 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
     """ Functional TestCase for GoogleData tool """
 
     def test_main(self):
-
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/portal_statistics/admin_verify')
         self.assertTrue('<h1>Portal statistics</h1>' in self.browser.get_html())
@@ -26,6 +22,7 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         html = self.browser.get_html()
         self.failUnless('Saved changes.' in html)
+        self.browser_do_logout()
 
         self.browser.go('http://localhost/portal')
         soup = BeautifulSoup(self.browser.get_html())
@@ -37,5 +34,3 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         #check if the GoogleAnalytics javascript is corectly placed in the <head> section, before the closing </head> tag.
         script = head.findAll('script', attrs={'type':'text/javascript'})[-1]
         self.assertTrue(script.text.find('UA-12345-67') > -1)
-
-        self.browser_do_logout()
