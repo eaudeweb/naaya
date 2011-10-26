@@ -82,9 +82,7 @@ class RecoverPassword(SimpleItem):
     def _lookup_user_by_email(self, email):
         for user in self.getSite().acl_users.getUsers():
             if user.email.lower() == email.lower():
-                return user
-        else:
-            return None
+                yield user
 
     def _set_password(self, user_id, new_password):
         user = self.getSite().acl_users.getUser(user_id)
@@ -108,8 +106,8 @@ class RecoverPassword(SimpleItem):
         User submits an email address. If address found, an email is sent with
         a password reset token.
         """
-        user = self._lookup_user_by_email(email)
-        if user is None:
+        users = list(self._lookup_user_by_email(email))
+        if not users:
             err = i18n_exception(ValueError,
                                  'E-mail address not found: "${email}"',
                                  email=email)
@@ -119,16 +117,18 @@ class RecoverPassword(SimpleItem):
                 self.setSessionErrorsTrans(err)
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-        token = self._new_token(user.getId())
+        for user in users:
+            token = self._new_token(user.getId())
 
-        url = '%s/confirm?token=%s' % (self.absolute_url(), token)
+            url = '%s/confirm?token=%s' % (self.absolute_url(), token)
 
-        email_data = email_template.render_email(portal=self.getSite(),
-                                                 confirmation_url=url)
-        email_tool = self.getSite().getEmailTool()
-        email_tool.sendEmail(email_data['body_text'], [email],
-                             email_tool.get_addr_from(),
-                             email_data['subject'])
+            email_data = email_template.render_email(user=user,
+                                                     portal=self.getSite(),
+                                                     confirmation_url=url)
+            email_tool = self.getSite().getEmailTool()
+            email_tool.sendEmail(email_data['body_text'], [email],
+                                 email_tool.get_addr_from(),
+                                 email_data['subject'])
 
         if REQUEST is not None:
             options = {'email': email}
@@ -185,7 +185,7 @@ class RecoverPassword(SimpleItem):
     done_html = NaayaPageTemplateFile('zpt/recover_password_done', globals(),
                                       'naaya.core.auth.recover_password_done')
 
-InitializeClass(SimpleItem)
+InitializeClass(RecoverPassword)
 
 #@component.adapter(INySite, IHeartbeat)
 def cleanup_expired_tokens(site, hb):

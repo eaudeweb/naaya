@@ -15,7 +15,6 @@ class RecoverPasswordTest(NaayaFunctionalTestCase):
                 yield entry_data
 
     def test_password_email(self):
-        MAIL_OK_MSG = "e-mail message has been sent"
         self.browser.go('http://localhost/portal/login_html')
         assert ( 'href="http://localhost/portal/acl_users/recover_password"'
                  in self.browser.get_html() )
