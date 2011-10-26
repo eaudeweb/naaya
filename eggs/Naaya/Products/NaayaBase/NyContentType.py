@@ -2,6 +2,7 @@ from copy import deepcopy
 import logging
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permission import Permission
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -163,6 +164,20 @@ class NyContentType(object):
         if 'Owner' in roles:
             roles.remove('Owner')
             self.manage_permission(PERMISSION_EDIT_OBJECTS, roles, acquire=1)
+
+    security.declarePrivate('dont_inherit_view_permission')
+    def dont_inherit_view_permission(self):
+        permission = Permission(view, (), self)
+        roles = permission.getRoles()
+        roles = tuple(set(roles) | set(['Manager', 'Administrator', 'Owner']))
+        permission.setRoles(roles)
+
+    security.declarePrivate('inherit_view_permission')
+    def inherit_view_permission(self):
+        permission = Permission(view, (), self)
+        roles = permission.getRoles()
+        roles = list(roles)
+        permission.setRoles(roles)
 
     security.declarePrivate('process_submitted_form')
     def process_submitted_form(self, REQUEST_form, _lang=None,

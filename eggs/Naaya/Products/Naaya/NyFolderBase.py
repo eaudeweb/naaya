@@ -87,10 +87,12 @@ class NyFolderBase(Folder, NyPermissions):
             ob = self._getOb(id, None)
             if not ob:
                 continue
-            if hasattr(ob, 'approveThis'):
+            if hasattr(ob.aq_base, 'approveThis'):
                 ob.approveThis()
-            if hasattr(ob, 'takeEditRights'):
+            if hasattr(ob.aq_base, 'takeEditRights'):
                 ob.takeEditRights()
+            if hasattr(ob.aq_base, 'inherit_view_permission'):
+                ob.inherit_view_permission()
             ob.releasedate = self.utGetTodayDate()
             self.recatalogNyObject(ob)
 
@@ -114,10 +116,12 @@ class NyFolderBase(Folder, NyPermissions):
             ob = self._getOb(id, None)
             if not ob:
                 continue
-            if hasattr(ob, 'approveThis'):
+            if hasattr(ob.aq_base, 'approveThis'):
                 ob.approveThis(0, None)
-            if hasattr(ob, 'giveEditRights'):
+            if hasattr(ob.aq_base, 'giveEditRights'):
                 ob.giveEditRights()
+            if hasattr(ob.aq_base, 'dont_inherit_view_permission'):
+                ob.dont_inherit_view_permission()
             self.recatalogNyObject(ob)
         for id in self.utConvertToList(delids):
             try: self._delObject(id)
