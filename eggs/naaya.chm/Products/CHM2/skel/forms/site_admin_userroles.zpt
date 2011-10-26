@@ -16,7 +16,6 @@
 				user_firstname python:user_tool.getUserFirstName(user_obj); user_lastname python:user_tool.getUserLastName(user_obj);
 				user_email python:user_tool.getUserEmail(user_obj); user_account python:user_tool.getUserAccount(user_obj);
 				user_roles python:user_tool.getUsersRoles();
-				users_roles python:user_tool.getUsersRoles();
 				user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
 				session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
 
@@ -46,7 +45,7 @@
 					This is the list of roles this user has either on the entire portal or on specific locations. If you want to revoke one or more roles, just check them and click <em i18n:name="revoke" i18n:translate="">Revoke</em>.
 				</p>
 				<form method="post" tal:attributes="action string:${site_url}/admin_revokeuserroles">
-					<ul tal:define="user_roles python: users_roles.get(name)">
+					<ul tal:define="user_roles python: user_roles.get(name)">
 						<tal:block repeat="role user_roles">
 							<li tal:condition="python: role != ([], '')" >
 								<input type="checkbox" name="roles" tal:attributes="value python:role[1] != '' and role[1] or '/'" />
