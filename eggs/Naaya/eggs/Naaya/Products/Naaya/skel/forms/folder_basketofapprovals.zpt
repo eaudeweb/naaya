@@ -16,38 +16,10 @@
 
 <p i18n:translate="">
 	Don't forget to click the <strong i18n:name="save-button"
-	i18n:translate="">Save changes</strong> button  to confirm your changes.
+	i18n:translate="">Save changes</strong> button to confirm your changes.
 </p>
 
 <h2 i18n:translate="">Pending items</h2>
-
-<script type="text/javascript">
-<!--
-function checkApp(frm, control)
-{
-	var theIndex = -1;
-	for(i=0; i<frm.elements.length; i++)
-		if (frm.elements[i] == control)
-		{
-			theIndex = i;
-			break;
-		}
-	if (theIndex > -1)
-	{
-		if (control.name == 'appids')
-		{
-			if (control.checked == true)
-				frm.elements[i+1].checked = false;
-		}
-		else
-		{
-			if (control.checked == true)
-				frm.elements[i-1].checked = false;
-		}
-	}
-}
--->
-</script>
 
 <tal:block tal:define="pendings here/getPendingContent">
 <form method="post" name="pndForm" id="pndForm" tal:attributes="action string:${here/absolute_url}/processPendingContent" tal:condition="python:len(pendings)>0">
@@ -133,6 +105,19 @@ function checkApp(frm, control)
 	<p><strong i18n:translate="">No published items available.</strong></p>
 </tal:block>
 </tal:block>
+
+<script type="text/javascript">
+$(document).ready(function () {
+	$('input[name="appids"]').click(function () {
+		var value = $(this).val();
+		$('input[name="delids"][value="' + value + '"]').attr('checked', false);
+	});
+	$('input[name="delids"]').click(function () {
+		var value = $(this).val();
+		$('input[name="appids"][value="' + value + '"]').attr('checked', false);
+	});
+});
+</script>
 
 </metal:block>
 </metal:block>
