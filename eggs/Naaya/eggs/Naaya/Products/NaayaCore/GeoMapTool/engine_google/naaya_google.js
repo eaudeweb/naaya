@@ -58,7 +58,7 @@
         return {'lat': latlng.lat(), 'lon': latlng.lng()};
     }
 
-    function refresh_points() {
+    function refresh_points(event, callback) {
         var bounds = get_bounds();
         load_map_points(bounds, function(places) {
             the_map.clearOverlays();
@@ -80,6 +80,8 @@
                 the_map.addOverlay(marker);
             });
             current_places = places;
+            if (typeof callback !== undefined)
+                callback(places);
         });
     }
 

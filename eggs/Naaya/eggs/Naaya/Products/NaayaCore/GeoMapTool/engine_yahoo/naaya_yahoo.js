@@ -49,7 +49,7 @@
         return {'lat': geopoint.Lat, 'lon': geopoint.Lon};
     }
 
-    function refresh_points() {
+    function refresh_points(event, callback) {
         var bounds = get_bounds();
         load_map_points(bounds, function(places) {
             the_map.removeMarkersAll();
@@ -70,6 +70,8 @@
                 the_map.addOverlay(marker);
             });
             current_places = places;
+            if(typeof callback !== undefined)
+                callback(places);
         });
     }
 
