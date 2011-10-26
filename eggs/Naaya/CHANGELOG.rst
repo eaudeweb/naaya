@@ -5,6 +5,7 @@
 * recover password email for more accounts with same email [andredor]
 * Hide contributor and releasedate for anonymous users [nituacor]
 * Create map symbols based on skel.xml [moregale]
+* checkboxes for legend filters, callback for refresh_points in map [simiamih]
 
 2.12.12 (2011-10-24)
 --------------------

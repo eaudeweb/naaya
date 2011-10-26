@@ -137,17 +137,17 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 						<tal:block repeat="item parentsList">
 							<tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
 							<li>
-								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox hidden"
+								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox"
 									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
 								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title; class string:pin" />
-								<span tal:attributes="class string:pin_text" i18n:translate="" tal:content="item/title" />
+								<label tal:attributes="for item/id; class string:pin_text" i18n:translate="" tal:content="item/title" />
 								<ul tal:condition="children" class="category_child">
 									<li tal:repeat="child children">
 										<input type="checkbox" name="geo_types:list"
-											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" class="hidden" />
+											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
 										<img
 											tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
-										<span tal:attributes="class string:pin_text" i18n:translate="" tal:content="child/title" />
+										<label tal:attributes="for child/id; class string:pin_text" i18n:translate="" tal:content="child/title" />
 									</li>
 								</ul>
 							</li>
@@ -156,7 +156,9 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 					</ul>
 					<div>
 						<input type="hidden" id="path" name="path" tal:attributes="value path" />
-                                        <p class="map_right_control"><a href="javascript:toggleSelect();" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall" style="display: none;">Hide All</a></p>
+                                        <p class="map_right_control">
+						<img src="../++resource++geomaptool.icons/progress.gif" class="hidden" id="toggle-progress" />
+						<a href="javascript:toggleSelect();" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall" style="display: none;">Hide All</a></p>
 						<noscript>
 							<input type="submit" value="List locations" class="map-button" name="list_locations:method" i18n:attributes="value" />
 						</noscript>

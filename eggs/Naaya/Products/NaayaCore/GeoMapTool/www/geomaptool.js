@@ -2,16 +2,33 @@ var isSelected = true;
 function toggleSelect() {
   var frm = document.frmFilterMap;
   if(frm != null) {
-	  var i;
-	  for(i=0; i<frm.elements.length; i++)
-		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list')
-		  frm.elements[i].checked = !isSelected;
-	  isSelected = !isSelected;
-  var btn = document.getElementById('checkall');
-  if (btn.innerHTML == naaya_map_i18n["Show All"]) {btn.innerHTML = naaya_map_i18n["Hide All"]}
-  else {btn.innerHTML = naaya_map_i18n["Show All"]}
+    var i;
+    for(i=0; i<frm.elements.length; i++)
+	  if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list')
+	    frm.elements[i].checked = !isSelected;
+    isSelected = !isSelected;
+    jQuery("#toggle-progress").show();
   }
-  startMapRefresh();
+
+  // change button and hide loading animation after map.refresh_points
+  callback = function(){
+      if(frm != null){
+	var btn = document.getElementById('checkall');
+	if (btn.innerHTML == naaya_map_i18n["Show All"]){
+	  btn.innerHTML = naaya_map_i18n["Hide All"];
+	  jQuery(btn).attr("title", naaya_map_i18n["Hide All"]);
+	}
+	else{
+	  btn.innerHTML = naaya_map_i18n["Show All"];
+	  jQuery(btn).attr("title", naaya_map_i18n["Show All"]);
+	}
+
+	jQuery("#toggle-progress").hide();
+      }
+  };
+
+  startMapRefresh(callback);
+
 }
 
 function encode_form_value(value) {
@@ -258,9 +275,10 @@ function handleKeyPress(event) {
 	}
 }
 
-function startMapRefresh() {
+function startMapRefresh(callback) {
 	setAjaxWait();
-	map_engine.refresh_points();
+	// `event` param is undefined
+	map_engine.refresh_points(undefined, callback);
 }
 
 function toggleChildren(elem) {
@@ -301,10 +319,6 @@ function showPageElements() {
 	document.getElementById('map_links_js').style.display = "block";
 	//Also place handlers on inputs:
 	jQuery('#geo_query, #address').keypress(handleKeyPress);
-	jQuery('.pin_text').click(function(ev){
-	  var checkbox = jQuery("input[type='checkbox']", this.parentNode);
-	  checkbox.click();
-	});
 }
 
 var new_naaya_map_balloon = function(options) {

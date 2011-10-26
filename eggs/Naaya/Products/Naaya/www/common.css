@@ -1377,6 +1377,10 @@ font-weight:bold;
 margin:0 0 1em;
 padding:0.3em 0;
 }
+.portalmap_portlet div input[type="text"]:focus {
+    border: 1px solid #000;
+    padding: 1px;
+}
 .portalmap_portlet .portalmap_portlet_title small a{
 color: #000;
 text-decoration: underline;
@@ -1419,58 +1423,27 @@ margin-top: 0;
 }
 
 
-
-.portalmap_portlet .map_filters ul li.unchecked_categ{
-	color: #999999;
-	padding-left: 13px;
-	background: transparent 0 5px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
-}
-.portalmap_portlet .map_filters ul li{
-	color: black;
-	padding-left: 0;
-	background-image: none;
-}
-.portalmap_portlet .map_filters ul li.unchecked_categ ul li.unchecked_categ{
-	color: #999999;
-	padding-left: 13px;
-	margin-left: -13px;
-	background: transparent 0 3px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
-}
-.portalmap_portlet .map_filters ul li.unchecked_categ ul li{
-	color: black;
-	padding-left: 0;
-	margin-left: -13px;
-	background-image: none;
-}
+/* Filtering categories in legend */
+.portalmap_portlet .map_filters ul li.unchecked_categ,
+.portalmap_portlet .map_filters ul li.unchecked_categ ul li.unchecked_categ,
 .portalmap_portlet .map_filters ul li ul li.unchecked_categ{
 	color: #999999;
-	padding-left: 13px;
-	background: transparent 0 3px no-repeat scroll url("/++resource++geomaptool.icons/symbol_unchecked.jpg");
 }
+.portalmap_portlet .map_filters ul li,
+.portalmap_portlet .map_filters ul li.unchecked_categ ul li,
 .portalmap_portlet .map_filters ul li ul li{
 	color: black;
-	padding-left: 0;
-	background-image: none;
 }
 
-
-.portalmap_portlet .map_filters ul li.unchecked_categ img{
-	display: none;
-}
-.portalmap_portlet .map_filters ul li img{
-	display: inline;
-}
-.portalmap_portlet .map_filters ul li.unchecked_categ ul li img{
-	display: inline;
-}
-.portalmap_portlet .map_filters ul li ul li img{
-	display: inline;
-}
-.portalmap_portlet .map_filters ul li ul li.unchecked_categ img{
-	display: none;
-}
+.portalmap_portlet .map_filters ul li.unchecked_categ img,
+.portalmap_portlet .map_filters ul li ul li.unchecked_categ img,
 .portalmap_portlet .map_filters ul li.unchecked_categ ul li.unchecked_categ img{
 	display: none;
+}
+.portalmap_portlet .map_filters ul li img,
+.portalmap_portlet .map_filters ul li.unchecked_categ ul li img,
+.portalmap_portlet .map_filters ul li ul li img{
+	display: inline;
 }
 
 
@@ -1482,15 +1455,15 @@ margin-top: 0;
 	cursor: pointer;
 }
 .maptypes {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .maptypes li {
-	margin: 2px;
-	padding: 2px;
-	display: inline;
+    margin: 2px;
+    padding: 2px;
+    display: inline;
 }
 
 #map-container{

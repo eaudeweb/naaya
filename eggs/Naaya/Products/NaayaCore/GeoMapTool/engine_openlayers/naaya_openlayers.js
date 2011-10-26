@@ -302,11 +302,13 @@
         };
 
         var current_places = [];
-        map.refresh_points = function() {
+        map.refresh_points = function(event, callback) {
             var bounds = map.get_bounds();
             load_map_points(bounds, function(places) {
                 map.display_points(places);
                 current_places = places;
+                if(typeof callback !== undefined)
+                    callback(places);
             });
         };
 

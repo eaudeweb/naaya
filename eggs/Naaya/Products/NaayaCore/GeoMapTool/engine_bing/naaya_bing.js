@@ -56,7 +56,7 @@
         the_map.AddShapeLayer(the_points_layer = new VEShapeLayer());
     }
 
-    function refresh_points() {
+    function refresh_points(event, callback) {
         var bounds = get_bounds();
         if(bounds === null)
             return;
@@ -73,6 +73,8 @@
                 the_points_layer.AddShape(marker);
             });
             current_places = places;
+            if(typeof callback !== undefined)
+                callback(places);
         });
     }
 
