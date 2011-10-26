@@ -1,5 +1,6 @@
 2.12.13 (unreleased)
 --------------------
+* no google analytics tracking for managers [andredor]
 * recover password email for more accounts with same email [andredor]
 * Hide contributor and releasedate for anonymous users [nituacor]
 * Create map symbols based on skel.xml [moregale]

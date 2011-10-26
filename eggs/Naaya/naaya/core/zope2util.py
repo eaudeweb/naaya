@@ -223,6 +223,11 @@ class RestrictedToolkit(SimpleItem):
         if ga_id == '':
             # No website ID provided; e.g. not configured in portal_statistics
             return ''
+
+        if self.REQUEST.AUTHENTICATED_USER.has_role('Manager'):
+            # no google analytics for managers
+            return ''
+
         site = self.getSite()
         forms_tool = site.getFormsTool()
         ga_form = forms_tool.getForm("site_googleanalytics")
