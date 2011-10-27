@@ -80,7 +80,7 @@
                 the_map.addOverlay(marker);
             });
             current_places = places;
-            if (typeof callback !== undefined)
+            if (typeof callback !== "undefined")
                 callback(places);
         });
     }

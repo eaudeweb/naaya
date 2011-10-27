@@ -73,7 +73,7 @@
                 the_points_layer.AddShape(marker);
             });
             current_places = places;
-            if(typeof callback !== undefined)
+            if(typeof callback !== "undefined")
                 callback(places);
         });
     }
