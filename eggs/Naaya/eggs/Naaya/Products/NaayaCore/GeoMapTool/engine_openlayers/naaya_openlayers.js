@@ -307,7 +307,7 @@
             load_map_points(bounds, function(places) {
                 map.display_points(places);
                 current_places = places;
-                if(typeof callback !== undefined)
+                if(typeof callback !== "undefined")
                     callback(places);
             });
         };
