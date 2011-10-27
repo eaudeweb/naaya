@@ -1,6 +1,7 @@
 2.4.12 (unreleased)
 -------------------
 * css for layout with checkboxes in legend filters, portal_map [simiamih]
+* updated chm terms with it translations [simiamih]
 
 2.4.11 (2011-10-24)
 -------------------
