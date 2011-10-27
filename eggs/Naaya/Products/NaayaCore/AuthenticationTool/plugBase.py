@@ -26,10 +26,8 @@ class PlugBase(SimpleItem):
 
     def getLocalRoles(self, p_local_roles):
         #returns a list of local roles
-        l_temp = []
-        for l_role in list(p_local_roles):
-            if l_role not in ['Owner', 'Authenticated']: l_temp.append(l_role)
-        return l_temp
+        return [role for role in p_local_roles
+                        if role not in ['Owner', 'Authenticated']]
 
     def getUsersRoles(self, p_user_folder, p_meta_types=None):
         #returns a structure with user roles by objects
