@@ -15,9 +15,11 @@
 
 <metal:block fill-slot="body">
 		<h1>
-				<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title">&laquo;</a>
+				<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};"
+				   rel="nofollow" title="Previous month" i18n:attributes="title">&laquo;</a>
 				<span tal:omit-tag="" i18n:translate="">Items for</span> <span tal:replace="python:here.getMonthName(cmonth)+' '+str(cyear)" />
-				<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title">&raquo;</a>
+				<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};"
+				   rel="nofollow" title="Next month" i18n:attributes="title">&raquo;</a>
 		</h1>
 
 		<tal:block define="obj_list python:here.getEvents(cyear, cmonth)">
