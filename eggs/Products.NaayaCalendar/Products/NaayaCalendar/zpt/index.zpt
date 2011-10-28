@@ -19,14 +19,14 @@
 		<table id="calendar" cellspacing="0" cellpadding="0" tal:attributes="summary python:here.title">
 			<caption>
 				<a class="nav previous-month" tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};"
-						 title="previous month" i18n:attributes="title">&laquo;</a>
+						 rel="nofollow" title="previous month" i18n:attributes="title">&laquo;</a>
 					<a class="current-month" title="current month"
 						 tal:attributes="href string:${here/absolute_url}/index_html?cmonth=${cmonth}&cyear=${cyear};" i18n:attributes="title">
 						<span i18n:translate="" tal:replace="python:here.getMonthName(cmonth)"/>
 						<span tal:replace="cyear"/>
 					</a>
 					<a class="nav next-month" tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};"
-						 title="Next month" i18n:attributes="title">&raquo;</a>
+						 rel="nofollow" title="Next month" i18n:attributes="title">&raquo;</a>
 			</caption>
 			<tbody>
 				<tr>
