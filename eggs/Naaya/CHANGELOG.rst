@@ -1,4 +1,7 @@
-2.12.13 (unreleased)
+2.12.14 (unreleased)
+--------------------
+
+2.12.13 (2011-10-28)
 --------------------
 * removed site logo versions for all portal languages [dumitval]
 * unapproved items restricted for view [andredor]
