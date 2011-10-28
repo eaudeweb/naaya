@@ -15,12 +15,12 @@ class UpdateSiteLogos(UpdateScript):
         changed = False
 
         if 'python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())' in tal:
-            tal = tal.replace('python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())', 'here/leftLogoUrl', 1)
+            tal = tal.replace('python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())', 'here/leftLogoUrl')
             self.log.debug('leftLogoUrl updated')
             changed = True
         if 'string:${here/getLayoutToolPath}/logo.gif' in tal:
             tal = tal.replace('string:${here/getLayoutToolPath}/logo.gif',
-                    'here/leftLogoUrl', 1)
+                    'here/leftLogoUrl')
             self.log.debug('leftLogoUrl updated')
             changed = True
         if 'here/leftLogoUrl' in tal:
@@ -29,12 +29,12 @@ class UpdateSiteLogos(UpdateScript):
             self.log.error('here/leftLogoUrl not in standard_template')
 
         if 'python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())' in tal:
-            tal = tal.replace('python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())', 'here/rightLogoUrl', 1)
+            tal = tal.replace('python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())', 'here/rightLogoUrl')
             self.log.debug('rightLogoUrl updated')
             changed = True
         if 'string:${here/getLayoutToolPath}/logobis' in tal:
             tal = tal.replace('string:${here/getLayoutToolPath}/logobis',
-                    'here/rightLogoUrl', 1)
+                    'here/rightLogoUrl')
             self.log.debug('rightLogoUrl updated')
             changed = True
         if 'here/rightLogoUrl' in tal:
@@ -43,7 +43,7 @@ class UpdateSiteLogos(UpdateScript):
             self.log.error('here/rightLogoUrl not in standard_template')
 
         if 'id="logobis"'in tal:
-            tal = tal.replace('id="logobis"', 'id="right_logo"', 1)
+            tal = tal.replace('id="logobis"', 'id="right_logo"')
             self.log.debug('id="right_logo" updated')
             changed = True
 
@@ -70,7 +70,7 @@ class UpdateSiteLogos(UpdateScript):
                 else:
                     self.log.error('No gifs in the portal_layout')
         else:
-            self.log.debug('left_logo.gif present in site' % logo_id)
+            self.log.debug('left_logo.gif present in site')
 
 
         if not getattr(portal_layout.aq_base, 'right_logo.gif', None):
@@ -92,6 +92,6 @@ class UpdateSiteLogos(UpdateScript):
                 else:
                     self.log.error('No gifs in the portal_layout')
         else:
-            self.log.debug('right_logo.gif present in site' % logo_id)
+            self.log.debug('right_logo.gif present in site')
 
         return True
