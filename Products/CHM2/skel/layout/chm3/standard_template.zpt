@@ -144,7 +144,7 @@
 
       <div id="wrap">
         <div id="header">
-          <div id="logo" tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+          <div id="logo" tal:define="logo_url here/leftLogoUrl">
             <a tal:attributes="href python:here.getSite().absolute_url()" title="Biodiversity-CHM.NL Home">
               <img tal:attributes="src string:${skin_files_path}/logo.png; alt here/site_title; title here/site_title" i18n:attributes="alt; title" tal:condition="logo_url" />
             </a>
