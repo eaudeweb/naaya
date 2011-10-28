@@ -10,7 +10,7 @@ from Products.NaayaCore.LayoutTool.DiskFile import (DiskFile, resolve,
 
 from Products import Naaya as Naaya_module
 naaya_module_path = path.dirname(Naaya_module.__file__)
-logo_data = open(naaya_module_path + '/skel/layout/logo.gif').read()
+logo_data = open(naaya_module_path + '/skel/layout/left_logo.gif').read()
 
 class DiskFileTest(NaayaTestCase):
     def test_resolve(self):
@@ -24,7 +24,7 @@ class DiskFileTest(NaayaTestCase):
                          naaya_module_path + '/skel/layout/la/la/la')
 
     def test_render(self):
-        disk_file = DiskFile('logo.gif', 'Products.Naaya:skel/layout/logo.gif')
+        disk_file = DiskFile('left_logo.gif', 'Products.Naaya:skel/layout/left_logo.gif')
 
         self.assertEqual(disk_file._get_mime_type(), 'image/gif')
         self.assertEqual(disk_file._get_data(), logo_data)
@@ -34,7 +34,7 @@ class DiskFileBrowserTest(NaayaFunctionalTestCase):
     def afterSetUp(self):
         skin = self.portal.portal_layout.getCurrentSkin()
         manage_addDiskFile(skin, 'test-logo.gif',
-                           'Products.Naaya:skel/layout/logo.gif')
+                           'Products.Naaya:skel/layout/left_logo.gif')
         transaction.commit()
 
     def test_get(self):

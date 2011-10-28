@@ -60,11 +60,11 @@
                             </div>
                             <div>
                                 <a href="/" style="float: left;">
-                                    <tal:block define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+                                    <tal:block define="logo_url here/leftLogoUrl">
                                         <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                                     </tal:block>
                                 </a>
-                                <tal:block define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+                                <tal:block define="logo_url here/rightLogoUrl">
                                     <img style="float: right; clear: right;" tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                                 </tal:block>
                                 <div id="toptitle">

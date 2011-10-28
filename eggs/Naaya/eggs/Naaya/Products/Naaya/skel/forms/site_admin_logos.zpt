@@ -39,46 +39,40 @@
 <div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
-	This form lists logos for each language defined for this site. Logos defined for one language will appear only when browsing the portal in that language.
-	By checking "Set as default" for a language, the logos defined for that language will be used for languages which don't have logos defined.
+	This form allows you to personalize the left and right logos used for this site.
 </p>
 
 
-<form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data" tal:repeat="lang here/gl_get_languages_map">
-	<div class="logo-langs">
-		<span>
-			<label tal:attributes="for string:default_lang_${lang/id}" i18n:translate=""> Set as default </label>
-			<input type="checkbox" tal:attributes="id string:default_lang_${lang/id}; value lang/id; checked python:here.default_logo == lang['id']" name="default_lang"/>
-		</span>
-			<h2 tal:content="lang/title"/>
-	</div>
+<form method="post" tal:attributes="action string:${site_url}/admin_logos"
+	enctype="multipart/form-data" name="frmAdd">
 	<div class="logos">
-		<div class="left-logo" tal:define="logo_url python:here.leftLogoUrl(lang=lang['id'])">
-			<label for="logo" i18n:translate="">Left logo:</label>
-			<input type="file" id="logo" name="logo"/>
-			<tal:block condition="python:here.hasLeftLogo(lang['id'])">
+		<div class="left-logo" tal:define="logo_url here/leftLogoUrl">
+			<label for="left_logo" i18n:translate="">Left logo:</label>
+			<input type="file" id="left_logo" name="left_logo"/>
+			<tal:block condition="logo_url">
 				<div class="delete">
-					<label tal:attributes="for string:del_leftlogo_${lang/id}" i18n:translate="">Delete</label>
-					<input type="checkbox" tal:attributes="id string:del_leftlogo_${lang/id}" name="del_leftlogo"/>
+					<label for="del_leftlogo" i18n:translate="">Delete</label>
+					<input type="checkbox" id="del_leftlogo" name="del_leftlogo"/>
 				</div>
-				<img width="128" height="128" tal:attributes="src logo_url" tal:condition="logo_url"/>
+				<img width="128" height="128" tal:attributes="src logo_url"/>
 			</tal:block>
-			<strong tal:condition="not:python:here.hasLeftLogo(lang['id'])" i18n:translate="">No left logo for this language</strong>
+			<strong tal:condition="not: logo_url" i18n:translate="">
+				No left logo selected</strong>
 		</div>
-		<div class="right-logo" tal:define="logo_url python:here.rightLogoUrl(lang=lang['id'])">
-			<label for="logobis" i18n:translate="">Right logo:</label>
-			<input type="file" id="logobis" name="logobis"/>
-			<tal:block condition="python:here.hasRightLogo(lang['id'])">
+		<div class="right-logo" tal:define="logo_url here/rightLogoUrl">
+			<label for="right_logo" i18n:translate="">Right logo:</label>
+			<input type="file" id="right_logo" name="right_logo"/>
+			<tal:block condition="logo_url">
 				<div class="delete">
-					<label tal:attributes="for string:del_rightlogo_${lang/id}" i18n:translate="">Delete</label>
-					<input type="checkbox" tal:attributes="id string:del_rightlogo_${lang/id}" name="del_rightlogo"/>
+					<label for="del_rightlogo" i18n:translate="">Delete</label>
+					<input type="checkbox" id="del_rightlogo" name="del_rightlogo"/>
 				</div>
-				<img width="128" height="128" tal:attributes="src logo_url" tal:condition="logo_url"/>
+				<img width="128" height="128" tal:attributes="src logo_url"/>
 			</tal:block>
-			<strong tal:condition="not:logo_url" i18n:translate="">No right logo for this language</strong>
+			<strong tal:condition="not: logo_url" i18n:translate="">
+				No right logo selected</strong>
 		</div>
 	</div>
-	<input type="hidden" name="lang" tal:attributes="value lang/id"/>
 	<br style="clear: both;"/>
 	<br />
 	<input type="submit" value="Save changes" i18n:attributes="value" />

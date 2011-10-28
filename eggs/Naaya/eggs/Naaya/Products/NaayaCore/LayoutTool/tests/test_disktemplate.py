@@ -7,7 +7,7 @@ from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 
 from Products import Naaya as Naaya_module
 naaya_module_path = path.dirname(Naaya_module.__file__)
-logo_data = open(naaya_module_path + '/skel/layout/logo.gif').read()
+logo_data = open(naaya_module_path + '/skel/layout/left_logo.gif').read()
 
 use_macro_zpt = """\
 <metal:block use-macro="here/portal_layout/skin/test_template/macros/portlet">
