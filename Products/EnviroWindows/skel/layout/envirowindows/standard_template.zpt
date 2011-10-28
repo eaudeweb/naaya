@@ -81,10 +81,12 @@
                         </div>
                     </div>
                     <div id="header">
-                        <tal:block tal:define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
-                            <img id="logobis" tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
+                        <tal:block define="logo_url here/rightLogoUrl">
+                            <img id="right_logo"
+								tal:attributes="src logo_url; alt here/site_title"
+								i18n:attributes="alt" tal:condition="logo_url"/>
                         </tal:block>
-                        <tal:block tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+                        <tal:block define="logo_url here/leftLogoUrl">
                             <a tal:attributes="href site_url; title string:Home" tal:condition="logo_url">
                                 <img id="logo" tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt"/>
                             </a>
