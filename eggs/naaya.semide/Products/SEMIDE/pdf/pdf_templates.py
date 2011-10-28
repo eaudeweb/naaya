@@ -30,7 +30,7 @@ class pdf_templates:
     #generate PDF content for site objects
     def _addPageHeader(self, canvas, lang):
         #add the header of the PDF pages
-        logo_image = self.getLayoutTool()._getOb('logo.gif')
+        logo_image = self.getLayoutTool()._getOb('left_logo.gif')
         img = addPILImage(logo_image)
         l_measurements = [(3*PAGE_WIDTH)/9, (6*PAGE_WIDTH)/9]
         l_align = 'LEFT'

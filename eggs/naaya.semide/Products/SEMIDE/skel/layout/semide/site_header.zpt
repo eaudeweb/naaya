@@ -86,7 +86,7 @@
 					<img tal:attributes="src thumb3" alt="" />
 				</div>
 				<div id="site_logo">
-					<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" />
+					<img tal:attributes="src here/leftLogoUrl" alt="" />
 				</div>
 				<div id="site_title">
 					<span tal:content="here/site_title" />
