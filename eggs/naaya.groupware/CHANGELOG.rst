@@ -3,6 +3,7 @@
 
 1.1.3 (2011-10-28)
 ------------------
+* Owner can have just edit content permission (admin other properties) [andredor]
 * standard templates updated to site logo changes [dumitval]
 
 1.1.2 (2011-10-14)
