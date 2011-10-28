@@ -4,8 +4,7 @@
 		<a tal:attributes="title python:translate(item['title']);
 						   href string:${here/absolute_url}/gl_changeLanguage?old_lang=${item/id};
 						   class python:test(item['selected'], 'current', None)"
-			   tal:content="item/id">en</a>
+			   tal:content="item/id" i18n:translate=""></a>
 	</tal:block>
-	<tal:block replace="structure python: here.getFormsTool().getForm('site_googletranslate')()"></tal:block>
 </div>
 </tal:block>
