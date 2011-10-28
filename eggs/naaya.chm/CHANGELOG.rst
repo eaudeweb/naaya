@@ -1,4 +1,7 @@
-2.4.12 (unreleased)
+2.4.13 (unreleased)
+-------------------
+
+2.4.12 (2011-10-28)
 -------------------
 * standard templates updated to site logo changes [dumitval]
 * css for layout with checkboxes in legend filters, portal_map [simiamih]
