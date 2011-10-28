@@ -2,7 +2,6 @@
 <skel>
 	<forms>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
-		<form id="languages_box" title="CHM languages box"/>
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
 		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
