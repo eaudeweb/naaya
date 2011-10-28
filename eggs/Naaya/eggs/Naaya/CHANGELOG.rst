@@ -3,6 +3,7 @@
 
 2.12.13 (2011-10-28)
 --------------------
+* Owner can have just edit content permission (admin other properties) [andredor]
 * removed site logo versions for all portal languages [dumitval]
 * unapproved items restricted for view [andredor]
 * no google analytics tracking for managers [andredor]

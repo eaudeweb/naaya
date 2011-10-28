@@ -22,9 +22,12 @@
 	<dt><label for="rename_id" i18n:translate="">Rename objects' ids </label></dt>
 	<dd i18n:translate="">All the items in the portal have pregenerated ids, as you can see them in the URLs. If you want to insert your own ids, you should check the "Rename ids on objects" checkbox.</dd>
 	<dd><input type="checkbox" name="rename_id" id="rename_id" tal:attributes="checked here/rename_id" /></dd>
-	<dt><label for="submit_unapproved" i18n:translate="">Submit unapproved</label></dt> 
+	<dt><label for="submit_unapproved" i18n:translate="">Submit unapproved</label></dt>
 	<dd i18n:translate="">By default, the users having higher roles such as <em i18n:name="administrators" i18n:translate="">administrators</em> or <em i18n:name="managers" i18n:translate="">managers</em> have their submitted content immediately published on the portal. However, if you check the property below, all content submissions will pass an administrator's review (basket of approvals) before being published.</dd> 
-	<dd><input type="checkbox" name="submit_unapproved" id="submit_unapproved" tal:attributes="checked here/get_submit_unapproved" /></dd> 
+	<dd><input type="checkbox" name="submit_unapproved" id="submit_unapproved" tal:attributes="checked here/get_submit_unapproved" /></dd>
+	<dt><label for="edit_own_content" i18n:translate="">Allow users to edit own content</label></dt>
+	<dd i18n:translate="">By default, the users adding content to the site are not allowed to edit the content after they add it. However, if you check the property below, all users can edit the content they added to the portal.</dd>
+	<dd><input type="checkbox" name="edit_own_content" id="edit_own_content" tal:attributes="checked here/can_edit_own_content" /></dd>
 	<dt><label for="portal_url" i18n:translate="">Portal URL</label></dt>
 	<dd i18n:translate="">The portal URL represents the address this portal can be found at. By setting this parameter the URL will not change, but site administrators can use this information.</dd>
 	<dd><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></dd>

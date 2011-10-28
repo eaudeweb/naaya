@@ -89,7 +89,7 @@ from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, cooldown, is_ajax
 from naaya.core.zope2util import path_in_site, ofs_path
-from naaya.core.zope2util import permission_add_role
+from naaya.core.zope2util import permission_add_role, permission_del_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
@@ -2105,6 +2105,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         roles = Permission(PERMISSION_SKIP_APPROVAL, (), self).getRoles()
         return bool('Administrator' not in roles)
 
+    def _set_edit_own_content(self, edit_own_content):
+        if edit_own_content:
+            permission_add_role(self, PERMISSION_EDIT_OBJECTS, 'Owner')
+        else:
+            permission_del_role(self, PERMISSION_EDIT_OBJECTS, 'Owner')
+
+    def can_edit_own_content(self):
+        """ do owners have the "edit content" permission? """
+        roles = Permission(PERMISSION_EDIT_OBJECTS, (), self).getRoles()
+        return bool('Owner' in roles)
+
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, REQUEST=None, **kwargs):
@@ -2130,6 +2141,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.show_releasedate       = kwargs.get('show_releasedate', 0) and 1 or 0
         self.rename_id              = kwargs.get('rename_id', 0) and 1 or 0
         self._set_submit_unapproved(kwargs.get('submit_unapproved', ''))
+        self._set_edit_own_content(kwargs.get('edit_own_content', ''))
         self.repository_url         = kwargs.get('repository_url', '')
         self.portal_url             = kwargs.get('portal_url', '')
         self.http_proxy             = kwargs.get('http_proxy', '')
