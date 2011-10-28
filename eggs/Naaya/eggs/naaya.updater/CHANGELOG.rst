@@ -1,5 +1,6 @@
 1.2.12 (unreleased)
 -------------------
+* script to adapt standard templates to site logo changes [dumitval]
 
 1.2.11 (2011-10-24)
 -------------------
