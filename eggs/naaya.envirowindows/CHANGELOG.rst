@@ -1,5 +1,6 @@
 1.1.2 (unreleased)
 ------------------
+* standard templates updated to site logo changes [dumitval]
 
 1.1.1 (2011-10-14)
 ------------------
