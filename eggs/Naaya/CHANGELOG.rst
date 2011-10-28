@@ -1,4 +1,7 @@
-2.12.14 (unreleased)
+2.12.15 (unreleased)
+--------------------
+
+2.12.14 (2011-10-28)
 --------------------
 * current unapproved items restricted for view [andredor]
 
