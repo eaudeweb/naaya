@@ -21,11 +21,11 @@
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
 	<td valign="top" i18n:translate="">Left-side logo</td>
-	<td valign="top"><input type="file" name="logo" /></td>
+	<td valign="top"><input type="file" name="left_logo" /></td>
 </tr>
 <tr>
 	<td></td>
-	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Portal logo" i18n:attributes="alt" /></td>
+	<td><img tal:attributes="src here/leftLogoUrl" alt="Portal logo" i18n:attributes="alt" /></td>
 </tr>
 <tr>
 	<td></td>
