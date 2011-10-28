@@ -396,6 +396,13 @@ def permission_add_role(context, permission, role):
     ty = type(crt_roles)
     p.setRoles(ty(set(crt_roles) | set([role])))
 
+def permission_del_role(context, permission, role):
+    """ Removes permission from role """
+    p = Permission(permission, (), context)
+    crt_roles = p.getRoles()
+    ty = type(crt_roles)
+    p.setRoles(ty(set(crt_roles) - set([role])))
+
 def physical_path(ob):
     # TODO deprecate and replace with ofs_path
     return '/'.join(ob.getPhysicalPath())

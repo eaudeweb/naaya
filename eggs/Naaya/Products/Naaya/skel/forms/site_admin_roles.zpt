@@ -54,7 +54,7 @@
 			</thead>
 			<tbody>
 				<tal:block repeat="role here/acl_users/list_all_roles">
-				<tr tal:condition="python:role not in ('Manager')">
+				<tr tal:condition="python:role not in ('Manager', 'Owner')">
 					<td tal:content="role" />
 					<td tal:define="baseurl string:${here/absolute_url}/admin_editrole_html;
 									href string:${baseurl}?role=${role}" class="td-center">

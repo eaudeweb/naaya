@@ -3,6 +3,7 @@
 
 2.4.12 (2011-10-28)
 -------------------
+* Owner can have just edit content permission (admin other properties) [andredor]
 * standard templates updated to site logo changes [dumitval]
 * css for layout with checkboxes in legend filters, portal_map [simiamih]
 * updated chm terms with it translations [simiamih]
