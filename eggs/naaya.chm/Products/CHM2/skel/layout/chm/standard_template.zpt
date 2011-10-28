@@ -57,10 +57,10 @@
 
                 <div id="banner_logo">
                     <div id="banner">
-                    <div id="logo" tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+                    <div id="logo" tal:define="logo_url here/leftLogoUrl">
                         <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                     </div>
-                        <div id="banner_image" tal:define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+                        <div id="banner_image" tal:define="logo_url here/rightLogoUrl">
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
                         <div id="site-title">
