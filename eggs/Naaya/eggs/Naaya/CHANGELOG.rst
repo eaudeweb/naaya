@@ -1,5 +1,6 @@
 2.12.15 (unreleased)
 --------------------
+* removed googletranslate (also from languages_box.zpt) [dumitval]
 
 2.12.14 (2011-10-28)
 --------------------
