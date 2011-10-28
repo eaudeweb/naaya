@@ -3,6 +3,13 @@
 <tal:block content="structure here/manage_tabs"/>
 <metal:block define-slot="head">
     <link rel="stylesheet" href="/misc_/naayaUpdater/updater.css" type="text/css" media="screen" charset="utf-8">
+	<script src="misc_/Naaya/jquery-1.4.2.min.js"></script>
+	<script>
+		$(function() {
+			var newText = $("pre").html().split("[ERROR]").join("<span"+">[ERROR]<"+"/span>");
+			$("pre").html(newText).find("span").css('color','red');
+		});
+	</script>
 </metal:block>
 <h2 metal:define-slot="title" tal:content="string:${here/title_or_id} " />
 <!--<h3 metal:define-slot="priority">Priority: <span tal:replace="here/get_priority_string"/></h3>-->

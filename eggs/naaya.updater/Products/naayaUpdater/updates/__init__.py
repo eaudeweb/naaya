@@ -118,7 +118,7 @@ class UpdateScript(Item, Acquisition.Implicit):
                 if success:
                     report_html += '<h4>SUCCESS</h4>'
                 else:
-                    report_html += '<h4>FAILED</h4>'
+                    report_html += '<h4 style="color:red">FAILED</h4>'
 
                 report_html += self.report_html
                 self.report_html = ''

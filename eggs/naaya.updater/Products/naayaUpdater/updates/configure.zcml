@@ -403,4 +403,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_remove_site_title_attr.RemoveSiteTitle"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="update_standard_template_site_logos.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_standard_template_site_logos.UpdateSiteLogos"
+      permission="zope2.ViewManagementScreens" />
 </configure>
