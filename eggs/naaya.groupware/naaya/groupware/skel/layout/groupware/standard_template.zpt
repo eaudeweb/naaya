@@ -89,10 +89,10 @@
                         </div>
                     </div>
                     <div id="header">
-                        <div id="logobis" tal:define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+                        <div id="right_logo" tal:define="logo_url here/rightLogoUrl">
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
-                        <div id="logo" tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+                        <div id="logo" tal:define="logo_url here/leftLogoUrl">
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
                         <div class="page_title" tal:content="here/root_site_title|string:" />
