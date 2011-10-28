@@ -42,7 +42,6 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
 import naaya.content.base
-from naaya.content.base.meta import get_schema_name
 from naaya.content.base.constants import *
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
@@ -94,7 +93,6 @@ from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-from Products.NaayaCore.interfaces import ICaptcha
 from naaya.i18n.portal_tool import manage_addNaayaI18n
 from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
@@ -485,25 +483,25 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
                 #load logos
                 try:
-                    content = self.futRead(join(skel_path, 'layout', 'logo.gif'), 'rb')
+                    content = self.futRead(join(skel_path, 'layout', 'left_logo.gif'), 'rb')
                 except IOError, err:
                     zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
                 else:
-                    image_ob = layouttool_ob._getOb('logo.gif', None)
+                    image_ob = layouttool_ob._getOb('left_logo.gif', None)
                     if image_ob is None:
-                        layouttool_ob.manage_addImage(id='logo.gif', file='', title='Site logo')
-                        image_ob = layouttool_ob._getOb('logo.gif')
+                        layouttool_ob.manage_addImage(id='left_logo.gif', file='', title='Site logo')
+                        image_ob = layouttool_ob._getOb('left_logo.gif')
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1
                 try:
-                    content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
+                    content = self.futRead(join(skel_path, 'layout', 'right_logo.gif'), 'rb')
                 except IOError, err:
                     zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
                 else:
-                    image_ob = layouttool_ob._getOb('logobis.gif', None)
+                    image_ob = layouttool_ob._getOb('right_logo.gif', None)
                     if image_ob is None:
-                        layouttool_ob.manage_addImage(id='logobis.gif', file='', title='Site secondary logo')
-                        image_ob = layouttool_ob._getOb('logobis.gif')
+                        layouttool_ob.manage_addImage(id='right_logo.gif', file='', title='Site secondary logo')
+                        image_ob = layouttool_ob._getOb('right_logo.gif')
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1
             #load syndication
@@ -2050,139 +2048,49 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_metadata_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declarePublic('hasLeftLogo')
-    def hasLeftLogo(self, lang=''):
-        """ Returns true if the left logo image from the portal_layout tool is not empty
-            and therefore telling if this image should be displayed in the standard header.
-            Since older versions of Naaya used 'logo' as the image ID, this is the second choice
-        """
+    security.declarePublic('leftLogoUrl')
+    def leftLogoUrl(self):
+        """Returns the left logo url"""
         layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logo_%s.gif' % lang, None)
-        if logo and logo.size:
-            return True
-        return False
-
-    security.declarePublic('leftLogo')
-    def leftLogo(self, lang='', REQUEST=None):
-        """Returns the left logo corresponding to the site language"""
-        layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logo_%s.gif' % lang, None)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect(logo.absolute_url())
-        return logo
-
-    security.declarePublic('leftLogo')
-    def leftLogoUrl(self, lang=''):
-        """Returns the left logo url corresponding to the site language"""
-        layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logo_%s.gif' % lang, None)
-        if logo and logo.size:
+        logo = layout_tool._getOb('left_logo.gif', None)
+        if logo:
             return logo.absolute_url()
 
-    security.declarePublic('hasRightLogo')
-    def hasRightLogo(self, lang=''):
-        """ Returns true if the right logo image from the portal_layout tool is not empty
-            and therefore telling if this image should be displayed in the standard header.
-            Since older versions of Naaya used 'logobis' as the image ID, this is the second choice
-        """
+    security.declarePublic('rightLogoUrl')
+    def rightLogoUrl(self):
+        """Returns the right logo url"""
         layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logobis_%s.gif' % lang, None)
-        if logo and logo.size:
-            return True
-        return False
-
-    security.declarePublic('rightLogo')
-    def rightLogo(self, lang='', REQUEST=None):
-        """Returns the right logo corresponding to the site language"""
-        layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logobis_%s.gif' % lang, None)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect(logo.absolute_url())
-        return logo
-
-    security.declarePublic('leftLogo')
-    def rightLogoUrl(self, lang=''):
-        """Returns the right logo url corresponding to the site language"""
-        layout_tool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-        logo = layout_tool._getOb('logobis_%s.gif' % lang, None)
-        if logo and logo.size:
+        logo = layout_tool._getOb('right_logo.gif', None)
+        if logo:
             return logo.absolute_url()
-
-    security.declarePublic('defaultLeftLogoUrl')
-    def defaultLeftLogoUrl(self):
-        """Returns the url corresponding to the default left site logo"""
-        default_logo = self.leftLogoUrl(lang=self.default_logo)
-        if not default_logo:
-            logo = self.getLayoutTool()._getOb('logo.gif', None)
-            if logo is None:
-                logo = self.getLayoutTool()._getOb('logo', None)
-            if logo and logo.size:
-                return logo.absolute_url()
-        else:
-            return default_logo
-
-    security.declarePublic('defaultRightLogoUrl')
-    def defaultRightLogoUrl(self):
-        """Returns the url corresponding to the default right site logo"""
-        default_logo = self.rightLogoUrl(lang=self.default_logo)
-        if not default_logo:
-            logo = self.getLayoutTool()._getOb('logobis.gif', None)
-            if logo is None:
-                logo = self.getLayoutTool()._getOb('logobis', None)
-            if logo and logo.size:
-                return logo.absolute_url()
-        else:
-            return default_logo
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
-    def admin_logos(self, logo='', logobis='', del_leftlogo='', del_rightlogo='', default_lang='', lang='', REQUEST=None):
+    def admin_logos(self, left_logo='', right_logo='', del_leftlogo='', del_rightlogo='', REQUEST=None):
         """ Allows changing and deleting the left and right logos for a Naaya site.
-            Left and right logos are independent of the layout chosen and are images called
-            'logo.gif' and 'logobis.gif' (or, for older versions of Naaya, 'logo' and 'logobis'
+            Left and right logos are independent of the layout chosen and are
+            images called 'left_logo.gif' and 'right_logo.gif'
         """
-        layouttool = self.getLayoutTool()
-        if not lang: lang = self.gl_get_selected_language()
-
-        left_logo_id = 'logo_%s.gif' % lang
-        left_logo = layouttool._getOb(left_logo_id, None)
-        if left_logo is None:
-            layouttool.manage_addImage(id=left_logo_id, file='', title='Site logo')
-            left_logo = layouttool._getOb(left_logo_id)
-        if logo != '' and hasattr(logo, 'filename') and logo.filename != '':
-            content = logo.read()
-            if content != '':
-                left_logo.update_data(data=content)
-                left_logo._p_changed = 1
-        if del_leftlogo:
-            left_logo.update_data(data='')
-            left_logo._p_changed = 1
-
-        right_logo_id = 'logobis_%s.gif' % lang
-        right_logo = layouttool._getOb(right_logo_id, None)
-        if right_logo is None:
-            layouttool.manage_addImage(id=right_logo_id, file='', title='Site logo (right side)')
-            right_logo = layouttool._getOb(right_logo_id)
-        if logobis != '' and hasattr(logobis, 'filename') and logobis.filename != '':
-            content = logobis.read()
-            if content != '':
-                right_logo.update_data(data=content)
-                right_logo._p_changed = 1
-        if del_rightlogo:
-            right_logo.update_data(data='')
-            right_logo._p_changed = 1
-
-        if default_lang:
-            self.default_logo = default_lang
+        self._update_logo('left_logo.gif', left_logo, 'Site logo', del_leftlogo)
+        self._update_logo('right_logo.gif', right_logo, 'Site logo (right side)',
+                del_rightlogo)
 
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
+
+    def _update_logo(self, logo_id, logo_file, title, del_logo):
+        layouttool = self.getLayoutTool()
+        original_file = layouttool._getOb(logo_id, None)
+        new_logo_test = bool(logo_file != '' and hasattr(logo_file, 'filename')
+                and logo_file.filename != '' and logo_file.read() != '')
+        if del_logo and original_file is not None:
+            layouttool.manage_delObjects([logo_id])
+            original_file = None
+        if new_logo_test:
+            if original_file is not None:
+                layouttool.manage_delObjects([logo_id])
+            layouttool.manage_addImage(id=logo_id, file=logo_file,
+                    title=title)
 
     def _set_submit_unapproved(self, submit_unapproved):
         if submit_unapproved:
