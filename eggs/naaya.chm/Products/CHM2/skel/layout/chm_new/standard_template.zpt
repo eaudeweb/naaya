@@ -72,7 +72,9 @@
 
                 <div id="banner_logo">
                     <div id="banner">
-                        <div id="logos" tal:define="logo1_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl()); logo2_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+                        <div id="logos"
+							tal:define="logo1_url here/leftLogoUrl;
+										logo2_url here/rightLogoUrl">
                             <img class="first-logo" tal:attributes="src logo1_url; alt here/site_title" tal:condition="logo1_url" />
                             <img class="second-logo" tal:attributes="src logo2_url; alt here/site_title" tal:condition="logo2_url" />
                         </div>
