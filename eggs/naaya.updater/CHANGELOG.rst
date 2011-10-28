@@ -1,5 +1,9 @@
-1.2.13 (unreleased)
+1.2.14 (unreleased)
 -------------------
+
+1.2.13 (2011-10-28)
+-------------------
+* bugfix in the update script for site logos [dumitval]
 
 1.2.12 (2011-10-28)
 -------------------
