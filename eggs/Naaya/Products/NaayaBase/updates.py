@@ -1,4 +1,7 @@
-from Products.naayaUpdater.updates import UpdateScript
+from AccessControl.Permission import Permission
+from AccessControl.Permissions import view
+
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class SkipApprovalPermission(UpdateScript):
     title = ('Set the "Naaya - Skip approval" permission '
@@ -43,4 +46,24 @@ class AddHelpTextOnNewsDescription(UpdateScript):
                 and not description.help_text:
                 description.help_text = u'Keep this description short, about 50 words. Use the <strong>Details</strong> field below to add more information.'
                 self.log.info("Help text updated")
+        return True
+
+class RestrictUnapproved(UpdateScript):
+    """ """
+    title = 'Restrict view for unapproved objects'
+    creation_date = 'Oct 28, 2011'
+    authors = ['Andrei Laza']
+    priority = PRIORITY['HIGH']
+    description = "Don't inherit view permission for unapproved objects"
+
+    def _update(self, portal):
+        catalog = portal.getCatalogTool()
+        for brain in catalog(approved=0):
+            obj = brain.getObject()
+            permission = Permission(view, (), obj)
+            roles = permission.getRoles()
+            if isinstance(roles, list):
+                obj.dont_inherit_view_permission()
+                self.log.debug('restricted view permission for %s',
+                                obj.absolute_url())
         return True

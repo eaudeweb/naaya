@@ -82,6 +82,10 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.AddHelpTextOnNewsDescription"
              permission="zope2.ViewManagementScreens" />
+    <utility name="restrict_unapproved.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.RestrictUnapproved"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
