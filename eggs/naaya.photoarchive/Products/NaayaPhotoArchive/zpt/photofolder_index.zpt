@@ -149,7 +149,7 @@
 	<tal:block condition="objects_list">
 	<input type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
 	<input type="button" style="display: none"
-		name="select_all_label" id="select_all_label" value="Select all"
+		name="select_all_label" id="select_all_label" value="Select all" i18n:attributes="value"
 		class="action_button" onclick="toggleSelect('select_all')" />
 	<input class="action_button" tal:condition="here/checkPermissionCopyObject" type="submit"
 		name="copyObjects:method" value="Copy" i18n:attributes="value" />

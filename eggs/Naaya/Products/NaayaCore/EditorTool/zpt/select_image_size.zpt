@@ -7,7 +7,7 @@
 " >
 <html>
 	<head>
-		<title>Select image size</title>
+		<title i18n:translate="">Select image size</title>
 		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
 	</head>
 	<body>
@@ -19,28 +19,33 @@
 				<div class="body">
 					<dl class="photo_links">
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XSmall&title=${title}&image_url=${image_url}">Very small</a> (200px)
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XSmall&title=${title}&image_url=${image_url}" i18n:translate="">Very small</a>
+							(<tal:block i18n:translate="">200px</tal:block>)
 						</dd>
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Small&title=${title}&image_url=${image_url}">Small</a> (320px)
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Small&title=${title}&image_url=${image_url}" i18n:translate="">Small</a>
+							(<tal:block i18n:translate="">320px</tal:block>)
 						</dd>
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Medium&title=${title}&image_url=${image_url}">Medium</a> (480px)
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Medium&title=${title}&image_url=${image_url}" i18n:translate="">Medium</a>
+							(<tal:block i18n:translate="">480px</tal:block>)
 						</dd>
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Large&title=${title}&image_url=${image_url}">Large</a> (768px)
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Large&title=${title}&image_url=${image_url}" i18n:translate="">Large</a>
+							(<tal:block i18n:translate="">768px</tal:block>)
 						</dd>
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XLarge&title=${title}&image_url=${image_url}">Very large</a> (1024px)
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XLarge&title=${title}&image_url=${image_url}" i18n:translate="">Very large</a>
+							(<tal:block i18n:translate="">1024px</tal:block>)
 						</dd>
 						<dd>
-							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Original&title=${title}&image_url=${image_url}">Original</a>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Original&title=${title}&image_url=${image_url}" i18n:translate="">Original</a>
 						</dd>
 					</dl>
 				</div>
 			</div>
 
-			<input id="insert" type="button" value="Save size" tal:attributes="onclick string:location.href='${here/absolute_url}/prepare_image?src=url&title=${title}&url=${photo_link}'"/>
+			<input id="insert" type="button" i18n:attributes="value" value="Save size" tal:attributes="onclick string:location.href='${here/absolute_url}/prepare_image?src=url&title=${title}&url=${photo_link}'"/>
 		</div>
 
 		<div class="g-image-holder">

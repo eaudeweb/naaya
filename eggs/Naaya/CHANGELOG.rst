@@ -1,5 +1,6 @@
 2.12.17 (unreleased)
 --------------------
+* fix translations in TinyMCE image selection pages [andredor]
 
 2.12.16 (2011-10-31)
 --------------------

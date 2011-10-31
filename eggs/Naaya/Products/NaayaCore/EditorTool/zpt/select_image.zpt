@@ -8,37 +8,40 @@
 " />
 <html>
 	<head>
-		<title>Select image</title>
+		<title i18n:translate="">Select image</title>
 		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
 	</head>
 	<body>
 		<p i18n:translate="">
-			Insert an image by uploading it from your computer (<em i18n:name="Computer" i18n:translate="">Computer</em>), taking it from a remote page (<em i18n:name="URL" i18n:translate="">URL</em>) or selecting it from the ones already available in the portal (<em i18n:name="Browse" i18n:translate="">Browse</em>):
+			Insert an image by uploading it from your computer (<em i18n:name="Computer" i18n:translate="">Computer</em>),
+			taking it from a remote page (<em i18n:name="URL" i18n:translate="">URL</em>) or selecting it from the ones already available in the portal (<em i18n:name="Browse" i18n:translate="">Browse</em>):
 		</p>
 		<div class="tabs">
 			<ul>
-				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;">Computer</a></span></li>
-				<li id="link_tab"><span><a href="javascript:mcTabs.displayTab('link_tab','link_panel');" onmousedown="return false;">URL</a></span></li>
-				<li id="browse_tab" class="current"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;">Browse</a></span></li>
+				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
+				<li id="link_tab"><span><a href="javascript:mcTabs.displayTab('link_tab','link_panel');" onmousedown="return false;" i18n:translate="">URL</a></span></li>
+				<li id="browse_tab" class="current"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
 			</ul>
 		</div>
 		<div class="panel_wrapper">
 			<div id="computer_panel" class="panel">
 				<br />
 				<form id="comp_upload_form" tal:attributes="action string:${here/absolute_url}/prepare_image" method="post" enctype="multipart/form-data">
-					<label for="comp_file">Selected file</label>
+					<label for="comp_file" i18n:translate="">Selected file</label>
 					<input id="comp_file" type="file" name="file" size="50" />
 					<input id="comp_document" type="hidden" name="document" tal:attributes="value document_url" />
 					<input type="hidden" name="mode" value="upload" />
 				</form>
-				<p>
-					Click <strong><code>Browse...</code></strong> to select one picture from your computer.
+				<p i18n:translate="">
+					Click <strong i18n:name="Browse"><code i18n:translate="">Browse...</code></strong> to select one picture from your computer.
 				</p>
 				<div class="tip">
-				<strong>Tips:</strong>
+				<strong i18n:translate="">Tips:</strong>
 				<ul>
-					<li>To use multiple pictures create new photo gallery first, upload them there (all in one ZIP file) and go to <code><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;">Browse</a></code> tab.</li>
-					<li>Small pictures are loading faster. Modern cameras creates very big pictures. It is prefferable to bring them to a reasonable size before upload.</li>
+					<li i18n:translate="">To use multiple pictures create new photo gallery first, upload them there (all in one ZIP file) and
+						go to <code i18n:name="Browse"><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></code> tab.
+					</li>
+					<li i18n:translate="">Small pictures are loading faster. Modern cameras creates very big pictures. It is prefferable to bring them to a reasonable size before upload.</li>
 				</ul>
 				</div>
 			</div>
@@ -46,23 +49,21 @@
 			<div id="link_panel" class="panel">
 				<br />
 				<form tal:attributes="action string:${here/absolute_url}/prepare_image" method="post">
-					<label for="">Picture URL</label>
+					<label for="" i18n:translate="">Picture URL</label>
 					<input id="fe_url_file" type="text" name="url" value="" style="width: 50em;" />
-					<input type="submit" value="Fetch" style="width: 10em;" />
+					<input type="submit" i18n:attributes="value" value="Fetch" style="width: 10em;" />
 					<input id="fe_document" type="hidden" name="document" value="" />
 					<input type="hidden" name="mode" value="url" />
 				</form>
-				<p>
-					Use this feature to insert picture into your document from another website.
-					<br />
-				</p>
+				<p i18n:translate="">Use this feature to insert picture into your document from another website.</p>
+				<br />
 				<div class="tip">
-				<strong>Notes:</strong>
+				<strong i18n:translate="">Notes:</strong>
 				<ul>
-					<li>Small pictures load faster. Modern cameras takes very big pictures. Bring them to reasonable size before upload</li>
-					<li>Consider copyright terms before using other peoples work</li>
-					<li>In time websites change, this link may become invalid breaking your image as well</li>
-					<li>Linking to another websites generates additional overhead traffic for them. Owners may not agree with that</li>
+					<li i18n:translate="">Small pictures load faster. Modern cameras takes very big pictures. Bring them to reasonable size before upload</li>
+					<li i18n:translate="">Consider copyright terms before using other peoples work</li>
+					<li i18n:translate="">In time websites change, this link may become invalid breaking your image as well</li>
+					<li i18n:translate="">Linking to another websites generates additional overhead traffic for them. Owners may not agree with that</li>
 				</ul>
 				</div>
 			</div>
@@ -76,10 +77,10 @@
 				<div id="source" style="margin: 0;">
 					<ul>
 						<li tal:condition="python:here.isImageContainer(document)">
-							<a tal:attributes="class python:test(src == 'document', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=document">document</a>
+							<a tal:attributes="class python:test(src == 'document', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=document" i18n:translate="">document</a>
 						</li>
 						<li>
-							<a tal:attributes="class python:test(src == 'website', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=website">website</a>
+							<a tal:attributes="class python:test(src == 'website', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=website" i18n:translate="">website</a>
 						</li>
 						<tal:block repeat="album here/enumeratePhotoAlbums">
 						<li>
@@ -105,14 +106,16 @@
 				</div>
 				<div id="browser">
 					<tal:block tal:condition="images" repeat="image images">
-						<a tal:condition="python: src != 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}"><img tal:attributes="src image/absolute_url" class="thumbnail" title="Click to select" /></a>
+						<a tal:condition="python: src != 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}">
+							<img tal:attributes="src image/absolute_url" class="thumbnail" title="Click to select" />
+						</a>
 						<a tal:condition="python: src == 'album'"
 								tal:attributes="href string:${here/absolute_url}/select_image_size?src=url&title=${image/title} ${image/author} ${image/source}&image_url=${image/absolute_url}">
 							<img tal:condition="python: src == 'album'" tal:attributes="src string:${image/absolute_url}/view?display=XSmall" class="thumbnail" title="Click to select" />
 						</a>
 					</tal:block>
 					<p tal:condition="not:images" i18n:translate="">No images available in this repository</p>
-                    <div class="cleaner"></div>
+					<div class="cleaner"></div>
 				</div>
 				</tal:block>
 			</div>
