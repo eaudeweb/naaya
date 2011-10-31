@@ -7,6 +7,8 @@
   xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                       http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
+<span tal:replace="python:request.RESPONSE.setHeader('content-type','text/xml;charset=utf-8')" />
+
   <url tal:repeat="doc python:here.getCatalogedObjectsCheckView(
           meta_type=['Naaya Document', 'Naaya File', 'Naaya Folder'],
           approved=1, howmany=-1,

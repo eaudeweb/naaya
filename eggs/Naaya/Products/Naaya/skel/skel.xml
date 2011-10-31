@@ -86,6 +86,7 @@
 		<form id="site_unauthorized" title="Portal logout"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
 		<form id="sitemap_add" title="Sitemap for picklists"/>
+		<form id="sitemap_xml" title="Google sitemap"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
 	</forms>
 	<layout default_skin_id="skin" default_scheme_id="scheme">
