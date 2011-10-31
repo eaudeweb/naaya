@@ -1,4 +1,7 @@
-2.12.16 (unreleased)
+2.12.17 (unreleased)
+--------------------
+
+2.12.16 (2011-10-31)
 --------------------
 * saveProperties for GlossaryWidget can save display and separator [andredor]
 
