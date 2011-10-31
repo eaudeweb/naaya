@@ -1,4 +1,7 @@
-2.12.17 (unreleased)
+2.12.18 (unreleased)
+--------------------
+
+2.12.17 (2011-10-31)
 --------------------
 * fix translations in TinyMCE image selection pages [andredor]
 
