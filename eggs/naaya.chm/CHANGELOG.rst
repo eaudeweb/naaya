@@ -1,5 +1,6 @@
 2.4.14 (unreleased)
 -------------------
+* customize sitemap.xml form for CHM network 
 
 2.4.13 (2011-10-31)
 -------------------
