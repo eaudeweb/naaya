@@ -189,7 +189,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def mapLocalizerLangs(self):
         """ """
         results = []
-        localizer_langs = self.get_languages_mapping()
+        localizer_langs = self.getPortalI18n().get_languages_mapping()
         for item in localizer_langs:
             results.append({'lang':item['code'], 'english_name':item['name']})
         return results
