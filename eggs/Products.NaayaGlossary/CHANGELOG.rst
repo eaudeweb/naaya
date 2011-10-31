@@ -1,4 +1,7 @@
-1.1.3 (unreleased)
+1.1.4 (unreleased)
+------------------
+
+1.1.3 (2011-10-31)
 ------------------
 * fix deprecated get_languages_mapping [andredor]
 
