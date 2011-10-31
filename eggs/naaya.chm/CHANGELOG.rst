@@ -1,4 +1,7 @@
-2.4.14 (unreleased)
+2.4.15 (unreleased)
+-------------------
+
+2.4.14 (2011-10-31)
 -------------------
 * customize sitemap.xml form for CHM network 
 
