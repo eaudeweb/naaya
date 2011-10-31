@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<title>Insert/Edit link</title>
+		<title i18n:translate="">Insert/Edit link</title>
 		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
 		<style type="text/css">
 			#link_prepare {
@@ -29,27 +29,27 @@
 			<ul>
 				<li>
 					<div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
-					<div style="float: left; clear: both;">To choose a link from this portal, click on the desired item from the sitemap above</div>
-					<div class="propfield" style="clear:both;"><label for="url">URL:</label></div>
+					<div style="float: left; clear: both;" i18n:translate="">To choose a link from this portal, click on the desired item from the sitemap above</div>
+					<div class="propfield" style="clear:both;"><label for="url" i18n:translate="">URL:</label></div>
 					<input class="sitemap_tree_target" type="text" id="url" name="url" style="width: 32em;" />
 				</li>
 				<li>
 					<div class="propfield" style="clear: both;"><label for="target">Target</label></div>
 					<select id="target" name="target">
-						<option value="">Open link in same window</option>
-						<option value="_new">Open link in new window</option>
+						<option value="" i18n:translate="">Open link in same window</option>
+						<option value="_new" i18n:translate="">Open link in new window</option>
 					</select>
 				</li>
 				<li>
-					<div class="propfield"><label for="title">Title</label></div>
+					<div class="propfield"><label for="title" i18n:translate="">Title</label></div>
 					<input id="title" type="text" name="title" value="" style="width: 25em;" />
 				</li>
 			</ul>
 		</div>
 		<br class="cleaner" />
 		<div class="mceActionPanel">
-			<input id="insert" type="button" value="Insert" onclick="insert_link();" />
-			<input id="cancel" type="button" value="Cancel" onclick="popup_close();" />
+			<input id="insert" type="button" i18n:attributes="value" value="Insert" onclick="insert_link();" />
+			<input id="cancel" type="button" i18n:attributes="value" value="Cancel" onclick="popup_close();" />
 		</div>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
