@@ -3737,7 +3737,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def standard_template_macro(self, macro='page'):
         return self.getLayoutTool().get_standard_template().macros[macro]
 
-    sitemap_xml = NaayaPageTemplateFile('zpt/sitemap_xml', globals(), 'naaya.google.sitemap')
+    security.declareProtected(view, 'sitemap_xml')
+    def sitemap_xml(self, REQUEST=None, RESPONSE=None):
+        """ """
+        
+        return self.getFormsTool().getContent({'here': self}, 'sitemap_xml')
 
     sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(), 'naaya.semanticweb.sitemap')
 
