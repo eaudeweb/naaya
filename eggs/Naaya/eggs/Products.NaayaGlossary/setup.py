@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
-import os
 
 setup(name='Products.NaayaGlossary',
-      version='1.1.2',
+      version='1.1.4',
       description="Naaya Glossary",
       long_description=open("README.txt").read() + "\n" +
                        open("CHANGELOG.rst").read(),
