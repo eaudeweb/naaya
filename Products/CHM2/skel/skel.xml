@@ -23,6 +23,7 @@
 		<form id="site_search" title="Portal search"/>
 		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_urlmap" title="Portal url map"/>
+		<form id="sitemap_xml" title="Google sitemap"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
