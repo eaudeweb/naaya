@@ -1,4 +1,7 @@
-2.12.15 (unreleased)
+2.12.16 (unreleased)
+--------------------
+
+2.12.15 (2011-10-31)
 --------------------
 * removed googletranslate (also from languages_box.zpt) [dumitval]
 * remove link checker from cron heartbeat [moregale]
