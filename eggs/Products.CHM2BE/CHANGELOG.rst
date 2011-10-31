@@ -1,4 +1,7 @@
-1.0.10 (unreleased)
+1.0.11 (unreleased)
+------------------
+
+1.0.10 (2011-10-31)
 ------------------
 * install chm_terms (update script) [dumitval, andredor]
 * removed form languages_box.zpt from skel/forms - identical to Naaya [dumitval]
