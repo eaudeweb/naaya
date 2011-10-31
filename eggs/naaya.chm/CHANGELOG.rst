@@ -1,4 +1,7 @@
-2.4.13 (unreleased)
+2.4.14 (unreleased)
+-------------------
+
+2.4.13 (2011-10-31)
 -------------------
 * removed form languages_box.zpt from skel/forms - identical to Naaya [dumitval]
 
