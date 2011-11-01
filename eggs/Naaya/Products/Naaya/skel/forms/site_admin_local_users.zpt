@@ -58,21 +58,25 @@
 </metal:block></metal:block>
 
 <metal:block fill-slot="second-tabs"><metal:block define-macro="second-tabs">
-    <tal:block define="path_info string:admin_local_users_html|path_info">
-    <div class="second_tab_set">
-        <ul>
-            <li tal:define="url string:${site_url}/admin_local_users_html">
-                <a tal:attributes="href url; class python: 'admin_local_users_html' in path_info and 'current_sub' or ''"
-                   i18n:translate="">List users</a>
-            </li>
-            <li tal:define="url string:${site_url}/admin_assignroles_html">
-                <a tal:attributes="href url; class python: 'admin_assignroles_html' in path_info and 'current_sub' or ''"
-                   i18n:translate="">Assign roles to users</a>
-            </li>
-        </ul>
-    </div>
-    </tal:block>
+	<div class="second_tab_set">
+		<ul>
+			<li tal:define="url string:${site_url}/admin_local_users_html">
+				<a tal:attributes="href url; class python: test('admin_local_users_html' in request.PATH_INFO or 'admin_users_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">List users</a>
+			</li>
+			<li tal:define="url string:${site_url}/admin_assignroles_html">
+				<a tal:attributes="href url; class python: test('admin_assignroles_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Assign roles to users</a>
+			</li>
+			<li tal:define="url string:${site_url}/admin_adduser_html">
+				<a tal:attributes="href url; class python: test('admin_adduser_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Add new user</a>
+			</li>
+		</ul>
+	</div>
+	<div class="clear">&nbsp;</div>
 </metal:block></metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, role=filter_role);
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
@@ -80,10 +84,7 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
 <div class="form-buttons cleaner">
 	<span class="buttons">
-		<tal:block>
-			<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title" i18n:translate="">Add new user</a>
-			<input tal:condition="users" type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
-		</tal:block>
+		<input tal:condition="users" type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
 	</span>
 </div>
 

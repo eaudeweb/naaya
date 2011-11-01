@@ -1,5 +1,6 @@
 2.12.19 (unreleased)
 --------------------
+* use second level tab for "Add new user" in Users' management [andredor]
 
 2.12.18 (2011-10-31)
 --------------------

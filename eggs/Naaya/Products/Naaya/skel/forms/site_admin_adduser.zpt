@@ -2,7 +2,7 @@
 <metal:block fill-slot="second-title" i18n:translate="">Add user</metal:block>
 
 <metal:block fill-slot="second-tabs">
-    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
+	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
 </metal:block>
 
 <metal:block fill-slot="description-text"></metal:block>
