@@ -189,7 +189,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             kwargs.update(REQUEST.form)
 
         #check survey expiration
-        if self.expired():
+        if self.expired() and not self.checkPermissionPublishObjects():
             error_msg = "The survey has expired"
             if not REQUEST:
                 raise SurveyQuestionnaireException(error_msg)
