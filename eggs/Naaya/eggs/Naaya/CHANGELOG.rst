@@ -2,6 +2,7 @@
 --------------------
 * remove ajax calls for Users' management [andredor]
 * use second level tab for "Add new user" in Users' management [andredor]
+* openlayers geocoding using google api
 
 2.12.18 (2011-10-31)
 --------------------
