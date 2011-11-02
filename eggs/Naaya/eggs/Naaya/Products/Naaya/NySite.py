@@ -88,7 +88,7 @@ from NyFolder import folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, cooldown, is_ajax
-from naaya.core.zope2util import path_in_site, ofs_path
+from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
@@ -1401,7 +1401,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
     def getNavigationSiteMap(self, REQUEST=None, all=False, only_folders=False,
-                             **kwargs):
+                             subportals=False, **kwargs):
         """
         Return JSON tree of the sitemap
         Used with javascript tree libraries
@@ -1410,118 +1410,75 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if not node or node == '/':
             node = ''
 
+        ret = self.getNavigationObjects(node, all, only_folders, subportals)
+        return json.dumps(ret)
+
+    security.declarePrivate('getNavigationObjects')
+    def getNavigationObjects(self, node='', all=False, only_folders=False,
+                             subportals=False, root_site=None):
+        """
+        Returns list of objects needed by getNavigationSiteMap to construct
+        JSON for js tree
+        * `all` - include unapproved items
+        * `only_folders` - only show METATYPE_FOLDER items
+            - `subportals` - consider subportals as folders
+
+        """
+        if root_site is None:
+            root_site = self
+
         def recurse(items, level=0, stop_level=2):
             """ Create a dict with node properties and children """
             res = []
             for item in items:
-                if (only_folders is not False and
-                    item.meta_type != METATYPE_FOLDER):
+                if INySite.providedBy(item):
+                    res.append(item.getNavigationObjects('', all, only_folders, subportals, root_site=root_site))
                     continue
+
                 children_items = []
                 if level != stop_level:
                     node = path_in_site(item)
-                    if all: items = self.getFolderContent(node)
-                    else: items = self.getFolderPublishedContent(node)
-                    children_items = recurse(
-                        items[0]+items[1],
-                        level+1,
-                        stop_level
-                    )
+                    containers = self.getContents(node, published=(not all),
+                                                  only_folders=only_folders,
+                                                  subportals=subportals)
+                    children_items = recurse(containers, level+1, stop_level)
+
                 res.append(dict(
                     data = dict(
                         title=self.utStrEscapeHTMLTags(self.utToUtf8(item.title_or_id())),
                         icon=item.approved and item.icon or item.icon_marked
                     ),
                     attributes=dict(
-                        title=path_in_site(item)
+                        title=relative_object_path(item, root_site)
                     ),
                     children = children_items
                 ))
             return res
 
-        if all: items = self.getFolderContent(node)
-        else: items = self.getFolderPublishedContent(node)
-        ret = recurse(items[0]+items[1])
+        items = self.getContents(node, published=(not all),
+                               only_folders=only_folders, subportals=subportals)
+        ret = recurse(items)
 
-        #Adding the portal if we are in root
-        if not node or node == '/':
+        # Adding the portal if we are in root
+        if node in ('', '/'):
+            root_ob = self.restrictedTraverse(node)
             ret = {
                 'attributes': {
-                    'title': '/'
+                    'title': relative_object_path(root_ob, root_site)
                 },
                 'data': {
                     'icon': self.icon,
-                    'title': self.title
+                    'title': root_ob.title
                 },
                 'children': ret
             }
-        return json.dumps(ret)
+        return ret
 
     security.declareProtected(view, 'getCompleteNavigationSiteMap')
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
         """ Returns site map including unapproved items,
         in order to be used to display a tree"""
         self.getNavigationSiteMap(REQUEST=REQUEST, all=True, **kwargs)
-
-    security.declareProtected(view, 'getNavigationPhotos')
-    def getNavigationPhotos(self, REQUEST=None, **kwargs):
-        """
-        XXX: Not used in Naaya.. should be removed
-        Returns site map with photos only in order to be used with extjs library
-        """
-        node = REQUEST.form.get('node', '')
-        if not node or node == '/':
-            node = ''
-
-        items = self.getFolderPublishedContent(node)
-        folders = items[0]
-        documents = [x for x in items[1] if x.meta_type == 'Naaya Photo']
-        res = []
-        for folder in folders:
-            iconCls = 'custom-%s' % folder.meta_type.replace(' ', '-')
-            title = ''
-            folder_localized = getattr(folder.aq_base, 'getLocalProperty', None)
-            if folder_localized:
-                title = folder_localized('title')
-            title = title or folder.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": false,
-                "href": "%(href)s",
-                "iconCls": "%(iconCls)s"
-                }""" % {
-                    "id": folder.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "iconCls": iconCls,
-                })
-        for document in documents:
-            icon = getattr(document, 'icon', '')
-            icon = icon and '/'.join((self.absolute_url(), icon))
-            title = ''
-            document_localized = getattr(document.aq_base, "getLocalProperty", None)
-            if document_localized:
-                title = document_localized('title')
-            title = title or document.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": true,
-                "href": "%(href)s",
-                "icon": "%(icon)s"
-                }""" % {
-                    "id": document.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "icon": icon,
-                })
-        res = ', '.join(res)
-        return '[%s]' % res.encode('utf-8')
 
     def getSiteMap(self, expand=[], root=None, showitems=0, sort_order=1):
         #returns a list of objects with additional information
@@ -1534,41 +1491,53 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if expand == 'all': return ','.join([node[0].absolute_url(1) for node in tree])
         else: return expand
 
-    def getFolderPublishedContent(self, folder_path):
-        """ return the published content of a folder """
-        if folder_path:
-            folder_ob = self.restrictedTraverse(folder_path)
-            parent = folder_ob.getParentNode()
-            if parent == self:
-                ppath = ''
-            else:
-                ppath = parent.absolute_url(1)
-            pub_folders = call_method(folder_ob, 'getPublishedFolders', [])
-            pub_objects = call_method(folder_ob, 'getPublishedObjects', [])
-            return pub_folders, pub_objects, ppath
+    security.declarePrivate('getContainerContents')
+    def getContents(self, path='', only_folders=False,
+                    published=True, subportals=False):
+        """
+        Lookup location can be folder specified by `path` or portal in self.
+        If only_folders is True, only return METATYPE_FOLDER objects.
+            - If subportals is True, also return contained portals.
+        If published is True, only return `approved` items.
 
+        Returns list of items found in location.
+        OBS: if lookup location provides INySite, skip non-container meta_type-s
+
+        """
+        if path == '/':
+            path=''
+        ob = self.restrictedTraverse(path)
         objects = []
-        for ob in self.objectValues(self.get_naaya_containers_metatypes()):
-            if not getattr(ob, 'approved', 0):
-                continue
-            elif not getattr(ob, 'submitted', 0):
-                continue
-            else:
-                objects.append(ob)
+        containers = self.get_naaya_containers_metatypes()
 
-        return objects, [], ''
+        for sub_ob in ob.objectValues():
+            if only_folders:
+                # leave subportals out of this filtering, if selected
+                if not (subportals and INySite.providedBy(sub_ob)):
+                    if sub_ob.meta_type != METATYPE_FOLDER:
+                        continue
+            # if portal and only_folders=False, filter out non-containers
+            elif INySite.providedBy(ob):
+                if sub_ob.meta_type not in containers:
+                    # leave subportals out of this filtering, if selected
+                    if not (subportals and INySite.providedBy(sub_ob)):
+                        continue
 
-    def getFolderContent(self, folder_path):
-        """ return the content of a folder """
-        if folder_path:
-            folder_ob = self.restrictedTraverse(folder_path)
-            parent = folder_ob.getParentNode()
-            if parent == self:
-                ppath = ''
-            else:
-                ppath = parent.absolute_url(1)
-            return folder_ob.getFolders(), folder_ob.getObjects(), ppath
-        return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.submitted==1], [], ''
+            if not INySite.providedBy(sub_ob):
+                if not getattr(sub_ob, 'submitted', False):
+                    continue
+
+            objects.append(sub_ob)
+
+        # filter out based on published
+        if published:
+            for ob in list(objects):
+                if INySite.providedBy(ob):
+                    continue
+                if not getattr(ob, 'approved', False):
+                    objects.remove(ob)
+
+        return objects
 
     def __getSiteMap(self, root, showitems, expand, depth, sort_order=1):
         #site map core
