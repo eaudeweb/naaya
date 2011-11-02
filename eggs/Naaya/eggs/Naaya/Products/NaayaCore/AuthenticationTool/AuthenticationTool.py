@@ -26,7 +26,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.list import PersistentList
 
 from naaya.core.utils import is_ajax, render_macro, force_to_unicode
-from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import relative_object_path
 from naaya.core.exceptions import ValidationError, i18n_exception
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import \
@@ -40,6 +40,7 @@ from Products.NaayaBase.interfaces import IRoleLogger
 from naaya.core.utils import is_valid_email
 from Products.NaayaCore.managers.import_export import (set_response_attachment,
                                                        UnicodeReader)
+from Products.Naaya.interfaces import INySite
 
 from recover_password import RecoverPassword
 
@@ -429,7 +430,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if location == '' or location == '/':
             self._doChangeUserRoles(name, roles)
         else:
-            location_obj = self.unrestrictedTraverse(location, None)
+            location_obj = self.getSite().unrestrictedTraverse(location, None)
             if location_obj is None:
                 raise ValidationError('Invalid location')
             location_obj.manage_setLocalRoles(name, roles)
@@ -712,27 +713,40 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 return True
         return False
 
-    def getUsersRoles(self, p_meta_types=None):
+    def getUsersRoles(self, meta_types=None):
         """
         Same as getAuthenticatedUserRoles, except for all the users registered
-        in this folder. Don't use this in new code.
+        in this folder.
 
-        Output format: a dict with keyes=userids and values=list of roles. The
+        Output format: a dict with keys=userids and values=list of roles. The
         list of roles contains tuples of (list of role names, path of folder).
         """
-        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
+        current_site = self.getSite()
+        sites = [current_site]
+        # search for any sub-sites directly below current_site
+        for child in current_site.objectValues():
+            if INySite.providedBy(child):
+                sites.append(child)
+
         users_roles = {}
         for username in self.user_names():   #get the users
             user = self.getUser(username)
             users_roles[username] = [(self.getUserRoles(user), '')]
 
-        for folder in self.getCatalogedObjects(meta_type=p_meta_types,
-                has_local_role=1):
-            for roles_tuple in folder.get_local_roles():
-                local_roles = self.getLocalRoles(roles_tuple[1])
-                if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
-                    roles_list = users_roles[str(roles_tuple[0])]
-                    roles_list.append((local_roles, path_in_site(folder)))
+        for site in sites:
+            if meta_types is None:
+                picked_meta_types = site.get_containers_metatypes()
+            else:
+                picked_meta_types = meta_types
+
+            for folder in site.getCatalogedObjects(meta_type=picked_meta_types,
+                    has_local_role=1):
+                for roles_tuple in folder.get_local_roles():
+                    local_roles = self.getLocalRoles(roles_tuple[1])
+                    if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
+                        roles_list = users_roles[str(roles_tuple[0])]
+                        roles_list.append((local_roles,
+                                    relative_object_path(folder, current_site)))
         return users_roles
 
     security.declareProtected(manage_users, 'getUsersWithRoles')

@@ -171,9 +171,13 @@
         <td tal:define="user_roles python: users_roles[str(user)]">
             <div class="user-role"
                  tal:repeat="role python: user_roles">
-                <tal:block condition="python: role[0]">
+                <tal:block condition="python: role[0]" tal:define="obj python: here.utGetObject(role[1])">
                 <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-                <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+                <a class="roles-location" tal:attributes="href obj/absolute_url" tal:content="python:obj.title_or_id()"></a>
+			<img tal:condition="python: here.getSite()!=obj.getSite()"
+			     tal:attributes="alt python:('In %s subsite' % obj.getSite().title_or_id());
+					     title python:('In %s subsite' % obj.getSite().title_or_id());"
+			src="misc_/Naaya/info.png" />
                 </tal:block>
             </div>
             <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>

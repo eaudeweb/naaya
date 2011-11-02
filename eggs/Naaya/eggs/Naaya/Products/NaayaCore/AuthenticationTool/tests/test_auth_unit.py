@@ -4,6 +4,7 @@ import transaction
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from Products.Naaya.NySite import manage_addNySite
 import ldap_config
 import mock_ldap
 
@@ -19,6 +20,20 @@ class AuthenticationUnitTest(NaayaTestCase):
         self.assertEquals(check_username('USER~'), None)
         self.assertEquals(check_username('!user'), None)
         self.assertEquals(check_username('&*%^@$'), None)
+
+    def test_getUsersRoles(self):
+        acl_users = self.portal.acl_users
+        acl_users._doAddUser('user1', 'user1', ['Contributor'], '',
+                             'User name', 'User other name', 'user1@example.com')
+        manage_addNySite(self.portal, id='subsite', title='subsite', lang='en')
+        acl_users.manage_addUsersRoles('user1', roles=['Administrator'], location='info')
+        acl_users.manage_addUsersRoles('user1', roles=['Manager'], location='subsite/info')
+        users_roles = acl_users.getUsersRoles()
+        self.assertTrue('user1' in users_roles)
+        user1_roles = users_roles['user1']
+        self.assertTrue((['Contributor'], '') in user1_roles)
+        self.assertTrue((['Administrator'], 'info') in user1_roles)
+        self.assertTrue((['Manager'], 'subsite/info') in user1_roles)
 
 class LDAPBaseUnitTest(NaayaFunctionalTestCase):
     def afterSetUp(self):

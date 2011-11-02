@@ -142,6 +142,15 @@ class RestrictedToolkit(SimpleItem):
         """ Return path relative to site root """
         return path_in_site(obj)
 
+    def relative_object_path(self, obj, ancestor):
+        """
+        Compute the relative path from `ancestor` to `obj` (`obj` must be
+        somewhere inside `ancestor`);
+        Sample usage: get object path in subsite, relative to top site
+
+        """
+        return relative_object_path(obj, ancestor)
+
     def is_valid_email(self, email_str):
         """ Check validity of email address """
         return is_valid_email(email_str)
