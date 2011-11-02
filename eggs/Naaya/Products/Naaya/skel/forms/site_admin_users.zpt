@@ -17,6 +17,8 @@
 				filter_role python: request.get('role', '');
 				user_sources python: here.getAuthenticationTool().getSources();
 				path_info python: request.PATH_INFO">
+	<script type="text/javascript"
+		tal:attributes="src string:${user_tool/absolute_url}/admin_js"></script>
 <metal:block define-slot="buttons">
 	<tal:block tal:condition="python: 'admin_users_html' in path_info">
 		<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['buttons']"></metal:block>
