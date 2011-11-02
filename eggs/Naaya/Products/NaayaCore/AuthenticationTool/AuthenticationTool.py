@@ -623,10 +623,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return True if user was created in the last 5 days
         note: the `days` parameter is not used.
         """
-        if DateTime() - DateTime(self.getUserCreatedDate(user_obj)) <= 5:
-            return True
-        else:
-            return False
+        return (DateTime() - DateTime(self.getUserCreatedDate(user_obj))) <= 5
 
     security.declareProtected(view, 'isLocalUser')
     def isLocalUser(self, REQUEST=None):
@@ -642,14 +639,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         Return all user objects registered in this user folder
         """
-        data=self.data
-        names=data.keys()
-        names.sort()
-        users=[]
-        f=users.append
-        for n in names:
-            f(data[n])
-        return users
+        names_sorted = sorted(self.data.keys())
+        return [self.data[name] for name in names_sorted]
 
     security.declareProtected(view, 'getUser')
     def getUser(self, name):
