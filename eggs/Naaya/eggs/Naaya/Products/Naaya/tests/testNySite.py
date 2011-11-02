@@ -1,6 +1,10 @@
 import time
 from BeautifulSoup import BeautifulSoup
-from mock import patch
+from mock import patch, Mock
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 from DateTime import DateTime
 import transaction
@@ -264,3 +268,66 @@ class TestNySiteOFS(NaayaFunctionalTestCase):
                 break
         else:
             raise ValueError("Same __before_traverse__ as in original portal")
+
+
+class NavigationSiteMapTest(NaayaTestCase):
+
+    def t(self, node):
+        """ just a shorter method to grab node title """
+        return node['attributes']['title']
+
+    def setUp(self):
+        super(NaayaTestCase, self).setUp()
+        self.req = Mock()
+        addNyFolder(self.portal.info, 'sub_approved', submitted=1,
+                    contributor='contributor')
+        self.portal.info.sub_approved.approved = True
+        addNyFolder(self.portal.info, 'sub_unapproved', submitted=1,
+                    contributor='contributor')
+
+    def test_json_root(self):
+        t = self.t
+        self.req.form = {'node': '/'}
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req))
+        self.assertEqual(t(res), '/')
+        self.assertEqual(len(res['children']), 1)
+        self.assertEqual(t(res['children'][0]), 'info')
+        self.assertEqual(t(res['children'][0]['children'][0]), 'info/sub_approved')
+        self.assertEqual(t(res['children'][0]['children'][2]), 'info/contact')
+        self.assertEqual(res['children'][0]['children'][2]['children'], [])
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req, all=True))
+        self.assertEqual(t(res), '/')
+        self.assertEqual(t(res['children'][0]), 'info')
+        self.assertEqual(t(res['children'][0]['children'][0]), 'info/sub_approved')
+        self.assertEqual(t(res['children'][0]['children'][1]), 'info/sub_unapproved')
+        self.assertEqual(t(res['children'][0]['children'][3]), 'info/contact')
+        self.assertEqual(res['children'][0]['children'][3]['children'], [])
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req, only_folders=True))
+        self.assertEqual(t(res), '/')
+        self.assertEqual(t(res['children'][0]), 'info')
+        self.assertEqual(len(res['children'][0]['children']), 1)
+        self.assertEqual(t(res['children'][0]['children'][0]), 'info/sub_approved')
+
+    def test_json_node(self):
+        t = self.t
+        self.req.form = {'node': 'info'}
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req))
+        self.assertEqual(len(res), 3)
+        self.assertEqual(t(res[0]), 'info/sub_approved')
+        self.assertEqual(t(res[1]), 'info/accessibility')
+        self.assertEqual(t(res[2]), 'info/contact')
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req, all=True))
+        self.assertEqual(len(res), 4)
+        self.assertEqual(t(res[0]), 'info/sub_approved')
+        self.assertEqual(t(res[1]), 'info/sub_unapproved')
+        self.assertEqual(t(res[2]), 'info/accessibility')
+        self.assertEqual(t(res[3]), 'info/contact')
+
+        res = json.loads(self.portal.getNavigationSiteMap(self.req, only_folders=True))
+        self.assertEqual(len(res), 1)
+        self.assertEqual(t(res[0]), 'info/sub_approved')
