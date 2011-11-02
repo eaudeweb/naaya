@@ -31,6 +31,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
+from naaya.core import ggeocoding
 
 from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
@@ -1159,5 +1160,20 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         so we can get ZMI to let us customize the kml template """
         kml = kml_generator()
         return kml.close_style()
+
+    def _google_geocode(self, address):
+        try:
+            result = ggeocoding.geocode2(address)
+        except ggeocoding.GeocoderServiceError, e:
+            return {'error': e.message}
+        else:
+            # allow for returning multiple results
+            return [result]
+
+    def geocode(self, REQUEST):
+        """ geocode using the google service """
+        result = self._google_geocode(REQUEST.form['address'])
+        REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
+        return json.dumps(result)
 
 InitializeClass(GeoMapTool)

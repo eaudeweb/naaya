@@ -45,6 +45,11 @@
         $.getJSON(url, {'address': address}, callback);
     };
 
+    engine.geocode = function(address, callback) {
+        var url = engine.config['server_url'] + '/geocode';
+        $.getJSON(url, {'address': address}, callback);
+    };
+
     engine.bounds_btlr = function(box) {
         // construct a Bounds object from [bottom, top, left, right] values
         var b = box[0], t = box[1], l = box[2], r = box[3];
@@ -137,19 +142,12 @@
         };
 
         map.go_to_address = function(address) {
-            engine.geocode_nominatim(address, function(results) {
-                for(var c = 0; c < results.length; c ++) {
-                    var result = results[c];
-                    if(result['class'] == "place" &&
-                       result['type'] == "country") {
-                        // this is a hand-placed country marker; skip it
-                        continue;
-                    }
-                    var bounds = engine.bounds_btlr(result['boundingbox']);
-                    map.zoom_to_extent(bounds);
-                    break;
-                }
-
+            engine.geocode(address, function(results) {
+                var result = results[0];
+                var bb = result['boundingbox'];
+                var btlr = [bb['bottom'], bb['top'], bb['left'], bb['right']];
+                var bounds = engine.bounds_btlr(btlr);
+                map.zoom_to_extent(bounds);
             });
         };
 
@@ -365,13 +363,11 @@
         map.add_click_callback(update_location);
 
         map.marker_at_address = function(address) {
-            engine.geocode_nominatim(address, function(results) {
-                if(results.length < 1)
-                    return;
+            engine.geocode(address, function(results) {
                 var result = results[0];
                 var coord = {
-                    lat: result['lat'],
-                    lon: result['lon']
+                    lat: result['location']['lat'],
+                    lon: result['location']['lon']
                 };
                 map.set_zoom_and_center(engine.object_map_position(coord));
                 update_location(coord);
