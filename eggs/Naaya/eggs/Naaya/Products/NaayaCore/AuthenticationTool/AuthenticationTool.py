@@ -460,9 +460,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         Return a list of userids of all users registered in this portal.
         """
-        names=self.data.keys()
-        names.sort()
-        return names
+        return sorted(self.data.keys())
 
     security.declareProtected(manage_users, 'getUserNamesSortedByAttr')
     def getUserNamesSortedByAttr(self, skey='', rkey=0):
@@ -516,14 +514,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         filter_role = form_data.get('role', '')
         assert isinstance(query, basestring)
         query = query.strip()
+        query = self.utToUtf8(query).lower()
 
-        def _filter(user):
+        def match_user(user):
             """ Callback used to filter users """
             return (
-            user.name.lower().find(self.utToUtf8(query).lower()) !=-1 or
-            user.email.lower().find(self.utToUtf8(query).lower()) !=-1 or
-            user.firstname.lower().find(self.utToUtf8(query).lower()) !=-1 or
-            user.lastname.lower().find(self.utToUtf8(query).lower()) !=-1
+                user.name.lower().find(query) !=-1 or
+                user.email.lower().find(query) !=-1 or
+                user.firstname.lower().find(query) !=-1 or
+                user.lastname.lower().find(query) !=-1
             )
 
         def sort_key(obj):
@@ -557,7 +556,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         dummy_users.append(dummy)
             user_objects.extend(dummy_users)
 
-        users = filter(_filter, user_objects)
+        users = filter(match_user, user_objects)
         users = sorted(users, key=sort_key, reverse=bool(rkey))
 
         if filter_role == 'noroles':
