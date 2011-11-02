@@ -384,11 +384,12 @@ function custom_balloon(lat, lon, content) {
     balloon.html(content);
 
     var map_div = $('#map');
+    var map_position = map_div.position();
     var point_position = map_engine.page_position(lat, lon);
 
     balloon.show({
-        left: point_position.x + map_div.offset().left - 70,
-        top: map_div.offset().top + point_position.y + 10,
+        left: map_position.left + point_position.x - 70,
+        top: map_position.top + point_position.y + 10,
         parent: map_div.parent()
     });
 
