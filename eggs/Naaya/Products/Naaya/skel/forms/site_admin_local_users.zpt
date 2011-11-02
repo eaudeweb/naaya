@@ -27,7 +27,7 @@
 			<label for="filter-roles" i18n:translate="">with roles:</label>
 			<select name="role" id="filter-roles">
 				<option value="" i18n:translate="">All</option>
-				<option value="noroles" i18n:translate="">Users with no roles</option>
+				<option value="noroles" i18n:translate="" tal:attributes="selected python: test(filter_role == 'noroles', 'selected', '')">Users with no roles</option>
 				<tal:block repeat="role user_tool/list_valid_roles">
 				<option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
 				<option tal:condition="python:role!='Manager'" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
