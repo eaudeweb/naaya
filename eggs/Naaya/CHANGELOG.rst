@@ -1,4 +1,7 @@
-2.12.19 (unreleased)
+2.12.20 (unreleased)
+--------------------
+
+2.12.19 (2011-11-02)
 --------------------
 * remove ajax calls for Users' management [andredor]
 * use second level tab for "Add new user" in Users' management [andredor]
