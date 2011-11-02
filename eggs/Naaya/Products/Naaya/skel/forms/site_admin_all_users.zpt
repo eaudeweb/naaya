@@ -36,46 +36,28 @@
 				class="datatable sortable">
 			<thead>
 				<tr tal:condition="python:len(users) != 0">
-					<th align="left">
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
-							<span i18n:translate="">Username</span>
-						</a>
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
-							<span i18n:translate="">Username</span>
-						</a>
-						<img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-						<img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+					<tal:block define="sortdata python: ({'key': 'username', 'label': 'Username'},
+														 {'key': 'name', 'label': 'Name/Email', 'width': '30%'},
+														 {'key': '', 'label': 'Roles in Locations'},
+														 {'key': 'source', 'label': 'Source'})">
+					<th align="left" tal:repeat="item sortdata" tal:attributes="width item/width|nothing">
+						<tal:block condition="item/key">
+						<a class="sort-key"
+							tal:condition="python: (skey == item['key'] and rkey) or skey != item['key']"
+							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=${item/key}"
+							i18n:translate="" tal:content="item/label"></a>
+						<a class="sort-key"
+							tal:condition="python: skey == item['key'] and not rkey"
+							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=${item/key}&rkey=1"
+							i18n:translate="" tal:content="item/label"></a>
+						<img tal:condition="python: skey == item['key'] and not rkey" src="misc_/Naaya/sort_asc.gif" />
+						<img tal:condition="python: skey == item['key'] and rkey" src="misc_/Naaya/sort_desc.gif" />
+						</tal:block>
+						<tal:block condition="not: item/key"
+							i18n:translate="" tal:content="item/label">
+						</tal:block>
 					</th>
-					<th width="30%" align="left">
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
-							<span i18n:translate="">Name/Email</span>
-						</a>
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
-							<span i18n:translate="">Name/Email</span>
-						</a>
-						<img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-						<img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
-					</th>
-					<th align="left">
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
-							<span i18n:translate="">Roles in Locations</span>
-						</a>
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
-							<span i18n:translate="">Roles in Locations</span>
-						</a>
-						<img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-						<img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
-					</th>
-					<th align="left">
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source" tal:condition="python: (skey == 'source' and rkey) or skey != 'source'" >
-							<span i18n:translate="">Source</span>
-						</a>
-						<a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source&rkey=1" tal:condition="python: skey == 'source' and not rkey" >
-							<span i18n:translate="">Source</span>
-						</a>
-						<img tal:condition="python: skey == 'source' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-						<img tal:condition="python: skey == 'source' and rkey" src="misc_/Naaya/sort_desc.gif" />
-					</th>
+					</tal:block>
 				</tr>
 			</thead>
 

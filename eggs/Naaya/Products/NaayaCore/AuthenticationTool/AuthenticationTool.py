@@ -508,7 +508,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             form_data = kw
 
-        skey= form_data.get('skey', 'name')
+        skey = form_data.get('skey', 'name')
         rkey = int(form_data.get('rkey', 0))
         page = int(form_data.get('page', 0))
         per_page = int(form_data.get('per_page', 50))
@@ -527,11 +527,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             )
 
         def sort_key(obj):
-            attr = getattr(obj, skey, None)
-            if isinstance(attr, basestring):
-                return force_to_unicode(attr).lower()
+            if skey == 'username':
+                return force_to_unicode(obj.name).lower()
             else:
-                return attr
+                return u'%s %s' % (force_to_unicode(obj.firstname),
+                                  force_to_unicode(obj.lastname))
 
         user_objects = self.getUsers()
         if all_users:
