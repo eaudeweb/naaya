@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Products.CHM2BE',
-      version='1.0.11',
+      version='1.0.12',
       description="CHM2BE",
       long_description="CHM2BE",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
