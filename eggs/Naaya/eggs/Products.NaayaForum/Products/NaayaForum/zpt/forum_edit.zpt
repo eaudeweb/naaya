@@ -34,6 +34,23 @@
     <input type="text" name="file_max_size:int" id="file_max_size" size="10" tal:attributes="value python:here.getSession('file_max_size', file_max_size)" />
     <span i18n:translate="">(bytes)</span>
 </div>
+<div class="field">
+    <label for="topics_listing" i18n:translate="">Listing of topics</label>
+    <select name="topics_listing:utf8:ustring">
+		<option value="Plain table" i18n:translate=""
+			tal:attributes="selected python:test(here.topics_listing=='Plain table', 'selected', None)">Plain table</option>
+		<option value="Group by category" i18n:translate="" tal:attributes="selected python:test(here.topics_listing=='Group by category', 'selected', None)">Group by category</option>
+	</select>
+</div>
+<div class="field">
+    <label for="topics_ordering" i18n:translate="">Ordering topics by</label>
+    <select name="topics_ordering:utf8:ustring"
+		tal:define="sort_options here/get_sort_options">
+		<option tal:repeat="sort_option sort_options" i18n:translate=""
+			tal:attributes="value python:sort_option[0];
+			selected python:test(here.topics_ordering==sort_option[0], 'selected', None)" tal:content="python:sort_option[0]" />
+	</select>
+</div>
 <!-- Submit buttons-->
 <div class="field">
 	<input type="hidden" name="redirect_url" value="index_html" />

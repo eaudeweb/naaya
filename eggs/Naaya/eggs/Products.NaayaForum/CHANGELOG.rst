@@ -1,6 +1,7 @@
 1.2.8 (unreleased)
 ------------------
-* Made columns of the forum listing sortable [dumitval]
+* Added gruping by category in forum listing [dumitval]
+* Made columns of the forum listing sortable [dumitval]  
 
 1.2.7 (2011-10-24)
 ------------------
