@@ -30,6 +30,28 @@
                     (Value 0 is for no limit uploads)
                 </td>
 	</tr>
+	<tr>
+		<td class="form-label" valign="top">Listing of topics</td>
+		<td>
+			<select name="topics_listing:utf8:ustring">
+				<option value="Plain table"
+				tal:attributes="selected python:test(here.topics_listing=='Plain table', 'selected', None)">Plain table</option>
+				<option value="Group by category"
+				tal:attributes="selected python:test(here.topics_listing=='Group by category', 'selected', None)">Group by category</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label" valign="top">Ordering topics by</td>
+		<td>
+			<select name="topics_ordering:utf8:ustring"
+				tal:define="sort_options here/get_sort_options">
+				<option tal:repeat="sort_option sort_options" i18n:translate=""
+					tal:attributes="value python:sort_option[0];
+					selected python:test(here.topics_ordering==sort_option[0], 'selected', None)" tal:content="python:sort_option[0]" />
+			</select>
+		</td>
+	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>
 </table>
 </form>

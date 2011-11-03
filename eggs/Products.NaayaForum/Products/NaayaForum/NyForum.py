@@ -24,7 +24,6 @@ STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR(80) UNIQUE',
                       'hits': 'INTEGER DEFAULT 0'}
 
-
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
     """ """
@@ -49,6 +48,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     meta_label = LABEL_NYFORUM
     icon = 'misc_/NaayaForum/NyForum.gif'
     icon_marked = 'misc_/NaayaForum/NyForum_marked.gif'
+    topics_listing = 'Plain table'
+    topics_ordering = 'Reverse: Chronological order'
 
     manage_options = (
         Folder.manage_options[0:2]
@@ -192,6 +193,23 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     def getFolders(self): return self.getPublishedFolders()
     def hasContent(self): return (len(self.getObjects()) > 0)
 
+    def get_sort_options(self):
+        """ return a maping of sorting options"""
+        return [['Subject', 'subject', False],
+                ['Access type', 'access', False],
+                ['Status', 'status', False],
+                ['Author', 'author', False],
+                ['Number of replies', 'count_messages', False],
+                ['Number of views', 'views', False],
+                ['Chronological order', 'last_message', False],
+                ['Reverse: Subject', 'subject', True],
+                ['Reverse: Access type', 'access', True],
+                ['Reverse: Status', 'status', True],
+                ['Reverse: Author', 'author', True],
+                ['Reverse: Number of replies', 'count_messages', True],
+                ['Reverse: Number of views', 'views', True],
+                ['Reverse: Chronological order', 'last_message', True]]
+
     security.declareProtected(view, 'checkTopicsPermissions')
     def checkTopicsPermissions(self):
         """
@@ -201,15 +219,25 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
         a list of topics, sorted reversed by the date of the last post.
         """
         REQUEST = self.REQUEST
-        skey = REQUEST.get('skey', 'last_message')
-        rkey = REQUEST.get('rkey')
-        if not rkey:
-            #if no parameters are passed, default sorting is by date, reversed
-            rkey = not REQUEST.get('skey')
+        skey = REQUEST.get('skey', None)
+        rkey = None
+        if skey is None:
+            for option in self.get_sort_options():
+                if self.topics_ordering == option[0]:
+                    skey = option[1]
+                    rkey = option[2]
+        if rkey is None:
+            rkey = REQUEST.get('rkey')
+            if not rkey:
+                rkey = False
+            else:
+                rkey = rkey not in ['0', 'False']
+        if self.topics_listing == 'Plain table':
+            topics = {'Plain table': []}
         else:
-            rkey = rkey not in ['0', 'False']
-        r = []
-        ra = r.append
+            topics = {}
+            for category in self.categories:
+                topics[category] = []
         btn_select, btn_delete, can_operate = 0, 0, 0
         # btn_select - if there is at least one permisson to delete or copy an object
         # btn_delete - if there is at least one permisson to delete an object
@@ -219,44 +247,60 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
             if del_permission: btn_select = 1
             if del_permission: btn_delete = 1
             if edit_permission: can_operate = 1
-            ra((del_permission, edit_permission, x))
+            if self.topics_listing == 'Plain table':
+                topics['Plain table'].append((del_permission, edit_permission, x))
+            else:
+                topics[x.category].append((del_permission, edit_permission, x))
         can_operate = can_operate or btn_select
-        if skey == 'subject':
-            r.sort(key=lambda x: x[2].title_or_id().lower(), reverse=rkey)
-        elif skey == 'access':
-            r.sort(key=lambda x: x[2].access_type(), reverse=rkey)
-        elif skey == 'status':
-            r.sort(key=lambda x: x[2].is_topic_opened(), reverse=rkey)
-        elif skey == 'views':
-            r.sort(key=lambda x: self.getTopicHits(topic=x[2].id), reverse=rkey)
-        elif skey == 'last_message':
-            r.sort(key=lambda x: x[2].get_last_message().postdate, reverse=rkey)
-        else:
-            r.sort(key=lambda x: getattr(x[2], skey), reverse=rkey)
-        return btn_select, btn_delete, can_operate, r
+        for topics_category in topics.values():
+            if skey == 'subject':
+                topics_category.sort(key=lambda x: x[2].title_or_id().lower(),
+                        reverse=rkey)
+            elif skey == 'access':
+                topics_category.sort(key=lambda x: x[2].access_type(),
+                        reverse=rkey)
+            elif skey == 'status':
+                topics_category.sort(key=lambda x: x[2].is_topic_opened(),
+                        reverse=rkey)
+            elif skey == 'views':
+                topics_category.sort(key=lambda x:
+                        self.getTopicHits(topic=x[2].id), reverse=rkey)
+            elif skey == 'last_message':
+                topics_category.sort(key=lambda x:
+                        x[2].get_last_message().postdate, reverse=rkey)
+            else:
+                topics_category.sort(key=lambda x: getattr(x[2], skey),
+                        reverse=rkey)
+        
+        return btn_select, btn_delete, can_operate, topics, skey, rkey
 
     def checkPermissionSkipCaptcha(self):
         return getSecurityManager().checkPermission('Naaya - Skip Captcha', self)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', categories='', file_max_size='', REQUEST=None):
+    def manageProperties(self, title='', description='', categories='', file_max_size='', topics_listing='', topics_ordering='', REQUEST=None):
         """ """
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
         self.file_max_size = abs(int(file_max_size))
+        self.topics_listing = topics_listing
+        self.topics_ordering = topics_ordering
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #zmi actions
     security.declareProtected(PERMISSION_ADD_FORUM, 'saveProperties')
-    def saveProperties(self, title='', description='', categories='', file_max_size='', REQUEST=None):
+    def saveProperties(self, title='', description='', categories='',
+        file_max_size='', topics_listing='', topics_ordering='', REQUEST=None):
         """ """
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
         self.file_max_size = abs(int(file_max_size))
+        self.topics_listing = topics_listing
+        self.topics_ordering = topics_ordering
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
@@ -371,3 +415,4 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     forum_add_html = PageTemplateFile('zpt/forum_add', globals())
 
 InitializeClass(NyForum)
+
