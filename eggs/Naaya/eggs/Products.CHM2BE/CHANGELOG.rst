@@ -1,5 +1,6 @@
-1.0.11 (unreleased)
+1.0.11 (2011-10-31)
 ------------------
+* new portals don't have CHMBE bundle[nituacor]
 
 1.0.10 (2011-10-31)
 ------------------
