@@ -528,11 +528,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         def sort_key(obj):
             if skey == 'username':
                 return force_to_unicode(obj.name).lower()
+            elif skey == 'source':
+                return force_to_unicode(obj.source).lower()
             else:
                 return u'%s %s' % (force_to_unicode(obj.firstname),
                                   force_to_unicode(obj.lastname))
 
         user_objects = self.getUsers()
+        for user in user_objects:
+            user.source = 'Local users'
+
         if all_users:
             dummy_users = []
             for user_source in self.getSources():
@@ -542,7 +547,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     for username in user_folder.getUserNames():
                         dummy_users.append(DummyUser(name=username,
                                     firstname='', lastname='', email='',
-                                    roles=''))
+                                    roles='', source=user_source.title))
 
                 elif user_folder.meta_type == 'LDAPUserFolder':
                     for name, role in users_roles.items():
@@ -552,7 +557,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                 lastname=u''.join(full_name.split(' ')[1:]),
                                 email=user_source.getUserEmail(name,
                                     user_folder),
-                                roles=role)
+                                roles=role, source=user_source.title)
                         dummy_users.append(dummy)
             user_objects.extend(dummy_users)
 
