@@ -1,5 +1,6 @@
 1.2.8 (unreleased)
 ------------------
+* Made columns of the forum listing sortable [dumitval]
 
 1.2.7 (2011-10-24)
 ------------------
