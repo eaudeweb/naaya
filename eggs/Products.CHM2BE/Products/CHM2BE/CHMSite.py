@@ -29,6 +29,7 @@ def wrap_loadDefaultData(method):
     def loadDefaultData(self, *args, **kwargs):
         method(self, *args, **kwargs)
         self.loadSkeleton(join(CHM2BE_PRODUCT_PATH))
+        self.set_bundle(chmbe_bundle)
     return loadDefaultData
 
 CHMSite.product_paths.append(CHM2BE_PRODUCT_PATH)
