@@ -66,18 +66,52 @@
 		<input type="submit" value="Delete" i18n:attributes="value" />
 	</div>
 </div>
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
+	tal:define="skey request/skey|string:last_message;
+				rkey python:bool(request.get('rkey')) or not request.get('skey');
+				url here/absolute_url;
+				header_values python:({'key': '', 'label': ''},
+							{'key': 'subject', 'label': 'Subject'},
+							{'key': 'access', 'label': 'Access'},
+							{'key': 'status', 'label': 'Status'},
+							{'key': 'category', 'label': 'Category'},
+							{'key': 'author', 'label': 'Author'},
+							{'key': 'count_messages', 'label': 'Replies'},
+							{'key': 'views', 'label': 'Views'},
+							{'key': 'last_message', 'label': 'Last message'})">
 	<tr>
 		<th class="checkbox" tal:condition="btn_select" width="1%"></th>
-		<th width="1%"></th>
-		<th class="title-column" i18n:translate="">Subject</th>
-		<th class="title-column" i18n:translate="">Access</th>
-		<th class="title-column" i18n:translate="">Status</th>
-		<th class="title-column" i18n:translate="">Category</th>
-		<th class="title-column" i18n:translate="">Author</th>
-		<th class="title-column" i18n:translate="">Replies</th>
-		<th class="title-column" i18n:translate="">Views</th>
-		<th class="title-column" i18n:translate="">Last message</th>
+		<tal:block repeat="item header_values">
+			<th class="title-column" tal:condition="not: item/key"
+			title="Not sortable" i18n:attributes="title"
+			i18n:translate="" tal:content="item/label" />
+			<tal:block tal:condition="item/key">
+				<tal:block tal:condition="python:skey==item['key']">
+					<th class="title-column" tal:condition="not:rkey">
+						<a title="Sorted A..Z - Click to reverse" rel="nofollow"
+							tal:attributes="href string:${here/absolute_url}?skey=${item/key}&amp;rkey=1"
+							i18n:attributes="title" i18n:translate=""
+							tal:content="item/label" />
+						<img src="misc_/Naaya/sort_asc.gif" width="12" alt=""
+							height="12" />
+					</th>
+					<th class="title-column" tal:condition="rkey">
+						<a title="Sorted Z..A - Click to reverse" rel="nofollow"
+							tal:attributes="href string:${here/absolute_url}?skey=${item/key}"
+							i18n:attributes="title" i18n:translate=""
+							tal:content="item/label" />
+						<img src="misc_/Naaya/sort_desc.gif" width="12" alt=""
+							height="12" />
+					</th>
+				</tal:block>
+				<th class="title-column"
+					tal:condition="python:skey!=item['key']">
+					<a title="Sortable" rel="nofollow"
+					tal:attributes="href string:${here/absolute_url}?skey=${item/key}"
+					i18n:attributes="title" i18n:translate="" tal:content="item/label" />
+				</th>
+			</tal:block>
+		</tal:block>
 		<th class="edit" i18n:translate="" tal:condition="can_operate">Edit</th>
 	</tr>
 	<tbody>
@@ -94,13 +128,7 @@
 					tal:attributes="alt item/meta_label; title item/meta_label" />
 			</td>
 			<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" /></td>
-			<td>
-				<tal:block tal:condition="item/can_be_seen">
-					<tal:block tal:condition="item/has_restrictions" i18n:translate="">Limited</tal:block>
-					<tal:block tal:condition="python:not item.has_restrictions()" i18n:translate="">Public</tal:block>
-				</tal:block>
-				<tal:block tal:condition="python:not item.can_be_seen()" i18n:translate="">Restricted</tal:block>
-			</td>
+			<td i18n:translate="" tal:content="item/access_type"/>
 			<td tal:content="python:test(item.is_topic_opened(), 'Opened', 'Closed')" i18n:translate="" />
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />

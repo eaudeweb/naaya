@@ -200,7 +200,14 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
         Returns in a list of tuples: which buttons should be visible,
         a list of topics, sorted reversed by the date of the last post.
         """
-        import operator
+        REQUEST = self.REQUEST
+        skey = REQUEST.get('skey', 'last_message')
+        rkey = REQUEST.get('rkey')
+        if not rkey:
+            #if no parameters are passed, default sorting is by date, reversed
+            rkey = not REQUEST.get('skey')
+        else:
+            rkey = rkey not in ['0', 'False']
         r = []
         ra = r.append
         btn_select, btn_delete, can_operate = 0, 0, 0
@@ -212,9 +219,21 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
             if del_permission: btn_select = 1
             if del_permission: btn_delete = 1
             if edit_permission: can_operate = 1
-            ra((del_permission, edit_permission, x, x.get_last_message().postdate))
+            ra((del_permission, edit_permission, x))
         can_operate = can_operate or btn_select
-        return btn_select, btn_delete, can_operate, sorted(r, key=operator.itemgetter(3), reverse=True)
+        if skey == 'subject':
+            r.sort(key=lambda x: x[2].title_or_id().lower(), reverse=rkey)
+        elif skey == 'access':
+            r.sort(key=lambda x: x[2].access_type(), reverse=rkey)
+        elif skey == 'status':
+            r.sort(key=lambda x: x[2].is_topic_opened(), reverse=rkey)
+        elif skey == 'views':
+            r.sort(key=lambda x: self.getTopicHits(topic=x[2].id), reverse=rkey)
+        elif skey == 'last_message':
+            r.sort(key=lambda x: x[2].get_last_message().postdate, reverse=rkey)
+        else:
+            r.sort(key=lambda x: getattr(x[2], skey), reverse=rkey)
+        return btn_select, btn_delete, can_operate, r
 
     def checkPermissionSkipCaptcha(self):
         return getSecurityManager().checkPermission('Naaya - Skip Captcha', self)
