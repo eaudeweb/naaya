@@ -214,6 +214,17 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         """
         return not self.acquiredRolesAreUsedBy(view)
 
+    def access_type(self):
+        """
+        Returns the access level for the current user.
+        """
+        if not self.can_be_seen():
+            return 'Restricted'
+        elif self.has_restrictions():
+            return 'Limited'
+        else:
+            return 'Public'
+
     def get_roles_with_access(self):
         """
         Returns a list of roles that have access to this folder.
