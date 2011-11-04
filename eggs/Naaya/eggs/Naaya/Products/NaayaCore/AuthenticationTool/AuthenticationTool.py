@@ -506,88 +506,75 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             form_data = kw
 
+        all_users = bool(form_data.get('all_users', False))
         skey = form_data.get('skey', 'name')
         rkey = int(form_data.get('rkey', 0))
-        page = int(form_data.get('page', 0))
-        per_page = int(form_data.get('per_page', 50))
-        all_users = bool(form_data.get('all_users', False))
         filter_role = form_data.get('role', '')
+
         assert isinstance(query, basestring)
         query = query.strip()
         query = self.utToUtf8(query).lower()
 
-        def match_user(user):
-            """ Callback used to filter users """
-            return (
-                user.name.lower().find(query) !=-1 or
-                user.email.lower().find(query) !=-1 or
-                user.firstname.lower().find(query) !=-1 or
-                user.lastname.lower().find(query) !=-1
-            )
+        # gather basic information for users
+        users_info = self.get_users_info(not all_users)
 
+        # filter users by query
+        def match_user(user_info):
+            return (user_info.user_id.lower().find(query) !=-1 or
+                    user_info.full_name.lower().find(query) !=-1 or
+                    user_info.email.lower().find(query) !=-1)
+        users_info = filter(match_user, users_info)
+
+        # gather source title for remaining users
+        for user_info in users_info:
+            if user_info._source == self:
+                user_info.source_title = u'Local'
+            else:
+                user_info.source_title = force_to_unicode(
+                                                    user_info._source.title)
+        # sort users by skey
         def sort_key(obj):
             if skey == 'username':
-                return force_to_unicode(obj.name).lower()
+                return force_to_unicode(obj.user_id).lower()
             elif skey == 'source':
-                return force_to_unicode(obj.source).lower()
+                return force_to_unicode(obj.source_title).lower()
             else:
-                return u'%s %s' % (force_to_unicode(obj.firstname),
-                                  force_to_unicode(obj.lastname))
+                return force_to_unicode(obj.full_name).lower()
+        users_info.sort(key=sort_key, reverse=bool(rkey))
 
-        user_objects = self.getUsers()
-        for user in user_objects:
-            user.source = 'Local users'
+        #users_roles = {userid: [([role, ...], path), ...], ...}
+        users_roles = self.get_all_users_roles()
+        if filter_role and filter_role != 'noroles':
+            # remove all roles not equal to filter_role
+            filtered_users_roles = {}
+            for user_id in users_roles:
+                for roles, path in users_roles[user_id]:
+                    if filter_role in roles:
+                        filtered_users_roles.setdefault(user_id, [])
+                        filtered_users_roles[user_id].append(
+                                ([filter_role], path))
+            users_roles = filtered_users_roles
 
-        if all_users:
-            dummy_users = []
-            for user_source in self.getSources():
-                user_folder = user_source.getUserFolder()
-                users_roles = user_source.getUsersRoles(user_folder)
-                if user_folder.meta_type == 'User Folder':
-                    for username in user_folder.getUserNames():
-                        dummy_users.append(DummyUser(name=username,
-                                    firstname='', lastname='', email='',
-                                    roles='', source=user_source.title))
-
-                elif user_folder.meta_type == 'LDAPUserFolder':
-                    for name, role in users_roles.items():
-                        full_name = user_source.getUserCanonicalName(name)
-                        dummy = DummyUser(name=name,
-                                firstname=full_name.split(' ')[0],
-                                lastname=u''.join(full_name.split(' ')[1:]),
-                                email=user_source.getUserEmail(name,
-                                    user_folder),
-                                roles=role, source=user_source.title)
-                        dummy_users.append(dummy)
-            user_objects.extend(dummy_users)
-
-        users = filter(match_user, user_objects)
-        users = sorted(users, key=sort_key, reverse=bool(rkey))
-
+        # filter the users by role
         if filter_role == 'noroles':
-            users_dict = self.getUsersRoles()
-            users = [u for u in users if u.name in users_dict and
-                                         users_dict[u.name] == [([], '')]]
+            users_info = [user_info for user_info in users_info
+                                        if user_info.user_id not in users_roles]
         elif filter_role != '':
-            users_dict = self.getUsersWithRole([filter_role])
-            users = [u for u in users if u.name in users_dict]
+            users_info = [user_info for user_info in users_info
+                                        if user_info.user_id in users_roles]
 
-        if REQUEST is not None and is_ajax(REQUEST):
-            template = form_data.get('template', '')
+        # gather role info
+        for user_info in users_info:
+            user_info.roles = users_roles.get(user_info.user_id, [])
+
+        # gather is new user info
+        for user_info in users_info:
             try:
-                return render_macro(self.getSite(), template, 'datatable',
-                    skey=skey,
-                    rkey=rkey, all_users_objects=users,
-                    users=users[(page*per_page):(page * per_page + per_page)],
-                    per_page=per_page, site_url=self.getSitePath(),
-                    role=filter_role, user_tool=self.getAuthenticationTool(),
-                    user_sources=self.getSources(), request=REQUEST)
-            except Exception, e:
-                self.getSite().log_current_error()
-                REQUEST.RESPONSE.setStatus(500)
-                return str(e)
-        else:
-            return users
+                user_info.is_new_user = self.isNewUser(user_info.zope_user)
+            except AttributeError: # should work for local users only
+                user_info.is_new_user = False
+
+        return users_info
 
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
@@ -892,6 +879,27 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             else:
                 raise KeyError("User not found: %r" % (user_id,))
 
+    security.declarePrivate('get_users_info')
+    def get_users_info(self, local_users_only=False):
+        """
+        Returns the user info for all local users and all users in the sources.
+        For LDAP sources only returns the users that have roles in the site.
+        """
+        user_info_objects = [self.get_user_info(username)
+                                for username in self.getUserNames()]
+        if local_users_only:
+            return user_info_objects
+
+        for user_source in self.getSources():
+            user_folder = user_source.getUserFolder()
+            if user_folder.meta_type == 'User Folder':
+                user_info_objects.extend([self.get_user_info(username)
+                    for username in user_folder.getUserNames()])
+            elif user_folder.meta_type == 'LDAPUserFolder':
+                user_info_objects.extend([self.get_user_info(username)
+                    for username in user_source.getUsersRoles(user_folder)])
+        return user_info_objects
+
     security.declareProtected(manage_users, 'getUsersFullNames')
     def getUsersFullNames(self, users):
         """
@@ -1053,6 +1061,39 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         roles.extend(user.getRoles())
         return roles
+
+    security.declarePrivate('get_all_users_roles')
+    def get_all_users_roles(self):
+        """
+        Returns a structure with user roles by objects
+        {userid: [([role, ...], path), ...], ...}
+        """
+        users_roles = {}
+        # site roles for local users
+        for username in self.user_names():
+            local_user = self.getUser(username)
+            if local_user.roles:
+                users_roles[username] = [(local_user.roles, self.getSite())]
+
+        # search for sub-sites directly below the current site
+        sites = [obj for obj in self.getSite().objectValues()
+                        if INySite.providedBy(obj)]
+        sites.append(self.getSite())
+
+        for site in sites:
+            containers = site.getCatalogedObjects(
+                            meta_type=site.get_containers_metatypes(),
+                            has_local_role=1)
+            containers.append(site)
+            for container in containers:
+                for roles_tuple in container.get_local_roles():
+                    user = roles_tuple[0]
+                    username = str(user)
+                    local_roles = self.getLocalRoles(roles_tuple[1])
+                    if local_roles:
+                        users_roles.setdefault(username, []).append(
+                                (local_roles, container))
+        return users_roles
 
     def getUserFirstName(self, user_obj):
         """

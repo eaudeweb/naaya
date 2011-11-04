@@ -6,29 +6,29 @@
 </metal:block>
 
 <metal:block fill-slot="search-box">
-    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
+	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
-    all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
-    users python: all_users_objects[page:(page + per_page)];">
+	all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
+	users python: all_users_objects[page:(page + per_page)];">
 
-    <input type="hidden" id="template" value="site_admin_all_users" />
-    <input type="hidden" id="all_users" value="True" />
+	<input type="hidden" id="template" value="site_admin_all_users" />
+	<input type="hidden" id="all_users" value="True" />
 
-    <metal:block define-macro="datatable">
-    <div class="user-results">
-        <tal:block condition="users">
-        <div class="paginator-details">
-            <label for="per-page" i18n:translate="">Users per page</label>
-            <select name="per-page" id="per-page">
-                <option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
-                <option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
-                <option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
-            </select>
-        </div>
+	<metal:block define-macro="datatable">
+	<div class="user-results">
+		<tal:block condition="users">
+		<div class="paginator-details">
+			<label for="per-page" i18n:translate="">Users per page</label>
+			<select name="per-page" id="per-page">
+				<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
+				<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
+				<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
+			</select>
+		</div>
 
-        <div class="cleaner">&nbsp;</div>
-        </tal:block>
+		<div class="cleaner">&nbsp;</div>
+		</tal:block>
 
 		<table cellspacing="0" cellpadding="4" width="95%"
 				tal:define="users_roles user_tool/getUsersRoles;
@@ -39,16 +39,17 @@
 					<tal:block define="sortdata python: ({'key': 'username', 'label': 'Username'},
 														 {'key': 'name', 'label': 'Name/Email', 'width': '30%'},
 														 {'key': '', 'label': 'Roles in Locations'},
-														 {'key': 'source', 'label': 'Source'})">
+														 {'key': 'source', 'label': 'Source'});
+										querystring python: 'query=%s&amp;role=%s' % (query, filter_role);">
 					<th align="left" tal:repeat="item sortdata" tal:attributes="width item/width|nothing">
 						<tal:block condition="item/key">
 						<a class="sort-key"
 							tal:condition="python: (skey == item['key'] and rkey) or skey != item['key']"
-							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=${item/key}"
+							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?${querystring}&skey=${item/key}"
 							i18n:translate="" tal:content="item/label"></a>
 						<a class="sort-key"
 							tal:condition="python: skey == item['key'] and not rkey"
-							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=${item/key}&rkey=1"
+							tal:attributes="href string:${here/absolute_url}/admin_all_users_html?${querystring}&skey=${item/key}&rkey=1"
 							i18n:translate="" tal:content="item/label"></a>
 						<img tal:condition="python: skey == item['key'] and not rkey" src="misc_/Naaya/sort_asc.gif" />
 						<img tal:condition="python: skey == item['key'] and rkey" src="misc_/Naaya/sort_desc.gif" />
@@ -63,31 +64,31 @@
 
 			<tbody>
 			<tal:block repeat="user users">
-			<tal:block define="user_source python: user_tool.getUserSource(user.getId());
-								user_roles python: test(user_source == 'acl_users', users_roles.get(str(user), []), users_roles_by_source.get(user_source, {}).get(str(user), []));
-								user_roles python: [role for role in user_roles if role[0]];
+			<tal:block define="user_roles user/roles;
 								row_class python:test(path('repeat/user/odd'), 'row-odd', 'row-even');
-								user_nrows python: max(1, len(user_roles));">
+								user_nrows python: max(1, len(user_roles));
+								user_id user/user_id;
+								user_source_title user/source_title;">
 				<tr tal:attributes="class row_class"
 					tal:repeat="index python: range(user_nrows)">
 					<!-- Username -->
 					<td tal:condition="python: index == 0"
 						tal:attributes="rowspan python: user_nrows">
 						<strong>
-							<tal:block condition="python: user_source == 'acl_users'">
-							<a tal:define="user_quoted python:here.utUrlEncode(user)"
+							<tal:block condition="python:user_source_title == 'Local'">
+							<a tal:define="user_quoted python:here.utUrlEncode(user_id)"
 								tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
-								tal:content="user">username</a>
+								tal:content="user_id">username</a>
 							</tal:block>
-							<tal:block condition="python: not user_source == 'acl_users'" tal:content="user"></tal:block>
+							<tal:block condition="python: user_source_title != 'Local'" tal:content="user_id"></tal:block>
 						</strong>
-						<span tal:condition="python:user_tool.isNewUser(user)">
+						<span tal:condition="user/is_new_user">
 							<img src="misc_/Naaya/star.png" alt="New account"
 								tal:define="global any_new_account python:True" />
 						</span>
-						<span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_source != 'acl_users'">
+						<span tal:condition="python: user_id in user_tool.user_names() and user_source_title != 'Local'">
 							<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt"
-							     tal:define="global any_username_conflict python:True" />
+								 tal:define="global any_username_conflict python:True" />
 						</span>
 					</td>
 					<!-- end of Username -->
@@ -96,7 +97,7 @@
 					<td tal:condition="python: index == 0"
 						tal:attributes="rowspan python: user_nrows">
 						<div class="datatable-username">
-							<tal:block replace="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)"></tal:block>
+							<tal:block replace="user/full_name"></tal:block>
 						</div>
 
 						<div class="datatable-email" tal:define="email python:user_tool.getUserEmail(user)">
@@ -109,7 +110,7 @@
 					<tal:block condition="python: index < len(user_roles)">
 						<td tal:define="role python: user_roles[index]" class="user-role">
 							<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-							<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+							<a class="roles-location" tal:define="obj python: role[1]" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
 						</td>
 					</tal:block>
 					<tal:block condition="not: user_roles">
@@ -120,7 +121,7 @@
 					<!-- Source -->
 					<td tal:condition="python: index == 0"
 						tal:attributes="rowspan python: user_nrows"
-						tal:content="python:test(user_source == 'acl_users', 'Local users', user_source)"></td>
+						tal:content="string:${user_source_title} users"></td>
 					<!-- end of Source -->
 				</tr>
 				</tal:block>
@@ -133,7 +134,7 @@
 								<p class="table-message" tal:define="source_id python: user_sources[0].id" i18n:translate="">
 									No local users defined and no roles assigned to LDAP users yet.
 									You can <a i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>
-									and/or <a i18n:name="assing-role-link" tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP             user.
+									and/or <a i18n:name="assing-role-link" tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP			 user.
 								</p>
 							</td>
 						</tal:block>
@@ -155,40 +156,40 @@
 			</tal:block>
 		</metal:block>
 
-        <div class="tip"
-             tal:define="any_new_account any_new_account|nothing;
-                         any_username_conflict any_username_conflict|nothing"
-             tal:condition="python:any_new_account or any_username_conflict">
-            <p>
-                <span i18n:translate="" tal:condition="any_new_account">
-                    <img src="misc_/Naaya/star.png" alt="New-account" title="New-account" i18n:attributes="alt; title" i18n:name="new-account" /> local users added in the past 5 days
-                </span>
-                <br class="cleaner" />
-                <span i18n:translate="" tal:condition="any_username_conflict">
-                    <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="conflicting-usernames" /> local and
-                    LDAP accounts for the same username
-                </span>
-            </p>
-        </div>
-    </div>
-    </metal:block>
+		<div class="tip"
+			 tal:define="any_new_account any_new_account|nothing;
+						 any_username_conflict any_username_conflict|nothing"
+			 tal:condition="python:any_new_account or any_username_conflict">
+			<p>
+				<span i18n:translate="" tal:condition="any_new_account">
+					<img src="misc_/Naaya/star.png" alt="New-account" title="New-account" i18n:attributes="alt; title" i18n:name="new-account" /> local users added in the past 5 days
+				</span>
+				<br class="cleaner" />
+				<span i18n:translate="" tal:condition="any_username_conflict">
+					<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="conflicting-usernames" /> local and
+					LDAP accounts for the same username
+				</span>
+			</p>
+		</div>
+	</div>
+	</metal:block>
 
-    <div class="separator"></div>
+	<div class="separator"></div>
 
-    <tal:block repeat="user_source user_sources">
-    <div class="groups-roles-list" tal:condition="python:user_source.getUserFolder().meta_type == 'LDAPUserFolder'">
-        <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
-        <h3 i18n:translate="">
-            <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
-        </h3>
+	<tal:block repeat="user_source user_sources">
+	<div class="groups-roles-list" tal:condition="python:user_source.getUserFolder().meta_type == 'LDAPUserFolder'">
+		<tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
+		<h3 i18n:translate="">
+			<tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
+		</h3>
 
-        <div class="cleaner"></div>
-        <div class="description-text">
-            <p tal:condition="groups_roles_map" i18n:translate="">
-                Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
-                below.
-            </p>
-        </div>
+		<div class="cleaner"></div>
+		<div class="description-text">
+			<p tal:condition="groups_roles_map" i18n:translate="">
+				Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
+				below.
+			</p>
+		</div>
 
 		<table cellspacing="0" cellpadding="3" class="ldap_groups datatable sortable">
 			<thead tal:condition="python: len(groups_roles_map) != 0">
@@ -231,10 +232,10 @@
 				</tr>
 			</tbody>
 		</table>
-        </tal:block>
+		</tal:block>
 
-    </div>
-    <div class="separator"></div>
-    </tal:block>
+	</div>
+	<div class="separator"></div>
+	</tal:block>
 </metal:block></metal:block>
 </metal:block>
