@@ -1,0 +1,9 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           xmlns:zcml="http://namespaces.zope.org/zcml">
+    <configure zcml:condition="installed Products.naayaUpdater">
+        <utility name="local_channels_to_unicode.update"
+            provides="Products.naayaUpdater.interfaces.IUpdateScript"
+            component=".local_channels_to_unicode.LocalChannels2Unicode"
+            permission="zope2.ViewManagementScreens" />
+    </configure>
+</configure>
