@@ -48,11 +48,11 @@
     <div class="field-inline">
         <label for="subscribe_me-lang" i18n:translate="">Language</label>
         <select name="lang" id="subscribe_me-lang"
-                tal:define="gettext python:here.getPortalTranslations().gettext">
+                tal:define="gettext python:here.getPortalI18n().get_translation">
             <option tal:repeat="item here/gl_get_languages_map"
                     tal:attributes="value python:item['id'];
                                     selected python:item['selected']"
-                    tal:content="python:gettext(item['title'], item['id'])" />
+                    tal:content="python:'['+item['id']+'] '+gettext(item['title'])" />
         </select>
     </div>
 </tal:block>

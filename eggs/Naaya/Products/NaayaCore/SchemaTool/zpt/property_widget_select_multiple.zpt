@@ -105,7 +105,7 @@
     <script tal:define="js_data python:{
                         'list_is_tree': here.list_is_tree(),
                         'list_id': here.list_id,
-                        'translated_title': here.getSite().getPortalTranslations()(here.title),
+                        'translated_title': here.getSite().getPortalI18n().get_translation(here.title),
                         'prop_id': prop_id,
                         };
                     js_data_json python:here.rstk.json_dumps(js_data)"

@@ -1,5 +1,10 @@
-1.0.6 (unreleased)
+1.0.7 (unreleased)
 ------------------
+
+1.0.6 (2011-11-03)
+------------------
+* feature: fallback for translation utility - identity translation when
+  not in INySite portal context [simiamih]
 
 1.0.5 (2011-10-20)
 ------------------

@@ -71,7 +71,7 @@ class session_manager:
     def getSessionInfo(self, default=None):
         return self.__getSession(_SESSION_INFO, default)
 
-    def _translateSessionMessages(self, messages, lang=None, **kwargs):
+    def _translateSessionMessages(self, messages, **kwargs):
         """
         Translates Session messages using interpolation like so:
 
@@ -95,15 +95,10 @@ class session_manager:
         ['bad gigi']
         """
 
-        if lang is None:
-            lang = self.gl_get_selected_language()
-
-        def translate(msgid, mapping = {}):
-            return self.getPortalTranslations().translate(domain = None,
-                    msgid = msgid, mapping=mapping, target_language = lang)
+        translate = self.getPortalI18n().get_translation
 
         if isinstance(messages, (str, unicode)):
-            return [translate(messages, kwargs), ]
+            return [translate(messages, **kwargs), ]
         elif isinstance(messages, (list, tuple)): # This is the 3rd example
             translated_messages = []
             for message in messages:
@@ -113,7 +108,7 @@ class session_manager:
                         interpolation_params = message[1]
                     except IndexError:
                         interpolation_params = {}
-                    trans_message = translate(message_str, interpolation_params)
+                    trans_message = translate(message_str, **interpolation_params)
                 elif isinstance(message, (str, unicode)):
                     trans_message = translate(message)
                 else:
@@ -128,8 +123,8 @@ class session_manager:
         else:
             raise ValueError("Invalid arguments")
 
-    def setSessionInfoTrans(self, messages, lang=None, **kwargs):
-        self.__setSession(_SESSION_INFO, self._translateSessionMessages(messages, lang, **kwargs))
+    def setSessionInfoTrans(self, messages, **kwargs):
+        self.__setSession(_SESSION_INFO, self._translateSessionMessages(messages, **kwargs))
 
     def setSessionInfo(self, value):
         self.__setSession(_SESSION_INFO, value)
@@ -144,8 +139,8 @@ class session_manager:
     def getSessionErrors(self, default=None):
         return self.__getSession(_SESSION_ERRORS, default)
 
-    def setSessionErrorsTrans(self, messages, lang=None, **kwargs):
-        self.__setSession(_SESSION_ERRORS, self._translateSessionMessages(messages, lang=lang, **kwargs))
+    def setSessionErrorsTrans(self, messages, **kwargs):
+        self.__setSession(_SESSION_ERRORS, self._translateSessionMessages(messages, **kwargs))
 
     def setSessionErrors(self, value):
         self.__setSession(_SESSION_ERRORS, value)
