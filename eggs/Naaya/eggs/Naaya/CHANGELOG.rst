@@ -1,4 +1,7 @@
-2.12.21 (unreleased)
+2.12.22 (unreleased)
+--------------------
+
+2.12.21 (2011-11-04)
 --------------------
 * fix role filter in users management [andredor]
 * Fix the `geo_query` map filter for non-English portals [moregale]
