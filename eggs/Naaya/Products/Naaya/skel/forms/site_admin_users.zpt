@@ -10,7 +10,7 @@
     tal:define="site_url here/getSitePath;
                 user_tool here/getAuthenticationTool;
                 skey python: request.get('skey', 'name');
-                rkey python: request.get('rkey', 0);
+                rkey python: int(request.get('rkey', 0));
 				query python: request.get('query', '');
 				page python: int(request.get('page', 0));
 				per_page python: int(request.get('per_page', 50));

@@ -1,5 +1,6 @@
 2.12.21 (unreleased)
 --------------------
+* fix role filter in users management [andredor]
 
 2.12.20 (2011-11-04)
 --------------------
