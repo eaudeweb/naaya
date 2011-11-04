@@ -167,7 +167,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             approved=True,
             landscape_type=[], administrative_level=[],
             lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            query='', country='', languages=None, first_letter=None,
+            query='', country='', first_letter=None,
             **kwargs):
         base_filter = {}
 
@@ -178,8 +178,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             base_filter['meta_type'] = meta_types
 
-        # if geo_types is None the filters should not include this key
-        if geo_types is not None:
+        if geo_types:
             base_filter['geo_type'] = geo_types
 
         if approved:
@@ -209,14 +208,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if query:
             query_filters = []
             for f in filters:
-                f_full_text = f.copy()
-                f_full_text['PrincipiaSearchSource'] = query
-                query_filters.append(f_full_text)
-
-                if languages == None:
-                    languages = self.gl_get_selected_language()
-                languages = self.utConvertToList(languages)
-                for lang in languages:
+                for lang in self.gl_get_languages():
                     f_keywords = f.copy()
                     f_keywords['objectkeywords_%s' % (lang,)] = query
                     query_filters.append(f_keywords)
