@@ -7,11 +7,6 @@
 
   <naaya:call factory=".tbconsultation_item.register_permissions" />
 
-  <configure zcml:condition="installed Products.naayaUpdater">
-    <utility name="userinfo_on_talkback_comments.update"
-             provides="Products.naayaUpdater.interfaces.IUpdateScript"
-             component=".updates.SetUserInfo"
-             permission="zope2.ViewManagementScreens" />
-  </configure>
+  <include package=".updates" />
 
 </configure>
