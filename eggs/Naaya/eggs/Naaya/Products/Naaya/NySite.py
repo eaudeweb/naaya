@@ -3414,24 +3414,24 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def check_pluggable_item_properties(self, meta_type, **args):
         l = []
         la = l.append
-        translate = self.getPortalTranslations().translate
+        translate = self.getPortalI18n().get_translation
         for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
             if v[0] == 1 or v[1]:   #this property is mandatory
                 if args.has_key(k):    #property found in parameters list
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
-                        if self.utIsEmptyString(value): la(translate('', v[2]))
+                        if self.utIsEmptyString(value): la(translate(v[2]))
                     elif v[1] == MUST_BE_DATETIME:
-                        if not self.utIsValidDateTime(value): la(translate('', v[2]))
+                        if not self.utIsValidDateTime(value): la(translate(v[2]))
                     elif v[1] == MUST_BE_DATETIME_STRICT:
                         if self.utIsEmptyString(value) or not self.utIsValidDateTime(value):
-                            la(translate('', v[2]))
+                            la(translate(v[2]))
                     elif v[1] == MUST_BE_POSITIV_INT:
-                        if not self.utIsAbsInteger(value): la(translate('', v[2]))
+                        if not self.utIsAbsInteger(value): la(translate(v[2]))
                     elif v[1] == MUST_BE_POSITIV_FLOAT:
-                        if not value or not self.utIsFloat(value, positive=0): la(translate('', v[2]))
+                        if not value or not self.utIsFloat(value, positive=0): la(translate(v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
-                        if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(translate('', v[2]))
+                        if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(translate(v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
