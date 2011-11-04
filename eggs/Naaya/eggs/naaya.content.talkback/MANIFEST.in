@@ -1,3 +1,4 @@
+include *.rst
 recursive-include extra *
 recursive-include naaya *
 recursive-include Products *
