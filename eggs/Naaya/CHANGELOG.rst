@@ -1,5 +1,6 @@
 2.12.20 (unreleased)
 --------------------
+* update script to fix local_channel non unicode attributes [andredor]
 
 2.12.19 (2011-11-02)
 --------------------
