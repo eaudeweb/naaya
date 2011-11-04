@@ -68,8 +68,30 @@ class NyCommonView(object):
     security.declarePublic('standard_error_message')
     def standard_error_message(self, client=None, REQUEST=None, **kwargs):
         """ """
-        kwargs['here'] = self
-        return self.getFormsTool().getContent(kwargs, 'standard_error_message')
+        try:
+            if kwargs['error_type'] != 'NotFound':
+                self.processNotifyOnErrors(kwargs['error_type'],
+                                           kwargs['error_value'],
+                                           REQUEST)
+
+            site = self.getSite()
+            forms_tool = self.getFormsTool()
+            tmpl = forms_tool['standard_error_message'].aq_base.__of__(site)
+
+            try:
+                macro = self.standard_template_macro()
+                html = tmpl(macro=macro, **kwargs)
+            except:
+                html = tmpl(macro=None, **kwargs)
+
+            return html
+
+        except:
+            try:
+                log.exception('Error displaying the error page')
+            except:
+                pass
+            return "Error displaying the error page"
 
     security.declarePublic('log_page_error')
     def log_page_error(self, error):
