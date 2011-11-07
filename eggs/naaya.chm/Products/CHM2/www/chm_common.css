@@ -516,7 +516,7 @@ img.ajax-loader {
 		padding: 1em 0em 0em !important;
 }
 
-tr.row-odd {
+tr.row-odd, tr.row-odd-sub {
     background-color: #F7F7F7;
 }
 
@@ -529,7 +529,7 @@ tr.row-odd {
 	border-right: none;
 }
 
-.datatable tr.row-even td:last-child, .datatable tr.row-odd td:last-child {
+.datatable tr.row-even td:last-child, .datatable tr.row-odd td:last-child, .datatable tr.row-odd-sub td:last-child {
 	border-right: none !important;
 }
 
@@ -588,7 +588,6 @@ label:hover {
 	background-color: #F0F5FB;
     padding: 0.5em 1em 0.5em 1em;
 	border: 1px dotted #999999;
-	height: 3.5em;
 	margin-top: 1.5em;
 }
 
