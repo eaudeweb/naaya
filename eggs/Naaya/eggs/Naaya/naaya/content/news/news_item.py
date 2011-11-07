@@ -477,6 +477,19 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'change_topitem_status')
+    def change_topitem_status(self, REQUEST=None):
+        """ show/hide event on the front page """
+        if self.topitem:
+            self.topitem = False
+        else:
+            self.topitem = True
+
+        self.recatalogNyObject(self)
+
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
     @property
     def has_expired(self):
         if not self.expirationdate:

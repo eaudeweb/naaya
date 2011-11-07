@@ -454,6 +454,19 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'change_topitem_status')
+    def change_topitem_status(self, REQUEST=None):
+        """ show/hide event on the front page """
+        if self.topitem:
+            self.topitem = False
+        else:
+            self.topitem = True
+
+        self.recatalogNyObject(self)
+
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/story_manage_edit', globals())

@@ -859,23 +859,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('editlogo_html')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopStoryObjects')
-    def setTopStoryObjects(self, REQUEST=None):
-        """ """
-        #ids_list = self.utConvertToList(REQUEST.get('id_topstory', []))
-        try:
-            for item in self.objectValues():
-                if not isinstance(item, NyItem):
-                    continue
-                if hasattr(item, 'topitem'): item.topitem = 0
-                if REQUEST.has_key('topstory_' + item.id):
-                    item.topitem = 1
-                item._p_changed = 1
-                self.recatalogNyObject(item)
-        except: self.setSessionErrorsTrans('Error while updating data.')
-        else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-        if REQUEST: REQUEST.RESPONSE.redirect('index_html')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setSortOrder')
     def setSortOrder(self, ids, REQUEST):
         """ """
