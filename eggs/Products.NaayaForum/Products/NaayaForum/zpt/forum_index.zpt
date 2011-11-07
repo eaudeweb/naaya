@@ -60,8 +60,7 @@
 </div>
 
 <tal:block condition="python:len(topics)>0">
-<form method="post" tal:define="categories topics/keys;
-								dummy python:categories.sort()"
+<form method="post" tal:define="categories here/categories"
 	tal:attributes="action string:${here/absolute_url}/deleteTopics">
 <div tal:condition="btn_delete">
 	<div id="toolbar">
