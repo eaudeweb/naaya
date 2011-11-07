@@ -89,8 +89,10 @@ class GlossaryWidget(StringWidget):
             return (REQUEST or {}).get(prop, kwargs.get(prop, None))
 
         self.glossary_id = get_prop('glossary_id')
-        self.display_mode = get_prop('display_mode')
-        self.separator = get_prop('separator')
+        if get_prop('display_mode') is not None:
+            self.display_mode = get_prop('display_mode')
+        if get_prop('separator') is not None:
+            self.separator = get_prop('separator')
 
         if get_prop('all_content_types'):
             for schema in self.getParentNode().getParentNode().objectValues():
