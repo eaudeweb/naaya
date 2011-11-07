@@ -1,5 +1,7 @@
 2.12.22 (unreleased)
 --------------------
+* Added Cut/Copy/Paste buttons to event, news and story folders [dumitval]
+* One-click topstory setting for news and stories [dumitval]
 * filter display for User management search [andredor]
 
 2.12.21 (2011-11-04)

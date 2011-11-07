@@ -84,7 +84,17 @@
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>
 		<metal:block fill-slot="toolbar" tal:condition="python:len(object_list_custom)>0">
-		<div id="toolbar" tal:condition="btn_delete">
+		<div id="toolbar"
+			tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete">
+			<input type="submit" value="Copy" class="action-button" name="copyObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_copy" />
+			<input type="submit" value="Cut" class="action-button" name="cutObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_cut" />
+			<input type="submit" value="Paste" class="action-button" name="pasteObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_paste" />
 			<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
 				i18n:attributes="value"
 				tal:condition="btn_delete" />
