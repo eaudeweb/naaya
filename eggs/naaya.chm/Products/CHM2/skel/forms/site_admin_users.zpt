@@ -1,5 +1,5 @@
 <metal:block extend-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']" define-macro="page">
-<metal:block metal:fill-slot="header-title">
+<metal:block metal:fill-slot="title">
 	<h1>
 		<metal:block define-slot="title"><span tal:omit-tag="" i18n:translate="">Users' management</span></metal:block>
 		<tal:block tal:condition="python: 'admin_users_html' not in request.PATH_INFO">-</tal:block>
