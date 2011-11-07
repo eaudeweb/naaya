@@ -1,5 +1,6 @@
 2.4.15 (unreleased)
 -------------------
+* filter display for User management search [andredor]
 
 2.4.14 (2011-10-31)
 -------------------
