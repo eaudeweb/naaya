@@ -18,9 +18,12 @@
 	<form method="get" id="search-users-form" action="">
 		<div id="name_filter">
 			<label for="search" i18n:translate="">Search users:</label>
-			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
+			<input type="text" title="You can search by name, email, username (full or part of it)."
+				i18n:attributes="title" name="query" id="autocomplete-query"
+				class="autocomplete"
+				tal:attributes="value python: request.get('query', '')"
+				size="27" />
 			<br />
-			<small i18n:translate="">Leave search box empty to filter by roles</small>
 		</div>
 
 		<div class="filters">
@@ -44,6 +47,25 @@
 	</form>
 
 	<div class="cleaner"></div>
+
+	<p i18n:translate="" id="search-filters">
+		<tal:block condition="python: not request.get('query', '') and not filter_role">
+			Showing <strong i18n:name="all-users">all users</strong>.
+		</tal:block>
+
+		<tal:block condition="python: request.get('query', '')">
+			Showing only users containing
+			<strong i18n:name="query" tal:content="python: '\'' + query + '\''"/>
+			in their username, name or email.
+		</tal:block>
+
+		<tal:block condition="python: filter_role == 'noroles'">
+			Showing only users with <strong i18n:name="no-roles">no roles</strong>.
+		</tal:block>
+		<tal:block condition="python: filter_role and filter_role != 'noroles'">
+			Showing only <strong tal:content="filter_role"/> role.
+		</tal:block>
+	</p>
 </div>
 <div class="cleaner">&nbsp;</div>
 </metal:block></metal:block>
@@ -145,8 +167,8 @@
 						row_class python:test(path('repeat/user/odd'), 'row-odd', 'row-even');
 						user_nrows python: max(1, len(user_roles));
 						user_id user/user_id">
-	<tr tal:attributes="class row_class"
-		tal:repeat="index python: range(user_nrows)">
+	<tal:block repeat="index python: range(user_nrows)">
+	<tr tal:attributes="class python: test(index == 0, row_class, row_class+'-sub')">
 		<!-- checkbox -->
 		<td nowrap="nowrap" class="center checkbox"
 			tal:condition="python: index == 0"
@@ -219,6 +241,7 @@
 		</tal:block>
 		<!-- end of Revoke roles -->
 	</tr>
+	</tal:block>
 	</tal:block>
 	</tal:block>
 
