@@ -1,0 +1,12 @@
+<fieldset><legend i18n:translate="">OpenLayers map settings</legend>
+
+<div class="field-inline">
+    <label for="form-google_allow_mouse_scroll"
+           i18n:translate="">Allow mouse scroll</label>
+    <input type="checkbox" name="openlayers_mouse_wheel_zoom:boolean"
+           id="form-openlayers_mouse_wheel_zoom"
+           tal:attributes="checked python:test(here.mouse_wheel_zoom,
+                                               'checked', None)" />
+</div>
+
+</fieldset>
