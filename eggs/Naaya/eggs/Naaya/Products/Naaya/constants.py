@@ -54,7 +54,7 @@ JS_MESSAGES = [
     u'Show All',
     u'Hide All',
     u'Type location address',
-    u'Type keywords',
+    u'Type keywords to filter locations',
     u'close',
 # folder_listing.zpt error messages
     u'Please select one or more items to copy.',

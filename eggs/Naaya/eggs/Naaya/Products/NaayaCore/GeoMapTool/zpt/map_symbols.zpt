@@ -23,7 +23,10 @@
 		tal:content="python:test(record_data['action']=='add', 'Add category', 'Edit category')">
 	</legend>
 	<dl>
-		<dt i18n:translate="">Title</dt>
+		<dt>
+			<tal:block i18n:translate="">Title</tal:block>
+			<span class="mandatory_field">*</span>
+		</dt>
 		<dd>
 			<input type="text" name="title" class="title" size="60"
 				tal:attributes="value record_data/title" />
@@ -46,12 +49,21 @@
 		</dd>
 
 		<dt>
-			<tal:block i18n:translate="">Icon</tal:block>
+			<tal:block i18n:translate="">HTML color code</tal:block>
 			<span class="mandatory_field">*</span>
 		</dt>
 		<dd>
-			Specify color <input name="color" size="10" tal:attributes="value record_data/color" />
-			or <input type="file" name="picture" value="" size="35" accept="image/*" />
+			<input name="color" size="10"
+			tal:attributes="value record_data/color" /><br/>
+			<em i18n:translate="">(use <a rel="external" i18n:name="colorpickerdotcom" href="http://www.colorpicker.com">www.colorpicker.com</a> to easily pick the desired color)</em>
+		</dd>
+		<dt>
+			<tal:block i18n:translate="">Or upload an icon</tal:block>
+			<span class="mandatory_field">*</span>
+		</dt>
+		<dd>
+			<input type="file" name="picture" value="" size="35" accept="image/*" /><br/>
+			<em i18n:translate="">(please use images of max. 24x24 pixels)</em>
 		</dd>
 
 		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
