@@ -88,21 +88,40 @@ class symbols_tool:
 
     def __addSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
+        if not title:
+            raise ValueError('The title is required')
+
         if color is None and not picture:
-            raise ValueError('A picture is required to add symbol')
+            raise ValueError('A color code or an icon is required')
+
+        if color:
+            if not check_colorcode(color):
+                raise ValueError('Invalid color code: %s' % color)
+            if len(color) == 6:
+                color = '#' + color
+            picture = None
 
         obj = symbol_item(id, title, description, parent, color, None, sortorder)
-        obj.setPicture(picture)
+        if picture:
+            obj.setPicture(picture)
         self.__symbol_collection[id] = obj
 
     def __updateSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
-        if color is None and not picture:
-            raise ValueError('A picture is required to update symbol')
 
         try: obj = self.__symbol_collection[id]
         except: pass
         else:
+            if color is None and not picture and not obj.picture:
+                raise ValueError('A color code or an icon is required')
+
+            if color:
+                if not check_colorcode(color):
+                    raise ValueError('Invalid color code: %s' % color)
+                if len(color) == 6:
+                    color = '#' + color
+                picture = None
+
             obj.title = title
             obj.description = description
 
@@ -111,7 +130,8 @@ class symbols_tool:
                 for child in self.getSymbolChildren(obj.id):
                     child.parent = ''
 
-            obj.setPicture(picture)
+            if picture:
+                obj.setPicture(picture)
             try:
                 obj.sortorder = int(sortorder)
             except:
@@ -295,6 +315,10 @@ def parse_color(value, _color_pattern=re.compile(
         int(m.group('B'), 16),
     )
 
+
+def check_colorcode(color):
+    match_expr = re.compile(r'^#?([a-fA-F0-9]{6})', re.IGNORECASE)
+    return re.match(match_expr, color)
 
 def colored_circle(size, color, halo=False):
     image_2x = PIL.Image.new("RGBA", (size*2, size*2), (128, 128, 128, 0))

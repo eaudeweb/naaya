@@ -1,8 +1,6 @@
-2.12.23 (unreleased)
+2.12.22 (unreleased)
 --------------------
-
-2.12.22 (2011-11-07)
---------------------
+* Improvements in adding and updating location categories [dumitval]
 * Added Cut/Copy/Paste buttons to event, news and story folders [dumitval]
 * One-click topstory setting for news and stories [dumitval]
 * filter display for User management search [andredor]

@@ -99,7 +99,7 @@ function get_map_filter_values() {
     var filter = [];
     var skip = {
         'address:ustring:utf8': naaya_map_i18n["Type location address"],
-        'geo_query:ustring:utf8': naaya_map_i18n["Type keywords"]
+        'geo_query:ustring:utf8': naaya_map_i18n["Type keywords to filter locations"]
     };
     $.each($("form#frmFilterMap").serializeArray(), function(i, pair) {
         if(skip[pair.name] == pair.value) return; // placeholder, ignore it
@@ -302,10 +302,10 @@ function showPageElements() {
 		}
 		this.style.color = "#000";
 	}
-	geo_query.value = naaya_map_i18n["Type keywords"];
+	geo_query.value = naaya_map_i18n["Type keywords to filter locations"];
 	geo_query.style.color = "#ccc";
 	geo_query.onfocus = function() {
-		if (this.value === naaya_map_i18n["Type keywords"]) {
+		if (this.value === naaya_map_i18n["Type keywords to filter locations"]) {
 			this.value = "";
 		}
 		this.style.color = "#000";
