@@ -133,7 +133,7 @@
 						i18n:attributes="value"/>
 				</div>
 				<div class="portalmap_portlet_title">
-					<p i18n:translate="">Filter locations</p>
+					<p i18n:translate="">Filter</p>
 				</div>
 				<div class="map_filters">
 					<div>

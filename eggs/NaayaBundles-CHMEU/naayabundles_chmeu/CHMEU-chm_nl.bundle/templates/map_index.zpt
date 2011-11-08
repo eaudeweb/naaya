@@ -66,7 +66,7 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 				    </div>
                                     <div class="portalmap_location_filters">
 						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" style="width: 60%" />
-						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter locations" onclick="startMapRefresh()" i18n:attributes="value"/>
+						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
 						<noscript>
 							<p><small i18n:translate="">eg: "water supply"</small></p>
 						</noscript>
@@ -96,13 +96,13 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
                             </p>
                             <span id="map_show_filters">
                                 <a href="javascript:void(0);" onclick="jQuery('#map_collapsable_filters').show('blind', {}, 800, function(){jQuery('#map_hide_filters').show(); jQuery('#map_show_filters').hide();});">
-                                    Show advanced search
+                                    <tal:block i18n:translate="">Show advanced search</tal:block>
                                     <img src="/++resource++geomaptool.icons/down.gif" />
                                 </a>
                             </span>
                             <span id="map_hide_filters" class="hidden">
                                 <a href="javascript:void(0);" onclick="jQuery('#map_collapsable_filters').hide('blind', {}, 800, function(){jQuery('#map_hide_filters').hide(); jQuery('#map_show_filters').show();});">
-                                    Hide advanced search
+                                    <tal:block i18n:translate="">Hide advanced search</tal:block>
                                     <img src="/++resource++geomaptool.icons/up.gif" />
                                 </a>
                             </span>
