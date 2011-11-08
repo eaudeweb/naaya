@@ -26,7 +26,6 @@ from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyCommonView import NyCommonView
 from Products.Naaya.adapters import FolderMetaTypes
 
@@ -1263,21 +1262,13 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(view, 'index_rdf')
     def index_rdf(self, REQUEST=None, RESPONSE=None):
         """ RDF feed """
-        items = REQUEST.get('items', 0)
-        rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
-        items = items or rdf_max_items
-        try:
-            items = int(items)
-        except TypeError, ValueError:
-            items = 0
         return self.getSyndicationTool().syndicateSomething(
-            self.absolute_url(), self.getPublishedObjects(items=items))
+            self.absolute_url(), self.getPublishedContent())
 
     security.declareProtected(view, 'index_rdf')
     def index_atom(self, REQUEST=None, RESPONSE=None):
         """ Atom feed """
         lang = REQUEST.get('lang', None)
-        rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
         return self.getSyndicationTool().syndicateAtom(
             context=self, items=self.getPublishedContent(), lang=lang, REQUEST=REQUEST)
 
