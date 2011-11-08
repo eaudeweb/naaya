@@ -41,7 +41,7 @@
 					</div>
 					<div class="portalmap_location_filters">
 						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" style="width: 60%" />
-						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter locations" onclick="startMapRefresh()" i18n:attributes="value"/>
+						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
 						<noscript>
 							<p><small i18n:translate="">eg: "water supply"</small></p>
 						</noscript>
