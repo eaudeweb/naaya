@@ -9,8 +9,8 @@
 	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
-	all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
-	users python: all_users_objects[page:(page + per_page)];">
+	all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role, location=filter_location);
+	users python: all_users_objects[(page * per_page):((page + 1) * per_page)];">
 
 	<input type="hidden" id="template" value="site_admin_all_users" />
 	<input type="hidden" id="all_users" value="True" />
@@ -40,7 +40,7 @@
 														 {'key': 'name', 'label': 'Name/Email', 'width': '30%'},
 														 {'key': '', 'label': 'Roles in Locations'},
 														 {'key': 'source', 'label': 'Source'});
-										querystring python: 'query=%s&amp;role=%s' % (query, filter_role);">
+										querystring python: 'query=%s&amp;role=%s&amp;location=%s' % (query, filter_role, filter_location);">
 					<th align="left" tal:repeat="item sortdata" tal:attributes="width item/width|nothing">
 						<tal:block condition="item/key">
 						<a class="sort-key"

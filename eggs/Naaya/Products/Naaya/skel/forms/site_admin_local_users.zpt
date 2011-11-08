@@ -36,6 +36,43 @@
 				<option tal:condition="python:role!='Manager'" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
 				</tal:block>
 			</select>
+		</div>
+
+		<div class="filters">
+			<label for="filter-locations" i18n:translate="">in location:</label>
+			<select name="location" id="filter-locations">
+				<option value="_all_" i18n:translate="">All</option>
+				<tal:block define="containers_by_site user_tool/get_all_containers_with_roles">
+
+				<tal:block condition="python: len(containers_by_site) == 1">
+				<tal:block repeat="location python: containers_by_site[0]">
+				<option tal:define="path python: here.rstk.relative_object_path(location, here.getSite())"
+						tal:attributes="value path;
+										title path;
+										selected python: filter_location == path"
+						tal:content="location/title_or_id"/>
+				</tal:block>
+				</tal:block>
+
+				<tal:block condition="python: len(containers_by_site) > 1">
+				<tal:block repeat="containers containers_by_site">
+				<optgroup tal:attributes="label python: containers[0].title_or_id()">
+				<tal:block repeat="location containers">
+				<option tal:define="path python: here.rstk.relative_object_path(location, here.getSite())"
+						tal:attributes="value path;
+										title path;
+										selected python: filter_location == path"
+						tal:content="location/title_or_id"/>
+				</tal:block>
+				</optgroup>
+				</tal:block>
+				</tal:block>
+
+				</tal:block>
+			</select>
+		</div>
+
+		<div class="filters">
 			<input type="submit" i18n:attributes="value" value="Search" />
 		</div>
 
@@ -49,7 +86,7 @@
 	<div class="cleaner"></div>
 
 	<p i18n:translate="" id="search-filters">
-		<tal:block condition="python: not request.get('query', '') and not filter_role">
+		<tal:block condition="python: not request.get('query', '') and not filter_role and filter_location == '_all_'">
 			Showing <strong i18n:name="all-users">all users</strong>.
 		</tal:block>
 
@@ -63,7 +100,16 @@
 			Showing only users with <strong i18n:name="no-roles">no roles</strong>.
 		</tal:block>
 		<tal:block condition="python: filter_role and filter_role != 'noroles'">
-			Showing only <strong tal:content="filter_role"/> role.
+			Showing only <strong i18n:name="role" tal:content="filter_role"/> role.
+		</tal:block>
+
+		<tal:block condition="python: filter_location != '_all_' and filter_role != 'noroles'">
+		Showing only roles in
+		<strong i18n:name="location"
+			tal:define="location python: here.utGetObject(filter_location)">
+			<a tal:attributes="href location/absolute_url"
+				tal:content="location/title_or_id"></a>
+		</strong>
 		</tal:block>
 	</p>
 </div>
@@ -102,8 +148,8 @@
 </metal:block></metal:block>
 
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
-	all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, role=filter_role);
-	users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
+	all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location);
+	users python: all_users_objects[(page * per_page):((page + 1) * per_page)];">
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
 <div class="form-buttons cleaner">
@@ -140,7 +186,7 @@
 											 {'key': 'name', 'label': 'Name/Email', 'width': '30%'},
 											 {'key': '', 'label': 'Roles in Locations'},
 											 {'key': '', 'label': 'Revoke roles'});
-							querystring python: 'query=%s&amp;role=%s' % (query, filter_role);">
+							querystring python: 'query=%s&amp;role=%s&amp;location=%s' % (query, filter_role, filter_location);">
 		<th align="left" tal:repeat="item sortdata" tal:attributes="width item/width|nothing">
 			<tal:block condition="item/key">
 			<a class="sort-key"

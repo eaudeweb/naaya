@@ -15,6 +15,7 @@
 				page python: int(request.get('page', 0));
 				per_page python: int(request.get('per_page', 50));
 				filter_role python: request.get('role', '');
+				filter_location python: request.get('location', '_all_');
 				user_sources python: here.getAuthenticationTool().getSources();
 				path_info python: request.PATH_INFO">
 	<script type="text/javascript"
