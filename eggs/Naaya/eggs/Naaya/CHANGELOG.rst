@@ -1,4 +1,7 @@
-2.12.22 (unreleased)
+2.12.23 (unreleased)
+--------------------
+
+2.12.22 (2011-11-08)
 --------------------
 * index_atom now shows also folders [dumitval]
 * Improvements in adding and updating location categories [dumitval]
