@@ -110,9 +110,9 @@ class NyPortalLanguageManager(Persistent):
 
         """
         lang = normalize_code(lang)
-        available = list(self.getAvailableLanguages())
+        available = [x[0] for x in self.portal_languages]
         if lang in available:
-            if len(self.getAvailableLanguages()) == 1:
+            if len(available) == 1:
                 raise ValueError("Can not delete the only available language")
             else:
                 pos = available.index(lang)
@@ -161,7 +161,7 @@ class NyPortalLanguageManager(Persistent):
         lang = normalize_code(lang)
         if lang not in self.getAvailableLanguages():
             raise ValueError("Language %s is not provided by portal" % lang)
-        available = list(self.getAvailableLanguages())
+        available = [x[0] for x in self.portal_languages]
         if len(available)==1:
             return
         pos = available.index(lang)
