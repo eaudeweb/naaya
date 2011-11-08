@@ -61,10 +61,12 @@
 
     engine.create_olmap = function(div_id) {
         $('#' + div_id).addClass('naaya-openlayers');
+        var nav_control = new OpenLayers.Control.Navigation();
+        nav_control.zoomWheelEnabled = engine.config['mouse_wheel_zoom'];
         var olmap = new OpenLayers.Map({
             'div': div_id,
             controls: [
-                new OpenLayers.Control.Navigation(),
+                nav_control,
                 new OpenLayers.Control.ZoomPanel(),
                 new OpenLayers.Control.Attribution()
             ]

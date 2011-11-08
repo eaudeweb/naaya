@@ -31,6 +31,7 @@ class OpenLayersMapEngine(SimpleItem):
     title = u"OpenLayers maps"
     _initial_address = DEFAULT_ADDRESS
     _initial_bounding_box = DEFAULT_BBOX
+    mouse_wheel_zoom = True;
 
     security = ClassSecurityInfo()
 
@@ -44,6 +45,7 @@ class OpenLayersMapEngine(SimpleItem):
         js_config = {
             'server_url': self.absolute_url(),
             'initial_bounding_box': self._initial_bounding_box,
+            'mouse_wheel_zoom': self.mouse_wheel_zoom,
         }
         js_config.update(global_config)
         options = {
@@ -83,6 +85,8 @@ class OpenLayersMapEngine(SimpleItem):
 
             self._initial_address = initial_address
             self._initial_bounding_box = bounding_box
+
+        self.mouse_wheel_zoom = form_data.get('openlayers_mouse_wheel_zoom', False)
 
     security.declareProtected(view, 'naaya_openlayers_js')
     naaya_openlayers_js = ImageFile('naaya_openlayers.js', globals())
