@@ -1,5 +1,6 @@
 2.12.23 (unreleased)
 --------------------
+* location filter for User management search [andredor]
 
 2.12.22 (2011-11-08)
 --------------------

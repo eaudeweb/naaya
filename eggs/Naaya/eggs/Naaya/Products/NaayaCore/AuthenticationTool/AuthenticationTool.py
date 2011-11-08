@@ -510,6 +510,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         skey = form_data.get('skey', 'name')
         rkey = int(form_data.get('rkey', 0))
         filter_role = form_data.get('role', '')
+        filter_location = form_data.get('location', '_all_')
 
         assert isinstance(query, basestring)
         query = query.strip()
@@ -542,26 +543,45 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 return force_to_unicode(obj.full_name).lower()
         users_info.sort(key=sort_key, reverse=bool(rkey))
 
-        #users_roles = {userid: [([role, ...], path), ...], ...}
-        users_roles = self.get_all_users_roles()
-        if filter_role and filter_role != 'noroles':
-            # remove all roles not equal to filter_role
-            filtered_users_roles = {}
-            for user_id in users_roles:
-                for roles, path in users_roles[user_id]:
-                    if filter_role in roles:
-                        filtered_users_roles.setdefault(user_id, [])
-                        filtered_users_roles[user_id].append(
-                                ([filter_role], path))
-            users_roles = filtered_users_roles
-
-        # filter the users by role
+        # filter by role and location
         if filter_role == 'noroles':
+            #users_roles = {userid: [([role, ...], location), ...], ...}
+            users_roles = self.get_all_users_roles()
             users_info = [user_info for user_info in users_info
                                         if user_info.user_id not in users_roles]
-        elif filter_role != '':
-            users_info = [user_info for user_info in users_info
-                                        if user_info.user_id in users_roles]
+        else:
+            #users_roles = {userid: [([role, ...], location), ...], ...}
+            if filter_location == '_all_':
+                users_roles = self.get_all_users_roles()
+            else:
+                users_roles = self.get_all_users_roles(filter_location)
+
+            if filter_role:
+                # remove all roles not equal to filter_role
+                filtered_users_roles = {}
+                for user_id in users_roles:
+                    for roles, location in users_roles[user_id]:
+                        if filter_role in roles:
+                            filtered_users_roles.setdefault(user_id, [])
+                            filtered_users_roles[user_id].append(
+                                                    ([filter_role], location))
+                users_roles = filtered_users_roles
+            if filter_location != '_all_':
+                # remove all paths not starting with filter_location
+                site = self.getSite()
+                filtered_users_roles = {}
+                for user_id in users_roles:
+                    for roles, location in users_roles[user_id]:
+                        path = relative_object_path(location, site)
+                        if path.startswith(filter_location):
+                            filtered_users_roles.setdefault(user_id, [])
+                            filtered_users_roles[user_id].append(
+                                                            (roles, location))
+                users_roles = filtered_users_roles
+
+            if filter_role != '' or filter_location != '_all_':
+                users_info = [user_info for user_info in users_info
+                                            if user_info.user_id in users_roles]
 
         # gather role info
         for user_info in users_info:
@@ -1063,29 +1083,38 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return roles
 
     security.declarePrivate('get_all_users_roles')
-    def get_all_users_roles(self):
+    def get_all_users_roles(self, filter_path=''):
         """
-        Returns a structure with user roles by objects
-        {userid: [([role, ...], path), ...], ...}
+        Returns a structure with user roles by objects starting from filter_path
+        {userid: [([role, ...], location), ...], ...}
         """
         users_roles = {}
+        this_site = self.getSite()
         # site roles for local users
-        for username in self.user_names():
-            local_user = self.getUser(username)
-            if local_user.roles:
-                users_roles[username] = [(local_user.roles, self.getSite())]
+        if filter_path == '':
+            for username in self.user_names():
+                local_user = self.getUser(username)
+                if local_user.roles:
+                    users_roles[username] = [(local_user.roles, this_site)]
 
         # search for sub-sites directly below the current site
-        sites = [obj for obj in self.getSite().objectValues()
-                        if INySite.providedBy(obj)]
-        sites.append(self.getSite())
-
+        sites = [self.getSite()] + [obj for obj in self.getSite().objectValues()
+                                            if INySite.providedBy(obj)]
         for site in sites:
+            path = relative_object_path(site, this_site)
+            if (not path.startswith(filter_path)
+                    and not filter_path.startswith(path)):
+                continue
+
             containers = site.getCatalogedObjects(
                             meta_type=site.get_containers_metatypes(),
                             has_local_role=1)
             containers.append(site)
             for container in containers:
+                path = relative_object_path(container, this_site)
+                if not path.startswith(filter_path):
+                    continue
+
                 for roles_tuple in container.get_local_roles():
                     user = roles_tuple[0]
                     username = str(user)
@@ -1094,6 +1123,30 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         users_roles.setdefault(username, []).append(
                                 (local_roles, container))
         return users_roles
+
+    security.declareProtected(manage_users, 'get_all_paths_with_roles')
+    def get_all_containers_with_roles(self):
+        """
+        Returns a list of objects with user roles
+        all sites are included by default
+        """
+        ret = []
+
+        sites = [self.getSite()] + [obj for obj in self.getSite().objectValues()
+                                            if INySite.providedBy(obj)]
+        for site in sites:
+            site_containers = [site]
+            containers = site.getCatalogedObjects(
+                            meta_type=site.get_containers_metatypes(),
+                            has_local_role=1)
+            for container in containers:
+                for roles_tuple in container.get_local_roles():
+                    local_roles = self.getLocalRoles(roles_tuple[1])
+                    if local_roles:
+                        site_containers.append(container)
+                        break
+            ret.append(site_containers)
+        return ret
 
     def getUserFirstName(self, user_obj):
         """
