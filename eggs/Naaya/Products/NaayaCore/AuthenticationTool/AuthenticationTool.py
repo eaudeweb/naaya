@@ -1082,7 +1082,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         roles.extend(user.getRoles())
         return roles
 
-    security.declarePrivate('get_all_users_roles')
     def get_all_users_roles(self, filter_path=''):
         """
         Returns a structure with user roles by objects starting from filter_path

@@ -2,6 +2,7 @@
 --------------------
 * location filter for User management search [andredor]
 * option to disable openlayers map zoom with mouse wheel [moregale]
+* view/add/revoke roles for user edit page (admin) [andredor]
 
 2.12.22 (2011-11-08)
 --------------------

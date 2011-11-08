@@ -47,7 +47,7 @@
 				<form method="post" tal:attributes="action string:${site_url}/admin_revokeuserroles">
 					<ul tal:define="user_roles python: user_roles.get(name)">
 						<tal:block repeat="role user_roles">
-							<li tal:condition="python: role != ([], '')" >
+							<li tal:condition="python: role != ([], '')">
 								<input type="checkbox" name="roles" tal:attributes="value python:role[1] != '' and role[1] or '/'" />
 								<strong tal:content="python:', '.join(role[0])" /> -
 								<span tal:condition="python:role[1]=='/'" i18n:translate="">Entire portal</span>
