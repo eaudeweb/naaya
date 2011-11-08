@@ -23,6 +23,7 @@
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <tal:block define="users user_tool/get_local_usernames;
                    redirect redirect|nothing;
+                   selected_users python: request.get('names', []);
                    action action|string:${site_url}/admin_addroles">
     <form method="post" name="frmUsersRoles" tal:attributes="action action" class="assign-form" tal:condition="users">
         <input type="hidden" name="redirect" tal:attributes="value redirect" />
@@ -30,7 +31,9 @@
             <div class="field">
                 <label for="select-usernames" i18n:translate="">Username:</label>
                 <select name="names" size="10" multiple="multiple" id="select-usernames">
-                    <option tal:repeat="user users" tal:attributes="value user/uid" tal:content="string:${user/name} (${user/uid})" />
+                    <option tal:repeat="user users"
+                        tal:attributes="value user/uid; selected python: user['uid'] in selected_users"
+                        tal:content="string:${user/name} (${user/uid})" />
                 </select>
             </div>
         </metal:block>

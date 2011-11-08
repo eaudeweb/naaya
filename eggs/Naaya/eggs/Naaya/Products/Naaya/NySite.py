@@ -2390,7 +2390,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ Can be called via normal or ajax request.
         Returns empty string on ajax
         """
-        self.getAuthenticationTool().manage_revokeUserRole(user, location)
+        if not isinstance(location, list):
+            location = [location]
+        for l in location:
+            self.getAuthenticationTool().manage_revokeUserRole(user, l)
 
         if REQUEST is not None:
             if is_ajax(REQUEST):
@@ -2399,6 +2402,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 self.setSessionInfoTrans("Role(s) succesfully revoked")
                 REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
                             '%s/admin_local_users_html' % self.absolute_url()))
+
     #
     # END Admin User management. XXX: Should be moved to AuthenticationTool
     #

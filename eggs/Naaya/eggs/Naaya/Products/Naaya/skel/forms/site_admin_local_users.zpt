@@ -175,8 +175,7 @@
 <div class="cleaner">&nbsp;</div>
 
 <table cellspacing="0" cellpadding="4" width="95%"
-		tal:attributes="class python:len(users) and 'datatable sortable' or 'empty'"
-		tal:define="users_roles user_tool/getUsersRoles" >
+		tal:attributes="class python:len(users) and 'datatable sortable' or 'empty'">
 	<thead>
 	<tr  tal:condition="python:len(users) != 0">
 		<th width="5%" align="left" class="checkbox">

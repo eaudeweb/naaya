@@ -3,13 +3,13 @@
 <metal:block fill-slot="second-title" i18n:translate="">Edit user information</metal:block>
 
 <metal:block fill-slot="second-tabs">
-    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
+	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
 </metal:block>
 
 <metal:block fill-slot="section-title">
 	<div class="cleaner">&nbsp;</div>
 	<h3 i18n:translate="" class="title-inline">
-		Edit user information:
+		Edit credentials:
 	</h3>
 	
 	<span class="section-subtitle" tal:content="request/name|nothing" />
@@ -46,44 +46,65 @@
 			<br />
 			<input type="text" id="email" name="email:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
 		</div>
-		<br />
 		<div class="field-inline">
-			<label for="password" i18n:translate="">Password:</label>
+			<label for="password" i18n:translate="">Password: *</label>
 			<br />
 			<input type="password" id="password" name="password:utf8:ustring" value="" size="25" maxLength="255" />
 		</div>
 		<div class="field-inline">
-			<label for="confirm" i18n:translate="">Password verification:</label>
+			<label for="confirm" i18n:translate="">Password verification: *</label>
 			<br />
 			<input type="password" id="confirm" name="confirm:utf8:ustring" value="" size="25" maxLength="255" />
 		</div>
+		<p i18n:translate="">
+			*Leave password fields empty to keep the current password.
+		</p>
 		<div class="field">
 			<input type="hidden" name="name:utf8:ustring" tal:attributes="value user_account" />
 			<input type="submit" value="Save changes" i18n:attributes="value" />
 		</div>
 	</form>
 
-	<h3 i18n:translate="">
-		User log
-	</h3>
-	
-	<div class="user-log">
-		<p>
-			<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created[:-3])" /><br />
-			<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated[:-3])" /><br />
-		</p>
-		
-		<p>
-			<span i18n:translate="" tal:omit-tag="">Last login:</span>
-			<tal:block tal:define="user_lastlogin python:user_tool.getUserLastLogin(user_obj)"
-						tal:content="python:test(user_lastlogin=='', ' - ', user_lastlogin[:-3])" /><br />
-			<span i18n:translate="" tal:omit-tag="">Last activity:</span>
-			<tal:block tal:define="user_lastpost python:user_tool.getUserLastPost(user_obj)"
-						tal:content="python:test(user_lastpost=='', ' - ', user_lastpost[:-3])" />
-		</p>
-	</div>
 	<span tal:replace="here/delUserSession" />
+</tal:block>
 
+<div class="cleaner"></div>
+<tal:block define="username python: request.get('name', '');
+					user_roles python: user_tool.get_all_users_roles().get(username, []);"
+	condition="username">
+	<h3 i18n:translate="">Edit user roles</h3>
+	<form method="post" tal:condition="user_roles"
+		tal:attributes="action string:${site_url}/admin_revokerole">
+		<ul>
+			<tal:block repeat="role user_roles">
+				<li tal:condition="role">
+				<tal:block define="obj python: role[1]">
+					<input type="checkbox" name="location"
+						tal:attributes="value python: here.rstk.relative_object_path(obj, here.getSite())" />
+					<strong tal:content="python:', '.join(role[0])" /> -
+					<span>
+						<a tal:attributes="href obj/absolute_url"
+							tal:content="obj/title_or_id"></a>
+					</span>
+				</tal:block>
+				</li>
+			</tal:block>
+		</ul>
+		<input type="hidden" name="user" tal:attributes="value username" />
+		<span class="buttons">
+			<input type="submit" value="Revoke" i18n:attributes="value"
+				class="submission_button" />
+			<strong><a tal:attributes="href string:${site_url}/admin_assignroles_html?names=${username}"
+					i18n:translate="">Assign new role(s)</a></strong>
+		</span>
+	</form>
+	<p i18n:translate="" tal:condition="not: user_roles">
+		User has no roles in the portal. You can
+		<strong i18n:name="assign-new-roles"><a tal:attributes="href string:${site_url}/admin_assignroles_html?names=${username}"
+				i18n:translate="">Assign role(s)</a>
+		</strong>
+		.
+	</p>
 </tal:block>
 </metal:block>
 
