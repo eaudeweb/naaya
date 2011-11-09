@@ -2403,6 +2403,20 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
                             '%s/admin_local_users_html' % self.absolute_url()))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeroles')
+    def admin_revoke_searched_roles(self, names=[], role='', location='_all_',
+                                    REQUEST=None):
+        """ """
+        if not isinstance(names, list):
+            names = [names]
+
+        self.getAuthenticationTool().revoke_searched_roles(names, role, location)
+
+        if REQUEST is not None:
+            self.setSessionInfoTrans("Role(s) succesfully revoked")
+            REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
+                        '%s/admin_local_users_html' % self.absolute_url()))
+
     #
     # END Admin User management. XXX: Should be moved to AuthenticationTool
     #

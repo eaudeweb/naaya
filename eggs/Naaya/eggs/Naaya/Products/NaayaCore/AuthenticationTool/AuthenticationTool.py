@@ -288,12 +288,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         #Delete local roles (from folder property)
         users_roles = self.getUsersRoles()
         for user, roles in users_roles.iteritems():
-            if user in names:
-                if roles[0][0] != []:
-                    for pair in roles:
-                        location = self.utGetObject(pair[1])
-                        if location is not None and pair[0] != []:
-                            location.manage_delLocalRoles([user])
+            if user not in names:
+                continue
+            for pair in roles:
+                if not pair[0]:
+                    continue
+                location = self.utGetObject(pair[1])
+                if location is not None:
+                    location.manage_delLocalRoles([user])
+
         for name in names:
             del self.data[name]
 
@@ -566,18 +569,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                             filtered_users_roles[user_id].append(
                                                     ([filter_role], location))
                 users_roles = filtered_users_roles
-            if filter_location != '_all_':
-                # remove all paths not starting with filter_location
-                site = self.getSite()
-                filtered_users_roles = {}
-                for user_id in users_roles:
-                    for roles, location in users_roles[user_id]:
-                        path = relative_object_path(location, site)
-                        if path.startswith(filter_location):
-                            filtered_users_roles.setdefault(user_id, [])
-                            filtered_users_roles[user_id].append(
-                                                            (roles, location))
-                users_roles = filtered_users_roles
 
             if filter_role != '' or filter_location != '_all_':
                 users_info = [user_info for user_info in users_info
@@ -595,6 +586,41 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 user_info.is_new_user = False
 
         return users_info
+
+    def revoke_searched_roles(self, usernames, role_to_revoke, filter_location):
+        """ """
+        # get current roles + filter location
+        if filter_location == '_all_':
+            users_roles = self.get_all_users_roles()
+        else:
+            users_roles = self.get_all_users_roles(filter_location)
+
+        for user_id in usernames:
+            for local_roles, location in users_roles.get(user_id, []):
+                if role_to_revoke: # keep the other roles the user has
+                    if role_to_revoke not in local_roles:
+                        continue
+                    all_roles = location.get_local_roles_for_userid(user_id)
+                    roles_to_set = list(set(all_roles) - set([role_to_revoke]))
+                    if roles_to_set:
+                        location.manage_setLocalRoles(user_id, roles_to_set)
+                    else:
+                        location.manage_delLocalRoles([user_id])
+                else: # remove all roles
+                    location.manage_delLocalRoles([user_id])
+
+        # remove local roles for the site
+        if filter_location in ['_all_', '']: # remove site roles
+            for user_id in usernames:
+                if user_id not in self.user_names():
+                    continue
+                local_user = self.getUser(user_id)
+                if role_to_revoke: # keep the other roles the user has
+                    if role_to_revoke in local_user.roles:
+                        local_user.roles.remove(role_to_revoke)
+                else: # remove all roles
+                    local_user.roles = []
+
 
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
@@ -1123,7 +1149,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                 (local_roles, container))
         return users_roles
 
-    security.declareProtected(manage_users, 'get_all_paths_with_roles')
+    security.declareProtected(manage_users, 'get_all_containers_with_roles')
     def get_all_containers_with_roles(self):
         """
         Returns a list of objects with user roles
@@ -1134,7 +1160,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         sites = [self.getSite()] + [obj for obj in self.getSite().objectValues()
                                             if INySite.providedBy(obj)]
         for site in sites:
-            site_containers = [site]
+            site_containers = []
             containers = site.getCatalogedObjects(
                             meta_type=site.get_containers_metatypes(),
                             has_local_role=1)
@@ -1144,6 +1170,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if local_roles:
                         site_containers.append(container)
                         break
+            site_containers.sort(key=lambda x: x.title_or_id())
+            site_containers = [site] + site_containers
             ret.append(site_containers)
         return ret
 
