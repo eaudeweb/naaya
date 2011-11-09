@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="folder_restrict" title="NyFolder restrictions"/>
-		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
 		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_urls" title="Portal administration - urls"/>
-		<form id="site_admin_userroles" title="View the roles of a user"/>
-		<form id="site_admin_users" title="All users view"/>
-		<form id="site_admin_users_assigned" title="View users with roles"/>
-		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_admin_workgroup" title="View workgroup"/>
-		<form id="site_admin_workgroups" title="View workgroups"/>
 		<form id="site_external_search" title="External search"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>

@@ -1,6 +1,7 @@
 2.4.15 (unreleased)
 -------------------
 * filter display for User management search [andredor]
+* removed workgroup pages from User management [andredor]
 
 2.4.14 (2011-10-31)
 -------------------
