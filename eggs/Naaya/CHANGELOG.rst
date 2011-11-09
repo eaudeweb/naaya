@@ -1,4 +1,7 @@
-2.12.23 (unreleased)
+2.12.24 (unreleased)
+--------------------
+
+2.12.23 (2011-11-09)
 --------------------
 * location filter for User management search [andredor]
 * option to disable openlayers map zoom with mouse wheel [moregale]
