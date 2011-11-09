@@ -1,6 +1,10 @@
-2.12.24 (unreleased)
+2.12.25 (unreleased)
 --------------------
 * Improved style for map balloon [bogdatan]
+
+2.12.24 (2011-11-09)
+--------------------
+* revoke searched roles button for User management [andredor]
 
 2.12.23 (2011-11-09)
 --------------------

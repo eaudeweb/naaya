@@ -5,6 +5,9 @@ $(document).ready(function(){
 	$('.deluser').live('click', function(e){
 		return confirm(gettext("Are you sure you want to remove this user?"));
 	});
+	$('.revoke_roles').live('click', function(e){
+		return confirm(gettext("Are you sure you want to revoke these roles?"));
+	});
 	$('.delbutton').live('click', function(e){
 		return confirm(gettext("Are you sure you want to remove this?"));
 	});

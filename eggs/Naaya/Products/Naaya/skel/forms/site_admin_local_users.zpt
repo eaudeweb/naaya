@@ -74,6 +74,7 @@
 
 		<div class="filters">
 			<input type="submit" i18n:attributes="value" value="Search" />
+			<a tal:attributes="href string:${site_url}/admin_local_users_html">Clear search</a>
 		</div>
 
 		<input type="hidden" name="skey" tal:attributes="value skey" />
@@ -151,14 +152,23 @@
 	all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location);
 	users python: all_users_objects[(page * per_page):((page + 1) * per_page)];">
 
-<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
+<form method="post" action="" class="datatable-form">
 <div class="form-buttons cleaner">
 	<span class="buttons">
-		<input tal:condition="users" type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
+		<input tal:condition="users" type="submit"
+			value="Delete selected user(s)" i18n:attributes="value"
+			class="deluser" name="../admin_deleteusers:method" />
+		<input tal:condition="python: users and filter_role != 'noroles'"
+			type="submit"
+			value="Revoke searched role(s)" i18n:attributes="value"
+			class="revoke_roles" name="../admin_revoke_searched_roles:method" />
 	</span>
 </div>
 
 <input type="hidden" id="template" value="site_admin_local_users" />
+<input type="hidden" name="role" tal:attributes="value filter_role" />
+<input type="hidden" name="location" tal:attributes="value filter_location" />
+
 <metal:block define-macro="datatable">
 <div class="user-results">
 <tal:block condition="users">
@@ -290,9 +300,9 @@
 	</tal:block>
 	</tal:block>
 
-	<tr tal:condition="python:len(users) == 0" class="tr-messages">
-		<tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
-			<tal:block condition="if">
+	<tr tal:condition="not: users" class="tr-messages">
+		<tal:block define="has_filters python: query or filter_role or filter_location != '_all_'">
+			<tal:block condition="not: has_filters">
 				<td colspan="6">
 					<tal:block condition="user_sources">
 					<p class="table-message" tal:define="source_id python: user_sources[0].id" i18n:translate="">
@@ -302,7 +312,7 @@
 					</tal:block>
 				</td>
 			</tal:block>
-			<tal:block condition="not: if">
+			<tal:block condition="has_filters">
 				<td colspan="6">
 					<p class="table-message" i18n:translate="">
 						No users matched this search criteria.
