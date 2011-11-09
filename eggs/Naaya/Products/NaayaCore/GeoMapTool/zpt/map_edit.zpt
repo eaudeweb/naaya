@@ -66,8 +66,8 @@
         </select>
     </div>
 
-    <tal:block content="structure options/engine_config_html" />
 </fieldset>
+<tal:block content="structure options/engine_config_html" />
 
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 
