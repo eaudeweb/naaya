@@ -1,4 +1,7 @@
-1.0.12 (unreleased)
+1.0.13 (unreleased)
+------------------
+
+1.0.12 (2011-11-09)
 ------------------
 * filter display for User management search [andredor]
 * removed workgroup pages from User management [andredor]
