@@ -1,4 +1,7 @@
-1.2.4 (unreleased)
+1.2.5 (unreleased)
+==================
+
+1.2.4 (2011-11-09)
 ==================
 * change in search elements by topic (id instead of title) [dumitval]
 
