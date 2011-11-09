@@ -1302,19 +1302,94 @@ p.form-errors {
 	display: none;
 }
 div.marker-body {
-	width: 290px;
+	width: 350px;
 	margin-top: 0;
 }
 div.marker-more {
-	padding: 10px 5px 5px 30px;	/* T   R   B   L */
+	padding: 10px;
+	border-top: 1px solid #DDDDDD;
+	font-size: 11px;
+	background-color: #EFEFEF;
+	background-repeat: no-repeat;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#F9F9F9), to(#EFEFEF));
+	background-image: -webkit-linear-gradient(#F9F9F9, #EFEFEF);
+	background-image: -moz-linear-gradient(#F9F9F9, #EFEFEF);
+	background-image: -o-linear-gradient(top, #F9F9F9, #EFEFEF);
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#F9F9F9), to(#EFEFEF));
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#EFEFEF', GradientType=0); /* IE8 and down */
+	-webkit-box-shadow: inset 0 1px 0 #ffffff;
+	   -moz-box-shadow: inset 0 1px 0 #ffffff;
+	    -ms-box-shadow: inset 0 1px 0 #ffffff;
+	     -o-box-shadow: inset 0 1px 0 #ffffff;
+		box-shadow: inset 0 1px 0 #ffffff;
+	-webkit-border-radius: 0 0 3px 3px;
+	   -moz-border-radius: 0 0 3px 3px;
+	    -ms-border-radius: 0 0 3px 3px;
+	     -o-border-radius: 0 0 3px 3px;
+		border-radius: 0 0 3px 3px;
 }
+
+div.marker-more a {
+	color: #4E7CB0;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+
+div.marker-more a:hover {
+	text-decoration: underline;
+}
+
+div.marker-body p {
+	font-size: 12px;
+	margin: 10px;
+}
+
 div.marker-body h3 {
+	font-size: 18px;
 	font-weight: bold;
-	font-size: 1em;
-	margin-top: 0;
-	padding-top: 0;
-	text-transform: uppercase;
+	padding: 10px 10px 5px 10px !important;
+	text-transform: capitalize;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #4E7CB0;
+	white-space: normal;
+	line-height: 1.5;
 }
+
+.marker-balloon {
+	position: absolute;
+	background: rgba(255, 255, 255, 0.95);
+	z-index: 1020;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	    -ms-border-radius: 3px;
+	     -o-border-radius: 3px;
+		border-radius: 3px;
+	-webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	    -ms-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	     -o-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+}
+
+.marker-balloon-close-button {
+	float: right;
+	display: block;
+	height: 8px;
+	width: 8px;
+	background: transparent url('misc_/Naaya/close.png') no-repeat scroll left center;
+	text-decoration: none;
+	margin: 10px;
+}
+
+.marker-balloon-close-button:hover {
+	background-position: center center;
+}
+
+.marker-balloon-close-button:active {
+	background-position: right center;
+}
+
 .map-button {
 color: #fff;
 font-size: 90%;
