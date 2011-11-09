@@ -26,7 +26,6 @@
     <li tal:condition="canPublish"><strong title="Users and security settings" i18n:attributes="title" i18n:translate="">Users' management</strong>
         <ul>
             <li><a tal:attributes="href string:${site_url}/admin_users_html" title="Local users" i18n:attributes="title" i18n:translate="">Local users</a></li>
-            <li><a tal:attributes="href string:${site_url}/admin_workgroups_html" title="Workgroups" i18n:attributes="title" i18n:translate="">Workgroups</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_roles_html" title="Roles" i18n:attributes="title" i18n:translate="">Roles</a></li>
         </ul>
     </li>

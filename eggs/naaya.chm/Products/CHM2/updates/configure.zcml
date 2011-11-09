@@ -19,6 +19,11 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_helpdesk_cleanup.UpdateHelpdeskCleanup"
       permission="zope2.ViewManagementScreens" />
+    <utility
+      name="workgroup_removal.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_workgroup_removal.UpdateWorkgroupRemoval"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
