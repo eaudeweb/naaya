@@ -1,5 +1,6 @@
 2.12.24 (unreleased)
 --------------------
+* Improved style for map balloon [bogdatan]
 
 2.12.23 (2011-11-09)
 --------------------

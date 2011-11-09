@@ -43,6 +43,7 @@ misc_ = {
     'checked':ImageFile('www/checked.png', globals()),
     'checkin':ImageFile('www/checkin.gif', globals()),
     'checkout':ImageFile('www/checkout.gif', globals()),
+    'close.png': ImageFile('www/close.png', globals()),
     'comment.gif': ImageFile('www/comment.gif', globals()),
     'conflict_users.png': ImageFile('www/conflict_users.png', globals()),
     'copy.gif':ImageFile('www/copy.gif', globals()),

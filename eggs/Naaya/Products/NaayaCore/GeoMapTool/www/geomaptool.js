@@ -329,20 +329,14 @@ var new_naaya_map_balloon = function(options) {
 
     var content_div = $('<div>')[0];
 
-    var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>');
-    close_button.css({color: '#999', float: 'right'});
+    var close_button = $('<a href="javascript:void(0);" class="marker-balloon-close-button" title="' + naaya_map_i18n["Close"] + '">&nbsp;</a>');
     close_button.click(function(){ balloon.destroy(); });
 
-    var balloon_div = $(balloon['div']);
+    var balloon_div = $(balloon['div']).addClass('marker-balloon');
     $(balloon['div']).append(close_button, content_div);
 
     balloon.show = function(options) {
         $(balloon['div']).appendTo(options['parent']).css({
-            position: 'absolute',
-            border: '2px solid #999',
-            background: 'white',
-            padding: '5px',
-            'z-index': 1020,
             left: options['left'],
             top: options['top']
         });
