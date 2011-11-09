@@ -1,4 +1,7 @@
-1.2.14 (unreleased)
+1.2.15 (unreleased)
+-------------------
+
+1.2.14 (2011-11-09)
 -------------------
 * update script for filter display for User management search [andredor]
 
