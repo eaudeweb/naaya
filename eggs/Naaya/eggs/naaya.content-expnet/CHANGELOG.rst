@@ -1,5 +1,6 @@
 1.2.4 (unreleased)
 ==================
+* change in search elements by topic (id instead of title) [dumitval]
 
 1.2.3 (2011-10-24)
 ==================
