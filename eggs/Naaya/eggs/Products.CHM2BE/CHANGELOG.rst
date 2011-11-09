@@ -1,6 +1,7 @@
 1.0.12 (unreleased)
 ------------------
 * filter display for User management search [andredor]
+* removed workgroup pages from User management [andredor]
 
 1.0.11 (2011-10-31)
 ------------------
