@@ -1,5 +1,6 @@
 2.12.25 (unreleased)
 --------------------
+* Inline documentation for portal metadata fields
 * Information boxes for special roles in admin [andredor]
 * Improved style for map balloon [bogdatan]
 * removed broken obsolete getSymbolZPicture [simiamih]

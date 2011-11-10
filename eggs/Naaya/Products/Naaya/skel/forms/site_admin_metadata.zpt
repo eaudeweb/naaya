@@ -24,36 +24,64 @@
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_metadata">
-<dl>
-	<dt i18n:translate="">Site title</dt>
-	<dd><input type="text" name="site_title:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" /></dd>
-	<dt	i18n:translate="">Site subtitle</dt>
-	<dd><input type="text" name="site_subtitle:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" /></dd>
-</dl>
-<dl>
-	<dt i18n:translate="">Publisher</dt>
-	<dd><input type="text" name="publisher:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('publisher', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Contributor</dt>
-	<dd><input type="text" name="contributor:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('contributor', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Creator</dt>
-	<dd><input type="text" name="creator:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('creator', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Rights</dt>
-	<dd><input type="text" name="rights:utf8:ustring"
-		tal:attributes="value python:here.getLocalProperty('rights', curr_lang)" size="50" /></dd>
-</dl>
-<dl tal:define="editor here/getEditorTool">
-	<dt i18n:translate="">Description (HTML)</dt>
-	<dd><span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" /></dd>
-	<dd id="admin_textarea">
+<div class="field">
+	<label for="site_title" i18n:translate="">Site title</label>
+	<input type="text" name="site_title:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" />
+</div>
+<div class="field">
+	<label i18n:translate="">Site subtitle</label>
+	<input type="text" name="site_subtitle:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" />
+</div>
+<div class="field">
+	<label for="publisher" i18n:translate="" i18n:attributes="title"
+	title="An entity responsible for making the resource available.">
+		Publisher</label>
+	<input type="text" name="publisher:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('publisher', curr_lang)" size="50" />
+	<a href="http://dublincore.org/documents/dces/#publisher" rel="external">
+		<img src="misc_/Naaya/info.png"/>
+	</a>
+</div>
+<div class="field">
+	<label i18n:translate="" i18n:attributes="title"
+	title="An entity responsible for making contributions to the resource.">
+		Contributor</label>
+	<input type="text" name="contributor:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('contributor', curr_lang)" size="50" />
+	<a href="http://dublincore.org/documents/dces/#contributor" rel="external">
+		<img src="misc_/Naaya/info.png"/>
+	</a>
+</div>
+<div class="field">
+	<label i18n:translate="" i18n:attributes="title"
+	title="An entity primarily responsible for making the resource.">
+		Creator</label>
+	<input type="text" name="creator:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('creator', curr_lang)" size="50" />
+	<a href="http://dublincore.org/documents/dces/#creator" rel="external">
+		<img src="misc_/Naaya/info.png"/>
+	</a>
+</div>
+<div class="field">
+	<label i18n:translate="" i18n:attributes="title"
+	title="Information about rights held in and over the resource.">
+		Rights</label>
+	<input type="text" name="rights:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('rights', curr_lang)" size="50" />
+	<a href="http://dublincore.org/documents/dces/#rights" rel="external">
+		<img src="misc_/Naaya/info.png"/>
+	</a>
+</div>
+<div class="field" tal:define="editor here/getEditorTool">
+	<label i18n:translate="">Description (HTML)</label>
+	<span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" />
+	<div id="admin_textarea">
 		<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor"
 		tal:content="python:here.getLocalProperty('description', curr_lang)" />
-	</dd>
-</dl>
+	</div>
+</div>
 <p><input type="hidden" name="lang" tal:attributes="value curr_lang" /></p>
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 
