@@ -30,6 +30,7 @@ from datetime import datetime, date, timedelta
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.NaayaCore.managers.import_export import UnicodeReader
+from Products.NaayaBase.NyContainer import NyContainer
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from CHMProject import CHMProject
 from utilities.Slugify import slugify
@@ -63,7 +64,7 @@ def manage_add_chm_project_registration(self, id='', title='', registration_deta
         return add_chm_project_registration.__of__(self)(REQUEST)
 
 
-class CHMProjectRegistration(LocalPropertyManager, Folder):
+class CHMProjectRegistration(LocalPropertyManager, Folder, NyContainer):
     """ Main class of the meeting registration"""
 
     meta_type = 'CHM Project Registration'
