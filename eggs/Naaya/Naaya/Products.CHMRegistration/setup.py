@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
 import os
 NAME = 'Products.CHMRegistration'
-version = open('version.txt', 'r').read().strip()
 
 setup(name=NAME,
-      version=version,
+      version='1.0.2',
       description="CHMRegistration",
       long_description=open("README.txt").read() + "\n",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
