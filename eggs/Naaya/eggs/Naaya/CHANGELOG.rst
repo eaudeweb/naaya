@@ -1,5 +1,6 @@
 2.12.25 (unreleased)
 --------------------
+* Information boxes for special roles in admin [andredor]
 * Improved style for map balloon [bogdatan]
 
 2.12.24 (2011-11-09)

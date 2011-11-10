@@ -13,11 +13,11 @@
 
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <tal:block define="site_path python:here.getSitePath();
-                        source_url string:${site_path}/admin_roles_html;
-                        section python:request.get('section', 'list');">
-	
+						source_url string:${site_path}/admin_roles_html;
+						section python:request.get('section', 'list');">
+
 	<div class="cleaner"></div>
-	
+
 	<div id="add-role-form" class="cleaner assign-form">
 		<form method="post" name="addrole" tal:attributes="action string:${site_url}/admin_addrole">
 			<div class="field-inline">
@@ -34,15 +34,15 @@
 			</p>
 		</div>
 	</div>
-	
+
 	<div class="separator"></div>
-	
+
 	<div class="description-text">
 		<p class="cleaner" i18n:translate="">
 			Click edit icon (<img src="misc_/Naaya/edit" alt="edit link" tal:attributes="title string:Edit permissions" i18n:attributes="alt; title" i18n:name="edit-link"/>) to edit role`s permissions.
 		</p>
 	</div>
-	
+
 	<metal:block define-macro="datatable">
 	<div class="roles-list">
 		<table cellspacing="0" cellpadding="4" class="datatable">
@@ -50,6 +50,7 @@
 				<tr>
 					<th i18n:translate="">Role name</th>
 					<th i18n:translate="">Edit</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -62,13 +63,32 @@
 							<img src="misc_/Naaya/edit" alt="Edit" tal:attributes="title string:Edit '${role}' permissions" />
 						</a>
 					</td>
+					<td tal:condition="python: role in ['Authenticated', 'Anonymous', 'Owner']">
+						<a class="right info-link" href="javascript:void(0);" i18n:translate="">Details</a>
+					</td>
+				</tr>
+				<tr tal:condition="python: role == 'Authenticated'"
+					class="admin-info-text" i18n:translate="">
+					<td colspan="3">
+						The <a tal:attributes="href string:${here/absolute_url}/admin_editrole_html?role=Authenticated" i18n:name="Authenticated">Authenticated</a>
+						role is assigned automatically to users whom have provided valid authentication credentials.
+						When users are logged in they are considered to also have the Authenticated role, regardless of other roles.
+					</td>
+				</tr>
+				<tr tal:condition="python: role == 'Anonymous'"
+					class="admin-info-text" i18n:translate="">
+					<td colspan="3">
+						The <a tal:attributes="href string:${here/absolute_url}/admin_editrole_html?role=Anonymous" i18n:name="Anonymous">Anonymous</a>
+						role is a special role assigned automatically when the user is not logged in.
+						When users are logged in they are considered to also have the Anonymous role, regardless of other roles.
+					</td>
 				</tr>
 				</tal:block>
 			</tbody>
 		</table>
 	</div>
 	</metal:block>
-	
+
 </tal:block>
 </metal:block>
 </metal:block>

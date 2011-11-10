@@ -44,9 +44,9 @@
                 <th i18n:translate="" class="th-left">Permission</th>
             </tr>
             <tal:block repeat="perm options/permission_list">
-            <tr tal:define="input_id string:inperm-${repeat/perm/index};
-                            zope_perm perm/zope_permission"
-                tal:attributes="class python:test(path('repeat/perm/odd'),
+            <tal:block define="input_id string:inperm-${repeat/perm/index};
+                zope_perm perm/zope_permission">
+            <tr tal:attributes="class python:test(path('repeat/perm/odd'),
                                          'row-odd', 'row-even')">
                 <td class="center checkbox">
 
@@ -62,15 +62,18 @@
                            tal:content="perm/title"
                            class="middle-label" />
                     <a class="right info-link" href="javascript:void(0);" i18n:translate="">Details</a>
-                    <div class="admin-info-text">
-                      <p tal:content="perm/description"/>
-                      <p>
-                        <em>Zope permission:
-                        <tal:block content="zope_perm"/></em>
-                      </p>
-                    </div>
                 </td>
             </tr>
+            <tr class="admin-info-text">
+                <td colspan="2">
+                  <p tal:content="perm/description"/>
+                  <p>
+                    <em>Zope permission:
+                    <tal:block content="zope_perm"/></em>
+                  </p>
+                </td>
+            </tr>
+            </tal:block>
             </tal:block>
         </table>
         </div>
