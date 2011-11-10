@@ -21,7 +21,7 @@ function set_up_info_boxes() {
 
 	function toggle_info(evt) {
 		evt.preventDefault();
-		var info_div = $(this).siblings('div.admin-info-text');
+		var info_div = $(this).closest('tr').next();
 		info_div.toggle();
 	}
 }
