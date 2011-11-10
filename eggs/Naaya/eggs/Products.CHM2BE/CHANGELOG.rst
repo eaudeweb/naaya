@@ -1,5 +1,6 @@
 1.0.13 (unreleased)
 ------------------
+* fix admin.js loaded twice in admin pages [andredor]
 
 1.0.12 (2011-11-09)
 ------------------
