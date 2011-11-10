@@ -1,6 +1,7 @@
 2.4.16 (unreleased)
 -------------------
 * Replace glossary_keywords by chm_terms in menunav links [dumitval]
+* new folder icon and sitemap fix [andredor]
 
 2.4.15 (2011-11-09)
 -------------------
