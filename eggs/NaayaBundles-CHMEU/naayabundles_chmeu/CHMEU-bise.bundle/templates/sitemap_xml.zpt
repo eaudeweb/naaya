@@ -4,6 +4,7 @@
         xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84 http://www.google.com/schemas/sitemap/0.84/sitemap.xsd"
         xmlns:tal="http://xml.zope.org/namespaces/tal">
 
+<span tal:replace="python:request.RESPONSE.setHeader('content-type','text/xml;charset=utf-8')" />
 <tal:block tal:repeat="objective python:here.bap.get_objectives()">
 
   <url tal:repeat="ob python:here.countries_and_networks.objectValues('Naaya Folder')">
@@ -12,21 +13,22 @@
       <changefreq>monthly</changefreq>
       <priority>1.0</priority>
   </url>
-  <tal:block define="objective_name objective/name" 
-             repeat="ob python:here.countries_and_networks.objectValues('Naaya Folder')">
-    <tal:block repeat="target python:here.bap.get_targets(objective_name, ob.title_or_id())">
-       <url tal:define="target_id python:target[0]">
+  <tal:block define="objective_id objective/id;" repeat="ob python:here.countries_and_networks.objectValues('Naaya Folder')">
+    <tal:block repeat="target python:here.bap.get_targets(objective_id, ob.title_or_id())">
+      <tal:block define="target_id target/id">
+       <url>
            <loc tal:content="string:${ob/absolute_url}/bap/target?id=${target_id}" />
            <lastmod tal:content="python: ob.releasedate.strftime('%Y-%m-%d')" />
            <changefreq>monthly</changefreq>
            <priority>0.9</priority>
        </url>
-       <url tal:repeat="action python: here.bap.get_actions(objective_name, target[0], ob.title_or_id())">
+       <url tal:repeat="action python: here.bap.get_actions(target_id, ob.title_or_id())">
            <loc tal:content="string:${ob/absolute_url}/bap/action?id=${action/Ident}" />
            <lastmod tal:content="python: ob.releasedate.strftime('%Y-%m-%d')" />
            <changefreq>monthly</changefreq>
            <priority>0.8</priority>
        </url>
+       </tal:block>
     </tal:block>
   </tal:block>
 </tal:block>
