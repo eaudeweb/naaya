@@ -131,16 +131,16 @@
             return xy;
         };
 
-        map.zoom_to_extent = function(extent, fill_ratio) {
+        map.zoom_to_extent = function(extent, fill_ratio, max_zoom) {
             // `fill_ratio` means how much of the map viewport we can
             // fill up. Defaults to `1.0`.
             if(fill_ratio == null) fill_ratio = 1.0;
+            if(max_zoom == null) max_zoom = 14;
 
             var map_extent = extent.transform(engine.wgs84, map.projection);
             map_extent = map_extent.scale(1/fill_ratio);
-
-            map.olmap.setCenter(map_extent.getCenterLonLat(),
-                                map.olmap.getZoomForExtent(map_extent));
+            var zoom = Math.min(map.olmap.getZoomForExtent(map_extent), max_zoom);
+            map.olmap.setCenter(map_extent.getCenterLonLat(), zoom);
         };
 
         map.go_to_address = function(address) {
@@ -401,13 +401,13 @@
         return map;
     };
 
-    engine.map_with_points = function(div_id, places) {
+    engine.map_with_points = function(div_id, list_of_places) {
         var map = engine.new_map(div_id);
         var places = engine.new_markers_collection('places');
         map.add(places);
 
         var bounds = new OpenLayers.Bounds();
-        $.each(places, function(i, place) {
+        $.each(list_of_places, function(i, place) {
             var lonlat = new OpenLayers.LonLat(place.lon, place.lat);
             places.add(engine.new_marker({lonlat: lonlat, icon: null}));
             bounds.extend(lonlat);
