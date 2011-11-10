@@ -1,4 +1,7 @@
-2.4.16 (unreleased)
+2.4.17 (unreleased)
+-------------------
+
+2.4.16 (2011-11-10)
 -------------------
 * Replace glossary_keywords by chm_terms in menunav links [dumitval]
 * new folder icon and sitemap fix [andredor]
