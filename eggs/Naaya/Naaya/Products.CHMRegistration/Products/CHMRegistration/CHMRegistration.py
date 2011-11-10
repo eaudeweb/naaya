@@ -28,6 +28,7 @@ from OFS.Folder import Folder
 import time
 
 from Products.NaayaCore.managers import utils as naaya_utils
+from Products.NaayaBase.NyContainer import NyContainer
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from CHMParticipant import CHMParticipant
 from utilities.Slugify import slugify
@@ -58,7 +59,7 @@ def manage_add_chm_registration(self, id='', title='', conference_details='', ad
         return add_chm_registration.__of__(self)(REQUEST)
 
 
-class CHMRegistration(LocalPropertyManager, Folder):
+class CHMRegistration(LocalPropertyManager, Folder, NyContainer):
     """ Main class of the meeting registration"""
 
     meta_type = 'CHM Registration'
