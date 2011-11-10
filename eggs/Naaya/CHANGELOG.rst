@@ -2,6 +2,7 @@
 --------------------
 * Information boxes for special roles in admin [andredor]
 * Improved style for map balloon [bogdatan]
+* removed broken obsolete getSymbolZPicture [simiamih]
 
 2.12.24 (2011-11-09)
 --------------------

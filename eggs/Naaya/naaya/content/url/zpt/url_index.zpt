@@ -55,7 +55,7 @@
             tal:condition="python: title != '' and here.geo_location">
         <th i18n:translate="">Type</th>
         <td>
-            <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
+            <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
             <span tal:replace="title" />
         </td>
         </tr>
