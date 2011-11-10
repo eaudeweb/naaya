@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+0.0.2 (unreleased)
+----------------------
+
+1.0.1 (2011-11-10)
 ----------------------
 * Derive from NyContainer to allow approval/unapproval [dumitval]
 
