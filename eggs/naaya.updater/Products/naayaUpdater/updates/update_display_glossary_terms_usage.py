@@ -16,7 +16,7 @@ class UpdateDisplayGlossaryUsage(UpdateScript):
     Generic script that returns a list with all customised indexes of folders
     """
 
-    title = 'Display glossary terms usage'
+    title = 'Display glossary terms usage, remove terms in invalid languages'
     authors = ['Valentin Dumitru']
     creation_date = 'Oct 17, 2011'
     description = 'Displays a usage count for terms in the glossary_coverage'
@@ -110,8 +110,13 @@ class UpdateDisplayGlossaryUsage(UpdateScript):
                 for lang in terms_all_langs.keys():
                     ln_terms = terms_all_langs[lang][0].split(',') 
                     ln_terms = [term.strip() for term in ln_terms if term.strip()]
-                    #if lang != 'en':
-                    if lang not in processed_languages:
+                    if lang not in object.gl_get_languages():
+                        properties = object._local_properties.copy()
+                        self.log.debug('%s keyword in language %s deleted from %s' % (terms_all_langs[lang], lang, object.absolute_url()))
+                        del(properties['keywords'][lang])
+                        object._local_properties = properties
+                        break
+                    elif lang not in processed_languages:
                         language_mapping.update(self.get_language_mapping(
                             glossary, lang))
                         processed_languages.append(lang)
@@ -135,7 +140,11 @@ class UpdateDisplayGlossaryUsage(UpdateScript):
         gl_terms = []
         for brain in gl_catalog({}):
             try:
-                gl_terms.append(brain.getObject())
+                ob = brain.getObject()
+                if ob.meta_type == 'Naaya Glossary':
+                    self.log.error('%s present in the glossary catalog' % ob.getId())
+                else:
+                    gl_terms.append(brain.getObject())
             except KeyError:
                 pass
         language = glossary.get_language_by_code(lang)
