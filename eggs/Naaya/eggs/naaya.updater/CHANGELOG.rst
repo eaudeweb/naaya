@@ -1,5 +1,6 @@
 1.2.15 (unreleased)
 -------------------
+* Changed glossary usage update [dumitval]
 
 1.2.14 (2011-11-09)
 -------------------
