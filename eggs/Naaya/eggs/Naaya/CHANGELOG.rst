@@ -1,4 +1,7 @@
-2.12.25 (unreleased)
+2.12.26 (unreleased)
+--------------------
+
+2.12.25 (2011-11-10)
 --------------------
 * Inline documentation for portal metadata fields
 * Information boxes for special roles in admin [andredor]
