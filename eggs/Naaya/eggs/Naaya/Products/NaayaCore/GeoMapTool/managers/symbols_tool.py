@@ -214,12 +214,6 @@ class symbols_tool:
         try: return self.__symbol_collection[id].parent
         except: return id
 
-    def getSymbolZPicture(self, id, REQUEST=None):
-        """Get picture stream in zope interface """
-        try:
-            return self.__symbol_collection[id].picture
-        except: return None
-
     def getSymbolPicture(self, id, REQUEST=None):
         """Get picture stream"""
         if id.startswith('symbol_cluster'):
