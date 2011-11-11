@@ -1,4 +1,7 @@
-2.12.26 (unreleased)
+2.12.27 (unreleased)
+--------------------
+
+2.12.26 (2011-11-11)
 --------------------
 * tinymce updated from 3.2.7 to 3.4.7 [simiamih]
 
