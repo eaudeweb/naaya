@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2011-11-11)
 ------------------
 * bugfix: #692 3. add/edit links work, also all links work in
   firefox [simiamih]
