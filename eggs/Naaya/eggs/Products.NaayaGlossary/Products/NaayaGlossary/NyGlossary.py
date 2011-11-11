@@ -32,7 +32,7 @@ from Products.NaayaGlossary.parsers.stop_words_parser import stop_words_parser
 from Products.NaayaGlossary.parsers.import_parsers import glossary_export
 
 from Products.NaayaCore.managers.utils import genObjectId
-from naaya.core.zope2util import ofs_walk, ofs_path
+from naaya.core.zope2util import ofs_walk, ofs_path, relative_object_path
 from naaya.core.utils import download_to_temp_file
 from naaya.core.folderutils import sort_folder
 from interfaces import INyGlossaryItem, IItemTranslationChanged
@@ -756,6 +756,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 'attributes': {
                     'id': folder_ob.getId(),
                     'rel': "tree",
+                    'data-path': relative_object_path(folder_ob, self)
                 },
                 'data': {
                     'title': folder_ob.title_or_id(),
@@ -771,6 +772,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     'attributes': {
                         'id': element_ob.getId(),
                         'rel': 'node',
+                        'data-path': relative_object_path(element_ob, self)
                     },
                     'data': {
                         'title': element_ob.title_or_id(),

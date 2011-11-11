@@ -7,7 +7,7 @@ $(document).ready(function(){
 function add_link(self){
     var link = $(self.find('a')[0]);
     var pathname = window.location.pathname.substring(1)//remove first slash
-    var uri = "/" + pathname + '?insert=' + pathname.replace('index_html', '') + self.attr('id');
+    var uri = "/" + pathname + '?insert=' + pathname.replace('index_html', '') + self.attr('id') + '#glossary_add_div';
     link.after($('<a>')
         .attr('href', uri)
         .html('add')
@@ -18,7 +18,7 @@ function add_link(self){
 function edit_link(self){
     var link = $(self.find('a')[0]);
     var pathname = window.location.pathname.substring(1)//remove first slash
-    var uri = '/' + pathname + '?item=' + pathname.replace('index_html', '') + self.attr('id');
+    var uri = '/' + pathname + '?item=' + self.attr("data-path") + '#glossary_management_div';
     link.after($('<a>')
         .attr('href', uri)
         .html('edit')
@@ -38,10 +38,8 @@ function get_children(TREE_OBJ, NODE) {
     return all_children;
 }
 $('.edit-link, .add-link').live('click', function(){
-    if (!location_changed) {
-        window.location = $(this).attr('href');
-        location_changed = true;
-    }
+    window.location = $(this).attr('href');
+    location_changed = true;
 });
 
 $('#jstree_container').tree({
@@ -68,10 +66,8 @@ $('#jstree_container').tree({
             }
         },
         onselect : function(NODE, TREE_OBJ){
-            if (!location_changed) {
+            if (!location_changed)
                 window.location = $(NODE).find('a').attr('href');
-                location_changed = true;
-            }
         },
         beforemove : function(NODE, REF_NODE, TYPE, TREE_OBJ){
             //Before moving check if it's the same parent
