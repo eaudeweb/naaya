@@ -169,13 +169,13 @@
     </tal:block>
 
     <tal:block tal:condition="can_edit">
-    <div class="management_div" tal:condition="selected_item">
+    <div class="management_div" id="glossary_management_div" tal:condition="selected_item">
         <form action="updateGlossaryItem" method="post">
             <h2><span tal:replace="selected_item/title_or_id"/> <span i18n:translate="">properties</span></h2>
 
             <div class="field">
                 <label for="item_title" i18n:translate="">Title</label>
-                <input type="text" name="item_title" tal:attributes="value selected_item/title"/>
+                <input type="text" name="item_title" size="35" tal:attributes="value selected_item/title"/>
             </div>
             <div class="field">
                 <label for="item_themes" i18n:translate="">Themes</label>
@@ -235,7 +235,7 @@
         </form>
     </div>
 
-    <div class="management_div" tal:condition="insert_after">
+    <div class="management_div" id="glossary_add_div" tal:condition="insert_after">
         <h2>Add entry</h2>
         <form action="addGlossaryEntry" method="post" tal:define="theme_list insert_after/get_subjects_list ">
             <div class="field">
@@ -247,7 +247,7 @@
             </div>
             <div class="field">
                 <label for="entry_title" i18n:translate="">Title</label>
-                <input type="text" name="entry_title" id="entry_title"/>
+                <input type="text" name="entry_title" size="35" id="entry_title"/>
             </div>
             <div class="field">
                 <label for="entry_subjects" i18n:translate="">Themes</label>
@@ -260,11 +260,11 @@
             </div>
             <div class="field">
                 <label for="entry_source" i18n:translate="">Source</label>
-                <input type="text" name="entry_source" id="entry_source"/>
+                <input type="text" size="35" name="entry_source" id="entry_source"/>
             </div>
             <div class="field">
                 <label for="entry_contributor" i18n:translate="">Contributor</label>
-                <input type="text" name="entry_contributor" id="entry_contributor"/>
+                <input type="text" size="35" name="entry_contributor" id="entry_contributor"/>
             </div>
                 <input type="hidden" name="entry_parent" tal:attributes="value python:insert_after.absolute_url(1)"/>
             <div class="field">
