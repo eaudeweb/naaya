@@ -49,7 +49,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.i18n.LocalPropertyManager import LocalProperty
 
 import naaya.content.infofolder.skel as skel
-from naaya.content.infofolder.constants import *
+from naaya.content.infofolder.permissions import PERMISSION_EDIT_INFO
 
 #module constants
 METATYPE_OBJECT = 'Naaya Info'

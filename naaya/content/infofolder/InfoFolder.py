@@ -50,7 +50,7 @@ from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTra
 from naaya.content.event import event_item
 from paginator import DiggPaginator, EmptyPage, InvalidPage
 
-from constants import *
+from permissions import PERMISSION_ADD_INFOFOLDER
 import skel
 LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES
 
@@ -88,7 +88,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya InfoFolder',
         'label': 'InfoFolder',
-        'permission': 'Naaya - Add Naaya InfoFolder objects',
+        'permission': PERMISSION_ADD_INFOFOLDER,
         'forms': ['infofolder_add', 'infofolder_edit', 'infofolder_index'],
         'add_form': 'infofolder_add_html',
         'description': 'This is Naaya InfoFolder type.',
