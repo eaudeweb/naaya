@@ -30,6 +30,8 @@ from naaya.content.bfile.NyBlobFile import make_blobfile, trim_filename
 from naaya.content.bfile.utils import file_has_content, tmpl_version, get_view_adapter
 from naaya.content.bfile.interfaces import INyBFile
 
+from permissions import PERMISSION_ADD_LOCALIZED_BFILE
+
 #ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
 
 config = {
@@ -38,7 +40,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Localized Blob File',
         'label': 'Localized File',
-        'permission': 'Naaya - Add Naaya Localized Blob File',
+        'permission': PERMISSION_ADD_LOCALIZED_BFILE,
         'forms': ['localizedbfile_add', 'localizedbfile_edit', 'localizedbfile_index', 'localizedbfile_quickview_zipfile'],
         'add_form': 'localizedbfile_add_html',
         'description': 'Localized file objects that store data using ZODB BLOBs',
