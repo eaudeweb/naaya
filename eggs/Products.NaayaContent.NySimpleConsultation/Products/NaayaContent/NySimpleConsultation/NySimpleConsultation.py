@@ -47,14 +47,13 @@ from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from naaya.content.exfile.exfile_item import addNyExFile
 from simpleconsultation_comment import addSimpleConsultationComment
 from naaya.core.zope2util import permission_add_role
+from permissions import (PERMISSION_ADD_SIMPLE_CONSULTATION,
+                         PERMISSION_REVIEW_SIMPLECONSULTATION,
+                         PERMISSION_MANAGE_SIMPLECONSULTATION)
 
 #module constants
-PERMISSION_REVIEW_SIMPLECONSULTATION = 'Naaya - Review Simple Consultation'
-PERMISSION_MANAGE_SIMPLECONSULTATION = 'Naaya - Manage Simple Consultation'
-
 METATYPE_OBJECT = 'Naaya Simple Consultation'
 LABEL_OBJECT = 'Simple Consultation'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Simple Consultation objects'
 OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNySimpleConsultation_html', 'simpleconsultation_add_html', 'addNySimpleConsultation']
 OBJECT_ADD_FORM = 'simpleconsultation_add_html'
@@ -84,7 +83,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Simple Consultation',
         'label': 'Simple Consultation',
-        'permission': 'Naaya - Add Naaya Simple Consultation objects',
+        'permission': PERMISSION_ADD_SIMPLE_CONSULTATION,
         'forms': [],
         'add_form': 'simpleconsultation_add_html',
         'description': 'This is Naaya Simple Consultation type.',
