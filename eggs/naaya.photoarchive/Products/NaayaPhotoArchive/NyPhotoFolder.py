@@ -37,6 +37,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
+from permissions import PERMISSION_ADD_PHOTO
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
