@@ -13,7 +13,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
-from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
+from permissions import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 from utils import findUsers, listUsersInGroup
 from subscriptions import Subscriptions

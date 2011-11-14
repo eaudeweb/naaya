@@ -1,5 +1,6 @@
 1.2.9 (unreleased)
 ------------------
+* permission information update [andredor]
 
 1.2.8 (2011-10-24)
 ------------------

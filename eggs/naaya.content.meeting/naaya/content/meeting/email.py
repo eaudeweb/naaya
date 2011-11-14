@@ -13,7 +13,7 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate, Em
 
 #naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
-from naaya.content.meeting import PERMISSION_ADMIN_MEETING
+from permissions import PERMISSION_ADMIN_MEETING
 from utils import getUserEmail
 
 def configureEmailNotifications(site):

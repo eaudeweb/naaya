@@ -12,7 +12,7 @@ except ImportError:
     from Products.NaayaContent.discover import get_pluggable_content
 
 from naaya.content.meeting.meeting import NyMeeting
-from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING
+from permissions import PERMISSION_PARTICIPATE_IN_MEETING
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
 from meeting import add_observer_role
