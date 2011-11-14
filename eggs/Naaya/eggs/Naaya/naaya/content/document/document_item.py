@@ -27,6 +27,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 
+from permissions import PERMISSION_ADD_DOCUMENT
+
 #module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
@@ -61,7 +63,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Document',
         'label': 'HTML Document',
-        'permission': 'Naaya - Add Naaya Document objects',
+        'permission': PERMISSION_ADD_DOCUMENT,
         'forms': ['document_add', 'document_edit', 'document_index'],
         'add_form': 'document_add',
         'description': 'This is Naaya Document type.',

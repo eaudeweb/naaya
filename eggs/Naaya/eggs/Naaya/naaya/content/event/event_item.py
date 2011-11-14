@@ -31,6 +31,7 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyEvent
+from permissions import PERMISSION_ADD_EVENT
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -62,7 +63,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Event',
         'label': 'Event',
-        'permission': 'Naaya - Add Naaya Event objects',
+        'permission': PERMISSION_ADD_EVENT,
         'forms': ['event_add', 'event_edit', 'event_index'],
         'add_form': 'event_add_html',
         'description': 'This is Naaya Event type.',

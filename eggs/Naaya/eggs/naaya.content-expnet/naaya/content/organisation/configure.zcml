@@ -4,6 +4,7 @@
   i18n_domain="naaya.content">
 
   <naaya:content factory=".organisation_item.get_config" />
+  <naaya:call factory=".permissions.register_permissions" />
 
   <adapter factory="naaya.content.organisation.organisation_item.OrganisationCSVImportAdapter" />
 

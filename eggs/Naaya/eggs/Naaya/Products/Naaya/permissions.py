@@ -2,6 +2,7 @@ from textwrap import dedent
 from constants import PERMISSION_ADD_FOLDER
 from Products.NaayaBase.constants import PERMISSION_SKIP_APPROVAL
 
+
 permission_data = {
     'Naaya - Add comments for content': {
         'title': "Submit comments",
@@ -72,7 +73,7 @@ permission_data = {
     PERMISSION_ADD_FOLDER: {
         'title': "Submit Folder objects",
         'description': """
-            Create new content items of type NyFolder.
+            Create new folder objects.
         """,
     },
     PERMISSION_SKIP_APPROVAL: {
@@ -96,9 +97,12 @@ permission_data = {
     },
 }
 
-def register_default_permissions():
+def _register_permissions(permission_data):
     from NySite import register_naaya_permission
     for zope_perm, info in permission_data.iteritems():
         register_naaya_permission(zope_perm,
                                   info['title'],
                                   dedent(info['description']))
+
+def register_permissions():
+    _register_permissions(permission_data)

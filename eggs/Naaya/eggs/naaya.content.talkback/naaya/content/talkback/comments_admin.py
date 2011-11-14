@@ -35,7 +35,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 
 from Paragraph import Paragraph
-from constants import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
+from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
                        PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment

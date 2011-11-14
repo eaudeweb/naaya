@@ -415,4 +415,3 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     forum_add_html = PageTemplateFile('zpt/forum_add', globals())
 
 InitializeClass(NyForum)
-

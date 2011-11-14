@@ -24,6 +24,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 
 from interfaces import INyEduProduct
+from permissions import PERMISSION_ADD_EDU_PRODUCT
 import skel
 
 DEFAULT_SCHEMA = {
@@ -61,7 +62,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Educational Product',
         'label': 'EduProduct',
-        'permission': 'Naaya - Add Naaya Educational Product objects',
+        'permission': PERMISSION_ADD_EDU_PRODUCT,
         'forms': ['eduproduct_add', 'eduproduct_edit', 'eduproduct_index'],
         'add_form': 'eduproduct_add_html',
         'description': 'This is Naaya Educational Product type.',

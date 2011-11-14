@@ -3,6 +3,7 @@
   i18n_domain="naaya.content">
 
   <naaya:content factory=".bfile_item.get_config" />
+  <naaya:call factory=".permissions.register_permissions" />
 
   <adapter factory=".adapters.BFileZipAdapter"
 		   for=".interfaces.INyBFile"

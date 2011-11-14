@@ -23,6 +23,8 @@ from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
+from permissions import PERMISSION_ADD_POINTER
+
 #module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
@@ -49,7 +51,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Pointer',
         'label': 'Pointer',
-        'permission': 'Naaya - Add Naaya Pointer objects',
+        'permission': PERMISSION_ADD_POINTER,
         'forms': ['pointer_add', 'pointer_edit', 'pointer_index'],
         'add_form': 'pointer_add_html',
         'description': 'This is Naaya Pointer type.',

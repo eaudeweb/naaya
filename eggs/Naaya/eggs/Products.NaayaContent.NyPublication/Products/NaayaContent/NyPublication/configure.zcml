@@ -3,5 +3,6 @@
   i18n_domain="naaya.content">
 
   <naaya:content factory=".NyPublication.get_config" />
+  <naaya:call factory=".permissions.register_permissions" />
 
 </configure>

@@ -25,6 +25,7 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyURL
+from permissions import PERMISSION_ADD_URL
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -52,7 +53,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya URL',
         'label': 'URL',
-        'permission': 'Naaya - Add Naaya URL objects',
+        'permission': PERMISSION_ADD_URL,
         'forms': ['url_add', 'url_edit', 'url_index'],
         'add_form': 'url_add_html',
         'description': 'This is Naaya URL type.',

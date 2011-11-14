@@ -27,6 +27,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 
 from interfaces import INyStory
+from permissions import PERMISSION_ADD_STORY
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -63,7 +64,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Story',
         'label': 'Story',
-        'permission': 'Naaya - Add Naaya Story objects',
+        'permission': PERMISSION_ADD_STORY,
         'forms': ['story_add', 'story_edit', 'story_index'],
         'add_form': 'story_add',
         'description': 'This is Naaya Story type.',

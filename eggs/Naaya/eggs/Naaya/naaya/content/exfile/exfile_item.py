@@ -33,6 +33,8 @@ from Products.NaayaCore.managers.utils import uniqueId, slugify, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
+from permissions import PERMISSION_ADD_EXTENDED_FILE
+
 from lxml import etree
 from lxml.builder import ElementMaker
 
@@ -68,7 +70,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Extended File',
         'label': 'ExFile',
-        'permission': 'Naaya - Add Naaya Extended File objects',
+        'permission': PERMISSION_ADD_EXTENDED_FILE,
         'forms': ['exfile_add', 'exfile_edit', 'exfile_index'],
         'add_form': 'exfile_add_html',
         'description': 'This is Naaya ExFile type.',
