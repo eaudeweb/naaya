@@ -52,12 +52,11 @@ from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaCore.managers.utils import utils, make_id
 
 from interfaces import INyMunicipality
-
+from permissions import (PERMISSION_ADD_MUNICIPALITY,
+                         PERMISSION_EDIT_MUNICIPALITY)
 #module constants
 METATYPE_OBJECT = 'Naaya Municipality'
 LABEL_OBJECT = 'Municipality'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Municipality objects'
-PERMISSION_EDIT_OBJECTS = 'Naaya - Edit Naaya Municipality objects'
 OBJECT_FORMS = ['municipality_add', 'municipality_edit', 'municipality_index']
 OBJECT_CONSTRUCTORS = ['municipality_add_html', 'addNyMunicipality']
 OBJECT_ADD_FORM = 'municipality_add_html'
@@ -112,7 +111,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': LABEL_OBJECT,
-        'permission': PERMISSION_ADD_OBJECT,
+        'permission': PERMISSION_ADD_MUNICIPALITY,
         'forms': OBJECT_FORMS,
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,
@@ -281,9 +280,9 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """
         Check the permissions to edit NyMunicipality objects.
         """
-        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
+        return self.checkPermission(PERMISSION_EDIT_MUNICIPALITY)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_MUNICIPALITY, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
 
@@ -371,12 +370,12 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_index')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_MUNICIPALITY, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_edit')
 
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'process_species')
+    security.declareProtected(PERMISSION_ADD_MUNICIPALITY, 'process_species')
     def process_species(self, edit_species, delete_picture, ambassador_species,
                         ambassador_species_description, ambassador_species_picture,
                         crop_coordinates, form_errors):
@@ -460,7 +459,7 @@ class FileUpload(Implicit, Item):
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'upload_file')
+    security.declareProtected(PERMISSION_ADD_MUNICIPALITY, 'upload_file')
     def upload_file(self, REQUEST):
         """ """
         temp_folder = self.getSite().temp_folder
