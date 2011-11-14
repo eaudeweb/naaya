@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Products.NaayaContent.NyStudy',
-      version='1.0.1',
+      version='1.0.2',
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open("CHANGELOG.rst").read(),
