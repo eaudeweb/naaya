@@ -32,6 +32,8 @@ from comment_item import addComment, TalkBackConsultationComment, cleanup_messag
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
 from Products.NaayaCore.managers.utils import html2text
+from permissions import (PERMISSION_REVIEW_TALKBACKCONSULTATION,
+                         PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
 
 def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):

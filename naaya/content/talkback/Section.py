@@ -31,6 +31,7 @@ from parser import parse
 from Paragraph import addParagraph
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
+from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 
 
 addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),

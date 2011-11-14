@@ -46,6 +46,7 @@ from DateTime import DateTime
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
+from permissions import PERMISSION_REVIEW_TALKBACKCONSULTATION
 
 
 def addComment(self, contributor, message,
