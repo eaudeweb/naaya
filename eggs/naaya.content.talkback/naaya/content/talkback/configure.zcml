@@ -4,8 +4,7 @@
            i18n_domain="naaya.content">
 
   <naaya:content factory=".tbconsultation_item.get_config" />
-
-  <naaya:call factory=".tbconsultation_item.register_permissions" />
+  <naaya:call factory=".permissions.register_permissions" />
 
   <include package=".updates" />
 
