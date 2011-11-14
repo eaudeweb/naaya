@@ -1,4 +1,7 @@
-1.2.9 (unreleased)
+1.2.10 (unreleased)
+===================
+
+1.2.9 (2011-11-14)
 ==================
 * permission information update [andredor]
 
