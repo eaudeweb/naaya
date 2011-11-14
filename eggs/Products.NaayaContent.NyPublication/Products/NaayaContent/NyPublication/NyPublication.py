@@ -40,11 +40,11 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from publication_item import publication_item
+from permissions import PERMISSION_ADD_PUBLICATION
 
 #module constants
 METATYPE_OBJECT = 'Naaya Publication'
 LABEL_OBJECT = 'Publication'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Publication objects'
 OBJECT_FORMS = ['publication_add', 'publication_edit', 'publication_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyPublication_html', 'publication_add_html', 'addNyPublication', 'importNyPublication']
 OBJECT_ADD_FORM = 'publication_add_html'
@@ -89,7 +89,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Publication',
         'label': 'Publication',
-        'permission': 'Naaya - Add Naaya Publication objects',
+        'permission': PERMISSION_ADD_PUBLICATION,
         'forms': ['publication_add', 'publication_edit', 'publication_index'],
         'add_form': 'publication_add_html',
         'description': 'This is Naaya Publication type. It can be used for published articles or books.',
