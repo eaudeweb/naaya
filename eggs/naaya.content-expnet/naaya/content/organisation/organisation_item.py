@@ -57,6 +57,8 @@ from Products.NaayaCore.managers.utils import make_id
 
 from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
 
+from permissions import PERMISSION_ADD_ORGANISATION
+
 METATYPE_OBJECT = 'Naaya Organisation'
 
 DEFAULT_SCHEMA = {
@@ -87,7 +89,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': 'Organisation',
-        'permission': 'Naaya - Add Naaya Organisation objects',
+        'permission': PERMISSION_ADD_ORGANISATION,
         'forms': ['organisation_add', 'organisation_edit', 'organisation_index'],
         'add_form': 'organisation_add_html',
         'description': 'This is Naaya Organisation type.',

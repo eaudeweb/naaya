@@ -54,13 +54,13 @@ from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyExpert
+from permissions import PERMISSION_ADD_EXPERT
 
 from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
 LABEL_OBJECT = 'Expert'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Expert objects'
 OBJECT_FORMS = ['expert_add', 'expert_edit', 'expert_index']
 OBJECT_CONSTRUCTORS = ['expert_add_html', 'addNyExpert']
 OBJECT_ADD_FORM = 'expert_add_html'
@@ -107,7 +107,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': LABEL_OBJECT,
-        'permission': PERMISSION_ADD_OBJECT,
+        'permission': PERMISSION_ADD_EXPERT,
         'forms': OBJECT_FORMS,
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,
