@@ -1,8 +1,11 @@
-1.2.8 (unreleased)
+1.2.9 (unreleased)
+------------------
+
+1.2.8 (2011-11-14)
 ------------------
 * permission information update [andredor]
 * Added gruping by category in forum listing [dumitval]
-* Made columns of the forum listing sortable [dumitval]  
+* Made columns of the forum listing sortable [dumitval]
 
 1.2.7 (2011-10-24)
 ------------------
