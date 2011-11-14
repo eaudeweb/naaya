@@ -28,6 +28,7 @@ from Products.NaayaBase.NyContentType import NyContentData, NyContentType, NY_CO
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyBlogEntry
+from permissions import PERMISSION_ADD_BLOG_ENTRY
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -63,7 +64,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Blog Entry',
         'label': 'Blog Entry',
-        'permission': 'Naaya - Add Naaya Blog Entry objects',
+        'permission': PERMISSION_ADD_BLOG_ENTRY,
         'forms': ['blog_entry_add', 'blog_entry_edit', 'blog_entry_index'],
         'add_form': 'blog_entry_add_html',
         'description': 'This is Naaya Blog Entry type.',
