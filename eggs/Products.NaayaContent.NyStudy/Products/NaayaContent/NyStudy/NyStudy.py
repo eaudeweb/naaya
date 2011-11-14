@@ -40,11 +40,11 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from study_item import study_item
 from converters.xslt import Converter
+from permissions import PERMISSION_ADD_STUDY
 
 #module constants
 METATYPE_OBJECT = 'Naaya Study'
 LABEL_OBJECT = 'Study'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Study objects'
 OBJECT_FORMS = ['study_add', 'study_edit', 'study_index', 'study_style']
 OBJECT_CONSTRUCTORS = ['manage_addNyStudy_html', 'study_add', 'addNyStudy', 'importNyStudy']
 OBJECT_ADD_FORM = 'study_add'
@@ -73,7 +73,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Study',
         'label': 'Study',
-        'permission': 'Naaya - Add Naaya Study objects',
+        'permission': PERMISSION_ADD_STUDY,
         'forms': ['study_add', 'study_edit', 'study_index', 'study_style'],
         'add_form': 'study_add',
         'description': 'This is Naaya Study type.',
@@ -281,7 +281,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
+    security.declareProtected(PERMISSION_ADD_STUDY, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='',
         sortorder='', body='', topic='', scope='', toc='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
@@ -433,7 +433,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
     manage_edit_html = PageTemplateFile('zpt/study_manage_edit', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'add_html')
+    security.declareProtected(PERMISSION_ADD_STUDY, 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'study_add')
