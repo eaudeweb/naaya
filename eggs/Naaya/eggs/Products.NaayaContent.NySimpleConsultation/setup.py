@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Products.NaayaContent.NySimpleConsultation',
-      version='1.1.3',
+      version='1.1.4',
       description="",
       long_description=open("README.txt").read(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
