@@ -29,6 +29,7 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyNews
+from permissions import PERMISSION_ADD_NEWS
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -71,7 +72,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya News',
         'label': 'News',
-        'permission': 'Naaya - Add Naaya News objects',
+        'permission': PERMISSION_ADD_NEWS,
         'forms': ['news_add', 'news_edit', 'news_index'],
         'add_form': 'news_add_html',
         'description': 'This is Naaya News type.',

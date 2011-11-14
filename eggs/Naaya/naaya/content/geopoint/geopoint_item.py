@@ -24,6 +24,8 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
+from permissions import PERMISSION_ADD_GEOPOINT
+
 #module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
@@ -57,7 +59,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya GeoPoint',
         'label': 'GeoPoint',
-        'permission': 'Naaya - Add Naaya GeoPoint objects',
+        'permission': PERMISSION_ADD_GEOPOINT,
         'forms': ['geopoint_add', 'geopoint_edit', 'geopoint_index'],
         'add_form': 'geopoint_add_html',
         'description': 'This is Naaya GeoPoint type.',

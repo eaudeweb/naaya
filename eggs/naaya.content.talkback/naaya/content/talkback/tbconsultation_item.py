@@ -60,6 +60,10 @@ from Section import addSection
 from Section import addSection_html
 from invitations import InvitationsContainer, InvitationUsersTool
 from comments_admin import CommentsAdmin
+from permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
+                         PERMISSION_REVIEW_TALKBACKCONSULTATION,
+                         PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                         PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
 #module constants
 
@@ -134,7 +138,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_TALKBACKCONSULTATION,
         'label': 'TalkBack Consultation',
-        'permission': 'Naaya - Add Naaya TalkBack Consultation objects',
+        'permission': PERMISSION_ADD_TALKBACK_CONSULTATION,
         'forms': [],
         'add_form': 'talkbackconsultation_add_html',
         'description': 'This is Naaya TalkBack Consultation type.',
@@ -608,14 +612,3 @@ config.update({
 
 def get_config():
     return config
-
-def register_permissions():
-    from Products.Naaya.NySite import register_naaya_permission
-    register_naaya_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION,
-                              'TalkBack Consultation - submit review')
-    register_naaya_permission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
-                              'TalkBack Consultation - invite participants',
-                              '''Invite people with no user on this portal
-                                 to comment on TalkBack Consultations''')
-    register_naaya_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                              'TalkBack Consultation - manage')

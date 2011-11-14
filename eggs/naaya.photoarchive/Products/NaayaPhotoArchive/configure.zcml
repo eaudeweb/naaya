@@ -1,5 +1,8 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+      xmlns:naaya="http://namespaces.zope.org/naaya">
   <include package=".adapter" />
+
+  <naaya:call factory=".permissions.register_permissions" />
 
   <class class=".NyPhotoFolder.NyPhotoFolder">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />

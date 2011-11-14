@@ -53,6 +53,7 @@ from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyProject
+from permissions import PERMISSION_ADD_PROJECT
 
 from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
 
@@ -83,7 +84,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': 'Project',
-        'permission': 'Naaya - Add Naaya Project objects',
+        'permission': PERMISSION_ADD_PROJECT,
         'forms': ['project_add', 'project_edit', 'project_index'],
         'add_form': 'project_add_html',
         'description': 'This is Naaya Project type.',

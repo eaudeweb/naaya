@@ -28,6 +28,7 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyContact
+from permissions import PERMISSION_ADD_CONTACT
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -76,7 +77,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Contact',
         'label': 'Contact',
-        'permission': 'Naaya - Add Naaya Contact objects',
+        'permission': PERMISSION_ADD_CONTACT,
         'forms': ['contact_add', 'contact_edit', 'contact_index'],
         'add_form': 'contact_add_html',
         'description': 'This is Naaya Contact type.',

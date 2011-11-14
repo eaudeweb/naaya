@@ -82,4 +82,5 @@
   <include package="naaya.i18n" />
 
   <naaya:call factory=".naaya_bundle_registration" />
+  <naaya:call factory=".permissions.register_permissions" />
 </configure>

@@ -30,7 +30,7 @@ from OFS.SimpleItem import SimpleItem
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
-from constants import (PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+from permissions import (PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                        PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
 class FormError(Exception):

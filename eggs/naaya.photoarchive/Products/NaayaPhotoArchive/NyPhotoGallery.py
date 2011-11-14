@@ -33,6 +33,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 # Self imports
 from constants import *
+from permissions import PERMISSION_ADD_PHOTOFOLDER
 from Products.NaayaBase.constants import *
 from NyPhotoFolder import addNyPhotoFolder as m_addNyPhotoFolder
 from NyPhotoFolder import photofolder_add_html

@@ -31,6 +31,7 @@ from naaya.core.zope2util import abort_transaction_keep_session
 
 from NyBlobFile import make_blobfile, trim_filename
 from utils import file_has_content, tmpl_version, get_view_adapter
+from permissions import PERMISSION_ADD_BFILE
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -47,7 +48,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Blob File',
         'label': 'File',
-        'permission': 'Naaya - Add Naaya Blob File objects',
+        'permission': PERMISSION_ADD_BFILE,
         'forms': ['bfile_add', 'bfile_edit', 'bfile_index',
                   'bfile_quickview_zipfile'],
         'add_form': 'bfile_add_html',

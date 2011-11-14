@@ -51,9 +51,10 @@ from RateList import manage_addRateList
 from constants import *
 from naaya.core.zope2util import permission_add_role
 
+from permissions import PERMISSION_ADD_CONSULTATION
+
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Consultation objects'
 OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNyConsultation_html', 'consultation_add_html', 'addNyConsultation']
 OBJECT_ADD_FORM = 'consultation_add_html'
@@ -81,7 +82,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Consultation',
         'label': 'Consultation',
-        'permission': 'Naaya - Add Naaya Consultation objects',
+        'permission': PERMISSION_ADD_CONSULTATION,
         'forms': [],
         'add_form': 'consultation_add_html',
         'description': 'This is Naaya Consultation type.',

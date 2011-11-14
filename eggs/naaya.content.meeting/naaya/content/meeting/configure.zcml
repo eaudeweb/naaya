@@ -5,6 +5,7 @@
   i18n_domain="naaya.content">
 
   <naaya:content factory=".meeting.get_config" />
+  <naaya:call factory=".permissions.register_permissions" />
 
   <configure zcml:condition="installed Products.naayaUpdater">
       <zope:utility name="add_allow_register_feature.update"

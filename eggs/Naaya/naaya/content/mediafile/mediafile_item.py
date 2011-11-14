@@ -36,6 +36,7 @@ from converters.MediaConverter import \
      can_convert, \
      get_conversion_errors
 
+from permissions import PERMISSION_ADD_MEDIA_FILE
 from parsers import DEFAULT_PARSER as SubtitleParser
 
 #module constants
@@ -61,7 +62,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Media File',
         'label': 'Media File',
-        'permission': 'Naaya - Add Naaya Media File objects',
+        'permission': PERMISSION_ADD_MEDIA_FILE,
         'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index', 'mediafile_subtitle'],
         'add_form': 'mediafile_add_html',
         'description': 'This is Naaya MediaFile type.',

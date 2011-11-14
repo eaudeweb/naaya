@@ -1,5 +1,6 @@
 2.12.27 (unreleased)
 --------------------
+* permission information update [andredor]
 
 2.12.26 (2011-11-11)
 --------------------

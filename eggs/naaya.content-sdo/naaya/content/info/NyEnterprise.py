@@ -39,14 +39,13 @@ from Products.NaayaCore.managers.utils import make_id
 
 from info_item import NyInfo, DEFAULT_SCHEMA
 from naaya.content.infofolder import skel
-from naaya.content.infofolder.constants import *
+from naaya.content.infofolder.permissions import PERMISSION_ADD_INFO
 
 #module constants
 INFO_TYPE = skel.INFO_TYPES['enterprises']
 METATYPE_OBJECT = INFO_TYPE['meta_type']
 LABEL_OBJECT = INFO_TYPE['meta_label']
 PREFIX_OBJECT = INFO_TYPE['prefix']
-PERMISSION_ADD_OBJECT = PERMISSION_ADD_INFO
 OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['sdo_info_add', 'addNyEnterprise']
 OBJECT_ADD_FORM = 'enterprise_add_html'
@@ -81,7 +80,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': LABEL_OBJECT,
-        'permission': PERMISSION_ADD_OBJECT,
+        'permission': PERMISSION_ADD_INFO,
         'forms': OBJECT_FORMS,
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,

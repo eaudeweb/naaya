@@ -1,5 +1,6 @@
 1.2.8 (unreleased)
 ------------------
+* permission information update [andredor]
 * Added gruping by category in forum listing [dumitval]
 * Made columns of the forum listing sortable [dumitval]  
 

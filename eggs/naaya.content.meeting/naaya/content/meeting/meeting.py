@@ -41,7 +41,9 @@ from Products.Naaya.NySite import NySite
 #Meeting imports
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
-from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
+from permissions import (PERMISSION_ADD_MEETING,
+                         PERMISSION_PARTICIPATE_IN_MEETING,
+                         PERMISSION_ADMIN_MEETING)
 from participants import Participants
 from email import EmailSender, configureEmailNotifications
 from reports import MeetingReports
@@ -80,7 +82,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Meeting',
         'label': 'Meeting',
-        'permission': 'Naaya - Add Naaya Meeting objects',
+        'permission': PERMISSION_ADD_MEETING,
         'forms': ['meeting_add', 'meeting_edit', 'meeting_index'],
         'add_form': 'meeting_add_html',
         'description': 'This is Naaya Meeting type.',

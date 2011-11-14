@@ -31,6 +31,8 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
+from permissions import PERMISSION_ADD_FILE
+
 from lxml import etree
 from lxml.builder import ElementMaker
 
@@ -60,7 +62,7 @@ config = {
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya File',
         'label': 'File',
-        'permission': 'Naaya - Add Naaya File objects',
+        'permission': PERMISSION_ADD_FILE,
         'forms': ['file_add', 'file_edit', 'file_index'],
         'add_form': 'file_add_html',
         'description': 'This is Naaya File type.',

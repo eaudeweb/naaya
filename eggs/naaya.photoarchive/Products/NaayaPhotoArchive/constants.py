@@ -27,10 +27,6 @@ import Globals
 NAAYAPHOTOARCHIVE_PRODUCT_NAME = 'NaayaPhotoArchive'
 NAAYAPHOTOARCHIVE_PRODUCT_PATH = Globals.package_home(globals())
 
-PERMISSION_ADD_PHOTOGALLERY = 'Naaya - Add Naaya Photo Gallery'
-PERMISSION_ADD_PHOTOFOLDER = 'Naaya - Add Naaya Photo Folder'
-PERMISSION_ADD_PHOTO = 'Naaya - Add Naaya Photo'
-
 METATYPE_NYPHOTOGALLERY = 'Naaya Photo Gallery'
 METALABEL_NYPHOTOGALLERY = 'Photo Gallery'
 METATYPE_NYPHOTOFOLDER = 'Naaya Photo Folder'

@@ -3867,5 +3867,3 @@ def register_naaya_permission(zope_perm, title, description=""):
         'description': description,
         'zope_permission': zope_perm,
     }
-import _permissions
-_permissions.register_default_permissions()
