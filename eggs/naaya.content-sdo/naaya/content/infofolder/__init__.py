@@ -2,7 +2,7 @@ def initialize(context):
     """ """
     #register classes
     import InfoFolder
-    from constants import *
+    from permissions import PERMISSION_ADD_INFOFOLDER
     context.registerClass(
         InfoFolder.NyInfoFolder,
         permission = PERMISSION_ADD_INFOFOLDER,

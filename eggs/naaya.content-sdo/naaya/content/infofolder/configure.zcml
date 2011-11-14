@@ -4,9 +4,8 @@
 	i18n_domain="naaya.content">
 
 	<naaya:content factory=".InfoFolder.get_config" />
+	<naaya:call factory=".permissions.register_permissions" />
 	<five:registerPackage
 		package="."
 		initialize=".initialize"/>
 </configure>
-
-
