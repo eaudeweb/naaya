@@ -8,6 +8,7 @@ import Products
 from zope.interface import implements
 from zope import event
 from zope.deprecation import deprecate
+from App.FactoryDispatcher import FactoryDispatcher
 
 from interfaces import INyFolder
 from constants import *
@@ -68,6 +69,10 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
             A function that returns an instance of a folder
 
     """
+    parent = self
+    if isinstance(self, FactoryDispatcher):
+        parent = self.Destination()
+
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
     else:
@@ -80,14 +85,14 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
     site = self.getSite()
 
     #process parameters
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''),
+    id = make_id(parent, id=id, title=schema_raw_data.get('title', ''),
                  prefix=PREFIX_FOLDER)
 
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = callback(self, id, contributor)
+    ob = callback(parent, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
     if form_errors:
         if REQUEST is None:
@@ -99,11 +104,11 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
             return
 
     ob_meta_types = FolderMetaTypes(ob)
-    parent_meta_types = FolderMetaTypes(self)
+    parent_meta_types = FolderMetaTypes(parent)
     #extra settings
     if _folder_meta_types == '':
         # inherit allowed meta types from the parent folder or portal
-        if self.meta_type == site.meta_type:
+        if parent.meta_type == site.meta_type:
             # parent is portal, use defaults
             ob_meta_types.set_values(None)
         else:
@@ -115,7 +120,7 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
     else:
         ob_meta_types.set_values(self.utConvertToList(_folder_meta_types))
 
-    if self.checkPermissionSkipApproval():
+    if parent.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
