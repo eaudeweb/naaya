@@ -64,7 +64,7 @@ def _getUsersRoles(portal):
 def _get_user_by_uid(user_id, portal):
     for source in portal.acl_users.getSources():
         acl_folder = source.getUserFolder()
-        user_obj = source._get_user_by_uid(user_id, acl_folder)
+        user_obj = acl_folder.getUser(user_id)
         if user_obj:
             return user_obj
 
