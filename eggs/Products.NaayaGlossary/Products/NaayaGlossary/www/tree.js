@@ -7,6 +7,8 @@ $(document).ready(function(){
 function add_link(self){
     var link = $(self.find('a')[0]);
     var pathname = window.location.pathname.substring(1)//remove first slash
+    if (pathname.substring(pathname.length-1) != "/")
+        pathname += '/';
     var uri = "/" + pathname + '?insert=' + pathname.replace('index_html', '') + self.attr('id') + '#glossary_add_div';
     link.after($('<a>')
         .attr('href', uri)
