@@ -199,7 +199,7 @@ class NyBase(NyDublinCore):
         ra('<link>%s</link>' % self.absolute_url())
         ra('<title>%s</title>' % self.utXmlEncode(self.non_empty_title(lang)))
         ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
-        ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
+        ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.non_empty_title(lang)))
         ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
         ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
@@ -240,7 +240,7 @@ class NyBase(NyDublinCore):
                     E.link(self.absolute_url()),
                     E.title(self.non_empty_title(lang)),
                     E.description(self.getLocalProperty('description', lang)),
-                    Dc.title(self.getLocalProperty('title', lang)),
+                    Dc.title(self.non_empty_title(lang)),
                     Dc.identifier(self.identifier()),
                     Dc.date(self.utShowFullDateTimeHTML(self.releasedate)),
                     Dc.description(self.getLocalProperty('description', lang)),
@@ -360,7 +360,7 @@ def rss_item_for_object(obj,lang):
         E.link(obj.absolute_url()),
         E.title(obj.non_empty_title(lang)),
         E.description(obj.getLocalProperty('description', lang)),
-        Dc.title(obj.getLocalProperty('title', lang)),
+        Dc.title(obj.non_empty_title(lang)),
         Dc.identifier(obj.identifier()),
         Dc.date(obj.utShowFullDateTimeHTML(obj.releasedate)),
         Dc.description(obj.getLocalProperty('description', lang)),
