@@ -1,5 +1,6 @@
 2.12.29 (unreleased)
 --------------------
+* non empty titles for syndication [andredor]
 
 2.12.28 (2011-11-16)
 --------------------
