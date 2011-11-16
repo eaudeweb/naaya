@@ -1,4 +1,7 @@
-2.12.28 (unreleased)
+2.12.29 (unreleased)
+--------------------
+
+2.12.28 (2011-11-16)
 --------------------
 * Bugfix related to uninstalled pluggable items [dumitval]
 
