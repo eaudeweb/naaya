@@ -172,6 +172,20 @@ class NyBase(NyDublinCore):
 
         return '</item>'
 
+    security.declarePrivate('non_empty_title')
+    def non_empty_title(self, lang):
+        title = self.getLocalProperty('title', lang)
+        if title:
+            return title
+        d_title = self.getLocalProperty('title', self.gl_get_default_language())
+        if d_title:
+            return d_title
+        for lang in self.gl_get_languages():
+            lang_title = self.getLocalProperty('title', lang)
+            if lang_title:
+                return lang_title
+        return self.title_or_id()
+
     security.declarePrivate('syndicateThisCommon')
     def syndicateThisCommon(self, lang):
         """
@@ -183,7 +197,7 @@ class NyBase(NyDublinCore):
         r = []
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
-        ra('<title>%s</title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
+        ra('<title>%s</title>' % self.utXmlEncode(self.non_empty_title(lang)))
         ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
         ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
@@ -224,7 +238,7 @@ class NyBase(NyDublinCore):
                 E.item(
                     {'{%s}about'%rdf_namespace : self.absolute_url()},
                     E.link(self.absolute_url()),
-                    E.title(self.getLocalProperty('title', lang)),
+                    E.title(self.non_empty_title(lang)),
                     E.description(self.getLocalProperty('description', lang)),
                     Dc.title(self.getLocalProperty('title', lang)),
                     Dc.identifier(self.identifier()),
@@ -344,7 +358,7 @@ def rss_item_for_object(obj,lang):
     xml = E.item(
         {'{%s}about'%rdf_namespace : obj.absolute_url()},
         E.link(obj.absolute_url()),
-        E.title(obj.getLocalProperty('title', lang)),
+        E.title(obj.non_empty_title(lang)),
         E.description(obj.getLocalProperty('description', lang)),
         Dc.title(obj.getLocalProperty('title', lang)),
         Dc.identifier(obj.identifier()),
