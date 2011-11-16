@@ -1,4 +1,7 @@
-2.4.17 (unreleased)
+2.4.18 (unreleased)
+-------------------
+
+2.4.17 (2011-11-16)
 -------------------
 * tag cloud portlet for chm terms [andredor]
 
