@@ -2,12 +2,15 @@
 This module contains the class that implements permissions and rights checking.
 """
 
+import logging
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from zope.deprecation import deprecate
 from constants import *
 from naaya.i18n.constants import PERMISSION_TRANSLATE_PAGES
+
+log = logging.getLogger(__name__)
 
 class NyPermissions:
     """ Class that implements permissions and rights checking."""
@@ -56,8 +59,11 @@ class NyPermissions:
             #check pluggable content
             pc = self.get_pluggable_content()
             for k in self.get_pluggable_installed_meta_types():
-                p = p or self.checkPermission(pc[k]['permission'])
-                if p: break
+                if not pc.has_key(k):
+                    log.warning("%s appears as installed, although source files not on disk" % k)
+                else:
+                    p = p or self.checkPermission(pc[k]['permission'])
+                    if p: break
         return p
 
     def checkPermissionEditObjects(self):
