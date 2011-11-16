@@ -48,6 +48,7 @@ misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'jquery.ajaxupload.min.js':ImageFile('www/jquery.ajaxupload.min.js', globals()),
     'jquery.Jcrop.min.js':ImageFile('www/jquery.Jcrop.min.js', globals()),
+    'tagcloud.css': ImageFile('www/tagcloud.css', globals()),
 }
 
 #process config.xml file
