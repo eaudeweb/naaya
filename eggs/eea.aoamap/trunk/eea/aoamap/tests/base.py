@@ -3,7 +3,7 @@
 from plone.testing import z2
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
+#from plone.app.testing import applyProfile
 
 class EEAFixture(PloneSandboxLayer):
     """ Custom fixture

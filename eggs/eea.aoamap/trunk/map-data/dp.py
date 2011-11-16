@@ -8,7 +8,6 @@
 #
 # the original page is no longer available, but is mirrored at
 #   http://www.mappinghacks.com/code/PolyLineReduction/
-
 """
 
 >>> line = [(0,0),(1,0),(2,0),(2,1),(2,2),(1,2),(0,2),(0,1),(0,0)]
@@ -22,17 +21,19 @@
 """
 
 import math
-   
-def simplify_points (pts, tolerance): 
+
+def simplify_points(pts, tolerance):
+    """ Simplify points
+    """
     anchor  = 0
     floater = len(pts) - 1
     stack   = []
     keep    = set()
 
-    stack.append((anchor, floater))  
+    stack.append((anchor, floater))
     while stack:
         anchor, floater = stack.pop()
-      
+
         # initialize line segment
         if pts[floater] != pts[anchor]:
             anchorX = float(pts[floater][0] - pts[anchor][0])
@@ -43,7 +44,7 @@ def simplify_points (pts, tolerance):
             anchorY /= seg_len
         else:
             anchorX = anchorY = seg_len = 0.0
-    
+
         # inner loop:
         max_dist = 0.0
         farthest = anchor + 1
@@ -57,7 +58,7 @@ def simplify_points (pts, tolerance):
             proj = vecX * anchorX + vecY * anchorY
             if proj < 0.0:
                 dist_to_seg = seg_len
-            else: 
+            else:
                 # compare to floater
                 vecX = float(pts[i][0] - pts[floater][0])
                 vecY = float(pts[i][1] - pts[floater][1])
@@ -66,7 +67,9 @@ def simplify_points (pts, tolerance):
                 proj = vecX * (-anchorX) + vecY * (-anchorY)
                 if proj < 0.0:
                     dist_to_seg = seg_len
-                else:  # calculate perpendicular distance to line (pythagorean theorem):
+                else:
+                    # calculate perpendicular distance
+                    # to line (pythagorean theorem):
                     dist_to_seg = math.sqrt(abs(seg_len ** 2 - proj ** 2))
                 if max_dist < dist_to_seg:
                     max_dist = dist_to_seg
@@ -81,7 +84,7 @@ def simplify_points (pts, tolerance):
 
     keep = list(keep)
     keep.sort()
-    return [pts[i] for i in keep]
+    return [pts[j] for j in keep]
 
 if __name__ == "__main__":
     import doctest
