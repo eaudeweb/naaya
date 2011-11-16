@@ -1,9 +1,13 @@
+""" Map data
+"""
 from __future__ import division
 
 from osgeo import osr
 from osgeo import gdal
 
 def main():
+    """ Main
+    """
     import sys
     filename = sys.argv[1]
 

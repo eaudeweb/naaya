@@ -1,20 +1,27 @@
+""" Controllers
+"""
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import plone_views
-
+from eea.aoamap.browser import plone_views
 
 naaya_map_template = PageTemplateFile('naaya_map.zpt', globals())
 
-
 class SearchMap(plone_views.AoaMap):
-
+    """ Search
+    """
     def _get_search_url(self):
+        """ URL
+        """
         site = self.aq_parent.getSite()
         return site.absolute_url() + '/jsmap_search_map_documents'
 
     def _get_current_language(self):
+        """ Language
+        """
         return self.aq_parent.gl_get_selected_language()
 
     def _get_root_url(self):
+        """ Root
+        """
         return ''
 
     def __call__(self):

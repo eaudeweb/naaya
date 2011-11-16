@@ -1,3 +1,5 @@
+""" Plone Views
+"""
 import simplejson as json
 import urllib
 import logging
@@ -13,8 +15,9 @@ log = logging.getLogger(__name__)
 tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
 
-
 def _to_unicode(s):
+    """ To unicode
+    """
     if isinstance(s, str):
         s = s.decode('utf-8')
     return s
@@ -24,13 +27,15 @@ class I18nTemplate(PageTemplateFile):
     """ hack Zope's page templates to give us sane translation behaviour """
 
     def __init__(self, template_name):
-        return super(I18nTemplate, self).__init__(template_name, globals())
+        super(I18nTemplate, self).__init__(template_name, globals())
 
     def __call__(self, lang, *args, **kwargs):
         self.__lang = lang
         return super(I18nTemplate, self).__call__(*args, **kwargs)
 
     def __translate(self, msgid, domain=None, mapping=None, default=None):
+        """ Translate
+        """
         if mapping is not None:
             for k in mapping:
                 mapping[k] = _to_unicode(mapping[k])
@@ -38,6 +43,8 @@ class I18nTemplate(PageTemplateFile):
                               target_language=self.__lang)
 
     def pt_getEngineContext(self, namespace):
+        """ Engine context
+        """
         context = super(I18nTemplate, self).pt_getEngineContext(namespace)
         context.translate = self.__translate
         return context
@@ -45,8 +52,9 @@ class I18nTemplate(PageTemplateFile):
 
 map_template = I18nTemplate('map.pt')
 
-
 def css(sel, target):
+    """ CSS
+    """
     return lxml.cssselect.CSSSelector(sel)(target)
 
 
@@ -56,16 +64,24 @@ class AoaMap(BrowserView):
     """
 
     def _get_search_url(self):
+        """ URL
+        """
         return self._get_root_url() + '/aoa-map-search'
 
     def _get_current_language(self):
+        """ Language
+        """
         context = self.aq_parent
         return context.Language()
 
     def _get_root_url(self):
+        """ Root
+        """
         return self.aq_parent.getCanonical().absolute_url()
 
     def get_map_html(self):
+        """ Map HTML
+        """
         lang = self._get_current_language()
         if lang != 'ru':
             lang = 'en'
@@ -90,6 +106,8 @@ class AoaMap(BrowserView):
 
 
 def get_aoa_response(relative_url):
+    """ Response
+    """
     response = urllib.urlopen(aoa_url + relative_url)
     try:
         return response.read()
@@ -114,6 +132,8 @@ class AddToVirtualLibrary(BrowserView):
     """
 
     def get_vl_form_url(self):
+        """ URL
+        """
         return (aoa_url + 'tools/virtual_library/'
                 'bibliography-details-each-assessment?iframe=on')
 
@@ -123,18 +143,24 @@ class ImportFromAoa(BrowserView):
     """
 
     def aoa_data(self):
+        """ Data
+        """
         aoa_json = get_aoa_response('jsmap_search_map_documents')
         aoa_data = json.loads(aoa_json)
 
         return {
-            'countries': sorted(v['en'] for v in aoa_data['country_name'].values()),
-            'regions': sorted(v['en'] for v in aoa_data['region_name'].values()),
+            'countries': sorted(v['en'] for
+                                v in aoa_data['country_name'].values()),
+            'regions': sorted(v['en'] for
+                              v in aoa_data['region_name'].values()),
         }
 
     def submit(self):
+        """ Submit
+        """
         out = StringIO()
 
-        print>>out, "Creating documents:\n"
+        print >> out, "Creating documents:\n"
 
         theme_name = {
             'wa': "Water",
@@ -153,22 +179,24 @@ class ImportFromAoa(BrowserView):
                 doc = update_country_fiche(self.aq_parent, country, theme,
                                            self.request.form['date'])
 
-            print>>out, repr(doc)
+            print >> out, repr(doc)
 
 
         for region in self.request.form.get('region-info', []):
             doc = update_region_info(self.aq_parent, region)
-            print>>out, repr(doc)
+            print >> out, repr(doc)
 
 
-        print>>out, "\ndone"
+        print >> out, "\ndone"
         return out.getvalue()
 
 
 def update_plone_document(folder, doc_id, title, text):
+    """ Update document
+    """
     try:
         doc = folder[doc_id]
-    except:
+    except Exception:
         folder.invokeFactory(type_name="Document", id=doc_id)
         doc = folder[doc_id]
 
@@ -179,10 +207,14 @@ def update_plone_document(folder, doc_id, title, text):
 
 
 def slug(name):
+    """ Slug
+    """
     return name.replace(' ', '-')
 
 
 def update_country_profile(folder, country):
+    """ Update country profile
+    """
     doc_id = '%s-profile' % (slug(country),)
     title = "%s - country profile" % (country,)
     text = "Country profile HTML goes here"
@@ -197,11 +229,14 @@ def update_country_profile(folder, country):
 
 
 def update_country_fiche(folder, country, theme, date):
+    """ Update country fiche
+    """
     doc_id = '%s-%s' % (slug(country), slug(theme))
     title = "%s country fiche - %s (%s)" % (country, theme, date)
 
-    url = ('viewer_aggregator?toplone=1&country%%3Autf8%%3Austring=%s&theme=%s' %
-           (country, theme))
+    url = (
+        'viewer_aggregator?toplone=1&country%%3Autf8%%3Austring=%s&theme=%s' %
+        (country, theme))
     aoa_html = get_aoa_response(url)
     aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
     cf_doc = css('div.aoa-cf-content', aoa_doc)[0]
@@ -210,6 +245,8 @@ def update_country_fiche(folder, country, theme, date):
     return update_plone_document(folder, doc_id, title, text)
 
 def update_region_info(folder, region):
+    """ Update region info
+    """
     doc_id = '%s-info' % (slug(region),)
     title = "%s region" % (region,)
 

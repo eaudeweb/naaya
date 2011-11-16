@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-
+""" Extract
+"""
 import sys
-from copy import deepcopy
 from collections import namedtuple
 import json
 from osgeo import ogr
@@ -11,6 +11,8 @@ import dp
 gdal.UseExceptions()
 
 def get_properties(feature, encoding):
+    """ Properties
+    """
     fields  = {}
     for field in range(feature.GetFieldCount()):
         name = feature.GetFieldDefnRef(field).GetName().decode(encoding)
@@ -19,6 +21,8 @@ def get_properties(feature, encoding):
     return fields
 
 def get_features(in_file_path, encoding):
+    """ Features
+    """
     shapefile = ogr.Open(in_file_path)
     layer = shapefile.GetLayer(0)
 
@@ -77,9 +81,13 @@ pick_regions = {
 }
 
 def number_of_points(polygon):
+    """ Points
+    """
     return sum(len(ring) for ring in polygon)
 
 def simplify_poly(poly):
+    """ Simplify
+    """
     new_poly = []
     for idx, ring in enumerate(poly):
         if len(ring) < 25:
@@ -99,6 +107,8 @@ def simplify_poly(poly):
     return new_poly
 
 def points_in_geometry(geometry):
+    """ Points
+    """
     if geometry['type'] == 'Polygon':
         return sum(len(ring) for ring in geometry['coordinates'])
     elif geometry['type'] == 'MultiPolygon':
@@ -108,12 +118,15 @@ def points_in_geometry(geometry):
         raise ValueError('Unknown geometry type %r' % geometry['type'])
 
 def simplify_geometry(geometry):
+    """ Simplify geometry
+    """
     if geometry['type'] == 'Polygon':
         geometry['coordinates'] = simplify_poly(geometry['coordinates'])
 
     elif geometry['type'] == 'MultiPolygon':
-        geometry['coordinates'] = filter(None, (simplify_poly(p)
-                                    for p in geometry['coordinates']))
+        geometry['coordinates'] = [simplify_poly(p)
+                                   for p in geometry['coordinates']
+                                   if simplify_poly(p) is not None]
         geometry['coordinates'].sort(key=number_of_points, reverse=True)
 
     else:
@@ -123,14 +136,20 @@ def simplify_geometry(geometry):
         raise ValueError("polygon removed")
 
 def area(ring):
+    """ Area
+    """
     return sum(ring[i][0] * ring[i+1][1] - ring[i+1][0] * ring[i][1]
                for i in xrange(len(ring)-1))
 
 def normalize_ring(ring):
+    """ Ring
+    """
     if area(ring) < 0:
         ring.reverse()
 
 def deduplicate(ring):
+    """ Remove duplicates
+    """
     while True:
         for i in range(len(ring)-1):
             if ring[i] == ring[i+1]:
@@ -155,6 +174,8 @@ def deduplicate(ring):
                 return
 
 def extract_hole(ring):
+    """ Hole
+    """
     seen = {}
     for j, p in enumerate(ring[:-1]):
         if p in seen:
@@ -167,6 +188,8 @@ def extract_hole(ring):
 RingMatch = namedtuple('RingMatch', 'i ring_m m')
 
 def match_any(ring_a, some_rings):
+    """ Match
+    """
     points_a = set(ring_a)
     for ring_m in some_rings:
         for m, p in enumerate(ring_m):
@@ -174,9 +197,13 @@ def match_any(ring_a, some_rings):
                 return RingMatch(ring_a.index(p), ring_m, m)
 
 def splice_rings(ring_a, idx_a, ring_b, idx_b):
+    """ Splice rings
+    """
     ring_a[idx_a:idx_a] = ring_b[idx_b:] + ring_b[:idx_b]
 
 def merge_multipolygon(geometry):
+    """ Merge
+    """
     if geometry['type'] != 'MultiPolygon':
         raise ValueError('Unknown geometry type %r' % geometry['type'])
 
@@ -192,6 +219,8 @@ def merge_multipolygon(geometry):
 
     joined_rings = []
     def new_island():
+        """ Island
+        """
         ring, holes = initial_polys.pop()
         ring.append(ring[0])
         joined_rings.append((ring, holes))
@@ -233,7 +262,7 @@ def merge_multipolygon(geometry):
             if holes_of_ring:
                 continue # hole filler containing holes? too complex.
 
-            for ignored_ring, holes in joined_rings:
+            for _ignored_ring, holes in joined_rings:
                 match = match_any(ring, holes)
                 if match is not None:
                     if set(ring) == set(match.ring_m): # only exact matches
@@ -254,18 +283,24 @@ def merge_multipolygon(geometry):
     }
 
 def Feature(geometry, **kwargs):
+    """ Feature
+    """
     return {
         'geometry': geometry,
         'properties': kwargs,
     }
 
 def geojson(features):
+    """ GeoJSON
+    """
     return {
         'type': "FeatureCollection",
         'features': features,
     }
 
 def extract_countries(in_file_path):
+    """ Extract countries
+    """
     for properties, geometry in get_features(in_file_path, 'latin-1'):
         name = properties['NAME']
         name = rename_map.get(name, name)
@@ -279,6 +314,8 @@ def extract_countries(in_file_path):
         raise ValueError("Countries not picked: %r" % pick_countries)
 
 def extract_regions(countries):
+    """ Regions
+    """
     geometry_by_country = dict( (f['properties']['name'], f['geometry'])
                                 for f in countries )
     for region_name, country_names in pick_regions.iteritems():
@@ -299,17 +336,23 @@ def extract_regions(countries):
 
 
 def countries_main(args):
+    """ Main countries
+    """
     countries = list(extract_countries(args.shapefile))
     json.dump(geojson(countries), sys.stdout, indent=2)
 
 
 def regions_main(args):
+    """ Main regions
+    """
     countries = list(extract_countries(args.shapefile))
     regions = list(extract_regions(countries))
     json.dump(geojson(regions), sys.stdout, indent=2)
 
 
 def simplify_main(args):
+    """ Simplify main
+    """
     features = json.load(sys.stdin)['features']
     for f in features:
         try:
@@ -319,12 +362,16 @@ def simplify_main(args):
     json.dump(geojson(features), sys.stdout)
 
 def feature_area(feature):
+    """ Feature areas
+    """
     geometry = feature['geometry']
     if geometry['type'] != 'Polygon':
         raise ValueError('Unknown geometry type %r' % geometry['type'])
     return area(geometry['coordinates'][0])
 
 def country_bodies_main(args):
+    """ Bodies
+    """
     features = json.load(sys.stdin)['features']
 
     for f in features:
@@ -342,6 +389,8 @@ def country_bodies_main(args):
 
 
 def parse_args():
+    """ Parse args
+    """
     import argparse
     parser = argparse.ArgumentParser()
 
@@ -365,6 +414,8 @@ def parse_args():
 
 
 def main():
+    """ Main
+    """
     args = parse_args()
     args.subcommand(args)
 
