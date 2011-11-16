@@ -5,6 +5,9 @@
   <adapter factory="Products.CHM2.portlets.AdministrationPortlet"
            name="portlet_administration" />
 
+  <adapter factory="Products.CHM2.portlets.CHMTermsTagCloudPortlet"
+           name="portlet_chmterms_tagcloud" />
+
   <subscriber
     handler=".CHMSite.handle_content_type_installed"
     for="Products.Naaya.interfaces.INyPluggableItemInstalled"
