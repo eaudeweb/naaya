@@ -174,24 +174,28 @@ class SchemaTool(Folder):
         portal_schemas = self.getSite().portal_schemas
         output = []
         for schema in portal_schemas.listSchemas(installed=True).values():
-            temp_output = {'id': schema.id, 'title': schema.title_or_id()}
-            try:
-                geo_location = schema.getWidget('geo_location');
-                geo_type = schema.getWidget('geo_type');
-            except KeyError:
-                # one or both widgets are missing; skip it
-                temp_output['geo_taggable'] = False
-                temp_output['geo_enabled'] = False
-            else:
-                temp_output['geo_taggable'] = True
-                temp_output['geo_enabled'] = (geo_location.visible
-                                              and geo_type.visible)
-            if schema.is_ratable:
-                temp_output['ratable'] = True
-            else:
-                temp_output['ratable'] = False
+            temp_output = {'id': schema.id, 'title': schema.title_or_id()} + self.content_type_info(schema)
             output.append(temp_output)
         return output
+
+    def content_type_info(self, schema):
+        c_info = {}
+        try:
+            geo_location = schema.getWidget('geo_location');
+            geo_type = schema.getWidget('geo_type');
+        except KeyError:
+            # one or both widgets are missing; skip it
+            c_info['geo_taggable'] = False
+            c_info['geo_enabled'] = False
+        else:
+            c_info['geo_taggable'] = True
+            c_info['geo_enabled'] = (geo_location.visible
+                                          and geo_type.visible)
+        if schema.is_ratable:
+            c_info['ratable'] = True
+        else:
+            c_info['ratable'] = False
+        return c_info
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_contenttypes')
     def admin_set_contenttypes(self, geotag=[], ratable=[], REQUEST=None):

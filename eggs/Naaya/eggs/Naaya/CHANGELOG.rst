@@ -1,5 +1,7 @@
 2.12.31 (unreleased)
 --------------------
+* portal_map methods are no longer called if the content type is not
+  geo_enabled [dumitval]
 
 2.12.30 (2011-11-16)
 --------------------

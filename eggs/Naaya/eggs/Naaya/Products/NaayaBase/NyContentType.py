@@ -315,6 +315,13 @@ class NyContentType(object):
             self.setSessionInfoTrans('Item "${title}" deleted.', title=title)
             REQUEST.RESPONSE.redirect('%s/' % parent.absolute_url())
 
+    security.declareProtected(view, 'is_geo_enabled')
+    def is_geo_enabled(self):
+        """ check if the current object is geo_enabled """
+
+        schema_tool = self.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(self.meta_type)
+        return schema_tool.content_type_info(schema)['geo_enabled']
 
 InitializeClass(NyContentType)
 

@@ -111,6 +111,7 @@
             <th i18n:translate="">Geographical coverage</th>
             <td tal:content="here/coverage" />
         </tr>
+		<tal:block condition="here/is_geo_enabled">
           <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
                           picture python:portal_map.getSymbolPicture(here.geo_type)"
                           tal:condition="python: title != '' and here.geo_location">
@@ -120,6 +121,7 @@
               <span tal:replace="title" />
             </td>
           </tr>
+		</tal:block>
         <tal:block content="structure python: here.prop_display_tr('keywords')" />
         <tr>
             <th i18n:translate="">Export for Outlook</th>
