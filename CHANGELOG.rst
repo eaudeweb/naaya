@@ -1,4 +1,7 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
+==================
+
+1.2.6 (2011-11-17)
 ==================
 * Handle case when invalid topic is passed to organisations_list [dumitval]
 
