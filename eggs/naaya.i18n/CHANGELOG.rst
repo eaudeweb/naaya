@@ -1,5 +1,6 @@
 1.0.8 (unreleased)
 ------------------
+* strips and collapses whitespaces in message translations [simiamih]
 
 1.0.7 (2011-11-08)
 ------------------

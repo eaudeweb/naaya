@@ -15,6 +15,14 @@ class _TranslationCatalog(unittest.TestCase):
         catalog = self.catalog_factory(languages=('en', 'de'))
         self.assertRaises(StopIteration, catalog.messages().next)
 
+
+    def test_clean_translation(self):
+        catalog = self.catalog_factory(languages=('en', 'de'))
+        catalog.edit_message('water', 'en',
+                             '  water	 is  \r\n\n  healthy	\n	')
+        self.assertEqual(catalog.gettext('water', 'en'),
+                         'water is healthy')
+
     def test_get_unexistent_message(self):
         catalog = self.catalog_factory(languages=('en', 'de'))
         cat_en = catalog.gettext('cat', 'en')

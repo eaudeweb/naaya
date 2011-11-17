@@ -6,6 +6,7 @@ in a PersistentMapping.
 
 """
 import logging
+import re
 
 try:
     # zope 2.12
@@ -33,6 +34,14 @@ def update_transaction_note():
     if p.search(t.description) is None:
         t.note(label_with_count(0))
     t.description = p.sub(increment_count, t.description)
+
+def collapse_whitespace(text):
+    """
+    Strips, replaces new line with spaces and collapses multiple spaces
+
+    """
+    text = text.strip()
+    return re.sub(r'\s+', ' ', text)
 
 
 class NyMessageCatalog(Persistent):
@@ -79,7 +88,7 @@ class NyMessageCatalog(Persistent):
         # Add-by-edit functionality
         if not self._messages.has_key(msgid):
             self.gettext(msgid, lang)
-        self._messages[msgid][lang] = translation
+        self._messages[msgid][lang] = collapse_whitespace(translation)
 
     def del_message(self, msgid):
         """Deletes message and its translations from catalog"""
@@ -119,7 +128,8 @@ class NyMessageCatalog(Persistent):
             update_transaction_note()
 
         if not self._messages[msgid].has_key(self._default_language):
-            self._messages[msgid][self._default_language] = default
+            default_translation = collapse_whitespace(default)
+            self._messages[msgid][self._default_language] = default_translation
 
         # translation may be blank (supposition), then-> default (usually msgid)
         in_catalog = self._messages[msgid].get(lang, '')
