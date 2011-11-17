@@ -1280,7 +1280,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def gl_changeLanguage(self, old_lang, REQUEST=None):
         """ Changing portal browsing language """
         self.getPortalI18n().change_selected_language(old_lang)
-        if REQUEST: REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+        if REQUEST:
+            referer = REQUEST.get('HTTP_REFERER', None)
+            if not referer:
+                # no referer, redirect to object in path or fallback to portal
+                redirect_to_object = self
+                if REQUEST.get('PARENTS', []):
+                    redirect_to_object = REQUEST['PARENTS'][0]
+                referer = redirect_to_object.absolute_url()
+
+            REQUEST.RESPONSE.redirect(referer)
 
     def gl_add_site_language(self, language_code, language_name=None):
         #this is called when a new language is added for the portal

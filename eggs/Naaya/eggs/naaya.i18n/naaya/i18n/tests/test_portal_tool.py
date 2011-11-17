@@ -3,6 +3,7 @@ from zope.i18n.interfaces import INegotiator, ILanguageAvailability
 from zope.component import providedBy
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_CODE
 from nose.plugins.skip import SkipTest
 
@@ -113,3 +114,14 @@ class TestNySiteApi(NaayaTestCase):
         self.portal.gl_del_site_languages(('de', 'fr'))
         self.assertEqual(self.portal.gl_get_languages(),
                          (DEFAULT_PORTAL_LANGUAGE_CODE, ))
+
+
+class NySiteFunctionalTestCase(NaayaFunctionalTestCase):
+
+    def test_changeLanguage_redirect(self):
+        # Test redirect, no referrer
+        self.portal.gl_add_site_language('fr')
+        import transaction; transaction.commit()
+        self.browser.go('http://localhost/portal/info/contact/gl_changeLanguage?old_lang=fr')
+        self.assertEqual(self.browser.get_url(),
+                         'http://localhost/portal/info/contact')
