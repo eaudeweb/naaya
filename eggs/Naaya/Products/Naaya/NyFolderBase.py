@@ -190,7 +190,6 @@ class NyFolderBase(Folder, NyPermissions):
         display various buttons in the form it is called.
 
         """
-
         folders_info = self.listed_folders_info(skey, rkey, sort_on, sort_order)
         objects_info = self.listed_objects_info(skey, rkey, sort_on, sort_order)
 

@@ -55,6 +55,7 @@
         <tal:block content="structure python: here.prop_display_tr('keywords')" />
         <!-- <tal:block content="structure python: here.prop_display_tr('address')" /> -->
 
+        <tal:block condition="here/is_geo_enabled">
             <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
                             picture python:portal_map.getSymbolPicture(here.geo_type)"
                             tal:condition="python: title != '' and here.geo_location">
@@ -64,6 +65,7 @@
                     <span tal:replace="title" />
                 </td>
             </tr>
+		</tal:block>
 
         <tal:block content="structure python: here.prop_display_tr('url', as_href=True, rel='external')" />
 
