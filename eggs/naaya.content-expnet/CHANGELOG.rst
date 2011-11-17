@@ -1,5 +1,6 @@
 1.2.6 (unreleased)
 ==================
+* Handle case when invalid topic is passed to organisations_list [dumitval]
 
 1.2.5 (2011-11-14)
 ==================
