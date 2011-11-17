@@ -41,6 +41,9 @@
 </div>
 
 <tal:block define="results python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
+	<tal:block condition="python: results is None">
+		<tal:block define="redir python:request.RESPONSE.redirect(here.absolute_url())"/>
+	</tal:block>
 	<div class="main-content" tal:condition="results" tal:repeat="ob results">
 		<div tal:condition="ob/picture" class="picture">
 			<img tal:attributes="src string:${ob/absolute_url}/render_picture"
