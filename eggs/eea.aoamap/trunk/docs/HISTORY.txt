@@ -2,6 +2,9 @@ Changelog
 =========
 [Alex Morega - alex.morega at eaudeweb.ro]
 
+1.2-dev - (unreleased)
+----------------------
+
 1.1 - (2011-11-18)
 ------------------
 * Cleanup: Fixed pylint, pyflakes warnings
