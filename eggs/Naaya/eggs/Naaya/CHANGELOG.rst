@@ -1,5 +1,6 @@
 2.12.32 (unreleased)
 --------------------
+* added docx, xlsx and pptx mime types [dumitval]
 * gl_changeLanguage properly redirects when no referer [simiamih]
 
 2.12.31 (2011-11-17)
