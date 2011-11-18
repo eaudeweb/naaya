@@ -174,15 +174,16 @@ class SchemaTool(Folder):
         portal_schemas = self.getSite().portal_schemas
         output = []
         for schema in portal_schemas.listSchemas(installed=True).values():
-            temp_output = {'id': schema.id, 'title': schema.title_or_id()} + self.content_type_info(schema)
+            temp_output = {'id': schema.id, 'title': schema.title_or_id()}
+            temp_output.update(self.content_type_info(schema))
             output.append(temp_output)
         return output
 
     def content_type_info(self, schema):
         c_info = {}
         try:
-            geo_location = schema.getWidget('geo_location');
-            geo_type = schema.getWidget('geo_type');
+            geo_location = schema.getWidget('geo_location')
+            geo_type = schema.getWidget('geo_type')
         except KeyError:
             # one or both widgets are missing; skip it
             c_info['geo_taggable'] = False
