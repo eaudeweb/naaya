@@ -435,7 +435,23 @@ class ProjectsLister(Implicit, Item):
     def items_in_topic(self, topic=None, filter_name=None, objects=False):
         filters = {'meta_type' : 'Naaya Project', 'approved': True}
         if topic is not None:
-            filters['topics'] = topic
+            default_lang = self.gl_get_default_language()
+            default_lang_name = self.gl_get_language_name(default_lang)
+            glossary = self.getSite().chm_terms
+            try:
+                item_brains = glossary.getObjectByCode(topic)
+                if item_brains:
+                    #if the topic is a glossary element, the list is not empty
+                    #this list should contain only one object if the id is unique
+                    glossary_item = item_brains[0].getObject()
+                else:
+                    #the topic is a glossary folder
+                    glossary_item = getattr(glossary, topic)
+                topic_title = glossary_item.get_translation_by_language(default_lang_name)
+                filters['topics'] = topic_title
+            except AttributeError:
+                #an invalid topic was passed
+                return None
         if filter_name is not None:
             filters['title'] = '*%s*' % filter_name
 
