@@ -16,6 +16,7 @@ setup(
                      open(os.path.join("docs", "HISTORY.txt")).read(),
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
+      url='http://www.eea.europa.eu/data-and-maps',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
