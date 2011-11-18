@@ -67,7 +67,7 @@
 		<input type="submit" value="Delete" i18n:attributes="value" />
 	</div>
 </div>
-<tal:block repeat="category categories">
+<tal:block repeat="category python:test(here.topics_listing=='Plain table',topics.keys(),categories)">
 	<h3 tal:condition="python:here.topics_listing!='Plain table'"
 		i18n:translate="" tal:content="category"/>
 	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
