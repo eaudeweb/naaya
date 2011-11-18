@@ -42,7 +42,7 @@ DEFAULT_SCHEMA = {
                 label='Available until', data_type='date'),
     'supplier': dict(sortorder=160, widget_type='String',
                 label='Supplier'),
-    'supplier_url': dict(sortorder=170, widget_type='String',
+    'supplier_url': dict(sortorder=170, widget_type='URL',
                 label='Supplier URL'),
     'contact_person': dict(sortorder=180, widget_type='String',
                 label='Contact person'),
