@@ -1,5 +1,7 @@
 1.2.7 (unreleased)
 ==================
+* Handle case when invalid topic is passed to projects_list [dumitval]
+* Change in search projects by topic (id instead of title) [dumitval]
 
 1.2.6 (2011-11-17)
 ==================
@@ -11,7 +13,7 @@
 
 1.2.4 (2011-11-09)
 ==================
-* change in search elements by topic (id instead of title) [dumitval]
+* change in search organisations by topic (id instead of title) [dumitval]
 
 1.2.3 (2011-10-24)
 ==================

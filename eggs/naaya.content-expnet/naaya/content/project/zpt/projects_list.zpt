@@ -23,7 +23,7 @@
 		<metal:block define-macro="node-children">
 		<ul>
 			<li tal:repeat="node items">
-				<tal:block define="topic python: node.get_translation_by_language(default_lang_name)">
+				<tal:block define="topic node/id">
 				<a tal:define="url here/absolute_url"
 				   tal:attributes="href string:${url}?topic=${topic}"
 				   i18n:translate="" tal:content="node/title_or_id"></a>
@@ -41,6 +41,9 @@
 </div>
 
 <tal:block define="results python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
+	<tal:block condition="python: results is None">
+		<tal:block define="redir python:request.RESPONSE.redirect(here.absolute_url())"/>
+	</tal:block>
 	<div class="main-content" tal:condition="results" tal:repeat="ob results">
 		<div>
 			<h3><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h3>
