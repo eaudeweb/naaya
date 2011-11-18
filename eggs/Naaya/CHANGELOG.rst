@@ -1,4 +1,7 @@
-2.12.32 (unreleased)
+2.12.33 (unreleased)
+--------------------
+
+2.12.32 (2011-11-18)
 --------------------
 * bugfix: standard error page and SchemaTool [simiamih]
 * migrate StringWidget to URLWidget where needed [andredor]
