@@ -1,5 +1,6 @@
 1.2.9 (unreleased)
 ------------------
+* bugfix in category sorting (forum listing) [dumitval]
 
 1.2.8 (2011-11-14)
 ------------------
