@@ -1,4 +1,7 @@
-1.2.7 (unreleased)
+1.2.8 (unreleased)
+==================
+
+1.2.7 (2011-11-18)
 ==================
 * Handle case when invalid topic is passed to projects_list [dumitval]
 * Change in search projects by topic (id instead of title) [dumitval]
