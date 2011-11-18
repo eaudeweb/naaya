@@ -1,4 +1,7 @@
-1.2.5 (unreleased)
+1.2.6 (unreleased)
+------------------
+
+1.2.5 (2011-11-18)
 ------------------
 * migrate StringWidget to URLWidget where needed [andredor]
 
