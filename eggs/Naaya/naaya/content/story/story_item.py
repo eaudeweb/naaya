@@ -52,7 +52,7 @@ PROPERTIES_OBJECT = {
 DEFAULT_SCHEMA = {
     'body':         dict(sortorder=100, widget_type='TextArea', label='Body (HTML)', localized=True, tinymce=True),
     'topitem':      dict(sortorder=110, widget_type='Checkbox', label='Top item', data_type='int'),
-    'resourceurl':  dict(sortorder=120, widget_type='String',   label='Concerned URL'),
+    'resourceurl':  dict(sortorder=120, widget_type='URL',      label='Concerned URL'),
     'source':       dict(sortorder=130, widget_type='String',   label='Source'),
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)

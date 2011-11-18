@@ -59,7 +59,7 @@ DEFAULT_SCHEMA = {
     'details':          dict(sortorder=100, widget_type='TextArea', label='Details (HTML)', localized=True, tinymce=True),
     'expirationdate':   dict(sortorder=110, widget_type='Date',     label='Expiration date', data_type='date'),
     'topitem':          dict(sortorder=120, widget_type='Checkbox', label='Top item', data_type='int'),
-    'resourceurl':      dict(sortorder=130, widget_type='String',   label='Concerned URL'),
+    'resourceurl':      dict(sortorder=130, widget_type='URL',      label='Concerned URL'),
     'source':           dict(sortorder=140, widget_type='String',   label='Source', localized=True),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))

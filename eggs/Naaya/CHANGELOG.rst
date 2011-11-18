@@ -1,5 +1,6 @@
 2.12.32 (unreleased)
 --------------------
+* migrate StringWidget to URLWidget where needed [andredor]
 * added docx, xlsx and pptx mime types [dumitval]
 * gl_changeLanguage properly redirects when no referer [simiamih]
 

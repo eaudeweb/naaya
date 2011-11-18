@@ -45,7 +45,7 @@ PROPERTIES_OBJECT = {
     'lang':         (0, '', '')
 }
 DEFAULT_SCHEMA = {
-    'url':          dict(sortorder=140, widget_type='String', label='URL'),
+    'url':          dict(sortorder=140, widget_type='URL', label='URL'),
     'pointer':      dict(sortorder=150, widget_type='Pointer', label='Related to local item (if any)'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))

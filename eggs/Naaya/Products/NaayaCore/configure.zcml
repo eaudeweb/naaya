@@ -11,6 +11,7 @@
   <include package=".PortletsTool" />
   <include package=".GoogleDataTool" />
   <include package=".managers" />
+  <include package=".SchemaTool" />
   <include package=".SyndicationTool" />
 
   <adapter factory="Products.NaayaCore.managers.recaptcha_utils.CaptchaProvider" />

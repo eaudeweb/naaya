@@ -11,7 +11,7 @@ from naaya.core.zope2util import folder_manage_main_plus
 from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
-    'String', 'TextArea', 'Date', 'Interval', 'Checkbox',
+    'String', 'TextArea', 'Date', 'Interval', 'Checkbox', 'URL',
     'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer',
 ]
 

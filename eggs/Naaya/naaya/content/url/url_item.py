@@ -42,7 +42,7 @@ PROPERTIES_OBJECT = {
 }
 DEFAULT_SCHEMA = {
     'redirect': dict(sortorder=100, widget_type='Checkbox', data_type='bool', label='Automatically redirect to the given URL'),
-    'locator': dict(sortorder=110, widget_type='String', label='URL', localized=True),
+    'locator': dict(sortorder=110, widget_type='URL', label='URL', localized=True),
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
