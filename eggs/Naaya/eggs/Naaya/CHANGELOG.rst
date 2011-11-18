@@ -1,5 +1,6 @@
 2.12.33 (unreleased)
 --------------------
+* fix for empty string passed in geo_types filtering [dumitval]
 
 2.12.32 (2011-11-18)
 --------------------

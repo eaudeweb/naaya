@@ -410,7 +410,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if 'geo_types' in criteria:
             if isinstance(criteria['geo_types'], str):
-                criteria['geo_types'] = criteria['geo_types'].split(',')
+                if criteria['geo_types'] == '':
+                    criteria['geo_types'] = []
+                else:
+                    criteria['geo_types'] = criteria['geo_types'].split(',')
         else:
             criteria['geo_types'] = []
 
