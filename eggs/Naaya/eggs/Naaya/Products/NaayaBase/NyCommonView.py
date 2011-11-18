@@ -12,6 +12,8 @@ from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator
 from Products.NaayaCore.interfaces import ICaptcha
 
+log = logging.getLogger(__name__)
+
 class NyCommonView(object):
     """
     This class is for common methods that need to be available for many pages.
@@ -66,13 +68,13 @@ class NyCommonView(object):
         return self.getFormsTool().getContent(kwargs, 'channel_details')
 
     security.declarePublic('standard_error_message')
-    def standard_error_message(self, client=None, REQUEST=None, **kwargs):
+    def standard_error_message(self, client=None, **kwargs):
         """ """
         try:
             if kwargs['error_type'] != 'NotFound':
                 self.processNotifyOnErrors(kwargs['error_type'],
                                            kwargs['error_value'],
-                                           REQUEST)
+                                           self.REQUEST)
 
             site = self.getSite()
             forms_tool = self.getFormsTool()
@@ -95,7 +97,6 @@ class NyCommonView(object):
 
     security.declarePublic('log_page_error')
     def log_page_error(self, error):
-        log = logging.getLogger('naaya.commonview.page_error')
         log.warning('Page error: error type %r, error value %r,'
                     ' lineno %r, offset %r, ACTUAL_URL: %s\n%s',
                     error.type, error.value, error.lineno, error.offset,
