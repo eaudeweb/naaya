@@ -86,28 +86,28 @@
 <table border="1" cellspacing="0" cellpadding="2">
     <tr tal:define="new_rkey python:test(rkey=='1', 0, 1);">
         <th width="5%">Delete</th>
+        <tal:block tal:condition="python:skey=='username'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=username&amp;rkey=${new_rkey}&amp;query=${query}"
+                    >Username</a>
+            </th>
+        </tal:block>
+        <tal:block tal:condition="python:skey!='username'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=username&amp;query=${query}"
+                    >Username</a>
+            </th>
+        </tal:block>
+
         <tal:block tal:condition="python:skey=='name'">
             <th>
                 <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name&amp;rkey=${new_rkey}&amp;query=${query}"
-                    >Username</a>
+                    >Name</a>
             </th>
         </tal:block>
         <tal:block tal:condition="python:skey!='name'">
             <th>
                 <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name&amp;query=${query}"
-                    >Username</a>
-            </th>
-        </tal:block>
-
-        <tal:block tal:condition="python:skey=='lastname'">
-            <th>
-                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=lastname&amp;rkey=${new_rkey}&amp;query=${query}"
-                    >Name</a>
-            </th>
-        </tal:block>
-        <tal:block tal:condition="python:skey!='lastname'">
-            <th>
-                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=lastname&amp;query=${query}"
                     >Name</a>
             </th>
         </tal:block>
@@ -127,11 +127,11 @@
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
         <tal:block define="
-            name python:here.getUserAccount(user);
+            name user/user_id;
             user_quoted python:here.utUrlEncode(name);
-            firstname python:here.getUserFirstName(user);
-            lastname python:here.getUserLastName(user);
-            email python:here.getUserEmail(user);
+            firstname user/first_name;
+            lastname user/last_name;
+            email user/email;
             ">
         <td width="3%" nowrap="nowrap">
             <table>
