@@ -1,6 +1,5 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:zope="http://namespaces.zope.org/zope"
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <subscriber
@@ -23,11 +22,6 @@
          Products.Naaya.interfaces.IHeartbeat"
     handler=".subscribers.sync_on_heartbeat" />
 
-  <configure zcml:condition="installed Products.naayaUpdater">
-    <zope:utility name="Typo"
-          provides="Products.naayaUpdater.interfaces.IUpdateScript"
-          component=".updates.FixTypo"
-          permission="zope2.ViewManagementScreens" />
-  </configure>
+  <include package=".updates" />
 
 </configure>
