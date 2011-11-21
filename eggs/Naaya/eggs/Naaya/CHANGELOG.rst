@@ -1,5 +1,6 @@
 2.12.33 (unreleased)
 --------------------
+* get method in SyndicationTool [dumitval]
 * fix acl_users/manage page [andredor]
 * fix for empty string passed in geo_types filtering [dumitval]
 
