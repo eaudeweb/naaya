@@ -542,6 +542,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 return force_to_unicode(obj.user_id).lower()
             elif skey == 'source':
                 return force_to_unicode(obj.source_title).lower()
+            elif skey == 'email':
+                return force_to_unicode(obj.email).lower()
             else:
                 return force_to_unicode(obj.full_name).lower()
         users_info.sort(key=sort_key, reverse=bool(rkey))
