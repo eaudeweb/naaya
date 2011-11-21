@@ -1,7 +1,7 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 <tal:block condition="python: request.has_key('id_channel')">
-<tal:block tal:define="ob_channel python:here.getSyndicationTool()[request['id_channel']]">
+<tal:block tal:define="ob_channel python:here.getSyndicationTool().get(request['id_channel'])">
 <tal:block tal:condition="python:hasattr(ob_channel, 'url')">
 <h1 i18n:translate="" tal:content="python: ob_channel.title_or_id()" />
 <span i18n:translate="">RDF feed: </span> <a tal:attributes="href string:${ob_channel/url}"><span tal:content="ob_channel/url" /></a>
@@ -21,7 +21,7 @@
 	</ul>
 </tal:block>
 
-<tal:block tal:condition="not:python:hasattr(ob_channel, 'url')">
+<tal:block tal:condition="python:not hasattr(ob_channel, 'url')">
 <h1 i18n:translate="" tal:content="python:ob_channel.title_or_id()" />
 <span i18n:translate="">RDF channels: </span>
 <ul>

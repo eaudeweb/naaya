@@ -8,6 +8,7 @@ from datetime import timedelta
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
+from ZPublisher import NotFound
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope import component
@@ -298,6 +299,15 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     security.declareProtected(view_management_screens, 'manage_channeltypes_html')
     manage_channeltypes_html = PageTemplateFile('zpt/syndication_manage_channeltypes', globals())
+
+    security.declareProtected(view, 'get')
+    def get(self, channel_id):
+        channel = getattr(self, channel_id, None)
+        if channel:
+            return channel
+        else:
+            raise NotFound, "Channel not found"
+
 
 InitializeClass(SyndicationTool)
 
