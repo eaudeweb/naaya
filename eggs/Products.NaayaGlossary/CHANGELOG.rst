@@ -1,4 +1,7 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
+------------------
+
+1.1.5 (2011-11-21)
 ------------------
 * update script to convert values to unicode [andredor]
 
