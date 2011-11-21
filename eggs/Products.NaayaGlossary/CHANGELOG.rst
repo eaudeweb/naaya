@@ -1,5 +1,6 @@
 1.1.5 (unreleased)
 ------------------
+* update script to convert values to unicode [andredor]
 
 1.1.4 (2011-11-11)
 ------------------
