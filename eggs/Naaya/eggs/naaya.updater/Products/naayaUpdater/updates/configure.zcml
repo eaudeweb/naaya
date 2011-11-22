@@ -415,4 +415,9 @@
       provides="..interfaces.IUpdateScript"
       component=".update_user_management_styles.UpdateUserManagementStyles"
       permission="zope2.ViewManagementScreens" />
+	<utility
+      name="update_remove_downloadfilename_property.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_remove_downloadfilename_property.RemoveDownloadfilenameProperty"
+      permission="zope2.ViewManagementScreens" />
 </configure>
