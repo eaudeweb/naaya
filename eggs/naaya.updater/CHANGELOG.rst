@@ -1,4 +1,7 @@
-1.2.15 (unreleased)
+1.2.17 (unreleased)
+-------------------
+
+1.2.16 (2011-11-22)
 -------------------
 * Update script to delete 'downloadfilename' property from 'Naaya
   Extended File' objects [dumitval]
