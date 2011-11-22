@@ -411,7 +411,7 @@ class NyContentData(NyProperties):
             if prop_name in local_properties:
                 return self.getLocalProperty(prop_name, lang)
             else:
-                return getattr(self, prop_name, '')
+                return getattr(self.aq_base, prop_name, '')
 
         return SchemaFormHelper(self._get_schema(), self, get_value)
 
