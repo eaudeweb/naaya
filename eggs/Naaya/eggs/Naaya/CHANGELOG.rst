@@ -1,5 +1,6 @@
 2.12.33 (unreleased)
 --------------------
+* fix for importing zip archives with filenames in non-ASCII [dumitval]
 * get method in SyndicationTool [dumitval]
 * fix acl_users/manage page [andredor]
 * fix for empty string passed in geo_types filtering [dumitval]
