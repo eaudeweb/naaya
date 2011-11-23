@@ -2412,7 +2412,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
                             '%s/admin_local_users_html' % self.absolute_url()))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeroles')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revoke_searched_roles')
     def admin_revoke_searched_roles(self, names=[], role='', location='_all_',
                                     REQUEST=None):
         """ """
