@@ -151,6 +151,11 @@ class ZipImportTool(Implicit, Item):
                 else:
                     file_container_path, file_name = '', file_path
 
+                try:
+                    file_name.decode('utf-8')
+                except UnicodeDecodeError:
+                    #Try to decode the filename using the WinZip encoding ('DOS Latin')
+                    file_name = file_name.decode('CP437').encode('utf-8')
                 assert file_container_path in folder_map
                 try:
                     file_container = folder_map[file_container_path]
