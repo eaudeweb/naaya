@@ -1,4 +1,7 @@
-1.0.14 (unreleased)
+1.0.15 (unreleased)
+-------------------
+
+1.0.14 (2011-11-24)
 -------------------
 * update script to translate french glossary keywords [andredor]
 
