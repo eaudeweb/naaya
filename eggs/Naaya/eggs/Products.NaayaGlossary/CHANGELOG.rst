@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 ------------------
+* update script to also convert definitions to unicode [andredor]
 
 1.1.5 (2011-11-21)
 ------------------

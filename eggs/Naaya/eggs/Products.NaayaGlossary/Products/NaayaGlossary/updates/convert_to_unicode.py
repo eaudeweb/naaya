@@ -27,6 +27,15 @@ class ConvertToUnicode(UpdateScript):
                     element.absolute_url(), language, value)
             setattr(element, language, force_to_unicode(value))
 
+        for language in languages:
+            def_attr = 'def_' + language
+            value = getattr(element, def_attr, u'')
+            if isinstance(value, unicode):
+                continue
+            self.log.debug('%s %s: %s',
+                    element.absolute_url(), def_attr, value)
+            setattr(element, def_attr, force_to_unicode(value))
+
     def _update(self, portal):
         for glossary in portal.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             languages = glossary.get_english_names()
