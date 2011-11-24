@@ -1,5 +1,6 @@
 1.0.14 (unreleased)
 -------------------
+* update script to translate french glossary keywords [andredor]
 
 1.0.13 (2011-11-14)
 -------------------

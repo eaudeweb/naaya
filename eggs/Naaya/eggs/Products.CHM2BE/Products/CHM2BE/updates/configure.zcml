@@ -13,5 +13,9 @@
                  provides="Products.naayaUpdater.interfaces.IUpdateScript"
                  component=".update_install_chm_terms.InstallCHMTermsGlossary"
                  permission="zope2.ViewManagementScreens" />
+        <utility name="update_french_keywords.update"
+                 provides="Products.naayaUpdater.interfaces.IUpdateScript"
+                 component=".update_french_keywords.UpdateFrenchKeywords"
+                 permission="zope2.ViewManagementScreens" />
    </configure>
 </configure>
