@@ -90,7 +90,7 @@ function load_ui() {
             width: 650,
             minHeight: 300,
             dialogClass: 'glossary-widget-dialog',
-            position: 'top',
+            position: 'center',
             buttons: buttons
         });
         load_tree($('.glossary-widget-tree', dialog_div),
