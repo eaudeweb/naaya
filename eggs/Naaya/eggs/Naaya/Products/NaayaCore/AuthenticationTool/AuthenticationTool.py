@@ -1524,13 +1524,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             record_number = 0
             successfully_imported = 0
 
+            space_pattern = r'\s+'
             for row in reader:
                 try:
                     record_number += 1
                     properties = {}
                     record_errors = []
                     for column, value in zip(header, row):
-                        properties[column] = value
+                        if column == 'roles':
+                            if not properties.has_key('roles'):
+                                properties['roles'] = []
+                            if value:
+                                properties['roles'].append(value.strip())
+                        else:
+                            properties[column] = value.strip()
                     email = properties.get('email')
                     name = properties.get('name')
                     firstname = properties.get('firstname')
@@ -1539,7 +1546,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     roles = properties.get('roles')
                     domains = properties.get('domains')
 
-                    email = email.strip()
+                    name = str(name).lower()
+                    name = re.sub(space_pattern, '.', name)
+                    firstname = firstname.capitalize()
+                    lastname = lastname.capitalize()
+                    email = str(email).lower()
+
                     if not check_username(name):
                         record_errors.append('Record %s: Username: only letters, numbers, dot (.), minus (-) and underscore (_) are allowed' % record_number)
                     if not firstname:
@@ -1555,12 +1567,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if not password:
                         record_errors.append('Record %s: Password must be specified' % record_number)
 
-                    name = str(name).lower()
-                    existing_usernames = set(username.lower
-                        for username in self.getUserNames())
+                    existing_usernames = set(username.lower for username in self.getUserNames())
                     if self.get_user_with_userid(name) is not None or name in existing_usernames:
                         record_errors.append('Record %s: Username %s already in use' % (record_number, name))
-                    email = str(email).lower()
+
                     existing_emails = set(user.email.lower() for user in self.getUsers())
                     if email in existing_emails:
                         users_with_same_email = [user.name for user in self.getUsers()
@@ -1571,18 +1581,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         errors += record_errors
                         continue
 
-                    #convert data
-                    if roles:
-                        roles = self.utConvertToList(roles)
-                    else:
-                        roles = []
-                    if domains:
-                        domains = self.utConvertToList(domains)
-                    else:
-                        domains = []
-
-                    user = self._doAddUser(name, password, roles, domains,
-                                   firstname, lastname, email)
+                    user = self._doAddUser(name, password, roles, domains, firstname, lastname, email)
                     successfully_imported += 1
 
                 except UnicodeDecodeError, e:
