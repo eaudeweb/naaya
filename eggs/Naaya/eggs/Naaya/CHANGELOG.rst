@@ -1,5 +1,6 @@
 2.12.33 (unreleased)
 --------------------
+* change credentials page [andredor]
 * fix for importing zip archives with filenames in non-ASCII [dumitval]
 * get method in SyndicationTool [dumitval]
 * fix acl_users/manage page [andredor]

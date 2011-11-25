@@ -1632,8 +1632,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
         user = self.getAuthenticationTool().getUser(auth_user)
-        err = []
-        err = self.getAuthenticationTool().manage_changeUser(auth_user, password, confirm, user.roles, user.domains, firstname, lastname, email)
+        try:
+            self.getAuthenticationTool().manage_changeUser(auth_user, password, confirm, user.roles, user.domains, firstname, lastname, email)
+        except ValidationError, e:
+            err = [e]
+        else:
+            err = None
+
+        if err is None and password:
+            self.credentialsChanged(auth_user, password)
+
         if err is not None:
             if REQUEST:
                 self.setSessionErrorsTrans(err)
@@ -3689,6 +3697,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def form_languages_box(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'form_languages_box')
+
+    security.declarePublic('changecredentials_html')
+    def changecredentials_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_changecredentials')
 
     security.declarePublic('login_html')
     def login_html(self, REQUEST=None, RESPONSE=None):
