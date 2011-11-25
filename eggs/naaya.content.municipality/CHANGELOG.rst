@@ -1,4 +1,7 @@
-1.2.4 (unreleased)
+1.2.5 (unreleased)
+------------------
+
+1.2.4 (2011-11-25)
 ------------------
 * 'choice' property checked for consistency and overwritten [dumitval]
 
