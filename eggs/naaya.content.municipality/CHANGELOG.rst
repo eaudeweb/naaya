@@ -1,5 +1,6 @@
 1.2.4 (unreleased)
 ------------------
+* 'choice' property checked for consistency and overwritten [dumitval]
 
 1.2.3 (2011-11-14)
 ------------------
