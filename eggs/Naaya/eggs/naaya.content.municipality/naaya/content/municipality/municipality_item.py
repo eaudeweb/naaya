@@ -147,7 +147,6 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a Municipality type of object.
     """
-
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
     else:
@@ -214,6 +213,14 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    #Overwrite any inconsistent values in the choice property
+    if not ob.species and ob.choice == u'3':
+        ob.choice = u'1'
+        ob._p_changed = True
+    if ob.species:
+        ob.choice = u'3'
+        ob._p_changed = True
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -352,6 +359,12 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         # if the user doesn't have permission to publish objects, the object must be unapproved
         if not self.glCheckPermissionPublishObjects():
             self.approveThis(0, None)
+
+        #Overwrite any inconsistent values in the choice property
+        if not self.species and self.choice == u'3':
+            self.choice = u'1'
+        if self.species:
+            self.choice = u'3'
 
         self._p_changed = 1
         self.recatalogNyObject(self)
