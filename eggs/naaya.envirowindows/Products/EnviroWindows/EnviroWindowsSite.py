@@ -49,6 +49,7 @@ from naaya.content.contact.contact_item             import addNyContact
 from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
+from naaya.component import bundles
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
@@ -60,6 +61,9 @@ def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
     self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
+ew_bundle = bundles.get("EW")
+ew_bundle.set_parent(bundles.get("Naaya"))
 
 class EnviroWindowsSite(NySite):
     """ """
@@ -79,6 +83,7 @@ class EnviroWindowsSite(NySite):
         """ """
         NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
+        self.set_bundle(ew_bundle)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):

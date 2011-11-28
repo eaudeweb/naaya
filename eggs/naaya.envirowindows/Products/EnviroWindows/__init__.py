@@ -16,7 +16,7 @@
 # Miruna Badescu
 
 #Python imports
-from os.path import join
+import os.path
 
 #Zope imports
 import Globals
@@ -132,7 +132,7 @@ NySite.getLocationTitle = getLocationTitle
 #process config.xml file
 content_urls = {}
 config = config_parser()
-config_handler, error = config_parser().parse(file_utils().futRead(join(ENVIROWINDOWS_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
+config_handler, error = config_parser().parse(file_utils().futRead(os.path.join(ENVIROWINDOWS_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
 if config_handler is not None:
     if config_handler.root.urls is not None:
         for item in config_handler.root.urls.entries:
@@ -144,3 +144,9 @@ def get_content_urls(self):
     return content_urls
 
 EnviroWindowsSite.EnviroWindowsSite.get_content_urls = get_content_urls
+
+def ew_bundle_registration():
+    """ Register things from skel into the EW bundle """
+    from Products.NaayaCore.FormsTool import bundlesupport
+    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
+    bundlesupport.register_templates_in_directory(templates_path, 'EW')
