@@ -1,5 +1,6 @@
 2.12.33 (unreleased)
 --------------------
+* update script for migrating ew sites to bundles [andredor]
 * change credentials page [andredor]
 * fix for importing zip archives with filenames in non-ASCII [dumitval]
 * get method in SyndicationTool [dumitval]
