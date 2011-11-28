@@ -7,6 +7,7 @@ from naaya.component import bundles
 bundle_for_site_cls = {
     'NySite': 'Naaya',
     'CHMSite': 'CHM',
+    'EnviroWindowsSite': 'EW',
 }
 
 class MigrateToBundles(UpdateScript):
