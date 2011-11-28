@@ -1,3 +1,4 @@
+===================
 Buildout on windows
 ===================
 
@@ -5,6 +6,30 @@ Buildout on windows
     :hidden:
 
     ldap_windows
+
+
+Using Zope 2.12
+===============
+
+The buildout with Zope 2.12 has few dependencies. First, install `Python
+2.6`_, PyWin32_ and `PIL 1.1.7`_. Then download the `default buildout
+configuration`_ and, from inside, run the following commands::
+
+    \Python26\python.exe bootstrap.py -d
+    bin\buildout.exe
+
+If all works fine you should be able to start Zope::
+
+    bin\zope-instance.exe fg
+
+.. _`Python 2.6`: http://www.python.org/ftp/python/2.6.6/python-2.6.6.msi
+.. _PyWin32: http://sourceforge.net/projects/pywin32/files/pywin32/Build216/pywin32-216.win32-py2.6.exe/download
+.. _`PIL 1.1.7`: http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
+.. _`default buildout configuration`: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/zope212/
+
+
+Using Zope 2.10 (legacy)
+========================
 
 Prerequisites (software, settings)
 ----------------------------------
