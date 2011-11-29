@@ -1,5 +1,6 @@
 1.2.17 (unreleased)
 -------------------
+* fix update script to handle NyBlogEntries on EW [andredor]
 
 1.2.16 (2011-11-22)
 -------------------
