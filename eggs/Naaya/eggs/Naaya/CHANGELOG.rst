@@ -1,4 +1,7 @@
-2.12.33 (unreleased)
+2.12.34 (unreleased)
+--------------------
+
+2.12.33 (2011-11-29)
 --------------------
 * update script for migrating ew sites to bundles [andredor]
 * change credentials page [andredor]
