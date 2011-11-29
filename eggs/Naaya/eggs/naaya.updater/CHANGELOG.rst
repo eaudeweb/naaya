@@ -1,4 +1,7 @@
-1.2.17 (unreleased)
+1.2.18 (unreleased)
+-------------------
+
+1.2.17 (2011-11-29)
 -------------------
 * fix update script to handle NyBlogEntries on EW [andredor]
 
