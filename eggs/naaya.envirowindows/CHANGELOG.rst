@@ -1,4 +1,7 @@
-1.1.3 (unreleased)
+1.1.4 (unreleased)
+------------------
+
+1.1.3 (2011-11-29)
 ------------------
 * update portlet administration links [andredor]
 * ew bundle registration [andredor]
