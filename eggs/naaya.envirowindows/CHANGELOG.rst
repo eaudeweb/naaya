@@ -1,5 +1,6 @@
 1.1.3 (unreleased)
 ------------------
+* update portlet administration links [andredor]
 * ew bundle registration [andredor]
 * filter display for User management search [andredor]
 
