@@ -1,5 +1,9 @@
-1.2 (unreleased)
+1.3 (unreleased)
 ----------------
+
+1.2 (2011-11-29)
+----------------
+* Fix setup.py, `packages` section was missing [moregale]
 
 1.1 (2011-11-29)
 ----------------
