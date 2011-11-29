@@ -29,7 +29,7 @@ def migrate_comments(obj, log):
 def list_obsolete_comented_objects(portal):
     catalog = portal.getCatalogTool()
     result = set()
-    for brain in catalog.getCatalogTool()({'meta_type': catalog.searchable_content, 'submitted': 1, 'has_comments': 1}):
+    for brain in catalog.getCatalogTool()({'submitted': 1, 'has_comments': 1}):
         result.add(catalog.getobject(brain.data_record_id_))
     return result
 
