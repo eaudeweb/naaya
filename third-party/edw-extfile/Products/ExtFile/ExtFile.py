@@ -1217,8 +1217,12 @@ class DirLock:
 
 
 # Stream iterator
-class stream_iterator:
-    __implements__ = (IStreamIterator,)
+class stream_iterator(object):
+    if issubclass(IStreamIterator, interface.Interface):
+        interface.implements(IStreamIterator)
+    else:
+        # old-stye zope interface (before ZCA)
+        __implements__ = (IStreamIterator,)
 
     def __init__(self, stream, blocksize=2<<16):
         self._stream = stream
