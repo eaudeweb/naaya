@@ -1,3 +1,4 @@
+if(M.after_map_load == null) {
 M.config['country_code'] = {};
 $.each(response['country_name'], function(code, names) {
   var name = names[M.config['language']];
@@ -37,3 +38,4 @@ M.region_info_url = function(region_name) {
 };
 
 M.patched = 1;
+}
