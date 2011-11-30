@@ -1,0 +1,35 @@
+<div class="field-inline" tal:define="
+    value options/value|nothing;
+    errors options/errors;
+    prop_id here/prop_name;
+    my_symbol string:symbol357;
+    portal_map here/getGeoMapTool;
+    geo_type_list portal_map/getSymbolsListOrdered">
+    <label tal:attributes="for prop_id" class="widget-title">
+        <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
+        <span tal:condition="here/required" class="mandatory_field">*</span>
+    </label>
+    <p class="form-errors" tal:condition="errors" tal:content="errors" />
+    <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+        <option value=""></option>
+
+        <tal:block define="symbol python:portal_map.getSymbol(my_symbol)">
+            <metal:block use-macro="template/macros/option" />
+        </tal:block>
+        <tal:block repeat="symbol geo_type_list"><tal:block condition="python: symbol.parent == my_symbol">
+            <metal:block use-macro="template/macros/option" />
+        </tal:block></tal:block>
+
+    </select>
+</div>
+
+
+
+<tal:block condition="nothing">
+<option metal:define-macro="option"
+        tal:attributes="value symbol/id;
+                        selected python:symbol.id == value">
+    <tal:block condition="symbol/parent">&nbsp;&nbsp;&nbsp;</tal:block>
+    <tal:block i18n:translate="" tal:content="symbol/title" />
+</option>
+</tal:block>
