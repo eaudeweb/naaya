@@ -1,3 +1,4 @@
+<tal:block define="no_left_portlets python:True">
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
@@ -63,3 +64,4 @@ function fTreeClick(expand)
 
 </metal:block>
 </metal:block>
+</tal:block>
