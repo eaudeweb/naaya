@@ -1,5 +1,6 @@
 2.12.34 (unreleased)
 --------------------
+* Added two methods in support of showing mainsection images [dumitval]
 * Removed 'source' column from news and story folder indexes [dumitval]
 
 2.12.33 (2011-11-29)
