@@ -9,11 +9,11 @@
 
 		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
 			<metal:block use-macro="site_object_index/macros/icon"/>
-			<tal:block tal:replace="here/title_or_id" />
-			<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+			<tal:block replace="here/title_or_id" />
+			<tal:block condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
 				[Limited access]
 			</tal:block>
-			<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+			<tal:block condition="python:not here.can_be_seen()" i18n:translate="">
 				[Restricted access]
 			</tal:block>
 			<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
@@ -78,7 +78,6 @@
 				<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="objects_delete_all">Delete</th>
 				<th i18n:translate="" style="width: 10%;">Release date</th>
 				<th class="title-column" i18n:translate="">Title</th>
-				<th style="width: 30%;" i18n:translate="">Source</th>
 				<th class="checkin" i18n:translate="" tal:condition="python:objects_select_all">On front</th>
 				<th class="edit" i18n:translate="" tal:condition="python:objects_select_all">Edit</th>
 			</tr>
@@ -99,7 +98,11 @@
 										title object/meta_type" />
 					<a tal:attributes="href object/absolute_url;
 										title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
-					<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+					<tal:block define="source python: object.utTruncateString(object.source, 40)" condition="source">
+						<br/>
+						<tal:block i18n:translate="">Source:</tal:block> <tal:block content="source" />
+					</tal:block>
+					<tal:block condition="python:object.is_open_for_comments() and object.count_comments()>0">
 						[<span tal:replace="object/count_comments" />
 						<span i18n:translate="">comment(s)</span>]
 					</tal:block>
