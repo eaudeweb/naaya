@@ -1,0 +1,84 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Remote channels</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				syndication_tool here/getSyndicationTool;
+				ob_id python:request.get('id', '');
+				ob_data python:syndication_tool.get_data_remote_channel(ob_id)">
+<p i18n:translate="">
+	This section lists the remote channels defined by portal administrators. When adding
+	or changing a channel, don't forget to update the remote information by clicking the
+	<em i18n:name="update-button" i18n:translate="">Update now</em> link next to the channel's name. You should have a cron job working in your
+	system to update this information on regular basis (e.g. once a day); ask your system
+	administrator for more details.
+</p>
+<h2 tal:condition="python:ob_data[0]!='add'">
+	<a tal:attributes="href string:${site_url}/admin_remotechannels_html" i18n:translate="">Add new channel</a>
+</h2>
+<fieldset>
+	<legend>
+		<tal:block tal:condition="python:ob_data[0]=='add'" i18n:translate="">Add new channel</tal:block>
+		<tal:block tal:condition="python:ob_data[0]!='add'" i18n:translate="">Edit channel</tal:block>
+	</legend>
+	<form method="post" tal:attributes="action python:test(ob_data[0]=='add', '%s/admin_addremotechannel' % site_url, '%s/admin_editremotechannel' % site_url)">
+	<p><input type="hidden" name="id" tal:attributes="value python:ob_data[1]" /></p>
+	<dl>
+		<dt i18n:translate="">Title</dt>
+		<dd><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob_data[2]" /></dd> 
+		<dt i18n:translate="">RSS/RDF file URL</dt>
+		<dd><input type="text" name="url" size="50" tal:attributes="value python:ob_data[3]" /></dd>
+		<dt i18n:translate="">Number of items shown</dt>
+		<dd><input type="text" name="numbershownitems" size="3" tal:attributes="value python:ob_data[4]" /><span i18n:translate="" tal:omit-tag="">(0 for all items)</span></dd>
+	</dl>
+    <dl>
+        <dt i18n:translate="">Filter feed content by language when displaying</dt>
+        <dd><input type="checkbox" name="filter_by_language" tal:attributes="checked python:ob_data[6]" /></dd>
+    </dl>
+	<dl tal:condition="python:ob_data[0]=='add'">
+		<dt i18n:translate="">Create a portlet with automatic translation</dt>
+		<dd>
+			<input type="checkbox" name="automatic_translation_portlet" />
+		</dd>
+	</dl>
+	<dl tal:condition="python:ob_data[0]=='add'">
+		<dt i18n:translate="">Create a portlet without automatic translation</dt>
+		<dd><input type="checkbox" name="portlet" checked="checked" /></dd>
+	</dl>
+	<p><input type="submit" tal:attributes="value python:test(ob_data[0]=='add', 'Add', 'Save changes')" i18n:attributes="value" /></p>
+	</form>
+</fieldset>
+<br />
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteremotechannel">
+	<table class="datatable">
+	<col style="width: 1em;" />
+	<col style="width: 25em;" />
+	<col style="width: 2em;" />
+	<col style="width: 25em;" />
+	<thead>
+		<tr>
+			<th class="scope-col" scope="col">&nbsp;</th>
+			<th class="scope-col" scope="col" i18n:translate="">Title</th>
+			<th class="scope-col" scope="col" i18n:translate="">Items</th>
+			<th class="scope-col" scope="col" i18n:translate="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="channel syndication_tool/get_remote_channels" tal:attributes="class python:test(path('repeat/channel/odd'), 'zebraodd', 'zebraeven')">
+			<td width="1%" valign="top"><input type="checkbox" name="ids" tal:attributes="value channel/id" /></td>
+			<td valign="top" tal:content="channel/title_or_id" />
+			<td valign="top" tal:content="channel/count_feed_items" />
+			<td valign="top">
+				[<a tal:attributes="href channel/url" i18n:translate="">Preview RDF</a>]
+				[<a tal:attributes="href string:${site_url}/admin_remotechannels_html?id=${channel/id}" i18n:translate="">Edit properties</a>]
+				[<a tal:attributes="href string:${site_url}/admin_updateremotechannel?id=${channel/id}" i18n:translate="">Update now</a>]
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<input type="submit" value="Delete" i18n:attributes="value" />
+</form>
+</tal:block>
+
+</tal:block>

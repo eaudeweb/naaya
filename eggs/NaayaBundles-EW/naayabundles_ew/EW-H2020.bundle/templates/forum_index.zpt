@@ -1,0 +1,145 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords|nothing"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block fill-slot="body">
+<style>
+  #center_content {
+    max-width: 78% !important;
+  }
+
+  #right_port {
+    float: right !important;
+  }
+</style>
+
+<h1>
+	<img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" />
+	<span tal:replace="here/title_or_id" />
+	<a tal:attributes="href string:${here/absolute_url}/messages_feed"
+	   ><img src="misc_/NaayaCore/xml.png" /></a>
+	<a tal:attributes="href string:${here/absolute_url}/messages_feed?format=atom"
+	   ><img src="misc_/NaayaCore/xml-blue.jpg" /></a>
+</h1>
+<p tal:content="structure here/description" />
+
+<div id="center_content">
+
+<tal:block tal:define="info here/checkTopicsPermissions;
+	topics python:info[3]['Plain table'];
+	btn_select python:info[0];
+	btn_delete python:info[1];
+	can_operate python:info[2]">
+
+<div id="admin_this_folder"
+	tal:condition="python: here.checkPermissionAddForum() or here.checkPermissionAddForumTopic()">
+	<a tal:condition="here/checkPermissionAddForum"
+		tal:attributes="href string:${here/absolute_url}/edit_html">
+		<span class="buttons" i18n:translate="">Edit forum</span>
+	</a>
+	<a tal:condition="here/checkPermissionAddForumTopic" style="margin-left: 5px;"
+		tal:attributes="href string:${here/absolute_url}/topic_add_html">
+		<span class="buttons" i18n:translate="">Add topic</span>
+	</a>
+	<a tal:condition="python:here.checkPermission('Change permissions')" style="margin-left: 5px;"
+		tal:attributes="href string:${here/absolute_url}/edit_access">
+		<span class="buttons" i18n:translate="">Edit Permissions</span>
+	</a>
+</div>
+
+<tal:block tal:condition="python:len(topics)>0">
+<form tal:attributes="action string:${here/absolute_url}/deleteTopics" method="post">
+<div tal:condition="btn_delete">
+	<div id="toolbar">
+		<input type="submit" value="Delete" i18n:attributes="value" />
+	</div>
+</div>
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+	<tr>
+		<th class="checkbox" tal:condition="btn_select" width="1%"></th>
+		<th width="1%"></th>
+		<th class="title-column" i18n:translate="">Subject</th>
+		<th class="title-column" i18n:translate="">Access</th>
+		<th class="title-column" i18n:translate="">Status</th>
+		<th class="title-column" i18n:translate="">Category</th>
+		<th class="title-column" i18n:translate="">Author</th>
+		<th class="title-column" i18n:translate="">Replies</th>
+		<th class="title-column" i18n:translate="">Views</th>
+		<th class="title-column" i18n:translate="">Last message</th>
+		<th class="edit" i18n:translate="" tal:condition="can_operate">Edit</th>
+	</tr>
+	<tbody>
+		<tal:block repeat="topic topics">
+		<tal:block define="item python:topic[2]; last item/get_last_message"
+		           condition="python:here.date_time_now() - last.postdate < 365">
+		<tr>
+		<tal:block tal:define="del_permission python:topic[0];
+			edit_permission python:topic[1];
+			item python:topic[2]">
+			<td tal:condition="btn_select">
+				<input tal:condition="python:del_permission or edit_permission"
+					type="checkbox" name="ids" tal:attributes="value item/id" />
+			</td>
+			<td>
+				<img src="/misc_/NaayaForum/NyForumTopic.gif"
+					tal:attributes="alt item/meta_label; title item/meta_label" />
+			</td>
+			<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" /></td>
+			<td>
+				<tal:block tal:condition="item/can_be_seen">
+					<tal:block tal:condition="item/has_restrictions" i18n:translate="">Limited</tal:block>
+					<tal:block tal:condition="python:not item.has_restrictions()" i18n:translate="">Public</tal:block>
+				</tal:block>
+				<tal:block tal:condition="python:not item.can_be_seen()" i18n:translate="">Restricted</tal:block>
+			</td>
+			<td tal:content="python:test(item.is_topic_opened(), 'Opened', 'Closed')" i18n:translate="" />
+			<td tal:content="item/category" />
+			<td tal:content="item/author" />
+			<td tal:content="item/count_messages" />
+			<td tal:content="python:here.getTopicHits(topic=item.id)" />
+			<td tal:define="last item/get_last_message">
+				<span tal:replace="python:here.utShowFullDateTime(last.postdate)" />,
+				<span tal:replace="last/author" />
+			</td>
+			<td tal:condition="python:edit_permission">
+				<a tal:attributes="href string:${item/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+				</a>
+			</td>
+		</tal:block>
+		</tr>
+		</tal:block>
+		</tal:block>
+	</tbody>
+</table>
+</form>
+</tal:block>
+
+<p tal:condition="python:len(topics)==0">
+	<strong i18n:translate="">[No topics available]</strong>
+</p>
+
+</tal:block>
+</div>
+
+
+<div id="right_port">
+  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+  </tal:block>
+</div>
+
+</metal:block>
+</metal:block>
