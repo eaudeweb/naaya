@@ -1070,6 +1070,31 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return filter(lambda ob: ob is not None,
                       (self.utGetObject(path) for path in self.maintopics))
 
+    security.declarePublic('getMainTopic')
+    def getMainTopic(self, ob):
+        """
+        Returns the main topic in which the currect object is located
+        or None if the object is not located in a main topic
+        """
+        site_ob = self.getSite()
+        while ob is not None and ob != site_ob:
+            if ob.getId() in self.maintopics and ob.meta_type == 'Naaya Folder' and ob.aq_parent == site_ob:
+                return ob
+            ob = getattr(ob, 'aq_parent')
+        else:
+            return None
+
+    security.declarePublic('getMainTopicId')
+    def getMainTopicId(self, ob):
+        """
+        Returns the id of the main topic in which the currect object is located
+        or None if the object is not located in a main topic
+        """
+        main_topic = self.getMainTopic(ob)
+        if main_topic:
+            return main_topic.getId()
+        return None
+
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
         """ returns a list with all folders that contain pending(draft) objects """
