@@ -1,5 +1,6 @@
 2.4.18 (unreleased)
 -------------------
+* Possibility to add main_section images in custom sizes [dumitval]
 
 2.4.17 (2011-11-16)
 -------------------

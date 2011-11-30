@@ -594,36 +594,40 @@ class CHMSite(NySite):
         ob = getattr(temp_folder, id)
         ob.filename = filename
         ob.p_changed = 1
-        if 4 * x > 3 * y:
-            return (ob.absolute_url(), (x - 3 * y / 4) / 2, 0,   (x + 3 * y / 4) / 2, y)
+        if 143 * x > 962 * y:
+            return (ob.absolute_url(), (x - 962 * y / 143) / 2, 0,   (x + 962 * y / 143) / 2, y)
         else:
-            return (ob.absolute_url(), 0, (y - (4 * x / 3)) / 2,    x, (y + (4 * x / 3)) / 2)
+            return (ob.absolute_url(), 0, (y - (143 * x / 962)) / 2,    x, (y + (143 * x / 962)) / 2)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
     def admin_savemaintopic_image(self, mainsection, upload_picture_url,
-            x1, y1, x2, y2, REQUEST=None):
+            x1, y1, x2, y2, width, height, REQUEST=None):
         """ """
+        if width and height:
+            F_WIDTH = width
+            F_HEIGHT = height
+        else:
+            F_WIDTH = 962
+            F_HEIGHT = 143
+
         def process_picture(picture, crop_coordinates):
             image_string = data2stringIO(picture.data)
             img = Image.open(image_string)
             fmt = img.format
-            crop_size = crop_coordinates[2] - crop_coordinates[0]
-            if crop_size == 0:
+            crop_size = F_WIDTH
+            if crop_coordinates[2] - crop_coordinates[0] == 0:
                 x = img.size[0]
                 y = img.size[1]
-                crop_size = x
-                if 4 * x > 3 * y:
-                    crop_coordinates = ((x - 3 * y / 4) / 2, 0, (x + 3 * y / 4) / 2, y)
+                if F_HEIGHT * x > F_WIDTH * y:
+                    crop_coordinates = ((x - F_WIDTH * y / F_HEIGHT) / 2, 0, (x + F_WIDTH * y / F_HEIGHT) / 2, y)
                 else:
-                    crop_coordinates = (0, (y - (4 * x / 3)) / 2, x, (y + (4 * x / 3)) / 2)
+                    crop_coordinates = (0, (y - (F_HEIGHT * x / F_WIDTH)) / 2, x, (y + (F_HEIGHT * x / F_WIDTH)) / 2)
 
             img = img.crop(crop_coordinates)
-            if crop_size > 162:
-                crop_size = 162
             try:
-                img = img.resize((crop_size, 4 * crop_size / 3), Image.ANTIALIAS)
+                img = img.resize((F_WIDTH, F_HEIGHT), Image.ANTIALIAS)
             except AttributeError:
-                img = img.resize((width, height))
+                img = img.resize((F_WIDTH, F_HEIGHT))
             newimg = StringIO()
             img.save(newimg, fmt, quality=85)
             return newimg.getvalue()

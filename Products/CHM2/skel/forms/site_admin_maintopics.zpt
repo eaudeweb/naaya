@@ -133,6 +133,7 @@
 	<script type="text/javascript" src="misc_/CHM2/jquery.ajaxupload.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
+			var jcrop_api;
 			var has_run = false;
 			$('#picture_upload').mouseover(function() {
 				if(has_run) {
@@ -152,66 +153,83 @@
 			if (!too_old_ie) {
 				upload_button();
 			};
+			img_height = $('#height').val();
+			img_width = $('#width').val();
+			$('#height').focusout(function(){
+				img_height = $(this).val();
+				jcrop_api.destroy();
+				doCrop();
+			})
+			$('#width').focusout(function(){
+				img_width = $(this).val();
+				jcrop_api.destroy();
+				doCrop();
+			})
+			function upload_button() {
+				var button = $('#picture_upload'), interval;
+				new AjaxUpload(button,{
+					action: 'upload_maintopic_temp_image',
+					name: 'upload_file',
+					onSubmit : function(file, ext){
+						if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
+								// extension is not allowed
+								alert('Error: invalid file extension');
+								// cancel upload
+								return false;
+						};
+						$('#main_section_picture').empty();
+						button.text('Uploading');
+						this.disable();
+						interval = window.setInterval(function(){
+							var text = button.text();
+							if (text.length < 12){
+								button.text(text + '.');
+							} else {
+								button.text('Uploading');
+							}
+						}, 200);
+					},
+					onComplete: function(file, response){
+						button.text(gettext('Replace image'));
+						result = response.split("(")[1].split(")")[0].split(",");
+						address = result[0].replace("'", "").replace("'", "");
+						$('#upload_picture_url').val(address);
+						setCoords({	x : result[1],
+									y : result[2],
+									x2 : result[3],
+									y2 : result[4]});
+						window.clearInterval(interval);
+						this.enable();
+						$('<img'+'>').appendTo('#main_section_picture').attr('src', address);
+						doCrop();
+					}
+				});
+			};
+			function doCrop() {
+				$('#main_section_picture img').Jcrop({
+								allowMove:		true,
+								onSelect:		setCoords,
+								bgColor:		'black',
+								bgOpacity:		.4,
+								setSelect:		[	$('#x2').val(),
+													$('#y2').val(),
+													$('#x1').val(),
+													$('#y1').val()],
+								aspectRatio:	img_width/img_height
+							},function(){
+							jcrop_api = this;
+							});
+			};
+			function setCoords(c)
+			{
+				// c.x, c.y, c.x2, c.y2, c.w, c.h
+				$('#x1').val(c.x);
+				$('#y1').val(c.y);
+				$('#x2').val(c.x2);
+				$('#y2').val(c.y2);
+			};
 		});
 
-		function upload_button() {
-			var button = $('#picture_upload'), interval;
-			new AjaxUpload(button,{
-				action: 'upload_maintopic_temp_image',
-				name: 'upload_file',
-				onSubmit : function(file, ext){
-					if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-							// extension is not allowed
-							alert('Error: invalid file extension');
-							// cancel upload
-							return false;
-					};
-					$('#main_section_picture').empty();
-					button.text('Uploading');
-					this.disable();
-					interval = window.setInterval(function(){
-						var text = button.text();
-						if (text.length < 12){
-							button.text(text + '.');
-						} else {
-							button.text('Uploading');
-						}
-					}, 200);
-				},
-				onComplete: function(file, response){
-					button.text(gettext('Replace image'));
-					result = response.split("(")[1].split(")")[0].split(",");
-					address = result[0].replace("'", "").replace("'", "");
-					x = result[1];
-					y = result[2];
-					x2 = result[3];
-					y2 = result[4];
-					window.clearInterval(interval);
-					this.enable();
-					var image = $('<img'+'>').appendTo('#main_section_picture').attr('src', address);
-					doCrop(image, x, y, x2, y2);
-					document.getElementById('upload_picture_url').value = (address);
-				}
-			});
-		};
-		function doCrop(elem, x, y, x2, y2) {
-				jQuery(elem).Jcrop({
-					allowMove:		true,
-					onSelect:		setCoords,
-					bgColor:		'black',
-					bgOpacity:		.4,
-					setSelect:		[ x2, y2, x, y],
-					aspectRatio:	0.75
-				});
-		};
-		function setCoords(c)
-		{
-			// c.x, c.y, c.x2, c.y2, c.w, c.h
-			document.getElementById('x1').value = (c.x);
-			document.getElementById('y1').value = (c.y);
-			document.getElementById('x2').value = (c.x2);
-			document.getElementById('y2').value = (c.y2);
-		};
 	</script>
 
 <fieldset>
@@ -233,6 +251,13 @@
 					Upload an image
 				</a>
 			</span>
+		</div>
+
+		<div class="field">
+			<label for="width" i18n:translate="">
+				Specify final image dimensions (in pixels)</label>
+			<input type="text" name="width:int" id="width" value="962" size="4"/>
+			<input type="text" name="height:int" id="height" value="143" size="4"/>
 		</div>
 
 		<div id="main_section_picture"></div>
