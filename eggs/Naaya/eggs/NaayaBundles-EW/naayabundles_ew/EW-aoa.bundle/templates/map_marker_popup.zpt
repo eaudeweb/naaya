@@ -1,0 +1,18 @@
+<div class="marker-body"
+		tal:define="object options/object;
+					is_shadow python:object.meta_type == 'Naaya EW_AOA Shadow Object';
+					is_contact python:object.meta_type == 'Naaya Contact'">
+	<h3 tal:condition="is_shadow"
+		tal:content="python:here.utToUtf8(object.get('title'))" />
+	<h3 tal:condition="is_contact"
+		tal:content="python:here.utToUtf8(object.firstname + ' ' + object.lastname)" />
+	<h3 tal:condition="python:not (is_shadow or is_contact)"
+		tal:content="python:here.utToUtf8(object.title_or_id())" />
+	<span tal:replace="options/access_str"/>
+	<small tal:condition="not:is_contact"
+		tal:content="structure python:here.utToUtf8(object.description)" />
+	<small tal:condition="is_contact" tal:content="structure python:here.utToUtf8(object.organisation)" />
+	<div class="marker-more">
+		<a tal:attributes="href string:${object/absolute_url}/" i18n:translate="">see more</a>
+	</div>
+</div>

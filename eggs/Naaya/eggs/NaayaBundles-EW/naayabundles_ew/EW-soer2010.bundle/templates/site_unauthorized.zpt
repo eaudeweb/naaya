@@ -1,0 +1,9 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Access denied</h1>
+<div i18n:translate="">
+	Your account does not have sufficient rights to access this resource.
+	Please use the .Contact us. at the very bottom of this page if you have a special interest in this part.
+</div>
+
+<span tal:replace="structure here/standard_html_footer" />
