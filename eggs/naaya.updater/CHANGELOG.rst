@@ -1,4 +1,7 @@
-1.2.18 (unreleased)
+1.2.19 (unreleased)
+-------------------
+
+1.2.18 (2011-12-05)
 -------------------
 * fix update script for site logos for destinet [andredor]
 
