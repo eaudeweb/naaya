@@ -1,5 +1,8 @@
-1.2.10 (unreleased)
-------------------
+1.2.11 (unreleased)
+-------------------
+
+1.2.10 (2011-12-06)
+-------------------
 * re-added gadfly update script for old forum objects [andredor]
 
 1.2.9 (2011-11-18)
