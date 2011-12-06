@@ -39,7 +39,6 @@
 #calendar caption {
 	margin: 0.1em 0 0 0;
 	padding: 5px;
-	width: 100%;
 	background-color: #788893;
 	font-size: 1.1em;
   line-height: 1.1em;
