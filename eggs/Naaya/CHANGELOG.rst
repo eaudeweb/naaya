@@ -1,4 +1,7 @@
-2.12.34 (unreleased)
+2.12.35 (unreleased)
+--------------------
+
+2.12.34 (2011-12-06)
 --------------------
 * added NyGadflyContainer for NaayaForum update [andredor]
 * Added two methods in support of showing mainsection images [dumitval]
