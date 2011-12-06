@@ -1,5 +1,6 @@
 2.12.34 (unreleased)
 --------------------
+* added NyGadflyContainer for NaayaForum update [andredor]
 * Added two methods in support of showing mainsection images [dumitval]
 * Removed 'source' column from news and story folder indexes [dumitval]
 

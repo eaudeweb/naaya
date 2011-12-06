@@ -54,5 +54,11 @@
       component=".updates.AddReleasedate"
       permission="zope2.ViewManagementScreens"
      />
+    <utility
+      name="zgadfly_migration.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.ZGadFlyMigration"
+      permission="zope2.ViewManagementScreens"
+     />
   </configure>
 </configure>
