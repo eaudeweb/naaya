@@ -25,7 +25,6 @@
 	<metal:block metal:define-slot="page-middle">
 	<metal:block define-macro="folder-title">
 	<h1>
-		<metal:block use-macro="python: here.getFormsTool().getForm('site_object_index').macros['icon']"></metal:block>
 		<tal:block tal:replace="here/title_or_id" />
 		<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
 			[Limited access]
