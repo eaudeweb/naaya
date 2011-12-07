@@ -1,3 +1,6 @@
+1.1.5 (unreleased)
+------------------
+
 1.1.4 (2011-12-07)
 ------------------
 * addNyPublication returns object when referer not a known one [simiamih]
