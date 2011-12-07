@@ -1,0 +1,9 @@
+<configure xmlns:naaya="http://namespaces.zope.org/zope"
+           xmlns:zope="http://namespaces.zope.org/zope"
+           xmlns:five="http://namespaces.zope.org/five"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           >
+
+   <five:registerPackage package="." initialize=".initialize" />
+
+</configure>
