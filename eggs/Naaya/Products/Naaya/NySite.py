@@ -3,7 +3,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
-from os.path import join
+from os.path import join, dirname
 from urllib import quote
 from zipfile import ZipFile
 from datetime import datetime, timedelta
@@ -1799,23 +1799,50 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.setSession('body', message_body)
         return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
+    def get_portal_url(self):
+        if self.portal_url:
+            return self.portal_url
+        else:
+            return REQUEST.SERVER_URL
+
     security.declarePublic('processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
-        ignored_exceptions = self.error_log.getProperties()['ignored_exceptions']
-        if error_type not in ignored_exceptions and self.notify_on_errors_email:
-            if self.portal_url != '':
-                domain_name = self.portal_url.replace('http://', '').replace('https://','')
-                mail_from = 'error@%s' % domain_name
-            else: mail_from = 'error@%s' % urlparse(REQUEST.SERVER_URL)[1]
-            self.notifyOnErrorsEmail(p_to = self.notify_on_errors_email,
-                                    p_from = mail_from,
-                                    p_error_url = REQUEST.get('URL', ''),
-                                    p_error_ip = self.utGetRefererIp(REQUEST),
-                                    p_error_type = str(error_type),
-                                    p_error_value = str(error_value),
-                                    p_error_user = REQUEST.AUTHENTICATED_USER.getUserName(),
-                                    p_error_time = self.utGetTodayDate())
+        if not self.notify_on_errors_email:
+            return
+
+        portal_url = self.get_portal_url()
+        scheme, netloc, path, params, query, fragment = urlparse(portal_url)
+        mail_from = 'error@%s' % netloc
+
+        auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
+
+        self.notifyOnErrorsEmail(p_to = self.notify_on_errors_email,
+                                 p_from = mail_from,
+                                 p_error_url = REQUEST.get('URL', ''),
+                                 p_error_ip = self.utGetRefererIp(REQUEST),
+                                 p_error_type = str(error_type),
+                                 p_error_value = str(error_value),
+                                 p_error_user = auth_user,
+                                 p_error_time = self.utGetTodayDate())
+
+    security.declarePublic('dumpErrorToJSON')
+    def dumpErrorToJSON(self, error_type, error_value):
+        """ """
+        conf = getConfiguration()
+        if not conf.environment.has_key('JSON_ERROR_DUMPFILE'):
+            return
+
+        f = open(conf.environment['JSON_ERROR_DUMPFILE'], 'a')
+        try:
+            f.write(json.dumps({'error_time': str(datetime.now()),
+                                'portal_url': self.get_portal_url(),
+                                'INSTANCE_HOME': INSTANCE_HOME,
+                                'error_type': str(error_type),
+                                'error_value': str(error_value)})
+                    + '\n')
+        finally:
+            f.close()
 
     #external search
     security.declarePublic('external_search_capabilities')
