@@ -186,6 +186,8 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
         elif l_referer == 'publication_add_html':
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+        else: # undefined state (different referer, called in other context)
+            return ob
 
     return ob.getId()
 
