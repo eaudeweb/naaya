@@ -158,6 +158,8 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+        else: # undefined state (different referer, called in other context)
+            return ob
 
     return ob.getId()
 

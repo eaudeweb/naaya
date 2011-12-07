@@ -1,0 +1,19 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | Place your product or service on the global sustainable tourism Market Place" />
+    </metal:block>
+
+
+    <metal:block fill-slot="body">
+        <h1>
+            Place your product or service on the global sustainable tourism Market Place
+        </h1>
+        <p>
+        </p>
+        <ul>
+            <li><a tal:attributes="href string:${here/absolute_url}/market_publication">Add Publication</a></li>
+            <li><a tal:attributes="href string:${here/absolute_url}/market_contact">Add Contact</a></li>
+        </ul>
+    </metal:block>
+</metal:block>
