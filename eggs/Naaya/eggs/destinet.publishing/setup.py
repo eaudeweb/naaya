@@ -9,6 +9,6 @@ setup(name='destinet.publishing',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya >= 2.12', 'Products.NaayaContent.NyPublication'
+        'Naaya >= 2.12.35', 'Products.NaayaContent.NyPublication >= 1.1.4'
     ]
 )
