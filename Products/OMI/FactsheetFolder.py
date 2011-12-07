@@ -19,10 +19,6 @@
 # Cornel Nitu, Eau de Web
 # Valentin Dumitru, Eau de Web
 
-# Python
-#import pdb
-
-# Zope 
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -31,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 #from Products.MailHost.MailHost import MailHost, manage_addMailHost
 #from Products.ZTinyMCE.TinyMCE import manage_addZTinyMCE       --- no longer needed (served from zip)
-# Product
+
 from constants import *
 from utilities import *
 from Factsheet import manage_addFactsheet_html
