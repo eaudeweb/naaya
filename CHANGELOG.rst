@@ -1,5 +1,7 @@
 2.4.18 (unreleased)
 -------------------
+* geo coverage continents translations for french for new sites [andredor]
+* convert geo coverage glossary import from xml for new sites [andredor]
 * Possibility to add main_section images in custom sizes [dumitval]
 
 2.4.17 (2011-11-16)
