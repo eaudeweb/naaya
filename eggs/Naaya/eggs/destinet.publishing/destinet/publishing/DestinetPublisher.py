@@ -21,7 +21,10 @@ from naaya.content.file.file_item import NyFile_extfile, file_add_html
 from naaya.content.file.file_item import addNyFile as original_addNyFile
 from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile, mediafile_add_html
 from naaya.content.mediafile.mediafile_item import addNyMediaFile as original_addNyMediaFile
-#from Products.NaayaContent.NyPublication.publication_item import 
+from Products.NaayaContent.NyPublication.NyPublication import (NyPublication,
+                                  addNyPublication as original_addNyPublication)
+
+
 from naaya.content.pointer.pointer_item import addNyPointer
 
 from constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
@@ -85,7 +88,6 @@ class DestinetPublisher(SimpleItem):
         for tgrup in target_groups:
             locations.append(site.unrestrictedTraverse("who-who/%s" % str(tgrup)))
         for topic in topics:
-            import pdb; pdb.set_trace()
             locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
         for loc in locations:
             p_id = addNyPointer(loc, '', contributor=ob.contributor, **props)
@@ -272,8 +274,8 @@ class DestinetPublisher(SimpleItem):
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_mediafile' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "market")
-    def market(self):
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "place_on_market")
+    def place_on_market(self):
         """ Returns the intermediate page for `Place on global Market..` """
         return self.getSite().getFormsTool().getContent({'here': self},
                                                        'destinet_add_to_market')
@@ -299,10 +301,36 @@ class DestinetPublisher(SimpleItem):
         return self.getFormsTool().getContent({
             'here': self,
             'kind': meta_type,
-            'action': 'addNyContact_market_place',
+            'action': 'addNyContact_market',
             'form_helper': form_helper,
             'submitter_info_html': submitter.info_html(self, REQUEST),
         }, 'contact_add')
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "market_place_publication")
+    def market_place_publication(self, REQUEST=None, RESPONSE=None):
+        """ Place your product/service on the global sust tour. Market Place """
+        meta_type = 'Naaya Publication'
+        form_helper = get_schema_helper_for_metatype(self, meta_type)
+        return self.getFormsTool().getContent({
+            'here': self,
+            'kind': meta_type,
+            'action': 'addNyPublication_market',
+            'form_helper': form_helper,
+            'submitter_info_html': submitter.info_html(self, REQUEST),
+        }, 'publication_add')
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "disseminate_publication")
+    def disseminate_publication(self, REQUEST=None, RESPONSE=None):
+        """ Disseminate your sust. tour publications or tools (NyPublication) """
+        meta_type = 'Naaya Publication'
+        form_helper = get_schema_helper_for_metatype(self, meta_type)
+        return self.getFormsTool().getContent({
+            'here': self,
+            'kind': meta_type,
+            'action': 'addNyPublication_disseminate',
+            'form_helper': form_helper,
+            'submitter_info_html': submitter.info_html(self, REQUEST),
+        }, 'publication_add')
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyNews_who_who")
     def addNyContact_who_who(self, id='', REQUEST=None, contributor=None, **kwargs):
@@ -333,8 +361,8 @@ class DestinetPublisher(SimpleItem):
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyNews_market_place")
-    def addNyContact_market_place(self, id='', REQUEST=None, contributor=None, **kwargs):
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyNews_market")
+    def addNyContact_market(self, id='', REQUEST=None, contributor=None, **kwargs):
         """
         Create a Contact type of object in 'market-place' folder adding
         * extra validation for topics and target-groups
@@ -361,5 +389,63 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyPublication_disseminate")
+    def addNyPublication_disseminate(self, id='', REQUEST=None, contributor=None, **kwargs):
+        """
+        Create a NyPublication type of object in 'resources' folder adding
+        * extra validation for topics and target-groups
+        * pointers in the selected topics and target-groups
+
+        """
+        schema_raw_data = dict(REQUEST.form)
+        target_groups = schema_raw_data.get("target-groups", [])
+        topics = schema_raw_data.get("topics", [])
+        if not target_groups and not topics:
+            # unfortunately we both need _prepare_error_response
+            # (on NyContentData) and methods for session (by acquisition)
+            ob = NyPublication('', '', '', '').__of__(self)
+            form_errors = {'target-groups':
+                       ['Please select at least one Target Group or one Topic']}
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            REQUEST.RESPONSE.redirect('%s/disseminate_publication' % self.absolute_url())
+            return
+
+        response = original_addNyPublication(self.restrictedTraverse('resources'),
+                                             '', REQUEST)
+        if isinstance(response, NyPublication):
+            self._place_pointers(response)
+            REQUEST.RESPONSE.redirect(response.absolute_url())
+        else: # we have errors
+            REQUEST.RESPONSE.redirect('%s/disseminate_publication' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyPublication_market")
+    def addNyPublication_market(self, id='', REQUEST=None, contributor=None, **kwargs):
+        """
+        Create a NyPublication type of object in 'market-place' folder adding
+        * extra validation for topics and target-groups
+        * pointers in the selected topics and target-groups
+
+        """
+        schema_raw_data = dict(REQUEST.form)
+        target_groups = schema_raw_data.get("target-groups", [])
+        topics = schema_raw_data.get("topics", [])
+        if not target_groups and not topics:
+            # unfortunately we both need _prepare_error_response
+            # (on NyContentData) and methods for session (by acquisition)
+            ob = NyPublication('', '').__of__(self)
+            form_errors = {'target-groups':
+                       ['Please select at least one Target Group or one Topic']}
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
+            return
+
+        response = original_addNyPublication(self.restrictedTraverse('market-place'),
+                                             '', REQUEST)
+        if isinstance(response, NyPublication):
+            self._place_pointers(response)
+            REQUEST.RESPONSE.redirect(response.absolute_url())
+        else: # we have errors
+            REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
 
 InitializeClass(DestinetPublisher)

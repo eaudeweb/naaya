@@ -12,8 +12,8 @@
         <p>
         </p>
         <ul>
-            <li><a tal:attributes="href string:${here/absolute_url}/market_publication">Add Publication</a></li>
-            <li><a tal:attributes="href string:${here/absolute_url}/market_contact">Add Contact</a></li>
+            <li><a tal:attributes="href string:${here/absolute_url}/market_place_publication">Add Publication</a></li>
+            <li><a tal:attributes="href string:${here/absolute_url}/market_place_contact">Add Contact</a></li>
         </ul>
     </metal:block>
 </metal:block>

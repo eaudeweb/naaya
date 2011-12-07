@@ -1,6 +1,8 @@
-2.12.35 (unreleased)
+2.12.35 (2011-12-07)
 --------------------
 * dump errors to json file [andredor]
+* content type factories (addNyContact ..)  return object when referer
+  not the one expected [simiamih]
 
 2.12.34 (2011-12-06)
 --------------------
