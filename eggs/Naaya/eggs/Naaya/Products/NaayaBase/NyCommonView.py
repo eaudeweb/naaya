@@ -71,10 +71,22 @@ class NyCommonView(object):
     def standard_error_message(self, client=None, **kwargs):
         """ """
         try:
-            if kwargs['error_type'] != 'NotFound':
-                self.processNotifyOnErrors(kwargs['error_type'],
-                                           kwargs['error_value'],
-                                           self.REQUEST)
+            error_log_properties = self.error_log.getProperties()
+            ignored_exceptions = error_log_properties['ignored_exceptions']
+
+            if kwargs['error_type'] not in ignored_exceptions:
+                try:
+                    self.processNotifyOnErrors(kwargs['error_type'],
+                                               kwargs['error_value'],
+                                               self.REQUEST)
+
+                    self.dumpErrorToJSON(kwargs['error_type'],
+                                         kwargs['error_value'])
+                except:
+                    log.exception('Error processing error')
+
+            if kwargs['error_type'] == 'Redirect':
+                return
 
             site = self.getSite()
             forms_tool = self.getFormsTool()

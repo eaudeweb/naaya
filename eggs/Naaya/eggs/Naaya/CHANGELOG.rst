@@ -1,5 +1,6 @@
 2.12.35 (unreleased)
 --------------------
+* dump errors to json file [andredor]
 
 2.12.34 (2011-12-06)
 --------------------
