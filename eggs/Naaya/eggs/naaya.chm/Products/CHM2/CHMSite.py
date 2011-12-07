@@ -153,27 +153,11 @@ class CHMSite(NySite):
     def add_glossary_coverage(self):
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
         glossary = self._getOb(ID_GLOSSARY_COVERAGE)
-        glossary_languages = [
-                ('Arabic', 'ar'), ('Bulgarian', 'bg'), ('Catalan', 'ca'),
-                ('Czech', 'cs'), ('Danish', 'da'), ('German', 'de'),
-                ('Greek', 'el'), ('English', 'en'), ('Esperanto', 'eo'),
-                ('Spanish', 'es'), ('Estonian', 'et'), ('Basque', 'eu'),
-                ('Finnish', 'fi'), ('Faeroese', 'fo'), ('French', 'fr'),
-                ('Irish', 'ga'), ('Croatian', 'hr'), ('Hungarian', 'hu'),
-                ('Armenian', 'hy'), ('Islandic', 'is'), ('Italian', 'it'),
-                ('Lithuanian', 'lt'), ('Latvian', 'lv'), ('Macedonian', 'mk'),
-                ('Maltese', 'mt'), ('Dutch', 'nl'), ('Polish', 'pl'),
-                ('Portuguese', 'pt'), ('Romanian', 'ro'), ('Russian', 'ru'),
-                ('Slovak', 'sk'), ('Slovenian', 'sl'), ('Albanian', 'sq'),
-                ('Serbian', 'sr'), ('Swedish', 'sv'), ('Turkish', 'tr'),
-                ('Ukrainian', 'uk'),
-            ]
-        for name, code in glossary_languages:
-            glossary.addLanguage(name, code)
-        import_files = os.listdir(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations'))
-        import_files.sort()
-        for file in [file for file in import_files if file.endswith('.xml')]:
-            glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations', file)))
+
+        skel_dump_path = os.path.join(CHM2_PRODUCT_PATH, 'skel', 'others',
+                                      'coverage_glossary_translations')
+        dump_data = glossary_dump_from_skel(skel_dump_path)
+        glossary.dump_import(dump_data)
 
         self.coverage_glossary = ID_GLOSSARY_COVERAGE
         schema_tool = self.portal_schemas
