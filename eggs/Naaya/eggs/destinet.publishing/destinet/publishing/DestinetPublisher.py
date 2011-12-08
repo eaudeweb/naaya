@@ -24,10 +24,7 @@ from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile, mediafil
 from naaya.content.mediafile.mediafile_item import addNyMediaFile as original_addNyMediaFile
 from Products.NaayaContent.NyPublication.NyPublication import (NyPublication,
                                   addNyPublication as original_addNyPublication)
-
-
 from naaya.content.pointer.pointer_item import addNyPointer
-
 from constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
                        PERMISSION_DESTINET_PUBLISH)
 
@@ -74,9 +71,9 @@ def place_pointers(ob, exclude=[]):
         'description': getattr(ob, 'description', ''),
         'topics': list(getattr(ob, 'topics', [])),
         'target-groups': list(getattr(ob, 'target-groups', [])),
-        'geo_location.lat': getattr(ob, 'geo_location.lat', ''),
-        'geo_location.lon': getattr(ob, 'geo_location.lon', ''),
-        'geo_location.address': getattr(ob, 'geo_location.address', ''),
+        'geo_location.lat': '',
+        'geo_location.lon': '',
+        'geo_location.address': '',
         'geo_type': getattr(ob, 'geo_type', ''),
         'coverage': getattr(ob, 'coverage', ''),
         'keywords': getattr(ob, 'keywords', ''),
@@ -84,6 +81,10 @@ def place_pointers(ob, exclude=[]):
         'redirect': True,
         'pointer': path_in_site(ob)
     }
+    if ob.geo_location:
+        props['geo_location.lat'] = unicode(ob.geo_location.lat)
+        props['geo_location.lon'] = unicode(ob.geo_location.lon)
+        props['geo_location.address'] = ob.geo_location.address
     site = ob.getSite()
     target_groups = getattr(ob, "target-groups", [])
     topics = getattr(ob, "topics", [])
