@@ -82,9 +82,12 @@ def place_pointers(ob, exclude=[]):
         'pointer': path_in_site(ob)
     }
     if ob.geo_location:
-        props['geo_location.lat'] = unicode(ob.geo_location.lat)
-        props['geo_location.lon'] = unicode(ob.geo_location.lon)
-        props['geo_location.address'] = ob.geo_location.address
+        if ob.geo_location.lat:
+            props['geo_location.lat'] = unicode(ob.geo_location.lat)
+        if ob.geo_location.lon:
+            props['geo_location.lon'] = unicode(ob.geo_location.lon)
+        if ob.geo_location.address:
+            props['geo_location.address'] = ob.geo_location.address
     site = ob.getSite()
     target_groups = getattr(ob, "target-groups", [])
     topics = getattr(ob, "topics", [])
