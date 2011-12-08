@@ -3,6 +3,7 @@
     <name>
       <translation lang="en">Africa</translation>
       <translation lang="fr">Afrique</translation>
+      <translation lang="nl-BE">Afrika</translation>
     </name>
     <definition/>
     <element id="Mauritania" title="Mauritania">
@@ -6370,6 +6371,7 @@
     <name>
       <translation lang="en">Europe</translation>
       <translation lang="fr">Europe</translation>
+      <translation lang="nl-BE">Europa</translation>
     </name>
     <definition/>
     <element id="Cyprus" title="Cyprus">
