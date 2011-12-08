@@ -1,5 +1,6 @@
 1.2.10 (unreleased)
 ===================
+* fix multiple choice widget initial value [andredor]
 
 1.2.9 (2011-11-14)
 ==================
