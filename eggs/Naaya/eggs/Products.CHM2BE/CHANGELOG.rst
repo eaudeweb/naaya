@@ -1,5 +1,6 @@
 1.0.15 (unreleased)
 -------------------
+* general update script to translate glossary terms [andredor]
 
 1.0.14 (2011-11-24)
 -------------------
