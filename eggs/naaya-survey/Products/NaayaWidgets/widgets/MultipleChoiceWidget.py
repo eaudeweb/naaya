@@ -20,7 +20,7 @@ class MultipleChoiceWidget(Widget):
     multiplechoice_render_meth = PageTemplateFile('zpt/widget_multiplechoice', globals())
 
     def __init__(self, id, lang=None, **kwargs):
-        self.set_localproperty('choices', 'lines', lang)
+        self.set_localproperty('choices', 'lines', lang, [])
         Widget.__init__(self, id, lang, **kwargs)
 
     def getChoices(self):
