@@ -1,4 +1,7 @@
-2.4.18 (unreleased)
+2.4.19 (unreleased)
+-------------------
+
+2.4.18 (2011-12-08)
 -------------------
 * geo coverage continents translations for french for new sites [andredor]
 * convert geo coverage glossary import from xml for new sites [andredor]
