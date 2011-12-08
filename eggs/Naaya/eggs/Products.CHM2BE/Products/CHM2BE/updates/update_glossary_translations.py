@@ -6,17 +6,16 @@ from cStringIO import StringIO
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Globals import InitializeClass
 
 from naaya.core.utils import force_to_unicode
 from Products.naayaUpdater.updates import UpdateScript
 
-class UpdateFrenchKeywords(UpdateScript):
-    title = 'Update Keywords Glossary French translations'
+class UpdateGlossaryTranslations(UpdateScript):
+    title = 'Update Glossary translations'
     authors = ['Andrei Laza']
     creation_date = 'Nov 24, 2011'
     security = ClassSecurityInfo()
-
-    languages = ['fr']
 
     def lang_names(self, ob):
         ret = {}
@@ -43,12 +42,12 @@ class UpdateFrenchKeywords(UpdateScript):
         self.log.debug('%s - %s: from %r to %r', ob.getId(), lang_attr,
                                                  old_translation, translation)
 
-    def set_translations(self, node, ob):
+    def set_translations(self, node, ob, languages):
         lang_names = self.lang_names(ob)
 
         name_node = node.xpath('./name')[0]
         name_translations = self.get_translations(name_node)
-        for lang in self.languages:
+        for lang in languages:
             lang_name = lang_names[lang]
             translation = name_translations.get(lang, u'')
             translation = force_to_unicode(translation)
@@ -57,7 +56,7 @@ class UpdateFrenchKeywords(UpdateScript):
 
         definition_node = node.xpath('./definition')[0]
         definition_translations = self.get_translations(definition_node)
-        for lang in self.languages:
+        for lang in languages:
             lang_name = lang_names[lang]
             def_lang = ob.definition_lang(lang_name)
             translation = definition_translations.get(lang, u'')
@@ -68,15 +67,21 @@ class UpdateFrenchKeywords(UpdateScript):
     def _update(self, portal):
         if not 'dump_file' in self.REQUEST.form:
             return False
+        if not 'languages' in self.REQUEST.form:
+            return False
+        if not 'glossary' in self.REQUEST.form:
+            return False
 
         dump_file = self.REQUEST.form['dump_file']
+        languages = self.REQUEST.form['languages']
+        glossary_name = self.REQUEST.form['glossary']
         dump_zip = ZipFile(dump_file, 'r')
 
         metadata = json.loads(dump_zip.read('glossary/metadata.json'))
         translations_xml = dump_zip.read('glossary/translations.xml')
 
         xml_dump = lxml.etree.parse(StringIO(translations_xml))
-        glossary = portal.glossary_keywords
+        glossary = portal._getOb(glossary_name)
 
         for folder_node in xml_dump.xpath('/glossary/folder'):
             folder_id = folder_node.attrib['id']
@@ -85,7 +90,7 @@ class UpdateFrenchKeywords(UpdateScript):
                 self.log.warning("can't find folder with id %s", folder_id)
                 continue
 
-            self.set_translations(folder_node, folder)
+            self.set_translations(folder_node, folder, languages)
 
             for element_node in folder_node.xpath('./element'):
                 element_id = element_node.attrib['id']
@@ -95,7 +100,7 @@ class UpdateFrenchKeywords(UpdateScript):
                             element_id, folder_id)
                     continue
 
-                self.set_translations(element_node, element)
+                self.set_translations(element_node, element, languages)
 
         return True
 
@@ -103,4 +108,5 @@ class UpdateFrenchKeywords(UpdateScript):
     standard_update_template = UpdateScript.update_template
 
     security.declareProtected(view_management_screens, 'update_template')
-    update_template = PageTemplateFile('zpt/update_french_keywords', globals())
+    update_template = PageTemplateFile('zpt/update_glossary_translations', globals())
+InitializeClass(UpdateGlossaryTranslations)
