@@ -6,4 +6,10 @@
 
    <five:registerPackage package="." initialize=".initialize" />
 
+   <naaya:utility
+      name="CountriesFoldersFromGlossary.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_create_countries.CountriesFoldersFromGlossary"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>

@@ -9,6 +9,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
+from Products.Naaya.NyFolder import NyFolder
 from naaya.content.event.event_item import event_add_html, NyEvent
 from naaya.content.event.event_item import addNyEvent as original_addNyEvent
 from naaya.content.news.news_item import news_add_html, NyNews
@@ -45,6 +46,62 @@ def manage_addDestinetPublisher(self, REQUEST=None, RESPONSE=None):
     if REQUEST is not None:
         RESPONSE.redirect('manage_main')
 
+def get_countries(ob):
+    """
+    Extracts coverage from ob, iterates countries and returns
+    nyfolders of them in `countries` location (creates them if missing)
+
+    """
+    ret = []
+    site = ob.getSite()
+    cat = site.getCatalogTool()
+    filters = {'title': '', 'path': '/'.join(site.countries.getPhysicalPath()),
+               'meta_type': 'Naaya Folder'}
+    coverage = list(set(getattr(ob, 'coverage', u'').strip(',').split(',')))
+    for country_item in coverage:
+        country = country_item.strip()
+        if country:
+            filters['title'] = country
+            bz = cat.search(filters)
+            for brain in bz:
+                ret.append(brain.getObject())
+    return ret
+
+def place_pointers(ob, exclude=[]):
+    """ Ads pointers to ob in target_groups and topics """
+    props = {
+        'title': ob.title,
+        'description': getattr(ob, 'description', ''),
+        'topics': list(getattr(ob, 'topics', [])),
+        'target-groups': list(getattr(ob, 'target-groups', [])),
+        'geo_location.lat': getattr(ob, 'geo_location.lat', ''),
+        'geo_location.lon': getattr(ob, 'geo_location.lon', ''),
+        'geo_location.address': getattr(ob, 'geo_location.address', ''),
+        'geo_type': getattr(ob, 'geo_type', ''),
+        'coverage': getattr(ob, 'coverage', ''),
+        'keywords': getattr(ob, 'keywords', ''),
+        'sortorder': getattr(ob, 'sortorder', ''),
+        'redirect': True,
+        'pointer': path_in_site(ob)
+    }
+    site = ob.getSite()
+    target_groups = getattr(ob, "target-groups", [])
+    topics = getattr(ob, "topics", [])
+    locations = [] # pointer locations
+    if 'target-groups' not in exclude:
+        for tgrup in target_groups:
+            locations.append(site.unrestrictedTraverse("who-who/%s" % str(tgrup)))
+    for topic in topics:
+        locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
+    locations.extend(get_countries(ob))
+    for loc in locations:
+        p_id = addNyPointer(loc, '', contributor=ob.contributor, **props)
+        pointer = getattr(loc, p_id)
+        if pointer:
+            if ob.approved:
+                pointer.approveThis(1, ob.contributor)
+            else:
+                pointer.approveThis(0, None)
 
 class DestinetPublisher(SimpleItem):
     """
@@ -64,39 +121,6 @@ class DestinetPublisher(SimpleItem):
     def __init__(self, id, title):
         self.id = id
         self.title = title
-
-    def _place_pointers(self, ob):
-        """ Ads pointers to ob in target_groups and topics """
-        props = {
-            'title': ob.title,
-            'topics': list(getattr(ob, 'topics', [])),
-            'target-groups': list(getattr(ob, 'target-groups', [])),
-            'geo_location.lat': getattr(ob, 'geo_location.lat', ''),
-            'geo_location.lon': getattr(ob, 'geo_location.lon', ''),
-            'geo_location.address': getattr(ob, 'geo_location.address', ''),
-            'geo_type': getattr(ob, 'geo_type', ''),
-            'coverage': getattr(ob, 'coverage', ''),
-            'keywords': getattr(ob, 'keywords', ''),
-            'sortorder': getattr(ob, 'sortorder', ''),
-            'redirect': True,
-            'pointer': path_in_site(ob)
-        }
-        site = self.getSite()
-        target_groups = getattr(ob, "target-groups", [])
-        topics = getattr(ob, "topics", [])
-        locations = [] # pointer locations
-        for tgrup in target_groups:
-            locations.append(site.unrestrictedTraverse("who-who/%s" % str(tgrup)))
-        for topic in topics:
-            locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
-        for loc in locations:
-            p_id = addNyPointer(loc, '', contributor=ob.contributor, **props)
-            pointer = getattr(loc, p_id)
-            if pointer:
-                if ob.approved:
-                    pointer.approveThis(1, ob.contributor)
-                else:
-                    pointer.approveThis(0, None)
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH, "promote_event")
     def promote_event(self, REQUEST=None, RESPONSE=None):
@@ -127,7 +151,7 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyEvent(self.restrictedTraverse('events'),
                                        '', REQUEST)
         if isinstance(response, NyEvent):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/promote_event' % self.absolute_url())
@@ -161,7 +185,7 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyNews(self.restrictedTraverse('News'),
                                       '', REQUEST)
         if isinstance(response, NyNews):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/promote_news' % self.absolute_url())
@@ -198,10 +222,10 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/disseminate_url' % self.absolute_url())
             return
 
-        response = original_addNyURL(self.restrictedTraverse('events'),
+        response = original_addNyURL(self.restrictedTraverse('resources'),
                                      '', REQUEST)
         if isinstance(response, NyURL):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_url' % self.absolute_url())
@@ -232,10 +256,10 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/disseminate_file' % self.absolute_url())
             return
 
-        response = original_addNyFile(self.restrictedTraverse('events'),
+        response = original_addNyFile(self.restrictedTraverse('resources'),
                                            '', REQUEST)
         if isinstance(response, NyFile_extfile):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_file' % self.absolute_url())
@@ -266,10 +290,10 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/disseminate_mediafile' % self.absolute_url())
             return
 
-        response = original_addNyMediaFile(self.restrictedTraverse('events'),
+        response = original_addNyMediaFile(self.restrictedTraverse('resources'),
                                            '', REQUEST)
         if isinstance(response, NyMediaFile_extfile):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_mediafile' % self.absolute_url())
@@ -341,22 +365,20 @@ class DestinetPublisher(SimpleItem):
 
         """
         schema_raw_data = dict(REQUEST.form)
-        target_groups = schema_raw_data.get("target-groups", [])
         topics = schema_raw_data.get("topics", [])
-        if not target_groups and not topics:
+        if not topics:
             # unfortunately we both need _prepare_error_response
             # (on NyContentData) and methods for session (by acquisition)
             ob = NyContact('', '').__of__(self)
-            form_errors = {'target-groups':
-                       ['Please select at least one Target Group or one Topic']}
+            form_errors = {'topics': ['Please select at least one Topic']}
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
             return
 
         response = original_addNyContact(self.restrictedTraverse('who-who'),
-                                      '', REQUEST)
+                                         '', REQUEST)
         if isinstance(response, NyContact):
-            self._place_pointers(response)
+            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
@@ -370,14 +392,12 @@ class DestinetPublisher(SimpleItem):
 
         """
         schema_raw_data = dict(REQUEST.form)
-        target_groups = schema_raw_data.get("target-groups", [])
         topics = schema_raw_data.get("topics", [])
-        if not target_groups and not topics:
+        if not topics:
             # unfortunately we both need _prepare_error_response
             # (on NyContentData) and methods for session (by acquisition)
             ob = NyContact('', '').__of__(self)
-            form_errors = {'target-groups':
-                       ['Please select at least one Target Group or one Topic']}
+            form_errors = {'topics': ['Please select at least one Topic']}
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
             return
@@ -385,7 +405,7 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyContact(self.restrictedTraverse('market-place'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            self._place_pointers(response)
+            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
@@ -414,7 +434,7 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyPublication(self.restrictedTraverse('resources'),
                                              '', REQUEST)
         if isinstance(response, NyPublication):
-            self._place_pointers(response)
+            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_publication' % self.absolute_url())
@@ -428,14 +448,12 @@ class DestinetPublisher(SimpleItem):
 
         """
         schema_raw_data = dict(REQUEST.form)
-        target_groups = schema_raw_data.get("target-groups", [])
         topics = schema_raw_data.get("topics", [])
-        if not target_groups and not topics:
+        if not topics:
             # unfortunately we both need _prepare_error_response
             # (on NyContentData) and methods for session (by acquisition)
             ob = NyPublication('', '').__of__(self)
-            form_errors = {'target-groups':
-                       ['Please select at least one Target Group or one Topic']}
+            form_errors = {'topics': ['Please select at least one Topic']}
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
             return
@@ -443,7 +461,7 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyPublication(self.restrictedTraverse('market-place'),
                                              '', REQUEST)
         if isinstance(response, NyPublication):
-            self._place_pointers(response)
+            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
