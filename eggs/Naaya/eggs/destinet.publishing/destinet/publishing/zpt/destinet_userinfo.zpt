@@ -1,0 +1,54 @@
+<h2>Your submissions</h2>
+<p tal:condition="not: any">
+    You did not post any resource.
+</p>
+
+<div class="userinfo_item" tal:condition="news">
+    <h3>Your News</h3>
+    <div class="items">
+        <p tal:repeat="news_item news">
+            <a tal:attributes="href news_item/absolute_url"
+               tal:content="news_item/title_or_id"></a>
+        </p>
+    </div>
+</div>
+
+<div class="userinfo_item" tal:condition="events">
+    <h3>Your Events</h3>
+    <div class="items">
+        <p tal:repeat="event events">
+            <a tal:attributes="href event/absolute_url"
+               tal:content="event/title_or_id"></a>
+        </p>
+    </div>
+</div>
+
+<div class="userinfo_item" tal:condition="publications">
+    <h3>Your Publications</h3>
+    <div class="items">
+        <p tal:repeat="publication publications">
+            <a tal:attributes="href publication/absolute_url"
+               tal:content="publication/title_or_id"></a>
+        </p>
+    </div>
+</div>
+
+<script type="text/javascript" src="++resource++destinet.publishing/destinet.publishing.js"></script>
+<style type="text/css">
+.userinfo_item .items{
+    display: none;
+}
+.userinfo_item .items p{
+    margin: 4px;
+}
+
+.userinfo_item h3{
+    font-size: 13px;
+    cursor: pointer;
+    background-color: #DDD;
+    text-indent: 20px;
+    background-image: url('++resource++destinet.publishing/down.gif');
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+}
+</style>
