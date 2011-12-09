@@ -491,10 +491,18 @@ class DestinetPublisher(SimpleItem):
         news = map(lambda x: x.getObject(), cat.search(filters))
         filters['meta_type'] = 'Naaya Publication'
         publications = map(lambda x: x.getObject(), cat.search(filters))
+        filters['meta_type'] = 'Naaya File'
+        files = map(lambda x: x.getObject(), cat.search(filters))
+        filters['meta_type'] = 'Naaya Media File'
+        mediafiles = map(lambda x: x.getObject(), cat.search(filters))
+
+        any = bool(events or news or publications or files or mediafiles)
         return site.getFormsTool().getContent({'here': self, 'news': news,
-                                                'events': events,
-                                                'publications': publications,
-                                        'any': events or news or publications},
+                                               'events': events,
+                                               'publications': publications,
+                                               'files': files,
+                                               'mediafiles': mediafiles,
+                                               'any': any},
                                               'destinet_userinfo')
 
 
