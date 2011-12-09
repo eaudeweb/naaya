@@ -4,7 +4,7 @@
 </p>
 
 <div class="userinfo_item" tal:condition="news">
-    <h3>Your News</h3>
+    <h3>My News</h3>
     <div class="items">
         <p tal:repeat="news_item news">
             <a tal:attributes="href news_item/absolute_url"
@@ -14,7 +14,7 @@
 </div>
 
 <div class="userinfo_item" tal:condition="events">
-    <h3>Your Events</h3>
+    <h3>My Events</h3>
     <div class="items">
         <p tal:repeat="event events">
             <a tal:attributes="href event/absolute_url"
@@ -24,7 +24,7 @@
 </div>
 
 <div class="userinfo_item" tal:condition="publications">
-    <h3>Your Publications</h3>
+    <h3>My Publications</h3>
     <div class="items">
         <p tal:repeat="publication publications">
             <a tal:attributes="href publication/absolute_url"
