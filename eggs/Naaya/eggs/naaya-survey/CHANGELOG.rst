@@ -1,5 +1,6 @@
 1.2.13 (unreleased)
 ===================
+* TypeError: sequence expected, NoneType found [nituacor]
 
 1.2.12 (2011-12-09)
 ===================

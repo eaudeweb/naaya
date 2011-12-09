@@ -51,7 +51,7 @@ class ComboboxMatrixWidget(MatrixWidget):
 
     def __init__(self, id, lang=None, **kwargs):
         MatrixWidget.__init__(self, id, lang, **kwargs)
-        self.set_localproperty('values', 'lines', lang)
+        self.set_localproperty('values', 'lines', lang, [])
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
