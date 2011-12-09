@@ -1,5 +1,5 @@
 from OFS.SimpleItem import SimpleItem
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 try: # Zope >= 2.12
     from App.class_init import InitializeClass
 except ImportError:
@@ -32,6 +32,7 @@ NaayaPageTemplateFile('zpt/destinet_disseminate', globals(),
                       'destinet_disseminate')
 NaayaPageTemplateFile('zpt/destinet_add_to_market', globals(),
                       'destinet_add_to_market')
+NaayaPageTemplateFile('zpt/destinet_userinfo', globals(), 'destinet_userinfo')
 
 def manage_addDestinetPublisher(self, REQUEST=None, RESPONSE=None):
     """
@@ -125,6 +126,11 @@ class DestinetPublisher(SimpleItem):
     def __init__(self, id, title):
         self.id = id
         self.title = title
+
+    security.declarePublic("checkPermission")
+    def checkPermission(self):
+        return getSecurityManager().checkPermission(PERMISSION_DESTINET_PUBLISH,
+                                                    self)
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH, "promote_event")
     def promote_event(self, REQUEST=None, RESPONSE=None):
@@ -469,5 +475,27 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
+
+#********** Viewing Information ***************#
+
+    security.declarePublic(PERMISSION_DESTINET_PUBLISH, "userinfo")
+    def userinfo(self):
+        """ Renders a view with everything the member posted """
+        site = self.getSite()
+        cat = site.getCatalogTool()
+        user = self.REQUEST.AUTHENTICATED_USER.getId()
+        filters = {'contributor': user}
+        filters['meta_type'] = 'Naaya Event'
+        events = map(lambda x: x.getObject(), cat.search(filters))
+        filters['meta_type'] = 'Naaya News'
+        news = map(lambda x: x.getObject(), cat.search(filters))
+        filters['meta_type'] = 'Naaya Publication'
+        publications = map(lambda x: x.getObject(), cat.search(filters))
+        return site.getFormsTool().getContent({'here': self, 'news': news,
+                                                'events': events,
+                                                'publications': publications,
+                                        'any': events or news or publications},
+                                              'destinet_userinfo')
+
 
 InitializeClass(DestinetPublisher)

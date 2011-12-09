@@ -12,4 +12,10 @@
       component=".updates.update_create_countries.CountriesFoldersFromGlossary"
       permission="zope2.ViewManagementScreens" />
 
+   <browser:resourceDirectory
+        name="destinet.publishing"
+        directory="./www"
+        permission="zope.Public"
+        />
+
 </configure>
