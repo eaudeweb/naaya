@@ -1,5 +1,6 @@
 1.2.11 (unreleased)
 ===================
+* fix MatrixWidget initial value [nituacor]
 
 1.2.10 (2011-12-08)
 ===================

@@ -17,5 +17,5 @@ class MatrixWidget(Widget):
 
     def __init__(self, id, lang=None, **kwargs):
         Widget.__init__(self, id, lang, **kwargs)
-        self.set_localproperty('choices', 'lines', lang)
+        self.set_localproperty('choices', 'lines', lang, [])
         self.set_localproperty('rows', 'lines', lang)
