@@ -1,4 +1,7 @@
-1.2.13 (unreleased)
+1.2.14 (unreleased)
+===================
+
+1.2.13 (2011-12-09)
 ===================
 * TypeError: sequence expected, NoneType found [nituacor]
 
