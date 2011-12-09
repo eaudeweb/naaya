@@ -1,6 +1,7 @@
-<h2>Your submissions</h2>
+<br />
+<h2>My submissions</h2>
 <p tal:condition="not: any">
-    You did not post any resource.
+    No resources posted by yourself in DestiNet so far.
 </p>
 
 <div class="userinfo_item" tal:condition="news">
@@ -29,6 +30,26 @@
         <p tal:repeat="publication publications">
             <a tal:attributes="href publication/absolute_url"
                tal:content="publication/title_or_id"></a>
+        </p>
+    </div>
+</div>
+
+<div class="userinfo_item" tal:condition="files">
+    <h3>My Files</h3>
+    <div class="items">
+        <p tal:repeat="file files">
+            <a tal:attributes="href file/absolute_url"
+               tal:content="file/title_or_id"></a>
+        </p>
+    </div>
+</div>
+
+<div class="userinfo_item" tal:condition="mediafiles">
+    <h3>My Media Files</h3>
+    <div class="items">
+        <p tal:repeat="mediafile mediafiles">
+            <a tal:attributes="href mediafile/absolute_url"
+               tal:content="mediafile/title_or_id"></a>
         </p>
     </div>
 </div>
