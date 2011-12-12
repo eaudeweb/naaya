@@ -42,7 +42,7 @@ class TestNyURL(NaayaTestCase):
                 test1 = url
         self.assertNotEqual(test1, None, "URL not found via CatalogedObjectsCheckView")
         self.assertEqual(test1.title, "test1")
-        self.assertEqual(test1.locator, "www.google.com")
+        self.assertEqual(test1.locator, "http://www.google.com")
         self.logout()
 
 
@@ -85,7 +85,7 @@ class TestNyURL(NaayaTestCase):
         self.assertEqual(test2.getLocalProperty("coverage", "ar"), "coverage")
         self.assertEqual(test2.getLocalProperty("keywords", "ar"), "keyword1, keywords2")
         self.assertEqual(test2.sortorder, 1)
-        self.assertEqual(test2.getLocalProperty("locator", "ar"), "www.google.com")
+        self.assertEqual(test2.getLocalProperty("locator", "ar"), "http://www.google.com")
         self.assertEqual(test2.contributor, "cristiroma")
         self.assertEqual(test2.releasedate.day(), 30, "Release day does not match")
         self.assertEqual(test2.releasedate.month(), 4, "Release month does not match")
@@ -133,7 +133,7 @@ class TestNyURL(NaayaTestCase):
         url_item.addNyURL(self.app.portal.test_folder, title="urly", contributor="cristiroma", locator="www.google.com")
         url = self.app.portal.test_folder.urly
         exportStr = url.export_this_body_custom()
-        self.assertTrue(exportStr == '<locator lang="en"><![CDATA[www.google.com]]></locator>', "Exported custom body is malformed")
+        self.assertTrue(exportStr == '<locator lang="en"><![CDATA[http://www.google.com]]></locator>', "Exported custom body is malformed")
         self.logout()
 
 
@@ -182,7 +182,7 @@ class TestNyURL(NaayaTestCase):
         self.assertEqual(url.getLocalProperty("coverage", "ar"), "coverage")
         self.assertEqual(url.getLocalProperty("keywords", "ar"), "keyword1, keywords2")
         self.assertEqual(url.sortorder, 1)
-        self.assertEqual(url.getLocalProperty("locator", "ar"), "www.google.com")
+        self.assertEqual(url.getLocalProperty("locator", "ar"), "http://www.google.com")
         self.assertEqual(url.contributor, "cristiroma")
         self.assertEqual(url.releasedate.day(), 30, "Release day does not match")
         self.assertEqual(url.releasedate.month(), 4, "Release month does not match")
@@ -195,7 +195,7 @@ class TestNyURL(NaayaTestCase):
         self.assertEqual(url.getLocalProperty("coverage", "ar"), "")
         self.assertEqual(url.getLocalProperty("keywords", "ar"), "")
         self.assertEqual(url.sortorder, 10)
-        self.assertEqual(url.getLocalProperty("locator", "ar"), "www.yahoo.com")
+        self.assertEqual(url.getLocalProperty("locator", "ar"), "http://www.yahoo.com")
         self.assertEqual(url.contributor, "cristiroma")
         self.assertEqual(url.releasedate.day(), 2, "Release day does not match")
         self.assertEqual(url.releasedate.month(), 2, "Release month does not match")
@@ -220,7 +220,7 @@ class TestNyURL(NaayaTestCase):
         self.assertEqual(url.getLocalProperty("coverage", "ar"), "")
         self.assertEqual(url.getLocalProperty("keywords", "ar"), "")
         self.assertEqual(url.sortorder, 10)
-        self.assertEqual(url.getLocalProperty("locator", "ar"), "www.yahoo.com")
+        self.assertEqual(url.getLocalProperty("locator", "ar"), "http://www.yahoo.com")
         self.assertEqual(url.contributor, "cristiroma")
         self.assertEqual(url.releasedate.day(), 2, "Release day does not match")
         self.assertEqual(url.releasedate.month(), 2, "Release month does not match")
