@@ -501,10 +501,6 @@ class DestinetPublisher(SimpleItem):
                            cat.search({'path': location_path,
                                        'contributor': user}))
 
-        filters['meta_type'] = 'Naaya File'
-        files = map(lambda x: x.getObject(), cat.search(filters))
-        filters['meta_type'] = 'Naaya Media File'
-        mediafiles = map(lambda x: x.getObject(), cat.search(filters))
         user_obj = auth_tool.getUser(user)
         if user_obj:
             user_info = {'first_name': user_obj.firstname,
@@ -517,15 +513,12 @@ class DestinetPublisher(SimpleItem):
         forums = map(lambda x: x.getObject(), cat.search(
                                {'meta_type': forum_meta_types, 'author': user}))
 
-        any = bool(events or news or resources or topics or files or mediafiles
-                   or forums)
+        any = bool(events or news or resources or topics or forums)
         return site.getFormsTool().getContent({'here': self, 'news': news,
                                                'user_info': user_info,
                                                'events': events,
                                                'topics': topics,
                                                'resources': resources,
-                                               'files': files,
-                                               'mediafiles': mediafiles,
                                                'forums': forums,
                                                'any': any},
                                               'destinet_userinfo')

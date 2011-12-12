@@ -18,7 +18,10 @@
 </p>
 
 <div class="userinfo_item">
-    <h3>My News</h3>
+    <h3 tal:attributes="class python:test(news, 'close', 'open')">My News
+        <span tal:condition="news"
+              tal:content="python:'(%d items - click to open)'%len(news)"></span>
+    </h3>
     <div class="items" tal:condition="news">
         <p tal:repeat="news_item news">
             <a tal:attributes="href news_item/absolute_url"
@@ -31,7 +34,10 @@
 </div>
 
 <div class="userinfo_item">
-    <h3>My Events</h3>
+    <h3 tal:attributes="class python:test(events, 'close', 'open')">My Events
+        <span tal:condition="events"
+              tal:content="python:'(%d items - click to open)'%len(events)"></span>
+    </h3>
     <div class="items" tal:condition="events">
         <p tal:repeat="event events">
             <a tal:attributes="href event/absolute_url"
@@ -44,7 +50,10 @@
 </div>
 
 <div class="userinfo_item">
-    <h3>My Topics</h3>
+    <h3 tal:attributes="class python:test(topics, 'close', 'open')">My Topics
+        <span tal:condition="topics"
+              tal:content="python:'(%d items - click to open)'%len(topics)"></span>
+    </h3>
     <div class="items" tal:condition="topics">
         <p tal:repeat="topic topics">
             <a tal:attributes="href topic/absolute_url"
@@ -57,7 +66,10 @@
 </div>
 
 <div class="userinfo_item">
-    <h3>My Resources</h3>
+    <h3 tal:attributes="class python:test(resources, 'close', 'open')">My Resources
+        <span tal:condition="resources"
+              tal:content="python:'(%d items - click to open)'%len(resources)"></span>
+    </h3>
     <div class="items" tal:condition="resources">
         <p tal:repeat="resource resources">
             <a tal:attributes="href resource/absolute_url"
@@ -71,31 +83,14 @@
 
 
 <div class="userinfo_item" tal:condition="forums">
-    <h3>My Forums</h3>
+    <h3 tal:attributes="class python:test(forums, 'close', 'open')">My Forums
+        <span tal:condition="forums"
+              tal:content="python:'(%d items - click to open)'%len(forums)"></span>
+    </h3>
     <div class="items">
         <p tal:repeat="forum forums">
             <a tal:attributes="href forum/absolute_url"
                tal:content="forum/title_or_id"></a>
-        </p>
-    </div>
-</div>
-
-<div class="userinfo_item" tal:condition="files">
-    <h3>My Files</h3>
-    <div class="items">
-        <p tal:repeat="file files">
-            <a tal:attributes="href file/absolute_url"
-               tal:content="file/title_or_id"></a>
-        </p>
-    </div>
-</div>
-
-<div class="userinfo_item" tal:condition="mediafiles">
-    <h3>My Media Files</h3>
-    <div class="items">
-        <p tal:repeat="mediafile mediafiles">
-            <a tal:attributes="href mediafile/absolute_url"
-               tal:content="mediafile/title_or_id"></a>
         </p>
     </div>
 </div>
@@ -121,5 +116,15 @@
     background-image: url('++resource++destinet.publishing/down.gif');
     background-repeat: no-repeat;
     background-position: 2px 2px;
+}
+.userinfo_item h3.close{
+    background-image: url('++resource++destinet.publishing/down.gif');
+}
+.userinfo_item h3.open{
+    background-image: url('++resource++destinet.publishing/right.gif');
+}
+.userinfo_item h3 span{
+    font-weight: normal;
+    font-size: 11px;
 }
 </style>
