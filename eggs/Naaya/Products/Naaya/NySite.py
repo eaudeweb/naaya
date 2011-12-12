@@ -1803,7 +1803,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if self.portal_url:
             return self.portal_url
         else:
-            return REQUEST.SERVER_URL
+            return self.REQUEST.SERVER_URL
 
     security.declarePublic('processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
