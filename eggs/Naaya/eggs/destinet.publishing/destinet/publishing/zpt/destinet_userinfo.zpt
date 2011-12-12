@@ -1,35 +1,81 @@
 <br />
+<tal:block condition="user_info">
+<h2>My Contact Details</h2>
+<p><span class="label">First Name:</span>
+    <span class="label_value" tal:content="user_info/first_name"></span>
+</p>
+<p><span class="label">Last Name:</span>
+    <span class="label_value" tal:content="user_info/last_name"></span>
+</p>
+<p><span class="label">E-mail:</span>
+    <span class="label_value" tal:content="user_info/email"></span>
+</p>
+</tal:block>
+
 <h2>My submissions</h2>
 <p tal:condition="not: any">
     No resources posted by yourself in DestiNet so far.
 </p>
 
-<div class="userinfo_item" tal:condition="news">
+<div class="userinfo_item">
     <h3>My News</h3>
-    <div class="items">
+    <div class="items" tal:condition="news">
         <p tal:repeat="news_item news">
             <a tal:attributes="href news_item/absolute_url"
                tal:content="news_item/title_or_id"></a>
         </p>
     </div>
+    <p tal:condition="not:news">
+        No items posted under News so far.
+    </p>
 </div>
 
-<div class="userinfo_item" tal:condition="events">
+<div class="userinfo_item">
     <h3>My Events</h3>
-    <div class="items">
+    <div class="items" tal:condition="events">
         <p tal:repeat="event events">
             <a tal:attributes="href event/absolute_url"
                tal:content="event/title_or_id"></a>
         </p>
     </div>
+    <p tal:condition="not:events">
+        No items posted under Events so far.
+    </p>
 </div>
 
-<div class="userinfo_item" tal:condition="publications">
-    <h3>My Publications</h3>
+<div class="userinfo_item">
+    <h3>My Topics</h3>
+    <div class="items" tal:condition="topics">
+        <p tal:repeat="topic topics">
+            <a tal:attributes="href topic/absolute_url"
+               tal:content="topic/title_or_id"></a>
+        </p>
+    </div>
+    <p tal:condition="not:topics">
+        No items posted under Topics so far.
+    </p>
+</div>
+
+<div class="userinfo_item">
+    <h3>My Resources</h3>
+    <div class="items" tal:condition="resources">
+        <p tal:repeat="resource resources">
+            <a tal:attributes="href resource/absolute_url"
+               tal:content="resource/title_or_id"></a>
+        </p>
+    </div>
+    <p tal:condition="not:resources">
+        No items posted under Resources so far.
+    </p>
+</div>
+
+
+<div class="userinfo_item" tal:condition="forums">
+    <h3>My Forums</h3>
     <div class="items">
-        <p tal:repeat="publication publications">
-            <a tal:attributes="href publication/absolute_url"
-               tal:content="publication/title_or_id"></a>
+        <p tal:repeat="forum forums">
+            <a tal:attributes="href forum/absolute_url"
+               tal:content="forum/title_or_id"></a>
         </p>
     </div>
 </div>
@@ -61,6 +107,10 @@
 }
 .userinfo_item .items p{
     margin: 4px;
+}
+
+.label{
+    font-weight: bold;
 }
 
 .userinfo_item h3{

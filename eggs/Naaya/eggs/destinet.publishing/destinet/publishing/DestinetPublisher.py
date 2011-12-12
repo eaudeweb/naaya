@@ -483,27 +483,51 @@ class DestinetPublisher(SimpleItem):
         """ Renders a view with everything the member posted """
         site = self.getSite()
         cat = site.getCatalogTool()
+        auth_tool = site.getAuthenticationTool()
         user = self.REQUEST.AUTHENTICATED_USER.getId()
         filters = {'contributor': user}
         filters['meta_type'] = 'Naaya Event'
         events = map(lambda x: x.getObject(), cat.search(filters))
         filters['meta_type'] = 'Naaya News'
         news = map(lambda x: x.getObject(), cat.search(filters))
-        filters['meta_type'] = 'Naaya Publication'
-        publications = map(lambda x: x.getObject(), cat.search(filters))
+
+        location_path = '/'.join(site.topics.getPhysicalPath())
+        topics = map(lambda x: x.getObject(),
+                           cat.search({'path': location_path,
+                                       'contributor': user}))
+
+        location_path = '/'.join(site.resources.getPhysicalPath())
+        resources = map(lambda x: x.getObject(),
+                           cat.search({'path': location_path,
+                                       'contributor': user}))
+
         filters['meta_type'] = 'Naaya File'
         files = map(lambda x: x.getObject(), cat.search(filters))
         filters['meta_type'] = 'Naaya Media File'
         mediafiles = map(lambda x: x.getObject(), cat.search(filters))
+        user_obj = auth_tool.getUser(user)
+        if user_obj:
+            user_info = {'first_name': user_obj.firstname,
+                         'last_name': user_obj.lastname,
+                         'email': user_obj.email}
+        else:
+            user_info = None
 
-        any = bool(events or news or publications or files or mediafiles)
+        forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
+        forums = map(lambda x: x.getObject(), cat.search(
+                               {'meta_type': forum_meta_types, 'author': user}))
+
+        any = bool(events or news or resources or topics or files or mediafiles
+                   or forums)
         return site.getFormsTool().getContent({'here': self, 'news': news,
+                                               'user_info': user_info,
                                                'events': events,
-                                               'publications': publications,
+                                               'topics': topics,
+                                               'resources': resources,
                                                'files': files,
                                                'mediafiles': mediafiles,
+                                               'forums': forums,
                                                'any': any},
                                               'destinet_userinfo')
-
 
 InitializeClass(DestinetPublisher)
