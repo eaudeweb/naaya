@@ -6,7 +6,6 @@ except ImportError:
     from Globals import InitializeClass
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.core.zope2util import path_in_site
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
 from Products.Naaya.NyFolder import NyFolder
@@ -24,9 +23,9 @@ from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile, mediafil
 from naaya.content.mediafile.mediafile_item import addNyMediaFile as original_addNyMediaFile
 from Products.NaayaContent.NyPublication.NyPublication import (NyPublication,
                                   addNyPublication as original_addNyPublication)
-from naaya.content.pointer.pointer_item import addNyPointer
 from constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
                        PERMISSION_DESTINET_PUBLISH)
+from subscribers import place_pointers
 
 NaayaPageTemplateFile('zpt/destinet_disseminate', globals(),
                       'destinet_disseminate')
@@ -43,70 +42,6 @@ def manage_addDestinetPublisher(self, REQUEST=None, RESPONSE=None):
                     DestinetPublisher(ID_PUBLISHER, TITLE_PUBLISHER))
     if REQUEST is not None:
         RESPONSE.redirect('manage_main')
-
-def get_countries(ob):
-    """
-    Extracts coverage from ob, iterates countries and returns
-    nyfolders of them in `countries` location (creates them if missing)
-
-    """
-    ret = []
-    site = ob.getSite()
-    cat = site.getCatalogTool()
-    filters = {'title': '', 'path': '/'.join(site.countries.getPhysicalPath()),
-               'meta_type': 'Naaya Folder'}
-    coverage = list(set(getattr(ob, 'coverage', u'').strip(',').split(',')))
-    for country_item in coverage:
-        country = country_item.strip()
-        if country:
-            filters['title'] = country
-            bz = cat.search(filters)
-            for brain in bz:
-                ret.append(brain.getObject())
-    return ret
-
-def place_pointers(ob, exclude=[]):
-    """ Ads pointers to ob in target_groups and topics """
-    props = {
-        'title': ob.title,
-        'description': getattr(ob, 'description', ''),
-        'topics': list(getattr(ob, 'topics', [])),
-        'target-groups': list(getattr(ob, 'target-groups', [])),
-        'geo_location.lat': '',
-        'geo_location.lon': '',
-        'geo_location.address': '',
-        'geo_type': getattr(ob, 'geo_type', ''),
-        'coverage': getattr(ob, 'coverage', ''),
-        'keywords': getattr(ob, 'keywords', ''),
-        'sortorder': getattr(ob, 'sortorder', ''),
-        'redirect': True,
-        'pointer': path_in_site(ob)
-    }
-    if ob.geo_location:
-        if ob.geo_location.lat:
-            props['geo_location.lat'] = unicode(ob.geo_location.lat)
-        if ob.geo_location.lon:
-            props['geo_location.lon'] = unicode(ob.geo_location.lon)
-        if ob.geo_location.address:
-            props['geo_location.address'] = ob.geo_location.address
-    site = ob.getSite()
-    target_groups = getattr(ob, "target-groups", [])
-    topics = getattr(ob, "topics", [])
-    locations = [] # pointer locations
-    if 'target-groups' not in exclude:
-        for tgrup in target_groups:
-            locations.append(site.unrestrictedTraverse("who-who/%s" % str(tgrup)))
-    for topic in topics:
-        locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
-    locations.extend(get_countries(ob))
-    for loc in locations:
-        p_id = addNyPointer(loc, '', contributor=ob.contributor, **props)
-        pointer = getattr(loc, p_id)
-        if pointer:
-            if ob.approved:
-                pointer.approveThis(1, ob.contributor)
-            else:
-                pointer.approveThis(0, None)
 
 class DestinetPublisher(SimpleItem):
     """

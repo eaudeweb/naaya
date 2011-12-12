@@ -12,6 +12,12 @@
       component=".updates.update_create_countries.CountriesFoldersFromGlossary"
       permission="zope2.ViewManagementScreens" />
 
+   <naaya:utility
+      name="RebuildPointers.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_rebuild_pointers.RebuildPointers"
+      permission="zope2.ViewManagementScreens" />
+
    <browser:resourceDirectory
         name="destinet.publishing"
         directory="./www"
