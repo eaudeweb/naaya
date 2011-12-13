@@ -24,7 +24,7 @@
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<p i18n:translate="">
 		    On the map you will find examples of others who already developed a Biodiversity Action Plan.
-		    In the section <a tal:attributes="href string:${here/absolute_url}/overzicht_activiteiten/">'Overview activities'</a> you can read how you can add your own activity.
+		    In the section <a tal:attributes="href string:${here/getSitePath}/de_praktijk/overzicht_activiteiten">'Overview activities'</a> you can read how you can add your own activity.
 		</p>
 			<div class="map_filters">
 				<p id="js_links" style="display: none;">
