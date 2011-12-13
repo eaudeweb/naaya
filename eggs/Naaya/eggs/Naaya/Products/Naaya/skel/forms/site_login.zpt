@@ -50,10 +50,8 @@
 		You have no special rights in this portal.
 	</tal:block>
 </tal:block>
-<tal:block define="userob python: here.getAuthenticationTool().getUser(user)">
-	<br />
-	<a tal:attributes="href string:${site_url}/changecredentials_html">Change user credentials</a>
-</tal:block>
+<br />
+<a tal:attributes="href string:${site_url}/changecredentials_html">Change user credentials</a>
 <br />
 </tal:block>
 
