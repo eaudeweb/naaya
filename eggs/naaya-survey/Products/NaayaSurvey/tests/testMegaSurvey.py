@@ -63,6 +63,19 @@ class MegaSurveyTestCase(NaayaTestCase):
         self.assertEqual(report.getLocalAttribute('title', self.portal.gl_get_selected_language()), title)
         self.assertEqual(len(report.getStatistics()), 0) # 0 questions -> 0 statistics
 
+    def test_NyRoleManager_wrappers(self):
+        self.assertTrue(SurveyQuestionnaire.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
+        self.assertTrue(SurveyQuestionnaire.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
+        self.assertTrue(SurveyQuestionnaire.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
+
+class MegaSurveyTestCaseNoLogin(NaayaTestCase):
+    """Mega Survey test cases"""
+
+    def afterSetUp(self):
+        id = manage_addMegaSurvey(self.portal, title='Testing survey')
+        self.survey = self.portal._getOb(id)
+        self.portal.manage_install_pluggableitem('Naaya Mega Survey')
+
     def testTakingSurvey(self):
         """Test taking a survey"""
         answer = self.survey.getMyAnswer()
@@ -73,11 +86,6 @@ class MegaSurveyTestCase(NaayaTestCase):
 
         self.survey.expirationdate = DateTime() - 5
         self.assertRaises(SurveyQuestionnaireException, self.survey.addSurveyAnswer, notify_respondent=False)
-
-    def test_NyRoleManager_wrappers(self):
-        self.assertTrue(SurveyQuestionnaire.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
-        self.assertTrue(SurveyQuestionnaire.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
-        self.assertTrue(SurveyQuestionnaire.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
 
 
 class SavePropertiesTestCase(unittest.TestCase):
