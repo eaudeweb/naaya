@@ -62,7 +62,8 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
         form['__ac_name'] = username
         form['__ac_password'] = password
         self.browser.submit()
-        self.failUnless('You are logged in as: <em>%s</em>' % username in self.browser.get_html())
+        self.failUnless(('You are logged in as: <em>%s</em>' % username)
+                        in self.browser.get_html())
 
     def browser_do_logout(self):
         self.browser.go(self.portal.absolute_url() + '/logout')
