@@ -22,7 +22,10 @@
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 	<div id="center_content">
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
-		<p i18n:translate="">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum dapibus odio, sed consectetur orci cursus sed. Suspendisse bibendum vehicula sem, vel varius dolor cursus ut. Nunc non metus sit amet leo porta rhoncus. </p>
+		<p i18n:translate="">
+		    On the map you will find examples of others who already developed a Biodiversity Action Plan.
+		    In the section <a tal:attributes="href string:${here/absolute_url}/overzicht_activiteiten/">'Overview activities'</a> you can read how you can add your own activity.
+		</p>
 			<div class="map_filters">
 				<p id="js_links" style="display: none;">
 					<strong id="record_counter"></strong>
