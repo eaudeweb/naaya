@@ -78,17 +78,16 @@ class TestNySite(NaayaTestCase):
                                 ignored_exceptions=('Unauthorized',))
         request = self.fake_request
         request['URL'] = 'http://localhost:8080/portal/test'
+        self.portal.REQUEST = request
 
         # The Unauthorized error is listed in error_log.
-        self.portal.processNotifyOnErrors(error_type='Unauthorized',
-                error_value='You are not authorized to access this resource',
-                REQUEST=request)
+        self.portal.standard_error_message(error_type='Unauthorized',
+                error_value='You are not authorized to access this resource')
         self.assertEqual(mock_send_mail.call_count, 0)
 
         # The NotFound error is not listed in error_log. An email will be send.
-        self.portal.processNotifyOnErrors(error_type='NotFound',
-                                          error_value='Page is not found',
-                                          REQUEST=request)
+        self.portal.standard_error_message(error_type='NotFound',
+                                           error_value='Page is not found')
         self.assertEqual(mock_send_mail.call_count, 1)
 
     def test_list_permissions(self):
