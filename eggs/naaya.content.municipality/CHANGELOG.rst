@@ -1,4 +1,7 @@
-1.2.5 (unreleased)
+1.2.6 (unreleased)
+------------------
+
+1.2.5 (2011-12-14)
 ------------------
 * using global edit permission [andredor]
 
