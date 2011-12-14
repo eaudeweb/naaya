@@ -1,5 +1,6 @@
 import os.path
 import ldap
+import ldapurl
 import logging
 import yaml
 from datetime import datetime
@@ -51,8 +52,26 @@ class LDAPConnection(object):
             log.debug('Binding %s', dn)
             ldap_conn.simple_bind_s(dn, password)
 
+        self._ldap_url = ldapurl.LDAPUrl(uri)
         self._connection = ldap_conn
         self._encoding = encoding
+
+    def get_schema(self):
+        subschemasubentry_dn = self._connection.search_subschemasubentry_s(
+                self._ldap_url.dn)
+        if subschemasubentry_dn is None:
+            log.error("Couldn't find the schema subentry")
+            return None
+
+        if self._ldap_url.attrs is not None:
+            schema_attrs = self._ldap_url.attrs
+        else:
+            schema_attrs = ldap.schema.subentry.SCHEMA_ATTRS
+
+        subschemasubentry_entry = self._connection.read_subschemasubentry_s(
+                                    subschemasubentry_dn, attrs=schema_attrs)
+
+        return ldap.schema.SubSchema(subschemasubentry_entry)
 
     def get_values(self, baseDN):
         """
@@ -61,6 +80,7 @@ class LDAPConnection(object):
         """
         log.debug('Starting search %s', baseDN)
 
+        schema = self.get_schema()
         returned = self._connection.search_s(baseDN, ldap.SCOPE_SUBTREE)
 
         # convert values to unicode
@@ -68,10 +88,17 @@ class LDAPConnection(object):
         for dn, attr_dict in returned:
             ret[dn] = {}
             for attr, values in attr_dict.items():
-                try:
-                    ret[dn][attr] = [v.decode(self._encoding) for v in values]
-                except UnicodeDecodeError:
-                    log.exception('dn:%s attr:%s', dn, attr)
+                syntax = schema.get_syntax(attr)
+                if syntax in ldap.schema.models.NOT_HUMAN_READABLE_LDAP_SYNTAXES:
+                    ret[dn][attr] = {'type': 'binary', 'values': values}
+                else:
+                    try:
+                        ret[dn][attr] = {
+                                'type': 'text',
+                                'values': [v.decode(self._encoding) for v in values],
+                                }
+                    except UnicodeDecodeError:
+                        log.exception('dn:%s attr:%s', dn, attr)
         return ret
 
 def get_ldap_connection(config):
@@ -89,19 +116,38 @@ def write_values(cursor, results_list):
     cursor.execute(
         "CREATE TABLE LDAPMapping(id INTEGER PRIMARY KEY ASC, dn, attr, value)"
     )
+
+    cursor.execute("DROP TABLE IF EXISTS LDAPMappingBlobs")
+    cursor.execute(
+        "CREATE TABLE LDAPMappingBlobs(id INTEGER PRIMARY KEY ASC, dn, attr, value BLOB)"
+    )
     for result in results_list:
         for dn, attrs in result.items():
-            for attr, values in attrs.items():
-                for value in values:
-                    try:
-                        text = ('INSERT INTO LDAPMapping(dn, attr, value) '
-                                'VALUES (?, ?, ?)')
-                        cursor.execute(text, (dn, attr, value))
-                    except:
-                        log.exception("Error inserting "
-                                      "(dn=%s, attr=%s, value=%s)",
-                                      dn, attr, value)
-                        raise
+            for attr, wvalues in attrs.items():
+                if wvalues['type'] == 'text':
+                    for value in wvalues['values']:
+                        try:
+                            text = ('INSERT INTO LDAPMapping'
+                                    '(dn, attr, value) '
+                                    'VALUES (?, ?, ?)')
+                            cursor.execute(text, (dn, attr, value))
+                        except:
+                            log.exception("Error inserting "
+                                          "(dn=%s, attr=%s, value=%s)",
+                                          dn, attr, value)
+                            raise
+                elif wvalues['type'] == 'binary':
+                    for value in wvalues['values']:
+                        try:
+                            text = ('INSERT INTO LDAPMappingBlobs'
+                                    '(dn, attr, value) '
+                                    'VALUES (?, ?, ?)')
+                            cursor.execute(text, (dn, attr, buffer(value)))
+                        except:
+                            log.exception("Error inserting "
+                                          "(dn=%s, attr=%s, value=%s)",
+                                          dn, attr, '<binary>')
+                            raise
 
 def reset_dump_timestamp(cursor):
     cursor.execute("CREATE TABLE IF NOT EXISTS LDAPMetadata"
@@ -189,8 +235,26 @@ class DumpReader(object):
         text = "SELECT dn, attr, value FROM LDAPMapping ORDER BY dn, attr"
         cursor.execute(text)
 
-        for dn, iter in itertools.groupby(cursor, operator.itemgetter(0)):
+        blobcursor = db_conn.cursor()
+        text = "SELECT dn, attr, value FROM LDAPMappingBlobs ORDER BY dn, attr"
+        blobcursor.execute(text)
+
+        # iterate both and match by dn
+        attriter = itertools.groupby(cursor, operator.itemgetter(0))
+        blobiter = itertools.groupby(blobcursor, operator.itemgetter(0))
+        try:
+            blob_dn, blob_iter = blobiter.next()
+        except StopIteration:
+            blob_dn = None
+
+        for dn, iter in attriter:
             tuples = [(attr, value) for _dn, attr, value in iter]
+            if blob_dn == dn: # match in iteration
+                tuples.extend([(attr, str(value)) for _dn, attr, value in blob_iter])
+                try:
+                    blob_dn, blob_iter = blobiter.next()
+                except StopIteration:
+                    blob_dn = None
             yield dn, tuples
 
         db_conn.close()
