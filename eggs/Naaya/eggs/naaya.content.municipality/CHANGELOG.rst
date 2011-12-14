@@ -1,5 +1,6 @@
 1.2.5 (unreleased)
 ------------------
+* using global edit permission [andredor]
 
 1.2.4 (2011-11-25)
 ------------------
