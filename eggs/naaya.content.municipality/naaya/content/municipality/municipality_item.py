@@ -52,8 +52,8 @@ from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaCore.managers.utils import utils, make_id
 
 from interfaces import INyMunicipality
-from permissions import (PERMISSION_ADD_MUNICIPALITY,
-                         PERMISSION_EDIT_MUNICIPALITY)
+from permissions import PERMISSION_ADD_MUNICIPALITY
+
 #module constants
 METATYPE_OBJECT = 'Naaya Municipality'
 LABEL_OBJECT = 'Municipality'
@@ -283,13 +283,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
             ret = self.email.replace('@', ' at ')
         return ret
 
-    def checkPermissionEditObjects(self):
-        """
-        Check the permissions to edit NyMunicipality objects.
-        """
-        return self.checkPermission(PERMISSION_EDIT_MUNICIPALITY)
-
-    security.declareProtected(PERMISSION_EDIT_MUNICIPALITY, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
 
@@ -383,7 +377,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_index')
 
-    security.declareProtected(PERMISSION_EDIT_MUNICIPALITY, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_edit')
