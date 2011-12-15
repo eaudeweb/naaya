@@ -1,4 +1,7 @@
-2.12.36 (unreleased)
+2.12.37 (unreleased)
+--------------------
+
+2.12.36 (2011-12-15)
 --------------------
 * NyContentData.prop_exists [simiamih]
 
