@@ -1,0 +1,119 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+<div id="workarea" metal:fill-slot="div-workarea">
+
+    <!-- TODO: create and fill a slot in head macro in gw_macro template -->
+    <link href="++resource++naaya.groupware.profileoverview/style.css"
+          rel="stylesheet" type="text/css" />
+    <script src="++resource++naaya.groupware.profileoverview/jquery-1.4.4.min.js"
+          type="text/javascript" language="javascript"></script>
+    <script src="++resource++naaya.groupware.profileoverview/jquery-ui.custom.min.js"
+          type="text/javascript" language="javascript"></script>
+    <script src="++resource++naaya.groupware.profileoverview/primary.js"
+          type="text/javascript" language="javascript"></script>
+
+    <!--TODO: this is only for demo purposes-->
+    <h1>Profile Overview for demo_user</h1>
+
+    <h2>Interest group membership</h2>
+    <div id="id_access"  tal:condition="python:len(options['ig_access'])">
+    <tal:block repeat="access options/ig_access/keys">
+        <tal:block define="ig_list python:options['ig_access'][access]">
+            <div tal:attributes="id access">
+                <dl>
+                    <dt tal:content="python:access.capitalize()+' access'"></dt>
+                    <dd>
+                    <ul>
+                        <li tal:repeat="ig ig_list"
+                            tal:attributes="class python:('', 'more hidden')[repeat['ig'].index>5]">
+                            <span class="link-external">
+                                <a tal:attributes="href ig/absolute_url; target string:_blank"
+                                   tal:content="ig/title_or_id">
+                                </a>
+                            </span>
+                        </li>
+                        <li tal:condition="python:len(ig_list)>5" class="see_more_dots">
+                            ...
+                        </li>
+                    </ul>
+                    <div tal:condition="python:len(ig_list)>5" class="see_more">
+                        <a href="javascript:void(0);" tal:attributes="data-access access"
+                        tal:content="structure python:'see all %d interest groups &raquo;'%len(ig_list)"></a>
+                    </div>
+                    </dd>
+            </div>
+        </tal:block>
+    </tal:block>
+    </div>
+    <div id="id_access"  tal:condition="python:not len(options['ig_access'])">
+        You are not a member of any Interest Group.
+    </div>
+
+    <h2>Member of Roles</h2>
+    <tal:block condition="options/roles">
+
+    <table class="account-datatable sub-roles">
+        <thead>
+            <tr>
+                <td>
+                    Role ID
+                </td>
+    
+                <td>
+                    Role name
+                </td>
+            </tr>
+        </thead>
+    
+        <tbody>
+            <tal:block repeat="role options/roles">
+                <tr 
+                    tal:attributes="class python:('even', 'odd')[int(path('repeat/role/odd'))]+' '+role['parent'];
+                                    id string:row_${role/id}">
+                    <td nowrap="nowrap">
+                        <div class="arrow toggle_role" tal:condition="role/children"></div>
+                        <div class="arrow_placeholder" tal:condition="not: role/children"></div>
+                        <a tal:attributes="id role/id" class="toggle_role"
+                            tal:content="role/id"></a>
+                    </td>
+                    <td>
+                        <span tal:content="role/description"></span>
+                    </td>
+                </tr>
+            </tal:block>
+        </tbody>
+    </table>
+    </tal:block>
+    <tal:block condition="not: options/roles">
+        You do not belong to any LDAP Roles.
+    </tal:block>
+
+    <h2>Subscriptions to interest group notifications</h2>
+    <div id="id_subscriptions"  tal:condition="python:len(options['subscriptions'])">
+    <tal:block repeat="ig python:sorted(options['subscriptions'].keys(), key=lambda x: x.title_or_id())">
+        <tal:block define="sub_list python:options['subscriptions'][ig]">
+            <div tal:attributes="id string:subscriptions_${ig/id}">
+                <dl>
+                    <dt tal:content="ig/title_or_id"></dt>
+                    <dd>
+                    <ul>
+                        <li tal:repeat="sub sub_list">
+                            <a tal:content="sub/object/title_or_id"
+                               tal:attributes="href sub/object/absolute_url; class string:external-link; target string:_blank">
+                            </a>
+
+                            <div tal:content="sub/notif_type"
+                                  tal:attributes="class string:notif_type_label ${sub/notif_type}"></div>
+                        </li>
+                    </ul>
+                    </dd>
+            </div>
+        </tal:block>
+    </tal:block>
+    </div>
+    <div id="id_subscriptions"  tal:condition="python:not len(options['subscriptions'])">
+        You have no subscriptions configured in Interest Groups.
+    </div>
+
+</div>
+</metal:block>
+
