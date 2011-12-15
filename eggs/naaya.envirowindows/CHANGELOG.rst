@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2011-12-15)
 ------------------
 * fix localizing show_contributor_request_role [andredor]
 
