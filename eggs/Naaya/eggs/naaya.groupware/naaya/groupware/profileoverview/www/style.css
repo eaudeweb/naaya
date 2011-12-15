@@ -107,3 +107,31 @@ div.see_more{
     text-align: right;
     font-size: 11px;
 }
+
+div.notif_type_label{
+    font-size: 10px;
+    display: inline-block;
+    height: 21px;
+    color: white;
+    font-weight: bold;
+    padding-left: 8px;
+    padding-right: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-color: yellow;
+}
+div.instant{
+    background-color: #AA0000;
+}
+
+div.daily{
+    background-color: #660000;
+}
+
+div.weekly{
+    background-color: #006600;
+}
+
+div.monthly{
+    background-color: #000066;
+}
