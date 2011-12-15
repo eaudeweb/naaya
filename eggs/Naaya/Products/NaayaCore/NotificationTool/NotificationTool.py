@@ -472,25 +472,40 @@ class NotificationTool(Folder):
     my_subscriptions_html = NaayaPageTemplateFile('zpt/index', globals(),
                                 'naaya.core.notifications.my_subscriptions')
 
-    security.declareProtected(view, 'list_my_subscriptions')
-    def list_my_subscriptions(self, REQUEST):
+    security.declarePrivate('list_user_subscriptions')
+    def user_subscriptions(self, user):
         out = []
-        user_id = REQUEST.AUTHENTICATED_USER.getId()
-        if user_id is None and not self.config.get('enable_anonymous', False):
-            raise Unauthorized # to force login
-
+        user_id = user.getId()
         for obj, n, subscription in utils.walk_subscriptions(self.getSite()):
             if not isinstance(subscription, AccountSubscription):
                 continue
             if subscription.user_id != user_id:
                 continue
             out.append({
-                'location': path_in_site(obj),
+                'object': obj,
                 'notif_type': subscription.notif_type,
-                'lang': subscription.lang,
+                'lang': subscription.lang
             })
 
         return out
+
+    security.declareProtected(view, 'list_my_subscriptions')
+    def list_my_subscriptions(self, REQUEST):
+        """
+        Returns a list of mappings (location, notif_type, lang)
+        for all subscriptions of logged-in user
+
+        """
+        user = REQUEST.AUTHENTICATED_USER
+        if user.getId() is None and not self.config.get('enable_anonymous', False):
+            raise Unauthorized # to force login
+
+        subscriptions = self.user_subscriptions(user)
+        for subscription in subscriptions:
+            subscription['location'] = path_in_site(subscription['object'])
+            del subscription['object']
+
+        return subscriptions
 
     security.declareProtected(view, 'subscribe_me')
     def subscribe_me(self, REQUEST, location, notif_type, lang=None):
