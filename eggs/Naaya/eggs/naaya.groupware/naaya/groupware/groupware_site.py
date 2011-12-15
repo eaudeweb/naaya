@@ -18,6 +18,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as 
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from member_search import MemberSearch
 from interfaces import IGWSite
+from constants import METATYPE_GROUPWARESITE
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -45,7 +46,7 @@ ACTION_LOG_TYPES={
 class GroupwareSite(NySite):
     """ """
     implements(IGWSite)
-    meta_type = 'Groupware site'
+    meta_type = METATYPE_GROUPWARESITE
     #icon = 'misc_/GroupwareSite/site.gif'
 
     manage_options = (
@@ -102,8 +103,14 @@ class GroupwareSite(NySite):
         #set default main topics
         self.getPropertiesTool().manageMainTopics(['about', 'library'])
 
-    def get_user_access(self):
-        user = self.REQUEST.get('AUTHENTICATED_USER', None)
+    def get_user_access(self, user=None):
+        """
+        Returns on of 'admin', 'member', 'viewer' or 'restricted' for logged
+        in user, if not explicitly specified.
+
+        """
+        if user is None:
+            user = self.REQUEST.get('AUTHENTICATED_USER', None)
         if user is not None:
             if user.has_permission(PERMISSION_PUBLISH_OBJECTS, self):
                 return 'admin'

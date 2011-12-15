@@ -1,0 +1,1 @@
+METATYPE_GROUPWARESITE = 'Groupware site'
