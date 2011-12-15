@@ -11,5 +11,6 @@ setup(name='naaya.groupware',
       install_requires=[
           'Naaya',
           'naaya.content.bfile',
+          'eea.usersdb'
       ]
 )

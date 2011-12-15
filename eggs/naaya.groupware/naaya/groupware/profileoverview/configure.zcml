@@ -1,0 +1,19 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser">
+  <browser:page
+
+    for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="profile"
+    template="zpt/index.pt"
+    class=".profile.ProfileView"
+    permission="zope2.View"
+    />
+
+  <browser:resourceDirectory
+    directory="www"
+    name="naaya.groupware.profileoverview"
+    permission="zope2.View"
+    />
+
+</configure>

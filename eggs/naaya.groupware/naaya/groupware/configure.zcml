@@ -18,5 +18,6 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <include package=".profileoverview" />
   <include package=".updates" />
 </configure>
