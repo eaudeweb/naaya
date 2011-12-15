@@ -1,4 +1,21 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description; content python:here.html2text(description);" tal:condition="content" tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}" name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block metal:fill-slot="header-title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head"></metal:block>
+
+<metal:block metal:fill-slot="body">
+
 <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
 
 <div id="center_content" tal:attributes="style python:test(request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here) or len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
@@ -254,4 +271,6 @@ function fRenameObjects()
 </div>
 
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+
+</metal:block>
