@@ -1,6 +1,7 @@
 1.1.4 (unreleased)
 ------------------
 * filter display for User management search [andredor]
+* feature: naaya.groupware.profileoverview [simiamih]
 
 1.1.3 (2011-10-28)
 ------------------

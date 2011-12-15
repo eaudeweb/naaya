@@ -7,6 +7,7 @@ from eea import usersdb
 class ProfileClient(object):
 
     def __init__(self, zope_app, user, **config):
+        assert user is not None, "ProfileClient got `user` argument None"
         self.zope_app = zope_app
         self.ldap_folder = zope_app.acl_users
         self.user = user
@@ -36,14 +37,15 @@ class ProfileClient(object):
         to a list using DFS walk, useful for iteration in TAL
 
         """
-        queue = [tree[k] for k in sorted(tree.keys(), reverse=True)]
+        queue = [tree[k] for k in sorted(tree.keys())]
         flat_structure = []
-        while len(queue):
-            current = queue.pop()
+        while queue:
+            current = queue.pop(0)
             flat_structure.append(current)
-            if len(current['children']):
-                current['children'].reverse()
-                queue.extend(current['children'])
+            if current['children']:
+                new_queue = list(current['children'])
+                new_queue.extend(queue)
+                queue = new_queue
 
         return flat_structure
 
@@ -61,12 +63,12 @@ class ProfileClient(object):
             role['id'] = role_id
             role['name'] = role_id.rsplit('-', 1)[-1]
             role['description'] = attrs['description'][0]
-            role['level'] = 0
-            role['parent'] = 'top'
             role['children'] = []
             direct_address[role_id] = role
             if '-' not in role_id:
                 tree[role_id] = role
+                role['level'] = 0
+                role['parent'] = 'top'
             else:
                 parent = direct_address[role_id.rsplit('-', 1)[0]]
                 parent['children'].append(role)
@@ -83,18 +85,77 @@ class ProfileClient(object):
         """
         return self._dfs_roles_tree(self.roles_tree_in_ldap())
 
+    def notification_lists(self):
+        """
+        Returns a dictonary of lists, key is ig,
+        list contains dicts of notifications info
+
+        """
+        igs = self.zope_app.objectValues([METATYPE_GROUPWARESITE])
+        notifications = {}
+        for ig in igs:
+            notif_tool = ig.getNotificationTool()
+            ig_notifs = notif_tool.user_subscriptions(self.user)
+            if len(ig_notifs):
+                ig_notifs.sort(key=lambda x: x['object'].title_or_id())
+                notifications[ig] = ig_notifs
+
+        return notifications
 
 class ProfileView(BrowserView):
 
     def __call__(self, **kw):
         user = self.request.get('AUTHENTICATED_USER', None)
-        # TODO: redirect here if user not logged in
+        if not user.has_role('Authenticated'):
+            # TODO: nicer redirect
+            url = '/login/login_form?came_from=%s' % '/profile'
+            self.request.response.redirect(url)
+            return None
         zope_app = self.context.unrestrictedTraverse('/')
+
+        client = ProfileClient(zope_app, user)
+        roles_list = client.roles_list_in_ldap()
+        notifications = client.notification_lists()
+        ig_access = client.access_in_igs()
+
+        # custom filters - only relevant info in view
+        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        if 'viewer' in ig_access:
+            del ig_access['viewer']
+        if 'restricted' in ig_access:
+            del ig_access['restricted']
+
+        return self.index(ig_access=ig_access, roles=leaf_roles_list,
+                          subscriptions=notifications)
+
+class DemoProfileView(BrowserView):
+
+    def __call__(self, **kw):
+        user = self.request.get('AUTHENTICATED_USER', None)
+        if not user.has_role('Authenticated'):
+            # TODO: nicer redirect
+            url = '/login/login_form?came_from=%s' % '/profile'
+            self.request.response.redirect(url)
+            return None
+        zope_app = self.context.unrestrictedTraverse('/')
+
+        # TODO: this is a hack for devel
+        user = zope_app.acl_users.getUser('parttpet')
+        client = ProfileClient(zope_app, user)
+        ig_access = client.access_in_igs()
 
         # TODO: this is a hack for devel
         user = zope_app.acl_users.getUser('fierefra')
         client = ProfileClient(zope_app, user)
-        ig_access = client.access_in_igs()
         roles_list = client.roles_list_in_ldap()
+        notifications = client.notification_lists()
 
-        return self.index(ig_access=ig_access, roles=roles_list)
+        # custom filters - only relevant info in view
+        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        if 'viewer' in ig_access:
+            del ig_access['viewer']
+        if 'restricted' in ig_access:
+            del ig_access['restricted']
+
+        return self.index(ig_access=ig_access, roles=leaf_roles_list,
+                          subscriptions=notifications)
