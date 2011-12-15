@@ -6,6 +6,8 @@ from OFS.SimpleItem import Item
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaCore.SchemaTool.Schema import Schema
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.Naaya.NyFolder import addNyFolder, NyFolder
 
 def _create_test_schema():
     schema = Schema(id='my_schema', title='my_schema')
@@ -123,3 +125,17 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
             'my_int': 13,
         }
         self.assertEqual(dict(obj.dump_data()), ref_data)
+
+class NyContentTypeNaayaTestCase(NaayaTestCase):
+
+    def test_prop_exists(self):
+        obj = NyDummy()
+        addNyFolder(self.portal, 'my_int')
+        self.portal.my_int._setObject('obj_id', obj)
+        obj = self.portal.my_int.obj_id
+
+        self.assertTrue(isinstance(obj.my_int, NyFolder))
+        self.assertFalse(obj.prop_exists('my_int'))
+
+        obj._change_schema_properties(my_int='33')
+        self.assertTrue(obj.prop_exists('my_int'))

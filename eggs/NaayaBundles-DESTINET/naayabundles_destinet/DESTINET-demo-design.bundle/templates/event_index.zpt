@@ -114,8 +114,26 @@
 		(<span tal:replace="title" />)
 			</td>
 	</tr>
-
+	
 	<tal:block content="structure python: here.prop_display_tr('keywords')" />
+	<tr tal:condition="python:here.prop_exists('target-groups') and here.prop_value_or_none('target-groups')" tal:define="sel_list2 python:here.portal_schemas.NyEvent['target-groups-property'].get_selection_list()">
+			<th i18n:translate="">Target group(s)</th>
+			<td>
+				<tal:block repeat="the_group here/target-groups">
+					<span i18n:translate="" tal:replace="python: [x.title for x in sel_list2 if x.id == the_group][0]" />
+					<span tal:condition="not:repeat/the_group/end">,</span>
+					</tal:block>
+			</td>
+	</tr>
+	<tr tal:condition="python:here.prop_exists('topics') and here.topics" tal:define="sel_list2 python:here.portal_schemas.NyEvent['topics-property'].get_selection_list()">
+			<th i18n:translate="">Topics</th>
+			<td>
+				<tal:block repeat="the_topic here/topics">
+					<span i18n:translate="" tal:replace="python: [x.title for x in sel_list2 if x.id == the_topic][0]" />
+					<span tal:condition="not:repeat/the_topic/end">,</span>
+					</tal:block>
+			</td>
+	</tr>
 
 	</table>
 

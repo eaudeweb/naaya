@@ -415,6 +415,20 @@ class NyContentData(NyProperties):
 
         return SchemaFormHelper(self._get_schema(), self, get_value)
 
+    security.declareProtected(view, 'prop_exists')
+    def prop_exists(self, prop_name):
+        """
+        The safe way to check whether a schema property exists on object.
+        (bypasses properties from context throughout acquisition)
+        E.g.
+        <span tal:condition='here/topics'> may return true if you happen
+        to have a 'topics' container in your context. Always use
+        <span tal:condition='python:here.prop_exists('topics')'>
+
+        """
+        # TODO: maybe use AccessControl.ZopeGuards.guarded_getattr (in rstk)?
+        return hasattr(self.aq_base, prop_name)
+
     security.declareProtected(view, 'prop_details')
     def prop_details(self, prop_name, lang=None):
         """
