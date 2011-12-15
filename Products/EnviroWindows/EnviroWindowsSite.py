@@ -126,7 +126,8 @@ class EnviroWindowsSite(NySite):
         widget_args = dict(
             label='Allow users enrolment here?',
             data_type='bool',
-            widget_type='Checkbox'
+            widget_type='Checkbox',
+            localized=True,
         )
         naaya_folder_schema.addWidget('show_contributor_request_role',
                                       **widget_args)

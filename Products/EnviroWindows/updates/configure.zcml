@@ -8,6 +8,10 @@
           provides="Products.naayaUpdater.interfaces.IUpdateScript"
           component=".update_clean_ldap_source_title.CleanLDAPSourceTitle"
           permission="zope2.ViewManagementScreens" />
+      <utility name="show_contributor_request_role.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".update_show_contributor_request_role.ShowContributorRequestRole"
+          permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
