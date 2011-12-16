@@ -24,4 +24,10 @@
         permission="zope.Public"
         />
 
+   <zope:subscriber
+        for="
+             naaya.content.base.interfaces.INyContentObjectAddEvent"
+        handler=".subscribers.handle_add_content"
+        />
+
 </configure>
