@@ -13,15 +13,21 @@
 </p>
 <fieldset><legend i18n:translate="">Add new list of links</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addlinkslist">
-<dl>
-	<dt i18n:translate="">ID</dt>
-	<dd><input type="text" name="id" value="" size="30"/></dd>
-	<dt i18n:translate="">Title</dt>
-	<dd><input type="title" name="title" value="" size="30"/></dd>
-	<dt i18n:translate="">Create a portlet</dt>
-	<dd><input type="checkbox" name="portlet" checked="checked" /></dd>
-</dl>
-<p><input type="submit" value="Add" i18n:attributes="value" /></p>
+  <div class="field">
+    <label for="id" i18n:translate="">ID</label>
+    <input type="text" name="id" value=""/>
+  </div>
+  <div class="field">
+    <label for="title" i18n:translate="">Title</label>
+    <input type="title" name="title" value="" size="30"/>
+  </div>
+  <div class="field">
+    <label for="portlet" i18n:translate="">Create a portlet</label>
+    <input type="checkbox" name="portlet" checked="checked" />
+  </div>
+  <p>
+    <input type="submit" value="Add" i18n:attributes="value" />
+  </p>
 </form>
 </fieldset>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelinkslist">

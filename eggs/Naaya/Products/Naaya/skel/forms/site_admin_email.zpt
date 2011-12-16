@@ -19,24 +19,37 @@
 
 
 <form method="post" tal:attributes="action string:${site_url}/admin_email" enctype="multipart/form-data">
-	<dl>
-		<div tal:attributes="style python:test(queue_enabled, 'display:none', None)">
-			<dt i18n:translate="">Mail server name</dt>
-			<dd><input type="text" name="mail_server_name" size="50" tal:attributes="value here/mail_server_name" /></dd>
-			<dt i18n:translate="">Mail server port</dt>
-			<dd><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></dd>
-		</div>
-		<p class="tip" tal:condition="queue_enabled">
-			Outgoing messages are being sent to a queue on disk.
-		</p>
-		<dt i18n:translate="">Default from address</dt>
-		<dd><input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" /></dd>
-		<dt i18n:translate="">Administrators' emails (comma separated)</dt>
-		<dd><input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /></dd>
-		<dt i18n:translate="">Email address for notifications on errors (comma separated, leave empty to prevent error notifications)</dt>
-		<dd><input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /></dd>
-	</dl>
-	<p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
+  <tal:block condition="not:queue_enabled">
+    <div class="field">
+      <label for="mail_server_name" i18n:translate="">Mail server name</label>
+      <input type="text" name="mail_server_name" tal:attributes="value here/mail_server_name" />
+    </div>
+    <div class="field">
+      <label for="mail_server_port" i18n:translate="">Mail server port</label>
+      <input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" />
+    </div>
+  </tal:block>
+  <p class="tip" tal:condition="queue_enabled" i18n:translate="">
+    Outgoing messages are being sent to a queue on disk.
+  </p>
+
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Default from address</label>
+    <input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" />
+  </div>
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Administrators' emails</label>
+    <input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /><br />
+    <em i18n:translate="">comma separated</em>
+  </div>
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Email address for notifications on errors</label>
+    <input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /><br />
+    <em i18n:translate="">comma separated, leave empty to prevent error notifications</em>
+  </div>
+  <p>
+    <input type="submit" value="Save changes" i18n:attributes="value" />
+  </p>
 </form>
 </tal:block>
 
