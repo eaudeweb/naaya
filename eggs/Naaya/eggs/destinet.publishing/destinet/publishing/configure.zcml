@@ -25,9 +25,13 @@
         />
 
    <zope:subscriber
-        for="
-             naaya.content.base.interfaces.INyContentObjectAddEvent"
+        for="naaya.content.base.interfaces.INyContentObjectAddEvent"
         handler=".subscribers.handle_add_content"
+        />
+
+   <zope:subscriber
+        for="naaya.content.base.interfaces.INyContentObjectEditEvent"
+        handler=".subscribers.handle_edit_content"
         />
 
 </configure>

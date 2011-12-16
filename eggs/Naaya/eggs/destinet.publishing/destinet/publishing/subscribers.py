@@ -32,7 +32,7 @@ def get_countries(ob):
     return ret
 
 def place_pointers(ob, exclude=[]):
-    """ Ads pointers to ob in target_groups and topics """
+    """ Ads pointers to ob in target_groups, topics and countries """
     props = {
         'title': ob.title,
         'description': getattr(ob, 'description', ''),
@@ -77,8 +77,51 @@ def place_pointers(ob, exclude=[]):
             else:
                 pointer.approveThis(0, None)
 
+def _qualifies_for_both(obj):
+    """
+    Matches condition for adding pointers for both topics and target_groups
+
+    """
+    site = obj.getSite()
+    resources = site.resources
+    news = site.News
+    events = site.events
+    return ((isinstance(obj, NyEvent) and is_descendant_of(obj, events)) or
+        (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
+        (isinstance(obj, (NyFile_extfile, NyMediaFile_extfile, NyURL, NyPublication))
+          and is_descendant_of(obj, resources)))
+
+def _qualifies_for_topics_only(obj):
+    """
+    Matches condition for adding pointers for topics seulement
+
+    """
+    site = obj.getSite()
+    market_place = getattr(site, 'market-place')
+    who_who = getattr(site, 'who-who')
+    return (
+          (isinstance(obj, NyContact)
+            and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who)))
+        or
+          (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
+        )
+
 
 def handle_add_content(event):
+    """
+    Tests whether this requires adding pointers and perform the action
+
+    """
+    obj = event.context
+    site = obj.getSite()
+    if not getattr(site, 'destinet.publisher', False):
+        return None
+    if _qualifies_for_both(obj):
+        place_pointers(obj)
+    elif _qualifies_for_topics_only(obj):
+        place_pointers(obj, exclude=['target-groups'])
+
+def handle_edit_content(event):
     """
     Test whether this requires adding pointers and perform the action
 
@@ -87,21 +130,20 @@ def handle_add_content(event):
     site = obj.getSite()
     if not getattr(site, 'destinet.publisher', False):
         return None
-    resources = site.resources
-    news = site.News
-    events = site.events
-    market_place = getattr(site, 'market-place')
-    who_who = getattr(site, 'who-who')
-    if ((isinstance(obj, NyEvent) and is_descendant_of(obj, events)) or
-        (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
-        (isinstance(obj, (NyFile_extfile, NyMediaFile_extfile, NyURL, NyPublication))
-          and is_descendant_of(obj, resources))
-       ):
-        place_pointers(obj)
-    elif(
-          (isinstance(obj, NyContact)
-            and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who)))
-        or
-          (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
-        ):
-        place_pointers(obj, exclude=['target-groups'])
+    q_both = _qualifies_for_both(obj)
+    q_topics = _qualifies_for_topics_only(obj)
+    if q_topics or q_both:
+        # clean-up all existing pointer, then re-add them
+        cat = site.getCatalogTool()
+        pointers = cat.search({'meta_type': 'Naaya Pointer',
+                               'path': [ofs_path(site.countries),
+                                        ofs_path(site.topics),
+                                        ofs_path(getattr(site, 'who-who'))],
+                               'pointer': path_in_site(obj)})
+        for brain in pointers:
+            pointer = brain.getObject()
+            pointer.aq_parent._delObject(pointer.id)
+        if q_both:
+            place_pointers(obj)
+        else:
+            place_pointers(obj, exclude=['target-groups'])
