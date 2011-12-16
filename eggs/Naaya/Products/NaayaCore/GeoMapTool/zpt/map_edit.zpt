@@ -3,7 +3,7 @@
 
 <metal:block fill-slot="tab_contents">
 
-<form method="post" action="manageProperties" style="clear: left">
+<form method="post" action="manageProperties">
 
 <fieldset class="form-fieldset">
     <legend i18n:translate="">Map options</legend>

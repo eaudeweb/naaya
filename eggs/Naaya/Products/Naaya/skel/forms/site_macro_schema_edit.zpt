@@ -7,7 +7,7 @@
     schema_helper python:here.get_schema_helper(lang=curr_lang);
 ">
 
-<metal:block use-macro="here/standard_template_macro">
+<metal:block use-macro="python:here.standard_template_macro('light')">
 <metal:block fill-slot="body">
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">

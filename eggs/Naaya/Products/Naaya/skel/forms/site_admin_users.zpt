@@ -31,17 +31,17 @@
 </div>
 
 <metal:block define-slot="tabs"><metal:block define-macro="tabs">
-<div id="tabbedmenu" tal:define="toggle_all_users python:len(user_sources)>0">
+<div class="tabbedmenu" tal:define="toggle_all_users python:len(user_sources)>0">
     <ul>
         <li tal:condition='user_sources'
-			tal:attributes="id python: (
+			tal:attributes="class python: (
 								('admin_all_users_html' in path_info) or
 								('admin_users_html' in path_info) or
 								('admin_edituser_html' in path_info and request.get('from', '')  == 'all')
 							) and 'currenttab' or ''">
 			<a tal:attributes="href string:${site_url}/admin_all_users_html" i18n:translate="">All users</a>
 		</li>
-		<li tal:attributes="id python: (
+		<li tal:attributes="class python: (
 								('admin_local_users_html' in path_info) or
 								('admin_assignroles_html' in path_info) or
 								('admin_adduser_html' in path_info) or
@@ -51,11 +51,11 @@
 			<a tal:attributes="href string:${site_url}/admin_local_users_html" i18n:translate="">Local users</a>
 		</li>
         <li tal:repeat="item user_sources"
-			tal:attributes="id python: ('admin_sources_html' in path_info and request.get('id', '') == item.id) and 'currenttab' or ''">
+			tal:attributes="class python: ('admin_sources_html' in path_info and request.get('id', '') == item.id) and 'currenttab' or ''">
             <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="string:${item/title_or_id} users">source</a>
         </li>
 		<li tal:condition="python: here.checkPermission('Change permissions')"
-		    tal:attributes="id python: (
+		    tal:attributes="class python: (
 								('admin_roles_html' in path_info) or
 								('admin_editrole_html' in path_info)
 							) and 'currenttab' or ''">
@@ -63,8 +63,8 @@
 		</li>
     </ul>
 </div>
-<div id="tabbedmenuend"></div>
 </metal:block></metal:block>
+
 <metal:block define-slot='second-tabs'>
 	<tal:block tal:condition="python: 'admin_users_html' in path_info and len(user_sources) == 0">
 		<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>

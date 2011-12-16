@@ -1,6 +1,7 @@
 2.12.37 (unreleased)
 --------------------
 * user photos for Users management (from LDAP cache) [andredor]
+* `get_standard_template` fallback if macro not found [moregale]
 
 2.12.36 (2011-12-15)
 --------------------

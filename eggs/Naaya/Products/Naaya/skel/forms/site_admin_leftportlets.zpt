@@ -4,14 +4,13 @@
 
 <tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
 
-<div id="tabbedmenu">
+<div class="tabbedmenu">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_leftportlets_html" i18n:translate="">Left side</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_leftportlets_html" i18n:translate="">Left side</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_frontportlets_html" i18n:translate="">Front page</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_rightportlets_html" i18n:translate="">Right side</a></li>
 </ul>
 </div>
-<div id="tabbedmenuend"></div>
 
 <script type="text/javascript">
 <!--

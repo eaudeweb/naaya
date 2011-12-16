@@ -9,6 +9,8 @@
 	<meta i18n:attributes="content" content="Interactive map for the Geo-tagged information" name="description" />
 </metal:block>
 
+<metal:block fill-slot="breadcrumb"></metal:block>
+
 <metal:block metal:fill-slot="body">
 <tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds());
                        geo_query python:request.get('geo_query', '');
@@ -20,7 +22,7 @@
 <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(here.absolute_url())"></script>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-	<div id="center_content" style="width: 78%; overflow-x: auto;">
+	<div id="center_content" class="portalmap-map-box">
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<noscript>
 			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>

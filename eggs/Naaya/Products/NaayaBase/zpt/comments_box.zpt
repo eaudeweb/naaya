@@ -2,7 +2,7 @@
 	<hr class="hr_addcomment" />
 	<div class="commentbox_add" tal:condition="here/checkPermissionAddComments">
 		<a tal:attributes="href string:${here/absolute_url}/comment_add_html"
-			i18n:translate="" class="addcomment">Add comment</a>
+			i18n:translate="" class="addcomment button-like">Add comment</a>
 	</div>
 	<div class="commentbox_add" tal:condition="not: here/checkPermissionAddComments">
 		<a class="logincomment"

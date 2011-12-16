@@ -489,6 +489,7 @@ class PortletsTool(Folder, utils):
                 output.append(LegacyPortletWrapper(portlet, portlet_id))
                 names.add(portlet_id)
 
+        output.sort(key=lambda portlet: portlet.title_or_id().lower())
         return output
 
     def sort_portlets(self, REQUEST, portlet_order):

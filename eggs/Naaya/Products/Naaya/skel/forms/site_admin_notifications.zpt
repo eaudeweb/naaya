@@ -7,13 +7,12 @@
                 ob_notifications python:here.getNotificationTool();
                 curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
-<div id="tabbedmenu">
+<div class="tabbedmenu">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_notifications_html" i18n:translate="">Settings</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_notifications_html" i18n:translate="">Settings</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_notif_sitemap_html" i18n:translate="">Monitorised folders</a></li>
 </ul>
 </div>
-<div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
 Change the settings for the notification services offered by this portal in the form below, and click <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
