@@ -6,16 +6,16 @@
 <tal:block metal:fill-slot="section"
 		tal:define="site_url here/getSitePath;">
 
-<div id="tabbedmenu">
+<div class="tabbedmenu">
 	<ul>
 		<li tal:repeat="tab here/admin_tabs"
-			tal:attributes="id python:test(tab['url'] == current_tab_url, 'currenttab', None)">
+			tal:attributes="class python:test(tab['url'] == current_tab_url, 'currenttab', None)">
 			<a tal:attributes="href string:${here/absolute_url}/${tab/url}"
 				i18n:translate="" tal:content="tab/title"></a>
 		</li>
 	</ul>
 </div>
-<div id="tabbedmenuend"></div>
+
 <metal:block define-slot="tab_contents" />
 
 </tal:block>

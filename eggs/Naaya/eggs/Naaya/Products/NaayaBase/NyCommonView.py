@@ -93,7 +93,7 @@ class NyCommonView(object):
             tmpl = forms_tool['standard_error_message'].aq_base.__of__(site)
 
             try:
-                macro = self.standard_template_macro()
+                macro = self.standard_template_macro('light')
                 html = tmpl(macro=macro, **kwargs)
             except:
                 html = tmpl(macro=None, **kwargs)

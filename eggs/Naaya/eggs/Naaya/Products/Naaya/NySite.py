@@ -3796,7 +3796,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
 
     def standard_template_macro(self, macro='page'):
-        return self.getLayoutTool().get_standard_template().macros[macro]
+        template = self.getLayoutTool().get_standard_template()
+        if macro not in template.macros:
+            macro = 'page'
+        return template.macros[macro]
 
     security.declareProtected(view, 'sitemap_xml')
     def sitemap_xml(self, REQUEST=None, RESPONSE=None):

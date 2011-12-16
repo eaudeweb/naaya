@@ -1,9 +1,26 @@
 <metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
 
+<metal:block fill-slot="breadcrumb"></metal:block>
+
 <metal:block fill-slot="page-middle">
 	<tal:block define="folder_listing_info python: here.folder_listing_info(sort_on='releasedate', sort_order=1);
 						global object_list python:folder_listing_info['objects'];
 						objects_info python:here.getArchiveListing(here)">
+
+		<div class="folder_social">
+			<tal:block content="structure here/set_content_rating" />
+			<div class="folder_social_icons">
+			<a class="feed_link"
+				tal:attributes="href string:${here/absolute_url}/index_atom">
+				&nbsp;</a>
+			<a class="facebook_link"
+				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+				&nbsp;</a>
+			<a class="twitter_link"
+				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+				&nbsp;</a>
+			</div>
+		</div>
 
 		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
 			<metal:block use-macro="site_object_index/macros/icon"/>
@@ -23,20 +40,6 @@
 				</span>
 			</span>
 		</h1>
-		<div class="folder_social">
-			<tal:block content="structure here/set_content_rating" />
-			<div class="folder_social_icons">
-			<a class="feed_link"
-				tal:attributes="href string:${here/absolute_url}/index_atom">
-				&nbsp;</a>
-			<a class="facebook_link"
-				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
-				&nbsp;</a>
-			<a class="twitter_link"
-				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
-				&nbsp;</a>
-			</div>
-		</div>
 
 		<div class="folder_description">
 			<p tal:condition="python:here.description!=''"

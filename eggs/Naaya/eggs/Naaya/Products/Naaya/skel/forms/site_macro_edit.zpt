@@ -1,5 +1,6 @@
 <!-- Macro for edit form -->
-<metal:block define-macro="page" metal:extend-macro="here/standard_template_macro">
+<metal:block define-macro="page"
+             extend-macro="python:here.standard_template_macro('light')">
 
 <metal:block metal:fill-slot="body">
 

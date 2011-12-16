@@ -7,15 +7,14 @@
 				languages here/gl_get_languages_mapping;
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
-<div id="tabbedmenu">
+<div class="tabbedmenu">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
-<div id="tabbedmenuend"></div>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 <p i18n:translate="" class="cleaner">

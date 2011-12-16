@@ -4,15 +4,15 @@
 
 <tal:block metal:fill-slot="section">
 
-<div id="tabbedmenu">
+<div class="tabbedmenu">
 	<ul>
-		<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
 		<li><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
 		<li><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Google Snippets</a></li>
 	</ul>
 </div>
-<div id="tabbedmenuend"></div>
 <br clear="all" />
+
 <tal:block define="authorized here/checkAuthorization">
 
 <tal:block condition="authorized" content="structure here/stats_info" />

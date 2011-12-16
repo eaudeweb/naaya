@@ -8,15 +8,15 @@
 					user_tool here/getAuthenticationTool">
 
 <tal:block tal:condition="python:mode==''">
-	<div id="tabbedmenu">
+	<div class="tabbedmenu">
 	<ul>
-		<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/administration_users_html" i18n:translate="">Local users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${here/absolute_url}/administration_users_html" i18n:translate="">Local users</a></li>
 		<li tal:repeat="item user_tool/getSources">
 			<a tal:attributes="href string:${here/absolute_url}/administration_source_html?id=${item/id}" tal:content="item/title_or_id" i18n:translate="">source</a>
 		</li>
 	</ul>
 	</div>
-	<div id="tabbedmenuend" class="cleaner"></div>
+	<div class="cleaner"></div>
 	<script type="text/javascript">
 	function emptyLocation()
 	{
