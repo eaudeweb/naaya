@@ -30,6 +30,7 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.event import notify
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -41,6 +42,8 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from publication_item import publication_item
 from permissions import PERMISSION_ADD_PUBLICATION
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 #module constants
 METATYPE_OBJECT = 'Naaya Publication'
@@ -174,6 +177,7 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     self.notifyFolderMaintainer(self, ob)
     #log post date
     auth_tool = self.getAuthenticationTool()
@@ -341,6 +345,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
+            notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
                 self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
