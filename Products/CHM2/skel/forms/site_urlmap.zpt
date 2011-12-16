@@ -1,4 +1,4 @@
-<metal:block use-macro="here/standard_template_macro">
+<metal:block use-macro="python:here.standard_template_macro('light')">
 <metal:block fill-slot="body">
 
 <h1><tal:block tal:replace="here/title_or_id" /> <span i18n:translate="" tal:omit-tag="">sitemap</span></h1>
