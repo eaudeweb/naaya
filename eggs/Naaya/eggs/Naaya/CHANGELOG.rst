@@ -1,5 +1,6 @@
 2.12.38 (unreleased)
 --------------------
+* geocoding address in csv import - reverted r17586 [simiamih]
 
 2.12.37 (2011-12-16)
 --------------------
