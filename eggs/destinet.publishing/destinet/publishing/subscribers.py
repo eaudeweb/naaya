@@ -85,6 +85,8 @@ def handle_add_content(event):
     """
     obj = event.context
     site = obj.getSite()
+    if not getattr(site, 'destinet.publisher', False):
+        return None
     resources = site.resources
     news = site.News
     events = site.events
@@ -95,4 +97,11 @@ def handle_add_content(event):
         (isinstance(obj, (NyFile_extfile, NyMediaFile_extfile, NyURL, NyPublication))
           and is_descendant_of(obj, resources))
        ):
-        pass
+        place_pointers(obj)
+    elif(
+          (isinstance(obj, NyContact)
+            and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who)))
+        or
+          (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
+        ):
+        place_pointers(obj, exclude=['target-groups'])

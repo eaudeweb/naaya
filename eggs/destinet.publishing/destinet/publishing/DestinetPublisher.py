@@ -25,7 +25,6 @@ from Products.NaayaContent.NyPublication.NyPublication import (NyPublication,
                                   addNyPublication as original_addNyPublication)
 from constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
                        PERMISSION_DESTINET_PUBLISH)
-from subscribers import place_pointers
 
 NaayaPageTemplateFile('zpt/destinet_disseminate', globals(),
                       'destinet_disseminate')
@@ -96,7 +95,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyEvent(self.restrictedTraverse('events'),
                                        '', REQUEST)
         if isinstance(response, NyEvent):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/promote_event' % self.absolute_url())
@@ -130,7 +128,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyNews(self.restrictedTraverse('News'),
                                       '', REQUEST)
         if isinstance(response, NyNews):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/promote_news' % self.absolute_url())
@@ -151,7 +148,6 @@ class DestinetPublisher(SimpleItem):
         """
         Create an URL type of object in 'resources' folder adding
         * extra validation for topics and target-groups
-        * pointers in the selected topics and target-groups
 
         """
         schema_raw_data = dict(REQUEST.form)
@@ -170,7 +166,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyURL(self.restrictedTraverse('resources'),
                                      '', REQUEST)
         if isinstance(response, NyURL):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_url' % self.absolute_url())
@@ -204,7 +199,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyFile(self.restrictedTraverse('resources'),
                                            '', REQUEST)
         if isinstance(response, NyFile_extfile):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_file' % self.absolute_url())
@@ -238,7 +232,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyMediaFile(self.restrictedTraverse('resources'),
                                            '', REQUEST)
         if isinstance(response, NyMediaFile_extfile):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_mediafile' % self.absolute_url())
@@ -323,7 +316,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyContact(self.restrictedTraverse('who-who'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
@@ -350,7 +342,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyContact(self.restrictedTraverse('market-place'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
@@ -379,7 +370,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyPublication(self.restrictedTraverse('resources'),
                                              '', REQUEST)
         if isinstance(response, NyPublication):
-            place_pointers(response)
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/disseminate_publication' % self.absolute_url())
@@ -406,7 +396,6 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyPublication(self.restrictedTraverse('market-place'),
                                              '', REQUEST)
         if isinstance(response, NyPublication):
-            place_pointers(response, exclude=['target-groups'])
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
