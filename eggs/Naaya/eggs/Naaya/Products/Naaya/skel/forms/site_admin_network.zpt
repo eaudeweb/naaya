@@ -13,13 +13,17 @@
 <fieldset>
 <legend i18n:translate="">Add new portal</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addnetworkportal">
-	<dl>
-		<dt i18n:translate="">Title</dt>
-		<dd><input type="text" name="title:utf8:ustring" id="title" size="50" value="" /></dd>
-		<dt i18n:translate="">Portal URL</dt>
-		<dd><input type="text" name="url" id="url" size="50" value="http://" /></dd>
-	</dl>
-	<p><input type="submit" value="Add" /></p>
+  <div class="field">
+    <label for="title" i18n:translate="">Title</label>
+    <input type="text" name="title:utf8:ustring" id="title" size="50" value="" />
+  </div>
+  <div class="field">
+    <label for="title" i18n:translate="">Portal URL</label>
+    <input type="text" name="url" id="url" size="50" value="http://" />
+  </div>
+  <p>
+    <input type="submit" value="Add" i18n:attributes="" />
+  </p>
 </form>
 </fieldset>
 <br />
