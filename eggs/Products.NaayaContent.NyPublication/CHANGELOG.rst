@@ -1,5 +1,6 @@
 1.1.5 (unreleased)
 ------------------
+* event notifications: NyContentObjectAddEvent and Edit [simiamih]
 
 1.1.4 (2011-12-07)
 ------------------
@@ -8,7 +9,7 @@
 1.1.3 (2011-11-17)
 ------------------
 * portal_map methods are no longer called if the content type is not
-  geo_enabled [dumitval]
+ geo_enabled [dumitval]
 
 1.1.2 (2011-11-14)
 ------------------
@@ -25,3 +26,4 @@
 1.0 (2010-08-05)
 ----------------
 * Initial release
+
