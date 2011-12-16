@@ -1,4 +1,7 @@
-2.12.38 (unreleased)
+2.12.39 (unreleased)
+--------------------
+
+2.12.38 (2011-12-16)
 --------------------
 * geocoding address in csv import - reverted r17586 [simiamih]
 
