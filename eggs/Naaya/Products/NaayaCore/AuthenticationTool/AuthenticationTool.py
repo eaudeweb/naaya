@@ -17,7 +17,7 @@ from App.ImageFile import ImageFile
 from DateTime import DateTime
 from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.User import BasicUserFolder
 from AccessControl.User import SimpleUser
 from AccessControl.Permissions import view, manage_users
@@ -125,7 +125,7 @@ class UserInfo(object):
         assert isinstance(fields.get('user_id', None), str),\
                "user_id %r must be str" % fields['user_id']
         for key, value in fields.iteritems():
-            if key in ['user_id', '_get_zope_user', '_source']:
+            if key in ['user_id', '_get_zope_user', '_source', 'jpegPhoto']:
                 continue
             assert isinstance(value, unicode), \
                    ("value %r (for %r, user %r) not unicode" %
@@ -1032,6 +1032,57 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return None
         else:
             return self.REQUEST.AUTHENTICATED_USER.getId()
+
+    security.declarePublic('get_user_photo_url')
+    def get_user_photo_url(self, user_id=None):
+        """
+        Get the user photo URL for the user_id. Returns the URL for the
+        logged-in user if no user_id specified.
+
+        Checks for administrator permission for getting other users photos.
+        """
+        if user_id is None:
+            cuser_id = self.get_current_userid()
+        else:
+            cuser_id = user_id
+            if not self.checkPermissionPublishObjects():
+                raise Unauthorized, 'Not allowed to get other users photos'
+
+        try:
+            user_info = self.get_user_info(cuser_id)
+        except KeyError, ke:
+            log.warn(str(ke))
+            return
+
+        if hasattr(user_info, 'jpegPhoto') and user_info.jpegPhoto:
+            if user_id is None:
+                return self.absolute_url() + '/user_photo'
+            else:
+                return self.absolute_url() + '/user_photo?user_id=' + user_id
+
+    security.declarePublic('user_photo')
+    def user_photo(self, REQUEST, RESPONSE, user_id=None):
+        """
+        Get the user photo for the user_id. Returns the photo for the
+        logged-in user if no user_id specified.
+
+        Checks for administrator permission for getting other users photos.
+        """
+        if user_id is None:
+            user_id = self.get_current_userid()
+        else:
+            if not self.checkPermissionPublishObjects():
+                raise Unauthorized, 'Not allowed to get other users photos'
+
+        try:
+            user_info = self.get_user_info(user_id)
+        except KeyError, ke:
+            log.warn(str(ke))
+            return
+
+        if hasattr(user_info, 'jpegPhoto') and user_info.jpegPhoto:
+            RESPONSE.setHeader('Content-Type', 'image/jpeg')
+            return user_info.jpegPhoto
 
     security.declareProtected(manage_users, 'getUsersEmails')
     def getUsersEmails(self, users):

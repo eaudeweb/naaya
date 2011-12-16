@@ -99,7 +99,7 @@
         <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
     </h3>
 
-    <div class="description-text" tal:condition="python:len(users_roles) != 0">
+    <div class="description-text" tal:condition="users_roles">
         <p i18n:translate="">
             The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
             this portal.
@@ -127,7 +127,7 @@
     </div>
     
 	<table cellspacing="0" cellpadding="4" class="datatable sortable">
-		<tr tal:condition="python:len(users_roles) != 0">
+		<tr tal:condition="users_roles">
 			<th align="left">
 				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
 					<span i18n:translate="">Username</span>
@@ -151,15 +151,25 @@
 			<th align="left"><span i18n:translate="">Roles/Location</span></th>
 			<th width="1" i18n:translate="">Revoke roles</th>
 		</tr>
-		<tr tal:repeat="user python:users_roles"
-		tal:attributes="class python:test(path('repeat/user/odd'),
+		<tr tal:repeat="user users_roles"
+			tal:attributes="class python:test(path('repeat/user/odd'),
 											 'row-odd', 'row-even')">
-			<td tal:content="python:user[1] + ' ('+user[0]+')'" ></td>
-			<td tal:content="python:user[2]" />
+		<tal:block define="user_id python:user[0];
+							user_name python:user[1];
+							user_group python:user[2];
+							user_roles python:user[3];">
+			<td>
+				<span tal:content="string:${user_name} (${user_id})" />
+				<tal:block define="user_photo_url python: here.get_user_photo_url(user_id)">
+					<a tal:condition="user_photo_url"
+						tal:attributes="href user_photo_url"
+						class="preview">[view photo]</a>
+				</tal:block>
+			</td>
+			<td tal:content="user_group"></td>
 
-			<td tal:define="user_roles python: user[3]">
-				<div class="user-role"
-					 tal:repeat="role python: user_roles">
+			<td>
+				<div class="user-role" tal:repeat="role user_roles">
 					<tal:block condition="python: role[0]">
 					<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
 					<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
@@ -168,17 +178,18 @@
 				<tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
 			</td>
 
-			<td tal:define="user_roles python: user[3]">
-				<div class="user-role-revoke" tal:repeat="role python: user_roles">
+			<td>
+				<div class="user-role-revoke" tal:repeat="role user_roles">
 					<tal:block condition="python: role[0]">
 					<a class="revoke-role" i18n:attributes="title" title="Revoke role"
-						tal:define="location python: role[1]; username python: user[0]"
-						tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${username}&location=${location}">
+						tal:define="location python: role[1]"
+						tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${user_id}&location=${location}">
 						<img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
 					</a>
 					</tal:block>
 				</div>
 			</td>
+		</tal:block>
 		</tr>
 	</table>
 

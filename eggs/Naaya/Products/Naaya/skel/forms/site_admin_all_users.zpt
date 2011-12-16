@@ -82,6 +82,11 @@
 							</tal:block>
 							<tal:block condition="python: user_source_title != 'Local'" tal:content="user_id"></tal:block>
 						</strong>
+						<tal:block define="user_photo_url python: user_tool.get_user_photo_url(user_id)">
+							<a tal:condition="user_photo_url"
+								tal:attributes="href user_photo_url"
+								class="preview">[view photo]</a>
+						</tal:block>
 						<span tal:condition="user/is_new_user">
 							<img src="misc_/Naaya/star.png" alt="New account"
 								tal:define="global any_new_account python:True" />
