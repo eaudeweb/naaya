@@ -1,5 +1,4 @@
-<tal:block define="no_left_portlets python:True">
-<metal:block use-macro="here/standard_template_macro">
+<metal:block use-macro="python:here.standard_template_macro('light')">
 <metal:block fill-slot="body">
 
 <h1><tal:block tal:replace="here/site_title" /> <span i18n:translate="" tal:omit-tag="">sitemap</span></h1>
@@ -64,4 +63,3 @@ function fTreeClick(expand)
 
 </metal:block>
 </metal:block>
-</tal:block>

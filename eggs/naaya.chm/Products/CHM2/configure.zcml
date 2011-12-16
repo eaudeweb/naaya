@@ -38,5 +38,10 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <browser:resourceDirectory
+      name="Products.CHM2-www"
+      directory="www"
+      />
+
     <include package=".updates" />
 </configure>
