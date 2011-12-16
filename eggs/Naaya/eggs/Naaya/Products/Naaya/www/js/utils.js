@@ -36,6 +36,29 @@ $('.toggle-all').live('click', function(e){
     }
 });
 
+//image preview
+$("a.preview").click(function(e) {
+	e.preventDefault();
+});
+$("a.preview").hover(function (e) {
+	$("body").append("<div id='preview' style='position: absolute; border:1px solid #aaa'>"
+					+ "<img src='" + this.href + "'"
+					+ " style='max-height: 120px; max-width: 120px' />"
+					+ "</div>");
+	$("#preview")
+		.css("top", (e.pageY - 10) + "px")
+		.css("left", (e.pageX + 10) + "px")
+		.fadeIn("fast");
+},
+function () {
+	$("#preview").remove();
+});
+$("a.preview").mousemove(function(e){
+	$("#preview")
+		.css("top",(e.pageY - 10) + "px")
+		.css("left",(e.pageX + 10) + "px");
+});
+
 });
 
 /**

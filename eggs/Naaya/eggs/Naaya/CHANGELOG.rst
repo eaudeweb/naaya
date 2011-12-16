@@ -1,5 +1,6 @@
 2.12.37 (unreleased)
 --------------------
+* user photos for Users management (from LDAP cache) [andredor]
 
 2.12.36 (2011-12-15)
 --------------------

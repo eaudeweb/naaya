@@ -681,4 +681,6 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         '_get_zope_user': get_zope_user,
         '_source': ldap_plugin,
     }
+    if 'jpegPhoto' in cached_record:
+        fields['jpegPhoto'] = cached_record['jpegPhoto']
     return LDAPUserInfo(**fields)
