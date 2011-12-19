@@ -38,7 +38,7 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				coverImage: { url: image, scaling: 'scale' },
+				coverImage: { url: image, scaling: 'scale' }
 			}
 		],
 		plugins: {
@@ -52,7 +52,7 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				autoBuffering: true,
+				autoBuffering: true
 			}
 		],
 		plugins: {
