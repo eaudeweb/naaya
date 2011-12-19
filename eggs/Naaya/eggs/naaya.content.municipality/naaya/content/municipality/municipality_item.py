@@ -50,6 +50,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+
 
 from interfaces import INyMunicipality
 from permissions import PERMISSION_ADD_MUNICIPALITY
@@ -126,6 +128,10 @@ config = {
                 'NyMunicipality_marked.gif': ImageFile('www/NyMunicipality_marked.gif', globals()),
             },
     }
+
+email_templates = {
+    'email_when_unapproved_to_maintainer': EmailPageTemplateFile('templates/email_when_unapproved_to_maintainer.zpt', globals()),
+}
 
 def municipality_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -286,7 +292,6 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
@@ -353,6 +358,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         # if the user doesn't have permission to publish objects, the object must be unapproved
         if not self.glCheckPermissionPublishObjects():
             self.approveThis(0, None)
+            self.sendEmailNotificationWhenUnapproved()
 
         #Overwrite any inconsistent values in the choice property
         if not self.species and self.choice == u'3':
@@ -370,6 +376,46 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+
+    security.declarePrivate('sendEmailNotificationWhenUnapproved')
+    def sendEmailNotificationWhenUnapproved(self):
+        """ """
+        site = self.getSite()
+        auth_tool = site.getAuthenticationTool()
+        email_tool = site.getEmailTool()
+        translate_tool = site.getPortalTranslations()
+        notification_tool = site.getNotificationTool()
+
+        template = email_templates['email_when_unapproved_to_maintainer']
+        contributor = self.REQUEST.AUTHENTICATED_USER
+        d = {'NAME': '',
+             'CONTRIBUTOR': auth_tool.getUserFullName(contributor),
+             'MUNICIPALITY_TITLE': self.title_or_id(),
+             'MUNICIPALITY_URL': self.absolute_url(),
+             '_translate': translate_tool,
+             'portal': site,
+            }
+        try:
+            mail_from = notification_tool.from_email
+        except AttributeError:
+            mail_from = email_tool.get_addr_from()
+
+        mails_to = site.getMaintainersEmails(self)
+
+        for mail_to in mails_to:
+            users = list(auth_tool.lookup_user_by_email(mail_to))
+            if users:
+                name = auth_tool.getUserFirstName(users[0])
+            else:
+                name = mail_to[:mail_to.find('@')]
+            d['NAME'] = name
+            mail_data = template.render_email(**d)
+
+            email_tool.sendEmail(mail_data['body_text'],
+                                 mail_to,
+                                 mail_from,
+                                 mail_data['subject'])
+            d['NAME'] = ''
 
     #site actions
     security.declareProtected(view, 'index_html')
