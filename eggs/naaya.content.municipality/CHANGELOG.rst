@@ -1,5 +1,9 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
 ------------------
+
+1.2.6 (2011-12-19)
+------------------
+* municipality send notification on auto unapprove
 
 1.2.5 (2011-12-14)
 ------------------
