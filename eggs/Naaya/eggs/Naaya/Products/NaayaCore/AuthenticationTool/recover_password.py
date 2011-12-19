@@ -79,11 +79,6 @@ class RecoverPassword(SimpleItem):
         for token in tokens_to_remove:
             del token_map[token]
 
-    def _lookup_user_by_email(self, email):
-        for user in self.getSite().acl_users.getUsers():
-            if user.email.lower() == email.lower():
-                yield user
-
     def _set_password(self, user_id, new_password):
         user = self.getSite().acl_users.getUser(user_id)
         assert user is not None
@@ -106,7 +101,8 @@ class RecoverPassword(SimpleItem):
         User submits an email address. If address found, an email is sent with
         a password reset token.
         """
-        users = list(self._lookup_user_by_email(email))
+        auth_tool = self.getSite().getAuthenticationTool()
+        users = list(auth_tool.lookup_user_by_email(email))
         if not users:
             err = i18n_exception(ValueError,
                                  'E-mail address not found: "${email}"',

@@ -1033,6 +1033,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             return self.REQUEST.AUTHENTICATED_USER.getId()
 
+    security.declarePrivate('lookup_user_by_email')
+    def lookup_user_by_email(self, email):
+        for user in self.getUsers():
+            if user.email.lower() == email.lower():
+                yield user
+
     security.declarePublic('get_user_photo_url')
     def get_user_photo_url(self, user_id=None):
         """
