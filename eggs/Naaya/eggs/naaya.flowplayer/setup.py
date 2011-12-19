@@ -1,13 +1,10 @@
 from setuptools import setup, find_packages
-import os
-
-version = '1.1.2'
 
 setup(name='naaya.flowplayer',
-      version=version,
+      version='1.1.4',
       description="Flowplayer for naaya",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGELOG.rst").read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
