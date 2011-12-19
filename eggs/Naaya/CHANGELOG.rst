@@ -1,5 +1,6 @@
 2.12.39 (unreleased)
 --------------------
+* functionality to get users by email [andredor]
 
 2.12.38 (2011-12-16)
 --------------------
