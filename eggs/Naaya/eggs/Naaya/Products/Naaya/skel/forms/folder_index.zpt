@@ -87,6 +87,7 @@
 			i18n:attributes="title"
 			i18n:translate="">Zip download</a>
 	</div>
+	<div class="clearer"></div>
 	</metal:block>
 
 	<tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
