@@ -1,4 +1,7 @@
-2.12.39 (unreleased)
+2.12.40 (unreleased)
+--------------------
+
+2.12.39 (2011-12-19)
 --------------------
 * functionality to get users by email [andredor]
 
