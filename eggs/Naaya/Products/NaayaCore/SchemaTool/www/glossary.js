@@ -149,7 +149,7 @@ function add_value(term, skip_animation) {
     }
     else {
         var terms = form_input.val().split(options['separator']);
-        if (value != '' && terms.indexOf(value) == -1){
+        if (value != '' && jQuery.inArray(value, terms) == -1){
             // remove the current input
             terms.pop();
             // add the selected item
