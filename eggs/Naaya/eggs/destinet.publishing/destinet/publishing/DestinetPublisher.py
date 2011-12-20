@@ -4,6 +4,7 @@ try: # Zope >= 2.12
     from App.class_init import InitializeClass
 except ImportError:
     from Globals import InitializeClass
+import operator
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
@@ -405,6 +406,10 @@ class DestinetPublisher(SimpleItem):
     security.declarePublic(PERMISSION_DESTINET_PUBLISH, "userinfo")
     def userinfo(self):
         """ Renders a view with everything the member posted """
+
+        def sort_them(itemlist):
+            itemlist.sort(key=operator.attrgetter('releasedate'), reverse=True)
+
         site = self.getSite()
         cat = site.getCatalogTool()
         auth_tool = site.getAuthenticationTool()
@@ -412,18 +417,22 @@ class DestinetPublisher(SimpleItem):
         filters = {'contributor': user}
         filters['meta_type'] = 'Naaya Event'
         events = map(lambda x: x.getObject(), cat.search(filters))
+        sort_them(events)
         filters['meta_type'] = 'Naaya News'
         news = map(lambda x: x.getObject(), cat.search(filters))
+        sort_them(news)
 
         location_path = '/'.join(site.topics.getPhysicalPath())
         topics = map(lambda x: x.getObject(),
                            cat.search({'path': location_path,
                                        'contributor': user}))
+        sort_them(topics)
 
         location_path = '/'.join(site.resources.getPhysicalPath())
         resources = map(lambda x: x.getObject(),
                            cat.search({'path': location_path,
                                        'contributor': user}))
+        sort_them(resources)
 
         user_obj = auth_tool.getUser(user)
         if user_obj:
@@ -436,14 +445,20 @@ class DestinetPublisher(SimpleItem):
         forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
         forums = map(lambda x: x.getObject(), cat.search(
                                {'meta_type': forum_meta_types, 'author': user}))
+        sort_them(forums)
 
-        any = bool(events or news or resources or topics or forums)
+        contacts = map(lambda x: x.getObject(), cat.search(
+                               {'meta_type': 'Naaya Contact', 'author': user}))
+        sort_them(contacts)
+
+        any = bool(events or news or resources or topics or forums or contacts)
         return site.getFormsTool().getContent({'here': self, 'news': news,
                                                'user_info': user_info,
                                                'events': events,
                                                'topics': topics,
                                                'resources': resources,
                                                'forums': forums,
+                                               'contacts': contacts,
                                                'any': any},
                                               'destinet_userinfo')
 
