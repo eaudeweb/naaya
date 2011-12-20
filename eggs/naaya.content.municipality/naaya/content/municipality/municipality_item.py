@@ -23,6 +23,7 @@ import os
 import sys
 from decimal import Decimal
 from datetime import datetime
+from urllib import unquote
 
 #Zope imports
 from Persistence import Persistent
@@ -322,7 +323,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         upload_picture_url = schema_raw_data.pop('upload_picture_url', None)
         if upload_picture_url:
             temp_folder = self.getSite().temp_folder
-            picture_id = upload_picture_url.split('/')[-1]
+            picture_id = unquote(upload_picture_url.split('/')[-1])
             ambassador_species_picture = getattr(temp_folder, picture_id)
         else:
             ambassador_species_picture = None

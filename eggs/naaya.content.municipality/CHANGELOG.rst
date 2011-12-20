@@ -1,5 +1,6 @@
 1.2.7 (unreleased)
 ------------------
+* fix AttributeError when spaces in picture file name [andredor]
 
 1.2.6 (2011-12-19)
 ------------------
