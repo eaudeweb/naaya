@@ -1,4 +1,7 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
+------------------
+
+1.1.5 (2011-12-20)
 ------------------
 * pagination and performance improvements for admin_contacts page [andredor]
 
