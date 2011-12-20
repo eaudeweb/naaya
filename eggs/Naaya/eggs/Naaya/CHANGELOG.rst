@@ -1,4 +1,7 @@
-2.12.40 (unreleased)
+2.12.41 (unreleased)
+--------------------
+
+2.12.40 (2011-12-20)
 --------------------
 * bugfix: glossary widget js now works on IE [simiamih]
 
