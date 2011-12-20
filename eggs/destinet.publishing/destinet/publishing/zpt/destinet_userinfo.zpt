@@ -22,11 +22,8 @@
         <span tal:condition="news"
               tal:content="python:'(%d items - click to open)'%len(news)"></span>
     </h3>
-    <div class="items" tal:condition="news">
-        <p tal:repeat="news_item news">
-            <a tal:attributes="href news_item/absolute_url"
-               tal:content="news_item/title_or_id"></a>
-        </p>
+    <div class="items" tal:condition="news" tal:define="items news">
+        <metal:block use-macro="template/macros/item_macro" />
     </div>
     <p tal:condition="not:news">
         No items posted under News so far.
@@ -38,11 +35,8 @@
         <span tal:condition="events"
               tal:content="python:'(%d items - click to open)'%len(events)"></span>
     </h3>
-    <div class="items" tal:condition="events">
-        <p tal:repeat="event events">
-            <a tal:attributes="href event/absolute_url"
-               tal:content="event/title_or_id"></a>
-        </p>
+    <div class="items" tal:condition="events" tal:define="items events">
+        <metal:block use-macro="template/macros/item_macro" />
     </div>
     <p tal:condition="not:events">
         No items posted under Events so far.
@@ -54,11 +48,8 @@
         <span tal:condition="topics"
               tal:content="python:'(%d items - click to open)'%len(topics)"></span>
     </h3>
-    <div class="items" tal:condition="topics">
-        <p tal:repeat="topic topics">
-            <a tal:attributes="href topic/absolute_url"
-               tal:content="topic/title_or_id"></a>
-        </p>
+    <div class="items" tal:condition="topics" tal:define="items topics">
+        <metal:block use-macro="template/macros/item_macro" />
     </div>
     <p tal:condition="not:topics">
         No items posted under Topics so far.
@@ -70,30 +61,37 @@
         <span tal:condition="resources"
               tal:content="python:'(%d items - click to open)'%len(resources)"></span>
     </h3>
-    <div class="items" tal:condition="resources">
-        <p tal:repeat="resource resources">
-            <a tal:attributes="href resource/absolute_url"
-               tal:content="resource/title_or_id"></a>
-        </p>
+    <div class="items" tal:condition="resources" tal:define="items resources">
+        <metal:block use-macro="template/macros/item_macro" />
     </div>
     <p tal:condition="not:resources">
         No items posted under Resources so far.
     </p>
 </div>
 
-
-<div class="userinfo_item" tal:condition="forums">
+<div class="userinfo_item">
     <h3 tal:attributes="class python:test(forums, 'close', 'open')">My Forums
         <span tal:condition="forums"
               tal:content="python:'(%d items - click to open)'%len(forums)"></span>
     </h3>
-    <div class="items">
-        <p tal:repeat="forum forums">
-            <a tal:attributes="href forum/absolute_url"
-               tal:content="forum/title_or_id"></a>
-        </p>
+    <div class="items" tal:condition="forums" tal:define="items forums">
+        <metal:block use-macro="template/macros/item_macro" />
     </div>
 </div>
+
+<div class="userinfo_item">
+    <h3 tal:attributes="class python:test(contacts, 'close', 'open')">My Contacts
+        <span tal:condition="contacts"
+              tal:content="python:'(%d items - click to open)'%len(contacts)"></span>
+    </h3>
+    <div class="items" tal:condition="contacts" tal:define="items contacts">
+        <metal:block use-macro="template/macros/item_macro" />
+    </div>
+    <p tal:condition="not:contacts">
+        No Contacts posted so far.
+    </p>
+</div>
+
 
 <script type="text/javascript" src="++resource++destinet.publishing/destinet.publishing.js"></script>
 <style type="text/css">
@@ -127,4 +125,42 @@
     font-weight: normal;
     font-size: 11px;
 }
+.date_label{
+    background-color: #E6EDEF;
+    padding: 2px;
+    display: inline-block;
+    color: #898989;
+    margin-right: 8px;
+}
+.more_link{
+text-align: right;
+}
+div.more_list div.more_list_item{
+    display: none;
+}
 </style>
+
+
+<tal:block condition="nothing">
+<metal:block define-macro="item_macro">
+    <div tal:repeat="item python:items[:30]">
+        <div tal:content="python:item.releasedate.strftime('%d %b \'%y')"
+              class="date_label" />
+        <a tal:attributes="href item/absolute_url"
+                    tal:content="item/title_or_id"></a>
+    </div>
+    <div class="more_list" tal:condition="python:len(items)>30">
+        <div class="more_list_item" tal:repeat="item python:items[30:]">
+            <div tal:content="python:item.releasedate.strftime('%d %b \'%y')"
+                  class="date_label" />
+            <a tal:attributes="href item/absolute_url"
+                        tal:content="item/title_or_id"></a>
+        </div>
+        <div class="more_link">
+            <strong tal:content="python:'%d items'%(len(items)-30)" />
+            not displayed - 
+            <a href="javascript:void(0);">Show them</a>
+        </div>
+    </div>
+</metal:block>
+</tal:block>
