@@ -44,6 +44,17 @@
 					$('#municipality').autocomplete(data.split("splitter"), {mustMatch:true});
 				});
 			}
+			$("#dialog-picture-resize").dialog({
+				autoOpen: false,
+				modal: true,
+				resizable: false,
+				width: 500,
+				buttons: {
+					"Ok": function () {
+							$(this).dialog("close");
+						}
+				}
+			});
 			setInterval(function() {
 				var new_province = province.val();
 				if(new_province == current_province) return;
@@ -89,6 +100,10 @@
 					y = result[2];
 					x2 = result[3];
 					y2 = result[4];
+					resized = $.trim(result[5]);
+					if (resized === 'True') {
+						$('#dialog-picture-resize').dialog('open');
+					}
 					window.clearInterval(interval);
 					this.enable();
 					var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
@@ -163,6 +178,13 @@
 				<textarea id="ambassador_species_description" rows="10" cols="50"
 						name="ambassador_species_description:utf8:ustring"
 						tal:content="request/SESSION/ambassador_species_description|nothing"></textarea>
+			</div>
+			<div id="dialog-picture-resize" class="hidden"
+				title="Uploaded image was resized"
+				i18n:attributes="title" i18n:translate="">
+				The uploaded image was automatically resized to a maximum of 400
+				pixels (for the highest of the two dimensions) in order to better fit the
+				species view.
 			</div>
 			<div class="field">
 				<span class="buttons">
