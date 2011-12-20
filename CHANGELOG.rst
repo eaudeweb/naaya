@@ -1,4 +1,7 @@
-1.2.7 (unreleased)
+1.2.8 (unreleased)
+------------------
+
+1.2.7 (2011-12-20)
 ------------------
 * automatic image resize for large images [andredor]
 * fix AttributeError when spaces in picture file name [andredor]
