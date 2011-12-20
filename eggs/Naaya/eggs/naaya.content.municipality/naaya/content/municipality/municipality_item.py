@@ -518,21 +518,53 @@ class FileUpload(Implicit, Item):
         """ """
         temp_folder = self.getSite().temp_folder
         file = REQUEST.form.get('upload_file', None)
-        image_size = get_image_size(file)
-        if file is None or not image_size:
+        if file is None:
             return None
-        x = image_size[0]
-        y = image_size[1]
+
+        try:
+            image = Image.open(file)
+        except: # Python Imaging Library doesn't recognize it as an image
+            return None
+
+        x, y = image.size
         filename = file.filename
+
+        image_format = image.format
+        if not image_format:
+            _, ext = os.path.splitext(filename)
+            image_format = ext
+        # can't leave empty because image.save will crash
+        if not image_format:
+            image_format = 'JPEG'
+
+        MAX_SIZE = 400
+        if x >= MAX_SIZE and x >= y:
+            x, y = MAX_SIZE, y * MAX_SIZE / x
+            resize = True
+        elif y >= MAX_SIZE and y >= x:
+            x, y = x * MAX_SIZE / y, MAX_SIZE
+            resize = True
+        else:
+            resize = False
+        if resize:
+            try:
+                image = image.resize((x, y), Image.ANTIALIAS)
+            except AttributeError:
+                image = image.resize((x, y))
+
+        image_io = StringIO()
+        image.save(image_io, image_format, quality=85)
+
         id = make_id(temp_folder, id=filename)
-        manage_addImage(temp_folder, id, file=file)
+        manage_addImage(temp_folder, id, file=image_io.getvalue())
         ob = getattr(temp_folder, id)
         ob.filename = filename
         ob.p_changed = 1
+
         if x > y:
-            return (ob.absolute_url(), (x-y)/2, 0, y + (x-y)/2, y)
+            return (ob.absolute_url(), (x-y)/2, 0, y + (x-y)/2, y, resize)
         else:
-            return (ob.absolute_url(), 0, (y-x)/2, x, x + (y-x)/2)
+            return (ob.absolute_url(), 0, (y-x)/2, x, x + (y-x)/2, resize)
 
 InitializeClass(FileUpload)
 
