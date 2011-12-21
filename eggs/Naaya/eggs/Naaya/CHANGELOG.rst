@@ -1,5 +1,6 @@
 2.12.41 (unreleased)
 --------------------
+* added missing gif loader from jquery-ui [simiamih]
 
 2.12.40 (2011-12-20)
 --------------------
