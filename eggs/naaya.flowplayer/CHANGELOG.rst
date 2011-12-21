@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2011-12-21)
 ------------------
 * disable compression for .swf files - second try [andredor]
 
