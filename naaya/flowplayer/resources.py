@@ -20,13 +20,13 @@ class FlowPlayerBase(BrowserView):
 class FlowPlayer(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/flowplayer-3.2.7.swf'
 
 class FlowPlayerJs(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/flowplayer-3.2.6.min.js'
+        return '/++resource++flowplayer/flowplayer-3.2.6.js'
 
 class ConfigJs(FlowPlayerBase):
     @property
@@ -36,31 +36,31 @@ class ConfigJs(FlowPlayerBase):
 class ControlsPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/plugins/controls/flowplayer.controls-3.2.3.swf'
 
 class ControlsTubePlugin(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/plugins/controls/flowplayer.controls-tube-3.1.4.swf'
 
 class CaptionPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/plugins/caption/flowplayer.captions-3.2.3.swf'
 
 class ContentPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/plugins/content/flowplayer.content-3.2.0.swf'
 
 class AudioPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        self.REQUEST.RESPONSE.enableHTTPCompression(disable=True)
+        self.request.response.enableHTTPCompression(disable=True)
         return '/++resource++flowplayer/plugins/audio/flowplayer.audio-3.2.2.swf'
 
 class SubRip(BrowserView):
