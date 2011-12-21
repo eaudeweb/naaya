@@ -529,7 +529,6 @@ function Player(wrapper, params, conf) {
 		},
 		
 		load: function(fn) { 
-                  if (console) console.log('kk');
 			if (!self.isLoaded() && self._fireEvent("onBeforeLoad") !== false) {
 				var onPlayersUnloaded = function() {
 					html = wrapper.innerHTML;				
@@ -552,7 +551,6 @@ function Player(wrapper, params, conf) {
 				
 				// unload all instances
 				var unloadedPlayersNb = 0;
-                  if (console) console.log('pp');
 				each(players, function()  {
 					this.unload(function(wasUnloaded) {
 						if ( ++unloadedPlayersNb == players.length ) {
@@ -1122,7 +1120,6 @@ function Iterator(arr) {
 
 // these two variables are the only global variables
 window.flowplayer = window.$f = function() {
-    if (console) console.log('flowplayer start' + JSON.stringify(arguments));
 	var instance = null;
 	var arg = arguments[0];	
 	
