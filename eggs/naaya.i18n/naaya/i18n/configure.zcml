@@ -2,6 +2,7 @@
            xmlns:zope="http://namespaces.zope.org/zope"
            xmlns:five="http://namespaces.zope.org/five"
            xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
            >
 
    <five:registerPackage package="." initialize=".initialize" />
@@ -22,16 +23,18 @@
       name="default"
       />
 
-   <naaya:utility
-      name="LocalizerToNaayaI18n.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.LocalizerToNaayaI18n"
-      permission="zope2.ViewManagementScreens" />
+   <configure zcml:condition="installed Products.naayaUpdater">
+      <naaya:utility
+         name="LocalizerToNaayaI18n.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.LocalizerToNaayaI18n"
+         permission="zope2.ViewManagementScreens" />
 
-   <naaya:utility
-      name="RemoveEmptyLangsOrTrans.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.RemoveEmptyLangsOrTrans"
-      permission="zope2.ViewManagementScreens" />
+      <naaya:utility
+         name="RemoveEmptyLangsOrTrans.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.RemoveEmptyLangsOrTrans"
+         permission="zope2.ViewManagementScreens" />
+   </configure>
 
 </configure>
