@@ -77,6 +77,9 @@
     <div class="items" tal:condition="forums" tal:define="items forums">
         <metal:block use-macro="template/macros/item_macro" />
     </div>
+    <p tal:condition="not:resources">
+        No items posted in Forums.
+    </p>
 </div>
 
 <div class="userinfo_item">
