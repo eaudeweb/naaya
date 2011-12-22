@@ -43,7 +43,7 @@ Example:
 	<textarea
 		onfocus="javascript:displayToolTips('subtitle_tips', 'block')"
 		onblur="javascript:displayToolTips('subtitle_tips', 'none')"
-		id="subtitle" name="subtitle" rows="15" cols="70"
+		id="subtitle" name="subtitle:utf8:ustring" rows="15" cols="70"
 		tal:content="python:here.getSession('subtitle', here.getVersionLocalProperty('subtitle', curr_lang))"></textarea>
 	<label for="subtitle_file"><span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span></label>
 	<input type="file" onchange="javascript:check_srt(this);" size="50" name="subtitle_file" id="subtitle_file" value=""/>
