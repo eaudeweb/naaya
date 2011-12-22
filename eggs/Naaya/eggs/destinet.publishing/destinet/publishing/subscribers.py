@@ -9,6 +9,8 @@ from naaya.content.url.url_item import NyURL
 from naaya.content.file.file_item import NyFile_extfile
 from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
 from Products.NaayaContent.NyPublication.NyPublication import NyPublication
+from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
+from Products.NaayaCore.managers.utils import slugify
 
 def get_countries(ob):
     """
@@ -30,6 +32,26 @@ def get_countries(ob):
             for brain in bz:
                 ret.append(brain.getObject())
     return ret
+
+def get_category_location(ob):
+    """
+    Based on geo_type (Category) value, returns the corresponding location
+    in market-place/who-who, None if not found
+
+    """
+    geo_type = getattr(ob, 'geo_type', False)
+    if not geo_type:
+        return None
+    widget = GeoTypeWidget('').__of__(ob)
+    title = widget.convert_to_user_string(geo_type).replace('&', 'and')
+    slug = slugify(title, removelist=[])
+    site = ob.getSite()
+    if slug in site['market-place'].objectIds('Naaya Folder'):
+        return site['market-place'][slug]
+    elif slug in site['who-who'].objectIds('Naaya Folder'):
+        return site['who-who'][slug]
+    else:
+        return None
 
 def place_pointers(ob, exclude=[]):
     """ Ads pointers to ob in target_groups, topics and countries """
