@@ -27,6 +27,7 @@ from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.core.utils import force_to_unicode
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -524,7 +525,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         if _subtitle_file:
-            _subtitle = _subtitle_file.read()
+            _subtitle = force_to_unicode(_subtitle_file.read())
         self._setLocalPropValue('subtitle', _lang, _subtitle)
         if _delete_startup_image:
             self.startup_image = None
