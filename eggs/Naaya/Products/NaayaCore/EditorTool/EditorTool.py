@@ -45,6 +45,7 @@ def loadConfig(section='tinymce'):
                 'relative_urls',
                 'convert_urls',
                 'paste_use_dialog',
+                'verify_html',
                 'theme_advanced_resizing']
     ret = {}
     config = ConfigParser()
