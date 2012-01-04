@@ -33,7 +33,7 @@
   <form method="post" tal:attributes="action python:test(ob_data[0]=='add', '%s/admin_addlocalchannel' % site_url, '%s/admin_editlocalchannel' % site_url)">
   <div class="field">
     <label for="title" i18n:translate="">Title</label>
-    <input type="text" name="title" size="50" tal:attributes="value python:ob_data[2]" />
+    <input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob_data[2]" />
   </div>
   <div class="field">
     <label for="description" i18n:translate="">Description</label>
