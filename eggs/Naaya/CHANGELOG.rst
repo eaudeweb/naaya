@@ -1,5 +1,6 @@
 2.12.41 (unreleased)
 --------------------
+* The title of local channels is now utf8:ustring [dumitval]
 * verify_html turned off for TinyMCE [andredor]
 * fix non-ascii characters in subtitles [andredor]
 * added missing gif loader from jquery-ui [simiamih]
