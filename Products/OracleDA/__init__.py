@@ -17,7 +17,7 @@
 # Cornel Nitu, Finsiel Romania
 import os
 from OracleConnector import OracleConnector, manage_addOracleConnectorForm, manage_addOracleConnector
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 
 
 
