@@ -29,7 +29,7 @@ except ImportError:
                         ' http://www.ikaaro.org/localizer')
 
 # Import from Zope
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
 import ZClasses
 from Products.PageTemplates.GlobalTranslationService import \
