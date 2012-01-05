@@ -317,7 +317,8 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyContact(self.restrictedTraverse('who-who'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            REQUEST.RESPONSE.redirect(response.absolute_url())
+            #REQUEST.RESPONSE.redirect(response.absolute_url())
+            pass # Contacts are now redirected from post-add event
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
 
@@ -343,7 +344,8 @@ class DestinetPublisher(SimpleItem):
         response = original_addNyContact(self.restrictedTraverse('market-place'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            REQUEST.RESPONSE.redirect(response.absolute_url())
+            #REQUEST.RESPONSE.redirect(response.absolute_url())
+            pass # Contacts are now redirected from post-add event
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
 

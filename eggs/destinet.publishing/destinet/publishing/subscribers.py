@@ -10,7 +10,7 @@ from naaya.content.file.file_item import NyFile_extfile
 from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
 from Products.NaayaContent.NyPublication.NyPublication import NyPublication
 from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
-from Products.NaayaCore.managers.utils import slugify
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 
 def get_countries(ob):
     """
@@ -52,6 +52,24 @@ def get_category_location(ob):
         return site['who-who'][slug]
     else:
         return None
+
+def move_contact_by_category(obj):
+    """
+    Using get_category_location performs the actual move of the NyContact
+    Returns a tuple consiting of (object, is_new). is_new is True
+    if move action was required and performed (object changed location)
+
+    """
+    new_location = get_category_location(obj)
+    if new_location is not None:
+        if new_location != obj.aq_parent:
+            obj.aq_parent._delObject(obj.getId())
+            new_id = uniqueId(obj.getId(),
+                         lambda c: new_location._getOb(c, None) is not None)
+            obj.id = new_id
+            new_location._setObject(new_id, obj)
+            return (new_location._getOb(new_id), True)
+    return (obj, False)
 
 def place_pointers(ob, exclude=[]):
     """ Ads pointers to ob in target_groups, topics and countries """
@@ -123,11 +141,11 @@ def _qualifies_for_topics_only(obj):
     who_who = getattr(site, 'who-who')
     return (
           (isinstance(obj, NyContact)
-            and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who)))
+           # and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who))
+           )
         or
           (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
         )
-
 
 def handle_add_content(event):
     """
@@ -138,6 +156,11 @@ def handle_add_content(event):
     site = obj.getSite()
     if not getattr(site, 'destinet.publisher', False):
         return None
+    # Step 1 - Change location for NyContact depending on geo_type
+    if isinstance(obj, NyContact):
+        (obj, moved) = move_contact_by_category(obj)
+        obj.REQUEST.RESPONSE.redirect(obj.absolute_url())
+    # Step 2 - Add pointers
     if _qualifies_for_both(obj):
         place_pointers(obj)
     elif _qualifies_for_topics_only(obj):
@@ -155,7 +178,7 @@ def handle_edit_content(event):
     q_both = _qualifies_for_both(obj)
     q_topics = _qualifies_for_topics_only(obj)
     if q_topics or q_both:
-        # clean-up all existing pointer, then re-add them
+        # clean-up all existing pointers, then re-add them
         cat = site.getCatalogTool()
         pointers = cat.search({'meta_type': 'Naaya Pointer',
                                'path': [ofs_path(site.countries),
@@ -169,3 +192,26 @@ def handle_edit_content(event):
             place_pointers(obj)
         else:
             place_pointers(obj, exclude=['target-groups'])
+
+def handle_del_content(obj, event):
+    """
+    Test whether this required adding pointers and perform the cleanup of
+    pointers.
+
+    """
+    site = obj.getSite()
+    if not getattr(site, 'destinet.publisher', False):
+        return None
+    q_both = _qualifies_for_both(obj)
+    q_topics = _qualifies_for_topics_only(obj)
+    if q_topics or q_both:
+        # clean-up all existing pointers
+        cat = site.getCatalogTool()
+        pointers = cat.search({'meta_type': 'Naaya Pointer',
+                               'path': [ofs_path(site.countries),
+                                        ofs_path(site.topics),
+                                        ofs_path(getattr(site, 'who-who'))],
+                               'pointer': path_in_site(obj)})
+        for brain in pointers:
+            pointer = brain.getObject()
+            pointer.aq_parent._delObject(pointer.id)
