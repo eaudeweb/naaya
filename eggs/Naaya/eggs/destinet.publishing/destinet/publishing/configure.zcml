@@ -18,7 +18,7 @@
       component=".updates.update_rebuild_pointers.RebuildPointers"
       permission="zope2.ViewManagementScreens" />
 
-   <naaya:call factory=".patches.nycontenttype_object_submitted_message" />
+   <naaya:call factory=".patches.patch_addNyContact" />
 
    <browser:resourceDirectory
         name="destinet.publishing"
