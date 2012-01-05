@@ -1,4 +1,4 @@
-<configure xmlns:naaya="http://namespaces.zope.org/zope"
+<configure xmlns:naaya="http://namespaces.zope.org/naaya"
            xmlns:zope="http://namespaces.zope.org/zope"
            xmlns:five="http://namespaces.zope.org/five"
            xmlns:browser="http://namespaces.zope.org/browser"
@@ -6,17 +6,19 @@
 
    <five:registerPackage package="." initialize=".initialize" />
 
-   <naaya:utility
+   <zope:utility
       name="CountriesFoldersFromGlossary.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_create_countries.CountriesFoldersFromGlossary"
       permission="zope2.ViewManagementScreens" />
 
-   <naaya:utility
+   <zope:utility
       name="RebuildPointers.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_rebuild_pointers.RebuildPointers"
       permission="zope2.ViewManagementScreens" />
+
+   <naaya:call factory=".patches.nycontenttype_object_submitted_message" />
 
    <browser:resourceDirectory
         name="destinet.publishing"
@@ -32,6 +34,12 @@
    <zope:subscriber
         for="naaya.content.base.interfaces.INyContentObjectEditEvent"
         handler=".subscribers.handle_edit_content"
+        />
+
+   <zope:subscriber
+        for="naaya.content.base.interfaces.INyContentObject
+             zope.app.container.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.handle_del_content"
         />
 
 </configure>
