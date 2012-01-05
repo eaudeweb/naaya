@@ -1,6 +1,9 @@
-2.12.42 (unreleased)
+2.12.43 (unreleased)
 --------------------
-* replace_illegal_xml for stripping xml-illegal characters [dumitval]
+
+2.12.42 (2012-01-05)
+--------------------
+* UnicodeDecodeError in portal portlets [nituacor]
 
 2.12.41 (2012-01-04)
 --------------------
