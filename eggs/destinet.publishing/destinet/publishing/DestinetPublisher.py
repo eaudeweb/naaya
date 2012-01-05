@@ -15,7 +15,7 @@ from naaya.content.event.event_item import addNyEvent as original_addNyEvent
 from naaya.content.news.news_item import news_add_html, NyNews
 from naaya.content.news.news_item import addNyNews as original_addNyNews
 from naaya.content.contact.contact_item import NyContact
-from naaya.content.contact.contact_item import addNyContact as original_addNyContact
+from naaya.content.contact import contact_item
 from naaya.content.url.url_item import NyURL, url_add_html
 from naaya.content.url.url_item import addNyURL as original_addNyURL
 from naaya.content.file.file_item import NyFile_extfile, file_add_html
@@ -314,10 +314,10 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
             return
 
-        response = original_addNyContact(self.restrictedTraverse('who-who'),
+        response = contact_item.addNyContact(self.restrictedTraverse('who-who'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            #REQUEST.RESPONSE.redirect(response.absolute_url())
+            REQUEST.RESPONSE.redirect(response.absolute_url())
             pass # Contacts are now redirected from post-add event
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
@@ -341,10 +341,10 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
             return
 
-        response = original_addNyContact(self.restrictedTraverse('market-place'),
+        response = contact_item.addNyContact(self.restrictedTraverse('market-place'),
                                          '', REQUEST)
         if isinstance(response, NyContact):
-            #REQUEST.RESPONSE.redirect(response.absolute_url())
+            REQUEST.RESPONSE.redirect(response.absolute_url())
             pass # Contacts are now redirected from post-add event
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/market_place_contact' % self.absolute_url())
