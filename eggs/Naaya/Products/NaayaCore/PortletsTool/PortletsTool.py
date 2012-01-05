@@ -25,6 +25,7 @@ from LinksList import manage_addLinksListForm, manage_addLinksList
 from RefList import manage_addRefListForm, manage_addRefList
 from RefTree import manage_addRefTreeForm, manage_addRefTree
 from naaya.core.zope2util import folder_manage_main_plus
+from naaya.core.utils import force_to_unicode
 
 from interfaces import INyPortlet
 
@@ -489,7 +490,7 @@ class PortletsTool(Folder, utils):
                 output.append(LegacyPortletWrapper(portlet, portlet_id))
                 names.add(portlet_id)
 
-        output.sort(key=lambda portlet: portlet.title_or_id().lower())
+        output.sort(key=lambda portlet: force_to_unicode(portlet.title_or_id().lower()))
         return output
 
     def sort_portlets(self, REQUEST, portlet_order):
