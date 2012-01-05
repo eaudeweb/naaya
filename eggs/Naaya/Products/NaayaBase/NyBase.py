@@ -11,6 +11,7 @@ from zope.event import notify
 from naaya.content.base.events import (NyContentObjectApproveEvent,
                                        NyContentObjectUnapproveEvent)
 
+from naaya.core.utils import replace_illegal_xml
 from NyCheckControl import NyCheckControl
 from NyDublinCore import NyDublinCore
 from Products.NaayaCore.managers.utils import get_nsmap
@@ -357,21 +358,21 @@ def rss_item_for_object(obj,lang):
     E = ElementMaker(None, nsmap=nsmap)
     xml = E.item(
         {'{%s}about'%rdf_namespace : obj.absolute_url()},
-        E.link(obj.absolute_url()),
-        E.title(obj.non_empty_title(lang)),
-        E.description(obj.getLocalProperty('description', lang)),
-        Dc.title(obj.non_empty_title(lang)),
-        Dc.identifier(obj.identifier()),
+        E.link(replace_illegal_xml(obj.absolute_url())),
+        E.title(replace_illegal_xml(obj.non_empty_title(lang))),
+        E.description(replace_illegal_xml(obj.getLocalProperty('description', lang))),
+        Dc.title(replace_illegal_xml(obj.non_empty_title(lang))),
+        Dc.identifier(replace_illegal_xml(obj.identifier())),
         Dc.date(obj.utShowFullDateTimeHTML(obj.releasedate)),
-        Dc.description(obj.getLocalProperty('description', lang)),
-        Dc.contributor(obj.contributor),
+        Dc.description(replace_illegal_xml(obj.getLocalProperty('description', lang))),
+        Dc.contributor(replace_illegal_xml(obj.contributor)),
         Dc.language(lang)
         )
     for k in obj.getLocalProperty('coverage', lang).split(','):
-        xml.append(Dc.coverage(k.strip()))
+        xml.append(Dc.coverage(replace_illegal_xml(k.strip())))
     for k in obj.getLocalProperty('keywords', lang).split(','):
-        xml.append(Dc.subject(k.strip()))
-    xml.append(Dc.rights(obj.rights))
+        xml.append(Dc.subject(replace_illegal_xml(k.strip())))
+    xml.append(Dc.rights(replace_illegal_xml(obj.rights)))
     return xml
 
 rdf_ns_map = {

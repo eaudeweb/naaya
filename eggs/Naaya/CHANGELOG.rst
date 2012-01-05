@@ -1,5 +1,6 @@
 2.12.42 (unreleased)
 --------------------
+* replace_illegal_xml for stripping xml-illegal characters [dumitval]
 
 2.12.41 (2012-01-04)
 --------------------
