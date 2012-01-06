@@ -1,4 +1,7 @@
-2.12.43 (unreleased)
+2.12.44 (unreleased)
+--------------------
+
+2.12.43 (2012-01-06)
 --------------------
 * template fixes for admin views topcontent and network [simiamih]
 
