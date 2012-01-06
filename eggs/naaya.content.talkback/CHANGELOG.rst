@@ -1,5 +1,6 @@
 1.4.5 (unreleased)
 ------------------
+* Bugfix for editing a comment [dumitval]
 
 1.4.4 (2011-11-14)
 ------------------
