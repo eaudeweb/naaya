@@ -1,4 +1,7 @@
-1.4.5 (unreleased)
+1.4.6 (Unreleased)
+------------------
+
+1.4.5 (2012-01-06)
 ------------------
 * Bugfix for editing a comment [dumitval]
 
