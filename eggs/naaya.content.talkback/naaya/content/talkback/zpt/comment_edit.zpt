@@ -1,6 +1,6 @@
 <tal:block define="
     embedded python:request.get('embedded', 'off') == 'on';
-    back_url python:here.absolute_url() + test(embedded, '/embedded_html', '');
+    back_url python:test(embedded, here.absolute_url() + '/embedded_html', here.aq_parent.absolute_url());
     page_macro python:test(embedded, template.macros['embedded-page'],
                                      template.macros['page']);"
 ><metal:block use-macro="page_macro"><metal:block fill-slot="page-content">
