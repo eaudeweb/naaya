@@ -14,6 +14,10 @@ except ImportError:
 from lxml import etree
 import codecs
 import re
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 # Empty header information for PO files (UTF-8 is the default encoding)
 empty_po_header = {'last_translator_name': '',
@@ -291,3 +295,68 @@ class TranslationsImportExport(object):
                                self.backslash_unescape(msgid).decode(encoding),
                                lang,
                                self.backslash_unescape(msgstr).decode(encoding))
+
+    def spreadsheet_export(self, lang, dialect, encoding='utf-8'):
+        """ Exports the content of the message catalog to a spreadsheet format """
+        from Products.NaayaCore.managers.utils import spreadsheet_file
+        if dialect == 'excel':
+            ct, ext = 'text/comma-separated-values', 'csv'
+        else:
+            ct, ext = 'text/tab-separated-values', 'txt'
+
+        translations = {}
+        orglang = self._catalog._default_language
+        for msgkey, transunit in self._catalog.messages():
+            if isinstance(msgkey, unicode):
+                msgkey = msgkey.encode(encoding)
+            try:
+                translations[msgkey] = transunit[lang]
+            except KeyError:
+                translations[msgkey] = ""
+
+        #sort translations
+        tkeys = translations.keys()
+        tkeys.sort()
+
+        #build headers
+        output = [('source', 'target')]
+        output_app = output.append  #optimisations
+
+        #build content
+        for msgkey in tkeys:
+            translation = translations[msgkey]
+            if isinstance(msgkey, unicode):
+                msgkey = msgkey.encode(encoding)
+            else:
+                msgkey = unicode(msgkey, 'utf-8').encode(encoding)
+            if isinstance(translation, unicode):
+                translation = translation.encode(encoding)
+            else:
+                translation = unicode(translation, 'utf-8').encode(encoding)
+
+            output_app((msgkey, translation))
+
+        #generate a temporary file on the filesystem that will be used to return the actual output
+        tmp_name = spreadsheet_file(output, dialect)
+
+        #return spreadsheet file
+        content = open(str(tmp_name)).read()
+        headers = [('Content-Type', '%s;charset=%s' % (ct, encoding)),
+                   ('Content-Disposition', 'attachment; filename=%s' % '%s-%s.%s' % (orglang, lang, ext))]
+        return (headers, content)
+
+    def spreadsheet_import(self, file, lang, dialect, encoding='utf-8'):
+        """Imports translations from a spreadsheet format into the message catalog."""
+        from Products.NaayaCore.managers.import_export import CSVReader
+        # read translations from spreadsheet file
+        translations = CSVReader(file, dialect, encoding)
+        translations = translations.read()[0] #result.read() is ([{id, source, target}], '')
+
+        # iterate translations
+        for translation in translations:
+            #import only translated messages
+            if translation['target'] != '':
+                self._catalog.edit_message(
+                           translation['source'].decode(encoding),
+                           lang,
+                           translation['target'].decode(encoding))
