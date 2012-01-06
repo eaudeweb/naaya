@@ -1,4 +1,7 @@
-1.0.9 (unreleased)
+1.0.10 (unreleased)
+------------------
+
+1.0.9 (2012-01-06)
 ------------------
 * spreadsheet_import/export works [simiamih]
 
