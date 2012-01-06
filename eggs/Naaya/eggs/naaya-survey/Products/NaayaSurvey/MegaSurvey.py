@@ -115,6 +115,13 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
         self.approved = 1
 
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current folder.
+
+        """
+        return self.checkPermission(view)
+
     def all_meta_types(self, interfaces=None):
         """What can you put inside me?"""
         return BaseSurveyTemplate.all_meta_types(self, interfaces)

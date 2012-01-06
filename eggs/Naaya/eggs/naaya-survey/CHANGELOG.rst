@@ -1,5 +1,6 @@
 1.2.14 (unreleased)
 ===================
+* added can_be_seen for MegaSurvey [simiamih]
 
 1.2.13 (2011-12-09)
 ===================
