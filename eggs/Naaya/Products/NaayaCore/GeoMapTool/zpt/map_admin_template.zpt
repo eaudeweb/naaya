@@ -24,6 +24,8 @@
 	</ul>
 </div>
 
+<div class="cleaner">&nbsp;</div>
+
 <metal:block define-slot="tab_contents" />
 
 </tal:block>

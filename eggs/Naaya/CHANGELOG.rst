@@ -1,5 +1,6 @@
 2.12.43 (unreleased)
 --------------------
+* template fixes for admin views topcontent and network [simiamih]
 
 2.12.42 (2012-01-05)
 --------------------
