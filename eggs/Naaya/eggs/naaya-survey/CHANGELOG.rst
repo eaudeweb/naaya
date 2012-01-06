@@ -1,4 +1,7 @@
-1.2.15 (unreleased)
+1.2.16 (unreleased)
+===================
+
+1.2.15 (2012-01-06)
 ===================
 * check_item_title is now item_has_title [simiamih]
 
