@@ -601,4 +601,35 @@ class NaayaI18n(SimpleItem):
                 self.getSite().setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'spreadsheet_export')
+    def spreadsheet_export(self, target_lang, dialect, REQUEST, RESPONSE):
+        """ """
+        cat = self.get_message_catalog()
+        export_tool = self.get_importexport_tool()
+        (headers, content) = export_tool.spreadsheet_export(target_lang, dialect)
+        for (header_key, header_value) in headers:
+            RESPONSE.setHeader(header_key, header_value)
+        return content
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'spreadsheet_import')
+    def spreadsheet_import(self, file, target_lang, dialect, REQUEST, RESPONSE):
+        """ """
+        if not file:
+            self.setSessionErrorsTrans('You must select a file to import.')
+            return RESPONSE.redirect('%s/admin_importexport_html' %
+                                     self.absolute_url())
+        cat = self.get_message_catalog()
+        export_tool = self.get_importexport_tool()
+        try:
+            export_tool.spreadsheet_import(file, target_lang, dialect)
+            self.setSessionInfoTrans('Translations successfully imported.')
+        except KeyError, e:
+            self.setSessionErrorsTrans('File format does not match selected format.')
+        except UnicodeDecodeError, e:
+            self.setSessionErrorsTrans('File needs to be utf-8 encoded.')
+        except Exception, e:
+            self.setSessionErrorsTrans('Error importing translations.')
+
+        return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
+
 InitializeClass(NaayaI18n)
