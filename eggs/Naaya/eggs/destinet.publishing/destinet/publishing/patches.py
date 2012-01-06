@@ -12,6 +12,7 @@ def patch_addNyContact():
 
         """
         site = self.getSite()
+        # kwargs need to be merged with *args, regardless of applying patch act.
         if contributor is not None:
             kwargs['contributor'] = contributor
         if id is not None:
@@ -21,8 +22,11 @@ def patch_addNyContact():
             kwargs['REQUEST'] = REQUEST
         else:
             schema_raw_data = kwargs
-        if not getattr(site, 'destinet.publisher', False):
+
+        if (not getattr(site, 'destinet.publisher', False)
+            or self != site['who-who']):
             return original(self, **kwargs)
+
         geo_type = schema_raw_data.get('geo_type', None)
         new_parent = get_category_location(site, geo_type)
         if not new_parent:
