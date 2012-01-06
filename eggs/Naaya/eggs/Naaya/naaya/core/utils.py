@@ -246,7 +246,4 @@ _illegal_ranges = ["%s-%s" % (unichr(low), unichr(high))
 _illegal_xml_re = re.compile(u'[%s]' % u''.join(_illegal_ranges))
 
 def replace_illegal_xml(text, replacement=''):
-    try:
-        return _illegal_xml_re.sub(replacement, text)
-    except:
-        import pdb;pdb.set_trace()
+    return _illegal_xml_re.sub(replacement, text)
