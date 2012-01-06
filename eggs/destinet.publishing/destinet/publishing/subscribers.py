@@ -36,7 +36,8 @@ def get_countries(ob):
 def get_category_location(site, geo_type):
     """
     Based on geo_type (Category) value, returns the corresponding location
-    in market-place/who-who, None if not found
+    in who-who, who-who/market-place, who-who/market-solutions
+    or None if not found
 
     """
     if not geo_type:
@@ -44,12 +45,14 @@ def get_category_location(site, geo_type):
     widget = GeoTypeWidget('').__of__(site)
     title = widget.convert_to_user_string(geo_type).replace('&', 'and')
     slug = slugify(title, removelist=[])
-    if slug in site['market-place'].objectIds('Naaya Folder'):
-        return site['market-place'][slug]
-    elif slug in site['who-who'].objectIds('Naaya Folder'):
-        return site['who-who'][slug]
-    else:
-        return None
+    who_who = site['who-who']
+    candidates = map(lambda x: (x, x.objectIds('Naaya Folder')),
+                [who_who, who_who['market-place'], who_who['market-solutions']])
+    for (candidate_parent, candidate_ids) in candidates:
+        if slug in candidate_ids:
+            return candidate_parent[slug]
+
+    return None
 
 def place_pointers(ob, exclude=[]):
     """ Ads pointers to ob in target_groups, topics and countries """
@@ -121,7 +124,7 @@ def _qualifies_for_topics_only(obj):
     who_who = getattr(site, 'who-who')
     return (
           (isinstance(obj, NyContact)
-           # and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who))
+           and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who))
            )
         or
           (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
