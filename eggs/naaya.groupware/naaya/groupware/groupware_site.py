@@ -16,6 +16,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from naaya.component import bundles
 from member_search import MemberSearch
 from interfaces import IGWSite
 from constants import METATYPE_GROUPWARESITE
@@ -37,6 +38,9 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
     return ob
+
+groupware_bundle = bundles.get("Groupware")
+groupware_bundle.set_parent(bundles.get("Naaya"))
 
 ACTION_LOG_TYPES={
     'role_request': 'IG role request',
@@ -63,6 +67,7 @@ class GroupwareSite(NySite):
         """ """
         NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
+        self.set_bundle(groupware_bundle)
         self.portal_is_archived = False # The semantics of this flag is that you can't request membership of the IG any longer.
 
     security.declarePrivate('loadDefaultData')
@@ -392,3 +397,9 @@ class GroupwareSite(NySite):
     member_search = MemberSearch(id='member_search')
 
 InitializeClass(GroupwareSite)
+
+def groupware_bundle_registration():
+    """ Register things from skel into the GROUPWARE bundle """
+    from Products.NaayaCore.FormsTool import bundlesupport
+    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
+    bundlesupport.register_templates_in_directory(templates_path, 'GROUPWARE')
