@@ -10,9 +10,8 @@
                     reverse_sort python:request.get('reverse_sort', 'False');
                     sort_by python:request.get('sort_by', '');">
     <h1 i18n:translate="">Interest Group member search</h1>
-    <p i18n:translate="">
-    Search for members of this Interest Group. Leave name blank to show all.
-    </p>
+    <p i18n:translate="">Search for members of this Interest Group.</p>
+    <p class="tip" i18n:translate="">The full members list can be very long, please type at least one letter to narrow the search results.</p>
     <form id="search_form" action="" method="get">
         <label for="search_string" i18n:translate="">
             Name contains</label>
@@ -50,6 +49,10 @@
         });
         function beforeSubmit() {
             search_string = $('#search_string').val();
+			if (!search_string) {
+				alert ('Please type at least one letter to narrow search results.');
+				return false;
+			}
             showWatingForResponse();
         }
         function processResponse(data) {
