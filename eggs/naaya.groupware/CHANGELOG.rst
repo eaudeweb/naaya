@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2012-01-09)
 ------------------
 * load groupware bundle [dumitval]
 * changed message on member search page [dumitval]
