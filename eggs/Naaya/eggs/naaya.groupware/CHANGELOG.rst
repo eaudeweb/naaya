@@ -1,5 +1,6 @@
 1.1.4 (unreleased)
 ------------------
+* load groupware bundle [dumitval]
 * changed message on member search page [dumitval]
 * filter display for User management search [andredor]
 * feature: naaya.groupware.profileoverview [simiamih]
