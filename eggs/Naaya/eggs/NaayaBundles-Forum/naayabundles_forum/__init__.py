@@ -1,4 +1,4 @@
-PARENT_BUNDLE = 'Forum'
+PARENT_BUNDLE = 'Groupware'
 BUNDLE_NAME_PREFIX = 'Forum-'
 
 def load_bundles():
