@@ -8,6 +8,7 @@ bundle_for_site_cls = {
     'NySite': 'Naaya',
     'CHMSite': 'CHM',
     'EnviroWindowsSite': 'EW',
+    'GroupwareSite': 'Groupware',
 }
 
 class MigrateToBundles(UpdateScript):
@@ -28,8 +29,7 @@ class MigrateToBundles(UpdateScript):
 
         bundle = portal.get_bundle()
         portal_cls_name = portal.__class__.__name__
-
-        if bundle is getGlobalSiteManager():
+        if bundle is getGlobalSiteManager() or bundle is bundles.get('Naaya'):
             bundle_name = bundle_for_site_cls.get(portal_cls_name, 'Naaya')
             bundle = bundles.get(bundle_name)
             portal.set_bundle(bundle)
