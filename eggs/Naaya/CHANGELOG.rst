@@ -1,5 +1,7 @@
 2.12.44 (unreleased)
 --------------------
+* updated bundle migration script for gruopware sites [dumitval]
+* replace_illegal_xml for stripping xml-illegal characters [dumitval]
 
 2.12.43 (2012-01-06)
 --------------------
