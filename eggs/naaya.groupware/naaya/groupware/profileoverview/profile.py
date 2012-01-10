@@ -126,7 +126,7 @@ class ProfileView(BrowserView):
             del ig_access['restricted']
 
         return self.index(ig_access=ig_access, roles=leaf_roles_list,
-                          subscriptions=notifications)
+                          subscriptions=notifications, user_id=user.getId())
 
 class DemoProfileView(BrowserView):
 
@@ -158,4 +158,4 @@ class DemoProfileView(BrowserView):
             del ig_access['restricted']
 
         return self.index(ig_access=ig_access, roles=leaf_roles_list,
-                          subscriptions=notifications)
+                          subscriptions=notifications, user_id='demo_user')
