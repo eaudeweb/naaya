@@ -12,7 +12,7 @@
           type="text/javascript" language="javascript"></script>
 
     <!--TODO: this is only for demo purposes-->
-    <h1>Profile Overview for demo_user</h1>
+    <h1>Profile Overview for <span tal:content="options/user_id" /></h1>
 
     <h2>Interest group membership</h2>
     <div id="id_access"  tal:condition="python:len(options['ig_access'])">
