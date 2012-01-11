@@ -103,7 +103,6 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
     def manage_options(self):
         """ """
         l_options = ()
-        l_options += info_item.manage_options
         l_options += ({'label': 'Properties', 'action': 'edit_html'},)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
