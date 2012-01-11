@@ -1,4 +1,7 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
+------------------
+
+1.1.6 (2012-01-11)
 ------------------
 * mailto links in portal administration/send mail section [dumitval]
 
