@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 ===================
+* removed .txt from manifest [dumitval]
 
 1.2.15 (2012-01-06)
 ===================
