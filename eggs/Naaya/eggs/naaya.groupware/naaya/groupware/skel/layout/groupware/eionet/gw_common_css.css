@@ -478,7 +478,7 @@ div.translate-top {
 	margin:1em;
 	padding:1em;
 	}
-.deletecomment {
+a.deletecomment, a.deletecomment:visited {
 	font-size: 90%;
 	float:right;
 	background-color:#EBEBEB;
@@ -492,12 +492,12 @@ div.translate-top {
 	border-right:1px solid #777777;
 	color:#666666;
 	text-decoration: none;
-	background-image: url(trash.gif);
+	background-image: url(misc_/Naaya/trash.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
 	margin-bottom: 0.5em;
 }
-.addcomment {
+a.addcomment, a.addcomment:visited {
 	font-size: 90%;
 	background-color:#EBEBEB;
 	padding-top: 3px;
@@ -515,7 +515,7 @@ div.translate-top {
 	background-position: left center;
 	margin-bottom: 0.5em;
 }
-.logincomment {
+a.logincomment, a.logincomment:visited {
 	font-size: 90%;
 	background-color:#EBEBEB;
 	padding-top: 3px;
