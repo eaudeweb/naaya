@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 ------------------
+* mailto links in portal administration/send mail section [dumitval]
 
 1.1.5 (2011-12-20)
 ------------------
