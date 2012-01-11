@@ -211,6 +211,12 @@ a.b_download {
 a.b_download:hover {
 	text-decoration: underline;
 }
+a.download_link {
+	background: url("misc_/Naaya/download.png") no-repeat scroll left center transparent;
+	float: right;
+	padding-left: 25px;
+	width: auto;
+}
 /* sub-objects listing */
 #folderfile_list th{
 	background-color: #eeeeee;
