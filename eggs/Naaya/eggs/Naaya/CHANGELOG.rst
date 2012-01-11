@@ -1,4 +1,7 @@
-2.12.45 (unreleased)
+2.12.46 (unreleased)
+--------------------
+
+2.12.45 (2012-01-11)
 --------------------
 * mailto links in in admin_bulk_email_html [dumitval]
 
