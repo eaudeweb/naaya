@@ -228,9 +228,7 @@ class NyInfoFolder(NyFolder):
             {'label': 'Properties', 'action': 'edit_html'},
         )
         +
-        NyFolder.manage_options[3:5]
-        +
-        NyFolder.manage_options[6:]
+        NyFolder.manage_options[3:]
         )
 
     def __init__(self, id, contributor):
