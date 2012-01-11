@@ -17,7 +17,12 @@
 # Alin Voinea
 
 #Python imports
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import os
+import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED, BadZipfile
 
@@ -42,6 +47,7 @@ from Products.NaayaBase.constants                   import *
 from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
+from naaya.core.utils import is_valid_email
 from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.import_export      import CSVReader
 from Products.Naaya.NyFolder import addNyFolder
@@ -50,6 +56,8 @@ from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
 from naaya.component import bundles
+
+log = logging.getLogger(__name__)
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
@@ -1043,6 +1051,30 @@ text-decoration: underline;
                                                   year,
                                                   month)
         self.REQUEST.RESPONSE.redirect(news_url)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getMailRecipients')
+    def getMailRecipients(self, location='', REQUEST=None):
+        """ """
+        search = self.getCatalogedObjectsCheckView
+        path = physical_path(self)
+        if location not in ('', '/'):
+            if not location.startswith('/'):
+                location = '/' + location
+            path += location
+        contacts = search(meta_type=['Naaya Contact'], path=path)
+        addresses = set()
+        for contact in contacts:
+            email_address = contact.email.replace(' ', '').replace('[at]', '@').replace('(at)', '@')
+            try:
+                email_address.encode()
+                #if is_valid_email(email_address):
+                addresses.add(email_address)
+                #else:
+                #    log.warn('%s is not a valid email address for contact %s at %s' % (contact.email, contact.id, contact.absolute_url()))
+            except UnicodeEncodeError:
+                log.warn('UnicodeEncodeError in email address %s for contact %s at %s' % (contact.email, contact.id, contact.absolute_url()))
+
+        return json.dumps(list(addresses))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sendMailToContacts')
     def sendMailToContacts(self, subject='', content='', location='',
