@@ -1,6 +1,9 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
 ------------------
-* Fix name of Groupware bundle
+
+1.1.6 (2012-01-12)
+------------------
+* Fix name of Groupware bundle [dumitval]
 
 1.1.5 (2012-01-11)
 ------------------
