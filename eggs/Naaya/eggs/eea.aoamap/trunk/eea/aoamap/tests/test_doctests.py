@@ -2,7 +2,7 @@
 """
 import doctest
 import unittest
-from eea.dataservice.tests.base import FUNCTIONAL_TESTING
+from eea.aoamap.tests.base import FUNCTIONAL_TESTING
 from plone.testing import layered
 
 OPTIONFLAGS = (doctest.REPORT_ONLY_FIRST_FAILURE |
