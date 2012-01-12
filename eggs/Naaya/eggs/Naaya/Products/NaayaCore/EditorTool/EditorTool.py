@@ -151,7 +151,6 @@ class EditorTool(Folder):
         selectors = [sel[1:] for sel in selectors]
 
         # add the button and selectors to it
-        cfg['theme_advanced_buttons1'] = 'styleselect, ' + cfg['theme_advanced_buttons1']
         cfg['theme_advanced_styles'] = ';'.join(['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
 
     def render(self, element, lang=None, image_support=False, extra_options={}):
