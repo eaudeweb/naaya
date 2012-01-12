@@ -402,4 +402,4 @@ def groupware_bundle_registration():
     """ Register things from skel into the GROUPWARE bundle """
     from Products.NaayaCore.FormsTool import bundlesupport
     templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
-    bundlesupport.register_templates_in_directory(templates_path, 'GROUPWARE')
+    bundlesupport.register_templates_in_directory(templates_path, 'Groupware')
