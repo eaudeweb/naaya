@@ -59,7 +59,7 @@ th {
 	text-align: left;
 }
 
-#language, #logo, #logobis, .skiplink, #toolribbon, #breadcrumbtrail, #left_port, #footer, #topnav {
+#language, #logo, #right_logo, .skiplink, #toolribbon, #breadcrumbtrail, #left_port, #footer, #topnav {
 	display: none;
 }
 
