@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 ------------------
+* Fix name of Groupware bundle
 
 1.1.5 (2012-01-11)
 ------------------
