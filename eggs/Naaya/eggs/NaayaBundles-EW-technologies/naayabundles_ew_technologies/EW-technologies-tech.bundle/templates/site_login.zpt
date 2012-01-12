@@ -23,7 +23,7 @@
 <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
 <br />
 <tal:block tal:define="roles python:here.getAuthenticationTool().getAuthenticatedUserRoles()">
-    <div tal:condition="python:user_obj is None" i18n:translate="">
+    <div tal:condition="python:user_obj is None">
 		<!-- List roles for Zope user here -->
     </div>
     <tal:block tal:condition="python:len(roles) and user_obj is not None">
