@@ -2091,7 +2091,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """Returns the left logo url"""
         layout_tool = self.getLayoutTool()
         logo = layout_tool._getOb('left_logo.gif', None)
-        if logo:
+        # u can overwrite Naaya logo with empty file to disable left logo
+        if logo and logo.size:
             return logo.absolute_url()
 
     security.declarePublic('rightLogoUrl')
@@ -2099,7 +2100,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """Returns the right logo url"""
         layout_tool = self.getLayoutTool()
         logo = layout_tool._getOb('right_logo.gif', None)
-        if logo:
+        # u can overwrite Naaya logo with empty file to disable right logo
+        if logo and logo.size:
             return logo.absolute_url()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
