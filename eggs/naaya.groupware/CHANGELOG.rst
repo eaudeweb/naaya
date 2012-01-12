@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ------------------
+* fix style and logos for left/right logos [simiamih]
 
 1.1.6 (2012-01-12)
 ------------------
