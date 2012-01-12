@@ -1,4 +1,7 @@
-2.12.46 (unreleased)
+2.12.47 (unreleased)
+--------------------
+
+2.12.46 (2012-01-12)
 --------------------
 * added 'styleselect' in config.ini of portal editor,
 removed from python code [simiamih]
