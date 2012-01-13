@@ -1,4 +1,7 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
+------------------
+
+1.2.6 (2012-01-13)
 ------------------
 * Added i18n id for translation of 'Type' [dumitval]
 
