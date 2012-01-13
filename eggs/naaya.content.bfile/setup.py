@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.bfile',
-      version='1.3.4',
+      version='1.3.5',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
