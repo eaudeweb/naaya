@@ -1,4 +1,7 @@
-2.12.47 (unreleased)
+2.12.48 (unreleased)
+--------------------
+
+2.12.47 (2012-01-13)
 --------------------
 * support translation_id in widget properties,
   and make use of it in select widgets [dumitval]
