@@ -228,7 +228,7 @@ class NaayaI18n(SimpleItem):
     ### Translation API ###
 
     security.declarePublic('get_translation')
-    def get_translation(self, msg, **kwargs):
+    def get_translation(self, msg, _default=None, **kwargs):
         """
         Translate message in selected language using Message Catalog
         and substitute named identifiers with values supplied by kwargs mapping
@@ -238,7 +238,7 @@ class NaayaI18n(SimpleItem):
 
         """
         lang = self.get_selected_language()
-        msg = self.get_message_catalog().gettext(msg, lang)
+        msg = self.get_message_catalog().gettext(msg, lang, default=_default)
         return interpolate(msg, kwargs)
 
     ### Private methods for private views
