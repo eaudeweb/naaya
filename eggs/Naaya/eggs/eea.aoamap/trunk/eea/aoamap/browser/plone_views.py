@@ -1,6 +1,6 @@
 """ Plone Views
 """
-import simplejson as json
+import json
 import urllib
 import logging
 from StringIO import StringIO
