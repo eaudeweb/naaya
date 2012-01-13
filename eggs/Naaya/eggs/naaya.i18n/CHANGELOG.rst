@@ -1,5 +1,6 @@
 1.0.10 (unreleased)
 ------------------
+* override views config for Five: set different i18n_domain [simiamih]
 
 1.0.9 (2012-01-06)
 ------------------
