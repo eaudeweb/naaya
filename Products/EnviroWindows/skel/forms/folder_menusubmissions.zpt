@@ -9,7 +9,7 @@
         <span i18n:translate="" tal:omit-tag="">Submit</span>:
         <select name="typetoadd"
             tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
-            <option value="#" i18n:translate="">Type to add</option>
+            <option value="#" i18n:translate="Type to add (translate ''type'' as a noun)">Type to add</option>
             <option tal:repeat="item submissions"
                 tal:attributes="value python:item[0]"
                 tal:content="python:item[1]" i18n:translate="" />
