@@ -52,7 +52,7 @@
 		<th i18n:translate="">Channel title</th>
 		<th i18n:translate="">URL</th>
 		<th i18n:translate="">Language</th>
-		<th i18n:translate="">Type</th>
+		<th i18n:translate="Type (translate as a noun)">Type</th>
 		<th i18n:translate="">Items</th>
 	</tr>
 	<tr tal:repeat="item results">

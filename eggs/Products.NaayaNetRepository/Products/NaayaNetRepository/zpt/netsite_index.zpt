@@ -61,7 +61,7 @@ function fDeleteObjects()
 		<th class="title-column" i18n:translate="">Title</th>
 		<th class="title-column" i18n:translate="">URL</th>
 		<th class="type" i18n:translate="">Language</th>
-		<th class="type" i18n:translate="">Type</th>
+		<th class="type" i18n:translate="Type (translate as a noun)">Type</th>
 		<th class="type" i18n:translate="">Items</th>
 		<th class="edit" tal:condition="permission" i18n:translate="">Edit</th>
 	</tr>
