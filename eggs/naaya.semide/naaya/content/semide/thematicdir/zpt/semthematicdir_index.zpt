@@ -263,7 +263,7 @@ function fDownloadObjects()
 <tr>
 	<th style="width: 1%">
 		<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=meta_type${rkey_param};
-							title python:test(skey=='meta_type', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="">Type</span>
+							title python:test(skey=='meta_type', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="Type (translate as a noun)">Type</span>
 		<img tal:attributes="src python:test(skey=='meta_type', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 			 width="12" height="12" alt=""/>
 		</a>
@@ -383,7 +383,7 @@ function fDownloadObjects()
 </colgroup>
 <tr tal:condition="can_operate">
 	<th class="checkbox" style="width: 1%;" i18n:translate="" tal:condition="btn_select"></th>
-	<th class="type" style="width: 1%;" i18n:translate="">Type</th>
+	<th class="type" style="width: 1%;" i18n:translate="Type (translate as a noun)">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" style="width:1%" i18n:translate="">Version</th>
 	<th class="edit" style="width:1%;" i18n:translate="">Edit</th>

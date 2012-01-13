@@ -7,7 +7,7 @@
 <tal:block metal:fill-slot="custom_properties">
 <tr>
 	<td class="form-label">
-		<label for="type_law" i18n:translate="">Type</label>
+		<label for="type_law" i18n:translate="Type (translate as a noun)">Type</label>
 	</td>
 	<td>
 		<select name="type_law" id="type_law">

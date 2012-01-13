@@ -31,7 +31,7 @@
 </script>
 
 <div class="field">
-	<label for="type_multimedia"><span i18n:translate="" tal:omit-tag="">Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'type_multimedia')" class="mandatory_field"> *</span></label>
+	<label for="type_multimedia"><span i18n:translate="Type (translate as a noun)" tal:omit-tag="">Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'type_multimedia')" class="mandatory_field"> *</span></label>
 	<select name="type_multimedia" id="type_multimedia">
 		<option value=""></option>
 		<option tal:repeat="item here/getMultimediaTypesList"
