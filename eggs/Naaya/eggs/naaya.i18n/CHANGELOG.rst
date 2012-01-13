@@ -1,4 +1,7 @@
-1.0.10 (unreleased)
+1.0.11 (unreleased)
+------------------
+
+1.0.10 (2012-01-13)
 ------------------
 * Added default value when calling gettext [dumitval]
 * override views config for Five: set different i18n_domain [simiamih]
