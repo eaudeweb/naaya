@@ -4,6 +4,8 @@ Changelog
 
 1.3-dev - (unreleased)
 ----------------------
+* Bug fix: Added dependencies to setup.py
+  [voineali]
 
 1.2 - (2011-11-18)
 ------------------
