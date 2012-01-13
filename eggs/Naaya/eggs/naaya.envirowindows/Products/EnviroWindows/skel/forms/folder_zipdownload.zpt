@@ -50,7 +50,7 @@ function fCheckSelection(){
 	<table id="folderfile_list">
 		<tr>
 			<th class="checkbox" style="width: 4%;" i18n:translate=""></th>
-			<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+			<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
 			<th class="title-column" i18n:translate="">Title</th>
 			<th class="title-column" i18n:translate="">Contributor</th>
 			<th class="size-column" i18n:translate="">Size</th>

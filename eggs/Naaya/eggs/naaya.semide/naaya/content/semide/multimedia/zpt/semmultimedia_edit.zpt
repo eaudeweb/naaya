@@ -30,7 +30,7 @@
 <tal:block metal:fill-slot="custom_properties">
 <!-- Type -->
 <div class="field">
-	<label for="type_multimedia"><span i18n:translate="" tal:omit-tag="">Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'type_multimedia')" class="mandatory_field"> *</span></label>
+	<label for="type_multimedia"><span i18n:translate="Type (translate as a noun)" tal:omit-tag="">Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'type_multimedia')" class="mandatory_field"> *</span></label>
 	<select name="type_multimedia" id="type_multimedia">
 		<option value=""></option>
 		<option tal:repeat="item here/getMultimediaTypesList"

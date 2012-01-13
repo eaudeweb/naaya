@@ -37,7 +37,7 @@
 	</select>
 </div>
 <div class="field">
-	<label for="type" i18n:translate="">Type</label>
+	<label for="type" i18n:translate="Type (translate as a noun)">Type</label>
 	<select name="type" id="type">
 		<option tal:repeat="item python:here.getSyndicationTool().get_channeltypes_list()"
 			tal:attributes="value item/id; selected python:here.type==item.id"

@@ -23,7 +23,7 @@
     <tr>
         <th i18n:translate="">Property</th>
         <th i18n:translate="">Label</th>
-        <th i18n:translate="">Type</th>
+        <th i18n:translate="Type (translate as a noun)">Type</th>
         <th i18n:translate="">Mandatory</th>
         <th i18n:translate="">Localized</th>
         <th i18n:translate="">Sort</th>

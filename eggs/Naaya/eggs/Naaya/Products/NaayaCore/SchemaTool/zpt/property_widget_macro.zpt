@@ -12,7 +12,12 @@ prop_id prop_id|here/prop_name;
         <metal:block define-slot="label">
             <metal:block define-macro="label">
             <label tal:attributes="for prop_id" class="widget-title">
-                <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
+				<tal:block condition="python:here.title == 'Type'">
+					<tal:block i18n:translate="Type (translate as a noun)">Type</tal:block>
+				</tal:block>
+				<tal:block condition="python:here.title != 'Type'">
+					<span i18n:translate="" tal:replace="here/title" />
+				</tal:block>
                 <span tal:condition="here/required" class="mandatory_field">*</span>
             </label>
             </metal:block>

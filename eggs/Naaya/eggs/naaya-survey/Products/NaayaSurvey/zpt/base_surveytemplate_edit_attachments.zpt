@@ -36,7 +36,7 @@ function toggleSelect(caller){
 				<th class="checkbox" style="width: 4%;">
 					<input type="checkbox" onclick="toggleSelect(this)" />
 				</th>
-				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+				<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
 				<th class="title-column" i18n:translate="">Title</th>
 				<th class="edit" i18n:translate="">Edit</th>
 			</tr>

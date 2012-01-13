@@ -16,7 +16,7 @@
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <table border="0" cellspacing="2" cellpadding="2">
 <tr tal:condition="here/type_law">
-	<th i18n:translate="">Type</th>
+	<th i18n:translate="Type (translate as a noun)">Type</th>
 	<td tal:condition="here/type_law" tal:content="here/type_law" i18n:translate="" />
 	<td tal:condition="not:here/type_law" i18n:translate="">n/a</td>
 </tr>

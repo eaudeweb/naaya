@@ -116,7 +116,7 @@
 					tal:condition="btn_select">
 					<input type="checkbox" class="select-all" />
 				</th>
-				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+				<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
 				<th class="title-column" i18n:translate="">Title</th>
 				<th i18n:translate="">Location</th>
 				<th tal:condition="can_operate" class="checkin" i18n:translate="">Version</th>

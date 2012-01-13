@@ -193,7 +193,7 @@ function createKey(key)
 			</td>
 		</tr>
 		<tr>
-			<td i18n:translate="">Type</td>
+			<td i18n:translate="Type (translate as a noun)">Type</td>
 			<td>
 				<select name="obtype" id="obtype">
 					<option value="news" tal:attributes="selected python:ob_data[8]=='news'">News</option>

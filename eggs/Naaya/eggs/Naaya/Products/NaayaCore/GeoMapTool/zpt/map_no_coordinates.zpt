@@ -44,7 +44,7 @@ This page lists the locations that do not have coordinates. The test is made on 
 					<th tal:condition="edit_mode" width="1%">
 						<input type="checkbox" onclick="javascript: toggleSelect(this, 'locations:list')" />
 					</th>
-					<th scope="col" class="scope-col" i18n:translate="">Type</th>
+					<th scope="col" class="scope-col" i18n:translate="Type (translate as a noun)">Type</th>
 					<tal:block tal:condition="python:skey=='title'">
 						<tal:block tal:condition="python:rkey==''">
 							<th scope="col" class="scope-col">

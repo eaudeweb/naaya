@@ -16,7 +16,7 @@
 <tal:block define="selected_items python:here.utConvertToList(request.get('id'))">
 <table>
     <tr>
-        <th class="type" i18n:translate="">Type</th>
+        <th class="type" i18n:translate="Type (translate as a noun)">Type</th>
         <th class="title-column" i18n:translate="">Title</th>
         <th class="title-column" i18n:translate="">Old ID</th>
         <th class="edit" i18n:translate="">New ID</th>

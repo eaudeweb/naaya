@@ -76,7 +76,7 @@
 <table metal:define-macro="main" width="100%" class="datatable">
 	<thead>
 		<tr>
-			<th scope="col" class="scope-col" i18n:translate="">Type</th>
+			<th scope="col" class="scope-col" i18n:translate="Type (translate as a noun)">Type</th>
 			<tal:block tal:condition="python:sort_on=='title'">
 				<tal:block tal:condition="python:sort_order==''">
 					<th scope="col" class="scope-col">
