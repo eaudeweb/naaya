@@ -116,6 +116,9 @@ class Schema(Folder):
                 raise ValueError('Unknown data format "%s"' % value)
             elif name == 'default':
                 widget.default = value
+            elif name == 'translation_id':
+                widget.translation_id = value
+                widget._p_changed = True
             else:
                 widget.manage_changeProperties(**{name: value})
 

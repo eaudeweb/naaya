@@ -1,5 +1,7 @@
 2.12.47 (unreleased)
 --------------------
+* support translation_id in widget properties,
+  and make use of it in select widgets [dumitval]
 * Added i18n id for translation of 'Type' [dumitval]
 
 2.12.46 (2012-01-12)
