@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2012-01-13)
 ------------------
 * Added i18n id for translation of 'Type' [dumitval]
 * filter display for User management search [andredor]
