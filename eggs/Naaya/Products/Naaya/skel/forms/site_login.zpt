@@ -51,7 +51,7 @@
 	</tal:block>
 </tal:block>
 <br />
-<a tal:attributes="href string:${site_url}/changecredentials_html">Change user credentials</a>
+<a i18n:translate="" tal:attributes="href string:${site_url}/changecredentials_html">Change user credentials</a>
 <br />
 </tal:block>
 
