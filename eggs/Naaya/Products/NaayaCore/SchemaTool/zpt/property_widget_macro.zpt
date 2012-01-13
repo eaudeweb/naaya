@@ -29,7 +29,7 @@ prop_id prop_id|here/prop_name;
         </metal:block>
         <metal:block define-slot="help">
             <metal:block define-macro="help">
-                <p class="help-text" tal:condition="help_text" tal:content="structure help_text" />
+                <p i18n:translate="" class="help-text" tal:condition="help_text" tal:content="structure help_text" />
             </metal:block>
         </metal:block>
         <metal:block define-slot="scripts">
