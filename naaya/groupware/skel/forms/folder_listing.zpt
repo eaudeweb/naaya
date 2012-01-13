@@ -113,7 +113,7 @@ $(document).ready(function(){
 					tal:condition="btn_select">
 					<input type="checkbox" class="select-all" />
 				</th>
-				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+				<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
                 <th class="title-column">
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=title"
                         tal:condition="python: skey != 'title' or rkey"
