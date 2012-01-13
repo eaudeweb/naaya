@@ -49,7 +49,7 @@
     </select>
   </div>  
   <div class="field">
-    <label for="type" i18n:translate="">Type</label>
+    <label for="type" i18n:translate="Type (translate as a noun)">Type</label>
     <select name="type">
       <option tal:repeat="item syndication_tool/get_channeltypes_list"
         tal:attributes="value item/id; selected python:item.id==ob_data[5]"
@@ -94,7 +94,7 @@
       <th class="scope-col" scope="col" i18n:translate="">Title</th>
       <th class="scope-col" scope="col" i18n:translate="">Description</th>
       <th class="scope-col" scope="col" i18n:translate="">Language</th>
-      <th class="scope-col" scope="col" i18n:translate="">Type</th>
+      <th class="scope-col" scope="col" i18n:translate="Type (translate as a noun)">Type</th>
       <th class="scope-col" scope="col" i18n:translate="">Actions</th>
     </tr>
   </thead>

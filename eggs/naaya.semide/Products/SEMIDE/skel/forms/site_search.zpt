@@ -114,7 +114,7 @@ function fSet(ctrl, value)
 </colgroup>
 <thead>
 <tr>
-	<th scope="col" style="width: 1%"><span title="Not sortable" i18n:translate="" i18n:attributes="title">Type</span></th>
+	<th scope="col" style="width: 1%"><span title="Not sortable" i18n:translate="Type (translate as a noun)" i18n:attributes="title">Type</span></th>
 	<th scope="col"><span title="Not sortable" i18n:translate="" i18n:attributes="title">Title / Abstract</span></th>
 	<th scope="col" style="width: 5%"><span title="Not sortable" i18n:translate="" i18n:attributes="title">Translations in</span></th>
 	<th scope="col" style="width: 12%"><span title="Not sortable" i18n:translate="" i18n:attributes="title">Last updated</span></th>

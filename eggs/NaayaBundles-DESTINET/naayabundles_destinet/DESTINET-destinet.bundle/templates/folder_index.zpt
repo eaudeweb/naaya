@@ -154,7 +154,7 @@ function fRenameObjects()
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" width="95%">
 <tr tal:condition="can_operate">
     <th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
-    <th class="type" style="width: 4%;" i18n:translate="">Type</th>
+    <th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
     <th class="title-column" i18n:translate="">Title</th>
     <th class="checkin" i18n:translate="">Version</th>
     <th class="edit" i18n:translate="">Edit</th>

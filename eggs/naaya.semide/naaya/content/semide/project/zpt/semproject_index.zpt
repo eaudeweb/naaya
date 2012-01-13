@@ -140,7 +140,7 @@
 						<td i18n:translate="">acts as project coordinator</td>
 					</tr>
 					<tr tal:condition="item/org_type">
-						<th i18n:translate="">Type</th>
+						<th i18n:translate="Type (translate as a noun)">Type</th>
 						<td tal:content="python:here.getOrganismTypeTitle(item.org_type)" i18n:translate="" />
 					</tr>
 					<tr tal:condition="item/address">
@@ -193,7 +193,7 @@
 						<td tal:content="item/funding_programme" />
 					</tr>
 					<tr tal:condition="item/funding_type">
-						<th i18n:translate="">Type</th>
+						<th i18n:translate="Type (translate as a noun)">Type</th>
 						<td tal:content="python:here.getFundingTypeTitle(item.funding_type)" i18n:translate="" />
 					</tr>
 					<tr tal:condition="item/funding_rate">

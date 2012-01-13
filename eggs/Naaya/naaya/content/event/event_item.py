@@ -48,7 +48,7 @@ DEFAULT_SCHEMA = {
     'event_url':        dict(sortorder=170, widget_type='URL',      label='Event URL'),
     'details':          dict(sortorder=180, widget_type='TextArea', label='Details (HTML)', localized=True, tinymce=True),
     'topitem':          dict(sortorder=190, widget_type='Checkbox', label='On front', data_type='int'),
-    'event_type':       dict(sortorder=200, widget_type='Select',   label='Type', list_id='event_types'),
+    'event_type':       dict(sortorder=200, widget_type='Select',   label='Type', translation_id='Type (translate as a noun)', list_id='event_types'),
     'contact_person':   dict(sortorder=210, widget_type='String',   label='Contact person'),
     'contact_email':    dict(sortorder=220, widget_type='String',   label='Contact email'),
     'contact_phone':    dict(sortorder=230, widget_type='String',   label='Contact phone'),

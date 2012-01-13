@@ -53,7 +53,7 @@
 		<td><input type="checkbox" name="org_coord" id="org_coord" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Type organism</td>
+		<td class="form-label" valign="top">Type of organism</td>
 		<td>
 			<select name="org_type" id="org_type">
 				<option value=""></option>

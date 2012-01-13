@@ -23,7 +23,7 @@
 	<col style="width: 2em;" />
 	<thead>
 		<tr>
-			<th class="scope-col" scope="col" i18n:translate="">Type</th>
+			<th class="scope-col" scope="col" i18n:translate="Type (translate as a noun)">Type</th>
 			<th class="scope-col" scope="col" i18n:translate="">Title</th>
 			<th class="scope-col" scope="col" i18n:translate="">Sort order</th>
 		</tr>
@@ -55,7 +55,7 @@
 	<col style="width: 2em;" />
 	<thead>
 		<tr>
-			<th class="scope-col" scope="col" i18n:translate="">Type</th>
+			<th class="scope-col" scope="col" i18n:translate="Type (translate as a noun)">Type</th>
 			<th class="scope-col" scope="col" i18n:translate="">Title</th>
 			<th class="scope-col" scope="col" i18n:translate="">Sort order</th>
 		</tr>

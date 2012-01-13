@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 ===================
+* Added i18n id for translation of 'Type' [dumitval]
 * removed .txt from manifest [dumitval]
 
 1.2.15 (2012-01-06)

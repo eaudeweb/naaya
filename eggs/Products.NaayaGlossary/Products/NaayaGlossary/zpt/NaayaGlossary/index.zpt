@@ -239,7 +239,7 @@
         <h2>Add entry</h2>
         <form action="addGlossaryEntry" method="post" tal:define="theme_list insert_after/get_subjects_list ">
             <div class="field">
-                <label for="entry_type" i18n:translate="">Type</label>
+                <label for="entry_type" i18n:translate="Type (translate as a noun)">Type</label>
                 <select name="entry_type">
                     <option value="folder" i18n:translate="">Glossary Folder</option>
                     <option value="element" tal:condition="python:insert_after.meta_type != 'Naaya Glossary'" i18n:translate="">Glossary Element</option>

@@ -57,7 +57,7 @@
   <input type="text" name="sq" id="sq" size="50" tal:attributes="value sq" />
 </div>
 <div class="field">
-  <label for="nt" i18n:translate="">Type</label>
+  <label for="nt" i18n:translate="Type (translate as a noun)">Type</label>
   <select name="nt" id="nt">
   <option value=""></option>
   <option tal:repeat="item here/getNewsTypesList"
