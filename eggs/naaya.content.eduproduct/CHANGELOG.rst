@@ -1,5 +1,6 @@
 1.2.6 (unreleased)
 ------------------
+* Added i18n id for translation of 'Type' [dumitval]
 
 1.2.5 (2011-11-18)
 ------------------
