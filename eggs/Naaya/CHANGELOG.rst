@@ -1,5 +1,6 @@
 2.12.48 (unreleased)
 --------------------
+* removed get_modification_date from NyContentTypeViewAdapter [dumitval]
 * fixed a string in SelectMultipleWidget.py to allow translation [dumitval]
 * added i18n:translate to help_text of widgets [dumitval]
 
