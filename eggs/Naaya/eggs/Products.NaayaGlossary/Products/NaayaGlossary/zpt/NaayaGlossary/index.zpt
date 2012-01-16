@@ -92,10 +92,11 @@
     <!-- Set some constants for the jstree init -->
     <script type="text/javascript"
         tal:define="tree_get_url tree_get_url|string:;
-        can_edit_str python:str(bool(can_edit)).lower()"
-            tal:content="string:
-            var TREE_GET_URL = '${here/absolute_url}/get_json_tree/';
-            var CAN_EDIT = ${can_edit_str};">
+                    can_edit_str python:str(bool(can_edit)).lower();
+                    lang_code python:here.getSelectedLang()"
+        tal:content="string:
+            var TREE_GET_URL = '${here/absolute_url}/get_json_tree?lang=${lang_code}';
+            var CAN_EDIT = ${can_edit_str}">
     </script>
     <script type="text/javascript" src="misc_/NaayaGlossary/tree.js"></script>
     <div id="jstree_container" class="tree glossary_tree"><!-- tree container --></div>
