@@ -1,4 +1,7 @@
-2.12.48 (unreleased)
+2.12.49 (unreleased)
+--------------------
+
+2.12.48 (2012-01-16)
 --------------------
 * removed get_modification_date from NyContentTypeViewAdapter [dumitval]
 * fixed a string in SelectMultipleWidget.py to allow translation [dumitval]
