@@ -63,10 +63,6 @@ class NyContentTypeViewAdapter(GenericViewAdapter):
     def version_status(self):
         return self.ob.version_status()
 
-    def get_modification_date(self):
-        return DT2dt(self.ob.releasedate)
-
-
 class NyFileViewAdapter(NyContentTypeViewAdapter):
     def get_icon(self):
         return icon_for_content_type(self.ob.content_type, self.ob.approved)
