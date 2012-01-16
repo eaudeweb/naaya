@@ -1,5 +1,6 @@
 2.12.48 (unreleased)
 --------------------
+* fixed a string in SelectMultipleWidget.py to allow translation [dumitval]
 * added i18n:translate to help_text of widgets [dumitval]
 
 2.12.47 (2012-01-13)
