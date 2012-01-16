@@ -282,7 +282,7 @@ $(document).ready(function(){
 	</table>
 </form>
 </metal:block>
-<tal:block tal:condition="iframe"><br>
+<tal:block condition="iframe"><br />
 <tal:block replace="structure python:'</' +'body>'"></tal:block>
 <tal:block replace="structure python:'</' +'html>'"></tal:block>
 </tal:block>
