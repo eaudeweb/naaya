@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* bugfix: glossary index page - show terms in current language [moregale]
 
 1.1.7 (2012-01-13)
 ------------------

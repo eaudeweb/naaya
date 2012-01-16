@@ -739,15 +739,25 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         json_element_list = json.dumps(elements_list)
         return json_element_list
 
-    def get_json_tree(self, REQUEST):
+    def get_json_tree(self, lang='en', REQUEST=None):
         """ Return a json tree for glossary """
+
+        lang_name = self.get_language_by_code(lang)
+
+        def get_label(ob):
+            if hasattr(ob, 'get_translation_by_language'):
+                trans = ob.get_translation_by_language(lang_name)
+                if trans:
+                    return trans
+            return ob.title_or_id()
+
         tree_data = {
             "attributes": {
                 "id": self.getId(),
                 "rel": "root",
             },
             "data": {
-                'title': self.title_or_id(),
+                'title': get_label(self),
             },
             "children": []
         }
@@ -759,7 +769,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     'data-path': relative_object_path(folder_ob, self)
                 },
                 'data': {
-                    'title': folder_ob.title_or_id(),
+                    'title': get_label(folder_ob),
                     'icon': "misc_/NaayaGlossary/folder.gif",
                     'attributes': {
                         'href': folder_ob.absolute_url(),
@@ -775,7 +785,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         'data-path': relative_object_path(element_ob, self)
                     },
                     'data': {
-                        'title': element_ob.title_or_id(),
+                        'title': get_label(element_ob),
                         'icon': "misc_/NaayaGlossary/element.gif",
                         'attributes': {
                             'href': element_ob.absolute_url(),
