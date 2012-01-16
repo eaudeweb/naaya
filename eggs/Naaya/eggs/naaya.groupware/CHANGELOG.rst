@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+------------------
+
+1.1.9 (2012-01-16)
 ------------------
 * Added modification time to the folder listing [dumitval]
 
