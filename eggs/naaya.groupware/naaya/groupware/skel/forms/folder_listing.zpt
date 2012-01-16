@@ -144,10 +144,10 @@ $(document).ready(function(){
                 <th class="title-column">
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=modif_date"
                         tal:condition="python: skey != 'modif_date' or rkey"
-                        i18n:translate="">Date</a>
+                        i18n:translate="">Modification date and time</a>
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=modif_date&rkey=1"
                         tal:condition="python: skey == 'modif_date' and not rkey"
-                        i18n:translate="">Date</a>
+                        i18n:translate="">Modification date and time</a>
 
                     <img tal:condition="python: skey == 'modif_date' and not rkey"
                          src="misc_/Naaya/sort_asc.gif" />
@@ -221,8 +221,8 @@ $(document).ready(function(){
 									username python: auth_tool.name_from_userid(contributor);"
 						tal:content="string: ${contributor} (${username})">
 					</td>
-                    <td tal:define="modif folder_info/view/get_modification_date"
-                        tal:content="python: here.utShowDateTime(modif)">
+					<td tal:define="modif folder_info/view/get_modification_date"
+						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
 					</td>
 					<td></td>
 					<td class="edit" tal:condition="edit_permission">
@@ -298,8 +298,8 @@ $(document).ready(function(){
 									username python: auth_tool.name_from_userid(contributor);"
 						tal:content="string: ${contributor} (${username})">
 					</td>
-                    <td tal:define="modif object_info/view/get_modification_date"
-                        tal:content="python: here.utShowDateTime(modif)">
+					<td tal:define="modif object_info/view/get_modification_date"
+						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
 					</td>
 					<td tal:content="object_info/view/get_size"/>
 					<td class="edit" tal:condition="edit_permission">
