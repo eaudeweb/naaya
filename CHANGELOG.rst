@@ -1,5 +1,6 @@
 1.1.9 (unreleased)
 ------------------
+* Added modification time to the folder listing [dumitval]
 
 1.1.8 (2012-01-13)
 ------------------
