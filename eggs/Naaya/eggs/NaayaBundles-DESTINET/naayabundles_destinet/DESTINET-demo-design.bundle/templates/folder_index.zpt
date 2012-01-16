@@ -118,23 +118,32 @@ function fRenameObjects()
 //-->
 </script>
 
-	<div class="folder_social">
-		<tal:block content="structure here/set_content_rating" />
-		<div class="folder_social_icons">
-		<a class="feed_link" rel="external"
-			tal:attributes="href string:${here/absolute_url}/index_atom">
-			&nbsp;</a>
-		<a class="facebook_link" rel="external"
-			tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
-			&nbsp;</a>
-		<a class="twitter_link" rel="external"
-			tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
-			&nbsp;</a>
-		<a class="linkedin_link" rel="external"
-			tal:attributes="href string:http://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
-			&nbsp;</a>
+		<div class="folder_social">
+			<tal:block content="structure here/set_content_rating" />
+			<div class="folder_social_icons">
+			<div id="fb-root"></div>
+			<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) return;
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));</script>
+			<a class="feed_link" rel="external"
+				tal:attributes="href string:${here/absolute_url}/index_atom">
+				&nbsp;</a>
+			<a class="facebook_link" rel="external"
+				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+				&nbsp;</a>
+			<a class="twitter_link" rel="external"
+				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+				&nbsp;</a>
+			<a class="linkedin_link" rel="external"
+				tal:attributes="href string:http://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
+				&nbsp;</a>
+			</div>
+			<div class="fb-like" data-send="false" data-width="450" data-show-faces="false"></div>
 		</div>
-	</div>
 
 <div>
 <h1>
