@@ -1,5 +1,6 @@
 2.4.20 (unreleased)
 -------------------
+* path correction for social icons in style_common [dumitval]
 
 2.4.19 (2011-12-16)
 -------------------
