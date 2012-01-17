@@ -1,5 +1,6 @@
 2.12.49 (unreleased)
 --------------------
+* added LinkedIn logo [dumitval]
 * bugfix: dotted property clashed with reserved word - IE8 [simiamih]
 * bugfix: collapsing folder in mainsections does not hide link [simiamih]
 
