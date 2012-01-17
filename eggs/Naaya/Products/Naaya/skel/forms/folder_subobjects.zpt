@@ -65,7 +65,7 @@
   </div>
 </form>
 <script type='text/javascript'>
-  displayElement(document.manageSubobjects.default, 'nypluggable_meta_types');
+  displayElement(document.manageSubobjects['default'], 'nypluggable_meta_types');
 </script>
 </tal:block>
 
