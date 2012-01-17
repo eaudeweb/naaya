@@ -165,7 +165,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declarePrivate('build_geo_filters')
     def build_geo_filters(self, path='', meta_types=None, geo_types=[],
             approved=True,
-            landscape_type=[], administrative_level=[],
+            landscape_type=[], administrative_level=[], topics=[],
             lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
             query='', country='', first_letter=None,
             **kwargs):
@@ -186,6 +186,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if landscape_type:
             base_filter['landscape_type'] = landscape_type
+
+        if topics:
+            base_filter['topics'] = topics
 
         if administrative_level:
             base_filter['administrative_level'] = administrative_level
@@ -382,6 +385,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'path': '',
             'query': '',
             'approved': True,
+            'topics': [],
             'landscape_type': [],
             'administrative_level': [],
             'country': '',
@@ -826,6 +830,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             landscape_type = []
         if isinstance(landscape_type, str):
             landscape_type = landscape_type.split(',')
+        topics = kw.get('topics', [])
+        if topics == '':
+            topics = []
+        if isinstance(topics, str):
+            topics = topics.split(',')
         geo_query = kw.get('geo_query', '')
         country = kw.get('country', '')
 
@@ -839,7 +848,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         results = self.search_geo_objects(
             lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,
             lon_max=lon_max, geo_types=geo_types, query=geo_query,
-            administrative_level=administrative_level, landscape_type=landscape_type,
+            administrative_level=administrative_level,
+            landscape_type=landscape_type, topics=topics,
             first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
             country=country,
         )
@@ -851,6 +861,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['geo_types'] = geo_types
         options['administrative_level'] = administrative_level
         options['landscape_type'] = landscape_type
+        options['topics'] = topics
         options['geo_query'] = geo_query
         options['country'] = country
         options['step'] = int(kw.get('step', '50'))
