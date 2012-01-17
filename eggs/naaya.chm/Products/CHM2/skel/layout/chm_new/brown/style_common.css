@@ -11,19 +11,19 @@ a.download_link {
 }
 
 a.feed_link {
-	background: transparent url('rss.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/rss.png') no-repeat scroll left center;
 }
 
 a.facebook_link {
-	background: transparent url('facebook.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/facebook.png') no-repeat scroll left center;
 }
 
 a.twitter_link {
-	background: transparent url('twitter.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/twitter.png') no-repeat scroll left center;
 }
 
 a.download_link {
-	background: transparent url('download.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/download.png') no-repeat scroll left center;
 	float: right;
         width: auto;
 	padding-left: 25px;
