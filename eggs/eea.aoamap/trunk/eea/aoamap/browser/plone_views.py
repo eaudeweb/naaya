@@ -12,8 +12,9 @@ from zope import i18n
 
 log = logging.getLogger(__name__)
 
-tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
-aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
+CONFIG = getConfiguration()
+tiles_url = getattr(CONFIG, 'environment', {}).get('AOA_MAP_TILES', '')
+aoa_url = getattr(CONFIG, 'environment', {}).get('AOA_PORTAL_URL', '')
 
 def _to_unicode(s):
     """ To unicode
