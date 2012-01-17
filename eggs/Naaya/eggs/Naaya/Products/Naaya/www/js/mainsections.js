@@ -52,7 +52,8 @@ $(document).ready(function(){
             });
         }else if ($(this).hasClass('folder-toggle')){
             toggle_image($(this), function(obj){
-                obj.siblings().hide();
+                // only hide sublist, all siblings contain `a` and `ul`
+                obj.siblings("ul").hide();
             }, function(obj){
                 obj.siblings().show();
             });

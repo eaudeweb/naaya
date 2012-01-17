@@ -1,5 +1,6 @@
 2.12.49 (unreleased)
 --------------------
+* bugfix: collapsing folder in mainsections does not hide link [simiamih]
 
 2.12.48 (2012-01-16)
 --------------------
