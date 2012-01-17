@@ -1,4 +1,7 @@
-2.12.49 (unreleased)
+2.12.50 (unreleased)
+--------------------
+
+2.12.49 (2012-01-17)
 --------------------
 * GeoMap: added filtering option for topics [dumitval]
 * added LinkedIn logo [dumitval]
