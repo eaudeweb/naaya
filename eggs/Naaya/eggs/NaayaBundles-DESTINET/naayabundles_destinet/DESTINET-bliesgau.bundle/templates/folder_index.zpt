@@ -12,7 +12,15 @@
 	<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 
-<metal:block metal:fill-slot="head"></metal:block>
+<metal:block metal:fill-slot="head">
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+</metal:block>
 
 <metal:block metal:fill-slot="body">
 <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
@@ -24,13 +32,6 @@
 			<tal:block content="structure here/set_content_rating" />
 			<div class="folder_social_icons">
 			<div id="fb-root"></div>
-			<script>(function(d, s, id) {
-			  var js, fjs = d.getElementsByTagName(s)[0];
-			  if (d.getElementById(id)) return;
-			  js = d.createElement(s); js.id = id;
-			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-			  fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));</script>
 			<a class="feed_link" rel="external"
 				tal:attributes="href string:${here/absolute_url}/index_atom">
 				&nbsp;</a>
@@ -44,7 +45,6 @@
 				tal:attributes="href string:http://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
 				&nbsp;</a>
 			</div>
-			<div class="fb-like" data-send="false" data-width="450" data-show-faces="false"></div>
 		</div>
 		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
 			<metal:block use-macro="site_object_index/macros/icon"/>
@@ -90,6 +90,7 @@
 			tal:condition="python: here.checkPermission('Naaya - Zip export') and len(folders_list) + len(objects_list)> 0"
 			i18n:attributes="title"
 			i18n:translate="">Zip download</a>
+		<div class="fb-like" data-send="false" data-width="275" data-show-faces="false"></div>
 	</div>
 	<div class="clearer"></div>
 	</metal:block>
