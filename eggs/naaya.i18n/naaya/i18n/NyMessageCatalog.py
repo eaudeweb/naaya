@@ -16,24 +16,13 @@ except ImportError:
     from Globals import PersistentMapping
 from Persistence import Persistent
 from zope.interface import implements
+from zope.event import notify
 
 from naaya.core.utils import force_to_unicode
 
 from interfaces import INyTranslationCatalog
+from events import MessageAddEvent
 
-def update_transaction_note():
-    import transaction, re
-
-    def label_with_count(count):
-        return "(Saving %d new localizer messages)" % count
-    def increment_count(match):
-        return label_with_count(int(match.group('count')) + 1)
-    p = re.compile(r'\(Saving (?P<count>\d+) new localizer messages\)')
-
-    t = transaction.get()
-    if p.search(t.description) is None:
-        t.note(label_with_count(0))
-    t.description = p.sub(increment_count, t.description)
 
 def collapse_whitespace(text):
     """
@@ -125,7 +114,7 @@ class NyMessageCatalog(Persistent):
                 logger.warn('Got str "%s" in gettext, expecting unicode'
                             % msgstr)
             self._messages[msgid] = PersistentMapping()
-            update_transaction_note()
+            notify(MessageAddEvent(self, msgid, lang, default))
 
         if not self._messages[msgid].has_key(self._default_language):
             default_translation = collapse_whitespace(default)
