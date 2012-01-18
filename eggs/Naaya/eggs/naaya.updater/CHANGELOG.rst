@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* restored analytics template update [simiamih]
 
 1.2.18 (2011-12-05)
 -------------------
