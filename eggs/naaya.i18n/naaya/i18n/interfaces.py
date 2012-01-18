@@ -43,3 +43,7 @@ class INyLanguageManagement(ILanguageAvailability):
 
     def delAvailableLanguage(lang):
         """Removes a currently available language in portal"""
+
+
+class IMessageAddEvent(Interface):
+    """ New message added to catalog """

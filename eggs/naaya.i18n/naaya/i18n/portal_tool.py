@@ -6,6 +6,7 @@ translation available in naaya.i18n.
 """
 import re
 from urllib import quote
+import logging
 
 from zope.i18n import interpolate
 from OFS.SimpleItem import SimpleItem
@@ -34,6 +35,10 @@ from ImportExport import TranslationsImportExport
 from patches import populate_threading_local
 from admin_i18n import AdminI18n, message_encode, message_decode
 from ExternalService import external_translate
+from naaya.core.zope2util import physical_path
+
+
+log = logging.getLogger('naaya.i18n')
 
 
 def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
@@ -83,6 +88,9 @@ class NaayaI18n(SimpleItem):
     icon = 'misc_/portal_i18n/icon.gif'
 
     security = ClassSecurityInfo()
+
+    message_debug_list = ()
+    message_debug_exception = False
 
     def __init__(self, id, title, languages=[('en', 'English')]):
         self.id = id
@@ -261,11 +269,10 @@ class NaayaI18n(SimpleItem):
         options = (
             {'label': u'Messages', 'action': 'manage_messages'},
             {'label': u'Languages', 'action': 'manage_languages'},
-            {'label': u'Import', 'action': 'manage_import'
-            },
-            {'label': u'Export', 'action': 'manage_export'
-            }) \
-            + SimpleItem.manage_options
+            {'label': u'Import', 'action': 'manage_import'},
+            {'label': u'Export', 'action': 'manage_export'},
+            {'label': u'Debug', 'action': 'manage_debug'},
+            ) + SimpleItem.manage_options
         r = []
         for option in options:
             option = option.copy()
@@ -515,6 +522,23 @@ class NaayaI18n(SimpleItem):
     security.declareProtected(view_management_screens, 'manage_import_xliff')
     def manage_import_xliff(self, file, language, REQUEST, RESPONSE):
         raise NotImplementedError("Xliff import is not yet implemented")
+
+    _manage_debug = PageTemplateFile('zpt/debug', globals())
+    security.declareProtected(view_management_screens, 'manage_debug')
+    def manage_debug(self, REQUEST):
+        """ Watch for problematic translation strings """
+
+        if REQUEST.REQUEST_METHOD == 'POST':
+            form = REQUEST.form
+            self.message_debug_list = form['debug_strings'].splitlines()
+            log.info('%s message_debug_list = %r',
+                     physical_path(self), self.message_debug_list)
+            self.message_debug_exception = bool(form.get('debug_exception', False))
+
+            location = self.absolute_url() + '/manage_debug'
+            return REQUEST.RESPONSE.redirect(location)
+
+        return self._manage_debug(REQUEST)
 
     #######################################################################
     # Naaya Administration screens
