@@ -239,6 +239,8 @@
 			<permission name="Naaya - Add Naaya Media File objects" />
 			<permission name="Naaya - Add Naaya News objects" />
 			<permission name="Naaya - Add Naaya Photo" />
+			<permission name="Naaya - Add Naaya Photo Folder" />
+			<permission name="Naaya - Add Naaya Photo Gallery" />
 			<permission name="Naaya - Add Naaya Pointer objects" />
 			<permission name="Naaya - Add Naaya Simple Consultation objects" />
 			<permission name="Naaya - Add Naaya Story objects" />
