@@ -86,6 +86,10 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.RestrictUnapproved"
              permission="zope2.ViewManagementScreens" />
+    <utility name="set_photo_permissions.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.SetPhotoFolderGalleryPermission"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

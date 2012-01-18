@@ -1,6 +1,7 @@
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view
 
+from naaya.core.zope2util import permission_add_role
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class SkipApprovalPermission(UpdateScript):
@@ -66,4 +67,20 @@ class RestrictUnapproved(UpdateScript):
                 obj.dont_inherit_view_permission()
                 self.log.debug('restricted view permission for %s',
                                 obj.absolute_url())
+        return True
+
+class SetPhotoFolderGalleryPermission(UpdateScript):
+    title = ('Set Naaya Photo related permissions to administrators')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Jan 18, 2012'
+
+    def _update(self, portal):
+        permissions = ["Naaya - Add Naaya Photo Folder",
+                        "Naaya - Add Naaya Photo Gallery"]
+        for permission in permissions:
+            p = Permission(permission, (), portal)
+            if 'Administrator' not in p.getRoles():
+                permission_add_role(portal, permission, 'Administrator')
+                self.log.debug('Added %s permission', permission)
+
         return True
