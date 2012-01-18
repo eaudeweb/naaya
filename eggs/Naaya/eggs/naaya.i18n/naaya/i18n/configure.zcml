@@ -23,6 +23,16 @@
       name="default"
       />
 
+   <zope:subscriber
+      for=".interfaces.IMessageAddEvent"
+      handler=".handlers.update_transaction_note"
+      />
+
+   <zope:subscriber
+      for=".interfaces.IMessageAddEvent"
+      handler=".handlers.debug_messages"
+      />
+
    <configure zcml:condition="installed Products.naayaUpdater">
       <naaya:utility
          name="LocalizerToNaayaI18n.update"
