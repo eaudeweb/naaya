@@ -1,4 +1,7 @@
-1.1.10 (unreleased)
+1.1.11 (unreleased)
+------------------
+
+1.1.10 (2012-01-18)
 ------------------
 * bugfix: decode user names used in email template [simiamih]
 
