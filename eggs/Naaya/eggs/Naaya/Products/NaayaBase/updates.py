@@ -3,6 +3,7 @@ from AccessControl.Permissions import view
 
 from naaya.core.zope2util import permission_add_role
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from naaya.i18n.LocalPropertyManager import LocalAttribute
 
 class SkipApprovalPermission(UpdateScript):
     title = ('Set the "Naaya - Skip approval" permission '
@@ -84,3 +85,47 @@ class SetPhotoFolderGalleryPermission(UpdateScript):
                 self.log.debug('Added %s permission', permission)
 
         return True
+
+class RemoveNyContentProps(UpdateScript):
+    title = ('Delete old properties of NyContent objects '
+                'for already localized properties')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Jan 18, 2012'
+
+    def _update(self, portal):
+        schema_tool = portal.getSchemaTool()
+        objects_local_props = {}
+        deleted_props = {}
+        affected_meta_types = {}
+        affected_objects = 0
+        for meta_type, schema_ob in schema_tool.listSchemas().items():
+            localized_props = []
+            for widget in schema_ob.objectValues():
+                if widget.localized:
+                    localized_props.append(widget.id.rsplit('-property', 1)[0])
+            objects_local_props[meta_type] = localized_props
+
+        for ob in portal.getCatalogedObjectsA(
+                meta_type=objects_local_props.keys()):
+            for prop in objects_local_props[ob.meta_type]:
+                if prop in ob.__dict__.keys():
+                    value = getattr(ob, prop)
+                    if isinstance(value, LocalAttribute):
+                        continue
+                    if (not ob._local_properties.has_key(prop) or
+                            ob._local_properties[prop] == {}):
+                        for lang in portal.gl_get_languages():
+                            ob.set_localpropvalue(prop, lang, value)
+                    delattr(ob, prop)
+                    affected_objects += 1
+                    deleted_props[prop] = True
+                    affected_meta_types[ob.meta_type] = True
+                    self.log.debug('Deleted property "%s" for %s' %
+                            (prop, ob.absolute_url()))
+        self.log.debug('Affected objects: %s' % affected_objects)
+        if deleted_props.keys():
+            self.log.debug('Deleted properties: %s' % deleted_props.keys())
+        if affected_meta_types.keys():
+            self.log.debug('Affected meta_types: %s' % affected_meta_types.keys())
+        return True
+
