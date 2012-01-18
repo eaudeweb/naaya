@@ -1,4 +1,7 @@
-2.12.51 (unreleased)
+2.12.52 (unreleased)
+--------------------
+
+2.12.51 (2012-01-18)
 --------------------
 * Update script to remove old properties for content types (now
   localized) [dumitval]
