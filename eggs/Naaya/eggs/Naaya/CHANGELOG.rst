@@ -1,4 +1,7 @@
-2.12.50 (unreleased)
+2.12.51 (unreleased)
+--------------------
+
+2.12.50 (2012-01-18)
 --------------------
 * update script to add photo related permissions to administrators [dumitval]
 * added default permission for Photo Folder and Gallery to admins [dumitval]
