@@ -1,5 +1,6 @@
 1.1.10 (unreleased)
 ------------------
+* bugfix: decode user names used in email template [simiamih]
 
 1.1.9 (2012-01-16)
 ------------------
