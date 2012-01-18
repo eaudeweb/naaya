@@ -339,6 +339,12 @@
       component=".update_cleanup_mainsections.UpdateCleanupMainsections"
       permission="zope2.ViewManagementScreens" />
 
+        <utility 
+      name="analytics_template.update" 
+      provides="..interfaces.IUpdateScript" 
+      component=".update_analytics_template.UpdateAnalyticsTemplate" 
+      permission="zope2.ViewManagementScreens" /> 
+
 	<utility
       name="gbif_use_openzoom.update"
       provides="..interfaces.IUpdateScript"
