@@ -1,5 +1,6 @@
 2.12.50 (unreleased)
 --------------------
+* added default permission for Photo Folder and Gallery to admins [dumitval]
 
 2.12.49 (2012-01-17)
 --------------------
