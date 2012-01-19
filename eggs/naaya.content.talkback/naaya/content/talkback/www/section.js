@@ -19,6 +19,10 @@
 
 $(function() {
 
+function is_ie9(){
+    return (jQuery.browser.msie != undefined  && jQuery.browser.version.slice(0,2) == "9.");
+}
+
 if($('ul.tb-comments-tree').length > 0)
     var inline_comments = true;
 else
@@ -89,6 +93,7 @@ function comment_add(evt) {
         resize_interval = setInterval(function() {
             var new_height = get_height(iframe[0].contentWindow);
             if(new_height == height) return;
+            if (is_ie9() && (new_height == height+15)) return;
             iframe.height(new_height + 15);
             height = new_height;
             overlay.height($(document).height());
@@ -100,7 +105,7 @@ function comment_add(evt) {
 
 function get_height(the_window) {
     var the_document = the_window.document;
-    if ($.browser.msie) {
+    if (jQuery.browser.msie != undefined  && !is_ie9()) {
         // IE6 and IE7 are broken. Fix works with IE8 too.
         var scrollHeight = Math.max(
             the_document.documentElement.scrollHeight,
