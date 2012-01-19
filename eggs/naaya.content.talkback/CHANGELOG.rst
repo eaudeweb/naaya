@@ -1,5 +1,6 @@
 1.4.6 (Unreleased)
 ------------------
+* bugfix: iframe resize in IE9 [simiamih]
 
 1.4.5 (2012-01-06)
 ------------------
