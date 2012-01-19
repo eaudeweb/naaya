@@ -35,7 +35,7 @@
 	</tr>
 
 	<tal:block content="structure python: here.prop_display_tr('resourceurl', as_href=True)" />
-	<tr><th>Address</th><td><tal:block content="here/geo_address" /></td></tr>
+	<tr tal:condition="here/geo_address"><th>Address</th><td><tal:block content="here/geo_address" /></td></tr>
 	<tal:block content="structure python: here.prop_display_tr('source')" />
 
 	<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
