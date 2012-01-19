@@ -1,4 +1,7 @@
-1.4.6 (Unreleased)
+1.4.7 (unreleased)
+------------------
+
+1.4.6 (2012-01-19)
 ------------------
 * bugfix: iframe resize in IE9 [simiamih]
 
