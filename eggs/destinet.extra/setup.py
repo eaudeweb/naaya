@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='destinet.publishing',
+setup(name='destinet.extra',
     version='1.0',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
