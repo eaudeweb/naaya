@@ -35,6 +35,7 @@ from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaCore.managers.utils import make_id
 from naaya.component import bundles
+from Products.Naaya.managers.skel_parser import skel_handler_for_path
 
 from interfaces import ICHMSite
 
@@ -45,6 +46,18 @@ class Extra_for_DateRangeIndex:
     def __init__(self, **kw):
         for key in kw.keys():
             setattr(self, key, kw[key])
+
+
+def _get_skel_handler(bundle_name):
+    if bundle_name == 'CHM':
+        skel_path = os.path.join(CHM2_PRODUCT_PATH, 'skel')
+        return skel_handler_for_path(skel_path)
+    elif bundle_name == 'CHM3':
+        skel_path = os.path.join(CHM2_PRODUCT_PATH, 'skel-chm3')
+        return skel_handler_for_path(skel_path)
+    else:
+        return None
+
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
@@ -61,7 +74,7 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
     chm_site.set_bundle(bundles.get(bundle_name))
     self._setObject(id, chm_site)
     chm_site = self._getOb(id)
-    chm_site.loadDefaultData(load_glossaries)
+    chm_site.loadDefaultData(load_glossaries, _get_skel_handler(bundle_name))
 
     if google_api_keys:
         engine = chm_site.getGeoMapTool()['engine_google']
@@ -96,14 +109,15 @@ class CHMSite(NySite):
         self.set_bundle(chm_bundle)
 
     security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self, load_glossaries=[]):
+    def loadDefaultData(self, load_glossaries=[], skel_handler=None):
         """ """
         #set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
 
         #load site skeleton - configuration
-        self.loadSkeleton(CHM2_PRODUCT_PATH)
+        if skel_handler is not None:
+            self._load_skel_from_handler(skel_handler)
 
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')

@@ -43,6 +43,7 @@ def initialize(context):
 
     from Products.NaayaCore.LayoutTool.DiskFile import allow_path
     allow_path('Products.CHM2:skel/layout/')
+    allow_path('Products.CHM2:skel-chm3/layout/')
 
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
@@ -70,7 +71,11 @@ CHMSite.CHMSite.get_content_urls = get_content_urls
 
 def chm_bundle_registration():
     """ Register things from skel into the CHM bundle """
-    from Products.NaayaCore.FormsTool import bundlesupport
-    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
-    bundlesupport.register_templates_in_directory(templates_path, 'CHM')
-    bundlesupport.register_templates_in_directory(templates_path, 'CHM3')
+    from Products.NaayaCore.FormsTool.bundlesupport import \
+        register_templates_in_directory
+
+    def forms_path(skel_name):
+        return os.path.join(os.path.dirname(__file__), skel_name, 'forms')
+
+    register_templates_in_directory(forms_path('skel'), 'CHM')
+    register_templates_in_directory(forms_path('skel-chm3'), 'CHM3')
