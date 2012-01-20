@@ -31,7 +31,7 @@
 <tal:block define="is_ratable here/is_ratable">
 	<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <span tal:replace="here/title_or_id" />
 		<tal:block condition="is_ratable" replace="structure here/user_rating_view|nothing"/>
-		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>
 			<span tal:repeat="lang here/gl_get_languages_map">
 				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />

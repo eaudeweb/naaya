@@ -40,7 +40,7 @@
 			alt here/get_meta_label" />
 			<span tal:replace="here/title" />
 			<span class="available_langs"
-				tal:condition="python:here.check_item_title(here, here.title)">
+				tal:condition="python:here.item_has_title(here, here.title)">
 				<span i18n:translate="">Item only translated in </span>
 				<span tal:repeat="lang here/gl_get_languages_map">
 					<a tal:content="python:' %s' % lang['title']"

@@ -5,6 +5,7 @@
 ------------------
 * Added i18n id for translation of 'Type' [dumitval]
 * filter display for User management search [andredor]
+* check_item_title is now item_has_title [simiamih]
 
 1.1.3 (2011-10-28)
 ------------------

@@ -30,7 +30,7 @@
             <span tal:replace="here/title_or_id" />
             <tal:block condition="is_ratable"
                             replace="structure here/user_rating_view|nothing"/>
-                <span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
                     <span i18n:translate="">Item only translated in </span>
                     <span tal:repeat="lang here/gl_get_languages_map">
                         <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
