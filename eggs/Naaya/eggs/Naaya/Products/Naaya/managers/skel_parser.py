@@ -1,4 +1,10 @@
+import os.path
+import logging
 from xml.dom import minidom
+
+
+log = logging.getLogger(__name__)
+
 
 # Translation Map
 '''
@@ -137,3 +143,16 @@ class skel_parser(object):
         skel_handler = SkelTree()
         skel_handler.root = self.build_tree(dom)
         return (skel_handler, '')
+
+
+def skel_handler_for_path(skel_path):
+    f = open(os.path.join(skel_path, 'skel.xml'), 'rb')
+    skel_content = f.read()
+    f.close()
+    skel_handler, error = skel_parser().parse(skel_content)
+    if error:
+        log.error(error)
+        raise ValueError('error parsing skel.xml')
+
+    skel_handler.skel_path = skel_path
+    return skel_handler
