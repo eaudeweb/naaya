@@ -1,5 +1,6 @@
 1.0.4 (unreleased)
 ------------------
+* check_item_title is now item_has_title [simiamih]
 
 1.0.3 (2012-01-13)
 ------------------
