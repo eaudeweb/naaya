@@ -1,6 +1,8 @@
-2.4.20 (unreleased)
+2.5 (unreleased)
 -------------------
 * path correction for social icons in style_common [dumitval]
+* New bundle "CHM3" with separate skel folder and new layout
+  requires Naaya >= 2.12.52 [moregale]
 
 2.4.19 (2011-12-16)
 -------------------
