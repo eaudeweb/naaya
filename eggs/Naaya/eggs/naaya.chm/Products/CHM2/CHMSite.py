@@ -16,6 +16,7 @@ from ZPublisher.HTTPRequest import record
 from App.ImageFile import ImageFile
 from OFS.Image import manage_addImage
 from OFS.Folder import manage_addFolder
+from zope.publisher.browser import BrowserPage
 
 from constants import *
 from Products.NaayaBase.constants import *
@@ -735,3 +736,12 @@ def data2stringIO(data):
             data=data.next
     str_data.seek(0)
     return str_data
+
+
+style_preview_template = PageTemplateFile('zpt/style_preview', globals())
+
+class StylePreview(BrowserPage):
+    def __call__(self, REQUEST):
+        context = self.aq_parent
+        page = 'no-portlets'
+        return style_preview_template.__of__(context)(page=page)
