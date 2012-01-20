@@ -48,7 +48,7 @@ class Extra_for_DateRangeIndex:
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
-                      load_glossaries=[], REQUEST=None):
+                      load_glossaries=[], bundle_name='CHM', REQUEST=None):
     """ """
     if REQUEST is not None:
         # we'll need the SESSION later on; grab it early so we don't
@@ -57,7 +57,9 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
     ut = utils()
     id = ut.utCleanupId(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
-    self._setObject(id, CHMSite(id, title=title, lang=lang))
+    chm_site = CHMSite(id, title=title, lang=lang)
+    chm_site.set_bundle(bundles.get(bundle_name))
+    self._setObject(id, chm_site)
     chm_site = self._getOb(id)
     chm_site.loadDefaultData(load_glossaries)
 
@@ -70,6 +72,8 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
 
 chm_bundle = bundles.get("CHM")
 chm_bundle.set_parent(bundles.get("Naaya"))
+chm3_bundle = bundles.get("CHM3")
+chm3_bundle.set_parent(bundles.get("Naaya"))
 
 class CHMSite(NySite):
     """ """
