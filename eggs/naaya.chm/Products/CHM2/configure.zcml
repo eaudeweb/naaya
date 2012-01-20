@@ -38,6 +38,13 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <browser:page
+    for="Products.Naaya.interfaces.INySite"
+    name="style_preview.html"
+    class=".CHMSite.StylePreview"
+    permission="zope2.View"
+    />
+
   <browser:resourceDirectory
       name="Products.CHM2-www"
       directory="www"
