@@ -133,7 +133,7 @@ function fRenameObjects()
     <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
         [Restricted access]
     </tal:block>
-	<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+	<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
 		<span i18n:translate="">Item only translated in </span>
 		<span tal:repeat="lang here/gl_get_languages_map">
 			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
@@ -185,7 +185,7 @@ function fRenameObjects()
                     </em>
                 </tal:block>
 
-		<span class="available_langs" tal:condition="python:here.check_item_title(folder, folder.title)">
+		<span class="available_langs" tal:condition="python:here.item_has_title(folder, folder.title)">
 			<span i18n:translate="">Item only translated in </span>
 			<span tal:repeat="lang here/gl_get_languages_map">
 				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
@@ -221,7 +221,7 @@ function fRenameObjects()
     <td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" /></td>
     <td class="title-column">
         <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
-		<span class="available_langs" tal:condition="python:here.check_item_title(object, object.title)">
+		<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
 			<span i18n:translate="">Item only translated in </span>
 			<span tal:repeat="lang here/gl_get_languages_map">
 				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />

@@ -1,5 +1,6 @@
 2.12.52 (unreleased)
 --------------------
+* deprecated NyFolder.check_item_title calls removed [simiamih]
 
 2.12.51 (2012-01-18)
 --------------------
