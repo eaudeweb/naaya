@@ -1,0 +1,53 @@
+<metal:block define-macro="content">
+
+<div id="menu"><div class="wrap">
+    <ul class="menu-bar">
+        <li class="menu-bar-level1">
+            <a tal:attributes="href site_url" title=""
+               class="menu-bar-level1-link"
+               i18n:translate="" accesskey="1">Home</a>
+        </li>
+
+        <tal:block define="link_groups python:['menunav_about', 'menunav_news', 'menunav_events', 'menunav_stories', 'menunav_photos', 'menunav_more', 'menunav_sitemap']">
+            <tal:block repeat="item_group link_groups">
+                <tal:block define="group_list python:here.getPortletsTool().getLinksListById(item_group);
+                            l_list group_list/get_links_list">
+                    <li tal:condition="l_list"
+                        class="menu-bar-level1">
+                        <tal:block condition="python:len(l_list)==1"
+                            tal:repeat="l_item l_list">
+                            <a class="menu-bar-level1-link"
+                                tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
+                                tal:attributes="href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
+                                                title l_item/description"
+                                    tal:content="l_item/title"
+                                    i18n:translate=""
+                                    i18n:attributes="title">
+                            </a>
+                        </tal:block>
+                        <tal:block condition="python:len(l_list)>1">
+                            <a class="menu-bar-level1-link"
+                                tal:attributes="href string:${site_url}/links_group_html?id=${group_list/id}"
+                                tal:content="group_list/title"
+                                i18n:translate=""></a>
+                            <ul>
+                                <tal:block repeat="l_item l_list">
+                                    <li tal:condition="python:here.checkPermissionForLink(l_item.permission, here)">
+                                        <a tal:attributes="href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
+                                            title l_item/description"
+                                            i18n:attributes="title">
+                                            <span  tal:content="l_item/title"
+                                                i18n:translate="">Title</span>
+                                        </a>
+                                    </li>
+                                </tal:block>
+                            </ul>
+                        </tal:block>
+                    </li>
+                </tal:block>
+            </tal:block>
+        </tal:block>
+    </ul>
+</div></div>
+
+</metal:block>

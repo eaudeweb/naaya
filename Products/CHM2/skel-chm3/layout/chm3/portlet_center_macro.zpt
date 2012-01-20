@@ -1,23 +1,6 @@
 <tal:block metal:define-macro="portlet">
-<div tal:attributes="class box_class">
-<div class="box-top">
-<h3 class="center-portlet-title"><tal:block
-    metal:define-slot="portlet_title">PORTLET TITLE</tal:block></h3>
-</div>
-<div class="center-portlet-content">
-<tal:block metal:define-slot="portlet_content">PORTLET CONTENT</tal:block>
-</div>
-<div class="middle-portlet-footer">
-</div>
+<div class="portlet">
+    <h3><metal:s define-slot="portlet_title">PORTLET TITLE</metal:s></h3>
+    <metal:s define-slot="portlet_content">PORTLET CONTENT</metal:s>
 </div>
 </tal:block>
-
-<metal:block define-macro="site_portlet">
-    <metal:block define-slot="portlet_content"></metal:block>
-    <div class="clear">&nbsp;</div>
-</metal:block>
-
-<metal:block define-macro="page_portlet">
-    <metal:block define-slot="portlet_content"></metal:block>
-    <div class="clear">&nbsp;</div>
-</metal:block>
