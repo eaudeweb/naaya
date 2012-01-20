@@ -162,7 +162,5 @@
 <tal:no-style condition="no_style_css">
   <script>
     $('head link[href$="/style.css"]').remove();
-    $('head link[href$="/common.css"]').remove();
-    $('head link[href$="/print.css"]').remove();
   </script>
 </tal:no-style>
