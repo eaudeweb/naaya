@@ -62,6 +62,15 @@
         </td>
     </tr>
     <tr>
+        <td class="form-label">Bundle</td>
+        <td>
+            <select name="bundle_name">
+                <option>CHM</option>
+                <option>CHM3</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
         <td></td>
         <td><input type="submit" value="Add" /></td>
     </tr>
