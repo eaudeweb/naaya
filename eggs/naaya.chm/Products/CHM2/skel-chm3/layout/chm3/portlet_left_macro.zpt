@@ -1,10 +1,6 @@
-<metal:block define-macro="portlet">
-    <metal:block define-slot="portlet_content"></metal:block>
-</metal:block>
-
-<metal:block define-macro="site_portlet">
-    <div class="medium-box">
-        <metal:block define-slot="portlet_content"></metal:block>
-    </div>
-    <div class="clear">&nbsp;</div>
-</metal:block>
+<tal:block metal:define-macro="portlet">
+<div class="portlet">
+    <h3><metal:s define-slot="portlet_title">PORTLET TITLE</metal:s></h3>
+    <metal:s define-slot="portlet_content">PORTLET CONTENT</metal:s>
+</div>
+</tal:block>
