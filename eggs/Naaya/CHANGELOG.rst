@@ -1,6 +1,7 @@
 2.12.52 (unreleased)
 --------------------
 * deprecated NyFolder.check_item_title calls removed [simiamih]
+* allow for loading content from arbitrary skel folders [moregale]
 
 2.12.51 (2012-01-18)
 --------------------

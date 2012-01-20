@@ -80,7 +80,7 @@ from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExpo
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from managers.skel_parser import skel_parser
+from managers.skel_parser import skel_handler_for_path
 from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
@@ -326,29 +326,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return self.skel_handler_cache[product_path]
 
         skel_path = join(product_path, 'skel')
-        skel_content = self.futRead(join(skel_path, 'skel.xml'), 'r')
-        skel_handler, error = skel_parser().parse(skel_content)
-        if error:
-            zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, error)
-            raise ValueError('error parsing skel.xml')
-
-        skel_handler.skel_path = skel_path
-
+        skel_handler = skel_handler_for_path(skel_path)
         self.skel_handler_cache[product_path] = skel_handler
         return skel_handler
-
-    security.declarePrivate('get_all_skel_handlers')
-    def get_all_skel_handlers(self):
-        handlers = []
-        for product_path in self.product_paths:
-            handlers.append(self.get_skel_handler(product_path))
-        return handlers
 
     security.declarePrivate('loadSkeleton')
     def loadSkeleton(self, product_path):
         """ """
         #load site skeleton - configuration
-        skel_handler = self.get_skel_handler(product_path)
+        self._load_skel_from_handler(self.get_skel_handler(product_path))
+
+    def _load_skel_from_handler(self, skel_handler):
         skel_path = skel_handler.skel_path
         if skel_handler is not None:
             properties_tool = self.getPropertiesTool()
