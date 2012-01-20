@@ -17,15 +17,22 @@
 		<form id="site_urlmap" title="Portal url map"/>
 		<form id="sitemap_xml" title="Google sitemap"/>
 	</forms>
-	<layout default_skin_id="chm3" default_scheme_id="default">
+	<layout default_skin_id="chm3" default_scheme_id="default" diskpath_prefix="Products.CHM2:skel-chm3">
 		<skin id="chm3" title="CHM3">
 			<template id="portlet_center_macro" title=""/>
 			<template id="portlet_left_macro" title=""/>
 			<template id="portlet_right_macro" title=""/>
 			<template id="site_index" title=""/>
 			<template id="standard_template" title=""/>
+			<template id="element_breadcrumb" title=""/>
+			<template id="element_footer" title=""/>
+			<template id="element_footer_mainsections" title=""/>
+			<template id="element_header" title=""/>
+			<template id="element_mainsections" title=""/>
+			<template id="element_splash_content" title=""/>
+			<template id="element_topmenu" title=""/>
 			<scheme id="default" title="">
-				<file id="common.css" title=""/>
+				<diskfile path="common.css" id="common.css"/>
 				<image id="Naaya_Folder-icon" title=""/>
 				<image id="Naaya_Folder-icon-marked" title=""/>
 				<image id="collapse-icon.png" title=""/>
@@ -34,6 +41,7 @@
 				<image id="logo.png" title=""/>
 				<file id="print.css" title=""/>
 				<file id="style.css" title=""/>
+				<image id="sprite.png" title=""/>
 			</scheme>
 		</skin>
 	</layout>
@@ -97,6 +105,23 @@
 		</linkslist>
 		<linkslist id="menunav_sitemap" title="Sitemap" portlet="">
 			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
+		</linkslist>
+		<linkslist id="menunav_news" title="News" portlet="">
+			<link id="01" title="News" description="" url="/news/" relative="1" permission="" order="50"/>
+		</linkslist>
+		<linkslist id="menunav_events" title="Events" portlet="">
+			<link id="01" title="Events" description="" url="/events/" relative="1" permission="" order="50"/>
+		</linkslist>
+		<linkslist id="menunav_stories" title="Stories" portlet="">
+			<link id="01" title="Stories" description="" url="/stories/" relative="1" permission="" order="50"/>
+		</linkslist>
+		<linkslist id="menunav_photos" title="Photos" portlet="">
+			<link id="01" title="Photos" description="" url="/PhotoArchive/" relative="1" permission="" order="50"/>
+		</linkslist>
+		<linkslist id="menunav_more" title="More" portlet="">
+			<link id="01" title="Portal map" description="" url="/portal_map/" relative="1" permission="" order="20"/>
+			<link id="02" title="Forum" description="" url="/portal_forum/" relative="1" permission="" order="50"/>
+			<link id="03" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="80"/>
 		</linkslist>
 	</portlets>
 	<emails>

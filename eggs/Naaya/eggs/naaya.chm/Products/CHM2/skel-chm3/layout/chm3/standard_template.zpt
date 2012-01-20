@@ -1,295 +1,150 @@
-<metal:block extend-macro="python:here.getLayoutTool().get_standard_template_base().macros['page']" define-macro="page">
-  <metal:block fill-slot="meta">
+<metal:block define-macro="page">
+<tal:block replace="python:request.RESPONSE.setHeader('content-type','text/html;charset=utf-8')" />
+<!doctype html>
+<html tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+      tal:define="site_url here/getSitePath;
+                  layout_tool python:here.getSite().getLayoutTool();
+                  current_layout python:layout_tool.getCurrentSkin();
+                  skin_files_path python:layout_tool.get_skin_files_path();
+                  layout_path python:layout_tool.absolute_url();">
+  <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta name="author" content="Rob J.J. Hendriks" />
     <meta name="keywords" content="" />
-    <meta name="description" content="Welcome to Biodiversity-CHM.NL: Dutch node of the CBD Clearing House Mechanism Dutch node of the CBD Clearing House Mechanism and the central webportal for communication related to Dutch biodiversity policy. The mission of this portal is to provide access to a maximum of biodiversity information related to the Netherlands." />
-  </metal:block>
+    <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
+    <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
 
-  <metal:block fill-slot="standard-head-links">
+    <metal:block define-slot="header-title">
+      <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
+    </metal:block>
+
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/common.css" />
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/ui.css" />
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style.css" />
+    <link rel="stylesheet" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
+    <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/common.css" />
+    <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/style.css" />
 
-    <link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/print.css" />
-
-    <tal:block content="structure string:<!--[if IE]>"/>
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/ie-general.css" />
-    <tal:block content="structure string:<![endif]-->"/>
-
-    <tal:block content="structure string:<!--[if IE 6]>"/>
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/ie6.css" />
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/supersleight-min.js"></script>
-    <tal:block content="structure string: <![endif]-->"/>
-
-    <tal:block content="structure string:<!--[if IE 7]>"/>
-    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/ie7.css" />
-    <tal:block content="structure string:<![endif]-->"/>
-
-    <tal:block content="structure string:<!--[if IE]>"/>
-    <style type="text/css">
-    /*<![CDATA[*/
-    body {
-        word-wrap: break-word;
-    }
-    /*]]>*/
-    </style>
-    <tal:block content="structure string:<![endif]-->"/>
-    <noscript>
-      <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/noscript.css" />
-    </noscript>
-  </metal:block>
-
-  <metal:block fill-slot="standard-head-content">
     <tal:block replace="structure python: here.getFormsTool().getForm('site_scripts')()">
       Default JavaScripts
     </tal:block>
 
-    <script tal:define="site here/getSite; site_url site/absolute_url;" tal:content="string: var site_url = '${site_url}';"></script>
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/scroll.js"></script>
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/easing.js"></script>
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/mousewheel.js"></script>
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/functions.js"></script>
+    <script tal:define="site here/getSite; site_url site/absolute_url;"
+      tal:content="string: var site_url = '${site_url}';"></script>
+    <script tal:attributes="src string:${site_url}/++resource++Products.CHM2-www/jslib/scroll.js"></script>
+    <script tal:attributes="src string:${site_url}/++resource++Products.CHM2-www/chm3-common.js"></script>
+    <metal:block define-slot="head"></metal:block>
+    <tal:block replace="structure here/portal_statistics/gw_verify" />
+    <tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />
+  </head>
 
-    <tal:block content="structure string:<!--[if IE]>"/>
-    <script tal:attributes="src string:${skin_files_path}/pngfix.js" type="text/javascript"></script>
-    <tal:block content="structure string:<![endif]-->"/>
+  <tal:block define="global no_left_portlets no_left_portlets|nothing"
+             condition="not:no_left_portlets">
+    <tal:block define="global left_portlets_html python:' '.join(
+                                  item({'here': here, 'portlet_macro': 'portlet_left_macro'})
+                                  for item in here.portal_portlets.get_portlets_for_obj(here, 'left')
+                              ).strip();
+                       global no_left_portlets not:left_portlets_html"/>
+  </tal:block>
 
-    <script type='text/javascript'>
-    /* <![CDATA[ */
-    var ie6w = {
-      url: "http://10.0.0.207/chm/",
-      test: "false",
-      jstest: "false",
-      t1: "WARNING",
-      t2: "You are using an unsupported version of Internet Explorer. In order to protect your privacy, and to ensure an optimum browsing experience it is highly recommended that you upgrade to a modern browser.",
-      firefox: "true",
-      opera: "false",
-      chrome: "true",
-      safari: "false",
-      ie: "true",
-      firefoxu: "http://www.getfirefox.net/",
-      operau: "http://www.opera.com/",
-      chromeu: "http://www.google.com/chrome/",
-      safariu: "http://www.apple.com/safari/",
-      ieu: "http://www.microsoft.com/windows/ie/"
-    };
-    /* ]]> */
-    </script>
-    <script type='text/javascript' tal:attributes="src string:${skin_files_path}/iealert.js"></script>
-    
-    <link rel="stylesheet" type="text/css" media="screen"  tal:attributes="href string:${skin_files_path}/superfish.css" />
-    <script type="text/javascript" tal:attributes="src string:${skin_files_path}/hoverIntent.js"></script>
-		<script type="text/javascript" tal:attributes="src string:${skin_files_path}/superfish.js"></script>
-		<script type="text/javascript">
-      jQuery(function(){
-        jQuery('ul.sf-menu').superfish();
-      });
-		</script>    
-  </metal:block>
+  <tal:block define="global no_right_portlets no_right_portlets|nothing"
+             condition="not:no_right_portlets">
+    <tal:block define="global right_portlets_html python:' '.join(
+                                  item({'here': here, 'portlet_macro': 'portlet_right_macro'})
+                                  for item in here.portal_portlets.get_portlets_for_obj(here, 'right')
+                              ).strip();
+                       global no_right_portlets not:right_portlets_html"/>
+  </tal:block>
 
-  <metal:block fill-slot="standard-body">
-    <body>
-      <a class="hidden" href="#contentstart" accesskey="2">Skip navigation</a>
+  <tal:block define="global no_center_portlets no_center_portlets|nothing"
+             condition="not:no_center_portlets">
+    <tal:block define="global center_portlets_html python:' '.join(
+                                  item({'here': here, 'portlet_macro': 'portlet_center_macro', 'box_class': 'medium-box'})
+                                  for item in here.portal_portlets.get_portlets_for_obj(here, 'center')
+                              ).strip();
+                       global no_center_portlets not:center_portlets_html"/>
+  </tal:block>
 
-      <div id="global-navigation">
-        <div class="global-navigation-content">
 
-          <div id="global-actions" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
-            <ul>
-              <li class="login-item li-first-item">
-                <a title="Login" class="login" tal:condition="python: authenticated_user == 'Anonymous User'"
-                  tal:attributes="href string:${site_url}/login_html" i18n:translate="">
-                  Login
-                </a>
+  <body tal:attributes="class python:' '.join(test(no_left_portlets, [], ['has-left-portlets']) +
+                                              test(no_right_portlets, [], ['has-right-portlets'])) ">
+    <a class="hidden" href="#header" accesskey="2">Skip navigation</a>
 
-                <a title="Login" class="login" tal:condition="python: authenticated_user != 'Anonymous User'"
-                  tal:attributes="href string:${site_url}/login_html">
-                  <span id="log1" tal:condition="python: authenticated_user != 'Anonymous User'" i18n:translate="">Welcome</span>
-                  <span tal:replace="authenticated_user"/>
-                </a>
-              </li>
-            </ul>
-          </div>
+    <div id="header">
+      <metal:block use-macro="python:current_layout['element_topmenu'].macros['content']"/>
+      <metal:block use-macro="python:current_layout['element_header'].macros['content']"/>
+    </div>
 
-          <div id="global-information">
-            <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
-              <li class="li-first-item">
-                <a href="javascript:void(0); " class="information-first">
-                  <img tal:attributes="src string:${skin_files_path}/blank.gif" alt="" title="" />
-              </li>
-              <tal:block tal:repeat="item l_list">
-              <li tal:condition="python:here.checkPermissionForLink(item.permission, here)"
-                    tal:define="first repeat/item/start">
-                  <a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);">
-                      <acronym tal:attributes="title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title"></acronym>
-                  </a>
-              </li>
-              </tal:block>
-            </ul>
-          </div>
+    <div id="content-holder">
+      <div id="content">
 
-          <tal:block replace="structure here/languages_box"/>
+        <metal:block use-macro="python:current_layout['element_mainsections'].macros['menu']"/>
 
-          <div id="global-search">
-            <form method="get" id="global-search-form" tal:attributes="action string:${site_url}/search_html">
-              <input type="text" name="query" id="global-search-input" value="" accesskey="4" />
-              <input type="submit" value="Search" class="search-input-button" />
-            </form>
-          </div>
-        </div>
-      </div>
+        <metal:block define-slot="before-columns"></metal:block>
 
-      <div id="wrap">
-        <div id="header">
-          <div id="logo" tal:define="logo_url here/leftLogoUrl">
-            <a tal:attributes="href python:here.getSite().absolute_url()" title="Biodiversity-CHM.NL Home">
-              <img tal:attributes="src string:${skin_files_path}/logo.png; alt here/site_title; title here/site_title" i18n:attributes="alt; title" tal:condition="logo_url" />
-            </a>
-          </div>
+        <div class="wrap">
 
-          <div id="site-details">
-            <div id="site-title">
-              <a tal:attributes="href python: here.getSite().absolute_url(); title here/site_title" tal:content="here/site_title" />
-            </div>
-            <div id="site-description">
-              <p tal:content="here/site_subtitle" />
-            </div>
-          </div>
+          <span tal:replace="structure here/messages_box"/>
 
-          <div id="menu">
-            <ul class="sf-menu" tal:define="menu_id string:linkgroups" tal:attributes="id menu_id">
-              <li class="separator">
-                <img tal:attributes="src string:${skin_files_path}/blank.gif" title="" alt="" class="separator-image" />
-              </li>
+          <div id="center_content_holder">
 
-              <li>
-                <a tal:attributes="href site_url" title="" i18n:translate="" accesskey="1">Home</a>
-              </li>
-
-              <li class="separator">
-                <img tal:attributes="src string:${skin_files_path}/blank.gif" title="" alt="" class="separator-image" />
-              </li>
-
-              <tal:block define="link_groups python:['menunav_about', 'menunav_content', 'menunav_services', 'menunav_sitemap']">
-                <tal:block repeat="item_group link_groups">
-                  <tal:block define="group_list python:here.getPortletsTool().getLinksListById(item_group);
-                                    l_list group_list/get_links_list">
-                    <li tal:condition="l_list" tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}">
-                      <tal:block condition="python:len(l_list)==1" tal:repeat="l_item l_list">
-                          <a tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
-                              tal:attributes="href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
-                                                   title l_item/description"
-                              tal:content="l_item/title" i18n:translate="" i18n:attributes="title">
-                          </a>
-                      </tal:block>
-                      <tal:block condition="python:len(l_list)>1">
-                      <a tal:attributes="href string:${site_url}/links_group_html?id=${group_list/id};
-                                                  id string:${menu_id}_a_${repeat/item_group/index}" tal:content="group_list/title" i18n:translate="" class="menu-item-label"></a>
-                        <ul class="menu-item-content" tal:attributes="id string:${menu_id}_ul_${repeat/item_group/index}">
-                          <tal:block repeat="l_item l_list">
-                              <li tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
-                                      tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}_${repeat/l_item/index}">
-                                  <a tal:attributes="href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
-                                                              title l_item/description;
-                                                              id string:${menu_id}_a_${repeat/item_group/index}_${repeat/l_item/index}" i18n:attributes="title"><span  tal:content="l_item/title" i18n:translate="">Title</span></a>
-                              </li>
-                          </tal:block>
-                        </ul>
-                      </tal:block>
-                  </li>
-
-                  <li class="separator">
-                    <img tal:attributes="src string:${skin_files_path}/blank.gif" title="" alt="" class="separator-image" />
-                  </li>
-                </tal:block>
-              </tal:block>
+            <tal:block condition="not:no_left_portlets">
+              <metal:block define-slot="left-portlets">
+                <div class="portlet-column-left"
+                     tal:content="structure left_portlets_html"></div>
+              </metal:block>
             </tal:block>
-          </ul>
-        </div>
-      </div>
 
-        <div id="content-holder" tal:define="non_site_index python: here.rstk.has_view_name(['index_html'], request) and here != here.getSite()">
-          <div class="clear">&nbsp;</div>
-          <div id="content">
+            <div class="center-and-right">
 
-            <metal:block define-slot="maincategories-slideshow"></metal:block>
-            <metal:block define-slot="breadcrumb">
-            <div id="breadcrumb">
-              <ul>
-                <tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
-                  <li>
-                    <a class="home-link" tal:condition="python:path('repeat/crumb/index')<=0" tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" i18n:translate="">Home</a>
-                    <a tal:condition="python:path('repeat/crumb/index')>0" tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="python:test(len(crumb.title_or_id())<25, crumb.title_or_id()[:25], crumb.title_or_id()[:25]+ '...')" />
-                  </li>
+              <metal:block define-slot="breadcrumb">
+                <metal:block use-macro="python:current_layout['element_breadcrumb'].macros['content']"/>
+              </metal:block>
 
-                  <li class="breadcrumb-separator">
-                    <img tal:attributes="src string:${skin_files_path}/blank.gif" title="" alt="" class="separator-image" />
-                  </li>
-                </tal:block>
-              </ul>
-            </div>
-            </metal:block>
-
-            <span tal:replace="structure here/messages_box"/>
-
-            <metal:block define-slot="left-portlets">
-            <div class="home-medium-column left" tal:condition="python: here != here.getSite()">
-              <tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'left')">
-                <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
+              <tal:block condition="not:no_right_portlets">
+                <metal:block define-slot="right-portlets">
+                  <div class="portlet-column-right"
+                       tal:content="structure right_portlets_html">
+                  </div>
+                </metal:block>
               </tal:block>
-            </div>
-            </metal:block>
 
-            <div id="center_content_holder" tal:attributes="class python: test(non_site_index, 'page-big-column left', '')">
-                <div tal:attributes="class python: test(non_site_index, 'innerpage-large-box', '')">
+              <div class="center-column">
+
                 <metal:block define-slot="body">
                   <!--SITE_HEADERFOOTER_MARKER-->
                 </metal:block>
-                </div>
-                <metal:block define-slot="center-portlets">
-                <div id="center_port" tal:condition="python: here.rstk.has_view_name(['index_html'], request) and here != here.getSite()">
-                  <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
-                    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro', 'box_class': 'medium-box'})" />
-                  </tal:block>
-                </div>
-                </metal:block>
-            </div>
-            <metal:block define-slot="right-portlets">
-            <div id="right_port">
-                <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
-                    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+
+                <tal:block condition="not:no_center_portlets">
+                  <metal:block define-slot="center-portlets">
+                    <div id="center_port"
+                         tal:content="structure center_portlets_html"></div>
+                  </metal:block>
                 </tal:block>
-            </div>
-            </metal:block>
-            </div>
-          <div class="clear">&nbsp;</div>
-        </div>
 
-        <metal:block define-slot="footer">
-        <div id="footer">
-          <div class="clearfix">&nbsp;</div>
+              </div>
 
-          <div id="footer-content">
-                    <a tal:attributes="href string:${site_url}/informatie/copyright" i18n:translate="">Copyright</a>
-                    &middot;
-                    <a tal:attributes="href string:${site_url}/feedback_html" accesskey="9" i18n:translate="">Feedback</a>
-                    &middot;
-                    <a tal:attributes="href string:${site_url}/informatie/toegankelijkheidsverklaring" accesskey="0" i18n:translate="">Accessibility statement</a>
+            </div>
+
           </div>
-
-          <div class="clear">&nbsp;</div>
         </div>
-        </metal:block>
       </div>
+    </div>
 
-      <div class="clear">&nbsp;</div>
+    <metal:block define-slot="footer">
+      <metal:block use-macro="python:current_layout['element_footer_mainsections'].macros['content']"/>
+      <metal:block use-macro="python:current_layout['element_footer'].macros['content']"/>
+    </metal:block>
 
-      <div id="grass">
-        &nbsp;
-      </div>
-    </body>
+  </body>
+</html>
+</metal:block>
+
+<metal:block define-macro="light"
+             extend-macro="here/standard_template_macro">
+  <metal:block fill-slot="head">
+    <tal:block define="global no_left_portlets python:True;
+                       global no_right_portlets python:True;
+                       global no_center_portlets python:True"/>
+    <metal:block define-slot="head"></metal:block>
   </metal:block>
 </metal:block>
