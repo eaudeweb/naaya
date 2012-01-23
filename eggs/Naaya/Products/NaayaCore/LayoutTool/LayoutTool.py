@@ -3,7 +3,7 @@ Naaya Site
 
 """
 
-from os.path import join
+import os.path
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -112,6 +112,8 @@ class LayoutTool(Folder, combosync_tool):
         for v in ny_content.values():
             if v.has_key('additional_style') and v['additional_style']:
                 style = v['additional_style']
+                if callable(style):
+                    style = style()
                 res.append('/* Begin %s styles*/' % v['meta_type'])
                 res.append(style)
                 res.append('/* End %s styles*/\n' % v['meta_type'])
@@ -166,3 +168,28 @@ class LayoutTool(Folder, combosync_tool):
     ny_before_listing = PageTemplateFile('zpt/manage_main_header', globals())
 
 InitializeClass(LayoutTool)
+
+
+class AdditionalStyle(object):
+
+    def __init__(self, css_path, globals_=None):
+        if globals_ is not None:
+            dirname = os.path.dirname(globals_['__file__'])
+            css_path = os.path.join(dirname, css_path)
+        self.css_path = css_path
+        self.last_mtime = None
+
+    def _patch_content(self, value):
+        out = ["/* %s */" % self.css_path]
+        for i, line in enumerate(value.splitlines()):
+            out.append("/*%3d*/ %s" % (i+1, line))
+        return "\n".join(out)
+
+    def __call__(self):
+        mtime = os.stat(self.css_path).st_mtime
+        if mtime > self.last_mtime:
+            f = open(self.css_path, 'rb')
+            self.content = self._patch_content(f.read())
+            f.close()
+            self.last_mtime = mtime
+        return self.content
