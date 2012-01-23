@@ -8,8 +8,8 @@
 	<script tal:attributes="src string:/misc_/Naaya/mainsections.js"></script>
 </metal:block>
 <script type="text/javascript" tal:content="string:
-	var img_collapse = '${skin_files_path}/ep_collapse.gif';
-	var img_expand = '${skin_files_path}/ep_expand.gif';
+	var img_collapse = '++resource++Products.Naaya/ep_collapse.gif';
+	var img_expand = '++resource++Products.Naaya/ep_expand.gif';
 	var mainsections_cookie = '${site_id}-mainsections';
 	var maintopics_settings = ${maintopics_settings_json};"></script>
 

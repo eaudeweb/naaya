@@ -12,6 +12,11 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <browser:resourceDirectory
+      name="Products.Naaya"
+      directory="www"
+      />
+
   <adapter
     factory=".NyFolderBase.ObjectListingPortlet"
     name="portlet_objects_listing"
