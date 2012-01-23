@@ -94,6 +94,10 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.RemoveNyContentProps"
              permission="zope2.ViewManagementScreens" />
+    <utility name="add_last_modification.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.AddLastModificationProperty"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

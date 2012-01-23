@@ -30,7 +30,7 @@ class GenericViewAdapter(object):
         return False, False
 
     def get_modification_date(self):
-        return DT2dt(self.ob.bobobase_modification_time())
+        return DT2dt(getattr(self.ob.aq_base, 'last_modification', self.ob.bobobase_modification_time()))
 
     def get_info_text(self):
         return ""

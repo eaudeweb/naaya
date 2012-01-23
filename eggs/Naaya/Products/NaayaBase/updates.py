@@ -129,3 +129,18 @@ class RemoveNyContentProps(UpdateScript):
             self.log.debug('Affected meta_types: %s' % affected_meta_types.keys())
         return True
 
+class AddLastModificationProperty(UpdateScript):
+    title = ('Add last_modification date-time to NyContent objects')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Jan 20, 2012'
+
+    def _update(self, portal):
+        schema_tool = portal.getSchemaTool()
+        meta_types = schema_tool.listSchemas().keys()
+        for ob in portal.getCatalogedObjectsA(meta_type=meta_types):
+            if not hasattr(ob, 'last_modification'):
+                ob.last_modification = ob.bobobase_modification_time()
+                self.log.debug('Added last modification "%s" for %s' %
+                    (portal.utShowFullDateTime(ob.bobobase_modification_time()),
+                        ob.absolute_url()))
+        return True

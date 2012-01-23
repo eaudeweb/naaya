@@ -1,5 +1,6 @@
 2.12.52 (unreleased)
 --------------------
+* Added last_modification property to NyContent types [dumitval]
 * deprecated NyFolder.check_item_title calls removed [simiamih]
 * allow for loading content from arbitrary skel folders [moregale]
 
