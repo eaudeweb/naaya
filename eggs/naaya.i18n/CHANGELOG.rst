@@ -1,5 +1,7 @@
 1.0.11 (unreleased)
 ------------------
+* Debugging code to find sources of spurious messages [moregale]
+* Remove annoying log warnings [moregale]
 
 1.0.10 (2012-01-13)
 ------------------
