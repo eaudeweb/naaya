@@ -1,8 +1,8 @@
 #Python imports
 try:
-    import json
-except ImportError:
     import simplejson as json
+except ImportError:
+    import json
 
 #Zope imports
 from OFS.SimpleItem import SimpleItem
