@@ -26,6 +26,7 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -38,8 +39,6 @@ DEFAULT_SCHEMA = {
     # add NyBFile-specific properties here
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
-
-ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
 
 # this dictionary is updated at the end of the module
 config = {
@@ -56,7 +55,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyBFile',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/style.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'bfile.gif'),
         '_misc': {
                 'NyBFile.gif': ImageFile('www/bfile.gif', globals()),
