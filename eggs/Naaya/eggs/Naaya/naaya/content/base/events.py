@@ -1,3 +1,4 @@
+from DateTime import DateTime
 from zope.interface import implements
 from zope.event import notify
 from zope.component import adapter
@@ -83,3 +84,8 @@ def notify_content_object_moved(obj, event):
     new_site_path = '/'.join(new_pp[len(site_pp):])
 
     notify(NyContentObjectMovedEvent(obj, event, old_site_path, new_site_path))
+
+def update_last_modification(event):
+    obj = event.context
+    if not hasattr(obj, 'version') or not obj.version:
+        obj.last_modification = DateTime()
