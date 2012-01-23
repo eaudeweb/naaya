@@ -6,23 +6,23 @@
 
 
 <style type="text/css">
-	.logo-langs span {
+	.admin-content .logo-langs span {
 		float: right;
 		width: 10em;
 		}
-	.left-logo {
+	.admin-content .left-logo {
 		float: left;
 		width: 45%;
 		}
-	.right-logo {
+	.admin-content .right-logo {
 		float: right;
 		width: 45%;
 		}
-	form {
+	.admin-content form {
 		clear: both;
 		margin-bottom: 1em;
 		}
-	.delete {
+	.admin-content .delete {
 		display: block;
 		}
 </style>
