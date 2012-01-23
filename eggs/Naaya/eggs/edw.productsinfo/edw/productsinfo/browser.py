@@ -1,9 +1,9 @@
 """ Browser Views
 """
 try:
-    import json
-except ImportError:
     import simplejson as json
+except ImportError:
+    import json
 import Zope2
 from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
 from zope.publisher.browser import BrowserPage

@@ -2,9 +2,9 @@ import time
 from BeautifulSoup import BeautifulSoup
 from mock import patch, Mock
 try:
-    import json
-except ImportError:
     import simplejson as json
+except ImportError:
+    import json
 
 from DateTime import DateTime
 import transaction

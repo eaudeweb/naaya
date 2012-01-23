@@ -1,8 +1,8 @@
 import urllib
 try:
-    import json
-except ImportError:
     import simplejson as json
+except ImportError:
+    import json
 from os.path import join, dirname
 from urllib import quote
 from zipfile import ZipFile

@@ -1,9 +1,8 @@
 from difflib import get_close_matches
 try:
-    import json
-except ImportError:
     import simplejson as json
-
+except ImportError:
+    import json
 
 from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
