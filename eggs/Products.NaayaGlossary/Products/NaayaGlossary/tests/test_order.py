@@ -2,9 +2,9 @@
 import transaction
 import urllib
 try:
-    import json
-except ImportError:
     import simplejson as json
+except ImportError:
+    import json
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 import helpers
 
