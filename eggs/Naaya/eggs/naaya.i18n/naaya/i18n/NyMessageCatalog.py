@@ -64,12 +64,8 @@ class NyMessageCatalog(Persistent):
         # input type sanitize
         logger = logging.getLogger(__name__)
         if isinstance(msgid, str):
-            logger.warn(('Got str "%s" in edit_message for msgid, '
-                         'expecting unicode') % msgid)
             msgid = force_to_unicode(msgid)
         if isinstance(translation, str):
-            logger.warn(('Got str "%s" in edit_message for translation, '
-                         'expecting unicode') % translation)
             translation = force_to_unicode(translation)
         # language existance test
         if lang not in self.get_languages():
@@ -86,12 +82,10 @@ class NyMessageCatalog(Persistent):
 
     def gettext(self, msgid, lang=None, default=None):
         """Returns the corresponding translation of msgid in Catalog."""
-        msgstr = None
         if not isinstance(msgid, basestring):
             raise TypeError('Only strings can be translated.')
         # saving everything unicode, utf-8
         elif isinstance(msgid, str):
-            msgstr = msgid
             msgid = force_to_unicode(msgid)
         if not lang:
             raise ValueError("No language provided for gettext")
@@ -109,10 +103,6 @@ class NyMessageCatalog(Persistent):
 
         # Add it if it's not in the dictionary
         if not self._messages.has_key(msgid):
-            if msgstr is not None:
-                logger = logging.getLogger(__name__)
-                logger.warn('Got str "%s" in gettext, expecting unicode'
-                            % msgstr)
             self._messages[msgid] = PersistentMapping()
             notify(MessageAddEvent(self, msgid, lang, default))
 
