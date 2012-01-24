@@ -43,6 +43,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from Products.Naaya.NyFolder import NyFolder
 from Products.Naaya.adapters import FolderMetaTypes
 
@@ -54,7 +55,6 @@ from permissions import PERMISSION_ADD_INFOFOLDER
 import skel
 LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES
 
-ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
 
 DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 
@@ -96,7 +96,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyInfoFolder',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/InfoFolder.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInfoFolder.gif'),
         'on_install' : setupContentType,
         '_misc': {
