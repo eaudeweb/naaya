@@ -1,5 +1,9 @@
-2.12.52 (unreleased)
+2.12.53 (unreleased)
 --------------------
+
+2.12.52 (2012-01-24)
+--------------------
+* interface for GeoMapTool [bogdatan]
 * tiny mce default tab in advimage plugin [simiamih]
 * Added last_modification property to NyContent types [dumitval]
 * deprecated NyFolder.check_item_title calls removed [simiamih]
