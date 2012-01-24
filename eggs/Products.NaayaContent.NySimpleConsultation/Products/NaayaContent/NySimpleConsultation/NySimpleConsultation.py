@@ -43,6 +43,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyAccess import NyAccess
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from naaya.content.exfile.exfile_item import addNyExFile
 from simpleconsultation_comment import addSimpleConsultationComment
@@ -72,9 +73,6 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-style_file = open(os.path.join(os.path.dirname(__file__), 'www', 'style.css'))
-ADDITIONAL_STYLE = style_file.read()
-style_file.close()
 
 # this dictionary is updated at the end of the module
 config = {
@@ -92,7 +90,7 @@ config = {
         'schema_name': '',
         'import_string': '',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/style.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NySimpleConsultation.gif'),
         '_misc': {
                 'NySimpleConsultation.gif': ImageFile('www/NySimpleConsultation.gif', globals()),
