@@ -4,6 +4,7 @@ from OFS.Image import manage_addImage , cookId
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 import Acquisition
+from naaya.core.zope2util import sha_hexdigest
 
 class NyImageContainer(Acquisition.Implicit):
     """Container for storing images used in HTML documents"""
@@ -28,11 +29,18 @@ class NyImageContainer(Acquisition.Implicit):
         Upload image to the collection and then return to the referring URL.
         """
 
+        sha1_hash = sha_hexdigest(file)
+        for image in self.storage.objectValues('Image'):
+            if not hasattr(image, 'sha1_hash'):
+                image.sha1_hash = sha_hexdigest(image)
+            if sha1_hash == image.sha1_hash:
+                return image
         id, title = cookId(None, None, file)
+        orig_id = id
         i = 0
         while self.storage._getOb(id, None):
             i += 1
-            id = '%s-%u' % (id, i)
+            id = '%s-%u' % (orig_id, i)
         id = manage_addImage(self.storage, id, file, title)
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])

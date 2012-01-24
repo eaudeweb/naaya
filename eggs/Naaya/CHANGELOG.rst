@@ -1,5 +1,8 @@
 2.12.53 (unreleased)
 --------------------
+* fix for image id generation [dumitval]
+* sha1_hash added to all images uploaded to the image storage [dumitval]
+* update script to remove duplicates in the images storage [dumitval]
 
 2.12.52 (2012-01-24)
 --------------------

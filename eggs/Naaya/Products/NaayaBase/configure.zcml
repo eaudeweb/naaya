@@ -98,6 +98,10 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.AddLastModificationProperty"
              permission="zope2.ViewManagementScreens" />
+    <utility name="remove_duplicate_images.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.RemoveDuplicateImages"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

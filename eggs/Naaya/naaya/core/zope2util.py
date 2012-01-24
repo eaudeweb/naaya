@@ -5,6 +5,7 @@ Utilities to make Zope2 a friendlier place.
 
 import datetime
 import sys
+import sha
 import urllib
 
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -14,6 +15,7 @@ from OFS.interfaces import IItem, IObjectManager, IApplication
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 from Globals import DTMLFile
+from ZPublisher.HTTPRequest import FileUpload
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
@@ -25,7 +27,6 @@ from naaya.core.utils import unescape_html_entities
 from naaya.core.utils import icon_for_content_type
 from Products.Naaya.interfaces import INySite
 from backport import any
-
 def redirect_to(tmpl):
     """
     Generate a simple view that redirects to the specified URL.
@@ -488,3 +489,22 @@ def get_site_manager(context):
     local site manager of the object's site.
     """
     return context.getSite().getSiteManager()
+
+def sha_hexdigest(f):
+    sha_hash = sha.new()
+    if isinstance(f, FileUpload):
+        while True:
+            buffer = f.read(2**16)
+            if not buffer:
+                break
+            sha_hash.update(buffer)
+        f.seek(0)
+    elif hasattr(f, 'data'):
+        if isinstance(f.data, str):
+            sha_hash.update(f.data)
+        else:
+            data = f.data
+            while data is not None:
+                sha_hash.update(data.data)
+                data = data.next
+    return sha_hash.hexdigest()
