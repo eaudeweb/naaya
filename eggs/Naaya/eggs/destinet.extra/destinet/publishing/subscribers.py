@@ -60,7 +60,7 @@ def place_pointers(ob, exclude=[]):
         'title': ob.title,
         'description': getattr(ob, 'description', ''),
         'topics': ob.__dict__.get('topics', []),
-        'target-groups': ob.__dict__.get('topics', []),
+        'target-groups': ob.__dict__.get('target-groups', []),
         'geo_location.lat': '',
         'geo_location.lon': '',
         'geo_location.address': '',
