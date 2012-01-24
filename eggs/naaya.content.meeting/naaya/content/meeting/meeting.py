@@ -33,6 +33,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import relative_object_path
 from interfaces import INyMeeting
@@ -73,7 +74,6 @@ DEFAULT_SCHEMA['geo_type'].update(visible=True)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=True)
 
-ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
 
 # this dictionary is updated at the end of the module
 config = {
@@ -89,7 +89,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyMeeting',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/style.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'meeting.gif'),
         '_misc': {
                 'NyMeeting.gif': ImageFile('www/meeting.gif', globals()),
