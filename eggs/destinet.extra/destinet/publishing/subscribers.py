@@ -84,7 +84,7 @@ def place_pointers(ob, exclude=[]):
     locations = [] # pointer locations
     if 'target-groups' not in exclude and isinstance(target_groups, list):
         for tgrup in target_groups:
-            locations.append(site.unrestrictedTraverse("who-who/%s" % str(tgrup)))
+            locations.append(site.unrestrictedTraverse("resources/%s" % str(tgrup)))
     if isinstance(topics, list):
         for topic in topics:
             locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
@@ -161,6 +161,8 @@ def handle_edit_content(event):
         pointers = cat.search({'meta_type': 'Naaya Pointer',
                                'path': [ofs_path(site.countries),
                                         ofs_path(site.topics),
+                                        ofs_path(getattr(site, 'resources')),
+                                        # kept for pointers prior to v 1.1
                                         ofs_path(getattr(site, 'who-who'))],
                                'pointer': path_in_site(obj)})
         for brain in pointers:
@@ -188,6 +190,8 @@ def handle_del_content(obj, event):
         pointers = cat.search({'meta_type': 'Naaya Pointer',
                                'path': [ofs_path(site.countries),
                                         ofs_path(site.topics),
+                                        ofs_path(getattr(site, 'resources')),
+                                        # kept for pointers prior to v 1.1
                                         ofs_path(getattr(site, 'who-who'))],
                                'pointer': path_in_site(obj)})
         for brain in pointers:
