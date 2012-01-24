@@ -88,10 +88,11 @@ function load_ui() {
         };
         dialog_div.show().dialog({
             width: 650,
-            minHeight: 300,
+            height: 500,
             dialogClass: 'glossary-widget-dialog',
             position: 'center',
-            buttons: buttons
+            buttons: buttons,
+            modal: true
         });
         load_tree($('.glossary-widget-tree', dialog_div),
                   $('.glossary-widget-tree-buttons', dialog_div));

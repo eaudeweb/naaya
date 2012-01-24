@@ -20,6 +20,9 @@ from OFS.Folder import Folder
 from App.ImageFile import ImageFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 
+from zope.interface import implements
+from interfaces import IGeoMapTool
+
 from Products.NaayaBase.constants import *
 import Products.NaayaBase.NyContentType
 from Products.NaayaCore.constants import *
@@ -64,6 +67,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     """
     Class that implements the tool.
     """
+
+    implements(IGeoMapTool)
 
     #center map in Europe
     _cluster_pngs = [ImageFile('images/cluster_about_10.png', globals()),

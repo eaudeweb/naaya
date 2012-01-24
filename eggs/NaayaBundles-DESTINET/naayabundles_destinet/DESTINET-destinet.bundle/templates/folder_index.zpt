@@ -32,31 +32,7 @@
     logo here/getFolderLogo;
     path python:here.absolute_url(1); ">
 
-<script type="text/javascript" tal:condition="btn_select">
-<!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
+<script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
 
 <script type="text/javascript" tal:condition="btn_copy">
 <!--
@@ -112,6 +88,8 @@ function fRenameObjects()
 //-->
 </script>
 
+
+
 <div>
 <h1>
 <a class="b_download" tal:condition="here/showBulkDownloadButton"
@@ -147,10 +125,12 @@ function fRenameObjects()
         <tal:block tal:condition="btn_paste"><a href="javascript:fPasteObjects();"><span i18n:translate="">Paste</span></a></tal:block>
         <tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
         <tal:block tal:condition="python: here.rename_id and btn_delete"><a href="javascript:fRenameObjects();"><span i18n:translate="">Rename</span></a></tal:block>
+	<tal:block tal:condition="here/checkPermissionPublishObjects"><a href="javascript:fAllocateKeywords();"><span i18n:translate="">Allocate keywords for selected items</span></a></tal:block>
     </div>
 </div>
 
 <form name="objectItems" method="post" action="">
+<input type="hidden" name="type" value="folder" />
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" width="95%">
 <tr tal:condition="can_operate">
     <th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
@@ -165,7 +145,7 @@ function fRenameObjects()
         version_status python:folders[2];
         copy_permission python:folders[3];
         folder python:folders[4]">
-    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
+    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id:list" tal:attributes="value folder/id" /></td>
     <td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" /></td>
     <td class="title-column">
         <a tal:attributes="href folder/absolute_url; title python:here.stripHTMLTags(folder.description)" tal:content="folder/title_or_id" />
@@ -211,7 +191,7 @@ function fRenameObjects()
             version_status python:objects[2];
             copy_permission python:objects[3];
             object python:objects[4]">
-    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
+    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id:list" tal:attributes="value object/id" /></td>
     <td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" /></td>
     <td class="title-column">
         <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />

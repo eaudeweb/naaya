@@ -1,5 +1,7 @@
 <span tal:replace="structure here/standard_html_header"/>
 
+<script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
+
 <h1 i18n:translate="">List locations</h1>
 
 <tal:block 
@@ -53,7 +55,6 @@
 		</p>
 	</form>
 </noscript>
-
 	<strong tal:content="python:results"/> <span i18n:translate="">locations found.</span>
 	<a tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;start=${prev_start}&amp;end=${prev_end}&amp;step=${step}&amp;sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${first_letter}"
 		tal:condition="python:prev_start >= 0">
@@ -73,10 +74,19 @@
 		</tal:block>
 	</tal:block>
 
+<div id="toolbar" tal:condition="here/checkPermissionPublishObjects">
+	<a href="javascript:fAllocateKeywords();" title="Allocate keywords" i18n:attributes="title"><span i18n:translate="">Allocate keywords for selected items</span></a>
+</div>
+
+<form name="objectItems" method="post" action="">
+<input type="hidden" name="type" value="geo" />
 <table metal:define-macro="main" width="100%" class="datatable">
 	<thead>
 		<tr>
-			<th scope="col" class="scope-col" i18n:translate="Type (translate as a noun)">Type</th>
+			<th scope="col" class="scope-col">
+				<input type="checkbox" onchange="javascript:toggleSelect();" />
+			</th>
+			<th scope="col" class="scope-col" i18n:translate="">Type</th>
 			<tal:block tal:condition="python:sort_on=='title'">
 				<tal:block tal:condition="python:sort_order==''">
 					<th scope="col" class="scope-col">
@@ -153,6 +163,9 @@
 		</tr>
 		<tr tal:repeat="record records" tal:condition="records">
 			<td>
+				<input type="checkbox" name="id:list" tal:attributes="value python:'/'.join(record.getPhysicalPath())" />
+			</td>
+			<td>
 				<img tal:attributes="src string:getSymbolPicture?id=${record/geo_type};
 				                     alt python:here.getSymbolTitle(record.geo_type);
 				                     title python:here.getSymbolTitle(record.geo_type);" />
@@ -173,6 +186,7 @@
 		</tr>
 	</tbody>
 </table>
+</form>
 
 </tal:block>
 
