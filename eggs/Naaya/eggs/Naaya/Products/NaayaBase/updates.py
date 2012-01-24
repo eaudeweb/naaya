@@ -1,7 +1,7 @@
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view
 
-from naaya.core.zope2util import permission_add_role
+from naaya.core.zope2util import permission_add_role, sha_hexdigest
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from naaya.i18n.LocalPropertyManager import LocalAttribute
 
@@ -144,3 +144,50 @@ class AddLastModificationProperty(UpdateScript):
                     (portal.utShowFullDateTime(ob.bobobase_modification_time()),
                         ob.absolute_url()))
         return True
+
+class RemoveDuplicateImages(UpdateScript):
+    title = ('Remove duplicate files from /images folder')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Jan 20, 2012'
+
+    def _update(self, portal):
+        images = portal.images.objectValues('Image')
+        dup_images = {}
+        for image in images:
+            if not hasattr(image, 'sha1_hash'):
+                image.sha1_hash = sha_hexdigest(image)
+                self.log.debug('Image hash added, %s: %s' % (
+                    image.getId(), image.sha1_hash))
+            if image.getId() != image.title:
+                orig_image = getattr(portal.images, image.title, None)
+                if orig_image:
+                    if image.sha1_hash == orig_image.sha1_hash:
+                        dup_images[image.getId()] = orig_image.getId()
+
+        schema_tool = portal.getSchemaTool()
+        obj_textarea_props = {}
+        for meta_type, schema_ob in schema_tool.listSchemas().items():
+            textarea_widgets = schema_ob.objectValues('Naaya Schema Text Area Widget')
+            textarea_props = [widget.id.rsplit('-property', 1)[0]
+                    for widget in textarea_widgets]
+            obj_textarea_props[meta_type] = textarea_props
+        for ob in portal.getCatalogedObjectsA(
+                meta_type=obj_textarea_props.keys()):
+            for dup_id in dup_images.keys():
+                for prop_id in obj_textarea_props[ob.meta_type]:
+                    for lang in portal.gl_get_languages():
+                        curr_prop = ob.getLocalAttribute(
+                                prop_id, lang)
+                        if dup_id in curr_prop:
+                            ob.set_localpropvalue(prop_id, lang,
+                                    curr_prop.replace(
+                                        dup_id, dup_images[dup_id]).replace(
+                                        'src="/images',
+                                        'src="/destinet/images'))
+                            self.log.debug('Object %s, image id changed from %s to %s'
+                                    % (ob.absolute_url(), dup_id, dup_images[dup_id]))
+        portal.images.manage_delObjects(dup_images.keys())
+        for image_id in dup_images.keys():
+            self.log.debug('Deleted duplicated image: %s' % image_id)
+        return True
+
