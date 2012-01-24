@@ -52,6 +52,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 
 
 from interfaces import INyMunicipality
@@ -65,7 +66,6 @@ OBJECT_CONSTRUCTORS = ['municipality_add_html', 'addNyMunicipality']
 OBJECT_ADD_FORM = 'municipality_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Municipality type.'
 PREFIX_OBJECT = 'municipality'
-ADDITIONAL_STYLE = open(ImageFile('www/municipality.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
     'province': dict(sortorder=100, widget_type='Select', label='Province', required=True, list_id='provinces'),
@@ -123,7 +123,7 @@ config = {
         '_module': sys.modules[__name__],
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyMunicipality.gif'),
         'on_install' : setupContentType,
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/municipality.css', globals()),
         '_misc': {
                 'NyMunicipality.gif': ImageFile('www/NyMunicipality.gif', globals()),
                 'NyMunicipality_marked.gif': ImageFile('www/NyMunicipality_marked.gif', globals()),
