@@ -52,6 +52,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 
 from interfaces import INyExpert
 from permissions import PERMISSION_ADD_EXPERT
@@ -66,7 +67,6 @@ OBJECT_CONSTRUCTORS = ['expert_add_html', 'addNyExpert']
 OBJECT_ADD_FORM = 'expert_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Expert type.'
 PREFIX_OBJECT = 'expert'
-ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
     'personal_title':  dict(sortorder=100, widget_type='String',
@@ -116,7 +116,7 @@ config = {
         '_module': sys.modules[__name__],
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyExpert.gif'),
         'on_install' : setupContentType,
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/expert.css', globals()),
         '_misc': {
                 'NyExpert.gif': ImageFile('www/NyExpert.gif', globals()),
                 'NyExpert_marked.gif': ImageFile('www/NyExpert_marked.gif', globals()),
