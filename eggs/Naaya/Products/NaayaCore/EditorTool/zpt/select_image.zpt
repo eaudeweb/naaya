@@ -18,13 +18,13 @@
 		</p>
 		<div class="tabs">
 			<ul>
-				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
+				<li id="computer_tab" class="current"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
 				<li id="link_tab"><span><a href="javascript:mcTabs.displayTab('link_tab','link_panel');" onmousedown="return false;" i18n:translate="">URL</a></span></li>
-				<li id="browse_tab" class="current"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
+				<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
 			</ul>
 		</div>
 		<div class="panel_wrapper">
-			<div id="computer_panel" class="panel">
+			<div id="computer_panel" class="panel current">
 				<br />
 				<form id="comp_upload_form" tal:attributes="action string:${here/absolute_url}/prepare_image" method="post" enctype="multipart/form-data">
 					<label for="comp_file" i18n:translate="">Selected file</label>
@@ -67,7 +67,7 @@
 				</ul>
 				</div>
 			</div>
-			<div id="browse_panel" class="panel current">
+			<div id="browse_panel" class="panel">
 				<tal:block define="
 					src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));
 					images python:here.enumerateImages(src, req_query, request);">
