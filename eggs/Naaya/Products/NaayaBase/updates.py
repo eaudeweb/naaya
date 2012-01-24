@@ -181,9 +181,7 @@ class RemoveDuplicateImages(UpdateScript):
                         if dup_id in curr_prop:
                             ob.set_localpropvalue(prop_id, lang,
                                     curr_prop.replace(
-                                        dup_id, dup_images[dup_id]).replace(
-                                        'src="/images',
-                                        'src="/destinet/images'))
+                                        dup_id, dup_images[dup_id])
                             self.log.debug('Object %s, image id changed from %s to %s'
                                     % (ob.absolute_url(), dup_id, dup_images[dup_id]))
         portal.images.manage_delObjects(dup_images.keys())
