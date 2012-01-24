@@ -1,4 +1,7 @@
-2.12.53 (unreleased)
+2.12.54 (unreleased)
+--------------------
+
+2.12.53 (2012-01-24)
 --------------------
 * fix for image id generation [dumitval]
 * sha1_hash added to all images uploaded to the image storage [dumitval]
