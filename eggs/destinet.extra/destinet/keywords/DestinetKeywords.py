@@ -19,7 +19,12 @@ class allocate_keywords_html(BrowserPage):
     """
     def __call__(self, REQUEST):
         context = self.aq_parent
-        ids = REQUEST.form['id']
+        try:
+            ids = REQUEST.form['id']
+        except KeyError:
+            self.context.setSessionErrorsTrans('No keywords were selected!')
+            return self.request.RESPONSE.redirect(context.absolute_url())
+
         items, schemas, keywords = [], [], []
 
         for id in ids:
@@ -60,14 +65,19 @@ class allocateKeywords(BrowserPage):
     Update objects' keywords, whether there are bulk keywords selected or
     keywords for each object individually
     """
-    def __call__(self, redirect_url, paths, keywords, REQUEST=None):
+    def __call__(self, redirect_url='', paths=[], keywords=[], REQUEST=None):
         def split_keywords(text):
             fragments = [f.strip() for f in text.split(',')]
             return set(f for f in fragments if f)
 
         items = zip(paths, keywords)
+        try:
+            bulk_action = REQUEST.form['bulk_action']
+        except KeyError:
+            self.context.setSessionErrorsTrans('No keywords to allocate!')
+            return self.request.RESPONSE.redirect(self.aq_parent.absolute_url())
+
         bulk_items = REQUEST.form.get('checked_paths', [])
-        bulk_action = REQUEST.form.get('bulk_action', [])
         bulk_keywords = split_keywords(REQUEST.form['bulk_keywords'])
 
         for item_path, item_keywords in items:
