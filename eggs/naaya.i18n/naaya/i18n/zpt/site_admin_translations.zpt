@@ -38,8 +38,10 @@
 	each available language and also search by containing words. In order to
 	translate a message, click on the original text in English.
 </p>
-<form method="get" tal:attributes="action string:${portal_i18n_url}/admin_translations_html">
-	<span style="vertical-align: top;"><label for="search" i18n:translate="">Search message(s) containing</label></span>
+<form method="get"
+      class="translation-search"
+      tal:attributes="action string:${portal_i18n_url}/admin_translations_html">
+	<span><label for="search" i18n:translate="">Search message(s) containing</label></span>
 	<input type="text" name="query" size="25" tal:attributes="value query" />
 	<input type="submit" value="Go" i18n:attributes="value" />
 </form>
@@ -62,9 +64,7 @@
 		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${portal_i18n_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">next &raquo;</a></span>
 	</div>
 </div>
-<table class="datatable">
-<col style="width: 1em;" />
-<col style="width: 70em;" />
+<table class="datatable translation-listing">
 <thead>
 	<tr>
 		<th class="scope-col" scope="col">&nbsp;</th>
@@ -73,14 +73,14 @@
 				<th class="scope-col" scope="col">
 					<a tal:attributes="href string:${portal_i18n_url}/admin_translations_html?skey=msg&amp;rkey=1&amp;query=${query}">
 						<span i18n:translate="" tal:omit-tag="">Message</span>
-					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+					</a><img src="misc_/Naaya/sort_asc.gif" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
 					<a tal:attributes="href string:${portal_i18n_url}/admin_translations_html?skey=msg&amp;query=${query}">
 						<span i18n:translate="" tal:omit-tag="">Message</span>
-					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+					</a><img src="misc_/Naaya/sort_desc.gif" alt="" />
 				</th>
 			</tal:block>
 		</tal:block>
@@ -101,7 +101,7 @@
 								<span i18n:translate="" tal:omit-tag="" tal:content="language_name" />
 							</a> (*<span tal:content="not_translated" i18n:attributes="title"
 								title="Number of messages not translated in this language"/>)
-							<img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+							<img src="misc_/Naaya/sort_asc.gif" alt="" />
 						</th>
 					</tal:block>
 					<tal:block tal:condition="python:rkey=='1'">
@@ -110,7 +110,7 @@
 								<span i18n:translate="" tal:omit-tag="" tal:content="language_name" />
 							</a> (*<span tal:content="not_translated" i18n:attributes="title"
 								title="Number of messages not translated in this language"/>)
-							<img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+							<img src="misc_/Naaya/sort_desc.gif" alt="" />
 						</th>
 					</tal:block>
 				</tal:block>
