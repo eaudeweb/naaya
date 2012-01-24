@@ -161,6 +161,8 @@ class RemoveDuplicateImages(UpdateScript):
             if image.getId() != image.title:
                 orig_image = getattr(portal.images, image.title, None)
                 if orig_image:
+                    if not hasattr(orig_image, 'sha1_hash'):
+                        orig_image.sha1_hash = sha_hexdigest(orig_image)
                     if image.sha1_hash == orig_image.sha1_hash:
                         dup_images[image.getId()] = orig_image.getId()
 
