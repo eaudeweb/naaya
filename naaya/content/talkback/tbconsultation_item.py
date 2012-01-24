@@ -49,6 +49,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from naaya.core import submitter
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -77,8 +78,6 @@ OBJECT_CONSTRUCTORS = ['manage_addNyTalkBackConsultation_html',
 OBJECT_ADD_FORM = 'talkbackconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya TalkBack Consultation type.'
 PREFIX_OBJECT = 'tbcns'
-ADDITIONAL_STYLE = open(ImageFile(
-    'www/talkbackconsultation_style.css', globals()).path).read()
 
 DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA.update({
@@ -146,7 +145,7 @@ config = {
         'schema_name': METATYPE_TALKBACKCONSULTATION,
         'import_string': '',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
+        'additional_style': AdditionalStyle('www/talkbackconsultation_style.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyTalkBackConsultation.gif'),
         '_misc': {
                 'NyTalkBackConsultation.gif': ImageFile('www/NyTalkBackConsultation.gif', globals()),
