@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.1.2 (unreleased)
+====================
+
+1.1.1 (2012-01-24)
 ====================
 * pointers referred by target_groups are now placed in subdirs of resources,
   and not who-who [simiamih]
