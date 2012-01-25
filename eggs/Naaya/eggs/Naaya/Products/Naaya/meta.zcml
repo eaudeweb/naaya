@@ -16,6 +16,12 @@
       handler=".meta.simple_view_directive"
       />
 
+    <meta:directive
+      name="rstkMethod"
+      schema=".meta.INaayaRstkMethodDirective"
+      handler=".meta.rstk_method_directive"
+      />
+
   </meta:directives>
 
 </configure>

@@ -7,6 +7,7 @@ import datetime
 import sys
 import sha
 import urllib
+import types
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -27,6 +28,8 @@ from naaya.core.utils import unescape_html_entities
 from naaya.core.utils import icon_for_content_type
 from Products.Naaya.interfaces import INySite
 from backport import any
+from interfaces import IRstkMethod
+
 def redirect_to(tmpl):
     """
     Generate a simple view that redirects to the specified URL.
@@ -53,6 +56,7 @@ def json_default(value):
         return str(value)
     else:
         raise ValueError('Can not encode value %r' % value)
+
 
 class RestrictedToolkit(SimpleItem):
     """
@@ -243,6 +247,13 @@ class RestrictedToolkit(SimpleItem):
         ga_form = forms_tool.getForm("site_googleanalytics")
 
         return ga_form.__of__(site)(ga_id=ga_id)
+
+    def __getitem__(self, name):
+        method = get_site_manager(self).queryUtility(IRstkMethod, name)
+        if method is None:
+            raise KeyError('RestrictedToolkit: no method registered %r' % name)
+        else:
+            return types.MethodType(method, self)
 
 InitializeClass(RestrictedToolkit)
 
