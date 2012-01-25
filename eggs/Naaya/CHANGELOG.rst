@@ -1,10 +1,16 @@
-2.12.54 (unreleased)
+2.12.56 (unreleased)
+--------------------
+
+2.12.55 (2012-01-25)
 --------------------
 * added plugLDAPUserFolder.get_local_roles_by_groups [simiamih]
-* fix update script to remove duplicate images [dumitval]
 * remove inline styles [moregale]
 * ``naaya:simpleView`` directive [moregale]
 * ``naaya:rstkMethod`` directive [moregale]
+
+2.12.54 (2012-01-25)
+--------------------
+* fix update script to remove duplicate images [dumitval]
 
 2.12.53 (2012-01-24)
 --------------------
