@@ -1,5 +1,7 @@
 1.1.11 (unreleased)
 ------------------
+* profileoverview shows local roles owned by belonging to
+  a ldap group [simiamih]
 
 1.1.10 (2012-01-18)
 ------------------
