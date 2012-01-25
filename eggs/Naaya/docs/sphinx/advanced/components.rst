@@ -88,3 +88,42 @@ loading them (see :func:`~naaya.core.fsbundles.load_filesystem_bundle`)::
 Now, if we look in `bespoke`, we find templates registered from
 `path/to/bespoke.bundle/templates`. To make use of the templates we need
 to configure a Naaya portal to use `Bespoke` as its parent bundle.
+
+
+Zope 3 APIs
+-----------
+Naaya provides the following ZCML directives in the
+``http://namespaces.zope.org/naaya`` namespace:
+
+`naaya:call`
+    Call a function at Zope startup time. Useful for any kind of
+    initialization.
+    ::
+
+        <configure xmlns:naaya="http://namespaces.zope.org/naaya">
+            <naaya:call factory="module_name.func_name" />
+        </configure>
+
+    ::
+
+        def func_name():
+            print "I get called at startup."
+
+`naaya:simpleView`
+    Register a function as a Zope 3 View. The function will be called with two
+    arguments: `context` and `request`. `permission` is optional, defaults to
+    ``zope.Public``.
+    ::
+
+        <configure xmlns:naaya="http://namespaces.zope.org/naaya">
+            <naaya:simpleView
+                for="Products.Naaya.interfaces.INySite"
+                name="hello.html"
+                handler="module_name.say_hello"
+                permission="Zope2.ViewManagementScreens" />
+        </configure>
+
+    ::
+
+        def say_hello(context, request):
+            return "Hello from <tt>%s</tt>" % '/'.join(context.getPhysicalPath())

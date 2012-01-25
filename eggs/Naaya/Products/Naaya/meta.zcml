@@ -10,6 +10,12 @@
       handler=".meta.call_directive"
       />
 
+    <meta:directive
+      name="simpleView"
+      schema=".meta.INaayaSimpleViewDirective"
+      handler=".meta.simple_view_directive"
+      />
+
   </meta:directives>
 
 </configure>
