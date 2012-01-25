@@ -82,12 +82,6 @@
 <br />
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelocalchannel">
   <table class="datatable">
-  <col style="width: 1em;" />
-  <col style="width: 10em;" />
-  <col style="width: 35em;" />
-  <col style="width: 5em;" />
-  <col style="width: 5em;" />
-  <col style="width: 20em;" />
   <thead>
     <tr>
       <th class="scope-col" scope="col">&nbsp;</th>

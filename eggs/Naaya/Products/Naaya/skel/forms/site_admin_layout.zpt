@@ -209,6 +209,12 @@ function LoadScreenshot()
 //-->
 </script>
 
+<style>
+	form[name=frmSyncro] select {
+		width: 150px;
+	}
+</style>
+
 <span tal:replace="structure python:layout_tool.getSyncroObject(layout_tool.getDataForLayoutSettings())" />
 
 <form name="frmSyncro" method="post" tal:attributes="action string:${here/getSitePath}/admin_layout">

@@ -44,8 +44,6 @@
 <br />
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteremotechportlet">
   <table class="datatable" tal:define="portlets python:here.getPortletsTool().get_remotechannels_portlets()">
-    <col style="width: 1em;" />
-    <col style="width: 30em;" />
     <thead>
       <tr>
         <th class="scope-col" scope="col">&nbsp;</th>

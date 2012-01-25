@@ -10,7 +10,7 @@ class combosync_tool:
 
     def getMasterCombo(self, p_name='theMasterList'):
         """ """
-        l_mastercombo = '<select onchange="OnChangeTopic()" name="%s" style="width: 150px;">' % p_name
+        l_mastercombo = '<select onchange="OnChangeTopic()" name="%s">' % p_name
         for i in range(0,20):
             l_mastercombo += '<option value="">&nbsp;</option>'
         l_mastercombo += '</select>'
@@ -18,7 +18,7 @@ class combosync_tool:
 
     def getSlaveCombo(self, p_name='theSlaveList'):
         """ """
-        l_mastercombo = '<select onchange="OnChangeScheme()" name="%s" style="width: 150px;">' % p_name
+        l_mastercombo = '<select onchange="OnChangeScheme()" name="%s">' % p_name
         for i in range(0,20):
             l_mastercombo += '<option value="">&nbsp;</option>'
         l_mastercombo += '</select>'

@@ -120,8 +120,8 @@
 <metal:block fill-slot="buttons"><metal:block define-macro="buttons">
 <div class="floated-buttons">
 	<span class="buttons">
-		<a style="float: right" tal:condition="python:user_tool.showBulkDownloadButton()"
-				tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
+		<a tal:condition="python:user_tool.showBulkDownloadButton()"
+		   tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
 			<span i18n:translate="">Bulk download</span>
 		</a>
 	</span>

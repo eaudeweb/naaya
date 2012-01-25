@@ -29,11 +29,6 @@
 <br />
 <form method="post" tal:attributes="action string:${site_url}/admin_deletenetworkportal">
 	<table class="datatable">
-	<col style="width: 1em;" />
-	<col style="width: 15em;" />
-	<col style="width: 25em;" />
-	<col style="width: 10em;" />
-	<col style="width: 1em;" />
 	<thead>
 		<tr>
 			<th class="scope-col" scope="col">&nbsp;</th>

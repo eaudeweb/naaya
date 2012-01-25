@@ -20,7 +20,6 @@
 </p>
 
 <table class="datatable" tal:define="portlets python:here.getPortletsTool().get_special_portlets()">
-	<col style="width: 35em;" />
 	<thead>
 		<tr>
 			<th class="scope-col" scope="col" i18n:translate="">Title</th>
