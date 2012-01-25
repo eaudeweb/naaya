@@ -42,7 +42,10 @@ var ldap_roles = {
 jQuery(document).ready(function(){
 
    ldap_roles.init();
-   igs.init();
+   jQuery.get('/profile_ajax', '', function(data){
+                jQuery('#ig_access').html(data);
+                igs.init();
+        });
 
 });
 

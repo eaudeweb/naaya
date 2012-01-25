@@ -12,6 +12,14 @@
 
   <browser:page
     for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="profile_ajax"
+    template="zpt/ig_roles_ajax.pt"
+    class=".profile.ProfileViewAjax"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="naaya.groupware.interfaces.IGroupwareApplication"
     name="demoprofile"
     template="zpt/index.pt"
     class=".profile.DemoProfileView"

@@ -2,6 +2,7 @@
 ------------------
 * profileoverview shows local roles owned by belonging to
   a ldap group [simiamih]
+* profileoverview - ajax loading ig roles [simiamih]
 
 1.1.10 (2012-01-18)
 ------------------
