@@ -218,8 +218,11 @@ class DemoProfileView(BrowserView):
             del ig_access['restricted']
 
         ig_details = {}
-        for ig in set(ig_access.values()):
-            ig_details[ig.getPhysicalPath()] = self.local_access_in_ig(ig)
+        all_igs = []
+        for igs in ig_access.values():
+            all_igs.extend(igs)
+        for ig in all_igs:
+            ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
             by_groups = client.local_roles_by_groups(ig)
             ig_details[ig.getPhysicalPath()].extend(by_groups)
 
