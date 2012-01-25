@@ -17,6 +17,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
 import sys, os
+import Globals # needed when building documentation under Zope 2.10
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
