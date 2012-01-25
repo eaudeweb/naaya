@@ -302,6 +302,27 @@ class plugLDAPUserFolder(PlugBase):
 
         return groups_roles_map
 
+    def get_local_roles_by_groups(self, user):
+        """
+        Returns user local roles inside portal by being a member of a ldap
+        group.
+        Returns
+        {'group': [('Role', {'ob': ob, 'path': path, 'group': group}), ..],
+         .. }
+        where group index indicates the group that grants the role
+
+        """
+        local_roles = {}
+        all_roles = self.get_groups_roles_map()
+        user_in_group = self.getSite().acl_satellite.user_in_group_factory(user)
+        for group, role_list in all_roles.items():
+            if user_in_group(group):
+                for name, info in role_list:
+                    if not info['is_site']:
+                        group_list = local_roles.setdefault(group, [])
+                        group_list.append((name, info))
+        return local_roles
+
     security.declareProtected(manage_users, 'map_group_to_role')
     def map_group_to_role(self, group, roles=[], location='',
             send_mail='', REQUEST=None):
