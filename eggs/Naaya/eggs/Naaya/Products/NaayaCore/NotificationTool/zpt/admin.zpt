@@ -142,7 +142,7 @@
 <form id="addSubscriptionForm" action="admin_add_account_subscription" method="post"
       tal:condition="available_subscriptions">
     <fieldset>
-        <legend i18n:translate="">Add user subscripion</legend>
+        <legend i18n:translate="">Add user subscription</legend>
         <div class="field">
             <label for="user_id" i18n:translate="">User id</label>
             <input type="text" id="user_id" name="user_id"/>
