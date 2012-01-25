@@ -14,7 +14,8 @@
     <h1>Profile Overview for <span tal:content="options/user_id" /></h1>
 
     <h2>Interest group membership</h2>
-    <div id="id_access"  tal:condition="python:len(options['ig_access'])">
+    <div id="id_access">
+    <tal:block condition="python:len(options['ig_access'])">
     <tal:block repeat="access options/ig_access/keys">
         <tal:block define="ig_list python:options['ig_access'][access]">
             <div tal:attributes="id access">
@@ -35,7 +36,7 @@
                                 in <a tal:content="python: local_roles['location'].title_or_id()"
                                     tal:attributes="href python:local_roles['location'].absolute_url()" />
                                     <tal:block condition="python:local_roles['group']">
-                                        - as a member of <span tal:content="python:local_roles['group']" class="ldap_group" /></tal:block>
+                                        - as a member of <tt tal:content="python:local_roles['group']" class="ldap_group" /></tal:block>
                                     <span tal:condition="not:python:local_roles['group']"> - local role</span>
                             </li>
                             </ul>
@@ -52,10 +53,12 @@
             </div>
         </tal:block>
     </tal:block>
-    </div>
+    </tal:block>
     <div id="id_access"  tal:condition="python:not len(options['ig_access'])">
         You are not a member of any Interest Group.
     </div>
+    </div>
+    
 
     <h2>Member of Roles</h2>
     <tal:block condition="options/roles">
