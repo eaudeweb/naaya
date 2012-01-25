@@ -110,7 +110,7 @@ class GroupwareSite(NySite):
 
     def get_user_access(self, user=None):
         """
-        Returns on of 'admin', 'member', 'viewer' or 'restricted' for logged
+        Returns one of 'admin', 'member', 'viewer' or 'restricted' for logged
         in user, if not explicitly specified.
 
         """

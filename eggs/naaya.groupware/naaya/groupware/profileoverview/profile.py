@@ -1,7 +1,20 @@
 from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
+from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
 
 from eea import usersdb
+
+
+def get_plugldap(ig):
+    """ Returns plugLDAPUserFolder in IG, None if not found """
+    auth_tool = ig.getAuthenticationTool()
+    sources = auth_tool.getSources()
+    if not sources:
+        return None
+    for source in sources:
+        if isinstance(source, plugLDAPUserFolder.plugLDAPUserFolder):
+            return source
+    return None
 
 
 class ProfileClient(object):
@@ -18,7 +31,8 @@ class ProfileClient(object):
     def access_in_igs(self):
         """
         Returns a dictonary of lists, key is access level,
-        list contains IGs.
+        list contains IGs. We invoke groupware_site.get_user_access
+        which relies on local roles stored in site object location
 
         """
         igs = self.zope_app.objectValues([METATYPE_GROUPWARESITE])
@@ -30,6 +44,42 @@ class ProfileClient(object):
             lst.sort(key=lambda x: x.title_or_id())
 
         return roles
+
+    def local_access_in_ig(self, ig):
+        """
+        Returns local roles user may have in corresponding ig.
+        Return type: [{'location': obj, 'access': ['..'], 'group': ''}, ..]
+
+        """
+        auth_tool = ig.getAuthenticationTool()
+        local_roles = auth_tool.getAuthenticatedUserRoles()
+        result = []
+        for (roles, location) in local_roles:
+            if location not in ('', '/'):
+                result.append({'location': ig.unrestrictedTraverse(location),
+                               'access': list(roles), 'group': ''})
+        return result
+
+    def local_roles_by_groups(self, ig):
+        """
+        The representation of results is the same as local_access_in_ig,
+        but with 'group'
+        Roles are looked up based on ldap roles and LDAPUserFolder groups.
+        `leaf_roles_list` - terminal LDAP roles user belongs to
+
+        """
+        igs = self.zope_app.objectValues([METATYPE_GROUPWARESITE])
+        result = []
+
+        plugldap = get_plugldap(ig)
+        if not plugldap:
+            return []
+        locals = plugldap.get_local_roles_by_groups(self.user)
+        for group, roles in locals.items():
+            for role, info in roles:
+                result.append({'location': info['ob'], 'access': (role, ),
+                               'group': group})
+        return result
 
     def _dfs_roles_tree(self, tree):
         """
@@ -62,7 +112,7 @@ class ProfileClient(object):
             role = {}
             role['id'] = role_id
             role['name'] = role_id.rsplit('-', 1)[-1]
-            role['description'] = attrs['description'][0]
+            role['description'] = attrs.get('description', ('', ))[0]
             role['children'] = []
             direct_address[role_id] = role
             if '-' not in role_id:
@@ -80,7 +130,7 @@ class ProfileClient(object):
     def roles_list_in_ldap(self):
         """
         Same as roles_tree_in_ldap, but result is a flat structure,
-        a BFS walk of tree, useful for iteration in template
+        a BFS walk of tree, useful for iteration in template.
 
         """
         return self._dfs_roles_tree(self.roles_tree_in_ldap())
@@ -125,7 +175,17 @@ class ProfileView(BrowserView):
         if 'restricted' in ig_access:
             del ig_access['restricted']
 
+        ig_details = {}
+        all_igs = []
+        for igs in ig_access.values():
+            all_igs.extend(igs)
+        for ig in all_igs:
+            ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
+            by_groups = client.local_roles_by_groups(ig)
+            ig_details[ig.getPhysicalPath()].extend(by_groups)
+
         return self.index(ig_access=ig_access, roles=leaf_roles_list,
+                          ig_details=ig_details,
                           subscriptions=notifications, user_id=user.getId())
 
 class DemoProfileView(BrowserView):
@@ -157,5 +217,12 @@ class DemoProfileView(BrowserView):
         if 'restricted' in ig_access:
             del ig_access['restricted']
 
-        return self.index(ig_access=ig_access, roles=leaf_roles_list,
+        ig_details = {}
+        for ig in set(ig_access.values()):
+            ig_details[ig.getPhysicalPath()] = self.local_access_in_ig(ig)
+            by_groups = client.local_roles_by_groups(ig)
+            ig_details[ig.getPhysicalPath()].extend(by_groups)
+
+        return self.index(ig_access=ig_access, ig_details=ig_details,
+                          roles=leaf_roles_list,
                           subscriptions=notifications, user_id='demo_user')
