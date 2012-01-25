@@ -26,13 +26,6 @@
 <tal:block tal:define="pendings here/getPendingContent">
 <form method="post" name="pndForm" id="pndForm" tal:attributes="action string:${here/absolute_url}/processPendingContent" tal:condition="python:len(pendings)>0">
 	<table class="datatable">
-		<col style="width: 1em;" />
-		<col style="width: 10em;" />
-		<col style="width: 20em;" />
-		<col style="width: 10em;" />
-		<col style="width: 10em;" />
-		<col style="width: 5em;" />
-		<col style="width: 5em;" />
 		<thead>
 			<tr>
 				<th class="scope-col" scope="col">&nbsp;</th>
@@ -69,13 +62,6 @@
 <tal:block tal:define="published here/getPublishedContent">
 <form method="post" name="pblForm" id="pblForm" tal:attributes="action string:${here/absolute_url}/processPublishedContent" tal:condition="python:len(published)>0">
 	<table class="datatable">
-		<col style="width: 1em;" />
-		<col style="width: 10em;" />
-		<col style="width: 20em;" />
-		<col style="width: 10em;" />
-		<col style="width: 10em;" />
-		<col style="width: 5em;" />
-		<col style="width: 5em;" />
 		<thead>
 			<tr>
 				<th class="scope-col" scope="col">&nbsp;</th>

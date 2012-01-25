@@ -67,8 +67,6 @@
 </fieldset>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletehtmlportlet">
   <table class="datatable" tal:define="portlets python:here.getPortletsTool().get_html_portlets()">
-  <col style="width: 1em;" />
-  <col style="width: 15em;" />
   <thead>
     <tr>
       <th class="scope-col" scope="col">&nbsp;</th>

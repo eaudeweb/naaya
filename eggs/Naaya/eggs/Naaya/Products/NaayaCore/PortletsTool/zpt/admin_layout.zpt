@@ -18,6 +18,14 @@
 <!-- we define a macro for the body, so the `manage` template can re-use it -->
 
 <metal:block define-macro="body">
+
+<style>
+    form[name=assign_portlet] .field,
+    form[name=assign_portlet] .field-inline {
+        clear: both;
+    }
+</style>
+
 <script type="text/javascript">
 $(function(){
     $('table.datatable tbody').each(function() {
@@ -51,13 +59,13 @@ $(function(){
 <table class="datatable" id="assigned-portlets">
 <thead>
     <tr>
-        <th title="Folder where the portlet should appear" style="width: 15em;"
+        <th title="Folder where the portlet should appear"
           i18n:translate="" i18n:attributes="title">Location</th>
-        <th title="Position within the page" style="width: 7em;"
+        <th title="Position within the page"
           i18n:translate="" i18n:attributes="title">Position</th>
         <th title="Show portlet in subfolders of `location`"
           i18n:translate="" i18n:attributes="title">Inherit</th>
-        <th title="Title of portlet" style="width: 15em;"
+        <th title="Title of portlet"
           i18n:translate="" i18n:attributes="title">Portlet</th>
         <th></th>
     </tr>
@@ -109,8 +117,7 @@ $(function(){
 </tal:block>
 </table>
 
-<form id="portlet-sortorder" action="sort_portlets"
-      style="display: none; margin-bottom: 2em;">
+<form id="portlet-sortorder" action="sort_portlets" style="display: none">
 <div class="sort_container"></div>
 <input type="submit" value="Save sort order" />
 </form>
@@ -151,7 +158,6 @@ $(function(){
     <small><em>(choose a location from the tree below)</em></small>
 
     <div id="sitemap_tree" class="sitemap_tree"></div>
-    <div style="clear: both"></div>
     <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
     </div>
 

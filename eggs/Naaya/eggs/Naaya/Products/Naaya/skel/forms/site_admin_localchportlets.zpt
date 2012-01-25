@@ -42,8 +42,6 @@
 <br />
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelocalchportlet">
   <table class="datatable" tal:define="portlets python:here.getPortletsTool().get_localchannels_portlets()">
-  <col style="width: 1em;" />
-  <col style="width: 25em;" />
   <thead>
     <tr>
       <th class="scope-col" scope="col">&nbsp;</th>

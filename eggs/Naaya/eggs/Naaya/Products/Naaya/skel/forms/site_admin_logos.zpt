@@ -72,8 +72,6 @@
 				No right logo selected</strong>
 		</div>
 	</div>
-	<br style="clear: both;"/>
-	<br />
 	<input type="submit" value="Save changes" i18n:attributes="value" />
 </form>
 </tal:block>

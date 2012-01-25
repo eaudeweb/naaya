@@ -18,9 +18,6 @@
 <h2 i18n:translate="">Folders</h2>
 <form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
 	<table class="datatable">
-	<col style="width: 1em;" />
-	<col style="width: 35em;" />
-	<col style="width: 2em;" />
 	<thead>
 		<tr>
 			<th class="scope-col" scope="col" i18n:translate="Type (translate as a noun)">Type</th>
@@ -50,9 +47,6 @@
 <h2 i18n:translate="">Items</h2>
 <form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
 	<table class="datatable">
-	<col style="width: 1em;" />
-	<col style="width: 35em;" />
-	<col style="width: 2em;" />
 	<thead>
 		<tr>
 			<th class="scope-col" scope="col" i18n:translate="Type (translate as a noun)">Type</th>

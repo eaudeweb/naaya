@@ -50,8 +50,6 @@
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteitems">
 	<table class="datatable">
-	<col style="width: 1em;" />
-	<col style="width: 50em;" />
 	<thead>
 		<tr>
 			<th class="scope-col" scope="col">&nbsp;</th>

@@ -2,6 +2,7 @@
 --------------------
 * added plugLDAPUserFolder.get_local_roles_by_groups [simiamih]
 * fix update script to remove duplicate images [dumitval]
+* remove inline styles [moregale]
 
 2.12.53 (2012-01-24)
 --------------------

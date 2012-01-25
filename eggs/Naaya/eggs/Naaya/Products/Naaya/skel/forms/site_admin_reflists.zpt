@@ -19,7 +19,9 @@
 <div id="jstree_container" class="tree tree-default"></div>
 
 <noscript tal:define="trees python:here.getPortletsTool().getRefTrees()">
-<p i18n:translate="" style="color: green">You need to have JavaScript enabled in order to modify this list.</p>
+<p class="error" i18n:translate="">
+	You need to have JavaScript enabled in order to modify this list.
+</p>
 <ul>
 	<li tal:repeat="tree trees">
 		<tal:block define="node tree/get_nodes_as_tree">

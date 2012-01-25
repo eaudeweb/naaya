@@ -228,8 +228,6 @@ function dosubmit()
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deleterightportlets">
 	<table class="datatable">
-		<col style="width: 30em;" />
-		<col style="width: 30em;" />
 		<thead>
 			<tr>
 				<th class="scope-col" scope="col" i18n:translate="">Location</th>
@@ -241,8 +239,8 @@ function dosubmit()
 				<td tal:define="fol python:here.getFolderByPath(record)">
 					<a tal:condition="python:fol" tal:attributes="href string:admin_rightportlets_html?mode=edit&location=${record}" 
 					tal:content="python:fol.title_or_id()">location</a>
-					<span tal:condition="python:not fol" style="color: red;" i18n:translate="">Folder deleted:</span>
-					<span tal:condition="python:not fol" style="color: red; font-weight: bold;" tal:content="record" />
+					<span class="error" tal:condition="python:not fol" i18n:translate="">Folder deleted:</span>
+					<strong class="error" tal:condition="python:not fol" tal:content="record" />
 				</td>
 				<td>
 					<tal:block tal:repeat="item python:map(here.getPortletsTool().getPortletById, records[record])">

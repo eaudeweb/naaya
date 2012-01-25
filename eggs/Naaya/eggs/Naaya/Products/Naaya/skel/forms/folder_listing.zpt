@@ -103,11 +103,11 @@ $(document).ready(function(){
 		<metal:block define-slot="table_head">
 			<tr tal:condition="can_operate">
 				<metal:block define-slot="table_head_default">
-					<th class="checkbox" style="width: 4%;"
+					<th class="checkbox"
 						tal:condition="btn_select">
 						<input type="checkbox" class="select-all" />
 					</th>
-					<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+					<th class="type" i18n:translate="Type (translate as a noun)">Type</th>
 					<th class="title-column" i18n:translate="">Title</th>
 
 					<th class="checkin" i18n:translate="">Version</th>
@@ -133,12 +133,11 @@ $(document).ready(function(){
 					editable python:folder_info['editable'];
 					folder python:folder_info['self'];
 					" on-error="here/rstk/catch_unauthorized">
-					<td class="checkbox" tal:condition="btn_select"
-						style="width: 4%; vertical-align: top;">
+					<td class="checkbox" tal:condition="btn_select">
 						<input tal:condition="python:del_permission or copy_permission"
 							type="checkbox" name="id" tal:attributes="value folder/id" />
 					</td>
-					<td class="type" style="width: 4%;">
+					<td class="type">
 						<img tal:define="icon folder_info/view/get_icon"
 						     tal:condition="icon"
 						     tal:attributes="src icon/url;
@@ -210,12 +209,11 @@ $(document).ready(function(){
 					editable python:object_info['editable'];
 					object python:object_info['self'];
 					" on-error="here/rstk/catch_unauthorized">
-					<td class="checkbox" tal:condition="btn_select"
-						style="width: 4%; vertical-align: top;">
+					<td class="checkbox" tal:condition="btn_select">
 						<input tal:condition="python:del_permission or copy_permission"
 							type="checkbox" name="id" tal:attributes="value object/id" />
 					</td>
-					<td class="type" style="width: 4%;">
+					<td class="type">
 						<img tal:define="icon object_info/view/get_icon"
 						     tal:condition="icon"
 						     tal:attributes="src icon/url;
@@ -266,7 +264,7 @@ $(document).ready(function(){
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
-					<td tal:condition="ratings" class="type" style="width: 12%;">
+					<td tal:condition="ratings" class="type">
 						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"
 							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
