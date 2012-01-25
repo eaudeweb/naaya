@@ -51,11 +51,142 @@ def redirect_to(tmpl):
         REQUEST.RESPONSE.redirect(url)
     return redirect
 
+
 def json_default(value):
     if isinstance(value, Decimal):
         return str(value)
     else:
         raise ValueError('Can not encode value %r' % value)
+
+
+def json_dumps(obj):
+    """
+    Convert a Python object to JSON
+    """
+    return json.dumps(obj, default=json_default)
+
+
+json_loads = json.loads # needed for ZCML registration of RSTK method
+
+
+_button_form = PageTemplateFile('zpt/button_form.zpt', globals())
+
+def button_form(**kwargs):
+    """
+    A simple one-button form, useful when a button that does POST
+    is more appropriate than a link that does GET.
+
+    It takes a few keyword arguments.
+    `label`: what text should appear on the button;
+    `button_title`: tooltip text for the button;
+    `action`: what should the form do (e.g. ``"POST"``);
+    `formdata`: dictionary of name/value pairs to be embedded as
+    hidden inputs in the form.
+
+    None of the fields are translated by default; it's your
+    responsability to do that before calling ``button_form``.
+    """
+    return _button_form(**kwargs)
+
+
+def DT_strftime_rfc3339(date):
+    """
+    Convert a Zope DateTime value to rfc-3339 format, suitable for use
+    in an Atom feed.
+    """
+    d = DT2dt(date).strftime('%Y-%m-%dT%H:%M:%S%z')
+    return d[:-2] + ':' + d[-2:]
+
+
+def dt_strftime(date, format):
+    """
+    Convert a Zope DateTime value to rfc-3339 format, suitable for use
+    in an Atom feed.
+    """
+    return datetime.datetime.strftime(date, format)
+
+
+def we_provide(feature):
+    """ Check if the instance provides certain features """
+    if feature == 'Excel export':
+        try:
+            from xlwt import Workbook
+            return True
+        except ImportError:
+            pass
+    return False
+
+
+def catch_unauthorized():
+    """
+    useful in try..except handlers, like `tal:on-error`::
+
+        <p tal:content="here/read_value"
+           on-error="here/rstk/catch_unauthorized"/>
+    """
+    if sys.exc_info()[0] is Unauthorized:
+        return None
+    else:
+        raise
+
+
+def unescape_html_entities(text):
+    """ unescape html entities from the given text """
+    return unescape_html_entities(text)
+
+
+def simple_paginate(items, per_page=4):
+    """
+    A very simple paginator::
+
+        >>> self.rstk['simple_paginate']([1, 2, 3, 4, 5, 6], per_page=4)
+        [[1, 2, 3, 4], [5, 6]]
+    """
+    return simple_paginate(items, per_page)
+
+
+def get_object_view_info(ob):
+    """
+    Get object icon, meta_label, and other information, useful when
+    displaying the object in a list (e.g. folder index, search results,
+    latest news). Behind the scenes, data comes from adapters to the
+    :class:`~Products.Naaya.interfaces.IObjectView` interface.
+    Currently returns the following fields:
+
+    `icon`
+        the return value from
+        :func:`~Products.Naaya.interfaces.IObjectView.get_icon`
+    """
+
+    view_adapter = get_site_manager(ob).getAdapter(ob, IObjectView)
+
+    # Ideally we would just return the adapter, but RestrictedPython blocks
+    # all access to its methods.
+    return {
+        'icon': view_adapter.get_icon(),
+        # TODO add other fields as needed
+    }
+
+
+def google_analytics(context, ga_id=''):
+    """
+    Renders Google Analytics form template using the provided
+    `ga_id` Analytics Website property ID (UA-number).
+
+    """
+    if ga_id == '':
+        # No website ID provided; e.g. not configured in portal_statistics
+        return ''
+
+    if context.REQUEST.AUTHENTICATED_USER.has_role('Manager'):
+        # no google analytics for managers
+        return ''
+
+    site = context.getSite()
+    forms_tool = site.getFormsTool()
+    ga_form = forms_tool.getForm("site_googleanalytics")
+
+    return ga_form.__of__(site)(ga_id=ga_id)
 
 
 class RestrictedToolkit(SimpleItem):
@@ -70,183 +201,6 @@ class RestrictedToolkit(SimpleItem):
     """
     security = ClassSecurityInfo()
     # by default, all methods are "public"
-
-    _button_form = PageTemplateFile('zpt/button_form.zpt', globals())
-    def button_form(self, **kwargs):
-        """
-        A simple one-button form, useful when a button that does POST
-        is more appropriate than a link that does GET.
-
-        It takes a few keyword arguments.
-        `label`: what text should appear on the button;
-        `button_title`: tooltip text for the button;
-        `action`: what should the form do (e.g. ``"POST"``);
-        `formdata`: dictionary of name/value pairs to be embedded as
-        hidden inputs in the form.
-
-        None of the fields are translated by default; it's your
-        responsability to do that before calling ``button_form``.
-        """
-        return self._button_form(**kwargs)
-
-    def parse_string_to_datetime(self, date_string):
-        """
-        Parse a date/time string to a Python ``datetime.datetime``
-        object.
-        """
-        return parse(date_string)
-
-    def convert_datetime_to_DateTime(self, dt):
-        """
-        Convert a Python ``datetime.datetime`` object to a
-        Zope2 ``DateTime``.
-        """
-        return dt2DT(dt)
-
-    def convert_DateTime_to_datetime(self, DT):
-        """
-        Convert a Zope2 ``DateTime object`` to a Python
-        ``datetime.datetime``.
-        """
-        return DT2dt(DT)
-
-    def DT_strftime_rfc3339(self, date):
-        """
-        Convert a Zope DateTime value to rfc-3339 format, suitable for use
-        in an Atom feed.
-        """
-        d = DT2dt(date).strftime('%Y-%m-%dT%H:%M:%S%z')
-        return d[:-2] + ':' + d[-2:]
-
-    def dt_strftime(self, date, format):
-        """
-        Convert a Zope DateTime value to rfc-3339 format, suitable for use
-        in an Atom feed.
-        """
-        return datetime.datetime.strftime(date, format)
-
-    def json_dumps(self, obj):
-        """
-        Convert a Python object to JSON
-        """
-        return json.dumps(obj, default=json_default)
-
-    def json_loads(self, json_data):
-        """
-        Convert JSON data to a Python object
-        """
-        return json.loads(json_data)
-
-    def is_descendant_of(self, obj, ancestor):
-        """
-        Return if the `obj` is somewhere inside `ancestor`
-        """
-        return is_descendant_of(obj, ancestor)
-
-    def path_in_site(self, obj):
-        """ Return path relative to site root """
-        return path_in_site(obj)
-
-    def relative_object_path(self, obj, ancestor):
-        """
-        Compute the relative path from `ancestor` to `obj` (`obj` must be
-        somewhere inside `ancestor`);
-        Sample usage: get object path in subsite, relative to top site
-
-        """
-        return relative_object_path(obj, ancestor)
-
-    def is_valid_email(self, email_str):
-        """ Check validity of email address """
-        return is_valid_email(email_str)
-
-    def we_provide(self, feature):
-        """ Check if the instance provides certain features """
-        if feature == 'Excel export':
-            try:
-                from xlwt import Workbook
-                return True
-            except ImportError:
-                pass
-        return False
-
-    def catch_unauthorized(self):
-        """
-        useful in try..except handlers, like `tal:on-error`::
-
-            <p tal:content="here/read_value"
-               on-error="here/rstk/catch_unauthorized"/>
-        """
-        if sys.exc_info()[0] is Unauthorized:
-            return None
-        else:
-            raise
-
-    def url_quote(self, value):
-        """ URL-quote the given value. """
-        return urllib.quote(value)
-
-    def unescape_html_entities(self, text):
-        """ unescape html entities from the given text """
-        return unescape_html_entities(text)
-
-    def simple_paginate(self, items, per_page=4):
-        """
-        A very simple paginator::
-
-            >>> self.rstk.simple_paginate([1, 2, 3, 4, 5, 6], per_page=4)
-            [[1, 2, 3, 4], [5, 6]]
-        """
-        return simple_paginate(items, per_page)
-
-    def get_object_view_info(self, ob):
-        """
-        Get object icon, meta_label, and other information, useful when
-        displaying the object in a list (e.g. folder index, search results,
-        latest news). Behind the scenes, data comes from adapters to the
-        :class:`~Products.Naaya.interfaces.IObjectView` interface.
-        Currently returns the following fields:
-
-        `icon`
-            the return value from
-            :func:`~Products.Naaya.interfaces.IObjectView.get_icon`
-        """
-
-        view_adapter = get_site_manager(ob).getAdapter(ob, IObjectView)
-
-        # Ideally we would just return the adapter, but RestrictedPython blocks
-        # all access to its methods.
-        return {
-            'icon': view_adapter.get_icon(),
-            # TODO add other fields as needed
-        }
-
-    def icon_for_content_type(self, *args, **kwargs):
-        """
-        Return a dictionary with the url an title of the icon
-        for the passed content_type
-        """
-        return icon_for_content_type(*args, **kwargs)
-
-    def google_analytics(self, ga_id=''):
-        """
-        Renders Google Analytics form template using the provided
-        `ga_id` Analytics Website property ID (UA-number).
-
-        """
-        if ga_id == '':
-            # No website ID provided; e.g. not configured in portal_statistics
-            return ''
-
-        if self.REQUEST.AUTHENTICATED_USER.has_role('Manager'):
-            # no google analytics for managers
-            return ''
-
-        site = self.getSite()
-        forms_tool = site.getFormsTool()
-        ga_form = forms_tool.getForm("site_googleanalytics")
-
-        return ga_form.__of__(site)(ga_id=ga_id)
 
     def __getitem__(self, name):
         method = get_site_manager(self).queryUtility(IRstkMethod, name)
