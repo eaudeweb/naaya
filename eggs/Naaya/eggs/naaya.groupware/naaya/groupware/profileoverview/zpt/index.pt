@@ -11,7 +11,6 @@
     <script src="++resource++naaya.groupware.profileoverview/primary.js"
           type="text/javascript" language="javascript"></script>
 
-    <!--TODO: this is only for demo purposes-->
     <h1>Profile Overview for <span tal:content="options/user_id" /></h1>
 
     <h2>Interest group membership</h2>
@@ -30,6 +29,16 @@
                                    tal:content="ig/title_or_id">
                                 </a>
                             </span>
+                            <ul tal:condition="python:options['ig_details'][ig.getPhysicalPath()]">
+                            <li tal:repeat="local_roles python:options['ig_details'][ig.getPhysicalPath()]">
+                                <span tal:content="python:', '.join(local_roles['access'])" />
+                                in <a tal:content="python: local_roles['location'].title_or_id()"
+                                    tal:attributes="href python:local_roles['location'].absolute_url()" />
+                                    <tal:block condition="python:local_roles['group']">
+                                        - as a member of <span tal:content="python:local_roles['group']" class="ldap_group" /></tal:block>
+                                    <span tal:condition="not:python:local_roles['group']"> - local role</span>
+                            </li>
+                            </ul>
                         </li>
                         <li tal:condition="python:len(ig_list)>5" class="see_more_dots">
                             ...
