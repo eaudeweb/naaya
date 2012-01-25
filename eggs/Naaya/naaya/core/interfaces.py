@@ -26,3 +26,9 @@ class IFilesystemBundleFactory(Interface):
     """ Create a filesystem bundle for a given site. """
     def create_bundle():
         """ Write the new bundle in the filesystem and return it. """
+
+
+class IRstkMethod(Interface):
+    """ Method accessible on a RestrictedToolkit object. """
+    def __call__(*args, **kwargs):
+        """ Call the method. """
