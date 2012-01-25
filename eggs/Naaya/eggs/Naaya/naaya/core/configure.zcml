@@ -14,4 +14,91 @@
         directory="./mime-icons"
         permission="zope.Public"
         />
+
+    <naaya:rstkMethod
+        name="parse_string_to_datetime"
+        handler="dateutil.parser.parse"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        name="convert_datetime_to_DateTime"
+        handler=".zope2util.dt2DT"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        name="convert_DateTime_to_datetime"
+        handler=".zope2util.DT2dt"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        name="json_loads"
+        handler=".zope2util.json_loads"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.is_descendant_of"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.relative_object_path"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.path_in_site"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.is_valid_email"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        name="url_quote"
+        handler="urllib.quote"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.icon_for_content_type"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.button_form"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.DT_strftime_rfc3339"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.dt_strftime"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.json_dumps"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.we_provide"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.catch_unauthorized"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.unescape_html_entities"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.simple_paginate"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.get_object_view_info"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.google_analytics"
+        context="yes"
+        getattrPatch="yes" />
+
 </configure>
