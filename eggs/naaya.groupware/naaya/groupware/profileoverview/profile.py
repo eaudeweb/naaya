@@ -166,15 +166,24 @@ class ProfileView(BrowserView):
         client = ProfileClient(zope_app, user)
         roles_list = client.roles_list_in_ldap()
         notifications = client.notification_lists()
-        ig_access = client.access_in_igs()
-
         # custom filters - only relevant info in view
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
-        if 'viewer' in ig_access:
-            del ig_access['viewer']
+        return self.index(roles=leaf_roles_list,
+                          subscriptions=notifications, user_id=user.getId())
+
+class ProfileViewAjax(BrowserView):
+
+    def __call__(self, **kw):
+        user = self.request.get('AUTHENTICATED_USER', None)
+        if not user.has_role('Authenticated'):
+            return ''
+        zope_app = self.context.unrestrictedTraverse('/')
+        client = ProfileClient(zope_app, user)
+        ig_access = client.access_in_igs()
+        #if 'viewer' in ig_access:
+        #    del ig_access['viewer']
         if 'restricted' in ig_access:
             del ig_access['restricted']
-
         ig_details = {}
         all_igs = []
         for igs in ig_access.values():
@@ -183,10 +192,7 @@ class ProfileView(BrowserView):
             ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
             by_groups = client.local_roles_by_groups(ig)
             ig_details[ig.getPhysicalPath()].extend(by_groups)
-
-        return self.index(ig_access=ig_access, roles=leaf_roles_list,
-                          ig_details=ig_details,
-                          subscriptions=notifications, user_id=user.getId())
+        return self.index(ig_details=ig_details, ig_access=ig_access)
 
 class DemoProfileView(BrowserView):
 
@@ -200,9 +206,9 @@ class DemoProfileView(BrowserView):
         zope_app = self.context.unrestrictedTraverse('/')
 
         # TODO: this is a hack for devel
-        user = zope_app.acl_users.getUser('parttpet')
-        client = ProfileClient(zope_app, user)
-        ig_access = client.access_in_igs()
+        #user = zope_app.acl_users.getUser('parttpet')
+        #client = ProfileClient(zope_app, user)
+        #ig_access = client.access_in_igs()
 
         # TODO: this is a hack for devel
         user = zope_app.acl_users.getUser('fierefra')
@@ -212,20 +218,6 @@ class DemoProfileView(BrowserView):
 
         # custom filters - only relevant info in view
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
-        if 'viewer' in ig_access:
-            del ig_access['viewer']
-        if 'restricted' in ig_access:
-            del ig_access['restricted']
 
-        ig_details = {}
-        all_igs = []
-        for igs in ig_access.values():
-            all_igs.extend(igs)
-        for ig in all_igs:
-            ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
-            by_groups = client.local_roles_by_groups(ig)
-            ig_details[ig.getPhysicalPath()].extend(by_groups)
-
-        return self.index(ig_access=ig_access, ig_details=ig_details,
-                          roles=leaf_roles_list,
+        return self.index(roles=leaf_roles_list,
                           subscriptions=notifications, user_id='demo_user')
