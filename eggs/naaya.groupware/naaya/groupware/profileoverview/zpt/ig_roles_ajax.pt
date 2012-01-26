@@ -19,7 +19,7 @@
                                 in <a tal:content="python: local_roles['location'].title_or_id()"
                                     tal:attributes="href python:local_roles['location'].absolute_url()" />
                                     <tal:block condition="python:local_roles['group']">
-                                        - as a member of <tt tal:content="python:local_roles['group']" class="ldap_group" /></tal:block>
+                                        - as a member of <tt tal:content="python:options['role_names'][local_roles['group']]" class="ldap_group" /></tal:block>
                                     <span tal:condition="not:python:local_roles['group']"> - local role</span>
                             </li>
                             </ul>
