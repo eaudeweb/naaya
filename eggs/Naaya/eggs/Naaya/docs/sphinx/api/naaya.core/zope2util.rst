@@ -3,6 +3,8 @@ Zope 2 utilities
 
 .. currentmodule:: naaya.core.zope2util
 
+.. _restricted-toolkit:
+
 Restricted Toolkit
 ------------------
 
