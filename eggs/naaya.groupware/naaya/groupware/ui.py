@@ -23,7 +23,7 @@ def nfp_admin_link(context, request):
     """
     nfp_url = ''
 
-    if context.REQUEST.AUTHENTICATED_USER:
+    if context.REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User':
         user = context.REQUEST.AUTHENTICATED_USER
         zope_app = context.unrestrictedTraverse('/')
         client = ProfileClient(zope_app, user)
