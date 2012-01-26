@@ -82,6 +82,17 @@ Some terms used in the documentation are described here.
     Portal
         A portal is synonymous to a site.
 
+    RestrictedPython
+        Python code that is executed with reduced privileges. Used in
+        Zope2-style page templates and Python code stored in the database.
+
+    RestrictedToolkit
+        A singleton object that is available in :term:`RestrictedPython`. See
+        the API documentation for :ref:`restricted-toolkit`.
+
+    rstk
+        See :term:`RestrictedToolkit`.
+
     TAL
         Template Attribute Language is an AttributeLanguage used to create 
         dynamic templates. By marking elements of your HTML or XML document 

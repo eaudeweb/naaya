@@ -15,6 +15,8 @@ and utility lookups, use :func:`~naaya.core.zope2util.get_site_manager`
     sm.getAdapter(ob, ISomethingElse) # adapt an object to an interface
 
 
+.. _bundles:
+
 Component bundles
 -----------------
 Bundles provide a way to define components and have them apply only to
@@ -98,13 +100,14 @@ Naaya provides the following ZCML directives in the
 `naaya:call`
     Call a function at Zope startup time. Useful for any kind of
     initialization.
-    ::
+
+    .. code-block:: xml
 
         <configure xmlns:naaya="http://namespaces.zope.org/naaya">
             <naaya:call factory="module_name.func_name" />
         </configure>
 
-    ::
+    .. code-block:: python
 
         def func_name():
             print "I get called at startup."
@@ -113,7 +116,8 @@ Naaya provides the following ZCML directives in the
     Register a function as a Zope 3 View. The function will be called with two
     arguments: `context` and `request`. `permission` is optional, defaults to
     ``zope.Public``.
-    ::
+
+    .. code-block:: xml
 
         <configure xmlns:naaya="http://namespaces.zope.org/naaya">
             <naaya:simpleView
@@ -123,7 +127,37 @@ Naaya provides the following ZCML directives in the
                 permission="Zope2.ViewManagementScreens" />
         </configure>
 
-    ::
+    .. code-block:: python
 
         def say_hello(context, request):
             return "Hello from <tt>%s</tt>" % '/'.join(context.getPhysicalPath())
+
+`naaya:rstkMethod`
+    Register a method on :term:`RestrictedToolkit`. The method will be
+    accessible to any :term:`RestrictedPython` code publicly.
+
+    `name` defaults to the handler's ``__name__`` attribute. `handler` is
+    typically a function. If `context` is true, `handler` will be invoked with
+    the :class:`~naaya.core.zope2util.RestrictedToolkit` object as first
+    argument; defaults to ``no``. `bundle` controls in which :ref:`bundle
+    <bundles>` the method will be registered; defaults to ``Naaya``.
+
+    .. code-block:: xml
+
+        <configure xmlns:naaya="http://namespaces.zope.org/naaya">
+            <naaya:rstkMethod
+                name="complex_action"
+                handler="module_name.perform_complex_action"
+                context="yes"
+                bundle="CHM3" />
+        </configure>
+
+    The method can be invoked as follows (`rstk` is acquired from the parent
+    :class:`~Products.Naaya.NySite.NySite` object). Note the dictionary-like
+    syntax, to emphasize that a component lookup is being performed, instead of
+    a simple method access. The method is looked up in the current portal's
+    bundle.
+
+    .. code-block:: html
+
+        <tal:block content="python:here.rstk['complex_action']('foo', bar=13)"/>
