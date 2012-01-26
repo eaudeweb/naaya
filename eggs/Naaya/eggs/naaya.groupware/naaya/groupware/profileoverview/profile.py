@@ -1,3 +1,5 @@
+import operator
+
 from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
@@ -186,13 +188,19 @@ class ProfileViewAjax(BrowserView):
             del ig_access['restricted']
         ig_details = {}
         all_igs = []
+        roles = set()
         for igs in ig_access.values():
             all_igs.extend(igs)
         for ig in all_igs:
             ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
             by_groups = client.local_roles_by_groups(ig)
+            roles.update(set(map(operator.itemgetter('group'), by_groups)))
             ig_details[ig.getPhysicalPath()].extend(by_groups)
-        return self.index(ig_details=ig_details, ig_access=ig_access)
+        role_names = {}
+        for role in roles:
+            role_names[role] = client.agent.role_info(role)['description']
+        return self.index(ig_details=ig_details, ig_access=ig_access,
+                          role_names=role_names)
 
 class DemoProfileView(BrowserView):
 
