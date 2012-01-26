@@ -30,4 +30,5 @@
 
   <include package=".profileoverview" />
   <include package=".updates" />
+
 </configure>

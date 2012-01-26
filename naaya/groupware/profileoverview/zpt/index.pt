@@ -11,7 +11,8 @@
     <script src="++resource++naaya.groupware.profileoverview/primary.js"
           type="text/javascript" language="javascript"></script>
 
-    <h1>Profile Overview for <span tal:content="options/user_id" /></h1>
+    <h1>Overview on memberships in interest groups,
+ Roles and Subscriptions for user <tt tal:content="options/user_id" /></h1>
 
     <h2>Interest group membership</h2>
     <div id="ig_access">
@@ -19,7 +20,6 @@
             <img src="++resource++naaya.groupware.profileoverview/ajax-loader.gif" />
         </div>
     </div>
-    
 
     <h2>Member of Roles</h2>
     <tal:block condition="options/roles">
