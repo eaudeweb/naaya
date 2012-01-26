@@ -21,6 +21,13 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <naaya:simpleView
+    for=".interfaces.IGWSite"
+    name="nfp_admin_link_html"
+    handler=".ui.nfp_admin_link"
+    permission="zope2.ViewManagementScreens"
+    />
+
   <include package=".profileoverview" />
   <include package=".updates" />
 </configure>
