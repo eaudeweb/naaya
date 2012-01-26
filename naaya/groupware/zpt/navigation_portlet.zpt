@@ -2,7 +2,8 @@
 <div class="left_portlet_title">Navigation</div>
 <div class="left_portlet_content">
     <tal:block tal:define="site_url here/getSitePath;
-                            nfp_admin_link here/nfp_admin_link_html">
+                            site here/getSite;
+                            nfp_admin_link site/nfp_admin_link_html">
         <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
             <tal:block tal:repeat="item link_list">
                 <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
