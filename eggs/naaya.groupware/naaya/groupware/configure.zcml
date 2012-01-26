@@ -25,7 +25,7 @@
     for=".interfaces.IGWSite"
     name="nfp_admin_link_html"
     handler=".ui.nfp_admin_link"
-    permission="zope2.ViewManagementScreens"
+    permission="zope2.View"
     />
 
   <include package=".profileoverview" />
