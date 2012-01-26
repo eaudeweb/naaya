@@ -1,7 +1,8 @@
 <div class="left_portlet">
 <div class="left_portlet_title">Navigation</div>
 <div class="left_portlet_content">
-    <tal:block tal:define="site_url here/getSitePath">
+    <tal:block tal:define="site_url here/getSitePath;
+                            nfp_admin_link here/nfp_admin_link_html">
         <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
             <tal:block tal:repeat="item link_list">
                 <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
@@ -9,6 +10,10 @@
                                         title item/description"
                         tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
             </tal:block>
+
+            <li tal:condition="python: request.AUTHENTICATED_USER and nfp_admin_link and here.getSite().id == 'nfp-eionet'">
+                <a tal:attributes="href nfp_admin_link" title="View your NFP" i18n:translate="" i18n:attributes="title">Edit NRC members</a>
+            </li>
         </ul>
     </tal:block>
 </div>
