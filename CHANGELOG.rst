@@ -3,7 +3,7 @@
 * added 'Edit NRC members' for nfp-eionet [bogdatan]
 * profileoverview shows local roles owned by belonging to
   a ldap group [simiamih]
-* profileoverview - ajax loading ig roles [simiamih]
+* profileoverview - ajax loading ig roles + role names [simiamih]
 
 1.1.10 (2012-01-18)
 ------------------
