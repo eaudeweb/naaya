@@ -17,7 +17,9 @@
             Name contains</label>
         <input type="text" name="search_string:utf8:ustring" id="search_string"
             tal:attributes="value search_string"/>
+	<input type='hidden' id='skip_validation' name='skip_validation' value='' />
         <input type="submit" value="Search"/>
+	<input id="show_all" type="submit" value="Show all" />
     </form>
 
     <div id="search_results">
@@ -46,13 +48,21 @@
                 success: processResponse,
                 error: searchError
             });
+	    // Show all
+	    jQuery("#show_all").click(function(){
+		$('#skip_validation').val('1');
+		$('#search_form').submit();
+		return false;
+	    })
         });
         function beforeSubmit() {
             search_string = $('#search_string').val();
-			if (!search_string) {
+	    skip_validation = $('#skip_validation').val();
+			if (!search_string && !skip_validation) {
 				alert ('Please type at least one letter to narrow search results.');
 				return false;
 			}
+	    $('#skip_validation').val('');
             showWatingForResponse();
         }
         function processResponse(data) {

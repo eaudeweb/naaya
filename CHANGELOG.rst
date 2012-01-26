@@ -4,6 +4,7 @@
 * profileoverview shows local roles owned by belonging to
   a ldap group [simiamih]
 * profileoverview - ajax loading ig roles + role names [simiamih]
+* list all button in member search
 
 1.1.10 (2012-01-18)
 ------------------
