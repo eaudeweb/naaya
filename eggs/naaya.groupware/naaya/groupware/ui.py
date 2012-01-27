@@ -5,6 +5,7 @@ from profileoverview.profile import ProfileClient
 from App.config import getConfiguration
 
 local_users_zpt = PageTemplateFile('zpt/local_users.zpt', globals())
+index_html_zpt = PageTemplateFile('zpt/index.zpt', globals())
 
 CONFIG = getConfiguration()
 eionet_url = getattr(CONFIG, 'environment', {}).get('EIONET_LDAP_EXPLORER', '')
@@ -39,3 +40,9 @@ def nfp_admin_link(context, request):
             nfp_url = eionet_url + '/nfp_nrc/nrcs?nfp=' + country
 
     return nfp_url
+
+def index_html(context, request):
+    """
+    Render Forum's first page
+    """
+    return index_html_zpt.__of__(context)()

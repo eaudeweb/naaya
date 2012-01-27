@@ -1,5 +1,8 @@
 1.1.11 (unreleased)
 ------------------
+* changed from customized index page to simpleView [bogdatan]
+* changed names in IGs listing [bogdatan]
+* archived IGs list made collapsible [bogdatan]
 * added 'Edit NRC members' for nfp-eionet [bogdatan]
 * profileoverview shows local roles owned by belonging to
   a ldap group [simiamih]
