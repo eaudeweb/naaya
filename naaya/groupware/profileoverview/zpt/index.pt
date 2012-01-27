@@ -4,9 +4,9 @@
     <!-- TODO: create and fill a slot in head macro in gw_macro template -->
     <link href="++resource++naaya.groupware.profileoverview/style.css"
           rel="stylesheet" type="text/css" />
-    <script src="++resource++naaya.groupware.profileoverview/jquery-1.4.4.min.js"
+    <script src="++resource++naaya.groupware/jquery-1.4.4.min.js"
           type="text/javascript" language="javascript"></script>
-    <script src="++resource++naaya.groupware.profileoverview/jquery-ui.custom.min.js"
+    <script src="++resource++naaya.groupware/jquery-ui.custom.min.js"
           type="text/javascript" language="javascript"></script>
     <script src="++resource++naaya.groupware.profileoverview/primary.js"
           type="text/javascript" language="javascript"></script>
@@ -17,7 +17,7 @@
     <h2>Interest group membership</h2>
     <div id="ig_access">
         <div style='text-align: center;'>
-            <img src="++resource++naaya.groupware.profileoverview/ajax-loader.gif" />
+            <img src="++resource++naaya.groupware/ajax-loader.gif" />
         </div>
     </div>
 

@@ -14,6 +14,12 @@
 
   <naaya:call factory=".groupware_site.groupware_bundle_registration"  />
 
+  <browser:resourceDirectory
+    directory="www"
+    name="naaya.groupware"
+    permission="zope2.View"
+    />
+
   <browser:page
     for=".interfaces.IGroupwareApplication"
     name="local_users_html"
@@ -27,6 +33,19 @@
     handler=".ui.nfp_admin_link"
     permission="zope2.View"
     />
+
+  <naaya:simpleView
+    for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="index_html"
+    handler=".ui.index_html"
+    permission="zope2.View"
+    />
+
+  <browser:defaultView
+    for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="index_html"
+    />
+    
 
   <include package=".profileoverview" />
   <include package=".updates" />
