@@ -13,7 +13,7 @@ In order to become a member (i.e. obtain a username and a password) you should r
 supplied for each interest group and then follow the subscription instructions. 
         </p>
         <tal:block define="igs python:portals.get('admin', [])" condition="igs">
-            <h2 i18n:translate="">IG you can access with your credentials</h2>
+            <h2 i18n:translate="">Interest groups you can access with your credentials</h2>
             <p i18n:translate="">Including those publicly available</p>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
@@ -23,7 +23,7 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('member', [])" condition="igs">
-            <h2 i18n:translate="">IG that you are a member of</h2>
+            <h2 i18n:translate="">Interest groups that you are a member of</h2>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
@@ -32,7 +32,7 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
-            <h2 i18n:translate="">IG you can access without authentication</h2>
+            <h2 i18n:translate="">Interest groups you can access without authentication</h2>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
@@ -42,7 +42,7 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-            <h2 i18n:translate="">IG you need to be logged in with an EIONET account</h2>
+            <h2 i18n:translate="">Interest groups you need to be logged in with an EIONET account</h2>
             <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
@@ -53,7 +53,7 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('archived', [])" condition="igs">
-            <h2 i18n:translate="">Archived IG</h2>
+            <h2 i18n:translate="">Archived Interest groups</h2>
             <p i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk.</p>
             <a href="javascript:void(0); " title="Toggle IG list" i18n:translate="" i18n:attributes="title" class="collapsible-trigger show">
                 View list
