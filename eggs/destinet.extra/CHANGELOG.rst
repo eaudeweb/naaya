@@ -1,5 +1,6 @@
 1.1.2 (unreleased)
 ====================
+* Possibility to add local role "Editor" to contributors [dumitval]
 
 1.1.1 (2012-01-24)
 ====================
