@@ -124,7 +124,7 @@ Naaya provides the following ZCML directives in the
                 for="Products.Naaya.interfaces.INySite"
                 name="hello.html"
                 handler="module_name.say_hello"
-                permission="Zope2.ViewManagementScreens" />
+                permission="zope2.ViewManagementScreens" />
         </configure>
 
     .. code-block:: python
