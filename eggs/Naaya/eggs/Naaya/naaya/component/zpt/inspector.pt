@@ -13,8 +13,15 @@
     .tooltip {
         display: none;
     }
+    .link-manage-bundles {
+        float: right;
+    }
 </style>
 <link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.tooltip.css" />
+
+<div class="link-manage-bundles">
+    <a href="./manage_bundle">Manage bundle</a>
+</div>
 
 <tal:block define="selected_interface python: request.form.get('interface', 'ITemplate')">
 <form action="" method="GET">
