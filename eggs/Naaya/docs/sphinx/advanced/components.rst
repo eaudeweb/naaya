@@ -132,6 +132,18 @@ Naaya provides the following ZCML directives in the
         def say_hello(context, request):
             return "Hello from <tt>%s</tt>" % '/'.join(context.getPhysicalPath())
 
+    Unlike the Zope 2 publisher, where ``index_html`` is the default page name,
+    in Zope 3 the default is ``index.html``. It can be overridden with the
+    ``browser:defaultView`` directive:
+
+    .. code-block:: xml
+
+        <configure xmlns:browser="http://namespaces.zope.org/browser">
+            <browser:defaultView
+                for="Products.Naaya.interfaces.INySite"
+                name="hello.html" />
+        </configure>
+
 `naaya:rstkMethod`
     Register a method on :term:`RestrictedToolkit`. The method will be
     accessible to any :term:`RestrictedPython` code publicly.
