@@ -1,0 +1,3 @@
+include *.rst
+recursive-include destinet *
+global-exclude *py[co]
