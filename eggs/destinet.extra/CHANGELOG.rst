@@ -1,5 +1,6 @@
 1.1.3 (unreleased)
 ====================
+* fix for objects with no __ac_local_roles__ [dumitval]
 * all zcml configures linked in destinet.extra/configure.zcml [simiamih]
 
 1.1.2 (2012-01-30)
