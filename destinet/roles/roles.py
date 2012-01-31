@@ -42,8 +42,9 @@ def admin_assign_role(context, REQUEST):
         messages.append("User %s doesn't have contributions on this site yet." % orig_id)
     objects = {}
     for ob in obj_list:
+        local_roles = ob.__ac_local_roles__ or {}
         objects ['/'.join(ob.getPhysicalPath())] = [ob.title_or_id(),
-                                                    ob.__ac_local_roles__]
+                                                    local_roles]
     options['messages'] = messages
     options['objects'] = objects
     return _admin_assign_role.__of__(context)(REQUEST, **options)
