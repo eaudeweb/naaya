@@ -67,7 +67,7 @@
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
 
 <div class="survey-box" tal:define="days_left python:here.get_days_left()">
-	<h3 class="survey-box-title">
+	<h3 class="survey-box-title" i18n:translate="">
 		Survey details
 	</h3>
 	
@@ -86,12 +86,12 @@
 				<div class="survey-detail">
 					<span tal:condition="python:(days_left[0] == 1 and days_left[1] > 0) or here.allow_overtime">
 						<tal:block condition="python: days_left[1] == 1" i18n:translate="">
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="today"
 								  i18n:translate="">Today</span>
 							is the last day for this survey.
 						</tal:block>
 						<tal:block condition="python: days_left[1] == 2" i18n:translate="">
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="tomorrow"
 								  i18n:translate="">Tomorrow</span>
 							is the last day for this survey.
 						</tal:block>
@@ -110,7 +110,7 @@
 						</tal:block>
 						<tal:block condition="python: days_left[1] <= 1" i18n:translate="">
 							This survey starts
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="tomorrow"
 								  i18n:translate="">tomorrow</span>.
 						</tal:block>
 					</span>
@@ -119,7 +119,7 @@
 				
 				<tal:block tal:define="my_answers python: here.getMyAnswer(True)" condition="python: my_answers and here.allow_multiple_answers">
 					<div class="survey-detail">
-						<h4>
+						<h4 i18n:translate="">
 							Your answers so far:
 						</h4>
 						<ul id="my-answers-list">
@@ -132,7 +132,7 @@
 				
 				<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts and here.allow_multiple_answers">
 					<div class="survey-detail">
-						<h4>Your drafts:</h4>
+						<h4 i18n:translate="">Your drafts:</h4>
 						<ul id="my-answers-list">
 							<li  tal:repeat="draft my_drafts">
 								<a tal:attributes="href string:${draft/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(draft.modification_time)"></a>

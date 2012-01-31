@@ -5,7 +5,7 @@
                                             if not custom(n)]"
            condition="names_not_custom">
 
-<h3>Customize template</h3>
+<h3 i18n:translate="">Customize template</h3>
 <form method="post" tal:attributes="action string:${here/absolute_url}/manage_customizeTemplate">
 
 <select name="name">
@@ -14,7 +14,7 @@
             tal:content="name" />
 </select>
 
-<input type="submit" value="Customize" />
+<input type="submit" value="Customize" i18n:attributes="value" />
 
 </form>
 </tal:block>
