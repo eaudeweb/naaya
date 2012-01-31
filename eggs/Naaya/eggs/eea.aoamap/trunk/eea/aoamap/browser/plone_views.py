@@ -1,7 +1,8 @@
 """ Plone Views
 """
 try:
-    import simplejson as json
+    import simplejson
+    json = simplejson
 except ImportError:
     import json
 import urllib
