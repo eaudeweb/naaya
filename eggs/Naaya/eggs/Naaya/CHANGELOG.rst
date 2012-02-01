@@ -1,5 +1,6 @@
 2.12.56 (unreleased)
 --------------------
+* Fixed convert_from_user_string for use in csv_import [dumitval]
 
 2.12.55 (2012-01-25)
 --------------------
