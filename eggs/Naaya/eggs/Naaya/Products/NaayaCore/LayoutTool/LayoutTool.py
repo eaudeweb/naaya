@@ -136,8 +136,9 @@ class LayoutTool(Folder, combosync_tool):
         except AttributeError:
             return self.get_standard_template_base()
 
+    _blank_page = PageTemplateFile('zpt/blank_page.zpt', globals())
     def render_standard_template(self, context):
-        return self.get_standard_template().__of__(context)()
+        return self._blank_page.aq_base.__of__(context)()
 
     def get_standard_template_base(self):
         return self._standard_template
