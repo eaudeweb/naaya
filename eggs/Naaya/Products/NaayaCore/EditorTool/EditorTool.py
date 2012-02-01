@@ -246,11 +246,25 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         else:
             print 'no image to upload'
 
-
-    def enumerateImages(self, source, query=None, REQUEST=None):
+    def enumerateImages(self, source, page=0, query=None, REQUEST=None):
         """ Retrieve the list of images depending on the source.
         Return a list of ``Image`` objects
         """
+
+        def get_image_info(source, image):
+            image_object = {
+                'url': image.absolute_url(),
+                'title': image.title_or_id(),
+                'source': '',
+                'author': ''
+            }
+
+            if source == 'album':
+                image_object['source'] = image.source()
+                image_object['author'] = image.author()
+
+            return image_object
+
         ret = []
         if source == 'document':
             document = self.getEnclosingDocument(REQUEST)
@@ -271,7 +285,16 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
                     'meta_type': 'Naaya Photo',
                     filter_index: query})
                 ret = [x.getObject() for x in ret_brains]
-        return ret
+
+        total_images = len(ret)
+        images = ret[(int(page) * 12):((int(page) + 1) * 12)]
+
+        options = {
+            'total_images': total_images,
+            'images': [get_image_info(source, image) for image in images]
+        }
+
+        return json.dumps(options)
 
 
     def enumeratePhotoAlbums(self, REQUEST=None):
