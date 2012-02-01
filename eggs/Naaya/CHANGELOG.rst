@@ -1,5 +1,6 @@
 2.12.56 (unreleased)
 --------------------
+* Added convert_to_user_string for use in csv_export [dumitval]
 * Fixed convert_from_user_string for use in csv_import [dumitval]
 
 2.12.55 (2012-01-25)

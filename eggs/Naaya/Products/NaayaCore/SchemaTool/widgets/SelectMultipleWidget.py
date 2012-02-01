@@ -33,6 +33,13 @@ class SelectMultipleWidget(Widget):
             list_values[node.title] = node.id
         return [list_values[val.strip()] for val in value.split(';')]
 
+    def convert_to_user_string(self, values):
+        """ Convert the list value to a user-readable string """
+        list_values = {}
+        for node in self.get_list_nodes(self.list_id):
+            list_values[node.id] = node.title
+        return ';'.join([list_values[value] for value in values])
+
     def get_selection_list(self):
         listing = self.get_list_nodes(self.list_id)
         if listing == []:
