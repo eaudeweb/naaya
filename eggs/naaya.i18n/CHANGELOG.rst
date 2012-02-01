@@ -1,4 +1,7 @@
-1.0.11 (unreleased)
+1.0.12 (unreleased)
+-------------------
+
+1.0.11 (2012-02-01)
 ------------------
 * Debugging code to find sources of spurious messages [moregale]
 * Remove annoying log warnings [moregale]
