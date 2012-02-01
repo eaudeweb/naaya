@@ -14,7 +14,7 @@
 	content. Click on each link to edit and translate the item.
 </p>
 <br/><br/>
-<form method="get" action="">
+<form method="get" action="" class="translation-basket-search">
 	<label for="lang" i18n:translate="">Show items not translated in</label>
 	<select name="lang">
 		<option tal:repeat="item portal_i18n/get_languages_mapping"
