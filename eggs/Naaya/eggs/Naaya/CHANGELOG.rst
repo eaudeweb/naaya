@@ -1,4 +1,7 @@
-2.12.56 (unreleased)
+2.12.57 (unreleased)
+--------------------
+
+2.12.56 (2012-02-01)
 --------------------
 * Added convert_to_user_string for use in csv_export [dumitval]
 * Fixed convert_from_user_string for use in csv_import [dumitval]
