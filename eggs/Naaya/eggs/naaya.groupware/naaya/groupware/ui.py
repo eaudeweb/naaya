@@ -23,6 +23,8 @@ def nfp_admin_link(context, request):
     Check if LDAP user is NFP and return the URL to 'Edit NRC members' section
     """
     nfp_url = ''
+    # OBS: disable this until CIRCA Migration
+    return ''
 
     if context.REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User':
         user = context.REQUEST.AUTHENTICATED_USER
