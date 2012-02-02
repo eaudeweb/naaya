@@ -1,5 +1,6 @@
 1.1.12 (unreleased)
 -------------------
+* updated zope_customs documentation
 
 1.1.11 (2012-02-02)
 -------------------
