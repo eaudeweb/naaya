@@ -1,4 +1,7 @@
-1.1.2 (Unreleased)
+1.1.3 (unreleased)
+-------------------
+
+1.1.2 (2012-02-02)
 -------------------
 * get manage dtmls from context/aq_parent, not context [simiamih]
 
