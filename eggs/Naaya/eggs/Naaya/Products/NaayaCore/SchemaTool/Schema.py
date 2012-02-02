@@ -12,7 +12,7 @@ from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
     'String', 'TextArea', 'Date', 'Interval', 'Checkbox', 'URL',
-    'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer',
+    'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer', 'File',
 ]
 
 # widgets
@@ -45,6 +45,7 @@ class Schema(Folder):
                             widget_types_by_metatype[meta_type]].func_name,
             'permission': view_management_screens,
         } for meta_type in widget_types_by_metatype)
+
     all_meta_types = meta_types
 
     is_ratable = False
