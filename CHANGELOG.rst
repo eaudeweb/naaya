@@ -1,16 +1,20 @@
-1.1.11 (unreleased)
-------------------
+1.1.12 (unreleased)
+-------------------
+
+1.1.11 (2012-02-02)
+-------------------
 * changed from customized index page to simpleView [bogdatan]
 * changed names in IGs listing [bogdatan]
 * archived IGs list made collapsible [bogdatan]
-* added 'Edit NRC members' for nfp-eionet [bogdatan]
+* added 'Edit NRC members' for nfp-eionet, currently disabled
+  from py until CIRCA migration [bogdatan]
 * profileoverview shows local roles owned by belonging to
   a ldap group [simiamih]
 * profileoverview - ajax loading ig roles + role names [simiamih]
 * list all button in member search
 
 1.1.10 (2012-01-18)
-------------------
+-------------------
 * bugfix: decode user names used in email template [simiamih]
 
 1.1.9 (2012-01-16)
