@@ -83,9 +83,11 @@ class ZopeActor(object):
         from StringIO import StringIO
         assert isinstance(data_file, StringIO)
         data_file.filename = filename
+        content_type, content_encoding = mimetypes.guess_type(filename)
+        if content_type is None:
+            content_type = 'application/octet-stream'
         bf = make_blobfile(data_file,
-                           content_type=mimetypes.guess_type(filename,
-                                                    'application/octet-stream'),
+                           content_type=content_type,
                            removed=False,
                            timestamp=datetime(date.year, date.month, date.day))
 
