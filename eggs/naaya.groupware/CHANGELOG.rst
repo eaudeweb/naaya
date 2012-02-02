@@ -1,4 +1,7 @@
-1.1.12 (unreleased)
+1.1.13 (unreleased)
+-------------------
+
+1.1.12 (2012-02-02)
 -------------------
 * updated zope_customs documentation
 
