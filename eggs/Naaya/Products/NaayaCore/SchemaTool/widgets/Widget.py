@@ -23,7 +23,8 @@ DATA_TYPES = {
     'date': DateTime,
     'geo': Geo,
     'list': list,
-    'interval': Interval
+    'noop': None,
+    'interval': Interval,
 }
 
 def propname_from_widgetid(widgetid):
@@ -221,6 +222,8 @@ class Widget(Folder):
     security.declarePrivate('convertValue')
     def convertValue(self, value):
         convert = DATA_TYPES[self.data_type]
+        if convert is None:
+            return value
         try:
             if value in ('', None):
                 # special cases for empty values
@@ -232,6 +235,13 @@ class Widget(Folder):
         except ValueError:
             raise WidgetError('Conversion error: expected %s value '
                 'for "%s"' % (self.data_type, self.prop_name()))
+
+    def new_value(self, prev_prop_value, prop_value):
+        """
+        Given the existing value and the form-submitted value, decide what
+        the new value should be. By default, always set the new value.
+        """
+        return prop_value
 
     def prop_name(self):
         return propname_from_widgetid(self.getId())

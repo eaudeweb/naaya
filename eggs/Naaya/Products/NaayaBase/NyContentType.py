@@ -71,6 +71,8 @@ class SchemaFormHelper(object):
         widget = self.schema.getWidget(prop_name)
         prop_type = widget.getDataType()
         val = self.context.getSession(prop_name, '')
+        if prop_type is None:
+            return val or None
         if val in ('', None):
             if widget.default not in (None, ''):
                 return prop_type(widget.default)
@@ -406,7 +408,10 @@ class NyContentData(NyProperties):
             if val != '':
                 widget = schema.getWidget(prop_name)
                 prop_type = widget.getDataType()
-                return prop_type(val)
+                if prop_type is None:
+                    return val or None
+                else:
+                    return prop_type(val)
 
             if prop_name in local_properties:
                 return self.getLocalProperty(prop_name, lang)
@@ -506,15 +511,22 @@ class NyContentData(NyProperties):
         for prop_name, prop_value in kwargs.iteritems():
             widget = schema.getWidget(prop_name)
             prop_type = widget.getDataType()
-            if not isinstance(prop_value, prop_type) and prop_value is not None:
-                prop_value = prop_type(prop_value)
+            if prop_type is not None:
+                if not isinstance(prop_value, prop_type) and prop_value is not None:
+                    prop_value = prop_type(prop_value)
 
             if widget.localized:
                 prev_prop_value = self.getLocalProperty(prop_name, _lang)
-                self._setLocalPropValue(prop_name, _lang, prop_value)
+                new_prop_value = widget.new_value(prev_prop_value, prop_value)
+                self._setLocalPropValue(prop_name, _lang, new_prop_value)
             else:
-                prev_prop_value = getattr(self.aq_base, prop_name, prop_type())
-                setattr(self, prop_name, prop_value)
+                if prop_type is None:
+                    default = None
+                else:
+                    default = prop_type()
+                prev_prop_value = getattr(self.aq_base, prop_name, default)
+                new_prop_value = widget.new_value(prev_prop_value, prop_value)
+                setattr(self, prop_name, new_prop_value)
 
             if widget.meta_type == 'Naaya Schema Glossary Widget':
                 glossary = widget.get_glossary()
