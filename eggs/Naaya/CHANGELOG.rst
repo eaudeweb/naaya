@@ -1,4 +1,7 @@
-2.12.57 (unreleased)
+2.12.58 (unreleased)
+--------------------
+
+2.12.57 (2012-02-03)
 --------------------
 * Fix in ExportTool [dumitval]
 * File widget and file download view [moregale]
