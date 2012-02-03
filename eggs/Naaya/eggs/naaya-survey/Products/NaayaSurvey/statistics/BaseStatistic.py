@@ -85,6 +85,7 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         saves the resulting image as BMP in the passed temporary folder
         and returns its path and height in pixels'''
         im = Image.open(file_string)
+        im.load()
         height = im.size[1]
         if len(im.split()) == 4:
             r, g, b, a = img.split()
@@ -101,6 +102,7 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         saves the resulting image as BMP in the passed temporary folder
         and returns its path'''
         im = Image.open(file_string)
+        im.load()
         height = im.size[1]
         if len(im.split()) == 4:
             r, g, b, a = img.split()
