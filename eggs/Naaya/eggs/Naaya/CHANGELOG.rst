@@ -1,5 +1,6 @@
 2.12.57 (unreleased)
 --------------------
+* Fix in ExportTool [dumitval]
 * File widget and file download view [moregale]
 
 2.12.56 (2012-02-01)
