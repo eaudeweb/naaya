@@ -34,6 +34,10 @@ __version__ = '0.1.2'
 
 reo_colour = re.compile('^([A-Fa-f0-9]{2,2}){3,4}$')
 
+def to_utf8(text):
+    if isinstance(text, unicode):
+        return text.encode('utf-8')
+    return text
 
 def _check_colour(colour):
     if not reo_colour.match(colour):
@@ -371,7 +375,7 @@ class Chart(object):
         assert(isinstance(legend, list) or isinstance(legend, tuple) or
             legend is None)
         if legend:
-            self.legend = [urllib.quote(a) for a in legend]
+            self.legend = [urllib.quote(a) for a in map(to_utf8, legend)]
         else:
             self.legend = None
 
@@ -804,7 +808,7 @@ class PieChart(Chart):
         self.pie_labels = []
 
     def set_pie_labels(self, labels):
-        self.pie_labels = [urllib.quote(a) for a in labels]
+        self.pie_labels = [urllib.quote(a) for a in map(to_utf8, labels)]
 
     def get_url_bits(self):
         url_bits = Chart.get_url_bits(self)

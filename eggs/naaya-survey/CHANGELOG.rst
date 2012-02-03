@@ -1,5 +1,6 @@
 1.2.18 (unreleased)
 ===================
+* bugfix: utf8 labels in graphs [simiamih]
 
 1.2.17 (2012-01-31)
 ===================
