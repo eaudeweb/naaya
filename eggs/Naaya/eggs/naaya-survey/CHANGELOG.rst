@@ -1,4 +1,7 @@
-1.2.18 (unreleased)
+1.2.19 (unreleased)
+===================
+
+1.2.18 (2012-02-03)
 ===================
 * bugfix: utf8 labels in graphs [simiamih]
 
