@@ -218,7 +218,7 @@ class ExportTool(Implicit, Item):
         def getter_factory(prop_name, subname, convert, default=u''):
             def getter(ob):
                 try:
-                    ob_property = getattr(ob, prop_name)
+                    ob_property = getattr(ob.aq_base, prop_name)
 
                     if subname is None:
                         value = ob_property
