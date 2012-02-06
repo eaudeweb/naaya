@@ -2,8 +2,8 @@ Changelog
 =========
 [Alex Morega - alex.morega at eaudeweb.ro]
 
-1.3-dev - (unreleased)
-----------------------
+1.3 - (2012-02-06)
+------------------
 * Bug fix: Fixed tests
   [voineali]
 * Bug fix: Added dependencies to setup.py
