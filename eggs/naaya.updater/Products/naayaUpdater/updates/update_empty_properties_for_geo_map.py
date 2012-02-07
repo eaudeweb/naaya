@@ -31,18 +31,49 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateLandscapeType(UpdateScript):
     """ Update script  """
-    title = 'Update landscape_type and administrative_level from "" to "Unspecified"'
-    creation_date = 'Feb 25, 2010'
+    title = 'Update landscape_type and administrative_level from missing or "" to "Unspecified" + other corrections'
+    creation_date = 'Feb 7, 2012'
     authors = ['Valentin Dumitru']
-    description = 'Update landscape_type and administrative_level from "" to "Unspecified"'
+    description = 'Update landscape_type and administrative_level from missing or "" to "Unspecified" + other corrections'
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        for ob in portal.getCatalogedObjects():
-            if hasattr(ob, 'landscape_type') and ob.landscape_type == '':
+        replacements = {
+            'Unspecified': ['', 'unspecified', [u'unspecified'], u"[u'unspecified']"],
+            'Local': ['local'],
+            'Sub-Global': ['Sub-global', 'sub-global'],
+            'Regional': ['regional']
+
+        }
+        for ob in portal.getCatalogedObjects(meta_type='Naaya Contact'):
+            changed = False
+            if not hasattr(ob, 'landscape_type') or ob.landscape_type == '':
                 ob._setLocalPropValue('landscape_type', 'en', 'Unspecified')
-            if hasattr(ob, 'administrative_level') and ob.administrative_level == '':
+                self.log.debug('Landscape type set to "Unspecified" for %s' %
+                    ob.absolute_url())
+                changed = True
+
+            if not hasattr(ob, 'administrative_level'):
+                self.log.debug('Landscape type set to "Unspecified" for %s' %
+                    ob.absolute_url())
                 ob._setLocalPropValue('administrative_level', 'en', 'Unspecified')
-            portal.recatalogNyObject(ob)
+                changed = True
+
+            else:
+                for key, values in replacements.items():
+                    if ob.administrative_level in values:
+                        self.log.debug('Administrative level: replaced "%s" by "%s" for %s' % (
+                            ob.administrative_level, key, ob.absolute_url()))
+                        ob._setLocalPropValue('administrative_level', 'en', key)
+                        changed = True
+
+                if ob.administrative_level != ob.administrative_level.strip():
+                    self.log.debug('Administrative level: replaced "%s" by "%s" for %s' % (
+                        ob.administrative_level, ob.administrative_level.strip(),
+                        ob.absolute_url()))
+                    ob._setLocalPropValue('administrative_level', 'en', ob.administrative_level.strip())
+                    changed = True
+            if changed:
+                portal.recatalogNyObject(ob)
         return True
