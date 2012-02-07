@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* modified update script for portal_map filters [dumitval]
 * restored analytics template update [simiamih]
 
 1.2.18 (2011-12-05)
