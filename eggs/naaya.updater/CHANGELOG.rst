@@ -1,4 +1,7 @@
-1.2.19 (unreleased)
+1.2.20 (unreleased)
+-------------------
+
+1.2.19 (2012-02-07)
 -------------------
 * modified update script for portal_map filters [dumitval]
 * restored analytics template update [simiamih]
