@@ -1,6 +1,7 @@
 <glossary>
   <folder id="01" title="Status and trends of the components of biological diversity">
     <name>
+      <translation lang="da">Status for og udvikling af den biologiske diversitets bestanddele</translation>
       <translation lang="de">Status und Trends der Teilbereiche der biologischen Vielfalt</translation>
       <translation lang="en">Status and trends of the components of biological diversity</translation>
       <translation lang="et">Elurikkuse komponentide seisund ja trendid</translation>
@@ -12,6 +13,7 @@
       <translation lang="ro">Situa&#355;ia &#351;i tendin&#355;ele componentelor diversit&#259;&#355;ii biologice</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "Status for og udvikling af den biologiske diversitets bestanddele", Aichi biodiversitetsm&#229;l "19"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Status und Trends der Teilbereiche der biologischen Vielfalt", Aichi Biodiversit&#228;tsziel "19"</translation>
       <translation lang="en">Relates to: CBD focal area "Status and trends of the components of biological diversity", Aichi Biodiversity Target "19"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Elurikkuse komponentide seisund ja trendid", Aichi elurikkuse eesm&#228;rk "19"</translation>
@@ -24,6 +26,7 @@
     </definition>
     <element id="01_01" title="Abundance and distribution of species">
       <name>
+        <translation lang="da">M&#230;ngden og fordelingen af arter</translation>
         <translation lang="de">H&#228;ufigkeit und Verbreitung von Arten</translation>
         <translation lang="en">Abundance and distribution of species</translation>
         <translation lang="et">Liikide arvukus ja levik</translation>
@@ -35,6 +38,7 @@
         <translation lang="ro">Abunden&#355;a &#351;i distribu&#355;ia speciilor</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Udviklingen i m&#230;ngden og fordeligen af udvalgte arter", SEBI indikator "M&#230;ngden og fordelingen af udvalgte arter" Aichi biodiversitetsm&#229;l "12"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Entwicklungen der H&#228;ufigkeiten und in der Verbreitung ausgw&#228;hlter Arten", SEBI Indikator "H&#228;ufigkeit und Verbreitung ausgew&#228;hlter Arten" Aichi Biodiversit&#228;tsziel "12"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Trends in abundance and distribution of selected species", SEBI indicator "Abundance and distribution of selected species" Aichi Biodiversity Target "12"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Valitud liikide arvukuse ja leviku trendid", SEBI indikaator "Valitud liikide arvukus ja levik" Aichi elurikkuse eesm&#228;rk "12"</translation>
@@ -48,6 +52,7 @@
     </element>
     <element id="01_02" title="Status of threathened species">
       <name>
+        <translation lang="da">Status for truede arter</translation>
         <translation lang="de">Status gef&#228;hrdeter Arten</translation>
         <translation lang="en">Status of threathened species</translation>
         <translation lang="et">Ohustatud liikide seisund</translation>
@@ -59,6 +64,7 @@
         <translation lang="ro">Situa&#539;ia speciilor amenin&#539;ate</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "&#198;ndring i status for truede arter", SEBI indikator "R&#248;dliste indeks for europ&#230;iske arter", SEBI indikator "Arter af europ&#230;isk interesse", Aichi biodiversitetsm&#229;l "12"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Ver&#228;nderung des Status gef&#228;hrdeter Arten", SEBI Indikator "Rote Listen Index f&#252;r europ&#228;ische Arten", SEBI Indikator "Arten von europ&#228;ischem Interesse", Aichi Biodiversit&#228;tsziel "12"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Change in status of threatened species", SEBI indicator "Red List Index for European species", SEBI indicator "Species of European interest", Aichi Biodiversity Target "12"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Ohustatud liikide seisundi muutus", SEBI indikaator "Euroopa liikide punase nimestiku indeks", SEBI indikaator "Euroopa t&#228;htsusega liigid", Aichi elurikkuse eesm&#228;rk "12"</translation>
@@ -72,6 +78,7 @@
     </element>
     <element id="01_03" title="Extent of selected biomes, ecosystems and habitats">
       <name>
+        <translation lang="da">Udbredelsen af udvalgte biomer, &#248;kosystemer og habitater</translation>
         <translation lang="de">Gr&#246;&#223;e ausgew&#228;hlter Biome, &#214;kosysteme und Lebensr&#228;ume</translation>
         <translation lang="en">Extent of selected biomes, ecosystems and habitats</translation>
         <translation lang="et">Valitud bioomide, &#246;kos&#252;steemide ja elupaikade ulatus</translation>
@@ -83,6 +90,7 @@
         <translation lang="ro">Suprafa&#539;a de biomas&#259;, ecosisteme &#537;i habitate</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Udviklingen i udbredelsen af udvalgte biomer, &#248;kosystemer og habitater", CBD tv&#230;rg&#229;ende emne "&#216;kosystem tilgang", Aichi biodiversitetsm&#229;l "5"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Entwicklung der Ausdehnung ausgew&#228;hlter Biome, &#214;kosysteme und Lebensr&#228;ume", CBD Querschnittsthema "&#214;kosystemarer Ansatz", Aichi Biodiversit&#228;tsziel "5"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Trends in extent of selected biomes, ecosystems, and habitats", CBD cross-cutting issue "Ecosystems Approach", Aichi Biodiversity Target "5"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Valitud bioomide, &#246;kos&#252;steemide ja elupaikade ulatuse trendid", BMK valdkondadevaheline k&#252;simus "&#214;kos&#252;steemne l&#228;henemine", Aichi elurikkuse eesm&#228;rk "5"</translation>
@@ -96,6 +104,7 @@
     </element>
     <element id="01_04" title="Genetic diversity">
       <name>
+        <translation lang="da">Genetisk diversitet</translation>
         <translation lang="de">Genetische Vielfalt</translation>
         <translation lang="en">Genetic diversity</translation>
         <translation lang="et">Geneetiline mitmekesisus</translation>
@@ -107,6 +116,7 @@
         <translation lang="ro">Diversiatea genetic&#259;</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Udviklingen i genetisk diversitet af husdyr, dyrkede planter og fiskearter af stor socio&#248;konomiske betydning", SEBI indikator "Husdyrgenetisk diversitet", Aichi biodiversitetsm&#229;l "13"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Entwicklungen in der genetischen Vielfalt von Haustieren, kultivierten Pflanzen und Fischarten von sozio-&#246;konomischer Bedeutung", SEBI Indikator "Genetische Vielfalt des Viehbestands", Aichi Biodiversit&#228;tsziel "13"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Trends in genetic diversity of domesticated animals, cultivated plants, and fish species of major socioeconomic importance", SEBI indicator "Livestock genetic diversity", Aichi Biodiversity Target "13"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Koduloomade, kultuurtaimede ja majandusliku t&#228;htsusega kalaliikide geneetilise mitmekesisuse trendid", SEBI indikaator "Kariloomade geneetiline mitmekesisus", Aichi elurikkuse eesm&#228;rk "13"</translation>
@@ -120,6 +130,7 @@
     </element>
     <element id="01_05" title="Protected areas">
       <name>
+        <translation lang="da">Beskyttede arealer</translation>
         <translation lang="de">Gesch&#252;tzte Gebiete</translation>
         <translation lang="en">Protected areas</translation>
         <translation lang="et">Kaitsealused alad</translation>
@@ -131,6 +142,7 @@
         <translation lang="ro">Arii naturale protejate</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "D&#230;kningsgrad af beskyttede arealer", SEBI indikator "Nationalt beskyttede arealer", SEBI indikator "Omr&#229;der udpeget i henhold til EU's habitat- og fuglebeskyttelsesdirektiv", CBD tv&#230;rg&#229;ende emne "Beskyttede arealer", Aichi biodiversitetsm&#229;l "11"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Abdeckung durch gesch&#252;tzte Gebiete", SEBI Indikator "Nationale Schutzgebiete", SEBI Indikator "Nach der FFH- und Vogelschutzrichtlinie nominierte Gebiete", CBD Querschnittsthema "Schutzgebiete", Aichi Biodiversit&#228;tsziel "11"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Coverage of protected areas", SEBI indicator "Nationally designated protected areas", SEBI indicator "Sites designated under the EU Habitats and Birds Directives", CBD cross-cutting issue "Protected Areas", Aichi Biodiversity Target "11"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kaitsealuste alade ulatus", SEBI indikaator "Riiklikud kaitsealused alad", SEBI indikaator "EL loodus- ja linnudirektiiviga m&#228;&#228;ratletud alad", BMK valdkondadevaheline k&#252;simus "Kaitsealused alad", Aichi elurikkuse eesm&#228;rk "11"</translation>
@@ -144,6 +156,7 @@
     </element>
     <element id="01_06" title="Island Biodiversity">
       <name>
+        <translation lang="da">Biodiversitet p&#229; &#248;er</translation>
         <translation lang="de">Biodiversit&#228;t von Inseln</translation>
         <translation lang="en">Island Biodiversity</translation>
         <translation lang="et">Saarte elurikkus</translation>
@@ -155,6 +168,7 @@
         <translation lang="ro">Diversitatea insular&#259;</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tematisk program "Biodiversitet p&#229; &#248;er"</translation>
         <translation lang="de">Bezieht sich auf: CBD thematische Programm "Biodiversit&#228;t von Inseln"</translation>
         <translation lang="en">Relates to: CBD thematic programme "Island Biodiversity"</translation>
         <translation lang="et">Seondub: BMK temaatiline programm "Saarte elurikkus"</translation>
@@ -168,6 +182,7 @@
     </element>
     <element id="01_07" title="Mountain biodiversity">
       <name>
+        <translation lang="da">Biodiversitet i bjergegne</translation>
         <translation lang="de">Biodiversit&#228;t der Gebirge</translation>
         <translation lang="en">Mountain biodiversity</translation>
         <translation lang="et">M&#228;gede elurikkus</translation>
@@ -179,6 +194,7 @@
         <translation lang="ro">Diversitatea montan&#259;/alpin&#259;</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tematisk program "Biodiversitet i bjergegne"</translation>
         <translation lang="de">Bezieht sich auf: CBD thematische Programm "Biodiversit&#228;t der Gebirge"</translation>
         <translation lang="en">Relates to: CBD thematic programme "Mountain biodiversity"</translation>
         <translation lang="et">Seondub: BMK temaatiline programm "M&#228;gede elurikkus"</translation>
@@ -192,6 +208,7 @@
     </element>
     <element id="01_08" title="Identification, Monitoring, Indicators and Assessments">
       <name>
+        <translation lang="da">Identifikation, overv&#229;gning, indikatorer og vurderinger</translation>
         <translation lang="de">Identifikation, Monitoring, Indiaktoren und Bewertung</translation>
         <translation lang="en">Identification, Monitoring, Indicators and Assessments</translation>
         <translation lang="et">Identifitseerimine, seire, indikaatorid ja hindamised</translation>
@@ -203,6 +220,7 @@
         <translation lang="ro">Identificarea, monitorizarea, indicatori &#537;i evalu&#259;ri</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Identifikation, overv&#229;gning, indikatorer og vurderinger", CBD tv&#230;rg&#229;ende emne "Globalt Taksonomi Initiativ", Aichi biodiversitetsm&#229;l "12"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Identifikation, Monitoring, Indiaktoren und Bewertung", CBD Querschnittsthema "Globale Taxonomie-Initiative", Aichi Biodiversit&#228;tsziel "12"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Identification, Monitoring, Indicators and Assessments", CBD cross-cutting issue "Global Taxonomy Initiative", Aichi Biodiversity Target "12"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Identifitseerimine, seire, indikaatorid ja hindamised", BMK valdkondadevaheline k&#252;simus "&#220;leilmne taksonoomiline algatus", Aichi elurikkuse eesm&#228;rk "12"</translation>
@@ -216,6 +234,7 @@
     </element>
     <element id="01_09" title="Plant Conservation">
       <name>
+        <translation lang="da">Beskyttelse af planter</translation>
         <translation lang="de">Erhaltung der Pflanzen</translation>
         <translation lang="en">Plant Conservation</translation>
         <translation lang="et">Taimede kaitse</translation>
@@ -227,6 +246,7 @@
         <translation lang="ro">Conservarea plantelor</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Global Strategi for beskyttelse af planter"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Globale Strategie zur Erhaltung der Pflanzen"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Global Strategy for Plant Conservation"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "&#220;leilmne taimede kaitse strateegia"</translation>
@@ -241,6 +261,7 @@
   </folder>
   <folder id="02" title="Sustainable use of biodiversity">
     <name>
+      <translation lang="da">B&#230;redygtig udnyttelse af biodiversitet</translation>
       <translation lang="de">Nachhaltige Nutzung der biologischen Vielfalt</translation>
       <translation lang="en">Sustainable use of biodiversity</translation>
       <translation lang="et">Elurikkuse kestlik kasutamine</translation>
@@ -252,6 +273,7 @@
       <translation lang="ro">Dezvoltarea durabil&#259; a diversit&#259;&#539;ii biologice</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "B&#230;redygtig udnyttelse", CBD tv&#230;rg&#229;ende emne "B&#230;redygtig udnyttelse af biodiversitet", Aichi biodiversitetsm&#229;l "4"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Nachhaltige Nutzung", CBD Querschnittsthema "Nachhaltige Nutzung der biologischen Vielfalt", Aichi Biodiversit&#228;tsziel "4"</translation>
       <translation lang="en">Relates to: CBD focal area "Sustainable Use", CBD cross-cutting issue "Sustainable use of biodiversity", Aichi Biodiversity Target "4"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Kestlik kasutamine", BMK valdkondadevaheline k&#252;simus "Elurikkuse kestlik kasutamine", Aichi elurikkuse eesm&#228;rk "4"</translation>
@@ -264,6 +286,7 @@
     </definition>
     <element id="02_01" title="Forest under sustainable management">
       <name>
+        <translation lang="da">B&#230;redygtigt forvaltede skov</translation>
         <translation lang="de">Nachhaltig bewirtschaftete W&#228;lder</translation>
         <translation lang="en">Forest under sustainable management</translation>
         <translation lang="et">Kestlikult majandatav mets</translation>
@@ -275,6 +298,7 @@
         <translation lang="ro">P&#259;durea &#238;n conformitate cu un management durabil</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Areal af skov, landbrug og akvakultur der er b&#230;redygtigt forvaltede", SEBI indikator "Skov: St&#229;ende vedmasse, tilv&#230;kst og hugst", SEBI indikator "Skov: d&#248;dtved", CBD tematisk program "Biodiversitet i skov", Aichi biodiversitetsm&#229;l "7"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Nachhaltig bewirtschaftete Waldgebiete, landwirtschaftliche &#214;kosysteme und Aquakuluturen", SEBI Indikator "W&#228;lder: Vorrat, Mehrertrag und Holzeinschlag", SEBI Indikator "W&#228;lder: Totholz", CBD thematische Programm "Biodiversit&#228;t der W&#228;lder", Aichi Biodiversit&#228;tsziel "7"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Forest: growing stock, increment and fellings", SEBI indicator "Forest: deadwood", CBD thematic programme "Forest Biodiversity", Aichi Biodiversity Target "7"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "Mets: kasvava metsa tagavara, juurdekasv ja raiemahud", SEBI indikaator "Mets: surnud puit", BMK temaatiline programm "Metsa elurikkus", Aichi elurikkuse eesm&#228;rk "7"</translation>
@@ -288,6 +312,7 @@
     </element>
     <element id="02_02" title="Agricultural practices potentially supporting biodiversity">
       <name>
+        <translation lang="da">Landbrugspraksis der potentielt fremmer biodiversitet</translation>
         <translation lang="de">Landwirtschaftliche Praktiken mit dem Potenzial der Biodiversit&#228;tsf&#246;rderung</translation>
         <translation lang="en">Agricultural practices potentially supporting biodiversity</translation>
         <translation lang="et">Elurikkust potentsiaalselt toetavad p&#245;llumajanduspraktikad</translation>
@@ -299,6 +324,7 @@
         <translation lang="ro">Poten&#539;iale practici agricole &#238;n sprijinul biodiversit&#259;&#539;ii</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator  "Areal af skov, landbrug og akvakultur der er b&#230;redygtigt forvaltede", SEBI indikator "Landbrug: kv&#230;lstofbalance" SEBI indikator "Landbrug: arealforvaltning der potentielt fremmer biodiversitet", CBD tematisk program "Landbrugsbiodiversitet", Aichi biodiversitetsm&#229;l "7"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator  "Nachhaltig bewirtschaftete Waldgebiete, landwirtschaftliche &#214;kosysteme und Aquakuluturen", SEBI Indikator "Landwirtschaft: Stickstoffbilanz" SEBI Indikator "Landwirtschaft: Fl&#228;chenbewirtschaftung mit  Potenzial zur Unterst&#252;tzung der Biodiversit&#228;t", CBD thematische Programm "Landwirtschaftliche Biodiversit&#228;t", Aichi Biodiversit&#228;tsziel "7"</translation>
         <translation lang="en">Relates to: CBD headline indicator  "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Agriculture: nitrogen balance" SEBI indicator "Agriculture: area under management practices potentially supporting biodiversity", CBD thematic programme "Agricultural biodiversity", Aichi Biodiversity Target "7"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja  "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "P&#245;llumajandus: l&#228;mmastiku tasakaal" SEBI indikaator "P&#245;llumajandus: elurikkust potentsiaalselt toetava majandamisega ala", BMK temaatiline programm "P&#245;llumajanduslik elurikkus", Aichi elurikkuse eesm&#228;rk "7"</translation>
@@ -312,6 +338,7 @@
     </element>
     <element id="02_03" title="Sustainable fishery and aquaculture management">
       <name>
+        <translation lang="da">B&#230;redygtigt fiskeri og akvakultur</translation>
         <translation lang="de">Nachhaltige Fischerei und Aquakultur</translation>
         <translation lang="en">Sustainable fishery and aquaculture management</translation>
         <translation lang="et">Kestlik kala- ja veekultuuride majandus</translation>
@@ -323,6 +350,7 @@
         <translation lang="ro">Managementul durabil al pescuitului &#537;i acvaculturii</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Areal af skov, landbrug og akvakultur der er b&#230;redygtigt forvaltede", SEBI indikator "Fiskeri: Europ&#230;iske kommercielt udnyttede fiskebestande", SEBI indikator "Akvakultur: spildevandskvalitet fra dam- og havbrug med fisk", Aichi biodiversitetsm&#229;l "6"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Nachhaltig bewirtschaftete Waldgebiete, landwirtschaftliche &#214;kosysteme und Aquakuluturen", SEBI Indikator "Fischerei: Europ&#228;ische gewerbsm&#228;&#223;ig genutze Fischbest&#228;nde", SEBI Indikator "Aquakultur: Abwasserqualit&#228;t von verarbeitenden Farmen", Aichi Biodiversit&#228;tsziel "6"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Fisheries: European commercial fish stocks", SEBI indicator "Aquaculture: effluent water quality from finfish farms", Aichi Biodiversity Target "6"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "Kalandus: Euroopa t&#246;&#246;nduslikud kalavarud", SEBI indikaator "Veekultuur: merekalade farmidest v&#228;lja voolava vee kvaliteet", Aichi elurikkuse eesm&#228;rk "6"</translation>
@@ -336,6 +364,7 @@
     </element>
     <element id="02_04" title="Products derived from sustainable sources">
       <name>
+        <translation lang="da">Produkter der stammer fra b&#230;redygtige kilder</translation>
         <translation lang="de">Produkte aus nachhaltigen Quellen</translation>
         <translation lang="en">Products derived from sustainable sources</translation>
         <translation lang="et">Kestlikest allikatest p&#228;rinevad tooted</translation>
@@ -347,6 +376,7 @@
         <translation lang="ro">Produse derivate din surse durabile</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Andel af produkter fra b&#230;redygtige kilder", Aichi biodiversitetsm&#229;l "7"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Produktanteil aus nachhaltigen Quellen", Aichi Biodiversit&#228;tsziel "7"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Proportion of products derived from sustainable sources", Aichi Biodiversity Target "7"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikest allikatest p&#228;rinevate toodete osakaal", Aichi elurikkuse eesm&#228;rk "7"</translation>
@@ -360,6 +390,7 @@
     </element>
     <element id="02_05" title="Ecological Footprint">
       <name>
+        <translation lang="da">&#216;kologisk fodaftryk</translation>
         <translation lang="de">&#214;kologischer Fu&#223;abdruck</translation>
         <translation lang="en">Ecological Footprint</translation>
         <translation lang="et">&#214;koloogiline jalaj&#228;lg</translation>
@@ -371,6 +402,7 @@
         <translation lang="ro">Amprenta ecologic&#259;</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "&#216;kologisk fodaftryk og tilsvarende koncepter", SEBI indikator "De europ&#230;iske landes &#248;kologiske fodaftryk", Aichi biodiversitetsm&#229;l "4"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "&#214;kologischer Fu&#223;abdruck und verwandte Konzepte", SEBI Indikator "&#214;kologischer Fu&#223;abdruck europ&#228;ischer L&#228;nder", Aichi Biodiversit&#228;tsziel "4"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Ecological Footprint and related concepts", SEBI indicator "Ecological Footprint of European countries", Aichi Biodiversity Target "4"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;koloogiline jalaj&#228;lg ja seotud m&#245;isted", SEBI indikaator "Euroopa riikide &#246;koloogiline jalaj&#228;lg", Aichi elurikkuse eesm&#228;rk "4"</translation>
@@ -384,6 +416,7 @@
     </element>
     <element id="02_06" title="Biodiversity for Development">
       <name>
+        <translation lang="da">Biodiversitet og udvikling</translation>
         <translation lang="de">Biodiversit&#228;t und Entwicklung</translation>
         <translation lang="en">Biodiversity for Development</translation>
         <translation lang="et">Arengut toetav elurikkus</translation>
@@ -395,6 +428,7 @@
         <translation lang="ro">Biodiversitatea pentru dezvoltare</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Biodiversitet og udvikling", Aichi biodiversitetsm&#229;l "2"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Biodiversit&#228;t und Entwicklung", Aichi Biodiversit&#228;tsziel "2"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Biodiversity for Development", Aichi Biodiversity Target "2"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Arengut toetav elurikkus", Aichi elurikkuse eesm&#228;rk "2"</translation>
@@ -408,6 +442,7 @@
     </element>
     <element id="02_07" title="Economics, Trade and Incentive measures">
       <name>
+        <translation lang="da">&#216;konomi, handel og tilskyndelsesforanstaltninger</translation>
         <translation lang="de">&#214;konomie, Handel und F&#246;rderma&#223;nahmen</translation>
         <translation lang="en">Economics, Trade and Incentive measures</translation>
         <translation lang="et">Majandus, kaubandus ja toetused</translation>
@@ -419,6 +454,7 @@
         <translation lang="ro">Economie, comer&#539; &#539;i m&#259;suri de stimulare</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "&#216;konomi, handel og tilskyndelsesforanstaltninger", Aichi biodiversitetsm&#229;l "3",  Aichi biodiversitetsm&#229;l "4"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "&#214;konomie, Handel und F&#246;rderma&#223;nahmen", Aichi Biodiversit&#228;tsziel "3",  Aichi Biodiversit&#228;tsziel "4"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Economics, Trade and Incentive measures", Aichi Biodiversity Target "3",  Aichi Biodiversity Target "4"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Majandus, kaubandus ja toetused", Aichi elurikkuse eesm&#228;rk "3",  Aichi elurikkuse eesm&#228;rk "4"</translation>
@@ -432,6 +468,7 @@
     </element>
     <element id="02_08" title="Gender">
       <name>
+        <translation lang="da">K&#248;n</translation>
         <translation lang="de">Gender</translation>
         <translation lang="en">Gender</translation>
         <translation lang="et">Sugu</translation>
@@ -443,6 +480,7 @@
         <translation lang="ro">Gen</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "K&#248;n og biodiversitet", Aichi biodiversitetsm&#229;l "14"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Gender und Biodiversit&#228;t", Aichi Biodiversit&#228;tsziel "14"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Gender and Biodiversity", Aichi Biodiversity Target "14"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Sugu ja elurikkus", Aichi elurikkuse eesm&#228;rk "14"</translation>
@@ -457,6 +495,7 @@
   </folder>
   <folder id="03" title="Threats to biodiversity">
     <name>
+      <translation lang="da">Trusler for biodiversitet</translation>
       <translation lang="de">Gefahren f&#252;r die Biodiversit&#228;t</translation>
       <translation lang="en">Threats to biodiversity</translation>
       <translation lang="et">Ohud elurikkusele</translation>
@@ -468,6 +507,7 @@
       <translation lang="ro">Amenin&#539;&#259;ri asupra biodiversit&#259;&#539;ii</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "Trusler for biodiversitet"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Gefahren f&#252;r die Biodiversit&#228;t"</translation>
       <translation lang="en">Relates to: CBD focal area "Threats to biodiversity"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Ohud elurikkusele"</translation>
@@ -480,6 +520,7 @@
     </definition>
     <element id="03_01" title="Nitrogen deposition">
       <name>
+        <translation lang="da">Kv&#230;lstofdeposition</translation>
         <translation lang="de">Stickstoffdeposition</translation>
         <translation lang="en">Nitrogen deposition</translation>
         <translation lang="et">L&#228;mmastiku ladestumine</translation>
@@ -491,6 +532,7 @@
         <translation lang="ro">Depunerea de azot</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Kv&#230;lstofdeposition", SEBI indikator "Overskridelse af t&#229;legr&#230;nse for kv&#230;lstof", Aichi biodiversitetsm&#229;l "8"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Stickstoffdeposition", SEBI Indikator "&#220;berschreitung der Critical Loads f&#252;r Stickstoff", Aichi Biodiversit&#228;tsziel "8"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Nitrogen deposition", SEBI indicator "Critical load exceedance for nitrogen", Aichi Biodiversity Target "8"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "L&#228;mmastiku ladestumine", SEBI indikaator "Kriitilist piiri &#252;letav l&#228;mmastikukogus", Aichi elurikkuse eesm&#228;rk "8"</translation>
@@ -504,6 +546,7 @@
     </element>
     <element id="03_02" title="Invasive alien species">
       <name>
+        <translation lang="da">Invasive ikke-hjemmeh&#248;rende arter</translation>
         <translation lang="de">Invasive gebietsfremde Arten</translation>
         <translation lang="en">Invasive alien species</translation>
         <translation lang="et">Invasiivsed v&#245;&#245;rliigid</translation>
@@ -515,6 +558,7 @@
         <translation lang="ro">Specii alohtone invazive</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Udviklingen af invasive ikke-hjemmeh&#248;rende arter", SEBI indikator "Invasive ikke-hjemmeh&#248;rende arter", CBD tv&#230;rg&#229;ende emne "Invasive ikke-hjemmeh&#248;rende arter", Aichi biodiversitetsm&#229;l "9"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Entwicklung bei invasiven gebietsfremden Arten", SEBI Indikator "Invasive gebietsfremde Arten", CBD Querschnittsthema "Invasive gebietsfremde Arten", Aichi Biodiversit&#228;tsziel "9"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Trends in invasive alien species", SEBI indicator "Invasive alien species", CBD cross-cutting issue "Invasive alien species", Aichi Biodiversity Target "9"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Invasiivsete v&#245;&#245;rliikide trendid", SEBI indikaator "Invasiivsed v&#245;&#245;rliigid", BMK valdkondadevaheline k&#252;simus "Invasiivsed v&#245;&#245;rliigid", Aichi elurikkuse eesm&#228;rk "9"</translation>
@@ -528,6 +572,7 @@
     </element>
     <element id="03_03" title="Climate change">
       <name>
+        <translation lang="da">Klimaforandringer</translation>
         <translation lang="de">Klimawandel</translation>
         <translation lang="en">Climate change</translation>
         <translation lang="et">Kliimamuutus</translation>
@@ -539,6 +584,7 @@
         <translation lang="ro">Schimb&#259;ri climatice</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: SEBI indikator "Effekt af klimaforandringer p&#229; biodiversitet", CBD tv&#230;rg&#229;ende emne "Klimaforandringer og biodiversitet", Aichi biodiversitetsm&#229;l "10"</translation>
         <translation lang="de">Bezieht sich auf: SEBI Indikator "Klimawandeleinfluss auf die Biodiversit&#228;t", CBD Querschnittsthema "Klimawandel und Biodiversit&#228;t", Aichi Biodiversit&#228;tsziel "10"</translation>
         <translation lang="en">Relates to: SEBI indicator "Impact of climate change on biodiversity", CBD cross-cutting issue "Climate Change and Biodiversity", Aichi Biodiversity Target "10"</translation>
         <translation lang="et">Seondub: SEBI indikaator "Kliimamuutuse m&#245;ju elurikkusele", BMK valdkondadevaheline k&#252;simus "Kliimamuutus ja elurikkus", Aichi elurikkuse eesm&#228;rk "10"</translation>
@@ -552,6 +598,7 @@
     </element>
     <element id="03_04" title="Desertification">
       <name>
+        <translation lang="da">&#216;rkendannelse</translation>
         <translation lang="de">W&#252;stenbildung</translation>
         <translation lang="en">Desertification</translation>
         <translation lang="et">K&#245;rbestumine</translation>
@@ -563,6 +610,7 @@
         <translation lang="ro">De&#537;ertificare</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tematisk program "Biodiversitet i t&#248;rre og halvt&#248;rre omr&#229;der",  Aichi biodiversitetsm&#229;l "5"</translation>
         <translation lang="de">Bezieht sich auf: CBD thematische Programm "Biodiversit&#228;t trockenet und sub-humider Gebiete",  Aichi Biodiversit&#228;tsziel "5"</translation>
         <translation lang="en">Relates to: CBD thematic programme "Dry and Sub-humid Lands Biodiversity",  Aichi Biodiversity Target "5"</translation>
         <translation lang="et">Seondub: BMK temaatiline programm "Kuivade ja parasniiskete alade elurikkus",  Aichi elurikkuse eesm&#228;rk "5"</translation>
@@ -576,6 +624,7 @@
     </element>
     <element id="03_05" title="Impact assessment">
       <name>
+        <translation lang="da">Konsekvensanalyse</translation>
         <translation lang="de">Folgenabsch&#228;tzung</translation>
         <translation lang="en">Impact assessment</translation>
         <translation lang="et">M&#245;jude hindamine</translation>
@@ -587,6 +636,7 @@
         <translation lang="ro">Evaluarea impactului</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Konsekvensanalyse",  Aichi biodiversitetsm&#229;l "2"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Folgenabsch&#228;tzung",  Aichi Biodiversit&#228;tsziel "2"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Impact assessment",  Aichi Biodiversity Target "2"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "M&#245;jude hindamine",  Aichi elurikkuse eesm&#228;rk "2"</translation>
@@ -601,6 +651,7 @@
   </folder>
   <folder id="04" title="Ecosystem integrity and Ecosystem goods and services">
     <name>
+      <translation lang="da">&#216;kosystem integritet og &#248;kosystem varer og tjenesteydelser</translation>
       <translation lang="de">Intaktheit von &#214;kosystemen und &#214;kosystemleistungen</translation>
       <translation lang="en">Ecosystem integrity and Ecosystem goods and services</translation>
       <translation lang="et">&#214;kos&#252;steemi terviklikkus ja &#246;kos&#252;steemi tooted ning teenused</translation>
@@ -612,6 +663,7 @@
       <translation lang="ro">Integritatea ecosistemelor &#537;i bunurile &#537;i serviciile ecosistemelor</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "&#216;kosystem integritet og &#248;kosystem varer og tjenesteydelser", Aichi biodiversitetsm&#229;l "15",  Aichi biodiversitetsm&#229;l "14"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Intaktheit von &#214;kosystemen und &#214;kosystemleistungen", Aichi Biodiversit&#228;tsziel "15",  Aichi Biodiversit&#228;tsziel "14"</translation>
       <translation lang="en">Relates to: CBD focal area "Ecosystem integrity and Ecosystem goods and services", Aichi Biodiversity Target "15",  Aichi Biodiversity Target "14"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "&#214;kos&#252;steemi terviklikkus ja &#246;kos&#252;steemi tooted ning teenused", Aichi elurikkuse eesm&#228;rk "15",  Aichi elurikkuse eesm&#228;rk "14"</translation>
@@ -624,6 +676,7 @@
     </definition>
     <element id="04_01" title="Marine Trophic Index">
       <name>
+        <translation lang="da">Marint trofiindeks</translation>
         <translation lang="de">Marine trophic Index</translation>
         <translation lang="en">Marine Trophic Index</translation>
         <translation lang="et">Mere troofilisusindeks</translation>
@@ -635,6 +688,7 @@
         <translation lang="ro">Indicele trofic marin</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Marint trofiindeks", SEBI indikator "Marint trofiindeks for europ&#230;iske have", CBD tematisk program "Biodiversitet i havet og ved kyster",  Aichi biodiversitetsm&#229;l "15"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Marine trophic Index", SEBI Indikator "Marine trophic Index der europ&#228;ischen Meere", CBD thematische Programm "Biodiversit&#228;t der Meere und K&#252;sten",  Aichi Biodiversit&#228;tsziel "15"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Marine Trophic Index", SEBI indicator "Marine Trophic Index of European seas", CBD thematic programme "Marine and Coastal Biodiversity",  Aichi Biodiversity Target "15"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Mere troofilisusindeks", SEBI indikaator "Euroopa merede troofilisusindeks", BMK temaatiline programm "Mere ja ranniku elurikkus",  Aichi elurikkuse eesm&#228;rk "15"</translation>
@@ -648,6 +702,7 @@
     </element>
     <element id="04_02" title="Trophic integrity of terrestrial and freshwater ecosystems">
       <name>
+        <translation lang="da">Trofisk integritet af terrestriske &#248;kosystemer og ferskvands&#248;kosystemer</translation>
         <translation lang="de">Trophic integrity der Land- und S&#252;&#223;wasser&#246;kosysteme</translation>
         <translation lang="en">Trophic integrity of terrestrial and freshwater ecosystems</translation>
         <translation lang="et">Maismaa ja magevee &#246;kos&#252;steemide troofiline terviklikkus</translation>
@@ -659,6 +714,7 @@
         <translation lang="ro">Integritatea trofic&#259; a ecosistemelor terestre &#537;i a apelor de suprafa&#539;&#259;</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Trofisk integritet af andre &#248;kosystemer",  Aichi biodiversitetsm&#229;l "15"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Trophic integrity anderer &#214;kosysteme",  Aichi Biodiversit&#228;tsziel "15"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Trophic integrity of other ecosystems",  Aichi Biodiversity Target "15"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Teiste &#246;kos&#252;steemide troofiline terviklikkus",  Aichi elurikkuse eesm&#228;rk "15"</translation>
@@ -672,6 +728,7 @@
     </element>
     <element id="04_03" title="Fragmentation of natural and semi-natural areas">
       <name>
+        <translation lang="da">Opspiltning af natur og halv-natur arealer</translation>
         <translation lang="de">Zerschneidung nat&#252;rlicher und naturnaher Fl&#228;chen</translation>
         <translation lang="en">Fragmentation of natural and semi-natural areas</translation>
         <translation lang="et">Looduslike ja pool-looduslike alade killustumine</translation>
@@ -683,6 +740,7 @@
         <translation lang="ro">Fragmentarea zonelor naturale &#351;i semi-naturale</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Sammenh&#230;ng eller opsplitning af &#248;kosystemer", SEBI indikator "Opspiltning af natur og halv-natur arealer",  Aichi biodiversitetsm&#229;l "5"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Konnektivit&#228;t oder Zerschneidung von &#214;kosystemen", SEBI Indikator "Zerschneidung nat&#252;rlicher und naturnaher Fl&#228;chen",  Aichi Biodiversit&#228;tsziel "5"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Connectivity or Fragmentation of ecosystems", SEBI indicator "Fragmentation of natural and semi-natural areas",  Aichi Biodiversity Target "5"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;kos&#252;steemide sidusus v&#245;i killustatus", SEBI indikaator "Looduslike ja pool-looduslike alade killustumine",  Aichi elurikkuse eesm&#228;rk "5"</translation>
@@ -696,6 +754,7 @@
     </element>
     <element id="04_04" title="Fragmentation of river systems">
       <name>
+        <translation lang="da">Opspiltning af vandveje</translation>
         <translation lang="de">Zerschneidung von Flusssystemen</translation>
         <translation lang="en">Fragmentation of river systems</translation>
         <translation lang="et">J&#245;es&#252;steemide killustumine</translation>
@@ -707,6 +766,7 @@
         <translation lang="ro">Fragmentarea sistemelor de r&#226;u</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Sammenh&#230;ng eller opsplitning af &#248;kosystemer", SEBI indikator "Opspiltning af vandveje", CBD tematisk program "Biodiversitet i ferske vande",  Aichi biodiversitetsm&#229;l "5"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Konnektivit&#228;t oder Zerschneidung von &#214;kosystemen", SEBI Indikator "Zerschneidung von Flusssystemen", CBD thematische Programm "Biodiversit&#228;t der Binnengew&#228;sser",  Aichi Biodiversit&#228;tsziel "5"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Connectivity or Fragmentation of ecosystems", SEBI indicator "Fragmentation of river systems", CBD thematic programme "Inland Waters Biodiversity",  Aichi Biodiversity Target "5"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;kos&#252;steemide sidusus v&#245;i killustatus", SEBI indikaator "J&#245;es&#252;steemide killustumine", BMK temaatiline programm "Sisevete elurikkus",  Aichi elurikkuse eesm&#228;rk "5"</translation>
@@ -720,6 +780,7 @@
     </element>
     <element id="04_05" title="Nutrients in transitional, coastal and marine waters">
       <name>
+        <translation lang="da">N&#230;ringsstoffer i brakvands-, kyst-og havomr&#229;der</translation>
         <translation lang="de">N&#228;hrstoffe in &#196;stuargew&#228;ssern, K&#252;stengew&#228;ssern und Meeren</translation>
         <translation lang="en">Nutrients in transitional, coastal and marine waters</translation>
         <translation lang="et">Toitained siirde-, ranniku- ja merevees</translation>
@@ -731,6 +792,7 @@
         <translation lang="ro">Nutrien&#355;i &#238;n apele de tranzi&#355;ie, costiere &#351;i marine</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: SEBI indikator "N&#230;ringsstoffer i brakvands-, kyst-og havomr&#229;der"</translation>
         <translation lang="de">Bezieht sich auf: SEBI Indikator "N&#228;hrstoffe in &#196;stuargew&#228;ssern, K&#252;stengew&#228;ssern und Meeren"</translation>
         <translation lang="en">Relates to: SEBI indicator "Nutrients in transitional, coastal and marine waters"</translation>
         <translation lang="et">Seondub: SEBI indikaator "Toitained siirde-, ranniku- ja merevees"</translation>
@@ -744,6 +806,7 @@
     </element>
     <element id="04_06" title="Water quality of freshwater ecosystems">
       <name>
+        <translation lang="da">Vandkvalitet i ferskvands&#248;kosystemer</translation>
         <translation lang="de">Wasserqualit&#228;t von S&#252;&#223;wasser-&#214;kosystemen</translation>
         <translation lang="en">Water quality of freshwater ecosystems</translation>
         <translation lang="et">Magevee &#246;kos&#252;steemide veekvaliteet</translation>
@@ -755,6 +818,7 @@
         <translation lang="ro">Calitatea apei ecosistemelor de ap&#259; dulce</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Vandkvalitet i ferskvands&#248;kosystemer", SEBI indikator "Ferskvandskvalitet", CBD tematisk program "Biodiversitet i ferske vande",  Aichi biodiversitetsm&#229;l "8"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Wasserqualit&#228;t von S&#252;&#223;wasser-&#214;kosystemen", SEBI Indikator "Frischwasserqualit&#228;t", CBD thematische Programm "Biodiversit&#228;t der Binnengew&#228;sser",  Aichi Biodiversit&#228;tsziel "8"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Water quality of freshwater ecosystems", SEBI indicator "Freshwater quality", CBD thematic programme "Inland Waters Biodiversity",  Aichi Biodiversity Target "8"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Magevee &#246;kos&#252;steemide veekvaliteet", SEBI indikaator "Magevee kvaliteet", BMK temaatiline programm "Sisevete elurikkus",  Aichi elurikkuse eesm&#228;rk "8"</translation>
@@ -768,6 +832,7 @@
     </element>
     <element id="04_07" title="Human-induced ecosystem failure">
       <name>
+        <translation lang="da">Menneskeskabt &#248;kosystem sammenbrud</translation>
         <translation lang="de">Menschenbedingter &#214;kosystemschaden</translation>
         <translation lang="en">Human-induced ecosystem failure</translation>
         <translation lang="et">Inimtekkeline &#246;kos&#252;steemi h&#228;iring</translation>
@@ -779,6 +844,7 @@
         <translation lang="ro">Activit&#259;&#539;ile antropice asupra ecosistemelor</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Forekomst af menneskeskabt &#248;kosystem sammenbrud"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Eintritt menschenbedingter &#214;kosystemsch&#228;den"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Incidence of human-induced ecosystem failure"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Inimtekkeliste &#246;kos&#252;steemi h&#228;iringute esinemissagedus"</translation>
@@ -792,6 +858,7 @@
     </element>
     <element id="04_08" title="Health and well-being of humans">
       <name>
+        <translation lang="da">Sundhed og trivsel for mennesker</translation>
         <translation lang="de">Gesundheit und Wohlfahrt des Menschen</translation>
         <translation lang="en">Health and well-being of humans</translation>
         <translation lang="et">Inimeste tervis ja heaolu</translation>
@@ -803,6 +870,7 @@
         <translation lang="ro">S&#259;n&#259;tatea &#351;i bun&#259;starea oamenilor</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Sundhed og trivsel for lokalsamfund, der er direkte afh&#230;ngige af lokale &#248;kosystem varer og tjenesteydelser", Aichi biodiversitetsm&#229;l "14"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Gesundheit und Wohlfahrt von Gesellschaften, die direkt von lokalen&#214;kosystemleistungen abh&#228;ngen", Aichi Biodiversit&#228;tsziel "14"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Health and well-being of communities who depend directly on local ecosystem goods and services", Aichi Biodiversity Target "14"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kohaliku &#246;kos&#252;steemi toodetest ja teenustest otseselt s&#245;ltuvate kogukondade tervis ja heaolu", Aichi elurikkuse eesm&#228;rk "14"</translation>
@@ -816,6 +884,7 @@
     </element>
     <element id="04_09" title="Biodiversity for food and medicine">
       <name>
+        <translation lang="da">Biodiversitet til ern&#230;ring og medicin</translation>
         <translation lang="de">Biodiversit&#228;t f&#252;r Ern&#228;hrung und Medizin</translation>
         <translation lang="en">Biodiversity for food and medicine</translation>
         <translation lang="et">Elurikkus toidu ja meditsiini jaoks</translation>
@@ -827,6 +896,7 @@
         <translation lang="ro">Biodiversitate pentru alimente &#351;i medicamente</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Biodiversitet til ern&#230;ring og medicin"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Biodiversit&#228;t f&#252;r Ern&#228;hrung und Medizin"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Biodiversity for food and medicine"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Elurikkus toidu ja meditsiini jaoks"</translation>
@@ -840,6 +910,7 @@
     </element>
     <element id="04_10" title="Biodiversity and tourism">
       <name>
+        <translation lang="da">Biodiversitet og turisme</translation>
         <translation lang="de">Biodiversit&#228;t und Tourismus</translation>
         <translation lang="en">Biodiversity and tourism</translation>
         <translation lang="et">Elurikkus ja turism</translation>
@@ -851,6 +922,7 @@
         <translation lang="ro">Biodiversitate &#537;i turism</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Turisme og biodiversitet"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Tourismus und Biodiversit&#228;t"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Tourism and Biodiversity"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Turism ja Elurikkus"</translation>
@@ -865,6 +937,7 @@
   </folder>
   <folder id="05" title="Knowledge of biodiversity">
     <name>
+      <translation lang="da">Viden om biodiversitet</translation>
       <translation lang="de">Wissen &#252;ber Biodiversit&#228;t</translation>
       <translation lang="en">Knowledge of biodiversity</translation>
       <translation lang="et">Elurikkusealased teadmised</translation>
@@ -876,6 +949,7 @@
       <translation lang="ro">Cunoa&#351;terea biodiversit&#259;&#355;ii</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "Status for traditionel viden, nyskabelse og praksis", Aichi biodiversitetsm&#229;l "19"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Status des traditionellen Wissens, Innovationen und Praktiken", Aichi Biodiversit&#228;tsziel "19"</translation>
       <translation lang="en">Relates to: CBD focal area "Status of traditional knowledge, innovations and Practices", Aichi Biodiversity Target "19"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Traditsiooniliste teadmiste, uuenduste ja praktikate seisund", Aichi elurikkuse eesm&#228;rk "19"</translation>
@@ -888,6 +962,7 @@
     </definition>
     <element id="05_01" title="Traditional knowledge">
       <name>
+        <translation lang="da">Traditionel viden</translation>
         <translation lang="de">Traditionelles Wissen</translation>
         <translation lang="en">Traditional knowledge</translation>
         <translation lang="et">Traditsioonilised teadmised</translation>
@@ -899,6 +974,7 @@
         <translation lang="ro">Cuno&#537;tin&#539;e tradi&#539;ionale</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD n&#248;gle-indikator "Status og tendenser i sproglig diversitet og antallet talere af indigene sprog", CBD n&#248;gle-indikator "Anden indikator for status for indigen og traditionel viden", CBD tv&#230;rg&#229;ende emne "Traditionel viden, nyskabelse og praksis",  Aichi biodiversitetsm&#229;l "18"</translation>
         <translation lang="de">Bezieht sich auf: CBD headline-Indikator "Status und Entwicklung sprachlicher Vielfalt und Anzahl der Personen, die indigene Sprachen sprechen", CBD headline-Indikator "Andere Indikatoren zum Status des indigenen und traditionellen Wissens", CBD Querschnittsthema "Traditionelles Wissen, Innovationen und Praktiken",  Aichi Biodiversit&#228;tsziel "18"</translation>
         <translation lang="en">Relates to: CBD headline indicator "Status and trends of linguistic diversity and numbers of speakers of indigenous languages", CBD headline indicator "Other indicator of the status of indigenous and traditional knowledge", CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices",  Aichi Biodiversity Target "18"</translation>
         <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Keelelise mitmekesisuse seisund ja trendid ning p&#245;liskeele r&#228;&#228;kijate arv", BMK &#252;ldn&#228;itaja "Teine indikaator p&#245;lis- ja traditsiooniliste teadmiste seisundi kohta", BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika",  Aichi elurikkuse eesm&#228;rk "18"</translation>
@@ -912,6 +988,7 @@
     </element>
     <element id="05_02" title="Innovations">
       <name>
+        <translation lang="da">Nyskabelse</translation>
         <translation lang="de">Innovationen</translation>
         <translation lang="en">Innovations</translation>
         <translation lang="et">Uuendused</translation>
@@ -923,6 +1000,7 @@
         <translation lang="ro">Inova&#539;ii</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Traditionel viden, nyskabelse og praksis",  Aichi biodiversitetsm&#229;l "18"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Traditionelles Wissen, Innovationen und Praktiken",  Aichi Biodiversit&#228;tsziel "18"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices",  Aichi Biodiversity Target "18"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika",  Aichi elurikkuse eesm&#228;rk "18"</translation>
@@ -936,6 +1014,7 @@
     </element>
     <element id="05_03" title="Best practices">
       <name>
+        <translation lang="da">Bedste praksis</translation>
         <translation lang="de">Best Practice</translation>
         <translation lang="en">Best practices</translation>
         <translation lang="et">Parimad praktikad</translation>
@@ -947,6 +1026,7 @@
         <translation lang="ro">bune practici</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Traditionel viden, nyskabelse og praksis",  Aichi biodiversitetsm&#229;l "18"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Traditionelles Wissen, Innovationen und Praktiken",  Aichi Biodiversit&#228;tsziel "18"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices",  Aichi Biodiversity Target "18"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika",  Aichi elurikkuse eesm&#228;rk "18"</translation>
@@ -961,6 +1041,7 @@
   </folder>
   <folder id="06" title="Access to genetic resources and benefit-sharing">
     <name>
+      <translation lang="da">Adgang til genetiske ressourcer og udbyttedeling</translation>
       <translation lang="de">Zugang zu genetischen Ressourcen und die ausgewogene und gerechte Aufteilung der sich aus ihrer Nutzung ergbenden Vorteile</translation>
       <translation lang="en">Access to genetic resources and benefit-sharing</translation>
       <translation lang="et">Ligip&#228;&#228;s geneetilistele ressurssidele ja kasu jaotamine</translation>
@@ -972,6 +1053,7 @@
       <translation lang="ro">Accesul la resursele genetice &#537;i &#238;mp&#259;r&#539;irea echitabil&#259; a acestora</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "Status for adgang og udbyttedeling ", CBD tv&#230;rg&#229;ende emne "Adgang til genetiske ressourcer og udbyttedeling ", Aichi biodiversitetsm&#229;l "16"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Status des Zugangs und der gerechten Aufteilung ", CBD Querschnittsthema "Zugang zu genetischen Ressourcen und die ausgewogene und gerechte Aufteilung der sich aus ihrer Nutzung ergbenden Vorteile ", Aichi Biodiversit&#228;tsziel "16"</translation>
       <translation lang="en">Relates to: CBD focal area "Status of access and benefit-sharing ", CBD cross-cutting issue "Access to genetic resources and benefit-sharing ", Aichi Biodiversity Target "16"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Ligip&#228;&#228;su ja kasu jaotamise olukord ", BMK valdkondadevaheline k&#252;simus "Ligip&#228;&#228;s geneetilistele ressurssidele ja kasu jaotamine ", Aichi elurikkuse eesm&#228;rk "16"</translation>
@@ -985,6 +1067,7 @@
   </folder>
   <folder id="07" title="Resources for biodiversity">
     <name>
+      <translation lang="da">Ressourcer til biodiversitet</translation>
       <translation lang="de">Ressourcen f&#252;r die Biodiversit&#228;t</translation>
       <translation lang="en">Resources for biodiversity</translation>
       <translation lang="et">Ressursid elurikkuse jaoks</translation>
@@ -996,6 +1079,7 @@
       <translation lang="ro">Resurse pentru biodiversitate</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: CBD fokus omr&#229;de "Status for ressource overf&#248;relser"</translation>
       <translation lang="de">Bezieht sich auf: CBD Schwerpunkt "Status zum Ressourcen-Transfer"</translation>
       <translation lang="en">Relates to: CBD focal area "Status of resource transfers"</translation>
       <translation lang="et">Seondub: BMK tegevusvaldkond "Ressursside &#252;lekandmise olukord"</translation>
@@ -1008,6 +1092,7 @@
     </definition>
     <element id="07_01" title="Financing biodiversity management">
       <name>
+        <translation lang="da">Financiering af biodiversitetsforvaltning</translation>
         <translation lang="de">Finanzierung des Biodiversit&#228;tsmanagements</translation>
         <translation lang="en">Financing biodiversity management</translation>
         <translation lang="et">Elurikkuse valdkonna rahastamine</translation>
@@ -1019,6 +1104,7 @@
         <translation lang="ro">Finan&#539;area managementului biodiversit&#259;&#539;ii</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: SEBI indikator "Financiering af biodiversitetsforvaltning", CBD tv&#230;rg&#229;ende emne "Biodiversitet og udvikling", CBD n&#248;gle-indikator "Officielle udviklingsbistand til st&#248;tte for konventionen", Aichi biodiversitetsm&#229;l "20"</translation>
         <translation lang="de">Bezieht sich auf: SEBI Indikator "Finanzierung des Biodiversit&#228;tsmanagements", CBD Querschnittsthema "Biodiversit&#228;t und Entwicklung", CBD headline-Indikator "Offizielle Entwicklungshilfe zur Unterst&#252;tzung der Konvention", Aichi Biodiversit&#228;tsziel "20"</translation>
         <translation lang="en">Relates to: SEBI indicator "Financing biodiversity management", CBD cross-cutting issue "Biodiversity for Development", CBD headline indicator "Official development assistance provided in support of the Convention", Aichi Biodiversity Target "20"</translation>
         <translation lang="et">Seondub: SEBI indikaator "Elurikkuse valdkonna rahastamine", BMK valdkondadevaheline k&#252;simus "Arengut toetav elurikkus", BMK &#252;ldn&#228;itaja "Ametlik arenguabi tagamaks toetus Konventsioonile", Aichi elurikkuse eesm&#228;rk "20"</translation>
@@ -1032,6 +1118,7 @@
     </element>
     <element id="07_02" title="Technology transfer and cooperation">
       <name>
+        <translation lang="da">Teknologioverf&#248;rsel og samarbejde</translation>
         <translation lang="de">Technologietransfer und Zusammenarbeit</translation>
         <translation lang="en">Technology transfer and cooperation</translation>
         <translation lang="et">Tehnoloogia vahetamine ja koost&#246;&#246;</translation>
@@ -1043,6 +1130,7 @@
         <translation lang="ro">Cooperarea &#537;i transferul de tehnologie</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Teknologioverf&#248;rsel og samarbejde", CBD n&#248;gle-indikator "Indikator for teknologisoverf&#248;rsel"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Technologietransfer und Zusammenarbeit", CBD headline-Indikator "Indikator zum Technologietransfer"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Technology transfer and cooperation", CBD headline indicator "Indicator of technology transfer"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Tehnoloogia vahetamine ja koost&#246;&#246;", BMK &#252;ldn&#228;itaja "Tehnoloogia vahetamise indikaator"</translation>
@@ -1056,6 +1144,7 @@
     </element>
     <element id="07_03" title="Liability and Redress">
       <name>
+        <translation lang="da">Ansvar og erstatning</translation>
         <translation lang="de">Haftung und Entsch&#228;digung</translation>
         <translation lang="en">Liability and Redress</translation>
         <translation lang="et">Kohustus ja h&#252;vitis</translation>
@@ -1067,6 +1156,7 @@
         <translation lang="ro">R&#259;spundere &#537;i repara&#539;ie</translation>
       </name>
       <definition>
+        <translation lang="da">Vedr&#248;rer: CBD tv&#230;rg&#229;ende emne "Ansvar og erstatning"</translation>
         <translation lang="de">Bezieht sich auf: CBD Querschnittsthema "Haftung und Entsch&#228;digung"</translation>
         <translation lang="en">Relates to: CBD cross-cutting issue "Liability and Redress"</translation>
         <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Kohustus ja h&#252;vitis"</translation>
@@ -1081,6 +1171,7 @@
   </folder>
   <folder id="08" title="Public opinion about biodiversity and public awareness">
     <name>
+      <translation lang="da">Den offentlige mening om biodiversitet og offentlig bevidsthed</translation>
       <translation lang="de">&#214;ffentliche Meinung &#252;ber Biodiversit&#228;t und &#246;ffentliches Bewusstsein</translation>
       <translation lang="en">Public opinion about biodiversity and public awareness</translation>
       <translation lang="et">Avalik arvamus elurikkuse kohta ja &#252;ldsuse teadlikkus</translation>
@@ -1092,6 +1183,7 @@
       <translation lang="ro">Opinia public&#259; &#537;i con&#537;tientizarea publicului privind biodiversitatea</translation>
     </name>
     <definition>
+      <translation lang="da">Vedr&#248;rer: EU fokus omr&#229;de "Offentlig mening", SEBI indikator "Offentlig bevidsthed", CBD tv&#230;rg&#229;ende emne "Kommunikation, uddannelse og offentlig bevidsthed", Aichi biodiversitetsm&#229;l "1"</translation>
       <translation lang="de">Bezieht sich auf: EU Schwerpunkt "&#214;ffentliche Meinung", SEBI Indikator "&#214;ffentliches Bewusstsein", CBD Querschnittsthema "Kimmunikation, Bildung und &#246;ffentliches Bewusstsein", Aichi Biodiversit&#228;tsziel "1"</translation>
       <translation lang="en">Relates to: EU focal area "Public opinion", SEBI indicator "Public awareness", CBD cross-cutting issue "Communication, Education &amp; Public Awareness", Aichi Biodiversity Target "1"</translation>
       <translation lang="et">Seondub: EL tegevusvaldkond "Avalik arvamus", SEBI indikaator "&#220;ldsuse teadlikkus", BMK valdkondadevaheline k&#252;simus "Kommunikatsioon, haridus ja &#252;ldsuse teadlikkus", Aichi elurikkuse eesm&#228;rk "1"</translation>
