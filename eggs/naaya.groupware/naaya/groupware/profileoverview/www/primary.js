@@ -40,13 +40,12 @@ var ldap_roles = {
 
 
 jQuery(document).ready(function(){
-
-   ldap_roles.init();
-   jQuery.get('/profile_ajax', '', function(data){
+    ldap_roles.init();
+    user = $("#user").val();
+    jQuery.get('/profile', {'user': user, 'ajax': 1}, function(data){
                 jQuery('#ig_access').html(data);
                 igs.init();
-        });
-
+    });
 });
 
 })();

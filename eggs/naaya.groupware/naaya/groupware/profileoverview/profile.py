@@ -3,9 +3,11 @@ import operator
 from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from eea import usersdb
 
+index_pt = PageTemplateFile('zpt/index.pt', globals())
+ajax_roles_pt = PageTemplateFile('zpt/ig_roles_ajax.pt', globals())
 
 def get_plugldap(ig):
     """ Returns plugLDAPUserFolder in IG, None if not found """
@@ -154,36 +156,49 @@ class ProfileClient(object):
 
         return notifications
 
-class ProfileView(BrowserView):
+def get_profile(context, request, authenticated_user, zope_app):
+    """
+    Return LDAP user profile.
+    If authenticated user is Manager, return the requested profile, otherwise
+    return personal profile.
+    """
+    requested_user = request.form.get('user', None)
+    if authenticated_user.has_role('Manager') and requested_user:
+        user = zope_app.acl_users.getUser(requested_user)
+        if not user:
+            context.REQUEST.RESPONSE.notFoundError()
+        return user
+    else:
+        return authenticated_user
 
-    def __call__(self, **kw):
-        user = self.request.get('AUTHENTICATED_USER', None)
-        if not user.has_role('Authenticated'):
-            # TODO: nicer redirect
+def ProfileView(context, request):
+    """
+    If there's an AJAX request return user's IGs, else return user's roles and
+    subscriptions.
+    """
+    auth_user = request.get('AUTHENTICATED_USER', None)
+    is_ajax = request.form.get('ajax', None)
+
+    if not auth_user.has_role('Authenticated'):
+        if not is_ajax:
             url = '/login/login_form?came_from=%s' % '/profile'
-            self.request.response.redirect(url)
+            request.response.redirect(url)
             return None
-        zope_app = self.context.unrestrictedTraverse('/')
+        else:
+            return ''
 
-        client = ProfileClient(zope_app, user)
+    zope_app = context.unrestrictedTraverse('/')
+    user = get_profile(context, request, auth_user, zope_app)
+    client = ProfileClient(zope_app, user)
+
+    if not is_ajax:
         roles_list = client.roles_list_in_ldap()
         notifications = client.notification_lists()
-        # custom filters - only relevant info in view
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
-        return self.index(roles=leaf_roles_list,
+        return index_pt.__of__(context)(roles=leaf_roles_list,
                           subscriptions=notifications, user_id=user.getId())
-
-class ProfileViewAjax(BrowserView):
-
-    def __call__(self, **kw):
-        user = self.request.get('AUTHENTICATED_USER', None)
-        if not user.has_role('Authenticated'):
-            return ''
-        zope_app = self.context.unrestrictedTraverse('/')
-        client = ProfileClient(zope_app, user)
+    else:
         ig_access = client.access_in_igs()
-        #if 'viewer' in ig_access:
-        #    del ig_access['viewer']
         if 'restricted' in ig_access:
             del ig_access['restricted']
         ig_details = {}
@@ -199,8 +214,9 @@ class ProfileViewAjax(BrowserView):
         role_names = {}
         for role in roles:
             role_names[role] = client.agent.role_info(role)['description']
-        return self.index(ig_details=ig_details, ig_access=ig_access,
-                          role_names=role_names)
+        return ajax_roles_pt.__of__(context)(ig_details=ig_details,
+                                             ig_access=ig_access,
+                                             role_names=role_names)
 
 class DemoProfileView(BrowserView):
 

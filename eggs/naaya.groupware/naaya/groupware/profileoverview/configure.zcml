@@ -1,20 +1,12 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
+  xmlns:naaya="http://namespaces.zope.org/naaya"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <browser:page
+  <naaya:simpleView
     for="naaya.groupware.interfaces.IGroupwareApplication"
     name="profile"
-    template="zpt/index.pt"
-    class=".profile.ProfileView"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="profile_ajax"
-    template="zpt/ig_roles_ajax.pt"
-    class=".profile.ProfileViewAjax"
+    handler=".profile.ProfileView"
     permission="zope2.View"
     />
 
