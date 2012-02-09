@@ -15,6 +15,7 @@
  Roles and Subscriptions for user <tt tal:content="options/user_id" /></h1>
 
     <h2>Interest group membership</h2>
+    <input type="hidden" id="user" tal:attributes="value options/user_id" />
     <div id="ig_access">
         <div style='text-align: center;'>
             <img src="++resource++naaya.groupware/ajax-loader.gif" />
@@ -57,7 +58,7 @@
     </table>
     </tal:block>
     <tal:block condition="not: options/roles">
-        You do not belong to any LDAP Roles.
+        <tt tal:content="options/user_id" /> does not belong to any LDAP Roles.
     </tal:block>
 
     <h2>Subscriptions to interest group notifications</h2>
@@ -84,7 +85,7 @@
     </tal:block>
     </div>
     <div id="id_subscriptions"  tal:condition="python:not len(options['subscriptions'])">
-        You have no subscriptions configured in Interest Groups.
+        <tt tal:content="options/user_id" /> has no subscriptions configured in Interest Groups.
     </div>
 
 </div>
