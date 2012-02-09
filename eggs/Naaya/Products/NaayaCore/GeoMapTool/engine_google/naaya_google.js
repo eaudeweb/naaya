@@ -31,12 +31,14 @@
             return 'hybrid';
         } else if (current_type == G_SATELLITE_MAP) {
             return 'satellite';
+        } else if (current_type == G_PHYSICAL_MAP) {
+            return 'physical';
         }
     }
 
     function setup_map(map_div_id) {
         the_map = new GMap2(document.getElementById(map_div_id), {
-            mapTypes: [G_HYBRID_MAP, G_NORMAL_MAP, G_SATELLITE_MAP]
+            mapTypes: [G_HYBRID_MAP, G_NORMAL_MAP, G_SATELLITE_MAP, G_PHYSICAL_MAP]
         });
         the_map.setMapType(base_layer_names[config.base_layer]);
         the_map.enableScrollWheelZoom();

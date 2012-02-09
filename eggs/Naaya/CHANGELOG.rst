@@ -1,5 +1,6 @@
 2.12.58 (unreleased)
 --------------------
+* Added Terrain view to map layers [dumitval]
 
 2.12.57 (2012-02-03)
 --------------------
