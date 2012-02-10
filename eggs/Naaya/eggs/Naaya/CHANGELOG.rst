@@ -1,5 +1,9 @@
-2.12.58 (unreleased)
+2.12.59 (unreleased)
 --------------------
+
+2.12.58 (2012-02-10)
+--------------------
+* fixed pagination in tinymce [bogdatan]
 * Added Terrain view to map layers [dumitval]
 
 2.12.57 (2012-02-03)
