@@ -18,13 +18,37 @@
 	<!DOCTYPE html>
 	<tal:block replace="structure python:'<' +'html>'"></tal:block>
 	<tal:block tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
-    layout_path python:here.getSite().getLayoutTool().absolute_url();">
+	layout_path python:here.getSite().getLayoutTool().absolute_url();">
 		<metal:block use-macro="python: here.standard_template_macro('standard-head-links')"></metal:block>
 	</tal:block>
 	<tal:block replace="structure python:'<' +'body>'"></tal:block>
 </tal:block>
 <script type="text/javascript">
 $(document).ready(function(){
+
+	var deleteObjects = function(action) {
+		$( "#dialog-delete-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 200,
+			width: 500,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete items": function() {
+					var form = $('#folder_listing');
+					form.attr('action', action);
+					form.submit();
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	};
+
 	// Multiple items operations
 	$('.select-all').click(function(e){
 		//Select toggle for all items
@@ -56,14 +80,8 @@ $(document).ready(function(){
 			return false;
 		}
 
-		var confirmed = true;
-		if (action == 'deleteObjects'){
-			confirmed = confirm(gettext('Are you sure?'));
-		}
-		if (confirmed){
-			var form = $('#folder_listing');
-			form.attr('action', action);
-			form.submit();
+		if(action == "deleteObjects") {
+		    deleteObjects(action);
 		}
 	});
 })
@@ -139,15 +157,15 @@ $(document).ready(function(){
 					</td>
 					<td class="type">
 						<img tal:define="icon folder_info/view/get_icon"
-						     tal:condition="icon"
-						     tal:attributes="src icon/url;
-						                     alt icon/title;
-						                     title icon/title" />
+							 tal:condition="icon"
+							 tal:attributes="src icon/url;
+											 alt icon/title;
+											 title icon/title" />
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
 						<em tal:condition="folder/can_be_seen"
-						    tal:content="folder_info/view/get_info_text" />
+							tal:content="folder_info/view/get_info_text" />
 						<span class="available_langs" tal:condition="python:here.item_has_title(folder, folder.title)">
 							<span i18n:translate="">Item only translated in </span>
 							<span tal:repeat="lang here/gl_get_languages_map">
@@ -215,24 +233,24 @@ $(document).ready(function(){
 					</td>
 					<td class="type">
 						<img tal:define="icon object_info/view/get_icon"
-						     tal:condition="icon"
-						     tal:attributes="src icon/url;
-						                     alt icon/title;
-						                     title icon/title" />
+							 tal:condition="icon"
+							 tal:attributes="src icon/url;
+											 alt icon/title;
+											 title icon/title" />
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
-                        <a tal:define="download_url object_info/view/get_download_url"
-                           tal:condition="download_url"
-                           tal:attributes="href download_url;"
-                           title="Download"
-                           i18n:attributes="title">
-                           <img tal:attributes="src string:${site_url}/misc_/Naaya/download-file.png"
-                                alt="Download"
-                                i18n:attributes="alt" />
-                        </a>
+						<a tal:define="download_url object_info/view/get_download_url"
+						   tal:condition="download_url"
+						   tal:attributes="href download_url;"
+						   title="Download"
+						   i18n:attributes="title">
+						   <img tal:attributes="src string:${site_url}/misc_/Naaya/download-file.png"
+								alt="Download"
+								i18n:attributes="alt" />
+						</a>
 						<em tal:condition="object/can_be_seen"
-						    tal:content="object_info/view/get_info_text" />
+							tal:content="object_info/view/get_info_text" />
 						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
 							<span i18n:translate="">Item only translated in </span>
 							<span tal:repeat="lang here/gl_get_languages_map">
@@ -279,6 +297,16 @@ $(document).ready(function(){
 		</tr>
 	</table>
 </form>
+
+<div id="dialog-delete-confirm" title="Delete items" style="display: none">
+	<p>
+		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+		<span i18n:translate="dialog-delete-confirm">
+		    These items will be permanently deleted and may not be recovered. Are you sure?
+		</span>
+	</p>
+</div>
+
 </metal:block>
 <tal:block condition="iframe"><br />
 <tal:block replace="structure python:'</' +'body>'"></tal:block>
