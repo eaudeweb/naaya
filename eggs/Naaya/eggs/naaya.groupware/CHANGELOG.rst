@@ -1,5 +1,9 @@
-1.1.13 (unreleased)
+1.1.14 (unreleased)
 -------------------
+
+1.1.13 (2012-02-10)
+-------------------
+* profileoverview shows specific profile by GET for managers [bogdatan]
 
 1.1.12 (2012-02-02)
 -------------------
