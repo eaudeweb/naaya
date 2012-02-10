@@ -49,9 +49,9 @@ _default_permission = 'zope.Public'
 def simple_view_directive(_context, handler, for_, name,
                           permission=_default_permission):
     class SimpleView(BrowserView):
-        def __call__(self):
+        def __call__(self, **kwargs):
             context = self.aq_parent
-            return handler(context, self.request)
+            return handler(context, self.request, **kwargs)
 
     metaconfigure.page(_context, name, permission, for_, class_=SimpleView)
 
