@@ -18,13 +18,13 @@
 		</p>
 		<div class="tabs">
 			<ul>
-				<li id="computer_tab" class="current"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
+				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
 				<li id="link_tab"><span><a href="javascript:mcTabs.displayTab('link_tab','link_panel');" onmousedown="return false;" i18n:translate="">URL</a></span></li>
-				<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
+				<li id="browse_tab" class="current"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
 			</ul>
 		</div>
 		<div class="panel_wrapper">
-			<div id="computer_panel" class="panel current">
+			<div id="computer_panel" class="panel">
 				<br />
 				<form id="comp_upload_form" tal:attributes="action string:${here/absolute_url}/prepare_image" method="post" enctype="multipart/form-data">
 					<label for="comp_file" i18n:translate="">Selected file</label>
@@ -67,7 +67,7 @@
 				</ul>
 				</div>
 			</div>
-			<div id="browse_panel" class="panel">
+			<div id="browse_panel" class="panel current">
 				<tal:block define="src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));">
 				<p i18n:translate="">
 					Pick an image from one of the available repositories below:
@@ -92,7 +92,8 @@
 					<br clear="all" style="clear: both;" />
 					<br/>
 					<br/>
-					<div style="margin: 0;" tal:condition="python: src == 'album'">
+					<div style="margin: 0;" tal:condition="python: src == 'album'"
+                                                                >
 						<div>
 							<input id="query" name="query" type="text" tal:attributes="value req_query"/>
 						</div>
@@ -127,10 +128,12 @@
                         tal:define="
                             src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));
                             options python:here.enumerateImages(src, 0, req_query, request);
-                            total_images python:here.rstk['json_loads'](options)['total_images'];"
+                            total_images python:here.rstk['json_loads'](options)['total_images'];
+                            album_url python: test(req_album, req_album, '')"
                         tal:content="string:
                             var total_images = ${total_images};
                             var src = '${src}';
+                            var album_url = '${album_url}';
                             var req_query = '${req_query}';
                             var url = '${here/absolute_url}';
                         "></script>
@@ -145,6 +148,9 @@
 
                     function pageSelectCallback(page_index){
                         params = 'page=' + page_index + '&source=' + src;
+                        if (album_url) {
+                            params = params + "&album=" + album_url;
+                        }
                         if( req_query != 'None' ){
                             params += "&query=" + req_query;
                         }
