@@ -260,8 +260,8 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
             }
 
             if source == 'album':
-                image_object['source'] = image.source()
-                image_object['author'] = image.author()
+                image_object['source'] = image.source
+                image_object['author'] = image.author
 
             return image_object
 
