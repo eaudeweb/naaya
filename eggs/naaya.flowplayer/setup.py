@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.flowplayer',
-      version='1.1.5',
+      version='1.1.6',
       description="Flowplayer for naaya",
       long_description=open("README.txt").read() + "\n" +
                        open("CHANGELOG.rst").read(),
