@@ -1,4 +1,7 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
+------------------
+
+1.1.5 (2012-02-13)
 ------------------
 * Update player window size according to the movie's aspect ratio [dumitval]
 
