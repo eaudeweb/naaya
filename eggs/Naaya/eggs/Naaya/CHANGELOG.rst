@@ -1,4 +1,7 @@
-2.12.60 (unreleased)
+2.12.61 (unreleased)
+--------------------
+
+2.12.60 (2012-02-13)
 --------------------
 * Keep original movie resolution if re-encoding is needed [dumitval]
 * Update script to add jquery-ui.css to standard template [dumitval]
