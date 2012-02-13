@@ -2,6 +2,7 @@
 """
 
 # Python imports
+import re, sys
 import os
 import logging
 import subprocess
@@ -37,8 +38,12 @@ class MediaConverter(threading.Thread):
         if not can_convert():
             return self.finish('Can not convert (are tools available?)')
 
+        resolution  = get_resolution(self.fin)
+        aspect_ratio = resolution[0]/resolution[1]
+        height = int(320/aspect_ratio)/8*8
+
         cmd = ["ffmpeg", "-y", "-v", "0", "-benchmark", "-i", self.fin, "-ar",
-               "22050", "-s", "320x240", "-b", "500k", "-f", "flv", self.fout]
+               "22050", "-s", "320x%s" % height, "-b", "500k", "-f", "flv", self.fout]
         self.process = subprocess.Popen(cmd, stdout=self.log, stderr=self.log)
         return self.step_2()
 
@@ -218,3 +223,13 @@ def get_conversion_errors(fpath, suffix=".log"):
 
     error_file.close()
     return ""
+
+def get_resolution(video_path):
+    txt = subprocess.Popen(['ffmpeg', '-i', video_path], stderr=subprocess.PIPE).communicate()[1]
+
+    for line in txt.splitlines():
+        if 'Video: ' in line:
+            m = re.search(r'(\d+)x(\d+)', line)
+            if m is not None:
+                return float(m.group(1)), float(m.group(2))
+    raise ValueError('Cannot parse ffmpeg output')

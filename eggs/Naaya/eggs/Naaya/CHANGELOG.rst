@@ -1,5 +1,6 @@
 2.12.60 (unreleased)
 --------------------
+* Keep original movie resolution if re-encoding is needed [dumitval]
 * Update script to add jquery-ui.css to standard template [dumitval]
 
 2.12.59 (2012-02-10)
