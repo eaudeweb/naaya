@@ -3,6 +3,7 @@ from AccessControl.Permissions import view
 
 from naaya.core.zope2util import permission_add_role, sha_hexdigest
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates.utils import get_standard_template
 from naaya.i18n.LocalPropertyManager import LocalAttribute
 
 class SkipApprovalPermission(UpdateScript):
@@ -189,5 +190,38 @@ class RemoveDuplicateImages(UpdateScript):
         portal.images.manage_delObjects(dup_images.keys())
         for image_id in dup_images.keys():
             self.log.debug('Deleted duplicated image: %s' % image_id)
+        return True
+
+class AddMissingCSSToStandardTemplate(UpdateScript):
+    title = ('Add missing css files to standard template')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Feb 13, 2012'
+
+    def _update(self, portal):
+        self.log.debug('Updating standard_template')
+        standard_template = get_standard_template(portal)
+        tal = standard_template.read()
+
+        todo = {
+            'jquery-ui.css': '<metal:block define-macro="standard-head-links">\n            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/www/js/css/jquery-ui.css" />',
+            'additional_style_css': '<metal:block define-macro="standard-head-links">\n            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />',
+        }
+
+        entry_point = '<metal:block define-macro="standard-head-links">'
+
+        changed = False
+        for k, v in todo.items():
+            if k in tal:
+                self.log.debug('%s in standard_template' % k)
+            else:
+                self.log.debug('%s not in standard_template' % k)
+                tal = tal.replace(entry_point, v)
+                self.log.debug('added %s link', k)
+                changed = True
+        if changed:
+            self.log.debug('standard_template changed')
+            standard_template.write(tal)
+        else:
+            self.log.debug('standard_template not changed')
         return True
 
