@@ -1,5 +1,6 @@
 1.1.5 (unreleased)
 ------------------
+* Update player window size according to the movie's aspect ratio [dumitval]
 
 1.1.4 (2011-12-21)
 ------------------
