@@ -1,5 +1,6 @@
 2.12.60 (unreleased)
 --------------------
+* Update script to add jquery-ui.css to standard template [dumitval]
 
 2.12.59 (2012-02-10)
 --------------------
