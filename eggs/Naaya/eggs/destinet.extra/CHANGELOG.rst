@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+====================
+
+1.1.4 (2012-02-14)
 ====================
 * fixed some security declarations in DestinetPublisher [simiamih]
 * Corrected to set keywords as local property [bogdatan]
