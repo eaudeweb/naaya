@@ -100,7 +100,9 @@ class allocateKeywords(BrowserPage):
             keywords = sorted(keywords)
             keywords = ", ".join(keyword for keyword in keywords if keyword)
 
-            item.keywords = keywords
+            site = self.context.getSite()
+            item.set_localpropvalue('keywords', site.gl_get_selected_language(),
+                                    keywords)
 
         self.context.setSessionInfoTrans('Keywords succesfully changed.')
         return self.request.RESPONSE.redirect(redirect_url)
