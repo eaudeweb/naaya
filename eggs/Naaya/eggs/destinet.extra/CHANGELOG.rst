@@ -1,5 +1,6 @@
 1.1.4 (unreleased)
 ====================
+* fixed some security declarations in DestinetPublisher [simiamih]
 * Corrected to set keywords as local property [bogdatan]
 * Imported permissions.zcml allow zope2.NaayaPublishContent permission [dumitval]
 * Corrected permission for allocateKeywords and allocate_keywords_html [dumitval]
