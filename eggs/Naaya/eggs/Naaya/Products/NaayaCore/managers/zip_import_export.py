@@ -127,10 +127,9 @@ class ZipImportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
     def do_import(self, data, REQUEST=None):
         """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if REQUEST and not self.getParentNode().checkAllowedToZipImport():
             raise Unauthorized
 
         errors = []
@@ -188,7 +187,6 @@ class ZipImportTool(Implicit, Item):
             else:
                 return []
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
     index_html = PageTemplateFile('../zpt/zip_import', globals())
 
 InitializeClass(ZipImportTool)

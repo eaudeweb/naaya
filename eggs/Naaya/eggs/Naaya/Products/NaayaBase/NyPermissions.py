@@ -9,10 +9,12 @@ from Globals import InitializeClass
 from zope.deprecation import deprecate
 from constants import *
 from naaya.i18n.constants import PERMISSION_TRANSLATE_PAGES
+from Products.Naaya.constants import PERMISSION_ADD_FOLDER
+
 
 log = logging.getLogger(__name__)
 
-class NyPermissions:
+class NyPermissions(object):
     """ Class that implements permissions and rights checking."""
 
     security = ClassSecurityInfo()
@@ -167,5 +169,26 @@ class NyPermissions:
         """ dummy function used to register the SKIP_APPROVAL permission"""
 
         pass
+
+    def checkAllowedToZipImport(self):
+        """
+        Not a regular Permission check.
+
+        Check if user can use Zip Import to add a structure of folders
+        and files in a location.
+        Permission is granted if he is:
+        * permitted to add Folders
+        * permitted to add Files
+
+        """
+        # Bypass cross imports
+        from naaya.content.bfile.permissions import PERMISSION_ADD_BFILE
+        from naaya.content.file.permissions import PERMISSION_ADD_FILE
+
+        return (self.checkPermission(PERMISSION_ADD_FOLDER) and
+                (self.checkPermission(PERMISSION_ADD_FILE) or
+                 self.checkPermission(PERMISSION_ADD_BFILE)
+                )
+               )
 
 InitializeClass(NyPermissions)
