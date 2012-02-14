@@ -3,6 +3,8 @@
            xmlns:zcml="http://namespaces.zope.org/zcml">
   <include package=".adapter" />
 
+  <include file="permissions.zcml" />
+
   <class class=".NyContentType.NyContentType">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
   </class>
