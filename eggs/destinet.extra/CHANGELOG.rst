@@ -1,5 +1,7 @@
 1.1.4 (unreleased)
 ====================
+* Imported permissions.zcml allow zope2.NaayaPublishContent permission [dumitval]
+* Corrected permission for allocateKeywords and allocate_keywords_html [dumitval]
 
 1.1.3 (2012-01-31)
 ====================
