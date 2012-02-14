@@ -295,7 +295,7 @@ class DestinetPublisher(SimpleItem):
             'submitter_info_html': submitter.info_html(self, REQUEST),
         }, 'publication_add')
 
-    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyNews_who_who")
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyContact_who_who")
     def addNyContact_who_who(self, id='', REQUEST=None, contributor=None, **kwargs):
         """
         Create a Contact type of object in 'who-who' folder adding
@@ -322,7 +322,7 @@ class DestinetPublisher(SimpleItem):
         else: # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyNews_market")
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyContact_market")
     def addNyContact_market(self, id='', REQUEST=None, contributor=None, **kwargs):
         """
         Create a Contact type of object in 'market-place' folder adding
