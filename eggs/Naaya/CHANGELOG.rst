@@ -1,4 +1,7 @@
-2.12.61 (unreleased)
+2.12.62 (unreleased)
+--------------------
+
+2.12.61 (2012-02-14)
 --------------------
 * Added permissions.zcml to be included in configure.zcml files [dumitval]
 * NyPermissions.checkAllowedToZipImport [simiamih]
