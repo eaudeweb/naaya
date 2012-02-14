@@ -1,5 +1,6 @@
 2.12.61 (unreleased)
 --------------------
+* NyPermissions.checkAllowedToZipImport [simiamih]
 
 2.12.60 (2012-02-13)
 --------------------
