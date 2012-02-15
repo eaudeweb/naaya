@@ -1,5 +1,9 @@
-1.1.14 (unreleased)
+1.1.15 (unreleased)
 -------------------
+
+1.1.14 (2012-02-15)
+-------------------
+* using ldap cache to display all members in members search [bogdatan]
 
 1.1.13 (2012-02-10)
 -------------------
