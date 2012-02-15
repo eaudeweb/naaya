@@ -10,7 +10,7 @@
 	</h3>
 	
 	<p>
-		<a tal:define="mail_addr string:${group_id}@roles.eaa.eionet.europa.eu"
+		<a tal:define="mail_addr string:${group_id}@roles.eea.eionet.europa.eu"
 		   tal:attributes="href string:mailto::${mail_addr};
 		                   title string:Send mail to all members of ${group_id}"
 		   tal:content="mail_addr"></a>
