@@ -1,5 +1,6 @@
 2.12.62 (unreleased)
 --------------------
+* typo in plugLDAPUserFolderGroupMembers - group email address [simiamih]
 
 2.12.61 (2012-02-14)
 --------------------
