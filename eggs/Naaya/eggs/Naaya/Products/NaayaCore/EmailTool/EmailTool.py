@@ -288,7 +288,10 @@ def configure_mail_queue():
         return
 
     from zope.sendmail.interfaces import IMailDelivery
-    from zope.sendmail.delivery import QueuedMailDelivery
+    try:
+        from repoze.sendmail.delivery import QueuedMailDelivery
+    except ImportError:
+        from zope.sendmail.delivery import QueuedMailDelivery
     gsm = getGlobalSiteManager()
     gsm.registerUtility(QueuedMailDelivery(queue_path),
                         IMailDelivery, "naaya-mail-delivery")
