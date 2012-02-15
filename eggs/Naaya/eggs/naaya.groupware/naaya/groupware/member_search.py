@@ -8,7 +8,7 @@ from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
      import plugLDAPUserFolder
-
+from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
 from naaya.core.utils import force_to_unicode
 
 
@@ -73,6 +73,7 @@ class MemberSearch(Implicit, Item):
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         sources_info = self.get_sources_info(acl_tool)
+
         for source_id in sources_info.keys():
             source = sources_info[source_id]['source']
 
@@ -84,8 +85,19 @@ class MemberSearch(Implicit, Item):
                 group_userids.extend(group_users)
             userids = set(individual_userids + group_userids)
 
-            users = source.getUserFolder().findUser('cn', search_string)
-            users = [user for user in users if user['uid'] in userids]
+            if search_string.strip():
+                users = source.getUserFolder().findUser('cn', search_string)
+                users = [user for user in users if user.has_key('uid') and
+                         user['uid'] in userids]
+            else:
+                cache = ldap_cache.Cache()
+                cache.update()
+                users = []
+
+                for user_dn in cache.users:
+                    user = cache.get(user_dn)
+                    if user.has_key('uid') and user['uid'] in userids:
+                        users.append(user)
 
             # precalculate user roles for performance
             user_roles_map = {}
