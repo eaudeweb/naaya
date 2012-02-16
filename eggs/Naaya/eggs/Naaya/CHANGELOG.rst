@@ -1,5 +1,6 @@
 2.12.63 (unreleased)
 --------------------
+* fixed localized file widget [nituacor]
 * using repoze.sendmail instead of zope.sendmail for queuing [simiamih]
 
 2.12.62 (2012-02-15)
