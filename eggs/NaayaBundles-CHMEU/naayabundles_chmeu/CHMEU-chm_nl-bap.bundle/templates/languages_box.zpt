@@ -1,3 +1,4 @@
+<metal:block define-macro="box">
 <div id="language" tal:define="rel_url python:here.absolute_url(1)">
 		<a title="English" tal:attributes="href string:http://en.biodiversiteit.nl/${rel_url}" i18n:attributes="title">
 			<img title="English" alt="English" 
@@ -21,3 +22,4 @@
 					 i18n:attributes="title; alt" />
 		</a>
 </div>
+</metal:block>
