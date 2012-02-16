@@ -274,9 +274,18 @@ class _ImmediateDelivery(object):
         self._d = delivery
 
     def send(self, fromaddr, toaddrs, message):
-        message = 'Message-Id: <%s>\n%s' % (self._d.newMessageId(), message)
+        message_id = self._d.newMessageId()
+        email_message = email.MIMEText.MIMEText(message, 'plain')
+        email_message['Message-Id'] = '<%s>' % message_id
         # make data_manager think it's being called by a transaction
-        data_manager = self._d.createDataManager(fromaddr, toaddrs, message)
+        try:
+            data_manager = self._d.createDataManager(fromaddr, toaddrs,
+                                                     email_message)
+        except TypeError:
+            # backwards compat with zope.sendmail and repoze.sendmail < 2.0
+            message_bytes = 'Message-Id: <%s>\n%s' % (message_id, message)
+            data_manager = self._d.createDataManager(fromaddr, toaddrs,
+                                                     message_bytes)
         data_manager.tpc_finish(None)
 
 def configure_mail_queue():
