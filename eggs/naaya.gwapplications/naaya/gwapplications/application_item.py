@@ -1,4 +1,5 @@
 from zope.interface import Interface, implements
+from zope.event import notify
 from OFS.SimpleItem import SimpleItem
 from Products.Five.browser import BrowserView
 from Products.NaayaCore.managers.utils import genObjectId
@@ -64,6 +65,7 @@ class GWApplication(SimpleItem):
         self.customize_portal(portal, **kwargs)
         self.created_path = portal.absolute_url(1)
         self.send_approved_email(kwargs['admin_comments'])
+        notify(ApplicationApproved(self))
 
     def reject(self, **kwargs):
         self.rejected = True
@@ -163,3 +165,13 @@ class GWApplicationIndexView(BrowserView):
 
         return self.request.response.redirect('../basket_html')
 
+
+class IApplicationApproved(Interface):
+    """ Event - application has been approved """
+
+
+class ApplicationApproved(object):
+    implements(IApplicationApproved)
+
+    def __init__(self, application):
+        self.application = application
