@@ -25,10 +25,10 @@ class FileWidget(Widget):
 
     def new_value(self, prev_prop_value, prop_value):
         # if the new value is None and the old value exists, don't overwrite.
-        if prev_prop_value:
-            if prop_value is None:
-                return prev_prop_value
-        return prop_value
+        if prop_value is None:
+            return prev_prop_value
+        else:
+            return prop_value
 
     template = PageTemplateFile('../zpt/property_widget_file', globals())
 
