@@ -1,4 +1,7 @@
-2.12.64 (unreleased)
+2.12.65 (unreleased)
+--------------------
+
+2.12.64 (2012-02-16)
 --------------------
 * fixed sending immediate emails with repoze.sendmail 2.3 [simiamih]
 
