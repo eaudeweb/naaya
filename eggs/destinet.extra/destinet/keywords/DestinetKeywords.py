@@ -103,6 +103,7 @@ class allocateKeywords(BrowserPage):
             site = self.context.getSite()
             item.set_localpropvalue('keywords', site.gl_get_selected_language(),
                                     keywords)
+            item.recatalogNyObject(item)
 
         self.context.setSessionInfoTrans('Keywords succesfully changed.')
         return self.request.RESPONSE.redirect(redirect_url)
