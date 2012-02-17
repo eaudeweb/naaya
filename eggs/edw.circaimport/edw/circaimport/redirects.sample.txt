@@ -1,0 +1,14 @@
+# In order to redirect an IG from CIRCA to forum/projects/archive,
+# simply enter space-separated, per line:
+# - old CIRCA id
+# - server destination ('forum', 'projects' or 'archives - default 'forum')
+# - alias (new ID in Groupware, if different)
+#
+# then place it in var/circa_import/ (or how it was configured in buildout).
+# Don't forget to add the old CIRCA id in vh-circa.conf on Apache of Dodo
+
+etcnpb
+eu98report
+gemet
+irena
+leac projects

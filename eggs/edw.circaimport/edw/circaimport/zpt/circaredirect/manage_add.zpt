@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Add Circa Redirect Object</title>
+  </head>
+  <body>
+    <h2>Add Circa Redirect Object</h2>
+    <form method="post">
+    ID: <input type='text' name='id' value='circaredirect' /> <br />
+    Title: <input type='text' name='title' value='Circa Redirection' />
+    <br />
+    <br />
+    <input type='submit' name='submit_add' value='Add' />
+    </form>
+  </body>
+</html>

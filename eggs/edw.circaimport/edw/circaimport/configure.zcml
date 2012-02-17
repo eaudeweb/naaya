@@ -1,5 +1,28 @@
 <configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:browser="http://namespaces.zope.org/browser">
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:naaya="http://namespaces.zope.org/naaya"
+           xmlns:five="http://namespaces.zope.org/five">
+
+  <browser:resourceDirectory
+      directory="./www"
+      name="edw.circaimport-www"
+      permission="zope2.View"
+      />
+
+  <naaya:simpleView
+       for="zope.app.container.interfaces.IAdding"
+       name="add_circaredirect_html"
+       permission="zope2.ViewManagementScreens"
+       handler=".circaredirect.CircaRedirectAddView"
+       />
+
+  <five:registerClass
+      class=".circaredirect.CircaRedirect"
+      meta_type="Circa Redirect"
+      addview="add_circaredirect_html"
+      icon="edw.circaimport-www/circaredirect.png"
+      permission="zope2.View"
+      />
 
   <browser:page
       for="Products.Naaya.interfaces.INySite"
