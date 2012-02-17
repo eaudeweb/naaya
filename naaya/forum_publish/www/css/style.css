@@ -1,0 +1,56 @@
+a {
+    cursor: pointer;
+}
+
+#sidebar-port.sidebar {
+    background: #fff2a8;
+    margin: 26px 0 0 5px;
+    padding: 10px;
+    float: right;
+    width: 160px;
+}
+#sidebar-port.sidebar textarea {
+    font-size: 11px;
+    width: 100%;
+}
+#sidebar-port.sidebar .message-published {
+    height: 103px;
+}
+#sidebar-port.sidebar .message-published a {
+    font-size: 11px;
+    color: #DA4F49;
+}
+#sidebar-port.sidebar .publish-buttons .publish {
+    background-color: #49AFCD;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-bottom: 1px solid #359cba;
+    border-right: 1px solid #359cba;
+    padding: 4px;
+    color: #fff;
+}
+
+#sidebar-port.sidebar .publish-buttons {
+    margin-top: 10px;
+}
+#sidebar-port.sidebar .publish-buttons a {
+    margin-right: 5px;
+    font-size: 11px;
+}
+
+#middle_port.sidebar-fix {
+    width: 68.5%;
+}
+
+#middle_port .forum_topic p::selection,
+#middle_port .forum_message p::selection {
+    background: #fff2a8;
+}
+#middle_port .forum_topic p::-moz-selection,
+#middle_port .forum_message p::-moz-selection {
+    background: #fff2a8;
+}
+.author {
+    color: #666;
+}
