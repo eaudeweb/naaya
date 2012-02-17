@@ -1,4 +1,7 @@
-2.12.65 (unreleased)
+2.12.66 (unreleased)
+--------------------
+
+2.12.65 (2012-02-17)
 --------------------
 * Email Delivery fix for zope 2.12 [simiamih]
 * Upgrade to jQuery 1.7.1 [moregale]
