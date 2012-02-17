@@ -10,7 +10,8 @@ import smtplib
 import cStringIO
 from urlparse import urlparse
 import logging
-import email.MIMEText, email.Utils, email.Charset, email.Header
+import email.Utils, email.Charset, email.Header
+from email.MIMEText import MIMEText
 
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.sendmail.interfaces import IMailDelivery
@@ -28,7 +29,25 @@ from EmailSender import build_email
 from naaya.core.permissions import naaya_admin
 from naaya.core.utils import force_to_unicode
 
+
 mail_logger = logging.getLogger('naaya.core.email')
+
+try:
+    import email.message
+except ImportError:
+    def create_plain_message(body_bytes):
+        """
+        This is just a simple factory for message instance (with payload)
+        that works with both email.MIMEText (python 2.4)
+        and email.message (python 2.6)
+
+        """
+        return MIMEText(body_bytes, 'plain')
+else:
+    def create_plain_message(body_bytes):
+        message = email.message.Message()
+        message.set_payload(body_bytes)
+        return message
 
 def manage_addEmailTool(self, REQUEST=None):
     """ """
@@ -151,7 +170,7 @@ class EmailTool(Folder):
                              'to: %r subject: %r',
                              site_path, p_to, p_subject)
             l_message = create_message(p_content, p_to, p_from, p_subject)
-            delivery.send(p_from, p_to, l_message)
+            send_by_delivery(delivery, p_from, p_to, l_message)
             return 1
 
         except:
@@ -223,6 +242,22 @@ def hack_to_use_quopri(message):
     del message['Content-Transfer-Encoding']
     message.set_charset(charset)
 
+def send_by_delivery(delivery, p_from, p_to, message):
+    """
+    Send `message` email, where `message` is a MIMEText/Message instance created
+    by create_message.
+    Knows how to handle repoze.sendmail 2.3 differences in `message` arg type.
+
+    """
+    try:
+        delivery.send(p_from, p_to, message.as_string())
+    except AssertionError, e:
+        if (e.args and
+            e.args[0] == 'Message must be instance of email.message.Message'):
+            delivery.send(p_from, p_to, message)
+        else:
+            raise
+
 def create_message(text, addr_to, addr_from, subject):
     if isinstance(addr_to, basestring):
         addr_to = (addr_to,)
@@ -230,14 +265,14 @@ def create_message(text, addr_to, addr_from, subject):
     subject = force_to_unicode(subject)
     text = force_to_unicode(text)
 
-    message = email.MIMEText.MIMEText(text.encode('utf-8'), 'plain')
+    message = create_plain_message(text.encode('utf-8'))
     hack_to_use_quopri(message)
     message['To'] = safe_header(addr_to)
     message['From'] = safe_header(addr_from)
     message['Subject'] = safe_header(subject)
     message['Date'] = email.Utils.formatdate()
 
-    return message.as_string()
+    return message
 
 class BestEffortSMTPMailer(SMTPMailer):
     """
@@ -275,7 +310,7 @@ class _ImmediateDelivery(object):
 
     def send(self, fromaddr, toaddrs, message):
         message_id = self._d.newMessageId()
-        email_message = email.MIMEText.MIMEText(message, 'plain')
+        email_message = create_plain_message(message)
         email_message['Message-Id'] = '<%s>' % message_id
         # make data_manager think it's being called by a transaction
         try:
