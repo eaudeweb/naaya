@@ -109,8 +109,9 @@ misc_ = {
 
     # jQuery
     # Use jquery.js if version is of no importance
-    'jquery.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
-    'jquery.min.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+    'jquery.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
+    'jquery.min.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
+    'jquery-1.7.1.min.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
     'jquery-1.4.2.min.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
 
     'jquery-1.3.2.min.js':ImageFile('www/js/jquery-1.3.2.min.js', globals()), # DEPRECATED
