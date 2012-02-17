@@ -3,6 +3,7 @@
 
 1.1.4 (2012-02-14)
 ====================
+* Recatalog objects after savingt their keywords [bogdatan]
 * fixed some security declarations in DestinetPublisher [simiamih]
 * Corrected to set keywords as local property [bogdatan]
 * Imported permissions.zcml allow zope2.NaayaPublishContent permission [dumitval]
