@@ -3,26 +3,19 @@
            xmlns:naaya="http://namespaces.zope.org/naaya"
            xmlns:five="http://namespaces.zope.org/five">
 
-  <browser:resourceDirectory
-      directory="./www"
-      name="edw.circaimport-www"
-      permission="zope2.View"
-      />
-
   <naaya:simpleView
-       for="zope.app.container.interfaces.IAdding"
-       name="add_circaredirect_html"
-       permission="zope2.ViewManagementScreens"
-       handler=".circaredirect.CircaRedirectAddView"
+       for="naaya.groupware.interfaces.IGroupwareApplication"
+       name="circa_redirect"
+       permission="zope2.View"
+       handler=".circaredirect.circa_redirect"
        />
 
-  <five:registerClass
-      class=".circaredirect.CircaRedirect"
-      meta_type="Circa Redirect"
-      addview="add_circaredirect_html"
-      icon="edw.circaimport-www/circaredirect.png"
-      permission="zope2.View"
-      />
+  <naaya:simpleView
+       for="naaya.groupware.interfaces.IGroupwareApplication"
+       name="circa_redirect_inspector"
+       permission="zope2.ViewManagementScreens"
+       handler=".circaredirect.circa_redirect_inspector"
+       />
 
   <browser:page
       for="Products.Naaya.interfaces.INySite"
