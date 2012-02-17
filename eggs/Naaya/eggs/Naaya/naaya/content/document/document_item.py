@@ -112,6 +112,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(
                                 schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('body', '')
+    _submit = bool(kwargs.get('submitted', 0))
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'doc',
                           removelist=[]),
@@ -126,11 +127,13 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('sortorder', sortorder_widget.default)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang,
-                    _override_releasedate=_releasedate, _all_values=False)
+                    _override_releasedate=_releasedate, _all_values=_submit)
     if form_errors:
         raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    if kwargs.has_key('submitted'): ob.submitThis()
+    if _submit:
+        ob.submitThis()
+
     self.recatalogNyObject(ob)
     #log post date
     auth_tool = self.getAuthenticationTool()
