@@ -1,5 +1,6 @@
-1.0.2 (unreleased)
+1.1 (unreleased)
 ------------------
+* added circa_redirect feature [simiamih]
 
 1.0.1 (2012-02-02)
 ------------------

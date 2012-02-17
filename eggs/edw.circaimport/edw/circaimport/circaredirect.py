@@ -1,20 +1,15 @@
-import operator
-import os.path
+import time
+import os
+from copy import deepcopy
 
-from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view, view_management_screens
-from App.class_init import InitializeClass
-from OFS.SimpleItem import SimpleItem
-from OFS.PropertyManager import PropertyManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Persistence import PersistentMapping
 
 from edw.circaimport import ui
 
+redirect_records = {'last-load': None, 'data': {}}
 DEFAULT_REDIRECT = {'alias': '', 'where': 'forum'} # in forum, no id translation
-REDIRECTS = {}
 SERVERS = ('forum', 'projects', 'archives')
-
+REDIRECTS = {} # filled here
 for server in SERVERS:
     REDIRECTS.update({
     server:
@@ -25,81 +20,65 @@ for server in SERVERS:
         }
     })
 
-def CircaRedirectAddView(context, request):
-    """ Add view (simpleView) for CircaRedirect """
-    submit_add = request.get('submit_add', '')
-    id = request.get('id', '')
-    title = request.get('title', '')
-    if submit_add:
-        obj = CircaRedirect(id, title)
-        parent = context.aq_parent
-        parent._setObject(id, obj)
-        request.RESPONSE.redirect(parent.absolute_url() + '/manage_main')
-        return ''
-    else:
-        pt = PageTemplateFile('zpt/circaredirect/manage_add', globals())
-        return pt.__of__(context)()
-
-class CircaRedirect(SimpleItem, PropertyManager):
+def load_config_file():
     """
-    TODO: docstring about class
+    Reads redirects.txt from var/circa_import folder and if successful,
+    updates redirection rules.
 
     """
-
-    security = ClassSecurityInfo()
-
-    def __init__(self, id, title=''):
-        self.id = id
-        self.title = title
-        self.load_config_file()
-
-    def load_config_file(self):
-        """
-        Reads redirects.txt from var/circa_import folder and if successful,
-        updates redirection rules.
-
-        """
-        file_path = os.path.join(ui.upload_prefix, "redirects.txt")
-        file = open(file_path, "r")
-        found = {}
-        for (i, line) in enumerate(file):
-            line = line.strip()
-            if not line or line.startswith('#'):
-                continue
-            tokens = line.split()
-            if len(tokens) == 1:
-                tokens.extend(['forum', ''])
-            elif len(tokens) == 2:
-                tokens.append('')
-            elif len(tokens) > 3:
-                file.close()
-                raise ValueError("Found more than 3 tokens on line #%d" % (i+1))
-            found[tokens[0]] = {'where': tokens[1], 'alias': tokens[2]}
-        self.redirects = PersistentMapping(found)
-        file.close()
-        return found
-
-    security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST):
-        """
-        Expected QUERYSTRING args:
-        - `id`, required - id of old IG in CIRCA
-        - `type`, required - type of redirect target - home, directory or
-          library
-        - `path`, optional - only used in "inside library" redirects
-
-        """
-        id = REQUEST.form.get('id', '')
-        rtype = REQUEST.form.get('type', 'home')
-        path = REQUEST.form.get('path', '')
-
-        redirect = self.redirects.get(id, DEFAULT_REDIRECT)
-        alias = id
-        if redirect['alias']:
-            alias = redirect['alias']
-        new_path = REDIRECTS.get(redirect['where'], {}).get(rtype)
-        new_path = new_path.replace('$1', alias).replace('$2', path)
-        REQUEST.RESPONSE.redirect(new_path)
-        REQUEST.RESPONSE.setStatus(301,
-            reason="CIRCA Interest Groups migrated to eionet.europa.eu hosts")
+    if not ui.upload_prefix:
         return None
+    file_path = os.path.join(ui.upload_prefix, "redirects.txt")
+    modification_time = os.stat(file_path).st_mtime
+    if modification_time == redirect_records['last-load']:
+        return None
+    file = open(file_path, "r")
+    found = {}
+    for (i, line) in enumerate(file):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        tokens = line.split()
+        if len(tokens) == 1:
+            tokens.extend(['forum', ''])
+        elif len(tokens) == 2:
+            tokens.append('')
+        elif len(tokens) > 3:
+            file.close()
+            raise ValueError("Found more than 3 tokens on line #%d" % (i+1))
+        found[tokens[0]] = {'where': tokens[1], 'alias': tokens[2]}
+    redirect_records['data'] = deepcopy(found)
+    redirect_records['last-load'] = modification_time
+    file.close()
+
+def circa_redirect(context, request):
+    """
+    Expected QUERYSTRING args:
+    - `id`, required - id of old IG in CIRCA
+    - `type`, required - type of redirect target - home, directory or
+      library
+    - `path`, optional - only used in "inside library" redirects
+
+    """
+    load_config_file()
+    id = request.form.get('id', '')
+    rtype = request.form.get('type', 'home')
+    path = request.form.get('path', '')
+
+    redirect = redirect_records['data'].get(id, DEFAULT_REDIRECT)
+    alias = id
+    if redirect['alias']:
+        alias = redirect['alias']
+    new_path = REDIRECTS.get(redirect['where'], {}).get(rtype)
+    new_path = new_path.replace('$1', alias).replace('$2', path)
+    request.RESPONSE.redirect(new_path)
+    request.RESPONSE.setStatus(301,
+        reason="CIRCA Interest Groups migrated to eionet.europa.eu hosts")
+    return None
+
+def circa_redirect_inspector(context, request):
+    """ Debugger when connecting to machine is not desirable """
+    load_config_file()
+    pt = PageTemplateFile("zpt/circaredirect/inspector.zpt", globals())
+    return pt.__of__(context)(redirects=redirect_records['data'],
+                    last_modification=time.ctime(redirect_records['last-load']))
