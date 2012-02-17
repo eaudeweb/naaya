@@ -2,20 +2,18 @@ import unittest
 import mock
 import os.path
 
-from edw.circaimport.circaredirect import CircaRedirect
-
 from edw.circaimport import ui
+from edw.circaimport.circaredirect import circa_redirect, load_config_file
+
 ui.upload_prefix = os.path.dirname(__file__)
+load_config_file()
 
 class CircaRedirectTests(unittest.TestCase):
-
-    def setUp(self):
-        self.cr = CircaRedirect('circaredirect')
 
     def assert_redirect(self, GET, expected_redirect):
         request = mock.Mock()
         request.form = GET
-        self.cr.index_html(request)
+        circa_redirect(mock.Mock(), request)
         request.RESPONSE.redirect.assert_called_with(expected_redirect)
 
     def test_home_redirect(self):
