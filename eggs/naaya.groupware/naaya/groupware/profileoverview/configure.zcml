@@ -5,7 +5,7 @@
 
   <naaya:simpleView
     for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="profile"
+    name="profile_overview"
     handler=".profile.ProfileView"
     permission="zope2.View"
     />
