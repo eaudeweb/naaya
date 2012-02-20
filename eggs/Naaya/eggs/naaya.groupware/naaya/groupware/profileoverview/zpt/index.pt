@@ -16,6 +16,10 @@
 
     <h2>Interest group membership</h2>
     <input type="hidden" id="user" tal:attributes="value options/user_id" />
+    <p>
+        Local roles are explicitly assigned by Administrators, while other
+        access rights are inherited from a group.
+    </p>
     <div id="ig_access">
         <div style='text-align: center;'>
             <img src="++resource++naaya.groupware/ajax-loader.gif" />
