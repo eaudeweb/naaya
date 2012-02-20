@@ -35,10 +35,21 @@
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 	<div id="center_content">
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
-		<p i18n:translate="">
-		    On the map you will find examples of others who already developed a Biodiversity Action Plan.
-		    In the section <a i18n:name="overview-link" i18n:translate="" tal:attributes="href string:de_praktijk/bap_toevoegen">'Register your own Biodiversity Action Plan'</a> you can read how you can add your own activity.
-		</p>
+    <div class="folder_description">
+        <p tal:condition="python:here.description!=''"
+          tal:content="structure here/description" />
+    </div>
+    <div class="folder_content">
+    <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+      <metal:block fill-slot="menu_extension">
+        <span tal:replace="structure here/menusubmissions" />
+      </metal:block>
+      <metal:block fill-slot="toolbar"></metal:block>
+      <metal:block fill-slot="table_head"></metal:block>
+      <metal:block fill-slot="table_folders_default"></metal:block>
+      <metal:block fill-slot="table_objects_default"></metal:block>
+    </metal:block>
+    </div>
 			<div class="map_filters">
 				<p id="js_links" style="display: none;">
 					<strong id="record_counter"></strong>
