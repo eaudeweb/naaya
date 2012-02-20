@@ -37,7 +37,7 @@
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<p i18n:translate="">
 		    On the map you will find examples of others who already developed a Biodiversity Action Plan.
-		    In the section <a i18n:name="overview-link" i18n:translate="" tal:attributes="href string:de_praktijk/overzicht_activiteiten">'Overview activities'</a> you can read how you can add your own activity.
+		    In the section <a i18n:name="overview-link" i18n:translate="" tal:attributes="href string:de_praktijk/bap_toevoegen">'Register your own Biodiversity Action Plan'</a> you can read how you can add your own activity.
 		</p>
 			<div class="map_filters">
 				<p id="js_links" style="display: none;">
@@ -106,6 +106,9 @@
 			<br clear="all" style="clear:both"/>
 			<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
 		</div>
+		<p>
+		  <a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url()+'/bap/de_praktijk'" id="view_as_list">You can also view locations as a list</a>
+		</p>
 		<br clear="all" style="clear:both"/>
 		<div id="map_links_js" class="hidden"></div>
 	</div>
