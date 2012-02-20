@@ -3,6 +3,7 @@
 
 1.2.19 (2012-02-07)
 -------------------
+* added dataTables for updates listing [bogdatan]
 * modified update script for portal_map filters [dumitval]
 * restored analytics template update [simiamih]
 
