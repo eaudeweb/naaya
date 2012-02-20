@@ -254,7 +254,7 @@ function fRenameObjects()
     <a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </p>
 
-<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.show_contributor_request_role">
+<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.getLocalProperty('show_contributor_request_role')">
     <a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
 </p>
 
