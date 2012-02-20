@@ -181,7 +181,7 @@ def ProfileView(context, request):
 
     if not auth_user.has_role('Authenticated'):
         if not is_ajax:
-            url = '/login/login_form?came_from=%s' % '/profile'
+            url = '/login/login_form?came_from=%s' % '/profile_overview'
             request.response.redirect(url)
             return None
         else:
@@ -224,7 +224,7 @@ class DemoProfileView(BrowserView):
         user = self.request.get('AUTHENTICATED_USER', None)
         if not user.has_role('Authenticated'):
             # TODO: nicer redirect
-            url = '/login/login_form?came_from=%s' % '/profile'
+            url = '/login/login_form?came_from=%s' % '/profile_overview'
             self.request.response.redirect(url)
             return None
         zope_app = self.context.unrestrictedTraverse('/')
