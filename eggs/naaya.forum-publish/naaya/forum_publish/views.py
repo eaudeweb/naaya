@@ -2,6 +2,7 @@ import scrubber
 import simplejson
 
 from naaya.content.document.document_item import addNyDocument
+from Products.NaayaCore.managers.utils import slugify
 
 LIST_OF_MESSAGES = [
     "Publish",
@@ -14,25 +15,41 @@ LIST_OF_MESSAGES = [
     "Alert",
 ]
 
+TITLE = "Draft"
+
+def get_document_or_create(site, title):
+    folder = site["forum_publish"]
+    try:
+        doc = folder[slugify(title)]
+    except KeyError:
+        doc_id = addNyDocument(folder, title=title, submitted=1)
+        doc = folder[doc_id]
+    return doc
+
 def forum_publish_save(context, request):
     scrub = scrubber.Scrubber().scrub
     response = {"status": "success"}
 
     content = request.form["content"]
     author = request.form["author"]
-    title = "Draft"
+    date = request.form["date"]
 
     site = context.getSite()
-    folder = site["forum_publish"]
+    doc = get_document_or_create(site, title=TITLE)
 
     if not isinstance(content, list):
         content = [content]
     if not isinstance(author, list):
         author = [author]
+    if not isinstance(date, list):
+        date = [date]
 
     # sanitize content and wrap div around it
-    content = ["<div class='content'>%s</div>" % c for c in content]
-    author = ["<div class='author'>%s</div>" % a for a in author]
+    content = ["<div class='doc-content'>%s</div>" % c for c in content]
+    author = [
+        "<div class='doc-date'>%s, <div class='doc-author'>%s</div></div>"
+            % (d, a) for a in author for d in date
+    ]
     # dom => [("<div class='content'>%s</div>", "<div class='author'>%s</div>")]
     dom = zip(content, author)
 
@@ -41,11 +58,11 @@ def forum_publish_save(context, request):
         body += "".join(element)
     body = scrub(body)
 
-    # create Naaya document
-    doc_id = addNyDocument(folder, title=title, body=body, submitted=1)
-    doc = folder[doc_id]
-    response["url"] = doc.absolute_url()
+    # update Naaya document
+    doc.body = doc.body + body
+    doc.recatalogNyObject(doc)
 
+    response["url"] = doc.absolute_url()
     request.RESPONSE.setHeader("Content-Type", "application/json")
     return simplejson.dumps(response)
 
