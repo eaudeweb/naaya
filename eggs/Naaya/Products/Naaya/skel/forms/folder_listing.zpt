@@ -38,9 +38,7 @@ $(document).ready(function(){
 			draggable: false,
 			buttons: {
 				"Delete items": function() {
-					var form = $('#folder_listing');
-					form.attr('action', action);
-					form.submit();
+                                    submit_form_action(action);
 				},
 				"Cancel": function() {
 					$( this ).dialog( "close" );
@@ -82,9 +80,17 @@ $(document).ready(function(){
 
 		if(action == "deleteObjects") {
 		    deleteObjects(action);
-		}
+		}else {
+                    submit_form_action(action);
+                }
 	});
 })
+
+function submit_form_action(action){
+    var form = $('#folder_listing');
+    form.attr('action', action);
+    return form.submit();
+}
 </script>
 
 <metal:block define-slot="menu_extension">
