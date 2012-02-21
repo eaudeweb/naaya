@@ -7,7 +7,7 @@
   <title>Naaya updater</title>
   <link rel="stylesheet" href="/++resource++naaya.updater/jquery.dataTables.css" type="text/css" media="screen" charset="utf-8" />
   <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
-  <script type="text/javascript" src="/++resource++naaya.updater/jquery.js"></script>
+  <script type="text/javascript" src="/++resource++Products.Naaya/js/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="/++resource++naaya.updater/jquery.dataTables.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
