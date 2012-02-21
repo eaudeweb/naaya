@@ -426,4 +426,9 @@
       provides="..interfaces.IUpdateScript"
       component=".update_remove_downloadfilename_property.RemoveDownloadfilenameProperty"
       permission="zope2.ViewManagementScreens" />
+        <utility
+      name="update_modify_local_properties.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_modify_local_properties.ModifyLocalProperties"
+      permission="zope2.ViewManagementScreens" />
 </configure>
