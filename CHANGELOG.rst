@@ -1,5 +1,6 @@
 1.4.7 (unreleased)
 ------------------
+* Added confirmation dialog when closing an unsubmitted comment window [dumitval]
 
 1.4.6 (2012-01-19)
 ------------------
