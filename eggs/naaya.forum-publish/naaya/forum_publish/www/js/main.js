@@ -1,13 +1,11 @@
 (function(B, _, rangy) {
 
-    "use strict";
-
     /* B => Backbone */
     // regular expression that replaces multiple spaces with one space
     var matchSpaces = /\s{2,}/g;
     // regular expression that matches date and author from
     // '17 Feb 2012 17:15:50, <a href="#">admin</a>'
-    var matchDateAndAUthor = /^([^,]+),\s*<a href="#">([^<]*)<\/a>/;
+    var matchDateAndAUthor = /^([^,]+),\s*<[aA] href="#">([^<]*)<\/[aA]>/;
 
     var isForumPage = function () {return $(".forum_topic").length > 0;};
     var sidebarExists = function () {return $("#sidebar-port").length > 0};
@@ -246,8 +244,10 @@
                 {type: "hidden", value: date, name: "date"});
             var removeHtml = this.make("a", {"class": "remove"}, gettext("Remove"));
 
+            this.$el.hide();
             this.$el.append(messageHtml, [authorHtml, dateHtml, removeHtml]);
             $(this.selector).append(this.$el);
+            $(this.selector).find("li:last").slideDown("fast");
        },
 
         remove: function () {

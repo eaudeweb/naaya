@@ -1,7 +1,5 @@
 (function(B, _) {
 
-    "use strict";
-
     var isDocPage = function () {return $(".doc-content").length > 0;};
 
     // http://www.colourlovers.com/palette/462628/Blazin_Jell-O_Rainbo
