@@ -45,7 +45,7 @@ function update_map_filter_values(filter) {
 
     $.each(filter, function(i, pair) {
         if(pair.name == 'geo_types') {
-            var inputs = $('input[name=geo_types:list]', form);
+            var inputs = $('input[name="geo_types:list"]', form);
             if(! geo_types_cleared) {
                 geo_types_cleared = true;
                 inputs.attr('checked', null);
