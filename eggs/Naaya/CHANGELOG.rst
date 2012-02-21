@@ -1,4 +1,7 @@
-2.12.66 (unreleased)
+2.12.67 (unreleased)
+--------------------
+
+2.12.66 (2012-02-21)
 --------------------
 * Added (back) example pins to admin_maptypes [dumitval]
 * fixed folder listing form submission for all actions [bogdatan]
