@@ -1,5 +1,9 @@
-2.12.67 (unreleased)
+2.12.68 (unreleased)
 --------------------
+
+2.12.67 (2012-02-21)
+--------------------
+* Fix selector for jquery 1.7 in geomaptool.js [moregale]
 
 2.12.66 (2012-02-21)
 --------------------
