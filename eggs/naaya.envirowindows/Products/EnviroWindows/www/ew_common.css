@@ -293,57 +293,56 @@ td.title-column a:hover{
 	border-left:1px solid #0F75B3;
 }
 /* Tabbed menus  */
-#tabbedmenu {
+#tabbedmenu, .tabbedmenu {
 	float:left;
 	width:100%;
 	border-bottom: 1px solid #346d9f;
 	font-size: 0.8em;
 	line-height: 1.5em;
+	position: relative !important;
+	left: -1em !important;
 }
-#tabbedmenu ul {
+#tabbedmenu ul, .tabbedmenu ul {
 	margin:0;
 	padding: 1em 1em 0;
 	list-style:none;
 }
-#tabbedmenu li {
+#tabbedmenu li, .tabbedmenu li {
 	float:left;
 	margin: 0;
 	padding:0;
 	white-space: nowrap;
 }
-#tabbedmenu a {
+#tabbedmenu a, .tabbedmenu a {
 	display:block;
 	text-decoration: none;
 	font-weight: normal;
-	color: black;
-	background: #F0F5FB;
+	background-color: #F0F5FB;
 	padding: 0.3em 1em 0.3em 1em;
 	margin: 0.3em 0.1em 0 0.1em;
 	border: 1px solid #346d9f;
 	border-bottom: none;
 	text-transform: uppercase;
 }
-#tabbedmenu a:hover {
+#tabbedmenu a:hover, .tabbedmenu a:hover {
 	background: #A8C7EC;
 	color: #000;
 }
-#tabbedmenu #currenttab {
-	/*background: #F0F5FB;*/
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
+	background-color: #F0F5FB;
 }
-#tabbedmenu #currenttab a {
+#tabbedmenu #currenttab a, .tabbedmenu .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	background: #454545;
+	background-color: #346D9F;
 	margin: 0em 0.1em 0 0.1em;
 	padding: 0.5em 1em 0.4em 1em;
-	color: #fafafa;
-	border: 1px solid #fff;
+	color: #fff !important;
 	border-bottom: none;
 }
-#tabbedmenu #currenttab span {
+#tabbedmenu #currenttab span, .tabbedmenu .currenttab span {
 	display:block;
 	text-decoration: none;
-	
 }
 /* warning box for active versions of items */
 .version_box {
