@@ -32,13 +32,13 @@ function load_ui() {
         var self = form_input;
         var values = form_input.val();
         form_input.val('');
-        $.each(values.split(options['separator']), function() {
+        $.each(values.split(options['separator']+' '), function() {
             add_value(this, true);
         });
     }
 
     function autocomplete_text() {
-        return $.trim(form_input.val().split(',').pop());
+        return $.trim(form_input.val().split(options['separator']).pop());
     }
 
     form_input.autocomplete({
@@ -149,7 +149,7 @@ function add_value(term, skip_animation) {
         }
     }
     else {
-        var terms = form_input.val().split(options['separator']);
+        var terms = form_input.val().split(options['separator']+' ');
         if (value != '' && jQuery.inArray(value, terms) == -1){
             // remove the current input
             terms.pop();
@@ -157,7 +157,7 @@ function add_value(term, skip_animation) {
             terms.push(value);
             // add placeholder to get the comma-and-space at the end
             terms.push("");
-            form_input.val(terms.join(options['separator']));
+            form_input.val(terms.join(options['separator']+' '));
             terms.pop();
         }
 
