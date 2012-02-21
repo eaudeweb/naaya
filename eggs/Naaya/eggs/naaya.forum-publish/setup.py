@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.forum-publish',
-      version='0.4',
+      version='0.5',
       description="Publish for Forum",
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
