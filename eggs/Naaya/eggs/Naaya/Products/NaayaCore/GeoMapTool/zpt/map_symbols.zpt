@@ -49,6 +49,17 @@
   </div>
   <div class="field">
     <label for="picture" i18n:translate="">Or upload an icon</label>
+
+    <p><em i18n:translate="">The picture you upload should not be larger than 24x24 pixels. Picture types allowed on the map: <strong i18n:name="png">.PNG</strong>, <strong i18n:name="gif">.GIF</strong>.</em></p>
+    <p><em i18n:translate="">Example pins (download the image on your computer and upload it below):</em></p>
+    <p>
+    <tal:block repeat="i python:range(1,20)">
+        <img tal:attributes="src string:misc_/NaayaCore/pin${i}.png; alt string:pin${i}.png" />
+    </tal:block><br />
+    <tal:block repeat="i python:range(1,14)">
+        <img tal:attributes="src string:misc_/NaayaCore/pin_22_${i}.png; alt string:pin_22_${i}.png" />
+    </tal:block>
+    </p>
     <input type="file" name="picture" value="" size="35" accept="image/*" />
     <span class="mandatory_field">*</span><br />
     <em i18n:translate="">(please use images of max. 24x24 pixels)</em>
