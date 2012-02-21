@@ -37,12 +37,12 @@
         },
 
         render: function () {
-            var authorLists = this.make("ul", { class: "doc-author-list" });
+            var authorLists = this.make("ul", { "class": "doc-author-list" });
             var self = this;
 
             this.collection.each(function (m) {
                 $(authorLists).append(self.make("li", {
-                        class: "author",
+                        "class": "author",
                         style: "color:" + m.get("color")
                     }, self.make("span", {}, m.get("name")))
                 );
