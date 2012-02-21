@@ -160,10 +160,10 @@
             var self = this;
 
             this.$el.hide();
-            this.$el.html(this.make("p", { class: "empty" },
+            this.$el.html(this.make("p", { "class": "empty" },
                 gettext("No published text")
             ));
-            this.$el.append(this.make("p", { class: "title" },
+            this.$el.append(this.make("p", { "class": "title" },
                 gettext("Message publish list")));
             this.$el.append(this.make("ul", { id: "message-published-list" }));
             this.$el.append(publishButtons);
@@ -173,10 +173,10 @@
         },
 
         _renderPublishButtons: function () {
-            var publishButtons = this.make("div", { class: "publish-buttons"});
+            var publishButtons = this.make("div", { "class": "publish-buttons"});
             $(publishButtons)
-                .append(this.make("a", { class: "publish"}, gettext("Publish")))
-                .append(this.make("a", { class: "cancel"}, gettext("Cancel")));
+                .append(this.make("a", { "class": "publish"}, gettext("Publish")))
+                .append(this.make("a", { "class": "cancel"}, gettext("Cancel")));
             return publishButtons;
         },
 
@@ -244,7 +244,7 @@
                 { type: "hidden", value: author, name: "author" });
             var dateHtml = this.make("input",
                 { type: "hidden", value: date, name: "date" });
-            var removeHtml = this.make("a", { class: "remove" }, gettext("Remove"));
+            var removeHtml = this.make("a", { "class": "remove" }, gettext("Remove"));
 
             this.$el.append(messageHtml, [authorHtml, dateHtml, removeHtml]);
             $(this.selector).append(this.$el);
