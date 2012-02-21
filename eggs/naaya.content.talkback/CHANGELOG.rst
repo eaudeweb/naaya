@@ -1,4 +1,7 @@
-1.4.7 (unreleased)
+1.4.8 (unreleased)
+------------------
+
+1.4.7 (2012-02-21)
 ------------------
 * Added confirmation dialog when closing an unsubmitted comment window [dumitval]
 
