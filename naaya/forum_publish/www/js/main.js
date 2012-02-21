@@ -9,22 +9,22 @@
     // '17 Feb 2012 17:15:50, <a href="#">admin</a>'
     var matchDateAndAUthor = /^([^,]+),\s*<a href="#">([^<]*)<\/a>/;
 
-    var isForumPage = function () { return $(".forum_topic").length > 0; };
-    var sidebarExists = function () { return $("#sidebar-port").length > 0};
+    var isForumPage = function () {return $(".forum_topic").length > 0;};
+    var sidebarExists = function () {return $("#sidebar-port").length > 0};
 
     // Dictionary that will contain all text translated in user language
     var translation_dictonary = {};
 
     var gettext = function (msg) {
         return translation_dictonary[msg] || msg;
-    };
+   };
 
     // dispatcher that will handle custom events
     var dispatcher = _.clone(B.Events);
 
     var MessageModel = B.Model.extend({
-        defaults: { content: null, author: null, date: null }
-    });
+        defaults: {content: null, author: null, date: null}
+   });
 
     var PublishButtonView = B.View.extend({
         /* View that handles the render for the publish button. */
@@ -34,36 +34,36 @@
 
         selector: ".message_top_buttons, .message_top_buttons2",
 
-        initialize: function () { this.render(); },
+        initialize: function () {this.render();},
 
         render: function () {
             this.$el.text(gettext("Publish")); // how can we do i18n
             $(this.selector).append(this.$el);
-        }
-    });
+       }
+   });
 
     var BoardView = B.View.extend({
         /* Renders the publish button and adds the events for publishing a
            selected text. */
         el: "#middle_port",
 
-        events: { "mousedown .btn-publish": "publish" },
+        events: {"mousedown .btn-publish": "publish"},
 
         dialogOptions: {
             modal: true,
             buttons: {
-                Ok: function() { $(this).dialog("close"); }
-            }
-        },
+                Ok: function() {$(this).dialog("close");}
+           }
+       },
 
         initialize: function () {
             this.getTranslation(this.render);
             dispatcher.on("publish/message", this.publishMessage, this);
-        },
+       },
 
         render: function () {
             new PublishButtonView();
-        },
+       },
 
         publish: function (e) {
             e.preventDefault();
@@ -77,14 +77,14 @@
             if(!$.trim(message)) {
                 this.notice(gettext("Please select a range"));
                 return;
-            }
+           }
             if(!this._checkIfSelectionInContainer(e, selection)) {
                 this.notice(gettext("Please select a range in the same container"));
                 return;
-            }
+           }
 
             dispatcher.trigger("publish/message", message, author, date);
-        },
+       },
 
         _checkIfSelectionInContainer: function(e, selection) {
             /* Check to see if selected text is in the same container with
@@ -96,7 +96,7 @@
             var parents = $(e.currentTarget)
                 .parents(".forum_topic, .forum_message")[0];
             return (parents === anchorN) && (parents === focusN);
-        },
+       },
 
         _getAuthorAndDate: function (self) {
             /* Get author and date
@@ -108,23 +108,23 @@
             authorAndDate = $.trim(authorAndDate.replace(matchSpaces, " "));
             // match regular expression and fetch author and date
             return authorAndDate.match(matchDateAndAUthor);
-        },
+       },
 
         notice: function(message) {
             /* Creates an jquery UI dialog and displays a message. */
             var dialog = this.make("div", {title: gettext("Alert")}, message);
             $(dialog).dialog(this.dialogOptions);
-        },
+       },
 
         publishMessage: function(message, author, date) {
-            var model = new MessageModel({ content: message, author: author,
-                date: date });
+            var model = new MessageModel({content: message, author: author,
+                date: date});
             if(!sidebarExists()) {
                 this.$el.addClass("sidebar-fix", "fast");
                 new SidebarView();
-            }
-            new MessageView({ model: model });
-        },
+           }
+            new MessageView({model: model});
+       },
 
         getTranslation: function (callback) {
             /* Get i18n translation and after render the view */
@@ -132,9 +132,9 @@
             $.get(url, function (data) {
                 translation_dictonary = data;
                 $.isFunction(callback) && callback();
-            }, "json");
-        }
-    });
+           }, "json");
+       }
+   });
 
     var SidebarView = B.View.extend({
         /* Renders a sidebar if it doesn't exist with default content. */
@@ -147,38 +147,38 @@
         events: {
             "click .publish": "publish",
             "click .cancel": "cancel"
-        },
+       },
 
         initialize: function () {
             this.render();
             // bind custom event for checking id sidebar is empty
             dispatcher.on("message/remove", this.checkIfSidebarEmpty, this);
-        },
+       },
 
         render: function () {
             var publishButtons = this._renderPublishButtons();
             var self = this;
 
             this.$el.hide();
-            this.$el.html(this.make("p", { "class": "empty" },
+            this.$el.html(this.make("p", {"class": "empty"},
                 gettext("No published text")
             ));
-            this.$el.append(this.make("p", { "class": "title" },
+            this.$el.append(this.make("p", {"class": "title"},
                 gettext("Message publish list")));
-            this.$el.append(this.make("ul", { id: "message-published-list" }));
+            this.$el.append(this.make("ul", {id: "message-published-list"}));
             this.$el.append(publishButtons);
 
             $(this.selector).after(this.$el);
-            this.$el.delay(100).effect("slide", { direction: "right" }, "fast");
-        },
+            this.$el.delay(100).effect("slide", {direction: "right"}, "fast");
+       },
 
         _renderPublishButtons: function () {
-            var publishButtons = this.make("div", { "class": "publish-buttons"});
+            var publishButtons = this.make("div", {"class": "publish-buttons"});
             $(publishButtons)
-                .append(this.make("a", { "class": "publish"}, gettext("Publish")))
-                .append(this.make("a", { "class": "cancel"}, gettext("Cancel")));
+                .append(this.make("a", {"class": "publish"}, gettext("Publish")))
+                .append(this.make("a", {"class": "cancel"}, gettext("Cancel")));
             return publishButtons;
-        },
+       },
 
         checkIfSidebarEmpty: function () {
             /* Checks if any message_published div exists in sidebar */
@@ -190,12 +190,12 @@
                 $empty.show();
                 $title.hide();
                 $publish.hide();
-            } else {
+           } else {
                 $empty.hide()
                 $title.show();
                 $publish.show();
-            }
-        },
+           }
+       },
 
         publish: function (e) {
             /* Serialize and publish form */
@@ -205,16 +205,16 @@
             $.post(url, form.serialize(), function(data) {
                 if(data.status == "success") {
                     document.location = data.url;
-                }
-            }, "json");
-        },
+               }
+           }, "json");
+       },
 
         cancel: function () {
-            this.$el.effect("slide", { direction: "right", mode: "hide" },
-                "fast", function () { $(this).remove();  });
+            this.$el.effect("slide", {direction: "right", mode: "hide"},
+                "fast", function () {$(this).remove(); });
             $(this.selector).delay(100).removeClass("sidebar-fix", "fast");
-        }
-    });
+       }
+   });
 
     var MessageView = B.View.extend({
         /* Renders a published message and bind events for it */
@@ -224,13 +224,13 @@
 
         selector: "#message-published-list",
 
-        events: { "click .remove": "remove" },
+        events: {"click .remove": "remove"},
 
         initialize: function () {
             this.author = this.options.author;
             this.render();
             dispatcher.trigger("message/remove");
-        },
+       },
 
         render: function () {
             var content = this.model.get("content");
@@ -238,29 +238,29 @@
             var date = this.model.get("date");
 
             var messageHtml = this.make("textarea",
-                { readonly: "readonly", rows: 5, cols: 5, name: "content" },
+                {readonly: "readonly", rows: 5, cols: 5, name: "content"},
                 content);
             var authorHtml = this.make("input",
-                { type: "hidden", value: author, name: "author" });
+                {type: "hidden", value: author, name: "author"});
             var dateHtml = this.make("input",
-                { type: "hidden", value: date, name: "date" });
-            var removeHtml = this.make("a", { "class": "remove" }, gettext("Remove"));
+                {type: "hidden", value: date, name: "date"});
+            var removeHtml = this.make("a", {"class": "remove"}, gettext("Remove"));
 
             this.$el.append(messageHtml, [authorHtml, dateHtml, removeHtml]);
             $(this.selector).append(this.$el);
-        },
+       },
 
         remove: function () {
             this.$el.slideUp("fast", function () {
                 $(this).remove();
                 dispatcher.trigger("message/remove");
-            });
-        }
-    });
+           });
+       }
+   });
 
     $(function () {
         // only do the magic if on a forum page
         isForumPage() && new BoardView();
-    });
+   });
 
 }(Backbone, _, rangy));
