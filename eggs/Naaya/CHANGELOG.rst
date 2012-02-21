@@ -1,5 +1,6 @@
 2.12.66 (unreleased)
 --------------------
+* Added (back) example pins to admin_maptypes [dumitval]
 * fixed folder listing form submission for all actions [bogdatan]
 * Corrections to glossary.js - add a space after comma [dumitval]
 
