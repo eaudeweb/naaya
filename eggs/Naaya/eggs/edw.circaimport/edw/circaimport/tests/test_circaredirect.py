@@ -3,12 +3,18 @@ import mock
 import os.path
 
 from edw.circaimport import ui
-from edw.circaimport.circaredirect import circa_redirect, load_config_file
+from edw.circaimport.circaredirect import circa_redirect
 
-ui.upload_prefix = os.path.dirname(__file__)
-load_config_file()
 
 class CircaRedirectTests(unittest.TestCase):
+
+    def setUp(self):
+        self.patcher = mock.patch('edw.circaimport.circaredirect.ui',
+                                  upload_prefix=os.path.dirname(__file__))
+        self.patcher.start()
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def assert_redirect(self, GET, expected_redirect):
         request = mock.Mock()
