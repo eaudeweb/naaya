@@ -1,5 +1,6 @@
 2.12.66 (unreleased)
 --------------------
+* fixed folder listing form submission for all actions [bogdatan]
 * Corrections to glossary.js - add a space after comma [dumitval]
 
 2.12.65 (2012-02-17)
