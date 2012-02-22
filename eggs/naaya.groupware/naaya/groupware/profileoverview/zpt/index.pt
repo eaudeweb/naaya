@@ -67,7 +67,7 @@
 
     <h2>Subscriptions to interest group notifications</h2>
     <div id="id_subscriptions"  tal:condition="python:len(options['subscriptions'])">
-    <tal:block repeat="ig python:sorted(options['subscriptions'].keys(), key=lambda x: x.title_or_id())">
+    <tal:block repeat="ig python:options['sorted_func'](options['subscriptions'].keys(), key=lambda x: x.title_or_id())">
         <tal:block define="sub_list python:options['subscriptions'][ig]">
             <div tal:attributes="id string:subscriptions_${ig/id}">
                 <dl>
