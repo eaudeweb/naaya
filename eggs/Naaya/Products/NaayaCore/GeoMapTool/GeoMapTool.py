@@ -33,7 +33,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
 from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import path_in_site, get_template_source
 from naaya.core import ggeocoding
 
 from managers.symbols_tool import symbols_tool
@@ -783,8 +783,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if 'map_index' in self.objectIds():
             raise ValueError('map_index already customized')
         else:
-            manage_addPageTemplate(self, id='map_index', title='',
-                                   text=self._index_template()._text)
+            text = get_template_source(self._index_template())
+            manage_addPageTemplate(self, id='map_index', title='', text=text)
             REQUEST.RESPONSE.redirect('%s/manage_workspace' %
                                       self.map_index.absolute_url())
 

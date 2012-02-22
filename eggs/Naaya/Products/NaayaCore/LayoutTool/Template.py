@@ -6,6 +6,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.FormsTool.interfaces import ITemplate
+from naaya.core.zope2util import get_template_source
 
 from interfaces import INyTemplate
 
@@ -65,10 +66,6 @@ class Template(ZopePageTemplate):
 
     @property
     def source(self):
-        try:
-            self.read()
-        except:
-            pass
-        return self._text
+        return get_template_source(self)
 
 InitializeClass(Template)

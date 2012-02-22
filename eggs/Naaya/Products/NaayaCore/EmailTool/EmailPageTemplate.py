@@ -11,6 +11,7 @@ from zope.pagetemplate.pagetemplate import PageTemplate as Z3_PageTemplate
 from zope.tales.tales import Context
 
 from zope.i18n import interpolate
+from naaya.core.zope2util import get_template_source
 
 def manage_addEmailPageTemplate(self, id, text):
     ept = EmailPageTemplate(id, text)
@@ -59,8 +60,8 @@ class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
             self._cook() # force re-compilation of template
 
         if REQUEST is not None:
-            return self._manage_edit_html(REQUEST, text=self._text)
-            #REQUEST.RESPONSE.redirect(self.absolute_url() + 'manage_edit')
+            text = get_template_source(self)
+            return self._manage_edit_html(REQUEST, text=text)
 
 InitializeClass(EmailPageTemplate)
 

@@ -15,6 +15,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils, batch_utils, make_id
 from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import get_template_source
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -1248,7 +1249,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         ob = parent[name]
 
         default_template = self.getFormsTool()[self.default_form_id]
-        ob.pt_edit(default_template._text, 'text/html')
+        ob.pt_edit(get_template_source(default_template), 'text/html')
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
