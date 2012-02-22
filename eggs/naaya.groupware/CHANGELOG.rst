@@ -1,4 +1,7 @@
-1.1.15 (unreleased)
+1.1.16 (unreleased)
+-------------------
+
+1.1.15 (2012-02-22)
 -------------------
 * nfp_nrc link is enabled in nfp-eionet [simiamih]
 
