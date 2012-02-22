@@ -196,6 +196,7 @@ def ProfileView(context, request):
         notifications = client.notification_lists()
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
         return index_pt.__of__(context)(roles=leaf_roles_list,
+                                        sorted_func=sorted,
                           subscriptions=notifications, user_id=user.getId())
     else:
         ig_access = client.access_in_igs()
@@ -243,5 +244,5 @@ class DemoProfileView(BrowserView):
         # custom filters - only relevant info in view
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
 
-        return self.index(roles=leaf_roles_list,
+        return self.index(roles=leaf_roles_list, sorted_func=sorted,
                           subscriptions=notifications, user_id='demo_user')

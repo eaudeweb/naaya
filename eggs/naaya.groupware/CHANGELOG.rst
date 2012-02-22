@@ -1,5 +1,6 @@
 1.1.16 (unreleased)
 -------------------
+* fixed sorted NameError in profileoverview index.pt [simiamih]
 
 1.1.15 (2012-02-22)
 -------------------
