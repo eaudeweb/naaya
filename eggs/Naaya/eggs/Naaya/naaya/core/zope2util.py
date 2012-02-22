@@ -8,6 +8,9 @@ import sys
 import sha
 import urllib
 import types
+import simplejson as json
+from decimal import Decimal
+from dateutil.parser import parse
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -18,10 +21,9 @@ from Globals import InitializeClass
 from Globals import DTMLFile
 from ZPublisher.HTTPRequest import FileUpload
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+from Products.PageTemplates.PageTemplate import PageTemplate
 from DateTime import DateTime
-import simplejson as json
-from decimal import Decimal
-from dateutil.parser import parse
+
 from Products.Naaya.interfaces import IObjectView
 from naaya.core.utils import force_to_unicode, is_valid_email
 from naaya.core.utils import unescape_html_entities
@@ -473,3 +475,11 @@ def sha_hexdigest(f):
                 sha_hash.update(data.data)
                 data = data.next
     return sha_hash.hexdigest()
+
+def get_template_source(template):
+    """ Returns the source text of a template """
+    if not isinstance(template, PageTemplate):
+        raise ValueError(("get_template_source wraps a PageTemplate, got"
+                          " a '%s'") % type(template))
+    template._cook_check()
+    return template._text

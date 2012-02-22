@@ -1,5 +1,6 @@
 from zope.component import getAdapter
 from Products.NaayaCore.managers.utils import html_diff
+from naaya.core.zope2util import get_template_source
 
 from interfaces import ITemplateSource
 
@@ -17,4 +18,4 @@ class TemplateSource(object):
         self.template = template
 
     def __call__(self):
-        return self.template._text
+        return get_template_source(self.template)

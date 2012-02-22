@@ -10,6 +10,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from naaya.core.custom_types import Interval
+from naaya.core.zope2util import get_template_source
 
 from geo import Geo
 
@@ -332,7 +333,7 @@ class Widget(Folder):
         parent = self.getSite().unrestrictedTraverse(parent_path)
         manage_addTemplate(parent, name)
         ob = parent[name]
-        ob.pt_edit(self.template._text, 'text/html')
+        ob.pt_edit(get_template_source(self.template), 'text/html')
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
 

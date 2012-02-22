@@ -40,6 +40,7 @@ from Products.NaayaCore.managers.utils import html_diff
 from interfaces import ITemplate, IFilesystemTemplateWriter
 from NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import fsbundles
+from naaya.core.zope2util import get_template_source
 
 
 log = logging.getLogger(__name__)
@@ -115,7 +116,7 @@ class FormsTool(Folder):
     def template_content(self, name):
         """ Get template content """
         template = self.get_template(name)
-        return template._text
+        return get_template_source(template)
 
     def getForm(self, name):
         """ Fetches a Naaya form. """
@@ -149,8 +150,7 @@ class FormsTool(Folder):
         """ show the differences between the default and customized form """
         name = REQUEST.get('name', '')
         bundle_template = self.bundle_template(name)
-        bundle_template.read()
-        bundle_content = bundle_template._text
+        bundle_content = get_template_source(bundle_template)
 
         customized_content = self.template_content(name)
 
@@ -217,7 +217,7 @@ class FormsTool(Folder):
 
         template_names = []
         for template in self.objectValues():
-            content = template._text
+            content = get_template_source(template)
             name = template.getId()
 
             writer.write_zpt(name, content)
