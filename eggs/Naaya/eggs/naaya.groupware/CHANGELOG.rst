@@ -1,5 +1,6 @@
 1.1.17 (unreleased)
 -------------------
+* fixed js for IE - profileoverview [bogdatan]
 
 1.1.16 (2012-02-22)
 -------------------
