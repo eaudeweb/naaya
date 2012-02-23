@@ -53,6 +53,7 @@ content_type_to_icons = {
     "text/xml": ["XML", "xml"],
     "application/x-xpinstall": ["XPI", "xpi"],
     "application/x-zip-compressed": ["ZIP", "zip"],
+    "application/zip": ["ZIP", "zip"],
 }
 
 def icon_for_content_type(content_type, approved=True):

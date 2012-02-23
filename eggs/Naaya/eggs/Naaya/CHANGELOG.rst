@@ -1,5 +1,6 @@
 2.12.68 (unreleased)
 --------------------
+* added another ZIP mime type [bogdatan]
 * naaya.core.zope2util.get_template_source wrapper [simiamih]
 
 2.12.67 (2012-02-21)
