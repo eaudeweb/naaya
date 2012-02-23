@@ -1,5 +1,6 @@
 1.2.20 (unreleased)
 -------------------
+* modified update script for portal_map filters [dumitval]
 
 1.2.19 (2012-02-07)
 -------------------
