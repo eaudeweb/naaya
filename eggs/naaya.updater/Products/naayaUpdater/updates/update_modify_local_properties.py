@@ -16,32 +16,32 @@ class ModifyLocalProperties(UpdateScript):
     security.declarePrivate('_update')
     def _update(self, portal):
         form = self.REQUEST.form
-        property = form.get('property', None)
+        prop_name = form.get('property', None)
 
-        if property:
+        if prop_name:
             save_to_local = form.get('save_to_local', None)
             languages = portal.gl_get_languages()
 
             for ob in portal.getCatalogedObjectsA():
-                if ob.__dict__.has_key(property):
+                if ob.__dict__.has_key(prop_name):
                     local_values = {}
                     for lang in languages:
-                        local_values[lang] = ob.getLocalProperty(property, lang)
+                        local_values[lang] = ob.getLocalProperty(prop_name, lang)
 
                     property_in_local = reduce(lambda x, y:x or y,
                                                local_values.values())
 
                     if(save_to_local and not property_in_local):
-                        value = ob.__dict__[property] or ''
+                        value = ob.__dict__[prop_name] or ''
                         for lang in languages:
-                            ob.set_localpropvalue(property, lang, value)
+                            ob.set_localpropvalue(prop_name, lang, value)
                             self.log.debug('Saving "%s" value for "%s" local '
                                            'property (%s)' %
-                                           (value, property, lang))
+                                           (value, prop_name, lang))
 
-                    delattr(ob, property)
+                    delattr(ob, prop_name)
                     self.log.debug('Deleted property "%s" for %s' %
-                                    (property, ob.absolute_url()))
+                                    (prop_name, ob.absolute_url()))
 
                     ob.recatalogNyObject(ob)
                     self.log.debug('Reindexed object %s' %
