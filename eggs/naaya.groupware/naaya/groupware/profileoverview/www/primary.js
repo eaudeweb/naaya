@@ -41,7 +41,7 @@ var ldap_roles = {
 
 jQuery(document).ready(function(){
     ldap_roles.init();
-    user = $("#user").val();
+    var user = $("#user").val();
     jQuery.get('/profile_overview', {'user': user, 'ajax': 1}, function(data){
                 jQuery('#ig_access').html(data);
                 igs.init();
