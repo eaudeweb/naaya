@@ -1,5 +1,6 @@
 2.12.68 (unreleased)
 --------------------
+* fixed form submission in Assign User to Roles (ldap) on z2.12 [simiamih]
 * added another ZIP mime type [bogdatan]
 * naaya.core.zope2util.get_template_source wrapper [simiamih]
 

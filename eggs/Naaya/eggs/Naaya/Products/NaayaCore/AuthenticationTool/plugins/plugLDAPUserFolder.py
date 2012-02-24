@@ -256,9 +256,10 @@ class plugLDAPUserFolder(PlugBase):
                 user_location, send_mail, REQUEST)
         if REQUEST is not None:
             if is_ajax(REQUEST):
-                url = REQUEST['HTTP_REFERER'] + '&s=assign_to_users'
+                url = (REQUEST['HTTP_REFERER'] + 
+                       ('?id=%s&s=assign_to_users' % self.id))
             else:
-                url = REQUEST['HTTP_REFERER']
+                url = REQUEST['HTTP_REFERER'] + '?id=' + self.id
             return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revokeUserRoles')
