@@ -1,6 +1,9 @@
 import csv
 import datetime
 
+from naaya.core.zope2util import relative_object_path, ofs_walk
+from Products.Naaya.interfaces import INyFolder
+
 from fixes import fix_exceptions
 
 def convert_index(i, o):
@@ -39,6 +42,11 @@ def parse_userid(s):
 def walk_backup(index_file, open_backup_file, get_date, actor):
     folders_info = {'root_path': '',
                     'known_folders': {'': None}}
+
+    gen_existing = ofs_walk(actor.context, [INyFolder], [INyFolder])
+    for folder in gen_existing:
+        rel_path = relative_object_path(folder, actor.context)
+        folders_info['known_folders'][rel_path] = None
 
     def remove_root_path(path):
         assert path.startswith(folders_info['root_path'])
