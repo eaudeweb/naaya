@@ -1,5 +1,6 @@
 2.12.69 (unreleased)
 --------------------
+* EmailTool.sendEmail should work without site [simiamih]
 
 2.12.68 (2012-02-24)
 --------------------

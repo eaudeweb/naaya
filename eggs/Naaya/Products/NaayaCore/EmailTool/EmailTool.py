@@ -146,7 +146,7 @@ class EmailTool(Folder):
                 diverted_mail.append([p_content, p_to, p_from, p_subject])
                 return 1
 
-            delivery = delivery_for_site(self.getSite())
+            delivery = delivery_for_site(site)
             if delivery is None:
                 mail_logger.info('Not sending email from %r because mail '
                                  'server is not configured',
@@ -286,12 +286,12 @@ class BestEffortSMTPMailer(SMTPMailer):
             mail_logger.exception("Failed to send email message.")
             # TODO write message to the portal's `error_log`
 
-def delivery_for_site(site):
+def delivery_for_site(site=None):
     delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
     if delivery is not None:
         return delivery
 
-    elif site.mail_server_name and site.mail_server_port:
+    elif site and site.mail_server_name and site.mail_server_port:
         from zope.sendmail.delivery import DirectMailDelivery
         site_mailer = BestEffortSMTPMailer(site.mail_server_name,
                                            site.mail_server_port)
