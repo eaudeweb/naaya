@@ -1,5 +1,6 @@
 1.1.1 (unreleased)
 ------------------
+* make it possible to import files in batches (merge imports) [simiamih]
 
 1.1 (2012-02-22)
 ------------------
