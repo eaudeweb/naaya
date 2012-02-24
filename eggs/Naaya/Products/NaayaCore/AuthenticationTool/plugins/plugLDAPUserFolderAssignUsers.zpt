@@ -24,7 +24,7 @@
     
     <br />
     
-    <form method="post" action="" name="frmRoles" id="frmRoles">
+    <form method="post" tal:attributes="action python:request.get('URL', '')" name="frmRoles" id="frmRoles">
         <input type="hidden" name="s" value="assign_to_users" />
         <input type="hidden" name="search" value="" />
         <input type="hidden" name="id" tal:attributes="value source_id" />
