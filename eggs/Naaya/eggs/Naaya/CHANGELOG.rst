@@ -1,4 +1,7 @@
-2.12.68 (unreleased)
+2.12.69 (unreleased)
+--------------------
+
+2.12.68 (2012-02-24)
 --------------------
 * fixed form submission in Assign User to Roles (ldap) on z2.12 [simiamih]
 * added another ZIP mime type [bogdatan]
