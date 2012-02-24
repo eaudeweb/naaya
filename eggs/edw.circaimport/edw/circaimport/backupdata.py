@@ -127,7 +127,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         doc_id = doc_dpl_name[:-len('.dpl')]
         if doc_id.startswith('_'):
             doc_id = 'file' + doc_id
-
+        if doc_id.startswith('aq_'):
+            doc_id = 'file_' + doc_id
+        if doc_id.endswith('__'):
+            doc_id = doc_id + 'file'
 
         full_path = parent_path+'/'+doc_id
         if not doc_langver.startswith('EN_'):
