@@ -155,7 +155,7 @@
                                     value item/keywords;
                                     size widget/width;
                                     maxlength python:test(widget.size_max, widget.size_max, None);
-                                    name string:keywords:utf8:list;
+                                    name string:keywords:utf8:ustring:list;
                                     id string:${item/id}-${index}" />
 
                             <tal:block tal:condition="python:widget is not None">
