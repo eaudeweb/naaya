@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 ====================
+* unicode encode bug fix [bogdatan]
 
 1.1.5 (2012-02-17)
 ====================
