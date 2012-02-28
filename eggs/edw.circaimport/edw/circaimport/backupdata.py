@@ -1,5 +1,6 @@
 import csv
 import datetime
+import re
 
 from naaya.core.zope2util import relative_object_path, ofs_walk
 from Products.Naaya.interfaces import INyFolder
@@ -159,8 +160,12 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         doc_data_file = open_backup_file(doc_zip_path.encode('latin-1'))
 
         if doc_filename.endswith('.url'):
-            url = doc_data_file.read()
-            assert url.startswith('http://'), "bad url: %r" % url
+            url = doc_data_file.read().strip()
+            if '\n' in url:
+                matched = re.search(r'URL=(.*)', url)
+                if matched:
+                    url = matched.groups()[0].strip()
+            assert url.startswith('http://') or url.startswith('https://'), "bad url: %r" % url
             actor.url_entry(parent_path, doc_id,
                             doc_filename, url,
                             title, description, keywords, date, userid)
