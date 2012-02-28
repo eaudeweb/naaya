@@ -41,4 +41,4 @@ def fix_exceptions(names, line, warn):
         return True
 
     else:
-        assert len(line) == len(names), 'busted line: %r' % line
+        assert len(line) == len(names), 'busted line: %r, names: %r' % (line, names)
