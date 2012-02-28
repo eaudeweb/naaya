@@ -2,7 +2,7 @@
 ------------------
 * make it possible to import files in batches (merge imports) [simiamih]
 * also aq_foo or bar__ ids are not allowed in zope [simiamih]
-* better .url files parsing [simiamih]
+* better .url files parsing and no url renaming [simiamih]
 
 1.1 (2012-02-22)
 ------------------
