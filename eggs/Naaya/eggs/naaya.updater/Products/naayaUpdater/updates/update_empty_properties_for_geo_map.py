@@ -36,23 +36,6 @@ class UpdateLandscapeType(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        no_landscape = False
-        landscape_localized = False
-        no_administrative_level = False
-        administrative_level_localized = False
-        NyContact = getattr(portal.portal_schemas, 'NyContact', None)
-        if NyContact:
-            if not getattr(NyContact, 'landscape_type-property', None):
-                no_landscape = True
-            else:
-                landscape_localized = getattr(NyContact,
-                        'landscape_type-property').localized
-            if not getattr(NyContact, 'administrative_level-property', None):
-                no_administrative_level = True
-            else:
-                administrative_level_localized = getattr(NyContact,
-                        'administrative_level-property').localized
-
         administrative_replacements = {
                 'Unspecified': ['', 'unspecified', [u'unspecified'],
                     u"[u'unspecified']"],
@@ -107,199 +90,217 @@ class UpdateLandscapeType(UpdateScript):
                 'Protected', 'Rural', 'Unspecified']
         administrative_levels = ['Local', 'Regional', 'National', 'Sub-Global',
                 'Global', 'Unspecified']
-        for ob in portal.getCatalogedObjects(meta_type='Naaya Contact'):
-            changed = False
-
-            if no_landscape:
-                if ob.hasLocalProperty('landscape_type'):
-                    ob.del_localproperty('landscape_type')
-                    changed = True
-                    self.log.debug('Landscape type (local property) deleted from %s' %
-                        ob.absolute_url())
-                if hasattr(ob.aq_base, 'landscape_type'):
-                    del ob.landscape_type
-                    changed = True
-                    self.log.debug('Landscape type deleted from %s' %
-                        ob.absolute_url())
+        schema_tool = portal.getSchemaTool()
+        schemas = schema_tool.listSchemas().items()
+        for meta_type, schema in schemas:
+            no_landscape = False
+            landscape_localized = False
+            no_administrative_level = False
+            administrative_level_localized = False
+            if not getattr(schema, 'landscape_type-property', None):
+                no_landscape = True
             else:
-                if not hasattr(ob.aq_base, 'landscape_type') or ob.landscape_type == '':
-                    ob.set_localpropvalue('landscape_type', 'en', ['Unspecified'])
-                    self.log.debug('Landscape type set to ["Unspecified"] for %s' %
-                        ob.absolute_url())
-                    changed = True
-                if isinstance(ob.landscape_type, basestring):
-                    if landscape_localized:
-                        if ob.landscape_type == 'protected':
-                            ob.set_localpropvalue('landscape_type', 'en', ['Protected'])
-                            try:
-                                del ob.landscape_type
-                            except AttributeError:
-                                pass
-                            self.log.debug(
-                                    'Landscape type moved from "protected" to '
-                                    'local property ["Protected"] for %s' %
-                                ob.absolute_url())
-                        else:
-                            if ob.landscape_type in landscape_types:
-                                ob.set_localpropvalue('landscape_type', 'en', [ob.landscape_type])
+                landscape_localized = getattr(schema,
+                        'landscape_type-property').localized
+            if not getattr(schema, 'administrative_level-property', None):
+                no_administrative_level = True
+            else:
+                administrative_level_localized = getattr(schema,
+                        'administrative_level-property').localized
+
+            for ob in portal.getCatalogedObjects(meta_type=meta_type):
+                changed = False
+
+                if no_landscape:
+                    if ob.hasLocalProperty('landscape_type'):
+                        ob.del_localproperty('landscape_type')
+                        changed = True
+                        self.log.debug('Landscape type (local property) deleted from %s' %
+                            ob.absolute_url())
+                    if hasattr(ob.aq_base, 'landscape_type'):
+                        del ob.landscape_type
+                        changed = True
+                        self.log.debug('Landscape type deleted from %s' %
+                            ob.absolute_url())
+                else:
+                    if not hasattr(ob.aq_base, 'landscape_type') or ob.landscape_type == '':
+                        ob.set_localpropvalue('landscape_type', 'en', ['Unspecified'])
+                        self.log.debug('Landscape type set to ["Unspecified"] for %s' %
+                            ob.absolute_url())
+                        changed = True
+                    if isinstance(ob.landscape_type, basestring):
+                        if landscape_localized:
+                            if ob.landscape_type == 'protected':
+                                ob.set_localpropvalue('landscape_type', 'en', ['Protected'])
                                 try:
                                     del ob.landscape_type
                                 except AttributeError:
                                     pass
                                 self.log.debug(
-                                    'Landscape type moved to local property %s for %s' %
-                                    (ob.landscape_type, ob.absolute_url()))
+                                        'Landscape type moved from "protected" to '
+                                        'local property ["Protected"] for %s' %
+                                    ob.absolute_url())
                             else:
-                                 self.log.error('Unhandled landscape type value %s'
-                                         % ob.landscape_type)
-                    else:
-                        if ob.landscape_type == 'protected':
-                            ob.landscape_type = ['Protected']
-                            self.log.debug(
-                                'Landscape type set to ["Protected"] for %s' %
-                                ob.absolute_url())
+                                if ob.landscape_type in landscape_types:
+                                    ob.set_localpropvalue('landscape_type', 'en', [ob.landscape_type])
+                                    try:
+                                        del ob.landscape_type
+                                    except AttributeError:
+                                        pass
+                                    self.log.debug(
+                                        'Landscape type moved to local property %s for %s' %
+                                        (ob.landscape_type, ob.absolute_url()))
+                                else:
+                                     self.log.error('Unhandled landscape type value %s'
+                                             % ob.landscape_type)
                         else:
-                            if ob.landscape_type in landscape_types:
-                                ob.landscape_type = [ob.landscape_type]
+                            if ob.landscape_type == 'protected':
+                                ob.landscape_type = ['Protected']
                                 self.log.debug(
-                                    'Landscape type set to %s for %s' %
-                                    (ob.landscape_type, ob.absolute_url()))
+                                    'Landscape type set to ["Protected"] for %s' %
+                                    ob.absolute_url())
                             else:
-                                 self.log.error('Unhandled landscape type value '
-                                                '%s for object %s'
-                                         % (ob.landscape_type, ob.absolute_url()))
-                    changed = True
-                for key, values in landscape_replacements.items():
-                    if ob.landscape_type in values:
-                        if landscape_localized:
-                            if key == 'all':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Urban', 'Forest', 'Coastal', 'Marine',
-                                         'Mountain','Protected', 'Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Urban", "Forest", '
-                                        '"Coastal", "Marine", "Mountain", '
-                                        '"Protected", "Rural"] for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'coastal-marine':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Coastal', 'Marine'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Coastal", "Marine"] '
-                                        'for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'coastal-mountain-protected':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Coastal', 'Mountain','Protected'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Coastal", "Mountain", '
-                                        '"Protected"] for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'forest-mountain-protected-rural':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Forest', 'Mountain', 'Protected', 'Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Forest", "Mountain", '
-                                        '"Protected", "Rural"] for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'forest-mountain-rural':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Forest', 'Mountain','Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Forest", "Mountain", '
-                                        '"Rural"] for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'mountain-rural':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Mountain','Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Mountain", "Rural"] '
-                                        'for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'protected-rural':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Protected','Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Protected", "Rural"] '
-                                        'for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
-                            elif key == 'urban-protected-rural':
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                     ['Urban', 'Protected', 'Rural'])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized ["Urban", "Protected", '
-                                        '"Rural"] for object %s'
-                                        % (ob.landscape_type, ob.absolute_url()))
+                                if ob.landscape_type in landscape_types:
+                                    ob.landscape_type = [ob.landscape_type]
+                                    self.log.debug(
+                                        'Landscape type set to %s for %s' %
+                                        (ob.landscape_type, ob.absolute_url()))
+                                else:
+                                     self.log.error('Unhandled landscape type value '
+                                                    '%s for object %s'
+                                             % (ob.landscape_type, ob.absolute_url()))
+                        changed = True
+                    for key, values in landscape_replacements.items():
+                        if ob.landscape_type in values:
+                            if landscape_localized:
+                                if key == 'all':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Urban', 'Forest', 'Coastal', 'Marine',
+                                             'Mountain','Protected', 'Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Urban", "Forest", '
+                                            '"Coastal", "Marine", "Mountain", '
+                                            '"Protected", "Rural"] for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'coastal-marine':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Coastal', 'Marine'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Coastal", "Marine"] '
+                                            'for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'coastal-mountain-protected':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Coastal', 'Mountain','Protected'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Coastal", "Mountain", '
+                                            '"Protected"] for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'forest-mountain-protected-rural':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Forest', 'Mountain', 'Protected', 'Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Forest", "Mountain", '
+                                            '"Protected", "Rural"] for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'forest-mountain-rural':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Forest', 'Mountain','Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Forest", "Mountain", '
+                                            '"Rural"] for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'mountain-rural':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Mountain','Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Mountain", "Rural"] '
+                                            'for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'protected-rural':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Protected','Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Protected", "Rural"] '
+                                            'for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                elif key == 'urban-protected-rural':
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                         ['Urban', 'Protected', 'Rural'])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized ["Urban", "Protected", '
+                                            '"Rural"] for object %s'
+                                            % (ob.landscape_type, ob.absolute_url()))
+                                else:
+                                    ob.set_localpropvalue('landscape_type', 'en',
+                                            [key])
+                                    self.log.debug('Landscape type corrected from %s '
+                                            'to localized [%s] for object %s'
+                                            % (ob.landscape_type, key,
+                                                ob.absolute_url()))
+                                try:
+                                    del ob.landscape_type
+                                except AttributeError:
+                                    pass
                             else:
-                                ob.set_localpropvalue('landscape_type', 'en',
-                                        [key])
-                                self.log.debug('Landscape type corrected from %s '
-                                        'to localized [%s] for object %s'
-                                        % (ob.landscape_type, key,
-                                            ob.absolute_url()))
-                            try:
-                                del ob.landscape_type
-                            except AttributeError:
-                                pass
-                        else:
-                            ob.landscape_type = [key]
-                            self.log.debug('Landscape type corrected from a '
-                                    'fantastic list to [%s] for object %s'
-                                    % (key, ob.absolute_url()))
-                        changed = True
-
-                for item in ob.landscape_type:
-                    if item not in landscape_types:
-                        self.log.error('Unhandled landscape type value %s for object %s'
-                                % (ob.landscape_type, ob.absolute_url()))
-
-
-            if no_administrative_level:
-                if hasattr(ob.aq_base, 'administrative_level'):
-                    try:
-                        del ob.administrative_level
-                        changed = True
-                        self.log.debug('Landscape type deleted from %s' %
-                            ob.absolute_url())
-                    except AttributeError:
-                        pass
-                if ob.hasLocalProperty('administrative_level'):
-                    ob.del_localproperty('administrative_level')
-                    changed = True
-                    self.log.debug('Administrative level (local property) deleted from %s' %
-                        ob.absolute_url())
-            else:
-                if not hasattr(ob.aq_base, 'administrative_level'):
-                    if administrative_level_localized:
-                        self.log.debug('Landscape type set to "Unspecified" for %s' %
-                            ob.absolute_url())
-                        ob.set_localpropvalue('administrative_level', 'en',
-                                'Unspecified')
-                    else:
-                        self.log.debug('Administrative level set to local property "Unspecified" for %s' %
-                            ob.absolute_url())
-                        ob.administrative_level = 'Unspecified'
-                    changed = True
-                else:
-                    for key, values in administrative_replacements.items():
-                        if ob.administrative_level in values:
-                            self.log.debug(
-                                'Administrative level: replaced "%s" by "%s" for %s' % (
-                                ob.administrative_level, key, ob.absolute_url()))
-                            ob.set_localpropvalue('administrative_level', 'en', key)
+                                ob.landscape_type = [key]
+                                self.log.debug('Landscape type corrected from a '
+                                        'fantastic list to [%s] for object %s'
+                                        % (key, ob.absolute_url()))
                             changed = True
-                    if ob.administrative_level != ob.administrative_level.strip():
-                        self.log.debug(
-                                'Administrative level: replaced "%s" by "%s" for %s' % (
-                            ob.administrative_level, ob.administrative_level.strip(),
-                            ob.absolute_url()))
-                        ob.set_localpropvalue('administrative_level', 'en',
-                                ob.administrative_level.strip())
-                        changed = True
-                    if ob.administrative_level not in administrative_levels:
-                        self.log.error('Unhandled administrative_level value %s on object %s'
-                                % (ob.administrative_level, ob.absolute_url()))
 
-            if changed:
-                portal.recatalogNyObject(ob)
+                    for item in ob.landscape_type:
+                        if item not in landscape_types:
+                            self.log.error('Unhandled landscape type value %s for object %s'
+                                    % (ob.landscape_type, ob.absolute_url()))
+
+
+                if no_administrative_level:
+                    if hasattr(ob.aq_base, 'administrative_level'):
+                        try:
+                            del ob.administrative_level
+                            changed = True
+                            self.log.debug('Landscape type deleted from %s' %
+                                ob.absolute_url())
+                        except AttributeError:
+                            pass
+                    if ob.hasLocalProperty('administrative_level'):
+                        ob.del_localproperty('administrative_level')
+                        changed = True
+                        self.log.debug('Administrative level (local property) deleted from %s' %
+                            ob.absolute_url())
+                else:
+                    if not hasattr(ob.aq_base, 'administrative_level'):
+                        if administrative_level_localized:
+                            self.log.debug('Landscape type set to "Unspecified" for %s' %
+                                ob.absolute_url())
+                            ob.set_localpropvalue('administrative_level', 'en',
+                                    'Unspecified')
+                        else:
+                            self.log.debug('Administrative level set to local property "Unspecified" for %s' %
+                                ob.absolute_url())
+                            ob.administrative_level = 'Unspecified'
+                        changed = True
+                    else:
+                        for key, values in administrative_replacements.items():
+                            if ob.administrative_level in values:
+                                self.log.debug(
+                                    'Administrative level: replaced "%s" by "%s" for %s' % (
+                                    ob.administrative_level, key, ob.absolute_url()))
+                                ob.set_localpropvalue('administrative_level', 'en', key)
+                                changed = True
+                        if ob.administrative_level != ob.administrative_level.strip():
+                            self.log.debug(
+                                    'Administrative level: replaced "%s" by "%s" for %s' % (
+                                ob.administrative_level, ob.administrative_level.strip(),
+                                ob.absolute_url()))
+                            ob.set_localpropvalue('administrative_level', 'en',
+                                    ob.administrative_level.strip())
+                            changed = True
+                        if ob.administrative_level not in administrative_levels:
+                            self.log.error('Unhandled administrative_level value %s on object %s'
+                                    % (ob.administrative_level, ob.absolute_url()))
+
+                if changed:
+                    portal.recatalogNyObject(ob)
         return True
