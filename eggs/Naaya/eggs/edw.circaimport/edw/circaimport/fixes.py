@@ -40,5 +40,12 @@ def fix_exceptions(names, line, warn):
         del line[idx('TITLE')]
         return True
 
+    elif len(names) < len(line) and 'ABSTRACT' in names:
+        # we might have "TAB" characters in ABSTRACT
+        diff = len(line) - len(names)
+        for i in range(diff):
+            line[idx('ABSTRACT')] += '\t' + line[idx('ABSTRACT')+1]
+            del line[idx('ABSTRACT')+1]
+
     else:
         assert len(line) == len(names), 'busted line: %r, names: %r' % (line, names)
