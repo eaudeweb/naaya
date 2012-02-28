@@ -1,5 +1,7 @@
 1.2.21 (unreleased)
 -------------------
+* generalised script for correcting administrative_level and
+  landscape_type [dumitval]
 
 1.2.20 (2012-02-23)
 -------------------
