@@ -9,6 +9,8 @@ def fix_exceptions(names, line, warn):
     if len(names) == 19 and len(line) == 14:
         for i in range(5):
             line.insert(idx('OVERWRITE'), '')
+        if not line[idx('TITLE')]:
+            line[idx('TITLE')] = line[idx('FILENAME')].rsplit('/', 1)[-1]
         warn('Very short line: %r' % line)
     elif (line[idx('UPLOADDATE')] == '@circa' and
         line[idx('REFERENCE')] == '00/00/0000' and
