@@ -129,6 +129,7 @@ class ZopeActor(object):
         assert orig_path not in self.rename
 
         kwargs = {
+            'id': ob_id,
             'contributor': userid or self.default_userid,
             'releasedate': nydateformat(date),
             'title': title,
@@ -137,9 +138,9 @@ class ZopeActor(object):
             'locator': url,
             '_send_notifications': False,
         }
-        new_url_id = addNyURL(parent, **kwargs)
-        self.rename[orig_path] = parent_path + '/' + new_url_id
-        new_url = parent[new_url_id]
+        url_id = addNyURL(parent, **kwargs)
+        self.rename[orig_path] = parent_path + '/' + url_id
+        new_url = parent[url_id]
         logger.info("Added url: %r", path_in_site(new_url))
         self.count['urls'] += 1
 
