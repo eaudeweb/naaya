@@ -6,7 +6,11 @@ def fix_exceptions(names, line, warn):
         return
 
     # malformed lines
-    if (line[idx('UPLOADDATE')] == '@circa' and
+    if len(names) == 19 and len(line) == 14:
+        for i in range(5):
+            line.insert(idx('OVERWRITE'), '')
+        warn('Very short line: %r' % line)
+    elif (line[idx('UPLOADDATE')] == '@circa' and
         line[idx('REFERENCE')] == '00/00/0000' and
         line[idx('CREATED')] == '00/00/0000'):
 
