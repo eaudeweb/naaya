@@ -124,6 +124,8 @@ class GlossaryWidget(StringWidget):
         else:
             g_catalog = glossary.getGlossaryCatalog()
             language_name = glossary.get_language_by_code(lang)
+            if language_name is None:
+                language_name = glossary.get_language_by_code('en')
 
             def search_catalog(query):
                 search_dict = {'approved': 1, language_name: query}
