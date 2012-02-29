@@ -1,5 +1,7 @@
 2.12.69 (unreleased)
 --------------------
+* Fix glossary search for languages which are not in glossary
+  languages list [bogdatan]
 * Atom feed unicode bug fix [bogdatan]
 * EmailTool.sendEmail should work without site [simiamih]
 
