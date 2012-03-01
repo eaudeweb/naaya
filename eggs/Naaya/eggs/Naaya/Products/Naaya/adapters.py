@@ -147,8 +147,8 @@ class FolderMetaTypes(object):
         Uses the `use default` logic, always returns list-type
 
         """
-        if self.context.folder_meta_types is None:
-            # None means use global settings
+        if getattr(self.context, 'folder_meta_types', None) is None:
+            # None or missing means use global settings
             return list(self.context.getSite().adt_meta_types)
         else:
             return list(self.context.folder_meta_types)

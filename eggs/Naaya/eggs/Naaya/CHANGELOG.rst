@@ -1,5 +1,6 @@
 2.12.69 (unreleased)
 --------------------
+* bugfix: folder_meta_types default when not found [simiamih]
 * Fix glossary search for languages which are not in glossary
   languages list [bogdatan]
 * Atom feed unicode bug fix [bogdatan]
