@@ -1,4 +1,7 @@
-2.12.69 (unreleased)
+2.12.70 (unreleased)
+--------------------
+
+2.12.69 (2012-03-01)
 --------------------
 * bugfix: folder_meta_types default when not found [simiamih]
 * Fix glossary search for languages which are not in glossary
