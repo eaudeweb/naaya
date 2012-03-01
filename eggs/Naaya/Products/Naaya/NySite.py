@@ -2019,19 +2019,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #paging stuff
     def process_querystring(self, p_querystring):
-        #eliminates empty values and the 'start' key
+        """
+        Removes empty values and 'start', 'skey', 'rkey' keys out of QUERYSTRING
+
+        """
+        keep = []
         if p_querystring:
-            l_qsparts = p_querystring.split('&')
-            for i in range(len(l_qsparts)):
-                if l_qsparts[i] != '':
-                    l_qsparts_tuple = l_qsparts[i].split('=', 1)
-                    l_key = self.utUnquote(l_qsparts_tuple[0])
-                    l_value = self.utUnquote(l_qsparts_tuple[1])
-                    if l_value == '' or l_key in ['start', 'skey', 'rkey']:
-                        l_qsparts[i] = ''
-            return '&'.join(filter(None, l_qsparts))
-        else:
-            return ''
+            pairs = p_querystring.split('&')
+            for pair in pairs:
+                key_value = pair.split('=', 1)
+                if len(key_value) == 1 or not key_value[1]:
+                    continue
+                if key_value[0] in ('start', 'skey', 'rkey'):
+                    continue
+                keep.append(pair)
+        return '&'.join(keep)
 
     def page_something(self, p_result, p_start, p_perpage=10):
         #Returns results with paging information

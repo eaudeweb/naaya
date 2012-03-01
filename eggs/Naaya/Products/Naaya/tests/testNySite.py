@@ -1,4 +1,5 @@
 import time
+import unittest
 from BeautifulSoup import BeautifulSoup
 from mock import patch, Mock
 try:
@@ -17,7 +18,7 @@ from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.FormsTool.interfaces import ITemplate
-from Products.Naaya.NySite import manage_addNySite
+from Products.Naaya.NySite import manage_addNySite, NySite
 
 from zope.interface import alsoProvides
 from testNyFolder import FolderListingInfo
@@ -357,3 +358,19 @@ class NavigationSiteMapTest(NaayaTestCase):
                                                           subportals=True))
         self.assertEqual(len(res), 1)
         self.assertEqual(t(res[0]), 'info/subsite/info')
+
+class NonPortalRelatedTestCase(unittest.TestCase):
+
+    def test_process_querystring(self):
+        site = NySite('test')
+        arg_expected = [
+            ('', ''),
+            ('x', ''),
+            ('x=oops', 'x=oops'),
+            ('x=oops&skey=&rkey=23', 'x=oops'),
+            ('x=&skey=&rkey=23', ''),
+            ('start=zz&skey=34&rkey=23&m=&n=oops', 'n=oops'),
+            ('m=once&f&start=zz&rkey=1&x=again&n=oops', 'm=once&x=again&n=oops')
+        ]
+        for arg, expected in arg_expected:
+            self.assertEqual(site.process_querystring(arg), expected)
