@@ -1,5 +1,6 @@
 2.12.70 (unreleased)
 --------------------
+* fix in NySite.process_querystring - missing values in QUERYSTRING [simiamih]
 * `uid` as default criteria in form for searching users in LDAP [simiamih]
 
 2.12.69 (2012-03-01)
