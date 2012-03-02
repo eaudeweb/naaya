@@ -165,6 +165,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     )
 
     product_paths = [NAAYA_PRODUCT_PATH]
+    # NySite acts like a NyFolder that inherits default subobjects
+    folder_meta_types = None
 
     security = ClassSecurityInfo()
     security.declareObjectPublic()

@@ -1,5 +1,6 @@
 2.12.70 (unreleased)
 --------------------
+* no subobjects for non-NyFolder objects (except NySite-s of course) [simiamih]
 * fix in NySite.process_querystring - missing values in QUERYSTRING [simiamih]
 * `uid` as default criteria in form for searching users in LDAP [simiamih]
 
