@@ -1,5 +1,10 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
 ------------------
+
+1.1.6 (2012-03-05)
+------------------
+* revert last change - the aspect ratio is fixed, depending now on a
+  property set on the media file [dumitval]
 
 1.1.5 (2012-02-13)
 ------------------
