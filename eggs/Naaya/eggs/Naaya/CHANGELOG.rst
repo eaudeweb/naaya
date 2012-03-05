@@ -1,4 +1,7 @@
-2.12.70 (unreleased)
+2.12.71 (unreleased)
+--------------------
+
+2.12.70 (2012-03-05)
 --------------------
 * refactored media conversion + setting of aspect ratio property [dumitval]
 * no subobjects for non-NyFolder objects (except NySite-s of course) [simiamih]
