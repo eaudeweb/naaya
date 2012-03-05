@@ -446,11 +446,11 @@ class DestinetPublisher(SimpleItem):
 
         forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
         forums = map(lambda x: x.getObject(), cat.search(
-                               {'meta_type': forum_meta_types, 'author': user}))
+                               {'meta_type': forum_meta_types, 'contributor': user}))
         sort_them(forums)
 
         contacts = map(lambda x: x.getObject(), cat.search(
-                               {'meta_type': 'Naaya Contact', 'author': user}))
+                               {'meta_type': 'Naaya Contact', 'contributor': user}))
         sort_them(contacts)
 
         any = bool(events or news or resources or topics or forums or contacts)
