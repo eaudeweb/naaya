@@ -27,8 +27,6 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
   var controls_url = site + '/flowplayer.controls.swf';
   container = container || 'player';
 
-	var width = $('#'+container).css('width').split('px')[0];
-
   // Config
   if (image){
 	var config = {
@@ -40,11 +38,7 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				coverImage: { url: image, scaling: 'scale' },
-				onStart: function(clip){
-					var h = parseInt(width*(clip.metaData.height/clip.metaData.width));
-					$(this.getParent()).css({height: h});
-				}
+				coverImage: { url: image, scaling: 'scale' }
 			}
 		],
 		plugins: {
@@ -58,11 +52,7 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				autoBuffering: true,
-				onStart: function(clip){
-					var h = parseInt(width*(clip.metaData.height/clip.metaData.width));
-					$(this.getParent()).css({height: h});
-				}
+				autoBuffering: true
 			}
 		],
 		plugins: {
