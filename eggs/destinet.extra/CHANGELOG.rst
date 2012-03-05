@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ====================
+* Filter by contributor instead of author (publishing) [dumitval]
 
 1.1.6 (2012-02-17)
 ====================
