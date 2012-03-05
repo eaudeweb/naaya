@@ -5,6 +5,7 @@ from naaya.core.zope2util import permission_add_role, sha_hexdigest
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.naayaUpdater.updates.utils import get_standard_template
 from naaya.i18n.LocalPropertyManager import LocalAttribute
+from naaya.content.mediafile.converters.MediaConverter import get_resolution
 
 class SkipApprovalPermission(UpdateScript):
     title = ('Set the "Naaya - Skip approval" permission '
@@ -223,5 +224,26 @@ class AddMissingCSSToStandardTemplate(UpdateScript):
             standard_template.write(tal)
         else:
             self.log.debug('standard_template not changed')
+        return True
+
+class AddAspectRatioToMediaFiles(UpdateScript):
+    title = ('Add aspect_ratio property to the ExtFile movies in Media File')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Feb 28, 2012'
+
+    def _update(self, portal):
+        for ob in portal.getCatalogedObjects(meta_type="Naaya Media File"):
+            media = ob.getSingleMediaObject()
+            if not media or hasattr(media.aq_base, 'aspect_ratio') or ob.is_audio():
+                continue
+            file_path = media.get_filename()
+            try:
+                resolution = get_resolution(file_path)
+                aspect_ratio = resolution[0]/resolution[1]
+                media.aspect_ratio = aspect_ratio
+                self.log.debug('Aspect ratio %s saved for %s' %
+                    (aspect_ratio, ob.absolute_url()))
+            except ValueError:
+                self.log.error('Media file not found for %s' % ob.absolute_url())
         return True
 

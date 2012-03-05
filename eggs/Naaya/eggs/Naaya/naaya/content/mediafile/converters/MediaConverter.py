@@ -2,11 +2,11 @@
 """
 
 # Python imports
-import re, sys
+import re
 import os
 import logging
 import subprocess
-import threading
+from threading import Timer
 logger = logging.getLogger('mediafile.converters')
 #
 # Media converter
@@ -15,108 +15,86 @@ class MediaConverterError(Exception):
     """Media Convertor Error"""
     pass
 
-class MediaConverter(threading.Thread):
-    """ Convert any video file to FlashVideoFile (.flv) using ffmpeg and index
-    is with flvtool2.
+def media2flv(ex_file):
+    """ Convert media to flv and add metadata
     """
-    def __init__(self, fin, fout, fdone, flog):
-        threading.Thread.__init__(self)
+    if not can_convert():
+        return "Can not convert (are tools available?)"
 
-        self.fin = fin
-        self.fout = fout
-        self.fdone = fdone
+    finput = ex_file.get_filename()
+    tcv_path = finput + ".tcv" # to convert
+    cvd_path = finput + ".cvd" # converted
+    log = open(finput + '.log', 'w')
+    os.rename(finput, tcv_path)
 
-        self.log = open(flog, 'w')
-        self.exit_code = 0
-        self.process = None
+    resolution = get_resolution(tcv_path)
+    aspect_ratio = resolution[0]/resolution[1]
+    height = int(320/aspect_ratio)/8*8
 
-    def step_1(self):
-        """ Convert video to flv
-        """
-        logger.debug('Conversion step 1')
+    #ex_file.aspect_ratio = aspect_ratio
+    #ex_file._p_changed = True
 
-        if not can_convert():
-            return self.finish('Can not convert (are tools available?)')
+    cmd = ["ffmpeg", "-y", "-v", "0", "-benchmark", "-i", tcv_path, "-ar",
+           "22050", "-s", "320x%s" % height, "-b", "500k", "-f", "flv", cvd_path]
+    process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
-        resolution  = get_resolution(self.fin)
-        aspect_ratio = resolution[0]/resolution[1]
-        height = int(320/aspect_ratio)/8*8
+    TIMEOUT = 3600 #seconds
+    timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
+    timer.start()
 
-        cmd = ["ffmpeg", "-y", "-v", "0", "-benchmark", "-i", self.fin, "-ar",
-               "22050", "-s", "320x%s" % height, "-b", "500k", "-f", "flv", self.fout]
-        self.process = subprocess.Popen(cmd, stdout=self.log, stderr=self.log)
-        return self.step_2()
+    exit_code = process.wait()
+    timer.cancel()
 
-    def step_2(self):
-        """ Wait for step 1 to finish and launch step 3 or exit
-        """
-        logger.debug('Conversion step 2')
+    if exit_code != 0:
+        error = 'MediaConverterError: Exit code %s' % exit_code
+        return finish(tcv_path, cvd_path, finput, log, error)
+    process = None
 
-        self.exit_code = self.process.wait()
-        if self.exit_code != 0:
-            return self.finish('Exit code %s' % self.exit_code)
+    """ Update video index using flvtool2 or finish """
+    if not can_index():
+        logger.debug("Can not index video (is flvtool2 installed?)")
+        return finish(tcv_path, cvd_path, finput, log)
+    cmd = ["flvtool2", "-U", cvd_path]
+    process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
-        self.process = None
-        return self.step_3()
+    timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
+    timer.start()
 
-    def step_3(self):
-        """ Update video index using flvtool2 or finish
-        """
-        logger.debug('Conversion step 3')
+    exit_code = process.wait()
+    timer.cancel()
 
-        if not can_index():
-            logger.debug("Can not index video (is flvtool2 installed?)")
-            return self.finish()
+    if exit_code != 0:
+        logger.exception('An error occured while indexing video file.')
 
-        cmd = ["flvtool2", "-U", self.fout]
-        self.process = subprocess.Popen(cmd, stdout=self.log, stderr=self.log)
-        return self.step_4()
+    return finish(tcv_path, cvd_path, finput, log)
 
-    def step_4(self):
-        """ Wait for step 3 and finish
-        """
-        logger.debug('Conversion step 4')
+def finish(tcv_path, cvd_path, finput, log, error=None):
+    """ Rename output to done and cleanup """
+    if error:
+        logger.exception(error)
+        log.write(error)
+        try:
+            os.unlink(cvd_path)
+        except Exception, err:
+            logger.exception(err)
+    else:
+        # Cleanup input file
+        try:
+            os.unlink(tcv_path)
+        except Exception, err:
+            logger.exception(err)
 
-        self.exit_code = self.process.wait()
-        if self.exit_code != 0:
-            logger.exception('An error occured while indexing video file.')
-        return self.finish()
+        # Rename output file to done file
+        try:
+            os.rename(cvd_path, finput)
+        except Exception, err:
+            logger.exception(err)
+            log.write(
+                'MediaConverterError: Could not finish conversion %s' % err)
 
-    def finish(self, error=None):
-        """ If no error rename output to done and cleanup
-        """
-        if error:
-            error = 'MediaConverterError: %s' % error
-            logger.exception(error)
-            self.log.write(error)
+    # Close log
+    log.close()
 
-            # Cleanup output file
-            try:
-                os.unlink(self.fout)
-            except Exception, err:
-                logger.exception(err)
-        else:
-            # Cleanup input file
-            try:
-                os.unlink(self.fin)
-            except Exception, err:
-                logger.exception(err)
-
-            # Rename output file to done file
-            try:
-                os.rename(self.fout, self.fdone)
-            except Exception, err:
-                logger.exception(err)
-                self.log.write(
-                    'MediaConverterError: Could not finish conversion %s' % err)
-
-        # Close log
-        self.log.close()
-
-    def run(self):
-        """ Run converter step by step
-        """
-        return self.step_1()
 #
 # Private interface
 #
@@ -147,7 +125,6 @@ def _check_flvtool2():
     """
     process = subprocess.Popen(["flvtool2", "-H"],
                 shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout = process.stdout.read()
 
     process.wait()
 
@@ -188,19 +165,6 @@ def can_index():
     """ Is flvtool2 installed?
     """
     return _is_flvtool2_available
-
-def media2flv(finput, suffix=""):
-    """ Convert media to flv and add metadata
-    """
-    if not can_convert():
-        return "Can not convert (are tools available?)"
-
-    fin = finput + suffix
-    tcv = finput + ".tcv" # to convert
-    cvd = finput + ".cvd" # converted
-    os.rename(fin, tcv)
-    media_converter = MediaConverter(tcv, cvd, finput, finput + '.log')
-    media_converter.start()
 
 def get_conversion_errors(fpath, suffix=".log"):
     """ Open error file and parse it for errors

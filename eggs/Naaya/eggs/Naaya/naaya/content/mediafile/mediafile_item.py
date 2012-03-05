@@ -27,6 +27,7 @@ from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.core.zope2util import ofs_path, launch_job
 from naaya.core.utils import force_to_unicode
 
 from lxml import etree
@@ -452,8 +453,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         is stored outside Data.fs, with original content-type ctype.
         """
         media = self._getOb(mid)
-        mid = media.get_filename()
-        return media2flv(mid, ".tmp")
+        launch_job(media2flv, self.aq_parent, ofs_path(media))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -604,6 +604,11 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if not (video and self.is_ext):
             return 0
         return video.get_size()
+
+    security.declareProtected(view, 'get_aspect_ratio')
+    def get_aspect_ratio(self, aspect_ratio=1.5):
+        video = self.getSingleMediaObject()
+        return getattr(video, 'aspect_ratio', aspect_ratio)
 
     def is_audio(self):
         return '.mp3' == os.path.splitext(self.getSingleMediaId())[1]
