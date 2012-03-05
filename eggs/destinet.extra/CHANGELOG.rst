@@ -1,4 +1,7 @@
-1.1.7 (unreleased)
+1.1.8 (unreleased)
+====================
+
+1.1.7 (2012-03-05)
 ====================
 * Filter by contributor instead of author (publishing) [dumitval]
 
