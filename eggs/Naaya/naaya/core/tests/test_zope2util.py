@@ -27,3 +27,32 @@ class PathsTest(NaayaTestCase):
                          'info/subsite/info')
         self.assertRaises(ValueError, relative_object_path,
                           self.portal, subportal)
+
+class TestThreadJob(NaayaTestCase):
+
+    def test_thread(self):
+        from time import sleep
+        from threading import Semaphore
+        from naaya.core.zope2util import ofs_path, launch_job
+        import transaction
+
+        job_done = Semaphore(0)
+
+        def threaded_job(context):
+            context.hello = "world"
+            transaction.commit()
+            job_done.release()
+
+        folder = self.portal['info']
+        launch_job(threaded_job, folder, ofs_path(folder))
+        transaction.commit()
+
+        for c in range(100):
+            if job_done.acquire(blocking=False):
+                break
+            sleep(0.1)
+        else:
+            self.fail("Waited 10 seconds and the job did not finish yet")
+
+        transaction.abort()
+        self.assertEqual(folder.hello, "world")

@@ -63,8 +63,16 @@ Example:
     </tal:block>
 </div>
 <div class="field">
-	<label for="startup_image"><span i18n:translate=""
-    tal:omit-tag="">Upload startup image (preferable in jpeg format)</span></label>
+	<label for="startup_image" i18n:translate="">
+			Upload startup image (preferably in jpeg format)
+	</label>
+	<label for="startup_image" i18n:translate=""
+		tal:define="aspect_ratio python:here.get_aspect_ratio(aspect_ratio=0)"
+		tal:condition="aspect_ratio">
+			Recommended aspect ratio: <tal:block i18n:name="aspect_ratio"
+				define="rounded_ratio python:round(aspect_ratio, 2)"
+				content="string:${rounded_ratio} : 1" />
+	</label>
 	<input type="file" size="50" name="startup_image" id="startup_image" value=""/>
 </div>
 

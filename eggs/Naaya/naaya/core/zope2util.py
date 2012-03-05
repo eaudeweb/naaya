@@ -3,6 +3,10 @@ Utilities to make Zope2 a friendlier place.
 
 """
 
+import threading
+import logging
+import transaction
+import time
 import datetime
 import sys
 import sha
@@ -31,6 +35,8 @@ from naaya.core.utils import icon_for_content_type
 from Products.Naaya.interfaces import INySite
 from backport import any
 from interfaces import IRstkMethod
+
+log = logging.getLogger(__name__)
 
 def redirect_to(tmpl):
     """
@@ -363,7 +369,7 @@ def abort_transaction_keep_session(request):
     the session.
     """
     session = dict(request.SESSION)
-    import transaction; transaction.abort()
+    transaction.abort()
     request.SESSION.update(session)
 
 def permission_add_role(context, permission, role):
@@ -483,3 +489,26 @@ def get_template_source(template):
                           " a '%s'") % type(template))
     template._cook_check()
     return template._text
+
+def launch_job(callback, context, obj_path):
+    """ Launch a job in a separate thread"""
+
+    db = context._p_jar.db()
+    trans = transaction.get()
+    trans.addAfterCommitHook(_start_thread, 
+        kws = {'db': db, 'context_path': obj_path, 'callback': callback})
+
+def _start_thread(status, db, context_path, callback):
+    t = threading.Thread(target=_run_job, args=(db, context_path, callback))
+    t.start()
+
+def _run_job(db, context_path, callback):
+    c = db.open()
+    app = c.root()['Application']
+    context = app.unrestrictedTraverse(context_path)
+    try:
+        callback(context)
+        transaction.commit()
+    except:
+        log.exception('Error in worker thread')
+        transaction.abort()
