@@ -26,6 +26,24 @@
 	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
+	<script>
+		$(document).ready(function(){
+			var plus_url = 'misc_/Naaya/plus.gif';
+			var minus_url = 'misc_/Naaya/minus.gif';
+			$('.hidden').hide();
+			$('.hidden').before('<img class="show_more" src="'+plus_url+'"/>');
+			$('.show_more').click(function(){
+				if ($(this).attr('src') == plus_url){
+					$(this).attr('src', minus_url);
+					$(this).next().slideDown();
+				}
+				else {
+					$(this).next().slideUp();
+					$(this).attr('src', plus_url);
+				}
+			});
+		});
+	</script>
 </metal:block>
 
 <metal:block fill-slot="body">
