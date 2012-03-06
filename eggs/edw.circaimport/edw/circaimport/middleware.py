@@ -38,7 +38,7 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
     actor = ZopeActor(context, current_user)
     def _open_on_key_error(name):
         """
-        Patches for when the names are wrong (usuallu unicode encoding problems)
+        Patches for when the names are wrong (usually unicode encoding problems)
         """
         chain = name.split('/')
         parent_path = '/'.join(chain[:-1])
@@ -128,8 +128,11 @@ def add_notifications_from_circa_export(site, filepath, notif_type):
                 logger.info('Ignoring (turned off) subscription for user %s at location %s', user_id, val['path'])
                 continue
 
+            val['path'] = val['path'].strip('/')
+            if val['path'] not in ('', '/'):
+                val['path'] = "library/%s" % val['path']
             try:
-                ob = site.unrestrictedTraverse(val['path'].strip('/'))
+                ob = site.unrestrictedTraverse(val['path'])
             except KeyError:
                 logger.error("Couldn't find object at path: %s", val['path'])
                 continue
@@ -222,13 +225,16 @@ def add_acls_from_circa_export(site, filepath):
 
     compute_roles_mapping(acls)
     for path, values in acls.items():
+        path = path.strip('/')
+        if path not in ('', '/'):
+            path = "library/%s" % path
         try:
-            ob = site.unrestrictedTraverse(path.strip('/'))
+            ob = site.unrestrictedTraverse(path)
         except KeyError:
             logger.error("Couldn't find object at path: %s", path)
             continue
 
-        if ob.meta_type != 'Naaya folder':
+        if ob.meta_type != 'Naaya Folder':
             logger.error("Object %r is not a folder (Naaya can only restrict permissions on folders)", relative_object_path(ob, site))
             continue
 
