@@ -1,4 +1,7 @@
-1.2.11 (unreleased)
+1.2.12 (unreleased)
+-------------------
+
+1.2.11 (2012-03-07)
 -------------------
 * Bugfix related to grouping by categories [dumitval]
 
