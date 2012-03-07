@@ -1,3 +1,6 @@
+2.12.72 (unreleased)
+--------------------
+
 2.12.71 (unreleased)
 --------------------
 * Atom feed - unicode bug fix in atom template [bogdatan]
