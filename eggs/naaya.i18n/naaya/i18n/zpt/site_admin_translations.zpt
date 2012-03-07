@@ -129,14 +129,16 @@
 <tbody>
 	<tr tal:repeat="message messages">
 		<td tal:define="index repeat/message/index;" tal:content="python: index + paging_start" />
-		<td>
-			<a tal:define="mesg python:admin_i18n.message_encode_and_quote(message[0])"
-				tal:attributes="href string:${portal_i18n_url}/admin_messages_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${mesg}"
-				tal:content="python:message[0][:50]" />
-		</td>
+		<td tal:content="python:message[0][:50]" />
 		<td tal:repeat="trans python:message[1:]">
-			<tal:block tal:condition="trans"><img src="misc_/Naaya/checked" alt="Translated" i18n:attributes="alt" /></tal:block>
-			<tal:block tal:condition="python:not trans">-</tal:block>
+			<a tal:define="mesg python:admin_i18n.message_encode_and_quote(message[0]);
+							lang_position repeat/trans/index;
+							trans_lang python:languages[lang_position]['code']"
+				tal:attributes="href string:${portal_i18n_url}/admin_messages_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${mesg}&trans_lang=${trans_lang}">
+				<tal:block tal:condition="trans"><img src="misc_/Naaya/checked" alt="Translated" i18n:attributes="alt" /></tal:block>
+				<tal:block tal:condition="python:not trans"
+					i18n:translate="">Add translation</tal:block>
+			</a>
 		</td>
 	</tr>
 </tbody>
