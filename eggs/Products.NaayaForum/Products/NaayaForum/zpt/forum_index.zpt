@@ -60,16 +60,23 @@
 </div>
 
 <tal:block condition="python:len(topics)>0">
-<form method="post" tal:define="categories here/categories"
+<form method="post" tal:define="categories here/categories;
+	invalid_categories python: 'Other' in topics.keys() and 'Other' not in categories;
+	all_categories python:test(invalid_categories, categories + ['Other'], categories)"
 	tal:attributes="action string:${here/absolute_url}/deleteTopics">
 <div tal:condition="btn_delete">
 	<div id="toolbar">
 		<input type="submit" value="Delete" i18n:attributes="value" />
 	</div>
 </div>
-<tal:block repeat="category python:test(here.topics_listing=='Plain table',topics.keys(),categories)">
-	<h3 tal:condition="python:here.topics_listing!='Plain table'"
-		i18n:translate="" tal:content="category"/>
+<tal:block repeat="category python:test(here.topics_listing=='Plain table',topics.keys(),all_categories)">
+	<h3 tal:condition="python:here.topics_listing!='Plain table'">
+		<tal:block i18n:translate="" content="category"/>
+		<tal:block condition="python: category == 'Other' and
+			invalid_categories and here.checkPermissionPublishObjects()" i18n:translate="" >
+			(topics with an inexistent or invalid category)
+		</tal:block>
+	</h3>
 	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
 		tal:define="category_topics python:topics[category];
 					skey python:info[4];
