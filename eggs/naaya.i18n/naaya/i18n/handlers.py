@@ -23,6 +23,8 @@ def update_transaction_note(*args):
 
 def debug_messages(event):
     request = get_request()
+    if not hasattr(request, 'PARENTS'): # wsgi request?
+        return
     portal_i18n = request.PARENTS[0].getSite()['portal_i18n']
     for pattern in portal_i18n.message_debug_list:
         if pattern in event.msgid:

@@ -1,5 +1,6 @@
 1.0.12 (unreleased)
 -------------------
+* debug handler no longer brakes functional tests [simiamih]
 
 1.0.11 (2012-02-01)
 ------------------
