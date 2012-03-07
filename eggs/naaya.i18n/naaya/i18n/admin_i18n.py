@@ -109,6 +109,8 @@ class AdminI18n(Implicit):
                     e.append(len(t.get(lang['code'], '').strip())>0)
                     i = i + 1
                 msgs.append(tuple(e))
+        if not isinstance(skey, int): # lang in skey not found
+            skey = 0
         #sort messages
         t = [(x[skey], x) for x in msgs]
         if skey == 0:
