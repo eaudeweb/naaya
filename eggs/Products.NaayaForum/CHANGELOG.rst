@@ -1,5 +1,6 @@
 1.2.11 (unreleased)
 -------------------
+* Bugfix related to grouping by categories [dumitval]
 
 1.2.10 (2011-12-06)
 -------------------

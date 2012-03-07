@@ -250,7 +250,12 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
             if self.topics_listing == 'Plain table':
                 topics['Plain table'].append((del_permission, edit_permission, x))
             else:
-                topics[x.category].append((del_permission, edit_permission, x))
+                if x.category in topics.keys():
+                    topics[x.category].append((del_permission, edit_permission, x))
+                elif 'Other' in topics.keys():
+                    topics['Other'].append((del_permission, edit_permission, x))
+                else:
+                    topics['Other'] = [(del_permission, edit_permission, x)]
         can_operate = can_operate or btn_select
         for topics_category in topics.values():
             if skey == 'subject':
