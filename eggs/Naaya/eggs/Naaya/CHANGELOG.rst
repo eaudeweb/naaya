@@ -1,5 +1,6 @@
 2.12.72 (unreleased)
 --------------------
+* Added SyntaxError for incorrect date format [bogdatan]
 
 2.12.71 (unreleased)
 --------------------

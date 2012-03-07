@@ -9,7 +9,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 from zope.annotation.interfaces import IAttributeAnnotatable
 from DateTime import DateTime
-from DateTime.interfaces import DateError
+from DateTime.interfaces import DateError, SyntaxError
 
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
@@ -87,7 +87,7 @@ class SchemaFormHelper(object):
         else:
             try:
                 return prop_type(val)
-            except (ValueError, DateError):
+            except (ValueError, DateError, SyntaxError):
                 # in case the string is malformed
                 # added DateError for DateTime errors
                 return prop_type()
