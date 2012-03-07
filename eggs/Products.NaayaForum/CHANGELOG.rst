@@ -1,5 +1,6 @@
 1.2.12 (unreleased)
 -------------------
+* Hide categories with no topics [dumitval]
 
 1.2.11 (2012-03-07)
 -------------------
