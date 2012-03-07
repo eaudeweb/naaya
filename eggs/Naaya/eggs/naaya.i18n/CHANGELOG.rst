@@ -1,5 +1,6 @@
 1.0.13 (unreleased)
 -------------------
+* Fix for Google translate suggestion in portals with many languages [dumitval]
 
 1.0.12 (unreleased)
 -------------------
