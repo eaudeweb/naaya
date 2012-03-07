@@ -570,8 +570,8 @@ class NaayaI18n(SimpleItem):
         ob.edit_message(message, language, translation)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
-                (self.absolute_url(), quote(message_encoded), start, skey, rkey, query))
+            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s&trans_lang=%s&saved=True' % \
+                (self.absolute_url(), quote(message_encoded), start, skey, rkey, query, language))
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmesg_html')
     admin_delmesg_html = PageTemplateFile('zpt/site_admin_delmessages', globals())
