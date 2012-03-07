@@ -70,15 +70,14 @@
 	</div>
 </div>
 <tal:block repeat="category python:test(here.topics_listing=='Plain table',topics.keys(),all_categories)">
-	<h3 tal:condition="python:here.topics_listing!='Plain table'">
+	<h3 tal:condition="python:here.topics_listing!='Plain table' and topics[category]">
 		<tal:block i18n:translate="" content="category"/>
 		<tal:block condition="python: category == 'Other' and
 			invalid_categories and here.checkPermissionPublishObjects()" i18n:translate="" >
 			(topics with an inexistent or invalid category)
 		</tal:block>
 	</h3>
-	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
-		tal:define="category_topics python:topics[category];
+	<table tal:define="category_topics python:topics[category];
 					skey python:info[4];
 					rkey python:info[5];
 					url here/absolute_url;
@@ -90,7 +89,9 @@
 								{'key': 'author', 'label': 'Author'},
 								{'key': 'count_messages', 'label': 'Replies'},
 								{'key': 'views', 'label': 'Views'},
-								{'key': 'last_message', 'label': 'Last message'})">
+								{'key': 'last_message', 'label': 'Last message'})"
+			tal:condition="category_topics" border="0" cellpadding="0"
+			cellspacing="0" id="folderfile_list">
 		<tr>
 			<th class="checkbox" tal:condition="btn_select" width="1%"></th>
 			<tal:block repeat="item header_values">
