@@ -1,8 +1,11 @@
-1.0.13 (unreleased)
+1.0.14 (unreleased)
+-------------------
+
+1.0.13 (2012-03-07)
 -------------------
 * Fix for Google translate suggestion in portals with many languages [dumitval]
 
-1.0.12 (unreleased)
+1.0.12 (2012-03-07)
 -------------------
 * debug handler no longer brakes functional tests [simiamih]
 * bugfix: skey must be int, regardless of `skey` lang existance [simiamih]
