@@ -10,6 +10,12 @@ from ZPublisher.BaseRequest import DefaultPublishTraverse
 from Products.Naaya.interfaces import INySite
 
 
+rename_dict = {
+ 'Products.Localizer.LocalAttributes LocalAttribute': \
+     'naaya.i18n.LocalPropertyManager LocalAttribute'
+ }
+
+
 class NySitePublishTraverse(DefaultPublishTraverse):
     adapts(INySite, IRequest)
 

@@ -7,4 +7,9 @@ setup(name='naaya.i18n',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
+      entry_points="""
+        # -*- entry_points -*-
+        [zodbupdate]
+        renames=naaya.i18n.patches:rename_dict
+        """
 )
