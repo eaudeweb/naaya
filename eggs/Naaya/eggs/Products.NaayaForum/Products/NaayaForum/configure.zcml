@@ -48,17 +48,22 @@
   <naaya:call factory=".permissions.register_permissions" />
 
   <configure zcml:condition="installed Products.naayaUpdater">
+
     <utility
       name="add_releasedate.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.AddReleasedate"
       permission="zope2.ViewManagementScreens"
      />
-    <utility
-      name="zgadfly_migration.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.ZGadFlyMigration"
-      permission="zope2.ViewManagementScreens"
-     />
+
+    <configure zcml:condition="installed Products.ZGadflyDA">
+      <utility
+        name="zgadfly_migration.update"
+        provides="Products.naayaUpdater.interfaces.IUpdateScript"
+        component=".updates.ZGadFlyMigration"
+        permission="zope2.ViewManagementScreens"
+       />
+    </configure>
+
   </configure>
 </configure>
