@@ -47,10 +47,10 @@ from os.path import join, isfile
 from copy import deepcopy
 from rdfparser import RDFParser
 
-try:
-    _repos = getConfiguration().environment['rdfsummary_repo']
-except KeyError:
-    _repos = join(CLIENT_HOME, 'RDFSummary')
+
+CONFIG = getConfiguration()
+_repos = join(CLIENT_HOME, 'RDFSummary')
+_repos = getattr(CONFIG, 'environment', {}).get('rdfsummary_repo', _repos)
 
 fixslash = string.maketrans('/','-')
 
