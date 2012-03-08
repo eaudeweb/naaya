@@ -37,7 +37,7 @@
 	<form method="post" tal:attributes="action string:${portal_i18n_url}/admin_editmessage;
 					    name python:'translate_' + trans_lang">
 		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:admin_i18n.get_message_translation(message, trans_lang, '')" /></div>
-		<input type="hidden" name="message:utf8:ustring" tal:attributes="value message" />
+		<input type="hidden" name="message:utf8:ustring" tal:attributes="value msg_encoded" />
 		<input type="hidden" name="language" tal:attributes="value trans_lang">
 		<input type="hidden" name="start" tal:attributes="value start" />
 		<input type="hidden" name="skey" tal:attributes="value skey" />

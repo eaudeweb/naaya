@@ -1,5 +1,6 @@
 1.0.14 (unreleased)
 -------------------
+* Fix for messages with new_line characters [dumitval]
 
 1.0.13 (2012-03-07)
 -------------------
