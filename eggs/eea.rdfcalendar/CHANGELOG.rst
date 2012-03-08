@@ -1,4 +1,7 @@
-1.0 (unreleased)
+1.1 (unreleased)
+----------------
+
+1.0 (2012-03-08)
 ----------------
 * better way to access buildout environment vars [simiamih]
 * Re-packaging of Zope2 products RDFCalendar 1.1 and RDFSummary 3.0.1 into
