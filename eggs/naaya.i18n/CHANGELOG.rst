@@ -1,4 +1,7 @@
-1.0.14 (unreleased)
+1.0.15 (unreleased)
+-------------------
+
+1.0.14 (2012-03-08)
 -------------------
 * ready for zodbupdate [simiamih]
 * Fix for messages with new_line characters [dumitval]
