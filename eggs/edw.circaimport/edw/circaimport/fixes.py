@@ -35,6 +35,11 @@ def fix_exceptions(names, line, warn):
         del line[idx('TITLE')]
         return True
 
+    elif (line[idx('URN')] == '32460' and
+          line[idx('FILENAME')].endswith('updated 2010-01-28.xls')):
+        del line[idx('TITLE')]
+        return True
+
     elif (line[idx('TITLE')].strip() == ''
           and line[idx('ABSTRACT')] == 'Public'):
         del line[idx('TITLE')]
