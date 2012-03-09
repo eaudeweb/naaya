@@ -30,13 +30,19 @@
     img.preview {
         background: url("misc_/NaayaCore/checkered.png") repeat;
     }
+    form.diskfile-to-database {
+        display: inline;
+    }
 </style>
 
-<p class="infotext">
-    This object is a <tt>DiskFile</tt>: it displays read-only data from a
-    file on disk. To change its contents, change the file (see
-    "Filesystem path" below).
-</p>
+<form class="diskfile-to-database" method="post"
+      tal:attributes="action string:${here/absolute_url}/manage_copy_to_database">
+    <p class="infotext">
+        This object is a <tt>DiskFile</tt>: it displays read-only data from a
+        file on disk. To change its contents, first
+        <button type="submit">copy the file to ZODB</button>.
+    </p>
+</form>
 
 <dl class="metadata">
     <dt>Pathspec:</dt>

@@ -7,6 +7,7 @@ import os
 from os import path
 import sys
 import mimetypes
+import logging
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -15,6 +16,8 @@ from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import METATYPE_DISKFILE
+
+log = logging.getLogger(__name__)
 
 
 def remove_excluded(name_list):
@@ -124,3 +127,22 @@ class DiskFile(SimpleItem):
             'mime_type': self._get_mime_type(),
         }
         return self._manage_main(REQUEST, **options)
+
+    def manage_copy_to_database(self, REQUEST):
+        """ Copy the file to ZODB for further customization """
+        file_id = self.getId()
+        parent = self.aq_inner.aq_parent
+        parent.manage_delObjects([file_id])
+
+        data_file = open(resolve(self.pathspec), 'rb')
+        parent.manage_addFile(id=file_id,
+                              file=data_file,
+                              content_type=self._get_mime_type())
+        data_file.close()
+        file_ob = parent[file_id]
+
+        log.info("DiskFile %r uploaded to database by %r",
+                 '/'.join(file_ob.getPhysicalPath()),
+                 REQUEST.AUTHENTICATED_USER)
+
+        REQUEST.RESPONSE.redirect(file_ob.absolute_url() + '/manage_workspace')

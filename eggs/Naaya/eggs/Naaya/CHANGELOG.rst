@@ -1,5 +1,6 @@
 2.12.73 (unreleased)
 --------------------
+* DiskFile can be converted to database File object [moregale]
 
 2.12.72 (2012-03-09)
 --------------------
