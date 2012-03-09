@@ -7,6 +7,14 @@ from Products.Naaya.interfaces import INyFolder
 
 from fixes import fix_exceptions
 
+
+def sanitize_folder_path(folder_zope_path):
+    folder_zope_path = folder_zope_path.replace('/_', '/~')
+    folder_zope_path = folder_zope_path.replace('/aq_', '/aq~')
+    folder_zope_path = folder_zope_path.replace('/description/', '/description-folder/')
+    folder_zope_path = re.sub(r'/description$', '/description-folder', folder_zope_path)
+    return folder_zope_path
+
 def convert_index(i, o):
     reader = csv.reader(i, dialect='excel-tab')
     writer = csv.writer(o)
@@ -63,9 +71,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         folder_zip_path =  line['FILENAME'][:-1].encode('utf-8')
 
         # for zope replace starting underscores
-        folder_zope_path = folder_zip_path.replace('/_', '/~')
-        folder_zope_path = folder_zope_path.replace('/aq_', '/aq~')
-        folder_zope_path = folder_zope_path.replace('/description/', '/description-folder/')
+        folder_zope_path = sanitize_folder_path(folder_zip_path)
 
         # use get_date as a backup
         try:
@@ -110,9 +116,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         doc_zip_path = line['FILENAME']
 
         # for zope replace starting underscores
-        doc_zope_path = doc_zip_path.replace('/_', '/~')
-        doc_zope_path = doc_zope_path.replace('/aq_', '/aq~')
-        doc_zope_path = doc_zope_path.replace('/description/', '/description-folder/')
+        doc_zope_path = sanitize_folder_path(doc_zip_path)
 
         # use get_date as a backup
         try:
