@@ -64,6 +64,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
 
         # for zope replace starting underscores
         folder_zope_path = folder_zip_path.replace('/_', '/~')
+        folder_zope_path = folder_zope_path.replace('/aq_', '/aq~')
 
         # use get_date as a backup
         try:
