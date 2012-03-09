@@ -1,4 +1,7 @@
-2.12.72 (unreleased)
+2.12.73 (unreleased)
+--------------------
+
+2.12.72 (2012-03-09)
 --------------------
 * Update script to delete invalid pointers [dumitval]
 * Added SyntaxError for incorrect date format [bogdatan]
