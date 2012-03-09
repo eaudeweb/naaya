@@ -114,7 +114,10 @@ class ZopeActor(object):
             }
             assert ob_id not in parent.objectIds()
             the_file_id = addNyBFile(parent, **kwargs)
-            self.rename[orig_path] = parent_path + '/' + the_file_id
+            if parent_path:
+                self.rename[orig_path] = parent_path + '/' + the_file_id
+            else:
+                self.rename[orig_path] = the_file_id
             the_file = parent[the_file_id]
 
         the_file._versions.append(bf)
@@ -139,7 +142,10 @@ class ZopeActor(object):
             '_send_notifications': False,
         }
         url_id = addNyURL(parent, **kwargs)
-        self.rename[orig_path] = parent_path + '/' + url_id
+        if parent_path:
+            self.rename[orig_path] = parent_path + '/' + url_id
+        else:
+            self.rename[orig_path] = url_id
         new_url = parent[url_id]
         logger.info("Added url: %r", path_in_site(new_url))
         self.count['urls'] += 1
