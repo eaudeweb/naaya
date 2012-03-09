@@ -30,18 +30,13 @@ def fix_exceptions(names, line, warn):
         else:
             warn('WEIRD LINE: %r' % line)
 
-    elif (line[idx('URN')] == '32460' and
-        line[idx('FILENAME')].endswith('1276514784.url')):
-        del line[idx('TITLE')]
-        return True
-
-    elif (line[idx('URN')] == '948835' and
-          line[idx('FILENAME')].endswith('updated 2010-01-28.xls')):
-        del line[idx('TITLE')]
-        return True
-
     elif (line[idx('TITLE')].strip() == ''
           and line[idx('ABSTRACT')] == 'Public'):
+        del line[idx('TITLE')]
+        return True
+
+    elif (len(line) - len(names) == 1
+          and line[idx('UPLOADDATE')].endswith('@circa')):
         del line[idx('TITLE')]
         return True
 
