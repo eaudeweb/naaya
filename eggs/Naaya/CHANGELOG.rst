@@ -1,8 +1,9 @@
 2.12.72 (unreleased)
 --------------------
+* Update script to delete invalid pointers [dumitval]
 * Added SyntaxError for incorrect date format [bogdatan]
 
-2.12.71 (unreleased)
+2.12.71 (2012-03-07)
 --------------------
 * Atom feed - unicode bug fix in atom template [bogdatan]
 

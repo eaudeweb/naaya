@@ -247,3 +247,24 @@ class AddAspectRatioToMediaFiles(UpdateScript):
                 self.log.error('Media file not found for %s' % ob.absolute_url())
         return True
 
+class DeleteInvalidPointers(UpdateScript):
+    title = ('Delete pointer objects pointing to inexisting objects')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Mar 8, 2012'
+
+    def _update(self, portal):
+        catalog = portal.portal_catalog
+        counter = 0
+        for brain in list(catalog(meta_type="Naaya Pointer")):
+            pointer_item = brain.getObject()
+            pointer = pointer_item.pointer
+            if pointer.startswith('/'):
+                pointer = pointer[1:]
+            obj = portal.unrestrictedTraverse(pointer.encode('utf-8'), None)
+            if obj is None:
+                self.log.debug('Pointer %s deleted' %
+                    pointer_item.absolute_url())
+                pointer_item.aq_parent.manage_delObjects(pointer_item.getId())
+                counter += 1
+        self.log.debug('A total of %s pointer items were deleted' % counter)
+        return True
