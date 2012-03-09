@@ -15,6 +15,18 @@ def sanitize_folder_path(folder_zope_path):
     folder_zope_path = re.sub(r'/description$', '/description-folder', folder_zope_path)
     return folder_zope_path
 
+def sanitize_id(doc_id):
+    if doc_id.startswith('_'):
+        doc_id = 'file' + doc_id
+    if doc_id.startswith('aq_'):
+        doc_id = 'file_' + doc_id
+    if doc_id.endswith('__'):
+        doc_id = doc_id + 'file'
+    if (doc_id.startswith('coverage_') or doc_id.startswith('istranslated_')
+        or doc_id.startswith('tags_') or doc_id.startswith('objectkeywords_')):
+        doc_id = 'file_' + doc_id
+    return doc_id
+
 def convert_index(i, o):
     reader = csv.reader(i, dialect='excel-tab')
     writer = csv.writer(o)
@@ -134,12 +146,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         assert parent_path in folders_info['known_folders']
 
         doc_id = doc_dpl_name[:-len('.dpl')]
-        if doc_id.startswith('_'):
-            doc_id = 'file' + doc_id
-        if doc_id.startswith('aq_'):
-            doc_id = 'file_' + doc_id
-        if doc_id.endswith('__'):
-            doc_id = doc_id + 'file'
+        doc_id = sanitize_id(doc_id)
 
         full_path = parent_path+'/'+doc_id
         if not doc_langver.startswith('EN_'):
