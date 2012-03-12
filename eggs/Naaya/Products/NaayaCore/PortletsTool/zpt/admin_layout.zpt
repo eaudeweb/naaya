@@ -113,7 +113,8 @@ $(function(){
                 label=label,
                 formdata=dict(action='ToggleInherit', **button_options),
                 button_title='Click to toggle inheritance')" />
-        <td tal:content="item/portlet/title_or_id" />
+        <td tal:content="item/portlet/title_or_id"
+            tal:attributes="title item/portlet/getId" />
         <td>
             <em tal:condition="item/oldstyle">[needs update]</em>
             <tal:block condition="not:item/oldstyle">
