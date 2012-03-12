@@ -1301,28 +1301,6 @@ body #admin_this_folder {
 	padding: 0;
 }
 
-.portlet.current-mainsection h3 {
-	margin: 0;
-	padding: 10px 0;
-	border-bottom: 1px solid #bfbfbf;
-	line-height: normal;
-}
-
-.portlet.current-mainsection ul {
-	padding-left: 0;
-}
-
-.portlet.current-mainsection li {
-	border-bottom: 1px solid #bfbfbf;
-	padding: 10px 0;
-}
-
-.portlet.current-mainsection li a {
-	text-decoration: none;
-	color: #444444;
-	font-family: Arial, Helvetica, sans-serif;
-}
-
 .site-image {
 	margin: 15px 0 0;
 }
