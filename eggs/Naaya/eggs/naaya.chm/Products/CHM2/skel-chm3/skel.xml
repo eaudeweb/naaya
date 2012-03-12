@@ -14,6 +14,7 @@
 			<template id="element_footer_mainsections" title=""/>
 			<template id="element_header" title=""/>
 			<template id="element_mainsections" title=""/>
+			<template id="element_mainsection_image" title=""/>
 			<template id="element_splash_content" title=""/>
 			<template id="element_topmenu" title=""/>
 			<diskfile path="common.css"/>
