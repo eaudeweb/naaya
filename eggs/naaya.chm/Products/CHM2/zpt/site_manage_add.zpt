@@ -65,8 +65,8 @@
         <td class="form-label">Bundle</td>
         <td>
             <select name="bundle_name">
-                <option>CHM</option>
                 <option>CHM3</option>
+                <option>CHM</option>
             </select>
         </td>
     </tr>
