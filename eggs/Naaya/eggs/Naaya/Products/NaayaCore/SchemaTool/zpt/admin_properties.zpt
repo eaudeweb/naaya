@@ -7,7 +7,7 @@
 </p>
 
 <form tal:attributes="action string:${here/absolute_url}/admin_set_contenttypes">
-<table>
+<table class="datatable">
 	<tr>
 		<th i18n:translate="">Content type</th>
 		<th i18n:translate="">Is geo-tagged</th>

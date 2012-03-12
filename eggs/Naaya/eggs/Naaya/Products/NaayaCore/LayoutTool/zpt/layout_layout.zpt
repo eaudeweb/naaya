@@ -219,7 +219,7 @@ function LoadScreenshot()
 	<tr>
 		<td class="form-label" style="vertical-align: top">Preview</td>
 		<td>
-			<img src="" name="theScreenshot" width="300" height="200" alt="Preview" />
+			<img src="" name="theScreenshot" class="layout-preview" alt="Preview" />
 		</td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>

@@ -1,4 +1,4 @@
-<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block use-macro="python:here.standard_template_macro('light')">
 
 <metal:block metal:fill-slot="header-title">
 	<title><tal:block i18n:translate="">Portal Geo Map</tal:block> | <span tal:replace="here/site_title" /></title>
@@ -42,7 +42,7 @@
 						<input type="button" name="address_button" id="address_button" value="Zoom in" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
 					</div>
 					<div class="portalmap_location_filters">
-						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" style="width: 60%" />
+						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" />
 						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
 						<noscript>
 							<p><small i18n:translate="">eg: "water supply"</small></p>
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 			<br clear="all" style="clear:both"/>
-			<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
+			<div id="map" tal:attributes="style string:height: ${height}px;;"></div>
 		</div>
 		<br clear="all" style="clear:both"/>
 		<div style="display:none" id="map_markers"></div>

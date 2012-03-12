@@ -28,7 +28,7 @@
   <a tal:attributes="href string:${site_url}/admin_addhtmlportlet" i18n:translate="">Add new portlet</a>
 </p>
 
-<fieldset tal:condition="python:ob is not None">
+<fieldset tal:condition="python:ob is not None" class="admin-edit-htmlportlet">
   <legend i18n:translate="">Edit portlet</legend>
   <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
   <form method="post" tal:attributes="action string:${site_url}/admin_edithtmlportlet">
