@@ -1,5 +1,10 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
+
+<metal:block fill-slot="head">
+  <link rel="stylesheet" href="++resource++Products.Naaya/lib/chosen/chosen.css" />
+</metal:block>
+
 <h1 metal:fill-slot="title" i18n:translate="">Arrange portlets</h1>
 
 <metal:block fill-slot="section">
@@ -24,7 +29,12 @@
     form[name=assign_portlet] .field-inline {
         clear: both;
     }
+    form[name=assign_portlet] select {
+        width: 300px;
+    }
 </style>
+
+<script src="++resource++Products.Naaya/lib/chosen/chosen.jquery.min.js"></script>
 
 <script type="text/javascript">
 $(function(){
@@ -53,6 +63,8 @@ $(function(){
             $('form#portlet-sortorder').show();
         }
     });
+
+    $('select[name="portlet_id"]').chosen();
 });
 </script>
 
