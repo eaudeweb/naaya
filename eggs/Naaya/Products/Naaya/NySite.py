@@ -427,6 +427,26 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                             skin.id,
                             disktemplate.path ]), id=(disktemplate.id or ''))
 
+                    for folder in skin.folders:
+                        skin_ob.manage_addFolder(folder.id or '', folder.title)
+                        folder_ob = skin_ob[folder.id]
+
+                        for diskfile in folder.diskfiles:
+                            manage_addDiskFile(folder_ob, pathspec='/'.join([
+                                layout_diskpath_prefix(),
+                                'layout',
+                                skin.id,
+                                folder.id,
+                                diskfile.path ]), id=(diskfile.id or ''))
+
+                        for file in folder.files:
+                            content = self.futRead(join(skel_path, 'layout', skin.id, folder.id, file.id), 'rb')
+                            if not folder_ob._getOb(file.id, None):
+                                folder_ob.manage_addFile(id=file.id, file='', title=file.title)
+                            file_ob = folder_ob._getOb(file.id)
+                            file_ob.update_data(data=content)
+                            file_ob._p_changed=1
+
                     for scheme in skin.schemes:
                         if skin_ob._getOb(scheme.id, None):
                             skin_ob.manage_delObjects([scheme.id])
