@@ -1,4 +1,7 @@
-2.12.73 (unreleased)
+2.12.74 (unreleased)
+--------------------
+
+2.12.73 (2012-03-12)
 --------------------
 * strip javascript from textarea comments [dumitval]
 * DiskFile can be converted to database File object [moregale]
