@@ -2,58 +2,64 @@
 
 <div class="wrap">
 
-    <div id="actions">
-        <div class="right">
-            <div id="global-actions" class="left"
-                tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
-                <ul>
-                    <li class="login-item li-first-item">
-                        <a title="Login" class="login" i18n:translate=""
-                            tal:condition="python: authenticated_user == 'Anonymous User'"
-                            tal:attributes="href string:${site_url}/login_html">
-                            Login
-                        </a>
+    <div class="actions">
 
-                        <span tal:condition="python: authenticated_user != 'Anonymous User'">
-                            Welcome <span i18n="user" tal:replace="authenticated_user"/>.
-                        </span>
+        <div class="global-actions"
+            tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
+            <ul>
+                <li class="login-item li-first-item">
+                    <a title="Login" class="login" i18n:translate=""
+                        tal:condition="python: authenticated_user == 'Anonymous User'"
+                        tal:attributes="href string:${site_url}/login_html">
+                        Login
+                    </a>
 
-                        <a tal:condition="python: authenticated_user != 'Anonymous User'"
-                           tal:define="url python:here.absolute_url()"
-                           tal:attributes="href string:${url}/logout"
-                           i18n:translate="" class="login">Logout</a>
-                    </li>
-                </ul>
-            </div>
-            <tal:block replace="structure here/languages_box"/>
+                    <span tal:condition="python: authenticated_user != 'Anonymous User'">
+                        Welcome <span i18n="user" tal:replace="authenticated_user"/>.
+                    </span>
+
+                    <a tal:condition="here/checkPermissionPublishObjects"
+                       tal:attributes="href string:${site_url}/admin_centre_html"
+                       i18n:translate="">Administration</a>
+
+                    <a tal:condition="python: authenticated_user != 'Anonymous User'"
+                       tal:define="url python:here.absolute_url()"
+                       tal:attributes="href string:${url}/logout"
+                       i18n:translate="" class="login">Logout</a>
+                </li>
+            </ul>
         </div>
-        <div id="global-search">
-            <form method="get" id="global-search-form" tal:attributes="action string:${site_url}/search_html">
-                <input type="text" name="query" id="global-search-input"
+
+        <div class="global-search">
+            <form method="get" class="global-search-form" tal:attributes="action string:${site_url}/search_html">
+                <input type="text" name="query" class="global-search-input"
                     value="" accesskey="4" /><!--
                     no whitespace here
-                --><input type="submit" value="Search" class="search-input-button" />
+                --><input type="submit" value="Search" class="global-search-submit" />
             </form>
         </div>
+
+        <tal:block replace="structure here/languages_box"/>
+
     </div>
 
-    <div id="logo-holder">
-        <div id="logo" class="left" tal:define="logo_url here/leftLogoUrl">
-            <a tal:attributes="href python:here.getSite().absolute_url()"
-                title="Biodiversity-CHM.NL Home">
-                <img tal:attributes="src string:${skin_files_path}/logo.png;
-                                    alt here/site_title;
-                                    title here/site_title"
-                    i18n:attributes="alt; title" tal:condition="logo_url" />
-            </a>
-        </div>
-        <div id="site-details" class="left">
-            <div id="site-title">
-                <a tal:attributes="href python: here.getSite().absolute_url();
-                                    title here/site_title"
-                    tal:content="here/site_title" />
+    <div class="logo-holder">
+        <tal:logos define="left_url here/leftLogoUrl;
+                           right_url here/rightLogoUrl">
+            <img class="left-logo"
+                 tal:condition="left_url"
+                 tal:attributes="src left_url" />
+            <img class="right-logo"
+                 tal:condition="right_url"
+                 tal:attributes="src right_url" />
+        </tal:logos>
+
+        <div class="site-details">
+            <div class="site-title">
+                <a tal:attributes="href site_url"
+                   tal:content="here/site_title"></a>
             </div>
-            <div id="site-description">
+            <div class="site-description">
                 <p tal:content="here/site_subtitle" />
             </div>
         </div>

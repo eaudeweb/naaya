@@ -30,7 +30,7 @@
 	This section allows administrators to manage the main sections.
 	You can set the order by drag and drop the boxes and click <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
 </p>
-<form name="frmDragDrop" method="post" action="">
+<form name="frmDragDrop" class="maintopics-drag-drop-form" method="post" action="">
 	<ul id="maintopicslist" class="boxy">
 		<li tal:repeat="item maintopics" tal:attributes="id python:here.rstk.path_in_site(item)">
 			<input type="checkbox" class="chk" name="ids"
