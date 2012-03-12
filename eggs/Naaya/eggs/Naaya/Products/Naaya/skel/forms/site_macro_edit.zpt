@@ -97,7 +97,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </tal:block>
 
 <!-- Edit form -->
-<form name="frmEdit" method="post" action="." enctype="multipart/form-data">
+<form name="frmEdit" class="edit-object-form" method="post" action="." enctype="multipart/form-data">
 
 <!-- Custom boxes -->
 <metal:block define-slot="custom_boxes" />

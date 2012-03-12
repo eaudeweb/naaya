@@ -68,7 +68,7 @@
 </div>
 
 <h2 i18n:translate="">Existing user</h2>
-<form tal:attributes="action action_url" method="post">
+<form tal:attributes="action action_url" method="post" class="login-form">
 
 <tal:block define="retry python:request.get('retry', '')">
 <div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
