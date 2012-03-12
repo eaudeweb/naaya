@@ -6,6 +6,13 @@ import warnings
 import tempfile
 import urllib
 import socket
+import scrubber
+
+if 'any' not in dir(__builtins__):
+    from Products.NaayaCore.backport import any
+    scrubber.any = any
+sanitize = scrubber.Scrubber().scrub
+
 
 content_type_to_icons = {
     "audio/aiff": ["AIFF", "aiff"],
@@ -248,3 +255,13 @@ _illegal_xml_re = re.compile(u'[%s]' % u''.join(_illegal_ranges))
 
 def replace_illegal_xml(text, replacement=''):
     return _illegal_xml_re.sub(replacement, text)
+
+def trim(message):
+    """ Remove leading and trailing empty paragraphs """
+    message = re.sub(r'^\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*', '', message)
+    message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
+    return message
+
+def cleanup_message(message):
+    return sanitize(trim(message)).strip()
+

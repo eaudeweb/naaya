@@ -29,6 +29,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from constants import *
 from Products.NaayaCore.managers.utils import utils
 import interfaces
+from naaya.core.utils import cleanup_message
 
 def physical_path(obj):
     return '/'.join(obj.getPhysicalPath())
@@ -309,7 +310,7 @@ class NyCommentable:
         author = REQUEST.AUTHENTICATED_USER.getUserName()
 
         ob = self._comment_add(title = form_data.get('title'),
-                               body = form_data.get('body'),
+                               body = cleanup_message(form_data.get('body')),
                                author = author,
                                releasedate = self.utGetTodayDate())
 
