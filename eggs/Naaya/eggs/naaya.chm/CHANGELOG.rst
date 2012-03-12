@@ -1,5 +1,7 @@
 3.0.0 (unreleased)
 ------------------
+* for new portals create a top-level PhotoGallery instead of a
+  PhotoFolder [moregale]
 
 2.4.20 (2012-03-12)
 -------------------

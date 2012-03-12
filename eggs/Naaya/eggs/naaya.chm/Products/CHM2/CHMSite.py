@@ -26,7 +26,7 @@ from Products.NaayaCore.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
-from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
+from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.NaayaGlossary.constants import *
@@ -123,8 +123,8 @@ class CHMSite(NySite):
         self.getLayoutTool().manage_delObjects('skin')
 
         #set default PhotoFolder
-        addNyPhotoFolder(self, id=ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE)
-        self._getOb(ID_PHOTOARCHIVE).approveThis()
+        addNyPhotoGallery(self, id='PhotoGallery', title=TITLE_PHOTOARCHIVE)
+        self._getOb('PhotoGallery').approveThis()
 
         #create and configure LinkChecker instance
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
@@ -212,7 +212,13 @@ class CHMSite(NySite):
         entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
         if len(entries) > 0: return entries[0]
         else: return None
-    def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
+
+    def getPhotoArchive(self):
+        ob = self._getOb('PhotoGallery', None)
+        if ob is None:
+            ob = self._getOb('PhotoArchive', None)
+        return ob
+
     def getNewsArchive(self): return self._getOb('news', None)
     def getEventsArchive(self): return self._getOb('events', None)
 
