@@ -21,6 +21,11 @@ class AdministrationPortlet(object):
     template = NaayaPageTemplateFile('skel/portlets/portlet_administration', globals(),
                                      'Products.CHM2.portlets.portlet_administration')
 
+
+NaayaPageTemplateFile('skel-chm3/portlets/portlet_administration', globals(),
+                      'Products.CHM2.portlets.portlet_administration', 'CHM3')
+
+
 class CHMTermsTagCloudPortlet(object):
     interface.implements(INyPortlet)
     component.adapts(ICHMSite)

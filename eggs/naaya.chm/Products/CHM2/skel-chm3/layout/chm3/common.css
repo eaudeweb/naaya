@@ -3,7 +3,6 @@ Data tables
 */
 
 table.datatable {
-	color: #666666;
 	margin: 1em 0em;
 	width: 95%;
 }
@@ -14,14 +13,8 @@ table.datatable {
 
 .datatable th {
 	text-align: center;
-	background-color: #4CA6D6;
-	border-bottom: 2px solid white;
 	border-top: none;
-	color: #fff;
-}
-
-.datatable th a {
-	color: #fff;
+	background: #ccc;
 }
 
 .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
@@ -59,28 +52,6 @@ tr.row-even {
 	border-right: none;
 }
 
-.datatable th:hover {
-	color: #333333;
-	background-color: #EFEFEF;
-}
-
-.datatable th:hover a {
-	color: #333333;
-}
-
-.datatable a,
-.table-message a,
-.message-empty a {
-	color: #346D9F;
-	text-decoration: underline;
-}
-
-.datatable a:hover,
-.table-message a:hover,
-.message-empty a:hover {
-	text-decoration: none;
-}
-
 .datatable tr.row-odd:hover,
 .datatable tr.row-even:hover {
 	background-color: #F6FCE3;
@@ -98,7 +69,6 @@ markup used IDs.
 	line-height:normal;
 	margin: 20px 0;
 	overflow: hidden;
-	border-bottom: 2px solid #888;
 }
 
 #tabbedmenu ul,
@@ -115,6 +85,11 @@ markup used IDs.
 	white-space: nowrap;
 	list-style-image: none;
 	list-style:none;
+	border-bottom: 1px solid #888;
+}
+
+#tabbedmenu li#currenttab,
+.tabbedmenu li.currenttab {
 }
 
 #tabbedmenu li:last-child,
@@ -128,17 +103,19 @@ markup used IDs.
 	text-decoration: none;
 	font-weight: bold;
 	padding: 6px 10px;
-	color: #888;
+	color: #fff;
 	border: 1px solid #888;
-	border-bottom: none;
+	background-color: #888;
+	margin-bottom: -1px;
 }
 
 #tabbedmenu #currenttab a,
 .tabbedmenu .currenttab a {
-	background-color: #888;
 	text-decoration: none;
 	font-weight: bold;
-	color: #fff;
+	color: #888;
+	background: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 #tabbedmenu #currenttab span,
@@ -169,12 +146,12 @@ ul.menu-bar a:visited {
 	text-decoration: none;
 }
 
-ul.menu-bar li.menu-bar-level1 {
+ul.menu-bar > li {
 	float: left;
 	margin: 0 1em;
 }
 
-ul.menu-bar a.menu-bar-level1-link {
+ul.menu-bar > li > a {
 	display: block;
 }
 
@@ -196,10 +173,12 @@ Buttons, links, bars with buttons
 
 .floated-buttons {
 	float: right;
-	margin-right: 0.5em;
+	margin-left: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 .buttons a {
+	display: block;
 	padding: 0.2em 0.5em;
 	text-decoration: none;
 	background-color: #888;
@@ -443,13 +422,6 @@ Pop up windows used as pickers
 Form fields, used in lots of places (edit content, various
 admin pages, anywhere a complex form is displayed)
 */
-.field {
-	margin: 1em 0;
-}
-
-.field-inline {
-	margin: 1em 0 0 1em;
-}
 
 .field label {
 	display: block;
@@ -478,8 +450,6 @@ just folder
 */
 
 #admin_this_folder {
-	padding: 0.4em 0.5em 0.4em 0;
-	background-color: #ddd;
 	text-align: left;
 }
 
@@ -495,10 +465,6 @@ just folder
 	background-color: #fff;
 	color: #000;
 	text-decoration: none;
-}
-
-#admin_this_folder a:hover {
-	background: #ccc;
 }
 
 #admin_this_folder span {
@@ -528,10 +494,7 @@ forum
 
 /* second menu */
 #toolbar {
-	padding: 0.6em;
-	padding-left: 0.6em;
-	margin-top: 0.8em;
-	background-color: #ddd;
+	padding: 5px 0 12px;
 }
 
 #toolbar a {
@@ -556,8 +519,6 @@ forum
 }
 
 div#toolbar input {
-	padding: 0 0.5em 1em;
-	height: 1.6em;
 	border: 1px solid #CCC;
 	background: #F6F6F6;
 	overflow: visible;
@@ -800,51 +761,6 @@ contentratings
 
 
 /**********************************************************
-Sortable tables
-*/
-
-.sortable th a:link,
-.sortable th a:visited,
-.sortable th span {
-	display: inline;
-}
-
-.sortable {
-	font-size: 0.9em;
-	line-height:normal;
-}
-
-.sortable th {
-	background: #ccc;
-	border: 1px outset #fff;
-	margin:0;
-	padding:0;
-	white-space: nowrap;
-	vertical-align: top;
-}
-
-.sortable th a:link,
-.sortable th a:visited,
-.sortable th span {
-	display:block;
-	text-decoration: none;
-	font-weight: normal;
-	color: black;
-	padding:1px 0.5em;
-}
-
-.sortable th a:hover {
-	color:white;
-	background: #aaa;
-}
-
-.sortable tbody tr.zebraeven {
-	background-color: white;
-}
-
-
-
-/**********************************************************
 Pagination
 */
 
@@ -998,10 +914,6 @@ div.separator {
 	margin-top: 1.5em;
 }
 
-.search-box:hover {
-	background-color: #FFFFDD;
-}
-
 .second_tab_set {
 	font-family: tahoma,verdana,sans-serif;
 	font-size: 90%;
@@ -1139,8 +1051,6 @@ Site search
 .searchQuery .styled_button {
 	height: 2em;
 	padding-top: 0;
-	border: 1px solid #ccc;
-	background: #ddd;
 	cursor: pointer;
 }
 
@@ -1206,7 +1116,6 @@ div.marker-body h3 {
 
 #portalmap_center {
 	padding: 0px;
-	border: 1px solid #ccc;
 	font-size: 12px;
 }
 
@@ -1233,10 +1142,6 @@ div.marker-body h3 {
 .portalmap_location_filters {
 	float:left;
 	width: 50%;
-}
-
-.portalmap_location_filters input.text_input {
-	width: 75%;
 }
 
 .portalmap_portlet {
@@ -1386,6 +1291,10 @@ div.marker-body h3 {
 	width: 36px;
 	height: 36px;
 	background: url(www/zoom-out.png) no-repeat;
+}
+
+.marker-balloon {
+	position: absolute;
 }
 
 
@@ -1735,6 +1644,10 @@ Naaya Thesaurus
 /**********************************************************
 Various other rules
 */
+
+.cleaner {
+	clear: both;
+}
 
 /* glossary widget (javascript picker) */
 .icon-image {

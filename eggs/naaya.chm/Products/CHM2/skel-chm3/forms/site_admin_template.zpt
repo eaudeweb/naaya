@@ -1,8 +1,6 @@
 <tal:block metal:define-macro="page">
 <metal:block use-macro="python:here.standard_template_macro('light')">
 
-<metal:block fill-slot="breadcrumb"></metal:block>
-
 <metal:block fill-slot="body">
 
 <script tal:attributes="src string:${here/getSitePath}/misc_/Naaya/jquery.form.js"></script>

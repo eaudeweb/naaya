@@ -127,7 +127,8 @@
         <thead>
           <tr>
             <th>Column one</th>
-            <th>Column two</th>
+            <th><a href="#">Column two (sortable)
+                <img src="misc_/Naaya/sort_asc.gif" alt=""></a></th>
             <th>Column three</th>
           </tr>
         </thead>
