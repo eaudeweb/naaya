@@ -20,8 +20,10 @@
 
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+    <link rel="stylesheet" tal:attributes="href string:${site_url}/++resource++Products.Naaya/lib/slideshow/slideshow.css" />
     <link rel="stylesheet" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
-    <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/common.css" />
+    <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/../common.css" />
+    <link rel="stylesheet" tal:attributes="href string:${site_url}/additional_style_css" />
     <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/style.css" />
 
     <tal:block replace="structure python: here.getFormsTool().getForm('site_scripts')()">
@@ -58,7 +60,7 @@
   <tal:block define="global no_center_portlets no_center_portlets|nothing"
              condition="not:no_center_portlets">
     <tal:block define="global center_portlets_html python:' '.join(
-                                  item({'here': here, 'portlet_macro': 'portlet_center_macro', 'box_class': 'medium-box'})
+                                  item({'here': here, 'portlet_macro': 'portlet_center_macro'})
                                   for item in here.portal_portlets.get_portlets_for_obj(here, 'center')
                               ).strip();
                        global no_center_portlets not:center_portlets_html"/>

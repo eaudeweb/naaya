@@ -1,23 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
-	<forms>
-		<form id="site_admin_comments" title="Portal administration - comments for content"/>
-		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
-		<form id="site_admin_properties" title="Portal administration - properties"/>
-		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
-		<form id="site_admin_urls" title="Portal administration - urls"/>
-		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_external_search" title="External search"/>
-		<form id="site_index" title="Portal home page"/>
-		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
-		<form id="site_links_group" title="Group of links"/>
-		<form id="site_requestrole" title="Request account page"/>
-		<form id="site_search" title="Portal search"/>
-		<form id="site_sitemap" title="Portal site map"/>
-		<form id="site_urlmap" title="Portal url map"/>
-		<form id="sitemap_xml" title="Google sitemap"/>
-	</forms>
-	<layout default_skin_id="chm3" default_scheme_id="default" diskpath_prefix="Products.CHM2:skel-chm3">
+	<layout default_skin_id="chm3"
+		default_scheme_id="color-green"
+		diskpath_prefix="Products.CHM2:skel-chm3">
 		<skin id="chm3" title="CHM3">
 			<template id="portlet_center_macro" title=""/>
 			<template id="portlet_left_macro" title=""/>
@@ -31,16 +16,53 @@
 			<template id="element_mainsections" title=""/>
 			<template id="element_splash_content" title=""/>
 			<template id="element_topmenu" title=""/>
-			<scheme id="default" title="">
-				<diskfile path="common.css" id="common.css"/>
-				<image id="Naaya_Folder-icon" title=""/>
-				<image id="Naaya_Folder-icon-marked" title=""/>
-				<image id="collapse-icon.png" title=""/>
-				<file id="color.js" title=""/>
-				<image id="expand-icon.png" title=""/>
-				<image id="logo.png" title=""/>
+			<diskfile path="common.css"/>
+			<diskfile path="sprite.png"/>
+			<diskfile path="Naaya_Folder-icon"/>
+			<diskfile path="Naaya_Folder-icon-marked"/>
+			<folder id="slider-images" title="">
+				<file id="branduse.jpg" title=""/>
+				<file id="cbd.png" title=""/>
+			</folder>
+			<scheme id="color-green" title="Green">
 				<file id="style.css" title=""/>
-				<image id="sprite.png" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-white" title="White">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-blue" title="Blue">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-pattern-leaves" title="Pattern leaves">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-orange" title="Orange">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-green-grey" title="Green-grey">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-light-green" title="Light green">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-blue-grey" title="Blue-grey">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-lime" title="Lime">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
+			</scheme>
+			<scheme id="color-animals" title="Animals">
+				<file id="style.css" title=""/>
+				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 		</skin>
 	</layout>
@@ -99,28 +121,14 @@
 			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
 			<link id="105" title="Photos" description="Photo archive" url="/PhotoArchive/" relative="1" permission="" order="60"/>
 		</linkslist>
-		<linkslist id="menunav_about" title="About" portlet="">
-			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
-		</linkslist>
-		<linkslist id="menunav_sitemap" title="Sitemap" portlet="">
-			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
-		</linkslist>
-		<linkslist id="menunav_news" title="News" portlet="">
-			<link id="01" title="News" description="" url="/news/" relative="1" permission="" order="50"/>
-		</linkslist>
-		<linkslist id="menunav_events" title="Events" portlet="">
-			<link id="01" title="Events" description="" url="/events/" relative="1" permission="" order="50"/>
-		</linkslist>
-		<linkslist id="menunav_stories" title="Stories" portlet="">
-			<link id="01" title="Stories" description="" url="/stories/" relative="1" permission="" order="50"/>
-		</linkslist>
-		<linkslist id="menunav_photos" title="Photos" portlet="">
-			<link id="01" title="Photos" description="" url="/PhotoArchive/" relative="1" permission="" order="50"/>
-		</linkslist>
-		<linkslist id="menunav_more" title="More" portlet="">
-			<link id="01" title="Portal map" description="" url="/portal_map/" relative="1" permission="" order="20"/>
-			<link id="02" title="Forum" description="" url="/portal_forum/" relative="1" permission="" order="50"/>
-			<link id="03" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="80"/>
+		<linkslist id="top_menu" title="Top menu" portlet="">
+			<link id="01" title="News" description="" url="/news/" relative="1" permission="" order="10"/>
+			<link id="02" title="Events" description="" url="/events/" relative="1" permission="" order="20"/>
+			<link id="03" title="Stories" description="" url="/stories/" relative="1" permission="" order="30"/>
+			<link id="04" title="Map" description="" url="/portal_map/" relative="1" permission="" order="40"/>
+			<link id="05" title="Photos" description="" url="/PhotoArchive/" relative="1" permission="" order="50"/>
+			<link id="06" title="Forum" description="" url="/portal_forum/" relative="1" permission="" order="60"/>
+			<link id="07" title="About" description="" url="/About/" relative="1" permission="" order="70"/>
 		</linkslist>
 	</portlets>
 	<emails>

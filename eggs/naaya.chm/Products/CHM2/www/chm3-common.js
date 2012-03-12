@@ -2,7 +2,7 @@ $(document).ready(function(){
 	$('.js-enabled').remove();
 	
 	$('.menu-bar').each(function() {
-		var top_items = $('li.menu-bar-level1', this);
+		var top_items = $('> li', this);
 		top_items.mouseenter(function(evt) {
 			$(this).addClass('menu-bar-hover');
 		});
