@@ -1,4 +1,7 @@
-3.0.0 (unreleased)
+3.0.1 (unreleased)
+------------------
+
+3.0.0 (2012-03-12)
 ------------------
 * for new portals create a top-level PhotoGallery instead of a
   PhotoFolder [moregale]
