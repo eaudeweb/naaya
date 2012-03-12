@@ -44,7 +44,7 @@ function fTreeClick(expand)
 		<tal:block tal:condition="python:tree_node[1]==1" tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))">
 			<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" i18n:attributes="alt" /></a>
 		</tal:block>
-		<img tal:define="icon python:here.rstk.get_object_view_info(tree_node[0])['icon']" tal:condition="icon"
+		<img tal:define="icon python:here.rstk['get_object_view_info'](tree_node[0])['icon']" tal:condition="icon"
 			tal:attributes="src icon/url; alt icon/title; title icon/title" width="16" />
 		<a tal:define="node_path python:tree_node[0].absolute_url()" tal:attributes="href node_path" tal:content="python:tree_node[0].title_or_id()">folder</a>
 		<tal:block tal:condition="python:tree_node[0].can_be_seen()">

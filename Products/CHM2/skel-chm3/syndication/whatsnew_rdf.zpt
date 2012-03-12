@@ -9,7 +9,7 @@
 <li tal:repeat="item channel/get_objects_for_rdf">
 	
 	<a tal:attributes="href item/absolute_url">
-		<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+		<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 		     tal:attributes="src icon/url; title icon/title; alt icon/title"
 		     style="vertical-align: -5px;" />
 		<tal:block content="item/title_or_id" />
