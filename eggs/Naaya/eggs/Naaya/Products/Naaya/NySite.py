@@ -3821,6 +3821,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
 
     def standard_template_macro(self, macro='page'):
+        """
+        Get a macro from the standard template of the current portal
+        layout.
+        """
         template = self.getLayoutTool().get_standard_template()
         if macro not in template.macros:
             macro = 'page'
@@ -3829,7 +3833,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'sitemap_xml')
     def sitemap_xml(self, REQUEST=None, RESPONSE=None):
         """ """
-        
         return self.getFormsTool().getContent({'here': self}, 'sitemap_xml')
 
     sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(), 'naaya.semanticweb.sitemap')

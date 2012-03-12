@@ -1,6 +1,31 @@
 Page templates
 ==============
 
+
+The standard template
+---------------------
+Each portal layout has one or more `standard template` macros which render the
+header, footer and portlets. They are included using the
+:ref:`~Products.Naaya.NySite.NySite.standard_template_macro` function::
+
+    <metal:block use-macro="python:here.standard_template_macro()">
+        <metal:block fill-slot="body">
+            <p>Body content goes here</p>
+        </metal:block>
+    </metal:block>
+
+
+A number of slots are provided by all standard templates:
+
+`head`
+    Part of the ``<head>`` HTML tag. Use this to include custom meta
+    tags or stylesheets.
+
+`body`
+    Slot for the main content of the page, surrounded by the header,
+    footer, and portlets.
+
+
 Internationalization
 --------------------
 Most messages included in templates should be translatable. For this, we use
