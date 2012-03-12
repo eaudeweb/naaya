@@ -1,5 +1,9 @@
-3.0.1 (unreleased)
+3.0.2 (unreleased)
 ------------------
+
+3.0.1 (2012-03-12)
+------------------
+* tweaks to initial portal content [moregale]
 
 3.0.0 (2012-03-12)
 ------------------
