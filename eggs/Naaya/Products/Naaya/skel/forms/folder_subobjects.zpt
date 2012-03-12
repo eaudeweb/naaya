@@ -29,7 +29,8 @@
 		      meta_types options/meta_types;
 		      has_custom_value options/has_custom_value">
 
-<form method="post" action="manageSubobjects" name="manageSubobjects">
+<form method="post" action="manageSubobjects" name="manageSubobjects"
+      class="subobjects-management-form">
   <div>
     <input id="load_default"
       onchange = "displayElement(this, 'nypluggable_meta_types')"

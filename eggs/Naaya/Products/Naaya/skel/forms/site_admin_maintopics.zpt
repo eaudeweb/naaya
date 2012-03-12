@@ -30,7 +30,7 @@
 	The order of display can be set by dragging and dropping the boxes, and then
 	clicking <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
 </p>
-<form name="frmDragDrop" method="post" action="">
+<form name="frmDragDrop" class="maintopics-drag-drop-form" method="post" action="">
 	<ul id="maintopicslist" class="boxy">
 		<li tal:repeat="item maintopics" tal:attributes="id python:here.rstk.path_in_site(item)">
 			<input type="checkbox" class="chk" name="ids"

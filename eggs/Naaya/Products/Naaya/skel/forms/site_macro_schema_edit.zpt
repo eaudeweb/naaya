@@ -101,7 +101,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </div>
 
 <!-- Edit form -->
-<form name="frmEdit" method="post" action="." enctype="multipart/form-data">
+<form name="frmEdit" class="edit-object-form" method="post" action="." enctype="multipart/form-data">
 
 <!-- Submit buttons-->
 <div class="field" metal:define-slot="submit_buttons">
