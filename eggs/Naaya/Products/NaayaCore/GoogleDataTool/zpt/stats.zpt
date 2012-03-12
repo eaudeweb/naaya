@@ -11,7 +11,6 @@
 		<li><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Google Snippets</a></li>
 	</ul>
 </div>
-<br clear="all" />
 
 <tal:block define="authorized here/checkAuthorization">
 

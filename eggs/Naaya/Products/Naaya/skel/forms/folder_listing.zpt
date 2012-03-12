@@ -13,6 +13,12 @@
 	ratings here/folder_listing_ratings;
 	iframe python: bool(request.get('iframe', 0))">
 
+<style>
+    .rating {
+        width: 100px;
+    }
+</style>
+
 <metal:block define-slot="folder-listing">
 <tal:block condition="iframe" on-error="here/rstk/catch_unauthorized">
 	<!DOCTYPE html>
@@ -142,8 +148,8 @@ function submit_form_action(action){
 					<tal:comment condition="nothing">
 						Fill this slot to add custom columns (heading for columns goes here).
 					</tal:comment>
-					<th width="10%" tal:condition="ratings"
-						class="edit" i18n:translate="">Rating</th>
+					<th tal:condition="ratings"
+						class="rating" i18n:translate="">Rating</th>
 				</metal:block>
 			</tr>
 		</metal:block>
@@ -211,7 +217,7 @@ function submit_form_action(action){
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
-					<td witdh="10%" tal:condition="ratings" class="type">
+					<td tal:condition="ratings" class="rating">
 						<tal:block condition="folder/user_rating_view|nothing"
 							replace="structure folder/user_rating_stars"/>
 					</td>
@@ -290,7 +296,7 @@ function submit_form_action(action){
 					</td>
 					<td tal:condition="ratings" class="type">
 						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"
-							condition="object/is_ratable" replace="structure user_rating"/>
+							condition="object/is_ratable|nothing" replace="structure user_rating"/>
 					</td>
 
 				</tal:block>

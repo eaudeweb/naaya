@@ -1,6 +1,7 @@
 2.12.74 (unreleased)
 --------------------
 * Fully flexible portlet assignment from skel.xml [moregale]
+* fix markup in templates, remove inline css [moregale]
 
 2.12.73 (2012-03-12)
 --------------------
