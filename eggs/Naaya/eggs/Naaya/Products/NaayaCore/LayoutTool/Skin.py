@@ -48,6 +48,7 @@ class Skin(Folder):
         {'name': METATYPE_DISKFILE, 'action': 'manage_addDiskFile_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
         {'name': METATYPE_DISKTEMPLATE, 'action': 'manage_addDiskTemplate_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
         {'name': 'Image', 'action': 'manage_addProduct/OFSP/imageAdd', 'permission': 'Add Documents, Images, and Files' },
+        {'name': 'File', 'action': 'manage_addProduct/OFSP/fileAdd', 'permission': 'Add Documents, Images, and Files' },
         {'name': 'Folder', 'action': 'manage_addProduct/OFSP/folderAdd', 'permission': 'Add Folders' },
     )
     all_meta_types = meta_types

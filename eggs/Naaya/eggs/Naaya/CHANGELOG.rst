@@ -3,6 +3,7 @@
 * Fully flexible portlet assignment from skel.xml [moregale]
 * fix markup in templates, remove inline css [moregale]
 * NyFolderBase allowed meta_types defaults to empty list [moregale]
+* Allow adding files and folders in a portal_layout skin [moregale]
 
 2.12.73 (2012-03-12)
 --------------------
