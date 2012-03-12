@@ -36,7 +36,7 @@
     <script tal:attributes="src string:${site_url}/++resource++Products.CHM2-www/chm3-common.js"></script>
     <metal:block define-slot="head"></metal:block>
     <tal:block replace="structure here/portal_statistics/gw_verify" />
-    <tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />
+    <tal:block replace="structure python:here.rstk['google_analytics'](here.portal_statistics.ga_id)" />
   </head>
 
   <tal:block define="global no_left_portlets no_left_portlets|nothing"
