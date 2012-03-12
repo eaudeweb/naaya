@@ -17,7 +17,7 @@
     </div>
 
     <div id="footer-content-bottom" class="wrap">
-        <tal:block define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
+        <tal:block define="l_list python:here.getPortletsTool().getLinksListById('related_sites').get_links_list()">
             <tal:block repeat="item l_list">
                 <a tal:condition="python:here.checkPermissionForLink(item.permission, here)"
                     tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);">

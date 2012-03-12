@@ -85,50 +85,25 @@
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestphotos">
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<portlet id="portlet_calendar" title="Calendar of Events"/>
-		<linkslist id="topnav_links" title="Top navigation links" portlet="">
-			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://cbd.int/chm" relative="0" permission="" order="10"/>
-			<link id="101" title="Europa" description="Gateway to the European Union" url="http://europa.eu/" relative="0" permission="" order="20"/>
-			<link id="102" title="DG Environment" description="Directorate General Environment" url="http://ec.europa.eu/environment/index_en.htm" relative="0" permission="" order="30"/>
-			<link id="103" title="DG Env-Nature" description="Directorate General Environment-Nature" url="http://ec.europa.eu/environment/nature/index_en.htm" relative="0" permission="" order="40"/>
-			<link id="104" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu/" relative="0" permission="" order="50"/>
-			<link id="105" title="GBIF" description="Global Biodiversity Information Facility" url="http://www.gbif.org/" relative="0" permission="" order="60"/>
-			<link id="106" title="EUNIS Database" description="European Nature Information System" url="http://eunis.eea.europa.eu" relative="0" permission="" order="70"/>
-			<link id="107" title="SEBI" description="European Biodiversity Indicators 2010" url="http://biodiversity-chm.eea.europa.eu/information/indicator/F1090245995" relative="0" permission="" order="80"/>
-			<link id="108" title="Biosafety BCH" description="Global Biosafety Clearing-House (CBD)" url="http://bch.cbd.int/" relative="0" permission="" order="90"/>
-			<link id="109" title="EC ABS" description="EC Access and Benefit Sharing portal" url="http://biodiversity-chm.eea.europa.eu/information/F1046684686/F1118645293" relative="0" permission="" order="100"/>
-		</linkslist>
-		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
-			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
-			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
-			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
-			<link id="105" title="Photos" description="Photo gallery" url="/PhotoGallery/" relative="1" permission="" order="60"/>
-			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
-			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
-			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
-			<link id="110" title="Glossary" description="" url="/chm_terms" relative="1" permission="" order="110"/>
-			<link id="112" title="Network search" description="" url="/external_search_html" relative="1" permission="" order="130"/>
-		</linkslist>
-		<linkslist id="menunav_services" title="Services" portlet="">
-			<link id="110" title="Glossary" description="" url="/chm_terms" relative="1" permission="" order="110"/>
-			<link id="112" title="Network search" description="" url="/external_search_html" relative="1" permission="" order="130"/>
-			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="Naaya - Publish content" order="100"/>
-			<link id="113" title="Portal map" description="" url="/portal_map" relative="1" permission="" order="150"/>
-			<link id="108" title="Fora" description="" url="/portal_forum" relative="1" permission="" order="140"/>
-		</linkslist>
-		<linkslist id="menunav_content" title="Content" portlet="">
-			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
-			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
-			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
-			<link id="105" title="Photos" description="Photo gallery" url="/PhotoGallery/" relative="1" permission="" order="60"/>
-		</linkslist>
 		<linkslist id="top_menu" title="Top menu" portlet="">
-			<link id="01" title="News" description="" url="/news/" relative="1" permission="" order="10"/>
-			<link id="02" title="Events" description="" url="/events/" relative="1" permission="" order="20"/>
-			<link id="03" title="Stories" description="" url="/stories/" relative="1" permission="" order="30"/>
-			<link id="04" title="Map" description="" url="/portal_map/" relative="1" permission="" order="40"/>
-			<link id="05" title="Photos" description="" url="/PhotoGallery/" relative="1" permission="" order="50"/>
-			<link id="06" title="Forum" description="" url="/portal_forum/" relative="1" permission="" order="60"/>
-			<link id="07" title="About" description="" url="/About/" relative="1" permission="" order="70"/>
+			<link id="01" order="10" title="News" description="" url="/news/" relative="1" permission=""/>
+			<link id="02" order="20" title="Events" description="" url="/events/" relative="1" permission=""/>
+			<link id="03" order="30" title="Stories" description="" url="/stories/" relative="1" permission=""/>
+			<link id="04" order="40" title="Map" description="" url="/portal_map/" relative="1" permission=""/>
+			<link id="05" order="50" title="Photos" description="" url="/PhotoGallery/" relative="1" permission=""/>
+			<link id="06" order="60" title="Forum" description="" url="/portal_forum/" relative="1" permission=""/>
+			<link id="07" order="70" title="Glossary" description="" url="/chm_terms/" relative="1" permission=""/>
+			<link id="08" order="80" title="About" description="" url="/About/" relative="1" permission=""/>
+		</linkslist>
+		<linkslist id="related_sites" title="Related sites" portlet="">
+			<link id="01" order="10" title="BISE" description="Biodiversity Information System for Europe" url="htp://biodiversity.europa.eu" relative="0" permission=""/>
+			<link id="02" order="20" title="DG Environment" description="Directorate General Environment" url="http://ec.europa.eu/environment/index_en.htm" relative="0" permission=""/>
+			<link id="03" order="30" title="DG Env-Nature" description="Directorate General Environment-Nature" url="http://ec.europa.eu/environment/nature/index_en.htm" relative="0" permission=""/>
+			<link id="04" order="40" title="EUNIS Database" description="European Nature Information System" url="http://eunis.eea.europa.eu" relative="0" permission=""/>
+			<link id="05" order="50" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu/" relative="0" permission=""/>
+			<link id="06" order="60" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://cbd.int/chm" relative="0" permission=""/>
+			<link id="07" order="70" title="Biosafety BCH" description="Global Biosafety Clearing-House (CBD)" url="http://bch.cbd.int/" relative="0" permission=""/>
+			<link id="08" order="80" title="GBIF" description="Global Biodiversity Information Facility" url="http://www.gbif.org/" relative="0" permission=""/>
 		</linkslist>
 	</portlets>
 	<emails>
