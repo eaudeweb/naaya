@@ -23,6 +23,8 @@ class NyFolderBase(Folder, NyPermissions):
 
     _dynamic_content_types = {}
 
+    folder_meta_types = ()
+
     def contained_objects(self):
         return [o for o in self.objectValues(self.get_meta_types())
                 if getattr(o, 'submitted', 0) == 1]
