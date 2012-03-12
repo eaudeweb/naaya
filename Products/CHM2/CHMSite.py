@@ -167,6 +167,10 @@ class CHMSite(NySite):
         # enable some notifications
         self['portal_notification'].config['enable_monthly'] = True
 
+        portal_layout = self['portal_layout']
+        if 'chm3' in portal_layout.objectIds():
+            portal_layout['chm3']._setProperty('main_section_image_size', '978x75')
+
     def get_data_path(self):
         """ """
         return CHM2_PRODUCT_PATH
