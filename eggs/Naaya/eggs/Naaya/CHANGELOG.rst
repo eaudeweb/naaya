@@ -1,4 +1,7 @@
-2.12.74 (unreleased)
+2.12.75 (unreleased)
+--------------------
+
+2.12.74 (2012-03-12)
 --------------------
 * Fully flexible portlet assignment from skel.xml [moregale]
 * fix markup in templates, remove inline css [moregale]
