@@ -34,6 +34,7 @@ setup(name='Naaya',
           'simplejson >= 2.0.9',
           'vobject >= 0.8.1c',
           'Unidecode',
+          'scrubber',
 
           #Zope
           'contentratings',
