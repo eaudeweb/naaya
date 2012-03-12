@@ -1,6 +1,5 @@
-<tal:block metal:define-macro="page">
-<metal:block use-macro="python:here.standard_template_macro('light')">
-
+<metal:block define-macro="page"
+             extend-macro="python:here.standard_template_macro('light')">
 <metal:block fill-slot="body">
 
 <script tal:attributes="src string:${here/getSitePath}/misc_/Naaya/jquery.form.js"></script>
@@ -37,4 +36,3 @@
 <metal:block fill-slot="right-portlets"></metal:block>
 
 </metal:block>
-</tal:block>
