@@ -11,6 +11,11 @@
         <a tal:attributes="href string:${site_url}/info/accessibility"
             accesskey="0"
             i18n:translate="">Accessibility statement</a>
+        <a tal:define="notif_tool python:here.getSite().getNotificationTool();
+                       available python:list(notif_tool.available_notif_types())"
+           tal:attributes="href notif_tool/absolute_url"
+           tal:condition="available"
+            i18n:translate="">Subscribe to notifications</a>
         <a tal:attributes="href string:${site_url}/sitemap_html"
             class="right"
             i18n:translate="">Sitemap</a>
