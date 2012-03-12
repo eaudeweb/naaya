@@ -6,8 +6,7 @@
     <tal:block define="main_section_images python:skin['main_section_images']"
                condition="python:main_section_images.hasObject(context_id)">
       <div tal:define="image python:main_section_images[context_id]"
-           class="mainsection-image-holder"
-           style="position:relative;width:100%;">
+           class="main-section-image-holder">
         <img tal:attributes="src image/absolute_url"/>
       </div>
     </tal:block>
