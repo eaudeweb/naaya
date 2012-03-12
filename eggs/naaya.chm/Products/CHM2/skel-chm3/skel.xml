@@ -93,12 +93,13 @@
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<portlet id="portlet_calendar" title="Calendar of Events"/>
 		<portlet id="portlet_current_mainsection" title="Current main section"/>
-		<assign parent="" inherit="0" position="left" id="portlet_maincategories"/>
+		<assign parent="" inherit="0" position="left" id="portlet_calendar"/>
+		<assign parent="" inherit="0" position="left" id="portlet_whatsnew_rdf"/>
 		<assign parent="" inherit="1" position="left" id="portlet_current_mainsection"/>
 		<assign parent="" inherit="0" position="center" id="portlet_lateststories_rdf"/>
 		<assign parent="" inherit="0" position="center" id="portlet_upcomingevents_rdf"/>
-		<assign parent="" inherit="0" position="center" id="portlet_whatsnew_rdf"/>
 		<assign parent="" inherit="0" position="center" id="portlet_latestphotos"/>
+		<assign parent="" inherit="0" position="center" id="portlet_latestuploads_rdf"/>
 		<linkslist id="top_menu" title="Top menu" portlet="">
 			<link id="01" order="10" title="News" description="" url="/news/" relative="1" permission=""/>
 			<link id="02" order="20" title="Events" description="" url="/events/" relative="1" permission=""/>
