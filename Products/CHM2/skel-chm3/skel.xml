@@ -25,6 +25,12 @@
 				<file id="branduse.jpg" title=""/>
 				<file id="cbd.png" title=""/>
 			</folder>
+			<folder id="main_section_images" title="">
+				<file id="convention" title="" content_type="image/png"/>
+				<file id="cooperation" title="" content_type="image/png"/>
+				<file id="network" title="" content_type="image/png"/>
+				<file id="information" title="" content_type="image/png"/>
+			</folder>
 			<scheme id="color-green" title="Green">
 				<file id="style.css" title=""/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
