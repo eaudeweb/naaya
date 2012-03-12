@@ -1,7 +1,5 @@
 <metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
 
-<metal:block fill-slot="breadcrumb"></metal:block>
-
 <metal:block fill-slot="page-middle">
 
 	<div class="folder_social">
