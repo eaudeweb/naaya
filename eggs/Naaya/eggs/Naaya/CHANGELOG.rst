@@ -1,5 +1,6 @@
 2.12.75 (unreleased)
 --------------------
+* portlet administration - select portlet using "chosen" [moregale]
 
 2.12.74 (2012-03-12)
 --------------------
