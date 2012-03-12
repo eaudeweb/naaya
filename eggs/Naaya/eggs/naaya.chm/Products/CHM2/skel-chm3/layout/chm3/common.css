@@ -615,6 +615,10 @@ table#folderfile_list {
 	vertical-align: middle;
 }
 
+#folderfile_list .rating {
+	width: 100px;
+}
+
 td.title-column a {
 	color: #3F5967;
 }
@@ -1016,6 +1020,37 @@ ul.boxy li {
 	padding: 4px;
 	border: 1px solid #ccc;
 	background-color: #eee;
+}
+
+
+
+/**********************************************************
+Administration - other
+*/
+
+.admin-content .logo-preview {
+	max-width: 128px;
+	max-height: 128px;
+}
+
+
+
+/**********************************************************
+Schema & widgets
+*/
+
+.schema-widget-geo {
+	background-color: #ecf5fa;
+	border: 1px solid #b6cde1;
+	margin-top: 0.5em;
+	padding: 0.5em;
+	width: 430px;
+}
+
+.schema-widget-geo #map {
+	width: 400px;
+	height: 400px;
+	position: relative;
 }
 
 
