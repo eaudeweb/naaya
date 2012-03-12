@@ -89,6 +89,10 @@
 
           <div id="center_content_holder">
 
+            <metal:block define-slot="mainsection_image">
+              <metal:block use-macro="python:current_layout['element_mainsection_image'].macros['content']"/>
+            </metal:block>
+
             <tal:block condition="not:no_left_portlets">
               <metal:block define-slot="left-portlets">
                 <div class="portlet-column-left"
