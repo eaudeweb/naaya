@@ -35,8 +35,8 @@ METATYPE_CHMSITE = 'CHM Site'
 ID_LINKCHECKER = 'LinkChecker'
 TITLE_LINKCHECKER = 'URL checker'
 
-ID_PHOTOARCHIVE = 'PhotoArchive'
-TITLE_PHOTOARCHIVE = 'Photo archive'
+ID_PHOTOARCHIVE = 'PhotoGallery'
+TITLE_PHOTOARCHIVE = 'Photo gallery'
 
 ID_GLOSSARY_KEYWORDS = 'glossary_keywords'
 TITLE_GLOSSARY_KEYWORDS = 'Keywords glossary'
