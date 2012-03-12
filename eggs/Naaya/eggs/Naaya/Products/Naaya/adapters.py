@@ -7,6 +7,10 @@ def _get_icon_url(ob):
     name = ob.meta_type.replace(' ', '_')
     skin_icon = scheme._getOb(name + '-icon', None)
     skin_icon_marked = scheme._getOb(name + '-icon-marked', None)
+    if skin_icon is None:
+        skin_icon = scheme.aq_parent._getOb(name + '-icon', None)
+    if skin_icon_marked is None:
+        skin_icon_marked = scheme.aq_parent._getOb(name + '-icon-marked', None)
 
     if not ob.approved and skin_icon_marked is not None:
         return skin_icon_marked.absolute_url()
