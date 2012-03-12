@@ -1,4 +1,7 @@
-2.5 (unreleased)
+3.0.0 (unreleased)
+------------------
+
+2.4.20 (2012-03-12)
 -------------------
 * path correction for social icons in style_common [dumitval]
 * New bundle "CHM3" with separate skel folder and new layout
