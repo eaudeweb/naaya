@@ -40,6 +40,7 @@ TAG_MAPPING = {
     'syndication/localchannel': {'rename': 'localchannels', 'type': 'list'},
     'syndication/remotechannel': {'rename': 'remotechannels', 'type': 'list'},
     'portlets/portlet': {'rename': 'portlets', 'type': 'list'},
+    'portlets/assign': {'type': 'list'},
     'portlets/linkslist': {'rename': 'linkslists', 'type': 'list'},
     'portlets/linkslist/link': {'rename': 'links', 'type': 'list'},
     'portlets/reflist': {'rename': 'reflists', 'type': 'list'},

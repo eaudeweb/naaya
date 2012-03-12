@@ -590,6 +590,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         inherit = (('right' in inherit_portlets)
                                 or (portlet_id in inherit_portlets))
                         portletstool_ob.assign_portlet('', "right", portlet_id, inherit)
+                if skel_handler.root.portlets.assign:
+                    # unassign any existing portlets if using explicit assignment
+                    for position in ['left', 'right', 'center']:
+                        for portlet_id in portletstool_ob.get_portlet_ids_for('', position):
+                            portletstool_ob.unassign_portlet('', position, portlet_id)
+                for assignment in skel_handler.root.portlets.assign:
+                    parent = assignment.parent or ''
+                    position = assignment.position
+                    portlet_id = assignment.id
+                    inherit = bool(assignment.inherit == '1')
+                    portletstool_ob.assign_portlet(parent, position, portlet_id, inherit)
             #load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:

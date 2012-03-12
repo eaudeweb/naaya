@@ -1,5 +1,6 @@
 2.12.74 (unreleased)
 --------------------
+* Fully flexible portlet assignment from skel.xml [moregale]
 
 2.12.73 (2012-03-12)
 --------------------
