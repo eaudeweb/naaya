@@ -4,6 +4,7 @@
   PhotoFolder [moregale]
 * enable monthly notifications by default [moregale]
 * configurable resolution for mainsection images [moregale]
+* new CHM3 layout ready to use [moregale]
 
 2.4.20 (2012-03-12)
 -------------------

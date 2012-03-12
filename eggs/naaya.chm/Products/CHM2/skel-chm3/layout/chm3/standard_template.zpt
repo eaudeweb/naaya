@@ -137,7 +137,6 @@
     </div>
 
     <metal:block define-slot="footer">
-      <metal:block use-macro="python:current_layout['element_footer_mainsections'].macros['content']"/>
       <metal:block use-macro="python:current_layout['element_footer'].macros['content']"/>
     </metal:block>
 
