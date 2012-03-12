@@ -164,6 +164,9 @@ class CHMSite(NySite):
         #add EC CHM to network portals list
         self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
 
+        # enable some notifications
+        self['portal_notification'].config['enable_monthly'] = True
+
     def get_data_path(self):
         """ """
         return CHM2_PRODUCT_PATH
