@@ -1,5 +1,8 @@
-1.0.17 (unreleased)
--------------------
+1.1.1 (unreleased)
+------------------
+
+1.1.0 (2012-03-13)
+------------------
 * check_item_title is now item_has_title [simiamih]
 * new CHM3-BE bundle that inherits from CHM3 [moregale]
 
