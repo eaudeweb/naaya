@@ -196,13 +196,6 @@ ul#nav {
 }
 
 /* Subtitle (based on page type) and menu */
-.right_link_portlet {
-  width:100%;
-  display:inline-block;
-  margin-bottom: 0;
-  padding: 0;
-  
-}
 
 #right_port {
   float: none;
@@ -255,18 +248,42 @@ p
 }
 
 /* Drop-down menu */
-.right_link_portlet a:visited {
-  color: #252525;
+
+ul#nav {
+    border-top:1px solid #ffffff; /* 3px solid #99cc33*/ /*1px solid #ffffff*/ /*1px solid #ffffff*/ /*1px solid #ffffff*/
+    background-color: #f9f9f9; /*#eeeff0*/ /*#ecf2e1*/ /*#d9d8b9*/ /*#c1c19d*/
+    margin-bottom:1em;
 }
 
-.right_link_portlet ul {
+.right_link_portlet .portlet-title,
+.portlet > h3 {
+    display: none;
+}
+
+ul#nav {
+    padding:0em;
+    margin:0em;
+    overflow: auto;
+}
+
+ul#nav li {
+    list-style-type:none;
+    padding: 0.2em 0.8em;
+}
+
+ul#nav a {
+    color: #252525;
+    text-decoration: none;
+}
+
+ul#nav {
   padding: 0;
   margin: auto;
   list-style: none;
   line-height: 1;
 } /* all lists */
 
-.right_link_portlet ul a,.right_link_portlet ul strong {
+ul#nav a,ul#nav strong {
   cursor: pointer;
   background: #DFDFDF;
   padding: 5px;
@@ -278,11 +295,11 @@ p
   font-weight: normal;
 }
 
-.right_link_portlet ul ul strong {
+ul#nav ul strong {
   background:#DFDFDF url(http://www.biodiv.be/portal_layout/littlemouse/littlemouse/fleche_droite.png) no-repeat right center;
 }
 
-.right_link_portlet ul li {
+ul#nav li {
   float: left;
   margin:0;
   padding: 0px !important;
@@ -291,7 +308,7 @@ p
   font-size:90%;
 } /* all list items */
 
-.right_link_portlet ul li ul {
+ul#nav li ul {
   position: absolute;
   background: transparent;
   width: 180px;
@@ -299,32 +316,28 @@ p
   left: -999em; /* using left instead of display to hide menus because display: none isn't read by screen readers */ 
 } /* second-level lists */
 
-.right_link_portlet ul li ul ul {
+ul#nav li ul ul {
   margin: -23px 0 0 180px;
 } /* third-and-above-level lists */
 
-.right_link_portlet li li {
+ul#nav li li {
   display:block;
   width:180px;
 }
 
-.right_link_portlet ul li:hover ul ul, .right_link_portlet ul li.sfhover ul ul {
+ul#nav li:hover ul ul, ul#nav li.sfhover ul ul {
   left: -999em;
 }
 
-.right_link_portlet ul li:hover ul, .right_link_portlet ul li li:hover ul, .right_link_portlet ul li.sfhover ul, .right_link_portlet ul li li.sfhover ul {
+ul#nav li:hover ul, ul#nav li li:hover ul, ul#nav li.sfhover ul, ul#nav li li.sfhover ul {
   left: auto;
 } /* lists nested under hovered list items */
 
-.right_link_portlet a:hover,.right_link_portlet strong:hover {
+ul#nav a:hover,ul#nav strong:hover {
   background-color:#BABBB8;
 }
 
-.right_link_portlet .content {
-  border: none;
-}
-
-.right_link_portlet .content ul ul ul {
+ul#nav ul ul {
   margin: -23px 0 0 180px !important;
 }
 
