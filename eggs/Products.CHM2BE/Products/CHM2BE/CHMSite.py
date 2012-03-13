@@ -29,7 +29,13 @@ def wrap_loadDefaultData(method):
     def loadDefaultData(self, *args, **kwargs):
         method(self, *args, **kwargs)
         self.loadSkeleton(join(CHM2BE_PRODUCT_PATH))
-        self.set_bundle(chmbe_bundle)
+
+        parent_bundle_name = self.get_bundle().__name__
+        if parent_bundle_name == 'CHM3':
+            self.set_bundle(chm3_be_bundle)
+        else:
+            self.set_bundle(chmbe_bundle)
+
     return loadDefaultData
 
 CHMSite.product_paths.append(CHM2BE_PRODUCT_PATH)
@@ -37,3 +43,6 @@ CHMSite.loadDefaultData = wrap_loadDefaultData(CHMSite.loadDefaultData)
 
 chmbe_bundle = bundles.get("CHMBE")
 chmbe_bundle.set_parent(bundles.get("CHM"))
+
+chm3_be_bundle = bundles.get("CHM3-BE")
+chm3_be_bundle.set_parent(bundles.get("CHM3"))
