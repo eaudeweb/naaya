@@ -27,3 +27,4 @@ def chmbe_bundle_registration():
     from Products.NaayaCore.FormsTool import bundlesupport
     templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
     bundlesupport.register_templates_in_directory(templates_path, 'CHMBE')
+    bundlesupport.register_templates_in_directory(templates_path, 'CHM3-BE')
