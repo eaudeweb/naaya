@@ -66,7 +66,7 @@
 
 <h2 i18n:translate="">Attachments</h2>
 
-<form name="frmDelete" method="post"
+<form name="frmDelete" method="post" class="forum-delete-attachments-form"
 	tal:attributes="action string:${here/absolute_url}/deleteAttachments">
 <div>
 	<div id="toolbar">
@@ -95,7 +95,7 @@
 	Add new attachments one by one using the form below:
 </p>
 
-<form name="addAttachment" method="post" enctype="multipart/form-data"
+<form name="addAttachment" class="forum-add-attachment-form" method="post" enctype="multipart/form-data"
 	tal:attributes="action string:${here/absolute_url}/addAttachment">
 <div style="color: red;" tal:define="file_max_size python:request.get('file_max_size', '')"
 	tal:condition="file_max_size"

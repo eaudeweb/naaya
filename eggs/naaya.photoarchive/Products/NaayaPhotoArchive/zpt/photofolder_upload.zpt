@@ -11,7 +11,7 @@
 
 <p i18n:translate="">Select an image or zip file to upload.</p>
 
-<form action="." name="frmUpload" method="post" enctype="multipart/form-data">
+<form action="." name="frmUpload" class="photo-upload-form" method="post" enctype="multipart/form-data">
 
 <div class="field-inline">
     <label class="widget-title" for="upload_file"

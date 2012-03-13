@@ -30,7 +30,8 @@
 
     <p i18n:translate="">This page allows the administrators to send emails to the participants of the meeting. The meeting contact email is used as default for the sender address.</p>
 
-    <form method="post" action="send_email" name="formSendEmail">
+    <form method="post" action="send_email" name="formSendEmail"
+          class="meeting-send-email-form">
         <div class="field">
             <label class="widget-title" for="from_email" i18n:translate="">From:</label>
             <input type="text" name="from_email:utf8:ustring" id="from_email" size="50"
