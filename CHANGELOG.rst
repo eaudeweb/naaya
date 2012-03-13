@@ -1,5 +1,6 @@
 1.4.8 (unreleased)
 ------------------
+* fixed permission for "Manage comments" button [simiamih]
 
 1.4.7 (2012-02-21)
 ------------------
