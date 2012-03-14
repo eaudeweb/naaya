@@ -1,5 +1,6 @@
 2.12.77 (unreleased)
 --------------------
+* Javascript fix for deselecting checkboxes [dumitval]
 * Bugfix in admin_bulk_email [dumitval]
 
 2.12.76 (2012-03-14)

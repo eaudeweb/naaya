@@ -32,7 +32,7 @@ $('.toggle-all').live('click', function(e){
     if(checked){
         $("input." + rel).attr('checked', 'checked');
     }else{
-        $("input." + rel).attr('checked', '');
+        $("input." + rel).removeAttr('checked');
     }
 });
 
