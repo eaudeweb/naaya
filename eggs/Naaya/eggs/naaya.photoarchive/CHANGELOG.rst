@@ -1,4 +1,7 @@
-1.3.9 (unreleased)
+1.3.10 (unreleased)
+------------------
+
+1.3.9 (2012-03-14)
 ------------------
 * use permission for exporting zip of photo folder [simiamih]
 
