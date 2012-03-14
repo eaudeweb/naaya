@@ -1,6 +1,9 @@
-2.12.76 (unreleased)
+2.12.77 (unreleased)
 --------------------
-* added nofollow to zip download links
+
+2.12.76 (2012-03-14)
+--------------------
+* added nofollow to zip download links [dumitval]
 * code refactoring: Naaya - Zip export permission [simiamih]
 
 2.12.75 (2012-03-12)
