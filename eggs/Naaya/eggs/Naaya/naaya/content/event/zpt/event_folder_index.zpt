@@ -207,7 +207,7 @@
 <metal:block fill-slot="folder_footer">
 	<div id="folder_footer" class="folder_footer">
 		<a class="download_link"
-			href="./zip_export/do_export"
+			rel="nofollow" href="./zip_export/do_export"
 			title="Download the contents of this folder to a Zip file"
 			tal:condition="python: here.checkPermission('Naaya - Zip export') and len(object_list_custom) > 0"
 			i18n:attributes="title"

@@ -81,7 +81,7 @@
 					folders_list object_list_custom|python:listing_info['folders'];
 					objects_list object_list_custom|python:listing_info['objects'];">
 		<a class="download_link"
-			href="./zip_export/do_export"
+			rel="nofollow" href="./zip_export/do_export"
 			title="Download the contents of this folder to a Zip file"
 			tal:condition="python: here.checkPermissionZipExport() and len(folders_list) + len(objects_list)> 0"
 			i18n:attributes="title"
