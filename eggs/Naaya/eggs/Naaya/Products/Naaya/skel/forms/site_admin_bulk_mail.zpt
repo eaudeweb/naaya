@@ -22,9 +22,10 @@
                     class: 'button-like'
                 });
                 sel_all.click(function(){
-                    $("input[type=checkbox][name=user_mails:list]").attr('checked', 'checked');
+                    $('.selector').attr('checked', 'checked');
                     $("#select_all").toggle();
                     $("#select_none").toggle();
+                    create_mailto_links();
                 });
 
                 var sel_none = $("<a" + ">Select none<" + "/a>");
@@ -37,9 +38,10 @@
                 sel_none.hide();
 
                 sel_none.click(function(){
-                    $("input[type=checkbox][name=user_mails:list]").attr('checked', '');
+                    $('.selector').removeAttr('checked');
                     $("#select_all").toggle();
                     $("#select_none").toggle();
+                    create_mailto_links();
                 });
                 $('#user_listing').before(sel_all);
                 $('#user_listing').before(sel_none);
@@ -48,44 +50,44 @@
             else {
                 $('#compose_message').css({'display': 'none'});
             };
-			create_mailto_links();
-			$('.selector').click(function(){
-				create_mailto_links();
-			});
-			$('#send_with_outlook').click(function(){
-				$('#many_emails').show();
-				$('#send_with_local_client_long').hide();
-				$('#send_with_outlook_long').slideDown();
-			});
-			$('#send_with_local_client').click(function(){
-				$('#many_emails').show();
-				$('#send_with_outlook_long').hide();
-				$('#send_with_local_client_long').slideDown();
-			});
-			function create_mailto_links(){
-				var user_emails = [];
-				$('.selector:checked').each(function(){
-					user_emails.push($(this).val());
-				})
-				if (user_emails.length>0){
-					$('#send_with_outlook').attr('href', 'mailto:' + user_emails.join('; '));
-					$('#send_with_outlook_long')
-						.attr('href', 'mailto:' + user_emails.join('; '))
-						.text(user_emails.join('; '));
-					$('#send_with_local_client').attr('href', 'mailto:' + user_emails.join(', '));
-					$('#send_with_local_client_long')
-						.attr('href', 'mailto:' + user_emails.join(', '))
-						.text(user_emails.join(', '));
-					$('.click_to_send_local_client').slideDown()
-				}
-				else {
-					$('.click_to_send_local_client').slideUp()
-				}
-			}
+            create_mailto_links();
+            $('.selector').click(function(){
+                create_mailto_links();
+            });
+            $('#send_with_outlook').click(function(){
+                $('#many_emails').show();
+                $('#send_with_local_client_long').hide();
+                $('#send_with_outlook_long').slideDown();
+            });
+            $('#send_with_local_client').click(function(){
+                $('#many_emails').show();
+                $('#send_with_outlook_long').hide();
+                $('#send_with_local_client_long').slideDown();
+            });
+            function create_mailto_links(){
+                var user_emails = [];
+                $('.selector:checked').each(function(){
+                    user_emails.push($(this).val());
+                })
+                if (user_emails.length>0){
+                    $('#send_with_outlook').attr('href', 'mailto:' + user_emails.join('; '));
+                    $('#send_with_outlook_long')
+                        .attr('href', 'mailto:' + user_emails.join('; '))
+                        .text(user_emails.join('; '));
+                    $('#send_with_local_client').attr('href', 'mailto:' + user_emails.join(', '));
+                    $('#send_with_local_client_long')
+                        .attr('href', 'mailto:' + user_emails.join(', '))
+                        .text(user_emails.join(', '));
+                    $('.click_to_send_local_client').slideDown()
+                }
+                else {
+                    $('.click_to_send_local_client').slideUp()
+                }
+            }
         });
         window.onload = function() {
             $("select_none").hide();
-	}
+    }
     </script>
 
     <tal:block condition="not:compose">
@@ -153,14 +155,14 @@
                 <input type="hidden" name="skey" tal:attributes="value skey"/>
                 <input type="hidden" name="rkey" tal:attributes="value rkey"/>
                 <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
-				<div class="click_to_send_local_client" style="display:none">
-					<p><a id="send_with_outlook">Click here</a> <span i18n:translate="">to send email with Outlook.</span></p>
-					<p><a id="send_with_local_client">Click here</a> <span i18n:translate="">to send email with your prefered email client.</span></p>
-					<p class="tip" i18n:translate="" id="many_emails" style="display:none">
-						If this link doesn't work with your mail client please copy emails from below.
-					</p>
-					<p><a style="display:none" id="send_with_outlook_long" /><a style="display:none" id="send_with_local_client_long" /></p>
-				</div>
+                <div class="click_to_send_local_client" style="display:none">
+                    <p><a id="send_with_outlook">Click here</a> <span i18n:translate="">to send email with Outlook.</span></p>
+                    <p><a id="send_with_local_client">Click here</a> <span i18n:translate="">to send email with your prefered email client.</span></p>
+                    <p class="tip" i18n:translate="" id="many_emails" style="display:none">
+                        If this link doesn't work with your mail client please copy emails from below.
+                    </p>
+                    <p><a style="display:none" id="send_with_outlook_long" /><a style="display:none" id="send_with_local_client_long" /></p>
+                </div>
             </fieldset>
         </form>
     </tal:block>
@@ -182,9 +184,9 @@
             </p>
         </tal:block>
         <form action="send_mail_to_roles" method="post" tal:condition="mails">
-			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
-			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html" i18n:name="portal-properties-page" i18n:translate="">portal properties page</a>.
-			</div>
+            <div class="message-error" tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
+            on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html" i18n:name="portal-properties-page" i18n:translate="">portal properties page</a>.
+            </div>
             <div class="field">
                 <label for="mail_subject" i18n:translate="">Subject</label>
                 <input type="text" id="mail_subject" name="mail_subject" size="70" tal:attributes="disabled not:mail_from"/>
