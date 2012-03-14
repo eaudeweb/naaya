@@ -1,4 +1,7 @@
-2.12.77 (unreleased)
+2.12.78 (unreleased)
+--------------------
+
+2.12.77 (2012-03-14)
 --------------------
 * Javascript fix for deselecting checkboxes [dumitval]
 * Bugfix in admin_bulk_email [dumitval]
