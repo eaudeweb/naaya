@@ -1,5 +1,6 @@
 1.3.9 (unreleased)
 ------------------
+* use permission for exporting zip of photo folder [simiamih]
 
 1.3.8 (2011-11-14)
 ------------------

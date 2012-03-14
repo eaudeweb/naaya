@@ -1,5 +1,6 @@
 2.12.76 (unreleased)
 --------------------
+* code refactoring: Naaya - Zip export permission [simiamih]
 
 2.12.75 (2012-03-12)
 --------------------

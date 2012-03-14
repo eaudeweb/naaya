@@ -1,6 +1,7 @@
 from textwrap import dedent
 from constants import PERMISSION_ADD_FOLDER
-from Products.NaayaBase.constants import PERMISSION_SKIP_APPROVAL
+from Products.NaayaBase.constants import (PERMISSION_SKIP_APPROVAL,
+                                          PERMISSION_ZIP_EXPORT)
 
 
 permission_data = {
@@ -58,10 +59,11 @@ permission_data = {
             Translate portal messages into other languages.
         """,
     },
-    'Naaya - Zip export': {
+    PERMISSION_ZIP_EXPORT: {
         'title': "Export folder as Zip",
         'description': """
-            Export contents of folder as Zip file.
+            Export contents of folder as Zip file. Also applies to Naaya Photo
+            Folder.
         """,
     },
     'Naaya - Validate content': {
