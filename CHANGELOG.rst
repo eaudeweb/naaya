@@ -1,7 +1,7 @@
 1.4.9 (unreleased)
 ------------------
 
-1.4.8 (unreleased)
+1.4.8 (2012-03-14)
 ------------------
 * feature: bulk send invitations [simiamih]
 * fixed permission for "Manage comments" button [simiamih]
