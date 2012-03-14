@@ -18,7 +18,7 @@
 	<metal:block metal:define-slot="page-middle">
     <metal:block define-macro="folder-title">
 		<a class="b_download"  style="float: right"
-		   href="./zip_export/do_export"
+		   rel="nofollow" href="./zip_export/do_export"
 		   title="Download the contents of this folder to a Zip file" 
 		   i18n:attributes="title"
 		   i18n:translate="">Zip download</a>

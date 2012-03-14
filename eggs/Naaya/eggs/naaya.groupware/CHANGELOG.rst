@@ -1,5 +1,6 @@
 1.1.18 (unreleased)
 -------------------
+* added nofollow to zip download links [dumitval]
 
 1.1.17 (2012-02-23)
 -------------------

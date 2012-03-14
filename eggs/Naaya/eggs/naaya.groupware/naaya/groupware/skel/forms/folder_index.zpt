@@ -40,7 +40,7 @@
 			</span>
 		</span>
 		<a class="b_download"
-		   href="./zip_export/do_export"
+		   rel="nofollow" href="./zip_export/do_export"
 		   title="Download the contents of this folder to a Zip file" 
 		   tal:condition="python: here.checkPermission('Naaya - Zip export')"
 		   i18n:attributes="title"
