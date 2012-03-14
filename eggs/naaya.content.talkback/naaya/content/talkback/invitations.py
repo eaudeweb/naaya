@@ -20,6 +20,7 @@
 from base64 import urlsafe_b64encode
 from random import randrange
 from datetime import date
+import xlrd
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
@@ -54,24 +55,22 @@ class InvitationsContainer(SimpleItem):
         """ Create an invitation, send e-mail """
         keys = ('name', 'email', 'organization', 'notes', 'message')
         formerrors = {}
-        extra_opts = {}
+        preview = {}
 
         if REQUEST.REQUEST_METHOD == 'POST':
             do_preview = (REQUEST.form.get('do', '') == 'Preview')
+
+            inviter_userid, inviter_name = self._get_inviter_info()
+
             formdata = dict( (key, REQUEST.form.get(key, '')) for key in keys )
-
-            auth_tool = self.getAuthenticationTool()
-            inviter_userid = auth_tool.get_current_userid()
-            inviter_name = self.get_user_name_or_userid(inviter_userid)
-
             kwargs = dict(formdata, web_form=True,
                           inviter_userid=inviter_userid,
                           inviter_name=inviter_name)
 
             try:
                 if do_preview:
-                    extra_opts.update(self._send_invitation(preview=True, **kwargs))
-                    extra_opts['preview_attribution'] = '%s (invited by %s)' % \
+                    preview.update(self._send_invitation(preview=True, **kwargs))
+                    preview['preview_attribution'] = '%s (invited by %s)' % \
                         (formdata['name'], inviter_name)
                 else:
                     self._send_invitation(**kwargs)
@@ -88,7 +87,69 @@ class InvitationsContainer(SimpleItem):
             formdata = dict( (key, '') for key in keys )
 
         return self._create_html(formdata=formdata, formerrors=formerrors,
-                                 **extra_opts)
+                                 previews=[preview])
+
+    def bulk_create(self, REQUEST):
+        """ Same as `create`, but input is an xls file """
+        keys = ('name', 'email', 'organization', 'notes', 'message')
+        previews = []
+        if REQUEST.REQUEST_METHOD == 'POST':
+            do_preview = (REQUEST.form.get('do', '') == 'Preview')
+
+            inviter_userid, inviter_name = self._get_inviter_info()
+
+            try:
+                xls = REQUEST.form.get('input_file')
+                spreadsheet = xlrd.open_workbook(file_contents=xls.read())
+                sheet = spreadsheet.sheet_by_index(0)
+            except Exception, e:
+                self.setSessionErrorsTrans('Error reading the spreadsheet.')
+            else:
+                assert sheet.ncols == 5, "Expected sheet with 5 columns"
+                header = sheet.row(0)
+                assert ([x.value.strip() for x in header] ==
+                    ['Name', 'Email', 'Organization', 'Notes', 'Message']),\
+                    "Unexpected table header in spreadsheet"
+
+                errors = []
+                for i in range(1, sheet.nrows):
+                    cells = sheet.row(i)
+                    clean_it = lambda x: x.value.strip()
+                    formdata = dict( (key, clean_it(cells[i])) for (i, key) in enumerate(keys) )
+                    kwargs = dict(formdata, web_form=True,
+                          inviter_userid=inviter_userid,
+                          inviter_name=inviter_name)
+                    try:
+                        if do_preview:
+                            previews.append(self._send_invitation(preview=True, **kwargs))
+                            previews[-1]['preview_attribution'] = '%s (invited by %s)' % \
+                                (formdata['name'], inviter_name)
+                        else:
+                            self._send_invitation(**kwargs)
+                            # todo: ugly quick fix
+                            existing = self.getSessionInfo() or ['']
+                            self.setSessionInfoTrans('Invitation for ${name} '
+                                                     'has been sent.',
+                                                     name=formdata['name'])
+                            self.setSessionInfo([existing[0] + '\n' + self.getSessionInfo()[0]])
+                    except FormError, e:
+                        errors.append('Error creating invitation for line #%d in spreadsheet: %r'
+                                                   % ((i+1), [ (x[0], x[1].args) for x in e.errors]))
+                    except Exception, e:
+                        errors.append('Error creating invitation for line #%d in spreadsheet: %r'
+                                                   % ((i+1), e.args))
+
+                    if errors:
+                        self.setSessionErrorsTrans('; '.join(errors))
+
+        return self._create_html(formdata=dict( (key, '') for key in keys ),
+                                 formerrors={}, previews=previews)
+
+    def _get_inviter_info(self):
+        auth_tool = self.getAuthenticationTool()
+        inviter_userid = auth_tool.get_current_userid()
+        inviter_name = self.get_user_name_or_userid(inviter_userid)
+        return (inviter_userid, inviter_name)
 
     def _create_invitation(self, **invite_args):
         key = random_key()

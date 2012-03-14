@@ -18,6 +18,23 @@
     approve, edit or remove those comments.
 </p>
 
+
+    <tal:block repeat="preview options/previews">
+        <h2 tal:condition="repeat/preview/start">Your Preview</h2>
+        <dl tal:condition="preview/preview_mail|nothing">
+            <dt i18n:translate="">Preview e-mail message:</dt>
+            <dd>
+                <p tal:content="string:Subject: ${preview/preview_mail/subject}" />
+                <pre class="tb-invitation-preview"
+                  tal:content="preview/preview_mail/body_text" />
+            <dd>
+            <dt i18n:translate="">Comments will be attributed with the text:</dt>
+            <dd>
+                <pre tal:content="preview/preview_attribution" />
+            </dd>
+        </dl>
+    </tal:block>
+
 <form name="invite" method="post"
   tal:define="data options/formdata; errors options/formerrors">
     <div class="field">
@@ -58,20 +75,28 @@
         <textarea name="message:utf8:ustring" id="message" rows="5" cols="50"
           tal:content="data/message"></textarea>
     </div>
-    <dl tal:condition="options/preview_mail|nothing">
-        <dt i18n:translate="">Preview e-mail message:</dt>
-        <dd>
-            <p tal:content="string:Subject: ${options/preview_mail/subject}" />
-            <pre class="tb-invitation-preview"
-              tal:content="options/preview_mail/body_text" />
-        <dd>
-        <dt i18n:translate="">Comments will be attributed with the text:</dt>
-        <dd>
-            <pre tal:content="options/preview_attribution" />
-        </dd>
-    </dl>
+
     <input type="submit" name="do" value="Preview" />
     <input type="submit" name="do" value="Send invitation" />
+</form>
+
+<hr />
+<p>
+    You can also provide an XLS file with more recipients.
+    You can download the <a tal:attributes="href string:/++resource++naaya.content.talkback/template.xls;">
+    template from here</a>.<br />
+    Hint: It's useful to first hit the Preview button in order to check
+    for errors in file. Then reselect the file and hit "Send invitation".
+</p>
+<form name="invite_bulk" method="post" enctype="multipart/form-data"
+      tal:attributes="action string:${here/absolute_url}/bulk_create">
+    <div class="field">
+    <label for="input_file" i18n:translate="">Spreadsheet file (*.xls)</label>
+    <input type="file" name="input_file" id="input_file"  />
+    </div>
+    <input type="submit" name="do" value="Preview" />
+    <input type="submit" name="do" value="Send invitation" />
+    <div class="field"> </div>
 </form>
 
 </metal:block>
