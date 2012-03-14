@@ -445,6 +445,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     def saveProperties_hook(self, schema_raw_data):
         pass
 
+    security.declareProtected(PERMISSION_ZIP_EXPORT, 'downloadAllObjects')
     def downloadAllObjects(self, REQUEST=None):
         #Download all pictures in a zip file.
         return self.utGenerateZip(
@@ -453,6 +454,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             RESPONSE=REQUEST.RESPONSE
         )
 
+    security.declareProtected(PERMISSION_ZIP_EXPORT, 'downloadSelectedObjects')
     def downloadSelectedObjects(self, ids=None, REQUEST=None):
         # Download photos from ids
         return self.utGenerateZip(

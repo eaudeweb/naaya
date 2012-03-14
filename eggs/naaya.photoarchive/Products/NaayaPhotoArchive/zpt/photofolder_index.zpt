@@ -22,6 +22,7 @@
 	nb_photos python:len(here.getObjects());
 	paginator python:here.getObjectPaginator(objects_list, photos_per_page);
 	label string:Photos;
+	perm_zip_export here/checkPermissionZipExport;
 ">
 
 <link rel="stylesheet" type="text/css"
@@ -108,7 +109,7 @@
 	</div>
 
 	<!-- Downloads -->
-	<div class="g-box" tal:condition="objects_list">
+	<div class="g-box" tal:condition="python:objects_list and perm_zip_export">
 		<div class="title">
 			<span  i18n:translate="">Downloads</span>
 		</div>
@@ -147,8 +148,8 @@
 <div class="thumbnail-layout" id="selection_buttons">
 
 	<tal:block condition="objects_list">
-	<input type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
-	<input type="button" style="display: none"
+	<input tal:condition="perm_zip_export" type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
+	<input tal:condition="perm_zip_export" type="button" style="display: none"
 		name="select_all_label" id="select_all_label" value="Select all" i18n:attributes="value"
 		class="action_button" onclick="toggleSelect('select_all')" />
 	<input class="action_button" tal:condition="here/checkPermissionCopyObject" type="submit"

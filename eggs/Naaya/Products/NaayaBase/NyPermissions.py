@@ -191,4 +191,12 @@ class NyPermissions(object):
                 )
                )
 
+    def checkPermissionZipExport(self):
+        """
+        Allowed to export zip of contents? Used for Naaya Folder and Naaya
+        Photo Folder.
+
+        """
+        return self.checkPermission(PERMISSION_ZIP_EXPORT)
+
 InitializeClass(NyPermissions)

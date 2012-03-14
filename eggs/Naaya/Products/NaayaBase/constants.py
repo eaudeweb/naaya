@@ -21,6 +21,7 @@ PERMISSION_PUBLISH_DIRECT = 'Naaya - Publish direct'
 PERMISSION_SKIP_CAPTCHA = 'Naaya - Skip Captcha'
 PERMISSION_BULK_DOWNLOAD = 'Naaya - Bulk download'
 PERMISSION_SKIP_APPROVAL = 'Naaya - Skip approval'
+PERMISSION_ZIP_EXPORT = 'Naaya - Zip export'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'

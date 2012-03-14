@@ -13,7 +13,8 @@ from zope.event import notify
 import transaction
 
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import (PERMISSION_PUBLISH_OBJECTS,
+                                          PERMISSION_ZIP_EXPORT)
 from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import relative_object_path, get_site_manager
 from naaya.content.file.file_item import addNyFile
@@ -200,7 +201,7 @@ class ZipExportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    security.declareProtected("Naaya - Zip export", 'do_export')
+    security.declareProtected(PERMISSION_ZIP_EXPORT, 'do_export')
     def do_export(self, REQUEST=None):
         """
         Export the contents of the current folder as a Zip file. Returns an
