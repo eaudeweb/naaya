@@ -1,5 +1,6 @@
 0.8.1 (unreleased)
 ----------------
+* Append in case of publishing several items to the same comment.
 
 0.8 (2012-03-16)
 ----------------
