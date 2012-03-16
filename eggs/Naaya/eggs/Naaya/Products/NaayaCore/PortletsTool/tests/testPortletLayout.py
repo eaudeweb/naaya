@@ -194,34 +194,6 @@ class PortletArrangementTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
         self.failUnless('Folderr' in info)
 
 class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
-    def test_listCurrentAssignments(self):
-        self.portal.portal_portlets.assign_portlet('', 'center', 'prt1')
-        self.portal.portal_portlets.assign_portlet('fol', 'left', 'prt2')
-        self.portal.portal_portlets.assign_portlet('fol/sub', 'right', 'prt1')
-        transaction.commit()
-
-        self.browser_do_login('admin', '')
-        self.browser.go('http://localhost/portal/portal_portlets/admin_layout')
-        html = self.browser.get_html()
-
-        def assert_entry(html, **kwargs):
-            pattern = (r"<td>\s*<a href=\"[^\"]*\">%(folder_title)s</a>[^<]*"
-                r"<small>%(folder_path)s</small>\s*</td>"
-                r"\s*<td\s*title=\".*\"\s*class=\".*portlet_arrange_%(position)s\">"
-                r"%(position)s</td>\s*<td>.*</td>"
-                r"\s*<td>%(portlet_title)s</td>"
-                )
-            self.failUnless(re.search(pattern % kwargs, html, re.DOTALL))
-
-        assert_entry(html, folder_path='home page',
-                     folder_title='Naaya Test Site', position='center',
-                     portlet_title='Test Portlet 1')
-        assert_entry(html, folder_path='/fol', folder_title='Folderr',
-            position='left', portlet_title='Test Portlet 2')
-        assert_entry(html, folder_path='/fol/sub', folder_title='Subfolderr',
-            position='right', portlet_title='Test Portlet 1')
-
-        self.browser_do_logout()
 
     def test_assignPortletInherited(self):
         self.browser_do_login('admin', '')
