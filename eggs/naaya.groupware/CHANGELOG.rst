@@ -1,5 +1,6 @@
 1.1.19 (unreleased)
 -------------------
+* fixed tests: index_html is now simpleView [simiamih]
 
 1.1.18 (2012-03-15)
 -------------------
