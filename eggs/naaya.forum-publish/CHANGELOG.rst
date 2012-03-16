@@ -1,4 +1,7 @@
-0.7 (unreleased)
+0.8 (unreleased)
+----------------
+
+0.7 (2012-03-16)
 ----------------
 * Bugfix. Used time.strptime for compatibility with python2.4.
 
