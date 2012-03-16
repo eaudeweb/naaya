@@ -1,4 +1,7 @@
-1.1.19 (unreleased)
+1.1.20 (unreleased)
+-------------------
+
+1.1.19 (2012-03-16)
 -------------------
 * fixed zope 2.12 merging GET and POST in review_ig_request [simiamih]
 * fixed tests: index_html is now simpleView [simiamih]
