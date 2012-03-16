@@ -10,7 +10,7 @@
 		<tal:block metal:define-slot="section">Section</tal:block>
 	</td>
 	<td valign="top">
-		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+		<span tal:replace="structure python:here.getPortletsTool().getPortletById('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</td>
 </tr>
 </table>
