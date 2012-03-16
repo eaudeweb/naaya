@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ====================
+* Bugfix in editor role assignment [dumitval]
 * Adapt keywords functionality to work with standard folder listing [dumitval]
 
 1.1.7 (2012-03-05)
