@@ -1,0 +1,39 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+    <input type="hidden" name="base_url"
+           tal:attributes="value here/absolute_url" />
+    <input type="hidden" name="topic"
+           tal:attributes="value options/topic" />
+    <h1>Preview document before publish</h1>
+    <div class="forum-preview-buttons">
+        <a id="forum-preview-save" class="action-button">Publish document</a>
+        <a id="forum-preview-clear" class="action-button">Clear preview</a>
+    </div>
+    <div id="forum-preview-container">
+        <tal:block repeat="item options/forum_publish_objects">
+            <div class="forum-topic-container"
+                 tal:attributes="style python: test(item['timestamp'] > 0,
+                                                    'margin-left: 20px', '')
+            ">
+                <div class="forum_topic_author">
+                    <span tal:content="item/date">17 Feb 2012 17:15:32</span>,
+                    <span tal:content="item/author">admin</span>
+                </div>
+
+                <div class="preview-title"
+                     tal:condition="python: item['timestamp'] == 0"
+                     tal:content="structure item/content" />
+
+                <div tal:condition="python: item['timestamp'] > 0"
+                     tal:content="structure item/content" />
+
+                <div class="preview-actions"
+                     tal:condition="python: item['timestamp'] > 0">
+                    <a class="preview-remove"
+                       tal:attributes="data-id item/id">Remove</a>
+                </div>
+            </div>
+        </tal:block>
+    </div>
+</metal:block>
+</metal:block>
