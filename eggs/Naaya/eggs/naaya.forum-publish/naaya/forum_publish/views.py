@@ -110,7 +110,7 @@ def forum_publish_save_object(context, REQUEST):
                                          key=lambda k: k["timestamp"])
 
     response["url"] = "%s/forum_publish_preview/?topic=%s" % \
-                      (context.absolute_url(), topic["title"])
+                      (context.absolute_url(), topic["id"])
     return simplejson.dumps(response)
 
 def forum_publish_remove_object(context, REQUEST):
