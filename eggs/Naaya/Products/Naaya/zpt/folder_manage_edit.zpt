@@ -52,7 +52,7 @@
     </td>
 
     <tal:block condition="python: custom_index and not custom_index_tmpl">
-        <script tal:content="python: 'var here_url=%s;' % here.rstk.json_dumps(
+        <script tal:content="python: 'var here_url=%s;' % here.rstk['json_dumps'](
                                 here.absolute_url())"></script>
         <script>$(function() {
             var button = $('<a class="buttonish">').text("create it");
@@ -69,7 +69,7 @@
     </tal:block>
 
     <tal:block condition="python: custom_index and custom_index_tmpl">
-        <script tal:define="url_json python: here.rstk.json_dumps(
+        <script tal:define="url_json python: here.rstk['json_dumps'](
                     custom_index_tmpl.absolute_url() + '/manage_workspace');"
                 tal:content="string: var template_url = ${url_json};"></script>
         <script>$(function() {

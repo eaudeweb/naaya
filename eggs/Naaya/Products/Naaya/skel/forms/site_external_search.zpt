@@ -113,7 +113,7 @@
 		<tbody>
 			<tr tal:repeat="record records">
 				<td style="text-align: middle">
-					<img tal:define="icon python:here.rstk.get_object_view_info(record)['icon']"
+					<img tal:define="icon python:here.rstk['get_object_view_info'](record)['icon']"
 							 tal:attributes="src icon/url; title icon/title; alt icon/title" />
 				</td>
 				<td>

@@ -46,7 +46,7 @@
 
 				<tal:block condition="python: len(containers_by_site) == 1">
 				<tal:block repeat="location python: containers_by_site[0]">
-				<option tal:define="path python: here.rstk.relative_object_path(location, here.getSite())"
+				<option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
 						tal:attributes="value path;
 										title path;
 										selected python: filter_location == path"
@@ -58,7 +58,7 @@
 				<tal:block repeat="containers containers_by_site">
 				<optgroup tal:attributes="label python: containers[0].title_or_id()">
 				<tal:block repeat="location containers">
-				<option tal:define="path python: here.rstk.relative_object_path(location, here.getSite())"
+				<option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
 						tal:attributes="value path;
 										title path;
 										selected python: filter_location == path"
@@ -283,7 +283,7 @@
 		<tal:block condition="python: index < len(user_roles)">
 		<td tal:define="role python: user_roles[index]" class="user-role-revoke">
 			<a class="revoke-role" i18n:attributes="title" title="Revoke role"
-				tal:define="location python: here.rstk.relative_object_path(role[1], here.getSite())"
+				tal:define="location python: here.rstk['relative_object_path'](role[1], here.getSite())"
 				tal:attributes="href string:${site_url}/admin_revokerole?user=${user_id}&location=${location}">
 				<img src="/misc_/Naaya/revoke_permission.png"
 					alt="Revoke role"

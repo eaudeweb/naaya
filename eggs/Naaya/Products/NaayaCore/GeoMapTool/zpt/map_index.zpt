@@ -19,7 +19,7 @@
 <tal:block content="structure python:here.setup_map_engine_html(request)" />
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
-<script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(here.absolute_url())"></script>
+<script tal:content="structure python:'var portal_map_url=%s;' % here.rstk['json_dumps'](here.absolute_url())"></script>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 	<div id="center_content" class="portalmap-map-box">

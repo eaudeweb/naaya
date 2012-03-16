@@ -16,7 +16,7 @@ opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
 <metal:block use-macro="here/widget_macro/macros/widget">
     <metal:block fill-slot="scripts">
 
-        <script tal:define="val python:here.rstk.json_dumps(prop_id)"
+        <script tal:define="val python:here.rstk['json_dumps'](prop_id)"
                 tal:content="structure string:
                         var prop_name = ${val};
                 "></script>

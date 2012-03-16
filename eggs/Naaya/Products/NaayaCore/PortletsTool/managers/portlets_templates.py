@@ -134,7 +134,7 @@ LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.ge
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf">
-			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 			     tal:attributes="src icon/url; title icon/title; alt icon/title"
 			     style="vertical-align: -5px;" />
 			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
@@ -157,7 +157,7 @@ SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.g
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf">
-			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 			     tal:attributes="src icon/url; title icon/title; alt icon/title"
 			     style="vertical-align: -5px;" />
 			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />

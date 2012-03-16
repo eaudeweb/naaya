@@ -32,9 +32,9 @@
 </p>
 <form name="frmDragDrop" class="maintopics-drag-drop-form" method="post" action="">
 	<ul id="maintopicslist" class="boxy">
-		<li tal:repeat="item maintopics" tal:attributes="id python:here.rstk.path_in_site(item)">
+		<li tal:repeat="item maintopics" tal:attributes="id python:here.rstk['path_in_site'](item)">
 			<input type="checkbox" class="chk" name="ids"
-				   tal:attributes="value python:here.rstk.path_in_site(item)" />
+				   tal:attributes="value python:here.rstk['path_in_site'](item)" />
 			<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
 		</li>
 	</ul>
