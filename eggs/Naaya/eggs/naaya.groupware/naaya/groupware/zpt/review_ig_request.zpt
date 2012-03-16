@@ -19,7 +19,7 @@
                 You can choose to grant the requested role by clicking <strong i18n:name="grant_role" i18n:translate="">Grant role</strong>
                 button or <strong i18n:name="reject_request" i18n:translate="">Reject request</strong> optionally filling up the <strong i18n:name="rejection_reason" i18n:translate="">Rejection reason</strong>.
             </p>
-            <form method="post" action="">
+            <form method="post" tal:attributes="action string:${here/absolute_url}/review_ig_request">
                 <input type="hidden" name="key" tal:attributes="value request/key" />
                 <div class="field">
                     <label for="reason" i18n:translate="">Rejection reason (optional)</label>
