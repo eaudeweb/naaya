@@ -1,5 +1,6 @@
 0.8 (unreleased)
 ----------------
+* Bugfix. Use topic["id"] because topic["title"] breaks up.
 
 0.7 (2012-03-16)
 ----------------
