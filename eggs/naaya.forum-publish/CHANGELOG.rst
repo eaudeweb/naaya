@@ -1,4 +1,7 @@
-0.8.1 (unreleased)
+0.8.2 (unreleased)
+----------------
+
+0.8.1 (2012-03-16)
 ----------------
 * Append in case of publishing several items to the same comment.
 
