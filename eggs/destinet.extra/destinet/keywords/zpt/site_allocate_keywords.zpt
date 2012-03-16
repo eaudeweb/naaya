@@ -109,7 +109,7 @@
             <tbody>
                 <tr>
                     <th>
-                        <input type="checkbox" onchange="javascript:toggleSelect();" />
+                        <input type="checkbox" class="keywords-select-all" />
                     </th>
 
                     <th i18n:translate="">
@@ -131,8 +131,9 @@
                         field_class python:' '.join(['field', 'glossary-widget-mode-%s' % widget.display_mode,]);
                         prop_id string:${item/id}-${index};">
 
-                        <td align="center">
-                            <input type="checkbox" name="checked_paths:list" tal:attributes="value python:'/'.join(item.getPhysicalPath())" />
+                        <td align="center" class="checkbox">
+                            <input class="checked_paths" type="checkbox" name="checked_paths:list"
+							tal:attributes="value python:'/'.join(item.getPhysicalPath())" />
                             <input type="hidden" name="paths:list" tal:attributes="value python:'/'.join(item.getPhysicalPath())" />
                         </td>
 
