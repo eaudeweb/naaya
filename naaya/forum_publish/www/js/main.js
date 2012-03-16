@@ -21,7 +21,7 @@
     var dispatcher = _.clone(B.Events);
 
     var MessageModel = B.Model.extend({
-        defaults: {content: null, author: null, date: null}
+        defaults: {content: null, author: null, date: null, id: null}
    });
 
     var PublishButtonView = B.View.extend({
@@ -30,7 +30,7 @@
 
         className: "btn-publish",
 
-        selector: ".message_top_buttons, .message_top_buttons2",
+        selector: ".message_top_buttons",
 
         initialize: function () {this.render();},
 
@@ -69,8 +69,12 @@
             var selection = rangy.getSelection();
             var message = $.trim(selection.toHtml().replace(matchSpaces, " "));
 
+            message = this._processMessage(e, selection, message);
+
             var authorAndDate = this._getAuthorAndDate($(e.currentTarget));
+            var id = this._getId($(e.currentTarget));
             var date = authorAndDate[1], author = authorAndDate[2];
+            var topic = _.string.strRightBack(document.location.pathname, "/");
 
             if(!$.trim(message)) {
                 this.notice(gettext("Please select a range"));
@@ -80,19 +84,49 @@
                 this.notice(gettext("Please select a range in the same container"));
                 return;
            }
+            var context = {"message": message, "author": author, "date": date,
+                           "id": id, "topic": topic};
+            dispatcher.trigger("publish/message", context);
+        },
 
-            dispatcher.trigger("publish/message", message, author, date);
-       },
+        _processMessage: function(e, selection, message) {
+            var content = $(selection.anchorNode)
+                .parents(".forum_message")
+                .find(".forum_message_description")
+                .html();
+
+            // strip down to text without tags and spaces
+            var message_without_html = _.string.stripTags(message);
+            message_without_html = _.string.clean(message_without_html);
+            content = $.trim(content);
+            content = _.string.stripTags(content);
+            content = _.string.clean(content);
+
+            // message doesn't need processing
+            if(content == message_without_html) {
+                return message
+            } else if(_.string.startsWith(content, message_without_html)) {
+                // add ... at end
+                message = _.string.sprintf("%s...", message);
+            } else if(_.string.endsWith(content, message_without_html)) {
+                // add ... at start
+                message = _.string.sprintf("...%s", message);
+            } else {
+                // add ... at start and end
+                message = _.string.sprintf("...%s...", message);
+            }
+            return message;
+        },
 
         _checkIfSelectionInContainer: function(e, selection) {
             /* Check to see if selected text is in the same container with
                publish button */
             var anchorN = $(selection.anchorNode)
-                .parents(".forum_topic, .forum_message")[0];
+                .parents(".forum_message_description")[0];
             var focusN = $(selection.focusNode)
-                .parents(".forum_topic, .forum_message")[0];
+                .parents(".forum_message_description")[0];
             var parents = $(e.currentTarget)
-                .parents(".forum_topic, .forum_message")[0];
+                .parents(".forum_message").find(".forum_message_description")[0];
             return (parents === anchorN) && (parents === focusN);
        },
 
@@ -100,12 +134,18 @@
             /* Get author and date
                '17 Feb 2012 17:15:50, <a href="#">admin</a>' */
              var authorAndDate = self
-                .parents(".forum_topic, .forum_message")
-                .find(".forum_topic_author, .forum_message_author").html();
+                .parents(".forum_message")
+                .find(".forum_message_author").html();
             // remove spaces
             authorAndDate = $.trim(authorAndDate.replace(matchSpaces, " "));
             // match regular expression and fetch author and date
             return authorAndDate.match(matchDateAndAUthor);
+       },
+
+       _getId: function (self) {
+            var id = self.parents(".forum_message")
+                         .children("a:first").attr("name");
+            return id;
        },
 
         notice: function(message) {
@@ -114,13 +154,18 @@
             $(dialog).dialog(this.dialogOptions);
        },
 
-        publishMessage: function(message, author, date) {
-            var model = new MessageModel({content: message, author: author,
-                date: date});
+        publishMessage: function(context) {
+            var model = new MessageModel({
+                "id": context.id,
+                "content": context.message,
+                "author": context.author,
+                "date": context.date,
+                "topic": context.topic
+            });
             if(!sidebarExists()) {
                 this.$el.addClass("sidebar-fix", "fast");
                 new SidebarView();
-           }
+            }
             new MessageView({model: model});
        },
 
@@ -198,7 +243,7 @@
         publish: function (e) {
             /* Serialize and publish form */
             var form = this.$el.find(":input");
-            var url = $("base").attr("href") + "../forum_publish_save";
+            var url = $("base").attr("href") + "../forum_publish_save_object";
 
             $.post(url, form.serialize(), function(data) {
                 if(data.status == "success") {
@@ -231,21 +276,23 @@
        },
 
         render: function () {
-            var content = this.model.get("content");
-            var author = this.model.get("author");
-            var date = this.model.get("date");
+            var context = {
+                "id": this.model.get("id"),
+                "author": this.model.get("author"),
+                "date": this.model.get("date"),
+                "topic": this.model.get("topic")
+            };
 
+            var content = this.model.get("content");
             var messageHtml = this.make("textarea",
                 {readonly: "readonly", rows: 5, cols: 5, name: "content"},
                 content);
-            var authorHtml = this.make("input",
-                {type: "hidden", value: author, name: "author"});
-            var dateHtml = this.make("input",
-                {type: "hidden", value: date, name: "date"});
+            var contextHtml = this.make("input",
+                {"type": "hidden", "value": $.toJSON(context), "name": "context"})
             var removeHtml = this.make("a", {"class": "remove"}, gettext("Remove"));
 
             this.$el.hide();
-            this.$el.append(messageHtml, [authorHtml, dateHtml, removeHtml]);
+            this.$el.append(messageHtml, [contextHtml, removeHtml]);
             $(this.selector).append(this.$el);
             $(this.selector).find("li:last").slideDown("fast");
        },
