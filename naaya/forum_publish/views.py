@@ -37,11 +37,7 @@ def forum_publish_save(context, REQUEST):
     scrub = scrubber.Scrubber().scrub
     response = {"status": "success"}
     content = REQUEST.form["content"]
-
-    try:
-        topic = context[REQUEST.form["topic"]]
-    except KeyError:
-        raise NotFound("Topic not found")
+    topic = _get_topic(context, REQUEST.form["topic"])
 
     if hasattr(topic, "forum_publish_objects"):
         content  = scrub(content)
@@ -79,65 +75,71 @@ def forum_publish_save_object(context, REQUEST):
     if not isinstance(request_context, list):
         request_context = [request_context]
 
-    # import pdb; pdb.set_trace()
-    forum_publish_objects = []
-    for item in zip(request_content, request_context):
-        data = simplejson.loads(item[1])
-        data["content"] = item[0]
-        # from '17 Feb 2012 17:15:50' string to timestamp
-        data["timestamp"] = int(time.mktime(time.strptime(data["date"], "%d %b %Y %H:%M:%S")))
-        # data["timestamp"] = int(time.mktime(data["timestamp"].timetuple()))
-        forum_publish_objects.append(data)
+    # process information from REQUES
+    objects = _forum_publish_objects(request_content, request_context)
+    topic = _get_topic(context, objects[0]["topic"])
 
-    try:
-        topic = context[forum_publish_objects[0]["topic"]]
-    except KeyError:
-        raise NotFound("Topic not found")
-
+    # add forum_publish_objects to topic
     if not hasattr(topic.aq_base, "forum_publish_objects"):
-        topic.forum_publish_objects = []
-        topic.forum_publish_objects.append({
-            "id": topic["id"],
-            "title": topic["title"],
-            "author": topic["author"],
-            "date": topic["postdate"],
-            "content": topic["description"],
-            "timestamp": 0,
-        })
+        topic.forum_publish_objects = {
+            0: {
+                "id": topic["id"],
+                "title": topic["title"],
+                "author": topic["author"],
+                "date": topic["postdate"],
+                "content": topic["description"],
+            }
+        }
 
-    topic.forum_publish_objects.extend(forum_publish_objects)
-    topic.forum_publish_objects = sorted(topic.forum_publish_objects,
-                                         key=lambda k: k["timestamp"])
+    # process forum_publish_objects
+    publish_objects = topic.forum_publish_objects
+    for i, obj in enumerate(objects):
+        # append to post instead of creating a new post
+        if obj["timestamp"] in publish_objects.keys():
+            publish_objects[obj["timestamp"]]["content"] += "<br /> %s" % obj["content"]
+        else:
+            publish_objects[obj["timestamp"]] = obj
 
     response["url"] = "%s/forum_publish_preview/?topic=%s" % \
                       (context.absolute_url(), topic["id"])
+
     return simplejson.dumps(response)
 
-def forum_publish_remove_object(context, REQUEST):
-    response = {"status": "success"}
-    id = REQUEST.form["id"]
 
+def _forum_publish_objects(content, context):
+    objects = []
+    for item in zip(content, context):
+        data = simplejson.loads(item[1])
+        data["content"] = item[0]
+        # from '17 Feb 2012 17:15:50' string to timestamp
+        data["timestamp"] = time.strptime(data["date"], "%d %b %Y %H:%M:%S")
+        data["timestamp"] = int(time.mktime(data["timestamp"]))
+        objects.append(data)
+    return objects
+
+
+def _get_topic(context, title):
     try:
-        topic = context[REQUEST.form["topic"]]
+        return context[title]
     except KeyError:
         raise NotFound("Topic not found")
 
 
-    if hasattr(topic.aq_base, "forum_publish_objects"):
-        topic.forum_publish_objects = [
-            i for i in topic.aq_base.forum_publish_objects if i["id"] != id
-        ]
+def forum_publish_remove_object(context, REQUEST):
+    response = {"status": "success"}
+    timestamp = int(REQUEST.form["timestamp"])
+    topic = _get_topic(context, REQUEST.form["topic"])
+
+    if (hasattr(topic.aq_base, "forum_publish_objects") and
+        timestamp in topic.forum_publish_objects.keys()):
+        del topic.forum_publish_objects[timestamp]
     else:
         raise NotFound
     return simplejson.dumps(response)
 
 
 def forum_publish_preview(context, REQUEST):
-    try:
-        topic = context[REQUEST.form["topic"]]
-    except KeyError:
-        raise NotFound("Topic not found")
-
+    topic = _get_topic(context, REQUEST.form["topic"])
     forum_publish_objects = []
     if hasattr(topic.aq_base, "forum_publish_objects"):
         forum_publish_objects = topic.aq_base.forum_publish_objects
@@ -149,11 +151,7 @@ def forum_publish_preview(context, REQUEST):
 
 
 def forum_publish_clear_objects(context, REQUEST):
-    try:
-        topic = context[REQUEST.form["topic"]]
-    except KeyError:
-        raise NotFound("Topic not found")
-
+    topic = _get_topic(context, REQUEST.form["topic"])
     if hasattr(topic.aq_base, "forum_publish_objects"):
         del topic.forum_publish_objects
     return simplejson.dumps({"status": "success"})
