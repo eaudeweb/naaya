@@ -85,8 +85,8 @@ def forum_publish_save_object(context, REQUEST):
         data = simplejson.loads(item[1])
         data["content"] = item[0]
         # from '17 Feb 2012 17:15:50' string to timestamp
-        data["timestamp"] = datetime.strptime(data["date"], "%d %b %Y %H:%M:%S")
-        data["timestamp"] = int(time.mktime(data["timestamp"].timetuple()))
+        data["timestamp"] = int(time.mktime(time.strptime(data["date"], "%d %b %Y %H:%M:%S")))
+        # data["timestamp"] = int(time.mktime(data["timestamp"].timetuple()))
         forum_publish_objects.append(data)
 
     try:
