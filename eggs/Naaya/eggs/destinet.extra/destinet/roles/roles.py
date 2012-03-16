@@ -1,7 +1,7 @@
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-_admin_assign_role = NaayaPageTemplateFile('zpt/site_admin_roles', globals(),
-                      'site_admin_roles')
+_admin_assign_role = NaayaPageTemplateFile('zpt/site_admin_editor_role', globals(),
+                      'site_admin_editor_role')
 
 def admin_assign_role(context, REQUEST):
     orig_id = REQUEST.get('orig_id')
