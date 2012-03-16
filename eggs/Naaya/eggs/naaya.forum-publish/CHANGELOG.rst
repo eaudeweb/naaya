@@ -1,4 +1,7 @@
-0.6 (unreleased)
+0.7 (unreleased)
+----------------
+
+0.6 (2012-03-16)
 ----------------
 * Improve forum-publish, added preview document before publish and sorted posts.
 
