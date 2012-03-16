@@ -1,5 +1,4 @@
 from Products.naayaUpdater.updates import UpdateScript
-from Products.NaayaBase.NyGadflyContainer import NyGadflyContainer
 from NyForum import STATISTICS_CONTAINER
 
 class AddReleasedate(UpdateScript):
@@ -24,6 +23,7 @@ class ZGadFlyMigration(UpdateScript):
     creation_date = 'Oct 15, 2010'
 
     def _update(self, portal):
+        from Products.NaayaBase.NyGadflyContainer import NyGadflyContainer
         topics_stats = {}
         catalog = portal.getCatalogTool()
         for brain in catalog(meta_type='Naaya Forum'):
