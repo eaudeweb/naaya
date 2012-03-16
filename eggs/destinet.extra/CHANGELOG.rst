@@ -1,4 +1,7 @@
-1.1.8 (unreleased)
+1.1.9 (unreleased)
+-----------------
+
+1.1.8 (2012-03-16)
 ====================
 * Bugfix in editor role assignment [dumitval]
 * Adapt keywords functionality to work with standard folder listing [dumitval]
