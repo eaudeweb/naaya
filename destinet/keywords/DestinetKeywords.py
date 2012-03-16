@@ -24,6 +24,8 @@ class allocate_keywords_html(BrowserPage):
         except KeyError:
             self.context.setSessionErrorsTrans('No keywords were selected!')
             return self.request.RESPONSE.redirect(context.absolute_url())
+        if isinstance(ids, basestring):
+            ids = [ids]
 
         items, schemas, keywords = [], [], []
 
