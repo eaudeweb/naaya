@@ -285,7 +285,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             Dc.publisher(l_site.publisher),
             Ev.location(self.location),
             Ev.organizer(self.host),
-            Ev.type(self.getPortalTranslations().translate('', self.getEventTypeTitle(self.event_type))),
+            Ev.type(self.getPortalI18n().get_translation('', self.getEventTypeTitle(self.event_type))),
             Ev.startdate(self.utShowFullDateTimeHTML(self.start_date))
         )
         if self.end_date:
