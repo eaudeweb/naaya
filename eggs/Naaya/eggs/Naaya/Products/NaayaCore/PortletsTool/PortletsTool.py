@@ -581,6 +581,9 @@ class LegacyPortletWrapper(object):
     def id(self):
         return self.portlet_id
 
+    def getId(self):
+        return self.id
+
     def __call__(self, options):
         position = portlet_template_reverse_names[options['portlet_macro']]
         return self.portlet(options['here'], position)
