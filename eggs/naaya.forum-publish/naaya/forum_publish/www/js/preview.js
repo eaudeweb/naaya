@@ -45,10 +45,10 @@
             var target = $(e.currentTarget);
             var url = _.string.sprintf("%s/forum_publish_remove_object",
                                        this.base_url);
-            var id = target.data("id");
+            var timestamp = target.data("timestamp");
             var topic = this.topic;
 
-            $.post(url, {"id": id, "topic": topic}, function () {
+            $.post(url, {"timestamp": timestamp, "topic": topic}, function () {
                 target.parents(".forum-topic-container").slideUp("slow");
             });
         },
