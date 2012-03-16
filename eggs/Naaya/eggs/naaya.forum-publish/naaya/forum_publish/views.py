@@ -156,7 +156,6 @@ def forum_publish_clear_objects(context, REQUEST):
 
     if hasattr(topic.aq_base, "forum_publish_objects"):
         del topic.forum_publish_objects
-
     return simplejson.dumps({"status": "success"})
 
 
