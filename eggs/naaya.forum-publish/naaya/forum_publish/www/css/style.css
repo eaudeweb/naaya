@@ -90,3 +90,33 @@ a {
 .author {
     color: #666;
 }
+
+.forum-preview-buttons {
+    border: 1px solid #eee;
+    background: #FAFAFA;
+    padding: 10px;
+}
+.forum-preview-buttons a {
+    text-decoration: none;
+    border-color: #bbb #666 #666 #bbb;
+    border-style: solid;
+    font-weight: bold;
+    margin-right: 5px;
+    border-width: 1px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    color: #0061A2;
+    padding: 4px;
+}
+.preview-actions {
+    margin-top: 5px;
+}
+.preview-remove {
+    color: #DA4F49;
+    font-size: 11px;
+}
+.preview-remove:hover {
+    text-decoration: underline;
+}
+
