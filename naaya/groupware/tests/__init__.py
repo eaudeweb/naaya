@@ -62,10 +62,8 @@ class GWPortalTestPlugin(NaayaPortalTestPlugin):
         def get_content(filename):
             return open(os.path.join(zope_customisation,
                                      filename), 'rb').read()
-        #index_html
+        #index_html, now registered as simpleView
         app._delObject('index_html')
-        manage_addPageTemplate(app, 'index_html', '')
-        app.index_html.write(get_content('index.html'))
 
         #gw_macro
         manage_addPageTemplate(app, 'gw_macro', '')
