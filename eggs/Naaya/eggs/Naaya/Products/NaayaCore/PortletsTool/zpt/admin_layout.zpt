@@ -109,7 +109,7 @@ $(function(){
             tal:content="item/position"
             tal:attributes="class string:sort-handle portlet_arrange_${item/position}" />
         <td tal:define="label python:test(item['inherit'], 'yes', 'no')"
-            tal:content="structure python:rstk.button_form(
+            tal:content="structure python:rstk['button_form'](
                 label=label,
                 formdata=dict(action='ToggleInherit', **button_options),
                 button_title='Click to toggle inheritance')" />
@@ -118,7 +118,7 @@ $(function(){
         <td>
             <em tal:condition="item/oldstyle">[needs update]</em>
             <tal:block condition="not:item/oldstyle">
-            <tal:block content="structure python:rstk.button_form(
+            <tal:block content="structure python:rstk['button_form'](
                 label='Remove',
                 formdata=dict(action='Unassign', **button_options),
                 button_title='Stop displaying the portlet')" />

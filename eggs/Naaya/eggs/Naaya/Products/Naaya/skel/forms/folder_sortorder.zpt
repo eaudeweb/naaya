@@ -28,7 +28,7 @@
 	<tbody>
 		<tr tal:repeat="folder folders" tal:attributes="class python:test(path('repeat/folder/odd'), 'zebraodd', 'zebraeven')">
 			<td class="center">
-				<img tal:define="icon python:here.rstk.get_object_view_info(folder)['icon']"
+				<img tal:define="icon python:here.rstk['get_object_view_info'](folder)['icon']"
 				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 			</td>
 			<td>
@@ -57,7 +57,7 @@
 	<tbody>
 		<tr tal:repeat="item items" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
 			<td class="center">
-				<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+				<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 			</td>
 			<td>

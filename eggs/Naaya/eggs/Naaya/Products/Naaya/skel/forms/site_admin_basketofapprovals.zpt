@@ -39,7 +39,7 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="item pendings" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
-				<td><img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+				<td><img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 				         tal:attributes="src icon/url; title icon/title; alt icon/title" /></td>
 				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
@@ -75,7 +75,7 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="item published" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
-				<td><img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+				<td><img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 				         tal:attributes="src icon/url; title icon/title; alt icon/title" /></td>
 				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>

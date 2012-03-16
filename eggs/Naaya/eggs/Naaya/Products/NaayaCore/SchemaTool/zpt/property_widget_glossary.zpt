@@ -49,7 +49,7 @@
             </div>
             <div class="glossary-widget-tree"></div>
           </div>
-          <script tal:define="js_options python:here.rstk.json_dumps({
+          <script tal:define="js_options python:here.rstk['json_dumps']({
                       'input_id': prop_id,
                       'widget_url': here.absolute_url(),
                       'lang': curr_lang,

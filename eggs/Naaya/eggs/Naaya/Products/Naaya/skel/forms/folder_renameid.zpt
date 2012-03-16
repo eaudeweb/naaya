@@ -24,7 +24,7 @@
     <tr tal:repeat="selected_item selected_items">
         <tal:block define="item python:here.getObjectById(selected_item)">
         <td class="type">
-            <img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+            <img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
                  tal:attributes="src icon/url; title icon/title; alt icon/title" />
         </td>
         <td class="title-column">

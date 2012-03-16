@@ -2,7 +2,7 @@
 
 <metal:block fill-slot="body">
 <tal:block define="folder_path python:here.aq_parent.absolute_url(1);
-                   xls python:here.rstk.we_provide('Excel export')">
+                   xls python:here.rstk['we_provide']('Excel export')">
 
 <h1 tal:content="here/title_or_id" i18n:translate="" />
 

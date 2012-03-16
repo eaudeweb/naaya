@@ -18,7 +18,7 @@
 		downloadfilename python:here.downloadfilename(lang=req_lang, version=True);
 		size python:here.utShowSizeKb(here.size(req_lang));
 		content_type python:here.getVersionContentType(req_lang);
-		icon python:here.rstk.icon_for_content_type(content_type);
+		icon python:here.rstk['icon_for_content_type'](content_type);
 		title python:icon['title'];
 		url python:icon['url']"
 		tal:attributes="href download_url">

@@ -80,7 +80,7 @@
 				<li tal:condition="role">
 				<tal:block define="obj python: role[1]">
 					<input type="checkbox" name="location"
-						tal:attributes="value python: here.rstk.relative_object_path(obj, here.getSite())" />
+						tal:attributes="value python: here.rstk['relative_object_path'](obj, here.getSite())" />
 					<strong tal:content="python:', '.join(role[0])" /> -
 					<span>
 						<a tal:attributes="href obj/absolute_url"

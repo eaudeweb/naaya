@@ -39,7 +39,7 @@
     <script tal:define="site here/getSite;
                         site_url site/absolute_url;
                         template_path here/custom_template;
-                        url_json python: here.rstk.json_dumps(
+                        url_json python: here.rstk['json_dumps'](
                                 '%s/%s/manage_workspace' %
                                 (site_url, template_path));"
             tal:content="string: var template_url = ${url_json};"></script>
@@ -51,7 +51,7 @@
 </tal:block>
 
 <tal:block condition="python: options['show'] == 'help'">
-    <script tal:define="path_json python:here.rstk.json_dumps(
+    <script tal:define="path_json python:here.rstk['json_dumps'](
                             'portal_forms/schemawidget-%s-%s' % (
                                 here.aq_parent.getId(), here.prop_name()))"
             tal:content="string:var example_path = ${path_json}"></script>

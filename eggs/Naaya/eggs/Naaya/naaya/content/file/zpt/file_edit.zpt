@@ -21,7 +21,7 @@
 	<label for="source-none" i18n:translate="">Keep</label>
 	<tal:block define="download_url here/getEditDownloadUrl;
 			size python:here.utShowSizeKb(here.size);
-			icon python:here.rstk.icon_for_content_type(here.content_type);
+			icon python:here.rstk['icon_for_content_type'](here.content_type);
 			title python:icon['title'];
 			url python:icon['url']">
 		<a tal:attributes="href download_url">

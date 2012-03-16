@@ -729,7 +729,7 @@ class NotificationTool(Folder):
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=subscriptions.csv')
             return exporter.generate_csv(header, rows)
-        if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+        if file_type == 'Excel' and self.rstk['we_provide']('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=subscriptions.xls')

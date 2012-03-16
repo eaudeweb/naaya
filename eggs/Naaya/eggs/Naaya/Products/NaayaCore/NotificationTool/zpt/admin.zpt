@@ -316,7 +316,7 @@
   <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
 </tal:block>
 <script tal:content="python:('var notif_tool_url = %s' %
-                     here.rstk.json_dumps(here.absolute_url()))"></script>
+                     here.rstk['json_dumps'](here.absolute_url()))"></script>
 <script>
 $(function() {
     // fix for IE
