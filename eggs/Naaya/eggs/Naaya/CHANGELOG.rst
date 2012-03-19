@@ -1,5 +1,6 @@
 2.12.78 (unreleased)
 --------------------
+* Skel - set content type for files in a scheme [moregale]
 
 2.12.77 (2012-03-14)
 --------------------
