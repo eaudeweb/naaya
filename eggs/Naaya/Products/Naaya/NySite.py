@@ -471,7 +471,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                             if not scheme_ob._getOb(file.id, None):
                                 scheme_ob.manage_addFile(id=file.id, file='', title=file.title)
                             file_ob = scheme_ob._getOb(file.id)
-                            file_ob.update_data(data=content)
+                            content_type = getattr(file, 'content_type', None)
+                            file_ob.update_data(content, content_type)
                             file_ob._p_changed=1
 
                         for diskfile in scheme.diskfiles:
