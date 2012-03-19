@@ -37,6 +37,7 @@
 			</scheme>
 			<scheme id="color-white" title="White">
 				<file id="style.css" title=""/>
+				<file id="white_pattern" title="" content_type="image/jpeg"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 			<scheme id="color-blue" title="Blue">
@@ -45,10 +46,13 @@
 			</scheme>
 			<scheme id="color-pattern-leaves" title="Pattern leaves">
 				<file id="style.css" title=""/>
+				<file id="leaves_footer" title="" content_type="image/png"/>
+				<file id="leaves_header" title="" content_type="image/png"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 			<scheme id="color-orange" title="Orange">
 				<file id="style.css" title=""/>
+				<file id="orange_header" title="" content_type="image/jpeg"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 			<scheme id="color-green-grey" title="Green-grey">
@@ -61,14 +65,19 @@
 			</scheme>
 			<scheme id="color-blue-grey" title="Blue-grey">
 				<file id="style.css" title=""/>
+				<file id="sand_blue" title="" content_type="image/png"/>
+				<file id="sand_gray" title="" content_type="image/png"/>
+				<file id="sand_lightBlue" title="" content_type="image/png"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 			<scheme id="color-lime" title="Lime">
 				<file id="style.css" title=""/>
+				<file id="lime_background" title="" content_type="image/jpeg"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 			<scheme id="color-animals" title="Animals">
 				<file id="style.css" title=""/>
+				<file id="animals_header" title="" content_type="image/png"/>
 				<diskfile path="screenshot.gif" title="Skin screenshot"/>
 			</scheme>
 		</skin>
