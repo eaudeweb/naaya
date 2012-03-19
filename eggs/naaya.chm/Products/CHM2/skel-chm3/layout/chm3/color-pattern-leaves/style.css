@@ -788,7 +788,7 @@ form fieldset {
  * Content on all pages
  ********************/
 #header {
-  background: url("scheme_C_header");
+  background: url("leaves_header");
 }
 
 #header .logo-holder {
@@ -1045,7 +1045,7 @@ ul.menu-bar.mainsections-menu ul li:last-child {
 #footer-mainsections {
 	width: 100%;
 	margin-top: 55px;
-  background: url("scheme_C_footer");
+  background: url("leaves_footer");
 	overflow: hidden;
 	padding-top: 20px;
 	word-wrap: break-word; /* valid CSS3 property */
@@ -1122,7 +1122,7 @@ ul.menu-bar.mainsections-menu ul li:last-child {
 
 #footer {
 	clear: both;
-  background: url("scheme_C_footer");
+  background: url("leaves_footer");
 	width: 100%;
 	color: #FFFFFF;
 	font-size: 14px;
