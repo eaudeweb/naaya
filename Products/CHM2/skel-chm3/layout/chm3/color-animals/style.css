@@ -786,7 +786,7 @@ form fieldset {
  * Content on all pages
  ********************/
 #header {
-  background: #F3F7DF url("header_animals") 0% 100% repeat-x;
+  background: #F3F7DF url("animals_header") 0% 100% repeat-x;
 }
 
 #header .logo-holder {
