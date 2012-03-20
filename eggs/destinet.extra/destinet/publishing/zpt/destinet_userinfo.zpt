@@ -47,33 +47,6 @@
 							$('#'+ob_type+'_objects').find('div.items').hide();
 							$('#'+ob_type+'_objects').find('div.items').append(item_details);
 						}
-						/*if (data.length > 30){
-							$('#'+ob_type+'_objects ` div.items').append(
-								$('<div>').addClass('more_list'));
-							var k = 0;
-							for(k=30;k<data.length;k++){
-								var ob = data[k];
-								$('#'+ob_type+'_objects > div.items > div.more_list').append(
-									$('<div>').addClass('more_list_item')
-										.append($('<div>').addClass('date_label').text(ob[2])
-										.after($('<a>')
-											.attr('href', ob[1])
-											.text(ob[0]))
-									)
-								);
-							}
-							var items = gettext('items');
-							var not_displayed = gettext('not displayed');
-							var show_them = gettext('Show them');
-							$('#'+ob_type+'_objects > div.items > div.more_list')
-								.append($('<div>')
-									.addClass('more_link')
-									.append($('<strong>').text(data.length-30+' '+items+' ')
-										.after($('<span>').text(not_displayed+' - '))
-										.after($('<a>')
-											.attr('href', 'javascript:void(0);')
-											.text(show_them))));
-						}*/
 					}
 					else{
 						$('#'+ob_type+'_objects > div.items').append($('<p>').text(no_objects));
