@@ -13,157 +13,157 @@
 </tal:block>
 
 <h2>My submissions</h2>
-<p tal:condition="not: any">
-    No resources posted by yourself in DestiNet so far.
-</p>
 
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(news, 'close', 'open')">My News
-        <span tal:condition="news"
-              tal:content="python:'(%d items - click to open)'%len(news)"></span>
-    </h3>
-    <div class="items" tal:condition="news" tal:define="items news">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:news">
-        No items posted under News so far.
-    </p>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.userinfo_item .items').show();
+		var ob_types = ['news', 'events', 'topics', 'resources', 'forums', 'contacts'];
+		//var ob_types = ['news']
+		var no_objects = gettext('No items posted so far');
+		var i = 0;
+		for (i=0;i<ob_types.length;i++){
+			var ob_type = ob_types[i];
+			var get_url = "destinet.publisher/get_userinfo?ob=" + ob_type;
+			$.ajax({
+				url: get_url,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					$('#'+ob_type+'_objects').find('div.items').empty();
+					if (data.length > 0){
+						$('#'+ob_type+'_objects').find('h3').removeClass('open').addClass('close');
+						var counter_message = gettext('most recent items - click to open');
+						if (data.length == 1){
+							counter_message = gettext('item - click to open')
+						}
+						$('#'+ob_type+'_objects').find('span.ob_counter').text('('+data.length+' '+counter_message+')');
+						var j = 0;
+						for (j=0;j<data.length;j++){
+							var ob = data[j];
+							var item_details = $('<div>').append($('<div>')
+								.addClass('date_label').text(ob[2]));
+							$(item_details).find('div.date_label')
+								.after($('<a>').attr('href', ob[1]).text(ob[0]));
+							$('#'+ob_type+'_objects').find('div.items').hide();
+							$('#'+ob_type+'_objects').find('div.items').append(item_details);
+						}
+						/*if (data.length > 30){
+							$('#'+ob_type+'_objects ` div.items').append(
+								$('<div>').addClass('more_list'));
+							var k = 0;
+							for(k=30;k<data.length;k++){
+								var ob = data[k];
+								$('#'+ob_type+'_objects > div.items > div.more_list').append(
+									$('<div>').addClass('more_list_item')
+										.append($('<div>').addClass('date_label').text(ob[2])
+										.after($('<a>')
+											.attr('href', ob[1])
+											.text(ob[0]))
+									)
+								);
+							}
+							var items = gettext('items');
+							var not_displayed = gettext('not displayed');
+							var show_them = gettext('Show them');
+							$('#'+ob_type+'_objects > div.items > div.more_list')
+								.append($('<div>')
+									.addClass('more_link')
+									.append($('<strong>').text(data.length-30+' '+items+' ')
+										.after($('<span>').text(not_displayed+' - '))
+										.after($('<a>')
+											.attr('href', 'javascript:void(0);')
+											.text(show_them))));
+						}*/
+					}
+					else{
+						$('#'+ob_type+'_objects > div.items').append($('<p>').text(no_objects));
+					}
+				}
+			});
+		}
+	})
+</script>
+
+<div class="userinfo_item" id="news_objects">
+	<h3 class="open">My News
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(events, 'close', 'open')">My Events
-        <span tal:condition="events"
-              tal:content="python:'(%d items - click to open)'%len(events)"></span>
-    </h3>
-    <div class="items" tal:condition="events" tal:define="items events">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:events">
-        No items posted under Events so far.
-    </p>
+<div class="userinfo_item" id="events_objects">
+	<h3 class="open">My events
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(topics, 'close', 'open')">My Topics
-        <span tal:condition="topics"
-              tal:content="python:'(%d items - click to open)'%len(topics)"></span>
-    </h3>
-    <div class="items" tal:condition="topics" tal:define="items topics">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:topics">
-        No items posted under Topics so far.
-    </p>
+<div class="userinfo_item" id="topics_objects">
+	<h3 class="open">My Topics
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(resources, 'close', 'open')">My Resources
-        <span tal:condition="resources"
-              tal:content="python:'(%d items - click to open)'%len(resources)"></span>
-    </h3>
-    <div class="items" tal:condition="resources" tal:define="items resources">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:resources">
-        No items posted under Resources so far.
-    </p>
+<div class="userinfo_item" id="resources_objects">
+	<h3 class="open">My Resources
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(forums, 'close', 'open')">My Forums
-        <span tal:condition="forums"
-              tal:content="python:'(%d items - click to open)'%len(forums)"></span>
-    </h3>
-    <div class="items" tal:condition="forums" tal:define="items forums">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:resources">
-        No items posted in Forums.
-    </p>
+<div class="userinfo_item" id="forums_objects">
+	<h3 class="open">My Forums
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
-<div class="userinfo_item">
-    <h3 tal:attributes="class python:test(contacts, 'close', 'open')">My Contacts
-        <span tal:condition="contacts"
-              tal:content="python:'(%d items - click to open)'%len(contacts)"></span>
-    </h3>
-    <div class="items" tal:condition="contacts" tal:define="items contacts">
-        <metal:block use-macro="template/macros/item_macro" />
-    </div>
-    <p tal:condition="not:contacts">
-        No Contacts posted so far.
-    </p>
+<div class="userinfo_item" id="contacts_objects">
+	<h3 class="open">My Contacts
+		<span class="ob_counter"></span>
+	</h3>
+	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
-
 
 <script type="text/javascript" src="++resource++destinet.publishing/destinet.publishing.js"></script>
 <style type="text/css">
-.userinfo_item .items{
-    display: none;
-}
-.userinfo_item .items p{
-    margin: 4px;
-}
+	.userinfo_item .items{
+		display: none;
+	}
+	.userinfo_item .items p{
+		margin: 4px;
+	}
 
-.label{
-    font-weight: bold;
-}
+	.label{
+		font-weight: bold;
+	}
 
-.userinfo_item h3{
-    font-size: 13px;
-    cursor: pointer;
-    background-color: #DDD;
-    text-indent: 20px;
-    background-image: url('++resource++destinet.publishing/down.gif');
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-}
-.userinfo_item h3.close{
-    background-image: url('++resource++destinet.publishing/down.gif');
-}
-.userinfo_item h3.open{
-    background-image: url('++resource++destinet.publishing/right.gif');
-}
-.userinfo_item h3 span{
-    font-weight: normal;
-    font-size: 11px;
-}
-.date_label{
-    background-color: #E6EDEF;
-    padding: 2px;
-    display: inline-block;
-    color: #898989;
-    margin-right: 8px;
-}
-.more_link{
-text-align: right;
-}
-div.more_list div.more_list_item{
-    display: none;
-}
+	.userinfo_item h3{
+		font-size: 13px;
+		cursor: pointer;
+		background-color: #DDD;
+		text-indent: 20px;
+		background-image: url('++resource++destinet.publishing/down.gif');
+		background-repeat: no-repeat;
+		background-position: 2px 2px;
+	}
+	.userinfo_item h3.close{
+		background-image: url('++resource++destinet.publishing/right.gif');
+	}
+	.userinfo_item h3.open{
+		background-image: url('++resource++destinet.publishing/down.gif');
+	}
+	.userinfo_item h3 span{
+		font-weight: normal;
+		font-size: 11px;
+	}
+	.date_label{
+		background-color: #E6EDEF;
+		padding: 2px;
+		display: inline-block;
+		color: #898989;
+		margin-right: 8px;
+	}
+	.more_link{
+	text-align: right;
+	}
+	div.more_list div.more_list_item{
+		display: none;
+	}
 </style>
-
-
-<tal:block condition="nothing">
-<metal:block define-macro="item_macro">
-    <div tal:repeat="item python:items[:30]">
-        <div tal:content="python:item.releasedate.strftime('%d %b \'%y')"
-              class="date_label" />
-        <a tal:attributes="href item/absolute_url"
-                    tal:content="item/title_or_id"></a>
-    </div>
-    <div class="more_list" tal:condition="python:len(items)>30">
-        <div class="more_list_item" tal:repeat="item python:items[30:]">
-            <div tal:content="python:item.releasedate.strftime('%d %b \'%y')"
-                  class="date_label" />
-            <a tal:attributes="href item/absolute_url"
-                        tal:content="item/title_or_id"></a>
-        </div>
-        <div class="more_link">
-            <strong tal:content="python:'%d items'%(len(items)-30)" />
-            not displayed - 
-            <a href="javascript:void(0);">Show them</a>
-        </div>
-    </div>
-</metal:block>
-</tal:block>
