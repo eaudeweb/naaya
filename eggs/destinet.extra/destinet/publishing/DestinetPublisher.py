@@ -1,3 +1,7 @@
+try:
+    import simplejson as json
+except ImportError:
+    import json
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo, getSecurityManager
 try: # Zope >= 2.12
@@ -9,7 +13,6 @@ import operator
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
-from Products.Naaya.NyFolder import NyFolder
 from naaya.content.event.event_item import event_add_html, NyEvent
 from naaya.content.event.event_item import addNyEvent as original_addNyEvent
 from naaya.content.news.news_item import news_add_html, NyNews
@@ -405,36 +408,49 @@ class DestinetPublisher(SimpleItem):
 
 #********** Viewing Information ***************#
 
-    security.declarePublic(PERMISSION_DESTINET_PUBLISH, "userinfo")
-    def userinfo(self):
-        """ Renders a view with everything the member posted """
-
-        def sort_them(itemlist):
-            itemlist.sort(key=operator.attrgetter('releasedate'), reverse=True)
+    security.declarePublic('get_userinfo')
+    def get_userinfo(self, ob):
+        """ returns a list of objects based on the ob type"""
 
         site = self.getSite()
         cat = site.getCatalogTool()
-        auth_tool = site.getAuthenticationTool()
         user = self.REQUEST.AUTHENTICATED_USER.getId()
         filters = {'contributor': user}
-        filters['meta_type'] = 'Naaya Event'
-        events = map(lambda x: x.getObject(), cat.search(filters))
-        sort_them(events)
-        filters['meta_type'] = 'Naaya News'
-        news = map(lambda x: x.getObject(), cat.search(filters))
-        sort_them(news)
+        if ob == 'events':
+            filters['meta_type'] = 'Naaya Event'
+            ob_list = cat.search(filters)
+        elif ob == 'news':
+            filters['meta_type'] = 'Naaya News'
+            ob_list = cat.search(filters)
+        elif ob == 'topics':
+            location_path = '/'.join(site.topics.getPhysicalPath())
+            ob_list = cat.search({'path': location_path,
+                                           'contributor': user})
+        elif ob == 'resources':
+            location_path = '/'.join(site.resources.getPhysicalPath())
+            ob_list = cat.search({'path': location_path,
+                                           'contributor': user})
+        elif ob == 'forums':
+            forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
+            ob_list = cat.search({'meta_type': forum_meta_types,
+                                    'contributor': user})
+        elif ob == 'contacts':
+            ob_list = cat.search({'meta_type': 'Naaya Contact',
+                                    'contributor': user})
+        sorted_list  = site.utSortObjsListByAttr(ob_list, 'releasedate')
 
-        location_path = '/'.join(site.topics.getPhysicalPath())
-        topics = map(lambda x: x.getObject(),
-                           cat.search({'path': location_path,
-                                       'contributor': user}))
-        sort_them(topics)
+        userinfo = [[item.title, item.absolute_url,
+                        item.releasedate.strftime('%d %b \'%y')]
+                        for item in sorted_list[:50]]
+        return json.dumps(userinfo)
 
-        location_path = '/'.join(site.resources.getPhysicalPath())
-        resources = map(lambda x: x.getObject(),
-                           cat.search({'path': location_path,
-                                       'contributor': user}))
-        sort_them(resources)
+    security.declarePublic("userinfo")
+    def userinfo(self):
+        """ Renders a view with everything the member posted """
+
+        site = self.getSite()
+        auth_tool = site.getAuthenticationTool()
+        user = self.REQUEST.AUTHENTICATED_USER.getId()
 
         user_obj = auth_tool.getUser(user)
         if user_obj:
@@ -444,24 +460,8 @@ class DestinetPublisher(SimpleItem):
         else:
             user_info = None
 
-        forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
-        forums = map(lambda x: x.getObject(), cat.search(
-                               {'meta_type': forum_meta_types, 'contributor': user}))
-        sort_them(forums)
-
-        contacts = map(lambda x: x.getObject(), cat.search(
-                               {'meta_type': 'Naaya Contact', 'contributor': user}))
-        sort_them(contacts)
-
-        any = bool(events or news or resources or topics or forums or contacts)
-        return site.getFormsTool().getContent({'here': self, 'news': news,
-                                               'user_info': user_info,
-                                               'events': events,
-                                               'topics': topics,
-                                               'resources': resources,
-                                               'forums': forums,
-                                               'contacts': contacts,
-                                               'any': any},
+        return site.getFormsTool().getContent({'here': self,
+                                               'user_info': user_info},
                                               'destinet_userinfo')
 
 InitializeClass(DestinetPublisher)
