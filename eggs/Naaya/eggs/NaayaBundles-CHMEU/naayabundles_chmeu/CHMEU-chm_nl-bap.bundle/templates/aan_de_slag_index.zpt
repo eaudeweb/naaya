@@ -26,7 +26,7 @@
     	    <metal:block define-macro="folder-title"></metal:block>
 
         	<tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
-        		<tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+        		<tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro', 'box_class': ''})" />
         	</tal:block>
 
         	<div class="folder_description">
