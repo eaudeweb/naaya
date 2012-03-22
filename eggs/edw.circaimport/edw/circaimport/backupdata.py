@@ -180,7 +180,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                 matched = re.search(r'URL=(.*)', url)
                 if matched:
                     url = matched.groups()[0].strip()
-            assert url.startswith('http://') or url.startswith('https://'), "bad url: %r" % url
+            assert url.startswith('http://') or url.startswith('https://') or url.startswith('ftp://'), "bad url: %r" % url
             actor.url_entry(parent_path, doc_id,
                             doc_filename, url,
                             title, description, keywords, date, userid)
