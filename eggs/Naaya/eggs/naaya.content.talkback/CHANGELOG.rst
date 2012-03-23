@@ -1,5 +1,6 @@
 1.4.9 (unreleased)
 ------------------
+* Removed approval workflow for comments [dumitval]
 
 1.4.8 (2012-03-14)
 ------------------

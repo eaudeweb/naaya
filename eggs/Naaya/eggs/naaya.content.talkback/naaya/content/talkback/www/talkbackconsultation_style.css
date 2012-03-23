@@ -261,10 +261,6 @@ dl.tb-invitations dd {
 dl.tb-invitations.revoked dt {
     text-decoration: line-through;
 }
-dl.tb-comments-unapproved ul.tb-comments-tree {
-	padding: 0;
-}
-
 table.tb-comments-overview {
     width: 100%;
 }
