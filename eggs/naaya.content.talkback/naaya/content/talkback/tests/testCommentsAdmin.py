@@ -63,7 +63,7 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
         # comment 1
         id1 = addComment(consultation['test-section']['000'],
                          contributor='invite:' + self.invite_key,
-                         message=u'invitee comment (1)', approved=False)
+                         message=u'invitee comment (1)')
         comments.append(paragraph_000[id1])
 
         transaction.commit()

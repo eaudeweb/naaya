@@ -9,7 +9,6 @@
     <th>Location</th>
     <th>Author</th>
     <th>Comment</th>
-    <th>Status</th>
 </thead>
 
 <tbody>
@@ -31,15 +30,6 @@
     </td>
 
     <td tal:content="structure comment/message"></td>
-
-    <td>
-        <tal:block condition="comment/approved">
-            <!-- leave empty so people can write notes -->
-        </tal:block>
-        <tal:block condition="not:comment/approved">
-            not approved
-        </tal:block>
-    </td>
 
 </tr>
 </tal:block>

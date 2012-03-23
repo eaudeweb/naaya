@@ -388,8 +388,6 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
                 for comment in paragraph.get_comments():
                     if comment.comment_date < cutoff:
                         continue
-                    if not comment.approved:
-                        continue
                     comments_list.append(comment)
         comments_list.sort(key=operator.attrgetter('comment_date'),
                            reverse=True)

@@ -18,9 +18,6 @@
 # Alex Morega, Eau de Web
 
 #Python imports
-import os
-import sys
-from itertools import groupby
 from cStringIO import StringIO
 import csv
 try:
@@ -70,31 +67,21 @@ class CommentsAdmin(SimpleItem):
         else:
             raise Unauthorized
 
-        unapproved = []
         total_count = 0
         invited_count = 0
         anonymous_count = 0
 
         for comment in self._iter_comments():
-            if comment.approved is False:
-                unapproved.append(comment)
-
             total_count += 1
             if comment.is_invited:
                 invited_count += 1
             elif comment.is_anonymous:
                 anonymous_count += 1
 
-        group_key = lambda comment: comment.get_section()
-        grouped_unapproved = [(k, list(g))
-                              for k, g in groupby(unapproved, group_key)]
-
         options = {
             'total_count': total_count,
             'invited_count': invited_count,
             'anonymous_count': anonymous_count,
-            'unapproved_count': len(unapproved),
-            'unapproved_comments': grouped_unapproved,
             'comment_macros': Paragraph.comments_html.macros,
         }
         return self._admin_template(REQUEST, **options)

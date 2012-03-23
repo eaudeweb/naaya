@@ -50,12 +50,12 @@ from permissions import PERMISSION_REVIEW_TALKBACKCONSULTATION
 
 
 def addComment(self, contributor, message,
-               file='', reply_to=None, approved=True):
+               file='', reply_to=None):
     id = self.utGenRandomId(6)
     while id in self.objectIds():
         id = self.utGenRandomId(6)
     ob = TalkBackConsultationComment(id, contributor, message,
-                                     file, reply_to, approved)
+                                     file, reply_to)
     self._setObject(id, ob)
     ob = self._getOb(id)
     ob._save_contributor_name()
@@ -76,14 +76,12 @@ class TalkBackConsultationComment(NyFSFile):
     security = ClassSecurityInfo()
 
     reply_to = None
-    approved = True
     contributor_name = None
 
-    def __init__(self, id, contributor, message, file, reply_to, approved):
+    def __init__(self, id, contributor, message, file, reply_to):
         self.contributor = contributor
         self.message = message
         self.reply_to = reply_to
-        self.approved = approved
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, '', file)
 
@@ -158,22 +156,6 @@ class TalkBackConsultationComment(NyFSFile):
         else:
             return None
 
-    def visible_to_user(self, request):
-        if self.approved:
-            return True
-
-        if self.check_edit_permissions():
-            return True
-
-        if self.invite_key is not None:
-            invitations = self.get_consultation().invitations
-            current_invite = invitations.get_current_invitation(request)
-            if (current_invite is not None and
-                current_invite.key == self.invite_key):
-                return True
-
-        return False
-
     def check_manage_permissions(self):
         """ Allow people with PERMISSION_MANAGE_TALKBACKCONSULTATION """
         if self.checkPermissionManageTalkBackConsultation():
@@ -219,20 +201,6 @@ class TalkBackConsultationComment(NyFSFile):
             back_url = REQUEST.form.get('back_url',
                                         self.get_section().absolute_url())
             REQUEST.RESPONSE.redirect(back_url)
-
-    security.declarePublic('approve')
-    def approve(self, REQUEST):
-        """ approve this comment """
-        if not self.check_manage_permissions():
-            raise Unauthorized
-
-        if REQUEST.REQUEST_METHOD != 'POST':
-            raise ValueError('Please use POST')
-
-        self.approved = True
-
-        back_url = REQUEST.form.get('back_url', self.get_section().absolute_url())
-        REQUEST.RESPONSE.redirect(back_url)
 
     security.declareProtected(view_management_screens, 'manage_workspace')
     manage_workspace = PageTemplateFile('zpt/comment_manage', globals())

@@ -138,16 +138,3 @@ class CommentsFeedTest(NaayaTestCase):
             '<summary type="html">comment from today</summary>',
             '<summary type="html">comment from yesterday</summary>',
             '<summary type="html">comment from 2 days ago</summary>']
-
-    def test_unapproved(self):
-        addComment(self.tb['sec']['000'], contributor='contributor',
-                   message="I'm ok")
-        addComment(self.tb['sec']['000'], contributor='contributor',
-                   message="I'm not approved", approved=False)
-
-        doc = self.tb.comments_atom()
-        dom = minidom.parseString(doc)
-        assert len(dom.getElementsByTagName('entry')) == 1
-        entry = dom.getElementsByTagName('entry')[0]
-        assert (entry.getElementsByTagName('summary')[0].toxml() ==
-                '<summary type="html">I\'m ok</summary>')
