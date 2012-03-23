@@ -104,7 +104,7 @@ class Paragraph(Folder):
 
     security.declareProtected(view, 'comment_count')
     def comment_count(self):
-        return sum(1 for c in self.get_comments() if c.approved)
+        return sum(1 for c in self.get_comments())
 
     _delete_comment_confirmation = NaayaPageTemplateFile(
             'zpt/paragraph_delete_comment', globals(),
@@ -224,17 +224,14 @@ class Paragraph(Folder):
         clean_message = cleanup_message(message)
         next_page = REQUEST.get('next_page', self.absolute_url())
         reply_to = REQUEST.form.get('reply_to', None)
-        approved = True
 
         contributor_name = REQUEST.form.get('contributor_name', '')
         errors = []
         if invitation is not None:
             contributor = 'invite:' + invitation.key
-            approved = False
         elif userid is None:
             if contributor_name:
                 contributor = 'anonymous:' + contributor_name
-                approved = False
             else:
                 errors.append('Please input your name.')
         else:
@@ -259,13 +256,10 @@ class Paragraph(Folder):
             'message': clean_message,
             'file': REQUEST.form.get('file', ''),
             'reply_to': reply_to,
-            'approved': approved,
         }
         addComment(self, **form_data)
 
         success_message = "Comment submitted successfully."
-        if not approved:
-            success_message += " An administrator will review it for approval."
         self.setSessionInfoTrans(success_message)
         REQUEST.RESPONSE.redirect(next_page)
 
