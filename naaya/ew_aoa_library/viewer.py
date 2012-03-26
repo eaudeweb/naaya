@@ -1,3 +1,4 @@
+# coding=utf-8
 from difflib import get_close_matches
 try:
     import simplejson as json
