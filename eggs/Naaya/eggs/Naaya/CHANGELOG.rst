@@ -1,5 +1,9 @@
-2.12.78 (unreleased)
+2.12.79 (unreleased)
 --------------------
+
+2.12.78 (2012-03-26)
+--------------------
+* admin_bulk_mail_html fix for IE < 9 [dumitval]
 * Skel - set content type for files in a scheme [moregale]
 
 2.12.77 (2012-03-14)
