@@ -56,6 +56,7 @@ misc_ = {
     'fullscreencollapse_icon.gif':ImageFile('www/fullscreencollapse_icon.gif', globals()),
     'fullscreenexpand_icon.gif':ImageFile('www/fullscreenexpand_icon.gif', globals()),
     'gadfly_container.gif': ImageFile('www/gadfly_container.gif', globals()),
+    'indicator.gif': ImageFile('www/indicator.gif', globals()),
     'info.png': ImageFile('www/info.png', globals()),
     'linkedin.png': ImageFile('www/linkedin.png', globals()),
     'logintoadd.gif': ImageFile('www/logintoadd.gif', globals()),
