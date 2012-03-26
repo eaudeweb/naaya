@@ -15,41 +15,21 @@
     <script type="text/javascript">
         $(document).ready(function(){
             if ($("input[type=checkbox][name=user_mails:list]").length > 0) {
-                var sel_all = $("<a" + ">" + "Select all<" + "/a>");
-                sel_all.attr({
-                    href: '#',
-                    id: 'select_all',
-                    class: 'button-like'
-                });
-                sel_all.click(function(){
-                    $('.selector').attr('checked', 'checked');
-                    $("#select_all").toggle();
-                    $("#select_none").toggle();
+                $('#select_all').change(function(){
+                    if ($(this).attr('checked')){
+                        $('.selector').attr('checked', 'checked');
+                    }
+                    else{
+                        $('.selector').removeAttr('checked', 'checked');
+                    }
                     create_mailto_links();
                 });
 
-                var sel_none = $("<a" + ">Select none<" + "/a>");
-                sel_none.attr({
-                    href: '#',
-                    id: 'select_none',
-                    class: 'button-like'
-                });
-
-                sel_none.hide();
-
-                sel_none.click(function(){
-                    $('.selector').removeAttr('checked');
-                    $("#select_all").toggle();
-                    $("#select_none").toggle();
-                    create_mailto_links();
-                });
-                $('#user_listing').before(sel_all);
-                $('#user_listing').before(sel_none);
                 $('#compose_message').css({'display': 'inline'});
             }
             else {
                 $('#compose_message').css({'display': 'none'});
-            };
+            }
             create_mailto_links();
             $('.selector').click(function(){
                 create_mailto_links();
@@ -68,26 +48,25 @@
                 var user_emails = [];
                 $('.selector:checked').each(function(){
                     user_emails.push($(this).val());
-                })
+                });
                 if (user_emails.length>0){
-                    $('#send_with_outlook').attr('href', 'mailto:' + user_emails.join('; '));
+                    $('#send_with_outlook')
+                        .attr('href', 'mailto:' + user_emails.join('; '));
                     $('#send_with_outlook_long')
                         .attr('href', 'mailto:' + user_emails.join('; '))
                         .text(user_emails.join('; '));
-                    $('#send_with_local_client').attr('href', 'mailto:' + user_emails.join(', '));
+                    $('#send_with_local_client')
+                        .attr('href', 'mailto:' + user_emails.join(', '));
                     $('#send_with_local_client_long')
                         .attr('href', 'mailto:' + user_emails.join(', '))
                         .text(user_emails.join(', '));
-                    $('.click_to_send_local_client').slideDown()
+                    $('.click_to_send_local_client').slideDown();
                 }
                 else {
-                    $('.click_to_send_local_client').slideUp()
+                    $('.click_to_send_local_client').slideUp();
                 }
             }
         });
-        window.onload = function() {
-            $("select_none").hide();
-    }
     </script>
 
     <tal:block condition="not:compose">
@@ -116,8 +95,10 @@
                 <table class="datatable" id="user_listing" tal:condition="users">
                     <thead>
                         <tr>
-                            <th align="left" i18n:translate="">Select</th>
-                            <th align="left">
+                            <th i18n:translate="">
+                                <input type="checkbox" id="select_all"/>
+                            </th>
+                            <th>
                                 <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=uid&rkey=1">
                                     <span i18n:translate="">Username</span>
                                 </a>
@@ -125,7 +106,7 @@
                                     <span i18n:translate="">Username</span>
                                 </a>
                             </th>
-                            <th align="left">
+                            <th>
                             <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=name&rkey=1">
                                 <span i18n:translate="">Name</span>
                             </a>
@@ -133,7 +114,7 @@
                                 <span i18n:translate="">Name</span>
                             </a>
                             </th>
-                            <th align="left">
+                            <th>
                                 <span i18n:translate="">Email address</span>
                             </th>
                         </tr>
@@ -161,7 +142,7 @@
                     <p class="tip" i18n:translate="" id="many_emails" style="display:none">
                         If this link doesn't work with your mail client please copy emails from below.
                     </p>
-                    <p><a style="display:none" id="send_with_outlook_long" /><a style="display:none" id="send_with_local_client_long" /></p>
+                    <p><a style="display:none" id="send_with_outlook_long"></a><a style="display:none" id="send_with_local_client_long"></a></p>
                 </div>
             </fieldset>
         </form>
