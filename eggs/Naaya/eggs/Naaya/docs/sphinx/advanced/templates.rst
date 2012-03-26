@@ -6,7 +6,7 @@ The standard template
 ---------------------
 Each portal layout has one or more `standard template` macros which render the
 header, footer and portlets. They are included using the
-:ref:`~Products.Naaya.NySite.NySite.standard_template_macro` function::
+:meth:`~Products.Naaya.NySite.NySite.standard_template_macro` function::
 
     <metal:block use-macro="python:here.standard_template_macro()">
         <metal:block fill-slot="body">

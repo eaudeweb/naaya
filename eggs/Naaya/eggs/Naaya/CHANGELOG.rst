@@ -177,7 +177,7 @@
 2.12.46 (2012-01-12)
 --------------------
 * added 'styleselect' in config.ini of portal editor,
-removed from python code [simiamih]
+  removed from python code [simiamih]
 * left/rightLogoUrl tests logo for empty file [simiamih]
 
 2.12.45 (2012-01-11)

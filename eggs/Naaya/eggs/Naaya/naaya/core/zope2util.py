@@ -129,8 +129,8 @@ def catch_unauthorized():
     """
     useful in try..except handlers, like `tal:on-error`::
 
-        <p tal:content="here/read_value"
-           on-error="here/rstk/catch_unauthorized"/>
+        <p tal:content="here/read_value" on-error="here/rstk/catch_unauthorized"/>
+
     """
     if sys.exc_info()[0] is Unauthorized:
         return None
