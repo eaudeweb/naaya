@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+-----------------
+
+1.1.9 (2012-03-20)
 -----------------
 * speed up login_html using ajax calls [dumitval]
 
