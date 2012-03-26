@@ -1,3 +1,5 @@
+.. _administration-section:
+
 Administration
 ==============
 

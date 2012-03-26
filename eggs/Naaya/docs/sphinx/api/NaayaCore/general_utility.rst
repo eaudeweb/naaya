@@ -29,7 +29,7 @@ acquisition, and will be migrated there eventually.
 
 
 .. automodule:: Products.NaayaCore.managers.utils
-   :members: is_valid_email, slugify, uniqueId, make_id
+   :members: slugify, uniqueId, make_id
 
 .. autoclass:: Products.NaayaCore.managers.utils.utils
    :members: html2text, splitTextByWords, word_break, getObjectPaginator,

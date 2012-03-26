@@ -1,3 +1,5 @@
+.. _portlets-tool:
+
 Portlets tool
 =============
 

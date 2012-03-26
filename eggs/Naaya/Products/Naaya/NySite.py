@@ -1478,7 +1478,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         JSON for js tree
         * `all` - include unapproved items
         * `only_folders` - only show METATYPE_FOLDER items
-            - `subportals` - consider subportals as folders
+        * `subportals` - consider subportals as folders
 
         """
         if root_site is None:
@@ -1553,9 +1553,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     published=True, subportals=False):
         """
         Lookup location can be folder specified by `path` or portal in self.
-        If only_folders is True, only return METATYPE_FOLDER objects.
-            - If subportals is True, also return contained portals.
-        If published is True, only return `approved` items.
+        * If only_folders is True, only return METATYPE_FOLDER objects.
+        * If subportals is True, also return contained portals.
+        * If published is True, only return `approved` items.
 
         Returns list of items found in location.
         OBS: if lookup location provides INySite, skip non-container meta_type-s
