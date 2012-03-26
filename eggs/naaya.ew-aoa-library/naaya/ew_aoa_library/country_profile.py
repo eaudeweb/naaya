@@ -1,3 +1,4 @@
+# coding=utf-8
 from zope.publisher.browser import BrowserPage
 #from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
