@@ -185,6 +185,7 @@
 			<permission name="Access contents information" />
 			<permission name="Access session data" />
 			<permission name="Naaya - Zip export" />
+			<permission name="Naaya - Create user" />
 			<permission name="Query Vocabulary" />
 			<permission name="Search ZCatalog" />
 			<permission name="Use Database Methods" />
@@ -245,6 +246,7 @@
 			<permission name="Naaya - Add Naaya Simple Consultation objects" />
 			<permission name="Naaya - Add Naaya Story objects" />
 			<permission name="Naaya - Add Naaya URL objects" />
+			<permission name="Naaya - Create user" />
 			<permission name="Naaya - Copy content" />
 			<permission name="Naaya - Delete content" />
 			<permission name="Naaya - Edit content" />

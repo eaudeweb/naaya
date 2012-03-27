@@ -22,6 +22,7 @@ PERMISSION_SKIP_CAPTCHA = 'Naaya - Skip Captcha'
 PERMISSION_BULK_DOWNLOAD = 'Naaya - Bulk download'
 PERMISSION_SKIP_APPROVAL = 'Naaya - Skip approval'
 PERMISSION_ZIP_EXPORT = 'Naaya - Zip export'
+PERMISSION_CREATE_USER = 'Naaya - Create user'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'

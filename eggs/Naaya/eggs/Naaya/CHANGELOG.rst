@@ -1,6 +1,7 @@
 2.12.79 (unreleased)
 --------------------
 * missing icon: indicator.gif
+* new permission "Naaya - Create user" [moregale]
 
 2.12.78 (2012-03-26)
 --------------------
