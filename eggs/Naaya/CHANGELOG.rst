@@ -1,4 +1,7 @@
-2.12.79 (unreleased)
+2.12.80 (unreleased)
+--------------------
+
+2.12.79 (2012-03-27)
 --------------------
 * missing icon: indicator.gif
 * new permission "Naaya - Create user" [moregale]
