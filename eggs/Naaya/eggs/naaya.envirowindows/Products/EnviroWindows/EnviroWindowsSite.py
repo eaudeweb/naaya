@@ -56,6 +56,7 @@ from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
 from naaya.component import bundles
+from naaya.core.exceptions import i18n_exception
 
 log = logging.getLogger(__name__)
 
@@ -575,6 +576,9 @@ class EnviroWindowsSite(NySite):
         self.setContributorSession(username, role, firstname, lastname, email, '',
                     organisation, comments, address, phone, title, description, fax, website)
         try:
+            if not self.checkPermissionCreateUser():
+                raise i18n_exception(ValueError,
+                                     "Self-registration not allowed")
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, strict=1)
         except Exception, error:
             _err = error
