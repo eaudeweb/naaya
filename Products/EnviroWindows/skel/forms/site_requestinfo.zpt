@@ -128,6 +128,10 @@
 				<td>URL address:</td>
 				<td><input type="text" name="website:utf8:ustring" tal:attributes="value python:here.getSessionContributorWebsite(request.get('website', ''))" /></td>
 			</tr>
+			<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
+				<td></td>
+				<td tal:content="structure python: here.show_recaptcha(here)" />
+			</tr>
 		</table>
 	<br />
 	<input type="hidden" name="role" tal:attributes="value python:request.get('role', '')" />
