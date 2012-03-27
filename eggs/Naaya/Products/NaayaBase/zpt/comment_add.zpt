@@ -21,6 +21,7 @@
 	<span tal:replace="structure python:editor.render('body', image_support=True)" />
 	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor"></textarea>
 </div>
+<div class="field" tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()" tal:content="structure python: here.show_recaptcha(here)" />
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>

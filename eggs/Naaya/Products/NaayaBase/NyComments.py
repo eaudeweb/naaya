@@ -305,7 +305,15 @@ class NyCommentable:
         """
         Add a comment for this object.
         """
-
+        err = []
+        if not self.checkPermissionSkipCaptcha():
+            contact_word = REQUEST.get('contact_word')
+            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            if captcha_errors:
+                err.extend(captcha_errors)
+        if err:
+            self.setSessionErrorsTrans(err)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         form_data = dict(REQUEST.form)
         author = REQUEST.AUTHENTICATED_USER.getUserName()
 

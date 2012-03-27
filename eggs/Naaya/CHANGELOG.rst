@@ -1,5 +1,6 @@
 2.12.80 (unreleased)
 --------------------
+* Added recaptcha on comment_add_html [dumitval]
 
 2.12.79 (2012-03-27)
 --------------------
