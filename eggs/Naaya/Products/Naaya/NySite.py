@@ -99,6 +99,7 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
+from naaya.core.exceptions import i18n_exception
 
 from events import NyPluggableItemInstalled, SkelLoad
 
@@ -1731,6 +1732,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.setSession('body', body)
         REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_CREATE_USER,
+                              '_dummy_permission_create_user')
+    def _dummy_permission_create_user(self):
+        pass
+        # dummy view to register the 'Naaya - Create user' permission
+
     security.declareProtected(view, 'processRequestRoleForm')
     def processRequestRoleForm(self, username='', password='', confirm='',
                                firstname='', lastname='', email='',
@@ -1761,6 +1768,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if apply_role == 'contributor':
             #create an account without role
             try:
+                if not self.checkPermissionCreateUser():
+                    raise i18n_exception(ValueError,
+                                         "Self-registration not allowed")
                 userinfo = acl_tool.manage_addUser(name=username, password=password,
                            confirm=confirm, roles=[], domains=[], firstname=firstname,
                            lastname=lastname, email=email, strict=0)

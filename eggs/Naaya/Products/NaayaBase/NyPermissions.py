@@ -157,6 +157,11 @@ class NyPermissions(object):
 
         return self.checkPermission(PERMISSION_SKIP_APPROVAL)
 
+    def checkPermissionCreateUser(self):
+        """ Check the permission to create a user """
+
+        return self.checkPermission(PERMISSION_CREATE_USER)
+
     security.declareProtected(PERMISSION_SKIP_CAPTCHA, 'skip_captcha')
     def skip_captcha(self):
         """ bogus function used to register the SKIP_CAPTCHA permission"""

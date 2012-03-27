@@ -23,7 +23,7 @@ class SkipApprovalPermission(UpdateScript):
         self.log.info("submit_unapproved flag set to %r" % value)
         del portal.submit_unapproved
         return True
-    
+
 class HideSortOrderFromSchemas(UpdateScript):
     title = ('Hide the sortorder property from all schemas')
     authors = ['Valentin Dumitru']
@@ -267,4 +267,20 @@ class DeleteInvalidPointers(UpdateScript):
                 pointer_item.aq_parent.manage_delObjects(pointer_item.getId())
                 counter += 1
         self.log.debug('A total of %s pointer items were deleted' % counter)
+        return True
+
+class CreateUserPermission(UpdateScript):
+    title = ('Set the "Naaya - Create user" permission '
+             'for Administrator, Anonymous')
+    authors = ['Alex Morega']
+    creation_date = 'Mar 27, 2012'
+
+    def _update(self, portal):
+        permission = "Naaya - Create user"
+        p = Permission(permission, (), portal)
+        if 'Administrator' not in p.getRoles():
+            permission_add_role(portal, permission, 'Administrator')
+            permission_add_role(portal, permission, 'Anonymous')
+            self.log.debug('Added %s permission', permission)
+
         return True
