@@ -1,5 +1,6 @@
 1.1.9 (unreleased)
 ------------------
+* Added recaptcha on requestrole_html [dumitval]
 * Added recaptcha on createaccount_html [dumitval]
 
 1.1.8 (2012-03-27)

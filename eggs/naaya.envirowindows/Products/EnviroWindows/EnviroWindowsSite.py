@@ -581,18 +581,23 @@ class EnviroWindowsSite(NySite):
                 return RESPONSE.redirect(REQUEST['return_path'])
             else:
                 return RESPONSE.redirect(self.getSitePath())
+        err = []
         self.setContributorSession(username, role, firstname, lastname, email, '',
                     organisation, comments, address, phone, title, description, fax, website)
-        try:
-            if not self.checkPermissionCreateUser():
-                raise i18n_exception(ValueError,
-                                     "Self-registration not allowed")
-            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, strict=1)
-        except Exception, error:
-            _err = error
-        else:
-            _err = ''
-        if _err:
+        if not self.checkPermissionSkipCaptcha():
+            contact_word = REQUEST.get('contact_word')
+            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            if captcha_errors:
+                err.extend(captcha_errors)
+        if not err:
+            try:
+                if not self.checkPermissionCreateUser():
+                    raise i18n_exception(ValueError,
+                                         "Self-registration not allowed")
+                self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, strict=1)
+            except Exception, error:
+                err.append(error)
+        if err:
             self.setSessionErrorsTrans(_err)
             return RESPONSE.redirect('requestinfo_html?role=%s' % role)
         else:
