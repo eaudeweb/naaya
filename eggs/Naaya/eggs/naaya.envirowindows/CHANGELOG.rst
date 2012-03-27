@@ -1,4 +1,7 @@
-1.1.8 (unreleased)
+1.1.9 (unreleased)
+------------------
+
+1.1.8 (2012-03-27)
 ------------------
 * honor the "Naaya - Create user" permission [moregale]
 
