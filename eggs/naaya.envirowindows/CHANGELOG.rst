@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* honor the "Naaya - Create user" permission [moregale]
 
 1.1.7 (2012-01-13)
 ------------------
