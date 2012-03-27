@@ -532,18 +532,26 @@ class EnviroWindowsSite(NySite):
         checks that the field exists and has a value.
         """
         kwargs.update(REQUEST.form)
+        err = []
         allowed_fields = ['username', 'name', 'firstname', 'lastname', 'email',
                           'password', 'confirm', 'organisation',
                           'comments', 'location']
         kwargs = dict((k, v) for k, v in kwargs.iteritems()
                                         if k in allowed_fields)
+        if not self.checkPermissionSkipCaptcha():
+            contact_word = kwargs.get('contact_word')
+            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            if captcha_errors:
+                err.extend(captcha_errors)
         if not kwargs.get('comments', ''):
             # setRequestRoleSession expects 'name' instead of 'username'
             # also, it does not expect 'confirm'
+            err.append('Required field: Comments')
+        if err:
             kwargs['name'] = kwargs.pop('username', '')
             kwargs.pop('confirm', '')
             self.setRequestRoleSession(**kwargs)
-            self.setSessionErrorsTrans('Required field: Comments')
+            self.setSessionErrorsTrans(err)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         return super(EnviroWindowsSite, self).processRequestRoleForm(REQUEST=REQUEST, **kwargs)
 
