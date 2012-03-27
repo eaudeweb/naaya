@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+------------------
+
+1.1.9 (2012-03-27)
 ------------------
 * Added recaptcha on requestrole_html [dumitval]
 * Added recaptcha on createaccount_html [dumitval]
