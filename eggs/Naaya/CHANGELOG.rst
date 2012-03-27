@@ -1,4 +1,7 @@
-2.12.80 (unreleased)
+2.12.81 (unreleased)
+--------------------
+
+2.12.80 (2012-03-27)
 --------------------
 * Added recaptcha on comment_add_html [dumitval]
 
