@@ -1,5 +1,7 @@
 1.2.22 (unreleased)
 -------------------
+* Several scripts to monitor site security [dumitval]
+* Changed default number of updates listed to 30 [dumitval]
 
 1.2.21 (2012-02-28)
 -------------------

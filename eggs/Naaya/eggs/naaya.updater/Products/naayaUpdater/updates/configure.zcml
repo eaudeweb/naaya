@@ -431,4 +431,24 @@
       provides="..interfaces.IUpdateScript"
       component=".update_modify_local_properties.ModifyLocalProperties"
       permission="zope2.ViewManagementScreens" />
+	<utility
+		name="DisplayComments"
+		provides="..interfaces.IUpdateScript"
+		component=".update_security_checks.DisplayComments"
+		permission="zope2.ViewManagementScreens" />
+	<utility
+		name="DisplayOpenForComments"
+		provides="..interfaces.IUpdateScript"
+		component=".update_security_checks.DisplayOpenForComments"
+		permission="zope2.ViewManagementScreens" />
+	<utility
+		name="DisplayPermissionAddComments"
+		provides="..interfaces.IUpdateScript"
+		component=".update_security_checks.DisplayPermissionAddComments"
+		permission="zope2.ViewManagementScreens" />
+	<utility
+		name="DisplayForumMessages"
+		provides="..interfaces.IUpdateScript"
+		component=".update_security_checks.DisplayForumMessages"
+		permission="zope2.ViewManagementScreens" />
 </configure>
