@@ -1,4 +1,7 @@
-1.2.22 (unreleased)
+1.2.23 (unreleased)
+-------------------
+
+1.2.22 (2012-03-28)
 -------------------
 * Several scripts to monitor site security [dumitval]
 * Changed default number of updates listed to 30 [dumitval]
