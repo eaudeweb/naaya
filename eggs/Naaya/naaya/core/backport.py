@@ -1,5 +1,10 @@
 # Library code from newer versions of Python
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 def all(l):
         for i in l:
             if not i:

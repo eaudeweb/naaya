@@ -265,3 +265,5 @@ def trim(message):
 def cleanup_message(message):
     return sanitize(trim(message)).strip()
 
+def str2bool(string):
+    return string in [True, 'true', 'True']

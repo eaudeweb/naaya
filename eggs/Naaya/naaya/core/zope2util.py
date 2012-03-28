@@ -512,3 +512,7 @@ def _run_job(db, context_path, callback):
     except:
         log.exception('Error in worker thread')
         transaction.abort()
+
+def json_response(data, response):
+    response.setHeader('Content-Type', 'application/json')
+    return json.dumps(data)
