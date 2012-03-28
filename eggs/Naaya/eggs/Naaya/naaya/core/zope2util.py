@@ -463,24 +463,38 @@ def get_site_manager(context):
     """
     return context.getSite().getSiteManager()
 
-def sha_hexdigest(f):
-    sha_hash = sha.new()
+
+def iter_file_data(f):
+    """
+    Iterate through contents of given file. Can auto-detect if the file
+    is a Zope FileUpload or an OFS File/ImageFile.
+    """
+    # TODO add support for any file-like objects, with unit tests
     if isinstance(f, FileUpload):
         while True:
-            buffer = f.read(2**16)
-            if not buffer:
+            buf = f.read(2**16)
+            if not buf:
                 break
-            sha_hash.update(buffer)
+            yield buf
         f.seek(0)
+
     elif hasattr(f, 'data'):
         if isinstance(f.data, str):
-            sha_hash.update(f.data)
+            yield f.data
+
         else:
             data = f.data
             while data is not None:
-                sha_hash.update(data.data)
+                yield data.data
                 data = data.next
+
+
+def sha_hexdigest(f):
+    sha_hash = sha.new()
+    for buf in iter_file_data(f):
+        sha_hash.update(buf)
     return sha_hash.hexdigest()
+
 
 def get_template_source(template):
     """ Returns the source text of a template """
