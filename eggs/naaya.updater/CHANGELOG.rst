@@ -1,4 +1,7 @@
-1.2.23 (unreleased)
+1.2.24 (unreleased)
+-------------------
+
+1.2.23 (2012-03-29)
 -------------------
 * Improvements to the security scripts [dumitval]
 
