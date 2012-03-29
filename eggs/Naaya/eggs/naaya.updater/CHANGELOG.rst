@@ -1,5 +1,6 @@
 1.2.23 (unreleased)
 -------------------
+* Improvements to the security scripts [dumitval]
 
 1.2.22 (2012-03-28)
 -------------------
