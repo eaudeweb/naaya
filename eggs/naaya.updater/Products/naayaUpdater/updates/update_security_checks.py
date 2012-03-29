@@ -21,7 +21,7 @@ class DisplayComments(UpdateScript):
         auth_tool = portal.getAuthenticationTool()
         comments = [brain.getObject() for brain in catalog.search({'meta_type': 'Naaya Comment'})]
         for comment in comments:
-            user_id = comment.author
+            user_id = comment.author.encode('ascii')
             try:
                 user_ob = auth_tool.get_user_info(user_id)
                 user_name = getattr(user_ob, 'full_name', None)
@@ -105,9 +105,18 @@ class DisplayForumMessages(UpdateScript):
     security.declarePrivate('_update')
     def _update(self, portal):
         catalog = portal.portal_catalog
+        auth_tool = portal.getAuthenticationTool()
         objects = [brain.getObject() for brain in catalog.search({'meta_type': 'Naaya Forum Message'})]
         for object in objects:
-            self.log.info(object.absolute_url())
+            user_id = object.author.encode('ascii')
+            try:
+                user_ob = auth_tool.get_user_info(user_id)
+                user_name = getattr(user_ob, 'full_name', None)
+                if not user_name:
+                    user_name = getattr(user_ob, 'firstname', '') + getattr(user_ob, 'lastname', '')
+            except KeyError:
+                user_name = 'User not found: "%s"' % user_id
+            self.log.info('%r (%s) added %s' %
+                (user_name, object.author,
+                    object.absolute_url()))
         return True
-
-'Naaya Blog Entry'
