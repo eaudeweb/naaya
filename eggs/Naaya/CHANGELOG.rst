@@ -1,5 +1,6 @@
 2.12.81 (unreleased)
 --------------------
+* cleanup_message for feedback and request_role forms [dumitval]
 
 2.12.80 (2012-03-27)
 --------------------
