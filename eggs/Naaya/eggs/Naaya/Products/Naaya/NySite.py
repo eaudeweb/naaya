@@ -87,7 +87,7 @@ from NyVersions import NyVersions
 from NyFolder import folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
-from naaya.core.utils import call_method, cooldown, is_ajax
+from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
 from naaya.core.zope2util import redirect_to
@@ -1662,6 +1662,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             err.append('The full name is required')
         if email.strip() == '':
             err.append('The email is required')
+        comments = cleanup_message(comments)
         if comments.strip() == '':
             err.append('The comments are required')
         if err:
@@ -1751,6 +1752,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         get it and eventually the portal 'administrator_email' gets it if there
         is no 'maintainer_email'
         """
+        comments = cleanup_message(comments)
         location_path = 'unspecified'
         location_title = 'unspecified'
         acl_tool = self.getAuthenticationTool()
