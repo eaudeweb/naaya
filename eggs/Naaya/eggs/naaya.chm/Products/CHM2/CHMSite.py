@@ -36,6 +36,7 @@ from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaCore.managers.utils import make_id
 from naaya.component import bundles
 from Products.Naaya.managers.skel_parser import skel_handler_for_path
+from naaya.core.zope2util import json_response, iter_file_data
 
 from interfaces import ICHMSite
 
@@ -192,8 +193,8 @@ class CHMSite(NySite):
 
     security.declareProtected(view_management_screens, 'add_glossary_keywords')
     def add_glossary_keywords(self):
-        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS) 
-        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml'))) 
+        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
+        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
         schema_tool = self.portal_schemas
         keywords = schema_tool.NyDocument['keywords-property']
@@ -593,32 +594,62 @@ class CHMSite(NySite):
             results.remove(item)
         return results
 
+    def _get_mainsection_images_folder(self):
+        layout_tool = self.getLayoutTool()
+        # not using get_current_skin to make it work for CHMBE
+        skin = layout_tool._getOb(layout_tool.getCurrentSkinId()) # to work for CHMBE
+        # add images folder if it doesn't exist
+        if not skin.hasObject('main_section_images'):
+            manage_addFolder(skin, 'main_section_images')
+        return skin._getOb('main_section_images')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'upload_maintopic_temp_image')
     def upload_maintopic_temp_image(self, REQUEST):
         """ """
         temp_folder = self.getSite().temp_folder
-        file = REQUEST.form.get('upload_file', None)
+        file = REQUEST.form.get("upload_file", None)
+        if file is None:
+            return json_response({'error': "no file"}, REQUEST.RESPONSE)
 
-        image_size = get_image_size(file)
-        if file is None or not image_size:
-            return None
-        x = image_size[0]
-        y = image_size[1]
         filename = file.filename
         id = make_id(temp_folder, id=filename)
         manage_addImage(temp_folder, id, file=file)
         ob = getattr(temp_folder, id)
-        ob.filename = filename
-        ob.p_changed = 1
-        if 143 * x > 962 * y:
-            return (ob.absolute_url(), (x - 962 * y / 143) / 2, 0,   (x + 962 * y / 143) / 2, y)
-        else:
-            return (ob.absolute_url(), 0, (y - (143 * x / 962)) / 2,    x, (y + (143 * x / 962)) / 2)
+
+        skin = self.getLayoutTool().getCurrentSkin()
+        image_size = map(int, skin.main_section_image_size.split("x"))
+
+        try:
+            data = maintopic_image_to_crop(ob, image_size)
+        except AssertionError as e:
+            data = {"error": str(e)}
+
+        return json_response(data, REQUEST.RESPONSE)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'load_current_maintopic_image')
+    def load_current_maintopic_image(self, REQUEST):
+        """ """
+        main_section_images = self._get_mainsection_images_folder()
+        name = REQUEST.form.get("name", None)
+        ob = main_section_images.get(name, None)
+
+        skin = self.getLayoutTool().getCurrentSkin()
+        image_size = map(int, skin.main_section_image_size.split("x"))
+
+        try:
+            assert ob is not None, "no current image"
+            # will throw an AssertionEerror if image is not valid
+            data = maintopic_image_to_crop(ob, image_size)
+        except AssertionError as e:
+            data = {"error": str(e)}
+
+        return json_response(data, REQUEST.RESPONSE)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
     def admin_savemaintopic_image(self, mainsection, upload_picture_url,
             x1, y1, x2, y2, width, height, REQUEST=None):
         """ """
+
         if width and height:
             F_WIDTH = width
             F_HEIGHT = height
@@ -627,7 +658,7 @@ class CHMSite(NySite):
             F_HEIGHT = 143
 
         def process_picture(picture, crop_coordinates):
-            image_string = data2stringIO(picture.data)
+            image_string = picture2stringIO(picture)
             img = Image.open(image_string)
             fmt = img.format
             crop_size = F_WIDTH
@@ -648,26 +679,32 @@ class CHMSite(NySite):
             img.save(newimg, fmt, quality=85)
             return newimg.getvalue()
 
-        layout_tool = self.getLayoutTool()
-        # not using get_current_skin to make it work for CHMBE
-        skin = layout_tool._getOb(layout_tool.getCurrentSkinId()) # to work for CHMBE
-        # add images folder if it doesn't exist
-        if not skin.hasObject('main_section_images'):
-            manage_addFolder(skin, 'main_section_images')
-        main_section_images = skin._getOb('main_section_images')
+        main_section_images = self._get_mainsection_images_folder()
+        temp_folder = self.getSite().temp_folder
+
+        upload_picture_url = urllib.unquote(upload_picture_url)
+        # fetch image from temp folder or from main_section_images folder
+        if upload_picture_url.startswith(temp_folder.absolute_url()):
+            folder =  temp_folder
+        elif upload_picture_url.startswith(main_section_images.absolute_url()):
+            folder = main_section_images
+        else:
+            raise ValueError()
+
+        # get image
+        picture_id = upload_picture_url.split('/')[-1]
+        picture = folder[picture_id]
+
+        # crop image
+        crop_coordinates = (x1, y1, x2, y2)
+        croped_picture = process_picture(picture, crop_coordinates)
 
         # remove old image if exists
         if main_section_images.hasObject(mainsection):
             main_section_images.manage_delObjects([mainsection])
 
-        if upload_picture_url:
-            upload_picture_url = urllib.unquote(upload_picture_url)
-            temp_folder = self.getSite().temp_folder
-            picture_id = upload_picture_url.split('/')[-1]
-            picture = getattr(temp_folder, picture_id)
-            crop_coordinates = (x1, y1, x2, y2)
-            croped_picture = process_picture(picture, crop_coordinates)
-            manage_addImage(main_section_images, mainsection, croped_picture)
+        # add image to folder
+        manage_addImage(main_section_images, mainsection, croped_picture)
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
@@ -757,14 +794,38 @@ def get_image_size(file):
         file.seek(0)
         return image.size
 
-def data2stringIO(data):
-    str_data = StringIO()
-    if isinstance(data, str):
-        str_data.write(data)
+def maintopic_image_to_crop(ob, image_default_size):
+    image_file = picture2stringIO(ob)
+    image_size = get_image_size(image_file)
+
+    assert image_size, "can't determine image size"
+
+    x, y = image_size[0], image_size[1]
+    if (image_default_size[1] * x) > (image_default_size[0] * y):
+        data = {
+            'url': ob.absolute_url(),
+            'x': (x - image_default_size[0] * y / image_default_size[1]) / 2,
+            'y': 0,
+            'x2': (x + image_default_size[0] * y / image_default_size[1]) / 2,
+            'y2': y,
+        }
     else:
-        while data is not None:
-            str_data.write(data.data)
-            data=data.next
+        data = {
+            'url': ob.absolute_url(),
+            'x': 0,
+            'y': (y - (image_default_size[1] * x / image_default_size[0])) / 2,
+            'x2': x,
+            'y2': (y + (image_default_size[1] * x / image_default_size[0])) / 2,
+        }
+
+    return data
+
+
+def picture2stringIO(picture):
+    # TODO use tempfile.TemporaryFile or tempfile.SpooledTemporaryFile
+    str_data = StringIO()
+    for buf in iter_file_data(picture):
+        str_data.write(buf)
     str_data.seek(0)
     return str_data
 
