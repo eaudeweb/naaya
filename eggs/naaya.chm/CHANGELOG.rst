@@ -1,5 +1,6 @@
 3.0.2 (unreleased)
 ------------------
+* admin main section images refactored admin interface [catardra]
 
 3.0.1 (2012-03-12)
 ------------------
@@ -45,7 +46,7 @@
 
 2.4.14 (2011-10-31)
 -------------------
-* customize sitemap.xml form for CHM network 
+* customize sitemap.xml form for CHM network
 
 2.4.13 (2011-10-31)
 -------------------
@@ -100,7 +101,7 @@
 ------------------
 * adapted skel.nyexp to use the NaayaPageTemplate custom indexes for the News and Stories folders [dumitval]
 * style improvements; icons for feeds, facebook and twitter (for folder
-  index) [bogdatan]  
+  index) [bogdatan]
 
 2.4.2 (2011-10-06)
 ------------------

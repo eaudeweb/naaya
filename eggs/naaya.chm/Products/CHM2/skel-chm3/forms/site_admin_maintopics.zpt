@@ -129,108 +129,9 @@
 }
 </style>
 
-	<script type="text/javascript" src="misc_/CHM2/jquery.Jcrop.min.js"></script>
-	<script type="text/javascript" src="misc_/CHM2/jquery.ajaxupload.min.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			var jcrop_api;
-			var has_run = false;
-			$('#picture_upload').mouseover(function() {
-				if(has_run) {
-					return;
-				}
-				has_run = true;
-				upload_button();
-			});
-
-			var too_old_ie = false;
-			if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)){ //test for MSIE x.x;
-				var ieversion = new Number(RegExp.$1); // capture x.x portion and store as a number
-				if (ieversion < 7) {
-					too_old_ie = true;
-				};
-			};
-			if (!too_old_ie) {
-				upload_button();
-			};
-			img_height = $('#height').val();
-			img_width = $('#width').val();
-			$('#height').focusout(function(){
-				img_height = $(this).val();
-				jcrop_api.destroy();
-				doCrop();
-			})
-			$('#width').focusout(function(){
-				img_width = $(this).val();
-				jcrop_api.destroy();
-				doCrop();
-			})
-			function upload_button() {
-				var button = $('#picture_upload'), interval;
-				new AjaxUpload(button,{
-					action: 'upload_maintopic_temp_image',
-					name: 'upload_file',
-					onSubmit : function(file, ext){
-						if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-								// extension is not allowed
-								alert('Error: invalid file extension');
-								// cancel upload
-								return false;
-						};
-						$('#main_section_picture').empty();
-						button.text('Uploading');
-						this.disable();
-						interval = window.setInterval(function(){
-							var text = button.text();
-							if (text.length < 12){
-								button.text(text + '.');
-							} else {
-								button.text('Uploading');
-							}
-						}, 200);
-					},
-					onComplete: function(file, response){
-						button.text(gettext('Replace image'));
-						result = response.split("(")[1].split(")")[0].split(",");
-						address = result[0].replace("'", "").replace("'", "");
-						$('#upload_picture_url').val(address);
-						setCoords({	x : result[1],
-									y : result[2],
-									x2 : result[3],
-									y2 : result[4]});
-						window.clearInterval(interval);
-						this.enable();
-						$('<img'+'>').appendTo('#main_section_picture').attr('src', address);
-						doCrop();
-					}
-				});
-			};
-			function doCrop() {
-				$('#main_section_picture img').Jcrop({
-								allowMove:		true,
-								onSelect:		setCoords,
-								bgColor:		'black',
-								bgOpacity:		.4,
-								setSelect:		[	$('#x2').val(),
-													$('#y2').val(),
-													$('#x1').val(),
-													$('#y1').val()],
-								aspectRatio:	img_width/img_height
-							},function(){
-							jcrop_api = this;
-							});
-			};
-			function setCoords(c)
-			{
-				// c.x, c.y, c.x2, c.y2, c.w, c.h
-				$('#x1').val(c.x);
-				$('#y1').val(c.y);
-				$('#x2').val(c.x2);
-				$('#y2').val(c.y2);
-			};
-		});
-
-	</script>
+	<script src="misc_/CHM2/jquery.Jcrop.min.js"></script>
+	<script src="misc_/CHM2/jquery.ajaxupload.min.js"></script>
+	<script src="++resource++Products.CHM2-www/mainsection-image-admin.js"></script>
 
 <fieldset tal:define="skin python:here.getLayoutTool().getCurrentSkin();
                       resolution_spec skin/main_section_image_size|nothing"
@@ -249,11 +150,21 @@
 
 		<div class="field">
 			<span class="buttons">
-				<a i18n:translate="" title="Upload an image" i18n:attributes="title" id="picture_upload">
+				<a i18n:translate="" title="Upload an image" i18n:attributes="title"
+				   id="picture_upload_button">
 					Upload an image
 				</a>
 			</span>
 		</div>
+		<script>
+			$(function() {
+				// naaya_admin_mainsection_image_editor(
+				// 	$('#picture_upload_button'),
+				// 	$('#main_section_picture'),
+				// 	$('#upload_picture_url'),
+				// 	$('#main-section-image-selection-box'));
+			});
+		</script>
 
 		<div class="field"
 		     tal:define="width python:resolution_spec.split('x')[0];
@@ -266,7 +177,7 @@
 			       tal:attributes="value height"/>
 		</div>
 
-		<div id="main_section_picture"></div>
+		<div id="main_section_picture" style="margin-top: 10px"></div>
 		<input id="upload_picture_url" type="hidden" name="upload_picture_url" />
 		<input id="x1" type="hidden" name="x1:int" value="0" />
 		<input id="y1" type="hidden" name="y1:int" value="0" />
