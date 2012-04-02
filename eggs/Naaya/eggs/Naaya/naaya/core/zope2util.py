@@ -19,6 +19,7 @@ from dateutil.parser import parse
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
 from Acquisition import Implicit, aq_base
+from App.config import getConfiguration
 from OFS.interfaces import IItem, IObjectManager, IApplication
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
@@ -182,6 +183,7 @@ def google_analytics(context, ga_id=''):
     `ga_id` Analytics Website property ID (UA-number).
 
     """
+    ga_id = ga_id or getConfiguration().environment.get('GA_ID', '')
     if ga_id == '':
         # No website ID provided; e.g. not configured in portal_statistics
         return ''
