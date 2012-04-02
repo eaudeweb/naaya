@@ -36,7 +36,7 @@
         </td>
         <td tal:content="content_type/module|nothing" />
         <td tal:content="content_type/permission|nothing" />
-        <td style="text-align: center" tal:content="structure python:test(installed, '&#x2713;', '')" />
+        <td style="text-align: center" tal:content="structure python:test(installed, u'\u2713', '')" />
         <td>
             <form method="post" tal:attributes="action string:${here/absolute_url}/">
                 <input type="hidden" name="meta_type" tal:attributes="value meta_type" />

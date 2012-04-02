@@ -1,5 +1,6 @@
 2.12.81 (unreleased)
 --------------------
+* site_manage_controlpanel compatibility fix for Zope 2.12 [dumitval]
 * cleanup_message for feedback and request_role forms [dumitval]
 
 2.12.80 (2012-03-27)
