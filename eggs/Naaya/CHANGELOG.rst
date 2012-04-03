@@ -1,4 +1,7 @@
-2.12.81 (unreleased)
+2.13.1 (unreleased)
+--------------------
+
+2.13.0 (2012-04-03)
 --------------------
 * Added Akismet spam protection *update*
   (update_comments_add_spamstatus_property) [bogdatan]
