@@ -1,5 +1,6 @@
 1.1.20 (unreleased)
 -------------------
+* Changed from search.eionet.europa.eu/search.jsp to Google Search [bogdatan]
 * Updated administration portlet with comments management section
   and API keys status section [bogdatan]
 
