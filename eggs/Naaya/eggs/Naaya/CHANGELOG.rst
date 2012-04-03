@@ -1,5 +1,11 @@
 2.12.81 (unreleased)
 --------------------
+* Added Akismet spam protection *update*
+  (update_comments_add_spamstatus_property) [bogdatan]
+* Created admin interface for managing comments *update*
+  (update_portlet_administration_add_entries, update_css) [bogdatan]
+* Created admin interface for API key status *update*
+  (update_portlet_administration_add_entries, update_css) [bogdatan]
 * Search for ga_id (analytics) also in buildout configuration [dumitval]
 * site_manage_controlpanel compatibility fix for Zope 2.12 [dumitval]
 * cleanup_message for feedback and request_role forms [dumitval]

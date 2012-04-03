@@ -7,7 +7,7 @@ import zLOG
 
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS, PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS, PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES, MESSAGE_ERROROCCURRED
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes

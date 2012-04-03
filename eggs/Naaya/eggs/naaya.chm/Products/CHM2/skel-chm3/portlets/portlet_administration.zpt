@@ -50,6 +50,11 @@ menu python:[
      'title': 'Map general settings',
      'label': 'Map management'},
 
+    {'condition': canPublish,
+     'url': '/admin_api_keys_status_html',
+     'title': 'API Keys status',
+     'label': 'API keys status'},
+
     {'label': 'Content management',
      'condition': canPublish,
      'subitems': [

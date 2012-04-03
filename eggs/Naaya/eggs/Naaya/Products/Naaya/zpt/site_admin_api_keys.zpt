@@ -1,0 +1,42 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+    <h1 metal:fill-slot="title" i18n:translate="">API keys status</h1>
+
+    <tal:block metal:fill-slot="section">
+        <table width="100%" class="datatable api-keys-list">
+            <thead>
+                <tr>
+                    <th i18n:translate="">
+                        API proived
+                    </th>
+
+                    <th i18n:translate="">
+                        API key
+                    </th>
+
+                    <th i18n:translate="">
+                        API status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+        <tal:block repeat="api_key python: options['api_keys'].items()">
+            <tal:block define="api_key_provider python: api_key[0];
+                               api_key_properties python: api_key[1];">
+            <tr align="center" tal:attributes="class python: test(api_key_properties['valid'], 'valid', 'invalid')">
+                <td>
+                    <strong tal:content="api_key_provider" />
+                </td>
+
+                <td tal:content="api_key_properties/key" />
+
+                <td>
+                    <strong tal:content="string: Invalid" tal:condition="python: not api_key_properties['valid']" i18n:translate="" />
+                    <strong tal:content="string: Valid" tal:condition="python: api_key_properties['valid']" i18n:translate="" />
+                </td>
+            </tr>
+            </tal:block>
+        </tal:block>
+            </tbody>
+        </table>
+    </tal:block>
+</tal:block>

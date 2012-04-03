@@ -25,6 +25,20 @@ $(document).ready(function(){
         }
         localStorage.form = '';
     });
+
+    $('.select-file-type').click(function(e){
+        e.preventDefault();
+        $this = $(this);
+        type = $this.attr('id');
+        items = $('#portals-files-list input[type=radio]');
+        items.each(function(){
+            name = $(this).attr('value');
+            var re = new RegExp('.*(' + type + ').*');
+            if( name.match(re) ){
+                $(this).attr('checked', 'checked');
+            }
+        });
+    });
     /**
     This is not good enough to work
     $(':input').change(function(){
@@ -35,7 +49,9 @@ $(document).ready(function(){
     }
     **/
     //Create links
-    $('body pre').html(Linkify($('body pre').html()));
+    if ($('body pre').length){
+        $('body pre').html(Linkify($('body pre').html()));
+    }
 });
 
 /**
