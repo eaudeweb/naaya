@@ -1,3 +1,4 @@
+# coding=utf-8
 return {
 'Section in State of Environment report': ['Section in State of Environment report'],
 'Section in environmental performance review': ['Section in environmental performance review'],
