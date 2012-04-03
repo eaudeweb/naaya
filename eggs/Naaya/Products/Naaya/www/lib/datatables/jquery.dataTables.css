@@ -30,7 +30,9 @@ table.dataTable tfoot th {
 }
 
 table.dataTable td {
-	padding: 3px 10px;
+        vertical-align: top;
+	padding: 10px 20px;
+        border: 1px solid #DFDFDF;
 }
 
 table.dataTable td.center,
@@ -38,16 +40,15 @@ table.dataTable td.dataTables_empty {
 	text-align: center;
 }
 
-/*table.dataTable tr.odd { background-color: #E2E4FF; }
+table.dataTable tr.odd { background-color: #f7f7f7; }
 table.dataTable tr.even { background-color: white; }
 
-table.dataTable tr.odd td.sorting_1 { background-color: #D3D6FF; }
-table.dataTable tr.odd td.sorting_2 { background-color: #DADCFF; }
-table.dataTable tr.odd td.sorting_3 { background-color: #E0E2FF; }
-table.dataTable tr.even td.sorting_1 { background-color: #EAEBFF; }
-table.dataTable tr.even td.sorting_2 { background-color: #F2F3FF; }
+table.dataTable tr.odd td.sorting_1 { background-color: #E8E8E8; }
+/*table.dataTable tr.odd td.sorting_2 { background-color: #DADCFF; }
+table.dataTable tr.odd td.sorting_3 { background-color: #EFF0FF; }*/
+table.dataTable tr.even td.sorting_1 { background-color: #F2F2F2; }
+/*table.dataTable tr.even td.sorting_2 { background-color: #F2F3FF; }
 table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }*/
-
 
 /*
  * Table wrapper

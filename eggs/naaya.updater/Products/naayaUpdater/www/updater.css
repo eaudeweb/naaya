@@ -1,3 +1,9 @@
+body {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 /*
  *
  * Updates listing
@@ -63,44 +69,44 @@ table.listing a {
 }
 
 .priority0-even {
-  background: #fdc;
+  background: #fdc !important;
 }
 .priority0-even td {
-  border: 1px dotted #e88;
+  border: 1px dotted #e88 !important;
 }
 .priority0-odd {
-  background: #fed;
+  background: #fed !important;
 }
 .priority0-odd td{
-  border: 1px dotted #e88;
+  border: 1px dotted #e88 !important;
 }
 
 .priority1-even {
-  background: #ffb;
+  background: #ffb !important;
 }
 .priority1-even td {
-  border: 1px dotted #eea;
+  border: 1px dotted #eea !important;
 }
 .priority1-odd {
-  background: #ffd;
+  background: #ffd !important;
 }
 .priority1-odd td {
-  border: 1px dotted #eea;
+  border: 1px dotted #eea !important;
 }
 
 .priority2-even {
-  background: #F6F6F6;
+  background: #F6F6F6 !important;
 }
 .priority2-even td {
-  border: 1px dotted #ccc;
+  border: 1px dotted #ccc !important;
 }
 
 .priority2-odd {
-  background: #fbfbfb;
+  background: #fbfbfb !important;
 }
 
 .priority2-odd td {
-  border: 1px dotted #ddd;
+  border: 1px dotted #ddd !important;
 }
 
 td.details {
@@ -208,9 +214,96 @@ td.details {
 }
 
 .help-text {
-    font-size: .7em;
+    font-size: 11px;
 }
 .date-column {
     color: #A22 !important;
 }
 
+#updates-list tr:hover {
+    background: #FFF !important;
+}
+
+label {
+    cursor: pointer;
+}
+
+.red-label {
+    color: red;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.clear {
+    display: inline-block;
+    clear: both;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+#portals-files-list {
+    height: 250px;
+    width: 480px;
+    overflow: auto;
+}
+
+.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sortable li {
+    margin: 0 5px 2px 5px;
+    padding: 3px;
+    cursor: move;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+}
+
+.ui-state-highlight { height: 14px;}
+
+.sortable li.ui-state-disabled {
+    opacity: 0.6;
+}
+
+html>body .sortable li {
+    line-height: 1.2;
+}
+
+
+.sortable li {
+    border: 1px solid lightGrey;
+    background: #E6E6E6;
+    font-weight: normal;
+    color: #555 !important;
+}
+
+.sortable li.ui-state-highlight {
+    line-height: 1.2 !important;
+    border: 1px solid #FCEFA1 !important;
+    background: #FBF9EE !important;
+    color: #363636 !important;
+}
+
+.sections-holder,
+.portals-holder {
+    width: 250px;
+}
+
+.instructions-holder {
+    width: 350px;
+}

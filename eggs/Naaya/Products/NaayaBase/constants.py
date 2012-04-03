@@ -37,5 +37,6 @@ EXCEPTION_PARSINGFILE = 'Error parsing file %s: %s'
 
 # Others
 MESSAGE_SAVEDCHANGES = 'Saved changes. (${date})'
+MESSAGE_ERROROCCURRED = 'An error occurred while trying to save changes.'
 MESSAGE_NOTFROMEMAIL = 'The Sender email was not provided. Changes NOT saved (%s)'
 ERROR_NOTHING_SELECTED = 'Nothing was selected.'

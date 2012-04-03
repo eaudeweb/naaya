@@ -1,6 +1,10 @@
+from App.config import getConfiguration
 from Products.Five.browser import BrowserView
 from naaya.component import bundles
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaBase import akismet
 
+tmpl = NaayaPageTemplateFile('zpt/site_admin_api_keys', globals(), 'admin_api_keys')
 
 class SetBundleView(BrowserView):
     """ Change a site's bundle from ZMI """
@@ -21,3 +25,32 @@ class SetBundleView(BrowserView):
 
     def get_bundle(self):
         return self.context.getSite().get_bundle().__name__
+
+def AdminAPIKeysStatus(context, request):
+    """
+    Check if API keys exists and are valid
+    """
+    conf = getConfiguration()
+    api_keys = {
+        'akismet':{
+            'key': '',
+            'valid': False
+        }
+    }
+
+    akismet_api_key = getattr(conf, 'environment', {}).get('AKISMET_API_KEY', '')
+    valid = False
+    if akismet_api_key:
+        valid = akismet.verify_key(akismet_api_key, context.getSitePath())
+
+    api_keys['akismet'] = {
+        'key': akismet_api_key,
+        'valid': valid
+    }
+
+    options = {
+        'here': context,
+        'api_keys': api_keys,
+    }
+
+    return tmpl.__of__(context)(**options)

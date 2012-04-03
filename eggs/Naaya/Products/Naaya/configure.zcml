@@ -3,6 +3,8 @@
     xmlns:browser="http://namespaces.zope.org/browser">
     <include package=".adapter" />
 
+    <include file="permissions.zcml"
+        package="Products.NaayaBase"/>
 
   <browser:page
     name="manage_bundle"
@@ -11,6 +13,12 @@
     template="./zpt/site_manage_bundle.pt"
     permission="zope2.ViewManagementScreens"
     />
+
+  <naaya:simpleView
+        for="Products.Naaya.interfaces.INySite"
+        name="admin_api_keys_status_html"
+        handler=".views.AdminAPIKeysStatus"
+        permission="zope2.NaayaPublishContent" />
 
   <browser:resourceDirectory
       name="Products.Naaya"

@@ -17,6 +17,7 @@ try:
 except ImportError: #<2.12
     from zope.app.container.interfaces import (IObjectAddedEvent,
                                                IObjectMovedEvent)
+from App.config import getConfiguration
 from zope.component.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
 from Globals import InitializeClass
@@ -29,10 +30,21 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from constants import *
 from Products.NaayaCore.managers.utils import utils
 import interfaces
-from naaya.core.utils import cleanup_message
+import akismet
+from akismet import AkismetError
+from unidecode import unidecode
+from naaya.core.utils import cleanup_message, is_ajax, str2bool
+from naaya.core.backport import json
+from naaya.core.zope2util import json_response, ofs_path
 
-def physical_path(obj):
-    return '/'.join(obj.getPhysicalPath())
+akismet.USERAGENT = "MyApplication/MyVersion"
+
+configuration = getConfiguration()
+environment = getattr(configuration, 'environment', {})
+has_api_key = environment.has_key('AKISMET_API_KEY')
+
+if has_api_key:
+    akismet_api_key = environment.get('AKISMET_API_KEY', '')
 
 @adapter(interfaces.INyCommentable, IObjectEvent)
 def handleComentedObject(ob, event):
@@ -51,7 +63,7 @@ def catalog_comments(obj):
     if container is not None:
         for comment in container.objectValues(NyComment.meta_type):
             try:
-                catalog.catalog_object(comment, physical_path(comment))
+                catalog.catalog_object(comment, ofs_path(comment))
             except:
                 obj.getSite().log_current_error()
 
@@ -61,7 +73,7 @@ def uncatalog_comments(obj):
     if container is not None:
         for comment in container.objectValues(NyComment.meta_type):
             try:
-                catalog.uncatalog_object(physical_path(comment))
+                catalog.uncatalog_object(ofs_path(comment))
             except:
                 obj.getSite().log_current_error()
 
@@ -73,12 +85,13 @@ class NyComment(SimpleItem):
 
     icon = 'misc_/Naaya/comment.gif'
 
-    def __init__(self, id, title, body, author, releasedate):
+    def __init__(self, id, title, body, author, releasedate, spamstatus):
         self.id = id
         self.title = title
         self.body = body
         self.author = author
         self.releasedate = releasedate
+        self.spamstatus = spamstatus
 
     def export(self):
         """ Export object in Naaya XML format. """
@@ -273,6 +286,46 @@ class NyCommentable:
                             c.author.encode('utf-8'),
                             c.releasedate.encode('utf-8'))
 
+    def _is_spam(self, text):
+        """
+        Check if user submitted a spam comment.
+        """
+        site = self.getSitePath()
+        user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
+        user_ip = self.REQUEST.get('REMOTE_ADDR', '127.0.0.1')
+	text = unidecode(text)
+
+        is_spam = False
+        if has_api_key:
+            try:
+                akismet_key = akismet.verify_key(akismet_api_key, site)
+                if akismet_key:
+                    is_spam = akismet.comment_check(akismet_api_key, site, user_ip,
+                                                    user_agent,
+                                                    comment_content=text)
+            except akismet.AkismetError:
+                pass
+
+        return is_spam
+
+    def _submit_comment_to_akismet(self, text, status):
+	"""
+	Submit spam comment to akismet
+	"""
+	site = self.getSitePath()
+        user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
+        user_ip = self.REQUEST.get('REMOTE_ADDR', '127.0.0.1')
+	text = unidecode(text)
+
+        if has_api_key and akismet_api_key:
+            if akismet.verify_key(akismet_api_key, site):
+                if status:
+                    akismet.submit_spam(akismet_api_key, site, user_ip, user_agent,
+                                        comment_content=text)
+                else:
+                    akismet.submit_ham(akismet_api_key, site, user_ip, user_agent,
+                                        comment_content=text)
+
     #permissions
     def checkPermissionAddComments(self):
         """ Check for adding comments. """
@@ -284,13 +337,14 @@ class NyCommentable:
 
         return self.checkPermission(PERMISSION_COMMENTS_MANAGE)
 
-    def _comment_add(self, title='', body='', author='', releasedate=None):
+    def _comment_add(self, title='', body='', author='', releasedate=None,
+                     spamstatus=False):
         container = self._get_comments_container()
         if container is None:
             container = self._add_comments_container()
 
         id = self.utGenRandomId()
-        ob = NyComment(id, title, body, author, releasedate)
+        ob = NyComment(id, title, body, author, releasedate, spamstatus)
         container._setObject(id, ob)
 
         return ob
@@ -316,13 +370,20 @@ class NyCommentable:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         form_data = dict(REQUEST.form)
         author = REQUEST.AUTHENTICATED_USER.getUserName()
+        comment_title = form_data.get('title')
+        comment_body = cleanup_message(form_data.get('body'))
 
-        ob = self._comment_add(title = form_data.get('title'),
-                               body = cleanup_message(form_data.get('body')),
+        spamstatus = self._is_spam(comment_title)
+        if not spamstatus:
+            spamstatus = self._is_spam(comment_body)
+
+        ob = self._comment_add(title = comment_title,
+                               body = comment_body,
                                author = author,
                                releasedate = self.utGetTodayDate())
 
-        self.notifyFolderMaintainer(self, ob, p_template="email_notifyoncomment")
+        self.notifyFolderMaintainer(self, ob,
+                                    p_template = "email_notifyoncomment")
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
 
@@ -343,8 +404,66 @@ class NyCommentable:
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(user)
 
-        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-        return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        if is_ajax(REQUEST):
+            return json_response({'status': 'success'}, REQUEST.RESPONSE)
+        else:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    def _set_comment_spam_status(self, id, status):
+        """
+        """
+        container = self._get_comments_container()
+        if container:
+            comment = container._getOb(id, None)
+            if comment:
+                comment.spamstatus = status
+                comment.recatalogNyObject(comment)
+                try:
+                    self._submit_comment_to_akismet(comment.title, status)
+                    self._submit_comment_to_akismet(comment.body, status)
+                except AkismetError:
+                    pass
+
+                return True
+            else:
+                return False
+
+        return False
+
+    security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_spam_status')
+    def comment_spam_status(self, REQUEST):
+        """
+        Set comment spam status
+        Status: True/False
+        If it's an AJAX request return a message,
+        else redirect user to the admin page
+        """
+
+        id_comment = REQUEST.form.get('id', '')
+        status = str2bool(REQUEST.form.get('status', False))
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+        status_set = False
+        translate = self.getPortalI18n().get_translation
+
+        if self._set_comment_spam_status(id_comment, status):
+            status_set = True
+
+        if is_ajax(REQUEST):
+            if status_set:
+                return json_response({'status': 'success'}, REQUEST.RESPONSE)
+            else:
+                return json_response({'status': 'error',
+                                      'message': translate(MESSAGE_ERROROCCURRED)},
+                                    REQUEST.RESPONSE)
+        else:
+            if status_set:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            else:
+                self.setSessionErrorsTrans(MESSAGE_ERROROCCURRED)
+            return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+        return False
 
     comments_box = NaayaPageTemplateFile('zpt/comments_box', globals(), 'naaya.base.comments.box')
 

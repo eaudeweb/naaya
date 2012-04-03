@@ -3311,6 +3311,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if REQUEST:
             REQUEST.RESPONSE.redirect('admin_folder_subobjects_html?save=ok')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_comments_html')
+    def admin_comments_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
+
     #others
     def get_localch_noportlet(self):
         return [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
