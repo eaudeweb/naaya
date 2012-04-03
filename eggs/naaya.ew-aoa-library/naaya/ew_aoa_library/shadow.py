@@ -281,9 +281,8 @@ def extract_survey_answer_data_library(answer):
                            attrs['geo_coverage_country']],
         'viewer_region': [regions[idx] for idx in
                            attrs['geo_coverage_region']],
-        'viewer_geolevel': geolevels.get(answer['w_theme-coverage']),
+        'viewer_geolevel': geolevels.get(getattr(answer, 'w_theme-coverage')),
     })
-
     return attrs
 
 def extract_survey_answer_data_country_fiches(answer):
