@@ -1,4 +1,7 @@
-1.2.24 (unreleased)
+1.2.25 (unreleased)
+------------------
+
+1.2.24 (2012-04-03)
 ------------------
 * Added pre_update_hook function [bogdatan]
 * dataTables lib moved to Naaya [bogdatan]
