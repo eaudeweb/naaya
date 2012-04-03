@@ -971,3 +971,137 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	height: 36px;
 	background: url(www/zoom-out.png) no-repeat;
 }
+
+/**
+ * Admin comments list
+ *
+ * Added:  21 Mar 2012
+ * Author: Bogdan Tanase
+*/
+#comments-list .actions-label {
+    position: relative;
+    top: 0px;
+    font-weight: bold;
+}
+
+#comments-list .comment-actions {
+    opacity: 0;
+    -webkit-transition: opacity .1s ease-in-out;
+       -moz-transition: opacity .1s ease-in-out;
+            transition: opacity .1s ease-in-out;
+}
+
+#comments-list tr:hover .comment-actions {
+    opacity: 1;
+}
+
+.comment-actions a.toggle-spam-status .icon {
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+}
+
+a.toggle-spam-status.spam-status .icon {
+    background: transparent url('/++resource++Products.Naaya/spam-icon.png') no-repeat scroll center center;
+}
+
+a.toggle-spam-status.ham-status .icon{
+    background: transparent url('/++resource++Products.Naaya/ham-icon.png') no-repeat scroll center center;
+}
+
+a.delete-comment .icon {
+    display: inline-block;
+    height: 16px;
+    width: 15px;
+    background: transparent url('/++resource++Products.Naaya/trash-icon.png') no-repeat scroll center center;
+}
+
+.akismet-loading {
+    display: none;
+}
+
+.akismet-loading .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: transparent url('/++resource++Products.Naaya/ajax-loader-small.gif') no-repeat scroll center center;
+    position: relative;
+    top: 3px;
+    margin-top: -4px;
+}
+
+#comments-list tr.spam-comment {
+    /*background: #FEE;*/
+}
+
+#comments-list tr.spam-comment a.comment-title {
+    color: red;
+}
+
+#comments-list tr.ham-comment a.comment-title {
+    color: blue;
+}
+
+#comments-list tr.spam-comment .spam-status,
+#comments-list tr.spam-comment .ham-status-label {
+    display: none;
+}
+
+#comments-list tr.ham-comment .ham-status,
+#comments-list tr.ham-comment .spam-status-label {
+    display: none;
+}
+
+#comments-list tr {
+    background: #FFF;
+}
+/**
+ * END Admin comments list
+*/
+
+/**
+ * Admin API Keys status
+ *
+ * Added: 23 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.api-keys-list tr.invalid {
+    background-color: #FFF9F9;
+}
+/**
+ * END Admin API Keys status
+*/
+
+/**
+ * Comments style enhancement
+ *
+ * Added: 29 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.comment-holder {
+    margin: 10px 0;
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.comment-holder-blocked {
+    background: #F9F9F9;
+    border: 1px solid #DFDFDF;
+}
+.comment-label-blocked {
+    color: red;
+}
+.commentbutton:hover {
+    color: #333;
+}
+.commentbutton {
+    font-size: 90%;
+    float:right;
+    padding: 3px;
+    text-decoration: none;
+    margin-bottom: 0.5em;
+    margin-left: 10px;
+}
+/**
+ * END Comments style enhancement
+*/

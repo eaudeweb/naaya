@@ -18,6 +18,7 @@
 	<tal:block tal:condition="here/getGeoMapTool">
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map general settings" i18n:attributes="title" i18n:translate="">Map management</a></li>
 	</tal:block>
+        <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_api_keys_status_html" title="API keys status" i18n:attributes="title" i18n:translate="">API keys status</a></li>
 	<li tal:condition="canPublish"><strong i18n:translate="">Content management</strong></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Top content" i18n:attributes="title" i18n:translate="">Top content</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_schemas/admin_html" title="Content type property definitions" i18n:attributes="title" i18n:translate="">Manage content types</a></li>

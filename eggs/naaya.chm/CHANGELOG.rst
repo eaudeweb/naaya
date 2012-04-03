@@ -1,5 +1,7 @@
 3.0.2 (unreleased)
 ------------------
+* Updated administration portlet with comments management section
+  and API keys status section [bogdatan]
 * admin main section images refactored admin interface [catardra]
 
 3.0.1 (2012-03-12)
