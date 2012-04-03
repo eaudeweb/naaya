@@ -1,5 +1,7 @@
 1.1.20 (unreleased)
 -------------------
+* Updated administration portlet with comments management section
+  and API keys status section [bogdatan]
 
 1.1.19 (2012-03-16)
 -------------------
