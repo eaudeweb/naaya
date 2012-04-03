@@ -9,10 +9,12 @@
     <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
     <link rel="stylesheet" type="text/css" href="/styles/style.css" media="screen" />
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" type="text/css" href="/styles/3c_float.css" media="screen" />
+    <![endif]-->
     <link rel="shortcut icon" href="/styles/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="/styles/eeaicon.gif" type="image/gif" />
     <link rel="start" title="Home" href="/" />
-    <link rel="search" title="Search Eionet" href="http://search.eionet.europa.eu/" />
     <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
     <style type="text/css">
         .right-floated-tip {
@@ -47,6 +49,7 @@
             background-color: #F9F9ED; /*#a5ced1*/
         }
     </style>
+  <meta name="google-site-verification" content="oV-xE-LH3NMr2_h0HqMJ6M_La5oiZnusXH2OWcTO4bM" />
   </head>
     <body tal:define="gw_root_url string:${here/get_gw_root}/index_html" metal:define-slot="body">
         <div id="container" metal:define-slot="div-container">
@@ -58,14 +61,13 @@
                 <div id="righttools" metal:define-slot="div-righttools" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
                     <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:username == 'Anonymous User'">Login</a>
                     <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:username != 'Anonymous User'">Logout (<span tal:replace="username"/>)</a>
-                    <form action="http://google.com/search" method="get">
-                        <div id="freesrchform">
-                            <label for="freesrchfld">Search</label>
-                            <input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10" />
-                            <input type="hidden" name="sitesearch" value="forum.eionet.europa.eu" />
-                            <input id="freesrchbtn" type="image" src="/styles/button_go.gif" alt="Go" />
-                        </div>
-                    </form>
+	        <form action="http://google.com/search" method="get">			<div id="freesrchform"><label for="freesrchfld">Search</label>
+			<input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10"/>
+			<input type="hidden" name="sitesearch" value="forum.eionet.europa.eu"/>
+			<input id="freesrchbtn" type="image" src="/styles/button_go.gif" alt="Go"/>
+			</div>
+		</form>
+
                 </div>
             </div>
             <div id="pagehead" metal:define-slot="div-pagehead">
@@ -100,20 +102,35 @@
 
                 <h2>Helpdesk</h2>
                 <p class="helpdesktext">For accounts and assistance call the helpdesk at +37 2 508 4992 from
- Monday through Friday 9:00 to 17:00 CET or email <a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>.
+                    Monday through Friday 9:00 to 17:00 CET or email <a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>.
                 </p>
+                <div class="localnav">
+                    <h2>Account services</h2>
+                    <ul>
+                        <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
+                        <li>Edit my <a href="http://www.eionet.europa.eu/profile">user profile</a></li>
+                        <li>View my <a href="/profile_overview">memberships</a></li>
+                    </ul>
+                </div>
+
                 <h2>Places</h2>
                 <ul>
                     <li><a href="http://www.eionet.europa.eu/">Eionet portal</a></li>
                     <li><a href="http://ew.eea.europa.eu/">EnviroWindows</a></li>
                     <li><a href="http://www.eea.europa.eu/">EEA home</a></li>
                     <li><a href="http://www.europa.eu" title="EU website">Europa</a></li>
+                    <li><a href="http://forum-test.eionet.europa.eu/">Forum test site</a></li>
                 </ul>
             </div>
             <div id="workarea" metal:define-slot="div-workarea">
             </div>
+            <div class="ie-clear">&nbsp;</div>
         </div>
-        <div id="pagefoot" metal:define-slot="div-pagefoot"></div>
+        <div id="pagefoot" metal:define-slot="div-pagefoot">
+            <tal:block condition="nocall:here/manage_workspace" on-error="string:">
+                <a tal:attributes="href string:${here/absolute_url}/manage_workspace" i18n:translate="">Access the ZMI</a>
+            </tal:block>
+        </div>
     </body>
 </html>
 </metal:block>
