@@ -487,11 +487,6 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_deletions')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_comments_html')
-    def admin_comments_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
         """ """
