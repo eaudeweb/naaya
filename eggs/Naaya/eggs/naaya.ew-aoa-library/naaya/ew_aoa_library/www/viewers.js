@@ -116,7 +116,7 @@
 		});
 		$('form[name="select_for_report"]').submit(function(){
 			var submit_ok = false;
-			if (len($('[name="answer_ids"]:checked')) > 0)
+			if ($('[name="answer_ids"]:checked').length > 0)
 			{
 				return true;
 			}
