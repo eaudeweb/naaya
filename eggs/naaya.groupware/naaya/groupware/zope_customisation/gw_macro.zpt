@@ -58,14 +58,14 @@
                 <div id="righttools" metal:define-slot="div-righttools" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
                     <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:username == 'Anonymous User'">Login</a>
                     <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:username != 'Anonymous User'">Logout (<span tal:replace="username"/>)</a>
-	        <form action="http://search.eionet.europa.eu/search.jsp" method="get">
-			<div id="freesrchform"><label for="freesrchfld">Search</label>
-			<input type="text" id="freesrchfld" name="query" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10"/>
-			<input value="forum.eionet.europa.eu" name="qp_site" type="hidden"/>
-			<input id="freesrchbtn" type="image" src="/styles/button_go.gif" alt="Go"/>
-			</div>
-		</form>
-
+                    <form action="http://google.com/search" method="get">
+                        <div id="freesrchform">
+                            <label for="freesrchfld">Search</label>
+                            <input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10" />
+                            <input type="hidden" name="sitesearch" value="forum.eionet.europa.eu" />
+                            <input id="freesrchbtn" type="image" src="/styles/button_go.gif" alt="Go" />
+                        </div>
+                    </form>
                 </div>
             </div>
             <div id="pagehead" metal:define-slot="div-pagehead">
