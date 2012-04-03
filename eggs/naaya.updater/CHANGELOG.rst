@@ -1,5 +1,11 @@
 1.2.24 (unreleased)
--------------------
+------------------
+* Added pre_update_hook function [bogdatan]
+* dataTables lib moved to Naaya [bogdatan]
+* Update script for CSS rules [bogdatan]
+* Update script to add spamstatus on comments [bogdatan]
+* Update script to add new entries in administration
+  portlet [bogdatan]
 
 1.2.23 (2012-03-29)
 -------------------

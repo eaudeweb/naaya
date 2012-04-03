@@ -451,4 +451,14 @@
 		provides="..interfaces.IUpdateScript"
 		component=".update_security_checks.DisplayForumMessages"
 		permission="zope2.ViewManagementScreens" />
+        <utility
+      name="update_comments_add_spamstatus_property.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_comments_add_spamstatus_property.UpdateCommentsAddSpamstatusProperty"
+      permission="zope2.ViewManagementScreens" />
+        <utility
+      name="update_portlet_administration_add_entries.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_portlet_administration_add_entries.UpdatePortletAdministrationAddEntries"
+      permission="zope2.ViewManagementScreens" />
 </configure>

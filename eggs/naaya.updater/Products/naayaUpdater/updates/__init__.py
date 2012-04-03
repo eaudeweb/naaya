@@ -131,11 +131,17 @@ class UpdateScript(Item, Acquisition.Implicit):
                 self.add_log(self.id, portals,
                              self.REQUEST.AUTHENTICATED_USER.getUserName())
 
-        return self.update_template(REQUEST, report=report_html,
-                                    form=REQUEST.form)
+        pre_options = self.pre_update_hook()
+        return self.update_template(REQUEST,
+                                    report=report_html,
+                                    form=REQUEST.form,
+                                    pre_options=pre_options)
 
     security.declareProtected(view_management_screens, 'update_template')
     update_template = PageTemplateFile('zpt/update_template', globals())
+
+    def pre_update_hook(self):
+        return False
 
     def index_html(self, REQUEST):
         """ redirect to manage_workspace """
