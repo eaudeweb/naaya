@@ -15,7 +15,7 @@
         <tal:block repeat="item here/get_comments_list">
 	<div tal:attributes="id string:comment-${item/getId}"
              tal:condition="python: not item.spamstatus"
-             class="comment-holder">
+             class="comment-holder comment_box">
 		<span tal:content="item/title" class="commentbox_title">Comment title here</span>
 		<br /><br />
 		<span style="font-size:95%;">
@@ -29,7 +29,7 @@
                 <a tal:condition="python: here.checkPermissionManageComments() and not item.spamstatus"
                    tal:attributes="href string:${here/absolute_url}/comment_spam_status?id=${item/id}&status=True"
                    i18n:translate=""
-                   class="commentbutton">
+                   class="commentbutton markbutton">
                     Mark as junk
                 </a>
 		<span class="commentbox_content">
@@ -39,10 +39,10 @@
 			<span tal:replace="python:here.utShowFullDateTime(item.releasedate)" />
 		</span>
 	</div>
-        <div tal:condition="python: item.spamstatus and not here.checkPermissionManageComments()" class="comment-holder-blocked comment-holder">
+        <div tal:condition="python: item.spamstatus and not here.checkPermissionManageComments()" class="comment-holder-blocked comment-holder comment_box">
             <span class="commentbox_title" i18n:translate="">Junk comment</span>
         </div>
-        <div tal:condition="python: item.spamstatus and here.checkPermissionManageComments()" class="comment-holder-blocked comment-holder">
+        <div tal:condition="python: item.spamstatus and here.checkPermissionManageComments()" class="comment-holder-blocked comment-holder comment_box">
             <span class="commentbox_title">
                 <span class="comment-label-blocked" i18n:translate="">
                     Junk comment
@@ -62,7 +62,7 @@
             <a tal:condition="python: here.checkPermissionManageComments() and item.spamstatus"
                tal:attributes="href string:${here/absolute_url}/comment_spam_status?id=${item/id}&status=False"
                i18n:translate=""
-               class="commentbutton">
+               class="commentbutton markbutton">
                 Mark as valid
             </a>
             <span class="commentbox_content">
