@@ -1,4 +1,7 @@
-1.1.20 (unreleased)
+1.1.21 (unreleased)
+-------------------
+
+1.1.20 (2012-04-04)
 -------------------
 * Changed from search.eionet.europa.eu/search.jsp to Google Search [bogdatan]
 * Updated administration portlet with comments management section
