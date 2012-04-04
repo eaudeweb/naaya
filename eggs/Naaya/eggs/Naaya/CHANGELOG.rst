@@ -1,5 +1,6 @@
 2.13.2 (unreleased)
 --------------------
+* Added GA_ID and reCaptcha keys to Admin API Keys section [bogdatan]
 
 2.13.1 (2012-04-04)
 --------------------

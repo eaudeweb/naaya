@@ -31,6 +31,8 @@ def AdminAPIKeysStatus(context, request):
     Check if API keys exists and are valid
     """
     conf = getConfiguration()
+
+    #Akismet
     api_keys = {
         'akismet':{
             'key': '',
@@ -45,6 +47,41 @@ def AdminAPIKeysStatus(context, request):
 
     api_keys['akismet'] = {
         'key': akismet_api_key,
+        'valid': valid
+    }
+
+    #Google Analytics
+    ga_id = getattr(context.portal_statistics, 'ga_id', '')
+    valid = False
+    if ga_id == '':
+        ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
+
+    if ga_id:
+        valid = True
+
+    api_keys['ga_id'] = {
+        'key': ga_id,
+        'valid': valid
+    }
+
+    #reCaptcha
+    recaptcha_private_key = getattr(context, 'recaptcha_private_key', '')
+    valid = False
+    if recaptcha_private_key:
+        valid = True
+
+    api_keys['recaptcha_private_key'] = {
+        'key': recaptcha_private_key,
+        'valid': valid
+    }
+
+    recaptcha_public_key = getattr(context, 'recaptcha_public_key', '')
+    valid = False
+    if recaptcha_public_key:
+        valid = True
+
+    api_keys['recaptcha_public_key'] = {
+        'key': recaptcha_public_key,
         'valid': valid
     }
 
