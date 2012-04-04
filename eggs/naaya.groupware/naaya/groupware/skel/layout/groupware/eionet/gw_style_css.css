@@ -153,6 +153,7 @@ body.fullscreen {
 	color: #888;
 	text-decoration: none;
 	font-weight:bold;
+        line-height: 25px;
 }
 #breadcrumbtrail a:hover {
 	color: black;
@@ -161,7 +162,7 @@ body.fullscreen {
 }
 .breadcrumbitem {
 	background-image:url(arrow-normal.png);
-	background-position:100% 2px;
+	background-position: right center;
 	background-repeat:no-repeat;
 	margin-right:3px;
 	padding-right:11px;
