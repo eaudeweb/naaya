@@ -1,4 +1,7 @@
-2.13.2 (unreleased)
+2.13.3 (unreleased)
+--------------------
+
+2.13.2 (2012-04-05)
 --------------------
 * declared PortletsTool admin_layout as NaayaPageTemplateFile [dumitval]
 * Added GA_ID and reCaptcha keys to Admin API Keys section [bogdatan]
