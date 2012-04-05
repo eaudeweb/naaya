@@ -12,6 +12,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from zope import component
 from App.ImageFile import ImageFile
 
@@ -412,7 +413,7 @@ class PortletsTool(Folder, utils):
         else:
             raise ValueError('Unknown value for `action`: %s' % repr(action))
 
-    _admin_layout_zpt = PageTemplateFile('zpt/admin_layout', globals())
+    _admin_layout_zpt = NaayaPageTemplateFile('zpt/admin_layout', globals())
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, REQUEST):
         """ Administration page for portlets layout """
