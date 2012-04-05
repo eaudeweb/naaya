@@ -413,7 +413,8 @@ class PortletsTool(Folder, utils):
         else:
             raise ValueError('Unknown value for `action`: %s' % repr(action))
 
-    _admin_layout_zpt = NaayaPageTemplateFile('zpt/admin_layout', globals())
+    _admin_layout_zpt = NaayaPageTemplateFile('zpt/admin_layout', globals(),
+        'portlets_tool_admin_layout')
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, REQUEST):
         """ Administration page for portlets layout """
