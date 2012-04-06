@@ -1,4 +1,7 @@
-2.13.4 (unreleased)
+2.13.5 (unreleased)
+--------------------
+
+2.13.4 (2012-04-06)
 --------------------
 * bugfix in AuthenticationTool [simiamih]
 
