@@ -1,5 +1,6 @@
 1.2.25 (unreleased)
 ------------------
+* Added update_broken_back35 low priority update script [simiamih]
 
 1.2.24 (2012-04-03)
 ------------------
