@@ -1,4 +1,7 @@
-2.13.3 (unreleased)
+2.13.4 (unreleased)
+--------------------
+
+2.13.3 (2012-04-06)
 --------------------
 * Added function to retrieve local roles for a specified user [bogdatan]
 * fix FileIterator interface for zip download to work [simiamih]
