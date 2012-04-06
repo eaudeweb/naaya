@@ -1,5 +1,6 @@
 2.13.4 (unreleased)
 --------------------
+* bugfix in AuthenticationTool [simiamih]
 
 2.13.3 (2012-04-06)
 --------------------
