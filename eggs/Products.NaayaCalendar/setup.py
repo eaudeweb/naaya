@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Products.NaayaCalendar',
-      version='1.3.9',
+      version='1.3.10',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
