@@ -100,7 +100,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         other_qs=self.utRemoveFromQS(['cmonth', 'cyear'])
         if len(other_qs)>0:
             other_qs=other_qs+"&"
-        return self.utURL() + "?" + other_qs
+        return self.absolute_url(0) + "?" + other_qs
 
     #########################
     #   EVENTS FUNCTIONS    #
