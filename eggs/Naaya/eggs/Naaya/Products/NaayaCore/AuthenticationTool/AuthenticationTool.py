@@ -693,7 +693,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Returns a list with all roles of the authenticated user.
         """
         user = self.REQUEST.AUTHENTICATED_USER
-        return getUserLocalRoles(user)
+        return self.getUserLocalRoles(user, p_meta_types)
 
     def getUserLocalRoles(self, user, p_meta_types=None):
         """
