@@ -11,6 +11,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZPublisher.Iterators import IStreamIterator
 from zope.event import notify
 import transaction
+from zope import interface
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import (PERMISSION_PUBLISH_OBJECTS,
@@ -320,8 +321,11 @@ class FileIterator(object):
     Copied from ``ZPublisher.Iterators.filestream_iterator`` and modified.
     """
 
-    # Old Zope2-style interfaces. Hope this works.
-    __implements__ = (IStreamIterator,)
+    if issubclass(IStreamIterator, interface.Interface): 
+        interface.implements(IStreamIterator) 
+    else: 
+        # old-stye zope interface (before ZCA) 
+        __implements__ = (IStreamIterator,) 
 
     def __init__(self, data_file):
         self._data_file = data_file
