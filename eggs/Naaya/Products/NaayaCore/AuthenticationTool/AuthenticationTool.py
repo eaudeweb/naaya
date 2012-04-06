@@ -691,6 +691,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def getAuthenticatedUserRoles(self, p_meta_types=None):
         """
         Returns a list with all roles of the authenticated user.
+        """
+        user = self.REQUEST.AUTHENTICATED_USER
+        return getUserLocalRoles(user)
+
+    def getUserLocalRoles(self, user, p_meta_types=None):
+        """
+        Return list of local roles for a specified user
 
         This function looks at the site level, then inside all folders for
         local roles.
@@ -698,7 +705,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         r = []
         ra = r.append
-        user = self.REQUEST.AUTHENTICATED_USER
         username = user.getUserName()
         userroles = self.utConvertToList(self.getUserRoles(user))
         for x in ['Anonymous', 'Authenticated', 'Owner']:

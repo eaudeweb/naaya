@@ -1,5 +1,6 @@
 2.13.3 (unreleased)
 --------------------
+* Added function to retrieve local roles for a specified user [bogdatan]
 
 2.13.2 (2012-04-05)
 --------------------
