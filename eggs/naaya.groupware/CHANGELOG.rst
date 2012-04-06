@@ -1,5 +1,6 @@
 1.1.21 (unreleased)
 -------------------
+* Fixed profile overview to get local roles for specified user [bogdatan]
 
 1.1.20 (2012-04-04)
 -------------------
