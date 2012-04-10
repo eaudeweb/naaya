@@ -28,8 +28,16 @@ class ProfileClient(object):
         self.zope_app = zope_app
         self.ldap_folder = zope_app.acl_users
         self.user = user
-        servers = self.ldap_folder._delegate._servers
+        ldap_folder = self.ldap_folder
+        servers = ldap_folder._delegate._servers
+
         config['ldap_server'] = servers[0]['host']
+        try:
+            config['users_dn'] = ldap_folder.users_base
+            config['roles_dn'] = ldap_folder.groups_base
+        except AttributeError:
+            # Leave eea.userdb defaults
+            pass
         self.agent = usersdb.UsersDB(**config)
 
     def access_in_igs(self):

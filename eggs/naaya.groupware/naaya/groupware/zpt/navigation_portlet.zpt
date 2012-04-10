@@ -12,7 +12,7 @@
                         tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
             </tal:block>
 
-            <li tal:condition="python: request.AUTHENTICATED_USER and nfp_admin_link and here.getSite().id == 'nfp-eionet'">
+            <li tal:condition="nfp_admin_link">
                 <a tal:attributes="href nfp_admin_link" title="View your NFP" i18n:translate="" i18n:attributes="title">Edit NRC members</a>
             </li>
         </ul>

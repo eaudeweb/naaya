@@ -24,8 +24,10 @@ def nfp_admin_link(context, request):
     """
     nfp_url = ''
 
-    if context.REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User':
-        user = context.REQUEST.AUTHENTICATED_USER
+    user = context.REQUEST.AUTHENTICATED_USER
+    site_id = context.getSite().getId()
+
+    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
         zope_app = context.unrestrictedTraverse('/')
         client = ProfileClient(zope_app, user)
         roles_list = client.roles_list_in_ldap()
