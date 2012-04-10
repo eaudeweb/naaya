@@ -183,8 +183,12 @@ def google_analytics(context, ga_id=''):
     `ga_id` Analytics Website property ID (UA-number).
 
     """
-    ga_id = ga_id or getConfiguration().environment.get('GA_ID', '')
-    if ga_id == '':
+    conf = getConfiguration()
+    environment = getattr(conf, 'environment', {})
+    master_ga_id = environment.get('GA_ID', '')
+    ga_domain_name = environment.get('GA_DOMAIN_NAME', '')
+
+    if ga_id == '' and master_ga_id == '':
         # No website ID provided; e.g. not configured in portal_statistics
         return ''
 
@@ -192,11 +196,29 @@ def google_analytics(context, ga_id=''):
         # no google analytics for managers
         return ''
 
+    gaq = []
+    ga_keys = []
+    if master_ga_id:
+        ga_keys.append(master_ga_id)
+
+    if ga_id:
+        ga_keys.append(ga_id)
+
+    for ga_index, ga_key in enumerate(ga_keys):
+        if ga_index == 1:
+            gaq.append(['b._setAccount', ga_key])
+            gaq.append(['b._trackPageview'])
+        else:
+            gaq.append(['_setAccount', ga_key])
+            gaq.append(['_trackPageview'])
+
+    if ga_domain_name:
+        gaq.append(['_setDomainName', ga_domain_name])
+
     site = context.getSite()
     forms_tool = site.getFormsTool()
     ga_form = forms_tool.getForm("site_googleanalytics")
-
-    return ga_form.__of__(site)(ga_id=ga_id)
+    return ga_form.__of__(site)(gaq_json=json.dumps(gaq))
 
 
 class RestrictedToolkit(SimpleItem):
