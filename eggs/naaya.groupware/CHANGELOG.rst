@@ -1,4 +1,7 @@
-1.1.21 (unreleased)
+1.1.22 (unreleased)
+-------------------
+
+1.1.21 (2012-04-10)
 -------------------
 * Fixed NFP Admin Link to be called only for nfp-eionet website [bogdatan]
 * Fixed profile overview to get local roles for specified user [bogdatan]
