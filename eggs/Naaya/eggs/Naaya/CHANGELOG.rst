@@ -1,5 +1,6 @@
 2.13.5 (unreleased)
 --------------------
+* Fixed Analytics Tool test [bogdatan]
 
 2.13.4 (2012-04-06)
 --------------------

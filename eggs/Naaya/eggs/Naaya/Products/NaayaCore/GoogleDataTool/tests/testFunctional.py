@@ -32,5 +32,5 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless(head.find('meta', attrs={'name':'google-site-verification', 'content': 'test-code'}))
 
         #check if the GoogleAnalytics javascript is corectly placed in the <head> section, before the closing </head> tag.
-        script = head.findAll('script', attrs={'type':'text/javascript'})[-1]
+        script = head.findAll('script', attrs={'type':'text/javascript'})[-2]
         self.assertTrue(script.text.find('UA-12345-67') > -1)
