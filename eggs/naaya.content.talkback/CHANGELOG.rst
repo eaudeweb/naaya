@@ -1,5 +1,6 @@
 1.4.10 (unreleased)
 ------------------
+* fixed deprecation warning (bad super addressing) [simiamih]
 
 1.4.9 (2012-03-23)
 ------------------
