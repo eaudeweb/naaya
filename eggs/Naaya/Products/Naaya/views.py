@@ -53,9 +53,6 @@ def AdminAPIKeysStatus(context, request):
     #Google Analytics
     ga_id = getattr(context.portal_statistics, 'ga_id', '')
     valid = False
-    if ga_id == '':
-        ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
-
     if ga_id:
         valid = True
 
