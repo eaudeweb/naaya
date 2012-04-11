@@ -43,7 +43,6 @@ class CommentsAdmin(SimpleItem):
     title = "Comments administration"
 
     def __init__(self, id):
-        super(CommentsAdmin, self).__init__(id)
         self.id = id
 
     def _iter_comments(self):
