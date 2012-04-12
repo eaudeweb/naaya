@@ -1,4 +1,7 @@
-1.1.10 (unreleased)
+1.1.11 (unreleased)
+------------------
+
+1.1.10 (2012-04-12)
 ------------------
 * Updated administration portlet with comments management section
   and API keys status section [bogdatan]
