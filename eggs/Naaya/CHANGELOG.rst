@@ -1,5 +1,9 @@
-2.13.5 (unreleased)
+2.13.6 (unreleased)
 --------------------
+
+2.13.5 (2012-04-12)
+--------------------
+* added google analytics master profile [bogdatan]
 * Fixed Analytics Tool test [bogdatan]
 
 2.13.4 (2012-04-06)
