@@ -71,6 +71,7 @@ class NyCommonView(object):
     def standard_error_message(self, client=None, **kwargs):
         """ """
         try:
+            import pdb; pdb.set_trace()
             error_log_properties = self.error_log.getProperties()
             ignored_exceptions = error_log_properties['ignored_exceptions']
 
