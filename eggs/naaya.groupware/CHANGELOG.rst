@@ -1,5 +1,7 @@
 1.1.23 (unreleased)
 -------------------
+* Created a JSON view to return all portals from 
+  archives.eionet.europa.eu for forum.eionet.europa.eu [bogdatan]
 
 1.1.22 (2012-04-12)
 -------------------

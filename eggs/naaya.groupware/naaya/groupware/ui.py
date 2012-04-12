@@ -3,10 +3,14 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from profileoverview.profile import ProfileClient
 from constants import GROUPWARE_META_ID
 
+from naaya.core.backport import json
+
 from App.config import getConfiguration
 
 local_users_zpt = PageTemplateFile('zpt/local_users.zpt', globals())
 index_html_zpt = PageTemplateFile('zpt/index.zpt', globals())
+eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
+                                               globals())
 
 CONFIG = getConfiguration()
 eionet_url = getattr(CONFIG, 'environment', {}).get('EIONET_LDAP_EXPLORER', '')
@@ -63,3 +67,31 @@ def gw_meta_info(context, request=None):
     forum_meta = getattr(root, GROUPWARE_META_ID, {})
     meta_info['welcome_text'] = forum_meta.get('welcome_text', '')
     return meta_info
+
+def eionet_forum_index_html(context, request):
+    """
+    Render Forum's first page
+    """
+    return eionet_forum_index_html_zpt.__of__(context)()
+
+def archived_portals_json(context, request):
+    """
+    Return JSON with archived portals
+    """
+    archived_portals = context.groupedIGs().get('archived', [])
+
+    portals = []
+
+    for portal in archived_portals:
+        portals.append({
+            'id': portal.id,
+            'title': portal.title_or_id(),
+            'subtitle': portal.site_subtitle,
+            'url': portal.absolute_url()
+        })
+
+    jsonp = request.form.get('jsonp', None)
+    if jsonp:
+        return "%s(%s)" % (jsonp, json.dumps(portals))
+    else:
+        return json.dumps(portals)
