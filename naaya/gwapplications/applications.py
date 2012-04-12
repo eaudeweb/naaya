@@ -1,3 +1,4 @@
+from persistent.mapping import PersistentMapping
 from zope.interface import Interface, implements
 from OFS.Folder import Folder
 from application_item import IGWApplication, GWApplication
@@ -6,6 +7,8 @@ from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.EmailTool.EmailTool import EmailTool
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from application_item import make_unicode
+
+from naaya.groupware.constants import GROUPWARE_META_ID
 
 
 new_application_mail = EmailPageTemplateFile('emailpt/new_application.zpt', globals())
@@ -107,3 +110,24 @@ class GWApplicationsBasketView(BrowserView):
     def __call__(self):
         kwargs = {'objects': self.get_applications()}
         return self.index(**kwargs)
+
+class GWForumSettingsView(BrowserView):
+    """ Manage Forum settings - titles, welcome text """
+
+    def __call__(self, **kwargs):
+        formdata = self.context.REQUEST.form
+        if not formdata.get('submit', ''):
+            return self.index()
+        title = formdata.get('title', u'')
+        root_site_title = formdata.get('root_site_title', u'')
+        welcome_text = formdata.get('welcome_text', u'')
+        root = self.context.unrestrictedTraverse("/")
+        try:
+            forum_meta = getattr(root, GROUPWARE_META_ID)
+        except AttributeError:
+            setattr(root, GROUPWARE_META_ID, PersistentMapping())
+            forum_meta = getattr(root, GROUPWARE_META_ID)
+        forum_meta['welcome_text'] = welcome_text
+        root.title = title
+        setattr(root, 'root_site_title', root_site_title)
+        return self.index(**{'done': True})
