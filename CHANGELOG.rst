@@ -1,6 +1,7 @@
 1.3.5 (unreleased)
 ------------------
 * check_item_title is now item_has_title [simiamih]
+* fixed adapter to work with localizedbfile [simiamih]
 
 1.3.4 (2012-01-13)
 ------------------
