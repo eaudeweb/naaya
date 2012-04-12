@@ -1,6 +1,7 @@
 1.4.10 (unreleased)
 ------------------
 * fixed deprecation warning (bad super addressing) [simiamih]
+* fixed tests: invitees comments do not need aproval [simiamih]
 
 1.4.9 (2012-03-23)
 ------------------
