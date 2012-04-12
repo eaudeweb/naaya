@@ -50,8 +50,11 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
             return ensure_tzinfo(version.timestamp)
 
     def get_info_text(self):
-        trans = self.ob.getPortalTranslations().trans
-        version_count = len([v for v in self.ob._versions if not v.removed])
+        trans = self.ob.getPortalI18n().get_translation
+        container = self.ob._versions
+        # OBS: for localizedbfile count langs, v is str (the key of the lang)
+        versions = [v for v in container if not getattr(v, 'removed', True)]
+        version_count = len(versions)
         if version_count > 1:
             msg = trans("${number} versions", number=str(version_count))
             return "(%s)" % msg
