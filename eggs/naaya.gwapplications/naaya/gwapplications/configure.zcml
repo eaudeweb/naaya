@@ -37,6 +37,14 @@
       permission="zope2.ViewManagementScreens"
       />
 
+  <browser:page
+      for=".applications.IGWApplications"
+      name="forum_settings"
+      template="zpt/forum_settings.zpt"
+      class=".applications.GWForumSettingsView"
+      permission="zope2.ViewManagementScreens"
+      />
+
   <browser:resource
       name="applications.gif"
       image="www/applications.gif"
