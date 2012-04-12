@@ -1,5 +1,6 @@
 1.1.4 (unreleased)
 ------------------
+* view for editting groupware meta information [simiamih]
 
 1.1.3 (2012-02-17)
 -------------------
