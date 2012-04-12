@@ -91,12 +91,12 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
 
         self.assertFalse(self.comments[0].message in html)
-        self.assertTrue(self.comments[1].message in html)
+        self.assertFalse(self.comments[1].message in html)
 
         self.browser_do_logout()
 
     def test_moderate_comments_access(self):
-        self.browser_do_login('reviewer', 'reviewer')
+        self.browser_do_login('admin', '')
         self.browser.go(self.cons_url)
         self.assertTrue('admin_comments' in self.browser.get_html())
         self.browser.go(self.cons_url + '/admin_comments')
