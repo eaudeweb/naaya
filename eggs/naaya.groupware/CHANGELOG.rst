@@ -1,4 +1,7 @@
-1.1.22 (unreleased)
+1.1.23 (unreleased)
+-------------------
+
+1.1.22 (2012-04-12)
 -------------------
 * customizable instance titles and welcome text [simiamih]
 
