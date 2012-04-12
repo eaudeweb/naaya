@@ -41,11 +41,18 @@
     permission="zope2.View"
     />
 
+  <naaya:simpleView
+    for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="gw_meta_info"
+    handler=".ui.gw_meta_info"
+    permission="zope2.View"
+    />
+
   <browser:defaultView
     for="naaya.groupware.interfaces.IGroupwareApplication"
     name="index_html"
     />
-    
+
 
   <include package=".profileoverview" />
   <include package=".updates" />

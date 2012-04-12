@@ -1,6 +1,7 @@
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from profileoverview.profile import ProfileClient
+from constants import GROUPWARE_META_ID
 
 from App.config import getConfiguration
 
@@ -48,3 +49,17 @@ def index_html(context, request):
     Render Forum's first page
     """
     return index_html_zpt.__of__(context)()
+
+def gw_meta_info(context, request=None):
+    """
+    Returns dict containing forum meta information.
+    `request` is only used so this can be registered and called as a simpleView
+
+    """
+    root = context.unrestrictedTraverse("/")
+    meta_info = {'title': root.title,
+                 'root_site_title': getattr(root, 'root_site_title', ''),
+                 'welcome_text': ''}
+    forum_meta = getattr(root, GROUPWARE_META_ID, {})
+    meta_info['welcome_text'] = forum_meta.get('welcome_text', '')
+    return meta_info

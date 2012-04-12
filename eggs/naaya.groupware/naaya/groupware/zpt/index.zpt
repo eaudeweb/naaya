@@ -1,16 +1,19 @@
 <metal:block use-macro="here/gw_macro/macros/main">
-    <div id="workarea" tal:define="portals here/groupedIGs" metal:fill-slot="div-workarea">
+    <div id="workarea" tal:define="portals here/groupedIGs;
+                                   meta_info here/gw_meta_info"
+                       metal:fill-slot="div-workarea">
         <script src="++resource++naaya.groupware/jquery-1.4.4.min.js"
               type="text/javascript" language="javascript"></script>
         <script src="++resource++naaya.groupware/jquery-ui.custom.min.js"
               type="text/javascript" language="javascript"></script>
         <script src="++resource++naaya.groupware/main.js"
               type="text/javascript" language="javascript"></script>
-        <h1>Eionet Forum</h1>
-        <p class="documentDescription" i18n:translate="">Welcome to the Forum. The purpose of this site is to cooperate on
-items of shared interest.
-In order to become a member (i.e. obtain a username and a password) you should read the information
-supplied for each interest group and then follow the subscription instructions. 
+        <h1 tal:content="meta_info/root_site_title"></h1>
+        <p class="documentDescription" tal:content="structure meta_info/welcome_text">
+            Welcome to the Forum. The purpose of this site is to cooperate on
+            items of shared interest.
+            In order to become a member (i.e. obtain a username and a password) you should read the information
+            supplied for each interest group and then follow the subscription instructions.
         </p>
         <tal:block define="igs python:portals.get('admin', [])" condition="igs">
             <h2 i18n:translate="">Interest groups you can access with your credentials</h2>
