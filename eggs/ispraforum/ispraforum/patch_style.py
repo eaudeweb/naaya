@@ -1,22 +1,13 @@
 import os
 import re
 
-line_pattern = re.compile(r'tal:attributes="href [^"]*/additional_style_css"')
-new_href = 'tal:attributes="href string:${skin_files_path}/style-ispraforum.css"'
-
-
 def patch_template(tmpl):
-    lines = tmpl._text.splitlines()
-    for i, line in enumerate(lines):
-        m = line_pattern.search(line)
-        if m is None:
-            continue
-        i += 1
-        lines[i:i] = line_pattern.sub(new_href, line)
-        break
-    new_content = ''.join(lines)
+    full_path = os.path.dirname(os.path.abspath(__file__))
+    standard_template_file = os.path.join(full_path, 'zpt/standard_template.zpt')
+    standard_template = open(standard_template_file, 'r')
+    new_content = standard_template.read()
     tmpl.pt_edit(new_content, tmpl.content_type)
-
+    standard_template.close()
 
 def patch_style_for_new_site(event):
     application = event.application
