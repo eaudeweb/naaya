@@ -54,22 +54,22 @@ supplied for each interest group and then follow the subscription instructions.
                 </li>
             </ul>
         </tal:block>
-        <tal:block define="igs python:portals.get('archived', [])" condition="igs">
-            <h2 i18n:translate="">Archived Interest groups</h2>
-            <p i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk.</p>
-            <a href="javascript:void(0); " title="Toggle IG list" i18n:translate="" i18n:attributes="title" class="collapsible-trigger show">
-                View list
-            </a>
 
-            <a href="javascript:void(0); " title="Toggle IG list" i18n:translate="" i18n:attributes="title" class="collapsible-trigger hide">
-                Hide list
-            </a>
+        <h2 i18n:translate="">Archived Interest groups</h2>
+        <p i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk.</p>
+        <a href="javascript:void(0); " title="Toggle IG list" i18n:translate="" i18n:attributes="title" class="collapsible-trigger show">
+            View list
+        </a>
 
-            <ul class="ig_listing collapsible" id="archived_portals"></ul>
+        <a href="javascript:void(0); " title="Toggle IG list" i18n:translate="" i18n:attributes="title" class="collapsible-trigger hide">
+            Hide list
+        </a>
 
-            <div id="loading">
-                <img src="++resource++naaya.groupware/ajax-loader.gif" />
-            </div>
-        </tal:block>
+        <ul class="ig_listing collapsible" id="archived_portals"></ul>
+
+        <div id="loading">
+            <img src="++resource++naaya.groupware/ajax-loader.gif" />
+        </div>
+
     </div>
 </metal:block>
