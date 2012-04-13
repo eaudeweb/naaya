@@ -1,5 +1,6 @@
 import flask
 import database
+import schema
 
 
 views = flask.Blueprint('views', __name__)
@@ -13,15 +14,20 @@ def index():
 @views.route('/reports', methods=['GET'])
 def report_list():
     return flask.render_template('report_list.html', **{
-        'report_row_list': list(database.get_all_reports()),
+        'report_list': [{'id': row.id,
+                         'data': schema.ReportSchema.from_flat(row).value}
+                        for row in database.get_all_reports()],
     })
 
 
 @views.route('/reports', methods=['POST'])
 def report_add():
     session = database.get_session()
-    report_row = database.ReportRow({'title': flask.request.form['title']})
-    session.save(report_row)
+    request_data = flask.request.form.to_dict()
+    report_schema = schema.ReportSchema.from_flat(request_data)
+    # TODO validation
+    row = database.ReportRow(report_schema.flatten())
+    session.save(row)
     session.commit()
     return "ok"
 
