@@ -87,6 +87,15 @@ a {
     font-size: 14px;
 }
 
+#forum-preview-save-dialog button {
+    padding: 0px!important;
+    font-size: 10px!important;
+    position: relative;
+    top: -2px;
+    *top: 2px;
+}
+
+
 .author {
     color: #666;
 }
