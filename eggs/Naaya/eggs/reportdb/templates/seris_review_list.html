@@ -1,0 +1,7 @@
+<ul>
+{% for review in review_list %}
+  <a href="{{ url_for('views.seris_review_view',
+                      report_id=review['data']['report_id'],
+                      seris_review_id=review['id']) }}">Review</a>
+{% endfor %}
+</ul>
