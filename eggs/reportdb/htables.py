@@ -87,13 +87,13 @@ class Table(object):
 
     def _create(self):
         cursor = self._session.conn.cursor()
-        cursor.execute("CREATE TABLE " + self._name + " ("
+        cursor.execute("CREATE TABLE IF NOT EXISTS " + self._name + " ("
                             "id SERIAL PRIMARY KEY, "
                             "data HSTORE)")
 
     def _drop(self):
         cursor = self._session.conn.cursor()
-        cursor.execute("DROP TABLE person")
+        cursor.execute("DROP TABLE IF EXISTS " + self._name)
 
     def save(self, obj):
         cursor = self._session.conn.cursor()
