@@ -1,5 +1,7 @@
 <metal:block use-macro="here/standard_template_macro">
+
 <metal:block fill-slot="body">
+
     <input type="hidden" name="base_url"
            tal:attributes="value here/absolute_url" />
     <input type="hidden" name="topic"
@@ -38,5 +40,23 @@
             </tal:block>
         </tal:block>
     </div>
+
+
+    <div id="forum-preview-save-dialog" title="Save document" style="display: none">
+        <form>
+            <label for="name">Document Name</label>
+            <select id="doc-name">
+                <option value="">Select one...</option>
+                <tal:block repeat="doc options/documents">
+                    <option tal:attributes="value doc/id" tal:content="doc/title">
+                        Document title
+                    </option>
+                </tal:block>
+
+            </select>
+        </form>
+
+    </div>
 </metal:block>
+
 </metal:block>
