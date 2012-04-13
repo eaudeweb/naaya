@@ -4,8 +4,11 @@ import time
 from datetime import datetime
 
 from naaya.content.document.document_item import addNyDocument
+
+from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.managers.utils import slugify
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 from ZPublisher import NotFound
 
 preview_html_zpt = PageTemplateFile("zpt/preview.zpt", globals())
@@ -21,49 +24,10 @@ LIST_OF_MESSAGES = [
     "Alert",
 ]
 
-TITLE = "Draft"
-
-def get_document_or_create(site, title):
-    folder = site["forum_publish"]
-    try:
-        doc = folder[slugify(title)]
-    except KeyError:
-        doc_id = addNyDocument(folder, title=title, submitted=1)
-        doc = folder[doc_id]
-    return doc
-
-
-def forum_publish_save(context, REQUEST):
-    scrub = scrubber.Scrubber().scrub
-    response = {"status": "success"}
-    content = REQUEST.form["content"]
-    topic = _get_topic(context, REQUEST.form["topic"])
-
-    if hasattr(topic, "forum_publish_objects"):
-        content  = scrub(content)
-        site = context.getSite()
-        doc = get_document_or_create(site, title=TITLE)
-
-         # update Naaya document
-        doc.set_localpropvalue("body", site.gl_get_selected_language(), content)
-        # doc.body = content
-        doc.recatalogNyObject(doc)
-
-        response["url"] = doc.absolute_url()
-        REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
-        return simplejson.dumps(response)
-    else:
-        raise NotFound("No objects to publish")
-
-
-def forum_publish_translations(context, request):
-    trans = {}
-    portal_i18n = context.getSite().getPortalI18n()
-    for msg in LIST_OF_MESSAGES:
-        trans[msg] = portal_i18n.get_translation(msg)
-
-    request.RESPONSE.setHeader("Content-Type", "application/json")
-    return simplejson.dumps(trans)
+FOLDER = {
+    "id": "folder-extracts",
+    "title": "Folder of extracts",
+}
 
 
 def forum_publish_save_object(context, REQUEST):
@@ -102,8 +66,106 @@ def forum_publish_save_object(context, REQUEST):
 
     response["url"] = "%s/forum_publish_preview/?topic=%s" % \
                       (context.absolute_url(), topic["id"])
-
     return simplejson.dumps(response)
+
+
+def forum_publish_preview(context, REQUEST):
+    topic = _get_topic(context, REQUEST.form["topic"])
+    folder = get_or_create_folder(site=context.getSite(),
+                                  id=FOLDER["id"],
+                                  title=FOLDER["title"])
+
+    documents = folder.objectValues()
+    forum_publish_objects = []
+    if hasattr(topic.aq_base, "forum_publish_objects"):
+        forum_publish_objects = topic.aq_base.forum_publish_objects
+
+    return preview_html_zpt.__of__(context)(REQUEST, **{
+        "forum_publish_objects": forum_publish_objects,
+        "topic": REQUEST.form["topic"],
+        "documents": documents,
+    })
+
+
+def forum_publish_save(context, REQUEST):
+    scrub = scrubber.Scrubber().scrub
+    response = {"status": "success"}
+    content = REQUEST.form["content"]
+    topic = _get_topic(context, REQUEST.form["topic"])
+    filename = REQUEST.form["filename"]
+
+    if hasattr(topic, "forum_publish_objects"):
+        content  = scrub(content)
+        site = context.getSite()
+        doc = get_document_or_create(site, title=filename)
+
+        doc_content = doc.getLocalAttribute("body",
+                                            site.gl_get_selected_language())
+        doc_content += content
+         # update Naaya document
+        doc.set_localpropvalue("body", site.gl_get_selected_language(),
+                               doc_content)
+        # doc.body = content
+        doc.recatalogNyObject(doc)
+
+        # clear preview document
+        _clear_preview(context, REQUEST.form["topic"])
+
+        response["url"] = doc.absolute_url()
+        REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
+        return simplejson.dumps(response)
+    else:
+        raise NotFound("No objects to publish")
+
+
+def forum_publish_remove_object(context, REQUEST):
+    response = {"status": "success"}
+    timestamp = int(REQUEST.form["timestamp"])
+    topic = _get_topic(context, REQUEST.form["topic"])
+
+    if (hasattr(topic.aq_base, "forum_publish_objects") and
+        timestamp in topic.forum_publish_objects.keys()):
+        del topic.forum_publish_objects[timestamp]
+    else:
+        raise NotFound
+    return simplejson.dumps(response)
+
+
+def get_document_or_create(site, title):
+    folder = site[FOLDER["id"]]
+
+    try:
+        doc = folder[slugify(title)]
+    except KeyError:
+        doc_id = addNyDocument(folder, title=title, submitted=1)
+        doc = folder[doc_id]
+    return doc
+
+
+def get_or_create_folder(site, id, title):
+    """
+    Creates a folder if it does't exist
+    """
+    try:
+        folder = site[id]
+    except KeyError:
+        folder = site[addNyFolder(site, id=id, title=folder)]
+    return folder
+
+
+def forum_publish_clear_preview(context, REQUEST):
+    _clear_preview(context, REQUEST.form["topic"])
+    return simplejson.dumps({"status": "success"})
+
+
+def forum_publish_translations(context, request):
+    trans = {}
+    portal_i18n = context.getSite().getPortalI18n()
+    for msg in LIST_OF_MESSAGES:
+        trans[msg] = portal_i18n.get_translation(msg)
+
+    request.RESPONSE.setHeader("Content-Type", "application/json")
+    return simplejson.dumps(trans)
 
 
 def _forum_publish_objects(content, context):
@@ -125,35 +187,11 @@ def _get_topic(context, title):
         raise NotFound("Topic not found")
 
 
-def forum_publish_remove_object(context, REQUEST):
-    response = {"status": "success"}
-    timestamp = int(REQUEST.form["timestamp"])
-    topic = _get_topic(context, REQUEST.form["topic"])
-
-    if (hasattr(topic.aq_base, "forum_publish_objects") and
-        timestamp in topic.forum_publish_objects.keys()):
-        del topic.forum_publish_objects[timestamp]
-    else:
-        raise NotFound
-    return simplejson.dumps(response)
-
-
-def forum_publish_preview(context, REQUEST):
-    topic = _get_topic(context, REQUEST.form["topic"])
-    forum_publish_objects = []
-    if hasattr(topic.aq_base, "forum_publish_objects"):
-        forum_publish_objects = topic.aq_base.forum_publish_objects
-
-    return preview_html_zpt.__of__(context)(REQUEST, **{
-        "forum_publish_objects": forum_publish_objects,
-        "topic": REQUEST.form["topic"],
-    })
-
-
-def forum_publish_clear_objects(context, REQUEST):
-    topic = _get_topic(context, REQUEST.form["topic"])
+def _clear_preview(context, topic):
+    topic = _get_topic(context, topic)
     if hasattr(topic.aq_base, "forum_publish_objects"):
         del topic.forum_publish_objects
-    return simplejson.dumps({"status": "success"})
+        return True
+    return False
 
 
