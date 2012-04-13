@@ -149,7 +149,7 @@ def get_or_create_folder(site, id, title):
     try:
         folder = site[id]
     except KeyError:
-        folder = site[addNyFolder(site, id=id, title=folder)]
+        folder = site[addNyFolder(site, id=id, title=title)]
     return folder
 
 
