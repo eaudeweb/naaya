@@ -1,4 +1,7 @@
-0.8.2 (unreleased)
+0.8.3 (unreleased)
+----------------
+
+0.8.2 (2012-04-13)
 ----------------
 * Save dialog for creating a new document or for appendin to an existing one.
 
