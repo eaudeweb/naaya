@@ -1,7 +1,8 @@
 import flatland as fl
 
 
-ReportSchema = fl.Dict.of(
+ReportSchema = fl.Dict.with_properties(widget="group") \
+                      .of(
 
     fl.String.named('title') \
              .using(label=u"Title"),
@@ -9,7 +10,8 @@ ReportSchema = fl.Dict.of(
 )
 
 
-SerisReviewSchema = fl.Dict.of(
+SerisReviewSchema = fl.Dict.with_properties(widget="group") \
+                           .of(
 
     fl.Integer.named('report_id'),
 
