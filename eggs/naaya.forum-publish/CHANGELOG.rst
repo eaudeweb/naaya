@@ -1,9 +1,10 @@
 0.8.3 (unreleased)
 ----------------
+* Fix bug, folder not defined.
 
 0.8.2 (2012-04-13)
 ----------------
-* Save dialog for creating a new document or for appendin to an existing one.
+* Save dialog for creating a new document or for appending to an existing one.
 
 0.8.1 (2012-03-16)
 ----------------
