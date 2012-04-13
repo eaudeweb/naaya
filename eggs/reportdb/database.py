@@ -5,10 +5,15 @@ import htables
 schema = htables.Schema()
 
 ReportRow = schema.define_table('ReportRow', 'report')
+SerisReviewRow = schema.define_table('SerisReviewRow', 'seris_review')
 
 
 def get_all_reports():
     return get_session().table(ReportRow).get_all()
+
+
+def get_all_seris_reviews():
+    return get_session().table(SerisReviewRow).get_all()
 
 
 def get_session():
