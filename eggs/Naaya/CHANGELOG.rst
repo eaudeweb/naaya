@@ -1,5 +1,6 @@
 2.13.6 (unreleased)
 --------------------
+* starting to create mappings from errors to UI friendly texts [simiamih]
 
 2.13.5 (2012-04-12)
 --------------------

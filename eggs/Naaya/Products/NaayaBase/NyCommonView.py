@@ -11,6 +11,7 @@ from Globals import InitializeClass
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator
 from Products.NaayaCore.interfaces import ICaptcha
+from Products.NaayaBase.constants import PRETTY_EXCEPTION_MSG
 
 log = logging.getLogger(__name__)
 
@@ -91,7 +92,9 @@ class NyCommonView(object):
             site = self.getSite()
             forms_tool = self.getFormsTool()
             tmpl = forms_tool['standard_error_message'].aq_base.__of__(site)
-
+            if kwargs['error_type'] in PRETTY_EXCEPTION_MSG:
+                msg = PRETTY_EXCEPTION_MSG[kwargs['error_type']]
+                kwargs['error_type'] += '<br /><br />\n\n%s' % msg
             try:
                 macro = self.standard_template_macro('light')
                 html = tmpl(macro=macro, **kwargs)

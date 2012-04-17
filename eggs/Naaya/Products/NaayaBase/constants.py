@@ -34,6 +34,13 @@ EXCEPTION_NOVERSION_MSG = 'The object hasn\'t been locked out'
 EXCEPTION_STARTEDVERSION = 'VersionStarted'
 EXCEPTION_STARTEDVERSION_MSG = 'The object is locked out'
 EXCEPTION_PARSINGFILE = 'Error parsing file %s: %s'
+EXCEPTION_CONFLICTERROR = 'ConflictError'
+PRETTY_EXCEPTION_MSG = {
+    EXCEPTION_CONFLICTERROR:
+        ('Another user is modifying concurrent data that conflicts with your action.'
+         ' He was still saving data while your request was retried three times.<br />'
+         'Please reload the page, resubmit your form (if any) or go back and try again.'),
+}
 
 # Others
 MESSAGE_SAVEDCHANGES = 'Saved changes. (${date})'
