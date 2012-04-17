@@ -14,10 +14,11 @@
         initialize: function () {
             this.topic = $("input[name=topic]").val();
             this.base_url = $("input[name=base_url]").val();
+            this.append = false;
 
             var documents = [];
             $("#doc-name").find("option").each(function () {
-                documents.push($(this).val());
+                documents.push($(this).text());
             });
             this.documents = documents;
         },
@@ -25,9 +26,11 @@
         dialog: function (e) {
             var self = this;
             $("#forum-preview-save-dialog").find("select").combobox();
-            $("#forum-preview-save-dialog").find(".ui-autocomplete-input")
-                                           .on("keyup focus",
-                                                _.bind(this.change, this));
+            $("#forum-preview-save-dialog")
+                .find(".ui-autocomplete-input")
+                .on("keydown", _.bind(this.keydown, this))
+                .on("keyup focus", _.bind(this.change, this));
+
             $("#forum-preview-save-dialog").dialog({
                 modal: true,
                 height: 180,
@@ -35,10 +38,18 @@
 
                 buttons: {
                     "Save new document": function () {
-                        var file = $("#forum-preview-save-dialog")
-                                       .find(".ui-autocomplete-input")
+                        var file = "";
+
+                        if(self.append) {
+                            file = $("#forum-preview-save-dialog")
+                                       .find("select")
                                        .val();
-                        self.save(file)
+                        } else {
+                            file = $.trim($("#forum-preview-save-dialog")
+                                    .find(".ui-autocomplete-input")
+                                    .val());
+                        }
+                        file && self.save(file);
                     }
                 }
 
@@ -88,11 +99,20 @@
         change: function (e) {
             var that = $(e.currentTarget);
             var button = $(".ui-dialog-buttonpane").find("button span");
+            var val = $.trim(that.val());
 
-            if(_.include(this.documents, that.val()) && that.val() !== "") {
-                button.text("Append to selected document")
+            if(_.include(this.documents, val) && val !== "") {
+                button.text("Append to selected document");
+                this.append = true;
             } else {
                 button.text("Save new document");
+                this.append = false;
+            }
+        },
+
+        keydown: function (e) {
+            if(e.keyCode == 13) {
+                e.preventDefault();
             }
         },
 
