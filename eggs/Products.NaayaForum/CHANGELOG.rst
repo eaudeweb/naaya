@@ -1,4 +1,7 @@
-1.2.12 (unreleased)
+1.2.13 (unreleased)
+-------------------
+
+1.2.12 (2012-04-17)
 -------------------
 * ZGadflyDA update only if product is installed [simiamih]
 * Hide categories with no topics [dumitval]
