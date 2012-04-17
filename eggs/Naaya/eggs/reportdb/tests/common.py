@@ -1,5 +1,5 @@
 _testing_db_uri = None
-def _get_testing_db_uri():
+def get_testing_db_uri():
     global _testing_db_uri
     from manage import create_app
     if _testing_db_uri is None:
@@ -13,7 +13,7 @@ def create_mock_app():
     import database
     app = create_app()
     app.config["TESTING"] = True
-    app.config["DATABASE_URI"] = _get_testing_db_uri()
+    app.config["DATABASE_URI"] = get_testing_db_uri()
     database.initialize_app(app)
 
     with app.test_request_context():

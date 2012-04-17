@@ -9,10 +9,17 @@ schema = htables.Schema()
 PersonRow = schema.define_table('PersonRow', 'person')
 
 
+try:
+    from common import get_testing_db_uri
+except:
+    get_testing_db_uri = lambda: 'postgresql://localhost/reportdb_test'
+
+
 class HtableTest(unittest.TestCase):
 
+    CONNECTION_URI = get_testing_db_uri()
+
     def setUp(self):
-        self.connection_uri = 'postgresql://localhost/reportdb_test'
         with self.db_session() as session:
             session.create_all()
 
@@ -22,7 +29,7 @@ class HtableTest(unittest.TestCase):
 
     @contextmanager
     def db_session(self):
-        session_pool = schema.bind(self.connection_uri, debug=True)
+        session_pool = schema.bind(self.CONNECTION_URI, debug=True)
         session = session_pool.get_session()
         try:
             yield session
