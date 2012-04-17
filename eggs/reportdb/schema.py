@@ -39,14 +39,14 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
         CommonEnum.named('Format') \
                .valued(*sorted(report_formats.keys())),
-        fl.Scalar.named('no_of_pages') \
+        fl.Integer.named('no_of_pages') \
                  .using(label=u"No. of pages (main SOE report)"),
         CommonBoolean.named("separate_summary") \
                      .using(label=u"Separate summary report?"),
         CommonBoolean.named("separate_indicator") \
-                     .using(label=u"Separate summary report?\nIf yes, name of report:"),
+                     .using(label=u"Separate summary report? If yes, name of report:"),
         CommonBoolean.named("related_reports") \
-                     .using(label=u"Other directly related reports?\nIf yes, name of report/s:"),
+                     .using(label=u"Other directly related reports? If yes, name of report/s:"),
         fl.String.named('languages') \
                  .using(label=u"Languages of publication"),
         CommonDict.named('availability') \
@@ -74,7 +74,7 @@ indicators_usage = _load_json("refdata/indicators_usage.json")
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
 
-    fl.Integer.named('report_id'), #TODO should be filled by default
+    fl.Integer.named('report_id'), #TODO shouldn't be editable
 
     CommonDict.named('links') \
               .using(label=u"LINKS TO OTHER SoE REPORTS") \
