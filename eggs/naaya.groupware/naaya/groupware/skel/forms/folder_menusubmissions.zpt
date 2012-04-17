@@ -2,6 +2,7 @@
     submissions here/process_submissions;
     perm_add_something python:len(submissions)>0;
     perm_edit_object here/checkPermissionEditObject;
+    perm_del_object here/checkPermissionDeleteObject;
     perm_publish_objects here/checkPermissionPublishObjects;
     perm_validate_objects here/checkPermissionValidateObjects;
     standard_submissions python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects;
@@ -18,8 +19,10 @@
                 tal:content="python:item[1]" i18n:translate="" />
         </select>
     </span>
-    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects or allowed_to_zip_import">
+    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects or allowed_to_zip_import or perm_del_object">
         <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
+        <a tal:condition="perm_del_object" tal:attributes="href string:${this_absolute_url}/deleteThis"
+            onclick="return confirm(gettext('Are you sure?'))"><span i18n:translate="">Delete folder</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
         <a tal:condition="perm_validate_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
