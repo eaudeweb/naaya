@@ -1,5 +1,6 @@
 0.8.4 (unreleased)
 ----------------
+* Fix bug, append to document.
 
 0.8.3 (2012-04-13)
 ----------------
