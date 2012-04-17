@@ -83,6 +83,14 @@ def seris_review_add(report_id):
     session.commit()
     return "ok"
 
+@views.route('/reports/<int:report_id>/seris_reviews/new')
+def seris_review_new(report_id):
+    app = flask.current_app
+    seris_review_schema = schema.SerisReviewSchema()
+    return flask.render_template('seris_review_add.html', **{
+        'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
+        'seris_review_schema': seris_review_schema,
+    })
 
 @views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>')
 def seris_review_view(report_id, seris_review_id):
