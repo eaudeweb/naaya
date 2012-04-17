@@ -1,4 +1,7 @@
-2.13.6 (unreleased)
+2.13.7 (unreleased)
+--------------------
+
+2.13.6 (2012-04-17)
 --------------------
 * delete button for nyfolders [simiamih]
 * view permission for Anonymous for portal_layout on creation [simiamih]
