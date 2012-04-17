@@ -67,17 +67,7 @@ def seris_review_list(report_id):
                          'data': schema.SerisReviewSchema.from_flat(row).value}
                         for row in database.get_all_seris_reviews()],
     })
-"""
-@views.route('/reports/<int:report_id>/seris_reviews/new')
-def seris_review_new(report_id):
-    app = flask.current_app
-    seris_review_schema = schema.SerisReviewSchema()
-    seris_review_schema['report_id'].set(report_id)
-    return flask.render_template('seris_review_edit.html', **{
-        'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
-        'seris_review_schema': seris_review_schema,
-    })
-"""
+
 @views.route('/reports/<int:report_id>/seris_reviews/new', methods=['GET', 'POST'])
 def seris_review_add(report_id):
     if flask.request.method == "GET":
