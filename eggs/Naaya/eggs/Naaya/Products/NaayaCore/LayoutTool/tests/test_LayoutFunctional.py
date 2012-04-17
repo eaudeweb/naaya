@@ -1,5 +1,3 @@
-from unittest import TestSuite, makeSuite
-
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 def load_file(filename):
@@ -48,8 +46,3 @@ class LayoutToolFunctionalTestCase(NaayaFunctionalTestCase):
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(LayoutToolFunctionalTestCase))
-    return suite

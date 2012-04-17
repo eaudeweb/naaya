@@ -7,6 +7,7 @@ import os.path
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permission import Permission
 from AccessControl.Permissions import view_management_screens, view
 import Products
 from OFS.Folder import Folder
@@ -22,7 +23,10 @@ def manage_addLayoutTool(self, REQUEST=None):
     """ """
     ob = LayoutTool(ID_LAYOUTTOOL, TITLE_LAYOUTTOOL)
     self._setObject(ID_LAYOUTTOOL, ob)
-    self._getOb(ID_LAYOUTTOOL).loadDefaultData()
+    ob_aq = self._getOb(ID_LAYOUTTOOL)
+    ob_aq.loadDefaultData()
+    view_perm = Permission(view, (), ob_aq)
+    view_perm.setRoles(['Anonymous',])
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
