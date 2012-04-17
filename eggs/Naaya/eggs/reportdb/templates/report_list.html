@@ -1,5 +1,9 @@
 <ul>
 {% for report in report_list %}
-  <li>{{ report['data']['details']['title'] }}</li>
+    <li>
+        <a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+            {{ report['data']['details']['title'] }}
+        </a>
+    </li>
 {% endfor %}
 </ul>
