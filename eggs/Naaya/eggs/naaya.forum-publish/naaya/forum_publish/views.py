@@ -135,7 +135,7 @@ def get_document_or_create(site, title):
     folder = site[FOLDER["id"]]
 
     try:
-        doc = folder[slugify(title)]
+        doc = folder[slugify(title, removelist=[])]
     except KeyError:
         doc_id = addNyDocument(folder, title=title, submitted=1)
         doc = folder[doc_id]
