@@ -1,5 +1,6 @@
 1.2.1 (unreleased)
 -------------------
+* delete button for nyfolders [simiamih]
 
 1.2.0 (2012-04-13)
 -------------------

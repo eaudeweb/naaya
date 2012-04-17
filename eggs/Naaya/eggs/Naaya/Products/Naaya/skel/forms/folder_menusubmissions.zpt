@@ -2,6 +2,7 @@
     submissions here/process_submissions;
     perm_add_something python:len(submissions)>0;
     perm_edit_object here/checkPermissionEditObject;
+    perm_del_object here/checkPermissionDeleteObject;
     perm_publish_objects here/checkPermissionPublishObjects;
     perm_validate_objects here/checkPermissionValidateObjects">
 <div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects">
@@ -16,6 +17,9 @@
     </tal:block>
 	<a tal:condition="perm_edit_object"
 		tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
+	<a tal:condition="perm_del_object"
+		tal:attributes="href string:${this_absolute_url}/deleteThis"
+		onclick="return confirm(gettext('Are you sure?'))"><span i18n:translate="">Delete folder</span></a>
 	<select tal:condition="perm_publish_objects" name="more_actions" class="more_actions"
 		tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
 		<option value="#"><tal:block i18n:translate="">More actions</tal:block>...</option>

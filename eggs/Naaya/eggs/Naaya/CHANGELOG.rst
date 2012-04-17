@@ -1,5 +1,6 @@
 2.13.6 (unreleased)
 --------------------
+* delete button for nyfolders [simiamih]
 * view permission for Anonymous for portal_layout on creation [simiamih]
 * starting to create mappings from errors to UI friendly texts [simiamih]
 
