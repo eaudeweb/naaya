@@ -1,4 +1,7 @@
-1.1.10 (unreleased)
+1.1.11 (unreleased)
+====================
+
+1.1.10 (2012-04-18)
 ====================
 * country folders must match title exactly for pointers [simiamih]
 * subscribers updated to create pointers for NyBFile too [simiamih]
