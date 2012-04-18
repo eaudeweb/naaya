@@ -1,3 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block seris_content %}
+
 <h1>Report {{report['id']}}</h1>
 <div>
     <a href="{{url_for('views.seris_review_add',
@@ -16,3 +20,5 @@
     </li>
 {% endfor %}
 </ul>
+
+{% endblock %}

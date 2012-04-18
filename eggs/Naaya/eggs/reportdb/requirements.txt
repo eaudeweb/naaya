@@ -6,3 +6,4 @@ argparse==1.2.1
 psycopg2==2.4.5
 blinker==1.2
 flatland==dev
+requests==0.11.1
