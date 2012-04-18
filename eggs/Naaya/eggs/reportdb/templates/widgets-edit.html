@@ -15,6 +15,16 @@
   {{ mk.select.close() }}
 {% endmacro %}
 
+{% macro radioselect(mk, field) %}
+  
+  {% for value in field.valid_values %}
+      {% set value_label = (field.properties.value_labels[value]
+          if field.properties.value_labels else value) %}
+  {{ mk.input(field, type='radio', value=value) }}
+  {% endfor %}
+
+{% endmacro %}
+
 {% macro checkbox(mk, field) %}
   {{ mk.input(field, type="checkbox") }}
 {% endmacro %}
