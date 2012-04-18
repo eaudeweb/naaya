@@ -110,12 +110,12 @@ indicators_usage = _load_json("refdata/indicators_usage.json")
 topics_ratings = _load_json("refdata/topics_ratings.json")
 
 CommonTopicsEnum = fl.Enum.using(optional=True) \
-                          .with_properties(widget="select") \
+                          .with_properties(widget="radioselect") \
                           .valued(*sorted(topics_ratings.keys()))
 CommonTopicsDict = CommonDict.of(
 
                         CommonTopicsEnum.named('focus') \
-                                  .using(label=u"Focus"),
+                                        .using(label=u"Focus"),
 
                         CommonTopicsEnum.named('indicators') \
                                   .using(label=u"Indicators"),
