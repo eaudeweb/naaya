@@ -1,6 +1,6 @@
 from mock import Mock
 import logging
-from StringIO import StringIO
+from tempfile import NamedTemporaryFile
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -11,10 +11,6 @@ from naaya.content.pointer.pointer_item import NyPointer
 import destinet.publishing
 from destinet.publishing.DestinetPublisher import manage_addDestinetPublisher
 
-logger = logging.getLogger(destinet.publishing.subscribers.__name__)
-logging_stream = StringIO()
-handler = logging.StreamHandler(logging_stream)
-logger.addHandler(handler)
 
 class PublisherTestSuite(NaayaTestCase):
 
@@ -42,6 +38,14 @@ class PublisherTestSuite(NaayaTestCase):
         schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
         schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
         manage_addDestinetPublisher(self.portal)
+        # Logger setup for testing:
+        logger = logging.getLogger(destinet.publishing.subscribers.__name__)
+        self.logfile = NamedTemporaryFile()
+        handler = logging.FileHandler(self.logfile.name)
+        logger.addHandler(handler)
+
+    def tearDown(self):
+        self.logfile.close()
 
     def test_disseminate_url(self):
         addNyURL(self.portal.resources, id='url', title='url',
@@ -54,7 +58,6 @@ class PublisherTestSuite(NaayaTestCase):
         self.assertEqual(getattr(self.portal.countries.southgeorgia,
                                            'url', None), None)
 
-        # TODO:
-        #log_content = logging_stream.read()
-        #self.assertTrue("Country 'Not Existing' not found in destinet countries"
-        #                in log_content)
+        log_content = self.logfile.read()
+        self.assertTrue("Country 'Not Existing' not found in destinet countries"
+                        in log_content)
