@@ -616,7 +616,7 @@ class CHMSite(NySite):
 
         try:
             data = maintopic_image_to_crop(ob, image_size)
-        except AssertionError as e:
+        except AssertionError, e:
             data = {"error": str(e)}
 
         return json_response(data, REQUEST.RESPONSE)
@@ -635,7 +635,7 @@ class CHMSite(NySite):
             assert ob is not None, "no current image"
             # will throw an AssertionEerror if image is not valid
             data = maintopic_image_to_crop(ob, image_size)
-        except AssertionError as e:
+        except AssertionError, e:
             data = {"error": str(e)}
 
         return json_response(data, REQUEST.RESPONSE)
