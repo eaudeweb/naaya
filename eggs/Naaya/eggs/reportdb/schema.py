@@ -10,7 +10,7 @@ def _load_json(name):
 
 CommonEnum = fl.Enum.using(optional=True).with_properties(widget="select")
 CommonDict = fl.Dict.with_properties(widget="group")
-CommonBoolean = fl.Boolean.using(optional=True).with_properties(widget="checkbox")
+CommonBoolean = fl.Boolean.using(optional=False).with_properties(widget="checkbox")
 
 report_formats = _load_json("refdata/report_formats.json")
 
