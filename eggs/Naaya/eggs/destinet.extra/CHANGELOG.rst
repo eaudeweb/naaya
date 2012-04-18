@@ -1,5 +1,6 @@
 1.1.11 (unreleased)
 ====================
+* publishing unit test: test logging for missing country [simiamih]
 
 1.1.10 (2012-04-18)
 ====================
