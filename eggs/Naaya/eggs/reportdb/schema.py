@@ -17,18 +17,21 @@ report_formats = _load_json("refdata/report_formats.json")
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
 
-    fl.String.named('country') \
+    CommonEnum.named('country') \
              .using(label=u"Country"),
-
-    fl.String.named('name') \
-             .using(label=u"Name of report"),
 
     CommonDict.named('details') \
               .using(label=u"REPORT DETAILS") \
               .of(
 
-        fl.String.named('title') \
-                 .using(label=u"Title"),
+        fl.String.named('original_name') \
+                 .using(label=u"Name"),
+
+        fl.String.named('original_language') \
+                 .using(label=u"Original Language"),
+
+        fl.String.named('english_name') \
+                 .using(label=u"Name (in English)"),
 
         fl.Date.named('publication_date') \
                  .using(label=u"Date of publication") \
@@ -53,14 +56,19 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                      .using(label=u"Separate summary report?"),
 
         CommonBoolean.named("separate_indicator") \
-                     .using(label=u"Separate summary report? "
-                                   "If yes, name of report:"),
+                     .using(label=u"Separate summary report? "),
+
+        fl.String.named("separate_indicator_report_name") \
+                .using(label=u"If yes, name of report:"),
 
         CommonBoolean.named("related_reports") \
                      .using(label=u"Other directly related reports? "
                                    "If yes, name of report/s:"),
 
-        fl.String.named('languages') \
+        fl.String.named("related_reports_name") \
+                .using(label=u"If yes, name of report/s:"),
+
+        CommonEnum.named('languages') \
                  .using(label=u"Languages of publication"),
 
         CommonDict.named('availability') \
@@ -83,6 +91,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonBoolean.named("updated_eionet") \
                          .using(label=u"Updated in Eionet SERIS"),
 
+        fl.String.named("latest_year_seris") \
+                .using(label=u"If No, latest year in SERIS:"),
+
         fl.String.named('web_page') \
                  .using(label=u"Web page"),
     )
@@ -90,6 +101,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
 
 indicators_usage = _load_json("refdata/indicators_usage.json")
+uncertainty_methods = _load_json("refdata/uncertainty_methods.json")
 
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
@@ -130,8 +142,17 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         CommonBoolean.named('indicator_based') \
                      .using(label=u"Indicator-based report?"),
 
+        fl.String.named("no_of_indicators") \
+                .using(label=u"No. of indicators:"),
+
+        fl.String.named("indicators_per_page") \
+                .using(label=u"Indicators per page:"),
+
         CommonBoolean.named('eea_indicators') \
                      .using(label=u"EEA indicators used?"),
+
+        fl.String.named("eea_indicators_estimated_no") \
+                .using(label=u"Estimated number?"),
 
         CommonEnum.named('to_compare_countries') \
                   .valued(*sorted(indicators_usage.keys())) \
@@ -139,14 +160,18 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('to_compare_subnational') \
                   .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To compare with other countries/EU?"),
+                  .using(label=u"To compare at sub-national level?"),
 
         CommonEnum.named('to_assess_progress') \
                   .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To compare with other countries/EU?"),
+                  .using(label=u"To asses progress to target/threshold?"),
 
         CommonEnum.named('to_evaluate') \
-                  .using(label=u"To compare with other countries/EU?"),
+                  .valued(*sorted(indicators_usage.keys())) \
+                  .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
+
+        fl.String.named("related_reports_name") \
+                .using(label=u"If yes, how?"),
 
         CommonBoolean.named('dedicated_chapter') \
                   .using(label=u"Dedicated chapter"),
@@ -154,8 +179,12 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         CommonBoolean.named('dedicated_method') \
                      .using(label=u"Dedicated method"),
 
-        CommonBoolean.named('uncertainty') \
-                     .using(label=u"Uncertainty/multiple scenarios/error bars"),
+        CommonEnum.named('uncertainty') \
+                  .valued(*sorted(uncertainty_methods.keys())) \
+                  .using(label=u"Uncertainty method used:"),
+
+        fl.String.named("method_details") \
+                .using(label=u"Details:"),
     )
 
 )
