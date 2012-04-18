@@ -28,7 +28,8 @@ views = flask.Blueprint('views', __name__)
 
 @views.route('/')
 def index():
-    return "hello world!"
+    #TODO remove redirect when index will be implemented
+    return flask.redirect(flask.url_for('views.report_list'))
 
 
 @views.route('/reports')
@@ -64,11 +65,15 @@ def report_add():
 
 @views.route('/reports/<int:report_id>/seris_reviews')
 def seris_review_list(report_id):
-    return flask.render_template('seris_review_list.html', **{
-        'review_list': [{'id': row.id,
-                         'data': schema.SerisReviewSchema.from_flat(row).value}
-                        for row in database.get_all_seris_reviews()],
-    })
+    report = database.get_report_or_404(report_id)
+    return flask.render_template('seris_review_list.html', 
+        **{'report': {'id': report_id,
+                      'data': schema.ReportSchema.from_flat(report),
+                      'seris_reviews': [{'id': row.id,
+                                         'data': schema.SerisReviewSchema.from_flat(row).value}
+                                       for row in database.get_all_seris_reviews()]}
+        }
+    )
 
 
 @views.route('/reports/<int:report_id>/seris_reviews/new', methods=['GET', 'POST'])
