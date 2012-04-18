@@ -1,8 +1,10 @@
 1.1.10 (unreleased)
------------------
+====================
+* country folders must match title exactly for pointers [simiamih]
+* subscribers updated to create pointers for NyBFile too [simiamih]
 
 1.1.9 (2012-03-20)
------------------
+====================
 * speed up login_html using ajax calls [dumitval]
 
 1.1.8 (2012-03-16)
