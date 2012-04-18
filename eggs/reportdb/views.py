@@ -3,6 +3,8 @@ import flatland.out.markup
 import database
 import schema
 
+from jinja2 import ChoiceLoader
+from loader import ZopeTemplateLoader
 
 class MarkupGenerator(flatland.out.markup.Generator):
 
@@ -30,9 +32,10 @@ views = flask.Blueprint('views', __name__)
 def index():
     #TODO remove redirect when index will be implemented
     return flask.redirect(flask.url_for('views.report_list'))
+    #return flask.render_template('index.html')
 
 
-@views.route('/reports')
+@views.route('/reports/')
 def report_list():
     return flask.render_template('report_list.html', **{
         'report_list': [{'id': row.id,
@@ -41,7 +44,7 @@ def report_list():
     })
 
 
-@views.route('/reports/new')
+@views.route('/reports/new/')
 def report_edit():
     app = flask.current_app
     report_schema = schema.ReportSchema()
@@ -106,3 +109,15 @@ def seris_review_view(report_id, seris_review_id):
 
 def register_on(app):
     app.register_blueprint(views)
+    _my_extensions = app.jinja_options['extensions'] + ['jinja2.ext.do']
+
+    loaders = []
+    if app.config["ZOPE_TEMPLATE_PATH"]:
+        loaders.append(ZopeTemplateLoader(app.config["ZOPE_TEMPLATE_PATH"],
+                                          app.config["ZOPE_TEMPLATE_CACHE"],
+                                          app.config["ZOPE_TEMPLATE_LIST"]))
+    loaders.append(app.create_global_jinja_loader())
+
+    app.jinja_options = dict(app.jinja_options,
+                             extensions=_my_extensions,
+                             loader=ChoiceLoader(loaders))
