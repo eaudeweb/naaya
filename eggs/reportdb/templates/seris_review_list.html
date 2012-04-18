@@ -1,12 +1,12 @@
-<h1>Report {{review_list[0]['data']['report_id']}}</h1>
+<h1>Report {{report['id']}}</h1>
 <div>
     <a href="{{url_for('views.seris_review_add',
-        report_id=review_list[0]['data']['report_id'])}}">
+        report_id=report['id'])}}">
         Add Review
     </a>
 </div>
 <ul>
-{% for review in review_list %}
+{% for review in report['seris_reviews'] %}
     <li>
       <a href="{{ url_for('views.seris_review_view',
                           report_id=review['data']['report_id'],

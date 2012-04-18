@@ -8,6 +8,13 @@ ReportRow = schema.define_table('ReportRow', 'report')
 SerisReviewRow = schema.define_table('SerisReviewRow', 'seris_review')
 
 
+def get_report_or_404(report_id):
+    try:
+        return get_session().table(ReportRow).get(report_id)
+    except KeyError:
+        flask.abort(404)
+
+
 def get_all_reports():
     return get_session().table(ReportRow).get_all()
 
