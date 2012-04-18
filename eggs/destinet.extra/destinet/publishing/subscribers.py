@@ -1,3 +1,5 @@
+import logging
+
 from OFS.interfaces import IObjectWillBeAddedEvent
 
 from naaya.core.zope2util import is_descendant_of, path_in_site, ofs_path
@@ -7,10 +9,13 @@ from naaya.content.news.news_item import NyNews
 from naaya.content.contact.contact_item import NyContact
 from naaya.content.url.url_item import NyURL
 from naaya.content.file.file_item import NyFile_extfile
+from naaya.content.bfile.bfile_item import NyBFile
 from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
 from Products.NaayaContent.NyPublication.NyPublication import NyPublication
 from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
 from Products.NaayaCore.managers.utils import slugify
+
+logger = logging.getLogger(__name__)
 
 def get_countries(ob):
     """
@@ -27,10 +32,16 @@ def get_countries(ob):
     for country_item in coverage:
         country = country_item.strip()
         if country:
+            country_folders = []
             filters['title'] = country
             bz = cat.search(filters)
             for brain in bz:
-                ret.append(brain.getObject())
+                if brain.title.strip().lower() == country.lower():
+                    country_folders.append(brain.getObject())
+            ret.extend(country_folders)
+            if not country_folders:
+                logger.info("Country '%s' not found in destinet countries",
+                            country)
     return ret
 
 def get_category_location(site, geo_type):
@@ -111,7 +122,7 @@ def _qualifies_for_both(obj):
     events = site.events
     return ((isinstance(obj, NyEvent) and is_descendant_of(obj, events)) or
         (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
-        (isinstance(obj, (NyFile_extfile, NyMediaFile_extfile, NyURL, NyPublication))
+        (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication))
           and is_descendant_of(obj, resources)))
 
 def _qualifies_for_topics_only(obj):
