@@ -49,6 +49,7 @@ def report_edit():
         'report_schema': report_schema,
     })
 
+
 @views.route('/reports', methods=['POST'])
 def report_add():
     session = database.get_session()
@@ -60,6 +61,7 @@ def report_add():
     session.commit()
     return flask.redirect(flask.url_for('views.report_list'))
 
+
 @views.route('/reports/<int:report_id>/seris_reviews')
 def seris_review_list(report_id):
     return flask.render_template('seris_review_list.html', **{
@@ -67,6 +69,7 @@ def seris_review_list(report_id):
                          'data': schema.SerisReviewSchema.from_flat(row).value}
                         for row in database.get_all_seris_reviews()],
     })
+
 
 @views.route('/reports/<int:report_id>/seris_reviews/new', methods=['GET', 'POST'])
 def seris_review_add(report_id):
@@ -89,6 +92,7 @@ def seris_review_add(report_id):
     session.commit()
     return flask.redirect(flask.url_for('views.seris_review_list',
         report_id=report_id))
+
 
 @views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>')
 def seris_review_view(report_id, seris_review_id):
