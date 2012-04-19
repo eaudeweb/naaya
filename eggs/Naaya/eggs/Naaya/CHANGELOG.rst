@@ -1,4 +1,7 @@
-2.13.7 (unreleased)
+2.13.8 (unreleased)
+--------------------
+
+2.13.7 (2012-04-19)
 --------------------
 * Download HTML document from the object's index [dumitval]
 
