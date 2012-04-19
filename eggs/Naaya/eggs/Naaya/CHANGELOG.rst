@@ -1,5 +1,6 @@
 2.13.7 (unreleased)
 --------------------
+* Download HTML document from the object's index [dumitval]
 
 2.13.6 (2012-04-17)
 --------------------

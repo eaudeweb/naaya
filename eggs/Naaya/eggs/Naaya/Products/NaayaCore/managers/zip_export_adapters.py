@@ -53,12 +53,12 @@ class DefaultZipAdapter(object):
 
     @property
     def skip(self):
-        if not self.context.approved:
+        if not self.context.checkPermissionView():
             return True
-        elif not self.context.checkPermissionView():
+        elif not (self.context.approved or
+            self.context.checkPermissionEditObject()):
             return True
-        else:
-            return False
+        return False
 
 
 class FolderZipAdapter(DefaultZipAdapter):

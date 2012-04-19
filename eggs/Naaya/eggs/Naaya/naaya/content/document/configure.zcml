@@ -5,4 +5,10 @@
   <naaya:content factory=".document_item.get_config" />
   <naaya:call factory=".permissions.register_permissions" />
 
+  <naaya:simpleView
+    for=".interfaces.INyContentDocumentExport"
+    name="do_export"
+    handler=".document_item.do_export"
+    permission="zope2.View" />
+
 </configure>

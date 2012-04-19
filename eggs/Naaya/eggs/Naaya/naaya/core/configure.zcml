@@ -101,4 +101,9 @@
         context="yes"
         getattrPatch="yes" />
 
+    <naaya:rstkMethod
+        handler=".zope2util.provides"
+        context="yes"
+        getattrPatch="yes" />
+
 </configure>
