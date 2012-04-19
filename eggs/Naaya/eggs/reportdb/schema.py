@@ -53,7 +53,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
 
         CommonEnum.named('format') \
-               .valued(*sorted(report_formats.keys())),
+                  .using(label=u"Format") \
+                  .valued(*sorted(report_formats.keys())),
 
         fl.Integer.named('no_of_pages') \
                  .using(label=u"No. of pages (main SOE report)"),
@@ -68,8 +69,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                 .using(label=u"If yes, name of report:"),
 
         CommonBoolean.named("related_reports") \
-                     .using(label=u"Other directly related reports? "
-                                   "If yes, name of report/s:"),
+                     .using(label=u"Other directly related reports? "),
 
         fl.String.named("related_reports_name") \
                 .using(label=u"If yes, name of report/s:"),

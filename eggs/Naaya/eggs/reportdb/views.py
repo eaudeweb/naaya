@@ -54,7 +54,7 @@ def report_edit():
     })
 
 
-@views.route('/reports', methods=['POST'])
+@views.route('/reports/', methods=['POST'])
 def report_add():
     session = database.get_session()
     request_data = flask.request.form.to_dict()
@@ -66,11 +66,13 @@ def report_add():
     return flask.redirect(flask.url_for('views.report_list'))
 
 
-@views.route('/reports/<int:report_id>/seris_reviews')
+@views.route('/reports/<int:report_id>/seris_reviews/')
 def seris_review_list(report_id):
+    app = flask.current_app
     report = database.get_report_or_404(report_id)
-    return flask.render_template('seris_review_list.html', 
-        **{'report': {'id': report_id,
+    return flask.render_template('seris_review_list.html', **{
+            'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
+            'report': {'id': report_id,
                       'data': schema.ReportSchema.from_flat(report),
                       'seris_reviews': [{'id': row.id,
                                          'data': schema.SerisReviewSchema.from_flat(row).value}
@@ -79,7 +81,7 @@ def seris_review_list(report_id):
     )
 
 
-@views.route('/reports/<int:report_id>/seris_reviews/new', methods=['GET', 'POST'])
+@views.route('/reports/<int:report_id>/seris_reviews/new/', methods=['GET', 'POST'])
 def seris_review_add(report_id):
     if flask.request.method == "GET":
         app = flask.current_app
@@ -99,10 +101,10 @@ def seris_review_add(report_id):
     session.save(row)
     session.commit()
     return flask.redirect(flask.url_for('views.seris_review_list',
-        report_id=report_id))
+                                        report_id=report_id))
 
 
-@views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>')
+@views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>/')
 def seris_review_view(report_id, seris_review_id):
     return "This is review: "+str(report_id)+'.'+str(seris_review_id)
 

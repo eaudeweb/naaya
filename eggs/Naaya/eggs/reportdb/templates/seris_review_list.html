@@ -3,6 +3,7 @@
 {% block seris_content %}
 
 <h1>Report {{report['id']}}</h1>
+{{ mk.widget(report['data']) }}
 <div>
     <a href="{{url_for('views.seris_review_add',
         report_id=report['id'])}}">
