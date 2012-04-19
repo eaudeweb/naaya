@@ -15,12 +15,14 @@ CommonBoolean = fl.Boolean.using(optional=False).with_properties(widget="checkbo
 
 report_formats = _load_json("refdata/report_formats.json")
 publication_freq = _load_json("refdata/publication_freq.json")
+eu_countries_list = _load_json("refdata/european_countries_list.json")
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
 
     CommonEnum.named('country') \
-             .using(label=u"Country"),
+              .valued(*sorted(eu_countries_list.keys())) \
+              .using(label=u"Country"),
 
     CommonDict.named('details') \
               .using(label=u"REPORT DETAILS") \
