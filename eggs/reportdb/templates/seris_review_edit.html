@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block seris_content %}
+<form action="{#{{ url_for('views.seris_review_add') }}#}" method="post">
+  {{ mk.widget(seris_review_schema) }}
+  <div>
+    <button type="submit">Save</button>
+  </div>
+</form>
+{% endblock seris_content %}
