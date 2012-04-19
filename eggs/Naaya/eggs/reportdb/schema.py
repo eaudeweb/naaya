@@ -89,7 +89,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                          .using(label=u"with costs"),
         ),
 
-        CommonBoolean.named("updated_eionet") \
+        CommonBoolean.named("registered_eionet") \
                          .using(label=u"Registered in Eionet SERIS before"),
     )
 )
@@ -121,19 +121,20 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"LINKS TO OTHER SoE REPORTS") \
               .of(
         fl.Dict.named('reference') \
-               .with_properties(widget="group")
+               .using(label=u"Reference/links to:") \
+               .with_properties(widget="group") \
                   .of(
 
-            CommonBoolean.named('global') \
+            CommonBoolean.named('global_level') \
                          .using(label=u"Global-level SOER's (e.g. UNEP GEO)?"),
 
-            CommonBoolean.named('european') \
+            CommonBoolean.named('european_level') \
                          .using(label=u"European-level SOER's (e.g. EEA SOER)?"),
 
-            CommonBoolean.named('national') \
+            CommonBoolean.named('national_level') \
                          .using(label=u"National-level SOER's (e.g. other country)?"),
 
-            CommonBoolean.named('sub_national') \
+            CommonBoolean.named('sub_national_level') \
                          .using(label=u"Sub-national-level SOER's (e.g. regional)?"),
         ),
                      
@@ -146,42 +147,44 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"STRUCTURE") \
               .of(
 
-        CommonBoolean.named('basis') \
-                     .using(label=u"Basis for report structure?"),
+        fl.Dict.named('reference') \
+                .using(label=u"DPSIR framework:") \
+               .with_properties(widget="group") \
+                  .of(
+            CommonBoolean.named('basis_structure') \
+                         .using(label=u"Basis for report structure?"),
 
-        CommonBoolean.named('referenced') \
-                     .using(label=u"Referenced (ie. keyword search)?"),
+            CommonBoolean.named('indicator_based') \
+                         .using(label=u"Indicator-based report?"),
 
-        CommonBoolean.named('indicator_based') \
-                     .using(label=u"Indicator-based report?"),
+            CommonBoolean.named('eea_indicators') \
+                         .using(label=u"EEA indicators used?"),
 
-        fl.String.named("no_of_indicators") \
-                .using(label=u"No. of indicators:"),
+            fl.String.named("eea_indicators_estimated_no") \
+                    .using(label=u"Estimated number?"),
 
-        fl.String.named("indicators_per_page") \
-                .using(label=u"Indicators per page:"),
+            fl.Dict.named('indicators_usage') \
+                    .using(label=u"How are indicators used?") \
+                   .with_properties(widget="group") \
+                      .of(
 
-        CommonBoolean.named('eea_indicators') \
-                     .using(label=u"EEA indicators used?"),
+                CommonTopicsEnum.named('to_compare_countries') \
+                          .valued(*sorted(indicators_usage.keys())) \
+                          .using(label=u"To compare with other countries/EU?"),
 
-        fl.String.named("eea_indicators_estimated_no") \
-                .using(label=u"Estimated number?"),
+                CommonTopicsEnum.named('to_compare_subnational') \
+                          .valued(*sorted(indicators_usage.keys())) \
+                          .using(label=u"To compare at sub-national level?"),
 
-        CommonEnum.named('to_compare_countries') \
-                  .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To compare with other countries/EU?"),
+                CommonTopicsEnum.named('to_assess_progress') \
+                          .valued(*sorted(indicators_usage.keys())) \
+                          .using(label=u"To asses progress to target/threshold?"),
 
-        CommonEnum.named('to_compare_subnational') \
-                  .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To compare at sub-national level?"),
-
-        CommonEnum.named('to_assess_progress') \
-                  .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To asses progress to target/threshold?"),
-
-        CommonEnum.named('to_evaluate') \
-                  .valued(*sorted(indicators_usage.keys())) \
-                  .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
+                CommonTopicsEnum.named('to_evaluate') \
+                          .valued(*sorted(indicators_usage.keys())) \
+                          .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
+            ),
+        ),
 
         fl.String.named("related_reports_name") \
                 .using(label=u"If yes, how?"),
