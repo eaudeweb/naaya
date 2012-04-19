@@ -47,3 +47,6 @@ class INyContentObjectMovedEvent(Interface):
 
 class INyRdfView(Interface):
     """ Render an RDF document representing a given object """
+
+class INyContentObjectExport(Interface):
+    """ Export Ny Content object """

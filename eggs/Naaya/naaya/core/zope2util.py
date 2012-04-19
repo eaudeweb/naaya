@@ -26,6 +26,7 @@ from Globals import InitializeClass
 from Globals import DTMLFile
 from ZPublisher.HTTPRequest import FileUpload
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+from zope.configuration.name import resolve
 from Products.PageTemplates.PageTemplate import PageTemplate
 from DateTime import DateTime
 
@@ -220,6 +221,10 @@ def google_analytics(context, ga_id=''):
     ga_form = forms_tool.getForm("site_googleanalytics")
     return ga_form.__of__(site)(gaq_json=json.dumps(gaq))
 
+def provides(context, ob, interface_name):
+    """ proxy for zope interface.providedBy """
+    interface = resolve(interface_name)
+    return interface.providedBy(ob)
 
 class RestrictedToolkit(SimpleItem):
     """

@@ -1,5 +1,6 @@
 import os
 import sys
+from StringIO import StringIO
 
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -12,7 +13,7 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from zope.interface import implements
-from interfaces import INyDocument
+from interfaces import INyDocument, INyContentDocumentExport
 
 from Products.NaayaBase.NyContentType import (NyContentType,
                                               NY_CONTENT_BASE_SCHEMA)
@@ -25,7 +26,10 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import slugify, uniqueId
+from Products.NaayaCore.managers.interfaces import IZipExportObject
+from Products.NaayaCore.managers.import_export import set_response_attachment
 from naaya.core import submitter
+from naaya.core.zope2util import get_site_manager
 
 from permissions import PERMISSION_ADD_DOCUMENT
 
@@ -201,7 +205,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                  NyValidation, NyContentType):
     """ """
 
-    implements(INyDocument)
+    implements(INyDocument, INyContentDocumentExport)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -500,3 +504,20 @@ config.update({
 
 def get_config():
     return config
+
+def do_export(context, REQUEST):
+    """ Export the document as a html file """
+    sm = get_site_manager(context)
+    target = sm.queryAdapter(context, IZipExportObject)
+    if target.skip:
+        context.setSessionErrorsTrans("You don't have permission "
+            "to download this document")
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+    data = target.data
+    if isinstance(data, unicode):
+        data = data.encode('utf-8')
+    output = StringIO()
+    output.write(data)
+    set_response_attachment(REQUEST.RESPONSE, target.filename,
+            'text/html; charset=utf-8', output.len)
+    return output.getvalue()

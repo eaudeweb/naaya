@@ -38,6 +38,8 @@
        tal:attributes="href string:${here/absolute_url}/deleteThis"
        onclick="return confirm(gettext('Are you sure?'))"
        ><span i18n:translate="">Delete</span></a>
+    <a tal:condition="python:here.rstk['provides'](here, 'naaya.content.base.interfaces.INyContentObjectExport')"
+       tal:attributes="href string:${here/absolute_url}/do_export"><span i18n:translate="">Download</span></a>
   </div>
   </tal:block>
 </metal:block>
