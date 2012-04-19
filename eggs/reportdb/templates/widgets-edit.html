@@ -30,19 +30,27 @@
 {% endmacro %}
 
 {% macro group(mk, group) %}
-  {%- for name in mk.children_order(group) %}
-    {% set field = group[name] %}
-    {% set error_cls = 'error' if field.errors else '' %}
-    <div class="control-group {{ error_cls }}">
-      {{ mk.label(field, class='control-label', contents=field.label) }}
-      <div class="controls">
+  <table>
+    <tbody>
+    {%- for name in mk.children_order(group) %}
+    <tr> 
+      <td class="control-group {{ error_cls }}">
+        {% set field = group[name] %}
+        {% set error_cls = 'error' if field.errors else '' %}
+        {{ mk.label(field, class='control-label', contents=field.label) }}
+      </td>
+      <td>
         {{ mk.widget(field) }}
-        {% for message in field.errors %}
-          <span class="help-inline">{{ message }}</span>
-        {% endfor %}
-      </div>
-    </div>
-  {%- endfor %}
+        <div class="controls">
+          {% for message in field.errors %}
+            <span class="help-inline">{{ message }}</span>
+          {% endfor %}
+        </div>
+      </td>
+      </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
 {% endmacro %}
 
 {% macro schema(mk, schema) %}
@@ -50,8 +58,7 @@
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     <fieldset>
-      <legend>{{ field.label }}</legend>
-      {{ mk.widget(field) }}
+      {{ field.label }} {{ mk.widget(field) }}
      </fieldset>
   {% endfor -%}
   {% do mk.end() -%}
