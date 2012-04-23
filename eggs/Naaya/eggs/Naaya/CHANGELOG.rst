@@ -1,4 +1,7 @@
-2.13.8 (unreleased)
+2.13.9 (unreleased)
+--------------------
+
+2.13.8 (2012-04-23)
 --------------------
 * Import content from Excel files [dumitval]
 
