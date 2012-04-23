@@ -124,6 +124,14 @@ def we_provide(feature):
             return True
         except ImportError:
             pass
+    if feature == 'Excel import':
+        #For excel import we also need xlwt, to generate the template
+        try:
+            from xlwt import Workbook
+            from xlrd import open_workbook
+            return True
+        except ImportError:
+            pass
     return False
 
 

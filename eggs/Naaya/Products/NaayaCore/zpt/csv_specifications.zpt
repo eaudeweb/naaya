@@ -1,6 +1,8 @@
-<tal:block metal:define-macro="csv_specifications" i18n:translate="">
-    The CSV file should be UTF-8 encoded, use comma (,) as separator
-    and a double quotation mark (") as a quotecharacter.
-    These conditions are respected by Microsoft Excel
-    on a system with regional settings set to "United Kingdom".
-</tal:block>
+<metal:block define-macro="csv_specifications">
+<div id="csv_specifications" class="field" i18n:translate="">
+    The CSV file should be UTF-8 encoded, use comma (,) as separator and a
+    double quotation mark (") as a quotecharacter. These conditions are
+    respected by Microsoft Excel on a system with regional settings set to
+    "United Kingdom".
+</div>
+</metal:block>

@@ -10,6 +10,11 @@ try:
     excel_export_available = True
 except:
     excel_export_available = False
+try:
+    import xlrd
+    excel_read_available = True
+except:
+    excel_read_available = False
 
 import transaction
 from Acquisition import Implicit
@@ -32,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 class CSVImportTool(Implicit, Item):
-    title = "CSV import"
+    title = "Import from structured file"
 
     security = ClassSecurityInfo()
     geo_fields = {}
@@ -41,7 +46,7 @@ class CSVImportTool(Implicit, Item):
         self.id = id
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'template')
-    def template(self, meta_type, as_attachment=False, REQUEST=None):
+    def template(self, meta_type, file_type, as_attachment=False, REQUEST=None):
         """ """
         if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
             raise Unauthorized
@@ -49,7 +54,6 @@ class CSVImportTool(Implicit, Item):
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
             raise ValueError('Schema for meta-type "%s" not found' % meta_type)
-        output = StringIO()
         columns = []
         for widget in schema.listWidgets():
             if widget.multiple_form_values:
@@ -57,12 +61,25 @@ class CSVImportTool(Implicit, Item):
                     columns.append(widget.title + ' - ' + subname)
             else:
                 columns.append(widget.title)
-        csv.writer(output).writerow(columns)
-        if as_attachment and REQUEST is not None:
+
+        if file_type == 'CSV':
+            ret = generate_csv(columns, [[]])
+            content_type = 'text/csv; charset=utf-8'
             filename = schema.title_or_id() + ' bulk upload.csv'
+
+        elif file_type == 'Excel':
+            assert excel_export_available
+            ret = generate_excel(columns, [[]])
+            content_type = 'application/vnd.ms-excel'
+            filename = schema.title_or_id() + ' bulk upload.xls'
+
+        else: raise ValueError('unknown file format %r' % file_type)
+        
+        if REQUEST is not None:
             set_response_attachment(REQUEST.RESPONSE, filename,
-                'text/csv; charset=utf-8', output.len)
-        return output.getvalue()
+                content_type, len(ret))
+
+        return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
     def do_geocoding(self, properties):
@@ -78,7 +95,7 @@ class CSVImportTool(Implicit, Item):
         return properties
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
-    def do_import(self, meta_type, data, REQUEST=None):
+    def do_import(self, meta_type, file_type, data, REQUEST=None):
         """ """
         if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
             raise Unauthorized
@@ -116,25 +133,50 @@ class CSVImportTool(Implicit, Item):
                     'convert': widget.convert_from_user_string,
                 }
 
-        try:
-            reader = UnicodeReader(data)
+        if file_type == 'Excel':
+            assert excel_export_available
             try:
-                header = reader.next()
+                wb = xlrd.open_workbook(file_contents=data.read())
+                ws = wb.sheets()[0]
+                header = ws.row_values(0)
+                rows = []
+                for i in range(ws.nrows)[1:]:
+                    rows.append(ws.row_values(i))
+                
+            except xlrd.XLRDError:
+                msg = 'Invalid Excel file'
+                if REQUEST is None:
+                    raise ValueError(msg)
+                else:
+                    errors.append(msg)
+                    rows = []
+        elif file_type == 'CSV':
+            rows = UnicodeReader(data)
+            try:
+                header = rows.next()
             except StopIteration:
                 msg = 'Invalid CSV file'
                 if REQUEST is None:
                     raise ValueError(msg)
                 else:
                     errors.append(msg)
-                    reader = []
+                    rows = []
+            except UnicodeDecodeError, e:
+                if REQUEST is None:
+                    raise
+                else:
+                    errors.append('CSV file is not utf-8 encoded')
 
-            record_number = 0
-            obj_ids = []
+        else: raise ValueError('unknown file format %r' % file_type)
+        
+        record_number = 0
+        obj_ids = []
 
-            for row in reader:
+        try:
+            for row in rows:
                 try:
                     record_number += 1
-                    # TODO: extract this block into a separate function
+                    #TODO: extract this block into a separate function
                     properties = {}
                     extra_properties = {}
                     for column, value in zip(header, row):
@@ -147,12 +189,14 @@ class CSVImportTool(Implicit, Item):
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
                     properties = self.do_geocoding(properties)
-                    ob_id = add_object(location_obj, _send_notifications=False, **properties)
+                    ob_id = add_object(location_obj, _send_notifications=False,
+                                       **properties)
                     ob = location_obj._getOb(ob_id)
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
-                            extra_props_messages = adapter.handle_columns(extra_properties)
+                            extra_props_messages = adapter.handle_columns(
+                                extra_properties)
                             if extra_props_messages:
                                 errors.append(extra_props_messages)
                     obj_ids.append(ob.getId())
@@ -162,7 +206,7 @@ class CSVImportTool(Implicit, Item):
                     raise
                 except Exception, e:
                     self.log_current_error()
-                    msg = ('Error while importing from CSV, row ${record_number}: ${error}',
+                    msg = ('Error while importing from file, row ${record_number}: ${error}',
                            {'record_number': record_number, 'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
@@ -269,47 +313,13 @@ class ExportTool(Implicit, Item):
     def generate_csv_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
-        return self.generate_csv(dump_header, dump_items)
-
-    security.declarePrivate('generate_csv')
-    def generate_csv(self, header, rows):
-
-        output = StringIO()
-        csv_writer = csv.writer(output)
-
-        csv_writer.writerow(header)
-        for item in rows:
-            csv_writer.writerow([value.encode('utf-8') for value in item])
-
-        return output.getvalue()
+        return generate_csv(dump_header, dump_items)
 
     security.declarePrivate('generate_excel_output')
     def generate_excel_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
-        return self.generate_excel(dump_header, dump_items)
-
-    security.declarePrivate('generate_excel')
-    def generate_excel(self, header, rows):
-        style = xlwt.XFStyle()
-        normalfont = xlwt.Font()
-        headerfont = xlwt.Font()
-        headerfont.bold = True
-        style.font = headerfont
-
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Sheet 1')
-        row = 0
-        for col in range(0, len(header)):
-            ws.row(row).set_cell_text(col, header[col], style)
-        style.font = normalfont
-        for item in rows:
-            row += 1
-            for col in range(0, len(item)):
-                ws.row(row).set_cell_text(col, item[col], style)
-        output = StringIO()
-        wb.save(output)
-        return output.getvalue()
+        return generate_excel(dump_header, dump_items)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
     def export(self, meta_type, file_type="CSV", as_attachment=False, REQUEST=None):
@@ -450,3 +460,35 @@ class CSVReader(object):
         except Exception, ex:
             logger.exception('Read error')
             return (None, ex)
+
+def generate_csv(header, rows):
+
+    output = StringIO()
+    csv_writer = csv.writer(output)
+
+    csv_writer.writerow(header)
+    for item in rows:
+        csv_writer.writerow([value.encode('utf-8') for value in item])
+
+    return output.getvalue()
+
+def generate_excel(header, rows):
+    style = xlwt.XFStyle()
+    normalfont = xlwt.Font()
+    headerfont = xlwt.Font()
+    headerfont.bold = True
+    style.font = headerfont
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Sheet 1')
+    row = 0
+    for col in range(0, len(header)):
+        ws.row(row).set_cell_text(col, header[col], style)
+    style.font = normalfont
+    for item in rows:
+        row += 1
+        for col in range(0, len(item)):
+            ws.row(row).set_cell_text(col, item[col], style)
+    output = StringIO()
+    wb.save(output)
+    return output.getvalue()
