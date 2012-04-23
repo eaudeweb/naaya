@@ -12,7 +12,7 @@
     </a>]
     [<a href="{{url_for('views.seris_review_add',
         report_id=report['id'])}}">
-        Review Report {{ report['id'] }}
+        Add review to Report {{ report['id'] }}
     </a>]
 </div>
 <hr/>
@@ -22,7 +22,7 @@
     {% for review in report['seris_reviews'] %}
         <li>
           <a href="{{ url_for('views.seris_review_view',
-                              report_id=review['data']['report_id'],
+                              report_id=report['id'],
                               seris_review_id=review['id']) }}">
               Review {{ review['id'] }}
           </a>
