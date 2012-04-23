@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block seris_content %}
+
+<div>
+[<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+    Back to report
+</a>]
+[<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+    Edit review
+</a>]
+</div>
+<hr/>
+<div>
+    {{ mk.widget(report['data']) }}
+</div>
+<div>
+{{ mk.widget(seris['data']) }}
+</div>
+
+{% endblock %}
