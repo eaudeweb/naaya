@@ -18,6 +18,11 @@ def get_report_or_404(report_id):
 def get_all_reports():
     return get_session().table(ReportRow).get_all()
 
+def get_seris_or_404(seris_id):
+    try:
+        return get_session().table(SerisReviewRow).get(seris_id)
+    except KeyError:
+        flask.abort(404)
 
 def get_all_seris_reviews():
     return get_session().table(SerisReviewRow).get_all()

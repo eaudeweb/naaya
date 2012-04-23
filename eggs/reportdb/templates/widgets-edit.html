@@ -2,6 +2,10 @@
   {{ mk.input(field) }}
 {% endmacro %}
 
+{% macro hidden(mk, field) %}
+  {{ mk.input(field, type="hidden") }}
+{% endmacro %}
+
 {% macro textarea(mk, field) %}
   {{ mk.textarea(field, class=field.properties.css_class) }}
 {% endmacro %}
@@ -79,9 +83,11 @@
 {% macro schema(mk, schema) %}
   {%- do mk.begin(auto_domid=true, auto_for=true) %}
   {%- for name in mk.children_order(schema) %}
-    {% set field = schema[name] %}
-    <div class="section"><h3>{{ field.label }}</h3></div>
-    <div>{{ mk.widget(field) }} </div>
+    {% if name != "report_id" %}
+        {% set field = schema[name] %}
+        <div class="section"><h3>{{ field.label }}</h3></div>
+        <div>{{ mk.widget(field) }} </div>
+    {% endif %}
   {% endfor -%}
   {% do mk.end() -%}
 {% endmacro %}

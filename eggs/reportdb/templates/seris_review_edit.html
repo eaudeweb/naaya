@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block seris_content %}
+<div>
+    [<a href="{{url_for('views.seris_review_list',
+        report_id=report_id)}}">
+        Back to Report {{ report_id }}
+    </a>]
+</div>
+<hr/>
 <form action="{#{{ url_for('views.seris_review_add') }}#}" method="post">
   {{ mk.widget(seris_review_schema) }}
   <div>

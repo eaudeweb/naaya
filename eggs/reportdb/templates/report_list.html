@@ -3,11 +3,13 @@
 {% block seris_content %}
 
 <div>
-    <a href="{{url_for('views.report_edit')}}">
+    [<a href="{{url_for('views.report_edit')}}">
         Add Report
-    </a>
+    </a>]
 </div>
-
+<hr/>
+<div>
+<h2>Reports:</h2>
 <ul>
 {% for report in report_list %}
     <li>
@@ -17,5 +19,6 @@
     </li>
 {% endfor %}
 </ul>
+</div>
 
 {% endblock %}
