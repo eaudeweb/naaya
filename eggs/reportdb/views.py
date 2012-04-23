@@ -43,26 +43,48 @@ def report_list():
                         for row in database.get_all_reports()],
     })
 
-
+"""
 @views.route('/reports/new/')
-def report_edit():
+@views.route('/reports/<int:report_id>/edit/')
+def report_edit(report_id=None):
     app = flask.current_app
     report_schema = schema.ReportSchema()
     seris_review_schema = schema.SerisReviewSchema()
     return flask.render_template('report-edit.html', **{
         'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
+        'report_id': report_id,
         'report_schema': report_schema,
         'seris_review_schema': seris_review_schema,
     })
+"""
 
+@views.route('/reports/new/', methods=['GET', 'POST'])
+@views.route('/reports/<int:report_id>/edit/', methods=['GET', 'POST'])
+def report_edit(report_id=None):
+    if report_id == None:
+        report_row = None
+    else:
+        report_row = database.get_report_or_404(report_id)
 
-@views.route('/reports/seris_demo', methods=['POST'])
-def report_add():
+    if flask.request.method == 'GET':
+        app = flask.current_app
+        report_schema = schema.ReportSchema()
+        seris_review_schema = schema.SerisReviewSchema()
+        return flask.render_template('report-edit.html', **{
+            'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
+            'report_id': report_id,
+            'report_schema': report_schema,
+            'seris_review_schema': seris_review_schema,
+            })
+
     session = database.get_session()
-    request_data = flask.request.form.to_dict()
-    report_schema = schema.ReportSchema.from_flat(request_data)
+    form_data = dict(schema.ReportSchema())
+    form_data.update(flask.request.form.to_dict())
+    report_schema = schema.ReportSchema.from_flat(form_data)
     # TODO validation
-    report_row = database.ReportRow(report_schema.flatten())
+    if report_row is None:
+        report_row = database.ReportRow()
+    report_row.update(report_schema.flatten())
     session.save(report_row)
     session.commit()
     flask.flash("Report saved", "success")
@@ -86,7 +108,7 @@ def seris_review_list(report_id):
                        'seris_reviews': [
                           {'id': row.id,
                            'data': schema.SerisReviewSchema.from_flat(row).value}
-                          for row in database.get_all_seris_reviews()]
+                          for row in database.get_seris_reviews_list(report_id)]
                       }
         }
     )
@@ -103,10 +125,9 @@ def seris_review_add(report_id, seris_review_id=None):
 
     if flask.request.method == "GET":
         app = flask.current_app
-        if seris_review_id == None:
-            seris_review_schema = schema.SerisReviewSchema()
+        seris_review_schema = schema.SerisReviewSchema()
+        if seris_review_id != None:
             seris_review_schema['report_id'].set(report_id)
-        else:
             seris_review_schema = schema.SerisReviewSchema \
                                         .from_flat(seris_review_row)
         return flask.render_template('seris_review_edit.html', **{
@@ -123,6 +144,8 @@ def seris_review_add(report_id, seris_review_id=None):
     if seris_review_row is None:
         seris_review_schema['report_id'].set(report_id)
         seris_review_row = database.SerisReviewRow()
+    else:
+        seris_review_schema['report_id'].set(seris_review_row['report_id'])
     seris_review_row.update(seris_review_schema.flatten())
     session.save(seris_review_row)
     session.commit()
