@@ -93,11 +93,22 @@ def seris_review_list(report_id):
 
 
 @views.route('/reports/<int:report_id>/seris_reviews/new/', methods=['GET', 'POST'])
-def seris_review_add(report_id):
+@views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>/edit', 
+             methods=['GET', 'POST'])
+def seris_review_add(report_id, seris_review_id=None):
+    if seris_review_id == None:
+        seris_review_row = None
+    else:
+        seris_review_row = database.get_seris_or_404(seris_review_id)
+
     if flask.request.method == "GET":
         app = flask.current_app
-        seris_review_schema = schema.SerisReviewSchema()
-        seris_review_schema['report_id'].set(report_id)
+        if seris_review_id == None:
+            seris_review_schema = schema.SerisReviewSchema()
+            seris_review_schema['report_id'].set(report_id)
+        else:
+            seris_review_schema = schema.SerisReviewSchema \
+                                        .from_flat(seris_review_row)
         return flask.render_template('seris_review_edit.html', **{
             'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
             'report_id': report_id,
@@ -105,13 +116,17 @@ def seris_review_add(report_id):
         })
 
     session = database.get_session()
-    seris_review_schema = schema.SerisReviewSchema.from_flat(
-        flask.request.form.to_dict())
-    seris_review_schema['report_id'].set(report_id)
+    form_data = dict(schema.SerisReviewSchema())
+    form_data.update(flask.request.form.to_dict())
+    seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
     # TODO validation
-    row = database.SerisReviewRow(seris_review_schema.flatten())
-    session.save(row)
+    if seris_review_row is None:
+        seris_review_schema['report_id'].set(report_id)
+        seris_review_row = database.SerisReviewRow()
+    seris_review_row.update(seris_review_schema.flatten())
+    session.save(seris_review_row)
     session.commit()
+    flask.flash("Review saved.", "success")
     return flask.redirect(flask.url_for('views.seris_review_list',
                                         report_id=report_id))
 

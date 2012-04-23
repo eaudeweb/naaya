@@ -8,6 +8,7 @@
     </a>]
 </div>
 <hr/>
+{% if report_list %}
 <div>
 <h2>Reports:</h2>
 <ul>
@@ -20,5 +21,10 @@
 {% endfor %}
 </ul>
 </div>
+{% else %}
+<p>No reports yet. Click  
+<a href="{{url_for('views.report_edit')}}">here</a>
+ to add a new report.</p>
+{% endif %}
 
 {% endblock %}
