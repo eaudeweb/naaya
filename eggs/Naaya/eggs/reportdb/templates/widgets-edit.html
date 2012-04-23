@@ -51,7 +51,10 @@
   {%- for name in mk.children_order(schema) %}
     <div class="subgroup">
         {% set field = schema[name] %}
-        {{ field.label }} {{ mk.widget(field) }}
+        {{ field.label }}
+        <div class="controls">
+            {{ mk.widget(field) }}
+        </div>
     </div>
   {% endfor -%}
 {% endmacro %}
@@ -149,10 +152,8 @@
 {% endmacro %}
 
 {% macro options_with_labels(mk, schema) %}
-  {%- do mk.begin(auto_domid=true, auto_for=true) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     {{ field.label }} {{ mk.widget(field) }}
   {% endfor -%}
-  {% do mk.end() -%}
 {% endmacro %}

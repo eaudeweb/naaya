@@ -48,20 +48,29 @@ def report_list():
 def report_edit():
     app = flask.current_app
     report_schema = schema.ReportSchema()
+    seris_review_schema = schema.SerisReviewSchema()
     return flask.render_template('report-edit.html', **{
         'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
         'report_schema': report_schema,
+        'seris_review_schema': seris_review_schema,
     })
 
 
-@views.route('/reports/', methods=['POST'])
+@views.route('/reports/seris_demo', methods=['POST'])
 def report_add():
     session = database.get_session()
     request_data = flask.request.form.to_dict()
     report_schema = schema.ReportSchema.from_flat(request_data)
     # TODO validation
-    row = database.ReportRow(report_schema.flatten())
-    session.save(row)
+    report_row = database.ReportRow(report_schema.flatten())
+    session.save(report_row)
+    session.commit()
+    flask.flash("Report saved", "success")
+    seris_review_schema = schema.SerisReviewSchema.from_flat(
+                                    flask.request.form.to_dict())
+    seris_review_schema['report_id'].set(report_row.id)
+    seris_review_row = database.SerisReviewRow(seris_review_schema.flatten())
+    session.save(seris_review_row)
     session.commit()
     return flask.redirect(flask.url_for('views.report_list'))
 
