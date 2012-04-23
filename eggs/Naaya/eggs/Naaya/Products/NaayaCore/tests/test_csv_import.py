@@ -36,7 +36,8 @@ def do_import_object(context, meta_type, csv_data, target):
         Target must exist.
     """
     target = context.portal.restrictedTraverse(target, None)
-    target.csv_import.do_import(meta_type=meta_type, data=StringIO(csv_data))
+    target.csv_import.do_import(meta_type=meta_type, file_type='CSV',
+                                data=StringIO(csv_data))
 
 class NyCSVImportTest(NaayaTestCase):
     """ TestCase for Naaya CSV import """
@@ -48,7 +49,8 @@ class NyCSVImportTest(NaayaTestCase):
         self.portal.manage_delObjects(['imported'])
 
     def test_generate_csv_template(self):
-        columns = self.portal.csv_import.template('Naaya URL').strip().split(',')
+        columns = self.portal.csv_import.template('Naaya URL',
+                                                  'CSV').strip().split(',')
         self.failUnlessEqual(len(columns), 13)
         self.failUnless('Title' in columns)
         self.failUnless('Description' in columns)
@@ -224,7 +226,8 @@ class GeopointImportTest(NaayaTestCase):
         self.portal.manage_delObjects(['imported'])
 
     def test_template(self):
-        columns = self.portal.csv_import.template('Naaya Document').strip().split(',')
+        columns = self.portal.csv_import.template('Naaya Document',
+                                                  'CSV').strip().split(',')
         self.failUnless('Geo Loc - lat' in columns)
         self.failUnless('Geo Loc - lon' in columns)
         self.failUnless('Geo Loc - address' in columns)
