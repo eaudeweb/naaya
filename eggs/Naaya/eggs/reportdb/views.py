@@ -82,10 +82,12 @@ def seris_review_list(report_id):
     return flask.render_template('seris_review_list.html', **{
             'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
             'report': {'id': report_id,
-                      'data': schema.ReportSchema.from_flat(report),
-                      'seris_reviews': [{'id': row.id,
-                                         'data': schema.SerisReviewSchema.from_flat(row).value}
-                                       for row in database.get_all_seris_reviews()]}
+                       'data': schema.ReportSchema.from_flat(report),
+                       'seris_reviews': [
+                          {'id': row.id,
+                           'data': schema.SerisReviewSchema.from_flat(row).value}
+                          for row in database.get_all_seris_reviews()]
+                      }
         }
     )
 
@@ -98,6 +100,7 @@ def seris_review_add(report_id):
         seris_review_schema['report_id'].set(report_id)
         return flask.render_template('seris_review_edit.html', **{
             'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
+            'report_id': report_id,
             'seris_review_schema': seris_review_schema,
         })
 
@@ -115,7 +118,18 @@ def seris_review_add(report_id):
 
 @views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>/')
 def seris_review_view(report_id, seris_review_id):
-    return "This is review: "+str(report_id)+'.'+str(seris_review_id)
+    app = flask.current_app
+    report = database.get_report_or_404(report_id)
+    seris_review = database.get_seris_or_404(seris_review_id)
+    return flask.render_template('seris_review_view.html', **{
+            'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
+            'report': {'id': report_id,
+                       'data': schema.ReportSchema.from_flat(report)},
+            'seris': {'id': seris_review_id,
+                       'data': schema.SerisReviewSchema.from_flat(seris_review),
+                      }
+        }
+    )
 
 
 def register_on(app):
