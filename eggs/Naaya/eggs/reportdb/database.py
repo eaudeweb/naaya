@@ -24,6 +24,13 @@ def get_seris_or_404(seris_id):
     except KeyError:
         flask.abort(404)
 
+def get_seris_reviews_list(report_id):
+    reviews_list = list(get_session().table(SerisReviewRow).get_all())
+    for item in reviews_list:
+        if item['report_id'] != str(report_id):
+            reviews_list.remove(item)
+    return reviews_list
+
 def get_all_seris_reviews():
     return get_session().table(SerisReviewRow).get_all()
 
