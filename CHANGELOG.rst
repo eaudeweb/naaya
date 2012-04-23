@@ -1,4 +1,8 @@
-3.0.2 (unreleased)
+3.0.3 (unreleased)
+------------------
+
+
+3.0.2 (2012-04-23)
 ------------------
 * Updated administration portlet with comments management section
   and API keys status section [bogdatan]
