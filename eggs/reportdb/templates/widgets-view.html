@@ -1,0 +1,165 @@
+{%- macro input(mk, field) %}
+  {{ field.value }}
+{% endmacro -%}
+
+{% macro hidden(mk, field) %}
+  {{ mk.input(field, type="hidden") }}
+{% endmacro %}
+
+{%- macro textarea(mk, field) %}
+  <div>{{ field.value }}</div>
+{% endmacro -%}
+
+{%- macro select(mk, field) %}
+  {% set value_label = (field.properties.value_labels[field.value]
+     if field.properties.value_labels else field.value) %}
+  {{ value_label }}
+{% endmacro -%}
+
+{%- macro checkbox(mk, field) %}
+  {% if field.value %}
+    <i class="icon-ok"></i>
+  {% else %}
+    <i class="icon-remove"></i>
+  {% endif %}
+{% endmacro -%}
+
+{%- macro date(mk, field) %}
+  {{ field.value or "" }}
+{% endmacro -%}
+
+{% macro topics_radioselect(mk, field) %}
+  {% for value in field.valid_values %}
+      {% set value_label = (field.properties.value_labels[value]
+      if field.properties.value_labels else value) %}
+  <td>
+  {{ mk.input(field, type='radio', value=value, disabled='true') }}
+  </td>
+  {% endfor %}
+{% endmacro %}
+
+{% macro topics_columns(mk, schema) %}
+      {% set field = schema['focus'] %}
+      {{ mk.widget(field) }}
+      {% set field = schema['indicators'] %}
+      {{ mk.widget(field) }}
+  </tr> {# closes the row of the CommonTopicsDict #}
+{% endmacro %}
+
+{% macro topics_subgroup(mk, schema) %}
+  </tr>
+  <tr>
+  {%- for name in mk.children_order(schema) %}
+    <td>
+        {% set field = schema[name] %}
+        {{ field.label }}
+    </td>
+  {{ mk.widget(field) }}
+  {% endfor -%}
+  </tr>
+{% endmacro %}
+
+{% macro topics_group(mk, group) %}
+    <table class="topics-table">
+        <tr>
+            <th></th>
+            <th colspan="4" class="focus-column">
+                Focus
+            </th>
+            <th colspan="4" class="indicators-column">
+                Indicators
+            </th>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="radio">Major,</td>
+            <td class="radio"> some,</td>
+            <td class="radio"> minor,</td>
+            <td class="radio"> none</td>
+
+            <td class="radio">Several,</td>
+            <td class="radio"> some,</td>
+            <td class="radio"> few,</td>
+            <td class="radio"> none</td>
+        </tr>
+    <tbody>
+    {%- for name in mk.children_order(group) %}
+    <tr>
+      <td colspan="9" class="topics-group {{ error_cls }}">
+        {% set field = group[name] %}
+        {% set error_cls = 'error' if field.errors else '' %}
+        {{ mk.label(field, class='control-label', contents=field.label) }}
+      </td>
+      <td>
+        {{ mk.widget(field) }}
+        <span class="controls">
+          {% for message in field.errors %}
+            <span class="help-inline">{{ message }}</span>
+          {% endfor %}
+        </span>
+      </td>
+    {%- endfor %}
+    </tbody>
+    </table>
+{% endmacro %}
+
+{% macro indicators_radioselect(mk, field) %}
+  <table>
+      <tbody>
+      <tr><td>Most(>50%)</td><td>Some(<50%)</td><td>None</td></tr>
+      <tr>
+      {% for value in field.valid_values %}
+          {% set value_label = (field.properties.value_labels[value]
+          if field.properties.value_labels else value) %}
+          <td>{{ mk.input(field, type='radio', value=value, disabled='true') }}</td>
+      {% endfor %}
+      </tr>
+      </tbody>
+  </table>
+{% endmacro %}
+
+{% macro subgroup(mk, schema) %}
+  {%- for name in mk.children_order(schema) %}
+    <div class="subgroup">
+        {% set field = schema[name] %}
+        {{ field.label }}
+        <div class="controls">
+            {{ mk.widget(field) }}
+        </div>
+    </div>
+  {% endfor -%}
+{% endmacro %}
+
+{% macro group(mk, group) %}
+    {%- for name in mk.children_order(group) %}
+        {% set field = group[name] %}
+        {% set error_cls = 'error' if field.errors else '' %}
+      <div class="control-group {{ error_cls }}">
+        {{ mk.label(field, class='control-label', contents=field.label) }}
+          <div class="controls">
+              {{ mk.widget(field) }}
+          </div>
+      </div>
+    {%- endfor %}
+{% endmacro %}
+
+{% macro schema(mk, schema) %}
+  {%- do mk.begin(auto_domid=true, auto_for=true) %}
+  {%- for name in mk.children_order(schema) %}
+      {% if name != "report_id" %}
+        {% set field = schema[name] %}
+        <div class="section"><h3>{{ field.label }}</h3></div>
+        <div>{{ mk.widget(field) }} </div>
+      {% endif %}
+  {% endfor -%}
+  {% do mk.end() -%}
+{% endmacro %}
+
+{% macro options_with_labels(mk, schema) %}
+  {%- do mk.begin(auto_domid=true, auto_for=true) %}
+  {%- for name in mk.children_order(schema) %}
+    {% set field = schema[name] %}
+    {{ field.label }} {{ mk.widget(field) }}
+  {% endfor -%}
+  {% do mk.end() -%}
+{% endmacro %}
