@@ -1,4 +1,8 @@
-1.1.1 (unreleased)
+1.1.2 (unreleased)
+------------------
+
+
+1.1.1 (2012-04-23)
 ------------------
 * updated admin stylesheet [bogdatan]
 
