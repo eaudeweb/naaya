@@ -1,5 +1,9 @@
 2.13.9 (unreleased)
 --------------------
+* Added buildout environment vars API keys to the administration
+  API keys status page [bogdatan]
+* Added title and description for API keys in administration API
+  keys status page [bogdatan]
 
 2.13.8 (2012-04-23)
 --------------------
