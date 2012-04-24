@@ -16,6 +16,8 @@ CommonBoolean = fl.Boolean.using(optional=False).with_properties(widget="checkbo
 report_formats = _load_json("refdata/report_formats.json")
 publication_freq = _load_json("refdata/publication_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
+countries_list = _load_json("refdata/countries_list.json")
+languages_list = _load_json("refdata/languages_list.json")
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
@@ -25,7 +27,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
         CommonEnum.named('country') \
                   .using(label=u"Country") \
-                  .valued(*sorted(eu_countries_list.keys())),
+                  .valued(*countries_list),
         fl.String.named('soer_cover') \
                  .using(label=u"Copy of SOER cover")
     ),
@@ -37,8 +39,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         fl.String.named('original_name') \
                  .using(label=u"Name"),
 
-        fl.String.named('original_language') \
-                 .using(label=u"Original Language"),
+        CommonEnum.named('original_language') \
+                 .using(label=u"Original Language") \
+                 .valued(*languages_list),
 
         fl.String.named('english_name') \
                  .using(label=u"Name (in English)"),
