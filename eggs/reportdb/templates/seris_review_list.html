@@ -33,13 +33,6 @@
     </ul>
 </div>
 #}
-<div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <p>{{ message }}</p>
-    {% endif %}
-    {% endwith %}
-</div>
 
 {{ mk.widget(report['data']) }}
 {% if report['seris_reviews'] %}

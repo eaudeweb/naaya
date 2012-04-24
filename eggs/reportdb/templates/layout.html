@@ -12,6 +12,18 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
+{% block messages %}
+    <div class="messages">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+{% endblock messages %}
+
 {% block seris_content %}
 
     {{ script_src("js/lib/jquery-1.7.1.min.js") }}

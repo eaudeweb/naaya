@@ -75,7 +75,6 @@ def report_edit(report_id=None):
     report_schema = schema.ReportSchema.from_flat(form_data)
     seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
     # TODO validation
-    assert report_row.id, 'New report.'
     if report_row is None:
         report_row = database.ReportRow()
     if seris_review_row is None:
@@ -83,12 +82,11 @@ def report_edit(report_id=None):
     report_row.update(report_schema.flatten())
     session.save(report_row)
     session.commit()
-    flask.flash("Report saved", "success")
     seris_review_schema['report_id'].set(report_row.id)
     seris_review_row.update(seris_review_schema.flatten())
     session.save(seris_review_row)
     session.commit()
-    flask.flash("Seris review saved", "success")
+    flask.flash("Report saved.", "success")
     return flask.redirect(flask.url_for('views.report_list'))
 
 
@@ -103,7 +101,8 @@ def seris_review_list(report_id):
                        'seris_reviews': [
                           {'id': row.id,
                            'data': schema.SerisReviewSchema.from_flat(row)}
-                          for row in database.get_seris_reviews_list(report_id)]
+                          for row in database.get_seris_reviews_list(report_id,
+                              debug=True)]
                       }
         }
     )

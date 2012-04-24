@@ -7,7 +7,11 @@
     </a>]
 </div>
 <hr/>
+{% if report_id %}
 <form action="{{ url_for('views.report_edit', report_id=report_id) }}" method="post">
+{% else %}
+<form action="{{ url_for('views.report_edit') }}" method="post">
+{% endif %}
   {{ mk.widget(report_schema) }}
   {{ mk.widget(seris_review_schema) }}
   <div>

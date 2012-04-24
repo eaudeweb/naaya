@@ -1,13 +1,17 @@
 {% extends 'layout.html' %}
-
-{% block seris_content %}
+{% block action_buttons %}
 
 <div>
-    [<a href="{{url_for('views.report_edit')}}">
+    [<a href="{{ url_for('views.report_edit') }}">
         Add Report
     </a>]
 </div>
 <hr/>
+
+{% endblock %}
+
+{% block seris_content %}
+
 {% if report_list %}
 <div>
 <h2>Reports:</h2>

@@ -27,6 +27,9 @@ class ZopeTemplateLoader(jinja2.BaseLoader):
             source = source.strip()
             source = source.replace("{%", "{{ '{%' }}").replace("%}", "{{ '%}' }}")
             source = source.replace("{{", "{{ '{{' }}").replace("}}", "{{ '}}' }}")
+            source = source.replace("<!-- block_messages -->", 
+                    "{% block action_buttons %}{% endblock %}"
+                    "{% block messages %}{% endblock %}")
             source = source.replace("<!-- block_content -->", "{% block seris_content %}{% endblock %}")
             source = source.replace("<!-- block_head -->", "{% block head %}{% endblock %}")
 
