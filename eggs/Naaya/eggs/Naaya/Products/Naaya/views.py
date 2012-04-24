@@ -46,8 +46,38 @@ def AdminAPIKeysStatus(context, request):
         valid = akismet.verify_key(akismet_api_key, context.getSitePath())
 
     api_keys['akismet'] = {
+        'title': 'Akismet',
+        'description': 'Filters comments and track-back spam',
         'key': akismet_api_key,
-        'valid': valid
+        'valid': valid,
+        'change_link': None
+    }
+
+    master_ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
+    valid = False
+    if master_ga_id:
+        valid = True
+
+    api_keys['master_ga_id'] = {
+        'title': 'Google Analytics primary tracking code',
+        'description': 'The GA web property of the master profile (the profile of the top-level domain)',
+        'key': master_ga_id,
+        'valid': valid,
+        'change_link': None
+    }
+
+    ga_domain_name = getattr(conf, 'environment', {}).get('GA_DOMAIN_NAME', '')
+    valid = False
+    if ga_domain_name:
+        valid = True
+
+    api_keys['ga_domain_name'] = {
+        'title': 'Google Analytics domain name',
+        'description': 'Sets the domain name to the top-level domain for '
+                       'the portal',
+        'key': ga_domain_name,
+        'valid': valid,
+        'change_link': None
     }
 
     #Google Analytics
@@ -57,8 +87,11 @@ def AdminAPIKeysStatus(context, request):
         valid = True
 
     api_keys['ga_id'] = {
+        'title': 'Google Analytics portal tracking code',
+        'description': 'Allows Google to access your website traffic data and saves data in portal profile of GA.',
         'key': ga_id,
-        'valid': valid
+        'valid': valid,
+        'change_link': '/portal_statistics/admin_verify'
     }
 
     #reCaptcha
@@ -68,8 +101,11 @@ def AdminAPIKeysStatus(context, request):
         valid = True
 
     api_keys['recaptcha_private_key'] = {
+        'title': 'reCaptcha private key',
+        'description': 'reCaptcha private key for CAPTCHA verification',
         'key': recaptcha_private_key,
-        'valid': valid
+        'valid': valid,
+        'change_link': '/admin_properties_html'
     }
 
     recaptcha_public_key = getattr(context, 'recaptcha_public_key', '')
@@ -78,8 +114,11 @@ def AdminAPIKeysStatus(context, request):
         valid = True
 
     api_keys['recaptcha_public_key'] = {
+        'title': 'reCaptcha public key',
+        'description': 'reCaptcha public key for CAPTCHA verification',
         'key': recaptcha_public_key,
-        'valid': valid
+        'valid': valid,
+        'change_link': '/admin_properties_html'
     }
 
     options = {
