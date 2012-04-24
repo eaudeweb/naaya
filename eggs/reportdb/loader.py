@@ -31,6 +31,6 @@ class ZopeTemplateLoader(jinja2.BaseLoader):
             source = source.replace("<!-- block_head -->", "{% block head %}{% endblock %}")
 
             if self.cache_templates:
-                self.cache.set(path, source)
+                self.cache.set(path, source, timeout=120*60)
 
         return source, path, lambda: False
