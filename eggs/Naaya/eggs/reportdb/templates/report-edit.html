@@ -1,21 +1,43 @@
 {% extends 'layout.html' %}
+{% block scripts %}
+
+    {{ script_src("js/lib/jquery-1.7.1.min.js") }}
+    {{ script_src("js/chosen/chosen.jquery.min.js") }}
+
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+                jQuery(".chzn-select").chosen();
+        });
+    </script>
+
+{% endblock %}
+
+{% block extra_head %}
+    {{ css_link('css/chosen/chosen.css') }}
+{% endblock %}
 
 {% block seris_content %}
+
 <div>
     [<a href="{{url_for('views.report_list')}}">
         Back to reports list
     </a>]
 </div>
 <hr/>
+
 {% if report_id %}
-<form action="{{ url_for('views.report_edit', report_id=report_id) }}" method="post">
+{% set link = url_for('views.report_edit', report_id=report_id) %}
 {% else %}
-<form action="{{ url_for('views.report_edit') }}" method="post">
+{% set link = url_for('views.report_edit') %}
 {% endif %}
+
+<form action="{{ link }}" method="post">
   {{ mk.widget(report_schema) }}
   {{ mk.widget(seris_review_schema) }}
   <div>
     <button type="submit">Save</button>
   </div>
 </form>
+
+
 {% endblock seris_content %}

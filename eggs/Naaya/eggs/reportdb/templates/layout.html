@@ -9,6 +9,11 @@
     {{ css_link('css/bootstrap-ui/jquery.ui.1.8.16.ie.css') }}
     {{ css_link('css/style.css') }}
     <title>{% block title %}SERIS{% endblock %}</title>
+
+    <script>var app = {};</script>
+
+    {% block scripts %} {% endblock %}
+
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
@@ -26,13 +31,5 @@
 
 {% block seris_content %}
 
-    {{ script_src("js/lib/jquery-1.7.1.min.js") }}
-    {{ script_src("js/lib/jquery-ui-1.8.18.custom.min.js") }}
-    {{ script_src("js/main.js") }}
-
-    <script>var app = {};</script>
-
-    {% block scripts %}
-    {% endblock %}
 
 {% endblock %}
