@@ -2155,3 +2155,7 @@ a.delete-comment .icon {
 /**
  * END Comments style enhancement
 */
+
+.dataTables_wrapper {
+    position: inherit !important;
+}

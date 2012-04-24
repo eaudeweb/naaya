@@ -1,6 +1,9 @@
 1.1.2 (unreleased)
 ------------------
-
+* Added 'Comments on content' and 'API keys status' in
+  administration [bogdatan]
+* Overlap bug fix in administration dropdown navigation [bogdatan]
+* Added 'head' slot in administration template [bogdatan]
 
 1.1.1 (2012-04-23)
 ------------------

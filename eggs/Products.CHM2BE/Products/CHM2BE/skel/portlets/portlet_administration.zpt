@@ -13,14 +13,15 @@
             <li><a tal:attributes="href string:${site_url}/admin_logos_html" title="Logos" i18n:attributes="title" i18n:translate="">Logos</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_email_html" title="Email Settings" i18n:attributes="title" i18n:translate="">Email Settings</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_properties_html" title="Other Properties" i18n:attributes="title" i18n:translate="">Other Properties</a></li>
+            <li><a tal:attributes="href string:${site_url}/admin_api_keys_status_html" title="API keys status" i18n:attributes="title" i18n:translate="">API keys status</a></li>
         </ul>
     </li>
     <li tal:condition="canPublish"><strong title="Portal statistics" i18n:attributes="title" i18n:translate="">Portal statistics</strong>
         <ul>
-		<li><a tal:attributes="href string:${site_url}/portal_statistics/admin_stats" title="Google Analytics statistics" i18n:attributes="title" i18n:translate="">Statistics</a></li>
-		<li><a tal:attributes="href string:${site_url}/portal_statistics/admin_verify" title="Google Analytics verification codes" i18n:attributes="title" i18n:translate="">Verification codes</a></li>
-		<li><a tal:attributes="href string:${site_url}/portal_statistics/admin_account" title="Google Analytics settings" i18n:attributes="title" i18n:translate="">Settings</a></li>
-	</ul>
+                <li><a tal:attributes="href string:${site_url}/portal_statistics/admin_stats" title="Google Analytics statistics" i18n:attributes="title" i18n:translate="">Statistics</a></li>
+                <li><a tal:attributes="href string:${site_url}/portal_statistics/admin_verify" title="Google Analytics verification codes" i18n:attributes="title" i18n:translate="">Verification codes</a></li>
+                <li><a tal:attributes="href string:${site_url}/portal_statistics/admin_account" title="Google Analytics settings" i18n:attributes="title" i18n:translate="">Settings</a></li>
+        </ul>
     </li>
     <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_layout_html" title="Change the portal layout and color scheme" i18n:attributes="title" i18n:translate="">Portal layout</a></li>
     <li tal:condition="canPublish"><strong title="Users and security settings" i18n:attributes="title" i18n:translate="">Users' management</strong>
@@ -57,7 +58,7 @@
     </tal:block>
     <li><strong i18n:translate="">Content management</strong>
         <ul>
-	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Top content" i18n:attributes="title" i18n:translate="">Top content</a></li>
+        <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Top content" i18n:attributes="title" i18n:translate="">Top content</a></li>
 <li tal:condition="canPublish">
 <strong>Content types</strong>
             <ul>
@@ -109,4 +110,3 @@
 </ul>
 </tal:block>
 </tal:block>
-
