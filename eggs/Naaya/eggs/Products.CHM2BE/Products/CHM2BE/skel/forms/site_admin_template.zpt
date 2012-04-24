@@ -7,6 +7,8 @@
 				tal:attributes="src string:${here/getSitePath}/misc_/Naaya/jquery.form.js"></script>
 		<script type="text/javascript"
 				tal:attributes="src string:${here/getSitePath}/misc_/Naaya/admin.js"></script>
+                <metal:block define-slot="head">
+                </metal:block>
 	</metal:block>
 
 	<metal:block fill-slot="body">
