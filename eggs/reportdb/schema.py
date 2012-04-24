@@ -27,6 +27,11 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
         CommonEnum.named('country') \
                   .using(label=u"Country") \
+                  .with_properties(css_class="chzn-select chzn-done",
+                                   field_id="country_sel",
+                                   widget="chosen_select",
+                                   multiple="",
+                                   data_placeholder="Select countries") \
                   .valued(*countries_list),
         fl.String.named('soer_cover') \
                  .using(label=u"Copy of SOER cover")
@@ -236,27 +241,21 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonDict.named('env_regions') \
                   .using(label=u"Environment in different"
-                             "regions and specific areas") \
+                             " regions and specific areas") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            CommonTopicsDict.named('air') \
-                            .using(label=u"Air"),
+            CommonTopicsDict.named('coast_and_seas') \
+                            .using(label=u"Coast and seas"),
 
-            CommonTopicsDict.named('land') \
-                            .using(label=u"Land"),
-
-            CommonTopicsDict.named('soil') \
-                            .using(label=u"Soil"),
-
-            CommonTopicsDict.named('inland_waters') \
-                            .using(label=u"Inland waters (incl. rivers)"),
-
-            CommonTopicsDict.named('coastal_waters') \
-                            .using(label=u"Coastal waters and marine"),
+            CommonTopicsDict.named('specific_regions') \
+                            .using(label=u"Specific regions"),
 
             CommonTopicsDict.named('urban_environment') \
-                            .using(label=u"Cities & urban environment"),
+                            .using(label=u"Urban environment"),
+
+            CommonTopicsDict.named('other_radio') \
+                            .using(label=u"............(input field)"),
         ),
 
         CommonDict.named('env_issues') \
@@ -332,6 +331,9 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
             CommonTopicsDict.named('transport') \
                             .using(label=u"Transport"),
+
+            CommonTopicsDict.named('other_radio') \
+                            .using(label=u"............(input field)"),
         ),
 
         CommonDict.named('across_env') \

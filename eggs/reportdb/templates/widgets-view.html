@@ -16,6 +16,10 @@
   {{ value_label }}
 {% endmacro -%}
 
+{% macro chosen_select(mk, field) %}
+    {{ select(mk, field) }}
+{% endmacro %}
+
 {%- macro checkbox(mk, field) %}
   {% if field.value %}
     <i class="icon-ok"></i>

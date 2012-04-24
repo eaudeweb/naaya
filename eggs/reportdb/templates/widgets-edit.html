@@ -11,7 +11,23 @@
 {% endmacro %}
 
 {% macro select(mk, field) %}
-  {{ mk.select.open(field, class=field.properties.css_class) }}
+  {{ mk.select.open(field, class=field.properties.css_class,
+  id=field.properties.field_id) }}
+  {{ mk.option(field, value="", contents="--") }}
+  
+  {% for value in field.valid_values %}
+      {% set value_label = (field.properties.value_labels[value]
+          if field.properties.value_labels else value) %}
+  {{ mk.option(field, value=value, contents=value_label) }}
+  {% endfor %}
+  {{ mk.select.close() }}
+{% endmacro %}
+
+{% macro chosen_select(mk, field) %}
+{{ mk.select.open(field, class=field.properties.css_class,
+                         id=field.properties.field_id,
+                         multiple="",
+                         tabindex="-1") }}
   {{ mk.option(field, value="", contents="--") }}
   
   {% for value in field.valid_values %}
