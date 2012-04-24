@@ -1,7 +1,6 @@
 import flask
 import htables
 
-
 schema = htables.Schema()
 
 ReportRow = schema.define_table('ReportRow', 'report')
@@ -18,18 +17,25 @@ def get_report_or_404(report_id):
 def get_all_reports():
     return get_session().table(ReportRow).get_all()
 
+
 def get_seris_or_404(seris_id):
     try:
         return get_session().table(SerisReviewRow).get(seris_id)
     except KeyError:
         flask.abort(404)
 
+
 def get_seris_reviews_list(report_id):
-    reviews_list = list(get_session().table(SerisReviewRow).get_all())
-    for item in reviews_list:
-        if item['report_id'] != str(report_id):
-            reviews_list.remove(item)
+    # for the demo it only returns one review
+    all_reviews = get_all_seris_reviews()
+    reviews_list = []
+    for item in all_reviews:
+        if item['report_id'] == str(report_id): reviews_list.append(item)
+    assert reviews_list, 'No reviews.'
+    assert 1==len(reviews_list), ('More reviews for one report.',
+                                  str(len(reviews_list)),' reviews.')
     return reviews_list
+
 
 def get_all_seris_reviews():
     return get_session().table(SerisReviewRow).get_all()

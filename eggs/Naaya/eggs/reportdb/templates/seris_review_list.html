@@ -10,12 +10,14 @@
         report_id=report['id'])}}">
         Edit Report {{ report['id'] }}
     </a>]
-    [<a href="{{url_for('views.seris_review_add',
+    {# TO BE IMPLEMENTED LATER #}
+    {#[<a href="{{url_for('views.seris_review_add',
         report_id=report['id'])}}">
         Add review to Report {{ report['id'] }}
-    </a>]
+    </a>]#}
 </div>
 <hr/>
+{#
 <h2>Report {{report['id']}} reviews:</h2>
 <div>
     <ul>
@@ -30,6 +32,17 @@
     {% endfor %}
     </ul>
 </div>
+#}
+<div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <p>{{ message }}</p>
+    {% endif %}
+    {% endwith %}
+</div>
 
 {{ mk.widget(report['data']) }}
+{% if report['seris_reviews'] %}
+    {{ mk.widget(report['seris_reviews'][0]['data']) }}
+{% endif %}
 {% endblock %}
