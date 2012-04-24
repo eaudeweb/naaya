@@ -1,4 +1,7 @@
-2.13.9 (unreleased)
+2.13.10 (unreleased)
+--------------------
+
+2.13.9 (2012-04-24)
 --------------------
 * Added buildout environment vars API keys to the administration
   API keys status page [bogdatan]
