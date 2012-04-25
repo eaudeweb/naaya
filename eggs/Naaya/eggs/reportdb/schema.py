@@ -69,9 +69,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                     .with_properties(css_class="input-big"),
 
         CommonEnum.named('original_language') \
-                 .using(label=u"Original Language",
-                        optional=False) \
-                 .valued(*languages_list),
+                  .using(label=u"Original Language",
+                         optional=False) \
+                  .valued(*languages_list),
 
         CommonString.named('english_name') \
                     .using(label=u"Title (in English)") \
@@ -104,20 +104,20 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
                   .valued(*(['Yes', 'No', 'Unknown'])) \
-                     .using(label=u"Separate summary report?"),
+                  .using(label=u"Separate summary report?"),
 
         CommonEnum.named('lang_of_pub') \
-                 .using(label=u"Languages of publication") \
-                 .valued(*languages_list) \
-                 .with_properties(widget="chosen_select",
-                                  css_class="chzn-select",
-                                  field_id="lang_of_pub_sel",
-                                  multiple=""),
+                  .using(label=u"Languages of publication") \
+                  .valued(*languages_list) \
+                  .with_properties(widget="chosen_select",
+                                   css_class="chzn-select",
+                                   field_id="lang_of_pub_sel",
+                                   multiple=""),
 
         fl.Dict.named('availability') \
                .with_properties(widget="options_with_labels") \
-                  .using(label=u"Availability")\
-                  .of(
+               .using(label=u"Availability")\
+               .of(
 
             CommonBoolean.named("paper_only") \
                          .using(label=u"Paper only"),
@@ -136,7 +136,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         CommonBoolean.named("registered_eionet") \
-                         .using(label=u"Registered in Eionet SERIS before"),
+                     .using(label=u"Registered in Eionet SERIS before"),
 
     )
 )
@@ -146,26 +146,27 @@ indicators_usage = _load_json("refdata/indicators_usage.json")
 topics_ratings = _load_json("refdata/topics_ratings.json")
 evaluation_methods = _load_json("refdata/evaluation_methods.json")
 
-CommonTopicsEnum = fl.Enum.using(optional=True) \
-                          .with_properties(widget="topics_radioselect") \
-                          .valued(*sorted(topics_ratings.keys()))
+TopicEnum = fl.Enum.using(optional=True) \
+                   .with_properties(widget="topics_radioselect") \
+                   .valued(*sorted(topics_ratings.keys()))
 
-CommonIndicatorsEnum = fl.Enum.using(optional=True) \
-                          .with_properties(widget="indicators_radioselect") \
-                          .valued(*sorted(topics_ratings.keys()))
+IndicatorEnum = fl.Enum.using(optional=True) \
+                  .with_properties(widget="indicators_radioselect") \
+                  .valued(*sorted(topics_ratings.keys()))
 
-CommonTopicsDict = CommonDict.with_properties(widget="topics_columns") \
-                             .of(
+TopicDict = CommonDict.with_properties(widget="topics_columns") \
+                      .of(
 
-                        CommonTopicsEnum.named('focus') \
-                                        .with_properties(css_class="focus-column",
-                                                         add_empty_td="true") \
-                                        .using(label=u"Focus"),
+    TopicEnum.named('focus') \
+             .with_properties(css_class="focus-column",
+                              add_empty_td="true") \
+             .using(label=u"Focus"),
 
-                        CommonTopicsEnum.named('indicators') \
-                                        .with_properties(css_class="indicators-column") \
-                                        .using(label=u"Indicators"),
-                   )
+    TopicEnum.named('indicators') \
+             .with_properties(css_class="indicators-column") \
+             .using(label=u"Indicators"),
+
+)
 
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
@@ -214,9 +215,9 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         fl.Enum.named('indicator_based') \
-                     .with_properties(widget="radioselect") \
-                     .valued(*(["Yes", "No"])) \
-                     .using(label=u"Indicator-based report?"),
+               .with_properties(widget="radioselect") \
+               .valued(*(["Yes", "No"])) \
+               .using(label=u"Indicator-based report?"),
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*sorted(indicators_estimation.keys())) \
@@ -235,21 +236,21 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                .with_properties(widget="indicators_group") \
                .of(
 
-            CommonIndicatorsEnum.named('to_compare_countries') \
-                            .valued(*sorted(indicators_usage.keys())) \
-                            .using(label=u"To compare with other countries/EU?"),
+            IndicatorEnum.named('to_compare_countries') \
+                         .valued(*sorted(indicators_usage.keys())) \
+                         .using(label=u"To compare with other countries/EU?"),
 
-            CommonIndicatorsEnum.named('to_compare_subnational') \
-                            .valued(*sorted(indicators_usage.keys())) \
-                            .using(label=u"To compare at sub-national level?"),
+            IndicatorEnum.named('to_compare_subnational') \
+                         .valued(*sorted(indicators_usage.keys())) \
+                         .using(label=u"To compare at sub-national level?"),
 
-            CommonIndicatorsEnum.named('to_assess_progress') \
-                            .valued(*sorted(indicators_usage.keys())) \
-                            .using(label=u"To asses progress to target/threshold?"),
+            IndicatorEnum.named('to_assess_progress') \
+                         .valued(*sorted(indicators_usage.keys())) \
+                         .using(label=u"To asses progress to target/threshold?"),
 
-            CommonIndicatorsEnum.named('to_evaluate') \
-                            .valued(*sorted(indicators_usage.keys())) \
-                            .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
+            IndicatorEnum.named('to_evaluate') \
+                         .valued(*sorted(indicators_usage.keys())) \
+                         .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
             CommonEnum.named("evaluation_method") \
                       .valued(*sorted(evaluation_methods.keys())) \
@@ -270,9 +271,9 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
     ),
 
     fl.Dict.named('topics') \
-              .using(label=u"TOPICS COVERED") \
-              .with_properties(widget="topics_group") \
-              .of(
+           .using(label=u"TOPICS COVERED") \
+           .with_properties(widget="topics_group") \
+           .of(
 
         CommonDict.named('env_regions') \
                   .using(label=u"Environment in different"
@@ -280,17 +281,17 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            CommonTopicsDict.named('coast_and_seas') \
-                            .using(label=u"Coast and seas"),
+            TopicDict.named('coast_and_seas') \
+                     .using(label=u"Coast and seas"),
 
-            CommonTopicsDict.named('specific_regions') \
-                            .using(label=u"Specific regions"),
+            TopicDict.named('specific_regions') \
+                     .using(label=u"Specific regions"),
 
-            CommonTopicsDict.named('urban_environment') \
-                            .using(label=u"Urban environment"),
+            TopicDict.named('urban_environment') \
+                     .using(label=u"Urban environment"),
 
-            CommonTopicsDict.named('other_radio') \
-                            .using(label=u"............(input field)"),
+            TopicDict.named('other_radio') \
+                     .using(label=u"............(input field)"),
         ),
 
         CommonDict.named('env_issues') \
@@ -298,44 +299,44 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-                CommonTopicsDict.named('air_pollution') \
-                                .using(label=u"Air pollution"),
+                TopicDict.named('air_pollution') \
+                         .using(label=u"Air pollution"),
 
-                CommonTopicsDict.named('biodiversity') \
-                                .using(label=u"Biodiversity"),
+                TopicDict.named('biodiversity') \
+                         .using(label=u"Biodiversity"),
 
-                CommonTopicsDict.named('chemicals') \
-                                .using(label=u"Chemicals"),
+                TopicDict.named('chemicals') \
+                         .using(label=u"Chemicals"),
 
-                CommonTopicsDict.named('climate_change') \
-                                .using(label=u"Climate change"),
+                TopicDict.named('climate_change') \
+                         .using(label=u"Climate change"),
 
-                CommonTopicsDict.named('env_and_health') \
-                                .using(label=u"Environment and health"),
+                TopicDict.named('env_and_health') \
+                         .using(label=u"Environment and health"),
 
-                CommonTopicsDict.named('land_use') \
-                                .using(label=u"Land use"),
+                TopicDict.named('land_use') \
+                         .using(label=u"Land use"),
 
-                CommonTopicsDict.named('natural_resources') \
-                                .using(label=u"Natural resources"),
+                TopicDict.named('natural_resources') \
+                         .using(label=u"Natural resources"),
 
-                CommonTopicsDict.named('noise') \
-                                .using(label=u"Noise"),
+                TopicDict.named('noise') \
+                         .using(label=u"Noise"),
 
-                CommonTopicsDict.named('soil') \
-                                .using(label=u"Soil"),
-                                
-                CommonTopicsDict.named('waste_and_resources') \
-                                .using(label=u"Waste and material resources"),
+                TopicDict.named('soil') \
+                         .using(label=u"Soil"),
 
-                CommonTopicsDict.named('water') \
-                                .using(label=u"Water"),
+                TopicDict.named('waste_and_resources') \
+                         .using(label=u"Waste and material resources"),
 
-                CommonTopicsDict.named('other_issues') \
-                                .using(label=u"Various other issues"),
+                TopicDict.named('water') \
+                         .using(label=u"Water"),
 
-                CommonTopicsDict.named('other_radio') \
-                                .using(label=u"............(input field)"),
+                TopicDict.named('other_issues') \
+                         .using(label=u"Various other issues"),
+
+                TopicDict.named('other_radio') \
+                         .using(label=u"............(input field)"),
         ),
 
         CommonDict.named('sectors_and_activities') \
@@ -343,32 +344,32 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            CommonTopicsDict.named('agriculture') \
-                            .using(label=u"Agriculture"),
+            TopicDict.named('agriculture') \
+                     .using(label=u"Agriculture"),
 
-            CommonTopicsDict.named('energy') \
-                            .using(label=u"Energy"),
+            TopicDict.named('energy') \
+                     .using(label=u"Energy"),
 
-            CommonTopicsDict.named('fisheries') \
-                            .using(label=u"Fisheries"),
+            TopicDict.named('fisheries') \
+                     .using(label=u"Fisheries"),
 
-            CommonTopicsDict.named('household_consumption') \
-                            .using(label=u"Household consumption"),
+            TopicDict.named('household_consumption') \
+                     .using(label=u"Household consumption"),
 
-            CommonTopicsDict.named('industry') \
-                            .using(label=u"Industry"),
+            TopicDict.named('industry') \
+                     .using(label=u"Industry"),
 
-            CommonTopicsDict.named('green_economy') \
-                            .using(label=u"Green economy"),
+            TopicDict.named('green_economy') \
+                     .using(label=u"Green economy"),
 
-            CommonTopicsDict.named('tourism') \
-                            .using(label=u"Tourism"),
+            TopicDict.named('tourism') \
+                     .using(label=u"Tourism"),
 
-            CommonTopicsDict.named('transport') \
-                            .using(label=u"Transport"),
+            TopicDict.named('transport') \
+                     .using(label=u"Transport"),
 
-            CommonTopicsDict.named('other_radio') \
-                            .using(label=u"............(input field)"),
+            TopicDict.named('other_radio') \
+                     .using(label=u"............(input field)"),
         ),
 
         CommonDict.named('across_env') \
@@ -376,17 +377,17 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            CommonTopicsDict.named('env_technology') \
-                            .using(label=u"Environmental technology"),
+            TopicDict.named('env_technology') \
+                     .using(label=u"Environmental technology"),
 
-            CommonTopicsDict.named('policy_instruments') \
-                            .using(label=u"Policy instruments"),
+            TopicDict.named('policy_instruments') \
+                     .using(label=u"Policy instruments"),
 
-            CommonTopicsDict.named('env_scenarios') \
-                            .using(label=u"Environmental scenarios"),
+            TopicDict.named('env_scenarios') \
+                     .using(label=u"Environmental scenarios"),
 
-            CommonTopicsDict.named('other_radio') \
-                            .using(label=u"............(input field)"),
+            TopicDict.named('other_radio') \
+                     .using(label=u"............(input field)"),
         ),
 
     ),
