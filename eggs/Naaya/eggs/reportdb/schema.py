@@ -294,13 +294,13 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            EeaTopicDict.named('coast_and_seas') \
+            EeaTopicDict.named('coast_sea') \
                         .using(label=u"Coast and seas"),
 
-            EeaTopicDict.named('specific_regions') \
+            EeaTopicDict.named('regions') \
                         .using(label=u"Specific regions"),
 
-            EeaTopicDict.named('urban_environment') \
+            EeaTopicDict.named('urban') \
                         .using(label=u"Urban environment"),
 
             TopicDict.named('other_radio') \
@@ -312,44 +312,45 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-                EeaTopicDict.named('air_pollution') \
-                            .using(label=u"Air pollution"),
+            EeaTopicDict.named('air') \
+                        .using(label=u"Air pollution"),
 
-                EeaTopicDict.named('biodiversity') \
-                            .using(label=u"Biodiversity"),
+            EeaTopicDict.named('biodiversity') \
+                        .using(label=u"Biodiversity"),
 
-                EeaTopicDict.named('chemicals') \
-                            .using(label=u"Chemicals"),
+            EeaTopicDict.named('chemicals') \
+                        .using(label=u"Chemicals"),
 
-                EeaTopicDict.named('climate_change') \
-                            .using(label=u"Climate change"),
+            EeaTopicDict.named('climate') \
+                        .using(label=u"Climate change"),
 
-                EeaTopicDict.named('env_and_health') \
-                            .using(label=u"Environment and health"),
+            EeaTopicDict.named('human') \
+                        .using(label=u"Environment and health"),
 
-                EeaTopicDict.named('land_use') \
-                            .using(label=u"Land use"),
+            EeaTopicDict.named('landuse') \
+                        .using(label=u"Land use"),
 
-                EeaTopicDict.named('natural_resources') \
-                            .using(label=u"Natural resources"),
+            EeaTopicDict.named('natural') \
+                        .using(label=u"Natural resources"),
 
-                EeaTopicDict.named('noise') \
-                            .using(label=u"Noise"),
+            EeaTopicDict.named('noise') \
+                        .using(label=u"Noise"),
 
-                EeaTopicDict.named('soil') \
-                            .using(label=u"Soil"),
+            EeaTopicDict.named('soil') \
+                        .using(label=u"Soil"),
 
-                EeaTopicDict.named('waste_and_resources') \
-                            .using(label=u"Waste and material resources"),
+            EeaTopicDict.named('waste') \
+                        .using(label=u"Waste and material resources"),
 
-                EeaTopicDict.named('water') \
-                            .using(label=u"Water"),
+            EeaTopicDict.named('water') \
+                        .using(label=u"Water"),
 
-                EeaTopicDict.named('other_issues') \
-                            .using(label=u"Various other issues"),
+            EeaTopicDict.named('other_issues') \
+                        .using(label=u"Various other issues"),
 
-                TopicDict.named('other_radio') \
-                         .using(label=u"............(input field)"),
+            TopicDict.named('other_radio') \
+                     .using(label=u"............(input field)"),
+
         ),
 
         CommonDict.named('sectors_and_activities') \
@@ -363,16 +364,16 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('energy') \
                         .using(label=u"Energy"),
 
-            EeaTopicDict.named('fisheries') \
+            EeaTopicDict.named('fishery') \
                         .using(label=u"Fisheries"),
 
-            EeaTopicDict.named('household_consumption') \
+            EeaTopicDict.named('households') \
                         .using(label=u"Household consumption"),
 
             EeaTopicDict.named('industry') \
                         .using(label=u"Industry"),
 
-            EeaTopicDict.named('green_economy') \
+            EeaTopicDict.named('economy') \
                         .using(label=u"Green economy"),
 
             EeaTopicDict.named('tourism') \
@@ -390,13 +391,13 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            EeaTopicDict.named('env_technology') \
+            EeaTopicDict.named('technology') \
                         .using(label=u"Environmental technology"),
 
-            EeaTopicDict.named('policy_instruments') \
+            EeaTopicDict.named('policy') \
                         .using(label=u"Policy instruments"),
 
-            EeaTopicDict.named('env_scenarios') \
+            EeaTopicDict.named('scenarios') \
                         .using(label=u"Environmental scenarios"),
 
             TopicDict.named('other_radio') \
