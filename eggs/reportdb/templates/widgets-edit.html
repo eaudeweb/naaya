@@ -60,6 +60,11 @@
   {{ mk.input(field, type="checkbox") }}
 {% endmacro %}
 
+{% macro file(mk, field) %}
+  {{ mk.input(field, type="file",
+              name='%s-data' % field.flattened_name()) }}
+{% endmacro %}
+
 {% macro subgroup(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     <div class="subgroup">
