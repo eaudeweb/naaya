@@ -43,14 +43,14 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
 
         fl.String.named('original_name') \
-                 .using(label=u"Name"),
+                 .using(label=u"Title"),
 
         CommonEnum.named('original_language') \
                  .using(label=u"Original Language") \
                  .valued(*languages_list),
 
         fl.String.named('english_name') \
-                 .using(label=u"Name (in English)"),
+                 .using(label=u"Title (in English)"),
 
         fl.Date.named('date_of_publication') \
                  .using(label=u"Date of publication") \
