@@ -95,8 +95,8 @@
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     <tr>
-        <td>{{ field.label }}</td>
-        <td>{{ mk.widget(field) }}</td>
+        <td>{{ mk.label(field, contents=field.label) }}</td>
+        <td>{{ mk.label.open(field) }}{{ mk.widget(field) }}{{ mk.label.close()}}</td>
         <td class="helptext">{{ field.properties.get('help') }}</td>
     </tr>
   {% endfor -%}
@@ -135,11 +135,11 @@
   {%- for name in mk.children_order(schema) %}
     {% if not name=="report_id" %}
         {% set field = schema[name] %}
+        {% if field.label %}
         <div class="section">
-            {% if field.label %}
             <h3>{{ field.label }}</h3>
-            {% endif %}
         </div>
+        {% endif %}
         <div>{{ mk.widget(field) }} </div>
     {% endif %}
   {% endfor -%}
@@ -165,7 +165,7 @@
         {{ field.label }}
       {% endif %}
     </td>
-  {{ mk.widget(field) }}
+    {{ mk.widget(field) }}
   {% endfor -%}
 </tr>
 {% endmacro %}
