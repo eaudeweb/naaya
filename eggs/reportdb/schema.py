@@ -83,7 +83,11 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('lang_of_pub') \
                  .using(label=u"Languages of publication") \
-                 .valued(*languages_list),
+                 .valued(*languages_list) \
+                 .with_properties(widget="chosen_select",
+                                  css_class="chzn-select",
+                                  field_id="lang_of_pub_sel",
+                                  multiple=""),
 
         fl.Dict.named('availability') \
                .with_properties(widget="options_with_labels") \
