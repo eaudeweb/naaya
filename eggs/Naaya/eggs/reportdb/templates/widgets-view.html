@@ -65,7 +65,7 @@
       </td>
   {% endfor %}
   {% if field.properties.add_empty_td %}
-    <td></td>
+    <td class="empty"></td>
   {% endif %}
 {% endmacro %}
 
@@ -143,7 +143,7 @@
     <table class="indicators-table">
         <thead>
             <tr>
-                <th></th>
+                <th>{{group.label}}</th>
                 <th class="radio">Most (>50%)</th>
                 <th class="radio">Some (<50%)</th>
                 <th class="radio">None</th>
@@ -152,9 +152,9 @@
         </thead>
     <tbody>
     {%- for name in mk.children_order(group) %}
+    {% if name not in "evaluation_method" %}
     <tr>
       <td class="indicators-group {{ error_cls }}">
-    {% if name not in "evaluation_method" %}
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
         {{ mk.label(field, class='control-label', contents=field.label) }}
@@ -173,16 +173,12 @@
             {% set field = group["evaluation_method"] %}
             {% set error_cls = 'error' if field.errors else '' %}
             {{ mk.label(field, class='control-label', contents=field.label) }}
-            <div>
-                {{ mk.widget(field) }}
-            </div>
-            <div class="controls">
-              {% for message in field.errors %}
-                <span class="help-inline">{{ message }}</span>
-              {% endfor %}
-            </div>
-            </td>
-        </tr>
+            {{ mk.widget(field) }}
+            {% for message in field.errors %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </td>
+    </tr>
         {% endif %}
     {% endif %}
     {%- endfor %}

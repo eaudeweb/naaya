@@ -71,7 +71,9 @@ def report_edit(report_id=None):
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
 
         file_upload.handle_request(session, report_schema, report_row)
-
+        print '-'*50
+        print flask.request.form
+        print '-'*50
         if report_schema.validate():
 
             report_row.update(report_schema.flatten())
