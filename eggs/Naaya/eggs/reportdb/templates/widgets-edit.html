@@ -99,7 +99,7 @@
 {% macro schema(mk, schema) %}
   {%- do mk.begin(auto_domid=true, auto_for=true) %}
   {%- for name in mk.children_order(schema) %}
-    {% if name != "report_id" %}
+    {% if not name in ["report_id"] %}
         {% set field = schema[name] %}
         <div class="section"><h3>{{ field.label }}</h3></div>
         <div>{{ mk.widget(field) }} </div>
@@ -131,6 +131,7 @@
 
 {% macro topics_group(mk, group) %}
     <table class="topics-table">
+        <thead>
         <tr>
             <th></th>
             <th colspan="4" class="focus-column">
@@ -152,6 +153,7 @@
             <td class="radio"> few,</td>
             <td class="radio"> none</td>
         </tr>
+    </thead>
     <tbody>
     {%- for name in mk.children_order(group) %}
     <tr>
