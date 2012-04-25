@@ -3,6 +3,7 @@ import flatland.out.markup
 import database
 import schema
 import file_upload
+import datetime
 
 from jinja2 import ChoiceLoader
 from loader import ZopeTemplateLoader
@@ -71,6 +72,8 @@ def report_edit(report_id=None):
         if report_schema.validate():
 
             report_row.update(report_schema.flatten())
+            session.save(report_row)
+            report_row['details_upload_date'] = str(datetime.datetime.now())
             session.save(report_row)
             seris_review_schema['report_id'].set(report_row.id)
 
