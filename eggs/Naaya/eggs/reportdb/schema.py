@@ -173,6 +173,10 @@ TopicDict = CommonDict.with_properties(widget="topics_columns") \
 
 )
 
+
+EeaTopicDict = TopicDict.with_properties(eea_theme_link=True)
+
+
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
 
@@ -290,14 +294,14 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            TopicDict.named('coast_and_seas') \
-                     .using(label=u"Coast and seas"),
+            EeaTopicDict.named('coast_and_seas') \
+                        .using(label=u"Coast and seas"),
 
-            TopicDict.named('specific_regions') \
-                     .using(label=u"Specific regions"),
+            EeaTopicDict.named('specific_regions') \
+                        .using(label=u"Specific regions"),
 
-            TopicDict.named('urban_environment') \
-                     .using(label=u"Urban environment"),
+            EeaTopicDict.named('urban_environment') \
+                        .using(label=u"Urban environment"),
 
             TopicDict.named('other_radio') \
                      .using(label=u"............(input field)"),
@@ -308,41 +312,41 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-                TopicDict.named('air_pollution') \
-                         .using(label=u"Air pollution"),
+                EeaTopicDict.named('air_pollution') \
+                            .using(label=u"Air pollution"),
 
-                TopicDict.named('biodiversity') \
-                         .using(label=u"Biodiversity"),
+                EeaTopicDict.named('biodiversity') \
+                            .using(label=u"Biodiversity"),
 
-                TopicDict.named('chemicals') \
-                         .using(label=u"Chemicals"),
+                EeaTopicDict.named('chemicals') \
+                            .using(label=u"Chemicals"),
 
-                TopicDict.named('climate_change') \
-                         .using(label=u"Climate change"),
+                EeaTopicDict.named('climate_change') \
+                            .using(label=u"Climate change"),
 
-                TopicDict.named('env_and_health') \
-                         .using(label=u"Environment and health"),
+                EeaTopicDict.named('env_and_health') \
+                            .using(label=u"Environment and health"),
 
-                TopicDict.named('land_use') \
-                         .using(label=u"Land use"),
+                EeaTopicDict.named('land_use') \
+                            .using(label=u"Land use"),
 
-                TopicDict.named('natural_resources') \
-                         .using(label=u"Natural resources"),
+                EeaTopicDict.named('natural_resources') \
+                            .using(label=u"Natural resources"),
 
-                TopicDict.named('noise') \
-                         .using(label=u"Noise"),
+                EeaTopicDict.named('noise') \
+                            .using(label=u"Noise"),
 
-                TopicDict.named('soil') \
-                         .using(label=u"Soil"),
+                EeaTopicDict.named('soil') \
+                            .using(label=u"Soil"),
 
-                TopicDict.named('waste_and_resources') \
-                         .using(label=u"Waste and material resources"),
+                EeaTopicDict.named('waste_and_resources') \
+                            .using(label=u"Waste and material resources"),
 
-                TopicDict.named('water') \
-                         .using(label=u"Water"),
+                EeaTopicDict.named('water') \
+                            .using(label=u"Water"),
 
-                TopicDict.named('other_issues') \
-                         .using(label=u"Various other issues"),
+                EeaTopicDict.named('other_issues') \
+                            .using(label=u"Various other issues"),
 
                 TopicDict.named('other_radio') \
                          .using(label=u"............(input field)"),
@@ -353,29 +357,29 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            TopicDict.named('agriculture') \
-                     .using(label=u"Agriculture"),
+            EeaTopicDict.named('agriculture') \
+                        .using(label=u"Agriculture"),
 
-            TopicDict.named('energy') \
-                     .using(label=u"Energy"),
+            EeaTopicDict.named('energy') \
+                        .using(label=u"Energy"),
 
-            TopicDict.named('fisheries') \
-                     .using(label=u"Fisheries"),
+            EeaTopicDict.named('fisheries') \
+                        .using(label=u"Fisheries"),
 
-            TopicDict.named('household_consumption') \
-                     .using(label=u"Household consumption"),
+            EeaTopicDict.named('household_consumption') \
+                        .using(label=u"Household consumption"),
 
-            TopicDict.named('industry') \
-                     .using(label=u"Industry"),
+            EeaTopicDict.named('industry') \
+                        .using(label=u"Industry"),
 
-            TopicDict.named('green_economy') \
-                     .using(label=u"Green economy"),
+            EeaTopicDict.named('green_economy') \
+                        .using(label=u"Green economy"),
 
-            TopicDict.named('tourism') \
-                     .using(label=u"Tourism"),
+            EeaTopicDict.named('tourism') \
+                        .using(label=u"Tourism"),
 
-            TopicDict.named('transport') \
-                     .using(label=u"Transport"),
+            EeaTopicDict.named('transport') \
+                        .using(label=u"Transport"),
 
             TopicDict.named('other_radio') \
                      .using(label=u"............(input field)"),
@@ -386,14 +390,14 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
 
-            TopicDict.named('env_technology') \
-                     .using(label=u"Environmental technology"),
+            EeaTopicDict.named('env_technology') \
+                        .using(label=u"Environmental technology"),
 
-            TopicDict.named('policy_instruments') \
-                     .using(label=u"Policy instruments"),
+            EeaTopicDict.named('policy_instruments') \
+                        .using(label=u"Policy instruments"),
 
-            TopicDict.named('env_scenarios') \
-                     .using(label=u"Environmental scenarios"),
+            EeaTopicDict.named('env_scenarios') \
+                        .using(label=u"Environmental scenarios"),
 
             TopicDict.named('other_radio') \
                      .using(label=u"............(input field)"),
