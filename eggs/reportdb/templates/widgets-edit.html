@@ -91,7 +91,7 @@
 {% endmacro %}
 
 {% macro reference_group(mk, schema) %}
-  <table>
+  <table class="reference_table">
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     <tr>
