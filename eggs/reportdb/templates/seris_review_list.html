@@ -2,42 +2,44 @@
 
 {% block seris_content %}
 
-<div>
-    [<a href="{{url_for('views.report_list')}}">
-        Back to reports list
-    </a>]
-    [<a href="{{url_for('views.report_edit',
-        report_id=report['id'])}}">
-        Edit Report {{ report['id'] }}
-    </a>]
-    {# TO BE IMPLEMENTED LATER #}
-    {#[<a href="{{url_for('views.seris_review_add',
-        report_id=report['id'])}}">
-        Add review to Report {{ report['id'] }}
-    </a>]#}
-</div>
-<hr/>
-{#
-<h2>Report {{report['id']}} reviews:</h2>
-<div>
-    <ul>
-    {% for review in report['seris_reviews'] %}
-        <li>
-          <a href="{{ url_for('views.seris_review_view',
-                              report_id=report['id'],
-                              seris_review_id=review['id']) }}">
-              Review {{ review['id'] }}
-          </a>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
-#}
+<div class="report-content">
+    <div>
+        [<a href="{{url_for('views.report_list')}}">
+            Back to reports list
+        </a>]
+        [<a href="{{url_for('views.report_edit',
+            report_id=report['id'])}}">
+            Edit Report {{ report['id'] }}
+        </a>]
+        {# TO BE IMPLEMENTED LATER #}
+        {#[<a href="{{url_for('views.seris_review_add',
+            report_id=report['id'])}}">
+            Add review to Report {{ report['id'] }}
+        </a>]#}
+    </div>
+    <hr/>
+    {#
+    <h2>Report {{report['id']}} reviews:</h2>
+    <div>
+        <ul>
+        {% for review in report['seris_reviews'] %}
+            <li>
+              <a href="{{ url_for('views.seris_review_view',
+                                  report_id=report['id'],
+                                  seris_review_id=review['id']) }}">
+                  Review {{ review['id'] }}
+              </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    #}
 
-{{ mk.widget(report['data']) }}
-{% if report['seris_reviews'] %}
-    {{ mk.widget(report['seris_reviews'][0]['data']) }}
-{% endif %}
+    {{ mk.widget(report['data']) }}
+    {% if report['seris_reviews'] %}
+        {{ mk.widget(report['seris_reviews'][0]['data']) }}
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block scripts %}
