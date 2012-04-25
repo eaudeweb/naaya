@@ -132,7 +132,11 @@
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
               <div class="controls">
-                  {{ mk.widget(field) }}
+                  {% if field.properties.get('enclose_in_td') %}
+                      <td>{{ mk.widget(field) }}</td>
+                  {% else %}
+                      {{ mk.widget(field) }}
+                  {% endif %}
                   {% for message in field.errors %}
                   <span class="help-inline">{{ message }}</span>
                   {% endfor %}
@@ -174,14 +178,16 @@
 {% macro topics_subgroup(mk, schema) %}
 <tr>
   {%- for name in mk.children_order(schema) %}
+    {% set field = schema[name] %}
+    {% if not field.properties.get('extra_topic') %}
     <td>
-      {% set field = schema[name] %}
       {% if field.properties.get('eea_theme_link') %}
         {{ eea_theme_image_and_link(field.name, field.label) }}
       {% else %}
-        {{ field.label }}
+            {{ field.label }}
       {% endif %}
     </td>
+    {% endif %}
     {{ mk.widget(field) }}
   {% endfor -%}
 </tr>
@@ -219,7 +225,9 @@
         <td colspan="10">
             {% set field = group[name] %}
             {% set error_cls = 'error' if field.errors else '' %}
-            {{ field.label }}
+            {% if not name in extra_topic_list %}
+                {{ field.label }}
+            {% endif %}
         </td>
     </tr>
         {{ mk.widget(field) }}

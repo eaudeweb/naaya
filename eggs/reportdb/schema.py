@@ -166,7 +166,8 @@ topics_ratings = _load_json("refdata/topics_ratings.json")
 evaluation_methods = _load_json("refdata/evaluation_methods.json")
 
 TopicEnum = fl.Enum.using(optional=True) \
-                   .with_properties(widget="topics_radioselect") \
+                   .with_properties(widget="topics_radioselect", 
+                                    extra_topic="True") \
                    .valued(*sorted(topics_ratings.keys()))
 
 IndicatorEnum = fl.Enum.using(optional=True) \
@@ -319,8 +320,18 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('urban') \
                         .using(label=u"Urban environment"),
 
-            TopicDict.named('other_radio') \
-                     .using(label=u"............(input field)"),
+            CommonDict.named('other_topic') \
+                      .with_properties(extra_topic="True") \
+                      .of(
+
+                CommonString.named('other_topic_input') \
+                            .with_properties(hidden_label="True",
+                                             enclose_in_td="True"),
+
+                TopicDict.named('other_radio') \
+                         .with_properties(extra_topic="True", 
+                                          hidden_label="True") \
+            ),
         ),
 
         CommonDict.named('env_issues') \
@@ -364,8 +375,18 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('other_issues') \
                         .using(label=u"Various other issues"),
 
-            TopicDict.named('other_radio') \
-                     .using(label=u"............(input field)"),
+            CommonDict.named('other_topic') \
+                      .with_properties(extra_topic="True") \
+                      .of(
+
+                CommonString.named('other_topic_input') \
+                            .with_properties(hidden_label="True",
+                                             enclose_in_td="True"),
+
+                TopicDict.named('other_radio') \
+                         .with_properties(extra_topic="True", 
+                                          hidden_label="True") \
+            ),
 
         ),
 
@@ -398,8 +419,18 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('transport') \
                         .using(label=u"Transport"),
 
-            TopicDict.named('other_radio') \
-                     .using(label=u"............(input field)"),
+            CommonDict.named('other_topic') \
+                      .with_properties(extra_topic="True") \
+                      .of(
+
+                CommonString.named('other_topic_input') \
+                            .with_properties(hidden_label="True",
+                                             enclose_in_td="True"),
+
+                TopicDict.named('other_radio') \
+                         .with_properties(extra_topic="True", 
+                                          hidden_label="True") \
+            ),
         ),
 
         CommonDict.named('across_env') \
@@ -416,8 +447,18 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('scenarios') \
                         .using(label=u"Environmental scenarios"),
 
-            TopicDict.named('other_radio') \
-                     .using(label=u"............(input field)"),
+            CommonDict.named('other_topic') \
+                      .with_properties(extra_topic="True") \
+                      .of(
+
+                CommonString.named('other_topic_input') \
+                            .with_properties(hidden_label="True",
+                                             enclose_in_td="True"),
+
+                TopicDict.named('other_radio') \
+                         .with_properties(extra_topic="True", 
+                                          hidden_label="True") \
+            ),
         ),
 
     ),
