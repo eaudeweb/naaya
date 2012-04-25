@@ -2,6 +2,7 @@ import flask
 import flatland.out.markup
 import database
 import schema
+import file_upload
 
 from jinja2 import ChoiceLoader
 from loader import ZopeTemplateLoader
@@ -63,6 +64,8 @@ def report_edit(report_id=None):
         form_data.update(flask.request.form.to_dict())
         report_schema = schema.ReportSchema.from_flat(form_data)
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
+
+        file_upload.handle_request(session, report_schema, report_row)
 
         if report_schema.validate():
 
@@ -172,6 +175,17 @@ def seris_review_view(report_id, seris_review_id):
                       }
         }
     )
+
+
+@views.route('/download/<int:db_id>')
+def download(db_id):
+    session = database.get_session()
+    try:
+        db_file = session.get_db_file(db_id)
+    except KeyError:
+        flask.abort(404)
+    return flask.Response(''.join(db_file.iter_data()), # TODO stream response
+                          mimetype="application/octet-stream")
 
 
 def register_on(app):
