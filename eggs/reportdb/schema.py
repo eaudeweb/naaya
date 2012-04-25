@@ -18,6 +18,7 @@ publication_freq = _load_json("refdata/publication_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
 languages_list = _load_json("refdata/languages_list.json")
+indicators_estimation = _load_json("refdata/indicators_estimation.json")
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
@@ -190,6 +191,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                      .using(label=u"Indicator-based report?"),
 
         CommonEnum.named('indicators_estimation') \
+                  .valued(*sorted(indicators_estimation.keys())) \
                   .using(label=u"Indicators:"),
 
         CommonBoolean.named('eea_indicators') \
