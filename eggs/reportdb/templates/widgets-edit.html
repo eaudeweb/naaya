@@ -94,7 +94,9 @@
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
       <div class="field {{ error_cls }}">
+        {% if not name=='indicators_usage' %}  
         {{ mk.label(field, class='control-label', contents=field.label) }}
+        {% endif %}
           <div class="controls">
               {{ mk.widget(field) }}
               {% for message in field.errors %}
@@ -191,7 +193,7 @@
     <table class="indicators-table">
         <thead>
             <tr>
-                <th></th>
+                <th>{{group.label}}</th>
                 <th class="radio">Most (>50%)</th>
                 <th class="radio">Some (<50%)</th>
                 <th class="radio">None</th>
