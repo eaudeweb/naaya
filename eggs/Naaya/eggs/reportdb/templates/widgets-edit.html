@@ -37,6 +37,9 @@
   {{ mk.option(field, value=value, contents=value_label) }}
   {% endfor %}
   {{ mk.select.close() }}
+  {% if field.properties.get('help') %}
+  <span>{{ field.properties.get('help') }}</span>
+  {% endif %}
 {% endmacro %}
 
 {% macro topics_radioselect(mk, field) %}
@@ -108,27 +111,33 @@
 
 {% macro group(mk, group) %}
     {% set reversed_list = [] %}
+    {% set hidden_list = [] %}
     {%- for name in mk.children_order(group) %}
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
+        {% if field.properties.get('field_type')=="hidden" %}
+            {% do hidden_list.append(name) %}
+        {% endif %}
         {% if field.properties.get('reversed') %}
             {% do reversed_list.append(name) %}
         {% endif %}
-      <div class="field {{ error_cls }}">
-        {% if not name in ['indicators_usage'] + reversed_list %}  
-            {{ mk.label(field, class='control-label', contents=field.label) }}
-          <div class="controls">
-              {{ mk.widget(field) }}
-              {% for message in field.errors %}
-              <span class="help-inline">{{ message }}</span>
-              {% endfor %}
-          </div>
+        {% if name not in hidden_list %}
+            <div class="field {{ error_cls }}">
+            {% if not name in reversed_list %}  
+                {{ mk.label(field, class='control-label', contents=field.label) }}
+              <div class="controls">
+                  {{ mk.widget(field) }}
+                  {% for message in field.errors %}
+                  <span class="help-inline">{{ message }}</span>
+                  {% endfor %}
+              </div>
+            {% endif %}
+            {% if name in reversed_list %}
+               {{ mk.widget(field) }}
+               {{ mk.label(field, class='control-label', contents=field.label) }}
+            {% endif %}
+            </div>
         {% endif %}
-        {% if name in reversed_list %}
-           {{ mk.widget(field) }}
-           {{ mk.label(field, class='control-label', contents=field.label) }}
-        {% endif %}
-      </div>
     {%- endfor %}
 {% endmacro %}
 

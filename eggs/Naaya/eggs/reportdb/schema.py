@@ -55,6 +55,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                                    field_id="country_sel",
                                    widget="chosen_select",
                                    multiple="",
+                                   help=u"Region/sub-national?",
                                    data_placeholder="Select countries") \
                   .valued(*countries_list),
 
@@ -90,6 +91,13 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonString.named('publisher') \
                     .using(label=u"Published by"),
+
+        CommonString.named('uploader') \
+                    .using(label=u"Uploaded by"),
+
+        CommonString.named('upload_date') \
+                    .with_properties(field_type='hidden') \
+                    .using(label=u"Upload date"),
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
