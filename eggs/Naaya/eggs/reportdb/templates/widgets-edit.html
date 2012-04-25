@@ -110,8 +110,7 @@
 {% endmacro %}
 
 {% macro topics_subgroup(mk, schema) %}
-  </tr>
-  <tr>
+<tr>
   {%- for name in mk.children_order(schema) %}
     <td>
         {% set field = schema[name] %}
@@ -119,11 +118,11 @@
     </td>
   {{ mk.widget(field) }}
   {% endfor -%}
-  </tr>
+</tr>
 {% endmacro %}
 
 {% macro topics_group(mk, group) %}
-    <table class="topics-table">
+    <table class="topics-table" border=1>
         <thead>
             <tr>
                 <th></th>
@@ -150,19 +149,18 @@
         </tr>
     {%- for name in mk.children_order(group) %}
     <tr class="topics-group {{ error_cls }}">
-      <td colspan="9">
-        {% set field = group[name] %}
-        {% set error_cls = 'error' if field.errors else '' %}
-        {{ mk.label(field, class='control-label', contents=field.label) }}
-      </td>
-      <td>
+        <td colspan="9">
+            {% set field = group[name] %}
+            {% set error_cls = 'error' if field.errors else '' %}
+            {{ mk.label(field, class='control-label', contents=field.label) }}
+        </td>
+    </tr>
         {{ mk.widget(field) }}
         <span class="controls">
-          {% for message in field.errors %}
-            <span class="help-inline">{{ message }}</span>
-          {% endfor %}
+            {% for message in field.errors %}
+                <span class="help-inline">{{ message }}</span>
+            {% endfor %}
         </span>
-      </td>
     {%- endfor %}
     </tbody>
     </table>
