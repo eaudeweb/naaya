@@ -37,7 +37,9 @@ publication_years = [str(year) for year in xrange(1990,
 publication_freq = _load_json("refdata/publication_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
-languages_list = _load_json("refdata/languages_list.json")
+languages = _load_json("refdata/languages_list.json")
+language_names = sorted(languages.keys())
+language_codes = [languages[language_name] for language_name in language_names]
 indicators_estimation = _load_json("refdata/indicators_estimation.json")
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
@@ -74,7 +76,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named('original_language') \
                   .using(label=u"Original Language",
                          optional=False) \
-                  .valued(*languages_list),
+                  .with_properties(value_labels=language_names) \
+                  .valued(*language_codes),
 
         CommonString.named('english_name') \
                     .using(label=u"Title (in English)") \
@@ -99,7 +102,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('format') \
                   .using(label=u"Format") \
-                  .valued(*sorted(report_formats.keys())),
+                  .valued(*report_formats),
 
         fl.Integer.named('no_of_pages') \
                   .using(label=u"No. of pages (main SOE report)",
@@ -112,10 +115,11 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('lang_of_pub') \
                   .using(label=u"Languages of publication") \
-                  .valued(*languages_list) \
+                  .valued(*language_codes) \
                   .with_properties(widget="chosen_select",
                                    css_class="chzn-select",
                                    field_id="lang_of_pub_sel",
+                                   value_labels=language_names,
                                    multiple=""),
 
         fl.Dict.named('availability') \

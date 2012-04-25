@@ -15,7 +15,8 @@
   {{ mk.option(field, value="", contents="--") }}
   
   {% for value in field.valid_values %}
-      {% set value_label = (field.properties.value_labels[value]
+      {% set value_label =
+      (field.properties.value_labels[field.valid_values.index(value)]
           if field.properties.value_labels else value) %}
   {{ mk.option(field, value=value, contents=value_label) }}
   {% endfor %}
@@ -28,9 +29,10 @@
                          multiple="",
                          tabindex="-1") }}
   {{ mk.option(field, value="") }}
-  
+
   {% for value in field.valid_values %}
-      {% set value_label = (field.properties.value_labels[value]
+      {% set value_label =
+      (field.properties.value_labels[field.valid_values.index(value)]
           if field.properties.value_labels else value) %}
   {{ mk.option(field, value=value, contents=value_label) }}
   {% endfor %}
