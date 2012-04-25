@@ -88,6 +88,19 @@
   {% endfor -%}
 {% endmacro %}
 
+{% macro reference_group(mk, schema) %}
+  <table>
+  {%- for name in mk.children_order(schema) %}
+    {% set field = schema[name] %}
+    <tr>
+        <td>{{ field.label }}</td>
+        <td>{{ mk.widget(field) }}</td>
+        <td class="helptext">{{ field.properties.get('help') }}</td>
+    </tr>
+  {% endfor -%}
+  </table>
+{% endmacro %}
+
 
 {% macro group(mk, group) %}
     {%- for name in mk.children_order(group) %}
