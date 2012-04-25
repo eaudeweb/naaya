@@ -47,10 +47,13 @@
   {% for value in field.valid_values %}
       {% set value_label = (field.properties.value_labels[value]
       if field.properties.value_labels else value) %}
-  <td>
-  {{ mk.input(field, type='radio', value=value, disabled='true') }}
-  </td>
+      <td class={{field.properties.css_class}}>
+      {{ mk.input(field, type='radio', value=value) }}
+      </td>
   {% endfor %}
+  {% if field.properties.add_empty_td %}
+    <td></td>
+  {% endif %}
 {% endmacro %}
 
 {% macro topics_columns(mk, schema) %}
@@ -62,8 +65,7 @@
 {% endmacro %}
 
 {% macro topics_subgroup(mk, schema) %}
-  </tr>
-  <tr>
+<tr>
   {%- for name in mk.children_order(schema) %}
     <td>
         {% set field = schema[name] %}
@@ -71,48 +73,50 @@
     </td>
   {{ mk.widget(field) }}
   {% endfor -%}
-  </tr>
+</tr>
 {% endmacro %}
 
 {% macro topics_group(mk, group) %}
     <table class="topics-table">
-        <tr>
-            <th></th>
-            <th colspan="4" class="focus-column">
-                Focus
-            </th>
-            <th colspan="4" class="indicators-column">
-                Indicators
-            </th>
-        </tr>
+        <thead>
+            <tr>
+                <th></th>
+                <th colspan="4" class="focus-column">
+                    Focus
+                </th>
+                <th></th>
+                <th colspan="4" class="indicators-column">
+                    Indicators
+                </th>
+            </tr>
+        </thead>
+    <tbody>
         <tr>
             <td></td>
-            <td class="radio">Major,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> minor,</td>
-            <td class="radio"> none</td>
-
-            <td class="radio">Several,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> few,</td>
-            <td class="radio"> none</td>
+            <td class="focus-column">Major</td>
+            <td class="focus-column">Some</td>
+            <td class="focus-column">Minor</td>
+            <td class="focus-column">None</td>
+            <td></td>
+            <td class="indicators-column">Several</td>
+            <td class="indicators-column">Some</td>
+            <td class="indicators-column">Few</td>
+            <td class="indicators-column">None</td>
         </tr>
-    <tbody>
     {%- for name in mk.children_order(group) %}
-    <tr>
-      <td colspan="9" class="topics-group {{ error_cls }}">
-        {% set field = group[name] %}
-        {% set error_cls = 'error' if field.errors else '' %}
-        {{ mk.label(field, class='control-label', contents=field.label) }}
-      </td>
-      <td>
+    <tr class="topics-group {{ error_cls }}">
+        <td colspan="10">
+            {% set field = group[name] %}
+            {% set error_cls = 'error' if field.errors else '' %}
+            {{ mk.label(field, class='control-label', contents=field.label) }}
+        </td>
+    </tr>
         {{ mk.widget(field) }}
         <span class="controls">
-          {% for message in field.errors %}
-            <span class="help-inline">{{ message }}</span>
-          {% endfor %}
+            {% for message in field.errors %}
+                <span class="help-inline">{{ message }}</span>
+            {% endfor %}
         </span>
-      </td>
     {%- endfor %}
     </tbody>
     </table>
