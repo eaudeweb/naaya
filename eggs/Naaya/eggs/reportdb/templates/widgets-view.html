@@ -28,6 +28,17 @@
   {% endif %}
 {% endmacro -%}
 
+{% macro file(mk, field) %}
+  {% if (not field.is_empty) %}
+    {% set url = url_for('views.download', db_id=field.u) %}
+    {% if field.properties['widget_image'] %}
+      <img src="{{ url }}">
+    {% else %}
+      <a href="{{ url }}" rel="nofollow">download</a>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
 {%- macro date(mk, field) %}
   {{ field.value or "" }}
 {% endmacro -%}
