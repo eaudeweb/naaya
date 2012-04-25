@@ -119,21 +119,66 @@
 {% endmacro %}
 
 {% macro indicators_group(mk, group) %}
+    <table class="indicators-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="radio">Most (>50%)</th>
+                <th class="radio">Some (<50%)</th>
+                <th class="radio">None</th>
+                <th></th>
+            </tr>
+        </thead>
+    <tbody>
+    {%- for name in mk.children_order(group) %}
+    <tr>
+      <td class="indicators-group {{ error_cls }}">
+    {% if name not in "evaluation_method" %}
+        {% set field = group[name] %}
+        {% set error_cls = 'error' if field.errors else '' %}
+        {{ mk.label(field, class='control-label', contents=field.label) }}
+        {{ mk.widget(field) }}
+        <span class="controls">
+          {% for message in field.errors %}
+            <span class="help-inline">{{ message }}</span>
+          {% endfor %}
+        </span>
+        {% if name not in "to_evaluate" %}
+          </td>
+        </tr>
+        {% else %}
+        </td>
+        <td>
+            {% set field = group["evaluation_method"] %}
+            {% set error_cls = 'error' if field.errors else '' %}
+            {{ mk.label(field, class='control-label', contents=field.label) }}
+            <div>
+                {{ mk.widget(field) }}
+            </div>
+            <div class="controls">
+              {% for message in field.errors %}
+                <span class="help-inline">{{ message }}</span>
+              {% endfor %}
+            </div>
+            </td>
+        </tr>
+        {% endif %}
+    {% endif %}
+    {%- endfor %}
+    </tbody>
+    </table>
 {% endmacro %}
 
 {% macro indicators_radioselect(mk, field) %}
-  <table>
-      <tbody>
-      <tr><td>Most(>50%)</td><td>Some(<50%)</td><td>None</td></tr>
-      <tr>
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
           <td>{{ mk.input(field, type='radio', value=value, disabled='true') }}</td>
       {% endfor %}
-      </tr>
-      </tbody>
-  </table>
+{% endmacro %}
+
+{% macro checkbox(mk, field) %}
+  {{ mk.input(field, type="checkbox") }}
 {% endmacro %}
 
 {% macro subgroup(mk, schema) %}

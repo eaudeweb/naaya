@@ -46,6 +46,9 @@
       {{ mk.input(field, type='radio', value=value) }}
       </td>
   {% endfor %}
+  {% if field.properties.add_empty_td %}
+    <td></td>
+  {% endif %}
 {% endmacro %}
 
 {% macro indicators_radioselect(mk, field) %}
@@ -131,13 +134,14 @@
 {% endmacro %}
 
 {% macro topics_group(mk, group) %}
-    <table class="topics-table" border=1>
+    <table class="topics-table">
         <thead>
             <tr>
                 <th></th>
                 <th colspan="4" class="focus-column">
                     Focus
                 </th>
+                <th></th>
                 <th colspan="4" class="indicators-column">
                     Indicators
                 </th>
@@ -150,7 +154,7 @@
             <td class="focus-column">Some</td>
             <td class="focus-column">Minor</td>
             <td class="focus-column">None</td>
-
+            <td></td>
             <td class="indicators-column">Several</td>
             <td class="indicators-column">Some</td>
             <td class="indicators-column">Few</td>
@@ -158,7 +162,7 @@
         </tr>
     {%- for name in mk.children_order(group) %}
     <tr class="topics-group {{ error_cls }}">
-        <td colspan="9">
+        <td colspan="10">
             {% set field = group[name] %}
             {% set error_cls = 'error' if field.errors else '' %}
             {{ mk.label(field, class='control-label', contents=field.label) }}
@@ -225,6 +229,7 @@
     </tbody>
     </table>
 {% endmacro %}
+
 {% macro options_with_labels(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
