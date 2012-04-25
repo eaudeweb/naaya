@@ -168,6 +168,10 @@ class Session(object):
     def commit(self):
         self.conn.commit()
 
+    def rollback(self):
+        # TODO needs a unit test
+        self.conn.rollback()
+
     def table(self, obj_or_cls):
         if isinstance(obj_or_cls, TableRow):
             row_cls = type(obj_or_cls)
