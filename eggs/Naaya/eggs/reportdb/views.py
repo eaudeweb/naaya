@@ -73,7 +73,8 @@ def report_edit(report_id=None):
 
             report_row.update(report_schema.flatten())
             session.save(report_row)
-            report_row['details_upload_date'] = str(datetime.datetime.now())
+            #TODO create filter to display data without losing information
+            report_row['header_upload_date'] = datetime.datetime.now().strftime('%d %b %Y, %H:%M')
             session.save(report_row)
             seris_review_schema['report_id'].set(report_row.id)
 
