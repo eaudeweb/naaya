@@ -2,6 +2,7 @@ import flatland as fl
 import os
 import json
 import database
+import datetime
 from flatland.validation import Converted
 from file_upload import CommonFile
 
@@ -31,6 +32,8 @@ CommonDict = fl.Dict.with_properties(widget="group")
 CommonBoolean = fl.Boolean.with_properties(widget="checkbox")
 
 report_formats = _load_json("refdata/report_formats.json")
+publication_years = [str(year) for year in xrange(1990,
+                                           datetime.datetime.now().year+1)]
 publication_freq = _load_json("refdata/publication_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
@@ -77,8 +80,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                     .using(label=u"Title (in English)") \
                     .with_properties(css_class="input-big"),
 
-        CommonString.named('date_of_publication') \
+        CommonEnum.named('date_of_publication') \
                     .using(label=u"Date of publication") \
+                    .valued(*publication_years) \
                     .with_properties(css_class="input-small"),
 
         CommonString.named('publisher') \
