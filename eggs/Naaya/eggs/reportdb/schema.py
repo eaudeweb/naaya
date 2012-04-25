@@ -82,7 +82,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                      .using(label=u"Separate summary report?"),
 
         CommonEnum.named('lang_of_pub') \
-                 .using(label=u"Languages of publication"),
+                 .using(label=u"Languages of publication") \
+                 .valued(*languages_list),
 
         fl.Dict.named('availability') \
                .with_properties(widget="options_with_labels") \

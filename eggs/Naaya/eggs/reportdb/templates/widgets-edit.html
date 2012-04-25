@@ -84,7 +84,7 @@
     {%- for name in mk.children_order(group) %}
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
-      <div class="control-group {{ error_cls }}">
+      <div class="field {{ error_cls }}">
         {{ mk.label(field, class='control-label', contents=field.label) }}
           <div class="controls">
               {{ mk.widget(field) }}
