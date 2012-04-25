@@ -223,7 +223,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonBoolean.named('key_findings') \
                      .using(label=u"Reference/links to key findings "
-                                   "of the country's previous SOER?"),
+                                   "of the country's previous SOER?") \
+                     .with_properties(reversed="True"),
     ),
 
     CommonDict.named('structure') \
