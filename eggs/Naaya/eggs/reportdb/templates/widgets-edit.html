@@ -43,8 +43,8 @@
       {% set value_label = (field.properties.value_labels[value]
       if field.properties.value_labels else value) %}
       <td class={{field.properties.css_class}}>
-  {{ mk.input(field, type='radio', value=value) }}
-  </td>
+      {{ mk.input(field, type='radio', value=value) }}
+      </td>
   {% endfor %}
 {% endmacro %}
 
@@ -138,15 +138,15 @@
     <tbody>
         <tr>
             <td></td>
-            <td class="focus-column">Major,</td>
-            <td class="focus-column"> some,</td>
-            <td class="focus-column"> minor,</td>
-            <td class="focus-column"> none</td>
+            <td class="focus-column">Major</td>
+            <td class="focus-column">Some</td>
+            <td class="focus-column">Minor</td>
+            <td class="focus-column">None</td>
 
-            <td class="indicators-column">Several,</td>
-            <td class="indicators-column"> some,</td>
-            <td class="indicators-column"> few,</td>
-            <td class="indicators-column"> none</td>
+            <td class="indicators-column">Several</td>
+            <td class="indicators-column">Some</td>
+            <td class="indicators-column">Few</td>
+            <td class="indicators-column">None</td>
         </tr>
     {%- for name in mk.children_order(group) %}
     <tr class="topics-group {{ error_cls }}">
@@ -173,31 +173,47 @@
         <thead>
             <tr>
                 <th></th>
-                <th></th>
-                <th class="radio">Most(>50%)</th>
-                <th class="radio">Some(<50%)</th>
+                <th class="radio">Most (>50%)</th>
+                <th class="radio">Some (<50%)</th>
                 <th class="radio">None</th>
+                <th></th>
             </tr>
         </thead>
     <tbody>
-        <tr>
-            <td></td>
-        </tr>
     {%- for name in mk.children_order(group) %}
     <tr>
       <td class="indicators-group {{ error_cls }}">
+    {% if name not in "evaluation_method" %}
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
         {{ mk.label(field, class='control-label', contents=field.label) }}
-      </td>
-      <td>
         {{ mk.widget(field) }}
         <span class="controls">
           {% for message in field.errors %}
             <span class="help-inline">{{ message }}</span>
           {% endfor %}
         </span>
-      </td>
+        {% if name not in "to_evaluate" %}
+          </td>
+        </tr>
+        {% else %}
+        </td>
+        <td>
+            {% set field = group["evaluation_method"] %}
+            {% set error_cls = 'error' if field.errors else '' %}
+            {{ mk.label(field, class='control-label', contents=field.label) }}
+            <div>
+                {{ mk.widget(field) }}
+            </div>
+            <div class="controls">
+              {% for message in field.errors %}
+                <span class="help-inline">{{ message }}</span>
+              {% endfor %}
+            </div>
+            </td>
+        </tr>
+        {% endif %}
+    {% endif %}
     {%- endfor %}
     </tbody>
     </table>

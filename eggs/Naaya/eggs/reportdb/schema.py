@@ -241,7 +241,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                             .valued(*sorted(indicators_usage.keys())) \
                             .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
-            CommonEnum.named("related_reports_name") \
+            CommonEnum.named("evaluation_method") \
                       .valued(*sorted(evaluation_methods.keys())) \
                       .using(label=u"If yes, how?"),
         ),
