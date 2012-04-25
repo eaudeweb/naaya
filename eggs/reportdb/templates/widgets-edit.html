@@ -1,5 +1,5 @@
 {% macro input(mk, field) %}
-  {{ mk.input(field) }}
+  {{ mk.input(field, class=field.properties.get('css_class')) }}
 {% endmacro %}
 
 {% macro hidden(mk, field) %}

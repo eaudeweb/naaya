@@ -65,7 +65,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonString.named('original_name') \
                     .using(label=u"Title",
-                           optional=False),
+                           optional=False)
+                    .with_properties(css_class="input-big"),
 
         CommonEnum.named('original_language') \
                  .using(label=u"Original Language",
@@ -73,10 +74,12 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                  .valued(*languages_list),
 
         CommonString.named('english_name') \
-                    .using(label=u"Title (in English)"),
+                    .using(label=u"Title (in English)") \
+                    .with_properties(css_class="input-big"),
 
         CommonString.named('date_of_publication') \
-                    .using(label=u"Date of publication"),
+                    .using(label=u"Date of publication") \
+                    .with_properties(css_class="input-small"),
 
         CommonString.named('publisher') \
                     .using(label=u"Published by"),
