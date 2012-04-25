@@ -28,7 +28,6 @@
                          id=field.properties.field_id,
                          multiple="",
                          tabindex="-1") }}
-  {{ mk.option(field, value="") }}
 
   {% for value in field.valid_values %}
       {% set value_label =
@@ -64,6 +63,7 @@
 {% endmacro %}
 
 {% macro radioselect(mk, field) %}
+	{% set error_cls = 'error' if field.errors else '' %}
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
@@ -72,6 +72,10 @@
               {{ value }}
           <span>
       {% endfor %}
+		{% for message in field.errors %}
+			<span class="help-inline {{ error_cls }}">{{ message }}</span>
+		{% endfor %}
+
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
