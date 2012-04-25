@@ -135,20 +135,19 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                .using(label=u"Availability")\
                .of(
 
-            CommonBoolean.named("paper_only") \
-                         .using(label=u"Paper only"),
-
-            CommonBoolean.named("web") \
-                         .using(label=u"web"),
+            fl.Enum.named('paper_or_web') \
+                   .with_properties(widget="radioselect") \
+                   .valued(*(["paper only", "web"])) \
+                   .using(label=u""),
 
             CommonString.named("url") \
                         .using(label=u"URL"),
 
-            CommonBoolean.named("free") \
-                         .using(label=u"free"),
+            fl.Enum.named('costs') \
+                   .with_properties(widget="radioselect") \
+                   .valued(*(["free", "with costs"])) \
+                   .using(label=u""),
 
-            CommonBoolean.named("with_costs") \
-                         .using(label=u"with costs"),
         ),
 
         CommonBoolean.named("registered_eionet") \
