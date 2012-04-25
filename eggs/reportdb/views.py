@@ -6,6 +6,7 @@ import file_upload
 
 from jinja2 import ChoiceLoader
 from loader import ZopeTemplateLoader
+from gtranslate import translate
 
 class MarkupGenerator(flatland.out.markup.Generator):
 
@@ -176,6 +177,12 @@ def seris_review_view(report_id, seris_review_id):
         }
     )
 
+@views.route('/translate', methods=['GET', 'POST'])
+def google_translate():
+    text = flask.request.args.get('text')
+    dest_lang = flask.request.args.get('dest_lang')
+    src_lang = flask.request.args.get('src_lang')
+    return translate(text, dest_lang, src_lang)
 
 @views.route('/download/<int:db_id>')
 def download(db_id):
