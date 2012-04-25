@@ -39,3 +39,7 @@
     {{ mk.widget(report['seris_reviews'][0]['data']) }}
 {% endif %}
 {% endblock %}
+
+{% block scripts %}
+	{{ script_src("js/main.js") }}
+{% endblock %}

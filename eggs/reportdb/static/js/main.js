@@ -1,5 +1,8 @@
-/*$(document).ready(function() {
-	$('#f_header_soer_cover').change(function(){
+$(document).ready(function() {
+	$('input[type="radio"]').dblclick(function(){
+		$(this).removeAttr('checked');
+	})
+/*	$('#f_header_soer_cover').change(function(){
 		var text = $('#f_header_soer_cover').val();
 		$.get('/translate', {'text': text, dest_lang: 'en', src_lang: 'ro'}, 
 		function(data){
@@ -10,5 +13,5 @@
 				}
 			}
 		});
-	})
-})*/
+	})*/
+})
