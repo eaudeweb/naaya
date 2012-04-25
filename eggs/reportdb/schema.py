@@ -171,7 +171,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
 
     fl.Integer.named('report_id') #TODO shouldn't be editable
-              .with_properties(widget='hidden') \
+              .with_properties(field_type='hidden') \
               .using(label="Report id"),
 
     CommonDict.named('links') \

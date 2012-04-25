@@ -1,9 +1,6 @@
 {% macro input(mk, field) %}
-  {{ mk.input(field, class=field.properties.get('css_class')) }}
-{% endmacro %}
-
-{% macro hidden(mk, field) %}
-  {{ mk.input(field, type="hidden") }}
+  {{ mk.input(field, class=field.properties.get('css_class'),
+                      type=field.properties.get('field_type'))}}
 {% endmacro %}
 
 {% macro textarea(mk, field) %}
@@ -47,7 +44,7 @@
       </td>
   {% endfor %}
   {% if field.properties.add_empty_td %}
-    <td></td>
+    <td class="empty"></td>
   {% endif %}
 {% endmacro %}
 
