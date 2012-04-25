@@ -44,6 +44,13 @@ def syncdb():
     database.get_session().create_all()
 
 
+def _debug_log(name):
+    import logging
+    log = logging.getLogger(name)
+    log.setLevel(logging.DEBUG)
+    log.addHandler(logging.StreamHandler())
+
+
 if __name__ == '__main__':
     import schema
     schema.register_handler_for_empty()
