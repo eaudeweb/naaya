@@ -18,19 +18,23 @@
 <table class="table table-bordered table-striped report-listing">
   <thead>
     <th>Name</th>
-    <th>Uploaded by</th>
-    <th>Upload date</th>
+    <th>Coverage</th>
+    <th>Published on</th>
+    <th>Factsheet prepared by</th>
+    <th>Prepared on</th>
   </thead>
   <tbody>
 	{% for report in report_list %}
 		<tr>
 			<td>
 			<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
-				ID: {{ report['id'] }} {{ report['data']['details']['original_name'] }}
+				{{ report['data']['details']['original_name'] }}
 			</a>
 			</td>
-			<td></td>
-			<td></td>
+			<td>{{ report['data']['details']['country'] }}</td>
+			<td>{{ report['data']['details']['date_of_publication'] }}</td>
+			<td>{{ report['data']['header']['uploader'] }}</td>
+			<td>{{ report['data']['header']['upload_date'] }}</td>
 		</tr>
 	{% endfor %}
   </tbody>

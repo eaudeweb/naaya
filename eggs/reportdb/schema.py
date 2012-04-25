@@ -61,7 +61,15 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonFile.named('soer_cover') \
                   .using(label=u"Copy of SOER cover") \
-                  .with_properties(widget_image=True)
+                  .with_properties(widget_image=True),
+
+        CommonString.named('uploader') \
+                    .using(label=u"Factsheet prepared by",
+                           optional=False),
+
+        CommonString.named('upload_date') \
+                    .with_properties(field_type='hidden') \
+                    .using(label=u"Latest update")
 
     ),
 
@@ -91,13 +99,6 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonString.named('publisher') \
                     .using(label=u"Published by"),
-
-        CommonString.named('uploader') \
-                    .using(label=u"Uploaded by"),
-
-        CommonString.named('upload_date') \
-                    .with_properties(field_type='hidden') \
-                    .using(label=u"Upload date"),
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
