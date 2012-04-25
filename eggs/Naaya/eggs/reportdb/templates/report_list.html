@@ -15,15 +15,26 @@
 {% if report_list %}
 <div>
 <h2>Reports:</h2>
-<ul>
-{% for report in report_list %}
-    <li>
-        <a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
-            ID: {{ report['id'] }} {{ report['data']['details']['original_name'] }}
-        </a>
-    </li>
-{% endfor %}
-</ul>
+<table class="table table-bordered table-striped report-listing">
+  <thead>
+    <th>Name</th>
+    <th>Uploaded by</th>
+    <th>Upload date</th>
+  </thead>
+  <tbody>
+	{% for report in report_list %}
+		<tr>
+			<td>
+			<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+				ID: {{ report['id'] }} {{ report['data']['details']['original_name'] }}
+			</a>
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
+	{% endfor %}
+  </tbody>
+</table>
 </div>
 {% else %}
 <p>No reports yet. Click  
@@ -31,4 +42,19 @@
  to add a new report.</p>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+{{ css_link('lib/datatables/jquery.dataTables.css') }}
+{{ script_src('lib/datatables/jquery.dataTables.min.js') }}
+<script>
+$(document).ready(function() {
+	$('.report-listing').dataTable({
+		'aaSorting': [[0, "asc"]],
+		'sPaginationType': 'full_numbers',
+		"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+		"iDisplayLength": 25
+	});
+});
+</script>
 {% endblock %}
