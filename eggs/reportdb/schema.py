@@ -220,7 +220,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*sorted(indicators_estimation.keys())) \
-                  .using(label=u"Indicators:"),
+                  .using(label=u"if yes - indicators:"),
 
         fl.Enum.named('eea_indicators') \
                .with_properties(widget="radioselect") \
