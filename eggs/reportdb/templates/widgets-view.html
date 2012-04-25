@@ -1,3 +1,5 @@
+{%- from 'bits.html' import eea_theme_image_and_link -%}
+
 {%- macro input(mk, field) %}
   {{ field.value }}
 {% endmacro -%}
@@ -68,10 +70,10 @@
 {% endmacro %}
 
 {% macro topics_columns(mk, schema) %}
-      {% set field = schema['focus'] %}
-      {{ mk.widget(field) }}
-      {% set field = schema['indicators'] %}
-      {{ mk.widget(field) }}
+  {% set field = schema['focus'] %}
+  {{ mk.widget(field) }}
+  {% set field = schema['indicators'] %}
+  {{ mk.widget(field) }}
   </tr> {# closes the row of the CommonTopicsDict #}
 {% endmacro %}
 
@@ -79,8 +81,12 @@
 <tr>
   {%- for name in mk.children_order(schema) %}
     <td>
-        {% set field = schema[name] %}
+      {% set field = schema[name] %}
+      {% if field.properties.get('eea_theme_link') %}
+        {{ eea_theme_image_and_link(field.name, field.label) }}
+      {% else %}
         {{ field.label }}
+      {% endif %}
     </td>
   {{ mk.widget(field) }}
   {% endfor -%}
