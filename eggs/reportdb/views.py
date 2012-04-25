@@ -42,7 +42,7 @@ def index():
 def report_list():
     return flask.render_template('report_list.html', **{
         'report_list': [{'id': row.id,
-                         'data': schema.ReportSchema.from_flat(row).value}
+                         'data': schema.ReportSchema.from_flat(row)}
                         for row in database.get_all_reports()],
     })
 
@@ -65,8 +65,8 @@ def report_edit(report_id=None):
         form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
         form_data.update(flask.request.form.to_dict())
         #dirty fix in order to save the values from a multiple select
-        form_data['header_country'] = flask.request.form.getlist('header_country')
-        form_data['format_lang_of_pub'] = flask.request.form.getlist('format_lang_of_pub')
+        #form_data['header_country'] = flask.request.form.getlist('header_country')
+        #form_data['format_lang_of_pub'] = flask.request.form.getlist('format_lang_of_pub')
         report_schema = schema.ReportSchema.from_flat(form_data)
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
 
