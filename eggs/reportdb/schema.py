@@ -132,10 +132,12 @@ CommonTopicsDict = CommonDict.with_properties(widget="topics_columns") \
                              .of(
 
                         CommonTopicsEnum.named('focus') \
+                                        .with_properties(css_class="focus-column") \
                                         .using(label=u"Focus"),
 
                         CommonTopicsEnum.named('indicators') \
-                                  .using(label=u"Indicators"),
+                                        .with_properties(css_class="indicators-column") \
+                                        .using(label=u"Indicators"),
                    )
 
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
@@ -199,7 +201,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
-               .with_properties(widget="subgroup") \
+               .with_properties(widget="indicators_group") \
                .of(
 
             CommonIndicatorsEnum.named('to_compare_countries') \

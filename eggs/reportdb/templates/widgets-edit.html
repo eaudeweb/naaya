@@ -42,25 +42,18 @@
   {% for value in field.valid_values %}
       {% set value_label = (field.properties.value_labels[value]
       if field.properties.value_labels else value) %}
-  <td>
+      <td class={{field.properties.css_class}}>
   {{ mk.input(field, type='radio', value=value) }}
   </td>
   {% endfor %}
 {% endmacro %}
 
 {% macro indicators_radioselect(mk, field) %}
-  <table>
-      <tbody>
-          {#<tr><td>Most(>50%)</td><td>Some(<50%)</td><td>None</td></tr>#}
-      <tr>
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
           <td>{{ mk.input(field, type='radio', value=value) }}</td>
       {% endfor %}
-      </tr>
-      </tbody>
-  </table>
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
@@ -145,19 +138,19 @@
     <tbody>
         <tr>
             <td></td>
-            <td class="radio">Major,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> minor,</td>
-            <td class="radio"> none</td>
+            <td class="focus-column">Major,</td>
+            <td class="focus-column"> some,</td>
+            <td class="focus-column"> minor,</td>
+            <td class="focus-column"> none</td>
 
-            <td class="radio">Several,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> few,</td>
-            <td class="radio"> none</td>
+            <td class="indicators-column">Several,</td>
+            <td class="indicators-column"> some,</td>
+            <td class="indicators-column"> few,</td>
+            <td class="indicators-column"> none</td>
         </tr>
     {%- for name in mk.children_order(group) %}
-    <tr>
-      <td colspan="9" class="topics-group {{ error_cls }}">
+    <tr class="topics-group {{ error_cls }}">
+      <td colspan="9">
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
         {{ mk.label(field, class='control-label', contents=field.label) }}
@@ -178,32 +171,21 @@
 {% macro indicators_group(mk, group) %}
     <table class="indicators-table">
         <thead>
-        <tr>
-            <th></th>
-            <th colspan="4" class="focus-column">
-                Focus
-            </th>
-            <th colspan="4" class="indicators-column">
-                Indicators
-            </th>
-        </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th class="radio">Most(>50%)</th>
+                <th class="radio">Some(<50%)</th>
+                <th class="radio">None</th>
+            </tr>
         </thead>
     <tbody>
         <tr>
             <td></td>
-            <td class="radio">Major,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> minor,</td>
-            <td class="radio"> none</td>
-
-            <td class="radio">Several,</td>
-            <td class="radio"> some,</td>
-            <td class="radio"> few,</td>
-            <td class="radio"> none</td>
         </tr>
     {%- for name in mk.children_order(group) %}
     <tr>
-      <td colspan="9" class="topics-group {{ error_cls }}">
+      <td class="indicators-group {{ error_cls }}">
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
         {{ mk.label(field, class='control-label', contents=field.label) }}
