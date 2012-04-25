@@ -155,7 +155,8 @@ CommonTopicsDict = CommonDict.with_properties(widget="topics_columns") \
                              .of(
 
                         CommonTopicsEnum.named('focus') \
-                                        .with_properties(css_class="focus-column") \
+                                        .with_properties(css_class="focus-column",
+                                                         add_empty_td="true") \
                                         .using(label=u"Focus"),
 
                         CommonTopicsEnum.named('indicators') \
