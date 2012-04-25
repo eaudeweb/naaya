@@ -98,7 +98,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                     .with_properties(css_class="input-small"),
 
         CommonString.named('publisher') \
-                    .using(label=u"Published by"),
+                    .using(label=u"Published by") \
+                    .with_properties(css_class="input-medium"),
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
@@ -115,7 +116,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.Integer.named('no_of_pages') \
                   .using(label=u"No. of pages (main SOE report)",
-                         optional=True),
+                         optional=True) \
+                  .with_properties(css_class="input-small"),
 
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
@@ -255,7 +257,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                .using(label=u"EEA indicators used?"),
 
         CommonString.named("eea_indicators_estimated_no") \
-                    .using(label=u"Estimated number?"),
+                    .using(label=u"Estimated number?") \
+                    .with_properties(css_class="input-small"),
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
