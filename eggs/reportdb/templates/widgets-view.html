@@ -43,6 +43,17 @@
   {{ field.value or "" }}
 {% endmacro -%}
 
+{% macro radioselect(mk, field) %}
+      {% for value in field.valid_values %}
+          {% set value_label = (field.properties.value_labels[value]
+          if field.properties.value_labels else value) %}
+          <span> 
+              {{ mk.input(field, type='radio', value=value) }}
+              {{ value }}
+          <span>
+      {% endfor %}
+{% endmacro %}
+
 {% macro topics_radioselect(mk, field) %}
   {% for value in field.valid_values %}
       {% set value_label = (field.properties.value_labels[value]
