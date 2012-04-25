@@ -45,4 +45,6 @@ def syncdb():
 
 
 if __name__ == '__main__':
+    import schema
+    schema.register_handler_for_empty()
     manager.run()
