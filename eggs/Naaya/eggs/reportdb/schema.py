@@ -184,20 +184,24 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .of(
         fl.Dict.named('reference') \
                .using(label=u"Reference/links to:") \
-               .with_properties(widget="subgroup") \
+               .with_properties(widget="reference_group") \
                .of(
 
             CommonBoolean.named('global_level') \
-                         .using(label=u"Global-level SOER's (e.g. UNEP GEO)?"),
+                         .using(label=u"Global-level SOER's ?") \
+                         .with_properties(help=u"(e.g. UNEP GEO)"),
 
             CommonBoolean.named('european_level') \
-                         .using(label=u"European-level SOER's (e.g. EEA SOER)?"),
+                         .using(label=u"European-level SOER's ?") \
+                         .with_properties(help=u"(e.g. EEA SOER)"),
 
             CommonBoolean.named('national_level') \
-                         .using(label=u"National-level SOER's (e.g. other country)?"),
+                         .using(label=u"National-level SOER's ?") \
+                         .with_properties(help=u"(e.g. other country)"),
 
             CommonBoolean.named('sub_national_level') \
-                         .using(label=u"Sub-national-level SOER's (e.g. regional)?"),
+                         .using(label=u"Sub-national-level SOER's ?") \
+                         .with_properties(help=u"(e.g. regional)"),
         ),
 
         CommonBoolean.named('key_findings') \
