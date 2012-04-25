@@ -326,7 +326,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('other_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True"),
+                                             enclose_in_td="True",
+                                             css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
                          .with_properties(extra_topic="True", 
@@ -381,7 +382,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('other_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True"),
+                                             enclose_in_td="True",
+                                             css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
                          .with_properties(extra_topic="True", 
@@ -425,7 +427,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('other_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True"),
+                                             enclose_in_td="True",
+                                             css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
                          .with_properties(extra_topic="True", 
@@ -453,7 +456,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('other_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True"),
+                                             enclose_in_td="True",
+                                             css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
                          .with_properties(extra_topic="True", 
