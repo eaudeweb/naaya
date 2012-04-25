@@ -59,7 +59,7 @@ def report_edit(report_id=None):
         app = flask.current_app
         report_schema = schema.ReportSchema()
         seris_review_schema = schema.SerisReviewSchema()
-        if report_id != None:
+        if report_id is not None:
             report_schema = schema.ReportSchema.from_flat(report_row)
             seris_review_schema = schema.SerisReviewSchema.from_flat(seris_review_row)
         return flask.render_template('report-edit.html', **{
@@ -70,7 +70,9 @@ def report_edit(report_id=None):
             })
 
     session = database.get_session()
-    form_data = dict(schema.ReportSchema())
+    form_data = {}
+    form_data.update(schema.ReportSchema.from_defaults().flatten())
+    form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
     form_data.update(flask.request.form.to_dict())
     report_schema = schema.ReportSchema.from_flat(form_data)
     seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
@@ -120,7 +122,7 @@ def seris_review_add(report_id, seris_review_id=None):
     if flask.request.method == "GET":
         app = flask.current_app
         seris_review_schema = schema.SerisReviewSchema()
-        if seris_review_id != None:
+        if seris_review_id is not None:
             seris_review_schema['report_id'].set(report_id)
             seris_review_schema = schema.SerisReviewSchema \
                                         .from_flat(seris_review_row)
@@ -131,7 +133,7 @@ def seris_review_add(report_id, seris_review_id=None):
         })
 
     session = database.get_session()
-    form_data = dict(schema.SerisReviewSchema())
+    form_data = dict(schema.SerisReviewSchema.from_defaults().flatten())
     form_data.update(flask.request.form.to_dict())
     seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
     # TODO validation
