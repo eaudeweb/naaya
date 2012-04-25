@@ -40,7 +40,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
 
     CommonDict.named('header') \
-              .using(label=u"HEADER INFORMATION") \
+              .using(label=u"") \
               .of(
 
         CommonEnum.named('country') \
