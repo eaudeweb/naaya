@@ -51,7 +51,7 @@
 {% macro indicators_radioselect(mk, field) %}
   <table>
       <tbody>
-      <tr><td>Most(>50%)</td><td>Some(<50%)</td><td>None</td></tr>
+          {#<tr><td>Most(>50%)</td><td>Some(<50%)</td><td>None</td></tr>#}
       <tr>
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]

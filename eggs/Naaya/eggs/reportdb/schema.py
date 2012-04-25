@@ -112,16 +112,6 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonBoolean.named("registered_eionet") \
                          .using(label=u"Registered in Eionet SERIS before"),
-
-        fl.String.named("short_description") \
-                 .using(label=u"Short description from SERIS (old):") \
-                 .with_properties(widget="textarea"),
-
-        fl.String.named("table_of_contents") \
-                 .using(label=u"Overview of table of contents and"
-                               " indicators in report") \
-                 .with_properties(widget="textarea"),
-
     )
 )
 
@@ -365,5 +355,15 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             CommonTopicsDict.named('other_radio') \
                             .using(label=u"............(input field)"),
         ),
+
     ),
+    fl.String.named("short_description") \
+             .using(label=u"Short description from SERIS (old):") \
+             .with_properties(widget="textarea"),
+
+    fl.String.named("table_of_contents") \
+             .using(label=u"Overview of table of contents and"
+                           " indicators in report") \
+             .with_properties(widget="textarea"),
+
 )
