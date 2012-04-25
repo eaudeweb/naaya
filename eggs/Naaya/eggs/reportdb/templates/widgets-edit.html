@@ -243,6 +243,9 @@
 {% macro options_with_labels(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
-    {{ field.label }} {{ mk.widget(field) }}
+    <div class="field-inline">
+        {{ mk.widget(field) }}
+        {{ field.label }}
+    </div>
   {% endfor -%}
 {% endmacro %}
