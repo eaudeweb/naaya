@@ -180,7 +180,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         fl.Dict.named('reference') \
                .using(label=u"Reference/links to:") \
                .with_properties(widget="subgroup") \
-                  .of(
+               .of(
 
             CommonBoolean.named('global_level') \
                          .using(label=u"Global-level SOER's (e.g. UNEP GEO)?"),
@@ -205,23 +205,27 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .of(
 
         fl.Dict.named('reference') \
-                .using(label=u"DPSIR framework:") \
+               .using(label=u"DPSIR framework:") \
                .with_properties(widget="subgroup") \
-                  .of(
+               .of(
 
             CommonBoolean.named('basis_structure') \
                          .using(label=u"Basis for report structure?"),
         ),
 
-        CommonBoolean.named('indicator_based') \
+        fl.Enum.named('indicator_based') \
+                     .with_properties(widget="radioselect") \
+                     .valued(*(["Yes", "No"])) \
                      .using(label=u"Indicator-based report?"),
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*sorted(indicators_estimation.keys())) \
                   .using(label=u"Indicators:"),
 
-        CommonBoolean.named('eea_indicators') \
-                     .using(label=u"EEA indicators used?"),
+        fl.Enum.named('eea_indicators') \
+               .with_properties(widget="radioselect") \
+               .valued(*(["Yes", "No"])) \
+               .using(label=u"EEA indicators used?"),
 
         CommonString.named("eea_indicators_estimated_no") \
                     .using(label=u"Estimated number?"),
