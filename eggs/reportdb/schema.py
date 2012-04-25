@@ -140,6 +140,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         CommonBoolean.named("registered_eionet") \
+                     .with_properties(reversed="True") \
                      .using(label=u"Registered in Eionet SERIS before"),
 
     )
