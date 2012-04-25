@@ -132,15 +132,17 @@
 {% macro topics_group(mk, group) %}
     <table class="topics-table">
         <thead>
-        <tr>
-            <th></th>
-            <th colspan="4" class="focus-column">
-                Focus
-            </th>
-            <th colspan="4" class="indicators-column">
-                Indicators
-            </th>
-        </tr>
+            <tr>
+                <th></th>
+                <th colspan="4" class="focus-column">
+                    Focus
+                </th>
+                <th colspan="4" class="indicators-column">
+                    Indicators
+                </th>
+            </tr>
+        </thead>
+    <tbody>
         <tr>
             <td></td>
             <td class="radio">Major,</td>
@@ -153,8 +155,6 @@
             <td class="radio"> few,</td>
             <td class="radio"> none</td>
         </tr>
-    </thead>
-    <tbody>
     {%- for name in mk.children_order(group) %}
     <tr>
       <td colspan="9" class="topics-group {{ error_cls }}">
@@ -175,6 +175,51 @@
     </table>
 {% endmacro %}
 
+{% macro indicators_group(mk, group) %}
+    <table class="indicators-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th colspan="4" class="focus-column">
+                Focus
+            </th>
+            <th colspan="4" class="indicators-column">
+                Indicators
+            </th>
+        </tr>
+        </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td class="radio">Major,</td>
+            <td class="radio"> some,</td>
+            <td class="radio"> minor,</td>
+            <td class="radio"> none</td>
+
+            <td class="radio">Several,</td>
+            <td class="radio"> some,</td>
+            <td class="radio"> few,</td>
+            <td class="radio"> none</td>
+        </tr>
+    {%- for name in mk.children_order(group) %}
+    <tr>
+      <td colspan="9" class="topics-group {{ error_cls }}">
+        {% set field = group[name] %}
+        {% set error_cls = 'error' if field.errors else '' %}
+        {{ mk.label(field, class='control-label', contents=field.label) }}
+      </td>
+      <td>
+        {{ mk.widget(field) }}
+        <span class="controls">
+          {% for message in field.errors %}
+            <span class="help-inline">{{ message }}</span>
+          {% endfor %}
+        </span>
+      </td>
+    {%- endfor %}
+    </tbody>
+    </table>
+{% endmacro %}
 {% macro options_with_labels(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
