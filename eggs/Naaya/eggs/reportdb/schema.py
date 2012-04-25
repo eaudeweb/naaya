@@ -76,7 +76,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         fl.Integer.named('no_of_pages') \
                  .using(label=u"No. of pages (main SOE report)"),
 
-        CommonBoolean.named("separate_summary") \
+        CommonEnum.named("separate_summary") \
+                  #TODO implement values in json list
+                  .valued(*(['Yes', 'No', 'Unknown'])) \
                      .using(label=u"Separate summary report?"),
 
         CommonEnum.named('lang_of_pub') \
