@@ -259,7 +259,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
-               .with_properties(widget="indicators_group") \
+               .with_properties(widget="indicators_group", hidden_label="True") \
                .of(
 
             IndicatorEnum.named('to_compare_countries') \
