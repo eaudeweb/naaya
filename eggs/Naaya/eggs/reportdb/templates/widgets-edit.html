@@ -213,7 +213,7 @@
         <td colspan="10">
             {% set field = group[name] %}
             {% set error_cls = 'error' if field.errors else '' %}
-            {{ mk.label(field, class='control-label', contents=field.label) }}
+            {{ field.label }}
         </td>
     </tr>
         {{ mk.widget(field) }}
