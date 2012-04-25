@@ -246,7 +246,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         fl.Enum.named('indicator_based') \
                .with_properties(widget="radioselect") \
                .valued(*(["Yes", "No"])) \
-               .using(label=u"Indicator-based report?"),
+               .using(label=u"Indicator-based report?",
+                         optional=True),
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*sorted(indicators_estimation.keys())) \
@@ -255,7 +256,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         fl.Enum.named('eea_indicators') \
                .with_properties(widget="radioselect") \
                .valued(*(["Yes", "No"])) \
-               .using(label=u"EEA indicators used?"),
+               .using(label=u"EEA indicators used?",
+                         optional=True),
 
         CommonString.named("eea_indicators_estimated_no") \
                     .using(label=u"Estimated number?") \
