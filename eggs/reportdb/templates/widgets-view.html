@@ -246,7 +246,11 @@
   {%- for name in mk.children_order(schema) %}
       {% if name != "report_id" %}
         {% set field = schema[name] %}
-        <div class="section"><h3>{{ field.label }}</h3></div>
+        {% if field.label %}
+        <div class="section">
+            <h3>{{ field.label }}</h3>
+        </div>
+        {% endif %}
         <div>{{ mk.widget(field) }} </div>
       {% endif %}
   {% endfor -%}
