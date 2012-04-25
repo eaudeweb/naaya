@@ -3,6 +3,7 @@ import os
 import json
 import database
 from flatland.validation import Converted
+from file_upload import CommonFile
 
 
 def _load_json(name):
@@ -52,8 +53,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                                    data_placeholder="Select countries") \
                   .valued(*countries_list),
 
-        CommonString.named('soer_cover') \
-                    .using(label=u"Copy of SOER cover")
+        CommonFile.named('soer_cover') \
+                  .using(label=u"Copy of SOER cover") \
+                  .with_properties(widget_image=True)
 
     ),
 

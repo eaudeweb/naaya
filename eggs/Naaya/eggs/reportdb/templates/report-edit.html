@@ -32,7 +32,7 @@
 {% set link = url_for('views.report_edit') %}
 {% endif %}
 
-<form action="{{ link }}" method="post">
+<form action="{{ link }}" method="post" enctype=multipart/form-data>
   {{ mk.widget(report_schema) }}
   {{ mk.widget(seris_review_schema) }}
   <div>
