@@ -27,7 +27,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
         CommonEnum.named('country') \
                   .using(label=u"Country") \
-                  .with_properties(css_class="chzn-select chzn-done",
+                  .with_properties(css_class="chzn-select",
                                    field_id="country_sel",
                                    widget="chosen_select",
                                    multiple="",
@@ -188,6 +188,9 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonBoolean.named('indicator_based') \
                      .using(label=u"Indicator-based report?"),
+
+        CommonEnum.named('indicators_estimation') \
+                  .using(label=u"Indicators:"),
 
         CommonBoolean.named('eea_indicators') \
                      .using(label=u"EEA indicators used?"),
