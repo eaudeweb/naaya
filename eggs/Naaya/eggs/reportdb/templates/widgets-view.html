@@ -14,7 +14,7 @@
 
 {%- macro select(mk, field) %}
   {% set value_label = (field.properties.value_labels[field.value]
-     if field.properties.value_labels else field.value) %}
+     if field.properties.value_labels else field.u) %}
   {{ value_label }}
 {% endmacro -%}
 
@@ -194,7 +194,7 @@
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
-          <td>{{ mk.input(field, type='radio', value=value, disabled='true') }}</td>
+          <td>{{ mk.input(field, type='radio', value=value) }}</td>
       {% endfor %}
 {% endmacro %}
 
