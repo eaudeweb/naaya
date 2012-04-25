@@ -4,14 +4,30 @@ import json
 import database
 from flatland.validation import Converted
 
+
 def _load_json(name):
     with open(os.path.join(os.path.dirname(__file__), name), "rb") as f:
         return json.load(f)
 
-CommonEnum = fl.Enum.using(optional=True).with_properties(widget="select")
 
+def register_handler_for_empty():
+    """
+    Flatland doesn't generate "is required" messages for invalid empty
+    fields so we need to add the messages ourselves.
+    """
+    from flatland.signals import validator_validated
+    from flatland.schema.base import NotEmpty
+    def validated(sender, element, result, **kwargs):
+        if not result:
+            msg = u"%s is mandatory" % element.label
+            element.add_error(msg)
+    validator_validated.connect(validated, NotEmpty, weak=False)
+
+
+CommonString = fl.String.using(optional=True)
+CommonEnum = fl.Enum.using(optional=True).with_properties(widget="select")
 CommonDict = fl.Dict.with_properties(widget="group")
-CommonBoolean = fl.Boolean.using(optional=False).with_properties(widget="checkbox")
+CommonBoolean = fl.Boolean.with_properties(widget="checkbox")
 
 report_formats = _load_json("refdata/report_formats.json")
 publication_freq = _load_json("refdata/publication_freq.json")
@@ -26,6 +42,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
     CommonDict.named('header') \
               .using(label=u"HEADER INFORMATION") \
               .of(
+
         CommonEnum.named('country') \
                   .using(label=u"Country") \
                   .with_properties(css_class="chzn-select",
@@ -34,31 +51,33 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                                    multiple="",
                                    data_placeholder="Select countries") \
                   .valued(*countries_list),
-        fl.String.named('soer_cover') \
-                 .using(label=u"Copy of SOER cover")
+
+        CommonString.named('soer_cover') \
+                    .using(label=u"Copy of SOER cover")
+
     ),
 
     CommonDict.named('details') \
               .using(label=u"REPORT DETAILS") \
               .of(
 
-        fl.String.named('original_name') \
-                 .using(label=u"Title"),
+        CommonString.named('original_name') \
+                    .using(label=u"Title",
+                           optional=False),
 
         CommonEnum.named('original_language') \
-                 .using(label=u"Original Language") \
+                 .using(label=u"Original Language",
+                        optional=False) \
                  .valued(*languages_list),
 
-        fl.String.named('english_name') \
-                 .using(label=u"Title (in English)"),
+        CommonString.named('english_name') \
+                    .using(label=u"Title (in English)"),
 
-        fl.Date.named('date_of_publication') \
-                 .using(label=u"Date of publication") \
-                 .including_validators(Converted(incorrect=u"%(label)s is not "
-                                                            "a valid date")),
+        CommonString.named('date_of_publication') \
+                    .using(label=u"Date of publication"),
 
-        fl.String.named('publisher') \
-                 .using(label=u"Published by"),
+        CommonString.named('publisher') \
+                    .using(label=u"Published by"),
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
@@ -74,7 +93,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .valued(*sorted(report_formats.keys())),
 
         fl.Integer.named('no_of_pages') \
-                 .using(label=u"No. of pages (main SOE report)"),
+                  .using(label=u"No. of pages (main SOE report)",
+                         optional=True),
 
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
@@ -100,8 +120,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
             CommonBoolean.named("web") \
                          .using(label=u"web"),
 
-            fl.String.named("url") \
-                         .using(label=u"URL"),
+            CommonString.named("url") \
+                        .using(label=u"URL"),
 
             CommonBoolean.named("free") \
                          .using(label=u"free"),
@@ -112,6 +132,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonBoolean.named("registered_eionet") \
                          .using(label=u"Registered in Eionet SERIS before"),
+
     )
 )
 
@@ -167,7 +188,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             CommonBoolean.named('sub_national_level') \
                          .using(label=u"Sub-national-level SOER's (e.g. regional)?"),
         ),
-                     
+
         CommonBoolean.named('key_findings') \
                      .using(label=u"Reference/links to key findings "
                                    "of the country's previous SOER?"),
@@ -196,8 +217,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         CommonBoolean.named('eea_indicators') \
                      .using(label=u"EEA indicators used?"),
 
-        fl.String.named("eea_indicators_estimated_no") \
-                 .using(label=u"Estimated number?"),
+        CommonString.named("eea_indicators_estimated_no") \
+                    .using(label=u"Estimated number?"),
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
@@ -359,13 +380,14 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
     ),
-    fl.String.named("short_description") \
-             .using(label=u"Short description from SERIS (old):") \
-             .with_properties(widget="textarea"),
 
-    fl.String.named("table_of_contents") \
-             .using(label=u"Overview of table of contents and"
-                           " indicators in report") \
-             .with_properties(widget="textarea"),
+    CommonString.named("short_description") \
+                .using(label=u"Short description from SERIS (old):") \
+                .with_properties(widget="textarea"),
+
+    CommonString.named("table_of_contents") \
+                .using(label=u"Overview of table of contents and "
+                              "indicators in report") \
+                .with_properties(widget="textarea"),
 
 )
