@@ -28,6 +28,213 @@
 	font-weight: bold;
 	white-space: nowrap;
 }
+
+
+a.feed_link,
+a.facebook_link,
+a.twitter_link,
+a.download_link {
+	padding: 0;
+	line-height: 1.8;
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	text-decoration: none;
+}
+
+a.feed_link {
+	background: transparent url('/++resource++Products.Naaya/rss.png') no-repeat scroll left center;
+}
+
+a.facebook_link {
+	background: transparent url('/++resource++Products.Naaya/facebook.png') no-repeat scroll left center;
+}
+
+a.twitter_link {
+	background: transparent url('/++resource++Products.Naaya/twitter.png') no-repeat scroll left center;
+}
+
+a.download_link {
+	background: transparent url('/++resource++Products.Naaya/download.png') no-repeat scroll left center;
+	float: right;
+	width: auto;
+	padding-left: 25px;
+}
+
+.folder_social {
+	width: 100%;
+	display: inline-block;
+	clear: both;
+	position: relative;
+}
+
+#ratings {
+	float: left;
+	text-align: left;
+	display: block;
+}
+
+#user-rating-edit {
+	float: left;
+}
+
+.ratings_message {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	border: 1px solid #FFD06D;
+	background: #FFFDE5;
+	padding: 3px;
+	position: relative;
+	top: -3px;
+}
+
+.folder_social_icons {
+	display: block;
+	float: right;
+}
+
+/**
+ * Admin comments list
+ *
+ * Added:  21 Mar 2012
+ * Author: Bogdan Tanase
+*/
+#comments-list .actions-label {
+    position: relative;
+    top: 0px;
+    font-weight: bold;
+}
+
+#comments-list .comment-actions {
+    opacity: 0;
+    -webkit-transition: opacity .1s ease-in-out;
+       -moz-transition: opacity .1s ease-in-out;
+            transition: opacity .1s ease-in-out;
+}
+
+#comments-list tr:hover .comment-actions {
+    opacity: 1;
+}
+
+.comment-actions a.toggle-spam-status .icon {
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+}
+
+a.toggle-spam-status.spam-status .icon {
+    background: transparent url('/++resource++Products.Naaya/spam-icon.png') no-repeat scroll center center;
+}
+
+a.toggle-spam-status.ham-status .icon{
+    background: transparent url('/++resource++Products.Naaya/ham-icon.png') no-repeat scroll center center;
+}
+
+a.delete-comment .icon {
+    display: inline-block;
+    height: 16px;
+    width: 15px;
+    background: transparent url('/++resource++Products.Naaya/trash-icon.png') no-repeat scroll center center;
+}
+
+.akismet-loading {
+    display: none;
+}
+
+.akismet-loading .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: transparent url('/++resource++Products.Naaya/ajax-loader-small.gif') no-repeat scroll center center;
+    position: relative;
+    top: 3px;
+    margin-top: -4px;
+}
+
+#comments-list tr.spam-comment {
+    /*background: #FEE;*/
+}
+
+#comments-list tr.spam-comment a.comment-title {
+    color: red;
+}
+
+#comments-list tr.ham-comment a.comment-title {
+    color: blue;
+}
+
+#comments-list tr.spam-comment .spam-status,
+#comments-list tr.spam-comment .ham-status-label {
+    display: none;
+}
+
+#comments-list tr.ham-comment .ham-status,
+#comments-list tr.ham-comment .spam-status-label {
+    display: none;
+}
+
+#comments-list tr {
+    background: #FFF;
+}
+/**
+ * END Admin comments list
+*/
+
+/**
+ * Admin API Keys status
+ *
+ * Added: 23 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.api-keys-list tr.invalid {
+    background-color: #FFF9F9;
+}
+/**
+ * END Admin API Keys status
+*/
+
+/**
+ * Comments style enhancement
+ *
+ * Added: 29 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.comment-holder {
+    margin: 10px 0;
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.comment-holder-blocked {
+    background: #F9F9F9;
+    border: 1px solid #DFDFDF;
+}
+.comment-label-blocked {
+    color: red;
+}
+.commentbutton:hover {
+    color: #333;
+}
+.commentbutton {
+    font-size: 90%;
+    float:right;
+    padding: 3px;
+    border:1px solid #eeeeee;
+    border-right-color: #777;
+    border-left-color: #EEE;
+    border-bottom-color: #777;
+    border-top-color: #EEE;
+    color:#666;
+    text-decoration: none;
+    margin-bottom: 0.5em;
+    margin-left: 10px;
+    background: #EBEBEB;
+}
+/**
+ * END Comments style enhancement
+*/
+
 	/* folder index styles */
 #admin_this_folder{
 	padding: 0.5em;
@@ -105,7 +312,7 @@
 	}
 
 	table#folderfile_list{
-	/*width: 98%;*/
+	width: 100%;
 	}
 
 #folderfile_list th{
@@ -132,6 +339,7 @@
 
 #folderfile_list th.checkbox{
 	vertical-align: middle;
+        width: 1%;
 	}
 
 #folderfile_list .type{

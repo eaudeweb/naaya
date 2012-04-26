@@ -423,7 +423,7 @@ li {
 }
 
 #main_structure {
-	position: absolute;
+	/*position: absolute;*/
 	padding-right:15px;
 	top: 0; 
 }
