@@ -50,7 +50,7 @@
 {% endmacro -%}
 
 {%- macro url(mk, field) %}
-<a href="{{ field.value }}">{{ field.value|truncate(field.value,80) }}</a>
+<a href="{{ field.value }}">{{ field.value|urlize(trim_url_limit=80, nofollow=False) }}</a>
 {% endmacro -%}
 
 {% macro radioselect(mk, field) %}
