@@ -25,19 +25,20 @@
         Back to reports list
     </a>]
 </div>
-<hr/>
 
 {% if report_id %}
-{% set link = url_for('views.report_edit', report_id=report_id) %}
+    <h1>Edit report</h1>
+    {% set link = url_for('views.report_edit', report_id=report_id) %}
 {% else %}
-{% set link = url_for('views.report_edit') %}
+    <h1>Add report</h1>
+    {% set link = url_for('views.report_edit') %}
 {% endif %}
 
 <form action="{{ link }}" method="post" enctype=multipart/form-data>
   {{ mk.widget(report_schema) }}
   {{ mk.widget(seris_review_schema) }}
   <div>
-    <button type="submit">Save</button>
+    <input class="primary-button" type="submit" name="btnSave" value="Save report" />
   </div>
 </form>
 
