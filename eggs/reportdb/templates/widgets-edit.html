@@ -189,9 +189,7 @@
     </td>
     {% endif %}
     {% if field.properties.get('extra_topic') %}
-        {% if schema['extra_topic']['extra_topic_input'].value %}
-            <td>{{ mk.widget(field) }}</td>
-        {% endif %}
+        <td>{{ mk.widget(field) }}</td>
     {% else %}
         {{ mk.widget(field) }}
     {% endif %}
