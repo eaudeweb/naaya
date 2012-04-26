@@ -18,7 +18,7 @@
   {{ value_label }}
 {% endmacro -%}
 
-{% macro chosen_select(mk, field) %}
+{% macro multiple_select(mk, field) %}
   {% set value_labels = field.member_schema.properties.get('value_labels') %}
   {% for v in field.value %}
     {{ value_labels[v] if value_labels else v }}

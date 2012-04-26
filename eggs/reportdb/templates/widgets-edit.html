@@ -10,10 +10,15 @@
 {% endmacro %}
 
 {% macro select(mk, field) %}
-  {{ mk.select.open(field, class=field.properties.css_class,
-                           id=field.properties.field_id) }}
+  {% set attr = {} %}
+  {%- if field.properties.widget_chosen -%}
+    {%- do attr.update({'class': 'chzn-select'}) -%}
+  {%- endif -%}
+  {{ mk.select.open(field, **attr) }}
 
-    {{ mk.option(field, value="", contents="--") }}
+    {% if field.optional %}
+      {{ mk.option(field, value="", contents="--") }}
+    {% endif %}
 
     {% for value in field.valid_values %}
       {% set value_label = (field.properties.value_labels[value]
@@ -24,14 +29,16 @@
   {{ mk.select.close() }}
 {% endmacro %}
 
-{% macro chosen_select(mk, field) %}
+{% macro multiple_select(mk, field) %}
   {% set member = field.member_schema %}
   {% set attr = {
-        'class': 'chzn-select',
         'tabindex': '-1',
         'data-placeholder': field.properties.get('placeholder'),
         'multiple': 'multiple',
       } %}
+  {%- if field.properties.widget_chosen -%}
+    {%- do attr.update({'class': 'chzn-select'}) -%}
+  {%- endif -%}
   {{ mk.select.open(field, **attr) }}
 
     {% for value in member.valid_values %}
