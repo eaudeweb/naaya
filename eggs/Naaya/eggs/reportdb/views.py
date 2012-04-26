@@ -50,7 +50,7 @@ def report_list():
 def _expand_lists(form_data, keys):
     # TODO auto-detect the relevant fields in the schema
     for key in keys:
-        del form_data[key]
+        form_data.pop(key, None)
         for (idx, value) in enumerate(flask.request.form.getlist(key)):
             form_data['%s_%d' % (key, idx)] = value
 
