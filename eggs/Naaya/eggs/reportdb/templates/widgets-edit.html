@@ -137,8 +137,10 @@
     {% set hidden_list = [] %}
     {% set hidden_label_list = [] %}
     {%- for name in mk.children_order(group) %}
+
         {% set field = group[name] %}
         {% set error_cls = 'error' if field.errors else '' %}
+
         {% if field.properties.get('field_type')=="hidden" %}
             {% do hidden_list.append(name) %}
         {% endif %}
@@ -148,8 +150,9 @@
         {% if field.properties.get('reversed') %}
             {% do reversed_list.append(name) %}
         {% endif %}
-        {% if name not in hidden_list %}
-            <div class="field {{ error_cls }}">
+
+        {% if name not in hidden_list and not name=='other_radio' %}
+        <div class="field {{ error_cls }}">
             {% if not name in reversed_list %}  
                 {% if not name in hidden_label_list %}
                     {{ mk.label(field, class='control-label', contents=field.label) }}
@@ -164,8 +167,11 @@
                {{ mk.widget(field) }}
                {{ mk.label(field, class='control-label', contents=field.label) }}
             {% endif %}
-            </div>
+        </div>
+        {% elif name=='other_radio' %}
+                  {{ mk.widget(field) }}
         {% endif %}
+
     {%- endfor %}
 {% endmacro %}
 
@@ -198,18 +204,16 @@
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     {% if not field.properties.get('extra_topic') %}
-    <td>
-      {% if field.properties.get('eea_theme_link') %}
-        {{ eea_theme_image_and_link(field.name, field.label) }}
-      {% else %}
-            {{ field.label }}
-      {% endif %}
-    </td>
-    {% endif %}
-    {% if field.properties.get('extra_topic') %}
-        <td>{{ mk.widget(field) }}</td>
-    {% else %}
+        <td>
+          {% if field.properties.get('eea_theme_link') %}
+            {{ eea_theme_image_and_link(field.name, field.label) }}
+          {% else %}
+                {{ field.label }}
+          {% endif %}
+        </td>
         {{ mk.widget(field) }}
+    {% else %}
+        <td>{{ mk.widget(field) }}</td>
     {% endif %}
   {% endfor -%}
 </tr>
