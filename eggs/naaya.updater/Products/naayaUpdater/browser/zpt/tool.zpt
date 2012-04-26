@@ -20,7 +20,7 @@
                 'aTargets': [ 4 ]
             }],
             "aLengthMenu": [[10, 25, 30, 50, -1], [10, 25, 30, 50, "All"]],
-            "iDisplayLength": 30
+            "iDisplayLength": 20
         });
     });
   </script>
