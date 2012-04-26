@@ -52,7 +52,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.List.named('country') \
                .using(label=u"Country") \
-               .with_properties(widget="chosen_select",
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
                                 help=u"Region/sub-national?",
                                 placeholder="Select countries ...") \
                .of(
@@ -87,7 +88,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named('original_language') \
                   .using(label=u"Original Language",
                          optional=False) \
-                  .with_properties(value_labels=languages) \
+                  .with_properties(value_labels=languages,
+                                   widget_chosen=True) \
                   .valued(*language_codes),
 
         CommonString.named('english_name') \
@@ -128,7 +130,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.List.named('lang_of_pub') \
                .using(label=u"Languages of publication") \
-               .with_properties(widget="chosen_select",
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
                                 placeholder="Select languages ...") \
                .of(
 
