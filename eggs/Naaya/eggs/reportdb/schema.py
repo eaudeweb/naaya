@@ -50,15 +50,16 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"") \
               .of(
 
-        CommonEnum.named('country') \
-                  .using(label=u"Country") \
-                  .with_properties(css_class="chzn-select",
-                                   field_id="country_sel",
-                                   widget="chosen_select",
-                                   multiple="",
-                                   help=u"Region/sub-national?",
-                                   data_placeholder="Select countries") \
-                  .valued(*countries_list),
+        fl.List.named('country') \
+               .using(label=u"Country") \
+               .with_properties(widget="chosen_select",
+                                help=u"Region/sub-national?",
+                                placeholder="Select countries ...") \
+               .of(
+
+            CommonEnum.valued(*countries_list)
+
+        ),
 
         CommonFile.named('soer_cover') \
                   .using(label=u"Copy of SOER cover") \
@@ -125,14 +126,16 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .valued(*(['Yes', 'No', 'Unknown'])) \
                   .using(label=u"Separate summary report?"),
 
-        CommonEnum.named('lang_of_pub') \
-                  .using(label=u"Languages of publication") \
-                  .valued(*language_codes) \
-                  .with_properties(widget="chosen_select",
-                                   css_class="chzn-select",
-                                   field_id="lang_of_pub_sel",
-                                   value_labels=languages,
-                                   multiple=""),
+        fl.List.named('lang_of_pub') \
+               .using(label=u"Languages of publication") \
+               .with_properties(widget="chosen_select",
+                                placeholder="Select languages ...") \
+               .of(
+
+            CommonEnum.valued(*language_codes) \
+                      .with_properties(value_labels=languages)
+
+        ),
 
         fl.Dict.named('availability') \
                .with_properties(widget="options_with_labels") \

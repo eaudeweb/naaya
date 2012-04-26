@@ -25,15 +25,21 @@
 {% endmacro %}
 
 {% macro chosen_select(mk, field) %}
-  {{ mk.select.open(field, class=field.properties.css_class,
-                         id=field.properties.field_id,
-                         multiple="",
-                         tabindex="-1") }}
+  {% set member = field.member_schema %}
+  {% set attr = {
+        'class': 'chzn-select',
+        'tabindex': '-1',
+        'data-placeholder': field.properties.get('placeholder'),
+        'multiple': 'multiple',
+      } %}
+  {{ mk.select.open(field, **attr) }}
 
-    {% for value in field.valid_values %}
-      {% set value_label = (field.properties.value_labels[value]
-      if field.properties.value_labels else value) %}
-      {{ mk.option(field, value=value, contents=value_label) }}
+    {% for value in member.valid_values %}
+      {% set value_label = (member.properties.value_labels[value]
+      if member.properties.value_labels else value) %}
+      <option value="{{ value }}"
+        {%- if value in field.value %} selected{% endif %}>
+        {{- value_label }}</option>
     {% endfor %}
   {{ mk.select.close() }}
 
