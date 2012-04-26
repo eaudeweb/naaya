@@ -14,31 +14,32 @@
 
 {% if report_list %}
 <div>
-<h2>Reports:</h2>
-<table class="table table-bordered table-striped report-listing">
-  <thead>
-    <th>Name</th>
-    <th>Coverage</th>
-    <th>Published on</th>
-    <th>Factsheet prepared by</th>
-    <th>Prepared on</th>
-  </thead>
-  <tbody>
-	{% for report in report_list %}
-		<tr>
-			<td>
-			<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
-				{{ report['data']['details']['original_name'] }}
-			</a>
-			</td>
-			<td>{{ report['data']['header']['country'].x }}</td>
-			<td>{{ report['data']['details']['date_of_publication'] }}</td>
-			<td>{{ report['data']['header']['uploader'] }}</td>
-			<td>{{ report['data']['header']['upload_date'] }}</td>
-		</tr>
-	{% endfor %}
-  </tbody>
-</table>
+    <h1>Reports</h1>
+
+    <table class="table table-bordered table-striped report-listing">
+      <thead>
+        <th>Name</th>
+        <th>Coverage</th>
+        <th>Published on</th>
+        <th>Factsheet prepared by</th>
+        <th>Prepared on</th>
+      </thead>
+      <tbody>
+    	{% for report in report_list %}
+    		<tr>
+    			<td>
+    			<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+    				{{ report['data']['details']['original_name'] }}
+    			</a>
+    			</td>
+    			<td>{{ report['data']['header']['country'].x }}</td>
+    			<td>{{ report['data']['details']['date_of_publication'] }}</td>
+    			<td>{{ report['data']['header']['uploader'] }}</td>
+    			<td>{{ report['data']['header']['upload_date'] }}</td>
+    		</tr>
+    	{% endfor %}
+      </tbody>
+    </table>
 </div>
 {% else %}
 <p>No reports yet. Click  
