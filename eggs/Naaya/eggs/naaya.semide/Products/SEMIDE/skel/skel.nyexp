@@ -1112,7 +1112,7 @@ function toggleSelect(caller){
 		<title lang="en"><![CDATA[Countries]]></title>
 		<description lang="en"><![CDATA[
 
-<table border="0" width="100%">
+<table border="0">
 	<tbody>
 		<tr>
 			<td colspan="2" width="30%">
@@ -1166,7 +1166,7 @@ function toggleSelect(caller){
 				</p>
 			</td>
 
-			<td nowrap="nowrap" width="40%">
+			<td nowrap="nowrap" width="50%" align="center">
 				<map id="FPMap47" name="FPMap47">
 					<area shape="circle" target="_blank" alt="Cyprus" coords="755,569,22" href="http://www.emwis-cy.org" />
 					<area shape="poly" target="_blank" alt="Lebanon" coords="799,581,811,586,791,608,790,604" href="http://www.emwis-lb.org" />
@@ -1191,7 +1191,7 @@ function toggleSelect(caller){
 					<area shape="poly" target="_blank" alt="Go to the Palestinian focal point web site" coords="296,232,302,237,293,244" href="http://www.emwis-ps.org" />
 					<area shape="poly" target="_blank" alt="Go to the Tunisian focal point web site" coords="122,204,131,197,139,201,136,208,141,212,134,222,143,231,135,244,132,250,119,226" href="http://www.semide-tn.org" />
 				</map>
-				<img alt="" src="http://www.emwis.org/images_en/mapEuroMed-35-PFN.png" usemap="#FPMap47" height="263" width="317" />
+				<img alt="" src="http://www.emwis.org/images/mapEuroMed-35-PFN.png" usemap="#FPMap47" height="263" width="317" />
 			</td>
 
 			<td nowrap="nowrap" valign="top" width="15%">
