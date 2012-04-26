@@ -5,6 +5,11 @@
                       type=field.properties.get('field_type'))}}
 {% endmacro %}
 
+{% macro url(mk, field) %}
+  {{ mk.input(field, class=field.properties.get('css_class'),
+                      type=field.properties.get('field_type'))}}
+{% endmacro %}
+
 {% macro textarea(mk, field) %}
   {{ mk.textarea(field, class=field.properties.css_class) }}
 {% endmacro %}

@@ -9,7 +9,7 @@
 {% endmacro %}
 
 {%- macro textarea(mk, field) %}
-  <div>{{ field.value }}</div>
+  <div>{{ field.u }}</div>
 {% endmacro -%}
 
 {%- macro select(mk, field) %}
@@ -47,6 +47,10 @@
 
 {%- macro date(mk, field) %}
   {{ field.value or "" }}
+{% endmacro -%}
+
+{%- macro url(mk, field) %}
+    <a href="http://{{ field.value }}">{{ field.value }}</a>
 {% endmacro -%}
 
 {% macro radioselect(mk, field) %}
@@ -252,25 +256,23 @@
         {% if field.properties.get('reversed') %}
             {% do reversed_list.append(name) %}
         {% endif %}
-        {% if name not in hidden_list %}
-            <div class="field {{ error_cls }}">
-            {% if not name in reversed_list %}  
-                {% if not name in hidden_label_list %}
-                    {{ mk.label(field, class='control-label', contents=field.label) }}
-                {% endif %}
-              <div class="controls">
-                      {{ mk.widget(field) }}
-                  {% for message in field.errors %}
-                  <span class="help-inline">{{ message }}</span>
-                  {% endfor %}
-              </div>
+        <div class="field {{ error_cls }}">
+        {% if not name in reversed_list %}  
+            {% if not name in hidden_label_list %}
+                {{ mk.label(field, class='control-label', contents=field.label) }}
             {% endif %}
-            {% if name in reversed_list %}
-               {{ mk.widget(field) }}
-               {{ mk.label(field, class='control-label', contents=field.label) }}
-            {% endif %}
-            </div>
+          <div class="controls">
+                  {{ mk.widget(field) }}
+              {% for message in field.errors %}
+              <span class="help-inline">{{ message }}</span>
+              {% endfor %}
+          </div>
         {% endif %}
+        {% if name in reversed_list %}
+           {{ mk.widget(field) }}
+           {{ mk.label(field, class='control-label', contents=field.label) }}
+        {% endif %}
+        </div>
     {%- endfor %}
 {% endmacro %}
 
@@ -291,10 +293,11 @@
 {% endmacro %}
 
 {% macro options_with_labels(mk, schema) %}
-  {%- do mk.begin(auto_domid=true, auto_for=true) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
-    {{ field.label }} {{ mk.widget(field) }}
+    <div class="field-inline">
+        {{ mk.widget(field) }}
+        {{ field.label }}
+    </div>
   {% endfor -%}
-  {% do mk.end() -%}
 {% endmacro %}
