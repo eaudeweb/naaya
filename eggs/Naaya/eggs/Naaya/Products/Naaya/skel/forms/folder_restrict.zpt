@@ -40,7 +40,7 @@
 </p>
 <ol>
 	<li i18n:translate=""><a i18n:name="admin_roles" i18n:translate="" href="admin_roles_html">define a new role</a> without any permissions</li>
-	<li i18n:translate="">assign the desired users to this role using the <a i18n:name="admin_roles" i18n:translate="" href="admin_roles_html">Users and roles</a> form from the <a i18n:name="admin_users" i18n:translate="" href="admin_users_html">Users' management</a> area</li>
+	<li i18n:translate="">assign the desired users to this role using the <a i18n:name="admin_roles" i18n:translate="" href="admin_roles_html">Users and roles</a> form from the <a i18n:name="admin_users" i18n:translate="" href="admin_users_html">User management</a> area</li>
 	<li i18n:translate="">return to this form and restrict the access for that role</li>
 <ol>
 </fieldset>
