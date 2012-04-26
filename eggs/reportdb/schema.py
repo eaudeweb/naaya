@@ -341,7 +341,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(extra_radio="True", 
+                         .with_properties(enclosed_in_div="False", 
                                           hidden_label="True"),
             ),
         ),

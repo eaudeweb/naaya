@@ -257,6 +257,7 @@
             {% do reversed_list.append(name) %}
         {% endif %}
         
+        {% if not name=='other_radio' %}
         <div class="field {{ error_cls }}">
         {% if not name in reversed_list %}  
             {% if not name in hidden_label_list %}
@@ -273,6 +274,9 @@
            {{ mk.label(field, class='control-label', contents=field.label) }}
         {% endif %}
         </div>
+        {% else %}
+           {{ mk.widget(field) }}
+        {% endif %}
 
     {%- endfor %}
 {% endmacro %}
