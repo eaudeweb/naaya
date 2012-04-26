@@ -393,7 +393,7 @@ class DestinetPublisher(SimpleItem):
         if not topics:
             # unfortunately we both need _prepare_error_response
             # (on NyContentData) and methods for session (by acquisition)
-            ob = NyPublication('', '').__of__(self)
+            ob = NyPublication('', '', '', '').__of__(self)
             form_errors = {'topics': ['Please select at least one Topic']}
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/market_place_publication' % self.absolute_url())
