@@ -177,11 +177,11 @@ evaluation_methods = _load_json("refdata/evaluation_methods.json")
 TopicEnum = fl.Enum.using(optional=True) \
                    .with_properties(widget="topics_radioselect", 
                                     extra_topic="True") \
-                   .valued(*sorted(topics_ratings.keys()))
+                   .valued(*topics_ratings)
 
 IndicatorEnum = fl.Enum.using(optional=True) \
                   .with_properties(widget="indicators_radioselect") \
-                  .valued(*sorted(topics_ratings.keys()))
+                  .valued(*topics_ratings)
 
 TopicDict = CommonDict.with_properties(widget="topics_columns") \
                       .of(
@@ -279,19 +279,19 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                .of(
 
             IndicatorEnum.named('to_compare_countries') \
-                         .valued(*sorted(indicators_usage.keys())) \
+                         .valued(*indicators_usage) \
                          .using(label=u"To compare with other countries/EU?"),
 
             IndicatorEnum.named('to_compare_subnational') \
-                         .valued(*sorted(indicators_usage.keys())) \
+                         .valued(*indicators_usage) \
                          .using(label=u"To compare at sub-national level?"),
 
             IndicatorEnum.named('to_assess_progress') \
-                         .valued(*sorted(indicators_usage.keys())) \
+                         .valued(*indicators_usage) \
                          .using(label=u"To asses progress to target/threshold?"),
 
             IndicatorEnum.named('to_evaluate') \
-                         .valued(*sorted(indicators_usage.keys())) \
+                         .valued(*indicators_usage) \
                          .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
             CommonEnum.named("evaluation_method") \
