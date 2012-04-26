@@ -338,12 +338,11 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True",
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(extra_topic="True", 
-                                          hidden_label="True") \
+                         .with_properties(extra_radio="True", 
+                                          hidden_label="True"),
             ),
         ),
 
@@ -394,7 +393,6 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True",
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
@@ -439,7 +437,6 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True",
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
@@ -468,7 +465,6 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
                 CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
-                                             enclose_in_td="True",
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
