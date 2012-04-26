@@ -1,5 +1,3 @@
-<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
-
 html,div,h1,th,td,li,ul,fieldset,legend {
 	direction:rtl;
 }
