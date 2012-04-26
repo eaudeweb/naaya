@@ -89,6 +89,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .using(label=u"Original Language",
                          optional=False) \
                   .with_properties(value_labels=languages,
+                                   placeholder="Select a language ...",
                                    widget_chosen=True) \
                   .valued(*language_codes),
 
