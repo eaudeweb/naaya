@@ -297,7 +297,9 @@
     {% set field = schema[name] %}
     <div class="field-inline">
         {{ mk.widget(field) }}
-        {{ field.label }}
+        {% if not field.label == 'URL' %}
+            {{ field.label }}
+        {% endif %}
     </div>
   {% endfor -%}
 {% endmacro %}
