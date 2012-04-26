@@ -260,7 +260,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                          optional=True),
 
         CommonEnum.named('indicators_estimation') \
-                  .valued(*sorted(indicators_estimation.keys())) \
+                  .valued(*indicators_estimation) \
                   .using(label=u"if yes - indicators:"),
 
         fl.Enum.named('eea_indicators') \
