@@ -240,7 +240,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                .of(
 
             CommonBoolean.named('basis_structure') \
-                         .using(label=u"Basis for report structure?"),
+                         .using(label=u"Basis for report structure?") \
+                         .with_properties(reversed="True"),
         ),
 
         fl.Enum.named('indicator_based') \
