@@ -38,8 +38,9 @@ publication_freq = _load_json("refdata/publication_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
 languages = _load_json("refdata/languages_list.json")
-language_names = sorted(languages.keys())
-language_codes = [languages[language_name] for language_name in language_names]
+language_codes = [pair[1] for pair in
+                  sorted([(v,k) for (k,v) in languages.items()])]
+
 indicators_estimation = _load_json("refdata/indicators_estimation.json")
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
@@ -85,7 +86,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named('original_language') \
                   .using(label=u"Original Language",
                          optional=False) \
-                  .with_properties(value_labels=language_names) \
+                  .with_properties(value_labels=languages) \
                   .valued(*language_codes),
 
         CommonString.named('english_name') \
@@ -130,7 +131,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget="chosen_select",
                                    css_class="chzn-select",
                                    field_id="lang_of_pub_sel",
-                                   value_labels=language_names,
+                                   value_labels=languages,
                                    multiple=""),
 
         fl.Dict.named('availability') \
