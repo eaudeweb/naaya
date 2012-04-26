@@ -80,6 +80,7 @@ def report_edit(report_id=None):
         file_upload.handle_request(session, report_schema, report_row)
         if report_schema.validate():
 
+            report_row.clear()
             report_row.update(report_schema.flatten())
             session.save(report_row)
             #TODO create filter to display data without losing information
@@ -89,6 +90,7 @@ def report_edit(report_id=None):
 
             if seris_review_schema.validate():
 
+                seris_review_row.clear()
                 seris_review_row.update(seris_review_schema.flatten())
                 session.save(seris_review_row)
 
