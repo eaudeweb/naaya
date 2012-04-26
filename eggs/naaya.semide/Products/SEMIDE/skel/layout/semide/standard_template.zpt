@@ -16,7 +16,7 @@
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         </metal:block>
 
-        <metal:block define-slot="title">
+        <metal:block define-slot="header-title">
             <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
         </metal:block>
         <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
