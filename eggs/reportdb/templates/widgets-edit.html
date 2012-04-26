@@ -15,15 +15,15 @@
 {% endmacro %}
 
 {% macro select(mk, field) %}
-  {% set attr = {} %}
+  {% set attr = {
+        'data-placeholder': field.properties.get('placeholder'),
+      } %}
   {%- if field.properties.widget_chosen -%}
     {%- do attr.update({'class': 'chzn-select'}) -%}
   {%- endif -%}
   {{ mk.select.open(field, **attr) }}
 
-    {% if field.optional %}
-      {{ mk.option(field, value="", contents="--") }}
-    {% endif %}
+    {{ mk.option(field, value="", contents="") }}
 
     {% for value in field.valid_values %}
       {% set value_label = (field.properties.value_labels[value]
