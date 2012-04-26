@@ -35,6 +35,12 @@
     </div>
     #}
 
+    {% set cover = report['data']['header']['soer_cover'] %}
+    {% if (not cover.is_empty) %}
+      {% set url = url_for('views.download', db_id=cover.u) %}
+      <img src="{{ url }}" class="report-header_soer_cover" width="120" height="160">
+    {% endif %}
+
     <h1>{{ ', '.join(report['data']['header']['country'].value) }}</h1>
     <h2>{{ report['data']['details']['english_name'].value or
            report['data']['details']['original_name'].value }}</h2>
