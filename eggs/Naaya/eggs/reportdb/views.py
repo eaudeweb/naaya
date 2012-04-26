@@ -84,6 +84,8 @@ def report_edit(report_id=None):
             report_row.update(report_schema.flatten())
             session.save(report_row)
             #TODO create filter to display data without losing information
+            if report_row['format_availability_paper_or_web'] == 'paper only':
+                report_row['format_availability_url'] = ''
             report_row['header_upload_date'] = datetime.datetime.now().strftime('%d %b %Y, %H:%M')
             session.save(report_row)
             seris_review_schema['report_id'].set(report_row.id)
@@ -92,6 +94,12 @@ def report_edit(report_id=None):
 
                 seris_review_row.clear()
                 seris_review_row.update(seris_review_schema.flatten())
+                if seris_review_row['structure_indicator_based'] == 'No':
+                    seris_review_row['structure_indicators_estimation'] = ''
+                if seris_review_row['structure_eea_indicators'] == 'No':
+                    seris_review_row['structure_eea_indicators_estimated_no'] = ''
+                if seris_review_row['structure_indicators_usage_to_evaluate'] == 'None':
+                    seris_review_row['structure_indicators_usage_evaluation_method'] = ''
                 session.save(seris_review_row)
 
                 session.commit()
