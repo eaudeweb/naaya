@@ -151,6 +151,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                    .using(label=u""),
 
             CommonString.named("url") \
+                        .with_properties(widget="url") \
                         .using(label=u"URL"),
 
             fl.Enum.named('costs') \
