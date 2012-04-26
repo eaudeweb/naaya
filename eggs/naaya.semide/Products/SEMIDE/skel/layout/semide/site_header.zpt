@@ -39,9 +39,7 @@
 		<div class="white_backgrounded">
 			<div id="nav_upper" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
 				<div tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-
 					<div id="nav_upper_log">
-						
 						<img tal:attributes="src string:${here/getSkinFilesPath}/ico_login.gif;" align="middle" alt="" />
 						<tal:block condition="python: authenticated_user != 'Anonymous User'">
 							<span i18n:translate="" tal:omit-tag="">you are logged in as</span>
@@ -88,8 +86,8 @@
 					<img tal:attributes="src here/leftLogoUrl" alt="" />
 				</div>
 				<div id="site_title">
-					<span tal:content="here/site_title" />
-					<div id="site_subtitle" tal:content="here/site_subtitle" />
+					<span tal:content="here/site_title" i18n:translate="" />
+					<div id="site_subtitle" tal:content="here/site_subtitle" i18n:translate="" />
 				</div>
 			</div>
 <!--END top banner -->
@@ -104,7 +102,7 @@
 
 					<ul>
 						<li tal:repeat="main_categ here/getMainTopics">
-							<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/tooltip" tal:content="main_categ/title" />
+							<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/tooltip" tal:content="main_categ/title" i18n:translate="" i18n:attributes="" />
 							<span tal:condition="isArabic">&nbsp;|&nbsp;</span>
 						</li>
 					</ul>
@@ -145,7 +143,8 @@
 						<a tal:condition="python:crumb.meta_type!='SEMIDE Site'"
 						   tal:attributes="href string:${crumb/absolute_url}/;
 										   title crumb/title_or_id;"
-						   tal:content="crumb/title_or_id" />
+						   tal:content="crumb/title_or_id"
+                                                   i18n:translate="" i18n:attributes="" />
 						<a tal:condition="python:crumb.meta_type=='SEMIDE Site'" tal:attributes="href site_url"
 						   i18n:translate="">
 							Home
