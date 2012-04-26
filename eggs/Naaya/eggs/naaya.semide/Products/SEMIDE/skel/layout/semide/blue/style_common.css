@@ -400,7 +400,7 @@ a.delete-comment .icon {
 
 	/* Tabbed menus  */
 
-#tabbedmenu {
+#tabbedmenu, .tabbedmenu {
 	float: none;
 	width:100%;
 	border-bottom: thin solid #E3E2D3;
@@ -410,20 +410,20 @@ a.delete-comment .icon {
 	}
 
 
-#tabbedmenu ul {
+#tabbedmenu ul, .tabbedmenu ul {
 	overflow:hidden;
 	margin:0;
 	padding:10px 10px 0;
 	list-style:none;
 	}
-#tabbedmenu li {
+#tabbedmenu li, .tabbedmenu li {
 	float: left;
 	background:url("tableft.gif") no-repeat left top;
 	margin:0;
 	padding:0 0 0 9px;
 	white-space: nowrap;
 	}
-#tabbedmenu a {
+#tabbedmenu a, .tabbedmenu a {
 	display:block;
 	text-decoration: none;
 	font-weight: bold;
@@ -431,16 +431,16 @@ a.delete-comment .icon {
 	background:url("tabright.gif") no-repeat right top;
 	padding:5px 15px 4px 6px;
 	}
-#tabbedmenu #currenttab {
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
 	background-image:url("tableft_on.gif");
 	}
-#tabbedmenu #currenttab a {
+#tabbedmenu #currenttab a, .tabbedmenu .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
 	background-image:url("tabright_on.gif");
 	padding-bottom: 5px;
 	}
-#tabbedmenu #currenttab span {
+#tabbedmenu #currenttab span, .tabbedmenu .currenttab span {
 	display:block;
 	text-decoration: none;
 	font-weight: bold;
