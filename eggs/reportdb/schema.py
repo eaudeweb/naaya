@@ -322,11 +322,11 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('urban') \
                         .using(label=u"Urban environment"),
 
-            CommonDict.named('other_topic') \
+            CommonDict.named('extra_topic') \
                       .with_properties(extra_topic="True") \
                       .of(
 
-                CommonString.named('other_topic_input') \
+                CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
                                              enclose_in_td="True",
                                              css_class="input-medium"),
@@ -378,11 +378,11 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('other_issues') \
                         .using(label=u"Various other issues"),
 
-            CommonDict.named('other_topic') \
+            CommonDict.named('extra_topic') \
                       .with_properties(extra_topic="True") \
                       .of(
 
-                CommonString.named('other_topic_input') \
+                CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
                                              enclose_in_td="True",
                                              css_class="input-medium"),
@@ -423,11 +423,11 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('transport') \
                         .using(label=u"Transport"),
 
-            CommonDict.named('other_topic') \
+            CommonDict.named('extra_topic') \
                       .with_properties(extra_topic="True") \
                       .of(
 
-                CommonString.named('other_topic_input') \
+                CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
                                              enclose_in_td="True",
                                              css_class="input-medium"),
@@ -452,11 +452,11 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             EeaTopicDict.named('scenarios') \
                         .using(label=u"Environmental scenarios"),
 
-            CommonDict.named('other_topic') \
+            CommonDict.named('extra_topic') \
                       .with_properties(extra_topic="True") \
                       .of(
 
-                CommonString.named('other_topic_input') \
+                CommonString.named('extra_topic_input') \
                             .with_properties(hidden_label="True",
                                              enclose_in_td="True",
                                              css_class="input-medium"),

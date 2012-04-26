@@ -90,7 +90,13 @@
       {% endif %}
     </td>
     {% endif %}
-    {{ mk.widget(field) }}
+    {% if field.properties.get('extra_topic') %}
+        {% if schema['extra_topic']['extra_topic_input'].value %}
+            <td>{{ mk.widget(field) }}</td>
+        {% endif %}
+    {% else %}
+        {{ mk.widget(field) }}
+    {% endif %}
   {% endfor -%}
 </tr>
 {% endmacro %}
@@ -123,9 +129,9 @@
             <td class="indicators-column">None</td>
         </tr>
     {%- for name in mk.children_order(group) %}
+        {% set field = group[name] %}
     <tr class="topics-group {{ error_cls }}">
         <td colspan="10">
-            {% set field = group[name] %}
             {% set error_cls = 'error' if field.errors else '' %}
             {{ mk.label(field, class='control-label', contents=field.label) }}
         </td>
@@ -251,11 +257,7 @@
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
               <div class="controls">
-                  {% if field.properties.get('enclose_in_td') %}
-                  <td>{{field.value}}</td>
-                  {% else %}
                       {{ mk.widget(field) }}
-                  {% endif %}
                   {% for message in field.errors %}
                   <span class="help-inline">{{ message }}</span>
                   {% endfor %}
