@@ -277,7 +277,7 @@
 {% macro schema(mk, schema) %}
   {%- do mk.begin(auto_domid=true, auto_for=true) %}
   {%- for name in mk.children_order(schema) %}
-      {% if name != "report_id" %}
+      {% if name not in ['header', 'report_id'] %}
         {% set field = schema[name] %}
         {% if field.label %}
         <div class="section">
