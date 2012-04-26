@@ -35,6 +35,20 @@
     </div>
     #}
 
+    <h1>{{ ', '.join(report['data']['header']['country'].value) }}</h1>
+    <h2>{{ report['data']['details']['english_name'].value or
+           report['data']['details']['original_name'].value }}</h2>
+
+    <p class="report-header_upload_date">
+      <strong>This fact-sheet was prepared on</strong>:
+      {{ report['data']['header']['upload_date'] }}
+    </p>
+
+    <p class="report-header_uploader">
+      <strong>This fact-sheet was prepared by</strong>:
+      {{ report['data']['header']['uploader'] }}
+    </p>
+
     {{ mk.widget(report['data']) }}
     {% if report['seris_reviews'] %}
         {{ mk.widget(report['seris_reviews'][0]['data']) }}
