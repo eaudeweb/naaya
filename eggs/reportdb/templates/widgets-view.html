@@ -19,7 +19,11 @@
 {% endmacro -%}
 
 {% macro chosen_select(mk, field) %}
-    {{ select(mk, field) }}
+  {% set value_labels = field.member_schema.properties.get('value_labels') %}
+  {% for v in field.value %}
+    {{ value_labels[v] if value_labels else v }}
+    {%- if not loop.last %}, {% endif %}
+  {% endfor %}
 {% endmacro %}
 
 {%- macro checkbox(mk, field) %}

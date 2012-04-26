@@ -47,6 +47,14 @@ def report_list():
     })
 
 
+def _expand_lists(form_data, keys):
+    # TODO auto-detect the relevant fields in the schema
+    for key in keys:
+        del form_data[key]
+        for (idx, value) in enumerate(flask.request.form.getlist(key)):
+            form_data['%s_%d' % (key, idx)] = value
+
+
 @views.route('/reports/new/', methods=['GET', 'POST'])
 @views.route('/reports/<int:report_id>/edit/', methods=['GET', 'POST'])
 def report_edit(report_id=None):
@@ -64,16 +72,12 @@ def report_edit(report_id=None):
         form_data.update(schema.ReportSchema.from_defaults().flatten())
         form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
         form_data.update(flask.request.form.to_dict())
-        #dirty fix in order to save the values from a multiple select
-        #form_data['header_country'] = flask.request.form.getlist('header_country')
-        #form_data['format_lang_of_pub'] = flask.request.form.getlist('format_lang_of_pub')
+        _expand_lists(form_data, ['header_country', 'format_lang_of_pub'])
+
         report_schema = schema.ReportSchema.from_flat(form_data)
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
 
         file_upload.handle_request(session, report_schema, report_row)
-        print '-'*50
-        print flask.request.form
-        print '-'*50
         if report_schema.validate():
 
             report_row.update(report_schema.flatten())
