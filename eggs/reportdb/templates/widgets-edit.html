@@ -130,19 +130,13 @@
             {% do reversed_list.append(name) %}
         {% endif %}
         {% if name not in hidden_list %}
-            {% if not name in hidden_list+hidden_label_list %}
             <div class="field {{ error_cls }}">
-            {% endif %}
             {% if not name in reversed_list %}  
                 {% if not name in hidden_label_list %}
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
               <div class="controls">
-                  {% if field.properties.get('enclose_in_td') %}
-                      <td>{{ mk.widget(field) }}</td>
-                  {% else %}
-                      {{ mk.widget(field) }}
-                  {% endif %}
+                  {{ mk.widget(field) }}
                   {% for message in field.errors %}
                   <span class="help-inline">{{ message }}</span>
                   {% endfor %}
@@ -152,9 +146,7 @@
                {{ mk.widget(field) }}
                {{ mk.label(field, class='control-label', contents=field.label) }}
             {% endif %}
-            {% if not name in hidden_list+hidden_label_list %}
             </div>
-            {% endif %}
         {% endif %}
     {%- endfor %}
 {% endmacro %}
@@ -196,7 +188,13 @@
       {% endif %}
     </td>
     {% endif %}
-    {{ mk.widget(field) }}
+    {% if field.properties.get('extra_topic') %}
+        {% if schema['extra_topic']['extra_topic_input'].value %}
+            <td>{{ mk.widget(field) }}</td>
+        {% endif %}
+    {% else %}
+        {{ mk.widget(field) }}
+    {% endif %}
   {% endfor -%}
 </tr>
 {% endmacro %}
