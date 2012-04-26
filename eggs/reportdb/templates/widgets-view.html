@@ -267,8 +267,7 @@
               <span class="help-inline">{{ message }}</span>
               {% endfor %}
           </div>
-        {% endif %}
-        {% if name in reversed_list %}
+        {% else %}
            {{ mk.widget(field) }}
            {{ mk.label(field, class='control-label', contents=field.label) }}
         {% endif %}
