@@ -5,7 +5,6 @@
 	Skin-number:3;
 	Current-skin: blue;<tal:block condition="false">/*.*.green.*.*//*.*.magenta.*.*/</tal:block>
 </tal:block>
-<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 
 body {
 	margin:0;
