@@ -1,4 +1,5 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_macro_add.macros['page']">
+<!--<tal:block metal:use-macro="python:here.getFormsTool().site_macro_add.macros['page']">-->
+    <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_add').macros['page']">
 
 <h1 metal:fill-slot="title" i18n:translate="">Submit Multimedia</h1>
 
