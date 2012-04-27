@@ -653,7 +653,7 @@ li {
 
 #main_structure {
 	<tal:block condition="noArabic">
-	position: absolute;
+	/*position: absolute;*/
 	padding-right:15px;
 	</tal:block>
 	<tal:block condition="isArabic">
