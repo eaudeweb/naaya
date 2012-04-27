@@ -19,6 +19,9 @@
 
 #Python imports
 #Zope imports
+
+import os
+import Globals
 from App.ImageFile import ImageFile
 
 #Product imports
@@ -56,3 +59,13 @@ misc_ = {
     'FlashTemplate.gif':ImageFile('www/FlashTemplate.gif', globals()),
     'FlashCategory.gif':ImageFile('www/FlashCategory.gif', globals()),
 }
+
+def semide_bundle_registration():
+    """ Register things from skel into the CHM bundle """
+    from Products.NaayaCore.FormsTool.bundlesupport import \
+        register_templates_in_directory
+
+    def forms_path(skel_name):
+        return os.path.join(os.path.dirname(__file__), skel_name, 'forms')
+
+    register_templates_in_directory(forms_path('skel'), 'SEMIDE')
