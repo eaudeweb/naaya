@@ -81,7 +81,7 @@
             <div class="user-role" tal:repeat="role roles">
                 <tal:block condition="python: role[0]">
                 <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-                <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+                <a class="roles-location" tal:define="obj python: here.getSite().utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
                 </tal:block>
             </div>
             <tal:block condition="python: roles == [([], '')] ">-</tal:block>
