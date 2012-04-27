@@ -217,19 +217,19 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                .of(
 
             CommonBoolean.named('global_level') \
-                         .using(label=u"Global-level SOER's ?") \
+                         .using(label=u"Global-level SOER's?") \
                          .with_properties(help=u"(e.g. UNEP GEO)"),
 
             CommonBoolean.named('european_level') \
-                         .using(label=u"European-level SOER's ?") \
+                         .using(label=u"European-level SOER's?") \
                          .with_properties(help=u"(e.g. EEA SOER)"),
 
             CommonBoolean.named('national_level') \
-                         .using(label=u"National-level SOER's ?") \
+                         .using(label=u"National-level SOER's?") \
                          .with_properties(help=u"(e.g. other country)"),
 
             CommonBoolean.named('sub_national_level') \
-                         .using(label=u"Sub-national-level SOER's ?") \
+                         .using(label=u"Sub-national-level SOER's?") \
                          .with_properties(help=u"(e.g. regional)"),
         ),
 
@@ -261,7 +261,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*indicators_estimation) \
-                  .using(label=u"if yes - indicators:"),
+                  .using(label=u"Indicators estimation:"),
 
         fl.Enum.named('eea_indicators') \
                .with_properties(widget="radioselect") \
