@@ -1,5 +1,6 @@
 1.2.12 (unreleased)
 -------------------
+* bugfix: AttributeError: generate_csv [nituacor]
 
 1.2.11 (2012-01-13)
 -------------------
