@@ -32,7 +32,7 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-
+from Products.NaayaCore.managers.import_export generate_csv, generate_excel
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
@@ -148,15 +148,14 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         rows = [all_stringify(item) for item in rows]
 
         file_type = REQUEST.get('file_type', 'CSV')
-        exporter = self.getSite().csv_export
         if file_type == 'CSV':
             RESPONSE.setHeader('Content-Type', 'text/csv')
             RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
-            return exporter.generate_csv(header, rows)
+            return generate_csv(header, rows)
         if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
             RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
-            return exporter.generate_excel(header, rows)
+            return generate_excel(header, rows)
         else: raise ValueError('unknown file format %r' % file_type)
 
     #
