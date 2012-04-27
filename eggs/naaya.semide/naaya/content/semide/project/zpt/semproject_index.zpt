@@ -276,7 +276,7 @@
                                             <td tal:define="download_url item/getDownloadUrl">
                                                 <a tal:define="size python:item.utShowSizeKb(item.getSize());
                                                                content_type python:item.getContentType();
-                                                               icon python: here.rstk.icon_for_content_type(content_type);
+                                                               icon python: here.rstk['icon_for_content_type'](content_type);
                                                                title python: icon['title'];
                                                                url python: icon['url'];"
                                                    tal:attributes="href download_url">
