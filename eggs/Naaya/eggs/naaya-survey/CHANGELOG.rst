@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 ===================
+* bugfix: AttributeError: generate_csv [nituacor]
 
 1.2.18 (2012-02-03)
 ===================
