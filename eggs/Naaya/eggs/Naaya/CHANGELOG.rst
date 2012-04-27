@@ -1,5 +1,6 @@
 2.13.10 (unreleased)
 --------------------
+* Bugfix in folder_administration_users [dumitval]
 
 2.13.9 (2012-04-24)
 --------------------
