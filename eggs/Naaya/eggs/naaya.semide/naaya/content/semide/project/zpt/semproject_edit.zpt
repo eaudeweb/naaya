@@ -15,7 +15,7 @@
 				<option	tal:condition="not:item/theme_name"
 						tal:attributes="value item/theme_id;
 										selected python:item.theme_id in here.getSession('subject', here.getVersionProperty('subject'))"
-						tal:content="python:here.getPortalTranslations().gettext('no translation available', curr_lang)"
+						tal:content="python:here.getPortalI18n().get_translation('no translation available')"
 						i18n:translate="" />
 			</tal:block>
 		</select>
