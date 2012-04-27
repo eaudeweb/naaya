@@ -10,6 +10,7 @@ from AccessControl.requestmethod import postonly
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.managers.import_export import generate_excel
 
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
@@ -240,10 +241,9 @@ class Participants(SimpleItem):
             part_info = self.getAttendeeInfo(participant)
             rows.append([part_info['name'], part_info['uid'], part_info['email'], part_info['organization'], part_info['phone'], part_info['role']])
 
-        exporter = self.getSite().csv_export
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
-        return exporter.generate_excel(header, rows)
+        return generate_excel(header, rows)
 
 InitializeClass(Participants)
 
