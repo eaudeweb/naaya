@@ -1,5 +1,9 @@
-1.2.2 (unreleased)
+1.2.3 (unreleased)
 -------------------
+
+1.2.2 (2012-04-27)
+-------------------
+* bugfix: AttributeError: generate_csv [nituacor]
 
 1.2.1 (2012-04-17)
 -------------------
