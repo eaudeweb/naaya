@@ -261,6 +261,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*indicators_estimation) \
+                  .with_properties(hide_if_empty='True') \
                   .using(label=u"Indicators estimation:"),
 
         fl.Enum.named('eea_indicators') \
@@ -271,7 +272,8 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonString.named("eea_indicators_estimated_no") \
                     .using(label=u"Estimated number?") \
-                    .with_properties(css_class="input-small"),
+                    .with_properties(css_class="input-small",
+                                     hide_if_empty='True'),
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
@@ -477,11 +479,13 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
     CommonString.named("short_description") \
                 .using(label=u"Short description from SERIS (old):") \
-                .with_properties(widget="textarea"),
+                .with_properties(widget="textarea",
+                                 hide_if_empty='True'),
 
     CommonString.named("table_of_contents") \
                 .using(label=u"Overview of table of contents and "
                               "indicators in report") \
-                .with_properties(widget="textarea"),
+                .with_properties(widget="textarea",
+                                 hide_if_empty='True'),
 
 )

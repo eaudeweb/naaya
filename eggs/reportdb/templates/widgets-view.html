@@ -1,8 +1,10 @@
 {%- from 'bits.html' import eea_theme_image_and_link -%}
 
 {%- macro input(mk, field) %}
-  {% if field.value %}
+  {% if not field.value == '' %}
     {{ field.u }}
+  {% else %}
+    {{ '\u002d'  }}
   {% endif %}
 {% endmacro -%}
 
@@ -11,13 +13,23 @@
 {% endmacro %}
 
 {%- macro textarea(mk, field) %}
-  <div>{{ field.u }}</div>
+    <div>
+         {% if field.value == '' %}
+             {{ '\u002d' }}
+         {% else %}
+            {{ field.u }}
+         {% endif %}
+    </div>
 {% endmacro -%}
 
 {%- macro select(mk, field) %}
   {% set value_label = (field.properties.value_labels[field.value]
      if field.properties.value_labels else field.u) %}
-  {{ value_label }}
+     {% if value_label==''%}
+         {{ '\u002d' }}
+     {% else %}
+         {{ value_label }}
+     {% endif %}
 {% endmacro -%}
 
 {% macro multiple_select(mk, field) %}
@@ -215,9 +227,9 @@
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
-    {% if field.value==True %}
+    {% if field.value == True %}
         Yes
-    {% elif field.value==False %}
+    {% elif field.value == False %}
         No
     {% else %}
         {{ '\u002d' }}
@@ -253,6 +265,8 @@
 {% macro group(mk, group) %}
     {% set hidden_list = [] %}
     {% set hidden_label_list = [] %}
+    {% set boolean_list = ['registered_eionet',
+                           'key_findings'] %}
     {% set empty_fields_to_hide = ['indicators_estimation',
                                    'eea_indicators_estimated_no'] %}
 
@@ -265,7 +279,7 @@
             {% do hidden_label_list.append(name) %}
         {% endif %}
 
-        {% if not field.value and name in empty_fields_to_hide %}
+        {% if (not field.value or field.value == '') and name in empty_fields_to_hide %}
             {% do hidden_list.append(name) %}
         {% endif %}
 
@@ -276,10 +290,15 @@
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
               <div class="controls">
+                  {% if field.value or name in boolean_list or
+                        (field.value is undefined and name in boolean_list) %}
                       {{ mk.widget(field) }}
-                  {% for message in field.errors %}
-                  <span class="help-inline">{{ message }}</span>
-                  {% endfor %}
+                      {% for message in field.errors %}
+                      <span class="help-inline">{{ message }}</span>
+                      {% endfor %}
+                  {% else %}
+                      {{ '\u002d' }}
+                  {% endif %}
               </div>
             </div>
             {% else %}
