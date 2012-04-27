@@ -1,13 +1,11 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 <h1 metal:fill-slot="title" i18n:translate="">Comments on content</h1>
 
-<tal:block metal:fill-slot="head">
-    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-    <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
-</tal:block>
-
 <tal:block metal:fill-slot="section">
+<script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+<link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
+
 <p i18n:translate="">
 	This page presents links to all content for which comments have been added. You can follow
 	the links, see the comments and delete the irrelevant ones.
