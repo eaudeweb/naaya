@@ -38,6 +38,7 @@ from Products.NaayaProfilesTool.ProfileMeta import ProfileMeta
 from Products.NaayaProfilesTool.constants import ID_PROFILESTOOL
 from Products.NaayaProfilesTool.ProfilesTool import manage_addProfilesTool
 
+from Products.Naaya.managers.skel_parser import skel_handler_for_path
 from Products.Naaya.NySite                          import NySite
 from Products.Naaya.NySite                          import CONTAINERS_METATYPES
 from Products.Naaya.NySite                    import NAAYA_CONTAINERS_METATYPES
@@ -63,6 +64,8 @@ from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from Products.ZOpenArchives import (OAIServer, OAIAggregator,
                                     ZCatalogHarvester,OAIHarvester)
+
+from naaya.component import bundles
 
 from interfaces import ISEMIDESite
 
@@ -94,16 +97,29 @@ NAAYA_CONTAINERS_METATYPES.extend([METATYPE_NYCOUNTRY,
                                    METATYPE_NYPHOTOGALLERY,
                                    METATYPE_NYSEMTHEMATICDIR])
 
+def _get_skel_handler(bundle_name):
+    if bundle_name == 'SEMIDE':
+        skel_path = os.path.join(SEMIDE_PRODUCT_PATH, 'skel')
+        return skel_handler_for_path(skel_path)
+
 manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
-def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
+def manage_addSEMIDESite(self, id='', title='', lang=None, bundle_name='SEMIDE',
+                         REQUEST=None):
     """ """
     ut = utils()
     id = ut.utSlugify(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
-    self._setObject(id, SEMIDESite(id, title=title, lang=lang))
-    self._getOb(id).loadDefaultData()
+    semide_site = SEMIDESite(id, title=title, lang=lang)
+    semide_site.set_bundle(bundles.get(bundle_name))
+    self._setObject(id, semide_site)
+    semide_site = self._getOb(id)
+    semide_site.loadDefaultData(_get_skel_handler(bundle_name))
+
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
+semide_bundle = bundles.get("SEMIDE")
+semide_bundle.set_parent(bundles.get("Naaya"))
 
 class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     """ """
@@ -124,7 +140,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     def __init__(self, *args, **kwargs):
         """ """
-        NySite.__dict__['__init__'](self, *args, **kwargs)
+        self.show_releasedate = 1
+        super(SEMIDESite, self).__init__(*args, **kwargs)
 
     def _configure_linkchecker(self, linkchecker_ob):
         # Add Naaya Folder content type to be checked by linkchecker
@@ -184,18 +201,21 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                 linkchecker_ob.manage_addProperty('Naaya Semide Publication', 'publication_url', islink=1)
 
     security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
+    def loadDefaultData(self, skel_handler=None):
         """ """
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
 
         #load site skeleton - configuration
+        if skel_handler is not None:
+            self._load_skel_from_handler(skel_handler)
+
         if self.getSyndicationTool()._getOb('news_rdf', None):
             self.getSyndicationTool().manage_delObjects('news_rdf')
 
         if self.getSyndicationTool()._getOb('lateststories_rdf', None):
             self.getSyndicationTool().manage_delObjects('lateststories_rdf')
-        self.loadSkeleton(SEMIDE_PRODUCT_PATH)
+
         self.getLayoutTool().manage_delObjects('skin')
 
         manage_addProfilesTool(self)
