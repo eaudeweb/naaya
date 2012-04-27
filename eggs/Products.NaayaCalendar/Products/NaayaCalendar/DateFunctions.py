@@ -45,49 +45,49 @@ class DateFunctions(object):
 
     def LongMonths(self, p_index):
         """ return the month's name """
-        setTranslation = self.getSite().getPortalTranslations().translate
+        setTranslation = self.getSite().getPortalI18n().get_translation
         if p_index == 0:
-            return setTranslation('', 'January')
+            return setTranslation('January')
         elif p_index == 1:
-            return setTranslation('', 'February')
+            return setTranslation('February')
         elif p_index == 2:
-            return setTranslation('', 'March')
+            return setTranslation('March')
         elif p_index == 3:
-            return setTranslation('', 'April')
+            return setTranslation('April')
         elif p_index == 4:
-            return setTranslation('', 'May')
+            return setTranslation('May')
         elif p_index == 5:
-            return setTranslation('', 'June')
+            return setTranslation('June')
         elif p_index == 6:
-            return setTranslation('', 'July')
+            return setTranslation('July')
         elif p_index == 7:
-            return setTranslation('', 'August')
+            return setTranslation('August')
         elif p_index == 8:
-            return setTranslation('', 'September')
+            return setTranslation('September')
         elif p_index == 9:
-            return setTranslation('', 'October')
+            return setTranslation('October')
         elif p_index == 10:
-            return setTranslation('', 'November')
+            return setTranslation('November')
         elif p_index == 11:
-            return setTranslation('', 'December')
+            return setTranslation('December')
 
     def LongDays(self, p_index):
         """ return the day's name """
-        setTranslation = self.getSite().getPortalTranslations().translate
+        setTranslation = self.getSite().getPortalI18n().get_translation
         if p_index == 0:
-            return setTranslation('', 'Monday')
+            return setTranslation('Monday')
         elif p_index == 1:
-            return setTranslation('', 'Tuesday')
+            return setTranslation('Tuesday')
         elif p_index == 2:
-            return setTranslation('', 'Wednesday')
+            return setTranslation('Wednesday')
         elif p_index == 3:
-            return setTranslation('', 'Thursday')
+            return setTranslation('Thursday')
         elif p_index == 4:
-            return setTranslation('', 'Friday')
+            return setTranslation('Friday')
         elif p_index == 5:
-            return setTranslation('', 'Saturday')
+            return setTranslation('Saturday')
         elif p_index == 6:
-            return setTranslation('', 'Sunday')
+            return setTranslation('Sunday')
 
     def getLongWeekdays(self):
         """ return long weekdays """
@@ -168,12 +168,12 @@ class DateFunctions(object):
 
     def getDate(self, p_date):
         """ return date """
-        setTranslation = self.getSite().getPortalTranslations().translate
+        setTranslation = self.getSite().getPortalI18n().get_translation
         l_date = str(p_date)
         if l_date != '':
             try:    return DateTime(l_date).strftime("%d %B %Y")
-            except: return setTranslation('', 'empty')
-        else:       return setTranslation('', 'empty')
+            except: return setTranslation('empty')
+        else:       return setTranslation('empty')
 
     def getDateFromMinutes(self, minutes):
         """ return date based on minutes coresponding to an indexed date """
