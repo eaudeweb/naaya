@@ -1,6 +1,9 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
+  xmlns:naaya="http://namespaces.zope.org/naaya"
   i18n_domain="naaya">
+
+  <naaya:call factory=".semide_bundle_registration"  />
 
   <adapter
     factory="Products.SEMIDE.portlets.AdministrationPortlet"
