@@ -1,5 +1,21 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
 ------------------
+
+1.1.5 (2012-04-27)
+------------------
+* bugfix: Fixed AttributeError for Content-Type icons [bogdatan]
+* bugfix: Removed duplicate slot 'title' [bogdatan]
+* bugfix: Countries listing now support right portlet [bogdatan]
+* bugfix: Stylesheets MIME type to be interpreted as text/css [bogdatan]
+* feature: Added RSS/TWitter/Facebook URLs [bogdatan]
+* feature: Added 'API keys status' and 'Comments on content' 
+  pages [bogdatan]
+* bugfix: Fixed administration tabbedmenu design [bogdatan]
+* bugfix: Fixed translation for header components [bogdatan]
+* bugfix: Fixed left and right logo to load the proper one [bogdatan]
+* bugfix: Fixed add_form for Multimedia and Publication [bogdatan]
+* bugfix: Fixed DepricationWarning for rstk and portal translation [bogdatan]
+* Register SEMIDE bundle [bogdatan]
 
 1.1.4 (2012-01-13)
 ------------------
