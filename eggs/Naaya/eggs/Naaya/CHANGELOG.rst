@@ -1,4 +1,7 @@
-2.13.10 (unreleased)
+2.13.11 (unreleased)
+--------------------
+
+2.13.10 (2012-04-27)
 --------------------
 * bugfix: AttributeError: generate_csv [nituacor]
 * Bugfix in folder_administration_users [dumitval]
