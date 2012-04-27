@@ -864,4 +864,4 @@ class pdf_templates:
 
     def getTranslation(self, text, lang):
         """return translation for given text"""
-        return self.utToUtf8(self.getPortalTranslations().gettext(text, lang))
+        return self.utToUtf8(self.getPortalI18n().get_translation(text))

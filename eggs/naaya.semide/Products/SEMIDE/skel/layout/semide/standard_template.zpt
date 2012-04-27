@@ -67,7 +67,7 @@
         			</tal:block>
         </metal:block>
         <metal:block define-slot="head"></metal:block>
-	<tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />
+	<tal:block replace="structure python:here.rstk['google_analytics'](here.portal_statistics.ga_id)" />
 	</head>
 <metal:block define-slot="standard-body">
 <body>
