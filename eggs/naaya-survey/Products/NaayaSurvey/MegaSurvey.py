@@ -32,7 +32,7 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.import_export generate_csv, generate_excel
+from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
