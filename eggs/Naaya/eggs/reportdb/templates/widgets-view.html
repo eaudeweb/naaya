@@ -57,10 +57,9 @@
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
-          <span> 
-              {{ mk.input(field, type='radio', value=value) }}
-              {{ value }}
-          <span>
+          {% if value == field.value %}
+             {{ value }}
+          {% endif %}
       {% endfor %}
 {% endmacro %}
 
@@ -69,7 +68,11 @@
       {% set value_label = (field.properties.value_labels[value]
       if field.properties.value_labels else value) %}
       <td class={{field.properties.css_class}}>
-      {{ mk.input(field, type='radio', value=value) }}
+             {% if value == field.value %}
+                 {{ '\u2714'  }}
+             {% else %}
+                 {{ '\u2610'  }}
+             {% endif %}
       </td>
   {% endfor %}
   {% if field.properties.add_empty_td %}
@@ -204,12 +207,20 @@
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
-          <td>{{ mk.input(field, type='radio', value=value) }}</td>
+          <td>
+             {% if value == field.value %}
+                 {{ '\u2714'  }}
+             {% endif %}
+          </td>
       {% endfor %}
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
-  {{ mk.input(field, type="checkbox") }}
+    {% if field.value %}
+        Yes
+    {% else %}
+        No
+    {% endif %}
 {% endmacro %}
 
 {% macro subgroup(mk, schema) %}
