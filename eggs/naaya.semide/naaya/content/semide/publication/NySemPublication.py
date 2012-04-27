@@ -90,7 +90,12 @@ manage_addNySemPublication_html.action = 'addNySemPublication'
 
 def sempublication_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemPublication'}, 'sempublication_add')
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT,
+                                           'action': 'addNySemPublication',
+                                           'form_helper': form_helper},
+                                          'sempublication_add')
 
 def addNySemPublication(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     publication_url='', contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):

@@ -37,6 +37,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.ImageFile import ImageFile
 from OFS.Image import cookId
+from OFS.Folder import Folder
 import zope.event
 
 #Naaya
@@ -116,7 +117,13 @@ manage_addNySemMultimedia_html.action = 'addNySemMultimedia'
 
 def semmultimedia_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemMultimedia'}, 'semmultimedia_add')
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self,
+                                           'kind': METATYPE_OBJECT,
+                                           'action': 'addNySemMultimedia',
+                                           'form_helper': form_helper},
+                                          'semmultimedia_add')
 
 def addNySemMultimedia(self, id='', title='', description='', coverage='', keywords='', sortorder='', creator='', 
     creator_email='', rights='', type_multimedia='', source='', source_link='', subject='', relation='', 
@@ -159,7 +166,7 @@ def addNySemMultimedia(self, id='', title='', description='', coverage='', keywo
             i += 1
             id = '%s-%u' % (id, i)
         #create object
-        ob = NySemMultimedia(id, title, description, coverage, keywords, sortorder, creator, creator_email, 
+        ob = NySemMultimedia(id, title, coverage, keywords, sortorder, creator, creator_email, 
             rights, type_multimedia, source, source_link, subject, relation, file_link, 
             file_link_local, format, contributor, releasedate, lang)
         self.gl_add_languages(ob)
@@ -260,20 +267,39 @@ class NySemMultimedia(semmultimedia_item, NyAttributes, NyItem, NyCheckControl, 
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'}, Folder.manage_options[0])
         l_options += semmultimedia_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, contributor):
+    def __init__(self, id, title, coverage, keywords, sortorder, creator, creator_email,
+            rights, type_multimedia, source, source_link, subject, relation, file_link,
+            file_link_local, format, contributor, releasedate, lang):
         """ """
         self.id = id
         semmultimedia_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
+        self.title = title
+        self.coverage = coverage
+        self.keywords = keywords
+        self.sortorder = sortorder
+        self.creator = creator
+        self.creator_email = creator_email
+        self.rights = rights
+        self.type_multimedia = type_multimedia
+        self.source = source
+        self.source_link = source_link
+        self.subject = subject
+        self.relation = relation
+        self.file_link = file_link
+        self.file_link_local = file_link_local
+        self.format = format
         self.contributor = contributor
+        self.releasedate = releasedate
+        self.lang = lang
 
     security.declareProtected(view, 'resource_type')
     def resource_type(self):
@@ -363,7 +389,7 @@ class NySemMultimedia(semmultimedia_item, NyAttributes, NyItem, NyCheckControl, 
     security.declareProtected(Products.NaayaBase.constants.PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-        
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/semmultimedia_manage_edit', globals())
