@@ -82,17 +82,16 @@
 {% endmacro %}
 
 {% macro radioselect(mk, field) %}
-	{% set error_cls = 'error' if field.errors else '' %}
-      {% for value in field.valid_values %}
-          {% set value_label = (field.properties.value_labels[value]
-          if field.properties.value_labels else value) %}
-          {{ mk.input(field, type='radio', value=value) }}
-          {{ value }}
-      {% endfor %}
-		{% for message in field.errors %}
-			<span class="help-inline {{ error_cls }}">{{ message }}</span>
-		{% endfor %}
-
+    {% set error_cls = 'error' if field.errors else '' %}
+    {% for value in field.valid_values %}
+        {% set value_label = (field.properties.value_labels[value]
+        if field.properties.value_labels else value) %}
+        {{ mk.input(field, type='radio', value=value) }}
+        {{ value }}
+    {% endfor %}
+    {% for message in field.errors %}
+        <span class="help-inline {{ error_cls }}">{{ message }}</span>
+    {% endfor %}
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
@@ -194,12 +193,11 @@
   {{ mk.widget(field) }}
   {% set field = schema['indicators'] %}
   {{ mk.widget(field) }}
-  </tr> {# closes the row of the CommonTopicsDict #}
 {% endmacro %}
 
 {% macro topics_subgroup(mk, schema) %}
-<tr>
   {%- for name in mk.children_order(schema) %}
+    <tr>
     {% set field = schema[name] %}
     {% if not field.properties.get('extra_topic') %}
         <td>
@@ -213,8 +211,8 @@
     {% else %}
         <td>{{ mk.widget(field) }}</td>
     {% endif %}
+    </tr>
   {% endfor -%}
-</tr>
 {% endmacro %}
 
 {% macro topics_group(mk, group) %}
