@@ -1,5 +1,9 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
 ------------------
+
+1.1.6 (2012-04-30)
+------------------
+* bugfix: Removed pyfribidi version [bogdatan]
 
 1.1.5 (2012-04-27)
 ------------------
