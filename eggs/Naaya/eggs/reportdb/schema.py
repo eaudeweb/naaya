@@ -319,7 +319,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
            .with_properties(widget="topics_group") \
            .of(
 
-        CommonDict.named('env_regions') \
+        fl.Dict.named('env_regions') \
                   .using(label=u"Environment in different"
                              " regions and specific areas") \
                   .with_properties(widget="topics_subgroup") \
@@ -348,7 +348,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             ),
         ),
 
-        CommonDict.named('env_issues') \
+        fl.Dict.named('env_issues') \
                   .using(label=u"Environmental issues") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
@@ -404,7 +404,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
 
         ),
 
-        CommonDict.named('sectors_and_activities') \
+        fl.Dict.named('sectors_and_activities') \
                   .using(label=u"Sectors and activities") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
@@ -447,7 +447,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
             ),
         ),
 
-        CommonDict.named('across_env') \
+        fl.Dict.named('across_env') \
                   .using(label=u"Across environmental issues and sectors") \
                   .with_properties(widget="topics_subgroup") \
                   .of(
