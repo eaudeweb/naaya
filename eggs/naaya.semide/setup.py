@@ -19,7 +19,7 @@ setup(name='naaya.semide',
         'naaya.photoarchive',
         'edw-ZOpenArchives',
         'edw-reportlab',
-        'pyfribidi == 0.6.0',
+        'pyfribidi',
         'python-memcached',
     ]
 )
