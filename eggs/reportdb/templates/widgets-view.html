@@ -329,10 +329,14 @@
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     <div class="field-inline">
-        {{ mk.widget(field) }}
-        {% if not field.label == 'URL' %}
-            {{ field.label }}
-        {% endif %}
+        <ul>
+            {% if field.name == 'url' %}
+                {{ mk.widget(field) }}
+            {% else %}
+                <li>{{ mk.widget(field) }}</li>
+                {{ field.label }}
+            {% endif %}
+        </ul>
     </div>
   {% endfor -%}
 {% endmacro %}
