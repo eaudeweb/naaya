@@ -9,6 +9,7 @@ from jinja2 import ChoiceLoader
 from loader import ZopeTemplateLoader
 from gtranslate import translate
 
+
 class MarkupGenerator(flatland.out.markup.Generator):
 
     def __init__(self, template):
@@ -127,7 +128,7 @@ def report_edit(report_id=None):
         })
 
 
-@views.route('/reports/<int:report_id>/seris_reviews/')
+@views.route('/reports/<int:report_id>/')
 def seris_review_list(report_id):
     app = flask.current_app
     report = database.get_report_or_404(report_id)
@@ -144,61 +145,6 @@ def seris_review_list(report_id):
         }
     )
 
-
-@views.route('/reports/<int:report_id>/seris_reviews/new/', methods=['GET', 'POST'])
-@views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>/edit', 
-             methods=['GET', 'POST'])
-def seris_review_add(report_id, seris_review_id=None):
-    if seris_review_id == None:
-        seris_review_row = None
-    else:
-        seris_review_row = database.get_seris_or_404(seris_review_id)
-
-    if flask.request.method == "GET":
-        app = flask.current_app
-        seris_review_schema = schema.SerisReviewSchema()
-        if seris_review_id is not None:
-            seris_review_schema['report_id'].set(report_id)
-            seris_review_schema = schema.SerisReviewSchema \
-                                        .from_flat(seris_review_row)
-        return flask.render_template('seris_review_edit.html', **{
-            'mk': MarkupGenerator(app.jinja_env.get_template('widgets-edit.html')),
-            'report_id': report_id,
-            'seris_review_schema': seris_review_schema,
-        })
-
-    session = database.get_session()
-    form_data = dict(schema.SerisReviewSchema.from_defaults().flatten())
-    form_data.update(flask.request.form.to_dict())
-    seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
-    # TODO validation
-    if seris_review_row is None:
-        seris_review_schema['report_id'].set(report_id)
-        seris_review_row = database.SerisReviewRow()
-    else:
-        seris_review_schema['report_id'].set(seris_review_row['report_id'])
-    seris_review_row.update(seris_review_schema.flatten())
-    session.save(seris_review_row)
-    session.commit()
-    flask.flash("Review saved.", "success")
-    return flask.redirect(flask.url_for('views.seris_review_list',
-                                        report_id=report_id))
-
-
-@views.route('/reports/<int:report_id>/seris_reviews/<int:seris_review_id>/')
-def seris_review_view(report_id, seris_review_id):
-    app = flask.current_app
-    report = database.get_report_or_404(report_id)
-    seris_review = database.get_seris_or_404(seris_review_id)
-    return flask.render_template('seris_review_view.html', **{
-            'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
-            'report': {'id': report_id,
-                       'data': schema.ReportSchema.from_flat(report)},
-            'seris': {'id': seris_review_id,
-                       'data': schema.SerisReviewSchema.from_flat(seris_review),
-                      }
-        }
-    )
 
 @views.route('/translate', methods=['GET', 'POST'])
 def google_translate():
