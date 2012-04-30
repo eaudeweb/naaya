@@ -94,12 +94,11 @@
   {{ mk.widget(field) }}
   {% set field = schema['indicators'] %}
   {{ mk.widget(field) }}
-  </tr> {# closes the row of the CommonTopicsDict #}
 {% endmacro %}
 
 {% macro topics_subgroup(mk, schema) %}
-<tr>
   {%- for name in mk.children_order(schema) %}
+    <tr>
     {% set field = schema[name] %}
     {% if not field.properties.get('extra_topic') %}
         <td>
@@ -115,8 +114,8 @@
             <td>{{ mk.widget(field) }}</td>
         {% endif %}
     {% endif %}
+    </tr>
   {% endfor -%}
-</tr>
 {% endmacro %}
 
 {% macro topics_group(mk, group) %}
