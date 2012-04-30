@@ -105,7 +105,7 @@ def report_edit(report_id=None):
 
                 session.commit()
                 flask.flash("Report saved.", "success")
-                url = flask.url_for('views.seris_review_list',
+                url = flask.url_for('views.report_view',
                                     report_id=report_row.id)
                 return flask.redirect(url)
 
@@ -126,6 +126,19 @@ def report_edit(report_id=None):
         'report_schema': report_schema,
         'seris_review_schema': seris_review_schema,
         })
+
+
+@views.route('/reports/<int:report_id>/delete/', methods=['POST'])
+def report_delete(report_id):
+    if flask.request.method == 'POST':
+        session = database.get_session()
+        session.table(database.SerisReviewRow) \
+               .delete(database.get_seris_reviews_list(report_id)[0].id)
+
+        session.table(database.ReportRow).delete(report_id)
+        session.commit()
+        flask.flash("Report deleted.", "success")
+        return flask.redirect(flask.url_for('views.report_list'))
 
 
 @views.route('/reports/<int:report_id>/')
