@@ -129,10 +129,10 @@ def report_edit(report_id=None):
 
 
 @views.route('/reports/<int:report_id>/')
-def seris_review_list(report_id):
+def report_view(report_id):
     app = flask.current_app
     report = database.get_report_or_404(report_id)
-    return flask.render_template('seris_review_list.html', **{
+    return flask.render_template('report_view.html', **{
             'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
             'report': {'id': report_id,
                        'data': schema.ReportSchema.from_flat(report),

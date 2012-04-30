@@ -204,7 +204,7 @@ EeaTopicDict = TopicDict.with_properties(eea_theme_link=True)
 SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                            .of(
 
-    fl.Integer.named('report_id') #TODO shouldn't be editable
+    fl.Integer.named('report_id')
               .with_properties(field_type='hidden') \
               .using(label="Report id"),
 

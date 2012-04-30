@@ -204,7 +204,7 @@
           {% if field.properties.get('eea_theme_link') %}
             {{ eea_theme_image_and_link(field.name, field.label) }}
           {% else %}
-                {{ field.label }}
+            {{ field.label }}
           {% endif %}
         </td>
         {{ mk.widget(field) }}
