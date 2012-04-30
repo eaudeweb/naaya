@@ -11,29 +11,8 @@
             report_id=report['id'])}}">
             Edit Report
         </a>]
-        {# TO BE IMPLEMENTED LATER #}
-        {#[<a href="{{url_for('views.seris_review_add',
-            report_id=report['id'])}}">
-            Add review to Report {{ report['id'] }}
-        </a>]#}
     </div>
     <hr/>
-    {#
-    <h2>Report {{report['id']}} reviews:</h2>
-    <div>
-        <ul>
-        {% for review in report['seris_reviews'] %}
-            <li>
-              <a href="{{ url_for('views.seris_review_view',
-                                  report_id=report['id'],
-                                  seris_review_id=review['id']) }}">
-                  Review {{ review['id'] }}
-              </a>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
-    #}
 
     {% set cover = report['data']['header']['soer_cover'] %}
     {% if (not cover.is_empty) %}
@@ -60,6 +39,9 @@
         {{ mk.widget(report['seris_reviews'][0]['data']) }}
     {% endif %}
 </div>
+<form action="{{url_for('views.report_delete', report_id=report['id'])}}" method="POST">
+    <input type="submit" value="Delete Report" />
+</form>
 {% endblock %}
 
 {% block scripts %}
