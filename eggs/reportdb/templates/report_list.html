@@ -27,7 +27,7 @@
 	{% for report in report_list %}
 		<tr>
 			<td>
-			<a href="{{url_for('views.seris_review_list', report_id=report['id'])}}">
+			<a href="{{url_for('views.report_view', report_id=report['id'])}}">
 				{{ report['data']['details']['original_name'] }}
 			</a>
 			</td>
