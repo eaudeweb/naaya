@@ -64,8 +64,10 @@ def report_edit(report_id=None):
         seris_review_row = database.SerisReviewRow()
     else:
         report_row = database.get_report_or_404(report_id)
-        #TODO to be changed when there will be more than one seris
-        seris_review_row = database.get_seris_reviews_list(report_id)[0]
+        reviews_list = database.get_seris_reviews_list(report_id)
+        if reviews_list:
+            #TODO to be changed when there will be more than one seris
+            seris_review_row = reviews_list[0]
 
     if flask.request.method == 'POST':
         session = database.get_session()
@@ -132,9 +134,11 @@ def report_edit(report_id=None):
 def report_delete(report_id):
     if flask.request.method == 'POST':
         session = database.get_session()
-        #TODO change when multiple reviews will be implemented
-        session.table(database.SerisReviewRow) \
-               .delete(database.get_seris_reviews_list(report_id)[0].id)
+        reviews_list = database.get_seris_reviews_list(report_id)
+        if reviews_list:
+            #TODO change when multiple reviews will be implemented
+            session.table(database.SerisReviewRow) \
+                   .delete(database.get_seris_reviews_list(report_id)[0].id)
 
         session.table(database.ReportRow).delete(report_id)
         session.commit()
