@@ -6,6 +6,10 @@ html,div,h1,th,td,li,ul,fieldset,legend {
 	direction:ltr;
 }
 
+#center_content {
+    float: right;
+}
+
 body {
 	margin:0;
 	padding:0;

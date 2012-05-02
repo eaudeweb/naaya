@@ -17,6 +17,10 @@
 	#main_structure {
 	direction:ltr;
 	}
+
+        #center_content {
+            float: right;
+        }
 </tal:block>
 
 body {
