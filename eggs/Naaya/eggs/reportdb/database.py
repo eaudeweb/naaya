@@ -25,17 +25,12 @@ def get_seris_or_404(seris_id):
         flask.abort(404)
 
 
-def get_seris_reviews_list(report_id, debug=False):
+def get_seris_reviews_list(report_id):
     # for the demo it only returns one review
     all_reviews = get_all_seris_reviews()
     reviews_list = []
     for item in all_reviews:
         if item['report_id'] == str(report_id): reviews_list.append(item)
-
-    if debug:
-        assert reviews_list, 'No reviews.'
-        assert 1==len(reviews_list), ('More reviews for one report.',
-                                      str(len(reviews_list)),' reviews.')
     return reviews_list
 
 
