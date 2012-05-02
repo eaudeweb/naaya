@@ -128,7 +128,7 @@ function fSet(ctrl, value)
 		<td style="padding-bottom: 5px;">
 			<div style="margin-bottom:2px;">
 				<tal:block condition="python:record.meta_type in ['Naaya Folder', 'Naaya Country Folder']">
-					<a tal:attributes="href record/absolute_url;title record/tooltip">
+					<a tal:attributes="href record/absolute_url;title record/tooltip|nothing">
 						<tal:block	define="title_or_id record/title_or_id"
 										replace="structure python:here.getHighlightWordsInText(title_or_id, p_words = query,p_highlight_start='<strong>',p_highlight_end='</strong>', p_nosplit=True)"/>
 					</a>
@@ -143,7 +143,7 @@ function fSet(ctrl, value)
 			<tal:block replace="structure python:here.getHighlightWordsInHtml(record.description, p_words = query)"/>
 
 <tal:block condition="python:False">
-			<span tal:condition="python:record.meta_type in ['Naaya Folder', 'Naaya Country Folder']" tal:replace="structure record/tooltip"/>
+			<span tal:condition="python:record.meta_type in ['Naaya Folder', 'Naaya Country Folder']" tal:replace="structure record/tooltip|nothing"/>
 			<span tal:condition="python:record.meta_type not in ['Naaya Folder', 'Naaya Country Folder']" tal:replace="structure record/description"/>
 </tal:block>
 		</td>
