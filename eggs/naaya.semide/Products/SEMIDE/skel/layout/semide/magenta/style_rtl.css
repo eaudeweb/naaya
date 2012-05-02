@@ -17,6 +17,9 @@
 	#main_structure {
 	direction:ltr;
 	}
+        #center_portlet {
+            float: right;
+        }
 </tal:block>
 
 body {
