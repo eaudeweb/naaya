@@ -1,7 +1,7 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
-<tal:block define="folder_ob python:here.getContext(request.get('url', ''));
+<tal:block define="folder_ob python:here.restrictedTraverse(request.get('url'));
                    linkchecker_ob here/getLinkChecker;">
 <h1><img tal:attributes="src python:test(folder_ob.approved, folder_ob.icon, folder_ob.icon_marked); title folder_ob/meta_label; alt folder_ob/meta_label" border="0" /> <tal:block tal:replace="folder_ob/title_or_id" /> - <span i18n:translate="">broken links</span></h1>
 
