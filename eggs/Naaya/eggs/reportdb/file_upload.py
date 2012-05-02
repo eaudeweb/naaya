@@ -21,7 +21,7 @@ def handle_request(session, root_element, old_flat={}):
         flat_name = element.flattened_name()
         log.debug('processing field %r', flat_name)
 
-        uploaded_file = flask.request.files['%s-data' % flat_name]
+        uploaded_file = flask.request.files.get('%s-data' % flat_name)
         if uploaded_file:
             db_file = session.get_db_file()
             db_file.save_from(uploaded_file)
