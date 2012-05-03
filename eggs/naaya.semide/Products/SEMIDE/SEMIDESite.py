@@ -394,6 +394,10 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         except: pass
         try:    self.getCatalogTool().addIndex('resource_end_date', 'DateIndex')
         except: pass
+        try:    self.getCatalogTool().addIndex('start_date', 'DateIndex')
+        except: pass
+        try:    self.getCatalogTool().addIndex('end_date', 'DateIndex')
+        except: pass
         class DateRangeIndexExtraParams: # 100% stupid code needed for DateRangeIndex
             def __init__(self, since_field, until_field):
                 self.since_field = since_field
