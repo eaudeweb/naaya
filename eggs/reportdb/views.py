@@ -68,6 +68,8 @@ def report_edit(report_id=None):
         if reviews_list:
             #TODO to be changed when there will be more than one seris
             seris_review_row = reviews_list[0]
+        else:
+            seris_review_row = database.SerisReviewRow()
 
     if flask.request.method == 'POST':
         session = database.get_session()

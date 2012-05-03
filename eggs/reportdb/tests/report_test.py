@@ -11,9 +11,7 @@ class ReportCrudTest(unittest.TestCase):
         self.app, app_teardown = create_mock_app()
         self.addCleanup(app_teardown)
         # generate a unique random report name
-        self.report_name=''.join(random.choice(string.letters + string.digits) 
-                                 for i in xrange(30))
-
+        self.report_name = "asds3923x.@"
     def test_add(self):
         client = self.app.test_client()
         post_response = client.post('/reports/new/', data={
@@ -24,7 +22,7 @@ class ReportCrudTest(unittest.TestCase):
             'format_availability_costs': 'free',
             'header_country': 'Romania',
             'details_original_language': 'ro',
-            'global_level': 'on',
+            'links_reference_global_level': 'on',
         }, follow_redirects=True)
         self.assertIn('Report saved.', post_response.data)
         list_response = client.get('/reports/')
@@ -45,38 +43,38 @@ class ReportCrudTest(unittest.TestCase):
 
         
     def test_edit(self):
-        import pdb
-        pdb.set_trace()
         client = self.app.test_client()
         with self.app.test_request_context():
             session = database.get_session()
             row = database.ReportRow()
             data = {
                     u'format_availability_paper_or_web': u'paper only',
-                    u'format_lang_of_pub_0': u'ro',
+                    u'format_lang_of_pub': u'ro',
                     u'format_availability_costs': u'free',
-                    u'details_original_name': u'Test Report',
+                    u'details_original_name': self.report_name,
                     u'details_original_language': u'ro',
-                    u'format_availability_paper_or_web': u'paper only', 
-                    u'header_country_0': u'Romania',
-                    u'header_uploader': u'Report Guru'
+                    u'header_country': u'Romania',
+                    u'header_uploader': u'Report Guru',
+                    u'links_reference_global_level': u'on'
                    }
             row.update(data)
             session.save(row)
             session.commit()
-            data[u'format_no_of_pages'] =  u'5' #add new field
-            edit_response = client.post('/reports/1/edit/',
-                            data = {
-                            'format_availability_paper_or_web': 'paper only',
-                            'header_uploader': 'Report Guru',
-                            'format_lang_of_pub': 'ro',
-                            'details_original_name': self.report_name,
-                            'format_availability_costs': 'free',
-                            'header_country': 'Romania',
-                            'details_original_language': 'ro',
-                            'global_level': 'on'})
+            #add additional info
+            data.update({u'format_no_of_pages': u'2303445'})
+            #update existing info
+            data.update({u'header_uploader': u'Jerry Seinfeld'})
+            #remove info
+            del data[u'links_reference_global_level']
 
-            #TODO uncomment when ready
-            #self.assertIn("Report saved.", edit_response.data)
-
-
+            edit_response = client.post('/reports/%s/edit/' %row.id, 
+                            data = data,
+                            follow_redirects=True)
+            self.assertIn("Report saved.", edit_response.data)
+            self.assertIn("2303445", edit_response.data)
+            self.assertIn("Jerry Seinfeld", edit_response.data)
+            import re
+            self.assertTrue(
+                re.search('(?<=Global-level SOER).+s?>\s+<td>\s+No\s+</td>', 
+                edit_response.data
+            ))
