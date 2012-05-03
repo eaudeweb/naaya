@@ -1,3 +1,5 @@
+import re
+
 _testing_db_uri = None
 def get_testing_db_uri():
     global _testing_db_uri
@@ -24,3 +26,10 @@ def create_mock_app():
             database.get_session().drop_all()
 
     return app, app_teardown
+
+def search_label_value(label, value, string):
+    expression = ('%s.*</.+?>\s*<.+>\s*?%s\s+?</\w+>') %(label, value)
+    regx = re.compile(expression, re.IGNORECASE)
+    
+    return regx.search(string)
+
