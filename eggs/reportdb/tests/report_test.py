@@ -40,11 +40,6 @@ class ReportCrudTest(unittest.TestCase):
         list_response = client.get('/reports/')
         self.assertIn(self.report_data[u'details_original_name'], list_response.data)
 
-        edit_response = client.get('/reports/1/')
-        label = "EEA indicators used?"
-        value = '-'
-        self.assertTrue(common.search_label_value(label, value, edit_response.data))
-
         
     def test_update(self):
         #NOTE this tests both report and seris
