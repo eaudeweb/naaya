@@ -4,7 +4,9 @@ import string
 import database
 import schema
 import re
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 class ReportCrudTest(unittest.TestCase):
 
@@ -93,3 +95,34 @@ class ReportCrudTest(unittest.TestCase):
         list_response = client.get('/reports/')
         self.assertFalse( "v323x,3240543#%" in list_response.data)
         self.assertIn("Report deleted.", list_response.data)
+
+
+    def test_view_widgets(self):
+        # this test 3 valued widgets where valid values are 'yes', 'no' or '-'
+        # '-' is shown when no value given
+
+        client = self.app.test_client()
+        with self.app.test_request_context():
+            session = database.get_session()
+            row = database.ReportRow()
+            row.update(self.report_data)
+            session.save(row)
+            session.commit()
+
+        view_response = client.get('/reports/%s/' %row.id)
+        
+        # clone self.report_data dict
+        data = dict(self.report_data)
+        
+        del data[u'details_publisher']
+        with self.app.test_request_context():
+            session = database.get_session()
+            row.update(data)
+            session.save(row)
+            session.commit()
+
+        # no value given, look for '-'
+        expression = 'Published by.*</.+?>\s*<.+>\s*?-\s+?</\w+>'
+        logging.debug(expression)
+        regx = re.compile(expression, re.IGNORECASE)
+        self.assertRegexpMatches(view_response.data, regx)
