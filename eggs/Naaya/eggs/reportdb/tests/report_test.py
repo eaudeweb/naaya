@@ -10,9 +10,10 @@ class ReportCrudTest(unittest.TestCase):
         from common import create_mock_app
         self.app, app_teardown = create_mock_app()
         self.addCleanup(app_teardown)
-        # generate a unique random report name
+        # unique random report name
         self.report_name = "asds3923x.@"
-    def test_add(self):
+
+    def test_create(self):
         client = self.app.test_client()
         post_response = client.post('/reports/new/', data={
             'format_availability_paper_or_web': 'paper only',
@@ -28,21 +29,10 @@ class ReportCrudTest(unittest.TestCase):
         list_response = client.get('/reports/')
         self.assertIn(self.report_name, list_response.data)
 
-
-    def test_delete(self):
-        client = self.app.test_client()
-        with self.app.test_request_context():
-            session = database.get_session()
-            session.save(database.ReportRow(name="very_nice_and_unique_name"))
-            session.commit()
-
-        post_response = client.post("reports/1/delete/")
-        list_response = client.get('/reports/')
-        self.assertFalse( "very_nice_and_unique_name" in list_response.data)
-        self.assertIn("Report deleted.", list_response.data)
-
         
-    def test_edit(self):
+    def test_update(self):
+        #NOTE global_level is part of seris not the master report
+
         client = self.app.test_client()
         with self.app.test_request_context():
             session = database.get_session()
@@ -60,21 +50,46 @@ class ReportCrudTest(unittest.TestCase):
             row.update(data)
             session.save(row)
             session.commit()
+
             #add additional info
             data.update({u'format_no_of_pages': u'2303445'})
+
             #update existing info
             data.update({u'header_uploader': u'Jerry Seinfeld'})
+
             #remove info
             del data[u'links_reference_global_level']
 
             edit_response = client.post('/reports/%s/edit/' %row.id, 
                             data = data,
                             follow_redirects=True)
+
+            # checking correct flash message
             self.assertIn("Report saved.", edit_response.data)
+
+            # checking additional info
             self.assertIn("2303445", edit_response.data)
+
+            # checking existing info update
             self.assertIn("Jerry Seinfeld", edit_response.data)
+
+            # checking now if the checkbox has changed to No
             import re
-            self.assertTrue(
-                re.search('(?<=Global-level SOER).+s?>\s+<td>\s+No\s+</td>', 
-                edit_response.data
-            ))
+            regx = re.compile('(?<=Global-level SOER)'     # positive lookbehind
+                              '.+s?>\s+<td>\s+No\s+</td>', # check change to No
+                              re.IGNORECASE)
+            self.assertRegexpMatches(edit_response.data, regx)
+
+
+    def test_delete(self):
+        client = self.app.test_client()
+        with self.app.test_request_context():
+            session = database.get_session()
+            row = database.ReportRow(name="very_nice_and_unique_name")
+            session.save(row)
+            session.commit()
+
+        post_response = client.post("reports/%s/delete/" %row.id)
+        list_response = client.get('/reports/')
+        self.assertFalse( "very_nice_and_unique_name" in list_response.data)
+        self.assertIn("Report deleted.", list_response.data)
