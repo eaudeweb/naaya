@@ -5,6 +5,7 @@ import database
 import schema
 import re
 import logging
+import common
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -38,6 +39,11 @@ class ReportCrudTest(unittest.TestCase):
         self.assertIn('Report saved.', post_response.data)
         list_response = client.get('/reports/')
         self.assertIn(self.report_data[u'details_original_name'], list_response.data)
+
+        edit_response = client.get('/reports/1/')
+        label = "EEA indicators used?"
+        value = '-'
+        self.assertTrue(common.search_label_value(label, value, edit_response.data))
 
         
     def test_update(self):
@@ -77,10 +83,9 @@ class ReportCrudTest(unittest.TestCase):
             self.assertIn("Jerry Seinfeld", edit_response.data)
 
             # checking now if the checkbox has changed to No
-            regx = re.compile('(?<=Global-level SOER)'     # positive lookbehind
-                              '.+s?>\s+<td>\s+No\s+</td>', # check change to No
-                              re.IGNORECASE)
-            self.assertRegexpMatches(edit_response.data, regx)
+            label = "Global-level SOER.+s?"
+            value = 'No'
+            self.assertTrue(common.search_label_value(label, value, edit_response.data))
 
 
     def test_delete(self):
@@ -122,7 +127,6 @@ class ReportCrudTest(unittest.TestCase):
             session.commit()
 
         # no value given, look for '-'
-        expression = 'Published by.*</.+?>\s*<.+>\s*?-\s+?</\w+>'
-        logging.debug(expression)
-        regx = re.compile(expression, re.IGNORECASE)
-        self.assertRegexpMatches(view_response.data, regx)
+        label = 'Published by'
+        value = '-'
+        self.assertTrue(common.search_label_value(label, value, view_response.data))
