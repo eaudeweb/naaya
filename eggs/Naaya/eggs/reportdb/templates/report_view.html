@@ -2,6 +2,32 @@
 
 {% block seris_content %}
 
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#delete_report').click(function() {
+        $( "#dialog-delete-confirm" ).dialog({
+            open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+            },
+            resizable: false,
+            height: 200,
+            width: 500,
+            modal: true,
+            draggable: false,
+            buttons: {
+                "Delete report": function() {
+                    var form = $('#fdelete_report');
+                    return form.submit();
+                },
+                "Cancel": function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+    });
+})
+</script>
+
 <div class="report-content">
     <div class="report-actions">
         [<a href="{{url_for('views.report_list')}}">
@@ -11,7 +37,17 @@
             report_id=report['id'])}}">
             Edit Report
         </a>]
-    </div>
+        [<a id="delete_report" href="javascript:void(0);">
+            Delete Report
+        </a>]
+</div>
+<div id="dialog-delete-confirm" title="Delete report" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+        This report will be permanently deleted and cannot be recovered. Are you sure?
+    </p>
+    <form id="fdelete_report" action="{{url_for('views.report_delete', report_id=report['id'])}}" method="POST"></form>
+</div>
     <hr/>
 
     {% set cover = report['data']['header']['soer_cover'] %}
@@ -40,12 +76,8 @@
     {% endif %}
 </div>
 
-<form action="{{url_for('views.report_delete', report_id=report['id'])}}" method="POST">
-    <input class="primary-button" type="submit" value="Delete Report" />
-</form>
-
 {% endblock %}
 
 {% block scripts %}
-	{{ script_src("js/main.js") }}
+    {{ script_src("js/main.js") }}
 {% endblock %}

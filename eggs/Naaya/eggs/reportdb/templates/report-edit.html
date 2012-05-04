@@ -23,6 +23,12 @@
     [<a href="{{url_for('views.report_list')}}">
         Back to reports list
     </a>]
+    {% if report_id %}
+        [<a href="{{url_for('views.report_view',
+            report_id=report_id)}}">
+            View Report
+        </a>]
+    {% endif %}
 </div>
 
 {% if report_id %}
