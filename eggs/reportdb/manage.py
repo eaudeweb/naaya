@@ -10,6 +10,7 @@ default_config = {
     'ZOPE_TEMPLATE_CACHE': True,
     'ZOPE_TEMPLATE_PATH': None, 
     'ZOPE_TEMPLATE_LIST': ['frame.html'],
+    'HTTP_PROXIED': False,
 }
 
 
@@ -26,6 +27,10 @@ def create_app():
 
     database.initialize_app(app)
     views.register_on(app)
+
+    if app.config["HTTP_PROXIED"]:
+        from revproxy import ReverseProxied
+        app.wsgi_app = ReverseProxied(app.wsgi_app)
 
     return app
 
