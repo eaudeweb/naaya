@@ -346,6 +346,11 @@ class NyBase(NyDublinCore):
 
         return ''
 
+    security.declarePrivate('ny_ldap_group_roles')
+    @property # this is used in brains by Catalog
+    def ny_ldap_group_roles(self):
+        return getattr(self, '__ny_ldap_group_roles__', {})
+
 InitializeClass(NyBase)
 
 def rss_item_for_object(obj,lang):
