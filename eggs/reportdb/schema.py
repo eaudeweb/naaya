@@ -108,7 +108,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
-                  .valued(*sorted(publication_freq.keys())),
+                  .valued(*publication_freq),
     ),
 
     CommonDict.named('format') \
@@ -297,7 +297,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                          .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
             CommonEnum.named("evaluation_method") \
-                      .valued(*sorted(evaluation_methods.keys())) \
+                      .valued(*evaluation_methods) \
                       .using(label=u"If yes, how?"),
         ),
 
