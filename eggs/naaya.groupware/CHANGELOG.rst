@@ -1,4 +1,7 @@
-1.2.3 (unreleased)
+1.2.4 (unreleased)
+-------------------
+
+1.2.3 (2012-05-04)
 -------------------
 * using ny_ldap_group_roles meta in catalog *update* [simiamih]
 
