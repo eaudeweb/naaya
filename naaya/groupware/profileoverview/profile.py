@@ -64,7 +64,7 @@ class ProfileClient(object):
 
         """
         auth_tool = ig.getAuthenticationTool()
-        local_roles = auth_tool.getUserLocalRoles(self.user)
+        local_roles = auth_tool.getUserLocalRoles(self.user, try_groups=False)
         result = []
         for (roles, location) in local_roles:
             if location not in ('', '/'):

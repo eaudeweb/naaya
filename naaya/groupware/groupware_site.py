@@ -108,6 +108,9 @@ class GroupwareSite(NySite):
         #set default main topics
         self.getPropertiesTool().manageMainTopics(['about', 'library'])
 
+        # add meta on brains for group local roles
+        self.getCatalogTool().addColumn('ny_ldap_group_roles')
+
     def get_user_access(self, user=None):
         """
         Returns one of 'admin', 'member', 'viewer' or 'restricted' for logged
