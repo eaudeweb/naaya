@@ -695,7 +695,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         user = self.REQUEST.AUTHENTICATED_USER
         return self.getUserLocalRoles(user, p_meta_types)
 
-    def getUserLocalRoles(self, user, p_meta_types=None):
+    def getUserLocalRoles(self, user, p_meta_types=None, try_groups=True):
         """
         Return list of local roles for a specified user
 
@@ -720,17 +720,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 if roles_tuple[0] == username and len(local_roles) > 0:
                     ra((local_roles, folder.absolute_url(1)))
 
-        for source in self.getSources():
-            if not hasattr(source, 'get_groups_roles_map'):
-                continue
-            for group, roles in source.get_groups_roles_map().iteritems():
-                if source.user_in_group(user, group):
-                    r_dict = {}
-                    for role in roles:
-                        r_dict.setdefault(role[1]['path'], [])
-                        r_dict[role[1]['path']].append(role[0])
-                    for path, roles in r_dict.iteritems():
-                        ra((roles, path))
+        if try_groups:
+            for source in self.getSources():
+                if not hasattr(source, 'get_groups_roles_map'):
+                    continue
+                for group, roles in source.get_groups_roles_map().iteritems():
+                    if source.user_in_group(user, group):
+                        r_dict = {}
+                        for role in roles:
+                            r_dict.setdefault(role[1]['path'], [])
+                            r_dict[role[1]['path']].append(role[0])
+                        for path, roles in r_dict.iteritems():
+                            ra((roles, path))
 
         return r
 

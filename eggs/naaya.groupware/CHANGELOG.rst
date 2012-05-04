@@ -1,5 +1,6 @@
 1.2.3 (unreleased)
 -------------------
+* using ny_ldap_group_roles meta in catalog *update* [simiamih]
 
 1.2.2 (2012-04-27)
 -------------------

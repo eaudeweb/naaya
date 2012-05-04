@@ -4,6 +4,7 @@ import Acquisition
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import manage_users
 from Globals import InitializeClass
+from Missing import MV
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
 from zope.event import notify
@@ -276,11 +277,20 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_groups_roles_map(self):
         groups_roles_map = {}
-        def add_roles_from_ob(ob):
-            try:
-                ob_roles = ob.acl_satellite.getAllLocalRoles()
-            except AttributeError:
-                return # looks like we found a broken object
+        def add_roles_from_ob(ob, is_brain=False):
+            if is_brain:
+                ob_roles = getattr(ob, 'ny_ldap_group_roles', MV)
+                if not ob.has_key('ny_ldap_group_roles') or ob_roles is MV:
+                    # catalog field (meta) not created or missing value in brain
+                    is_brain = False
+                    ob = ob.getObject()
+            if not is_brain:
+                try:
+                    ob_roles = ob.acl_satellite.getAllLocalRoles()
+                except AttributeError:
+                    return # looks like we found a broken object
+            elif ob_roles: # brain with roles, get the object
+                ob = ob.getObject()
             for group_id, group_roles in ob_roles.iteritems():
                 all_group_roles = groups_roles_map.setdefault(group_id, [])
                 for role in group_roles:
@@ -294,12 +304,7 @@ class plugLDAPUserFolder(PlugBase):
         site = self.getSite()
         add_roles_from_ob(site)
         for b in site.getCatalogTool()(path='/'):
-            try:
-                ob = b.getObject()
-            except:
-                pass # broken brain?
-            else:
-                add_roles_from_ob(ob)
+            add_roles_from_ob(b, is_brain=True)
 
         return groups_roles_map
 
@@ -618,6 +623,8 @@ class LdapSatelliteProvider(Acquisition.Implicit):
             if role not in assigned_roles:
                 roles_to_add.append(role)
         assigned_roles += roles_to_add
+        #catalog = current_folder.getSite().getCatalogTool()
+        #catalog.recatalogNyObject(current_folder)
 
         notify(NyAddGroupRoleEvent(current_folder, group, roles_to_add))
 
@@ -637,6 +644,8 @@ class LdapSatelliteProvider(Acquisition.Implicit):
                 raise ValueError('Trying to remove non-existent role')
         if not assigned_roles:
             del local_roles[group]
+        #catalog = current_folder.getSite().getCatalogTool()
+        #catalog.recatalogNyObject(current_folder)
 
         notify(NyRemoveGroupRoleEvent(current_folder, group, roles))
 

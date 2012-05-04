@@ -9,4 +9,20 @@
         provides=".interfaces.IAuthenticationToolPlugin"
         component=".plugins.plugLDAPUserFolder.plugLDAPUserFolder"/>
 
+    <subscriber
+        for="Products.NaayaBase.interfaces.INyAddGroupRoleEvent"
+        handler=".subscribers.auto_catalog_object" />
+    <subscriber
+        for="Products.NaayaBase.interfaces.INyRemoveGroupRoleEvent"
+        handler=".subscribers.auto_catalog_object" />
+
+
+   <configure zcml:condition="installed Products.naayaUpdater">
+      <utility
+         name="AddNyLdapGroupRolesToCatalog.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.AddNyLdapGroupRolesToCatalog"
+         permission="zope2.ViewManagementScreens" />
+   </configure>
+
 </configure>

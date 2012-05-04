@@ -92,4 +92,17 @@ class CorrectRolesForImportedUsers(UpdateScript):
             self.log.info('No user roles to correct')
         return True
 
+class AddNyLdapGroupRolesToCatalog(UpdateScript):
+    title = 'Catalog ldap groups local roles'
+    authors = ['Mihnea Simian']
+    creation_date = 'May 03, 2012'
 
+    def _update(self, portal):
+        cat_tool = portal.getCatalogTool()
+        if 'ny_ldap_group_roles' in cat_tool.schema():
+            self.log.info('Portal already has this column in catalog, skipping')
+        else:
+            cat_tool.addColumn('ny_ldap_group_roles')
+            cat_tool.refreshCatalog()
+            self.log.info('Column added, catalog refreshed.')
+        return True
