@@ -1,5 +1,6 @@
 2.13.12 (unreleased)
 --------------------
+* bugfix: INySite-s must not be (re)catalogged [simiamih]
 
 2.13.11 (2012-05-04)
 --------------------
