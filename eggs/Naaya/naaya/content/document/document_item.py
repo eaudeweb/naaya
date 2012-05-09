@@ -12,6 +12,8 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectOpenEvent
+from naaya.content.base.events import NyContentObjectDownloadEvent
 from zope.interface import implements
 from interfaces import INyDocument, INyContentDocumentExport
 
@@ -471,6 +473,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'document_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
@@ -520,4 +523,5 @@ def do_export(context, REQUEST):
     output.write(data)
     set_response_attachment(REQUEST.RESPONSE, target.filename,
             'text/html; charset=utf-8', output.len)
+    notify(NyContentObjectDownloadEvent(context))
     return output.getvalue()

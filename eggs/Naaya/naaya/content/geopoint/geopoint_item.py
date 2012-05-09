@@ -11,6 +11,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectOpenEvent
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -356,6 +357,7 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'geopoint_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

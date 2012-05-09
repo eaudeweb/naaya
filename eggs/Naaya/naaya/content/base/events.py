@@ -10,6 +10,10 @@ from interfaces import INyContentObjectEditEvent
 from interfaces import INyContentObjectApproveEvent
 from interfaces import INyContentObjectUnapproveEvent
 from interfaces import INyContentObjectMovedEvent
+from interfaces import INyContentObjectOpenEvent
+from interfaces import INyContentObjectDownloadEvent
+
+from naaya.core.zope2util import get_or_create_site_logger
 
 class NyContentObjectAddEvent(object):
     """ Naaya content object has been created """
@@ -56,6 +60,20 @@ class NyContentObjectMovedEvent(object):
         self.old_site_path = old_site_path
         self.new_site_path = new_site_path
 
+class NyContentObjectOpenEvent(object):
+    """ Naaya content object has been opened """
+    implements(INyContentObjectOpenEvent)
+
+    def __init__(self, context):
+        self.context = context
+
+class NyContentObjectDownloadEvent(object):
+    """ Naaya content object has been downloaded """
+    implements(INyContentObjectDownloadEvent)
+
+    def __init__(self, context):
+        self.context = context
+
 @adapter(INyContentObject, IObjectMovedEvent)
 def notify_content_object_moved(obj, event):
     if event.oldParent is None or event.newParent is None:
@@ -89,3 +107,25 @@ def update_last_modification(event):
     obj = event.context
     if not hasattr(obj, 'version') or not obj.version:
         obj.last_modification = DateTime()
+
+def log_open_event(event):
+    """ Log open action on object """
+    context = event.context
+    site_id = context.getSite().id
+    user = context.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    logger = get_or_create_site_logger(site_id)
+    message = "%s on %s (%s) by %s" % ('OPEN', context.title_or_id(),
+                                       context.meta_type, user)
+    logger.info(message)
+
+def log_download_event(event):
+    """ Log download action on object """
+    context = event.context
+    site_id = context.getSite().id
+    user = context.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    logger = get_or_create_site_logger(site_id)
+    message = "%s on %s (%s) by %s" % ('DOWNLOAD', context.title_or_id(),
+                                       context.meta_type, user)
+    logger.info(message)
