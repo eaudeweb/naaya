@@ -1,5 +1,6 @@
 1.2.4 (unreleased)
 -------------------
+* refactored profile overview, subscriptions on callback [simiamih]
 
 1.2.3 (2012-05-04)
 -------------------

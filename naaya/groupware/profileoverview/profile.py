@@ -1,4 +1,5 @@
 import operator
+import urllib
 
 from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
@@ -8,6 +9,7 @@ from eea import usersdb
 
 index_pt = PageTemplateFile('zpt/index.pt', globals())
 ajax_roles_pt = PageTemplateFile('zpt/ig_roles_ajax.pt', globals())
+subscriptions_pt = PageTemplateFile('zpt/subscriptions_ajax.pt', globals())
 
 def get_plugldap(ig):
     """ Returns plugLDAPUserFolder in IG, None if not found """
@@ -147,13 +149,12 @@ class ProfileClient(object):
         """
         return self._dfs_roles_tree(self.roles_tree_in_ldap())
 
-    def notification_lists(self):
+    def notification_lists(self, igs):
         """
         Returns a dictonary of lists, key is ig,
         list contains dicts of notifications info
 
         """
-        igs = self.zope_app.objectValues([METATYPE_GROUPWARESITE])
         notifications = {}
         for ig in igs:
             notif_tool = ig.getNotificationTool()
@@ -189,7 +190,9 @@ def ProfileView(context, request):
 
     if not auth_user.has_role('Authenticated'):
         if not is_ajax:
-            url = '/login/login_form?came_from=%s' % '/profile_overview'
+            referer = '/profile_overview?user=%s' % request.form.get('user', '')
+            qs = urllib.urlencode({'came_from': referer})
+            url = '/login/login_form?%s' % qs
             request.response.redirect(url)
             return None
         else:
@@ -201,12 +204,10 @@ def ProfileView(context, request):
 
     if not is_ajax:
         roles_list = client.roles_list_in_ldap()
-        notifications = client.notification_lists()
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
         return index_pt.__of__(context)(roles=leaf_roles_list,
-                                        sorted_func=sorted,
-                          subscriptions=notifications, user_id=user.getId())
-    else:
+                                        user_id=user.getId())
+    elif is_ajax == 'memberships':
         ig_access = client.access_in_igs()
         if 'restricted' in ig_access:
             del ig_access['restricted']
@@ -226,31 +227,14 @@ def ProfileView(context, request):
         return ajax_roles_pt.__of__(context)(ig_details=ig_details,
                                              ig_access=ig_access,
                                              role_names=role_names)
-
-class DemoProfileView(BrowserView):
-
-    def __call__(self, **kw):
-        user = self.request.get('AUTHENTICATED_USER', None)
-        if not user.has_role('Authenticated'):
-            # TODO: nicer redirect
-            url = '/login/login_form?came_from=%s' % '/profile_overview'
-            self.request.response.redirect(url)
-            return None
-        zope_app = self.context.unrestrictedTraverse('/')
-
-        # TODO: this is a hack for devel
-        #user = zope_app.acl_users.getUser('parttpet')
-        #client = ProfileClient(zope_app, user)
-        #ig_access = client.access_in_igs()
-
-        # TODO: this is a hack for devel
-        user = zope_app.acl_users.getUser('fierefra')
-        client = ProfileClient(zope_app, user)
-        roles_list = client.roles_list_in_ldap()
-        notifications = client.notification_lists()
-
-        # custom filters - only relevant info in view
-        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
-
-        return self.index(roles=leaf_roles_list, sorted_func=sorted,
-                          subscriptions=notifications, user_id='demo_user')
+    elif is_ajax == 'subscriptions':
+        ig_access = client.access_in_igs()
+        if 'restricted' in ig_access:
+            del ig_access['restricted']
+        igs_with_access = []
+        for igs in ig_access.values():
+            igs_with_access.extend(igs)
+        notifications = client.notification_lists(igs_with_access)
+        return subscriptions_pt.__of__(context)(sorted_func=sorted,
+                                                subscriptions=notifications,
+                                                user_id=user.getId())
