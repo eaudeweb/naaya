@@ -1,0 +1,26 @@
+<tal:block condition="python:len(options['subscriptions'])">
+    <tal:block repeat="ig python:options['sorted_func'](options['subscriptions'].keys(), key=lambda x: x.title_or_id())">
+        <tal:block define="sub_list python:options['subscriptions'][ig]">
+            <div tal:attributes="id string:subscriptions_${ig/id}">
+                <dl>
+                    <dt tal:content="ig/title_or_id"></dt>
+                    <dd>
+                    <ul>
+                        <li tal:repeat="sub sub_list">
+                            <a tal:content="sub/object/title_or_id"
+                               tal:attributes="href sub/object/absolute_url; class string:external-link; target string:_blank">
+                            </a>
+
+                            <div tal:content="sub/notif_type"
+                                  tal:attributes="class string:notif_type_label ${sub/notif_type}"></div>
+                        </li>
+                    </ul>
+                    </dd>
+            </div>
+        </tal:block>
+    </tal:block>    
+</tal:block>
+
+<tal:block condition="python:not len(options['subscriptions'])">
+    <tt tal:content="options/user_id" /> has no subscriptions configured in Interest Groups.
+</tal:block>

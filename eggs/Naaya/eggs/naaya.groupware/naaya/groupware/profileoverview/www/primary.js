@@ -42,10 +42,22 @@ var ldap_roles = {
 jQuery(document).ready(function(){
     ldap_roles.init();
     var user = $("#user").val();
-    jQuery.get('/profile_overview', {'user': user, 'ajax': 1}, function(data){
-                jQuery('#ig_access').html(data);
-                igs.init();
-    });
+    var ajax_calls = function(){
+        jQuery.ajax({url: '/profile_overview',
+                     data: {user: user, ajax: 'memberships'},
+                     success: function(data){
+                                jQuery('#ig_access').html(data);
+                                igs.init();
+                        },
+                     complete: function(jqXHR, textStatus){
+                           jQuery.get('/profile_overview', {user: user, ajax: 'subscriptions'},
+                                function(data){
+                                 jQuery('#ig_subscriptions').html(data);
+                                });
+                        }
+        });
+    };
+    window.setTimeout(ajax_calls, 1000);
 });
 
 })();
