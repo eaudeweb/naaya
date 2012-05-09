@@ -1,13 +1,9 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-           i18n_domain="zope">
+<configure xmlns="http://namespaces.zope.org/zope">
 
-   <utility
-      factory=".NyNegotiator.NyNegotiator"
-      provides="zope.i18n.interfaces.INegotiator"
+   <adapter
+      for="zope.publisher.interfaces.http.IHTTPRequest"
+      provides="zope.i18n.interfaces.IUserPreferredCharsets"
+      factory=".utilities.NyHTTPCharsets"
       />
-
-   <!-- overrides Products.Five.utilities.browser/configure.zcml
-   to get Five msgids out of our domain -->
-   <include package="Products.Five.utilities.browser" />
 
 </configure>
