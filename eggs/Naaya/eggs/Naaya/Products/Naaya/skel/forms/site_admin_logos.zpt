@@ -33,18 +33,37 @@
 
 
 <div class="tabbedmenu">
-<ul>
+    <ul>
 	<li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
 	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
-</ul>
+    </ul>
 </div>
 
 <p i18n:translate="" class="cleaner">
-	This form allows you to personalize the left and right logos used for this site.
+    This form allows you to personalize the left and right logos used for this site.
 </p>
 
+<div class="tip">
+    <div>
+        <p>
+            <strong i18n:translate="">
+                Tips
+            </strong>
+    </div>
+
+    <ul>
+        <li i18n:translate="">
+            The ideal file dimension of logos should not be higher than the header;
+        </li>
+        <li i18n:translate="">
+            Large file size logos may slow down your website loading time.
+        </li>
+    </ul>
+</div>
+
+<br />
 
 <form method="post"
       tal:attributes="action string:${site_url}/admin_logos"
