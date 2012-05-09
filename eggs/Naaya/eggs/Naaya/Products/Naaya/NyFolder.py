@@ -27,6 +27,7 @@ from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
 from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectOpenEvent
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyCommonView import NyCommonView
 from Products.Naaya.adapters import FolderMetaTypes
@@ -1263,6 +1264,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             # no custom_index was configured, or the template is missing
             tmpl = self.getFormsTool()[self.default_form_id].aq_base.__of__(self)
 
+        event.notify(NyContentObjectOpenEvent(self))
         return tmpl(REQUEST)
 
     security.declareProtected(view, 'index_rdf')

@@ -11,6 +11,7 @@ from zope.interface import implements
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectOpenEvent
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -345,6 +346,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        notify(NyContentObjectOpenEvent(self))
         if self.redirect: REQUEST.RESPONSE.redirect(self.locator)
         return self.getFormsTool().getContent({'here': self}, 'url_index')
 
