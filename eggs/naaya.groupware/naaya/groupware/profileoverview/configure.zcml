@@ -10,14 +10,6 @@
     permission="zope2.View"
     />
 
-  <browser:page
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="demoprofile"
-    template="zpt/index.pt"
-    class=".profile.DemoProfileView"
-    permission="zope2.View"
-    />
-
   <browser:resourceDirectory
     directory="www"
     name="naaya.groupware.profileoverview"
