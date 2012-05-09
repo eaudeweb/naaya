@@ -7,6 +7,7 @@ ITranslationDomain utilities:
 from zope.interface import implements
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n import interpolate
+from zope.publisher.http import HTTPCharsets
 
 
 class NyI18nTranslator(object):
@@ -34,3 +35,22 @@ class NyI18nTranslator(object):
         else:
             raw = tool.get_message_catalog().gettext(msgid, target_language)
         return interpolate(raw, mapping)
+
+class NyHTTPCharsets(HTTPCharsets):
+
+    def __init__(self, request):
+        self.request = request
+
+    def getPreferredCharsets(self):
+        """
+        If HTTPHeader is missing, zope.publisher.http's utility returns empty
+        list, so Zope defaults to system default (ascii).
+        We keep publisher's utility logic, but we default to 'utf-8' before
+        system default.
+
+        """
+        charsets = super(NyHTTPCharsets, self).getPreferredCharsets()
+        if not charsets:
+            return ['utf-8']
+        else:
+            return charsets

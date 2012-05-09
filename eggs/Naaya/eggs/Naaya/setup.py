@@ -48,7 +48,7 @@ setup(name='Naaya',
           'naaya.content-compat',
           'naaya.flowplayer',
           'naaya.content.bfile',
-          'naaya.i18n',
+          'naaya.i18n > 1.0.14', # last one without overrides
 
           #Testing
           # 'twill',

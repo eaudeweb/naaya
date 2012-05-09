@@ -1,5 +1,4 @@
-<configure xmlns:naaya="http://namespaces.zope.org/zope"
-           xmlns:zope="http://namespaces.zope.org/zope"
+<configure xmlns="http://namespaces.zope.org/zope"
            xmlns:five="http://namespaces.zope.org/five"
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:zcml="http://namespaces.zope.org/zcml"
@@ -7,7 +6,7 @@
 
    <five:registerPackage package="." initialize=".initialize" />
 
-   <zope:adapter
+   <adapter
          factory=".patches.NySitePublishTraverse"
       />
 
@@ -17,30 +16,30 @@
         permission="zope.Public"
         />
 
-   <naaya:utility
+   <utility
       factory=".utilities.NyI18nTranslator"
       provides="zope.i18n.interfaces.ITranslationDomain"
       name="default"
       />
 
-   <zope:subscriber
+   <subscriber
       for=".interfaces.IMessageAddEvent"
       handler=".handlers.update_transaction_note"
       />
 
-   <zope:subscriber
+   <subscriber
       for=".interfaces.IMessageAddEvent"
       handler=".handlers.debug_messages"
       />
 
    <configure zcml:condition="installed Products.naayaUpdater">
-      <naaya:utility
+      <utility
          name="LocalizerToNaayaI18n.update"
          provides="Products.naayaUpdater.interfaces.IUpdateScript"
          component=".updates.LocalizerToNaayaI18n"
          permission="zope2.ViewManagementScreens" />
 
-      <naaya:utility
+      <utility
          name="RemoveEmptyLangsOrTrans.update"
          provides="Products.naayaUpdater.interfaces.IUpdateScript"
          component=".updates.RemoveEmptyLangsOrTrans"
