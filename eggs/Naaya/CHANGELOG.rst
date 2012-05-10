@@ -1,4 +1,7 @@
-2.13.12 (unreleased)
+2.13.13 (unreleased)
+--------------------
+
+2.13.12 (2012-05-10)
 --------------------
 * bugfix: only (re)catalog INyCatalogAware on add/rm group role [simiamih]
 
