@@ -1,4 +1,7 @@
-1.1.11 (unreleased)
+1.1.12 (unreleased)
+====================
+
+1.1.11 (2012-05-10)
 ====================
 * enhancements for admin_assign_role_html [dumitval]
 * Bugfix in adding Naaya Publications
