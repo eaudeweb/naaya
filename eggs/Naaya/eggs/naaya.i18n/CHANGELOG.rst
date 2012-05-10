@@ -1,4 +1,7 @@
-1.0.15 (unreleased)
+1.1.1 (unreleased)
+-------------------
+
+1.1.0 (2012-05-10)
 -------------------
 * override IUserPreferredCharset adapter, default charset to utf-8 [simiamih]
 
