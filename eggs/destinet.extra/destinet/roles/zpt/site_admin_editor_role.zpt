@@ -83,7 +83,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr tal:repeat="object_path python:objects.keys()">
+                        <tal:block repeat="object objects">
+						<tr tal:define="object_path python:object[0]">
 							<td nowrap="nowrap" class="center checkbox">
 								<input type="checkbox" name="object_paths"
 									tal:attributes="value object_path;
@@ -92,13 +93,14 @@
 
 							<td>
 								<a i18n:translate="" tal:attributes="href object_path"
-									tal:content="python:objects[object_path][0]" />
+									tal:content="python:object[1]" />
 							</td>
 
-							<td tal:define="roles python:objects[object_path][1];
+							<td tal:define="roles python:object[2];
 								users_with_edit python:[key for key in roles.keys() if key!=orig_id and 'Editor' in roles[key]]" tal:content="python:', '.join(users_with_edit)" />
 
 						</tr>
+                        </tal:block>
 					</tbody>
 				</table>
 				<div class="form-buttons" tal:condition="objects">
