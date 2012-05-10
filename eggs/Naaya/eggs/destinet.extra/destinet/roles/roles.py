@@ -9,8 +9,12 @@ def admin_assign_role(context, REQUEST):
     new_users = REQUEST.get('new_users', [])
     messages = []
     options = {}
-    users = context.getAuthenticationTool().getUsersWithRole('Contributor')
-    user_ids = sorted(users.keys())
+    user_list = context.getAuthenticationTool().getUsers()
+    users = {}
+    for user in user_list:
+        users[user.name] = {'name': user.firstname + ' ' + user.lastname,
+                               'email': user.email}
+    user_ids = sorted(users.keys(), key=lambda x:x.lower())
     if orig_id == '':
         messages.append('Please select a user to search for content.')
         orig_id = None
@@ -40,12 +44,12 @@ def admin_assign_role(context, REQUEST):
     obj_list = context.getCatalogedObjects(contributor=orig_id)
     if not obj_list:
         messages.append("User %s doesn't have contributions on this site yet." % orig_id)
-    objects = {}
+    objects = []
     for ob in obj_list:
         local_roles = ob.__ac_local_roles__ or {}
-        objects ['/'.join(ob.getPhysicalPath())] = [ob.title_or_id(),
-                                                    local_roles]
+        objects.append(['/'.join(ob.getPhysicalPath()), ob.title_or_id(),
+                            local_roles])
     options['messages'] = messages
-    options['objects'] = objects
+    options['objects'] = sorted(objects, key=lambda x:x[1].strip().lower())
     return _admin_assign_role.__of__(context)(REQUEST, **options)
 

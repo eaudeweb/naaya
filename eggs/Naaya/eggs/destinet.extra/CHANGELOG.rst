@@ -1,5 +1,6 @@
 1.1.11 (unreleased)
 ====================
+* enhancements for admin_assign_role_html [dumitval]
 * Bugfix in adding Naaya Publications
 * publishing unit test: test logging for missing country [simiamih]
 
