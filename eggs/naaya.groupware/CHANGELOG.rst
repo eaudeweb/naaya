@@ -1,4 +1,7 @@
-1.2.4 (unreleased)
+1.2.5 (unreleased)
+-------------------
+
+1.2.4 (2012-05-10)
 -------------------
 * refactored profile overview, subscriptions on callback [simiamih]
 
