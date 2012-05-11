@@ -1,5 +1,5 @@
 PARENT_BUNDLE = 'Groupware'
-BUNDLE_NAME_PREFIX = 'NFPIT-'
+BUNDLE_NAME_PREFIX = 'SINANET-'
 
 def load_bundles():
     import os.path

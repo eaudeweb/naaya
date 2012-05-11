@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='NaayaBundles-Nfpit',
-    description = "Server-specific bundles, NFP-IT",
+    name='naayabundles_forum',
+    description = "Server-specific bundles, SINAnet",
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
