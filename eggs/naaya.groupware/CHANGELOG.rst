@@ -1,5 +1,6 @@
 1.2.5 (unreleased)
 -------------------
+* member_search now searches in both uid and full name [dumitval]
 
 1.2.4 (2012-05-10)
 -------------------
