@@ -11,7 +11,7 @@ from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
 from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
 from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
 from naaya.core.utils import force_to_unicode
-
+from eea import usersdb
 
 class MemberSearch(Implicit, Item):
     title = "Interest Group member search"
@@ -63,8 +63,12 @@ class MemberSearch(Implicit, Item):
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         local_users = acl_tool.getUsers()
+        search_string = search_string.lower().strip()
         for user in local_users:
-            if search_string in user.name.lower():
+            if (search_string in user.name.lower() or
+                search_string in user.firstname.lower() or
+                search_string in user.lastname.lower()
+                ):
                 ret.append(self.get_local_user_info(user))
         return ret
 
@@ -87,9 +91,21 @@ class MemberSearch(Implicit, Item):
             userids = set(individual_userids + group_userids)
 
             if search_string.strip():
-                users = source.getUserFolder().findUser('cn', search_string)
-                users = [user for user in users if user.has_key('uid') and
-                         user['uid'] in userids]
+                user_folder = source.getUserFolder()
+                servers = user_folder._delegate._servers
+                config = {}
+                config['ldap_server'] = servers[0]['host']
+                try:
+                    config['users_dn'] = user_folder.users_base
+                    config['roles_dn'] = user_folder.groups_base
+                except AttributeError:
+                    # Leave eea.userdb defaults
+                    pass
+                agent = usersdb.UsersDB(**config)
+                users = agent.search_user(search_string)
+                users = [user for user in users if
+                            user.get('uid', user.get('id', None)) and
+                         user.get('uid', user.get('id')) in userids]
             else:
                 cache = ldap_cache.Cache()
                 cache.update()
@@ -98,20 +114,31 @@ class MemberSearch(Implicit, Item):
                 for user_dn in cache.users:
                     user = cache.get(user_dn)
                     if user.has_key('uid') and user['uid'] in userids:
-                        users.append(user)
+                        users.append({
+                        'id': user['uid'],
+                        'first_name': user['givenName'],
+                        'last_name': user['sn'],
+                        'full_name': user['cn'],
+                        'email': user['mail'],
+                        'organisation': user.get('o', 'N/A'),
+                        'postal_address': user.get('postalAddress', 'N/A'),
+                        })
 
             # precalculate user roles for performance
             user_roles_map = {}
             for user in users:
-                user_roles = self.get_external_user_roles(source,
-                                                          user['uid'],
-                                                          sources_info,
-                                                          group_userids_map)
-                user_roles_map[user['uid']] = user_roles
+                user_id = user.get('uid', user.get('id'))
+                user_roles = self.get_external_user_roles(
+                                source,
+                                user_id,
+                                sources_info,
+                                group_userids_map)
+                user_roles_map[user_id] = user_roles
 
-            user_info = [self.get_external_user_info(source, user,
-                                                 user_roles_map[user['uid']])
-                          for user in users]
+            user_info = [self.get_external_user_info(
+                            source, user,
+                            user_roles_map[user.get('uid', user.get('id'))])
+                         for user in users]
 
             ret.extend(user_info)
 
@@ -152,20 +179,21 @@ class MemberSearch(Implicit, Item):
 
     security.declarePrivate('get_external_user_info')
     def get_external_user_info(self, source, user, user_roles=None):
+        user_id = user.get('uid', user.get('id'))
         # user_roles are precalculated for the member search (perfomance)
         if user_roles is None:
-            user_roles = self.get_external_user_roles(source, user['uid'])
+            user_roles = self.get_external_user_roles(source, user_id)
         return {
-                'userid': user['uid'],
-                'firstname': force_to_unicode(user['givenName']),
-                'lastname': force_to_unicode(user['sn']),
-                'name': force_to_unicode(user['cn']),
-                'email': user.get('mail', ''),
+                'userid': user_id,
+                'firstname': force_to_unicode(user['first_name']),
+                'lastname': force_to_unicode(user['last_name']),
+                'name': force_to_unicode(user['full_name']),
+                'email': user['email'],
                 'access_level': self.get_user_access_level(user_roles),
-                'organisation': force_to_unicode(user.get('o', 'N/A')),
+                'organisation': force_to_unicode(
+                                user.get('organisation', 'N/A')),
                 'postal_address': force_to_unicode(
-                                    user.get('postalAddress', 'N/A')
-                                  ),
+                                user.get('postal_address', 'N/A')),
                 }
 
     security.declarePrivate('get_local_user_roles')
