@@ -14,6 +14,9 @@ More information about the requesting user:
  E-mail: <tal:block replace="options/email" />
  LDAP Roles: <tal:block replace="options/member_search_link" />
 
+Reason for this request (as stated by the user): <tal:block
+    content="options/explanatory_text"/>
+
 You can review this request and grant following this link:
     <tal:block replace="options/review_link" />
 

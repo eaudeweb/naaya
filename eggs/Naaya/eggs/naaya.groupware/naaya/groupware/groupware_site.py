@@ -17,6 +17,7 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from naaya.component import bundles
+from naaya.core.utils import cleanup_message
 from member_search import MemberSearch
 from interfaces import IGWSite
 from constants import METATYPE_GROUPWARESITE
@@ -266,6 +267,10 @@ class GroupwareSite(NySite):
 
         role = REQUEST.form.get('role', '')
         location = REQUEST.form.get('location', '')
+        explanatory_text = cleanup_message(
+            REQUEST.form.get('explanatory_text', '').strip())
+        if not explanatory_text:
+            explanatory_text = '-'
         sources = self.getAuthenticationTool().getSources()
 
         if not role or not sources:
@@ -319,7 +324,7 @@ class GroupwareSite(NySite):
 
         mail_tool = self.getEmailTool()
         mail_to = self.administrator_email
-        mail_from = mail_tool._get_from_address()
+        mail_from = mail_tool.get_addr_from()
         mail_data = self.request_ig_access_emailpt.render_email(**{
             'here': self,
             'role': role,
@@ -331,7 +336,8 @@ class GroupwareSite(NySite):
             'user_admin_link': user_admin_link,
             'member_search_link': member_search_link,
             'location_url': location_url,
-            'review_link': review_link
+            'review_link': review_link,
+            'explanatory_text': explanatory_text,
         })
         mail_tool.sendEmail(mail_data['body_text'], mail_to,
                             mail_from, mail_data['subject'])
