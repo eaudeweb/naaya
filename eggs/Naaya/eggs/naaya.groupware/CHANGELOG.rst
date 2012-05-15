@@ -1,5 +1,8 @@
-1.2.6 (unreleased)
--------------------
+1.2.7 (unreleased)
+------------------
+
+1.2.6 (2012-05-15)
+------------------
 * explanatory text for ig membership request [dumitval]
 
 1.2.5 (2012-05-14)
