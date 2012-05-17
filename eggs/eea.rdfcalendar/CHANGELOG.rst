@@ -1,5 +1,6 @@
 1.1 (unreleased)
 ----------------
+* Fix index crash when no year is provided [dumitval]
 
 1.0 (2012-03-08)
 ----------------
