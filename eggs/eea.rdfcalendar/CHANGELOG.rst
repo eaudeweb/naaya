@@ -1,4 +1,7 @@
-1.1 (unreleased)
+1.0.2 (unreleased)
+----------------
+
+1.0.1 (2012-05-18)
 ----------------
 * Fix index crash when no year is provided + update script [dumitval]
 
