@@ -1,4 +1,7 @@
-2.13.13 (unreleased)
+2.13.14 (unreleased)
+--------------------
+
+2.13.13 (2012-05-21)
 --------------------
 * Some new metadata on AnonymousSubscription [dumitval]
 
