@@ -108,11 +108,20 @@ class AnonymousSubscription(object):
     """
     interface.implements(ISubscription)
 
+    first_name = None
+    last_name = None
+    organisation = None
+    country = None
+
     def __init__(self, **kw):
         """
         @todo: Make a heartbeat to clean-up temporary subscribtions
         """
         self.email = kw.pop('email')
+        self.first_name = kw.get('first_name')
+        self.last_name = kw.get('last_name')
+        self.organisation = kw.get('organisation')
+        self.country = kw.get('country')
         self.notif_type = kw.pop('notif_type')
         self.lang = kw.pop('lang')
         self.location = kw.pop('location')
