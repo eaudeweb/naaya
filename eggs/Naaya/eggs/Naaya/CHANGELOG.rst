@@ -1,5 +1,6 @@
 2.13.13 (unreleased)
 --------------------
+* Some new metadata on AnonymousSubscription [dumitval]
 
 2.13.12 (2012-05-10)
 --------------------
