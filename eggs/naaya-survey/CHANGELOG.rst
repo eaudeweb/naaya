@@ -1,4 +1,7 @@
-1.2.20 (unreleased)
+1.2.21 (unreleased)
+===================
+
+1.2.20 (2012-05-22)
 ===================
 * Enhanced error messages for report generation [dumitval]
 
