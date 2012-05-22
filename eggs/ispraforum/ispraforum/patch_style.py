@@ -1,6 +1,9 @@
 import os
 import re
 
+from naaya.groupware.interfaces import ISinanetApplication
+
+
 def patch_template(tmpl):
     full_path = os.path.dirname(os.path.abspath(__file__))
     standard_template_file = os.path.join(full_path, 'zpt/standard_template.zpt')
@@ -12,10 +15,23 @@ def patch_template(tmpl):
 def patch_style_for_new_site(event):
     application = event.application
     site = application.unrestrictedTraverse(application.created_path)
+    root = application.unrestrictedTraverse("/")
+    if ISinanetApplication.providedBy(root): # special case for sinanet
+        patch_sinanet_ig(site)
+    else:
+        patch_ispra_ig(site)
+
+def patch_ispra_ig(site):
     tmpl = site['portal_layout'].get_current_skin()['standard_template']
     _update_logo(site, logo_id='right_logo.gif', delete=True)
     _update_logo(site, 'left_logo.gif', 'left_logo.png', 'image/png',
                  'Site left logo')
+    patch_template(tmpl)
+
+def patch_sinanet_ig(site):
+    tmpl = site['portal_layout'].get_current_skin()['standard_template']
+    _update_logo(site, logo_id='right_logo.gif', delete=True)
+    _update_logo(site, 'left_logo.gif', 'sinanet_logo.gif', 'Site left logo')
     patch_template(tmpl)
 
 def _update_logo(site, logo_id='', new_logo_file='', content_type='image/gif',
