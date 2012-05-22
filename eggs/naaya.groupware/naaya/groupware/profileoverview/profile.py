@@ -31,9 +31,8 @@ class ProfileClient(object):
         self.ldap_folder = zope_app.acl_users
         self.user = user
         ldap_folder = self.ldap_folder
-        servers = ldap_folder._delegate._servers
-
-        config['ldap_server'] = servers[0]['host']
+        server = ldap_folder._delegate._servers[0]
+        config['ldap_server'] = "%s:%s" % (server['host'], server['port'])
         try:
             config['users_dn'] = ldap_folder.users_base
             config['roles_dn'] = ldap_folder.groups_base
