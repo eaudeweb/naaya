@@ -53,7 +53,18 @@ class BaseMultipleChoiceStatistic(BaseStatistic):
                 if choice:
                     answered_count += 1
                 for i in choice:
-                    per_choice_count[i] += 1
+                    try:
+                        per_choice_count[i] += 1
+                    except IndexError:
+                        self.setSessionErrorsTrans(
+                            'Error at question "%s" there are more user '
+                            'selected answers than available choices (possibly '
+                            'because in other languages there are more choices '
+                            'for this question). Reports cannot be generated '
+                            'until there are enough choices for this question '
+                            'to cover existing answers.'
+                            % question.title)
+                        self.REQUEST.RESPONSE.redirect(self.REQUEST.HTTP_REFERER)
 
         unanswered_count = total - answered_count
         if total:
