@@ -1,5 +1,6 @@
 1.2.7 (unreleased)
 ------------------
+* profileoverview: also use port when creating ldap connection [simiamih]
 
 1.2.6 (2012-05-15)
 ------------------
