@@ -1,5 +1,6 @@
 1.2.8 (unreleased)
 ------------------
+* fixed test for profileoverview [simiamih]
 
 1.2.7 (2012-05-22)
 ------------------
