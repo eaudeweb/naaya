@@ -67,6 +67,11 @@
     name="index_html"
     />
 
+  <browser:defaultView
+    for="naaya.groupware.interfaces.ISinanetApplication"
+    name="index_html"
+    />
+
   <include package=".profileoverview" />
   <include package=".updates" />
 
