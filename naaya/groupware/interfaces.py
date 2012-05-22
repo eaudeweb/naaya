@@ -11,6 +11,9 @@ class IEionetForumApplication(IGroupwareApplication):
 class IArchivesForumApplication(IGroupwareApplication):
     """ This is a Zope App marker where EIONET Forum is installed """
 
+class ISinanetApplication(IGroupwareApplication):
+    """ This is a Zope App marker where SINAnet Forum is installed """
+
 class IGWSite(INySite):
     """ Interface for EnviroWindowsSite """
     pass
