@@ -1,5 +1,6 @@
 1.2.20 (unreleased)
 ===================
+* Enhanced error messages for report generation [dumitval]
 
 1.2.19 (2012-04-27)
 ===================

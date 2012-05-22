@@ -34,7 +34,7 @@ from zLOG import LOG, DEBUG
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import slugify, genRandomId
+from Products.NaayaCore.managers.utils import slugify, genRandomId, genObjectId
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 import statistics
@@ -182,7 +182,7 @@ class SurveyReport(Folder, LocalPropertyManager):
             self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try: self.manage_delObjects(ids)
-            except: self.setSessionErrorsTrans('Error while delete data.')
+            except: self.setSessionErrorsTrans('Error while deleting data.')
             else: self.setSessionInfoTrans('Item(s) deleted.')
         REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
