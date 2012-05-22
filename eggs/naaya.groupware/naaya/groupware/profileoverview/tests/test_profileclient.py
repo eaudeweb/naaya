@@ -12,7 +12,7 @@ from naaya.groupware.profileoverview.profile import ProfileClient
 
 def common_setup(zope_app):
     zope_app.acl_users._delegate = Mock()
-    zope_app.acl_users._delegate._servers = [{'host': ''}]
+    zope_app.acl_users._delegate._servers = [{'host': '', 'port': ''}]
     zope_app.acl_users._doAddUser('nick', 'nick', [], '')
 
 class InterestGroupsTestCase(NaayaTestCase):
