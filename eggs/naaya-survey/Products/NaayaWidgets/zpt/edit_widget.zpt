@@ -38,6 +38,6 @@
 </form>
 
 <!-- Translation bar on bottom -->
-<div metal:use-macro="here/edit_html/macros/translation_bar" />
+<div metal:use-macro="here/edit/macros/translation_bar" />
 
 <tal:block tal:replace="structure here/standard_html_footer"/>

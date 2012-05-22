@@ -176,8 +176,31 @@ class Widget(Folder, LocalPropertyManager):
             return datamodel[lang]
         return datamodel
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit')
+    edit = PageTemplateFile('zpt/edit_widget', globals())
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    edit_html = PageTemplateFile('zpt/edit_widget', globals())
+    def edit_html(self):
+        """ """
+        local_properties = self.getLocalProperties()
+        local_properties = filter(None,
+                                  [x.get('id', None) for x in local_properties]
+                              )
+        lang = self.get_selected_language()
+        other_languages = [language for language in self.gl_get_languages()
+            if language != lang]
+        if 'choices' in local_properties:
+            choices = self.getLocalAttribute('choices', lang)
+            for language in other_languages:
+                other_choices = len(self.getLocalAttribute('choices', language))
+                if (len(choices) != other_choices and other_choices):
+                    errors = self.getSessionErrors() or []
+                    errors.append('This question has a different '
+                        'number of choices (%s) in %s. Reports cannot be generated '
+                        'until this is corrected.'
+                        % (other_choices, self.gl_get_language_name(language)))
+                    self.setSessionErrorsTrans(errors)
+        return self.edit()
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'preview_html')
     preview_html = PageTemplateFile('zpt/preview_widget', globals())
