@@ -1,4 +1,7 @@
-1.2.7 (unreleased)
+1.2.8 (unreleased)
+------------------
+
+1.2.7 (2012-05-22)
 ------------------
 * custom interface for SINAnet instance [simiamih]
 * profileoverview: also use port when creating ldap connection [simiamih]
