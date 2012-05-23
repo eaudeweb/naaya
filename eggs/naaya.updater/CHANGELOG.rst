@@ -1,5 +1,6 @@
 1.2.26 (unreleased)
 -------------------
+* Change in update_translations to allow deletion of translations [dumitval]
 
 1.2.25 (2012-04-06)
 -------------------
