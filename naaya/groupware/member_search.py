@@ -92,9 +92,9 @@ class MemberSearch(Implicit, Item):
 
             if search_string.strip():
                 user_folder = source.getUserFolder()
-                servers = user_folder._delegate._servers
+                server = user_folder._delegate._servers[0]
                 config = {}
-                config['ldap_server'] = servers[0]['host']
+                config['ldap_server'] = "%s:%s" % (server['host'], server['port'])
                 try:
                     config['users_dn'] = user_folder.users_base
                     config['roles_dn'] = user_folder.groups_base
