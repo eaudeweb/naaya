@@ -1,4 +1,7 @@
-1.2.26 (unreleased)
+1.2.27 (unreleased)
+-------------------
+
+1.2.26 (2012-05-23)
 -------------------
 * Change in update_translations to allow deletion of translations [dumitval]
 
