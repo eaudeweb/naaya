@@ -8,6 +8,10 @@
         Select .PO file to import in selected portals*
         <input type='file' name='po_file' id='po_file' />
     </p>
+    <p>
+        Check if empty translations present in the PO should overwrite existing translations
+        <input type='checkbox' name='overwrite_with_empty' />
+    </p>
 
     <p>
         * Take note that the .PO file needs to be encoded with
