@@ -121,8 +121,8 @@ class LDIFOpener(object):
         name, ext = os.path.splitext(tail)
         if ext == '.tgz':
             fd = tarfile.open(path, 'r')
-            fd_ldif = fd.extractfile('%s/ldap/eionet-circle.%s.ircnode.ldif'
-                             % (name, name))
+            fd_ldif = fd.extractfile('%s/ldap/%s.%s.ircnode.ldif'
+                             % (CIRCA_CIRCLE_NAME, name, name))
             self.fd, self.fd_ldif = fd, fd_ldif
         elif ext == '.ldif':
             self.fd_ldif = open(path, 'r')
