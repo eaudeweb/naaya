@@ -4,6 +4,10 @@ from ldif import LDIFParser
 from pprint import pprint
 import os.path
 
+from App.config import getConfiguration
+
+CONFIG = getConfiguration()
+CIRCA_CIRCLE_NAME = getattr(CONFIG, 'environment', {}).get('CIRCA_CIRCLE_NAME', 'eionet-circle')
 
 class LDIFClassesParser(LDIFParser):
     """
