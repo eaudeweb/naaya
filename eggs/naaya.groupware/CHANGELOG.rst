@@ -1,5 +1,6 @@
 1.2.8 (unreleased)
 ------------------
+* using port when connecting to ldap in member_search [simiamih]
 * fixed test for profileoverview [simiamih]
 
 1.2.7 (2012-05-22)
