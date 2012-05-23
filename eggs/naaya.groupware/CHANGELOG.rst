@@ -1,4 +1,7 @@
-1.2.8 (unreleased)
+1.2.9 (unreleased)
+------------------
+
+1.2.8 (2012-05-23)
 ------------------
 * using port when connecting to ldap in member_search [simiamih]
 * fixed test for profileoverview [simiamih]
