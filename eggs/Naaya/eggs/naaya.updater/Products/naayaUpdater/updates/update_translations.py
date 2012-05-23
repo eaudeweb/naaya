@@ -25,7 +25,7 @@ def normalize_code(code):
     else:
         return parts[0]
 
-def read_po(filehandler):
+def read_po(filehandler, overwrite_with_empty=False):
     """
     Imports a po file in the given `lang` language. Requires a `filehandler`
     to the uploaded file.
@@ -70,7 +70,7 @@ def read_po(filehandler):
                     msgid = backslash_unescape(msgid).decode(encoding)
                     msgstr = backslash_unescape(match.groups()[0]).decode(encoding)
                     # ignore empty translations
-                    if msgstr:
+                    if msgstr or overwrite_with_empty:
                         data[msgid] = msgstr
                     msgid = None
             match = msgid_pat.search(line)
@@ -99,6 +99,7 @@ class UpdateTranslations(UpdateScript):
     def _update(self, portal):
         form = self.REQUEST.form # TODO: don't rely on self.REQUEST
         po_file = form['po_file']
+        overwrite_with_empty = form.get('overwrite_with_empty')
         lang = normalize_code(form['lang_code'])
         existing_langs = portal.gl_get_languages()
         if lang not in existing_langs:
@@ -120,7 +121,7 @@ class UpdateTranslations(UpdateScript):
             catalog = portal.getPortalTranslations()
             update_message = update_message_localizer
 
-        data = read_po(po_file)
+        data = read_po(po_file, overwrite_with_empty)
 
         for (msgid, msgstr) in data.items():
             update_message(msgid, lang, msgstr, 'PO Update Translations import')
