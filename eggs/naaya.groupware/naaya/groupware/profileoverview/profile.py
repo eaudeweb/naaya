@@ -208,6 +208,7 @@ def ProfileView(context, request):
                                         user_id=user.getId())
     elif is_ajax == 'memberships':
         ig_access = client.access_in_igs()
+
         if 'restricted' in ig_access:
             del ig_access['restricted']
         ig_details = {}
@@ -216,13 +217,17 @@ def ProfileView(context, request):
         for igs in ig_access.values():
             all_igs.extend(igs)
         for ig in all_igs:
-            ig_details[ig.getPhysicalPath()] = client.local_access_in_ig(ig)
+            ig_details[ig.id] = client.local_access_in_ig(ig)
             by_groups = client.local_roles_by_groups(ig)
-            roles.update(set(map(operator.itemgetter('group'), by_groups)))
-            ig_details[ig.getPhysicalPath()].extend(by_groups)
+            if by_groups:
+                roles.update(set(map(operator.itemgetter('group'), by_groups)))
+                ig_details[ig.id].extend(by_groups)
+            else:
+                ig_access['viewer'].remove(ig)
         role_names = {}
         for role in roles:
             role_names[role] = client.agent.role_info(role)['description']
+
         return ajax_roles_pt.__of__(context)(ig_details=ig_details,
                                              ig_access=ig_access,
                                              role_names=role_names)
