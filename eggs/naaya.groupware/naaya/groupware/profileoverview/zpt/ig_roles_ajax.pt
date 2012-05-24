@@ -13,8 +13,8 @@
                                    tal:content="ig/title_or_id">
                                 </a>
                             </span>
-                            <ul tal:condition="python:options['ig_details'][ig.getPhysicalPath()]">
-                            <li tal:repeat="local_roles python:options['ig_details'][ig.getPhysicalPath()]">
+                            <ul tal:condition="python:options['ig_details'][ig.id]">
+                            <li tal:repeat="local_roles python:options['ig_details'][ig.id]">
                                 <span tal:content="python:', '.join(local_roles['access'])" />
                                 in <a tal:content="python: local_roles['location'].title_or_id()"
                                     tal:attributes="href python:local_roles['location'].absolute_url()" />
