@@ -1,5 +1,7 @@
 1.2.9 (unreleased)
 ------------------
+* Improved profile overview to show only the IGs that account is
+  explicitly assigned [bogdatan]
 
 1.2.8 (2012-05-23)
 ------------------
