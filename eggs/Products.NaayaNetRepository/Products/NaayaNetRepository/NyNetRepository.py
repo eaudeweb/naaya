@@ -156,7 +156,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
         if ids is None: ids = []
         else: ids = self.utConvertToList(ids)
         try: self.manage_delObjects(ids)
-        except: self.setSessionErrors(['Error while delete data.'])
+        except: self.setSessionErrors(['Error while deleting data.'])
         else: self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 

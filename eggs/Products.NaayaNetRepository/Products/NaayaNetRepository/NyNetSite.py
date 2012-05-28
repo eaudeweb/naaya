@@ -161,7 +161,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
         except: error = 1
         else: error = 0
         if REQUEST:
-            if error: self.setSessionErrors(['Error while delete data.'])
+            if error: self.setSessionErrors(['Error while deleting data.'])
             else: self.setSessionInfo(['Item(s) deleted.'])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
