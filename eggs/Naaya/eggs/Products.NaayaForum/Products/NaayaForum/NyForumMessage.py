@@ -140,7 +140,7 @@ class NyForumMessage(NyForumBase, Folder):
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
         try: self.manage_delObjects(self.utConvertToList(ids))
-        except: self.setSessionErrorsTrans('Error while delete data.')
+        except: self.setSessionErrorsTrans('Error while deleting data.')
         else: self.setSessionInfoTrans('Attachment(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 

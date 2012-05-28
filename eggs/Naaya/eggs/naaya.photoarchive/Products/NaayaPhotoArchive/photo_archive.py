@@ -63,7 +63,7 @@ class photo_archive_base(object):
             self.setSessionErrorsTrans('You are not allowed to paste objects in this context.')
         else:
             try: self.manage_pasteObjects(None, REQUEST)
-            except: self.setSessionErrorsTrans('Error while paste data.')
+            except: self.setSessionErrorsTrans('Error while pasting data.')
             else: self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -76,7 +76,7 @@ class photo_archive_base(object):
             self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try: self.manage_delObjects(id_list)
-            except: self.setSessionErrorsTrans('Error while delete data.')
+            except: self.setSessionErrorsTrans('Error while deleting data.')
             else: self.setSessionInfoTrans('Item(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect(self.absolute_url())
     #
