@@ -304,7 +304,7 @@ class NyFolderBase(Folder, NyPermissions):
             self.setSessionErrorsTrans('You are not allowed to paste objects in this context.')
         else:
             try: self.manage_pasteObjects(None, REQUEST)
-            except: self.setSessionErrorsTrans('Error while paste data.')
+            except: self.setSessionErrorsTrans('Error while pasting data.')
             else: self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -323,7 +323,7 @@ class NyFolderBase(Folder, NyPermissions):
             try:
                 self.manage_delObjects(id_list)
             except Exception, err:
-                self.setSessionErrorsTrans('Error while delete data.')
+                self.setSessionErrorsTrans('Error while deleting data.')
                 zLOG.LOG("NyFolder.deleteObjects", zLOG.DEBUG, err)
             else:
                 self.setSessionInfoTrans('Item(s) deleted.')
