@@ -1,5 +1,6 @@
 import os
 import logging
+import ConfigParser
 from zope.component import getGlobalSiteManager
 from zope.interface import implements
 from naaya.component import bundles
@@ -60,6 +61,10 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
                 raise ValueError("Filesystem bundle %r already exists (%s)" %
                                  (bundle_name, e))
 
+            cfg_file = open(os.path.join(bundle_path, 'bundle.cfg'), 'wb')
+            cfg_file.write("[bundle]\nparent-bundle = %s\n" % parent_name)
+            cfg_file.close()
+
             # TODO in ZEO configurations we need to notify the other instances
             load_filesystem_bundle(bundle_path, bundle_name, parent_name)
             new_bundle = bundles.get(bundle_name)
@@ -100,7 +105,14 @@ def get_filesystem_bundle_factory(site):
     return gsm.queryAdapter(site, IFilesystemBundleFactory)
 
 
-def load_filesystem_bundle(bundle_path, bundle_name, parent_name=None):
+def _read_bundle_cfg(bundle_path):
+    config = ConfigParser.SafeConfigParser()
+    config.read(os.path.join(bundle_path, 'bundle.cfg'))
+    if not config.has_section('bundle'):
+        config.add_section('bundle')
+    return config
+
+def load_filesystem_bundle(bundle_path, bundle_name, default_parent_name=None):
     """
     Load a bundle from the filesystem:
 
@@ -112,10 +124,17 @@ def load_filesystem_bundle(bundle_path, bundle_name, parent_name=None):
                         "templates" sub-folder.
     :param bundle_name: Name of the bundle where registration will
                         happen.
-    :param parent_name: Name of the parent bundle to set on the loaded
-                        bundle (`None` means no parent is set).
+    :param default_parent_name: Name of the parent bundle to set on the
+                                loaded bundle, if no parent is defined in
+                                the `bundle.cfg` file.
     """
     gsm = getGlobalSiteManager()
+
+    cfg = _read_bundle_cfg(bundle_path)
+    try:
+        parent_name = cfg.get('bundle', 'parent-bundle')
+    except ConfigParser.NoOptionError:
+        parent_name = default_parent_name
 
     bundle = bundles.get(bundle_name)
     if parent_name is not None:
