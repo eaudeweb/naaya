@@ -26,12 +26,17 @@ def patch_ispra_ig(site):
     _update_logo(site, logo_id='right_logo.gif', delete=True)
     _update_logo(site, 'left_logo.gif', 'left_logo.png', 'image/png',
                  'Site left logo')
+    site.mail_address_from = 'no-reply@groupware.info-rac.org'
+    site.notify_on_errors_email = 'naayacrashteam@eaudeweb.ro'
     patch_template(tmpl)
 
 def patch_sinanet_ig(site):
     tmpl = site['portal_layout'].get_current_skin()['standard_template']
     _update_logo(site, logo_id='right_logo.gif', delete=True)
     _update_logo(site, 'left_logo.gif', 'sinanet_logo.gif', 'Site left logo')
+    site.acl_users.getSources()[0].title = 'SINAnet'
+    site.mail_address_from = 'no-reply@groupware.sinanet.isprambiente.it'
+    site.notify_on_errors_email = 'naayacrashteam@eaudeweb.ro'
     patch_template(tmpl)
 
 def _update_logo(site, logo_id='', new_logo_file='', content_type='image/gif',
