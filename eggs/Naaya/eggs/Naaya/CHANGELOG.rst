@@ -1,6 +1,7 @@
 2.13.14 (unreleased)
 --------------------
 * Three lines of buttons on the portal editor [dumitval]
+* Filesystem bundles have explicit parent configuration [moregale]
 
 2.13.13 (2012-05-21)
 --------------------

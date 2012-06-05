@@ -48,6 +48,18 @@ class FilesystemBundlesTest(unittest.TestCase):
         foo = bundles.get("CHM-Foo")
         self.assertTrue(foo.get_parent() is bundles.get("CHM"), "Wrong parent")
 
+    def test_parent_bundle_from_cfg_file(self):
+        self.bundle_names.append("CHM-Foo")
+        self.bundle_names.append("Bar")
+        f = open(os.path.join(self.bundle_path, 'bundle.cfg'), 'wb')
+        f.write("[bundle]\nparent-bundle = Bar\n")
+        f.close()
+
+        from naaya.core import fsbundles
+        fsbundles.load_filesystem_bundle(self.bundle_path, "CHM-Foo")
+        foo = bundles.get("CHM-Foo")
+        self.assertTrue(foo.get_parent() is bundles.get("Bar"), "Wrong parent")
+
     def test_reloading(self):
         self.bundle_names.append("CHM-Foo")
         self._write_template('bar', "Hello Bar")
@@ -115,6 +127,16 @@ class BundleFactoryTest(unittest.TestCase):
         self.assertEqual(bundle.__name__, 'FooSites-bar')
         self.assertEqual(os.listdir(self.tmp), ['FooSites-bar.bundle'])
         self.assertEqual(self.site.get_bundle(), bundle)
+
+    def test_bundle_cfg(self):
+        from naaya.core.fsbundles import get_filesystem_bundle_factory
+        factory = get_filesystem_bundle_factory(self.site)
+        bundle = factory()
+        cfg_path = os.path.join(self.tmp, 'FooSites-bar.bundle', 'bundle.cfg')
+        f = open(cfg_path, 'rb')
+        data = list(f)
+        f.close()
+        self.assertTrue('parent-bundle = Foo\n') in data
 
     def test_create_preexisting_bundle(self):
         from naaya.core.fsbundles import get_filesystem_bundle_factory
