@@ -69,6 +69,8 @@ markup used IDs.
 	line-height:normal;
 	margin: 20px 0;
 	overflow: hidden;
+	margin-bottom: 0px;
+	background: transparent;
 }
 
 #tabbedmenu ul,
@@ -85,7 +87,7 @@ markup used IDs.
 	white-space: nowrap;
 	list-style-image: none;
 	list-style:none;
-	border-bottom: 1px solid #888;
+	border-bottom: 1px solid #039749;
 }
 
 #tabbedmenu li#currenttab,
@@ -103,19 +105,47 @@ markup used IDs.
 	text-decoration: none;
 	font-weight: bold;
 	padding: 6px 10px;
-	color: #fff;
-	border: 1px solid #888;
+	color: #777; /*#335C9E;*/
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom: 1px solid #039749;
 	background-color: #888;
 	margin-bottom: -1px;
 }
 
-#tabbedmenu #currenttab a,
-.tabbedmenu .currenttab a {
+.tabbedmenu a:visited,
+#tabbedmenu a:visited {
+	color: #888;
+}
+
+.tabbedmenu a:hover,
+#tabbedmenu a:hover  {
+  color: #555;
+}
+
+#tabbedmenu li a,
+.tabbedmenu li a{
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background: #F0F0F0;
+}
+
+body #tabbedmenu #currenttab a,
+body .tabbedmenu .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	color: #888;
+	color: #039749;
 	background: #fff;
+	border: 1px solid #039749;
 	border-bottom: 1px solid #fff;
+}
+
+.tabbedmenu .currenttab a:visited,
+#tabbedmenu .currenttab a:visited {
+	color: #039749;
 }
 
 #tabbedmenu #currenttab span,
@@ -125,56 +155,15 @@ markup used IDs.
 	font-weight: bold;
 }
 
-
-
-/**********************************************************
-Menu bar that expands on JavaScript mouseover
-*/
-
-ul.menu-bar li {
-	list-style: none;
-}
-
-ul.menu-bar,
-ul.menu-bar ul {
-	background-color: #eee;
-	overflow: auto;
-}
-
-ul.menu-bar a,
-ul.menu-bar a:visited {
-	text-decoration: none;
-}
-
-ul.menu-bar > li {
-	float: left;
-	margin: 0 1em;
-}
-
-ul.menu-bar > li > a {
-	display: block;
-}
-
-ul.menu-bar ul {
-	position: absolute;
-	display: none;
-	padding: .5em;
-}
-
-ul.menu-bar li.menu-bar-hover ul {
-	display: block;
-}
-
-
-
 /**********************************************************
 Buttons, links, bars with buttons
 */
 
 .floated-buttons {
 	float: right;
-	margin-left: 0.5em;
+	margin-top: -5px;
 	margin-bottom: 0.5em;
+	margin-left: 0.5em;
 }
 
 .buttons a {
@@ -184,6 +173,7 @@ Buttons, links, bars with buttons
 	background-color: #888;
 	color: #fff;
 	font-weight: bold;
+	border: none;
 }
 
 .buttons a:visited {
@@ -457,13 +447,32 @@ just folder
 	font-weight: bold;
 }
 
-#admin_this_folder a {
-	padding: 2px 0;
+#admin_this_folder a,
+body .g-box-button input,
+.upload_photos {
 	line-height: 2em;
-	font-size: 90%;
-	border: 1px solid #888;
-	background-color: #fff;
-	color: #000;
+	font-size: 13px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	border: none;
+	background-color: #41A04B;
+	color: #FFFFFF;
+	cursor: pointer;
+	margin-left: 7px;
+	padding: 3px;
+	border-radius: 0px;
+	width: auto; /* instead of 12em for body .g-box-button input */
+}
+
+.upload_photos,
+.upload_photos:hover,
+.upload_photos:visited {
+  margin-left: 61px;
+  color: #fff;
+}
+
+#admin_this_folder a,
+#admin_this_folder a:hover {
 	text-decoration: none;
 }
 
@@ -774,6 +783,10 @@ Pagination
 	clear: both;
 }
 
+body .paginator {
+	font-size: 12px;
+}
+
 .paginator-head {
 	float: right;
 }
@@ -1033,7 +1046,331 @@ Administration - other
 	max-height: 128px;
 }
 
+.admin-content .admin-logos {
+	background: transparent;
+	border: none;
+}
 
+.edit-holder {
+	background: #DEE6FF;
+	border: 1px solid #ccc;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-bottomright: 4px;
+	padding: 5px; /* 5px everywhere, otherwise tabbedmenu and edit-holder do not touch */
+	margin: 0;
+}
+
+.admin-content select {
+	width: 150px;
+}
+
+.admin-content #portlet-sortorder {
+	display: none; 
+	margin-bottom: 2em;
+}
+
+.admin-content .field,
+.admin-content .field-inline {
+	margin-top: 10px;
+}
+
+.admin-content .field p {
+  margin: 3px 0px 0px 5px;
+}
+
+.admin-content .field-inline div:empty {
+	clear: both;
+}
+
+.admin-content .field label,
+.admin-content .field-inline label {
+  font-weight: normal;
+  margin-bottom: 0;
+  margin-left: 5px;
+  color: #555;
+}
+
+.admin-content #ajax-loader,
+.admin-content #description_styleselect_voiceDesc {
+	display: none;
+}
+
+.admin-content .portlet ul {
+	padding: 0px 5px;
+}
+
+.admin-content .portlet ul ul {
+	padding: 0px;
+}
+
+.admin-content .edit-holder {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-top: 0px solid #335C9E; /*  override a style from above*/
+}
+
+.admin-content #description {
+  margin: 0;
+  padding: 0;
+}
+
+.admin-content #right_port {
+	width: 230px;
+}
+
+h3 {
+   line-height: 18px;
+}
+
+.portlet > h3 {
+	line-height: 20px;
+}
+
+.admin-content #right_port h3 {
+	padding: 10px 0px 5px 5px;
+}
+
+.admin-content #right_port a {
+	color: #000;
+}
+
+.admin-content #center_content {
+	width: 730px;
+}
+
+.admin-content h3 {
+	margin: 0px !important;
+}
+
+.admin-content #center_content h3 {
+	color: #039749;
+}
+
+.admin-content #center_content .separator {
+	display: none;
+}
+
+.admin-content #center_content .clear:empty {
+	display: none;
+}
+
+.admin-content #center_content img {
+	text-align: center;
+}
+
+.admin-content #right_port li {
+	list-style: none;
+	margin-bottom: 0;
+	padding: 2px;
+}
+
+.admin-content .error {
+	margin: 10px 0px;
+	font-size: 12px;
+}
+
+.admin-content .cleaner  {
+	margin-top: 10px;
+}
+
+#admin-content form input[type="submit"] {
+	margin-bottom: 5px;
+}
+
+.admin-content .second_tab_set {
+	border-bottom: 1px solid #039749;
+	border-left: 1px solid #039749;
+	border-right: 1px solid #039749;
+	padding-bottom: 10px;
+	background: #ddd;
+}
+
+.admin-content .roles-list table {
+	border: 1px solid #ddd;
+}
+
+body .admin-content .left-logo,
+body .admin-content .right-logo {
+	float: left !important;
+	width: 98%;
+	margin-bottom: 10px;
+}
+
+.admin-content .left-logo input,
+.admin-content .right-logo input {
+margin-left: 0;
+}
+
+.admin-content .left-logo .delete,
+.admin-content .right-logo .delete {
+	margin-top: 10px;
+	display: inline;
+}
+
+.delete label {
+  margin-left: 20px;
+}
+
+.admin-content #left-logo {
+	display: block;
+}
+
+.admin-content .logos img {
+	border: 1px solid #ddd;
+	background: #fff; /* in case the logo has transparent background */
+	width: auto;
+	height: auto;
+}
+
+/* admin_assignroles_html */
+.admin-content .assign-form select {
+	margin-left: 10px;
+}
+
+.admin-content #assigned-portlets td.sort-handle { 
+	margin: 5px;
+	border: 1px dashed #335C9E; /* visually indicate that the cells support drag&drop */
+}
+
+.admin-content .portlet-assign-form label {
+	display: inline-block;
+	width: 55px;
+}
+
+.admin-content .translation-search {
+	margin: 15px 0px;
+	background: #CDEADB;
+}
+
+.admin-content .pagination span {
+	display: inline-block;
+	margin-bottom: 6px;
+}
+
+.admin-content #jstree_container {
+	margin-top: 15px;
+}
+
+/*.admin-content*/ fieldset {
+	margin-top: 10px;
+}
+
+.admin-content fieldset legend {
+	padding: 0px 5px;
+	color: #039749;
+}
+
+.admin-content #skip_notifications fieldset:nth-child(2n) {
+	max-height: 70px;
+}
+
+body .admin-content #addSubscriptionForm .search fieldset {
+	max-width: 400px;
+}
+
+.admin-content label[for="notif_type"],
+.admin-content label[for="lang"] {
+	display: inline-block;
+	width: 80px;
+}
+
+.admin-content #addSubscriptionForm input[type="submit"]{
+	margin-top: 10px;
+}
+
+body .admin-content .pagination span span {
+	color: #555;
+	font-weight: normal;
+}
+
+/* the following two blocks should have a second selector */
+.admin-content .form-fieldset legend {
+	padding: 0px 5px !important;
+}
+
+.admin-content .form-fieldset pre {
+	background: #fff;
+	border: 1px solid #ccc;
+	font-size: 11px;
+}
+
+.admin-content #sortorder {
+	min-width: 30px;
+
+}
+
+/* admin_topcontent_html */
+.admin-content #admin_this_folder {
+	margin: 10px 0px;
+}
+
+body .admin-content #toolbar {
+	background: #fff;
+}
+
+/* portal_i18n/admin_basket_translations_html */
+.admin-content .translation-basket-search {
+	margin-bottom: 20px;
+	padding: 5px 0px;
+}
+
+.admin-content .translation-basket-search label {
+	width: 170px;
+	margin-left: 5px;
+}
+
+.admin-content .translation-basket-search~h2 {
+	border-top: 2px solid #ccc; /* separator between different categories of items */
+}
+
+/* admin_maintopics_html */
+.admin-content .maintopics-drag-drop-form {
+	margin: 10px 0px;
+}
+
+.admin-content .maintopics-drag-drop-form ul {
+	padding-left: 10px;
+	padding-top: 5px;
+}
+
+body .admin-content ul.boxy li {
+	cursor: move;
+	padding: 4px;
+	margin-top: 3px;
+	border: 1px dashed #039749; /* visually indicate that the cells support drag&drop */
+	background-color: #fff;
+}
+
+.admin-content .maintopics-drag-drop-form input {
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
+.admin-content .maintopics-drag-drop-form~p,
+.admin-content #add-role-form p.cleaner {
+	color: #039749;
+}
+
+body .admin-content blockquote {
+	font-size: 11px;
+	padding-left: 12px;
+}
+
+.admin-content ul.validation-results {
+	margin: 0;
+	list-style-type: square;
+}
+
+.admin-content .admin-users-roles-form input[type="submit"] {
+	display: block;
+	clear: both;
+}
+
+.admin-content .sitemap_tree {
+	overflow: hidden;
+}
 
 /**********************************************************
 Schema & widgets
@@ -1069,6 +1406,10 @@ Site search
 	margin-right: 2%;
 }
 
+body .searchQuery {
+  background: transparent;
+}
+
 .searchQuery  h2 {
 	background: none;
 }
@@ -1087,6 +1428,11 @@ Site search
 	height: 2em;
 	padding-top: 0;
 	cursor: pointer;
+}
+
+body .searchQuery .styled_button {
+  border: none;
+  background:  #41A04B;
 }
 
 .searchQuery label {
@@ -1149,6 +1495,10 @@ div.marker-body h3 {
 	white-space: normal;
 }
 
+body #minimap {
+ width: auto !important; /* overrides an inline style */
+}
+
 #portalmap_center {
 	padding: 0px;
 	font-size: 12px;
@@ -1157,8 +1507,8 @@ div.marker-body h3 {
 #portalmap_top {
 	font-size: 90%;
 	padding: 4px;
-	background: #fff;
-	margin: 0 0 10px 10px;
+	background: transparent;
+	margin: 0 0 10px -10px;
 	white-space: normal;
 }
 
@@ -1177,6 +1527,10 @@ div.marker-body h3 {
 .portalmap_location_filters {
 	float:left;
 	width: 50%;
+}
+
+.portalmap_location_filters .text_input {
+	width: 260px;
 }
 
 .portalmap_portlet {
@@ -1359,18 +1713,19 @@ Naaya Calendar
 
 .calendar th {
 	font-size:10px;
-	color:#666;
+	color:#000;
 	padding:2px 3px;
 	text-align:center;
-	background:#e1e1e1 url(misc_/Naaya/nav-bg.gif) 0 50% repeat-x;
-	border-bottom:1px solid #ddd;
+	background:#999 url(misc_/Naaya/nav-bg.gif) 0 50% repeat-x;
+	border: none; 
+	font-weight: bold;
 }
 
 .calendar td {
 	font-size:11px;
 	text-align: center;
 	padding: 0;
-	border-top:1px solid #eee;
+	border:1px solid #f3f3f3;
 	border-bottom:none;
 }
 
@@ -1406,8 +1761,6 @@ Naaya Calendar
 	background: #036;
 	color:white;
 }
-
-
 
 /**********************************************************
 Naaya discussion Forum
@@ -1680,6 +2033,10 @@ Naaya Thesaurus
 Various other rules
 */
 
+.sortable {
+  background: #fff;
+}
+
 .cleaner {
 	clear: both;
 }
@@ -1800,10 +2157,7 @@ and in naaya.content.municipality */
 }
 
 /**
- * Admin comments list
- *
- * Added:  21 Mar 2012
- * Author: Bogdan Tanase
+ * Admin comments list - Akismet spam protection
 */
 #comments-list .actions-label {
     position: relative;
@@ -1888,9 +2242,6 @@ a.delete-comment .icon {
 
 /**
  * Admin API Keys status
- *
- * Added: 23 Mar 2012
- * Author: Bogdan Tanase
 */
 .api-keys-list tr.invalid {
     background-color: #FFF9F9;
@@ -1901,9 +2252,6 @@ a.delete-comment .icon {
 
 /**
  * Comments style enhancement
- *
- * Added: 29 Mar 2012
- * Author: Bogdan Tanase
 */
 .comment-holder {
     margin: 10px 0;
@@ -1932,3 +2280,218 @@ a.delete-comment .icon {
 /**
  * END Comments style enhancement
 */
+
+
+
+/* ********************************************
+    OVERRIDE from photo_archive.css 
+   ********************************************* */
+body div.g-main-content dd {
+	float: none; 
+	margin: 0;
+}
+
+body div.g-main-content dt {
+	width: auto; 
+	text-align: left; 
+	padding-right: 5px;
+}
+
+body .toolbar span,
+body .toolbar span:hover {
+	background: #41A04B;
+	border: 1px solid #41A04B;
+	color: #fff;
+	font-size: 13px;
+	font-weight: normal; 
+}
+
+body .album-image-details {
+	height: 36px; 
+}
+
+body .album-image-holder {
+	width: 220px; 
+	height: 220px; 
+	background: none;
+	border: 1px solid #DDD;
+}
+
+body .album-image-holder img {
+	padding: 10px;
+	background: white;
+}
+
+body .album-thumbnail {
+	width: 220px;
+}
+
+
+/* ONE SINGLE BLOCK FOR BORDER-RADIUS  */
+.admin-content .portlet,
+.admin-content fieldset,
+ .admin-content .form-fieldset,
+.admin-content ul.validation-results,
+.admin-content .maintopics-drag-drop-form,
+.add-object-form,
+.subobjects-management-form,
+.photo-upload-form,
+.edit-object-form,
+.forum-delete-attachments-form,
+.forum-add-attachment-form,
+.meeting-send-email-form,
+.admin-content .translation-basket-search,
+.buttons a,
+.calendarbox,
+.calendarbox .calendarnav-previous,
+.calendarbox .calendarnav-next,
+#toolbar input[type="submit"],
+.marker-body,
+div.boxes-right,
+form fieldset,
+.g-box,
+.tips_box,
+dl {
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+
+
+
+
+
+/********* OTHER ************/
+span#submission select {
+	width: 100px;
+}
+
+a.skiplink {
+	display: none;
+}
+
+.hidden {
+	display: none;
+}
+
+.clearer,
+.cleaner {
+	clear:both;
+}
+
+div#name_filter,
+.filters {
+	margin: 0.5em 0.5em 0em 0em;
+}
+
+div#role_filter {
+	float: left;
+	vertical-align: middle;
+}
+
+img.ajax-loader {
+	vertical-align: middle;
+}
+
+.loader {
+	display: none;
+	font-style: italic;
+	color: #346d9f;
+	vertical-align: 12px;
+	padding-left: 15em;
+}
+
+tr.row-odd {
+	background-color: #F7F7F7;
+}
+
+.user-role-revoke {
+	text-align: center;
+}
+
+.table-message,
+.message-empty {
+	font-size: 1em;
+	line-height: 1em;
+}
+
+td.checkbox {
+	text-align: center;
+}
+
+th.th-left {
+	text-align: left;
+}
+
+img {
+	vertical-align: middle;
+}
+
+tr.tr-hover {
+	padding: 0.5em;
+}
+
+tr.tr-hover:hover {
+	background-color: #FFFFDD;
+}
+
+/* Tip/'Note' box */
+.tip {
+	background: #FFFFDD;
+	border: 1px solid #ccc;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+	width: 91%;
+}
+
+.tip p {
+	margin: 0 !important;
+	line-height: 1.5em;
+}
+
+.tip img {
+	margin-right: 0.5em;
+}
+
+.right {
+	float: right;
+}
+
+
+/* IE does no support first(last)-child */
+td.td-center {
+	text-align: center;
+}
+
+label:hover {
+	cursor: pointer;
+}
+
+/*BEGIN-TINYMCE-STYLESELECT*/
+.infobox {
+	background: #000080;
+	color: #FFFFFF;
+	float: right;
+}
+
+.mainparagraph {
+	background-color: #f0f0f0;
+	border: 1px dotted #BED492;
+	padding: 0.5em 0.7em;
+}
+/*END-TINYMCE-STYLESELECT*/
+
+/* image from News item form */
+div.news_picture {
+  margin-top: 20px;
+  display:inline;
+}
+
+div.news_picture img {
+  float: right;
+}
+
+.field {
+   margin: 1em 0;
+}
