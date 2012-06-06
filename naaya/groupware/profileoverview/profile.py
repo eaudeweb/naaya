@@ -221,7 +221,8 @@ def ProfileView(context, request):
             by_groups = client.local_roles_by_groups(ig)
             roles.update(set(map(operator.itemgetter('group'), by_groups)))
             ig_details[ig.id].extend(by_groups)
-            if not ig_details[ig.id]:
+
+            if not ig_details[ig.id] and ig_access.has_key('viewer'):
                 ig_access['viewer'].remove(ig)
         role_names = {}
         for role in roles:
