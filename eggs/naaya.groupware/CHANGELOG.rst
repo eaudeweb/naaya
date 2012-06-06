@@ -1,4 +1,7 @@
-1.2.9 (unreleased)
+1.2.10 (unreleased)
+------------------
+
+1.2.9 (2012-06-06)
 ------------------
 * Improved profile overview to show only the IGs that account is
   explicitly assigned [bogdatan]
