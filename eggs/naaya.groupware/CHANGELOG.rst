@@ -1,4 +1,7 @@
-1.2.10 (unreleased)
+1.2.11 (unreleased)
+-------------------
+
+1.2.10 (2012-06-07)
 -------------------
 * eionet forum index uses text settings for messages [simiamih]
 * #885 - using 3 level cutoff for subscriptions in profile_overview [simiamih]
