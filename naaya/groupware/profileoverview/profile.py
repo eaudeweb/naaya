@@ -7,6 +7,9 @@ from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from eea import usersdb
 
+# limit the depth of search for notification subscriptions
+CUTOFF_SUBS = 3
+
 index_pt = PageTemplateFile('zpt/index.pt', globals())
 ajax_roles_pt = PageTemplateFile('zpt/ig_roles_ajax.pt', globals())
 subscriptions_pt = PageTemplateFile('zpt/subscriptions_ajax.pt', globals())
@@ -148,7 +151,7 @@ class ProfileClient(object):
         """
         return self._dfs_roles_tree(self.roles_tree_in_ldap())
 
-    def notification_lists(self, igs):
+    def notification_lists(self, igs, cutoff_level=None):
         """
         Returns a dictonary of lists, key is ig,
         list contains dicts of notifications info
@@ -157,7 +160,7 @@ class ProfileClient(object):
         notifications = {}
         for ig in igs:
             notif_tool = ig.getNotificationTool()
-            ig_notifs = notif_tool.user_subscriptions(self.user)
+            ig_notifs = notif_tool.user_subscriptions(self.user, cutoff_level)
             if len(ig_notifs):
                 ig_notifs.sort(key=lambda x: x['object'].title_or_id())
                 notifications[ig] = ig_notifs
@@ -238,7 +241,7 @@ def ProfileView(context, request):
         igs_with_access = []
         for igs in ig_access.values():
             igs_with_access.extend(igs)
-        notifications = client.notification_lists(igs_with_access)
+        notifications = client.notification_lists(igs_with_access, CUTOFF_SUBS)
         return subscriptions_pt.__of__(context)(sorted_func=sorted,
                                                 subscriptions=notifications,
                                                 user_id=user.getId())
