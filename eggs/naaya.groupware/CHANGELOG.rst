@@ -1,5 +1,7 @@
 1.2.10 (unreleased)
 ------------------
+* #885 - using 3 level cutoff for subscriptions in profile_overview [simiamih]
+* improved headings in profile overview [bogdatan]
 
 1.2.9 (2012-06-06)
 ------------------
