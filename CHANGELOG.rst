@@ -1,5 +1,6 @@
 1.2.10 (unreleased)
-------------------
+-------------------
+* eionet forum index uses text settings for messages [simiamih]
 * #885 - using 3 level cutoff for subscriptions in profile_overview [simiamih]
 * improved headings in profile overview [bogdatan]
 
