@@ -9,7 +9,7 @@ setup(name='naaya.groupware',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 2.13.14',
           'naaya.content.bfile',
           'eea.usersdb'
       ]
