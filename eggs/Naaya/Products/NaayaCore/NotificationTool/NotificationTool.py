@@ -474,10 +474,16 @@ class NotificationTool(Folder):
                                 'naaya.core.notifications.my_subscriptions')
 
     security.declarePrivate('list_user_subscriptions')
-    def user_subscriptions(self, user):
+    def user_subscriptions(self, user, cutoff_level=None):
+        """
+        Returns all user subscriptions in the portal.
+        Use with caution as this iterates almost all the objects in site.
+        You can use `cutoff_level` to limit the depth.
+
+        """
         out = []
         user_id = user.getId()
-        for obj, n, subscription in utils.walk_subscriptions(self.getSite()):
+        for obj, n, subscription in utils.walk_subscriptions(self.getSite(), cutoff_level):
             if not isinstance(subscription, AccountSubscription):
                 continue
             if subscription.user_id != user_id:
