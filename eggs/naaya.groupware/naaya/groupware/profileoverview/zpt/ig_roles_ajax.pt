@@ -3,7 +3,9 @@
         <tal:block define="ig_list python:options['ig_access'][access]">
             <div tal:attributes="id access">
                 <dl>
-                    <dt tal:content="python:access.capitalize()+' access'"></dt>
+                    <dt tal:condition="python:access is 'viewer'">Explicit permissions in unrestricted Interest groups</dt>
+                    <dt tal:condition="python:access is 'member'">Permissions in restricted Interest groups</dt>
+                    <dt tal:condition="python:access is 'admin'">Admin access</dt>
                     <dd>
                     <ul>
                         <li tal:repeat="ig ig_list"
