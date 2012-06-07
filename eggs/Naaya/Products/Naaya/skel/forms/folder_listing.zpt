@@ -13,12 +13,6 @@
 	ratings here/folder_listing_ratings;
 	iframe python: bool(request.get('iframe', 0))">
 
-<style>
-    .rating {
-        width: 100px;
-    }
-</style>
-
 <metal:block define-slot="folder-listing">
 <tal:block condition="iframe" on-error="here/rstk/catch_unauthorized">
 	<!DOCTYPE html>

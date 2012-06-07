@@ -19,7 +19,8 @@
 	<span i18n:translate="">You will be notified about the result of your request</span>.
 </p>
 
-<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
+<form class="RequestRoleForm" method="post"
+	tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
 
 <input type="hidden" name="apply_role" tal:attributes="value role" />
 
