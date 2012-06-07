@@ -1,5 +1,10 @@
 2.13.14 (unreleased)
 --------------------
+* news_index: moved picture outside table [dumitval]
+* removed in-file style from folder_listing [dumitval]
+* added classes on some items [dumitval]
+* updated some portlets to not show when empty [dumitval]
+* map_admin_template.zpt: changed title [dumitval]
 * Three lines of buttons on the portal editor [dumitval]
 * Filesystem bundles have explicit parent configuration [moregale]
 
