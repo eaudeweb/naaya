@@ -121,3 +121,14 @@ class SubscriptionListingTest(NaayaTestCase):
 
         subs3 = list(walk_subscriptions(self.portal['f1']['a']))
         self.assertEqual(len(subs3), 0)
+
+    def test_walk_subscriptions_cutoff_level(self):
+        def get_with_cutoff(cutoff):
+            return [path_in_site(obj) for
+                        obj, n, sub in walk_subscriptions(self.portal, cutoff)]
+        self.assertTrue(get_with_cutoff(None), ['f1/b', 'f1/b/2'])
+        self.assertEqual(get_with_cutoff(4), get_with_cutoff(None))
+        subs = get_with_cutoff(3)
+        self.assertEqual(subs, ['f1/b'])
+        subs = get_with_cutoff(2)
+        self.assertEqual(len(subs), 0)

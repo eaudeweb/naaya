@@ -51,11 +51,19 @@ def fetch_subscriptions(obj, inherit):
                                                     inherit=True):
                 yield subscription
 
-def walk_subscriptions(obj):
+def walk_subscriptions(obj, cutoff_level=None):
     """
     Get subscriptions on `obj` and all of its children. Returns a
     generator that yields tuples in the form `(obj, n, subscription)`.
+
+    If `cutoff_level` is set to an integer x, than at most x levels
+    will be walked, first included.
+
     """
+    if cutoff_level == 0:
+        return
+    elif cutoff_level is not None:
+        cutoff_level -= 1
     try:
         sc = ISubscriptionContainer(obj)
     except TypeError:
@@ -66,7 +74,7 @@ def walk_subscriptions(obj):
         yield (obj, n, subscription)
 
     for child_obj in obj.objectValues():
-        for item in walk_subscriptions(child_obj):
+        for item in walk_subscriptions(child_obj, cutoff_level):
             yield item
 
 def list_modified_objects(site, when_start, when_end):
