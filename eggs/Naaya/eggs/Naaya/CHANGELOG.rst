@@ -1,5 +1,9 @@
-2.13.14 (unreleased)
+2.13.15 (unreleased)
 --------------------
+
+2.13.14 (2012-06-07)
+--------------------
+* cutoff level for walking subscriptions [simiamih]
 * news_index: moved picture outside table [dumitval]
 * removed in-file style from folder_listing [dumitval]
 * added classes on some items [dumitval]
