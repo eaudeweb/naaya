@@ -176,15 +176,18 @@ class PortletArrangementTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
         folder = self._get('portal/fol')
         info = self._get('portal/info')
 
-        self.failUnless('Latest news' in homepage)
+        if self.portal.getSyndicationTool().latestnews_rdf.get_objects_for_rdf():
+            self.failUnless('Latest news' in homepage)
         self.failIf('Latest news' in folder)
         self.failIf('Latest news' in info)
 
-        self.failUnless('Upcoming events' in homepage)
+        if self.portal.getSyndicationTool().upcomingevents_rdf.get_objects_for_rdf():
+            self.failUnless('Upcoming events' in homepage)
         self.failIf('Upcoming events' in folder)
         self.failIf('Upcoming events' in info)
 
-        self.failUnless('Latest uploads' in homepage)
+        if self.portal.getSyndicationTool().latestuploads_rdf.get_objects_for_rdf():
+            self.failUnless('Latest uploads' in homepage)
         self.failIf('Latest uploads' in folder)
         self.failIf('Latest uploads' in info)
 
