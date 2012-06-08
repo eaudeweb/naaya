@@ -1,4 +1,7 @@
-3.0.5 (unreleased)
+3.0.6 (unreleased)
+------------------
+
+3.0.5 (2012-06-08)
 ------------------
 * renamed main section images [dumitval]
 
