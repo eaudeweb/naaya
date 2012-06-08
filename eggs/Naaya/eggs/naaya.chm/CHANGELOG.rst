@@ -1,4 +1,7 @@
-3.0.3 (unreleased)
+3.0.4 (unreleased)
+------------------
+
+3.0.3 (2012-06-07)
 ------------------
 * Updated some portlets to not show when empty [dumitval]
 * Deleted site_index from skel-chm3/forms [dumitval]
