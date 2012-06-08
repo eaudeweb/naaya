@@ -28,8 +28,8 @@
 			<folder id="main_section_images" title="">
 				<file id="convention" title="" content_type="image/png"/>
 				<file id="cooperation" title="" content_type="image/png"/>
-				<file id="network" title="" content_type="image/png"/>
-				<file id="information" title="" content_type="image/png"/>
+				<file id="biodiversity" title="" content_type="image/png"/>
+				<file id="info-links" title="" content_type="image/png"/>
 			</folder>
 			<scheme id="color-green" title="Green">
 				<file id="style.css" title=""/>
