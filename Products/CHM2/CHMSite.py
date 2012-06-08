@@ -704,6 +704,22 @@ class CHMSite(NySite):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
+    security.declareProtected(view, 'get_mainsection')
+    def get_mainsection(self, ob):
+        """
+        Returns the main section to which an object belongs (hierarchically)
+        or None if the object resides outside main sections
+        """
+        if ob == self:
+            return ''
+        if ob.aq_parent == self:
+            ob_id = ob.getId()
+            if ob_id in self.maintopics:
+                return ob_id
+        else:
+            return self.get_mainsection(ob.aq_parent)
+
+
 InitializeClass(CHMSite)
 
 
