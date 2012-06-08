@@ -1,5 +1,6 @@
 3.0.4 (unreleased)
 ------------------
+* Mainsection images are shown also in subfolders [dumitval]
 
 3.0.3 (2012-06-07)
 ------------------
