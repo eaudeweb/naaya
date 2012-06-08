@@ -1,16 +1,15 @@
 <metal:block define-macro="content">
 
   <tal:block define="skin layout_tool/getCurrentSkin;
-                     context_id here/getId"
+                     mainsection_id python:here.get_mainsection(here)"
              condition="python:skin.hasObject('main_section_images')">
     <tal:block define="main_section_images python:skin['main_section_images']"
-               condition="python:main_section_images.hasObject(context_id)">
-      <div tal:define="image python:main_section_images[context_id]"
+               condition="python:main_section_images.hasObject(mainsection_id)">
+      <div tal:define="image python:main_section_images[mainsection_id]"
            class="main-section-image-holder">
         <img tal:attributes="src image/absolute_url"/>
       </div>
     </tal:block>
   </tal:block>
-
 
 </metal:block>
