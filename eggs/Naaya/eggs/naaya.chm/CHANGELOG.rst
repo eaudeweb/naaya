@@ -1,5 +1,6 @@
 3.0.6 (unreleased)
 ------------------
+* Updated skel to rename images [dumitval]
 
 3.0.5 (2012-06-08)
 ------------------
