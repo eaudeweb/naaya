@@ -8,6 +8,8 @@ import itertools
 
 from OFS.Uninstalled import BrokenClass
 
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 from naaya.core.zope2util import ofs_walk
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from naaya.core.utils import force_to_unicode
@@ -233,3 +235,40 @@ class RemoveEmptyLangsOrTrans(UpdateScript):
         self.log.debug('%d empty translations removed' % no_trans)
 
         return True
+
+class DeleteMessages(UpdateScript):
+    title = 'Deletes messages containing a searched string'
+    creation_date = 'Jun 8, 2012'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ("Search for a sting in all messages and delete the ones"
+                    "containg the string")
+
+    def _update(self, portal):
+        form = self.REQUEST.form
+        catalog = portal.portal_i18n._catalog
+        search_string = form.get('search_string', None)
+        delete_all = form.get('delete_all', None)
+        counter = 0
+        if search_string:
+            for message in list(catalog._messages.keys()):
+                if search_string in message:
+                    catalog.del_message(message)
+                    counter += 1
+                    self.log.debug('Message %s deleted' % message)
+            self.log.debug('%s messages deleted' % counter)
+            return True
+        elif delete_all:
+            for message in list(catalog._messages.keys()):
+                catalog.del_message(message)
+                counter += 1
+            self.log.debug('%s messages deleted' % counter)
+            return True
+        else:
+            self.log.error('No search string entered and "delete all"'
+            'confirmation not checked')
+            return False
+
+    update_template = PageTemplateFile('zpt/update_delete_messages',
+                                       globals())
+    update_template.default = UpdateScript.update_template
