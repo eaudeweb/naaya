@@ -1,5 +1,6 @@
 1.1.1 (unreleased)
 -------------------
+* Script for deletion of messages based on a search string [dumitval]
 
 1.1.0 (2012-05-10)
 -------------------
