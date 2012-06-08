@@ -1,4 +1,7 @@
-3.0.6 (unreleased)
+3.0.7 (unreleased)
+------------------
+
+3.0.6 (2012-06-08)
 ------------------
 * Updated skel to rename images [dumitval]
 
