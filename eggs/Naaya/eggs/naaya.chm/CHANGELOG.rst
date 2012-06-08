@@ -1,4 +1,7 @@
-3.0.4 (unreleased)
+3.0.5 (unreleased)
+------------------
+
+3.0.4 (2012-06-08)
 ------------------
 * Mainsection images are shown also in subfolders [dumitval]
 
