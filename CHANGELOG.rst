@@ -1,5 +1,6 @@
 3.0.5 (unreleased)
 ------------------
+* renamed main section images [dumitval]
 
 3.0.4 (2012-06-08)
 ------------------
