@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ------------------
+* bugfix: Call handlers only for SEMIDE portals [bogdatan]
 
 1.1.6 (2012-04-30)
 ------------------
