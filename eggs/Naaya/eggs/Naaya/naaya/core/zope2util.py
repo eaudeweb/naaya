@@ -587,8 +587,7 @@ def get_or_create_site_logger(site_id):
         log_filename = os.path.join(abs_path, '%s.log' % site_id)
         logger.propagate = 0
         logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(levelname)s %(asctime)s: %(message)s',
-                                      '%d %b %H:%M')
+        formatter = logging.Formatter('%(asctime)s: %(message)s', '%d %b %H:%M')
         handler = logging.handlers.RotatingFileHandler(log_filename,
                                                        maxBytes=10000000,
                                                        backupCount=3)

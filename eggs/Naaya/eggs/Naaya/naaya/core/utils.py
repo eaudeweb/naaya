@@ -267,3 +267,20 @@ def cleanup_message(message):
 
 def str2bool(string):
     return string in [True, 'true', 'True']
+
+def file_length(file_name):
+    file_content = open(file_name, 'w')
+    _return = 0
+    try:
+        for i, l in enumerate(file_content):
+            pass
+        _return = i + 1
+    finally:
+        file_content.close()
+
+    return _return
+
+def get_or_create_attribute(ob, attr, default_value):
+    if not hasattr(ob, attr):
+        setattr(ob, attr, default_value)
+    return ob
