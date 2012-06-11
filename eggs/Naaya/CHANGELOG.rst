@@ -1,5 +1,8 @@
 2.13.15 (unreleased)
 --------------------
+* Added two new utility functions: get_or_create_attribute,
+  file_length [bogdatan]
+* Changed get_or_create_site_logger format [bogdatan]
 
 2.13.14 (2012-06-07)
 --------------------
