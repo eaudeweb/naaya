@@ -716,6 +716,8 @@ class CHMSite(NySite):
             ob_id = ob.getId()
             if ob_id in self.maintopics:
                 return ob_id
+            else:
+                return ''
         else:
             return self.get_mainsection(ob.aq_parent)
 

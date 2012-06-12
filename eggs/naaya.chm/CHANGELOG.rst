@@ -1,5 +1,6 @@
 3.0.7 (unreleased)
 ------------------
+* bugfix in get_mainsection [dumitval]
 
 3.0.6 (2012-06-08)
 ------------------
