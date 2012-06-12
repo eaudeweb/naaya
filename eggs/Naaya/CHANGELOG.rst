@@ -1,5 +1,6 @@
 2.13.15 (unreleased)
 --------------------
+* External link for recaptcha [dumitval]
 * Added two new utility functions: get_or_create_attribute,
   file_length [bogdatan]
 * Changed get_or_create_site_logger format [bogdatan]
