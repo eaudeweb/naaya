@@ -1,5 +1,6 @@
 3.0.8 (unreleased)
 ------------------
+* External link for recaptcha [dumitval]
 
 3.0.7 (2012-06-12)
 ------------------
