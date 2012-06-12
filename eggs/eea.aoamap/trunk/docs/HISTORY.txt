@@ -2,8 +2,8 @@ Changelog
 =========
 [Alex Morega - alex.morega at eaudeweb.ro]
 
-1.4-dev - (unreleased)
-----------------------
+1.4 - (2012-06-12)
+------------------
 * Bug fix: fixed markup of HISTORY.txt file
   [ciobabog refs #5231]
 
