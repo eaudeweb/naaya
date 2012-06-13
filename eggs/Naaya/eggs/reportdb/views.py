@@ -1,4 +1,5 @@
 import datetime
+from functools import wraps
 import flask
 import jinja2
 import flatland.out.markup
@@ -40,6 +41,16 @@ def edit_is_allowed():
         return True
     roles = getattr(flask.g, 'user_roles', [])
     return bool('Contributor' in roles)
+
+
+def require_edit_permission(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if edit_is_allowed():
+            return func(*args, **kwargs)
+        else:
+            return "Please log in to access this view."
+    return wrapper
 
 
 @views.route('/')

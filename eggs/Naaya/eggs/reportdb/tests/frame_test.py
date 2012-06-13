@@ -97,3 +97,37 @@ class PermissionsTest(unittest.TestCase):
         with self.app.test_request_context():
             flask.g.user_roles = ['Contributor']
             self.assertTrue(views.edit_is_allowed())
+
+
+class EditPermissionDecoratorTest(unittest.TestCase):
+
+    ok_msg = 'edit is being allowed'
+
+    def setUp(self):
+        self.app, cleanup_app = create_mock_app()
+        self.addCleanup(cleanup_app)
+        self.app.config['SKIP_EDIT_AUTHORIZATION'] = False
+        self.mock_roles = []
+
+        @self.app.before_request
+        def set_roles():
+            flask.g.user_roles = self.mock_roles
+
+        @self.app.route('/edit_permission_test')
+        @views.require_edit_permission
+        def edit_permission_test():
+            return self.ok_msg
+
+    def test_allow_if_permission_available(self):
+        self.mock_roles = ['Contributor']
+        client = self.app.test_client()
+        response = client.get('/edit_permission_test')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, self.ok_msg)
+
+    def test_disallow_if_permission_not_available(self):
+        client = self.app.test_client()
+        response = client.get('/edit_permission_test')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.ok_msg, response.data)
+        self.assertIn("Please log in", response.data)
