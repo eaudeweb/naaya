@@ -3,13 +3,17 @@ This module contains the class that implements permissions and rights checking.
 """
 
 import logging
+
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from zope.deprecation import deprecate
-from constants import *
+
 from naaya.i18n.constants import PERMISSION_TRANSLATE_PAGES
 from Products.Naaya.constants import PERMISSION_ADD_FOLDER
+from naaya.core.backport import all
+
+from Products.NaayaBase.constants import *
 
 
 log = logging.getLogger(__name__)
@@ -109,10 +113,20 @@ class NyPermissions(object):
 
         return self.checkPermissionAddObjects()
 
-    def checkPermissionDeleteObjects(self):
-        """ Check the permissions to delete objects."""
+    def checkPermissionDeleteObjects(self, object_ids):
+        """
+        Some users need to delete their own items, although they do not have
+        delete permission on parent.
+        Check whether user can delete the sub objects with ids `object_ids`
 
-        return self.checkPermission(PERMISSION_DELETE_OBJECTS)
+        """
+        if self.checkPermissionDeleteObject():
+            # user can delete anything inside, if he can delete the container
+            return True
+        objects = [self[object_id] for object_id in object_ids]
+        permissions = [x.checkPermissionDeleteObject() for x in objects]
+
+        return all(permissions)
 
     def checkPermissionEditObject(self):
         """ Check the permissions to edit a single object. The user must have
@@ -130,7 +144,7 @@ class NyPermissions(object):
 
         """
 
-        return self.checkPermissionDeleteObjects()
+        return self.checkPermission(PERMISSION_DELETE_OBJECTS)
 
     def checkPermissionCopyObject(self):
         """ Check the permissions to copy a single object. The user must have
@@ -203,5 +217,6 @@ class NyPermissions(object):
 
         """
         return self.checkPermission(PERMISSION_ZIP_EXPORT)
+
 
 InitializeClass(NyPermissions)

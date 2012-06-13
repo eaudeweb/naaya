@@ -43,3 +43,27 @@ class TestDeleteByOwner(NaayaTestCase):
         ob.deleteThis()
 
         self.assertTrue(ob_id not in parent.objectIds())
+
+    def test_not_allowed_by_checking(self):
+        """ test can not delete object by ticking checkbox in folder view """
+        self.login('contributor')
+        parent = self.portal['info']
+
+        ob = self._submit_obj()
+
+        self.assertRaises(Unauthorized, parent.deleteObjects, id=ob.getId())
+
+    def test_delete_by_checking(self):
+        """ test can delete own object by ticking checkbox in folder view """
+        parent = self.portal['info']
+        permission_add_role(self.portal, PERMISSION_DELETE_OBJECTS, 'Owner')
+        self.login('contributor')
+
+        ob = self._submit_obj()
+        ob_id = ob.getId()
+
+        self.assertTrue(ob_id in parent.objectIds())
+
+        parent.deleteObjects(id=ob_id)
+
+        self.assertTrue(ob_id not in parent.objectIds())
