@@ -1,4 +1,7 @@
-2.13.15 (unreleased)
+2.13.16 (unreleased)
+--------------------
+
+2.13.15 (2012-06-13)
 --------------------
 * owners can now delete objects by checking them in folder view [simiamih]
 * View for external applications to use authentication and standard
