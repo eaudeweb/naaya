@@ -1,5 +1,7 @@
 2.13.15 (unreleased)
 --------------------
+* View for external applications to use authentication and standard
+  template from a Naaya portal [moregale]
 * External link for recaptcha [dumitval]
 * Added two new utility functions: get_or_create_attribute,
   file_length [bogdatan]
