@@ -7,10 +7,8 @@ import flaskext.script
 default_config = {
     'DATABASE_URI': 'postgresql://localhost/reportdb',
     'TESTING_DATABASE_URI': 'postgresql://localhost/reportdb_test',
-    'ZOPE_TEMPLATE_CACHE': True,
-    'ZOPE_TEMPLATE_PATH': None, 
-    'ZOPE_TEMPLATE_LIST': ['frame.html'],
     'HTTP_PROXIED': False,
+    'FRAME_URL': None,
 }
 
 
