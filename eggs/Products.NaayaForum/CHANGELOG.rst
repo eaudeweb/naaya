@@ -1,5 +1,6 @@
 1.2.13 (unreleased)
 -------------------
+* bugfix: #921 permissions defined on class could not be unset *update* [simiamih]
 
 1.2.12 (2012-04-17)
 -------------------
