@@ -1,4 +1,7 @@
-1.2.13 (unreleased)
+1.2.14 (unreleased)
+-------------------
+
+1.2.13 (2012-06-13)
 -------------------
 * bugfix: #921 permissions defined on class could not be unset *update* [simiamih]
 
