@@ -5,54 +5,68 @@
 </tal:block>
 
 <tal:block metal:fill-slot="custom_properties">
-<tr>
-	<td class="form-label">Personal title</td>
-	<td><input type="text" name="personaltitle" size="10" tal:attributes="value here/personaltitle" /></td>
-</tr>
-<tr>
-	<td class="form-label">Firstname</td>
-	<td><input type="text" name="firstname" size="50" tal:attributes="value here/firstname" /></td>
-</tr>
-<tr>
-	<td class="form-label">Lastname</td>
-	<td><input type="text" name="lastname" size="50" tal:attributes="value here/lastname" /></td>
-</tr>
-<tr>
-	<td class="form-label">Job Title</td>
-	<td><input type="text" name="jobtitle" size="70" tal:attributes="value here/jobtitle" /></td>
-</tr>
-<tr>
-	<td class="form-label">Department</td>
-	<td><input type="text" name="department" size="70" tal:attributes="value here/department" /></td>
-</tr>
-<tr>
-	<td class="form-label">Organisation</td>
-	<td><input type="text" name="organisation" size="70" tal:attributes="value here/organisation" /></td>
-</tr>
-<tr>
-	<td class="form-label" valign="top">Postal Address</td>
-	<td><textarea name="postaladdress" rows="5" cols="50" tal:content="here/postaladdress" /></td>
-</tr>
-<tr>
-	<td class="form-label">Phone number</td>
-	<td><input type="text" name="phone" size="40" tal:attributes="value here/phone" /></td>
-</tr>
-<tr>
-	<td class="form-label">Fax number</td>
-	<td><input type="text" name="fax" size="40" tal:attributes="value here/fax" /></td>
-</tr>
-<tr>
-	<td class="form-label">Cellphone number</td>
-	<td><input type="text" name="cellphone" size="40" tal:attributes="value here/cellphone" /></td>
-</tr>
-<tr>
-	<td class="form-label">Email</td>
-	<td><input type="text" name="email" size="40" tal:attributes="value here/email" /></td>
-</tr>
-<tr>
-	<td class="form-label">Webpage</td>
-	<td><input type="text" name="webpage" size="70" tal:attributes="value here/webpage" /></td>
-</tr>
+    <tr>
+        <td class="form-label">Spatial scale</td>
+        <td>
+            <select name="spatial_scale:utf8:ustring"
+                    tal:define="list_nodes
+                                python:here.get_list_nodes('case_study_spatial_scale')">
+                <option i18n:translate="" tal:repeat="node list_nodes"
+                    tal:attributes="value node/id;
+                                    selected python:here.spatial_scale == node.id"
+                    tal:content="node/title" />
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Geographical scope</td>
+        <td>
+            <select name="geographical_scope:utf8:ustring" multiple="True"
+                    size="5" tal:define="list_nodes
+                                python:here.get_list_nodes('case_study_countries')">
+                <option i18n:translate="" tal:repeat="node list_nodes"
+                    tal:attributes="value node/id;
+                                    selected python:node.id in here.geographical_scope"
+                    tal:content="node/title" />
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Status</td>
+        <td>
+            <select name="status:utf8:ustring"
+                    tal:define="list_nodes
+                                python:here.get_list_nodes('case_study_status')">
+                <option i18n:translate="" tal:repeat="node list_nodes"
+                    tal:attributes="value node/id;
+                                    selected python:here.status == node.id"
+                    tal:content="node/title" />
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Website and/or main references</td>
+        <td>
+            <textarea cols="50" rows="5" name="website:utf8:ustring"
+                tal:content="here/website"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Additional information on the methods and content</td>
+        <td>
+            <textarea cols="50" rows="5"
+                name="additional_info:utf8:ustring"
+                tal:content="here/additional_info"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Contact person</td>
+        <td>
+            <textarea cols="50" rows="5"
+                name="contact_person:utf8:ustring"
+                tal:content="here/contact_person"></textarea>
+        </td>
+    </tr>
 </tal:block>
 
 </tal:block>
