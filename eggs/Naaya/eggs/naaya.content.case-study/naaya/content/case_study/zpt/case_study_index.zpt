@@ -1,0 +1,99 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'))"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+        <metal:block use-macro="site_object_index/macros/action_buttons"/>
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+        <tr tal:condition="here/title">
+            <th i18n:translate="">Title of the case study</th>
+            <td tal:content="here/title" />
+        </tr>
+        <tr tal:condition="here/spatial_scale">
+            <th i18n:translate="">Spatial scale</th>
+            <td tal:content="python:here.get_node_title('case_study_spatial_scale',
+                                here.spatial_scale)" />
+        </tr>
+        <tr tal:condition="here/geographical_scope">
+            <th i18n:translate="">Geographical scope</th>
+            <td>
+                <tal:block repeat="country here/geographical_scope">
+                    <tal:block
+                        content="python:here.get_node_title('case_study_countries',
+                                country)" />
+                    <tal:block condition="not:repeat/country/end"
+                        content="string:, " />
+                </tal:block>
+            </td>
+        </tr>
+        <tr tal:condition="here/status">
+            <th i18n:translate="">Status</th>
+            <td tal:content="python:here.get_node_title('case_study_status',
+                                here.status)" />
+        </tr>
+        <tr tal:condition="here/website">
+            <th i18n:translate="">Website and/or main references</th>
+            <td tal:content="structure here/website" />
+        </tr>
+        <tr tal:condition="here/description">
+            <th i18n:translate="">
+                Short description of the process and governance</th>
+            <td tal:content="structure here/description" />
+        </tr>
+        <tr tal:condition="here/additional_info">
+            <th i18n:translate="">
+                Additional information on the methods and content</th>
+            <td tal:content="structure here/additional_info" />
+        </tr>
+        <tr tal:condition="here/contact_person">
+            <th i18n:translate="">Contact person</th>
+            <td tal:content="structure here/contact_person" />
+        </tr>
+        </table>
+
+        <tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>
