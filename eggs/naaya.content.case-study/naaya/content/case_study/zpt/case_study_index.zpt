@@ -41,23 +41,14 @@
 
         <metal:block use-macro="site_object_index/macros/action_buttons"/>
 
-        <!-- Map widget -->
-        <tal:block condition="python:here.prop_details('geo_location')['show']"
-            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
-
-        <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
-        <tr tal:condition="here/title">
-            <th i18n:translate="">Title of the case study</th>
-            <td tal:content="here/title" />
-        </tr>
-        <tr tal:condition="here/spatial_scale">
-            <th i18n:translate="">Spatial scale</th>
-            <td tal:content="python:here.get_node_title('case_study_spatial_scale',
+        <div class="study-topic" tal:condition="here/spatial_scale">
+            <label i18n:translate="">Spatial scale</label>
+            <p tal:content="python:here.get_node_title('case_study_spatial_scale',
                                 here.spatial_scale)" />
-        </tr>
-        <tr tal:condition="here/geographical_scope">
-            <th i18n:translate="">Geographical scope</th>
-            <td>
+        </div>
+        <div class="study-topic" tal:condition="here/geographical_scope">
+            <label i18n:translate="">Geographical scope</label>
+            <p>
                 <tal:block repeat="country here/geographical_scope">
                     <tal:block
                         content="python:here.get_node_title('case_study_countries',
@@ -65,32 +56,31 @@
                     <tal:block condition="not:repeat/country/end"
                         content="string:, " />
                 </tal:block>
-            </td>
-        </tr>
-        <tr tal:condition="here/status">
-            <th i18n:translate="">Status</th>
-            <td tal:content="python:here.get_node_title('case_study_status',
+            </p>
+        </div>
+        <div class="study-topic" tal:condition="here/status">
+            <label i18n:translate="">Status</label>
+            <p tal:content="python:here.get_node_title('case_study_status',
                                 here.status)" />
-        </tr>
-        <tr tal:condition="here/website">
-            <th i18n:translate="">Website and/or main references</th>
-            <td tal:content="structure here/website" />
-        </tr>
-        <tr tal:condition="here/description">
-            <th i18n:translate="">
-                Short description of the process and governance</th>
-            <td tal:content="structure here/description" />
-        </tr>
-        <tr tal:condition="here/additional_info">
-            <th i18n:translate="">
-                Additional information on the methods and content</th>
-            <td tal:content="structure here/additional_info" />
-        </tr>
-        <tr tal:condition="here/contact_person">
-            <th i18n:translate="">Contact person</th>
-            <td tal:content="structure here/contact_person" />
-        </tr>
-        </table>
+        </div>
+        <div class="study-topic" tal:condition="here/website">
+            <label i18n:translate="">Website and/or main references</label>
+            <p tal:content="structure here/website" />
+        </div>
+        <div class="study-topic" tal:condition="here/description">
+            <label i18n:translate="">
+                Short description of the process and governance</label>
+            <p tal:content="structure here/description" />
+        </div>
+        <div class="study-topic" tal:condition="here/additional_info">
+            <label i18n:translate="">
+                Additional information on the methods and content</label>
+            <p tal:content="structure here/additional_info" />
+        </div>
+        <div class="study-topic" tal:condition="here/contact_person">
+            <label i18n:translate="">Contact person</label>
+            <p tal:content="structure here/contact_person" />
+        </div>
 
         <tal:block content="structure here/set_content_rating" />
 
