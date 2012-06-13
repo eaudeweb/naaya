@@ -19,7 +19,7 @@ from OAIRecord import OAIRecord
 from OAIToken import manage_addOAIToken
 
 from interfaces import IOAIServer
-from utils import create_object, process_form
+from utils import create_object, process_form, clean_xml
 
 #possible token keys
 token_keys = ['metadataPrefix', 'offset', 'set', 'from', 'until']
@@ -379,6 +379,19 @@ class OAIServer(OAIRepository):
                 results_list.append([header, metadata, about])
             else:
                 results_list.append(header)
+
+            if metadata:
+                map = metadata._map
+                props = ['title', 'description', 'subject', 'type']
+                for prop in props:
+                    try:
+                        if map.has_key(prop) and map[prop][0]:
+                            if isinstance(map[prop][0], str) or isinstance(map[prop][0], unicode):
+                                map[prop][0] = clean_xml(map[prop][0])
+                    except IndexError:
+                        continue
+
+                metadata._map = map
 
             #Create a Token if limit is reached
             if record_count >= self.results_limit:

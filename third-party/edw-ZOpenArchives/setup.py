@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='edw-ZOpenArchives',
-    version='0.2.1',
+    version='0.2.2',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     license='GPLv2',

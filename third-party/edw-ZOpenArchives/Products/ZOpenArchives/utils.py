@@ -103,10 +103,17 @@ def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
         # error log
         pass
     return s
-space_sub = re.compile('[\x00|\x01|\x02|\x03|\x04|\x05|\x06|\x07|\x08|'
-                       '\x0B|\x0C|\x0E|\x0F|\x7F]',
+space_sub = re.compile('[\x00|\x01|\x02|\x03|\x04|\x05|\x06|\x07|\x08|\x09|\x10'
+                       '|\x11|\x12|\x13|\x14|\x15|\x16|\x17|\x18|\x19|\x0A|\x0B'
+                       '|\x0C|\x0D|\x0E|\x0F|\x1A|\x1B|\x1C|\x1D|\x1E|\x1F|\x7F'
+                       '|\x13|\xc2\x80|\xc2\x81|\xc2\x82|\xc2\x83|\xc2\x84'
+                       '|\xc2\x85|\xc2\x86|\xc2\x87|\xc2\x88|\xc2\x89|\xc2\x8a'
+                       '|\xc2\x8b|\xc2\x8c|\xc2\x8d|\xc2\x8e|\xc2\x8f|\xc2\x90'
+                       '|\xc2\x91|\xc2\x92|\xc2\x93|\xc2\x94|\xc2\x95|\xc2\x96'
+                       '|\xc2\x97|\xc2\x98|\xc2\x99|\xc2\x9a|\xc2\x9b|\xc2\x9c'
+                       '|\xc2\x9d|\xc2\x9e|\xc2\x9f]',
                        re.IGNORECASE)
-newline_sub = re.compile('[\x0A|\x1F|x0D]', re.IGNORECASE)
+newline_sub = re.compile('[\x0A|\x1F|\x0D]', re.IGNORECASE)
 tab_sub = re.compile('[\x09]', re.IGNORECASE)
 
 def clean_xml(str):
