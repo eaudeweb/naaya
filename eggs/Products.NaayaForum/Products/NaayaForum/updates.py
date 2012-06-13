@@ -1,3 +1,5 @@
+from AccessControl.Permission import Permission
+
 from Products.NaayaBase.constants import PERMISSION_SKIP_CAPTCHA
 from Products.naayaUpdater.updates import UpdateScript
 
@@ -6,33 +8,22 @@ from Products.NaayaForum.constants import (PERMISSION_ADD_FORUMMESSAGE,
                                            PERMISSION_MODIFY_FORUMTOPIC)
 
 class SetDefaultPermissions(UpdateScript):
-    title = "Set/Reset default permissions for NaayaForums"
+    title = "Set default permissions for NaayaForums"
     authors = ["Mihnea Simian"]
     creation_date = 'Jun 08, 2012'
 
-    def needs_update(self, forum):
-        """
-        Forum does not need update if this permission setting is on object.
-        It used to be on class before refactoring permissions for forum.
-
-        """
-        attr_on_obj = '_Add_Edit_Delete_Naaya_Forum_Topic_Permission'
-        return attr_on_obj not in forum.__dict__
-
     def _update(self, portal):
         portal_catalog = portal.getCatalogTool()
+        set_roles = ['Administrator', 'Manager']
         for brain in portal_catalog(meta_type='Naaya Forum'):
             forum = brain.getObject()
-            if self.needs_update(forum):
-                forum.manage_permission(PERMISSION_ADD_FORUMMESSAGE,
-                                   ['Anonymous'], acquire=1)
-                forum.manage_permission(PERMISSION_MODIFY_FORUMTOPIC,
-                                       ['Administrator', 'Manager'], acquire=1)
-                forum.manage_permission(PERMISSION_SKIP_CAPTCHA,
-                                       ['Administrator', 'Manager'], acquire=1)
-                self.log.debug('Default permissions reset for %s' % forum.absolute_url())
-            else:
-                self.log.debug('Skipping %s' % forum.absolute_url())
+            for permission_name in (PERMISSION_MODIFY_FORUMTOPIC,
+                                    PERMISSION_SKIP_CAPTCHA):
+                perm = Permission(permission_name, (), forum)
+                roles = perm.getRoles()
+                if 'Manager' not in roles or 'Administrator' not in roles:
+                    perm.setRoles(list(set(roles + set_roles)))
+            self.log.debug('Default permissions added for %s', forum.absolute_url())
 
         return True
 
