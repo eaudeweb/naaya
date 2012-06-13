@@ -1,9 +1,9 @@
 import operator
+import logging
 
 from OFS.Folder import Folder
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view
-import zLOG
 
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
@@ -11,6 +11,10 @@ from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DEL
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes
+
+
+logger = logging.getLogger(__name__)
+
 
 class NyFolderBase(Folder, NyPermissions):
     """
@@ -276,19 +280,22 @@ class NyFolderBase(Folder, NyPermissions):
             else: self.setSessionInfoTrans('Item(s) copied.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
+    security.declareProtected(view, 'cutObjects')
     def cutObjects(self, REQUEST=None, **kwargs):
         """ """
-        if not REQUEST:
-            ids = self.utConvertToList(kwargs.get('id', []))
-            return self.manage_cutObjects(ids)
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        id_list = self.utConvertToList(kwargs.get('id', []))
 
-        kwargs.update(REQUEST.form)
-        ids = self.utConvertToList(kwargs.get('id', []))
-        if not ids:
+        if not self.checkPermissionDeleteObjects(id_list):
+            raise Unauthorized
+
+        if not REQUEST:
+            return self.manage_cutObjects(id_list)
+        elif not id_list:
             self.setSessionErrorsTrans('Please select one or more items to cut.')
         else:
-            try: self.manage_cutObjects(ids, REQUEST)
+            try: self.manage_cutObjects(id_list, REQUEST)
             except: self.setSessionErrorsTrans('Error while cut data.')
             else: self.setSessionInfoTrans('Item(s) cut.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -308,28 +315,29 @@ class NyFolderBase(Folder, NyPermissions):
             else: self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
+    security.declareProtected(view, 'deleteObjects')
     def deleteObjects(self, REQUEST=None, **kwargs):
         """ """
-        if not REQUEST:
-            ids = self.utConvertToList(kwargs.get('id', []))
-            return self.manage_delObjects(ids)
-
-        kwargs.update(REQUEST.form)
+        if REQUEST:
+            kwargs.update(REQUEST.form)
         id_list = self.utConvertToList(kwargs.get('id', []))
-        if not id_list:
+
+        if not self.checkPermissionDeleteObjects(id_list):
+            raise Unauthorized
+
+        if not REQUEST:
+            return self.manage_delObjects(id_list)
+        elif not id_list:
             self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try:
                 self.manage_delObjects(id_list)
             except Exception, err:
                 self.setSessionErrorsTrans('Error while deleting data.')
-                zLOG.LOG("NyFolder.deleteObjects", zLOG.DEBUG, err)
+                logger.exception("Exception when deleting objects")
             else:
                 self.setSessionInfoTrans('Item(s) deleted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-
-
 
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):

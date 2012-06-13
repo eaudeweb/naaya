@@ -1,5 +1,6 @@
 2.13.15 (unreleased)
 --------------------
+* owners can now delete objects by checking them in folder view [simiamih]
 * View for external applications to use authentication and standard
   template from a Naaya portal [moregale]
 * External link for recaptcha [dumitval]
