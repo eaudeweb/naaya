@@ -5,3 +5,4 @@ Pillow==1.7.7
 Fabric==1.4.1
 pycrypto==2.5
 ssh==1.7.13
+mock==0.8.0

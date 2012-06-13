@@ -1,13 +1,13 @@
+import datetime
 import flask
+import jinja2
 import flatland.out.markup
+
 import database
 import schema
 import file_upload
-import datetime
-
-from jinja2 import ChoiceLoader
-from loader import ZopeTemplateLoader
 from gtranslate import translate
+import frame
 
 
 class MarkupGenerator(flatland.out.markup.Generator):
@@ -30,6 +30,9 @@ class MarkupGenerator(flatland.out.markup.Generator):
 
 
 views = flask.Blueprint('views', __name__)
+
+
+views.before_request(frame.get_frame_before_request)
 
 
 @views.route('/')
@@ -186,14 +189,11 @@ def download(db_id):
 def register_on(app):
     app.register_blueprint(views)
     _my_extensions = app.jinja_options['extensions'] + ['jinja2.ext.do']
-
-    loaders = []
-    if app.config["ZOPE_TEMPLATE_PATH"]:
-        loaders.append(ZopeTemplateLoader(app.config["ZOPE_TEMPLATE_PATH"],
-                                          app.config["ZOPE_TEMPLATE_CACHE"],
-                                          app.config["ZOPE_TEMPLATE_LIST"]))
-    loaders.append(app.create_global_jinja_loader())
+    template_loader = jinja2.ChoiceLoader([
+        frame.FrameTemplateLoader(),
+        app.create_global_jinja_loader(),
+    ])
 
     app.jinja_options = dict(app.jinja_options,
                              extensions=_my_extensions,
-                             loader=ChoiceLoader(loaders))
+                             loader=template_loader)

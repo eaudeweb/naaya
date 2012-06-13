@@ -16,6 +16,7 @@ def create_mock_app():
     app = create_app()
     app.config["TESTING"] = True
     app.config["DATABASE_URI"] = get_testing_db_uri()
+    app.config["FRAME_URL"] = None
     database.initialize_app(app)
 
     with app.test_request_context():
