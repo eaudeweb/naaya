@@ -12,7 +12,8 @@ from Products.NaayaCore.managers.utils import utils, make_id
 from NyForumTopic import (manage_addNyForumTopic_html, topic_add_html,
                           addNyForumTopic)
 from feeds import messages_feed
-from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (MESSAGE_SAVEDCHANGES,
+                                          PERMISSION_SKIP_CAPTCHA)
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.NyAccess import NyAccess
@@ -33,6 +34,7 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
     ob = NyForum(id, title, description, categories, file_max_size)
     ob.releasedate = self.process_releasedate()
     self._setObject(id, ob)
+    self[id].loadDefaultData()
     if not REQUEST:
         return id
     # Redirect
@@ -68,10 +70,6 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
 
     security = ClassSecurityInfo()
 
-    _Add_Naaya_Forum_Message_Permission = ['Anonymous']
-    _Add_Edit_Delete_Naaya_Forum_Topic_Permission = ['Administrator', 'Manager']
-    _Naaya___Skip_Captcha_Permission = ['Administrator', 'Manager']
-
     edit_access = NyAccess('edit_access', {
         view: "Access content",
         PERMISSION_MODIFY_FORUMTOPIC: "Modify topic",
@@ -100,6 +98,17 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
         #make this object available for portal search engine
         self.submitted = 1
         self.approved = 1
+
+    def loadDefaultData(self):
+        """
+        Sets default permissions
+        """
+        self.manage_permission(PERMISSION_ADD_FORUMMESSAGE,
+                               ['Anonymous'], acquire=1)
+        self.manage_permission(PERMISSION_MODIFY_FORUMTOPIC,
+                               ['Administrator', 'Manager'], acquire=1)
+        self.manage_permission(PERMISSION_SKIP_CAPTCHA,
+                               ['Administrator', 'Manager'], acquire=1)
 
     def __setstate__(self,state):
         """
