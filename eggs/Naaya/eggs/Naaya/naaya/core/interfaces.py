@@ -32,3 +32,10 @@ class IRstkMethod(Interface):
     """ Method accessible on a RestrictedToolkit object. """
     def __call__(*args, **kwargs):
         """ Call the method. """
+
+
+class IExternalApplicationFrame(Interface):
+    """
+    Marker interface to define a "frame" service, to be used by an
+    external application.
+    """
