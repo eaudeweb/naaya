@@ -22,6 +22,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -132,7 +133,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyCaseStudy',
         '_module': sys.modules[__name__],
-        'additional_style': None,
+        'additional_style': AdditionalStyle('www/case_study.css', globals()),
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'case_study.png'),
         'on_install' : setupContentType,
         'on_uninstall' : uninstallContentType,
