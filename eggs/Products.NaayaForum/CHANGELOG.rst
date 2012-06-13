@@ -13,7 +13,7 @@
 
 1.2.10 (2011-12-06)
 -------------------
-* re-added gadfly update script for old forum objects [andredor]
+* re-added gadfly *update* script for old forum objects [andredor]
 
 1.2.9 (2011-11-18)
 ------------------
@@ -21,7 +21,7 @@
 
 1.2.8 (2011-11-14)
 ------------------
-* permission information update [andredor]
+* permission information *update* [andredor]
 * Added gruping by category in forum listing [dumitval]
 * Made columns of the forum listing sortable [dumitval]
 
