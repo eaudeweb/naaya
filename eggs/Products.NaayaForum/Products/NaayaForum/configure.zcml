@@ -50,6 +50,13 @@
   <configure zcml:condition="installed Products.naayaUpdater">
 
     <utility
+      name="set_default_permissions.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.SetDefaultPermissions"
+      permission="zope2.ViewManagementScreens"
+     />
+
+    <utility
       name="add_releasedate.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.AddReleasedate"
