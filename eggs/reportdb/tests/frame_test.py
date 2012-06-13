@@ -125,9 +125,23 @@ class EditPermissionDecoratorTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, self.ok_msg)
 
+    def assert_not_allowed(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Please log in", response.data)
+
     def test_disallow_if_permission_not_available(self):
         client = self.app.test_client()
         response = client.get('/edit_permission_test')
-        self.assertEqual(response.status_code, 200)
+        self.assert_not_allowed(response)
         self.assertNotIn(self.ok_msg, response.data)
-        self.assertIn("Please log in", response.data)
+
+    def test_views_are_protected(self):
+        protected_urls = [('GET', '/reports/new/'),
+                          ('POST', '/reports/new/'),
+                          ('GET', '/reports/13/edit/'),
+                          ('POST', '/reports/13/edit/'),
+                          ('POST', '/reports/13/delete/')]
+        client = self.app.test_client()
+        for method, url in protected_urls:
+            response = client.open(url, method=method)
+            self.assert_not_allowed(response)

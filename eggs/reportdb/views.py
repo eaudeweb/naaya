@@ -79,6 +79,7 @@ def _expand_lists(form_data, keys):
 
 @views.route('/reports/new/', methods=['GET', 'POST'])
 @views.route('/reports/<int:report_id>/edit/', methods=['GET', 'POST'])
+@require_edit_permission
 def report_edit(report_id=None):
     if report_id is None:
         report_row = database.ReportRow()
@@ -154,6 +155,7 @@ def report_edit(report_id=None):
 
 
 @views.route('/reports/<int:report_id>/delete/', methods=['POST'])
+@require_edit_permission
 def report_delete(report_id):
     if flask.request.method == 'POST':
         session = database.get_session()
