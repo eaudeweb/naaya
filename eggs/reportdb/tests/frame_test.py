@@ -4,9 +4,9 @@ import flask
 from common import create_mock_app
 
 
-def setUpModule():
-    global frame
-    import frame
+def setUpModule(self):
+    import frame; self.frame = frame
+    import views; self.views = views
 
 
 class FrameTest(unittest.TestCase):
@@ -74,3 +74,26 @@ class FrameTest(unittest.TestCase):
         with self.app.test_request_context():
             frame.get_frame_before_request()
             self.assertEqual(flask.g.user_roles, ['Anonymous', 'Contributor'])
+
+
+class PermissionsTest(unittest.TestCase):
+
+    def setUp(self):
+        self.app, cleanup_app = create_mock_app()
+        self.app.config['FRAME_URL'] = 'ze_frame_url'
+        self.addCleanup(cleanup_app)
+
+    def test_anything_allowed_if_authorization_is_disabled(self):
+        self.app.config['SKIP_EDIT_AUTHORIZATION'] = True
+        with self.app.test_request_context():
+            self.assertTrue(views.edit_is_allowed())
+
+    def test_disallow_if_frame_role_is_anonymous(self):
+        with self.app.test_request_context():
+            flask.g.user_roles = ['Anonymous']
+            self.assertFalse(views.edit_is_allowed())
+
+    def test_allow_if_frame_role_is_contributor(self):
+        with self.app.test_request_context():
+            flask.g.user_roles = ['Contributor']
+            self.assertTrue(views.edit_is_allowed())

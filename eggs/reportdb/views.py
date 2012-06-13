@@ -35,6 +35,13 @@ views = flask.Blueprint('views', __name__)
 views.before_request(frame.get_frame_before_request)
 
 
+def edit_is_allowed():
+    if flask.current_app.config.get('SKIP_EDIT_AUTHORIZATION', False):
+        return True
+    roles = getattr(flask.g, 'user_roles', [])
+    return bool('Contributor' in roles)
+
+
 @views.route('/')
 def index():
     #TODO remove redirect when index will be implemented
