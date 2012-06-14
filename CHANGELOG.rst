@@ -1,4 +1,7 @@
-0.0.2 (unreleased)
+0.0.3 (unreleased)
+-------------------
+
+0.0.2 (2012-06-14)
 -------------------
 * Layout changes in index and edit [dumitval]
 
