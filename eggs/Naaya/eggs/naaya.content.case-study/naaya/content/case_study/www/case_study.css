@@ -11,3 +11,8 @@ div.study-topic{
 	padding: 5px;
 	border: solid 1px #84AF4D;
 }
+label.heading{
+	font-size: 1.2em;
+	display: block;
+	margin: 0 0 0.5em 0;
+}
