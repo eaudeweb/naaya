@@ -9,7 +9,7 @@ setup(name='naaya.content.case-study',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 2.13.12',
       ],
 )
 
