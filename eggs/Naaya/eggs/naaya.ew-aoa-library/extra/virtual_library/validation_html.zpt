@@ -119,6 +119,7 @@ $(function() {
 	//Unhide the main form (hidden so it only works with javascript turned on.
 	$('form[name="frmAdd"]').show();
 	$('#w_submitter-organisation_single_select').show();
+	$('#languages_list').show();
 	$('#anonymous_responder_email').parent().hide()
 
 	// function to transform a list of checkboxes with same name
@@ -214,13 +215,9 @@ $(function() {
 					'Ukrainian': 'uk',
 					'Uzbek': 'uz'
 					};
-	$('<select id="languages_list">')
-		.insertBefore($('#w_title-original-language'));
-	$.each(languages, function(key, value){
-		$('#languages_list')
-			.append($('<option>', {value: key})
-			.text(key));
-		});
+
+	var languages_select = $('#languages_list');
+	languages_select.insertBefore($('#w_title-original-language'));
 
 	$('<div id="new_language" />')
 		.insertAfter($('#languages_list'));
@@ -228,47 +225,74 @@ $(function() {
 		.attr('size', '80')
 		.appendTo($('#new_language'));
 	$('<a id="add_language_value" />')
-		.text('Add')
 		.attr({
 		'href': 'javascript:void(0)',
 		'style': 'margin-left:1em'
 		})
 		.insertAfter($('#new_language_value'));
+	if (curr_lang == 'ru'){
+		$('#add_language_value').text('добавить');
+	}
+	else{
+		$('#add_language_value').text('Add');
+	}
 	$('<ul id="original_titles" />')
 		.attr('style', 'margin:0; padding:3px;')
 		.addClass('no_bullets')
 		.insertAfter($('#new_language'));
-	$('#add_language_value').click(function() {
-		if ($("#languages_list").val() == 'Select language') {
-			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-			$( "#modal-select-language:ui-dialog" ).dialog( "destroy" );
-			$( "#modal-select-language" ).dialog({
-				modal: true,
-				buttons: {
-					Ok: function() {
-						$( this ).dialog( "close" );
-					}
+	function show_language_dialog(){
+		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+		$( "#modal-select-language:ui-dialog" ).dialog( "destroy" );
+		$( "#modal-select-language" ).dialog({
+			modal: true,
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );
 				}
-			});
+			}
+		});
+	}
+	function show_title_dialog(){
+		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+		$( "#modal-enter-title:ui-dialog" ).dialog( "destroy" );
+		$( "#modal-enter-title" ).dialog({
+			modal: true,
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	}
+	$('#new_language_value').focusin(function() {
+		if ($("#languages_list").val() == 'Please select') {
+			show_language_dialog();
+			return;
+		};
+	})
+	$('#new_language_value').focusout(function() {
+		setTimeout(function(){
+			if ($('#new_language_value').val()) {
+				add_language_value();
+			}
+		}, 500);
+	})
+	$('#add_language_value').click(function() {
+		add_language_value();
+	});
+	function add_language_value(){
+		if ($("#languages_list").val() == 'Please select') {
+			show_language_dialog();
 			return;
 		}
 
 		if (! $("#new_language_value").val()) {
-			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-			$( "#modal-enter-title:ui-dialog" ).dialog( "destroy" );
-			$( "#modal-enter-title" ).dialog({
-				modal: true,
-				buttons: {
-					Ok: function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
+			show_title_dialog();
 			return;
 		}
 
 		update_language();
-	});
+	}
 	initialize_title_lines();
 	$('input[name="w_location.address:utf8:ustring"]').parent().parent().removeAttr('style');
 	$('input[name="w_location.address:utf8:ustring"]').parent().parent().children().hide();
@@ -423,7 +447,7 @@ $(function() {
 		var the_ul = $('<ul'+'>').css('margin-top', '-1em');
 		var the_select = $('<select'+'><option value=""'+'>-- select value --<'+'/option><'+'/select>');
 
-		$([the_ul, the_select]).insertBefore(checkboxes.first());
+		$([the_ul[0], the_select[0]]).insertBefore(checkboxes.first());
 
 		checkboxes.each(function() {
 			var checkbox = $(this);
@@ -584,5 +608,11 @@ $(function() {
 		University/academia</option>
 	<option i18n:translate="" value="NGO">NGO</option>
 	<option i18n:translate="" value="general public">General public</option>
+</select>
+<select id="languages_list" style="display:none" tal:define="lang here/gl_get_selected_language;
+	language_list here/get_languages_with_translation">
+	<option i18n:translate="" value="Please select">Please select language</option>
+	<option tal:repeat="item language_list"
+		i18n:translate="" tal:attributes="value python:item[1]['en']" tal:content="python:item[1][lang]" />
 </select>
 </metal:block>
