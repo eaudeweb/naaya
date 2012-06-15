@@ -108,24 +108,40 @@ def update_last_modification(event):
     if not hasattr(obj, 'version') or not obj.version:
         obj.last_modification = DateTime()
 
+def build_log(context):
+    """
+    Prepare data to be added to message log for action on object
+    """
+    site = context.getSite()
+    return {
+        'site_id': site.id,
+        'user': context.REQUEST.AUTHENTICATED_USER.getUserName(),
+        'content_title': context.title_or_id(),
+        'content_meta_type': context.meta_type,
+        'content_path': "/".join(context.getPhysicalPath()),
+        #'log_events': getattr(site, 'content_action_logging', True)
+    }
+
 def log_open_event(event):
     """ Log open action on object """
     context = event.context
-    site_id = context.getSite().id
-    user = context.REQUEST.AUTHENTICATED_USER.getUserName()
+    log_data = build_log(context)
 
-    logger = get_or_create_site_logger(site_id)
-    message = "%s on %s (%s) by %s" % ('OPEN', context.title_or_id(),
-                                       context.meta_type, user)
+    logger = get_or_create_site_logger(log_data['site_id'])
+    message = "%s\t%s\t%s (%s)\t%s" % ('OPEN', log_data['user'],
+                                  log_data['content_title'],
+                                  log_data['content_path'],
+                                  log_data['content_meta_type'])
     logger.info(message)
 
 def log_download_event(event):
     """ Log download action on object """
     context = event.context
-    site_id = context.getSite().id
-    user = context.REQUEST.AUTHENTICATED_USER.getUserName()
+    log_data = build_log(context)
 
-    logger = get_or_create_site_logger(site_id)
-    message = "%s on %s (%s) by %s" % ('DOWNLOAD', context.title_or_id(),
-                                       context.meta_type, user)
+    logger = get_or_create_site_logger(log_data['site_id'])
+    message = "%s\t%s\t%s (%s)\t%s" % ('DOWNLOAD', log_data['user'],
+                                  log_data['content_title'],
+                                  log_data['content_path'],
+                                  log_data['content_meta_type'])
     logger.info(message)

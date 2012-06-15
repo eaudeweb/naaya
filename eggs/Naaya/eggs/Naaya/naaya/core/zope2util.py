@@ -583,7 +583,9 @@ def get_or_create_site_logger(site_id):
     if not site_id in SITE_LOGGER_INITIALIZED:
         conf = getConfiguration()
         abs_path = getattr(conf, 'environment', {}).get('CONTENT_ACTION_LOG_PATH',
-                                                        '')
+                                                        '/tmp')
+        if not os.path.exists(abs_path):
+            os.makedirs(abs_path)
         log_filename = os.path.join(abs_path, '%s.log' % site_id)
         logger.propagate = 0
         logger.setLevel(logging.DEBUG)

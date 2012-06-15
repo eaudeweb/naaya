@@ -269,7 +269,7 @@ def str2bool(string):
     return string in [True, 'true', 'True']
 
 def file_length(file_name):
-    file_content = open(file_name, 'w')
+    file_content = open(file_name, 'r+')
     _return = 0
     try:
         for i, l in enumerate(file_content):

@@ -1,5 +1,7 @@
 2.13.16 (unreleased)
 --------------------
+* bugfix: get_or_create_site_logger creates log path if does not 
+  exists [bogdatan]
 
 2.13.15 (2012-06-13)
 --------------------
