@@ -1,5 +1,6 @@
 2.13.16 (unreleased)
 --------------------
+* tests for Products.NaayaCore.managers.catalog_tool [simiamih]
 * Changed ReCaptcha warning message content and position [dumitval]
 * bugfix: get_or_create_site_logger creates log path if does not 
   exists [bogdatan]

@@ -3,12 +3,12 @@ from AccessControl import getSecurityManager
 from AccessControl.Permissions import view
 from OFS.Uninstalled import BrokenClass
 
-class catalog_tool:
-    """ This class is responsable with API for ZCatalog object """
+class catalog_tool(object):
+    """
+    This is a mixing class derived by NySite
+    which is responsible with API for ZCatalog object
 
-    def __init__(self):
-        """ """
-        pass
+    """
 
     def __buildCatalogPath(self, p_item):
         """Creates an id for the item to be added in catalog"""
