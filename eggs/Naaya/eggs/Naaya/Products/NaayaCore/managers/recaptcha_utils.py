@@ -17,10 +17,10 @@ def render_captcha(context):
     """Return HTML code for CAPTCHA."""
     err = context.getSession('err_recaptcha', '')
     context.delSession('err_recaptcha')
-    return "".join((displayhtml(context.getSite().recaptcha_public_key),
-                    '<span class="errormsg">',
+    return "".join(('<span class="errormsg">',
                     escape(err),
-                    '</span>'))
+                    '</span>',
+                    displayhtml(context.getSite().recaptcha_public_key)))
 
 def is_valid_captcha(context, REQUEST):
     """Test if captcha was passed."""
@@ -29,7 +29,8 @@ def is_valid_captcha(context, REQUEST):
                       context.getSite().recaptcha_private_key,
                       REQUEST.get('REMOTE_ADDR', '')).is_valid
     if not is_valid:
-        context.setSession('err_recaptcha', 'Incorrect. Try again')
+        context.setSession('err_recaptcha',
+            'Your previous attempt was incorrect. Please try again')
     return is_valid
 
 class RecaptchaResponse(object):
