@@ -251,7 +251,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.display_subobject_count_for_admins = ""
         self.default_logo = ''
         CookieCrumbler.__dict__['__init__'](self)
-        catalog_tool.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)
         networkportals_manager.__dict__['__init__'](self)
