@@ -1,5 +1,6 @@
 3.0.8 (unreleased)
 ------------------
+* Fixed portlet_calendar to show in folders [dumitval]
 * External link for recaptcha [dumitval]
 
 3.0.7 (2012-06-12)
