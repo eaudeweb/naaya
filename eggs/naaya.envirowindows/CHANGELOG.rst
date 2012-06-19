@@ -1,4 +1,7 @@
-1.1.11 (unreleased)
+1.1.12 (unreleased)
+------------------
+
+1.1.11 (2012-06-19)
 ------------------
 * Corrected link in request role and account notification [dumitval]
 
