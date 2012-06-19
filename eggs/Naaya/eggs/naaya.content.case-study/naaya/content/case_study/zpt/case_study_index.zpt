@@ -83,7 +83,8 @@
             <p tal:content="structure here/contact_person" />
         </div>
 
-        <tal:block content="structure here/set_content_rating" />
+        <tal:block condition="is_ratable"
+            content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />
     </metal:block>
