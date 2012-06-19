@@ -1,5 +1,6 @@
 1.1.11 (unreleased)
 ------------------
+* Corrected link in request role and account notification [dumitval]
 
 1.1.10 (2012-04-12)
 ------------------
