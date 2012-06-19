@@ -30,7 +30,8 @@ class MockCaptchaProvider(object):
     def is_valid_captcha(self, request):
         is_valid = request.get('test-captcha-response', None) in self.keys
         if not is_valid:
-            self.site.setSession('err_recaptcha', 'Incorrect. Try again')
+            self.site.setSession('err_recaptcha',
+                'Your previous attempt was incorrect. Please try again')
         return is_valid
 
     def requested_keys(self):
