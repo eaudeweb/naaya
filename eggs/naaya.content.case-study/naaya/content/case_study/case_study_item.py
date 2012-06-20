@@ -55,20 +55,20 @@ DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['spatial_scale'] = dict(sortorder=20, widget_type='Select',
                 label='Spatial scale', list_id='case_study_spatial_scale',
                 help_text=('Please tick the appropriate spatial scale '
-                           'of the case-study.'))
+                           'of the case-study.'), required=True)
 DEFAULT_SCHEMA['geographical_scope'] = dict(sortorder=30,
                 widget_type='SelectMultiple', label='Geographical scope',
-                list_id='case_study_countries',
+                list_id='case_study_countries', required=True,
                 help_text=('Please, select from the list, all countries that '
                            'are covered in the case-study.'))
 DEFAULT_SCHEMA['status'] = dict(sortorder=40, widget_type='Select',
-                label='Status', list_id='case_study_status',
+                label='Status', list_id='case_study_status', required=True,
                 help_text='Please tick appropriate status of the case-study.')
 DEFAULT_SCHEMA['website'] = dict(sortorder=50, widget_type='TextArea',
                 label='Website and/or main references', localized=True,
                 tinymce=True, help_text=('Please provide links to website '
                                          'and/or to the main publications.'))
-DEFAULT_SCHEMA['description'].update(sortorder=60,
+DEFAULT_SCHEMA['description'].update(sortorder=60, required=True,
                 label='Short description of the process and governance',
                 help_text=('Please provide short text (preferably less than '
                            '2000 characters) to inform mainly about the '
@@ -84,7 +84,7 @@ DEFAULT_SCHEMA['additional_info'] = dict(sortorder=70, widget_type='TextArea',
                            'list of ecosystems and ecosystem services assessed,'
                            ' the main result, etc.'))
 DEFAULT_SCHEMA['contact_person'] = dict(sortorder=80, widget_type='TextArea',
-                label='Contact person', tinymce=True,
+                label='Contact person', tinymce=True, required=True,
                 help_text=('Please indicate up to three contact persons, '
                 'with their names and affiliations.'))
 DEFAULT_SCHEMA['title'].update(help_text=('Please provide the full title of '
