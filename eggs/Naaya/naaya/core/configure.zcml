@@ -106,6 +106,10 @@
         context="yes"
         getattrPatch="yes" />
 
+    <naaya:rstkMethod
+        handler=".zope2util.latest_visible_uploads"
+        context="yes"
+        getattrPatch="yes" />
 
     <naaya:simpleView
         for=".interfaces.IExternalApplicationFrame"

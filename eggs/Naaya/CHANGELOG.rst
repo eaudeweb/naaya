@@ -1,5 +1,7 @@
 2.13.16 (unreleased)
 --------------------
+* `Products.NaayaCore.managers.catalog_tool:latest_visible_uploads`
+  [simiamih]
 * tests for Products.NaayaCore.managers.catalog_tool [simiamih]
 * Changed ReCaptcha warning message content and position [dumitval]
 * bugfix: get_or_create_site_logger creates log path if does not 

@@ -236,6 +236,20 @@ def provides(context, ob, interface_name):
     interface = resolve(interface_name)
     return interface.providedBy(ob)
 
+def latest_visible_uploads(context, howmany=-1):
+    """
+    Rstk caller for latest_viewable_uploads in
+    Products.NaayaCore.managers.catalog_tool
+
+    """
+    items = []
+    gen = context.getSite().latest_visible_uploads()
+    for cnt, ob in enumerate(gen):
+        if cnt == howmany:
+            break
+        items.append(ob)
+    return items
+
 class RestrictedToolkit(SimpleItem):
     """
     RestrictedToolkit exposes some useful methods to RestrictedPython

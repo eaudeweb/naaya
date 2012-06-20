@@ -3,6 +3,8 @@ from AccessControl import getSecurityManager
 from AccessControl.Permissions import view
 from OFS.Uninstalled import BrokenClass
 
+from naaya.core.zope2util import ofs_path
+
 class catalog_tool(object):
     """
     This is a mixing class derived by NySite
@@ -184,6 +186,37 @@ class catalog_tool(object):
                     l_counter = l_counter + howmany
                     l_objects = self.safe_getobjects(l_temp)
             return l_output
+
+    def latest_visible_uploads(self, meta_type=None):
+        """ Generator that yields latest uploaded object viewable by user. """
+        filters = {'submitted': 1, 'approved': 1, 'sort_on': 'releasedate',
+                   'sort_order': 'reverse'}
+        if meta_type:
+            filters['meta_type'] = self.utConvertToList(meta_type)
+        else:
+            filters['meta_type'] = self.searchable_content
+        check_perm = getSecurityManager().checkPermission
+
+        # Performance trick: First filter top level objects where user
+        # has access and only search by those paths
+        paths = []
+        top_level = self.getSite().objectValues(filters['meta_type'])
+        paths = [ofs_path(ob) for ob in top_level if check_perm(view, ob)]
+        if not paths:
+            return
+        else:
+            filters['path'] = paths
+
+        all_brains = self.__searchCatalog(filters)
+
+        for brain in all_brains:
+            try:
+                obj = brain.getObject()
+            except Exception:
+                continue
+            else:
+                if check_perm(view, obj):
+                    yield obj
 
     #Monkey patch
     def getCatalogedMapObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
