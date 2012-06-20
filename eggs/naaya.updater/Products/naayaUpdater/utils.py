@@ -93,7 +93,7 @@ def get_portals(container, context=None, meta_types=None):
 def get_portal(container, ppath):
     return container.getPhysicalRoot().unrestrictedTraverse(ppath)
 
-def get_portal_path(container, portal_metatype):
+def get_portal_path(container, portal):
     """ return the portal path given the metatype """
 
     if isinstance(portal, types.ModuleType):
