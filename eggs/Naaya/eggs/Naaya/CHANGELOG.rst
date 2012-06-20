@@ -1,5 +1,6 @@
 2.13.16 (unreleased)
 --------------------
+* *update* script: latestuploads_rdf uses latest_visible_uloads [simiamih]
 * `Products.NaayaCore.managers.catalog_tool:latest_visible_uploads`
   [simiamih]
 * tests for Products.NaayaCore.managers.catalog_tool [simiamih]
