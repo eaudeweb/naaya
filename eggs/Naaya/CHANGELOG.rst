@@ -1,5 +1,6 @@
 2.13.16 (unreleased)
 --------------------
+* `Pillow` is now required dependency for Naaya [simiamih]
 * *update* script: latestuploads_rdf uses latest_visible_uloads [simiamih]
 * `Products.NaayaCore.managers.catalog_tool:latest_visible_uploads`
   [simiamih]

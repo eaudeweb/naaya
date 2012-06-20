@@ -35,6 +35,7 @@ setup(name='Naaya',
           'vobject >= 0.8.1c',
           'Unidecode',
           'scrubber',
+          'Pillow',
 
           #Zope
           'contentratings',
