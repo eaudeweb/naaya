@@ -1,5 +1,6 @@
 1.2.27 (unreleased)
 -------------------
+* corrected get_portal_path in top level utils and update_layout [simiamih]
 
 1.2.26 (2012-05-23)
 -------------------
