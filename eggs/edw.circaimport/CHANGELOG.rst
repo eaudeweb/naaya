@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.2.1 (unreleased)
+------------------
+
+1.2 (2012-06-20)
 ------------------
 * circa circle name configurable from environ var CIRCA_CIRCLE_NAME [simiamih]
 * make it possible to import files in batches (merge imports) [simiamih]
