@@ -43,10 +43,11 @@
 
 <noscript>
 	<form action="downloadLocationsKml" method="post">
-		<p i18n:translate="">
-			Additionally you can display the points in
-			<a href="http://earth.google.com/downloads.html">Google Earth viewer</a>
+		<p>
+			<tal:block i18n:translate="">Additionally you can display the points in
+			<a href="http://earth.google.com/downloads.html" i18n:name="GoogleEarthViewer">Google Earth viewer</a>
 			(version 4.0 or higher)
+			</tal:block>
 			<input type="hidden" name="geo_types:list" tal:attributes="value geo_type" tal:repeat="geo_type geo_types"/>
 			<input type="hidden" name="administrative_level:list" tal:attributes="value adm_level" tal:repeat="adm_level administrative_level"/>
 			<input type="hidden" name="landscape_type:list" tal:attributes="value land_type" tal:repeat="land_type landscape_type"/>
