@@ -1,4 +1,7 @@
-2.13.16 (unreleased)
+2.13.17 (unreleased)
+--------------------
+
+2.13.16 (2012-06-20)
 --------------------
 * `Pillow` is now required dependency for Naaya [simiamih]
 * *update* script: latestuploads_rdf uses latest_visible_uloads [simiamih]
