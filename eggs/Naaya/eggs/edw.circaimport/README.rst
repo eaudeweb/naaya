@@ -2,7 +2,7 @@ CIRCA import
 ============
 
 This is a small utility package that helps with migrating CIRCA interest
-groups to Naaya.
+groups to Naaya (EIONET Forum - Groupware setup).
 
 Installation
 ------------
@@ -22,6 +22,10 @@ Add a ZCML configuration entry to specify where CIRCA Zip files will be found
     <configure xmlns:circaimport="http://ns.eaudeweb.ro/edw.circaimport">
         <circaimport:root path="${buildout:directory}/var/circaimport"/>
     </configure>
+
+Also add a Zope environment variable called CIRCA_CIRCLE_NAME with the
+circa group name (e.g. 'eionet-circle' for EIONET, 'circa-it' for
+Italian CIRCA).
 
 
 Folders migration
