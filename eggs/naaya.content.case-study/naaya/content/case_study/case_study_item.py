@@ -192,6 +192,21 @@ def addNyCaseStudy(self, id='', REQUEST=None, contributor=None, **kwargs):
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
+    spatial_scale = schema_raw_data.get('spatial_scale')
+    geographical_scope = schema_raw_data.get('geographical_scope', [])
+    if (spatial_scale == 'regional-case-study-covers-more-one-country' and
+        len(geographical_scope) < 2):
+        form_errors.setdefault('geographical_scope', [])
+        form_errors['geographical_scope'].append(
+            'For regional case studies please select at least 2 countries')
+    if (spatial_scale and
+        spatial_scale != 'regional-case-study-covers-more-one-country' and
+        len(geographical_scope) > 1):
+        form_errors.setdefault('geographical_scope', [])
+        form_errors['geographical_scope'].append(
+            'For national or sub-national case studies please select exactly '
+            'one country')
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -388,9 +403,26 @@ class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyConte
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+            _override_releasedate=_releasedate)
+
+        spatial_scale = schema_raw_data.get('spatial_scale')
+        geographical_scope = schema_raw_data.get('geographical_scope')
+        if (spatial_scale == 'regional-case-study-covers-more-one-country' and
+            len(geographical_scope) < 2):
+            form_errors.setdefault('geographical_scope', [])
+            form_errors['geographical_scope'].append(
+                'For regional case studies please select at least 2 countries')
+        if (spatial_scale and
+            spatial_scale != 'regional-case-study-covers-more-one-country' and
+            len(geographical_scope) > 1):
+            form_errors.setdefault('geographical_scope', [])
+            form_errors['geographical_scope'].append(
+                'For national or sub-national case studies please select exactly '
+                'one country')
 
         if not form_errors:
             self._p_changed = 1

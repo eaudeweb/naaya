@@ -1,5 +1,6 @@
 0.0.3 (unreleased)
 -------------------
+* added field dependencies [dumitval]
 * changed mandatory fields [dumitval]
 * set_content_rating only called if the content type is 'ratable' [dumitval]
 
