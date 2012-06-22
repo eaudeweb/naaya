@@ -1,4 +1,7 @@
-0.0.3 (unreleased)
+0.0.4 (unreleased)
+-------------------
+
+0.0.3 (2012-06-22)
 -------------------
 * added field dependencies [dumitval]
 * changed mandatory fields [dumitval]
