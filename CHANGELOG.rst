@@ -1,5 +1,6 @@
 1.2.11 (unreleased)
 -------------------
+* changed to use http_proxy from buildout [dumitval]
 * External link for recaptcha [dumitval]
 
 1.2.10 (2012-06-07)
