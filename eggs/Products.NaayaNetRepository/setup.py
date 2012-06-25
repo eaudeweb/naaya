@@ -20,6 +20,6 @@ setup(name=NAME,
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 2.13.17',
       ],
 )

@@ -51,10 +51,14 @@
   </div>
   <div class="field">
     <label for="http_proxy" i18n:translate="">HTTP Proxy</label>
-    <p i18n:translate="">
+    <p tal:condition="not:here/buildout_http_proxy"  i18n:translate="">
       If your server is behind a proxy, specify its address followed by the port number. 
       Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128</p>
-    <input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/http_proxy" />
+    <p tal:condition="here/buildout_http_proxy" i18n:translate="">
+      The proxy server is set by the portal's configuration and cannot be changed here.</p>
+    <input type="text" name="http_proxy" id="http_proxy" size="40"
+        tal:attributes="value here/http_proxy;
+            disabled python:test(here.buildout_http_proxy(), 'disabled', None)" />
   </div>
   <div class="field">
     <label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> public key</label>

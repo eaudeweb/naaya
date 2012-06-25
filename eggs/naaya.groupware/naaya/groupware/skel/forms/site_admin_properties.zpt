@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['light']">
 
 <h1 metal:fill-slot="title" i18n:translate="">Portal properties - Other properties</h1>
 
@@ -29,8 +29,9 @@
 	<dd i18n:translate="">The portal URL represents the address this portal can be found at. By setting this parameter the URL will not change, but site administrators can use this information.</dd>
 	<dd><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></dd>
 	<dt><label for="http_proxy" i18n:translate="">HTTP Proxy</label></dt>
-	<dd i18n:translate="">If your server is behind a proxy, specify its address followed by the port number. Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128</dd>
-	<dd><input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/http_proxy" /></dd>
+	<dd tal:condition="not:here/buildout_http_proxy" i18n:translate="">If your server is behind a proxy, specify its address followed by the port number. Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128</dd>
+	<dd tal:condition="here/buildout_http_proxy" i18n:translate="">The proxy server is set by the portal's configuration and cannot be changed here.</dd>
+	<dd><input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/http_proxy; disabled python:test(here.buildout_http_proxy(), 'disabled', None)" /></dd>
 	<dt><label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="recaptcha">reCAPTCHA</a> public key</label></dt>
 	<dd><input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/recaptcha_public_key" /></dd>
 	<dt><label for="recaptcha_private_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="recaptcha">reCAPTCHA</a> private key</label></dt>

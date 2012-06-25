@@ -1186,7 +1186,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #it gets the content from the given url
         try:
             l_urlgrab = urlgrab_tool()
-            l_http_proxy = self.http_proxy
+            l_http_proxy = self.get_http_proxy()
             if l_http_proxy != '':
                 l_urlgrab.proxies['http'] = l_http_proxy
             webPage = l_urlgrab.open(p_url)
@@ -1889,7 +1889,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'get_remote_servers')
     def get_remote_servers(self):
         #get remote servers
-        xconn = XMLRPCConnector(self.http_proxy)
+        xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(self.repository_url, 'get_sites')
         if res is None: return {}
         else: return res
@@ -1978,7 +1978,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         Perform an XMLRPC call to handle this external search
         for the specified portal.
         """
-        xconn = XMLRPCConnector(self.http_proxy)
+        xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(portal_url, 'handle_external_search', query, langs)
         if res is None: return []
         else: return res
@@ -2653,7 +2653,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         err, res = '', None
         success = False
-        xconn = XMLRPCConnector(self.http_proxy)
+        xconn = XMLRPCConnector(self.get_http_proxy())
         if url.endswith('/'): url = url[:-1]
         res = xconn(url, 'external_search_capabilities')
         if res is None:
@@ -2673,7 +2673,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         success = False
         networkportal = self.get_networkportal_item(id)
         if networkportal:
-            xconn = XMLRPCConnector(self.http_proxy)
+            xconn = XMLRPCConnector(self.get_http_proxy())
             res = xconn(networkportal.url, 'external_search_capabilities')
             if res is None:
                 err = 'Cannot connect to the given URL.'
@@ -3613,6 +3613,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.searchable_content = [x for x in self.searchable_content if x != meta_type]
             # not removing the permission (why bother?)
 
+            #pitem = self.get_pluggable_item(meta_type)
+            #run `on_uninstall` function if defined in content's `config`
+            #if 'on_uninstall' in pitem:
+            #    pitem['on_uninstall'](self)
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
     def is_logged(self, REQUEST=None):
@@ -3977,6 +3982,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return translate_url(*args)
 
     rdf_cataloged_items = rdf_cataloged_items
+
+    def buildout_http_proxy(self):
+        conf = getConfiguration()
+        return getattr(conf, 'environment', {}).get('HTTP_PROXY', '')
+
+    def get_http_proxy(self):
+        return self.buildout_http_proxy() or self.http_proxy
 
 InitializeClass(NySite)
 

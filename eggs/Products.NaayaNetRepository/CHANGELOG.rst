@@ -1,5 +1,6 @@
 1.0.5 (unreleased)
 ==================
+* changed to use http_proxy from buildout [dumitval]
 
 1.0.4 (2012-01-13)
 ==================

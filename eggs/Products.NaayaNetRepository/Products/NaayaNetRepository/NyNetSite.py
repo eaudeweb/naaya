@@ -205,7 +205,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     def update_search_capabilities(self, REQUEST=None):
         """ """
         msg, err, res = '', '', None
-        xconn = XMLRPCConnector(self.http_proxy)
+        xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(self.url, 'external_search_capabilities')
         if res is None:
             err = 'Cannot connect to the given URL.'
