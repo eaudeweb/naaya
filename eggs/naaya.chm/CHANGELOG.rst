@@ -1,4 +1,7 @@
-3.0.9 (unreleased)
+3.0.10 (unreleased)
+------------------
+
+3.0.9 (2012-06-25)
 ------------------
 * changed to use http_proxy from buildout [dumitval]
 
