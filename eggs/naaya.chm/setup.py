@@ -9,7 +9,7 @@ setup(name='naaya.chm',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya >= 2.12',
+        'Naaya >= 2.13.17',
         'naaya.photoarchive',
         'Products.NaayaLinkChecker',
         'Products.NaayaNetRepository',
