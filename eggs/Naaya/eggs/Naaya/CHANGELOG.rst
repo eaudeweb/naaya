@@ -1,4 +1,7 @@
-2.13.17 (unreleased)
+2.13.18 (unreleased)
+--------------------
+
+2.13.17 (2012-06-25)
 --------------------
 * get_http_proxy from buildout [dumitval]
 
