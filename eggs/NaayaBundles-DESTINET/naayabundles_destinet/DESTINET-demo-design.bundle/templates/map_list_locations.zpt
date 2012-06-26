@@ -80,14 +80,10 @@
 	<a href="javascript:fAllocateKeywords();" title="Allocate keywords" i18n:attributes="title"><span i18n:translate="">Allocate keywords for selected items</span></a>
 </div>
 
-<form name="objectItems" method="post" action="">
 <input type="hidden" name="type" value="geo" />
 <table metal:define-macro="main" width="100%" class="datatable">
 	<thead>
 		<tr>
-			<th scope="col" class="scope-col">
-				<input type="checkbox" onchange="javascript:toggleSelect();" />
-			</th>
 			<th scope="col" class="scope-col" i18n:translate="">Type</th>
 			<tal:block tal:condition="python:sort_on=='title'">
 				<tal:block tal:condition="python:sort_order==''">
@@ -166,9 +162,6 @@
 		<tr tal:repeat="record records" tal:condition="records">
 			<tal:block define="has_view record/title_or_id"
 				on-error="structure string:<td colspan='6'></strong>Access to <a href='${record/absolute_url}'>${record/getId}</a> is restricted</strong></td>">
-			<td>
-				<input type="checkbox" name="id:list" tal:attributes="value python:'/'.join(record.getPhysicalPath())" />
-			</td>
 			<td>
 				<img tal:attributes="src string:getSymbolPicture?id=${record/geo_type};
 									 alt python:here.getSymbolTitle(record.geo_type);
