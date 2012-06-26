@@ -26,6 +26,18 @@
     <link rel="stylesheet" tal:attributes="href string:${site_url}/additional_style_css" />
     <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/style.css" />
 
+    <tal:block content="structure string:&lt;!--[if IE 7]&gt;"/>
+      <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/../ie7.css" />
+    <tal:block content="structure string:&lt;![endif]--&gt;"/>
+
+    <tal:block content="structure string:&lt;!--[if IE 8]&gt;"/>
+      <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/../ie8.css" />
+    <tal:block content="structure string:&lt;![endif]--&gt;"/>
+
+    <tal:block content="structure string:&lt;!--[if IE 9]&gt;"/>
+      <link rel="stylesheet" tal:attributes="href string:${skin_files_path}/../ie9.css" />
+    <tal:block content="structure string:&lt;![endif]--&gt;"/>
+
     <tal:block replace="structure python: here.getFormsTool().getForm('site_scripts')()">
       Default JavaScripts
     </tal:block>
