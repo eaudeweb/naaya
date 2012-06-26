@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
 
@@ -163,13 +164,15 @@
 			<td colspan="7" i18n:translate="">No locations found</td>
 		</tr>
 		<tr tal:repeat="record records" tal:condition="records">
+			<tal:block define="has_view record/title_or_id"
+				on-error="structure string:<td colspan='6'></strong>Access to <a href='${record/absolute_url}'>${record/getId}</a> is restricted</strong></td>">
 			<td>
 				<input type="checkbox" name="id:list" tal:attributes="value python:'/'.join(record.getPhysicalPath())" />
 			</td>
 			<td>
 				<img tal:attributes="src string:getSymbolPicture?id=${record/geo_type};
-				                     alt python:here.getSymbolTitle(record.geo_type);
-				                     title python:here.getSymbolTitle(record.geo_type);" />
+									 alt python:here.getSymbolTitle(record.geo_type);
+									 title python:here.getSymbolTitle(record.geo_type);" />
 			</td>
 			<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title_or_id" /></td>
 			<td tal:content="record/geo_location/address" />
@@ -184,11 +187,13 @@
 				<tal:block define="user_rating record/user_rating_stars_numbers|nothing"
 					condition="record/is_ratable" replace="structure user_rating"/>
 			</td>
+			</tal:block>
 		</tr>
 	</tbody>
-</table>
+</table> 
 
 </tal:block>
 
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
