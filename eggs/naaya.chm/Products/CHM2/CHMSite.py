@@ -116,12 +116,14 @@ class CHMSite(NySite):
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
 
+        #remove Naaya default content
+        naaya_skin_ids = [skin.getId() for skin in
+            self.getLayoutTool().objectValues('Naaya Skin')]
+        self.getLayoutTool().manage_delObjects(naaya_skin_ids)
+
         #load site skeleton - configuration
         if skel_handler is not None:
             self._load_skel_from_handler(skel_handler)
-
-        #remove Naaya default content
-        self.getLayoutTool().manage_delObjects('skin')
 
         #set default PhotoFolder
         addNyPhotoGallery(self, id='PhotoGallery', title=TITLE_PHOTOARCHIVE)

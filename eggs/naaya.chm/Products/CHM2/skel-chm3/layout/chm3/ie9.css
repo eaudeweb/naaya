@@ -1,0 +1,13 @@
+/* INSTEAD OF IE9 HACKS */
+
+body .global-search-submit {
+ padding-top: 1px;
+}
+
+body .global-search-input {
+ height: 21px;
+}
+
+body #calendar caption {
+ width: auto;
+}
