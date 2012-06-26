@@ -1,11 +1,11 @@
-<div class="content-header" style="background: none repeat scroll 0 0 #FFFFFF; padding: 0px; margin: 0px auto 0; width: 978px">
-		<div id="lofslidecontent45" class="lof-slidecontent" style="width:978px; height:240px;">
+<div class="content-header" style="background: none repeat scroll 0 0 #FFFFFF; padding: 0px; margin: 0px auto 0; width: 980px">
+		<div id="lofslidecontent45" class="lof-slidecontent" style="width:980px; height:240px;">
 			<div class="preload"></div>
-			<div class="lof-main-outer" style="width:978px; height:240px;">
+			<div class="lof-main-outer" style="height:240px;">
 				<div onclick="return false" href="" class="lof-previous" title="Previous"> </div>
 				<ul class="lof-main-wapper">
 					<li tal:repeat="photo here/slider-images/objectValues">
-						<img tal:attributes="src string:${photo/absolute_url}; alt photo/title_or_id" style="width: 978px; height: 240px" />
+						<img tal:attributes="src string:${photo/absolute_url}; alt photo/title_or_id" style="width: 980px; height: 240px" />
 						<div class="lof-main-item-desc">
 							<h2 tal:on-error="string:" tal:content="python:photo.title.split('|')[0]" />
 							<p tal:on-error="string:" tal:content="python:photo.title.split('|')[1]" />
