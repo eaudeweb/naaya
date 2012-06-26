@@ -1,5 +1,6 @@
 3.0.10 (unreleased)
 ------------------
+* Added ie7,8,9 css files [dumitval]
 * Removed some in-line style from element_spash_content [dumitval]
 
 3.0.9 (2012-06-25)
