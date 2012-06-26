@@ -26,7 +26,7 @@
 .lof-main-outer{
 	position:relative;
 	height:100%;
-	width:978px;
+	width:980px;
 	z-index:3px;
 	overflow:hidden;
 }
@@ -37,7 +37,7 @@
 	z-index:100px;
 	position:absolute;
 	bottom:0px;
-	width: 978px;
+	width: 980px;
 	background:url(bg_trans.png);
 	height:70px;
 }
@@ -71,7 +71,7 @@ ul.lof-main-wapper li{
 	padding:0px;
 	margin:0px;
 	position:absolute;
-	width: 978px;
+	width: 980px;
 	text-align: center;
 }
 .lof-opacity  li{
