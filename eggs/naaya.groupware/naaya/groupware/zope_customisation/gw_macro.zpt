@@ -49,6 +49,12 @@
             background-color: #F9F9ED; /*#a5ced1*/
         }
     </style>
+    <script type="text/javascript">
+        var _gaq=[['_setAccount', 'UA-17090641-1'],['_trackPageview']];
+        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
   <meta name="google-site-verification" content="oV-xE-LH3NMr2_h0HqMJ6M_La5oiZnusXH2OWcTO4bM" />
   </head>
     <body tal:define="gw_root_url string:${here/get_gw_root}/index_html" metal:define-slot="body">
@@ -97,22 +103,23 @@
                     <li><a href="../applications">Request new IG</a></li>
                     <li tal:condition="python:'Manager' in user.getRoles()">
                         <a href="../applications/basket_html">Manage applications</a></li>
+                    <li tal:condition="python:'Manager' in user.getRoles()">
+                        <a href="../applications/forum_settings">Forum settings</a></li>
                 </ul>
               </div>
 
                 <h2>Helpdesk</h2>
                 <p class="helpdesktext">For accounts and assistance call the helpdesk at +37 2 508 4992 from
-                    Monday through Friday 9:00 to 17:00 CET or email <a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>.
+ Monday through Friday 9:00 to 17:00 CET or email <a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>.
                 </p>
-                <div class="localnav">
-                    <h2>Account services</h2>
-                    <ul>
-                        <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
-                        <li>Edit my <a href="http://www.eionet.europa.eu/profile">user profile</a></li>
-                        <li>View my <a href="/profile_overview">memberships</a></li>
-                    </ul>
-                </div>
-
+<div class="localnav">
+ <h2>Account services</h2>
+<ul>
+ <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
+ <li>Edit my <a href="/profile">user profile</a></li>
+ <li>View my <a href="/profile_overview">memberships</a></li>
+</ul>
+</div>
                 <h2>Places</h2>
                 <ul>
                     <li><a href="http://www.eionet.europa.eu/">Eionet portal</a></li>
