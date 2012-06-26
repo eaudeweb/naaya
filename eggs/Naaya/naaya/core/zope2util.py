@@ -243,7 +243,7 @@ def latest_visible_uploads(context, howmany=-1):
 
     """
     items = []
-    gen = context.getSite().latest_visible_uploads()
+    gen = context.getSite().latest_visible_uploads(context.get_meta_types())
     for cnt, ob in enumerate(gen):
         if cnt == howmany:
             break

@@ -200,7 +200,7 @@ class catalog_tool(object):
         # Performance trick: First filter top level objects where user
         # has access and only search by those paths
         paths = []
-        top_level = self.getSite().objectValues(filters['meta_type'])
+        top_level = self.getSite().objectValues(self.searchable_content)
         paths = [ofs_path(ob) for ob in top_level if check_perm(view, ob)]
         if not paths:
             return
