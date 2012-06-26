@@ -12,7 +12,6 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
@@ -579,7 +578,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'mediafile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

@@ -583,32 +583,3 @@ def _run_job(db, context_path, callback):
 def json_response(data, response):
     response.setHeader('Content-Type', 'application/json')
     return json.dumps(data)
-
-SITE_LOGGER_INITIALIZED = []
-
-def get_or_create_site_logger(site_id):
-    """
-    Returns a logger based on site ID which will save changes made on specific
-    content types
-    """
-    global SITE_LOGGER_INITIALIZED
-
-    logger = logging.getLogger('%s-logger' % site_id)
-    if not site_id in SITE_LOGGER_INITIALIZED:
-        conf = getConfiguration()
-        abs_path = getattr(conf, 'environment', {}).get('CONTENT_ACTION_LOG_PATH',
-                                                        '/tmp')
-        if not os.path.exists(abs_path):
-            os.makedirs(abs_path)
-        log_filename = os.path.join(abs_path, '%s.log' % site_id)
-        logger.propagate = 0
-        logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s: %(message)s', '%d %b %H:%M')
-        handler = logging.handlers.RotatingFileHandler(log_filename,
-                                                       maxBytes=10000000,
-                                                       backupCount=3)
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        SITE_LOGGER_INITIALIZED.append(site_id)
-
-    return logger

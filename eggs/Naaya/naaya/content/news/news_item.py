@@ -11,7 +11,6 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 from DateTime import DateTime
 from zope.interface import implements
 
@@ -511,7 +510,6 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'news_index')
 
     security.declareProtected(view, 'picture_html')

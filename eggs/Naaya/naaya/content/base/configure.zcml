@@ -13,16 +13,6 @@
       for="naaya.content.base.interfaces.INyContentObjectEditEvent"
       handler=".events.update_last_modification" />
 
-  <subscriber
-      for="naaya.content.base.interfaces.INyContentObjectOpenEvent"
-      handler=".events.log_open_event"
-    />
-
-  <subscriber
-      for="naaya.content.base.interfaces.INyContentObjectDownloadEvent"
-      handler=".events.log_download_event"
-    />
-
   <adapter factory=".publish.NyContentPublishTraverse" />
 
   <adapter factory=".publish.DefaultRdfView"

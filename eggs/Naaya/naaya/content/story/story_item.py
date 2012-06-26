@@ -11,7 +11,6 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 from zope.interface import implements
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -494,7 +493,6 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'story_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

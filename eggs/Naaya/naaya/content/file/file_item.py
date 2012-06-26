@@ -15,7 +15,6 @@ from Products.NaayaBase.NyContentType import NyContentData
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 from zope.interface import implements
 from interfaces import INyFile
 
@@ -554,7 +553,6 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'file_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

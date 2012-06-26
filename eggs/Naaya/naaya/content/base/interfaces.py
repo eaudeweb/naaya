@@ -50,13 +50,3 @@ class INyRdfView(Interface):
 
 class INyContentObjectExport(Interface):
     """ Export Ny Content object """
-
-class INyContentObjectOpenEvent(Interface):
-    """ Naaya content object has been opened """
-
-    context = Attribute("INyContentObject instance")
-
-class INyContentObjectDownloadEvent(Interface):
-    """ Naaya content object has been downloaded """
-
-    context = Attribute("INyContentObject instance")
