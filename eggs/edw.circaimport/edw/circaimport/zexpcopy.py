@@ -1,7 +1,6 @@
 """
-This is not exactly a CIRCA related feature, but it's specific to EIONET
-Forum setup - depends on Archives, Projects and Forum instances on same
-machine and specific configs.
+This is not exactly a CIRCA related feature, but it is used in EIONET
+Forum to move data from Archives instance to Forum/Projects.
 
 """
 import re
