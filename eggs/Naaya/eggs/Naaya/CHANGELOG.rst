@@ -1,5 +1,6 @@
 2.13.18 (unreleased)
 --------------------
+* Updates to slideshow.css [dumitval]
 * bugfix: Folders excluded from latest uploads listing [bogdatan]
 
 2.13.17 (2012-06-25)
