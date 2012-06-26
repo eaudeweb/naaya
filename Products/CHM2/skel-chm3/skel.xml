@@ -18,6 +18,9 @@
 			<template id="element_splash_content" title=""/>
 			<template id="element_topmenu" title=""/>
 			<diskfile path="common.css"/>
+			<diskfile path="ie7.css"/>
+			<diskfile path="ie8.css"/>
+			<diskfile path="ie9.css"/>
 			<diskfile path="sprite.png"/>
 			<diskfile path="Naaya_Folder-icon"/>
 			<diskfile path="Naaya_Folder-icon-marked"/>
