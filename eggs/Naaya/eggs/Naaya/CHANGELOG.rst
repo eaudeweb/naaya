@@ -1,5 +1,6 @@
 2.13.18 (unreleased)
 --------------------
+* bugfix: temporary removed get_or_create_site_logger [bogdatan]
 * Updates to slideshow.css [dumitval]
 * bugfix: Folders excluded from latest uploads listing [bogdatan]
 

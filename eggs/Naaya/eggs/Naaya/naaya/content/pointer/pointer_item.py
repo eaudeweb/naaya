@@ -22,7 +22,6 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 
 from permissions import PERMISSION_ADD_POINTER
 
@@ -363,7 +362,6 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
         can_view = getSecurityManager().checkPermission(view, obj)
         params = {'here': self, 'restricted': 0, 'missing': 0}
 
-        notify(NyContentObjectOpenEvent(self))
         if obj and self.redirect:
             if can_view:
                 REQUEST.RESPONSE.redirect(obj.absolute_url())

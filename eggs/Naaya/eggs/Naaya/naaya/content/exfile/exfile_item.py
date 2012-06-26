@@ -15,7 +15,6 @@ from OFS.Folder import Folder
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.base.events import NyContentObjectOpenEvent
 from zope.interface import implements
 from interfaces import INyExFile
 
@@ -726,7 +725,6 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        notify(NyContentObjectOpenEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'exfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
