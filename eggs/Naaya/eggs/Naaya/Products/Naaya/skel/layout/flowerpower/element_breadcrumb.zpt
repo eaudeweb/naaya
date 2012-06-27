@@ -1,0 +1,13 @@
+<metal:block define-macro="content">
+
+<div tal:condition="python:here != here.getSite()" id="breadcrumbtrail"
+    tal:on-error="python:here.log_page_error(error)">
+  <tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
+    <a tal:attributes="href string:${crumb/absolute_url}/;
+                       title crumb/title_or_id"
+       tal:content="crumb/title_or_id"></a>
+    <span tal:condition="not:repeat/crumb/end"> &raquo; </span>
+  </tal:block>
+</div>
+
+</metal:block>
