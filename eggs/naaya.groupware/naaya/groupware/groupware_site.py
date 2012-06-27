@@ -79,7 +79,12 @@ class GroupwareSite(NySite):
         NySite.__dict__['loadDefaultData'](self)
 
         #remove Naaya default content
-        self.getLayoutTool().manage_delObjects('skin')
+        layout_tool = self.getLayoutTool()
+        naaya_skins = [skin.getId() for skin in
+            layout_tool.objectValues('Naaya Skin')]
+        logos = [image.getId() for image in
+            layout_tool.objectValues('Image')]
+        layout_tool.manage_delObjects(naaya_skins + logos)
         self.getPortletsTool().manage_delObjects(['menunav_links', 'topnav_links'])
         self.manage_delObjects('info')
 
