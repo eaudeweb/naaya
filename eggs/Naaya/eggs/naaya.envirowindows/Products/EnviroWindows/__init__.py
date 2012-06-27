@@ -43,6 +43,9 @@ def initialize(context):
         icon = 'www/Site.gif'
         )
 
+    from Products.NaayaCore.LayoutTool.DiskFile import allow_path
+    allow_path('Products.EnviroWindows:skel/layout/envirowindows')
+
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'printer.gif':ImageFile('www/printer.gif', globals()),
