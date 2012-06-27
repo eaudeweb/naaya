@@ -1,5 +1,6 @@
 3.0.10 (unreleased)
 ------------------
+* All Naaya Skins and images removed before skel loading [dumitval]
 * Added ie7,8,9 css files [dumitval]
 * Removed some in-line style from element_spash_content [dumitval]
 
