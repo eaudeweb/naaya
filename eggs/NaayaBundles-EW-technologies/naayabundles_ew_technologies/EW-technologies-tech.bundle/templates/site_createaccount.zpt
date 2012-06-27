@@ -51,6 +51,10 @@
 		<td valign="top" i18n:translate="">Comments<br />(if any)</td>
 		<td><textarea name="comments:utf8:ustring" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea></td>
 	</tr>
+	<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
+		<td></td>
+		<td tal:content="structure python: here.show_recaptcha(here)" />
+	</tr>
 	<tr>
 		<td></td>
 		<td><input type="submit" value="Submit request" i18n:attributes="value" /></td>
