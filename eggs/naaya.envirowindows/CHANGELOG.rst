@@ -1,5 +1,6 @@
 1.1.12 (unreleased)
 ------------------
+* DiskFile allow_path to layout schemes [dumitval]
 
 1.1.11 (2012-06-19)
 ------------------
