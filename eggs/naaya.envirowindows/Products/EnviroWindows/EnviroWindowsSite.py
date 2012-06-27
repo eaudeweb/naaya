@@ -101,6 +101,15 @@ class EnviroWindowsSite(NySite):
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
 
+        #remove Naaya default content
+        layout_tool = self.getLayoutTool()
+        naaya_skins = [skin.getId() for skin in
+            layout_tool.objectValues('Naaya Skin')]
+        logos = [image.getId() for image in
+            layout_tool.objectValues('Image')]
+        layout_tool.manage_delObjects(naaya_skins + logos)
+        self.manage_delObjects('info')
+
         #load site skeleton - configuration
         self.loadSkeleton(ENVIROWINDOWS_PRODUCT_PATH)
 
@@ -115,10 +124,6 @@ class EnviroWindowsSite(NySite):
         except: pass
         try:    self.getCatalogTool().manage_addIndex('resource_country', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
-
-        #remove Naaya default content
-        self.getLayoutTool().manage_delObjects('skin')
-        self.manage_delObjects('info')
 
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)

@@ -117,9 +117,12 @@ class CHMSite(NySite):
         NySite.__dict__['loadDefaultData'](self)
 
         #remove Naaya default content
-        naaya_skin_ids = [skin.getId() for skin in
-            self.getLayoutTool().objectValues('Naaya Skin')]
-        self.getLayoutTool().manage_delObjects(naaya_skin_ids)
+        layout_tool = self.getLayoutTool()
+        naaya_skins = [skin.getId() for skin in
+            layout_tool.objectValues('Naaya Skin')]
+        logos = [image.getId() for image in
+            layout_tool.objectValues('Image')]
+        layout_tool.manage_delObjects(naaya_skins + logos)
 
         #load site skeleton - configuration
         if skel_handler is not None:
