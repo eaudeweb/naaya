@@ -1,5 +1,6 @@
 0.0.4 (unreleased)
 -------------------
+* removed NyContentObjectOpenEvent import [dumitval]
 
 0.0.3 (2012-06-22)
 -------------------
