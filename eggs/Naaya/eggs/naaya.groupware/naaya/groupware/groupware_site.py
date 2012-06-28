@@ -379,7 +379,6 @@ class GroupwareSite(NySite):
         else:
             return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/relinquish_membership_html?done=failed')
 
-
     security.declarePublic('requestrole_html')
     def requestrole_html(self, REQUEST):
         """ redirect to request_ig_access_html """

@@ -111,6 +111,11 @@
         context="yes"
         getattrPatch="yes" />
 
+    <naaya:rstkMethod
+        handler=".zope2util.users_in_role"
+        context="yes"
+        getattrPatch="yes" />
+
     <naaya:simpleView
         for=".interfaces.IExternalApplicationFrame"
         name="frame"
