@@ -1,6 +1,6 @@
 <metal:block use-macro="here/gw_macro/macros/main">
 <div id="workarea" metal:fill-slot="div-workarea">
-
+    <tal:block define="meta_info here/gw_meta_info">
     <!-- TODO: create and fill a slot in head macro in gw_macro template -->
     <link href="++resource++naaya.groupware.profileoverview/style.css"
           rel="stylesheet" type="text/css" />
@@ -14,7 +14,7 @@
     <h1>Overview on memberships in interest groups,
  Roles and Subscriptions for user <tt tal:content="options/user_id" /></h1>
 
-    <h2>Interest group membership</h2>
+    <h2>Interest group membership in <span tal:replace="meta_info/root_site_title" /></h2>
     <input type="hidden" id="user" tal:attributes="value options/user_id" />
     <p>
         Local roles are explicitly assigned by Administrators, while other
@@ -65,13 +65,13 @@
         <tt tal:content="options/user_id" /> does not belong to any LDAP Roles.
     </tal:block>
 
-    <h2>Subscriptions to interest group notifications</h2>
+    <h2>Subscriptions to interest group notifications in <span tal:replace="meta_info/root_site_title" /></h2>
     <div id="ig_subscriptions">
         <div style='text-align: center;'>
             <img src="++resource++naaya.groupware/ajax-loader.gif" />
         </div>
     </div>
-
+    </tal:block>
 </div>
 </metal:block>
 
