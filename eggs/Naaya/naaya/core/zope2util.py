@@ -250,6 +250,14 @@ def latest_visible_uploads(context, howmany=-1):
         items.append(ob)
     return items
 
+def users_in_role(context, role_name=''):
+    """ """
+    auth_tool = context.getSite().getAuthenticationTool()
+    users = auth_tool.search_users(query='', skey='name', rkey=0,
+                                   all_users=True, role=role_name,
+                                   location='_all_')
+    return users
+
 class RestrictedToolkit(SimpleItem):
     """
     RestrictedToolkit exposes some useful methods to RestrictedPython
