@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
+		<form id="folder_index" title="Folder index customisation for CHM2"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
