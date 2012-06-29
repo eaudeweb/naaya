@@ -1,5 +1,6 @@
 1.2.12 (unreleased)
 -------------------
+* Added site_admin_template to skel (temporary) [dumitval]
 * All Naaya Skins and images removed before skel loading [dumitval]
 * DiskFile allow_path to layout schemes [dumitval]
 
