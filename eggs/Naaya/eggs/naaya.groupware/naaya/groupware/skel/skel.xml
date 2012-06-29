@@ -8,6 +8,7 @@
 		<form id="folder_index" title="Folder index customisation for Groupware"/>
 		<form id="folder_listing" title="Folder contents customisation for Groupware"/>
 		<form id="site_index" title="IG index customisation for Groupware"/>
+		<form id="site_admin_template" title="Portal administration - macro"/>
 	</forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
