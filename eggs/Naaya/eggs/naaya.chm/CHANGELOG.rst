@@ -1,4 +1,7 @@
-3.0.10 (unreleased)
+3.0.11 (unreleased)
+------------------
+
+3.0.10 (2012-06-29)
 ------------------
 * Added folder_index to chm2 skel (temporary) [dumitval]
 * All Naaya Skins and images removed before skel loading [dumitval]
