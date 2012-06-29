@@ -4,6 +4,7 @@
 		<form id="folder_index" title="NyFolder default view" />
 		<form id="site_admin_contacts" title="Portal administration - contacts"/>
 		<form id="site_login" title="Portal login"/>
+		<form id="site_index" title="Portal home page"/>
 		<form id="site_requestrole" title="Portal request role form step 1"/>
 		<form id="site_requestlocations" title="Portal request role form - step 3"/>
 		<form id="site_requestinfo" title="Portal request account form - step 2"/>
@@ -13,6 +14,7 @@
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
 		<form id="googlesearchinterfaces_html" title="List all GoogleSearchInterfaces"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
+		<form id="site_admin_template" title="Portal administration - macro"/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
