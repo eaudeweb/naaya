@@ -1,4 +1,7 @@
-1.1.12 (unreleased)
+1.1.13 (unreleased)
+------------------
+
+1.1.12 (2012-06-29)
 ------------------
 * Added site_index and site_admin_template to skel (temporary) [dumitval]
 * All Naaya Skins and images removed before skel loading [dumitval]
