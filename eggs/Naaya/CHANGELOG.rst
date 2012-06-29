@@ -1,5 +1,6 @@
 2.13.19 (unreleased)
 --------------------
+* Updates to element_header (flowerpower scheme) [dumitval]
 
 2.13.18 (unreleased)
 --------------------
