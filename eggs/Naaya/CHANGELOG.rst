@@ -2,7 +2,7 @@
 --------------------
 * Updates to element_header (flowerpower scheme) [dumitval]
 
-2.13.18 (unreleased)
+2.13.18 (2012-06-28)
 --------------------
 * bugfix: temporary removed get_or_create_site_logger [bogdatan]
 * Updates to slideshow.css [dumitval]
