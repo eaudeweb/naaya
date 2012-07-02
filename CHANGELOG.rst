@@ -1,5 +1,6 @@
 1.2.13 (unreleased)
 -------------------
+* bugfix: *update* for folders with wrong releasedate [bogdatan]
 
 1.2.12 (2012-06-29)
 -------------------

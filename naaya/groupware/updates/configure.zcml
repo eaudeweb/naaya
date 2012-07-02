@@ -9,6 +9,11 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_owner_permissions.UpdateOwnerPermissions"
       permission="zope2.ViewManagementScreens" />
-  </configure>
 
+    <utility
+      name="folders_release_date.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_folders_release_date.UpdateFoldersReleaseDate"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
 </configure>
