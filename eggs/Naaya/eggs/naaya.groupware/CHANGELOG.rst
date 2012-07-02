@@ -1,4 +1,7 @@
-1.2.13 (unreleased)
+1.2.14 (unreleased)
+-------------------
+
+1.2.13 (2012-07-02)
 -------------------
 * bugfix: *update* for folders with wrong releasedate [bogdatan]
 
