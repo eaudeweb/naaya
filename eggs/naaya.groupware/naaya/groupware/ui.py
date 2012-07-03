@@ -14,6 +14,7 @@ eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
 
 CONFIG = getConfiguration()
 eionet_url = getattr(CONFIG, 'environment', {}).get('EIONET_LDAP_EXPLORER', '')
+NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
 
 class LocalUsersPage(BrowserPage):
     def __call__(self):
@@ -52,7 +53,7 @@ def index_html(context, request):
     """
     Render Forum's first page
     """
-    return index_html_zpt.__of__(context)()
+    return index_html_zpt.__of__(context)(network_name=NETWORK_NAME)
 
 def gw_meta_info(context, request=None):
     """
