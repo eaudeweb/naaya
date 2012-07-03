@@ -45,7 +45,7 @@
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups you need to be logged in with an EIONET account</h2>
+            <h2 i18n:translate="" tal:content="string:Interest groups you need to be logged in with an ${options/network_name} account"></h2>
             <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
