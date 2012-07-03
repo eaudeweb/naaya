@@ -1,5 +1,6 @@
 1.2.14 (unreleased)
 -------------------
+* using network_name in default index for groupware [simiamih]
 * Reverted a change in site_admin_properties [dumitval]
 
 1.2.13 (2012-07-02)
