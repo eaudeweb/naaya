@@ -1,0 +1,10 @@
+Dear Groupware Manager,
+
+Your IG Data export has been completed.
+You need to access "Export/Import IG Data" on the destination server and pick
+the location where data will be imported.
+You will be requested the path to the exported zexp file:
+
+<span tal:replace="options/zexp_path" />
+
+If you have any difficulties, please contact Helpdesk or the Groupware developers.
