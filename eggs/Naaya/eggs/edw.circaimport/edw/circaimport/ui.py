@@ -1,17 +1,23 @@
 import os.path
 import logging
 import traceback
+import operator
 from StringIO import StringIO
 
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import transaction
 
-from middleware import (add_files_and_folders_from_circa_export,
-                             get_acl_users_sources_titles,
-                             add_roles_from_circa_export,
-                             add_notifications_from_circa_export,
-                             add_acls_from_circa_export)
+from Products.Naaya.constants import METATYPE_NYSITE
+from naaya.groupware.constants import METATYPE_GROUPWARESITE
+
+from edw.circaimport.middleware import (add_files_and_folders_from_circa_export,
+                                        get_acl_users_sources_titles,
+                                        add_roles_from_circa_export,
+                                        add_notifications_from_circa_export,
+                                        add_acls_from_circa_export)
+from edw.circaimport import zexpcopy
+
 
 upload_prefix = None
 logger = logging.getLogger('edw.circaimport.ui')
@@ -25,6 +31,9 @@ import_roles_zpt = PageTemplateFile('zpt/import_roles.zpt', globals())
 import_notifications_zpt = PageTemplateFile('zpt/import_notifications.zpt',
                                         globals())
 import_acls_zpt = PageTemplateFile('zpt/import_acls.zpt', globals())
+zexpcopy_export_zpt = PageTemplateFile('zpt/zexpcopy/export.zpt', globals())
+zexpcopy_import_zpt = PageTemplateFile('zpt/zexpcopy/import.zpt', globals())
+zexpcopy_tree_ajax_zpt = PageTemplateFile('zpt/zexpcopy/tree_ajax.zpt', globals())
 
 def init_log_stream():
     log = StringIO()
@@ -189,3 +198,50 @@ class ImportACLsFromCirca(BrowserPage):
             logger.critical(traceback.format_exc())
 
         return import_acls_zpt.__of__(ctx)(report=log.getvalue())
+
+class ZExportData(BrowserPage):
+    def __call__(self):
+        ctx = self.context.aq_inner
+        info = error = ''
+        sites = ctx.objectValues([METATYPE_NYSITE, METATYPE_GROUPWARESITE])
+        sites = [(s.getId(), s.title_or_id()) for s in sites]
+        sites.sort(key=operator.itemgetter(0))
+        submit = self.request.form.get('submit')
+        if submit:
+            path = self.request.form.get('location')
+            ig_id = self.request.form.get('ig')
+            ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
+            zexp_path = zexpcopy.write_zexp(ob)
+            options = {
+                'performed': True,
+                'zexp_path': zexp_path,
+                'info': info,
+                'error': error,
+                'igs': sites,
+            }
+            return zexpcopy_export_zpt.__of__(ctx)(**options)
+        else:
+            return zexpcopy_export_zpt.__of__(ctx)(performed=False,
+                                                   igs=sites)
+
+class ZImportData(BrowserPage):
+    def __call__(self):
+        ctx = self.context.aq_inner
+        info = error = ''
+        submit = self.request.form.get('submit')
+        if submit:
+            path = self.request.form.get('path')
+            zexp_path = self.request.form.get('zexp_path')
+            ob = ctx.unrestrictedTraverse(path)
+            new_ids = zexpcopy.load_zexp(zexp_path, ob)
+            return zexpcopy_import_zpt.__of__(ctx)(performed=True, ob=ob,
+                                                   new_ids=new_ids, info=info,
+                                                   error=error)
+        else:
+            return zexpcopy_import_zpt.__of__(ctx)(performed=False)
+
+class ZExpcopyTree(BrowserPage):
+    def __call__(self):
+        ctx = self.context.aq_inner
+        site = ctx.unrestrictedTraverse(self.request.form.get('ig'))
+        return zexpcopy_tree_ajax_zpt.__of__(ctx)(site=site)

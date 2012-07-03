@@ -6,6 +6,12 @@ Forum to move data from Archives instance to Forum/Projects.
 import re
 import transaction
 
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
+
+export_completed_mail_zpt = PageTemplateFile('zpt/zexpcopy/mail_export_done.zpt',
+                                             globals())
+
 
 def manage_main_catch_path(self, REQUEST, manage_tabs_message, title):
     """
@@ -32,4 +38,14 @@ def write_zexp(ob):
 
 def load_zexp(zexp_path, destination):
     """ Given the zexp file, it loads the data in the given OFS destination """
+    existing = destination.objectIds()
     destination._importObjectFromFile(zexp_path, verify=0, set_owner=0)
+    new_ids = list(set(destination.objectIds() - set(existing)))
+    # should I assert len(new_ids) == 1 ?
+    return new_ids
+
+def send_export_completed_mail(zexp_path, mail_from, mail_to):
+        mail_body = export_completed_mail_zpt(zexp_path=zexp_path)
+        mail_subject = 'IG Data export completed'
+        email_sender = EmailTool('email_sender', 'Zexpcopy email sender')
+        email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
