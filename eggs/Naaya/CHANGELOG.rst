@@ -1,6 +1,7 @@
 2.13.19 (unreleased)
 --------------------
 * Updates to element_header (flowerpower scheme) [dumitval]
+* Added users_in_role rstk method [bogdatan]
 
 2.13.18 (2012-06-28)
 --------------------
