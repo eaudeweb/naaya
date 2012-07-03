@@ -1,13 +1,18 @@
+from datetime import datetime
+
 from zope.interface import Interface, implements
 from zope.event import notify
 from OFS.SimpleItem import SimpleItem
 from Products.Five.browser import BrowserView
+from App.config import getConfiguration
+
 from Products.NaayaCore.managers.utils import genObjectId
 from naaya.groupware.groupware_site import manage_addGroupwareSite
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
-from datetime import datetime
 
 
+CONFIG = getConfiguration()
+NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
 approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt', globals())
 rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt', globals())
 
@@ -94,7 +99,7 @@ class GWApplication(SimpleItem):
 
         acl_path = self.acl_users.absolute_url(1)
         ac_tool = portal.getAuthenticationTool()
-        ac_tool.manageAddSource(acl_path, 'Eionet')
+        ac_tool.manageAddSource(acl_path, NETWORK_NAME)
         ac_tool.getSources()[0].addUserRoles(name=self.userid, roles=['Administrator'], user_location='Users')
 
     def send_approved_email(self, admin_comments):
