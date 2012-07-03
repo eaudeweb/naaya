@@ -3,6 +3,12 @@
            xmlns:naaya="http://namespaces.zope.org/naaya"
            xmlns:five="http://namespaces.zope.org/five">
 
+  <browser:resourceDirectory
+    directory="www"
+    name="edw.circaimport"
+    permission="zope2.View"
+    />
+
   <naaya:simpleView
        for="naaya.groupware.interfaces.IGroupwareApplication"
        name="circa_redirect"
@@ -56,6 +62,27 @@
       for="Products.Naaya.interfaces.INySite"
       name="import_acls_from_circa"
       class=".ui.ImportACLsFromCirca"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
+      for="naaya.groupware.interfaces.IGroupwareApplication"
+      name="zexport_data"
+      class=".ui.ZExportData"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
+      for="naaya.groupware.interfaces.IGroupwareApplication"
+      name="zimport_data"
+      class=".ui.ZImportData"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
+      for="naaya.groupware.interfaces.IGroupwareApplication"
+      name="zexpcopy_tree_ajax"
+      class=".ui.ZExpcopyTree"
       permission="zope2.ViewManagementScreens"
       />
 
