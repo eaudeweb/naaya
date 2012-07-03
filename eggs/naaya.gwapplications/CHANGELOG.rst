@@ -1,4 +1,7 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
+------------------
+
+1.1.5 (2012-07-03)
 ------------------
 * using NETWORK_NAME for ldap source object title [simiamih]
 
