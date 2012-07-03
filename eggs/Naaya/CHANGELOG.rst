@@ -1,4 +1,7 @@
-2.13.19 (unreleased)
+2.13.20 (unreleased)
+--------------------
+
+2.13.19 (2012-07-03)
 --------------------
 * Updates to element_header (flowerpower scheme) [dumitval]
 * Added users_in_role rstk method [bogdatan]
