@@ -1,4 +1,7 @@
-3.0.0 (unreleased)
+3.0.1 (unreleased)
+--------------------
+
+3.0.0 (2012-07-04)
 --------------------
 * Adapted folder_index, site_index and site_admin_template
   to work with the flowerpower standard_template [dumitval]
