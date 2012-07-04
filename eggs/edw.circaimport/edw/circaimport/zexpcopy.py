@@ -8,8 +8,10 @@ import transaction
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
+from Products.NaayaCore.EmailTool.EmailTool import EmailTool
 
-export_completed_mail_zpt = PageTemplateFile('zpt/zexpcopy/mail_export_done.zpt',
+
+export_completed_message_zpt = PageTemplateFile('zpt/zexpcopy/mail_export_done.zpt',
                                              globals())
 
 
@@ -44,8 +46,7 @@ def load_zexp(zexp_path, destination):
     # should I assert len(new_ids) == 1 ?
     return new_ids
 
-def send_export_completed_mail(zexp_path, mail_from, mail_to):
-        mail_body = export_completed_mail_zpt(zexp_path=zexp_path)
+def send_export_completed_mail(mail_body, mail_from, mail_to):
         mail_subject = 'IG Data export completed'
         email_sender = EmailTool('email_sender', 'Zexpcopy email sender')
         email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
