@@ -1,4 +1,7 @@
-1.4.10 (unreleased)
+1.4.11 (unreleased)
+------------------
+
+1.4.10 (2012-07-04)
 ------------------
 * adapted to correctly create footnote links [dumitval]
 * fixed deprecation warning (bad super addressing) [simiamih]
