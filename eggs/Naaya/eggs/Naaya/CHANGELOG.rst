@@ -1,5 +1,6 @@
 2.13.20 (unreleased)
 --------------------
+* Allow id tag in portal editor anchor tags [dumitval]
 * Code cosmetics on flowerpower standard_template [dumitval]
 
 2.13.19 (2012-07-03)
