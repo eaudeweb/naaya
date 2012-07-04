@@ -18,6 +18,8 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
+import re
+
 #Zope imports
 from OFS.Folder import Folder
 from Globals import InitializeClass
@@ -41,6 +43,8 @@ def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):
         id = self.utSlugify(id)
     else:
         id = self.make_paragraph_id()
+    body = re.sub(r'href="\#_ftn([0-9]*)"', r'href="#_ftn\1" id="_ftnref\1"', body)
+    body = re.sub(r'href="\#_ftnref([0-9]*)"', r'href="#_ftnref\1" id="_ftn\1"', body)
     ob = Paragraph(id, title, body)
     self._setObject(id, ob)
     ob = self._getOb(id)
@@ -51,7 +55,6 @@ def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):
     else:
         self.paragraph_ids.append(id)
     self._p_changed = 1
-
 
 class Paragraph(Folder):
 

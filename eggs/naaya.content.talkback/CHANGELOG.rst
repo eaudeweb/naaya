@@ -1,5 +1,6 @@
 1.4.10 (unreleased)
 ------------------
+* adapted to correctly create footnote links [dumitval]
 * fixed deprecation warning (bad super addressing) [simiamih]
 * fixed tests: invitees comments do not need aproval [simiamih]
 
