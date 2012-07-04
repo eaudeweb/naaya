@@ -1,5 +1,9 @@
-2.13.21 (unreleased)
+3.0.0 (unreleased)
 --------------------
+* Adapted folder_index, site_index and site_admin_template
+  to work with the flowerpower standard_template [dumitval]
+* Changed left_logo.gif [dumitval]
+* Deleted old skin+scheme [dumitval]
 * Adapted skin/standard_template to the new layout
   (the diff helps future updates of envirowindows, forum, etc) [dumitval]
 
