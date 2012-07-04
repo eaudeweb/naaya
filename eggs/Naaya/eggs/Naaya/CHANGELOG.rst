@@ -1,5 +1,7 @@
 2.13.21 (unreleased)
 --------------------
+* Adapted skin/standard_template to the new layout
+  (the diff helps future updates of envirowindows, forum, etc) [dumitval]
 
 2.13.20 (2012-07-04)
 --------------------
