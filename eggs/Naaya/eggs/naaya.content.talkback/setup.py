@@ -9,7 +9,7 @@ setup(name='naaya.content.talkback',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 2.13.20',
           'BeautifulSoup >= 3.0.7a',
           'scrubber >= 1.4.2',
           'xlrd'
