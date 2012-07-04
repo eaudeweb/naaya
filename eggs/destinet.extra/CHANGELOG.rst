@@ -1,4 +1,7 @@
-1.1.12 (unreleased)
+1.1.13 (unreleased)
+====================
+
+1.1.12 (2012-07-04)
 ====================
 * approve/unapprove object action is performed on synced pointers [simiamih]
 
