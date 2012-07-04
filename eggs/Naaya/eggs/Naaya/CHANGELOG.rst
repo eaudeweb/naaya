@@ -1,4 +1,7 @@
-2.13.20 (unreleased)
+2.13.21 (unreleased)
+--------------------
+
+2.13.20 (2012-07-04)
 --------------------
 * Allow id tag in portal editor anchor tags [dumitval]
 * Code cosmetics on flowerpower standard_template [dumitval]
