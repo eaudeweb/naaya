@@ -211,11 +211,22 @@ class ZExportData(BrowserPage):
             path = self.request.form.get('location')
             ig_id = self.request.form.get('ig')
             ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
-            zexp_path = zexpcopy.write_zexp(ob)
+            sender = ctx.applications.mail_from
+            to = self.request.AUTHENTICATED_USER.mail
+            try:
+                zexp_path = zexpcopy.write_zexp(ob)
+            except Exception, e:
+                zexp_path = ''
+                error = "Error while exporting %s IG Data: %s" % (ig_id, e.args)
+                zexpcopy.send_export_completed_mail(error, sender, to)
+            else:
+                info = zexpcopy.export_completed_message_zpt.__of__(ctx)(zexp_path=zexp_path,
+                                                                    ob_url=ob.absolute_url())
+                zexpcopy.send_export_completed_mail(info, sender, to)
             options = {
                 'performed': True,
                 'zexp_path': zexp_path,
-                'info': info,
+                'info': info.replace('\n', '<br />\n'),
                 'error': error,
                 'igs': sites,
             }
@@ -228,17 +239,34 @@ class ZImportData(BrowserPage):
     def __call__(self):
         ctx = self.context.aq_inner
         info = error = ''
+        sites = ctx.objectValues([METATYPE_NYSITE, METATYPE_GROUPWARESITE])
+        sites = [(s.getId(), s.title_or_id()) for s in sites]
+        sites.sort(key=operator.itemgetter(0))
         submit = self.request.form.get('submit')
         if submit:
-            path = self.request.form.get('path')
             zexp_path = self.request.form.get('zexp_path')
-            ob = ctx.unrestrictedTraverse(path)
-            new_ids = zexpcopy.load_zexp(zexp_path, ob)
+            path = self.request.form.get('location')
+            ig_id = self.request.form.get('ig')
+            ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
+            sender = ctx.applications.mail_from
+            to = self.request.AUTHENTICATED_USER.mail
+            new_ids = []
+            try:
+                new_ids = zexpcopy.load_zexp(zexp_path, ob)
+            except IOError, e:
+                error = (('Can not read file with exported data. '
+                          'Did you enter correctly the path you received by '
+                          'email after export?. Error was: %s') % e.args)
+            except Exception, e:
+                error = 'Error importing data from zexp file: %s' % e.args
+            else:
+                info = 'The import process ended without errors.'
             return zexpcopy_import_zpt.__of__(ctx)(performed=True, ob=ob,
                                                    new_ids=new_ids, info=info,
-                                                   error=error)
+                                                   error=error, igs=sites)
         else:
-            return zexpcopy_import_zpt.__of__(ctx)(performed=False)
+            return zexpcopy_import_zpt.__of__(ctx)(performed=False,
+                                                   igs=sites)
 
 class ZExpcopyTree(BrowserPage):
     def __call__(self):
