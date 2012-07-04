@@ -2,14 +2,27 @@ from mock import Mock
 import logging
 from tempfile import NamedTemporaryFile
 
+import transaction
+from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.User import UnrestrictedUser
+
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
+from naaya.core.zope2util import path_in_site
 from naaya.content.url.url_item import addNyURL
 from naaya.content.pointer.pointer_item import NyPointer
 
 import destinet.publishing
 from destinet.publishing.DestinetPublisher import manage_addDestinetPublisher
+
+
+def loginUnrestricted():
+    """ """
+    noSecurityManager()
+    god = UnrestrictedUser('god', 'god', [], '')
+    newSecurityManager(None, god)
+    return god
 
 
 class PublisherTestSuite(NaayaTestCase):
@@ -61,3 +74,26 @@ class PublisherTestSuite(NaayaTestCase):
         log_content = self.logfile.read()
         self.assertTrue("Country 'Not Existing' not found in destinet countries"
                         in log_content)
+
+    def test_cut_paste(self):
+        loginUnrestricted()
+        addNyURL(self.portal.resources, id='url', title='url',
+                 coverage='Georgia, Not Existing', topics=['atopic'],
+                 url='http://eaudeweb.ro', contributor='simiamih')
+        transaction.commit()
+        cp = self.portal.resources.manage_cutObjects('url')
+        self.portal.countries.manage_pasteObjects(cp)
+        ob = self.portal.countries.url
+        new_path = path_in_site(ob)
+        self.assertEqual(self.portal.topics.atopic.url.pointer, new_path)
+        self.assertTrue(self.portal.countries.georgia.url.pointer, new_path)
+
+    def test_approve_unapprove(self):
+        addNyURL(self.portal.resources, id='url', title='url',
+                 coverage='Georgia, Not Existing', topics=['atopic'],
+                 url='http://eaudeweb.ro', contributor='simiamih')
+        ob = self.portal.resources.url
+        a_pointer = self.portal.countries.georgia.url
+        self.assertEqual(ob.approved, a_pointer.approved)
+        ob.approveThis(1, 'simiamih')
+        self.assertEqual(ob.approved, a_pointer.approved)

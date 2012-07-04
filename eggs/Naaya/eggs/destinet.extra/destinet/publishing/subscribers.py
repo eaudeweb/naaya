@@ -141,6 +141,28 @@ def _qualifies_for_topics_only(obj):
           (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
         )
 
+def get_linked_pointer_brains(obj):
+    """
+    Tests if object had met condition to be synced with pointers
+    and returns brains to existing ones. Used by handlers to keep them in sync.
+
+    """
+    site = obj.getSite()
+    q_both = _qualifies_for_both(obj)
+    q_topics = _qualifies_for_topics_only(obj)
+    pointers = []
+    if q_topics or q_both:
+        cat = site.getCatalogTool()
+        pointers = cat.search({'meta_type': 'Naaya Pointer',
+                               'path': [ofs_path(site.countries),
+                                        ofs_path(site.topics),
+                                        ofs_path(getattr(site, 'resources')),
+                                        # kept for pointers prior to v 1.1
+                                        ofs_path(getattr(site, 'who-who'))],
+                               'pointer': path_in_site(obj)})
+
+    return pointers
+
 def handle_add_content(event):
     """
     Tests whether this requires adding pointers and perform the action
@@ -208,3 +230,29 @@ def handle_del_content(obj, event):
         for brain in pointers:
             pointer = brain.getObject()
             pointer.aq_parent._delObject(pointer.id)
+
+def handle_approval_unapproval(obj, approved, approved_by):
+    """
+    Approve/Unapprove pointers. Used by the two event handlers for approval
+
+    """
+    pointer_brains = get_linked_pointer_brains(obj)
+    for brain in pointer_brains:
+        pointer = brain.getObject()
+        try:
+            pointer.approveThis(1, approved_by)
+        except Exception:
+            logger.exception("Can set approve=%s by %s for pointer %s",
+                             approved, approved_by, ofs_path(pointer))
+
+def handle_approve_content(event):
+    """ Also approve pointers if this object is synced with pointers. """
+    if not getattr(event.context.getSite(), 'destinet.publisher', False):
+        return
+    handle_approval_unapproval(event.context, 1, event.contributor)
+
+def handle_unapprove_content(event):
+    """ Also unapprove pointers if this object is synced with pointers. """
+    if not getattr(event.context.getSite(), 'destinet.publisher', False):
+        return
+    handle_approval_unapproval(event.context, 0, event.contributor)
