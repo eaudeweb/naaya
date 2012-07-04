@@ -51,6 +51,8 @@ class PublisherTestSuite(NaayaTestCase):
         schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
         schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
         manage_addDestinetPublisher(self.portal)
+        cat = self.portal.getCatalogTool()
+        cat.addIndex('pointer', 'FieldIndex')
         # Logger setup for testing:
         logger = logging.getLogger(destinet.publishing.subscribers.__name__)
         self.logfile = NamedTemporaryFile()

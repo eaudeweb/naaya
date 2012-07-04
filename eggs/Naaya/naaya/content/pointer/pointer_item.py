@@ -24,6 +24,7 @@ from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
 from permissions import PERMISSION_ADD_POINTER
+from constants import META_TYPE_NAAYA_POINTER
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -49,7 +50,7 @@ config = {
         'product': 'NaayaContent',
         'module': 'pointer_item',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': 'Naaya Pointer',
+        'meta_type': META_TYPE_NAAYA_POINTER,
         'label': 'Pointer',
         'permission': PERMISSION_ADD_POINTER,
         'forms': ['pointer_add', 'pointer_edit', 'pointer_index'],
