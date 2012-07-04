@@ -20,24 +20,29 @@
 	<br />
 	<!-- real content-->
 	<tal:block condition="options/performed">
-		<span tal:replace="options/zexp_path" />
+		<div tal:condition="options/error" class="error-msg" tal:content="structure options/error">
+		</div>
+		<div tal:condition="options/info" class="system-msg" tal:content="structure options/info">
+		</div>
 	</tal:block>
-
-	<form class="exportimport">
-		<label class="question">Select content to be exported:</label>
-		<br /><br />
-                <select id="ig_selection" name="ig">
-                    <option value="-">First select the source IG</option>
-                    <tal:block repeat="ig options/igs">
-                    <option tal:attributes="value python:ig[0]" tal:content="python: '%s (%s)' % ig"></option>
-                    </tal:block>
-                </select>
-                <div id="treehere">
-                </div>
-                <div style="clear: both;"></div>
-		<br /><br />
-		<input value="Export" type="submit" class="btn" name="submit" />
-	</form>
+	<tal:block condition="not:options/performed">
+		<form class="exportimport">
+			<label class="question">Select content to be exported:</label>
+			<br /><br />
+			<select id="ig_selection" name="ig">
+			    <option value="-">First select the source IG</option>
+			    <tal:block repeat="ig options/igs">
+			    <option tal:attributes="value python:ig[0]" tal:content="python: '%s (%s)' % ig"></option>
+			    </tal:block>
+			</select>
+			<div id="treehere">
+			</div>
+			<div style="clear: both;"></div>
+			<br /><br />
+			<input value="Export" type="submit" class="btn" name="submit" />
+			<small>(you will get an email when the export is finished in case the browser times out waiting for it)</small>
+		</form>
+	</tal:block>
 	</div><!--  end div#workarea -->
 
 </metal:block>
