@@ -36,6 +36,16 @@
         handler=".subscribers.handle_edit_content"
         />
 
+    <zope:subscriber
+        for="naaya.content.base.interfaces.INyContentObjectApproveEvent"
+        handler=".subscribers.handle_approve_content"
+        />
+
+    <zope:subscriber
+        for="naaya.content.base.interfaces.INyContentObjectUnapproveEvent"
+        handler=".subscribers.handle_unapprove_content"
+        />
+
    <zope:subscriber
         for="naaya.content.base.interfaces.INyContentObject
              zope.app.container.interfaces.IObjectRemovedEvent"

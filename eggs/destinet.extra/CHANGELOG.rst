@@ -1,5 +1,6 @@
 1.1.12 (unreleased)
 ====================
+* approve/unapprove object action is performed on synced pointers [simiamih]
 
 1.1.11 (2012-05-10)
 ====================
