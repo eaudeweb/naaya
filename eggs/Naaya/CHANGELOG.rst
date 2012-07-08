@@ -1,5 +1,7 @@
 3.0.1 (unreleased)
 --------------------
+* added some missing images from the old scheme [dumitval]
+* renamed the skin and scheme back to the original ids [dumitval]
 
 3.0.0 (2012-07-04)
 --------------------

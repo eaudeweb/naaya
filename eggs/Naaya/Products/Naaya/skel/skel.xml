@@ -90,8 +90,8 @@
 		<form id="sitemap_xml" title="Google sitemap"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
 	</forms>
-	<layout default_skin_id="flowerpower" default_scheme_id="color-blue">
-		<skin id="flowerpower" title="Flowerpower">
+	<layout default_skin_id="skin" default_scheme_id="scheme">
+		<skin id="skin" title="Flowerpower">
 			<file id="common.css" title=""/>
 			<template id="element_breadcrumb" title="element breadcrumb"/>
 			<template id="element_footer" title="element footer"/>
@@ -105,10 +105,28 @@
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="site_index" title="Portal homepage index"/>
 			<template id="standard_template" title="Portal standard template"/>
-			<scheme id="color-blue" title="Color blue">
+			<scheme id="scheme" title="Color blue">
 				<file id="style.css" title=""/>
 				<image id="background_left_portlet.png" title=""/>
 				<image id="background_right_portlet.png" title=""/>
+				<image id="bg-lang-btns.gif" title=""/>
+				<image id="powered.gif" title="Powered"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="addcomment.gif" title="Add comment"/>
+				<image id="comment.gif" title="Comment icon"/>
+				<image id="logintoadd.gif" title="Login to add"/>
+				<image id="trash.gif" title="Trash"/>
+				<image id="sort_asc.gif" title="Sort in ascending order"/>
+				<image id="sort_desc.gif" title="Sort in descending order"/>
+				<image id="sort_not.gif" title="Not sortable"/>
+				<image id="translate.gif" title="Translating language"/>
+				<image id="header-bg.gif" title="Header background"/>
+				<image id="left-li-bg.gif" title="Left background"/>
+				<image id="menunav-a-hover.gif" title="Menu hover"/>
+				<image id="menunav-bg.gif" title="Menunav background"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 		</skin>
 	</layout>
