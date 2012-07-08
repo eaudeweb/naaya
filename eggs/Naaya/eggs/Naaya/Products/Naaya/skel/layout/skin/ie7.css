@@ -102,12 +102,12 @@ body .login-form .field label {
 
 /* instead of the gradient, which is not supported */
 body .left_portlet {
-  background: url("color-blue/background_left_portlet.png") repeat-y;
+  background: url("scheme/background_left_portlet.png") repeat-y;
 }
 
 /* instead of the gradient, which is not supported */
 body .portlet-column-right .right_portlet {
-  background: url("color-blue/background_right_portlet.png") repeat-y; 
+  background: url("scheme/background_right_portlet.png") repeat-y; 
 }
 
 body .message_top_buttons2 {
