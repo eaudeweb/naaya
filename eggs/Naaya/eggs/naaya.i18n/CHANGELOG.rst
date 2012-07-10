@@ -1,4 +1,7 @@
-1.1.2 (unreleased)
+1.1.3 (unreleased)
+-------------------
+
+1.1.2 (2012-07-10)
 -------------------
 * Fixed messages search to look in msgid too (some old messages do not
   have their default on 'en' translation) [bogdatan]
