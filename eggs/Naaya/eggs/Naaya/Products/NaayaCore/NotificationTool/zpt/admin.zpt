@@ -168,7 +168,7 @@
             <input type="text" id="location" name="location" class="sitemap_tree_target" style="width:40%;"/>
         </div>
         <div class="field-inline">
-            <label for="notif_type">Subscribe to</label>
+            <label for="notif_type" i18n:translate="">Subscribe to</label>
             <select name="notif_type" id="notif_type">
                 <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
                 <option value="daily" tal:condition="python:'daily' in available_subscriptions" i18n:translate="">Daily digest</option>

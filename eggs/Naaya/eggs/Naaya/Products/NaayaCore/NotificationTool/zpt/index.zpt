@@ -27,7 +27,7 @@
            class="subscribe_me-sitemap_tree_target" />
 </div>
 <div class="field-inline">
-    <label for="subscribe_me-notif_type">Subscribe to</label>
+    <label for="subscribe_me-notif_type" i18n:translate="">Subscribe to</label>
     <select name="notif_type" id="subscribe_me-notif_type">
         <option value="instant"
                 tal:condition="python:'instant' in can_subscribe_to"

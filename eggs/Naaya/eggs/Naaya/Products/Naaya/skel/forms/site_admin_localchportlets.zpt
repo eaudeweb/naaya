@@ -22,10 +22,7 @@
 </p>
 <fieldset>
   <legend i18n:translate="">Choose the local channel you wish to generate a portlet from</legend>
-  <p i18n:translate="">
-    The list below presents the local channels previously defined in this portal
-    for which a portlet was not yet defined
-  </p>
+  <p i18n:translate="">The list below presents the local channels previously defined in this portal for which a portlet was not yet defined</p>
   <form method="post" tal:attributes="action string:${site_url}/admin_addlocalchportlet">
     <div class="field-inline">
       <label for="id" i18n:translate="">Local channel</label>

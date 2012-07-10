@@ -7,11 +7,11 @@
 	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
-<p class="page-description">
+<p class="page-description" i18n:translate="">
 	The list below presents the top-level approved Naaya Folders from this site. The main sections
 	are a subset of those that will appear listed on all pages as tabs, in menus, etc.
 	depending of the layout.
-	Select the main sections relevant for your site and press <strong>Save changes</strong>.
+	Select the main sections relevant for your site and press <span i18n:name="save-changes"><strong i18n:translate="">Save changes</strong></span>.
 </p>
 
 <form method="post" action="manageMainTopics">

@@ -14,10 +14,7 @@
 </ul>
 </div>
 
-<p i18n:translate="" class="cleaner">
-	This page displays the list of available special portlets. These portlets cannot be erased or modified
-	using this page.
-</p>
+<p i18n:translate="" class="cleaner">This page displays the list of available special portlets. These portlets cannot be erased or modified using this page.</p>
 
 <table class="datatable" tal:define="portlets python:here.getPortletsTool().get_special_portlets()">
 	<thead>

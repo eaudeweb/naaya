@@ -162,13 +162,13 @@ $(function(){
     <div class="field-inline">
     <label for="inherit" i18n:translate="">Inherit</label>
     <input type="checkbox" id="inherit" name="inherit:boolean" checked="checked" />
-    <small><em>(show portlet in subfolders of location)</em></small>
+    <small><em i18n:translate="">(show portlet in subfolders of location)</em></small>
     </div>
 
     <div class="field-inline">
     <label for="location" i18n:translate="">Location</label>
     <input name="location" class="sitemap_tree_target" id="location" type="text" />
-    <small><em>(choose a location from the tree below)</em></small>
+    <small><em i18n:translate="">(choose a location from the tree below)</em></small>
 
     <div id="sitemap_tree" class="sitemap_tree"></div>
     <metal:block use-macro="here/macro_utils/macros/ajaxtree" />

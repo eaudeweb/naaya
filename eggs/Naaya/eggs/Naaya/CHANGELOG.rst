@@ -1,5 +1,6 @@
 3.0.1 (unreleased)
 --------------------
+* added missing i18n:translate attribute on HTML tags [bogdatan]
 * added some missing images from the old scheme [dumitval]
 * renamed the skin and scheme back to the original ids [dumitval]
 
