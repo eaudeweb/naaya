@@ -6,10 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
 <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
 
-<p i18n:translate="">
-	This page presents links to all content for which comments have been added. You can follow
-	the links, see the comments and delete the irrelevant ones.
-</p>
+<p i18n:translate="">This page presents links to all content for which comments have been added. You can follow the links, see the comments and delete the irrelevant ones.</p>
 
 <table cellpadding="0" cellspacing="0" class="datatable display listing" id="comments-list">
     <thead>

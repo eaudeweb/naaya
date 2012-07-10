@@ -24,10 +24,7 @@
 
 <fieldset>
   <legend i18n:translate="">Choose the list of links you wish to generate a portlet from</legend>
-  <p i18n:translate="">
-    The list below presents the list of links previously defined in this portal
-    for which a portlet was not yet defined
-  </p>
+  <p i18n:translate="">The list below presents the list of links previously defined in this portal for which a portlet was not yet defined</p>
   <form method="post" tal:attributes="action string:${site_url}/admin_addlinksportlet">
     <div class="field-inline">
       <label for="id" i18n:translate="">List of links</label>

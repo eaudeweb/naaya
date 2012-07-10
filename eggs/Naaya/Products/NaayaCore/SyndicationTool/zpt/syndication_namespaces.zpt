@@ -5,7 +5,7 @@
 	Saved changes. (<span tal:replace="here/ZopeTime" />)
 </div>
 
-<p class="page-description">
+<p class="page-description" i18n:translate="">
 	The list below presents the namespaces included in the RDF files generated from local channels.
 </p>
 <dl>

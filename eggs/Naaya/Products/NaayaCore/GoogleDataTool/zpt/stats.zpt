@@ -16,7 +16,7 @@
 
 <tal:block condition="authorized" content="structure here/stats_info" />
 
-<p tal:condition="not:authorized">You don't have access to the Google Analytics statistics. You need to grant access to your account from the <a tal:attributes="href string:${here/absolute_url}/admin_account">settings</a> page.</p>
+<p tal:condition="not:authorized" i18n:translate="">You don't have access to the Google Analytics statistics. You need to grant access to your account from the <span i18n:name="account-settings"><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">settings</a></span> page.</p>
 </tal:block>
 
 </tal:block>

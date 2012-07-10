@@ -7,10 +7,10 @@
 	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
-<p class="page-description">
+<p class="page-description" i18n:translate="">
 	The list below presents the types of objects installed on this server.
 	Every time you install a new product and want to add instances of its objects inside Naaya Folders,
-	select them from the list below and press <strong>Save changes</strong>.
+	select them from the list below and press <span i18n:name="save-changes"><strong i18n:translate="">Save changes</strong></span>.
 </p>
 
 <form method="post" action="manageSubobjects">

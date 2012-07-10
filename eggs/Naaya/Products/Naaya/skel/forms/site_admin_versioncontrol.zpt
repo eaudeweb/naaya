@@ -4,9 +4,7 @@
 
 <tal:block metal:fill-slot="section">
 <div tal:condition="python:here.checkPermissionValidateObjects() or here.checkPermissionPublishObjects()">
-<p i18n:translate="">
-	This page lists the active versions opened by users on various types of content in this portal.
-</p>
+<p i18n:translate="">This page lists the active versions opened by users on various types of content in this portal.</p>
 <tal:block tal:define="site_url here/absolute_url; objects here/getCheckedOutObjects">
 <ul>
 	<li tal:repeat="object objects">

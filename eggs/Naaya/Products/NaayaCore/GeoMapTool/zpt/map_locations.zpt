@@ -23,9 +23,7 @@
 //-->;
 </script>
 
-<p i18n:translate="" class="cleaner">
-	Use this form to edit/delete the locations present in this portal.
-</p>
+<p i18n:translate="" class="cleaner">Use this form to edit/delete the locations present in this portal.</p>
 
 <br clear="all" />
 

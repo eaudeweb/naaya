@@ -1,5 +1,7 @@
 1.1.2 (unreleased)
 -------------------
+* Fixed messages search to look in msgid too (some old messages do not
+  have their default on 'en' translation) [bogdatan]
 
 1.1.1 (2012-06-08)
 -------------------

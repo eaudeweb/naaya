@@ -29,7 +29,7 @@
 			</div>
 		</form>
 		<div class="description-text">
-			<p class="cleaner">
+			<p class="cleaner" i18n:translate="">
 				Do not create a role unless you really need it.
 			</p>
 		</div>

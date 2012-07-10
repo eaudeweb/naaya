@@ -20,10 +20,7 @@
 </ul>
 </div>
 
-<p i18n:translate="" class="cleaner">
-  This page displays the list of available portlets that contains static HTML. The content of
-  each of them can be modified using an WYSIWYG editor.
-</p>
+<p i18n:translate="" class="cleaner">This page displays the list of available portlets that contains static HTML. The content of each of them can be modified using an WYSIWYG editor.</p>
 <p>
   <a tal:attributes="href string:${site_url}/admin_addhtmlportlet" i18n:translate="">Add new portlet</a>
 </p>
