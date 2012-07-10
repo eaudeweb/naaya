@@ -98,7 +98,11 @@ class AdminI18n(Implicit):
         try: regex = re.compile(query.strip().lower())
         except: regex = re.compile('')
         for m, t in self.catalog.messages():
-            default = t.get('en', m)
+            default = t.get('en', m).strip()
+            # Some old messages saved in catalog do not have their
+            # default set on 'en' translation
+            if not default:
+                default = m
             if regex.search(default.lower()):
                 if isinstance(m, unicode):
                     m = m.encode('utf-8')
