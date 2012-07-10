@@ -1,4 +1,7 @@
-3.0.1 (unreleased)
+3.0.2 (unreleased)
+--------------------
+
+3.0.1 (2012-07-10)
 --------------------
 * added missing i18n:translate attribute on HTML tags [bogdatan]
 * added some missing images from the old scheme [dumitval]
