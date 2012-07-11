@@ -1,5 +1,6 @@
 1.1.13 (unreleased)
 ====================
+* refactored unit testing code [simiamih]
 
 1.1.12 (2012-07-04)
 ====================
