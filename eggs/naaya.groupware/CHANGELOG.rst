@@ -1,5 +1,6 @@
 1.2.15 (unreleased)
 -------------------
+* Removed float for 'Tips' on login form [bogdatan]
 
 1.2.14 (2012-07-03)
 -------------------
