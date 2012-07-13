@@ -1,5 +1,6 @@
 1.4.11 (unreleased)
 ------------------
+* #964 - redesigned comment edit/delete permissions [simiamih]
 
 1.4.10 (2012-07-04)
 ------------------

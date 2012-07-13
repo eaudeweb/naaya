@@ -156,12 +156,29 @@ class TalkBackConsultationComment(NyFSFile):
         else:
             return None
 
+    def has_replies(self):
+        for comment in self.aq_parent.get_comments():
+            if comment.reply_to == self.getId():
+                return True
+        return False
+
     def check_manage_permissions(self):
-        """ Allow people with PERMISSION_MANAGE_TALKBACKCONSULTATION """
+        """
+        * allow people with PERMISSION_MANAGE_TALKBACKCONSULTATION
+        * allow owner of comment (contributor)
+        * allow inviter of the owner
+
+        """
         if self.checkPermissionManageTalkBackConsultation():
             return True
 
         auth_tool = self.getAuthenticationTool()
+        owner_tuple = self.getOwnerTuple()
+        if owner_tuple is not None:
+            user_path, owner_id = owner_tuple
+            if owner_id == auth_tool.get_current_userid():
+                return True # current user is comment owner
+
         if self.invite_key is not None:
             invite = self.get_consultation().invitations.get_invitation(self.invite_key)
             if invite.inviter_userid == auth_tool.get_current_userid():
@@ -169,25 +186,26 @@ class TalkBackConsultationComment(NyFSFile):
 
         return False
 
+    def check_del_permissions(self):
+        """
+        Same as manage_permissions, except
+        user can not delete comment if there are replies to it.
+
+        """
+        if not self.check_manage_permissions():
+            return False
+        if self.has_replies():
+            return False
+        return True
+
     def check_edit_permissions(self):
         """
-        Allow people with PERMISSION_REVIEW_TALKBACKCONSULTATION.
-        In the case of invited comments, also allow the inviter.
+        Same permission as `manage`. Also, same permission as `delete`,
+        except for the no-replies condition missing here.
+        Used to be different, kept if needed to be customized at some point.
+
         """
-
-        if self.check_manage_permissions():
-            return True
-
-        auth_tool = self.getAuthenticationTool()
-        owner = self.getOwner()
-        if hasattr(owner, 'name'):
-            ownerid = owner.name
-            if isinstance(ownerid, unicode):
-                ownerid = ownerid.encode('utf-8')
-            if ownerid == auth_tool.get_current_userid():
-                return True # user can edit his own comments
-
-        return False
+        return self.check_manage_permissions()
 
     security.declarePublic('save_modifications')
     def save_modifications(self, message, REQUEST=None):
