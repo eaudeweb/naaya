@@ -1,4 +1,7 @@
-1.4.11 (unreleased)
+1.4.12 (unreleased)
+------------------
+
+1.4.11 (2012-07-13)
 ------------------
 * #964 - redesigned comment edit/delete permissions [simiamih]
 
