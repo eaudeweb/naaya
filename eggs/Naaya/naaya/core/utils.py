@@ -86,7 +86,7 @@ def call_method(obj, attr, default):
     or `default` if `obj` doesn't have `attr`.
     """
     if get_noaq_attr(obj, attr, default) != default:
-        return obj[attr]()
+        return getattr(obj, attr)()
     else:
         return default
 
