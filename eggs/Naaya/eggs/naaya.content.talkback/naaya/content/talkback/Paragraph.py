@@ -112,15 +112,19 @@ class Paragraph(Folder):
     _delete_comment_confirmation = NaayaPageTemplateFile(
             'zpt/paragraph_delete_comment', globals(),
             'tbconsultation_paragraph_delete_comment')
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
+    security.declareProtected(view, 'delete_comment')
     def delete_comment(self, comment_id, REQUEST=None):
         """ """
-        if not isinstance(self._getOb(comment_id), TalkBackConsultationComment):
+        comment = self._getOb(comment_id)
+        if not comment.check_del_permissions():
+            raise Unauthorized
+
+        if not isinstance(comment, TalkBackConsultationComment):
             raise ValueError('Member object with id="%s" is not a TalkBackConsultationComment instance' % comment_id)
 
         if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
             # the client should POST to delete the comment
-            return self._delete_comment_confirmation(self, REQUEST, comment=self._getOb(comment_id))
+            return self._delete_comment_confirmation(self, REQUEST, comment=comment)
 
         self.manage_delObjects([comment_id])
         if REQUEST:
