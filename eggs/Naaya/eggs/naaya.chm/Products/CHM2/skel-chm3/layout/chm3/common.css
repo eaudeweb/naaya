@@ -2,6 +2,14 @@
 Data tables
 */
 
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
 table.datatable {
 	margin: 1em 0em;
 	width: 95%;
