@@ -1,4 +1,7 @@
-3.0.2 (unreleased)
+3.0.3 (unreleased)
+--------------------
+
+3.0.2 (2012-07-18)
 --------------------
 * Fixed naaya.core.utils.call_method() to work with
   Zope 2.12.23 too [bogdatan]
