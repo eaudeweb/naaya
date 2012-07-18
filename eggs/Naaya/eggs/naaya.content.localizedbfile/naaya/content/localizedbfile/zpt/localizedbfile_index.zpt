@@ -104,6 +104,7 @@
     <tr>
         <th i18n:translate="">#</th>
         <th i18n:translate="">File name</th>
+        <th i18n:translate="">Contributor</th>
         <th i18n:translate="">Upload date</th>
         <th i18n:translate="">Size</th>
         <th i18n:translate="">Content type</th>
@@ -118,6 +119,7 @@
         <em tal:condition="version/is_current"
             i18n:translate="">(current)</em>
     </td>
+    <td tal:content="version/contributor" />
     <td tal:content="version/pretty_timestamp" />
     <td tal:content="version/pretty_size" />
     <td>

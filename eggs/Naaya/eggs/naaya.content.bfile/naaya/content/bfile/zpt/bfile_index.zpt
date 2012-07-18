@@ -102,7 +102,9 @@
 <caption i18n:translate="">All versions</caption>
 <thead>
     <tr>
+        <th i18n:translate="">#</th>
         <th i18n:translate="">File name</th>
+        <th i18n:translate="">Contributor</th>
         <th i18n:translate="">Upload date</th>
         <th i18n:translate="">Size</th>
         <th i18n:translate="">Content type</th>
@@ -110,12 +112,14 @@
 </thead>
 <tbody>
 <tr tal:repeat="version options/versions">
+    <td tal:content="version/id" />
     <td>
         <a tal:attributes="href version/url"
            tal:content="version/filename"></a>
         <em tal:condition="version/is_current"
             i18n:translate="">(current)</em>
     </td>
+    <td tal:content="version/contributor" />
     <td tal:content="version/pretty_timestamp" />
     <td tal:content="version/pretty_size" />
     <td>

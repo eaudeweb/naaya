@@ -125,7 +125,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     if file_has_content(_uploaded_file):
-        ob._save_file(_uploaded_file)
+        ob._save_file(_uploaded_file, contributor)
 
     #process parameters
     if self.checkPermissionSkipApproval():
@@ -236,11 +236,12 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         else:
             return None
 
-    def _save_file(self, the_file):
+    def _save_file(self, the_file, contributor):
         # TODO set tzinfo on timestamp
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.utcnow())
+                           timestamp=datetime.utcnow(),
+                           contributor=contributor)
         self._versions.append(bf)
 
     security.declarePrivate('remove_version')
@@ -294,7 +295,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         auth_tool.changeLastPost(contributor)
 
         if file_has_content(_uploaded_file):
-            self._save_file(_uploaded_file)
+            self._save_file(_uploaded_file, contributor)
 
         notify(NyContentObjectEditEvent(self, contributor))
 
@@ -348,6 +349,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             versions[-1]['is_current'] = True
 
         return versions
+
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):

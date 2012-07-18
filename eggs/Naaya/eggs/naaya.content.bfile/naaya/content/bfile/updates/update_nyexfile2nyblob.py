@@ -140,7 +140,8 @@ class Import(object):
 
         """
         for version in value:
-            self.context._save_file(version)
+            self.context._save_file(version,
+                                    contribut='')
     versions = property(None, versions)
 
     def properties(self, value):

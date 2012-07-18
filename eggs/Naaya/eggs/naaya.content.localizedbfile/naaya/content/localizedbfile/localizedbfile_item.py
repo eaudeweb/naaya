@@ -124,7 +124,7 @@ def addNyLocalizedBFile(self, id='', REQUEST=None, contributor=None, _lang=None,
             return
 
     if file_has_content(_uploaded_file):
-        ob._save_file(_uploaded_file, _lang)
+        ob._save_file(_uploaded_file, _lang, contributor)
 
     if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -252,11 +252,12 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         f.write('')
         f.close()
 
-    def _save_file(self, the_file, language):
+    def _save_file(self, the_file, language, contributor):
         """ """
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.utcnow())
+                           timestamp=datetime.utcnow(),
+                           contributor=contributor)
         _versions = self._versions.pop(language, None)
 
         if _versions == None:
@@ -337,7 +338,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         auth_tool.changeLastPost(contributor)
 
         if file_has_content(_uploaded_file):
-            self._save_file(_uploaded_file, _lang)
+            self._save_file(_uploaded_file, _lang, contributor)
 
         notify(NyContentObjectEditEvent(self, contributor))
 
