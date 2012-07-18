@@ -1,4 +1,7 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
+------------------
+
+1.0.4 (2012-07-18)
 ------------------
 * Added contributor to versions [bogdatan]
 * check_item_title is now item_has_title [simiamih]
