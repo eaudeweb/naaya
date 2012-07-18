@@ -150,7 +150,8 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         for c in range(4):
             f = self.make_file('afile%(lang)s' %{'lang':c+1}, 'text/plain', 'some data for file%(file)s'
                     %{'file':c+1})
-            self.portal.myfolder['mylocalizedbfile']._save_file(f, _lang)
+            self.portal.myfolder['mylocalizedbfile']._save_file(f, _lang,
+                                                                contributor='contributor')
 
         transaction.commit()
 
@@ -395,7 +396,8 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'data': '1234',
         }
         lang = 'en'
-        self.the_file._save_file(self.make_file(**file_data), lang)
+        self.the_file._save_file(self.make_file(**file_data), lang,
+                                 contributor='contributor')
         transaction.commit()
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.ob_url_en)
@@ -422,8 +424,10 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'data': 'g'*int(1024*15.3),
         }
         lang = 'en'
-        self.the_file._save_file(self.make_file(**file_data_1), lang)
-        self.the_file._save_file(self.make_file(**file_data_2), lang)
+        self.the_file._save_file(self.make_file(**file_data_1), lang,
+                                 contributor='contributor')
+        self.the_file._save_file(self.make_file(**file_data_2), lang,
+                                 contributor='contributor')
         transaction.commit()
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.ob_url_en)
@@ -456,7 +460,8 @@ class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'data': 'asdf'*1024*64,
         }
         lang = 'en'
-        self.portal.fol.secur._save_file(self.make_file(**self.file_data), lang)
+        self.portal.fol.secur._save_file(self.make_file(**self.file_data), lang,
+                                 contributor='contributor')
         transaction.commit()
         self.the_file = self.portal.fol.secur
 

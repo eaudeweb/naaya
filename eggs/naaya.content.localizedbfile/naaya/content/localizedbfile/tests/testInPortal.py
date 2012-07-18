@@ -60,7 +60,8 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         myfrfile.filename = 'my-fr.jpg'
         myfrfile.headers = {'content-type': 'image/jpeg'}
 
-        mylocalizedbfile._save_file(myfrfile, 'fr')
+        mylocalizedbfile._save_file(myfrfile, 'fr',
+                                 contributor='contributor')
         self.assertEqual(len(mylocalizedbfile._versions), 2)
         self.assertTrue(mylocalizedbfile._versions.has_key('fr'))
         fr_file = mylocalizedbfile._versions['fr'][0]
@@ -88,22 +89,26 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
 
         myfile2 = StringIO('new data')
         myfile2.filename = 'other.txt'
-        mylocalizedbfile._save_file(myfile2, language)
+        mylocalizedbfile._save_file(myfile2, language,
+                                 contributor='contributor')
         myfrfile = StringIO('french data')
         myfrfile.filename = 'french_file.txt'
-        mylocalizedbfile._save_file(myfrfile, 'fr')
+        mylocalizedbfile._save_file(myfrfile, 'fr',
+                                 contributor='contributor')
         myfrfile2 = StringIO('new french data')
         myfrfile2.filename = 'french_file_2.txt'
-        mylocalizedbfile._save_file(myfrfile2, 'fr')
+        mylocalizedbfile._save_file(myfrfile2, 'fr',
+                                 contributor='contributor')
         myfrfile2 = StringIO('newer french data')
         myfrfile2.filename = 'french_file_3.txt'
-        mylocalizedbfile._save_file(myfrfile2, 'fr')
+        mylocalizedbfile._save_file(myfrfile2, 'fr',
+                                 contributor='contributor')
 
         versions_en = mylocalizedbfile._versions_for_tmpl(language)
         self.assertEqual(len(versions_en), 2)
         versions_fr = mylocalizedbfile._versions_for_tmpl('fr')
         self.assertEqual(len(versions_fr), 3)
-        
+
         cv = mylocalizedbfile.current_version
         self.assertEqual(cv.filename, 'other.txt')
         self.assertEqual(cv.size, 8)
@@ -122,24 +127,28 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
 
         language = 'de'
         self.assertRaises(KeyError, mylocalizedbfile.remove_version, 1, language)
-        
+
         language = 'en'
 
         myfile2 = StringIO('new data')
         myfile2.filename = 'other.txt'
-        mylocalizedbfile._save_file(myfile2, language)
+        mylocalizedbfile._save_file(myfile2, language,
+                                 contributor='contributor')
 
         myfrfile = StringIO('new french data')
         myfrfile.filename = 'fr_file1.txt'
-        mylocalizedbfile._save_file(myfrfile, 'fr')
-        
+        mylocalizedbfile._save_file(myfrfile, 'fr',
+                                 contributor='contributor')
+
         myfrfile2 = StringIO('newer french data')
         myfrfile2.filename = 'fr_file2.txt'
-        mylocalizedbfile._save_file(myfrfile2, 'fr')
+        mylocalizedbfile._save_file(myfrfile2, 'fr',
+                                 contributor='contributor')
 
         myfrfile3 = StringIO('latest french data')
         myfrfile3.filename = 'fr_file3.txt'
-        mylocalizedbfile._save_file(myfrfile3, 'fr')
+        mylocalizedbfile._save_file(myfrfile3, 'fr',
+                                 contributor='contributor')
 
         to_remove = mylocalizedbfile._versions[language][1]
         mylocalizedbfile.remove_version(1, language)
@@ -153,7 +162,8 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
 
         myfile3 = StringIO('even newer data')
         myfile3.filename = 'other.txt'
-        mylocalizedbfile._save_file(myfile3, language)
+        mylocalizedbfile._save_file(myfile3, language,
+                                 contributor='contributor')
         self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][2])
 
         self.failUnlessEqual(myfile3.filename, mylocalizedbfile._versions[language][2].filename)
@@ -162,7 +172,7 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
 
         mylocalizedbfile.remove_version(0, language)
         self.assertTrue(mylocalizedbfile.current_version is None)
-       
+
         language = 'fr'
         rm_ver = mylocalizedbfile._versions[language][1]
         mylocalizedbfile.remove_version(1, language)
@@ -182,7 +192,7 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         mylocalizedbfile.remove_version(0, language)
         cv = mylocalizedbfile.current_version
         self.assertTrue(cv is None)
-        
+
     def test_add_no_title(self):
         myfile = StringIO('hello data!')
         myfile.filename = 'my_file_for_title.txt'
@@ -205,4 +215,3 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         file_id = addNyLocalizedBFile(myfolder, uploaded_file=myfile,
                              submitted=1, contributor='contributor')
         self.assertEqual(file_id, 'assapa-c-r-_aaaa1') # as returned by unidecode
-

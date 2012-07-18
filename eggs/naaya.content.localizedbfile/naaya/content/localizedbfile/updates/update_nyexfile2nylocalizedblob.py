@@ -151,7 +151,8 @@ class Import(object):
             if version.__class__ is str:
                 language = version
             elif version.__class__ is  StringIO:
-                self.context._save_file(version, language)
+                self.context._save_file(version, language,
+                                 contributor='')
             else:
                 raise ValueError
 
