@@ -23,6 +23,7 @@ language_names = {
     'it': "Italian",
     'lt': "Lithuanian",
     'lv': "Latvian",
+    'mk': "Macedonian",
     'nl': "Dutch",
     'nl-BE': "Dutch/Belgium",
     'no': "Norwegian",
