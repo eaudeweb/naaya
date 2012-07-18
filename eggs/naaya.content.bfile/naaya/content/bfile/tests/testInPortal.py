@@ -69,7 +69,8 @@ class NyBFileTestCase(NaayaTestCase):
 
         myfile2 = StringIO('new data')
         myfile2.filename = 'other.txt'
-        mybfile._save_file(myfile2)
+        mybfile._save_file(myfile2,
+                           contributor='contributor')
 
         self.assertEqual(len(mybfile._versions), 2)
         cv = mybfile.current_version
@@ -85,7 +86,8 @@ class NyBFileTestCase(NaayaTestCase):
 
         myfile2 = StringIO('new data')
         myfile2.filename = 'other.txt'
-        mybfile._save_file(myfile2)
+        mybfile._save_file(myfile2,
+                           contributor='contributor')
 
         mybfile.remove_version(1)
         rm_ver = mybfile._versions[1]
@@ -96,7 +98,8 @@ class NyBFileTestCase(NaayaTestCase):
 
         myfile3 = StringIO('even newer data')
         myfile3.filename = 'other.txt'
-        mybfile._save_file(myfile3)
+        mybfile._save_file(myfile3,
+                           contributor='contributor')
         self.assertTrue(mybfile.current_version is mybfile._versions[2])
 
         mybfile.remove_version(2)

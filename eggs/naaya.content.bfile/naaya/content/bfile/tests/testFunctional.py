@@ -158,7 +158,8 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         for c in range(4):
             f = self.make_file('afile', 'text/plain', 'some data')
-            self.portal.myfolder['mybfile']._save_file(f)
+            self.portal.myfolder['mybfile']._save_file(f,
+                                                       contributor='contributor')
 
         transaction.commit()
 
@@ -336,7 +337,8 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'content_type': 'image/png',
             'data': '1234',
         }
-        self.the_file._save_file(self.make_file(**file_data))
+        self.the_file._save_file(self.make_file(**file_data),
+                                 contributor='contributor')
         transaction.commit()
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.ob_url)
@@ -362,8 +364,10 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'content_type': 'image/jpeg',
             'data': 'g'*int(1024*15.3),
         }
-        self.the_file._save_file(self.make_file(**file_data_1))
-        self.the_file._save_file(self.make_file(**file_data_2))
+        self.the_file._save_file(self.make_file(**file_data_1),
+                                 contributor='contributor')
+        self.the_file._save_file(self.make_file(**file_data_2),
+                                 contributor='contributor')
         transaction.commit()
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.ob_url)
@@ -398,7 +402,8 @@ class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
             'content_type': 'image/png',
             'data': 'asdf'*1024*64,
         }
-        self.portal.fol.secur._save_file(self.make_file(**self.file_data))
+        self.portal.fol.secur._save_file(self.make_file(**self.file_data),
+                                 contributor='contributor')
         transaction.commit()
         self.the_file = self.portal.fol.secur
 
