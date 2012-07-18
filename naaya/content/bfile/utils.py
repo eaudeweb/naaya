@@ -24,6 +24,7 @@ def tmpl_version(context, version, ver_id):
         viewable = True
 
     return {
+        'contributor': getattr(version, 'contributor', ''),
         'filename': force_to_unicode(version.filename),
         'content_type': version.content_type,
         'pretty_size': pretty_size(version.size),
