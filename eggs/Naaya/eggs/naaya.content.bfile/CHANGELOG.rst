@@ -1,5 +1,6 @@
 1.3.5 (unreleased)
 ------------------
+* Added contributor to versions [bogdatan]
 * check_item_title is now item_has_title [simiamih]
 * fixed adapter to work with localizedbfile [simiamih]
 
