@@ -29,10 +29,15 @@ def process_create_account(context, request):
     form_data, form_errors = validate_widgets(schema, request.form)
     if form_errors:
         prepare_error_response(context, schema, form_errors, request.form)
-        # TODO: we are losing the user register input values in form
+        # we need to put ourselves the user specific values in form
+        args_for_session = {}
+        for key in EW_REGISTER_FIELD_NAMES:
+            args_for_session[key] = request.form.get(key)
+        args_for_session['name'] = request.form.get('username')
+        site.setRequestRoleSession(**args_for_session)
         request.RESPONSE.redirect(referer)
     else:
-        # OBS: email is already sent here!:
+        # OBS: email is already sent here:
         site.processRequestRoleForm(request)
         redirect = request.RESPONSE.headers.get('location')
         if redirect != referer:
@@ -44,6 +49,9 @@ def process_create_account(context, request):
             ob.approveThis(0, None)
             ob.submitThis()
             ob.giveEditRights()
+            # voodoo for setting ownership using AccessControl.Owned API
+            new_user = site.acl_users.getUser(username).__of__(site.acl_users)
+            ob.changeOwnership(new_user)
             # hack to edit object without permissions (no auth)
             setattr(ob, 'checkPermissionEditObject', lambda: True)
             ob.manageProperties(title=contact_name,
