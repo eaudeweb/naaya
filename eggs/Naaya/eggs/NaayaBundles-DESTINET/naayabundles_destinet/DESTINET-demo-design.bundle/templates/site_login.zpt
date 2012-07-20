@@ -109,7 +109,7 @@
 
 <h2 i18n:translate="">New user</h2>
 
-<p i18n:translate="">First <a i18n:name="create_an_account" i18n:translate="" href="createaccount_html">create an account</a> on this server and then return to this page to log in. As registered user you will be able to upload items from the left hand bar. Whenever you log in you then will see and can directly access all items you have added.</p>
+<p i18n:translate="">First <a i18n:name="create_an_account" i18n:translate="" href="create_destinet_account_html">create an account</a> on this server and then return to this page to log in. As registered user you will be able to upload items from the left hand bar. Whenever you log in you then will see and can directly access all items you have added.</p>
 
 </tal:block>
 
