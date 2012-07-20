@@ -30,9 +30,13 @@ class DestinetTestCase(NaayaTestCase):
         addNyFolder(self.portal, 'countries')
         addNyFolder(self.portal.countries, 'georgia', title='Georgia')
         addNyFolder(self.portal.countries, 'southgeorgia', title='South Georgia')
-        schema = self.portal.portal_schemas['NyURL']
-        schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
-        schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
+        schemas = [self.portal.portal_schemas[x] for x in ('NyURL', 'NyContact')]
+        for schema in schemas:
+            schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
+            schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
+            schema.addWidget('administrative_level', widget_type='Select', data_type='str')
+            schema.addWidget('landscape_type', widget_type='SelectMultiple', data_type='list')
+        
         manage_addDestinetPublisher(self.portal)
         cat = self.portal.getCatalogTool()
         cat.addIndex('pointer', 'FieldIndex')

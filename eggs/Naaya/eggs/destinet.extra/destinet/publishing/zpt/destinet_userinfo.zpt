@@ -10,6 +10,15 @@
 <p><span class="label">E-mail:</span>
     <span class="label_value" tal:content="user_info/email"></span>
 </p>
+<tal:block condition="contact_obj">
+    <p>
+        Full contact details can be viewed and modified here:
+        <span class="label_value">
+            <a tal:attributes="href contact_obj/absolute_url"
+               tal:content="contact_obj/title_or_id"></a>
+        </span>
+    </p>
+</tal:block>
 </tal:block>
 
 <h2>My submissions</h2>
