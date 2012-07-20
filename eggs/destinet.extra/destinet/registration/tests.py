@@ -94,7 +94,7 @@ class RegistrationTestCase(DestinetTestCase):
         self.assertEqual(contact.id, 'doejohn')
         path, owner = contact.getOwnerTuple()
         self.assertEqual(owner, 'doejohn')
-        self.assertEqual(contact.approved, 0)
+        self.assertEqual(contact.approved, 1)
         self.assertEqual(contact.lastname, self.initial_data['lastname'])
         self.assertEqual(contact.coverage, self.initial_data['coverage'])
 
