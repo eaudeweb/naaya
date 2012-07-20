@@ -47,7 +47,7 @@ def process_create_account(context, request):
             username = request.form['username']
             contact_name = "%(firstname)s %(lastname)s" % request.form
             ob = _create_NyContact_object(where, username, username)
-            ob.approveThis(0, None)
+            ob.approveThis(1, username)
             ob.submitThis()
             ob.giveEditRights()
             # voodoo for setting ownership using AccessControl.Owned API
@@ -59,6 +59,7 @@ def process_create_account(context, request):
                                 firstname=request.form['firstname'],
                                 lastname=request.form['lastname'],
                                 organisation=request.form['organisation'],
+                                approved=True,
                                 **form_data)
             delattr(ob, 'checkPermissionEditObject')
         else:
