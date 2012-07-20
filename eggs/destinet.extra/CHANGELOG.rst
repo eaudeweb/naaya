@@ -1,4 +1,7 @@
-1.1.13 (unreleased)
+1.2.1 (unreleased)
+====================
+
+1.2.0 (2012-07-20)
 ====================
 * refactored unit testing code [simiamih]
 * feature: destinet custom registration; needs interface assigned to portal
