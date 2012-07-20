@@ -10,4 +10,10 @@
         handler=".ui.create_destinet_account_html"
         permission="zope.Public" />
 
+    <naaya:simpleView
+        for="destinet.extra.interfaces.IDestinetSite"
+        name="processRequestDestinetRoleForm"
+        handler=".ui.process_create_account"
+        permission="zope.Public" />
+
 </configure>
