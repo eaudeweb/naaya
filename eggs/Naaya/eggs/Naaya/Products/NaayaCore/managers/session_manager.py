@@ -4,7 +4,7 @@ from naaya.core.exceptions import localize_exc
 _SESSION_ERRORS = "site_errors"
 _SESSION_INFO = "site_infos"
 
-class session_manager:
+class session_manager(object):
     """This class has some methods to work with session variables"""
 
     def __init__(self):
