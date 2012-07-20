@@ -1,6 +1,8 @@
 1.1.13 (unreleased)
 ====================
 * refactored unit testing code [simiamih]
+* feature: destinet custom registration; needs interface assigned to portal
+  from ZMI and bundles updated [simiamih]
 
 1.1.12 (2012-07-04)
 ====================
