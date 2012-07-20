@@ -9,6 +9,7 @@ setup(name='destinet.extra',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya >= 2.12.35', 'Products.NaayaContent.NyPublication >= 1.1.4'
+        'Naaya >= 2.12.35', 'Products.NaayaContent.NyPublication >= 1.1.4',
+        'naaya.envirowindows', 'naayabundles-destinet'
     ]
 )
