@@ -3,7 +3,8 @@ from Products.NaayaBase.NyContentType import SchemaFormHelper
 from naaya.content.contact.contact_item import _create_NyContact_object
 
 from destinet.registration.core import validate_widgets, prepare_error_response
-from destinet.registration.constants import WIDGET_NAMES
+from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
+                                             WIDGET_NAMES)
 
 
 def render_create_account_tpl(context, widgets, request_form=None, errors=None):
