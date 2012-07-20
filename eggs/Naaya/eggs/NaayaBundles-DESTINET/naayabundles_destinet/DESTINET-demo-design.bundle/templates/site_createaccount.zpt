@@ -10,7 +10,7 @@
 	You will be notified about the result of your request.
 </p>
 
-<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
+<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestDestinetRoleForm">
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td valign="top" i18n:translate="">Username</td>
@@ -40,9 +40,9 @@
 		<td i18n:translate="">Organisation</td>
 		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
-        <tal:block repeat="widget_data widgets">
+        <tal:block repeat="widget widgets">
             <tr><td colspan="2">
-                <tal:block replace="structure python:widget_data[0].render_html(widget_data[1])" />
+                <tal:block replace="structure widget" />
             </td></tr>
         </tal:block>
 	<tr>
