@@ -453,15 +453,24 @@ class DestinetPublisher(SimpleItem):
         user = self.REQUEST.AUTHENTICATED_USER.getId()
 
         user_obj = auth_tool.getUser(user)
+        contact_obj = None
         if user_obj:
             user_info = {'first_name': user_obj.firstname,
                          'last_name': user_obj.lastname,
                          'email': user_obj.email}
+            # --- since destinet.registration: --- #
+            if user in site['who-who']['destinet-users'].objectIds():
+                candidate = site['who-who']['destinet-users'][user]
+                owner_tuple = candidate.getOwnerTuple()
+                if owner_tuple and owner_tuple[1] == user:
+                    contact_obj = candidate
+            # --- end --- #
         else:
             user_info = None
 
         return site.getFormsTool().getContent({'here': self,
-                                               'user_info': user_info},
+                                               'user_info': user_info,
+                                               'contact_obj': contact_obj},
                                               'destinet_userinfo')
 
 InitializeClass(DestinetPublisher)
