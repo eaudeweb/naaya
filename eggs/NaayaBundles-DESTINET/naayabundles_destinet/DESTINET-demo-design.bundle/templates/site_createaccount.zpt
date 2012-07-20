@@ -1,4 +1,6 @@
 <span tal:replace="structure here/standard_html_header"/>
+<script type="text/javascript"
+        tal:attributes="src string:${here/absolute_url}/jstree/jquery.tree.min.js"></script>
 
 <h1 i18n:translate="">DestiNet account application</h1>
 
@@ -38,6 +40,11 @@
 		<td i18n:translate="">Organisation</td>
 		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
+        <tal:block repeat="widget_data widgets">
+            <tr><td colspan="2">
+                <tal:block replace="structure python:widget_data[0].render_html(widget_data[1])" />
+            </td></tr>
+        </tal:block>
 	<tr>
 		<td valign="top" i18n:translate="">Location<br />the privileges should apply</td>
 		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/>		<span i18n:translate="" tal:omit-tag="">Entire portal</span>
