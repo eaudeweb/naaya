@@ -39,7 +39,7 @@ ul.menu-bar.mainsections-menu {
 	margin: 0;
 	padding: 0;
 	color: #eee;
-	height: 74px;
+/*	height: 74px;*/
 	font-size: 14px;
 	background: #444;
 }
@@ -47,10 +47,6 @@ ul.menu-bar.mainsections-menu {
 ul.menu-bar.mainsections-menu,
 .wrap {
   width: 980px;
-}
-
-ul.menu-bar.mainsections-menu > li > a {
-	color: #FEFFFE;
 }
 
 ul.menu-bar.mainsections-menu ul li {
@@ -748,8 +744,9 @@ body .global-search-submit {
 }
 
 ul.menu-bar.mainsections-menu > li > a {
+	color: #FEFFFE;
 	width: 103px;
-	height: 52px; /* SHOULD BE COMMENTED */
+/*	height: 52px; */
 	padding: 11px;
 	font-weight: bold;
 	text-align: center;

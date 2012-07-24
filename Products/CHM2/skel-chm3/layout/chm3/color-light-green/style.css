@@ -17,13 +17,13 @@ body #menu ul.menu-bar {
 	padding: 0;
 	height: 30px;
 	background: #D8DCC4;
-        border-right: 1px solid #C0C0C0;
-        border-left: 1px solid #C0C0C0;
-        border-bottom: 1px solid #C0C0C0;
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-        -moz-border-radius-bottomleft: 6px;
-        -moz-border-radius-bottomright: 6px;
+	border-right: 1px solid #C0C0C0;
+	border-left: 1px solid #C0C0C0;
+	border-bottom: 1px solid #C0C0C0;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
 }
 
 #header {
@@ -47,7 +47,7 @@ ul.menu-bar.mainsections-menu {
 	margin: 0;
 	padding: 0;
 	color: #eee;
-	height: 74px;
+	/*height: 74px; */
 	font-size: 14px;
 	border-radius: 6px;
 	background: #A7C91B;
@@ -65,10 +65,6 @@ ul.menu-bar.mainsections-menu {
 ul.menu-bar.mainsections-menu,
 .wrap {
   width: 980px;
-}
-
-ul.menu-bar.mainsections-menu > li > a {
-	color: #FEFFFE;
 }
 
 ul.menu-bar.mainsections-menu ul li {
@@ -763,8 +759,9 @@ body .global-search-submit {
 }
 
 ul.menu-bar.mainsections-menu > li > a {
+	color: #FEFFFE;
 	width: 103px;
-	height: 52px; /* SHOULD BE COMMENTED */
+/*	height: 52px;*/
 	padding: 11px;
 	font-weight: bold;
 	text-align: center;

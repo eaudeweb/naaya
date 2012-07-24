@@ -40,17 +40,13 @@ ul.menu-bar.mainsections-menu {
 	margin: 0;
 	padding: 0;
 	color: #EEE;
-	height: 74px;
+	/*height: 74px;*/
 	font-size: 14px;
 }
 
 ul.menu-bar.mainsections-menu,
 .wrap {
   width: 980px;
-}
-
-ul.menu-bar.mainsections-menu > li > a {
-	color: #FEFFFE;
 }
 
 ul.menu-bar a {
@@ -735,8 +731,9 @@ body .global-search-submit {
 }
 
 ul.menu-bar.mainsections-menu > li > a {
+	color: #FEFFFE;
 	width: 103px;
-	height: 52px; /* SHOULD BE COMMENTED */
+	/*height: 52px; */
 	padding: 11px;
 	color: #fefffe;
 	font-weight: bold;
