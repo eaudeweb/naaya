@@ -1,4 +1,7 @@
-3.0.12 (unreleased)
+3.0.13 (unreleased)
+------------------
+
+3.0.12 (2012-07-24)
 ------------------
 * changed main section images for chm3 [dumitval]
 
