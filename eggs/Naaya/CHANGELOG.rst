@@ -1,5 +1,7 @@
 3.0.3 (unreleased)
 --------------------
+* bugfix: ScriptChannel returns empty list if there is no Python code to be
+  executed [bogdatan]
 
 3.0.2 (2012-07-18)
 --------------------

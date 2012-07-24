@@ -25,6 +25,8 @@ def manage_addScriptChannel(self, id='', title='', description='', language=None
     ob = ScriptChannel(id, title, description, language, type, numberofitems)
     self._setObject(id, ob)
     ob = self._getOb(id)
+    if not body:
+        body = 'return []'
     ob.write(body)
     if portlet:
         self.create_portlet_for_scriptchannel(ob)
