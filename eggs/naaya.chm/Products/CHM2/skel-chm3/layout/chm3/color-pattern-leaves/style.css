@@ -37,21 +37,17 @@ body #menu ul.menu-bar {
 }
 
 ul.menu-bar.mainsections-menu {
-        background: #F18024;
+    background: #F18024;
 	margin: 0;
 	padding: 0;
 	color: #FEFFFE;
-	height: 74px;
+	/*height: 74px;*/
 	font-size: 14px;
 }
 
 ul.menu-bar.mainsections-menu,
 .wrap {
   width: 980px;
-}
-
-ul.menu-bar.mainsections-menu > li > a {
-	color: #360;
 }
 
 ul.menu-bar.mainsections-menu ul li {
@@ -742,8 +738,9 @@ body .global-search-submit {
 }
 
 ul.menu-bar.mainsections-menu > li > a {
+	color: #360;
 	width: 103px;
-	height: 52px; /* SHOULD BE COMMENTED */
+	/*height: 52px; SHOULD BE COMMENTED */
 	padding: 11px;
 	font-weight: bold;
 	text-align: center;
