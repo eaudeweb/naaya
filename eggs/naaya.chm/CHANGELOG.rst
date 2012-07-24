@@ -1,5 +1,6 @@
 3.0.12 (unreleased)
 ------------------
+* changed main section images for chm3 [dumitval]
 
 3.0.11 (2012-07-24)
 ------------------
