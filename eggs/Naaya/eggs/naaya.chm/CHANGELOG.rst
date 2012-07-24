@@ -1,5 +1,6 @@
 3.0.11 (unreleased)
 ------------------
+* Removed height on maintopics bar [dumitval]
 * Added missing classes for floats [bogdatan]
 
 3.0.10 (2012-06-29)
