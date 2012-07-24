@@ -105,6 +105,8 @@
         <th i18n:translate="">#</th>
         <th i18n:translate="">File name</th>
         <th i18n:translate="">Contributor</th>
+        <th i18n:translate="">Release date</th>
+        <th i18n:translate="">Uploaded by</th>
         <th i18n:translate="">Upload date</th>
         <th i18n:translate="">Size</th>
         <th i18n:translate="">Content type</th>
@@ -119,6 +121,8 @@
         <em tal:condition="version/is_current"
             i18n:translate="">(current)</em>
     </td>
+    <td tal:content="python:here.getAuthenticationTool().name_from_userid(here.contributor) or here.contributor" />
+    <td tal:content="python: options['current_version']['pretty_timestamp']" />
     <td tal:content="version/contributor" />
     <td tal:content="version/pretty_timestamp" />
     <td tal:content="version/pretty_size" />
