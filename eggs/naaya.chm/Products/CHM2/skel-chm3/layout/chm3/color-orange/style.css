@@ -41,17 +41,13 @@ ul.menu-bar.mainsections-menu {
 	margin: 0;
 	padding: 0;
 	color: #FEFFFE;
-	height: 74px;
+/*	height: 74px;*/
 	font-size: 14px;
 }
 
 ul.menu-bar.mainsections-menu,
 .wrap {
   width: 980px;
-}
-
-ul.menu-bar.mainsections-menu > li > a {
-	color: #3C606C;
 }
 
 ul.menu-bar.mainsections-menu ul li {
@@ -741,8 +737,9 @@ body .global-search-submit {
 }
 
 ul.menu-bar.mainsections-menu > li > a {
+	color: #3C606C;
 	width: 103px;
-	height: 52px; /* SHOULD BE COMMENTED */
+/*	height: 52px;*/
 	padding: 11px;
 	font-weight: bold;
 	text-align: center;
