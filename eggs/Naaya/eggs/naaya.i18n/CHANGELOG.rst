@@ -1,4 +1,7 @@
-1.1.3 (unreleased)
+1.1.4 (unreleased)
+-------------------
+
+1.1.3 (2012-07-26)
 -------------------
 * Update script to delete all english 'translations' [dumitval]
 
