@@ -1,5 +1,6 @@
 1.1.3 (unreleased)
 -------------------
+* Update script to delete all english 'translations' [dumitval]
 
 1.1.2 (2012-07-10)
 -------------------
