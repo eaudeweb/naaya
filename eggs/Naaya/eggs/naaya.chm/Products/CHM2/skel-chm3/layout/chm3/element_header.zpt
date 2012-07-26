@@ -14,8 +14,9 @@
                         Login
                     </a>
 
-                    <span tal:condition="python: authenticated_user != 'Anonymous User'">
-                        Welcome <span i18n="user" tal:replace="authenticated_user"/>.
+                    <span tal:condition="python: authenticated_user != 'Anonymous User'"
+                        i18n:translate="">
+                        Welcome <span i18n:name="user" tal:replace="authenticated_user"/>.
                     </span>
 
                     <a tal:condition="here/checkPermissionPublishObjects"
@@ -35,7 +36,8 @@
                 <input type="text" name="query" class="global-search-input"
                     value="" accesskey="4" /><!--
                     no whitespace here
-                --><input type="submit" value="Search" class="global-search-submit" />
+                --><input type="submit" value="Search" i18n:attributes="value"
+                    class="global-search-submit" />
             </form>
         </div>
 
