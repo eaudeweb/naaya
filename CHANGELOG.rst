@@ -1,5 +1,6 @@
 3.0.13 (unreleased)
 ------------------
+* added translation flags to element_header [dumitval]
 
 3.0.12 (2012-07-24)
 ------------------
