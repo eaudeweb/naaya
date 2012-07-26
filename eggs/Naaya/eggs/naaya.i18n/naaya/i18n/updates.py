@@ -272,3 +272,22 @@ class DeleteMessages(UpdateScript):
     update_template = PageTemplateFile('zpt/update_delete_messages',
                                        globals())
     update_template.default = UpdateScript.update_template
+
+class DeleteEnglishValues(UpdateScript):
+    title = 'Deletes english values of all existing messages'
+    creation_date = 'Jul 26, 2012'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ("Deletes english values of all existing messages."
+                    "Useful when a wrong language was imported into English")
+
+    def _update(self, portal):
+        form = self.REQUEST.form
+        catalog = portal.portal_i18n._catalog
+        counter = 0
+        for mess, trans in catalog._messages.items():
+            if trans['en']:
+                catalog._messages[mess]['en'] = ''
+                counter += 1
+        self.log.debug('%s English "translations" deleted' % counter)
+        return True

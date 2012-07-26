@@ -45,10 +45,16 @@
          component=".updates.RemoveEmptyLangsOrTrans"
          permission="zope2.ViewManagementScreens" />
 
-	  <utility
+      <utility
          name="DeleteMessages.update"
          provides="Products.naayaUpdater.interfaces.IUpdateScript"
          component=".updates.DeleteMessages"
+         permission="zope2.ViewManagementScreens" />
+
+      <utility
+         name="DeleteEnglishValues.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.DeleteEnglishValues"
          permission="zope2.ViewManagementScreens" />
    </configure>
 
