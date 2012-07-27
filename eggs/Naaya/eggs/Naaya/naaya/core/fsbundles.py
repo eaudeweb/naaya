@@ -47,8 +47,7 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
                 site_path = site_path[1:]
             bundle_name = name_prefix + '-'.join(site_path)
 
-            lsm = site.getSiteManager()
-            site_parent = lsm.__bases__[0]
+            site_parent = get_site_parent(site)
             parent_bundle = bundles.get(parent_name)
             if site_parent is not parent_bundle:
                 raise ValueError("Site has wrong parent, %r != %r" %
@@ -76,10 +75,13 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
 
     gsm = getGlobalSiteManager()
     gsm.registerAdapter(filesystem_bundle_factory,
-                        (INySite,), IFilesystemBundleFactory)
+                        (INySite,), IFilesystemBundleFactory, name=parent_name)
     log.info("Filesystem bundles %r will be created under %r",
              name_prefix, bundles_dir)
 
+def get_site_parent(site):
+    lsm = site.getSiteManager()
+    return lsm.__bases__[0]
 
 def get_writable_bundle(site):
     """ Look for a server bundle where templates can be written to disk. """
@@ -102,7 +104,9 @@ def get_writable_bundle(site):
 def get_filesystem_bundle_factory(site):
     """ Convenienve function to look up a filesystem bundle factory. """
     gsm = getGlobalSiteManager()
-    return gsm.queryAdapter(site, IFilesystemBundleFactory)
+    site_parent = get_site_parent(site)
+    return gsm.queryAdapter(site, IFilesystemBundleFactory,
+                            name=site_parent.__name__)
 
 
 def _read_bundle_cfg(bundle_path):

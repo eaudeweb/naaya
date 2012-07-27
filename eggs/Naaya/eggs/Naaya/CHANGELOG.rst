@@ -1,5 +1,6 @@
 3.0.4 (unreleased)
 --------------------
+* fix in bundle name registration [dumitval]
 
 3.0.3 (2012-07-24)
 --------------------
