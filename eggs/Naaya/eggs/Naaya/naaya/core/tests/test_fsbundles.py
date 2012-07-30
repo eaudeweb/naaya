@@ -118,7 +118,8 @@ class BundleFactoryTest(unittest.TestCase):
             clean_up_bundle(name)
         gsm = getGlobalSiteManager()
         assert gsm.unregisterAdapter(required=(INySite,),
-                                     provided=IFilesystemBundleFactory)
+                                     provided=IFilesystemBundleFactory,
+                                     name='Foo')
 
     def test_create_bundle(self):
         from naaya.core.fsbundles import get_filesystem_bundle_factory
@@ -148,4 +149,4 @@ class BundleFactoryTest(unittest.TestCase):
         from naaya.core.fsbundles import get_filesystem_bundle_factory
         self.site.set_bundle(bundles.get('Baz'))
         factory = get_filesystem_bundle_factory(self.site)
-        self.assertRaises(ValueError, factory)
+        self.assertTrue(factory is None)
