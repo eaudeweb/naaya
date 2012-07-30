@@ -1,5 +1,6 @@
 3.0.5 (unreleased)
 --------------------
+* test fixes (fsbundles) [dumitval]
 
 3.0.4 (2012-07-27)
 --------------------
