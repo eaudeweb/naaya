@@ -1,5 +1,6 @@
 3.0.14 (unreleased)
 ------------------
+* Zope 2.10 fix for loading maintopic images [dumitval]
 
 3.0.13 (2012-07-26)
 ------------------
