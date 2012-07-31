@@ -631,7 +631,7 @@ class CHMSite(NySite):
         """ """
         main_section_images = self._get_mainsection_images_folder()
         name = REQUEST.form.get("name", None)
-        ob = main_section_images.get(name, None)
+        ob = main_section_images._getOb(name, None)
 
         skin = self.getLayoutTool().getCurrentSkin()
         image_size = map(int, skin.main_section_image_size.split("x"))
