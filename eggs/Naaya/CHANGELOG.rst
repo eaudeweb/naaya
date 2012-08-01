@@ -1,4 +1,7 @@
-3.0.5 (unreleased)
+3.0.6 (unreleased)
+--------------------
+
+3.0.5 (2012-08-01)
 --------------------
 * updated pointers on obj move should be recataloged [simiamih]
 * test fixes (fsbundles) [dumitval]
