@@ -26,8 +26,52 @@
 	</tal:block>
 	<tal:block replace="structure python:'<' +'body>'"></tal:block>
 </tal:block>
+<script type="text/javascript" tal:content="structure string:var folder_url = '${here/absolute_url}';"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+
+	$('#delete-folder').click(function() {
+		$( "#dialog-delete-folder-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 240,
+			width: 600,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete Folder": function() {
+                                    window.location = folder_url + '/deleteThis';
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	});
+
+	var deleteObjects = function(action) {
+		$( "#dialog-delete-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 200,
+			width: 500,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete checked items": function() {
+                                    submit_form_action(action);
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	};
+
 	// Multiple items operations
 	$('.select-all').click(function(e){
 		//Select toggle for all items
@@ -59,17 +103,18 @@ $(document).ready(function(){
 			return false;
 		}
 
-		var confirmed = true;
-		if (action == 'deleteObjects'){
-			confirmed = confirm(gettext('Are you sure?'));
-		}
-		if (confirmed){
-			var form = $('#folder_listing');
-			form.attr('action', action);
-			form.submit();
+                if(action == "deleteObjects") {
+                    deleteObjects(action);
 		}
 	});
 })
+
+
+function submit_form_action(action){
+    var form = $('#folder_listing');
+    form.attr('action', action);
+    return form.submit();
+}
 </script>
 
 <metal:block define-slot="menu_extension">
@@ -324,6 +369,29 @@ $(document).ready(function(){
         </tbody>
 	</table>
 </form>
+
+<div id="dialog-delete-folder-confirm" i18n:attributes="title" title="Delete entire folder" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="dialog-delete-folder-confirm" tal:define="folder_title here/title_or_id">
+                The <strong>entire</strong> <span i18n:name="folder_title" tal:replace="folder_title" /> folder and all its contents will be deleted.
+                <br i18n:name="br" />
+                If you want to delete specific checked items, use the <strong i18n:name="delete" i18n:translate="">Delete</strong> button next to Cut, Copy.
+                <br i18n:name="br" /><br i18n:name="br" />
+                Are you sure you want to delete <span i18n:name="folder_title" tal:replace="folder_title" /> and all its contents?
+            </span>
+       </p>
+</div>
+
+<div id="dialog-delete-confirm" i18n:attributes="title" title="Delete items" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="dialog-delete-confirm">
+                The checked items will be permanently deleted and may not be recovered. Are you sure?
+            </span>
+       </p>
+</div>
+
 </metal:block>
 <tal:block condition="iframe"><br />
 <tal:block replace="structure python:'</' +'body>'"></tal:block>
