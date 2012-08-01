@@ -1,5 +1,6 @@
 1.2.1 (unreleased)
 ====================
+* pointers also for many meta type objs added in who-who [simiamih]
 
 1.2.0 (2012-07-20)
 ====================
