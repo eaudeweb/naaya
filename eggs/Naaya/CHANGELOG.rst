@@ -1,5 +1,6 @@
 3.0.5 (unreleased)
 --------------------
+* updated pointers on obj move should be recataloged [simiamih]
 * test fixes (fsbundles) [dumitval]
 
 3.0.4 (2012-07-27)
