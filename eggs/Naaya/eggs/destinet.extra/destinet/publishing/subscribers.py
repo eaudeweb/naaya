@@ -120,10 +120,15 @@ def _qualifies_for_both(obj):
     resources = site.resources
     news = site.News
     events = site.events
+    who_who = getattr(site, 'who-who')
     return ((isinstance(obj, NyEvent) and is_descendant_of(obj, events)) or
         (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
         (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication))
-          and is_descendant_of(obj, resources)))
+          and is_descendant_of(obj, resources))
+         or
+        (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication, NyNews, NyEvent))
+          and is_descendant_of(obj, who_who))
+        )
 
 def _qualifies_for_topics_only(obj):
     """
