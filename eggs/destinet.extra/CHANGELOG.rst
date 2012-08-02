@@ -1,4 +1,7 @@
-1.2.1 (unreleased)
+1.2.2 (unreleased)
+====================
+
+1.2.1 (2012-08-02)
 ====================
 * new user instantly receives Contributor role [simiamih]
 * comments have been rebranded as About me and saved on contact [simiamih]
