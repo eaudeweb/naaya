@@ -63,6 +63,7 @@ def process_create_account(context, request):
                                 description=request.form['comments'],
                                 **form_data)
             delattr(ob, 'checkPermissionEditObject')
+            site.admin_addroles([username], ['Contributor'], '', send_mail=True)
         else:
             # also call this to prefill values in form for contact
             prepare_error_response(context, schema, form_errors, request.form)

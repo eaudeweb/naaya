@@ -1,5 +1,6 @@
 1.2.1 (unreleased)
 ====================
+* new user instantly receives Contributor role [simiamih]
 * comments have been rebranded as About me and saved on contact [simiamih]
 * pointers also for many meta type objs added in who-who [simiamih]
 
