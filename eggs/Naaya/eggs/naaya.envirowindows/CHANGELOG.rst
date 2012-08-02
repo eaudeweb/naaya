@@ -1,5 +1,6 @@
 1.1.13 (unreleased)
 ------------------
+* typo in email_requestrole [simiamih]
 
 1.1.12 (2012-06-29)
 ------------------
