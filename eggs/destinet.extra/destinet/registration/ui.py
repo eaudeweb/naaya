@@ -60,8 +60,14 @@ def process_create_account(context, request):
                                 lastname=request.form['lastname'],
                                 organisation=request.form['organisation'],
                                 approved=True,
+                                description=request.form['comments'],
                                 **form_data)
             delattr(ob, 'checkPermissionEditObject')
         else:
             # also call this to prefill values in form for contact
             prepare_error_response(context, schema, form_errors, request.form)
+            # ugly hack as a conseq of renaming Comments field
+            if isinstance(request.SESSION.get('site_errors'), (tuple, list)):
+                if 'Required field: Comments' in request.SESSION['site_errors']:
+                    request.SESSION['site_errors'].remove('Required field: Comments')
+                    request.SESSION['site_errors'].append('Required field: About Me')
