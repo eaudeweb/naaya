@@ -1,6 +1,40 @@
 <span tal:replace="structure here/standard_html_header"/>
 <script type="text/javascript"
         tal:attributes="src string:${here/absolute_url}/jstree/jquery.tree.min.js"></script>
+<span style="display:none;" i18n:translate="" id="placeholder-text">
+My role and interest in sustainable and responsible tourism is ..
+</span>
+<script type="text/javascript">
+(function(){
+    jQuery(document).ready(
+        function(){
+            var com = jQuery("#about-me-comments");
+            var about_me_tip = jQuery('#placeholder-text').html();
+            com.css({'font-family': 'sans-serif'});
+            if (!com.val()){
+                com.val(about_me_tip);
+                com.click(function(){
+                    if (!com.data('first_click')){
+                        com.val('');
+                        com.data('first_click', true);
+                    }
+                });
+            }
+            jQuery("#submit-request").click(function(){
+                if (!com.data('first_click')
+                    && (com.val() == about_me_tip)){
+                    com.val('');
+                }
+            });
+        });
+})();
+</script>
+
+<!-- /createaccount_html -> /create_destinet_account_html -->
+<script type="text/javascript"
+        tal:define="site here/getSite;"
+        tal:condition="not:widgets" tal:on-error="string: window.location = '${site/absolute_url}/create_destinet_account_html';">
+</script>
 
 <h1 i18n:translate="">DestiNet account application</h1>
 
@@ -11,6 +45,7 @@
 </p>
 
 <form method="post" tal:attributes="action string:${here/getSitePath}/processRequestDestinetRoleForm">
+<input type="hidden" name="location" value="" />
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td valign="top" i18n:translate="">Username</td>
@@ -40,16 +75,11 @@
 		<td i18n:translate="">Organisation</td>
 		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
-        <tal:block repeat="widget widgets">
+        <tal:block repeat="widget widgets" tal:on-error="string: ">
             <tr><td colspan="2">
                 <tal:block replace="structure widget" />
             </td></tr>
         </tal:block>
-	<tr>
-		<td valign="top" i18n:translate="">Location<br />the privileges should apply</td>
-		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/>		<span i18n:translate="" tal:omit-tag="">Entire portal</span>
-		</td>
-	</tr>
 	<tr tal:condition="python:not here == here.getSite()">
 		<td></td>
 		<td><input type="radio" name="location" 
@@ -58,8 +88,9 @@
 		</td>
 	</tr>
 	<tr>
-		<td valign="top" i18n:translate="">Comments</td>
-		<td><textarea name="comments:utf8:ustring" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea>*</td>
+		<td valign="top" i18n:translate="">About Me</td>
+		<td><textarea name="comments:utf8:ustring" id="about-me-comments"
+                rows="6" cols="70" tal:content="here/getSessionUserComments"></textarea>*</td>
 	</tr>
 	<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
 		<td></td>
@@ -67,7 +98,7 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td><input type="submit" value="Submit request" i18n:attributes="value" /></td>
+		<td><input type="submit" id="submit-request" value="Submit request" i18n:attributes="value" /></td>
 	</tr>
 </table>
 </form>

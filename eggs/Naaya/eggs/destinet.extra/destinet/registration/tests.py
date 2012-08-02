@@ -97,6 +97,7 @@ class RegistrationTestCase(DestinetTestCase):
         self.assertEqual(contact.approved, 1)
         self.assertEqual(contact.lastname, self.initial_data['lastname'])
         self.assertEqual(contact.coverage, self.initial_data['coverage'])
+        self.assertEqual(contact.description, self.initial_data['comments'])
 
     def test_form(self):
         self.portal.REQUEST.SESSION = {}

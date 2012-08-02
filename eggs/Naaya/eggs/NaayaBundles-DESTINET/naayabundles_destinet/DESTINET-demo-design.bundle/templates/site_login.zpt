@@ -109,7 +109,14 @@
 
 <h2 i18n:translate="">New user</h2>
 
-<p i18n:translate="">First <a i18n:name="create_an_account" i18n:translate="" href="create_destinet_account_html">create an account</a> on this server and then return to this page to log in. As registered user you will be able to upload items from the left hand bar. Whenever you log in you then will see and can directly access all items you have added.</p>
+<p i18n:translate="">First <a i18n:name="create_an_account" i18n:translate="" href="create_destinet_account_html">create an account</a>
+as a DestiNet User, and you will receive an automatic approval, to allow you to log in straightaway.
+Once you can log in, you can use the left hand bar options to contribute your own information to DestiNet.
+<br i18n:name="br" />
+<br i18n:name="br" />
+Whenever you log in, your <strong i18n:name="MyDestinet" i18n:translate="">My DestiNet</strong> profile will appear.
+This profile gives you access to everything you upload into the portal. It will also allow you to edit your profile.
+</p>
 
 </tal:block>
 
