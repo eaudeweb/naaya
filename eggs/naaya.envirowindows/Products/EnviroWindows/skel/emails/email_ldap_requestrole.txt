@@ -5,7 +5,7 @@ Name: @@NAME@@
 Username: @@USERNAME@@
 Comments: @@COMMENTS@@
 
-As a portal admnistrator, you are requested to grant this account with content
+As a portal administrator, you are requested to grant this account with content
 '@@ROLE@@' rights for @@LOCATION@@.
 
 Enter the "Users' management" section at @@PORTAL_URL@@/admin_assignroles_html to assign this user the necessary role.
