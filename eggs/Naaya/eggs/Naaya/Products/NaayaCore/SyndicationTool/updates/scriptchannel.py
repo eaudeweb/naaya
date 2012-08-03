@@ -20,7 +20,6 @@ class FillScriptBody(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        portal_path = utils.get_portal_path(self, NySite)
         syndication_tool = portal.getSyndicationTool()
         script_channels = syndication_tool.get_script_channels()
 
