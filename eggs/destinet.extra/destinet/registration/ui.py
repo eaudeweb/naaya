@@ -2,7 +2,8 @@
 from Products.NaayaBase.NyContentType import SchemaFormHelper
 from naaya.content.contact.contact_item import _create_NyContact_object
 
-from destinet.registration.core import validate_widgets, prepare_error_response
+from destinet.registration.core import (validate_widgets, prepare_error_response,
+                                        handle_groups)
 from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
                                              WIDGET_NAMES)
 
@@ -13,13 +14,17 @@ def render_create_account_tpl(context, widgets, request_form=None, errors=None):
 def create_destinet_account_html(context, request):
     """ """
     ns = {'here': context}
-    schema = context.getSite().getSchemaTool()['NyContact']
-    sh = SchemaFormHelper(schema, context)
+    contact_schema = context.getSite().getSchemaTool()['NyContact']
+    sh = SchemaFormHelper(contact_schema, context)
     widgets = []
     for wid in WIDGET_NAMES:
-        widgets.append(sh._get_renderer(wid, schema["%s-property" % wid], False))
+        widgets.append(sh._get_renderer(wid, contact_schema["%s-property" % wid], False))
+    register_extra_schema = context.getSite().getSchemaTool()['registration']
+    sh = SchemaFormHelper(register_extra_schema, context)
+    groups_widget = sh._get_renderer('groups', register_extra_schema['groups-property'], False)
     ns = {'widgets': widgets,
-          'here': context}
+          'here': context,
+          'groups_widget': groups_widget}
     return context.getFormsTool().getContent(ns, 'site_createaccount')
 
 def process_create_account(context, request):
@@ -27,9 +32,10 @@ def process_create_account(context, request):
     referer = request.HTTP_REFERER
     site = context.getSite()
     schema = site.getSchemaTool()['NyContact']
-    form_data, form_errors = validate_widgets(schema, request.form)
+    register_schema = context.getSite().getSchemaTool()['registration']
+    form_data, form_errors = validate_widgets(schema, register_schema, request.form)
     if form_errors:
-        prepare_error_response(context, schema, form_errors, request.form)
+        prepare_error_response(context, schema, register_schema, form_errors, request.form)
         # we need to put ourselves the user specific values in form
         args_for_session = {}
         for key in EW_REGISTER_FIELD_NAMES:
@@ -64,9 +70,10 @@ def process_create_account(context, request):
                                 **form_data)
             delattr(ob, 'checkPermissionEditObject')
             site.admin_addroles([username], ['Contributor'], '', send_mail=True)
+            handle_groups(ob, request.form)
         else:
             # also call this to prefill values in form for contact
-            prepare_error_response(context, schema, form_errors, request.form)
+            prepare_error_response(context, schema, register_schema, form_errors, request.form)
             # ugly hack as a conseq of renaming Comments field
             if isinstance(request.SESSION.get('site_errors'), (tuple, list)):
                 if 'Required field: Comments' in request.SESSION['site_errors']:
