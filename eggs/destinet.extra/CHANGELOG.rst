@@ -1,4 +1,7 @@
-1.2.2 (unreleased)
+1.2.3 (unreleased)
+====================
+
+1.2.2 (2012-08-03)
 ====================
 * added user groups in registration; side-effect: pointer in designated
   `new applicants` folder [simiamih]
