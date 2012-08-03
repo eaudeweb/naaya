@@ -33,7 +33,9 @@ class DestinetTestCase(NaayaTestCase):
         schema = self.portal.portal_schemas['NyURL']
         schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
         schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
-        
+        self.portal.getSchemaTool().addSchema('registration', 'registration')
+        schema = self.portal.portal_schemas['registration']
+        schema.addWidget('groups', widget_type='SelectMultiple', data_type='list')
         manage_addDestinetPublisher(self.portal)
         cat = self.portal.getCatalogTool()
         cat.addIndex('pointer', 'FieldIndex')

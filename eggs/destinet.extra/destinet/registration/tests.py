@@ -4,11 +4,12 @@ from lxml.html.soupparser import fromstring
 import mock
 
 from Products.NaayaCore.managers.session_manager import session_manager
+from naaya.core.zope2util import path_in_site
 
 from destinet.testing.DestinetTestCase import (DestinetTestCase,
                                                DestinetFunctionalTestCase)
 from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
-                                             WIDGET_NAMES)
+                                             WIDGET_NAMES, USER_GROUPS)
 from destinet.registration.ui import process_create_account
 
 class RegistrationTestCase(DestinetTestCase):
@@ -24,7 +25,8 @@ class RegistrationTestCase(DestinetTestCase):
             'comments': 'I am John Doe',
             'location': '',
             'geo_type': 'Forest',
-            'coverage': 'Australia'
+            'coverage': 'Australia',
+            'groups': []
         }
 
     @property
@@ -98,6 +100,17 @@ class RegistrationTestCase(DestinetTestCase):
         self.assertEqual(contact.lastname, self.initial_data['lastname'])
         self.assertEqual(contact.coverage, self.initial_data['coverage'])
         self.assertEqual(contact.description, self.initial_data['comments'])
+
+    @mock.patch('destinet.registration.core.USER_GROUPS',
+                {'test-group': 'resources'})
+    def test_contact_with_group(self):
+        """ test destinet registration when group is selected """
+        self.portal.REQUEST.form.update(self.initial_data)
+        self.portal.REQUEST.form.update(groups=['test-group'])
+        process_create_account(self.context, self.portal.REQUEST)
+        contact = self.portal['who-who']['destinet-users'].objectValues()[0]
+        pointer = self.portal.resources._getOb(contact.getId())
+        self.assertEqual(pointer.pointer, path_in_site(contact))
 
     def test_form(self):
         self.portal.REQUEST.SESSION = {}
