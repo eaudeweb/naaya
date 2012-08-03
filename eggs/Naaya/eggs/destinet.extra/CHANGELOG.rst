@@ -1,5 +1,7 @@
 1.2.2 (unreleased)
 ====================
+* added user groups in registration; side-effect: pointer in designated
+  `new applicants` folder [simiamih]
 
 1.2.1 (2012-08-02)
 ====================
