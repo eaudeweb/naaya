@@ -149,7 +149,7 @@
         <table cellspacing="0" cellpadding="4" id="search_results" class="datatable sortable">
             <tr>
                 <th width="5%" align="left" class="checkbox">
-                    <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
+                    <input type="checkbox" class="select-all" checked="checked" onclick="selectAll(name='zope_perm_list:list');" />
                 </th>
                 <th>User ID</th>
                 <th>Canonical name</th>

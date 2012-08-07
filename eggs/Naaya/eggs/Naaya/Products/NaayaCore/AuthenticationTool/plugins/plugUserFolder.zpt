@@ -43,36 +43,7 @@
 		</tr>
 	</table>
 </div>
-<!--
-<table border="0" cellspacing="2" cellpadding="2">
-	<tr>
-		<th width="1%"></th>
-		<th width="20%">User</th>
-		<th width="45%">Role(s)</th>
-		<th width="35%">Location(s)</th>
-	</tr>
-<td colspan="2" style="vertical-align: top">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%" tal:define="roles python:users_roles[user]">
-					<tr tal:repeat="role roles">
-						<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
-							<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])">
-						</td>
-						<td width="55%" tal:condition="python:role[0] != []">
-							<span tal:replace="python:here.utJoinToString(role[0], ', ')">roles</span>
-						</td>
-						<td width="*" tal:condition="python:role[0] != []">
-							<span tal:condition="python:role[1] == ''">Zope</span>
-							<span tal:condition="python:role[1] != ''" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
-								<a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
-							</span>
-						</td>
-					</tr>
-				</table>
-			</td>
-	<tr><td></td>
-		<td colspan="3"><input type="submit" value="Revoke roles" /></td></tr>
-</table>
--->
+
 <fieldset><legend i18n:translate="">Assign roles to users</legend>
 <p i18n:translate="">
     Assign a new role to an existing user: select the username from the drop-down field,

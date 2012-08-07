@@ -97,7 +97,7 @@ $(document).ready(function(){
 */
 
 function selectAll(name){
-	$('.datatable td.checkbox input[@name="' + name + '"][type="checkbox"]').attr('checked', $('.select-all').attr('checked'));
+	$('.datatable td.checkbox input[@name="' + name + '"][type="checkbox"]').attr('checked', $('.select-all').attr('checked') || false);
 	return false;
 }
 
