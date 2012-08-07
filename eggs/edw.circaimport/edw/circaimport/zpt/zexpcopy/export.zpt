@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css"  media="screen"
 	tal:attributes="href python:'%s/jstree/themes/default/style.css'%options['igs'][0][0]"
 	>
+        <metal:block use-macro="options/macros/top_message"></metal:block>
         <!-- tabs-->
 	<div id="tabbedmenu">
 		<ul>

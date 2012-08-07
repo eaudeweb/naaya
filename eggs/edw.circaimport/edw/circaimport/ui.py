@@ -34,6 +34,7 @@ import_acls_zpt = PageTemplateFile('zpt/import_acls.zpt', globals())
 zexpcopy_export_zpt = PageTemplateFile('zpt/zexpcopy/export.zpt', globals())
 zexpcopy_import_zpt = PageTemplateFile('zpt/zexpcopy/import.zpt', globals())
 zexpcopy_tree_ajax_zpt = PageTemplateFile('zpt/zexpcopy/tree_ajax.zpt', globals())
+tpl_macros = PageTemplateFile('zpt/zexpcopy/macros.zpt', globals()).macros
 
 def init_log_stream():
     log = StringIO()
@@ -218,22 +219,27 @@ class ZExportData(BrowserPage):
             except Exception, e:
                 zexp_path = ''
                 error = "Error while exporting %s IG Data: %s" % (ig_id, e.args)
-                zexpcopy.send_export_completed_mail(error, sender, to)
+                logger.exception(error)
+                subject = 'Error exporting IG Data'
+                zexpcopy.send_action_completed_mail(error, sender, to, subject)
             else:
                 info = zexpcopy.export_completed_message_zpt.__of__(ctx)(zexp_path=zexp_path,
                                                                     ob_url=ob.absolute_url())
-                zexpcopy.send_export_completed_mail(info, sender, to)
+                subject = 'IG Data exported successfully'
+                zexpcopy.send_action_completed_mail(info, sender, to, subject)
             options = {
                 'performed': True,
                 'zexp_path': zexp_path,
                 'info': info.replace('\n', '<br />\n'),
                 'error': error,
                 'igs': sites,
+                'macros': tpl_macros,
             }
             return zexpcopy_export_zpt.__of__(ctx)(**options)
         else:
             return zexpcopy_export_zpt.__of__(ctx)(performed=False,
-                                                   igs=sites)
+                                                   igs=sites,
+                                                   macros=tpl_macros)
 
 class ZImportData(BrowserPage):
     def __call__(self):
@@ -251,22 +257,35 @@ class ZImportData(BrowserPage):
             sender = ctx.applications.mail_from
             to = self.request.AUTHENTICATED_USER.mail
             new_ids = []
+            sp = transaction.savepoint()
             try:
                 new_ids = zexpcopy.load_zexp(zexp_path, ob)
             except IOError, e:
+                sp.rollback()
                 error = (('Can not read file with exported data. '
                           'Did you enter correctly the path you received by '
                           'email after export?. Error was: %s') % e.args)
+                logger.exception(error)
             except Exception, e:
+                sp.rollback()
                 error = 'Error importing data from zexp file: %s' % e.args
+                logger.exception(error)
+                subject = 'Error importing IG Data'
+                zexpcopy.send_action_completed_mail(error, sender, to, subject)
             else:
-                info = 'The import process ended without errors.'
+                info = (('The import process ended without errors.'
+                        ' Data was imported in this folder, please check: %s')
+                        % ob.absolute_url())
+                subject = 'IG Data imported successfully'
+                zexpcopy.send_action_completed_mail(info, sender, to, subject)
             return zexpcopy_import_zpt.__of__(ctx)(performed=True, ob=ob,
                                                    new_ids=new_ids, info=info,
-                                                   error=error, igs=sites)
+                                                   error=error, igs=sites,
+                                                   macros=tpl_macros)
         else:
             return zexpcopy_import_zpt.__of__(ctx)(performed=False,
-                                                   igs=sites)
+                                                   igs=sites,
+                                                   macros=tpl_macros)
 
 class ZExpcopyTree(BrowserPage):
     def __call__(self):
