@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css"  media="screen"
 	tal:attributes="href python:'%s/jstree/themes/default/style.css'%options['igs'][0][0]"
 	>
+        <metal:block use-macro="options/macros/top_message"></metal:block>
         <!-- tabs-->
 	<div id="tabbedmenu">
 		<ul>
@@ -25,7 +26,12 @@
 		<div tal:condition="options/info" class="system-msg" tal:content="structure options/info">
 		</div>
                 <tal:block condition="not:options/error">
-                    
+                    <div class="note-msg">
+			<strong>Note</strong>
+			<p>The exported data is not going to be deleted automatically from source.</p>
+			<p>If you wish to remove it, please do it manually after you are sure the imported objects are in place.</p>
+			<p>Better safe than sorry!</p>
+                    </div>
                 </tal:block>
 
 	</tal:block>

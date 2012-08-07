@@ -6,11 +6,14 @@ Forum to move data from Archives instance to Forum/Projects.
 import re
 import transaction
 
+from App.config import getConfiguration
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.EmailTool.EmailTool import EmailTool
 
 
+CONFIG = getConfiguration()
+NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
 export_completed_message_zpt = PageTemplateFile('zpt/zexpcopy/mail_export_done.zpt',
                                              globals())
 
@@ -42,11 +45,12 @@ def load_zexp(zexp_path, destination):
     """ Given the zexp file, it loads the data in the given OFS destination """
     existing = destination.objectIds()
     destination._importObjectFromFile(zexp_path, verify=0, set_owner=0)
-    new_ids = list(set(destination.objectIds() - set(existing)))
+    new_ids = list(set(destination.objectIds()) - set(existing))
     # should I assert len(new_ids) == 1 ?
     return new_ids
 
-def send_export_completed_mail(mail_body, mail_from, mail_to):
-        mail_subject = 'IG Data export completed'
-        email_sender = EmailTool('email_sender', 'Zexpcopy email sender')
-        email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
+def send_action_completed_mail(mail_body, mail_from, mail_to, mail_subject):
+    """ Calls an email sender to deliver the info message """
+    email_sender = EmailTool('email_sender', 'Zexpcopy email sender')
+    mail_body = "%s \n\nHave a great day,\n%s" % (mail_body, NETWORK_NAME)
+    email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
