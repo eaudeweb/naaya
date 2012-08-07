@@ -1,12 +1,13 @@
 1.4.12 (unreleased)
-------------------
+-------------------
+* bugfix: close comment window link for anonymous [simiamih]
 
 1.4.11 (2012-07-13)
-------------------
+-------------------
 * #964 - redesigned comment edit/delete permissions [simiamih]
 
 1.4.10 (2012-07-04)
-------------------
+-------------------
 * adapted to correctly create footnote links [dumitval]
 * fixed deprecation warning (bad super addressing) [simiamih]
 * fixed tests: invitees comments do not need aproval [simiamih]

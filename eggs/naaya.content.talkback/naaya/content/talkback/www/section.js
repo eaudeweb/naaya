@@ -60,10 +60,15 @@ function comment_add(evt) {
     close_button_2.addClass('tb-iframe-close-bottom');
     var close_buttons = $([close_button_1[0], close_button_2[0]]);
     close_buttons.click(function() {
-		var mce_text = iframe[0].contentWindow.tinymce.editors[0].getContent();
-		mce_text = mce_text.replace('<p>', '')
-			.replace('</p>', '')
-			.replace(/&nbsp;/g,'');
+                var tinymce = iframe[0].contentWindow.tinymce;
+                if (tinymce === undefined)
+                    var mce_text = '';
+                else {
+                    var mce_text = tinymce.editors[0].getContent();
+                    mce_text = mce_text.replace('<p>', '')
+                            .replace('</p>', '')
+                            .replace(/&nbsp;/g,'');
+                }
 		if (mce_text.length > 0)
 		{
 			var r=confirm(gettext('Are you sure you want to close this window without adding your comment?'));
