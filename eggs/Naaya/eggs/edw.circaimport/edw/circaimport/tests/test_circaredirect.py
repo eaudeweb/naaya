@@ -9,8 +9,8 @@ from edw.circaimport.circaredirect import circa_redirect
 class CircaRedirectTests(unittest.TestCase):
 
     def setUp(self):
-        self.patcher = mock.patch('edw.circaimport.circaredirect.ui',
-                                  upload_prefix=os.path.dirname(__file__))
+        self.patcher = mock.patch('edw.circaimport.circaredirect.ui.upload_prefix',
+                                  os.path.dirname(__file__))
         self.patcher.start()
 
     def tearDown(self):
