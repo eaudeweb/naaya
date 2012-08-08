@@ -1,4 +1,7 @@
-3.0.6 (unreleased)
+3.0.7 (unreleased)
+--------------------
+
+3.0.6 (2012-08-08)
 --------------------
 * fixed select-all checkbox in assign role to ldap users [simiamih]
 * typo in email_requestrole [simiamih]
