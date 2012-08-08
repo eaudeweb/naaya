@@ -1,4 +1,7 @@
-1.4.12 (unreleased)
+1.4.13 (unreleased)
+-------------------
+
+1.4.12 (2012-08-08)
 -------------------
 * bugfix: close comment window link for anonymous [simiamih]
 
