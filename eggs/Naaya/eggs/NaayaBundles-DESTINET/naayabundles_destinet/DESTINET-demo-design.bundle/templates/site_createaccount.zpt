@@ -81,7 +81,7 @@ My role and interest in sustainable and responsible tourism is ..
             </td></tr>
         </tal:block>
         <tr><td colspan="2">
-                <tal:block replace="structure groups_widget" />
+                <tal:block replace="structure groups_widget" tal:on-error="string: " />
             </td></tr>
 	<tr>
 		<td valign="top" i18n:translate="">About Me</td>
