@@ -1,5 +1,6 @@
 3.0.7 (unreleased)
 --------------------
+* cleaning up obsolete code (NyVersions) [simiamih]
 
 3.0.6 (2012-08-08)
 --------------------

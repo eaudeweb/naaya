@@ -83,7 +83,6 @@ from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_handler_for_path
 from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
-from NyVersions import NyVersions
 from NyFolder import folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
@@ -142,7 +141,7 @@ def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
-             Folder, NyBase, NyPermissions, NyImportExport, NyVersions, utils,
+             Folder, NyBase, NyPermissions, NyImportExport, utils,
              list_utils, file_utils, catalog_tool, search_tool,
              session_manager, portlets_manager,
              networkportals_manager, NyFolderBase):
