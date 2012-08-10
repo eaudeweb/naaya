@@ -1422,46 +1422,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         self.recatalogNyObject(ob)
         return 'gl_clean_objects_translations OK.'
 
-    #layer over NyEpozToolbox XXX
-    def getUploadedImages(self): return self.getImagesFolder().objectValues(['Image'])
-
-    security.declareProtected(view, 'process_image_upload')
-    def process_image_upload(self, file='', REQUEST=None):
-        """ """
-        if file != '':
-            if hasattr(file, 'filename'):
-                if file.filename != '':
-                    manage_addImage(self.getImagesFolder(), '', file)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s?doc_url=%s' % \
-                                        (REQUEST['HTTP_REFERER'],
-                                         self.utUrlEncode(self.absolute_url()))) # TODO update URL
-
-    security.declareProtected(view, 'process_file_upload')
-    def process_file_upload(self, file='', REQUEST=None):
-        """ """
-        if file != '':
-            if hasattr(file, 'filename'):
-                if file.filename != '':
-                    pos = max(file.filename.rfind('/'), file.filename.rfind('\\'), file.filename.rfind(':'))+1
-                    id = file.filename[pos:]
-                    ph = file.filename[:pos]
-                    while True:
-                        try:
-                            manage_addFile(self.getImagesFolder(), '', file)
-                            break
-                        except:
-                            rand_id = utils().utGenRandomId(6)
-                            file.filename = '%s%s_%s' % (ph, rand_id , id)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
-
-    security.declareProtected(view, 'process_delete')
-    def process_delete(self, ids=[], REQUEST=None):
-        """ """
-        try: self.getImagesFolder().manage_delObjects(self.utConvertToList(ids))
-        except: pass
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
+    def getUploadedImages(self):
+        """ Basically, returns Image objects in /images folder """
+        return self.getImagesFolder().objectValues(['Image'])
 
     # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
@@ -2284,6 +2247,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def get_naaya_permissions_in_site(self):
         """ Return list of permissions relevant to this portal. """
+        from Products.Naaya.permissions import NAAYA_KNOWN_PERMISSIONS
         permission_map = {}
         for pluggable in self.get_pluggable_content().values():
             meta_type = pluggable['meta_type']
@@ -2301,7 +2265,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 'description': description,
                 'zope_permission': zope_perm,
             }
-        permission_map.update(_naaya_known_permissions)
+        permission_map.update(NAAYA_KNOWN_PERMISSIONS)
 
         return permission_map
 
@@ -3917,21 +3881,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     jstree = StaticServeFromZip('source', 'www/js/jstree.zip', globals())
     jquery_tree_init = ImageFile('www/js/jquery.tree.init.js', globals())
 
-    #--------------------------------------------------------------------------------------------------
-    security.declareProtected(view_management_screens, 'update_portal_forms')
-    def update_portal_forms(self):
-        """ """
-        skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
-        formstool_ob = self.getFormsTool()
-        portal_forms = {'site_admin_users': 'Portal administration - users'}
-        for k, v in portal_forms.items():
-            content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
-            form_ob = formstool_ob._getOb(k, None)
-            if form_ob is None:
-                continue
-            form_ob.pt_edit(text=content, content_type='')
-        return 'done'
-
     common_css = ImageFile('www/common.css', globals())
     print_css = ImageFile('www/print.css', globals())
     style_css = ImageFile('www/style.css', globals())
@@ -3999,14 +3948,3 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.buildout_http_proxy() or self.http_proxy
 
 InitializeClass(NySite)
-
-_naaya_known_permissions = {}
-def register_naaya_permission(zope_perm, title, description=""):
-    """
-    Register a permission so that administrators can assign it to roles.
-    """
-    _naaya_known_permissions[zope_perm] = {
-        'title': title,
-        'description': description,
-        'zope_permission': zope_perm,
-    }
