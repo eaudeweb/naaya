@@ -1,4 +1,7 @@
-3.0.7 (unreleased)
+3.0.8 (unreleased)
+--------------------
+
+3.0.7 (2012-08-10)
 --------------------
 * Fix in loading skeleton (added files to skin) [dumitval]
 * cleaning up obsolete code (NyVersions) [simiamih]
