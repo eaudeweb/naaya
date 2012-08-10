@@ -1,5 +1,6 @@
 1.3.10 (unreleased)
-------------------
+-------------------
+* importing register_naaya_permissions as in Naaya 3.0.7 [simiamih]
 
 1.3.9 (2012-03-14)
 ------------------
