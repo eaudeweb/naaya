@@ -412,6 +412,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                             image_ob.update_data(data=content)
                             image_ob._p_changed=1
 
+                    for file in skin.files:
+                        content = self.futRead(join(skel_path, 'layout', skin.id, file.id), 'rb')
+                        if not skin_ob._getOb(file.id, None):
+                            skin_ob.manage_addFile(id=file.id, file='', title=file.title)
+                        file_ob = skin_ob._getOb(file.id)
+                        content_type = getattr(file, 'content_type', None)
+                        file_ob.update_data(content, content_type)
+                        file_ob._p_changed=1
+
                     for diskfile in skin.diskfiles:
                         manage_addDiskFile(skin_ob, pathspec='/'.join([
                             layout_diskpath_prefix(),

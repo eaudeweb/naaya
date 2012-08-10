@@ -1,5 +1,6 @@
 3.0.7 (unreleased)
 --------------------
+* Fix in loading skeleton (added files to skin) [dumitval]
 * cleaning up obsolete code (NyVersions) [simiamih]
 
 3.0.6 (2012-08-08)

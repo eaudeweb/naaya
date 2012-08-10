@@ -22,6 +22,7 @@ TAG_MAPPING = {
         'rename': 'pluggablecontenttypes', 'type': 'list'},
     'properties/language': {'rename': 'languages', 'type': 'list'},
     'layout/skin': {'rename': 'skins', 'type': 'list'},
+    'layout/skin/file': {'rename': 'files', 'type': 'list'},
     'layout/skin/template': {'rename': 'templates', 'type': 'list'},
     'layout/skin/style': {'rename': 'styles', 'type': 'list'},
     'layout/skin/image': {'rename': 'images', 'type': 'list'},
