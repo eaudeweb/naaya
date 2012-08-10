@@ -1,19 +1,20 @@
 1.1.13 (unreleased)
-------------------
+-------------------
+* removed unused code [simiamih]
 * typo in email_requestrole [simiamih]
 
 1.1.12 (2012-06-29)
-------------------
+-------------------
 * Added site_index and site_admin_template to skel (temporary) [dumitval]
 * All Naaya Skins and images removed before skel loading [dumitval]
 * DiskFile allow_path to layout schemes [dumitval]
 
 1.1.11 (2012-06-19)
-------------------
+-------------------
 * Corrected link in request role and account notification [dumitval]
 
 1.1.10 (2012-04-12)
-------------------
+-------------------
 * Updated administration portlet with comments management section
   and API keys status section [bogdatan]
 

@@ -116,6 +116,7 @@ misc_ = {
 
 
 def register_permissions():
-    from Products.Naaya.NySite import register_naaya_permission
+    from Products.Naaya.permissions import register_naaya_permission
     register_naaya_permission(PERMISSION_ADD_PHOTO,
                               'Submit Photo objects')
+

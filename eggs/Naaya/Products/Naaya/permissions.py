@@ -99,8 +99,19 @@ permission_data = {
     },
 }
 
+NAAYA_KNOWN_PERMISSIONS = {}
+def register_naaya_permission(zope_perm, title, description=""):
+    """
+    Register a permission so that administrators can assign it to roles.
+
+    """
+    NAAYA_KNOWN_PERMISSIONS[zope_perm] = {
+        'title': title,
+        'description': description,
+        'zope_permission': zope_perm,
+    }
+
 def _register_permissions(permission_data):
-    from NySite import register_naaya_permission
     for zope_perm, info in permission_data.iteritems():
         register_naaya_permission(zope_perm,
                                   info['title'],
