@@ -88,7 +88,7 @@ def read_zipfile_contents(data):
             file_paths.add(p)
             if '/' in p:
                 # maybe our parent folder is not listed explicitly
-                add_to_folder_tree(p.rsplit('/')[0])
+                add_to_folder_tree(p.rsplit('/', 1)[0])
 
     def iterate_zipfile_files():
         for file_path in file_paths:
