@@ -17,6 +17,7 @@ folder_with_files = load_file('./data/folder_with_files_zip.zip')
 complicated_zip = load_file('./data/complicated_zip.zip')
 mac_zip = load_file('./data/mac_zip.zip')
 spaces_zip = load_file('./data/Spaces in filename_zip.zip')
+no_parent_folders = load_file('./data/parent_folders_not_explicit.zip')
 
 class NyZipImport(NaayaTestCase):
     """ TestCase for Naaya CSV import """
@@ -112,6 +113,15 @@ class NyZipImport(NaayaTestCase):
         self.assert_same_contents(self.test_folder.objectIds(), ['one_folder'])
         self.assert_same_contents(self.test_folder['one_folder'].objectIds(),
             ['one_file', 'three_file', 'two_file'])
+
+    def test_parent_folders_not_explicit(self):
+        errors = self.test_folder.zip_import.do_import(data=no_parent_folders)
+        self.assertEqual(errors, [])
+        self.assert_same_contents(self.test_folder.objectIds(), ['one_folder'])
+        one_folder = self.test_folder['one_folder']
+        self.assert_same_contents(one_folder.objectIds(), ['second_folder'])
+        self.assert_same_contents(one_folder.second_folder.objectIds(),
+                                  ['one_file', 'three_file', 'two_file'])
 
     def test_import_mails(self):
         diverted_mail = EmailTool.divert_mail()

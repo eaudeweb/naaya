@@ -1,5 +1,6 @@
 3.0.8 (unreleased)
 --------------------
+* bugfix: treating explicit folder parents zips [simiamih]
 * more cleanup and code moved; photoarchive *needs* to be 1.3.10 [simiamih]
 
 3.0.7 (2012-08-10)
