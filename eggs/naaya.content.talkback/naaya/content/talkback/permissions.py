@@ -2,6 +2,8 @@ from Products.Naaya.permissions import _register_permissions
 
 PERMISSION_ADD_TALKBACK_CONSULTATION = 'Naaya - Add Naaya TalkBack Consultation objects'
 PERMISSION_REVIEW_TALKBACKCONSULTATION = 'Naaya - Review TalkBack Consultation'
+PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE = \
+    'Naaya - Review TalkBack after deadline'
 PERMISSION_MANAGE_TALKBACKCONSULTATION = 'Naaya - Manage TalkBack Consultation'
 PERMISSION_INVITE_TO_TALKBACKCONSULTATION = 'Naaya - Invite to TalkBack Consultation'
 
@@ -14,6 +16,11 @@ permission_data = {
     },
     PERMISSION_REVIEW_TALKBACKCONSULTATION: {
         'title': 'TalkBack Consultation - submit review',
+        'description': """
+        """,
+    },
+    PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE: {
+        'title': 'TalkBack Consultation - submit review after deadline',
         'description': """
         """,
     },

@@ -63,6 +63,7 @@ from invitations import InvitationsContainer, InvitationUsersTool
 from comments_admin import CommentsAdmin
 from permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
                          PERMISSION_REVIEW_TALKBACKCONSULTATION,
+                         PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION,
                          PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
@@ -504,7 +505,9 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
             else:
                 return 'no-permission'
 
-        if self.get_days_left()[1] <= 0 and not self.checkPermissionManageTalkBackConsultation():
+        if self.get_days_left()[1] <= 0 and not (
+                self.checkPermissionManageTalkBackConsultation() or
+                self.checkPermissionReviewTalkBackConsultationAfterDeadline()):
             return 'deadline-reached'
 
     security.declareProtected(
@@ -520,6 +523,22 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         Check for reviewing the TalkBack Consultation.
         """
         return self.checkPermission(PERMISSION_REVIEW_TALKBACKCONSULTATION)
+
+    security.declareProtected(
+        PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE,
+        'review_after_deadline')
+    def review_after_deadline(self):
+        """
+        Dummy function to register the permission.
+        """
+        raise NotImplementedError
+
+    def checkPermissionReviewTalkBackConsultationAfterDeadline(self):
+        """
+        Check for reviewing the TalkBack Consultation
+        after the deadline has passed.
+        """
+        return self.checkPermission(PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE)
 
     def checkPermissionManageTalkBackConsultation(self):
         """
