@@ -1,4 +1,7 @@
-1.4.13 (unreleased)
+1.4.14 (unreleased)
+-------------------
+
+1.4.13 (2012-08-16)
 -------------------
 * Added permission to comment/reply after consultation deadline [dumitval]
 
