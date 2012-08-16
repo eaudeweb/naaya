@@ -1,5 +1,6 @@
 1.4.13 (unreleased)
 -------------------
+* Added permission to comment/reply after consultation deadline [dumitval]
 
 1.4.12 (2012-08-08)
 -------------------
