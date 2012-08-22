@@ -1,5 +1,6 @@
 1.2.3 (unreleased)
 ====================
+* different way of finding linked contact object (catalog based) [simiamih]
 
 1.2.2 (2012-08-03)
 ====================
