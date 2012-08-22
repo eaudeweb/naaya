@@ -1,4 +1,7 @@
-1.2.3 (unreleased)
+1.2.4 (unreleased)
+====================
+
+1.2.3 (2012-08-22)
 ====================
 * different way of finding linked contact object (catalog based) [simiamih]
 
