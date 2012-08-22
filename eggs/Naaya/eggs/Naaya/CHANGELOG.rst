@@ -1,3 +1,6 @@
+3.0.9 (unreleased)
+--------------------
+
 3.0.8 (2012-08-22)
 --------------------
 * added sentry error logging support [simiamih]
