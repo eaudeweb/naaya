@@ -12,7 +12,7 @@
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />
 
     <naaya:call factory=".monitoring.initialize" />
-    <configure zcml:condition="installed ZPublisher.interfaces.IPubFailure">
+    <configure zcml:condition="installed ZPublisher.interfaces">
         <subscriber for="ZPublisher.interfaces.IPubFailure"
             handler=".monitoring.log_pub_failure" />
     </configure>
