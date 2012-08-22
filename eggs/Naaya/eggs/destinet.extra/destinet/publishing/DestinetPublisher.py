@@ -13,6 +13,7 @@ import operator
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
+from naaya.core.zope2util import ofs_path
 from naaya.content.event.event_item import event_add_html, NyEvent
 from naaya.content.event.event_item import addNyEvent as original_addNyEvent
 from naaya.content.news.news_item import news_add_html, NyNews
@@ -423,13 +424,11 @@ class DestinetPublisher(SimpleItem):
             filters['meta_type'] = 'Naaya News'
             ob_list = cat.search(filters)
         elif ob == 'topics':
-            location_path = '/'.join(site.topics.getPhysicalPath())
-            ob_list = cat.search({'path': location_path,
-                                           'contributor': user})
+            ob_list = cat.search({'path': ofs_path(site.topics),
+                                  'contributor': user})
         elif ob == 'resources':
-            location_path = '/'.join(site.resources.getPhysicalPath())
-            ob_list = cat.search({'path': location_path,
-                                           'contributor': user})
+            ob_list = cat.search({'path': ofs_path(site.resources),
+                                  'contributor': user})
         elif ob == 'forums':
             forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
             ob_list = cat.search({'meta_type': forum_meta_types,
@@ -451,6 +450,7 @@ class DestinetPublisher(SimpleItem):
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
         user = self.REQUEST.AUTHENTICATED_USER.getId()
+        cat = site.getCatalogTool()
 
         user_obj = auth_tool.getUser(user)
         contact_obj = None
@@ -459,11 +459,19 @@ class DestinetPublisher(SimpleItem):
                          'last_name': user_obj.lastname,
                          'email': user_obj.email}
             # --- since destinet.registration: --- #
-            if user in site['who-who']['destinet-users'].objectIds():
-                candidate = site['who-who']['destinet-users'][user]
-                owner_tuple = candidate.getOwnerTuple()
-                if owner_tuple and owner_tuple[1] == user:
-                    contact_obj = candidate
+            container = site['who-who']['destinet-users']
+            candidate_brains = cat.search({'path': ofs_path(container),
+                                           'contributor': user})
+            for candidate_br in candidate_brains:
+                try:
+                    candidate = candidate_br.getObject()
+                except Exception, e:
+                    continue
+                else:
+                    owner_tuple = candidate.getOwnerTuple()
+                    if owner_tuple and owner_tuple[1] == user:
+                        contact_obj = candidate
+                        break
             # --- end --- #
         else:
             user_info = None
