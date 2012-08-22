@@ -1,4 +1,7 @@
-1.3.10 (unreleased)
+1.3.11 (unreleased)
+-------------------
+
+1.3.10 (2012-08-22)
 -------------------
 * importing register_naaya_permissions as in Naaya 3.0.7 [simiamih]
 
