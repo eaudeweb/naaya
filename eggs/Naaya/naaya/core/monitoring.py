@@ -1,10 +1,12 @@
 import logging
 import zExceptions
+from AccessControl.unauthorized import Unauthorized
 
 
 ignored_types = [
     zExceptions.Redirect,
     zExceptions.Unauthorized,
+    Unauthorized,
     zExceptions.Forbidden,
     zExceptions.NotFound,
     zExceptions.MethodNotAllowed,
