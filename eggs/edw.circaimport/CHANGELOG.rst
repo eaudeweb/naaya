@@ -1,4 +1,7 @@
-1.3 (unreleased)
+1.3.1 (unreleased)
+------------------
+
+1.3.0 (2012-08-28)
 ------------------
 * new feature (sub product): zexp export/import between instances [simiamih]
 
