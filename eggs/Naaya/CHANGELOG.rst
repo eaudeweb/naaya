@@ -1,4 +1,7 @@
-3.0.9 (unreleased)
+3.0.10 (unreleased)
+--------------------
+
+3.0.9 (2012-08-28)
 --------------------
 * improved monitoring (extra info, zope sentry handler) [simiamih]
 
