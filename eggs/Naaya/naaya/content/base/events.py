@@ -10,6 +10,10 @@ from interfaces import INyContentObjectEditEvent
 from interfaces import INyContentObjectApproveEvent
 from interfaces import INyContentObjectUnapproveEvent
 from interfaces import INyContentObjectMovedEvent
+from interfaces import INyContentObjectViewEvent
+from interfaces import INyContentObjectDownloadEvent
+
+from naaya.core.zope2util import get_or_create_site_logger
 
 class NyContentObjectAddEvent(object):
     """ Naaya content object has been created """
@@ -56,6 +60,20 @@ class NyContentObjectMovedEvent(object):
         self.old_site_path = old_site_path
         self.new_site_path = new_site_path
 
+class NyContentObjectViewEvent(object):
+    """ Naaya content object has been opened """
+    implements(INyContentObjectViewEvent)
+
+    def __init__(self, context):
+        self.context = context
+
+class NyContentObjectDownloadEvent(object):
+    """ Naaya content object has been downloaded """
+    implements(INyContentObjectDownloadEvent)
+
+    def __init__(self, context):
+        self.context = context
+
 @adapter(INyContentObject, IObjectMovedEvent)
 def notify_content_object_moved(obj, event):
     if event.oldParent is None or event.newParent is None:
@@ -89,3 +107,32 @@ def update_last_modification(event):
     obj = event.context
     if not hasattr(obj, 'version') or not obj.version:
         obj.last_modification = DateTime()
+
+def prepare_log_data(context):
+    """
+    Prepare data to be added to message log for action on object
+    """
+    site = context.getSite()
+    return {
+        'site_id': site.id,
+        'user': context.REQUEST.AUTHENTICATED_USER.getUserName(),
+        'content_title': context.title_or_id(),
+        'content_meta_type': context.meta_type,
+        'content_path': "/".join(context.getPhysicalPath()),
+        #'log_events': getattr(site, 'content_action_logging', True),
+    }
+
+def log_view_event(event):
+    """ Log view action on object """
+    context = event.context
+    log_data = prepare_log_data(context)
+    log_data['action'] = 'VIEW'
+    logger = get_or_create_site_logger(context.getSite())
+    logger.info(log_data)
+
+def log_download_event(event):
+    """ Log download action on object """
+    context = event.contex
+    log_data = prepare_log_data(context)
+    logger = get_or_create_site_logger(context.getSite())
+    logger.info(log_data)

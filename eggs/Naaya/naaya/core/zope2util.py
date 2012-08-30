@@ -38,6 +38,7 @@ from naaya.core.utils import icon_for_content_type
 from Products.Naaya.interfaces import INySite
 from backport import any
 from interfaces import IRstkMethod
+from jsonlogger import JSONFormatter
 
 log = logging.getLogger(__name__)
 
@@ -591,3 +592,52 @@ def _run_job(db, context_path, callback):
 def json_response(data, response):
     response.setHeader('Content-Type', 'application/json')
     return json.dumps(data)
+
+def get_zope_env(var, default=''):
+    """
+    Returns the value from buildout of specified variable if exists,
+    otherwise returns a default value
+
+    """
+
+    configuration = getConfiguration()
+    return getattr(configuration, 'environment', {}).get(var, default)
+
+SITE_LOGGER_INITIALIZED = []
+
+def get_or_create_site_logger(site):
+    """
+    Returns a logger based on site ID which will save actions on content types
+
+    """
+    global SITE_LOGGER_INITIALIZED
+
+    site_physical_path = '_'.join(site.getPhysicalPath())[1:]
+    logger = logging.getLogger('%s-logger' % site_physical_path)
+    if not site_physical_path in SITE_LOGGER_INITIALIZED:
+        abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+
+        if abs_path:
+            if not os.path.exists(abs_path):
+                os.makedirs(abs_path)
+            log_filename = os.path.join(abs_path, '%s.log' % site_physical_path)
+            if not os.access(log_filename, os.W_OK):
+                return logger
+            logger.propagate = 0
+
+            supported_keys = [
+                'asctime',
+                'message',
+            ]
+
+            log_format = ' '.join(['%%({%d})' % index for index, key in enumerate(supported_keys)])
+            custom_format = log_format.format(*supported_keys)
+
+            handler = logging.FileHandler(log_filename)
+            handler.setFormatter(JSONFormatter(custom_format))
+            logger.setLevel(logging.INFO)
+            logger.addHandler(handler)
+
+            SITE_LOGGER_INITIALIZED.append(site_physical_path)
+
+    return logger
