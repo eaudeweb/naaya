@@ -89,7 +89,7 @@ from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
-from naaya.core.zope2util import redirect_to
+from naaya.core.zope2util import redirect_to, get_zope_env
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.i18n.portal_tool import manage_addNaayaI18n
@@ -3286,6 +3286,111 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_comments_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_actions_on_content_html')
+    def admin_actions_on_content_html(self, REQUEST=None, RESPONSE=None):
+        """
+        List all logged actions on content types
+
+        """
+        from naaya.core.utils import get_or_create_attribute
+        self.aq_self = get_or_create_attribute(self.aq_self, 'content_action_logging', True)
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_content_actions')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_log_content')
+    def admin_set_log_content(self, enabled=False, REQUEST=None, RESPONSE=None):
+        """
+        Enable/Disable logging actions on content types
+
+        """
+        from naaya.core.utils import str2bool
+        lang = self.gl_get_selected_language()
+        enabled = str2bool(REQUEST.form.get('enabled', False))
+        if enabled in [True, False]:
+            self.content_action_logging = enabled
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                 date=self.utGetTodayDate())
+        REQUEST.RESPONSE.redirect('%s/admin_actions_on_content_html'
+                                  % (self.absolute_url()))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getContentActions')
+    def getContentActions(self, REQUEST=None, RESPONSE=None):
+        """
+        Returns plain text and parsed lines of logging files for actions on
+        content
+
+        """
+        from naaya.core.utils import file_length
+        site_physical_path = '_'.join(self.getPhysicalPath())[1:]
+        lines = []
+        plain_text_lines = []
+        show_plain_text = False
+        writeable = False
+        abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+        log_filename = os.path.join(abs_path, '%s.log' % site_physical_path)
+
+        if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
+            writeable = True
+            log_file = open(log_filename)
+            file_len = file_length(log_filename)
+
+            if file_len < 200:
+                show_plain_text = True
+
+            for line in log_file:
+                if show_plain_text:
+                    plain_text_lines.append(line)
+
+                line = json.loads(line)
+                line_data = line['message']
+                line_data['date'] = line['asctime']
+                lines.append(line_data)
+
+        return {
+            'writeable': writeable,
+            'lines': lines,
+            'plain_text_lines': plain_text_lines,
+        }
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_download_log_file')
+    def admin_download_log_file(self, REQUEST=None, RESPONSE=None):
+        """
+        Download logging files for actions made on content types
+
+        """
+        from Products.NaayaCore.managers.import_export import set_response_attachment
+        from StringIO import StringIO
+        site_physical_path =  '_'.join(self.getPhysicalPath())[1:]
+        abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+        log_filename = '%s.log' % site_physical_path
+        log_filepath = os.path.join(abs_path, log_filename)
+        log_file = open(log_filepath, 'r+')
+        data = log_file.read()
+        log_file.close()
+        output = StringIO()
+        output.write(data)
+        set_response_attachment(REQUEST.RESPONSE, log_filename,
+                                'text/html; charset=utf-8', output.len)
+        return output.getvalue()
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'clear_log_files')
+    def clear_log_files(self, REQUEST=None, RESPONSE=None):
+        """
+        Delete from logging files all actions made on content types
+
+        """
+
+        if is_ajax(REQUEST):
+            site_id = self.id
+            abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+
+            log_filename = os.path.join(abs_path, '%s.log' % site_id)
+            log_file = open(log_filename, 'r+')
+            log_file.truncate()
+            log_file.close()
+            return "SUCCESS"
+        else:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
 
     #others
     def get_localch_noportlet(self):

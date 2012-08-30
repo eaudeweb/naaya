@@ -270,15 +270,10 @@ def str2bool(string):
 
 def file_length(file_name):
     file_content = open(file_name, 'r+')
-    _return = 0
-    try:
-        for i, l in enumerate(file_content):
-            pass
-        _return = i + 1
-    finally:
-        file_content.close()
+    length = len(file_content.readlines())
+    file_content.close()
 
-    return _return
+    return length
 
 def get_or_create_attribute(ob, attr, default_value):
     if not hasattr(ob, attr):

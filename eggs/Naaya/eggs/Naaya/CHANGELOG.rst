@@ -1,5 +1,6 @@
-3.0.10 (unreleased)
+3.1.0 (unreleased)
 --------------------
+* feature: #882 logging user actions in text files on disk [bogdatan]
 
 3.0.9 (2012-08-28)
 --------------------
