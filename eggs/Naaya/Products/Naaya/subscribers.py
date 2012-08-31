@@ -1,5 +1,8 @@
 from ZPublisher.BeforeTraverse import rewriteBeforeTraverse
 
+from naaya.core.site_logging import create_site_logger
+
+
 def update_maintopics_after_move(event):
     """ object was renamed; update maintopics """
     site = event.context.getSite()
@@ -51,3 +54,11 @@ def site_cloned(site, event):
             btr[name] = ob
     #Override __before_traverse__
     rewriteBeforeTraverse(site, btr)
+
+def site_moved_or_added(site, event):
+    """
+    Handler triggered after a site was added to a location as a consequence of
+    a moval or of an initialization of a new one
+
+    """
+    create_site_logger(site)

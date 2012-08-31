@@ -13,7 +13,7 @@ from interfaces import INyContentObjectMovedEvent
 from interfaces import INyContentObjectViewEvent
 from interfaces import INyContentObjectDownloadEvent
 
-from naaya.core.zope2util import get_or_create_site_logger
+from naaya.core.site_logging import get_site_logger
 
 class NyContentObjectAddEvent(object):
     """ Naaya content object has been created """
@@ -127,12 +127,12 @@ def log_view_event(event):
     context = event.context
     log_data = prepare_log_data(context)
     log_data['action'] = 'VIEW'
-    logger = get_or_create_site_logger(context.getSite())
+    logger_slug, logger = get_site_logger(context.getSite())
     logger.info(log_data)
 
 def log_download_event(event):
     """ Log download action on object """
     context = event.contex
     log_data = prepare_log_data(context)
-    logger = get_or_create_site_logger(context.getSite())
+    logger_slug, logger = get_site_logger(context.getSite())
     logger.info(log_data)

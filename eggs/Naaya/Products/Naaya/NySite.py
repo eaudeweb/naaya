@@ -99,6 +99,7 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
 from naaya.core.exceptions import i18n_exception
+from naaya.core.site_logging import SITES_LOG_PATH_VAR
 
 from events import NyPluggableItemInstalled, SkelLoad
 
@@ -3326,7 +3327,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         plain_text_lines = []
         show_plain_text = False
         writeable = False
-        abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+        abs_path = get_zope_env(SITES_LOG_PATH_VAR)
         log_filename = os.path.join(abs_path, '%s.log' % site_physical_path)
 
         if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
@@ -3361,7 +3362,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         from Products.NaayaCore.managers.import_export import set_response_attachment
         from StringIO import StringIO
         site_physical_path =  '_'.join(self.getPhysicalPath())[1:]
-        abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+        abs_path = get_zope_env(SITES_LOG_PATH_VAR)
         log_filename = '%s.log' % site_physical_path
         log_filepath = os.path.join(abs_path, log_filename)
         log_file = open(log_filepath, 'r+')
@@ -3382,7 +3383,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         if is_ajax(REQUEST):
             site_id = self.id
-            abs_path = get_zope_env('CONTENT_ACTION_LOG_PATH', '')
+            abs_path = get_zope_env(SITES_LOG_PATH_VAR)
 
             log_filename = os.path.join(abs_path, '%s.log' % site_id)
             log_file = open(log_filename, 'r+')

@@ -17,6 +17,8 @@
             handler=".monitoring.log_pub_failure" />
     </configure>
 
+    <naaya:call factory=".site_logging.init_site_loggers" />
+
     <browser:resourceDirectory
         name="naaya.mime_icons"
         directory="./mime-icons"
@@ -65,7 +67,7 @@
         getattrPatch="yes" />
 
     <naaya:rstkMethod
-        handler=".zope2util.icon_for_content_type"
+        handler="naaya.core.utils.icon_for_content_type"
         getattrPatch="yes" />
 
     <naaya:rstkMethod
