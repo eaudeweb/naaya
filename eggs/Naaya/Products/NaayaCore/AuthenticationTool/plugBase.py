@@ -1,4 +1,4 @@
-
+from zope.event import notify
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 
@@ -61,9 +61,15 @@ class PlugBase(SimpleItem):
             location_ob = self.utGetObject(location)
         if location_ob is None:
             raise ValueError("Invalid location")
+        auth_tool = self.getAuthenticationTool()
+        history = auth_tool.getLocationUserRoles(user, location)
         location_ob.manage_delLocalRoles([user])
 
         if REQUEST is not None:
+            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+            notify(RoleAssignmentEvent(location_ob, manager_id, user, [],
+                                       history))
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def addUserRoles(self, name=[], roles=[], location='', user_location='',
@@ -91,21 +97,23 @@ class PlugBase(SimpleItem):
         auth_tool = site.getAuthenticationTool()
         #process form values
         if location == "/" or location == '':
-            loc, location = 'all', site
+            loc, location_ob = 'all', site
         else:
-            loc, location = 'other', self.utGetObject(location)
-        if location is None:
+            loc, location_ob = 'other', self.utGetObject(location)
+        if location_ob is None:
             return on_error('Invalid location path')
         #assing roles
         if not isinstance(roles, list):
             roles = [roles]
+        history = {}
         for n in name:
-            location.manage_setLocalRoles(n, roles)
+            history[n] = auth_tool.getLocationUserRoles(n, location)
+            location_ob.manage_setLocalRoles(n, roles)
             if send_mail:
                 try:
                     email = auth_tool.getUsersEmails([n])[0]
                     fullname = auth_tool.getUsersFullNames([n])[0]
-                    site.sendAccountModifiedEmail(email, roles, loc, location)
+                    site.sendAccountModifiedEmail(email, roles, loc, location_ob)
                 except:
                     pass
             try:
@@ -114,6 +122,11 @@ class PlugBase(SimpleItem):
             except:
                 pass
         if REQUEST is not None:
+            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+            for n in name:
+                notify(RoleAssignmentEvent(location_ob, manager_id, n, roles,
+                                           history[n]))
             self.setSessionInfoTrans("Role(s) successfully assigned")
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 

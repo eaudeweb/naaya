@@ -266,7 +266,7 @@ class plugLDAPUserFolder(PlugBase):
     security.declareProtected(manage_users, 'revokeUserRoles')
     def revokeUserRoles(self, user, location, REQUEST=None):
         """ """
-        super(plugLDAPUserFolder, self).revokeUserRoles(user, location)
+        super(plugLDAPUserFolder, self).revokeUserRoles(user, location, REQUEST)
         if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
@@ -358,9 +358,13 @@ class plugLDAPUserFolder(PlugBase):
             auth_tool = site.getAuthenticationTool()
             user_id_list = self.group_member_ids(group)
             for user_email in auth_tool.getUsersEmails(user_id_list):
-                site.sendAccountModifiedEmail(user_email, roles, loc, location)
+                site.sendAccountModifiedEmail(user_email, roles, loc, ob)
 
         if REQUEST is not None:
+            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+            notify(RoleAssignmentEvent(ob, manager_id, "group: %s" % group,
+                                       roles, []))
             self.setSessionInfoTrans("Role(s) succesfully assigned")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=assign_to_groups'
@@ -375,6 +379,10 @@ class plugLDAPUserFolder(PlugBase):
         ob.acl_satellite.remove_group_roles(group_id, [role])
 
         if REQUEST is not None:
+            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+            notify(RoleAssignmentEvent(ob, manager_id, "group: %s" % group_id,
+                                       [], [role]))
             self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
