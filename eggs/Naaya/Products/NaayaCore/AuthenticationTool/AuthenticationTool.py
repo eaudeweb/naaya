@@ -494,6 +494,25 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                             (local_roles, folder.absolute_url(1)))
         return users_roles
 
+    security.declareProtected(manage_users, 'getUsersRolesRestricted')
+    def getLocationUserRoles(self, user_id, path):
+        """
+        Returns information about the user's local roles at the exact location.
+        If location is site, returns roles in site.
+
+        """
+        if path in ("/", ""):
+            return self.getUserRoles(self.getUser(user_id))
+        else:
+            roles = []
+            folder = self.unrestrictedTraverse(path, None)
+            if folder:
+                for roles_tuple in folder.get_local_roles():
+                    local_roles = self.getLocalRoles(roles_tuple[1])
+                    if roles_tuple[0] == user_id and len(local_roles) > 0:
+                        roles.extend(local_roles)
+            return roles
+
     security.declareProtected(manage_users, 'search_users')
     def search_users(self, query, REQUEST=None, **kw):
         """ Search users based of query and other criteria, returning user

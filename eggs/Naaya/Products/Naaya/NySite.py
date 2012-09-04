@@ -2422,16 +2422,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         optionally sending a notification e-mail
 
         """
+        auth_tool = self.getAuthenticationTool()
         err = ''
         success = False
+        history = {}
         names = self.utConvertToList(names)
         if len(names)<=0:
             err = 'A username must be specified'
         else:
             try:
                 for name in names:
-                    self.getAuthenticationTool().manage_addUsersRoles(name,
-                                                            roles, location)
+                    history[name] = auth_tool.getLocationUserRoles(name, location)
+                    auth_tool.manage_addUsersRoles(name, roles, location)
             except ValidationError, error:
                 err = error
             else:
@@ -2462,6 +2464,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 REQUEST.RESPONSE.redirect(
                     REQUEST.environ.get('HTTP_REFERER', redirect_url))
             elif success:
+                from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+                context = ((location in ("/", "")) and self.getSite() or
+                            self.unrestrictedTraverse(location, None))
+                manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+                for name in names:
+                    notify(RoleAssignmentEvent(context, manager_id, name, roles,
+                                               history[name]))
                 self.setSessionInfoTrans("Role(s) successfully assigned")
                 REQUEST.RESPONSE.redirect(redirect_url)
 
@@ -2472,10 +2481,20 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         if not isinstance(location, list):
             location = [location]
+        auth_tool = self.getAuthenticationTool()
+        history = {}
         for l in location:
+            history[l] = auth_tool.getLocationUserRoles(user, l)
             self.getAuthenticationTool().manage_revokeUserRole(user, l)
 
         if REQUEST is not None:
+            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+            for loc in location:
+                context = ((loc in ("/", "")) and self.getSite() or
+                            self.unrestrictedTraverse(loc, None))
+                notify(RoleAssignmentEvent(context, manager_id, user,
+                                           [], history[loc]))
             if is_ajax(REQUEST):
                 return 'SUCCESS'
             else:
