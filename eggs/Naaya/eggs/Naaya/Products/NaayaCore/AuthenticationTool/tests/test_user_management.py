@@ -1,8 +1,12 @@
 import transaction
+from mock import patch, Mock
+
 from AccessControl.Permissions import view
 from AccessControl.Permission import Permission
 
+from naaya.core import site_logging
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+
 
 class AuthTestSetup(NaayaFunctionalTestCase):
     def setUp(self):
@@ -174,3 +178,85 @@ class UserWithRolesOnlyOnFolderTests(UserWithRolesOnlyOnFolderTestSetup):
 
         self.browser.go(folder_url)
         self.assertEqual(folder_url, self.browser.get_url())
+
+class UserManagementLoggingTestSuite(UserWithRolesOnlyOnFolderTestSetup):
+
+    def setUp(self):
+        super(UserManagementLoggingTestSuite, self).setUp()
+        self.site_logger = Mock()
+        patcher = patch('naaya.core.site_logging.get_site_logger')
+        self.patch_get_site_logger = patcher.start()
+        self.patch_get_site_logger.return_value = self.site_logger
+        self.browser_do_logout()
+        self.browser_do_login('admin', '')
+
+    def tearDown(self):
+        self.browser_do_logout()
+        self.patch_get_site_logger.stop()
+        super(UserManagementLoggingTestSuite, self).tearDown()
+
+    def test_assign_roles_new_location(self):
+        """ test logging event of assigning new role in virgin location """
+        um_page = self.browser.go('http://localhost/portal/admin_assignroles_html')
+        form = self.browser.get_form('frmUsersRoles')
+        form['names'] = [self.user_name]
+        form['roles'] = ['Contributor', 'Reviewer']
+        form['location'] = ''
+        form['send_mail'] = []
+        self.browser.clicked(form, self.browser.get_form_field(form, 'names'))
+        self.browser.submit()
+        self.site_logger.info.assert_called_once_with(
+            {
+                'type': site_logging.USER_MAN,
+                'who': 'admin',
+                'whom': self.user_name,
+                'action': 'ASSIGNED',
+                'roles': form['roles'],
+                'content_path': '/portal',
+            })
+
+    def test_assign_roles_existing_location(self):
+        """ test logging event of overwriting roles in a location for a user """
+        um_page = self.browser.go('http://localhost/portal/admin_assignroles_html')
+        form = self.browser.get_form('frmUsersRoles')
+        form['names'] = [self.user_name]
+        form['roles'] = ['Contributor', 'Reviewer']
+        form['location'] = 'info'
+        form['send_mail'] = []
+        self.browser.clicked(form, self.browser.get_form_field(form, 'names'))
+        self.browser.submit()
+        self.assertEqual((({
+                            'type': site_logging.USER_MAN,
+                            'who': 'admin',
+                            'whom': self.user_name,
+                            'action': 'UNASSIGNED',
+                            'roles': ['Administrator', 'Manager', 'Contributor'],
+                            'content_path': '/portal/info',
+                           },), {}),
+                        self.site_logger.info.call_args_list[0])
+        self.assertEqual((({
+                'type': site_logging.USER_MAN,
+                'who': 'admin',
+                'whom': self.user_name,
+                'action': 'ASSIGNED',
+                'roles': form['roles'],
+                'content_path': '/portal/info',
+            },), {}),
+                        self.site_logger.info.call_args_list[1])
+
+    def test_unassign_roles(self):
+        """ test logging event of unassigning a role """
+        expected = {
+                    'type': site_logging.USER_MAN,
+                    'who': 'admin',
+                    'whom': self.user_name,
+                    'action': 'UNASSIGNED',
+                    'roles': ['Administrator', 'Manager', 'Contributor'],
+                    'content_path': '/portal/info',
+                   }
+        path_addressing = ['portal/info', '/portal/info', 'info']
+        for loc in path_addressing:
+            um_page = self.browser.go('http://localhost/portal/admin_revokerole?user=%s&location=%s'
+                                      % (self.user_name, loc))
+            self.site_logger.info.assert_called_once_with(expected)
+            transaction.abort()

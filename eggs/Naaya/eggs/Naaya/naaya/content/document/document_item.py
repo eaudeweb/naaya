@@ -471,8 +471,6 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        from naaya.content.base.events import NyContentObjectViewEvent
-        notify(NyContentObjectViewEvent(self))
         return self.getFormsTool().getContent({'here': self}, 'document_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

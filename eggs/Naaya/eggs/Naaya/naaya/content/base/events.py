@@ -64,15 +64,17 @@ class NyContentObjectViewEvent(object):
     """ Naaya content object has been opened """
     implements(INyContentObjectViewEvent)
 
-    def __init__(self, context):
+    def __init__(self, context, user_id):
         self.context = context
+        self.user_id = user_id
 
 class NyContentObjectDownloadEvent(object):
     """ Naaya content object has been downloaded """
     implements(INyContentObjectDownloadEvent)
 
-    def __init__(self, context):
+    def __init__(self, context, user_id):
         self.context = context
+        self.user_id = user_id
 
 @adapter(INyContentObject, IObjectMovedEvent)
 def notify_content_object_moved(obj, event):
@@ -107,32 +109,3 @@ def update_last_modification(event):
     obj = event.context
     if not hasattr(obj, 'version') or not obj.version:
         obj.last_modification = DateTime()
-
-def prepare_log_data(context):
-    """
-    Prepare data to be added to message log for action on object
-    """
-    site = context.getSite()
-    return {
-        'site_id': site.id,
-        'user': context.REQUEST.AUTHENTICATED_USER.getUserName(),
-        'content_title': context.title_or_id(),
-        'content_meta_type': context.meta_type,
-        'content_path': "/".join(context.getPhysicalPath()),
-        #'log_events': getattr(site, 'content_action_logging', True),
-    }
-
-def log_view_event(event):
-    """ Log view action on object """
-    context = event.context
-    log_data = prepare_log_data(context)
-    log_data['action'] = 'VIEW'
-    logger_slug, logger = get_site_logger(context.getSite())
-    logger.info(log_data)
-
-def log_download_event(event):
-    """ Log download action on object """
-    context = event.contex
-    log_data = prepare_log_data(context)
-    logger_slug, logger = get_site_logger(context.getSite())
-    logger.info(log_data)

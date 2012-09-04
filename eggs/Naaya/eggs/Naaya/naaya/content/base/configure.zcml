@@ -15,12 +15,12 @@
 
   <subscriber
       for="naaya.content.base.interfaces.INyContentObjectViewEvent"
-      handler=".events.log_view_event"
+      handler=".subscribers.log_view_event"
     />
 
   <subscriber
       for="naaya.content.base.interfaces.INyContentObjectDownloadEvent"
-      handler=".events.log_download_event"
+      handler=".subscribers.log_download_event"
     />
 
   <adapter factory=".publish.NyContentPublishTraverse" />

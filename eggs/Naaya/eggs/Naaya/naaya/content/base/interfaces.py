@@ -55,8 +55,10 @@ class INyContentObjectViewEvent(Interface):
     """ Naaya content object has been opened """
 
     context = Attribute("INyContentObject instance")
+    user_id = Attribute("user_id of logged in user that performed access")
 
 class INyContentObjectDownloadEvent(Interface):
     """ Naaya content object has been downloaded """
 
     context = Attribute("INyContentObject instance")
+    user_id = Attribute("user_id of logged in user that performed access")
