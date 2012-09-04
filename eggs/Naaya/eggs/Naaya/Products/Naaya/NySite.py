@@ -2508,9 +2508,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         if not isinstance(names, list):
             names = [names]
-
-        self.getAuthenticationTool().revoke_searched_roles(names, role, location)
-
+        self.getAuthenticationTool().revoke_searched_roles(names, role,
+                                                           location, REQUEST)
         if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) succesfully revoked")
             REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
