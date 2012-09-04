@@ -1,5 +1,4 @@
 import re
-from unittest import TestSuite, makeSuite
 from copy import deepcopy
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -145,7 +144,3 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
 
         self.browser_do_logout()
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyPublicationFunctionalTestCase))
-    return suite
