@@ -501,17 +501,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         If location is site, returns roles in site.
 
         """
+        user = self.get_user_with_userid(user_id)
+        roles = set()
         if path in ("/", ""):
-            return self.getUserRoles(self.getUser(user_id))
-        else:
-            roles = []
-            folder = self.unrestrictedTraverse(path, None)
-            if folder:
-                for roles_tuple in folder.get_local_roles():
-                    local_roles = self.getLocalRoles(roles_tuple[1])
-                    if roles_tuple[0] == user_id and len(local_roles) > 0:
-                        roles.extend(local_roles)
-            return roles
+            roles.update(set(self.getUserRoles(user)))
+
+        # when user is not local, also has the roles here for site obj
+        folder = self.getSite().unrestrictedTraverse(path, None)
+        if folder:
+            for roles_tuple in folder.get_local_roles():
+                local_roles = self.getLocalRoles(roles_tuple[1])
+                if roles_tuple[0] == user_id and len(local_roles) > 0:
+                    roles.update(set(local_roles))
+
+        return list(roles - set(['Owner', 'Anonymous', 'Authenticated']))
 
     security.declareProtected(manage_users, 'search_users')
     def search_users(self, query, REQUEST=None, **kw):

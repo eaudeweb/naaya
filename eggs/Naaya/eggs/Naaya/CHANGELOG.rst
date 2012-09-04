@@ -1,5 +1,6 @@
 3.1.0 (unreleased)
 --------------------
+* #988 also for pluguserfolder [simiamih]
 * feature: #988 logging user management actions [simiamih]
 * feature: #882 logging user actions in text files on disk [bogdatan]
 
