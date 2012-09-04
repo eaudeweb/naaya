@@ -24,6 +24,7 @@ from AccessControl.Permissions import view, manage_users
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.list import PersistentList
+from zope.event import notify
 
 from naaya.core.utils import is_ajax, render_macro, force_to_unicode
 from naaya.core.zope2util import relative_object_path
@@ -42,7 +43,8 @@ from Products.NaayaCore.managers.import_export import (set_response_attachment,
                                                        UnicodeReader)
 from Products.Naaya.interfaces import INySite
 
-from recover_password import RecoverPassword
+from Products.NaayaCore.AuthenticationTool.recover_password import RecoverPassword
+from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 
 log = logging.getLogger(__name__)
 
@@ -500,6 +502,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Returns information about the user's local roles at the exact location.
         If location is site, returns roles in site.
 
+        Basically the same as Zope's location.get_local_roles_for_userid,
+        but works for any type of user (local, from source)
+        in any type of location (portal root, folder)
+
         """
         user = self.get_user_with_userid(user_id)
         roles = set()
@@ -611,8 +617,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return users_info
 
-    def revoke_searched_roles(self, usernames, role_to_revoke, filter_location):
+    def revoke_searched_roles(self, usernames, role_to_revoke, filter_location,
+                              REQUEST=None):
         """ """
+        if REQUEST:
+            # for logging
+            manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            manager_id = None
         # get current roles + filter location
         if filter_location == '_all_':
             users_roles = self.get_all_users_roles()
@@ -630,8 +642,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         location.manage_setLocalRoles(user_id, roles_to_set)
                     else:
                         location.manage_delLocalRoles([user_id])
+                    actually_revoked = [role_to_revoke]
                 else: # remove all roles
+                    actually_revoked = location.get_local_roles_for_userid(user_id)
                     location.manage_delLocalRoles([user_id])
+                if manager_id:
+                    notify(RoleAssignmentEvent(location, manager_id,
+                                               user_id, [], actually_revoked))
 
         # remove local roles for the site
         if filter_location in ['_all_', '']: # remove site roles
@@ -640,10 +657,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     continue
                 local_user = self.getUser(user_id)
                 if role_to_revoke: # keep the other roles the user has
-                    if role_to_revoke in local_user.roles:
-                        local_user.roles.remove(role_to_revoke)
+                    if role_to_revoke not in local_user.roles:
+                        continue
+                    local_user.roles.remove(role_to_revoke)
+                    actually_revoked = [role_to_revoke]
                 else: # remove all roles
+                    actually_revoked = local_user.roles
                     local_user.roles = []
+                if manager_id:
+                    notify(RoleAssignmentEvent(self.getSite(), manager_id,
+                                               user_id, [], actually_revoked))
 
 
     security.declareProtected(manage_users, 'searchUsers')

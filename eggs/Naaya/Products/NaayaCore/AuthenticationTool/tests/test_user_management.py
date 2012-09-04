@@ -230,7 +230,7 @@ class UserManagementLoggingTestSuite(UserWithRolesOnlyOnFolderTestSetup):
                             'who': 'admin',
                             'whom': self.user_name,
                             'action': 'UNASSIGNED',
-                            'roles': ['Administrator', 'Manager', 'Contributor'],
+                            'roles': ['Contributor', 'Administrator', 'Manager'],
                             'content_path': '/portal/info',
                            },), {}),
                         self.site_logger.info.call_args_list[0])
@@ -251,7 +251,7 @@ class UserManagementLoggingTestSuite(UserWithRolesOnlyOnFolderTestSetup):
                     'who': 'admin',
                     'whom': self.user_name,
                     'action': 'UNASSIGNED',
-                    'roles': ['Administrator', 'Manager', 'Contributor'],
+                    'roles': ['Contributor', 'Administrator', 'Manager'],
                     'content_path': '/portal/info',
                    }
         path_addressing = ['portal/info', '/portal/info', 'info']
