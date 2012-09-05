@@ -1,4 +1,7 @@
-3.1.0 (unreleased)
+3.1.1 (unreleased)
+--------------------
+
+3.1.0 (2012-09-05)
 --------------------
 * #988 for Revoke searched user roles [simiamih]
 * #988 also for pluguserfolder [simiamih]
