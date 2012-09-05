@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-    <h1 metal:fill-slot="title" i18n:translate="">Actions on content</h1>
+    <h1 metal:fill-slot="title" i18n:translate="">Logged events</h1>
 
     <tal:block metal:fill-slot="section"
                define="site_logger here/get_site_logger_content;
@@ -119,14 +119,14 @@
         <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
 
         <p i18n:translate="">
-            This page lists actions (open & download) made on all content types.
+            This page lists logged actions performed in portal.
         </p>
 
         <div class="message-error" tal:condition="python: not site_logger['writeable']">
             <fieldset><legend i18n:translate="">Notification</legend>
                 <div class="fieldset_div">
                     <p i18n:translate="">
-                        The actions on content may not be logged either because the log file is not writeable or there is not configured path where to save the files. Please contact the administrator.
+                        Site log file is not writeable or there is no path configured.
                     </p>
                 </div>
             </fieldset>
