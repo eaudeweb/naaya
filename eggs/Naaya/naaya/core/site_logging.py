@@ -80,7 +80,7 @@ def log_user_access(context, who, how):
     data = {
         'type': ACCESS,
         'action': how,
-        'user': who,
+        'who': who,
         'content_path': ofs_path(context),
     }
     site_logger = get_site_logger(context.getSite())
