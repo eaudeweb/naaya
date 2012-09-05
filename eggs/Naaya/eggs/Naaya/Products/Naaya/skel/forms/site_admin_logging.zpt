@@ -2,9 +2,9 @@
     <h1 metal:fill-slot="title" i18n:translate="">Actions on content</h1>
 
     <tal:block metal:fill-slot="section"
-               define="options here/getContentActions;
-                       plain_text_lines python: options['plain_text_lines'];
-                       lines python: options['lines'];
+               define="site_logger here/get_site_logger_content;
+                       plain_text_lines python: site_logger['plain_text_lines'];
+                       lines python: site_logger['lines'];
                        site_url python: here.getSite().absolute_url();">
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <script tal:content="string: var WWW_URL='${site_url}';"></script>
@@ -122,7 +122,7 @@
             This page lists actions (open & download) made on all content types.
         </p>
 
-        <div class="message-error" tal:condition="python: not options['writeable']">
+        <div class="message-error" tal:condition="python: not site_logger['writeable']">
             <fieldset><legend i18n:translate="">Notification</legend>
                 <div class="fieldset_div">
                     <p i18n:translate="">
@@ -159,21 +159,17 @@
                         <th i18n:translate="" style="width: 14%">
                             Date
                         </th>
-            
                         <th i18n:translate="">
-                            User
+                            User (Who)
                         </th>
-            
                         <th i18n:translate="">
-                            Action
+                            Action Type
                         </th>
-    
                         <th i18n:translate="">
                             Content
                         </th>
-    
                         <th i18n:translate="">
-                            Content Type
+                            Raw Log Content
                         </th>
                     </tr>
                 </thead>
@@ -186,27 +182,28 @@
             
                         <td>
                             <a title="Profile overview"
-                               tal:attributes="href string:http://forum.eionet.europa.eu/profile_overview?user=${line/user};"
-                               tal:condition="python: line['user'] != 'Anonymous User'"
+                               tal:attributes="href string:http://forum.eionet.europa.eu/profile_overview?user=${line/who};"
+                               tal:condition="python: line['who'] != 'Anonymous User'"
                                i18n:attributes="title"
                                target="_blank">
-                                <span tal:replace="line/user" />
+                                <span tal:replace="line/who" />
                             </a>
 
-                            <span tal:replace="line/user" tal:condition="python: line['user'] == 'Anonymous User'" />
+                            <span tal:replace="line/who" tal:condition="python: line['who'] == 'Anonymous User'" />
                         </td>
+
                         <td>
-                            <span tal:replace="line/action" />
+                            <span tal:replace="line/type" />
                         </td>
-    
+
                         <td>
-                            <a tal:attributes="href string:${site_url}/${line/content_path}">
-                                <span tal:replace="line/content_title" />
+                            <a tal:attributes="href line/content_path" tal:on-error="string: ">
+                                <span tal:replace="python:here.aq_parent.restrictedTraverse(line['content_path']).title_or_id()"  tal:on-error="string: " />
                             </a>
                         </td>
-    
+
                         <td>
-                            <span tal:replace="line/content_meta_type" />
+                            <span tal:replace="line" />
                         </td>
                     </tr>
                 </tal:block>
@@ -216,21 +213,17 @@
                         <th i18n:translate="" style="width: 14%">
                             Date
                         </th>
-            
                         <th i18n:translate="">
-                            User
+                            User (Who)
                         </th>
-            
                         <th i18n:translate="">
-                            Action
+                            Action Type
                         </th>
-    
                         <th i18n:translate="">
                             Content
                         </th>
-    
                         <th i18n:translate="">
-                            Content Type
+                            Raw Log Content
                         </th>
                     </tr>
                 </tfoot>

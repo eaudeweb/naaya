@@ -99,7 +99,7 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
 from naaya.core.exceptions import i18n_exception
-from naaya.core.site_logging import SITES_LOG_PATH_VAR
+from naaya.core.site_logging import SITES_LOG_PATH_VAR, get_site_logger
 
 from events import NyPluggableItemInstalled, SkelLoad
 
@@ -3306,15 +3306,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_actions_on_content_html')
-    def admin_actions_on_content_html(self, REQUEST=None, RESPONSE=None):
-        """
-        List all logged actions on content types
-
-        """
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_site_logging_html')
+    def admin_site_logging_html(self, REQUEST=None, RESPONSE=None):
+        """ Web viewer for site logger """
         from naaya.core.utils import get_or_create_attribute
-        self.aq_self = get_or_create_attribute(self.aq_self, 'content_action_logging', True)
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_content_actions')
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_logging')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_log_content')
     def admin_set_log_content(self, enabled=False, REQUEST=None, RESPONSE=None):
@@ -3329,25 +3325,24 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.content_action_logging = enabled
         self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                  date=self.utGetTodayDate())
-        REQUEST.RESPONSE.redirect('%s/admin_actions_on_content_html'
+        REQUEST.RESPONSE.redirect('%s/admin_site_logging_html'
                                   % (self.absolute_url()))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getContentActions')
-    def getContentActions(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
+    def get_site_logger_content(self, REQUEST=None, RESPONSE=None):
         """
         Returns plain text and parsed lines of logging files for actions on
         content
 
         """
         from naaya.core.utils import file_length
-        site_physical_path = '_'.join(self.getPhysicalPath())[1:]
+        logger = get_site_logger(self)
         lines = []
         plain_text_lines = []
         show_plain_text = False
         writeable = False
         abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-        log_filename = os.path.join(abs_path, '%s.log' % site_physical_path)
-
+        log_filename = os.path.join(abs_path, '%s.log' % logger.name)
         if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
             writeable = True
             log_file = open(log_filename)
@@ -3379,9 +3374,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         from Products.NaayaCore.managers.import_export import set_response_attachment
         from StringIO import StringIO
-        site_physical_path =  '_'.join(self.getPhysicalPath())[1:]
+        logger = get_site_logger(self)
         abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-        log_filename = '%s.log' % site_physical_path
+        log_filename = '%s.log' % logger.name
         log_filepath = os.path.join(abs_path, log_filename)
         log_file = open(log_filepath, 'r+')
         data = log_file.read()
@@ -3401,9 +3396,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         if is_ajax(REQUEST):
             site_id = self.id
+            logger = get_site_logger(self)
             abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-
-            log_filename = os.path.join(abs_path, '%s.log' % site_id)
+            log_filename = '%s.log' % logger.name
             log_file = open(log_filename, 'r+')
             log_file.truncate()
             log_file.close()
