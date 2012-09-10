@@ -1,5 +1,6 @@
 1.2.21 (unreleased)
 ===================
+* redirect to the parent after answer submit [dumitval]
 
 1.2.20 (2012-05-22)
 ===================
