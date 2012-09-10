@@ -1,5 +1,6 @@
 1.2.15 (unreleased)
 -------------------
+* redirect to survey also for administrators [dumitval]
 
 1.2.14 (2012-09-10)
 -------------------
