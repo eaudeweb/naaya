@@ -516,11 +516,18 @@ class NyMeeting(NyContentData, NyFolder):
 
     def registration_status(self):
         """ """
+        username = self.REQUEST.AUTHENTICATED_USER.getUserName()
         participants = self.getParticipants()
         subscriptions = participants.subscriptions.getAccountSubscriptions()
         for subscriber in subscriptions:
-            if self.REQUEST.AUTHENTICATED_USER.getUserName() == subscriber.uid:
+            if username == subscriber.uid:
                 return subscriber.accepted
+        attendees = participants._get_attendees()
+        attendee_role = attendees.get(username)
+        if attendee_role == 'Meeting Participant':
+            return 'accepted'
+        elif attendee_role == 'Meeting Waiting List':
+            return 'new'
         return None
 
     #zmi pages
