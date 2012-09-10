@@ -45,12 +45,26 @@
             <a tal:attributes="href url" i18n:name="login" i18n:translate="">login</a>
              and request to participate with your account.
         </p>
-        <p tal:condition="not: is_anonymous"
+        <p tal:condition="python:not is_anonymous and not here.registration_status()"
             i18n:translate="">
             <a tal:attributes="href url" i18n:name="register" i18n:translate="">Register</a>
             for this meeting as
             <em i18n:name="name"
                 tal:content="python:auth_tool.name_from_userid(username)"/>.
+        </p>
+        <p tal:condition="python: here.registration_status() == 'new'"
+            i18n:translate="">You are registered for this meeting as
+              <em i18n:name="name"
+                tal:content="python:auth_tool.name_from_userid(username)"/>
+                (pending approval).
+        </p>
+        <p tal:condition="python: here.registration_status() == 'accepted'"
+            i18n:translate="">You are registered for this meeting as
+              <em i18n:name="name"
+                tal:content="python:auth_tool.name_from_userid(username)"/>.
+        </p>
+        <p tal:condition="python: here.registration_status() == 'rejected'"
+            i18n:translate="">Your registration was rejected.
         </p>
         </td>
     </tr>

@@ -514,6 +514,15 @@ class NyMeeting(NyContentData, NyFolder):
         participants = self.getParticipants()
         return participants.isParticipant(userid)
 
+    def registration_status(self):
+        """ """
+        participants = self.getParticipants()
+        subscriptions = participants.subscriptions.getAccountSubscriptions()
+        for subscriber in subscriptions:
+            if self.REQUEST.AUTHENTICATED_USER.getUserName() == subscriber.uid:
+                return subscriber.accepted
+        return None
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/meeting_manage_edit', globals())
@@ -522,7 +531,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        if self.survey_required and self.checkPermissionParticipateInMeeting() and self.isParticipant():
+        if self.survey_required and self.registration_status():
             site = self.getSite()
             path = str(self.survey_pointer)
             survey_ob = site.unrestrictedTraverse(path, None)

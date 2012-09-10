@@ -248,6 +248,19 @@ class Subscriptions(SimpleItem):
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
 
         self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
+        if self.survey_required and not self.checkPermissionAdminMeeting():
+            site = self.getSite()
+            path = str(self.survey_pointer)
+            survey_ob = site.unrestrictedTraverse(path, None)
+            if survey_ob is not None and survey_ob.meta_type == 'Naaya Mega Survey':
+                answers = survey_ob.getAnswers()
+                respondents = [a.respondent for a in answers]
+                current_user = REQUEST.AUTHENTICATED_USER.getUserName()
+                if current_user not in respondents:
+                    self.setSessionInfoTrans(
+                        'Registration successfully sent for approval. '
+                        'Please also respond to the following questionaire.')
+                    return REQUEST.RESPONSE.redirect('%s/%s' % (self.getSite().absolute_url(), self.survey_pointer))
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscribe_account_successful')
 
     security.declareProtected(view, 'subscribe_account_successful')

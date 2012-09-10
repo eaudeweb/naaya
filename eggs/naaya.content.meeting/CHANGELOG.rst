@@ -1,5 +1,6 @@
 1.2.13 (unreleased)
 -------------------
+* Improvements in survey integration [dumitval] 
 
 1.2.12 (2012-04-27)
 -------------------
