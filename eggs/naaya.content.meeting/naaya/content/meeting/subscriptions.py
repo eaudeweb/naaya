@@ -248,7 +248,7 @@ class Subscriptions(SimpleItem):
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
 
         self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
-        if self.survey_required and not self.checkPermissionAdminMeeting():
+        if self.survey_required:
             site = self.getSite()
             path = str(self.survey_pointer)
             survey_ob = site.unrestrictedTraverse(path, None)
