@@ -172,7 +172,11 @@
             <p tal:define="site here/getSite">
                 <span class="buttons">
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
-                       i18n:translate="">Register to attend</a>
+                      i18n:translate="" tal:condition="not: here/registration_status">
+                        Register to attend</a>
+                    <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
+                      i18n:translate="" tal:condition="here/registration_status">
+                        Register another user</a>
                 </span>
             </p>
             </tal:block>

@@ -51,7 +51,7 @@ class Participants(SimpleItem):
             return []
         return listUsersInGroup(self.getSite(), search_role)
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'isParticipant')
+    security.declareProtected(view, 'isParticipant')
     def isParticipant(self, userid=None):
         """ """
         if userid is None:
