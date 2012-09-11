@@ -1,4 +1,7 @@
-1.2.16 (unreleased)
+1.2.17 (unreleased)
+-------------------
+
+1.2.16 (2012-09-11)
 -------------------
 * List survey answers in the participants and applicants tables [dumitval]
 
