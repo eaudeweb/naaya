@@ -1,4 +1,7 @@
-1.2.17 (unreleased)
+1.2.18 (unreleased)
+-------------------
+
+1.2.17 (2012-09-11)
 -------------------
 * bugfix in survey identification process [dumitval]
 
