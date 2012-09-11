@@ -530,6 +530,31 @@ class NyMeeting(NyContentData, NyFolder):
             return 'new'
         return None
 
+    security.declareProtected(view, 'get_survey')
+    def get_survey(self):
+        site = self.getSite()
+        path = str(self.survey_pointer)
+        return site.unrestrictedTraverse(path, None)
+
+    security.declareProtected(view, 'get_survey_questions')
+    def get_survey_questions(self):
+        survey = self.get_survey()
+        if survey is not None:
+            questions = []
+            for question in survey.getSortedWidgets():
+                questions.append((question.id, question.title))
+            return questions
+
+    security.declareProtected(view, 'get_survey_answer')
+    def get_survey_answer(self, uid, qid):
+        survey = self.get_survey()
+        if survey is not None:
+            question = getattr(survey, qid)
+            choices = question.getChoices()
+            for answer in survey.objectValues('Naaya Survey Answer'):
+                if answer.respondent == uid:
+                    return choices[getattr(answer, qid)]
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/meeting_manage_edit', globals())
@@ -539,9 +564,7 @@ class NyMeeting(NyContentData, NyFolder):
     def index_html(self, REQUEST):
         """ """
         if self.survey_required and self.registration_status():
-            site = self.getSite()
-            path = str(self.survey_pointer)
-            survey_ob = site.unrestrictedTraverse(path, None)
+            survey_ob = self.get_survey()
             if survey_ob is not None and survey_ob.meta_type == 'Naaya Mega Survey':
                 answers = survey_ob.getAnswers()
                 respondents = [a.respondent for a in answers]
