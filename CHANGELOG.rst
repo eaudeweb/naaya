@@ -1,5 +1,6 @@
 1.2.17 (unreleased)
 -------------------
+* bugfix in survey identification process [dumitval]
 
 1.2.16 (2012-09-11)
 -------------------
