@@ -45,6 +45,8 @@ function toggleSelect(checkbox, form_name, name) {
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
                 i18n:translate="">Status</a>
         </th>
+        <th tal:repeat="question here/get_survey_questions"
+            tal:content="python:question[1]" />
     </tr>
     <tr tal:repeat="user users"
             tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
@@ -66,6 +68,10 @@ function toggleSelect(checkbox, form_name, name) {
         </td>
         <td><span tal:replace="user"/></td>
         <td><span tal:replace="user_info/role"/></td>
+        <td tal:define="uid user_info/uid"
+            tal:repeat="question here/get_survey_questions"
+            tal:content="python:here.get_survey_answer(
+                uid, question[0])"/>
         </tal:block>
     </tr>
 </table>

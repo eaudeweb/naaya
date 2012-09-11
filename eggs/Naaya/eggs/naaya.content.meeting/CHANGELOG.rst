@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 -------------------
+* List survey answers in the participants and applicants tables [dumitval]
 
 1.2.15 (2012-09-10)
 -------------------

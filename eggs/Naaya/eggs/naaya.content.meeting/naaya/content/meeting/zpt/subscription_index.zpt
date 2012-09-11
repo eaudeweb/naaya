@@ -112,6 +112,8 @@
                     <th>
                         <span i18n:translate="">Status</span>
                     </th>
+                    <th tal:repeat="question here/get_survey_questions"
+                        tal:content="python:question[1]" />
                 </tr>
                 <tr tal:repeat="account_subscription here/getAccountSubscriptions">
                     <td>
@@ -127,6 +129,10 @@
                     <td tal:content="account_subscription/organization"/>
                     <td tal:content="account_subscription/phone"/>
                     <td tal:content="account_subscription/accepted"/>
+                    <td tal:define="uid account_subscription/uid"
+                        tal:repeat="question here/get_survey_questions"
+                        tal:content="python:here.get_survey_answer(
+                            uid, question[0])"/>
                 </tr>
             </table>
             <input type="submit" name="accept" value="Accept as participant(s)"/>
