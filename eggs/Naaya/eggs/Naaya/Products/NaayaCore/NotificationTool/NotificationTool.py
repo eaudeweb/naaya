@@ -665,9 +665,12 @@ class NotificationTool(Folder):
         acl_users = self.getSite().getAuthenticationTool()
         users = acl_users.search_users(query, all_users=True)
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
-        return json.dumps([ {'user_id': user.name,
-                             'full_name': user.firstname + " " + user.lastname,
-                             'email': user.email} for user in users ])
+        return json.dumps([ {
+            'user_id': getattr(user, 'name', getattr(user, 'user_id')),
+            'full_name': getattr(user, 'firstname', getattr(user, 'first_name'))
+                + " " +
+                getattr(user, 'lastname', getattr(user, 'last_name')),
+            'email': user.email} for user in users ])
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     def admin_settings(self, REQUEST):
