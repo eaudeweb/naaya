@@ -539,7 +539,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'get_survey_questions')
     def get_survey_questions(self):
         survey = self.get_survey()
-        if survey is not None:
+        if survey is not None and survey.meta_type == 'Naaya Mega Survey':
             questions = []
             for question in survey.getSortedWidgets():
                 questions.append((question.id, question.title))
@@ -548,7 +548,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'get_survey_answer')
     def get_survey_answer(self, uid, qid):
         survey = self.get_survey()
-        if survey is not None:
+        if survey is not None and survey.meta_type == 'Naaya Mega Survey':
             question = getattr(survey, qid)
             choices = question.getChoices()
             for answer in survey.objectValues('Naaya Survey Answer'):
