@@ -1,4 +1,7 @@
-3.1.1 (unreleased)
+3.1.2 (unreleased)
+--------------------
+
+3.1.1 (2012-09-11)
 --------------------
 * bugfix in user search (notification admin page) [dumitval]
 
