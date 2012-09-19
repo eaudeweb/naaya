@@ -183,7 +183,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             base_filter['meta_type'] = meta_types
 
-        if geo_types is not None:
+        if geo_types:
             base_filter['geo_type'] = geo_types
 
         if approved:
