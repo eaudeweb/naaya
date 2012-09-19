@@ -1,4 +1,7 @@
-3.1.2 (unreleased)
+3.1.3 (unreleased)
+--------------------
+
+3.1.2 (2012-09-19)
 --------------------
 * bugfix in build_geo_filters [dumitval]
 
