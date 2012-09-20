@@ -34,7 +34,7 @@ def patch_sinanet_ig(site):
     tmpl = site['portal_layout'].get_current_skin()['standard_template']
     _update_logo(site, logo_id='right_logo.gif', delete=True)
     _update_logo(site, 'left_logo.gif', 'sinanet_logo.gif', 'Site left logo')
-    site.mail_address_from = 'no-reply@groupware.sinanet.isprambiente.it'
+    site.mail_address_from = 'websinanet@isprambiente.it'
     site.notify_on_errors_email = 'naayacrashteam@eaudeweb.ro'
     patch_template(tmpl)
 
