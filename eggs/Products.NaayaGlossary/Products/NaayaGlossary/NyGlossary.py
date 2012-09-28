@@ -762,38 +762,40 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             "children": []
         }
         for folder_ob in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
-            folder_data = {
-                'attributes': {
-                    'id': folder_ob.getId(),
-                    'rel': "tree",
-                    'data-path': relative_object_path(folder_ob, self)
-                },
-                'data': {
-                    'title': get_label(folder_ob),
-                    'icon': "misc_/NaayaGlossary/folder.gif",
+            if folder_ob.approved or self.checkPermissionManageGlossary():
+                folder_data = {
                     'attributes': {
-                        'href': folder_ob.absolute_url(),
-                    }
-                },
-                'children': []
-            }
-            for element_ob in folder_ob.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
-                folder_data['children'].append({
-                    'attributes': {
-                        'id': element_ob.getId(),
-                        'rel': 'node',
-                        'data-path': relative_object_path(element_ob, self)
+                        'id': folder_ob.getId(),
+                        'rel': "tree",
+                        'data-path': relative_object_path(folder_ob, self)
                     },
                     'data': {
-                        'title': get_label(element_ob),
-                        'icon': "misc_/NaayaGlossary/element.gif",
+                        'title': get_label(folder_ob),
+                        'icon': "misc_/NaayaGlossary/folder.gif",
                         'attributes': {
-                            'href': element_ob.absolute_url(),
+                            'href': folder_ob.absolute_url(),
                         }
                     },
-                   'children': []
-                })
-            tree_data['children'].append(folder_data)
+                    'children': []
+                }
+                for element_ob in folder_ob.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
+                    if element_ob.approved or self.checkPermissionManageGlossary():
+                        folder_data['children'].append({
+                            'attributes': {
+                                'id': element_ob.getId(),
+                                'rel': 'node',
+                                'data-path': relative_object_path(element_ob, self)
+                            },
+                            'data': {
+                                'title': get_label(element_ob),
+                                'icon': "misc_/NaayaGlossary/element.gif",
+                                'attributes': {
+                                    'href': element_ob.absolute_url(),
+                                }
+                            },
+                           'children': []
+                        })
+                tree_data['children'].append(folder_data)
 
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
         return json.dumps(tree_data)
