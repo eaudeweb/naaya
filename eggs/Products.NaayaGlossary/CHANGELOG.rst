@@ -1,5 +1,8 @@
 1.1.9 (unreleased)
 ------------------
+* hide glossary items from non-admins if not approved [dumitval]
+* ugly fix for a jquery-tree bug [dumitval]
+* bugfix in add-link computation [dumitval]
 
 1.1.8 (2012-01-16)
 ------------------
