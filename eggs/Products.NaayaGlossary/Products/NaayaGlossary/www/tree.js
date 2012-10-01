@@ -57,7 +57,8 @@ $('#jstree_container').tree({
             tree_obj = TREE_OBJ;
             TREE_OBJ.open_all();
             if (CAN_EDIT) {
-                TREE_OBJ.children('li').each(function(){//Folders
+                //TREE_OBJ.children('li').each(function(){//Folders
+                $('#jstree_container').children('ul').children('li').children('ul').children('li').each(function(){//Folders
                     var self = $(this);
                     edit_link(self);
                     add_link(self);
