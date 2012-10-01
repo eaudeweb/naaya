@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+------------------
+
+1.1.9 (2012-10-01)
 ------------------
 * hide glossary items from non-admins if not approved [dumitval]
 * ugly fix for a jquery-tree bug [dumitval]
