@@ -1,5 +1,6 @@
 1.2.15 (unreleased)
 -------------------
+* Naaya Mega Survey content-type enabled by default [simiamih]
 * naaya-delete-modal for both Delete and Delete Folder [simiamih]
 * Removed float for 'Tips' on login form [bogdatan]
 
