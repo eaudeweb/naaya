@@ -1,5 +1,6 @@
 1.2.22 (unreleased)
 ===================
+* bugfix: #1000; fixed KeyError on rendering survey report [simiamih]
 
 1.2.21 (2012-09-10)
 ===================
