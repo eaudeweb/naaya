@@ -405,7 +405,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryItem')
     def updateGlossaryItem(self, item_title='', item_subjects='', item_source='',
                            item_contributor='', item_approved='', item_translation=[],
-                           item_meta_type='', item_lang_code=[], item_url='', REQUEST=None):
+                            item_def_translation=[], item_meta_type='', item_lang_code=[],
+                            item_url='', REQUEST=None):
         """ """
 
         #do folder update
@@ -422,6 +423,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     lang_code = item_lang_code[i]
                     folder.manageNameTranslations(lang_code, translation)
                     i+=1
+                for translation in item_def_translation:
+                    lang_code = item_lang_code[i]
+                    folder.manageDefinitionTranslations(lang_code, translation)
+                    i+=1
 
         elif item_meta_type == "Naaya Glossary Element":
             #do element update
@@ -434,6 +439,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 for translation in item_translation:
                     lang_code = item_lang_code[i]
                     element.manageNameTranslations(lang_code, translation)
+                    i+=1
+                for translation in item_def_translation:
+                    lang_code = item_lang_code[i]
+                    folder.manageDefinitionTranslations(lang_code, translation)
                     i+=1
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)

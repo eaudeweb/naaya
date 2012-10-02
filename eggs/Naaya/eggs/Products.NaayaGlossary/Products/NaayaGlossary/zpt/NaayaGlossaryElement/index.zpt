@@ -27,23 +27,23 @@
 		</span>
 	</h1>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" tal:condition="here/is_published">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" tal:condition="python:here.is_published() or here.checkPermissionManageGlossary()">
 		<tr>
 			<td valign="top" class="main-cell">
 
 	<tal:block condition="here/check_if_no_translations">
-		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Name translations</span></div>
+		<div class="category_subtitle"><strong i18n:translate="">Name translations</strong></div>
 		<div class="category_content">
-			<table border="0" cellpadding="0" cellspacing="3">
+			<table class="datatable">
 				<tr>
-					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th style="width: 20%" class="language" i18n:translate="">Language</th>
 					<th i18n:translate="">Translations</th>
 				</tr>
 
 				<tal:block repeat="lang here/get_english_names">
-					<tr	tal:define="trans python:here.get_translation_by_language(lang)"
+					<tr tal:define="trans python:here.get_translation_by_language(lang)"
 						tal:condition="trans">
-						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="language" tal:content="lang" />
 						<td class="translation" tal:content="trans" />
 					</tr>
 				</tal:block>
@@ -52,18 +52,18 @@
 	</tal:block>
 
 	<tal:block condition="here/check_if_no_def_trans">
-		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Definition translations</span></div>
+		<div class="category_subtitle"><strong i18n:translate="">Definition translations</strong></div>
 		<div class="category_content">
-			<table border="0" cellpadding="0" cellspacing="3">
+			<table class="datatable">
 				<tr>
-					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th style="width: 20%" class="language" i18n:translate="">Language</th>
 					<th i18n:translate="">Translations</th>
 				</tr>
 
 				<tal:block repeat="lang here/get_english_names">
-					<tr	tal:define="trans python:here.get_def_trans_by_language(lang)"
+					<tr tal:define="trans python:here.get_def_trans_by_language(lang)"
 						tal:condition="trans">
-						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="language" tal:content="lang" />
 						<td class="translation" tal:content="trans" />
 					</tr>
 				</tal:block>
@@ -104,7 +104,7 @@
 		</tr>
 	</table>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" tal:condition="python:not here.is_published()">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" tal:condition="python:not (here.is_published() or here.checkPermissionManageGlossary())">
 		<tr>
 			<td valign="top" class="main-cell">
 				<strong i18n:translate="">Sorry, this term is not published.</strong>
