@@ -86,9 +86,11 @@
 			<div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
 				<div class="breadcrumbhead" i18n:translate="">You are here: </div>
 				<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
+                                <tal:block metal:define-slot="generated-breadcrumbs">
 				<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
 					<span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
 				</tal:block>
+                                </tal:block>
 			</div>
             <div id="leftcolumn" class="localnav" metal:define-slot="div-leftcolumn">
                 <h2>Navigation</h2>
