@@ -34,7 +34,7 @@
 				tal:define="obj_list here/get_object_list">
 			<!-- Elements display -->
 			<tal:block repeat="item obj_list">
-			<tr tal:condition="item/approved">
+			<tr tal:condition="python:item.approved or here.checkPermissionManageGlossary()">
 				<td width="15" align="left" valign="top"><img src="misc_/NaayaGlossary/element.gif" alt="Glossary element" title="Glossary element" i18nattributes="title alt"></td>
 				<td width="707" tal:define="elem_trans python:item.get_translation_by_language(language);
 							    def_trans python:item.get_def_trans_by_language(language)">
@@ -56,18 +56,18 @@
 		</table>
 
 	<tal:block condition="here/check_if_no_translations">
-		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Name translations</span></div>
+		<div class="category_subtitle"><strong i18n:translate="">Name translations</strong></div>
 		<div class="category_content">
-			<table border="0" cellpadding="0" cellspacing="3">
+			<table class="datatable">
 				<tr>
-					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th style="width: 20%" class="language" i18n:translate="">Language</th>
 					<th i18n:translate="">Translations</th>
 				</tr>
 
 				<tal:block repeat="lang here/get_english_names">
 					<tr	tal:define="trans python:here.get_translation_by_language(lang)"
 						tal:condition="trans">
-						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="language" tal:content="lang" />
 						<td class="translation" tal:content="trans" />
 					</tr>
 				</tal:block>
@@ -76,18 +76,18 @@
 	</tal:block>
 
 	<tal:block condition="here/check_if_no_def_trans">
-		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Definition translations</span></div>
+		<div class="category_subtitle"><strong i18n:translate="">Definition translations</strong></div>
 		<div class="category_content">
-			<table border="0" cellpadding="0" cellspacing="3">
+			<table class="datatable">
 				<tr>
-					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th style="width: 20%" class="language" i18n:translate="">Language</th>
 					<th i18n:translate="">Translations</th>
 				</tr>
 
 				<tal:block repeat="lang here/get_english_names">
 					<tr	tal:define="trans python:here.get_def_trans_by_language(lang)"
 						tal:condition="trans">
-						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="language" tal:content="lang" />
 						<td class="translation" tal:content="trans" />
 					</tr>
 				</tal:block>
