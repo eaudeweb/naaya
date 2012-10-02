@@ -1,15 +1,4 @@
 <metal:block use-macro="here/gw_macro/macros/main">
-    <div class="breadcrumbtrail" metal:fill-slot="div-breadcrumbtrail">
-        <div class="breadcrumbhead" i18n:translate="">You are here: </div>
-		<div class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></div>
-        <div class="breadcrumbitem">
-            <a tal:attributes="href gw_root_url" title="Groupware home">Forum</a>
-        </div>
-        <div class="breadcrumbitemlast">
-            <a tal:attributes="href here/absolute_url; title here/title_or_id"
-               tal:content="here/title_or_id">here/title_or_id</a>
-        </div>
-    </div>
     <div id="workarea"
          tal:define="username python:request.AUTHENTICATED_USER.getUserName();
                      done python:options.get('done', False)"
