@@ -663,14 +663,22 @@ class NotificationTool(Folder):
         """ search for user by name (ajax function) """
         query = REQUEST.form['query']
         acl_users = self.getSite().getAuthenticationTool()
-        users = acl_users.search_users(query, all_users=True)
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
-        return json.dumps([ {
-            'user_id': getattr(user, 'name', getattr(user, 'user_id')),
-            'full_name': getattr(user, 'firstname', getattr(user, 'first_name'))
-                + " " +
-                getattr(user, 'lastname', getattr(user, 'last_name')),
-            'email': user.email} for user in users ])
+        member_search = getattr(self.getSite(), 'member_search', False)
+        if member_search:
+            users = member_search._search_users(query)
+            return json.dumps([ {
+                'user_id': user['userid'],
+                'full_name': "%s %s" % (user['firstname'], user['lastname']),
+                'email': user['email']} for user in users ])
+        else:
+            users = acl_users.search_users(query, all_users=True)
+            return json.dumps([ {
+                'user_id': getattr(user, 'name', getattr(user, 'user_id')),
+                'full_name': getattr(user, 'firstname', getattr(user, 'first_name'))
+                    + " " +
+                    getattr(user, 'lastname', getattr(user, 'last_name')),
+                'email': user.email} for user in users ])
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     def admin_settings(self, REQUEST):
