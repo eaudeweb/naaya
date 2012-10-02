@@ -243,9 +243,9 @@
             </tal:block>
 
             <p tal:condition="python: not plain_text_lines and lines">
-                The log file size is to large to be displayed. Try <a tal:attributes="href string:${site_url}/admin_download_log_file"
+                The log file is too large to be displayed. Try <a tal:attributes="href string:${site_url}/admin_download_log_file"
                                                                       title="View logs as plain text" i18n:translate=""
-                                                                      i18n:attributes="title">downloading</a> the file instead
+                                                                      i18n:attributes="title">downloading</a> the file instead.
             </p>
         </div>
 
