@@ -228,6 +228,33 @@
                 </tal:block>
             </table>
             </div>
+            <h2 i18n:translate="">Definitions</h2>
+
+            <div class="field">
+            <table class="datatable">
+                <tr>
+                    <th i18n:translate="">Language</th>
+                    <th i18n:translate="">Translation</th>
+                    <th i18n:translate="">Translate</th>
+                </tr>
+                <tal:block repeat="language selected_item/get_english_names">
+                  <tal:block define="def_lang python:selected_item.definition_lang(language)">
+                    <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(def_lang)">
+                        <td>
+                            <div>
+                                <label tal:attributes="for string:cb-${language}" tal:content="language" />
+                            </div>
+                        </td>
+                        <td tal:content="python:test(translation, translation, '-')"/>
+                        <td>
+                            <input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
+                            <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
+                        </td>
+                    </tr>
+                  </tal:block>
+                </tal:block>
+            </table>
+            </div>
             <input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
             <input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
             <div class="field">
