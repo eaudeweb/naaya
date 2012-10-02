@@ -1,5 +1,10 @@
-1.1.10 (unreleased)
+1.1.11 (unreleased)
 ------------------
+
+1.1.10 (2012-10-02)
+------------------
+* Edit definitions from the glossary index [dumitval]
+* Glossary folder and element index improvements [dumitval]
 
 1.1.9 (2012-10-01)
 ------------------
