@@ -1,17 +1,12 @@
 <metal:block use-macro="here/gw_macro/macros/main">
-    <div class="breadcrumbtrail" metal:fill-slot="div-breadcrumbtrail">
-        <div class="breadcrumbhead">You are here: </div>
-		<div class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></div>
-        <div class="breadcrumbitem">
-            <a tal:attributes="href gw_root_url" title="Groupware home">Forum</a>
-        </div>
-        <div class="breadcrumbitem">
-            <a tal:attributes="href here/absolute_url; title here/title_or_id" tal:content="here/title_or_id">here/title_or_id</a>
-        </div>
+    <tal:block metal:fill-slot="generated-breadcrumbs">
+        <tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
+                <span class="breadcrumbitem"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
+        </tal:block>
         <div class="breadcrumbitemlast">
             <a tal:attributes="href string:${here/absolute_url}/basket_html; title here/title_or_id">Basket</a>
         </div>
-    </div>
+    </tal:block>
     <div id="workarea" tal:define="username python:request.AUTHENTICATED_USER.getUserName()" metal:fill-slot="div-workarea">
         <tal:block condition="python:username != 'Anonymous User'">
             <h1>Interest group applications listing</h1>
