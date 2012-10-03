@@ -1,4 +1,7 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
+------------------
+
+1.1.6 (2012-10-03)
 ------------------
 * #1001; improved breadcrumbs - gw_macro needs update [simiamih]
 
