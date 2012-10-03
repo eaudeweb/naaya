@@ -1,4 +1,7 @@
-1.2.15 (unreleased)
+1.2.16 (unreleased)
+-------------------
+
+1.2.15 (2012-10-03)
 -------------------
 * Naaya Mega Survey content-type enabled by default [simiamih]
 * naaya-delete-modal for both Delete and Delete Folder [simiamih]
