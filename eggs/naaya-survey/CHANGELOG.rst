@@ -1,4 +1,7 @@
-1.2.22 (unreleased)
+1.2.23 (unreleased)
+===================
+
+1.2.22 (2012-10-03)
 ===================
 * bugfix: #1000; fixed KeyError on rendering survey report [simiamih]
 
