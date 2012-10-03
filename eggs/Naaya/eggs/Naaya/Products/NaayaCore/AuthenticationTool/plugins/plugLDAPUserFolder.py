@@ -176,7 +176,8 @@ class plugLDAPUserFolder(PlugBase):
         cn = role.get('cn', '')
         if cn:  cn = cn[0]
         description = role.get('description', '')
-        if description: description = description[0]
+        if description:
+            description = description[0].decode(self.default_encoding)
         return (dn, cn, description)
 
     def _getRole(self, id):
