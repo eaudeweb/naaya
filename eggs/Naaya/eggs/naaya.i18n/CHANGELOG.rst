@@ -1,5 +1,6 @@
 1.1.4 (unreleased)
 -------------------
+* bugfix: #929; also provide iso-8859-1 as secondary codec [simiamih]
 
 1.1.3 (2012-07-26)
 -------------------

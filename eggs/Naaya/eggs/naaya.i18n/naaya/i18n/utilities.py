@@ -45,12 +45,13 @@ class NyHTTPCharsets(HTTPCharsets):
         """
         If HTTPHeader is missing, zope.publisher.http's utility returns empty
         list, so Zope defaults to system default (ascii).
-        We keep publisher's utility logic, but we default to 'utf-8' before
+        We keep publisher's utility logic, but we default to 'utf-8',
+        'iso-8859-1' and then everything that goes, before hiting
         system default.
 
         """
         charsets = super(NyHTTPCharsets, self).getPreferredCharsets()
         if not charsets:
-            return ['utf-8']
+            return ['utf-8', 'iso-8859-1', '*']
         else:
             return charsets
