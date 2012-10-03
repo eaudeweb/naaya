@@ -1,6 +1,6 @@
 3.1.4 (unreleased)
 --------------------
-* bugfix: #1003; undecoded value for role description [simiamih]
+* bugfix: #1004; undecoded value for role description [simiamih]
 
 3.1.3 (2012-10-03)
 --------------------
