@@ -31,18 +31,18 @@ def create_site_logger(site):
     """
     Sets proper file handler to corresponding site logger.
     Called on startup for all existing INySites or after creation of a site.
-    Caution: closes and removes any previous handlers.
+    Caution: removes previous handlers, if any
 
     """
     logger = get_site_logger(site)
     logger.propagate = 0
     logger.setLevel(logging.INFO)
-    for handler in logger.handlers:
+    existing = list(logger.handlers) # we don't iterate what we modify
+    for handler in existing:
         try:
-            handler.close()
+            logger.removeHandler(handler)
         except Exception, e:
-            log.exception("Could not close found handler on site logger")
-    logger.handlers = []
+            log.exception("Could not remove existing site logger handler")
     custom_format = '%(asctime) %(message)'
     abs_path = get_zope_env(SITES_LOG_PATH_VAR)
     if abs_path:
