@@ -20,14 +20,14 @@ class HTTPCharsetsTestSuite(TestCase):
         self.assertEqual(naaya_i18n, expected)
 
     def test_missing_header(self):
-        """ test charset header absence defaults to utf-8 """
+        """ test defaults on charset header absence """
         req = create_request(None)
-        self._validate(req, ['utf-8'])
+        self._validate(req, ['utf-8', 'iso-8859-1', '*'])
 
     def test_empty_header(self):
-        """ test empty charset header defaults to utf-8 """
+        """ test defaults on empty charset header"""
         req = create_request('')
-        self._validate(req, ['utf-8'])
+        self._validate(req, ['utf-8', 'iso-8859-1', '*'])
 
     def test_specific_header(self):
         """ test explicit charset header keeps zope publisher's behaviour """
@@ -46,4 +46,5 @@ class HTTPCharsetsTestSuite(TestCase):
         req = create_request()
         adapter = IUserPreferredCharsets(req)
         self.assertTrue(isinstance(adapter, NyHTTPCharsets))
-        self.assertEqual(adapter.getPreferredCharsets(), ['utf-8'])
+        self.assertEqual(adapter.getPreferredCharsets(),
+                         ['utf-8', 'iso-8859-1', '*'])
