@@ -1,4 +1,7 @@
-3.1.3 (unreleased)
+3.1.4 (unreleased)
+--------------------
+
+3.1.3 (2012-10-03)
 --------------------
 * #1000; user search in admin of notifications works
   with groupware [simiamih]
