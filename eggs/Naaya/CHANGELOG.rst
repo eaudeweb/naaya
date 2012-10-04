@@ -1,4 +1,7 @@
-3.1.4 (unreleased)
+3.1.5 (unreleased)
+--------------------
+
+3.1.4 (2012-10-04)
 --------------------
 * removed zope2util ensure_tzinfo [simiamih]
 * bugfix: #1004; undecoded value for role description [simiamih]
