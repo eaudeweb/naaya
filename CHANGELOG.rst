@@ -1,4 +1,7 @@
-1.3.6 (unreleased)
+1.3.7 (unreleased)
+------------------
+
+1.3.6 (2012-10-04)
 ------------------
 * version timestamps are saved with tzinfo [simiamih]
 * Added 'Uploaded by' column in versions table [bogdatan]
