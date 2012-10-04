@@ -37,12 +37,13 @@ def create_site_logger(site):
     logger = get_site_logger(site)
     logger.propagate = 0
     logger.setLevel(logging.INFO)
-    existing = list(logger.handlers) # we don't iterate what we modify
-    for handler in existing:
-        try:
-            logger.removeHandler(handler)
-        except Exception, e:
-            log.exception("Could not remove existing site logger handler")
+    if hasattr(logger.handlers, '__iter__'): # for testing - i really give up!!
+        existing = list(logger.handlers)
+        for handler in existing:
+            try:
+                logger.removeHandler(handler)
+            except Exception, e:
+                log.exception("Could not remove existing site logger handler")
     custom_format = '%(asctime) %(message)'
     abs_path = get_zope_env(SITES_LOG_PATH_VAR)
     if abs_path:
