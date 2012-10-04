@@ -1,5 +1,6 @@
 1.3.6 (unreleased)
 ------------------
+* version timestamps are saved with tzinfo [simiamih]
 * Added 'Uploaded by' column in versions table [bogdatan]
 
 1.3.5 (2012-07-18)
