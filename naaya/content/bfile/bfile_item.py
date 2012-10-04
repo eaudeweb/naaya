@@ -237,10 +237,9 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             return None
 
     def _save_file(self, the_file, contributor):
-        # TODO set tzinfo on timestamp
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.utcnow(),
+                           timestamp=datetime.now(self.getSite().get_tzinfo()),
                            contributor=contributor)
         self._versions.append(bf)
 
