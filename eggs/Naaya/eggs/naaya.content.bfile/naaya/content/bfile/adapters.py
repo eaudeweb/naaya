@@ -3,7 +3,7 @@
 import os.path
 from Products.Naaya.adapters import NyContentTypeViewAdapter
 from Products.NaayaCore.managers.zip_export_adapters import DefaultZipAdapter
-from naaya.core.zope2util import DT2dt, ensure_tzinfo
+from naaya.core.zope2util import DT2dt
 from naaya.core.utils import pretty_size, icon_for_content_type
 
 from interfaces import INyBFile
@@ -47,7 +47,7 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
         if version is None:
             return DT2dt(self.ob.releasedate)
         else:
-            return ensure_tzinfo(version.timestamp)
+            return version.timestamp
 
     def get_info_text(self):
         trans = self.ob.getPortalI18n().get_translation
