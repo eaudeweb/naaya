@@ -33,9 +33,10 @@ class NyBFileTestCase(NaayaTestCase):
         myfile.filename = 'my.jpg'
         myfile.headers = {'content-type': 'image/jpeg'}
 
-        now_pre = datetime.utcnow()
+        tzinfo = self.portal.get_tzinfo()
+        now_pre = datetime.now(tzinfo)
         self.add_bfile(id='mybfile', title='My bfile', uploaded_file=myfile)
-        now_post = datetime.utcnow()
+        now_post = datetime.now(tzinfo)
 
         mybfile = self.portal.myfolder.mybfile
         self.assertTrue(mybfile.id, 'mybfile')
