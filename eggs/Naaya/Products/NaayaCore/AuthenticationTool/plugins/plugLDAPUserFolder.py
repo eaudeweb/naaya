@@ -553,7 +553,7 @@ class plugLDAPUserFolder(PlugBase):
     security.declarePublic('section_group_members_html')
     section_group_members_html = PageTemplateFile('plugLDAPUserFolderGroupMembers', globals())
 
-    security.declarePublic('pickroles_html')
+    security.declareProtected(manage_users, 'pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
 
 InitializeClass(plugLDAPUserFolder)
