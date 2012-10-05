@@ -101,6 +101,10 @@
 			<permission name="Take ownership" />
 		</role>
 
+                <role name="Reviewer">
+                        <permission name="Naaya - Review TalkBack Consultation" />
+                </role>
+
 		<role name="Owner">
 			<permission name="View" />
 			<permission name="Naaya - Copy content" />
@@ -120,6 +124,18 @@
 			<permission name="Naaya - Add Naaya Pointer objects" />
 			<permission name="Naaya - Add Naaya URL objects" />
 		</role>
+                <role name="Administrator">
+                        <permission name="Naaya - Review TalkBack Consultation" />
+                        <permission name="Naaya - Invite to TalkBack Consultation" />
+                        <permission name="Naaya - Manage TalkBack Consultation" />
+                        <permission name="Naaya - Review TalkBack after deadline" />
+                </role>
+                <role name="Manager">
+                        <permission name="Naaya - Review TalkBack Consultation" />
+                        <permission name="Naaya - Invite to TalkBack Consultation" />
+                        <permission name="Naaya - Manage TalkBack Consultation" />
+                        <permission name="Naaya - Review TalkBack after deadline" />
+                </role>
 
 	</security>
 
