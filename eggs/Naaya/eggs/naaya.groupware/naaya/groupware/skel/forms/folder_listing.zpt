@@ -105,7 +105,9 @@ $(document).ready(function(){
 
                 if(action == "deleteObjects") {
                     deleteObjects(action);
-		}
+		}else {
+                    submit_form_action(action);
+                }
 	});
 })
 

@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 -------------------
+* bugfix: cut/copy buttons were not working anymore [simiamih]
 
 1.2.15 (2012-10-03)
 -------------------
