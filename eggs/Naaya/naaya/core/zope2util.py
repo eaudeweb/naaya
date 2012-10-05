@@ -372,6 +372,12 @@ def DT2dt(date):
     args.append(UnnamedTimeZone(int(date.tzoffset()/60)))
     return datetime.datetime(*args)
 
+def ensure_tzinfo(dt, default_tz=UnnamedTimeZone(0)):
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=default_tz)
+    else:
+        return dt
+
 folder_manage_main_plus = DTMLFile('zpt/folder_main_plus', globals())
 """
 The OFS.ObjectManager `manage_main` template, modified to render two
