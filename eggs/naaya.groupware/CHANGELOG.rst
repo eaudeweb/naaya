@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 -------------------
+* default talkback permissions by skel setting [simiamih]
 * bugfix: cut/copy buttons were not working anymore [simiamih]
 
 1.2.15 (2012-10-03)
