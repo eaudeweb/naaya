@@ -510,6 +510,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'news_index')
 
     security.declareProtected(view, 'picture_html')
