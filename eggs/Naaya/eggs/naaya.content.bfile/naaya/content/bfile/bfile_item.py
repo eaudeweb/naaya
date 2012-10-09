@@ -178,10 +178,12 @@ def bfile_download(context, path, REQUEST):
     action = REQUEST.form.get('action', 'download')
     if action == 'view':
         view_adapter = get_view_adapter(ver)
+        context.notify_access_event(REQUEST)
         if view_adapter is not None:
             return view_adapter(context)
         return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
     elif action == 'download':
+        context.notify_access_event(REQUEST, 'download')
         return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
     else:
         raise NotFound
@@ -359,6 +361,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             options['current_version'] = versions[-1]
 
         template_vars = {'here': self, 'options': options}
+        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent(template_vars, 'bfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
