@@ -1,5 +1,6 @@
 1.2.17 (unreleased)
 -------------------
+* include IG Logger in admin menu [simiamih]
 
 1.2.16 (2012-10-05)
 -------------------
