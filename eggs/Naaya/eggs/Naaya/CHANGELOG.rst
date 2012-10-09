@@ -1,4 +1,7 @@
-3.1.7 (unreleased)
+3.1.8 (unreleased)
+--------------------
+
+3.1.7 (2012-10-09)
 --------------------
 * content types trigger view/download events [simiamih]
 * added `notify_access_event` on NyContentType base class [simiamih]
