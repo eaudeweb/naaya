@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-    <h1 metal:fill-slot="title" i18n:translate="">Logged events</h1>
+    <h1 metal:fill-slot="title" i18n:translate="">Interest Group Logger</h1>
 
     <tal:block metal:fill-slot="section"
                define="site_logger here/get_site_logger_content;
@@ -91,14 +91,9 @@
             height: 395px;
             overflow: auto;
             margin-bottom: 15px;
-        }
-
-        #plain-text-box pre {
-            margin: 0;
-            padding: 0;
             line-height: 1.5;
             font-size: 12px;
-            background: #FFF;
+            background: #eee;
         }
         #log-download-button {
             float: right;
@@ -119,8 +114,12 @@
         <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
 
         <p i18n:translate="">
-            This page lists logged actions performed in portal.
+            Here you can browse logged events in this Interest Group. The event types that are currently logged are:
         </p>
+        <ul>
+            <li>Access or download of HTML Documents, Files, Events, News, Stories and Contacts.</li>
+            <li>User Management changes: Role assignments and unassignments.</li>
+        </ul>
 
         <div class="message-error" tal:condition="python: not site_logger['writeable']">
             <fieldset><legend i18n:translate="">Notification</legend>
@@ -163,13 +162,13 @@
                             User (Who)
                         </th>
                         <th i18n:translate="">
-                            Action Type
+                            Event Type
                         </th>
                         <th i18n:translate="">
                             Content
                         </th>
                         <th i18n:translate="">
-                            Raw Log Content
+                            Event Message
                         </th>
                     </tr>
                 </thead>
@@ -177,7 +176,7 @@
                 <tal:block repeat="line lines">
                     <tr>
                         <td>
-                            <span tal:replace="line/date" />
+                            <span tal:replace="python:here.utShowFullDateTime(line['date'])" />
                         </td>
             
                         <td>
@@ -203,7 +202,7 @@
                         </td>
 
                         <td>
-                            <span tal:replace="line" />
+                            <span tal:replace="structure line/readable_message" />
                         </td>
                     </tr>
                 </tal:block>
@@ -217,13 +216,13 @@
                             User (Who)
                         </th>
                         <th i18n:translate="">
-                            Action Type
+                            Event Type
                         </th>
                         <th i18n:translate="">
                             Content
                         </th>
                         <th i18n:translate="">
-                            Raw Log Content
+                            Event Message
                         </th>
                     </tr>
                 </tfoot>
@@ -232,9 +231,7 @@
 
         <div id="log-plain-text-holder" >
             <tal:block condition="python: plain_text_lines or not lines">
-                <div id="plain-text-box">
-                    <pre><tal:block repeat="line plain_text_lines"><span tal:replace="line" /><br /></tal:block></pre>
-                </div>
+                <div id="plain-text-box"><tal:block repeat="line plain_text_lines"><span tal:replace="line" /><br /></tal:block></div>
 
                 <a tal:attributes="href string:${site_url}/admin_download_log_file"
                    title="View logs as plain text" i18n:translate=""

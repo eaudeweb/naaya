@@ -99,7 +99,7 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
 from naaya.core.exceptions import i18n_exception
-from naaya.core.site_logging import SITES_LOG_PATH_VAR, get_site_logger
+from naaya.core import site_logging
 
 from events import NyPluggableItemInstalled, SkelLoad
 
@@ -2426,6 +2426,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         err = ''
         success = False
         history = {}
+        roles = self.utConvertToList(roles)
         names = self.utConvertToList(names)
         if len(names)<=0:
             err = 'A username must be specified'
@@ -3309,24 +3310,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_site_logging_html')
     def admin_site_logging_html(self, REQUEST=None, RESPONSE=None):
         """ Web viewer for site logger """
-        from naaya.core.utils import get_or_create_attribute
         return self.getFormsTool().getContent({'here': self}, 'site_admin_logging')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_log_content')
-    def admin_set_log_content(self, enabled=False, REQUEST=None, RESPONSE=None):
-        """
-        Enable/Disable logging actions on content types
-
-        """
-        from naaya.core.utils import str2bool
-        lang = self.gl_get_selected_language()
-        enabled = str2bool(REQUEST.form.get('enabled', False))
-        if enabled in [True, False]:
-            self.content_action_logging = enabled
-        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                 date=self.utGetTodayDate())
-        REQUEST.RESPONSE.redirect('%s/admin_site_logging_html'
-                                  % (self.absolute_url()))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
     def get_site_logger_content(self, REQUEST=None, RESPONSE=None):
@@ -3335,36 +3319,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         content
 
         """
-        from naaya.core.utils import file_length
-        logger = get_site_logger(self)
-        lines = []
-        plain_text_lines = []
-        show_plain_text = False
-        writeable = False
-        abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-        log_filename = os.path.join(abs_path, '%s.log' % logger.name)
-        if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
-            writeable = True
-            log_file = open(log_filename)
-            file_len = file_length(log_filename)
-
-            if file_len < 200:
-                show_plain_text = True
-
-            for line in log_file:
-                if show_plain_text:
-                    plain_text_lines.append(line)
-
-                line = json.loads(line)
-                line_data = line['message']
-                line_data['date'] = line['asctime']
-                lines.append(line_data)
-
-        return {
-            'writeable': writeable,
-            'lines': lines,
-            'plain_text_lines': plain_text_lines,
-        }
+        return site_logging.get_site_logger_content(self, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_download_log_file')
     def admin_download_log_file(self, REQUEST=None, RESPONSE=None):
@@ -3372,39 +3327,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         Download logging files for actions made on content types
 
         """
-        from Products.NaayaCore.managers.import_export import set_response_attachment
-        from StringIO import StringIO
-        logger = get_site_logger(self)
-        abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-        log_filename = '%s.log' % logger.name
-        log_filepath = os.path.join(abs_path, log_filename)
-        log_file = open(log_filepath, 'r+')
-        data = log_file.read()
-        log_file.close()
-        output = StringIO()
-        output.write(data)
-        set_response_attachment(REQUEST.RESPONSE, log_filename,
-                                'text/html; charset=utf-8', output.len)
-        return output.getvalue()
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'clear_log_files')
-    def clear_log_files(self, REQUEST=None, RESPONSE=None):
-        """
-        Delete from logging files all actions made on content types
-
-        """
-
-        if is_ajax(REQUEST):
-            site_id = self.id
-            logger = get_site_logger(self)
-            abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-            log_filename = '%s.log' % logger.name
-            log_file = open(log_filename, 'r+')
-            log_file.truncate()
-            log_file.close()
-            return "SUCCESS"
-        else:
-            REQUEST.RESPONSE.redirect(self.absolute_url())
+        return site_logging.admin_download_log_file(self, REQUEST, RESPONSE)
 
     #others
     def get_localch_noportlet(self):
