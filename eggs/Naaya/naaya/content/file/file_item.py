@@ -553,6 +553,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'file_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
@@ -582,6 +583,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        self.notify_access_event(REQUEST, 'download')
         if version and self.hasVersion():
             return file_item.index_html(self.version, REQUEST, RESPONSE)
         return file_item.index_html(self, REQUEST, RESPONSE)
@@ -589,6 +591,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
         """ """
+        self.notify_access_event(REQUEST)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Pragma', 'public')

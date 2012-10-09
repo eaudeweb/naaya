@@ -471,6 +471,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'document_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

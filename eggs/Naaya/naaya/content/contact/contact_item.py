@@ -315,6 +315,7 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             response.setHeader('content-type', 'text/x-vCard')
             response.setHeader('charset', 'UTF-8')
             response.setHeader('content-disposition', 'attachment; filename=%s.vcf' % self.id)
+            self.notify_access_event(REQUEST, 'download')
 
         return '\n'.join(r)
 
@@ -428,6 +429,7 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'contact_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

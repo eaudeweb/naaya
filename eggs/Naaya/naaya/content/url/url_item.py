@@ -345,6 +345,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        self.notify_access_event(REQUEST)
         if self.redirect: REQUEST.RESPONSE.redirect(self.locator)
         return self.getFormsTool().getContent({'here': self}, 'url_index')
 
