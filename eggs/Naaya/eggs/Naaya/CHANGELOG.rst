@@ -1,5 +1,6 @@
 3.1.8 (unreleased)
 --------------------
+* refactored site logging admin view [simiamih]
 
 3.1.7 (2012-10-09)
 --------------------
