@@ -1,4 +1,7 @@
-3.1.8 (unreleased)
+3.1.9 (unreleased)
+--------------------
+
+3.1.8 (2012-10-09)
 --------------------
 * refactored site logging admin view [simiamih]
 
