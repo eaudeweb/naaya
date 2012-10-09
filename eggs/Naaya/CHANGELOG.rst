@@ -1,4 +1,7 @@
-3.1.6 (unreleased)
+3.1.7 (unreleased)
+--------------------
+
+3.1.6 (2012-10-09)
 --------------------
 * bugfix: adding role to local user in location with email
   notification [simiamih]
