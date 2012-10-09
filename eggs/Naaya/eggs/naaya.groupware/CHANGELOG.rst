@@ -1,4 +1,7 @@
-1.2.17 (unreleased)
+1.2.18 (unreleased)
+-------------------
+
+1.2.17 (2012-10-09)
 -------------------
 * include IG Logger in admin menu [simiamih]
 
