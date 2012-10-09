@@ -1,5 +1,7 @@
 3.1.6 (unreleased)
 --------------------
+* bugfix: adding role to local user in location with email
+  notification [simiamih]
 
 3.1.5 (2012-10-04)
 --------------------
