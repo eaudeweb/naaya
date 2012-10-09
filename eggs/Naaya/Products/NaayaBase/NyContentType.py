@@ -8,6 +8,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 from zope.annotation.interfaces import IAttributeAnnotatable
+from zope.event import notify
 from DateTime import DateTime
 from DateTime.interfaces import DateError, SyntaxError
 
@@ -324,6 +325,23 @@ class NyContentType(object):
         schema_tool = self.getSchemaTool()
         schema = schema_tool.getSchemaForMetatype(self.meta_type)
         return schema_tool.content_type_info(schema)['geo_enabled']
+
+    security.declarePrivate('notify_access_event')
+    def notify_access_event(self, REQUEST, event_type='view'):
+        """ Shortcut to easier call a view/download notify event for NyZzz """
+        from Products.NaayaCore.AuthenticationTool.AuthenticationTool import is_anonymous
+        if REQUEST and not is_anonymous(REQUEST.AUTHENTICATED_USER):
+            if event_type == 'view':
+                from naaya.content.base.events import NyContentObjectViewEvent
+                event_factory = NyContentObjectViewEvent
+            elif event_type == 'download':
+                from naaya.content.base.events import NyContentObjectDownloadEvent
+                event_factory = NyContentObjectDownloadEvent
+            else:
+                log.error("Unkown access event type %r", event_type)
+                return None
+            notify(event_factory(self, REQUEST.AUTHENTICATED_USER.getUserName()))
+
 
 InitializeClass(NyContentType)
 

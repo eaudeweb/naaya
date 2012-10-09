@@ -1,5 +1,6 @@
 3.1.7 (unreleased)
 --------------------
+* added `notify_access_event` on NyContentType base class [simiamih]
 
 3.1.6 (2012-10-09)
 --------------------
