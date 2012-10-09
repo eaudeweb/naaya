@@ -8,5 +8,5 @@ setup(name='naaya.content.localizedbfile',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires=['naaya.content.bfile']
+      install_requires=['naaya.content.bfile >= 1.3.8']
 )
