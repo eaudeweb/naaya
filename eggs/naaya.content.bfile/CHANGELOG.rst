@@ -1,5 +1,6 @@
 1.3.8 (unreleased)
 ------------------
+* view/download events are triggered [simiamih]
 
 1.3.7 (2012-10-04)
 ------------------
