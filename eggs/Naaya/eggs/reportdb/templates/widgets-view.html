@@ -32,6 +32,14 @@
      {% endif %}
 {% endmacro -%}
 
+{%- macro if_yes_select(mk, field) %}
+  {% set value_label = (field.properties.value_labels[field.value]
+     if field.properties.value_labels else field.u) %}
+     {% if value_label %}
+         {{ value_label }}
+     {% endif %}
+{% endmacro -%}
+
 {% macro multiple_select(mk, field) %}
   {% set value_labels = field.member_schema.properties.get('value_labels') %}
   {% for v in field.value %}
@@ -135,15 +143,15 @@
     <tbody>
         <tr>
             <td></td>
-            <td class="focus-column">Major</td>
-            <td class="focus-column">Some</td>
-            <td class="focus-column">Minor</td>
+            <td class="focus-column">Major<br/>(chapter)</td>
+            <td class="focus-column">Some<br/>(section(s))</td>
+            <td class="focus-column">Minor<br/>(ocasionally mentioned)</td>
             <td class="focus-column">None</td>
             <td></td>
-            <td class="indicators-column">Several</td>
-            <td class="indicators-column">Some</td>
-            <td class="indicators-column">Few</td>
-            <td class="indicators-column">None</td>
+            <td class="indicators-column">Several<br/>(>5)</td>
+            <td class="indicators-column">Some<br/>(3-5)</td>
+            <td class="indicators-column">Few<br/>(1-2)</td>
+            <td class="indicators-column">None<br/>(0)</td>
         </tr>
     {%- for name in mk.children_order(group) %}
         {% set field = group[name] %}
@@ -169,8 +177,8 @@
         <thead>
             <tr>
                 <th>{{group.label}}</th>
-                <th class="radio">Most (>50%)</th>
-                <th class="radio">Some (<50%)</th>
+                <th class="radio">Primarily (>50%)</th>
+                <th class="radio">Ocasionally (<50%)</th>
                 <th class="radio">None</th>
                 <th></th>
             </tr>
@@ -189,7 +197,7 @@
             <span class="help-inline">{{ message }}</span>
           {% endfor %}
         </span>
-        {% if name not in "to_evaluate" %}
+        {% if name not in "to_evaluate" or not group["evaluation_method"].value %}
           </td>
         </tr>
         {% else %}
@@ -197,7 +205,6 @@
         <td>
             {% set field = group["evaluation_method"] %}
             {% set error_cls = 'error' if field.errors else '' %}
-            {{ mk.label(field, class='control-label', contents=field.label) }}
             {{ mk.widget(field) }}
             {% for message in field.errors %}
                 <p>{{ message }}</p>
@@ -233,6 +240,9 @@
     {% else %}
         {{ '\u002d' }}
     {% endif %}
+{% endmacro %}
+
+{% macro registration_checkbox(mk, field) %}
 {% endmacro %}
 
 {% macro subgroup(mk, schema) %}
@@ -324,18 +334,23 @@
   {% do mk.end() -%}
 {% endmacro %}
 
-{% macro options_with_labels(mk, schema) %}
-  {%- for name in mk.children_order(schema) %}
-    {% set field = schema[name] %}
-    <div class="field-inline">
-        <ul>
-            {% if field.name == 'url' %}
-                {{ mk.widget(field) }}
-            {% else %}
-                <li>{{ mk.widget(field) }}</li>
-                {{ field.label }}
-            {% endif %}
-        </ul>
-    </div>
-  {% endfor -%}
+{% macro availability_section(mk, schema) %}
+  {% set paper_or_web = schema['paper_or_web'] %}
+  {% set url = schema['url'] %}
+  {% set registration_required = schema['registration_required'] %}
+  {% set costs = schema['costs'] %}
+  <div class="field-inline">
+      <ul>
+              <li>{{ mk.widget(paper_or_web) }}
+                  {%- if paper_or_web.value == 'web' -%}
+                    {{ '\u002d' }} {{ mk.widget(url) }}
+                  {% endif -%}
+              </li>
+              {% if registration_required.value %}
+                <li>registration required</li>
+              {% endif %}
+              <li>{{ mk.widget(costs) }}</li>
+              {# {{ field.label }} #}
+      </ul>
+  </div>
 {% endmacro %}

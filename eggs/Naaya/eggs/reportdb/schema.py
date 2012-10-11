@@ -28,13 +28,16 @@ def register_handler_for_empty():
 
 CommonString = fl.String.using(optional=True)
 CommonEnum = fl.Enum.using(optional=True).with_properties(widget="select")
+IfYesEnum = fl.Enum.using(optional=True).with_properties(widget="if_yes_select")
 CommonDict = fl.Dict.with_properties(widget="group")
 CommonBoolean = fl.Boolean.with_properties(widget="checkbox")
+RegistrationBoolean = fl.Boolean.with_properties(widget="registration_checkbox")
 
 report_formats = _load_json("refdata/report_formats.json")
-publication_years = [str(year) for year in xrange(1990,
+update_years = publication_years = [str(year) for year in xrange(1990,
                                            datetime.datetime.now().year+1)]
 publication_freq = _load_json("refdata/publication_freq.json")
+update_freq = _load_json("refdata/update_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
 languages = _load_json("refdata/languages_list.json")
@@ -85,49 +88,76 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                            optional=False)
                     .with_properties(css_class="input-big"),
 
-        CommonEnum.named('original_language') \
-                  .using(label=u"Original Language",
-                         optional=False) \
-                  .with_properties(value_labels=languages,
+        fl.List.named('original_language') \
+                  .using(label=u"Original Language(s)") \
+                  .with_properties(widget="multiple_select",
                                    placeholder="Select a language ...",
                                    widget_chosen=True) \
-                  .valued(*language_codes),
+                  .of(
+
+              CommonEnum.valued(*language_codes) \
+                      .with_properties(value_labels=languages)
+        ),
 
         CommonString.named('english_name') \
                     .using(label=u"Title (in English)") \
                     .with_properties(css_class="input-big"),
 
-        CommonEnum.named('date_of_publication') \
-                    .using(label=u"Date of publication") \
-                    .valued(*publication_years) \
-                    .with_properties(css_class="input-small"),
-
         CommonString.named('publisher') \
                     .using(label=u"Published by") \
                     .with_properties(css_class="input-medium"),
 
-        CommonEnum.named('freq_of_pub') \
-                  .using(label=u"Frequency of publication") \
-                  .valued(*publication_freq),
     ),
 
     CommonDict.named('format') \
               .using(label=u"FORMAT & ACCESSIBILITY") \
               .of(
 
+        fl.Enum.named('report_type') \
+               .with_properties(widget="radioselect") \
+               .valued(*(["report (static source)", "portals (dynamic source)"])) \
+               .using(label=u"Report type"),
+
         CommonEnum.named('format') \
                   .using(label=u"Format") \
-                  .valued(*report_formats),
+                  .valued(*report_formats) \
+                  .with_properties(css_class="select-small"),
+
+        CommonEnum.named('date_of_publication') \
+                    .using(label=u"Year of publication") \
+                    .valued(*publication_years) \
+                    .with_properties(css_class="select-small static-source"),
+
+        CommonEnum.named('date_of_last_update') \
+                    .using(label=u"Year of last update") \
+                    .valued(*update_years) \
+                    .with_properties(css_class="select-small dynamic-source"),
+
+        CommonEnum.named('freq_of_pub') \
+                  .using(label=u"Frequency of publication") \
+                  .valued(*publication_freq) \
+                  .with_properties(css_class="select-small static-source"),
+
+        CommonEnum.named('freq_of_upd') \
+                  .using(label=u"Frequency of updates") \
+                  .valued(*update_freq) \
+                  .with_properties(css_class="select-small dynamic-source"),
 
         fl.Integer.named('no_of_pages') \
                   .using(label=u"No. of pages (main SOE report)",
                          optional=True) \
-                  .with_properties(css_class="input-small"),
+                  .with_properties(css_class="input-small static-source"),
+
+        fl.Integer.named('size') \
+                  .using(label=u"Size (MBytes)",
+                         optional=True) \
+                  .with_properties(css_class="input-small dynamic-source"),
 
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
                   .valued(*(['Yes', 'No', 'Unknown'])) \
-                  .using(label=u"Separate summary report?"),
+                  .using(label=u"Summar report available?") \
+                  .with_properties(css_class="select-small"),
 
         fl.List.named('lang_of_pub') \
                .using(label=u"Languages of publication") \
@@ -142,7 +172,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         fl.Dict.named('availability') \
-               .with_properties(widget="options_with_labels") \
+               .with_properties(widget="availability_section") \
                .using(label=u"Availability")\
                .of(
 
@@ -154,6 +184,9 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
             CommonString.named("url") \
                         .with_properties(widget="url") \
                         .using(label=u"URL"),
+
+            RegistrationBoolean.named('registration_required') \
+                   .using(label=u"registration required"),
 
             fl.Enum.named('costs') \
                    .with_properties(widget="radioselect") \
@@ -208,37 +241,6 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .with_properties(field_type='hidden') \
               .using(label="Report id"),
 
-    CommonDict.named('links') \
-              .using(label=u"LINKS TO OTHER SoE REPORTS") \
-              .of(
-        fl.Dict.named('reference') \
-               .using(label=u"Reference/links to:") \
-               .with_properties(widget="reference_group") \
-               .of(
-
-            CommonBoolean.named('global_level') \
-                         .using(label=u"Global-level SOER's?") \
-                         .with_properties(help=u"(e.g. UNEP GEO)"),
-
-            CommonBoolean.named('european_level') \
-                         .using(label=u"European-level SOER's?") \
-                         .with_properties(help=u"(e.g. EEA SOER)"),
-
-            CommonBoolean.named('national_level') \
-                         .using(label=u"National-level SOER's?") \
-                         .with_properties(help=u"(e.g. other country)"),
-
-            CommonBoolean.named('sub_national_level') \
-                         .using(label=u"Sub-national-level SOER's?") \
-                         .with_properties(help=u"(e.g. regional)"),
-        ),
-
-        CommonBoolean.named('key_findings') \
-                     .using(label=u"Reference/links to key findings "
-                                   "of the country's previous SOER?") \
-                     .with_properties(reversed="True"),
-    ),
-
     CommonDict.named('structure') \
               .using(label=u"STRUCTURE") \
               .of(
@@ -256,24 +258,13 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
         fl.Enum.named('indicator_based') \
                .with_properties(widget="radioselect") \
                .valued(*(["Yes", "No"])) \
-               .using(label=u"Indicator-based report?",
+               .using(label=u"Indicators used?",
                          optional=True),
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*indicators_estimation) \
                   .with_properties(hide_if_empty='True') \
                   .using(label=u"Indicators estimation:"),
-
-        fl.Enum.named('eea_indicators') \
-               .with_properties(widget="radioselect") \
-               .valued(*(["Yes", "No"])) \
-               .using(label=u"EEA indicators used?",
-                         optional=True),
-
-        CommonString.named("eea_indicators_estimated_no") \
-                    .using(label=u"Estimated number?") \
-                    .with_properties(css_class="input-small",
-                                     hide_if_empty='True'),
 
         fl.Dict.named('indicators_usage') \
                .using(label=u"How are indicators used?") \
@@ -288,6 +279,14 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                          .valued(*indicators_usage) \
                          .using(label=u"To compare at sub-national level?"),
 
+            IndicatorEnum.named('to_compare_eea') \
+                         .valued(*indicators_usage) \
+                         .using(label=u"To link with EEA/EU indicators?"),
+
+            IndicatorEnum.named('to_compare_global') \
+                         .valued(*indicators_usage) \
+                         .using(label=u"To link with global indicators?"),
+
             IndicatorEnum.named('to_assess_progress') \
                          .valued(*indicators_usage) \
                          .using(label=u"To asses progress to target/threshold?"),
@@ -296,57 +295,22 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                          .valued(*indicators_usage) \
                          .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
-            CommonEnum.named("evaluation_method") \
+            IfYesEnum.named("evaluation_method") \
                       .valued(*evaluation_methods) \
                       .using(label=u"If yes, how?"),
         ),
 
-        fl.Dict.named('uncertainty_addressed') \
-               .using(label=u"Uncertainty addressed?") \
-               .with_properties(widget="subgroup") \
-               .of(
+        fl.Enum.named('policy_recommendations') \
+               .with_properties(widget="radioselect") \
+               .valued(*(["Yes", "No"])) \
+               .using(label=u"Report gives policy recommendations?"),
 
-            CommonBoolean.named('dedicated_chapter') \
-                         .using(label=u"Dedicated chapter"),
-
-            CommonBoolean.named('dedicated_method') \
-                         .using(label=u"Dedicated method"),
-        ),
     ),
 
     fl.Dict.named('topics') \
            .using(label=u"TOPICS COVERED") \
            .with_properties(widget="topics_group") \
            .of(
-
-        fl.Dict.named('env_regions') \
-                  .using(label=u"Environment in different"
-                             " regions and specific areas") \
-                  .with_properties(widget="topics_subgroup") \
-                  .of(
-
-            EeaTopicDict.named('coast_sea') \
-                        .using(label=u"Coast and seas"),
-
-            EeaTopicDict.named('regions') \
-                        .using(label=u"Specific regions"),
-
-            EeaTopicDict.named('urban') \
-                        .using(label=u"Urban environment"),
-
-            CommonDict.named('extra_topic') \
-                      .with_properties(extra_topic="True") \
-                      .of(
-
-                CommonString.named('extra_topic_input') \
-                            .with_properties(hidden_label="True",
-                                             css_class="input-medium"),
-
-                TopicDict.named('other_radio') \
-                         .with_properties(enclosed_in_div="False", 
-                                          hidden_label="True"),
-            ),
-        ),
 
         fl.Dict.named('env_issues') \
                   .using(label=u"Environmental issues") \
@@ -472,6 +436,35 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                 TopicDict.named('other_radio') \
                          .with_properties(extra_topic="True", 
                                           hidden_label="True") \
+            ),
+        ),
+
+        fl.Dict.named('env_regions') \
+                  .using(label=u"Environment in different"
+                             " regions and specific areas") \
+                  .with_properties(widget="topics_subgroup") \
+                  .of(
+
+            EeaTopicDict.named('coast_sea') \
+                        .using(label=u"Coast and seas"),
+
+            EeaTopicDict.named('regions') \
+                        .using(label=u"Specific regions"),
+
+            EeaTopicDict.named('urban') \
+                        .using(label=u"Urban environment"),
+
+            CommonDict.named('extra_topic') \
+                      .with_properties(extra_topic="True") \
+                      .of(
+
+                CommonString.named('extra_topic_input') \
+                            .with_properties(hidden_label="True",
+                                             css_class="input-medium"),
+
+                TopicDict.named('other_radio') \
+                         .with_properties(enclosed_in_div="False", 
+                                          hidden_label="True"),
             ),
         ),
 
