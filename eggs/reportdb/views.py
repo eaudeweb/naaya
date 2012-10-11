@@ -40,7 +40,7 @@ def edit_is_allowed():
     if flask.current_app.config.get('SKIP_EDIT_AUTHORIZATION', False):
         return True
     roles = getattr(flask.g, 'user_roles', [])
-    return bool('Contributor' in roles)
+    return bool('Authenticated' in roles)
 
 
 def require_edit_permission(func):
