@@ -99,7 +99,8 @@ def report_edit(report_id=None):
         form_data.update(schema.ReportSchema.from_defaults().flatten())
         form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
         form_data.update(flask.request.form.to_dict())
-        _expand_lists(form_data, ['header_country', 'format_lang_of_pub'])
+        _expand_lists(form_data, ['header_country', 'format_lang_of_pub',
+            'details_original_language'])
 
         report_schema = schema.ReportSchema.from_flat(form_data)
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)
@@ -111,8 +112,16 @@ def report_edit(report_id=None):
             report_row.update(report_schema.flatten())
             session.save(report_row)
             #TODO create filter to display data without losing information
+            if report_row['format_report_type'] == 'report (static source)':
+                report_row['format_date_of_last_update'] = ''
+                report_row['format_freq_of_upd'] = ''
+                report_row['format_size'] = ''
             if report_row['format_availability_paper_or_web'] == 'paper only':
                 report_row['format_availability_url'] = ''
+                report_row['format_availability_registration_required'] = ''
+            if report_row['format_availability_paper_or_web'] == 'web':
+                if not report_row['format_availability_registration_required']:
+                    report_row['format_availability_costs'] = 'free'
             report_row['header_upload_date'] = datetime.datetime.now().strftime('%d %b %Y, %H:%M')
             session.save(report_row)
             seris_review_schema['report_id'].set(report_row.id)
@@ -123,9 +132,14 @@ def report_edit(report_id=None):
                 seris_review_row.update(seris_review_schema.flatten())
                 if seris_review_row['structure_indicator_based'] == 'No':
                     seris_review_row['structure_indicators_estimation'] = ''
-                if seris_review_row['structure_eea_indicators'] == 'No':
-                    seris_review_row['structure_eea_indicators_estimated_no'] = ''
-                if seris_review_row['structure_indicators_usage_to_evaluate'] == 'None':
+                    seris_review_row['structure_indicators_usage_to_compare_countries'] = ''
+                    seris_review_row['structure_indicators_usage_to_compare_subnational'] = ''
+                    seris_review_row['structure_indicators_usage_to_compare_eea'] = ''
+                    seris_review_row['structure_indicators_usage_to_compare_global'] = ''
+                    seris_review_row['structure_indicators_usage_to_assess_progress'] = ''
+                    seris_review_row['structure_indicators_usage_to_evaluate'] = ''
+                    seris_review_row['structure_indicators_usage_evaluation_method'] = ''
+                elif not seris_review_row['structure_indicators_usage_to_evaluate']:
                     seris_review_row['structure_indicators_usage_evaluation_method'] = ''
                 session.save(seris_review_row)
 

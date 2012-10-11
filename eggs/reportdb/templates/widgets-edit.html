@@ -21,7 +21,7 @@
   {%- if field.properties.widget_chosen -%}
     {%- do attr.update({'class': 'chzn-select'}) -%}
   {%- endif -%}
-  {{ mk.select.open(field, **attr) }}
+  {{ mk.select.open(field,  class=field.properties.get('css_class'), **attr) }}
 
     {{ mk.option(field, value="", contents="") }}
 
@@ -34,6 +34,10 @@
   {{ mk.select.close() }}
 {% endmacro %}
 
+{% macro if_yes_select(mk, field) %}
+  {{ select(mk, field) }}
+{% endmacro %}
+
 {% macro multiple_select(mk, field) %}
   {% set member = field.member_schema %}
   {% set attr = {
@@ -44,7 +48,7 @@
   {%- if field.properties.widget_chosen -%}
     {%- do attr.update({'class': 'chzn-select'}) -%}
   {%- endif -%}
-  {{ mk.select.open(field, **attr) }}
+  {{ mk.select.open(field, class=field.properties.get('css_class'), **attr) }}
 
     {% for value in member.valid_values %}
       {% set value_label = (member.properties.value_labels[value]
@@ -96,6 +100,10 @@
 
 {% macro checkbox(mk, field) %}
   {{ mk.input(field, type="checkbox") }}
+{% endmacro %}
+
+{% macro registration_checkbox(mk, field) %}
+  {{ checkbox(mk, field) }}
 {% endmacro %}
 
 {% macro file(mk, field) %}
@@ -232,15 +240,15 @@
     <tbody>
         <tr>
             <td></td>
-            <td class="focus-column">Major</td>
-            <td class="focus-column">Some</td>
-            <td class="focus-column">Minor</td>
+            <td class="focus-column">Major<br/>(chapter)</td>
+            <td class="focus-column">Some<br/>(section(s))</td>
+            <td class="focus-column">Minor<br/>(ocasionally mentioned)</td>
             <td class="focus-column">None</td>
             <td></td>
-            <td class="indicators-column">Several</td>
-            <td class="indicators-column">Some</td>
-            <td class="indicators-column">Few</td>
-            <td class="indicators-column">None</td>
+            <td class="indicators-column">Several<br/>(>5)</td>
+            <td class="indicators-column">Some<br/>(3-5)</td>
+            <td class="indicators-column">Few<br/>(1-2)</td>
+            <td class="indicators-column">None<br/>(0)</td>
         </tr>
     {%- for name in mk.children_order(group) %}
     <tr class="topics-group {{ error_cls }}">
@@ -268,8 +276,8 @@
         <thead>
             <tr>
                 <th>{{group.label}}</th>
-                <th class="radio">Most (>50%)</th>
-                <th class="radio">Some (<50%)</th>
+                <th class="radio">Primarily (>50%)</th>
+                <th class="radio">Ocasionally (<50%)</th>
                 <th class="radio">None</th>
                 <th rowspan="4"></th>
             </tr>
@@ -310,7 +318,7 @@
     </table>
 {% endmacro %}
 
-{% macro options_with_labels(mk, schema) %}
+{% macro availability_section(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
     <div class="field-inline">
