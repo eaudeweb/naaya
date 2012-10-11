@@ -43,9 +43,7 @@ def _svn_repo(repo_path, origin_url, update=True):
 
 @task
 def install():
-    if not exists(app['repo']):
-         _svn_repo(app['repo'],
-            app['reportdb-repo'], update=False)
+     _svn_repo(app['repo'], app['reportdb-repo'], update=True)
 
     if not exists(app['sandbox']):
         run("virtualenv "# -p python2.6 
