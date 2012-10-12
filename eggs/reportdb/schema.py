@@ -3,7 +3,7 @@ import os
 import json
 import database
 import datetime
-from flatland.validation import Converted
+from flatland.validation import Validator, Converted
 from file_upload import CommonFile
 
 
@@ -28,7 +28,6 @@ def register_handler_for_empty():
 
 CommonString = fl.String.using(optional=True)
 CommonEnum = fl.Enum.using(optional=True).with_properties(widget="select")
-IfYesEnum = fl.Enum.using(optional=True).with_properties(widget="if_yes_select")
 CommonDict = fl.Dict.with_properties(widget="group")
 CommonBoolean = fl.Boolean.with_properties(widget="checkbox")
 RegistrationBoolean = fl.Boolean.with_properties(widget="registration_checkbox")
@@ -45,6 +44,21 @@ language_codes = [pair[1] for pair in
                   sorted([(v,k) for (k,v) in languages.items()])]
 
 indicators_estimation = _load_json("refdata/indicators_estimation.json")
+
+class IsInteger(Validator):
+
+    fail = None
+
+    def validate(self, element, state):
+        if element.properties.get("not_empty_error"):
+            self.fail = fl.validation.base.N_(element.properties["not_empty_error"])
+        else:
+            self.fail = fl.validation.base.N_(u'%(u)s is not a valid value for %(label)s.')
+
+        if not isinstance(element.value, int):
+            return self.note_error(element, state, 'fail')
+
+        return True
 
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
@@ -70,8 +84,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .with_properties(widget_image=True),
 
         CommonString.named('uploader') \
-                    .using(label=u"Factsheet prepared by",
-                           optional=False),
+                    .with_properties(field_type='hidden') \
+                    .using(label=u"Factsheet prepared by"),
 
         CommonString.named('upload_date') \
                     .with_properties(field_type='hidden') \
@@ -146,11 +160,13 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         fl.Integer.named('no_of_pages') \
                   .using(label=u"No. of pages (main SOE report)",
                          optional=True) \
+                  .including_validators(IsInteger()) \
                   .with_properties(css_class="input-small static-source"),
 
         fl.Integer.named('size') \
                   .using(label=u"Size (MBytes)",
                          optional=True) \
+                  .including_validators(IsInteger()) \
                   .with_properties(css_class="input-small dynamic-source"),
 
         CommonEnum.named("separate_summary") \
@@ -295,7 +311,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                          .valued(*indicators_usage) \
                          .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
 
-            IfYesEnum.named("evaluation_method") \
+            CommonEnum.named("evaluation_method") \
                       .valued(*evaluation_methods) \
                       .using(label=u"If yes, how?"),
         ),

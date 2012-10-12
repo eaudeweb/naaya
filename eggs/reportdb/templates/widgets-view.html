@@ -25,19 +25,7 @@
 {%- macro select(mk, field) %}
   {% set value_label = (field.properties.value_labels[field.value]
      if field.properties.value_labels else field.u) %}
-     {% if value_label==''%}
-         {{ '\u002d' }}
-     {% else %}
          {{ value_label }}
-     {% endif %}
-{% endmacro -%}
-
-{%- macro if_yes_select(mk, field) %}
-  {% set value_label = (field.properties.value_labels[field.value]
-     if field.properties.value_labels else field.u) %}
-     {% if value_label %}
-         {{ value_label }}
-     {% endif %}
 {% endmacro -%}
 
 {% macro multiple_select(mk, field) %}
@@ -276,8 +264,13 @@
     {% set hidden_label_list = [] %}
     {% set boolean_list = ['registered_eionet',
                            'key_findings'] %}
-    {% set empty_fields_to_hide = ['indicators_estimation',
-                                   'eea_indicators_estimated_no'] %}
+    {% set empty_fields_to_hide = ['date_of_publication',
+                                   'date_of_last_update',
+                                   'freq_of_pub',
+                                   'freq_of_upd',
+                                   'no_of_pages',
+                                   'size',
+                                   'indicators_estimation'] %}
 
     {%- for name in mk.children_order(group) %}
 
