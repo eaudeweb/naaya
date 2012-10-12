@@ -23,11 +23,11 @@ class MarkupGenerator(flatland.out.markup.Generator):
         else:
             return []
 
-    def widget(self, element, widget_name=None):
+    def widget(self, element, widget_name=None, **kwargs):
         if widget_name is None:
             widget_name = element.properties.get("widget", "input")
         widget_macro = getattr(self.template.module, widget_name)
-        return widget_macro(self, element)
+        return widget_macro(self, element, **kwargs)
 
 
 views = flask.Blueprint('views', __name__)
