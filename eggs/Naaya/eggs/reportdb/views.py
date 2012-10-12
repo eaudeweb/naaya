@@ -116,12 +116,20 @@ def report_edit(report_id=None):
                 report_row['format_date_of_last_update'] = ''
                 report_row['format_freq_of_upd'] = ''
                 report_row['format_size'] = ''
+            if report_row['format_report_type'] == 'portals (dynamic source)':
+                report_row['format_date_of_publication'] = ''
+                report_row['format_freq_of_pub'] = ''
+                report_row['format_no_of_pages'] = ''
             if report_row['format_availability_paper_or_web'] == 'paper only':
                 report_row['format_availability_url'] = ''
                 report_row['format_availability_registration_required'] = ''
             if report_row['format_availability_paper_or_web'] == 'web':
                 if not report_row['format_availability_registration_required']:
                     report_row['format_availability_costs'] = 'free'
+            uploader = getattr(flask.g, 'user_id')
+            if not uploader:
+                uploader = 'Developer'
+            report_row['header_uploader'] = uploader
             report_row['header_upload_date'] = datetime.datetime.now().strftime('%d %b %Y, %H:%M')
             session.save(report_row)
             seris_review_schema['report_id'].set(report_row.id)
