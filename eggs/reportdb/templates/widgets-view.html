@@ -143,18 +143,12 @@
         </tr>
     {%- for name in mk.children_order(group) %}
         {% set field = group[name] %}
-    <tr class="topics-group {{ error_cls }}">
+    <tr class="topics-group">
         <td colspan="10">
-            {% set error_cls = 'error' if field.errors else '' %}
             {{ mk.label(field, class='control-label', contents=field.label) }}
         </td>
     </tr>
         {{ mk.widget(field) }}
-        <span class="controls">
-            {% for message in field.errors %}
-                <span class="help-inline">{{ message }}</span>
-            {% endfor %}
-        </span>
     {%- endfor %}
     </tbody>
     </table>
@@ -175,47 +169,32 @@
     {%- for name in mk.children_order(group) %}
     {% if name not in "evaluation_method" %}
     <tr>
-      <td class="indicators-group {{ error_cls }}">
+      <td class="indicators-group">
         {% set field = group[name] %}
-        {% set error_cls = 'error' if field.errors else '' %}
         {{ mk.label(field, class='control-label', contents=field.label) }}
-        {{ mk.widget(field) }}
-        <span class="controls">
-          {% for message in field.errors %}
-            <span class="help-inline">{{ message }}</span>
-          {% endfor %}
-        </span>
-        {% if name not in "to_evaluate" or not group["evaluation_method"].value %}
-          </td>
-        </tr>
-        {% else %}
-        </td>
-        <td>
-            {% set field = group["evaluation_method"] %}
-            {% set error_cls = 'error' if field.errors else '' %}
-            {{ mk.widget(field) }}
-            {% for message in field.errors %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </td>
+        {{ mk.widget(field, group=group, name=name) }}
+      </td>
     </tr>
-        {% endif %}
     {% endif %}
     {%- endfor %}
     </tbody>
     </table>
 {% endmacro %}
 
-{% macro indicators_radioselect(mk, field) %}
+{% macro indicators_radioselect(mk, field, group, name) %}
       {% for value in field.valid_values %}
           {% set value_label = (field.properties.value_labels[value]
           if field.properties.value_labels else value) %}
           <td>
-             {% if value == field.value %}
-                 {{ '\u2714'  }}
-             {% else %}
-                 {{ '\u002d'  }}
-             {% endif %}
+            {% if value == field.value %}
+              {% if name in "to_evaluate" and group["evaluation_method"].value %}
+                {{ field.parent['evaluation_method'] }}
+              {% else %}
+                {{ '\u2714'  }}
+              {% endif %}
+            {% else %}
+               {{ '\u002d'  }}
+            {% endif %}
           </td>
       {% endfor %}
 {% endmacro %}
@@ -275,7 +254,6 @@
     {%- for name in mk.children_order(group) %}
 
         {% set field = group[name] %}
-        {% set error_cls = 'error' if field.errors else '' %}
 
         {% if field.properties.get('hidden_label') %}
             {% do hidden_label_list.append(name) %}
@@ -287,7 +265,7 @@
 
         {% if not name in hidden_list %} 
             {% if not name=='other_radio' %}
-            <div class="field {{ error_cls }}">
+            <div class="field">
                 {% if not name in hidden_label_list %}
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
@@ -295,9 +273,6 @@
                   {% if field.value or name in boolean_list or
                         (field.value is undefined and name in boolean_list) %}
                       {{ mk.widget(field) }}
-                      {% for message in field.errors %}
-                      <span class="help-inline">{{ message }}</span>
-                      {% endfor %}
                   {% else %}
                       {{ '\u002d' }}
                   {% endif %}
