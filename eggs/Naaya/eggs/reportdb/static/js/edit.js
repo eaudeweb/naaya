@@ -34,13 +34,6 @@ $(document).ready(function() {
 				  ['f_format_report_type_portalsdynamicsource']);
 	});
 
-	show_hide($('#f_format_availability_url').parent(),
-			  ['f_format_availability_paper_or_web_web']);
-	$('input[name="format_availability_paper_or_web"]').change(function(){
-		show_hide($('#f_format_availability_url').parent(),
-				  ['f_format_availability_paper_or_web_web']);
-	});
-
 	show_hide($('select[name="structure_indicators_estimation"]').parent().parent(),
 			  ['f_structure_indicator_based_Yes'], 'slow');
 	$('input[name="structure_indicator_based"]').change(function(){

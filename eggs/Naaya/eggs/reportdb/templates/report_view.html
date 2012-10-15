@@ -61,13 +61,23 @@ $(document).ready(function() {
            report['data']['details']['original_name'].value }}</h2>
 
     <p class="report-header_upload_date">
-      <strong>This fact-sheet was prepared on</strong>:
-      {{ report['data']['header']['upload_date'] }}
+      This fact-sheet was prepared on:
+      <strong>{{ report['data']['header']['upload_date'] }}</strong>
     </p>
 
     <p class="report-header_uploader">
-      <strong>This fact-sheet was prepared by</strong>:
-      {{ report['data']['header']['uploader'] }}
+      Prepared by:
+      <strong>{{ report['data']['header']['uploader'] }}</strong>
+    </p>
+
+    <p class="report-format-paper-or-url">
+      {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
+        and report['data']['format']['availability']['url'] %}
+        <strong>This fact-sheet is accessible at</strong>:
+        {{ mk.widget(report['data']['format']['availability']['url']) }}
+      {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
+        <strong>This fact-sheet is available only on paper</strong>
+      {% endif %}
     </p>
 
     {{ mk.widget(report['data']) }}

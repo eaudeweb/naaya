@@ -241,15 +241,7 @@
 {% macro group(mk, group) %}
     {% set hidden_list = [] %}
     {% set hidden_label_list = [] %}
-    {% set boolean_list = ['registered_eionet',
-                           'key_findings'] %}
-    {% set empty_fields_to_hide = ['date_of_publication',
-                                   'date_of_last_update',
-                                   'freq_of_pub',
-                                   'freq_of_upd',
-                                   'no_of_pages',
-                                   'size',
-                                   'indicators_estimation'] %}
+    {% set boolean_list = [] %}
 
     {%- for name in mk.children_order(group) %}
 
@@ -259,7 +251,7 @@
             {% do hidden_label_list.append(name) %}
         {% endif %}
 
-        {% if (not field.value or field.value == '') and name in empty_fields_to_hide %}
+        {% if (not field.value or field.value == '') and field.properties.get('hide_if_empty') %}
             {% do hidden_list.append(name) %}
         {% endif %}
 
@@ -270,7 +262,7 @@
                     {{ mk.label(field, class='control-label', contents=field.label) }}
                 {% endif %}
               <div class="controls">
-                  {% if field.value or name in boolean_list or
+                  {% if field.value or
                         (field.value is undefined and name in boolean_list) %}
                       {{ mk.widget(field) }}
                   {% else %}
@@ -319,6 +311,11 @@
               {% endif %}
               <li>{{ mk.widget(costs) }}</li>
               {# {{ field.label }} #}
+              {%- if paper_or_web.value != 'web' and url -%}
+                <li>
+                    URL: {{ mk.widget(url) }}
+                </li>
+              {% endif -%}
       </ul>
   </div>
 {% endmacro %}
