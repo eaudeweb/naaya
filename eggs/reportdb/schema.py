@@ -39,6 +39,8 @@ publication_freq = _load_json("refdata/publication_freq.json")
 update_freq = _load_json("refdata/update_freq.json")
 eu_countries_list = _load_json("refdata/european_countries_list.json")
 countries_list = _load_json("refdata/countries_list.json")
+target_audience = _load_json("refdata/target_audience.json")
+legal_reference = _load_json("refdata/legal_reference.json")
 languages = _load_json("refdata/languages_list.json")
 language_codes = [pair[1] for pair in
                   sorted([(v,k) for (k,v) in languages.items()])]
@@ -135,39 +137,46 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named('format') \
                   .using(label=u"Format") \
                   .valued(*report_formats) \
-                  .with_properties(css_class="select-small"),
+                  .with_properties(css_class="select-small static-source",
+                                   hide_if_empty='True'),
 
         CommonEnum.named('date_of_publication') \
                     .using(label=u"Year of publication") \
                     .valued(*publication_years) \
-                    .with_properties(css_class="select-small static-source"),
+                    .with_properties(css_class="select-small static-source",
+                                     hide_if_empty='True'),
 
         CommonEnum.named('date_of_last_update') \
                     .using(label=u"Year of last update") \
                     .valued(*update_years) \
-                    .with_properties(css_class="select-small dynamic-source"),
+                    .with_properties(css_class="select-small dynamic-source",
+                                     hide_if_empty='True'),
 
         CommonEnum.named('freq_of_pub') \
                   .using(label=u"Frequency of publication") \
                   .valued(*publication_freq) \
-                  .with_properties(css_class="select-small static-source"),
+                  .with_properties(css_class="select-small static-source",
+                                   hide_if_empty='True'),
 
         CommonEnum.named('freq_of_upd') \
                   .using(label=u"Frequency of updates") \
                   .valued(*update_freq) \
-                  .with_properties(css_class="select-small dynamic-source"),
+                  .with_properties(css_class="select-small dynamic-source",
+                                   hide_if_empty='True'),
 
         fl.Integer.named('no_of_pages') \
                   .using(label=u"No. of pages (main SOE report)",
                          optional=True) \
                   .including_validators(IsInteger()) \
-                  .with_properties(css_class="input-small static-source"),
+                  .with_properties(css_class="input-small static-source",
+                                   hide_if_empty='True'),
 
         fl.Integer.named('size') \
                   .using(label=u"Size (MBytes)",
                          optional=True) \
                   .including_validators(IsInteger()) \
-                  .with_properties(css_class="input-small dynamic-source"),
+                  .with_properties(css_class="input-small dynamic-source",
+                                   hide_if_empty='True'),
 
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
@@ -211,11 +220,29 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         ),
 
-        CommonBoolean.named("registered_eionet") \
-                     .with_properties(reversed="True") \
-                     .using(label=u"Registered in Eionet SERIS before?"),
+    ),
+
+    CommonDict.named('links') \
+              .using(label=u"LINKS") \
+              .of(
+
+        CommonEnum.named('target_audience') \
+                    .using(label=u"Target audience") \
+                    .valued(*target_audience) \
+                    .with_properties(css_class="select-small"),
+
+        CommonEnum.named('legal_reference') \
+                    .using(label=u"Legal reference") \
+                    .valued(*legal_reference) \
+                    .with_properties(css_class="select-small"),
+
+        CommonString.named("explanatory_text") \
+                    .using(label=u"Explanatory text") \
+                    .with_properties(widget="textarea",
+                                     hide_if_empty='True'),
 
     )
+
 )
 
 
@@ -261,15 +288,10 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"STRUCTURE") \
               .of(
 
-        fl.Dict.named('reference') \
-               .using(label=u"DPSIR framework:") \
-               .with_properties(widget="subgroup") \
-               .of(
-
-            CommonBoolean.named('basis_structure') \
-                         .using(label=u"Basis for report structure?") \
-                         .with_properties(reversed="True"),
-        ),
+        fl.Enum.named('reference') \
+               .with_properties(widget="radioselect") \
+               .valued(*(["Yes", "No"])) \
+               .using(label=u"DPSIR framework used?"),
 
         fl.Enum.named('indicator_based') \
                .with_properties(widget="radioselect") \
