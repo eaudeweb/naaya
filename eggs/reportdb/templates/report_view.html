@@ -73,7 +73,7 @@ $(document).ready(function() {
     <p class="report-format-paper-or-url">
       {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
         and report['data']['format']['availability']['url'] %}
-        <strong>This fact-sheet is accessible at</strong>:
+        <strong>The describe State of Environment information is accessible at</strong>:
         {{ mk.widget(report['data']['format']['availability']['url']) }}
       {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
         <strong>This fact-sheet is available only on paper</strong>
