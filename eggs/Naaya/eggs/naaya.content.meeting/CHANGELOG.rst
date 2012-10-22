@@ -1,5 +1,7 @@
 1.2.18 (unreleased)
 -------------------
+* bugfix: #1013 using survey widget's get_value
+  to get printable answer value [simiamih]
 
 1.2.17 (2012-09-11)
 -------------------
