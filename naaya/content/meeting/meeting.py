@@ -550,10 +550,9 @@ class NyMeeting(NyContentData, NyFolder):
         survey = self.get_survey()
         if survey is not None and survey.meta_type == 'Naaya Mega Survey':
             question = getattr(survey, qid)
-            choices = question.getChoices()
             for answer in survey.objectValues('Naaya Survey Answer'):
                 if answer.respondent == uid:
-                    return choices[getattr(answer, qid)]
+                    return question.get_value(getattr(answer, qid))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
