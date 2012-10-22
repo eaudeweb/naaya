@@ -1,4 +1,7 @@
-1.2.18 (unreleased)
+1.2.19 (unreleased)
+-------------------
+
+1.2.18 (2012-10-22)
 -------------------
 * bugfix: #1013 using survey widget's get_value
   to get printable answer value [simiamih]
