@@ -1,4 +1,7 @@
-3.1.9 (unreleased)
+3.1.10 (unreleased)
+--------------------
+
+3.1.9 (2012-10-23)
 --------------------
 * bulk email to users accepts json with custom mapping [simiamih]
 * include Import users link in local users management [simiamih]
