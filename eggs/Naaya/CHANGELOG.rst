@@ -1,4 +1,7 @@
-3.1.10 (unreleased)
+3.1.11 (unreleased)
+--------------------
+
+3.1.10 (2012-10-23)
 --------------------
 * added cookie disclaimer message + consent request [dumitval]
 * added Cookie policy HTML Document [dumitval]
