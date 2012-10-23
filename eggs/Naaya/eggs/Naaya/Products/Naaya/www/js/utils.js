@@ -159,3 +159,62 @@ function unserialize(data){
 }
 
 
+/**
+ * Set and check cookie consent... cookie
+*/
+$(document).ready(function(){
+	checkCookie();
+
+	function setCookie(c_name,value,expires){
+	  // set time, it's in milliseconds
+	  var today = new Date();
+	  today.setTime( today.getTime() );
+	  if ( expires ){
+		expires = expires * 1000 * 60 * 60 * 24;
+	  }
+	  var expires_date = new Date( today.getTime() + (expires) );
+	  var path = '/';
+	  document.cookie=c_name + "=" + escape(value) +
+		( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+		( ( path ) ? ";path=" + path : "" );
+	}
+
+	function getCookie(c_name){
+	  var i,x,y,ARRcookies=document.cookie.split(";");
+	  for (i=0;i<ARRcookies.length;i++){
+		x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		x=x.replace(/^\s+|\s+$/g,"");
+		if (x==c_name){
+		  return unescape(y);
+		}
+	  }
+	}
+
+	function checkCookie(){
+	  var consent=getCookie("naaya_disclaimer");
+	  if (consent==null){
+		$('#disclaimer').slideDown(1000);
+	  }
+	  else{
+		if($('#disclaimer:visible')){
+		  $('#disclaimer').slideUp(333);
+		}
+		else{
+		  $('#disclaimer').hide();
+		}
+	  }
+	}
+
+	function deleteCookie(name){
+	  path = '/'
+	  document.cookie = name + "=" +
+		( ( path ) ? ";path=" + path : "") +
+		";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+	}
+
+	$('#acknowledge').click(function(){
+	  setCookie("naaya_disclaimer", true, 365);
+	  checkCookie();
+	});
+})
