@@ -3,6 +3,7 @@ import logging
 import Acquisition
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import manage_users
+from AccessControl.unauthorized import Unauthorized
 from Globals import InitializeClass
 from Missing import MV
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -305,7 +306,10 @@ class plugLDAPUserFolder(PlugBase):
         site = self.getSite()
         add_roles_from_ob(site)
         for b in site.getCatalogTool()(path='/'):
-            add_roles_from_ob(b, is_brain=True)
+            try:
+                add_roles_from_ob(b, is_brain=True)
+            except Unauthorized, e:
+                pass # suppress restricted obs from breaking publishing
 
         return groups_roles_map
 
