@@ -354,7 +354,7 @@ class NavigationSiteMapTest(NaayaTestCase):
         self.assertEqual(t(res[4]['children'][0]), 'info/subsite/info')
         self.assertEqual(t(res[4]['children'][0]['children'][0]),
                          'info/subsite/info/accessibility')
-        self.assertEqual(len(res[4]['children'][0]['children']), 2)
+        self.assertEqual(len(res[4]['children'][0]['children']), 3)
 
         self.req.form = {'node': 'info/subsite'}
         res = json.loads(self.portal.getNavigationSiteMap(self.req,
