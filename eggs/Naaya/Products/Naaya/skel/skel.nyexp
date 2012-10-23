@@ -79,6 +79,54 @@
 				</ul>]]>
 			</body>
 		</ob>
+		<ob meta_type="Naaya Document" param="0" id="cookie_policy" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="0" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Cookie policy]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[
+				<p>A <strong>cookie</strong> is a small piece of data sent from
+				a website and stored in the user's computer. This information
+				can be used for several purposes, including saving user
+				identification, preferences on the site, choices from one page
+				to another, etc.</p>
+
+				<p>They can also be used for tracking user activity and
+				browsing history, which from a certain level is a privacy concern (triggering law regulations in the EU and US).</p>
+
+				<h2>Our policy</h2>
+				<p>This website uses cookies with the exclusive purposes of enabling its services and enhancing user experience on the site. Examples include:</p>
+
+				<ul>
+				<li>saving user authentication</li>
+				<li>setting site language preferences</li>
+				<li>saving site preferences (like the full-screen toggle)</li>
+				<li>well-functioning of applications (where users need to follow
+				a procedure consisting of several steps, and preferences must be
+				saved between steps) </li>
+				</ul>
+
+				<h2>Google Analytics</h2>
+				<p>We also make use of Google Analytics, a Web analytics service provided by Google Inc., helping measuring traffic patterns to,
+				from, and within our public Web sites. The information generated
+				by the cookies about your use of the Web site (including your IP
+				address, truncated to ensure your anonymity) is transmitted to Google. No personal, identifying information is recorded or
+				provided to Google. This anonymous information is then used to
+				evaluate visitors' use of the Web site and to compile statistical
+				reports on our site activity. The aggregate data and statistical
+				reports are used only to help us make our site more useful to
+				visitors and are made available only to Web managers and other
+				designated staff who require this information to perform their
+				duties.</p>
+
+				<p>For further information about Google Analytics, please refer to
+				<a href="http://www.google.com/intl/en_ALL/privacy/privacy-policy.html">
+				Google Analytics Privacy Policy</a>. Google Inc. offers a
+				possibility to <a href="https://tools.google.com/dlpage/gaoptout?hl=en">
+				disable Google Analytics</a> (including the setting of cookies).
+				</p>]]>
+			</body>
+		</ob>
 		<ob meta_type="Naaya Document" param="0" id="contact" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="0" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Contact us]]></title>
 			<description lang="en"><![CDATA[]]></description>
