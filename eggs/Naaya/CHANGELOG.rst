@@ -1,5 +1,6 @@
 3.1.10 (unreleased)
 --------------------
+* using %e to display day of mon without leading zero [simiamih]
 
 3.1.9 (2012-10-23)
 --------------------

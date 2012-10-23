@@ -858,11 +858,11 @@ class utils:
             ed, em, ey = p_end.day, p_end.month, p_end.year
             if sy == ey:    #same year
                 if sm == em:    #same month
-                    return '%s - %s %s' % (sd, p_end.strftime('%d %b'), sy)
+                    return '%s - %s %s' % (sd, p_end.strftime('%e %b'), sy)
                 else:
-                    return '%s - %s %s' % (p_start.strftime('%d %b'), p_end.strftime('%d %b'), sy)
+                    return '%s - %s %s' % (p_start.strftime('%e %b'), p_end.strftime('%e %b'), sy)
             else:
-                return '%s %s - %s %s' % (p_start.strftime('%d %b'), sy, p_end.strftime('%d %b'), ey)
+                return '%s %s - %s %s' % (p_start.strftime('%e %b'), sy, p_end.strftime('%e %b'), ey)
 
     def utShowInterval(self, start_date, end_date, all_day):
         """Pretty print Products.NaayaCore.SchemaTool.widgets.interval.Interval
