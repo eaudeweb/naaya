@@ -3673,14 +3673,22 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return "Clean up unsubmitted objects ended successfully on site %s" % self.absolute_url()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_mail_to_roles')
-    def send_mail_to_roles(self, mail_subject, mail_body, mails, REQUEST=None):
+    def send_mail_to_roles(self, mail_subject, mail_body, mails,
+                           mail_mappings={}, REQUEST=None):
         """
         Sends bulk mail with the specified subject and body to
         all email addresses in 'mails'
         """
         addr_from = self.getEmailTool().get_addr_from()
+        if mail_mappings:
+            mail_mappings = json.loads(mail_mappings)
+        else:
+            mail_mappings = {}
         for mail in mails:
-            self.getEmailTool().sendEmail(mail_body, mail, addr_from, mail_subject)
+            mail_custom_body = mail_body
+            for (k, v) in mail_mappings.get(mail.lower(), {}).items():
+                mail_custom_body = mail_custom_body.replace(k, v)
+            self.getEmailTool().sendEmail(mail_custom_body, mail, addr_from, mail_subject)
 
         if REQUEST:
             self.setSessionInfoTrans('Mail sent. (${date})', date=self.utGetTodayDate())
