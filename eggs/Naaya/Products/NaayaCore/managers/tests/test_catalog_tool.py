@@ -10,7 +10,7 @@ class CatalogToolTestSuite(NaayaTestCase):
     def setUp(self):
         super(CatalogToolTestSuite, self).setUp()
         info = self.portal.info
-        self.objs = [info, info.accessibility, info.contact]
+        self.objs = [info, info.accessibility, info.cookie_policy, info.contact]
         for i in range(10):
             rd = '%2d/01/2100' % (i+1)
             new_folder = info[addNyFolder(info, 'test%d' % i, releasedate=rd)]
