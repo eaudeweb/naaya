@@ -95,6 +95,7 @@
 			<file id="common.css" title=""/>
 			<template id="element_breadcrumb" title="element breadcrumb"/>
 			<template id="element_footer" title="element footer"/>
+			<template id="element_disclaimer" title="element disclaimer"/>
 			<template id="element_header" title="element header"/>
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<file id="ie7.css" title=""/>

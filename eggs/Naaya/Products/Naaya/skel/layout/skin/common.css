@@ -1830,3 +1830,23 @@ and in naaya.content.municipality */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 }
+
+/* Styling for the Cookies Disclaimer message */
+#disclaimer {
+	background: #FFE49D;
+	position: absolute;
+	width: 100%;
+	padding: 5px 0px;
+	border-bottom: 1px solid #555;
+	display: none;
+	top: 0px;
+}
+
+#disclaimer p {
+	text-align: center;
+}
+
+#disclaimer img {
+	padding-right:  5px;
+	vertical-align: text-top;
+}

@@ -1,5 +1,6 @@
 3.1.10 (unreleased)
 --------------------
+* added cookie disclaimer message + consent request [dumitval]
 * added Cookie policy HTML Document [dumitval]
 * logout page was broken by restricted objects raising Unauth. [simiamih]
 * using %e to display day of mon without leading zero [simiamih]
