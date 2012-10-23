@@ -1840,6 +1840,7 @@ and in naaya.content.municipality */
 	border-bottom: 1px solid #555;
 	display: none;
 	top: 0px;
+	z-index: 10000;
 }
 
 #disclaimer p {
