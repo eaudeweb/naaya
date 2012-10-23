@@ -296,14 +296,15 @@ class NavigationSiteMapTest(NaayaTestCase):
         self.assertEqual(t(res['children'][0]), 'info')
         self.assertEqual(t(res['children'][0]['children'][1]), 'info/cookie_policy')
         self.assertEqual(res['children'][0]['children'][1]['children'], [])
-        self.assertEqual(t(res['children'][0]['children'][2]), 'info/sub_approved')
+        self.assertEqual(t(res['children'][0]['children'][2]), 'info/contact')
 
         res = json.loads(self.portal.getNavigationSiteMap(self.req, all=True))
         self.assertEqual(t(res), '')
         self.assertEqual(t(res['children'][0]), 'info')
         self.assertEqual(t(res['children'][0]['children'][1]), 'info/cookie_policy')
-        self.assertEqual(t(res['children'][0]['children'][2]), 'info/sub_approved')
-        self.assertEqual(t(res['children'][0]['children'][3]), 'info/sub_unapproved')
+        self.assertEqual(t(res['children'][0]['children'][2]), 'info/contact')
+        self.assertEqual(t(res['children'][0]['children'][3]), 'info/sub_approved')
+        self.assertEqual(t(res['children'][0]['children'][4]), 'info/sub_unapproved')
         self.assertEqual(res['children'][0]['children'][3]['children'], [])
 
         res = json.loads(self.portal.getNavigationSiteMap(self.req, only_folders=True))
@@ -342,17 +343,18 @@ class NavigationSiteMapTest(NaayaTestCase):
 
         self.req.form = {'node': 'info'}
         res = json.loads(self.portal.getNavigationSiteMap(self.req, subportals=True))
-        self.assertEqual(len(res), 4)
+        self.assertEqual(len(res), 5)
 
         self.assertEqual(t(res[0]), 'info/accessibility')
-        self.assertEqual(t(res[1]), 'info/contact')
-        self.assertEqual(t(res[2]), 'info/sub_approved')
-        self.assertEqual(t(res[3]), 'info/subsite')
-        self.assertEqual(len(res[3]['children']), 1)
-        self.assertEqual(t(res[3]['children'][0]), 'info/subsite/info')
-        self.assertEqual(t(res[3]['children'][0]['children'][0]),
+        self.assertEqual(t(res[1]), 'info/cookie_policy')
+        self.assertEqual(t(res[2]), 'info/contact')
+        self.assertEqual(t(res[3]), 'info/sub_approved')
+        self.assertEqual(t(res[4]), 'info/subsite')
+        self.assertEqual(len(res[4]['children']), 1)
+        self.assertEqual(t(res[4]['children'][0]), 'info/subsite/info')
+        self.assertEqual(t(res[4]['children'][0]['children'][0]),
                          'info/subsite/info/accessibility')
-        self.assertEqual(len(res[3]['children'][0]['children']), 2)
+        self.assertEqual(len(res[4]['children'][0]['children']), 2)
 
         self.req.form = {'node': 'info/subsite'}
         res = json.loads(self.portal.getNavigationSiteMap(self.req,
