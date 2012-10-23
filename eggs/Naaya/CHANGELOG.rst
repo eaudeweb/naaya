@@ -1,5 +1,6 @@
 3.1.9 (unreleased)
 --------------------
+* bulk email to users accepts json with custom mapping [simiamih]
 * include Import users link in local users management [simiamih]
 
 3.1.8 (2012-10-09)

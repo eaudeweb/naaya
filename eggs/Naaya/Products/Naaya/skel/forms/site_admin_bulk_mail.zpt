@@ -176,6 +176,17 @@
                 <label for="mail_body" i18n:translate="">Body</label>
                 <textarea type="text" id="mail_body" name="mail_body" cols="70" rows="10" tal:attributes="disabled not:mail_from"></textarea>
             </div>
+            <div class="field">
+            <a href="javascript:void(0);" onclick="jQuery('#mail_mappings_field').toggle()"
+                i18n:translate="">
+                Toggle advanced options
+            </a>
+            </div>
+            <div class="field" style="display: none;" id="mail_mappings_field">
+                <label for="mail_mappings" i18n:translate="">Custom variables</label>
+                (json format, indexed by recipient)
+                <textarea type="text" id="mail_mappings" name="mail_mappings" cols="70" rows="10"></textarea>
+            </div>
             <input type="hidden" name="mails:list" tal:attributes="value mail" tal:repeat="mail mails"/>
             <input type="submit" value="Send mail" i18n:attributes="value" tal:attributes="disabled not:mail_from"/>
         </form>
