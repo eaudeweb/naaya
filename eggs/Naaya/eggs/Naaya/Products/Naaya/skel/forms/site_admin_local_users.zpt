@@ -143,6 +143,10 @@
 				<a tal:attributes="href url; class python: test('admin_adduser_html' in request.PATH_INFO, 'current_sub', '')"
 				   i18n:translate="">Add new user</a>
 			</li>
+			<li tal:define="url string:${site_url}/admin_importusers_html">
+				<a tal:attributes="href url; class python: test('admin_importusers_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Import users</a>
+			</li>
 		</ul>
 	</div>
 	<div class="clear">&nbsp;</div>
