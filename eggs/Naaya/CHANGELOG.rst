@@ -1,4 +1,7 @@
-3.1.11 (unreleased)
+3.1.12 (unreleased)
+--------------------
+
+3.1.11 (2012-10-24)
 --------------------
 * *update* #1012 script for refreshing Google MAPS API Key [simiamih]
 * new default API Key for Google maps engine [simiamih]
