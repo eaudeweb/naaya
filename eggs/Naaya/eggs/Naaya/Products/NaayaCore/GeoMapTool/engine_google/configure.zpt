@@ -2,10 +2,11 @@
 
 <div class="field">
     <label for="form-google_api_keys"
-           i18n:translate="">API keys</label>
+           i18n:translate="">API key</label>
     <p i18n:translate="">
-        One per line, in the format
-        <tt i18n:name="format">http://<i>DOMAIN_NAME</i>::<i>API_KEY</i></tt>.
+        Go to <a href="https://code.google.com/apis/console/" i18n:name="google-link">Google Apis</a>,
+        make sure Google Maps v2 is enabled in Services, and then get your API Key from API Access.
+        Make sure your domain is allowed for your API Key (Referers section, default Any).
     </p>
     <textarea rows="4" cols="80"
               name="google_api_keys" id="form-google_api_keys"

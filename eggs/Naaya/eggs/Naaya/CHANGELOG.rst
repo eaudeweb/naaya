@@ -1,5 +1,6 @@
 3.1.11 (unreleased)
 --------------------
+* new default API Key for Google maps engine [simiamih]
 
 3.1.10 (2012-10-23)
 --------------------
