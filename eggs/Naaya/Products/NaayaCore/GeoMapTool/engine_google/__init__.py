@@ -8,6 +8,12 @@ from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.GeoMapTool.GeoMapTool import register_map_engine
 
+
+# restricted to eea.europa.eu and eionet.europa.eu, for other domains
+# configure your own from Administration, Map Management.
+DEFAULT_API_KEY = 'AIzaSyCV-BfmY6xxmO0V3JAvRbvB30fwKHjaa9s'
+
+
 class GoogleMapEngine(SimpleItem):
     """
     Google maps plugin for Naaya GeoMapTool
@@ -21,8 +27,7 @@ class GoogleMapEngine(SimpleItem):
     def __init__(self, id):
         super(GoogleMapEngine, self).__init__()
         self._setId(id)
-        self.api_keys = ("ABQIAAAAkblOrSS9iVzkKUfXj3gOFRR26BjrSmLtamI"
-                         "PMRgDuTUxZh8BLxQ2qfb6PUeks1ZMeSmUGC0ZTrNFVg")
+        self.api_keys = DEFAULT_API_KEY
         self.base_layer = 'map'
         self.allow_mouse_scroll = True
         self.portal_map_zoom = None
