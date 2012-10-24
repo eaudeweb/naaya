@@ -1,6 +1,7 @@
 <configure xmlns='http://namespaces.zope.org/zope'
            xmlns:naaya="http://namespaces.zope.org/naaya"
-           xmlns:browser="http://namespaces.zope.org/browser">
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
     <browser:resourceDirectory
         name="geomaptool.icons"
         directory="./www"
@@ -16,4 +17,11 @@
     for="Products.Naaya.interfaces.ISkelLoad"
     />
 
+   <configure zcml:condition="installed Products.naayaUpdater">
+      <utility
+         name="UpdateGoogleMapsAPIKey.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.UpdateGoogleMapsAPIKey"
+         permission="zope2.ViewManagementScreens" />
+   </configure>
 </configure>
