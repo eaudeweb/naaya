@@ -295,7 +295,6 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
 
         template_vars = {'here': self, 'options': options}
         to_return = self.getFormsTool().getContent(template_vars, 'localizedbfile_index')
-        self.notify_access_event(REQUEST)
         return to_return
 
     def isVersionable(self):
