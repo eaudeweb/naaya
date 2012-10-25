@@ -1,5 +1,6 @@
 1.3.9 (unreleased)
 ------------------
+* opening file index page is not a view event [simiamih]
 
 1.3.8 (2012-10-09)
 ------------------

@@ -361,7 +361,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             options['current_version'] = versions[-1]
 
         template_vars = {'here': self, 'options': options}
-        self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent(template_vars, 'bfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
