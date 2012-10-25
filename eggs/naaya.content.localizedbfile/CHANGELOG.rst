@@ -1,5 +1,6 @@
 1.0.5 (unreleased)
 ------------------
+* revert: opening file index page is not a view event [simiamih]
 * view/download events are triggered [simiamih]
 
 1.0.4 (2012-07-18)
