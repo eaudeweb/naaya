@@ -204,7 +204,7 @@
                     Roles
                 </label>
                 
-                <select id="portal_roles" name="roles:list" size="5" multiple="multiple">
+                <select id="portal_roles" name="roles:list" size="6" multiple="multiple">
                     <tal:block repeat="item here/list_valid_roles">
                     <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
                             tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
