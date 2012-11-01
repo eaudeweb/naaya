@@ -3,18 +3,21 @@
 
     {{ script_src("js/main.js") }}
     {{ script_src("js/edit.js") }}
-    {{ script_src("js/chosen/chosen.jquery.min.js") }}
+    {#{ script_src("js/chosen/chosen.jquery.min.js") }#}
+    {{ script_src("js/select2/select2.min.js") }}
 
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            $('.chzn-select').chosen();
+            //$('.chzn-select').chosen();
+            $('.chzn-select').select2();
         });
     </script>
 
 {% endblock %}
 
 {% block extra_head %}
-    {{ css_link('css/chosen/chosen.css') }}
+    {#{ css_link('css/chosen/chosen.css') }#}
+    {{ css_link('js/select2/select2.css') }}
 {% endblock %}
 
 {% block seris_content %}

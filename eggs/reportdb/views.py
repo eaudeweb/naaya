@@ -9,7 +9,7 @@ import schema
 import file_upload
 from gtranslate import translate
 import frame
-
+from schema import countries_list, regions_dict, subregions_dict
 
 class MarkupGenerator(flatland.out.markup.Generator):
 
@@ -77,6 +77,21 @@ def _expand_lists(form_data, keys):
             form_data['%s_%d' % (key, idx)] = value
 
 
+@views.route('/reports/new/get_regions', methods=['GET'])
+@views.route('/reports/<int:report_id>/edit/get_regions', methods=['GET'])
+def get_regions(report_id=None):
+    return flask.json.dumps(regions_dict)
+
+@views.route('/reports/new/get_countries', methods=['GET'])
+@views.route('/reports/<int:report_id>/edit/get_countries', methods=['GET'])
+def get_countries(report_id=None):
+    return flask.json.dumps(countries_list)
+
+@views.route('/reports/new/get_subregions', methods=['GET'])
+@views.route('/reports/<int:report_id>/edit/get_subregions', methods=['GET'])
+def get_subregions(report_id=None):
+    return flask.json.dumps(subregions_dict)
+
 @views.route('/reports/new/', methods=['GET', 'POST'])
 @views.route('/reports/<int:report_id>/edit/', methods=['GET', 'POST'])
 @require_edit_permission
@@ -99,7 +114,8 @@ def report_edit(report_id=None):
         form_data.update(schema.ReportSchema.from_defaults().flatten())
         form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
         form_data.update(flask.request.form.to_dict())
-        _expand_lists(form_data, ['header_country', 'format_lang_of_pub',
+        _expand_lists(form_data, ['header_region', 'header_country',
+            'header_subregion', 'format_lang_of_pub',
             'details_original_language'])
 
         report_schema = schema.ReportSchema.from_flat(form_data)

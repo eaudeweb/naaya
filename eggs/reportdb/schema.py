@@ -37,7 +37,12 @@ update_years = publication_years = [str(year) for year in xrange(1990,
                                            datetime.datetime.now().year+1)]
 publication_freq = _load_json("refdata/publication_freq.json")
 update_freq = _load_json("refdata/update_freq.json")
-eu_countries_list = _load_json("refdata/european_countries_list.json")
+regions_dict = _load_json("refdata/regions_list.json")
+regions_list = regions_dict.keys()
+subregions_dict = _load_json("refdata/subregions_list.json")
+subregions_list = []
+for country in subregions_dict.keys():
+    subregions_list += subregions_dict[country]
 countries_list = _load_json("refdata/countries_list.json")
 target_audience = _load_json("refdata/target_audience.json")
 legal_reference = _load_json("refdata/legal_reference.json")
@@ -69,15 +74,36 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"") \
               .of(
 
+        fl.List.named('region') \
+               .using(label=u"Region", optional=True) \
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
+                                placeholder="Select region(s)...") \
+               .of(
+
+            CommonEnum.valued(*regions_list)
+
+        ),
+
         fl.List.named('country') \
                .using(label=u"Country") \
                .with_properties(widget="multiple_select",
                                 widget_chosen=True,
-                                help=u"Region/sub-national?",
                                 placeholder="Select countries ...") \
                .of(
 
             CommonEnum.valued(*countries_list)
+
+        ),
+
+        fl.List.named('subregion') \
+               .using(label=u"Sub-regions", optional=True) \
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
+                                placeholder="Select sub-regions ...") \
+               .of(
+
+            CommonEnum.valued(*subregions_list)
 
         ),
 
