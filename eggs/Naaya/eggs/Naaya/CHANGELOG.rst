@@ -1,5 +1,6 @@
 3.1.12 (unreleased)
 --------------------
+* checkPermissionReview [simiamih]
 
 3.1.11 (2012-10-24)
 --------------------
