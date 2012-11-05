@@ -218,5 +218,9 @@ class NyPermissions(object):
         """
         return self.checkPermission(PERMISSION_ZIP_EXPORT)
 
+    def checkPermissionReview(self):
+        """ Can the user review consultations? """
+        return self.checkPermission("Naaya - Review Consultation")
+
 
 InitializeClass(NyPermissions)
