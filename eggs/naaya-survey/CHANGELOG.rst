@@ -1,5 +1,6 @@
-1.2.23 (unreleased)
+1.2.23 (2012-11-5)
 ===================
+* bugfix: #9933; CSS fix inside survey_common.css [soniaand]
 
 1.2.22 (2012-10-03)
 ===================

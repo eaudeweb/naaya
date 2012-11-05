@@ -318,3 +318,29 @@ margin-top: 0 !important;
 	top: 20px;
 }
 /* END Bogdan */
+
+
+/* fixing bugs for ticket #9933; author Sonia */
+body .widgetEditMode {
+   max-width: 600px;
+   margin-bottom: 15px;
+}
+
+body .widgetEditMode th {
+   background: #eee;
+   max-width: 190px;
+}
+
+body .widgetEditMode th:empty {
+   background: #fff;
+}
+
+body .widgetEditMode .widget-title {
+   max-width: 450px;
+}
+
+body .widgetEditMode textarea {
+   width: 550px;
+   font-family: Arial, sans-serif;
+}
+/* end fixing bugs for ticket #9933 */
