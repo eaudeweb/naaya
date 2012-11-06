@@ -1,4 +1,7 @@
-1.2.23 (unreleased)
+1.2.24 (unreleased)
+===================
+
+1.2.23 (2012-11-06)
 ===================
 * bugfix: #9938; improper unauthorized error on rendering answer [simiamih]
 * bugfix: #9933; CSS fix inside survey_common.css [soniaand]
