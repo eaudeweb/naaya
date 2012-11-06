@@ -87,11 +87,11 @@ class TextAnswerListing(BaseStatistic):
         for answer in data:
             if self.checkPermissionPublishObjects():
                 answer_url = answer.absolute_url()
-                respondent = answer["respondent"]
+                respondent = answer.respondent
                 ws.write(current_row, 1, xlwt.Formula('HYPERLINK' + '("%s"; "%s")'
                     % (answer_url, respondent)), hyper_style)
             ws.write(current_row, 2,
-                self.utShowDateTime(answer['modification_time']), normal_style)
+                self.utShowDateTime(answer.modification_time), normal_style)
 
             response = answer.get(question.id, '', lang=self.gl_get_selected_language())
             # try to get any response if multilingual
