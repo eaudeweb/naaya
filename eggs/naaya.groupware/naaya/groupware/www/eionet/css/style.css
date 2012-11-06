@@ -61,3 +61,20 @@ a.ig_title {
 .breadcrumbitem {
         background-position: right center;
 }
+
+/* styles for the add/edit forms */
+.field {
+	margin: 1em;
+}
+.field-inline {
+	margin: 1em 0 0 1em;
+}
+.field label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+.field-inline label {
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
