@@ -30,7 +30,6 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.constants import \
-     EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS, \
      PERMISSION_SKIP_CAPTCHA
 from Products.NaayaCore.managers import recaptcha_utils
