@@ -1,25 +1,5 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cristian Ciupitu, Eau de Web
-
 import logging
 
-# Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from DateTime import DateTime
@@ -27,29 +7,29 @@ from Globals import InitializeClass, DTMLFile
 from App.ImageFile import ImageFile
 from AccessControl.Permission import Permission
 
-# Product imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
+
+from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
                          PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT,
                          PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS,
                          PERMISSION_VIEW_REPORTS)
-from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
+
 
 log = logging.getLogger(__name__)
 
-megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add',
-                      globals(), 'NaayaSurvey.megasurvey_add')
+megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add', globals(),
+                                            'NaayaSurvey.megasurvey_add')
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
-    if not title:
-        title = 'Survey'
+    title = title or 'Survey'
     id = make_id(context, id=id, title=title)
 
     # Get selected language
