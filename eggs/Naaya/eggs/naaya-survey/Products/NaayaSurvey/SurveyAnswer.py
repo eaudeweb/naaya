@@ -1,39 +1,18 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alin Voinea, Eau de Web
-
-# Zope imports
 from DateTime import DateTime
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
 from zope import interface
 from zope.event import notify
+from AccessControl.Permissions import view
+from AccessControl import Unauthorized
 
-# Products import
 from Products.ExtFile.ExtFile import manage_addExtFile
 from Products.NaayaCore.managers.utils import utils
-from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyProperties import NyProperties
 
-from AccessControl.Permissions import view
 from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS
 from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
@@ -134,10 +113,10 @@ class SurveyAnswer(Folder, NyProperties):
     security.declareProtected(view, 'getDatamodel')
     def getDatamodel(self):
         """ """
-        #can_view checks permission view answers or if the user is
-        #anonymous, checks if he has provided a valid key
+        # can_view checks permission view answers or if the user is
+        # anonymous, checks if he has provided a valid key
         if not self.can_view():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise Unauthorized(EXCEPTION_NOTAUTHORIZED_MSG)
 
         return dict([(widget.id, self.get(widget.id))
                      for widget in self.getSortedWidgets()])
@@ -173,13 +152,16 @@ class SurveyAnswer(Folder, NyProperties):
     _index_html = NaayaPageTemplateFile('zpt/surveyanswer_index',
                     globals(), 'NaayaSurvey.surveyanswer_index')
     def index_html(self):
-        """ Return the answer index if the current user
-        is the respondent or has permission to view answers """
+        """
+        Return the answer index if the current user
+        is the respondent or has permission to view answers
+
+        """
 
         if self.can_view():
             return self._index_html()
         else:
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise Unauthorized(EXCEPTION_NOTAUTHORIZED_MSG)
 
     def answer_values(self, REQUEST=None, **kwargs):
         """ Return values as list.
@@ -225,17 +207,22 @@ class SurveyAnswer(Folder, NyProperties):
 
     security.declarePublic('can_view')
     def can_view(self):
-        """ """
+        """
+        Allowed to view::
+
+        * users having PERMISSION_VIEW_ANSWERS
+        * respondent (author of the answer or anonymous providing valid key)
+
+        """
         REQUEST = self.REQUEST
         if self.checkPermission(PERMISSION_VIEW_ANSWERS):
             return True
-        #check if the user is the respondent
-        #(for anonymous that means providing a valid key
         elif REQUEST:
             if self.respondent == REQUEST.AUTHENTICATED_USER.getUserName():
                 key = self.get('anonymous_editing_key')
                 return self.respondent != 'Anonymous User' or (
                     key and key == REQUEST.get('key'))
+
 
 class NySurveyAnswerAddEvent(object):
     """ """
