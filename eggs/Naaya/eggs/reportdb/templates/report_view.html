@@ -56,29 +56,77 @@ $(document).ready(function() {
       <img src="{{ url }}" class="report-header_soer_cover" width="120" height="160">
     {% endif %}
 
-    <h1>{{ ', '.join(report['data']['header']['country'].value) }}</h1>
-    <h2>{{ report['data']['details']['english_name'].value or
-           report['data']['details']['original_name'].value }}</h2>
+    <h1>{{ report['data']['details']['english_name'].value or
+           report['data']['details']['original_name'].value }}</h1>
 
-    <p class="report-header_upload_date">
-      This fact-sheet was prepared on:
-      <strong>{{ report['data']['header']['upload_date'] }}</strong>
-    </p>
-
-    <p class="report-header_uploader">
-      Prepared by:
-      <strong>{{ report['data']['header']['uploader'] }}</strong>
-    </p>
-
-    <p class="report-format-paper-or-url">
-      {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
-        and report['data']['format']['availability']['url'] %}
-        <strong>The describe State of Environment information is accessible at</strong>:
-        {{ mk.widget(report['data']['format']['availability']['url']) }}
-      {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
-        <strong>This fact-sheet is available only on paper</strong>
+    <div class="section">
+      <h3>REPORT COVERAGE</h3>
+    </div>
+    <div>
+      {% if report['data']['header']['region'].value %}
+      <div class="field">
+        <label class="control-label">
+          {#% if %#}
+          {% if report['data']['header']['region']|length > 1 %}
+            Regions
+          {% else %}
+            Region
+          {% endif %}
+        </label>
+        <div class="controls">
+          {{ ', '.join(report['data']['header']['region'].value) }}
+        </div>
+      </div>
       {% endif %}
-    </p>
+      <div class="field">
+        <label class="control-label">
+          {#% if %#}
+          {% if report['data']['header']['country']|length > 1 %}
+            Countries
+          {% else %}
+            Country
+          {% endif %}
+        </label>
+        <div class="controls">
+          {{ ', '.join(report['data']['header']['country'].value) }}
+        </div>
+      </div>
+      {% if report['data']['header']['subregion'].value %}
+      <div class="field">
+        <label class="control-label">
+          {#% if %#}
+          {% if report['data']['header']['subregion']|length > 1 %}
+            Sub-regions
+          {% else %}
+            Sub-region
+          {% endif %}
+        </label>
+        <div class="controls">
+          {{ ', '.join(report['data']['header']['subregion'].value) }}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="field">
+        <label class="control-label">Fact-sheet prepared on:</label>
+        <div class="controls">{{ report['data']['header']['upload_date'] }}</div>
+      </div>
+
+      <div class="field">
+        <label class="control-label">Prepared by:</label>
+        <div class="controls">{{ report['data']['header']['uploader'] }}</div>
+      </div>
+
+      <p class="report-format-paper-or-url">
+        {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
+          and report['data']['format']['availability']['url'] %}
+          <strong>The describe State of Environment information is accessible at</strong>:
+          {{ mk.widget(report['data']['format']['availability']['url']) }}
+        {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
+          <strong>This fact-sheet is available only on paper</strong>
+        {% endif %}
+      </p>
+    </div>
 
     {{ mk.widget(report['data']) }}
     {% if report['seris_reviews'] %}
