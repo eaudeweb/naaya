@@ -6,6 +6,7 @@ This module contains the base class of Naaya architecture.
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from Globals import InitializeClass
+from Acquisition import aq_base
 from zope.event import notify
 
 from naaya.content.base.events import (NyContentObjectApproveEvent,
@@ -68,7 +69,7 @@ class NyBase(NyDublinCore):
         """
 
         #If approved attribute is not changed - do nothing
-        if hasattr(self, 'approved') and self.approved == approved:
+        if hasattr(aq_base(self), 'approved') and self.approved == approved:
             return
 
         if approved_by is None:
