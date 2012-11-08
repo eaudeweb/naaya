@@ -1,6 +1,7 @@
 3.1.12 (unreleased)
 --------------------
 * checkPermissionReview [simiamih]
+* don't acquire `approved` attribute when updating it [moregale]
 
 3.1.11 (2012-10-24)
 --------------------
