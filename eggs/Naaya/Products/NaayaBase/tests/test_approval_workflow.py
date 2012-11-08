@@ -8,8 +8,7 @@ from naaya.core.zope2util import permission_add_role
 
 class TestApproval(NaayaTestCase):
     def setUp(self):
-        notif_tool = self.portal.portal_notification
-        self.mock_notif = notif_tool.notify_instant = Mock()
+        self.notify_maintainer = self.portal.notifyFolderMaintainer = Mock()
 
     def tearDown(self):
         self.logout()
@@ -25,7 +24,7 @@ class TestApproval(NaayaTestCase):
 
         self.assertEqual(ob.approved, 0)
         self.assertEqual(ob.submitted, 1)
-        #TODO self.assertEqual(self.mock_notif.call_count, 0)
+        self.assertEqual(self.notify_maintainer.call_count, 1)
 
     def test_submit_by_contributor_with_auto_approve(self):
         permission_add_role(self.portal, PERMISSION_SKIP_APPROVAL,
@@ -36,7 +35,7 @@ class TestApproval(NaayaTestCase):
 
         self.assertEqual(ob.approved, 1)
         self.assertEqual(ob.submitted, 1)
-        self.assertEqual(self.mock_notif.call_count, 1)
+        self.assertTrue(self.notify_maintainer.call_count, 1)
 
     def test_submit_by_manager(self):
         self.login('site_admin')
@@ -45,7 +44,7 @@ class TestApproval(NaayaTestCase):
 
         self.assertEqual(ob.approved, 1)
         self.assertEqual(ob.submitted, 1)
-        self.assertEqual(self.mock_notif.call_count, 1)
+        self.assertTrue(self.notify_maintainer.call_count, 1)
 
 class TestApprovalForFolder(TestApproval):
     def _submit_obj(self):
