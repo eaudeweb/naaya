@@ -148,6 +148,9 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
     def _set_validate_permission(self, object, permission):
         object._Naaya___Validate_content_Permission = permission
 
+    def _set_skip_approval_permission(self, object, permission):
+        object._Naaya___Skip_approval_Permission = permission
+
 
     def test_add_folder(self):
         folder_name = 'testfolder2'
@@ -415,6 +418,54 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.assertTrue(parent2_info.has_edit_link)
 
         self.browser_do_logout()
+
+    def test_cut_paste_inside_folder(self):
+
+        from AccessControl import getSecurityManager
+
+        self._set_skip_approval_permission(self.portal.info, ('Contributor',))
+        self.portal._set_edit_own_content(edit_own_content=True)
+        transaction.commit()
+
+        #login
+        self.browser_do_login('contributor', 'contributor')
+        logged_user = getSecurityManager().getUser()
+
+        #add folders
+        addNyFolder(self.portal.info, 'test_folder')
+        addNyFolder(self.portal.info, 'target_folder')
+
+        # Change the ownership to the logged user
+        self.portal.info.test_folder.changeOwnership(logged_user)
+        self.portal.info.target_folder.changeOwnership(logged_user)
+
+        transaction.commit()
+
+        #go to parent folder. Ckeck if the `Owner` role has permission to copy&cut folders.
+        self.browser.go(self.portal.info.absolute_url(1))
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+        checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
+                                                    'value': 'test_folder'})
+        self.assertEqual(len(checkboxes), 1)
+
+        #copy test_folder in clipboard
+        form = self.browser.get_form('objectItems')
+        form['id'] = ['test_folder']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'cutObjects:method'))
+        self.browser.submit()
+
+        #paste clipboard data
+        self.browser.go(self.portal.info.target_folder.absolute_url(1))
+        form = self.browser.get_form('objectItems')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'pasteObjects:method'))
+        self.browser.submit()
+
+        #test if test_folder was copied inside target_folder
+        self.assertEqual(self.portal.info.target_folder.objectIds(), ['test_folder'])
+
+        #test if test_folder was removed from the initial location
+        self.assertFalse(self.portal.info.get('test_folder', None))
 
     def test_view_adapter(self):
         self.assertTrue(INyContentObject.providedBy(self.portal.info))

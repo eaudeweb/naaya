@@ -263,11 +263,15 @@ class NyFolderBase(Folder, NyPermissions):
                 if object.getLocalProperty('title', lang):
                     return 1
 
-    security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
+    security.declareProtected(view, 'copyObjects')
     def copyObjects(self, REQUEST=None, **kwargs):
         """ """
+        ids = self.utConvertToList(kwargs.get('id', []))
+
+        if not self.checkPermissionCopyObjects(ids):
+            raise Unauthorized
+
         if not REQUEST:
-            ids = self.utConvertToList(kwargs.get('id', []))
             return self.manage_copyObjects(ids)
 
         kwargs.update(REQUEST.form)
@@ -422,6 +426,14 @@ class NyFolderBase(Folder, NyPermissions):
             ra((pc[k]['add_form'], meta_label))
 
         return r
+
+    def _verifyObjectPaste(self, object, validate_src=1):
+        if validate_src == 2:   # paste after cut
+            if not object.checkPermissionDeleteObject():
+                raise Unauthorized
+            validate_src = 1 # let super validate as in paste after copy
+        return super(NyFolderBase, self)._verifyObjectPaste(object, validate_src)
+
 
 class ObjectListingPortlet(object):
 

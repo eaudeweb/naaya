@@ -97,10 +97,12 @@ class NyPermissions(object):
 
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
-    def checkPermissionCopyObjects(self):
-        """ Check the permissions to copy objects."""
+    def checkPermissionCopyObjects(self, object_ids):
+        """ Check the permissions to copy objects. """
+        objects = [self[object_id] for object_id in object_ids]
+        permissions = [x.checkPermissionCopyObject() for x in objects]
 
-        return self.checkPermission(PERMISSION_COPY_OBJECTS)
+        return all(permissions)
 
     def checkPermissionCutObjects(self):
         """ Check the permissions to cut objects."""
@@ -118,7 +120,6 @@ class NyPermissions(object):
         Some users need to delete their own items, although they do not have
         delete permission on parent.
         Check whether user can delete the sub objects with ids `object_ids`
-
         """
         if self.checkPermissionDeleteObject():
             # user can delete anything inside, if he can delete the container
@@ -152,7 +153,7 @@ class NyPermissions(object):
 
         """
 
-        return self.checkPermissionCopyObjects()
+        return self.checkPermission(PERMISSION_COPY_OBJECTS)
 
     def checkPermissionBulkDownload(self):
         """ Check if the user can access the bulk download functionality"""

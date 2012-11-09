@@ -2156,8 +2156,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def _set_edit_own_content(self, edit_own_content):
         if edit_own_content:
             permission_add_role(self, PERMISSION_EDIT_OBJECTS, 'Owner')
+            permission_add_role(self, PERMISSION_COPY_OBJECTS, 'Owner')
+            permission_add_role(self, PERMISSION_DELETE_OBJECTS, 'Owner')
         else:
             permission_del_role(self, PERMISSION_EDIT_OBJECTS, 'Owner')
+            permission_del_role(self, PERMISSION_COPY_OBJECTS, 'Owner')
+            permission_del_role(self, PERMISSION_DELETE_OBJECTS, 'Owner')
 
     def can_edit_own_content(self):
         """ do owners have the "edit content" permission? """
