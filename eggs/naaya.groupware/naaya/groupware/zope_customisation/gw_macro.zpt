@@ -147,9 +147,6 @@
             <div class="ie-clear">&nbsp;</div>
         </div>
         <div id="pagefoot" metal:define-slot="div-pagefoot">
-            <tal:block condition="nocall:here/manage_workspace" on-error="string:">
-                <a tal:attributes="href string:${here/absolute_url}/manage_workspace" i18n:translate="">Access the ZMI</a>
-            </tal:block>
         </div>
     </body>
 </html>
