@@ -1,5 +1,6 @@
 1.2.18 (unreleased)
 -------------------
+* redesigned access request and review access request [simiamih]
 
 1.2.17 (2012-10-09)
 -------------------

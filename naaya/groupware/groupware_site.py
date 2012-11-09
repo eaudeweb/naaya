@@ -18,14 +18,17 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as 
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
-from member_search import MemberSearch
-from interfaces import IGWSite
-from constants import METATYPE_GROUPWARESITE
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
 except:
     rdf_calendar_available = False
+from eea.usersdb.factories import agent_from_site
+
+from naaya.groupware.member_search import MemberSearch
+from naaya.groupware.interfaces import IGWSite
+from naaya.groupware.constants import METATYPE_GROUPWARESITE
+from naaya.groupware.profileoverview.profile import ProfileClient
 
 manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
@@ -168,6 +171,39 @@ class GroupwareSite(NySite):
         self.toggle_portal_restricted(kwargs.get('portal_is_restricted', None))
         super(GroupwareSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
 
+    security.declarePrivate('_user_admin_link')
+    def _user_admin_link(self, log_entry):
+        """ Used by review request access (email and view) """
+        return \
+             ("%(ig_url)s/admin_sources_html?"
+              "id=%(source_id)s&s=assign_to_users&params=uid&term=%(userid)s&search_user=Search&"
+              "req_role=%(role)s&req_location=%(location)s#ldap_user_roles") % \
+                  {'role': log_entry.role,
+                   'userid': log_entry.user,
+                   'ig_url': self.absolute_url(),
+                   'source_id': self.getAuthenticationTool().getSources()[0].getId(),
+                   'location': log_entry.location}
+
+    security.declarePrivate('_review_access_request_first_page')
+    def _review_access_request_first_page(self, log_entry):
+        """
+        Called by review_ig_request to access first (actual) page of
+        review request, containing user and request information
+
+        """
+        # get roles
+        app = self.aq_parent
+        user = app.acl_users.getUser(log_entry.user)
+        client = ProfileClient(app, user)
+        roles_list = client.roles_list_in_ldap()
+        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        # get all user info from LDAP
+        agent = agent_from_site(self)
+        user_info = agent.user_info(log_entry.user)
+        return self.review_ig_request_html(log_entry=log_entry, user=user_info,
+                                           ldap_roles=leaf_roles_list,
+                               user_admin_link=self._user_admin_link(log_entry))
+
     def review_ig_request(self, REQUEST=None, **kw):
         """ Administrator reviews user access request and decides to grant or
         reject the user access with some message. Here we check if the user
@@ -176,7 +212,7 @@ class GroupwareSite(NySite):
         XXX: Works only with a single source (no local users)
 
         """
-        #Store found keys in session, optimising the search
+        # Store found keys in session, optimising the search
         action_logger = self.getActionLogger()
         source_obj = self.getAuthenticationTool().getSources()[0]
         session_data = self.getSession('log_entry', {})
@@ -210,8 +246,9 @@ class GroupwareSite(NySite):
             session_data.update({key: log_entry_id})
             self.setSession('log_entry', session_data)
 
+        import pdb; pdb.set_trace()
         if REQUEST.REQUEST_METHOD == 'GET':
-            return self.review_ig_request_html(log_entry=log_entry)
+            return self._review_access_request_first_page(log_entry)
         else:
             result = {}
             send_mail = bool(kw.get('send_mail', False))
@@ -294,16 +331,6 @@ class GroupwareSite(NySite):
 
         user = REQUEST.AUTHENTICATED_USER
 
-        user_admin_link = \
-             ("%(ig_url)s/admin_sources_html?"
-              "id=%(source_id)s&s=assign_to_users&params=uid&term=%(userid)s&search_user=Search&"
-              "req_role=%(role)s&req_location=%(location)s#ldap_user_roles") % \
-                  {'role': role,
-                   'userid': user.name,
-                   'ig_url': self.absolute_url(),
-                   'source_id': source_obj.getId(),
-                   'location': location}
-
         member_search_link = (
             "%(ig_url)s/member_search?search_string=%(userid)s" % {
                 'ig_url': self.absolute_url(),
@@ -314,11 +341,14 @@ class GroupwareSite(NySite):
         #Create an action  for the current request and include a link in the
         #e-mail so that the log can be viewed or passed to another administrator
         key = self.utGenerateUID()
-        self.getActionLogger().create(
+        log_entry_id = self.getActionLogger().create(
             type=ACTION_LOG_TYPES['role_request'], key=key,
             user=user.getUserName(), role=role, location=location,
             location_url=location_url, location_title=location_title
         )
+        log_entry = self.getActionLogger()[log_entry_id]
+
+        user_admin_link = self._user_admin_link(log_entry)
 
         review_link = (
             "%(ig_url)s/review_ig_request?key=%(key)s" % {
