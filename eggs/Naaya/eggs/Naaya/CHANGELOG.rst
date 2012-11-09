@@ -3,6 +3,7 @@
 
 3.1.12 (2012-11-08)
 --------------------
+* user photos are not restricted [simiamih]
 * checkPermissionReview [simiamih]
 * don't acquire `approved` attribute when updating it [moregale]
 

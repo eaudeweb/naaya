@@ -1103,8 +1103,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             cuser_id = self.get_current_userid()
         else:
             cuser_id = user_id
-            if not self.checkPermissionPublishObjects():
-                raise Unauthorized, 'Not allowed to get other users photos'
 
         try:
             user_info = self.get_user_info(cuser_id)
@@ -1128,9 +1126,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         if user_id is None:
             user_id = self.get_current_userid()
-        else:
-            if not self.checkPermissionPublishObjects():
-                raise Unauthorized, 'Not allowed to get other users photos'
 
         try:
             user_info = self.get_user_info(user_id)
