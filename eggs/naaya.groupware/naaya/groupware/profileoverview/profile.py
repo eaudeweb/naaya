@@ -5,7 +5,7 @@ from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from eea import usersdb
+from eea.usersdb.factories import agent_from_uf
 
 # limit the depth of search for notification subscriptions
 CUTOFF_SUBS = 3
@@ -33,16 +33,7 @@ class ProfileClient(object):
         self.zope_app = zope_app
         self.ldap_folder = zope_app.acl_users
         self.user = user
-        ldap_folder = self.ldap_folder
-        server = ldap_folder._delegate._servers[0]
-        config['ldap_server'] = "%s:%s" % (server['host'], server['port'])
-        try:
-            config['users_dn'] = ldap_folder.users_base
-            config['roles_dn'] = ldap_folder.groups_base
-        except AttributeError:
-            # Leave eea.userdb defaults
-            pass
-        self.agent = usersdb.UsersDB(**config)
+        self.agent = agent_from_uf(self.ldap_folder, **config)
 
     def access_in_igs(self):
         """
