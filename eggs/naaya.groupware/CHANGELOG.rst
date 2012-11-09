@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* tests bugfix: test_profileclient.InterestGroupsTestCase [nituacor]
 
 1.2.18 (2012-11-09)
 -------------------
