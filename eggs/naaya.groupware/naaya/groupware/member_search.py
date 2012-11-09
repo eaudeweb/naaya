@@ -11,7 +11,7 @@ from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
 from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
 from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
 from naaya.core.utils import force_to_unicode
-from eea import usersdb
+from eea.usersdb.factories import agent_from_uf
 
 class MemberSearch(Implicit, Item):
     title = "Interest Group member search"
@@ -91,17 +91,7 @@ class MemberSearch(Implicit, Item):
             userids = set(individual_userids + group_userids)
 
             if search_string.strip():
-                user_folder = source.getUserFolder()
-                server = user_folder._delegate._servers[0]
-                config = {}
-                config['ldap_server'] = "%s:%s" % (server['host'], server['port'])
-                try:
-                    config['users_dn'] = user_folder.users_base
-                    config['roles_dn'] = user_folder.groups_base
-                except AttributeError:
-                    # Leave eea.userdb defaults
-                    pass
-                agent = usersdb.UsersDB(**config)
+                agent = agent_from_uf(source.getUserFolder())
                 users = agent.search_user(search_string)
                 users = [user for user in users if
                             user.get('uid', user.get('id', None)) and
