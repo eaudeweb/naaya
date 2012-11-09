@@ -1,18 +1,12 @@
-import unittest
-from mock import Mock
+from mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from naaya.groupware.groupware_site import manage_addGroupwareSite, GroupwareSite
-
-import naaya.groupware.profileoverview.profile
-naaya.groupware.profileoverview.profile.usersdb = Mock()
+from naaya.groupware.groupware_site import manage_addGroupwareSite
 
 from naaya.groupware.profileoverview.profile import ProfileClient
 
 
 def common_setup(zope_app):
-    zope_app.acl_users._delegate = Mock()
-    zope_app.acl_users._delegate._servers = [{'host': '', 'port': ''}]
     zope_app.acl_users._doAddUser('nick', 'nick', [], '')
 
 class InterestGroupsTestCase(NaayaTestCase):
@@ -24,12 +18,9 @@ class InterestGroupsTestCase(NaayaTestCase):
         manage_addGroupwareSite(self.app, 'ig2', 'ig2')
         manage_addGroupwareSite(self.app, 'ig3', 'ig3')
 
-    def test_igaccess(self):
+    @patch('naaya.groupware.profileoverview.profile.agent_from_uf')
+    def test_igaccess(self, mock_get_agent):
         client = ProfileClient(self.app, self.app.acl_users.getUser('nick'))
         ac = client.access_in_igs()
         self.assertEqual(set(ac.keys()), set(['viewer']))
         self.assertEqual(len(ac['viewer']), 3)
-
-class LDAPTestCase(unittest.TestCase):
-
-    pass
