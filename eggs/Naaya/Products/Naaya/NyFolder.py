@@ -194,7 +194,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyFolderBase,NyRoleManager, NyCommonView, NyAttributes, NyProperties,
+class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProperties,
                NyImportExport, NyContainer, utils, NyContentType, NyContentData):
     """ """
 
