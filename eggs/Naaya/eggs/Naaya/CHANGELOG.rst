@@ -1,4 +1,7 @@
-3.1.14 (unreleased)
+3.1.15 (unreleased)
+-------------------
+
+3.1.14 (2012-11-09)
 -------------------
 * bugfix: inheritance issues: move NyFolderBase after NyRoleManager [nituacor]
 
