@@ -38,7 +38,7 @@
                     </span>
                 </div>
                 <div class="field-inline" tal:condition="not:can_review">
-                    <input type="radio" name="role" id="review_role" value="Reviewer" tal:attributes="checked python:can_view and not can_review/>
+                    <input type="radio" name="role" id="review_role" value="Reviewer" tal:attributes="checked python:can_view and not can_review" />
                     <label for="review_role" i18n:translate="">Reviewer access</label>
                     <span i18n:translate="" class="access-definition">
                         is a specific access level used by certain content types; you should request this role
