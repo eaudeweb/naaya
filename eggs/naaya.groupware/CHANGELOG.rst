@@ -1,4 +1,7 @@
-1.2.18 (unreleased)
+1.2.19 (unreleased)
+-------------------
+
+1.2.18 (2012-11-09)
 -------------------
 * redesigned access request and review access request [simiamih]
 * update Owner edit permissions *update* [nituacor]
