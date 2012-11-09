@@ -1,5 +1,6 @@
 3.1.13 (unreleased)
 -------------------
+* bugfix: #9951; copy-cut-paste raised `Error while pasting data` for owners [nituacor]
 
 3.1.12 (2012-11-08)
 --------------------
