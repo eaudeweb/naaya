@@ -131,9 +131,6 @@
                         <a tal:attributes="href string:${site_url}/about/contact" i18n:translate="">Contact us</a>
                         <a tal:attributes="href string:${site_url}/about/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
                         <a href="http://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
-                        <tal:block condition="nocall:here/manage_workspace" on-error="string:">
-                            <a tal:attributes="href string:${here/absolute_url}/manage_workspace" i18n:translate="">Access the ZMI</a>
-                        </tal:block>
                     </div>
                 </metal:block>
             </div>
