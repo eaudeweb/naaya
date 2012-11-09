@@ -246,7 +246,6 @@ class GroupwareSite(NySite):
             session_data.update({key: log_entry_id})
             self.setSession('log_entry', session_data)
 
-        import pdb; pdb.set_trace()
         if REQUEST.REQUEST_METHOD == 'GET':
             return self._review_access_request_first_page(log_entry)
         else:
