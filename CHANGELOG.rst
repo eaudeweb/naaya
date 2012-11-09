@@ -1,3 +1,6 @@
-0.0.1 (unreleased)
+0.0.2 (unreleased)
 ------------------
-* initial beta
+
+0.0.1 (2012-11-09)
+------------------
+* initial beta [dumitval]
