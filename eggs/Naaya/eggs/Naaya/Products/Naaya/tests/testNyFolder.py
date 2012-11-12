@@ -465,7 +465,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.assertEqual(self.portal.info.target_folder.objectIds(), ['test_folder'])
 
         #test if test_folder was removed from the initial location
-        self.assertFalse(self.portal.info.get('test_folder', None))
+        self.assertTrue(getattr(self.portal.info, 'test_folder', None) is None)
 
     def test_view_adapter(self):
         self.assertTrue(INyContentObject.providedBy(self.portal.info))
