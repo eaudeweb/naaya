@@ -94,12 +94,7 @@ $(document).ready(function() {
       {% if report['data']['header']['subregion'].value %}
       <div class="field">
         <label class="control-label">
-          {#% if %#}
-          {% if report['data']['header']['subregion']|length > 1 %}
-            Sub-regions
-          {% else %}
-            Sub-region
-          {% endif %}
+            Sub-national
         </label>
         <div class="controls">
           {{ ', '.join(report['data']['header']['subregion'].value) }}
@@ -120,7 +115,7 @@ $(document).ready(function() {
       <p class="report-format-paper-or-url">
         {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
           and report['data']['format']['availability']['url'] %}
-          <strong>The describe State of Environment information is accessible at</strong>:
+          <strong>The report/portal is accessible at</strong>:
           {{ mk.widget(report['data']['format']['availability']['url']) }}
         {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
           <strong>This fact-sheet is available only on paper</strong>

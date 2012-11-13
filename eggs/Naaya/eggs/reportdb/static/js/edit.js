@@ -1,5 +1,29 @@
 $(document).ready(function() {
 
+	if ($('#f_format_report_type_portaldynamicsource:checked').length > 0){
+		$('#f_format_availability_paper_or_web_paperonly')
+			.removeAttr('checked')
+			.attr('disabled', 'disabled');
+	}
+	$('input[name="format_report_type"]').change(function(){
+		if ($('#f_format_report_type_portaldynamicsource:checked').length > 0){
+			$('#f_format_availability_paper_or_web_paperonly')
+				.removeAttr('checked')
+				.attr('disabled', 'disabled');
+		}
+		else{
+			$('#f_format_availability_paper_or_web_paperonly')
+				.removeAttr('disabled');
+		}
+	})
+	show_hide($('#f_format_availability_url').parent(),
+			['f_format_availability_paper_or_web_webonly',
+			'f_format_availability_paper_or_web_webandprint']);
+	$('input[name="format_availability_paper_or_web"]').change(function(){
+		show_hide($('#f_format_availability_url').parent(),
+				['f_format_availability_paper_or_web_webonly',
+				'f_format_availability_paper_or_web_webandprint']);
+	});
 	show_hide($('#f_format_availability_costs_withcosts').parent(),
 			['f_format_availability_paper_or_web_paperonly',
 			'f_format_availability_registration_required_1']);
@@ -15,10 +39,12 @@ $(document).ready(function() {
 	});
 
 	show_hide($('#f_format_availability_registration_required_1').parent(),
-			['f_format_availability_paper_or_web_web']);
+			['f_format_availability_paper_or_web_webonly',
+			'f_format_availability_paper_or_web_webandprint']);
 	$('input[name="format_availability_paper_or_web"]').change(function(){
 		show_hide($('#f_format_availability_registration_required_1').parent(),
-				['f_format_availability_paper_or_web_web']);
+				['f_format_availability_paper_or_web_webonly',
+				'f_format_availability_paper_or_web_webandprint']);
 	});
 
 	show_hide($('.static-source').parent().parent(),
@@ -32,7 +58,7 @@ $(document).ready(function() {
 			['f_format_report_type_portalsdynamicsource']);
 	$('input[name="format_report_type"]').change(function(){
 		show_hide($('.dynamic-source').parent().parent(),
-				['f_format_report_type_portalsdynamicsource']);
+				['f_format_report_type_portaldynamicsource']);
 	});
 
 	show_hide($('select[name="structure_indicators_estimation"]').parent().parent(),
@@ -58,8 +84,8 @@ $(document).ready(function() {
 			'f_structure_indicators_usage_to_evaluate_Some50']);
 	});
 
-	var regions_dict, subregions_dict;//, all_countries;
-	$.ajax({
+	var subregions_dict;//regions_dict, all_countries;
+	/*$.ajax({
 		url: 'get_regions',
 		dataType: "json",
 		async: false,
@@ -67,7 +93,7 @@ $(document).ready(function() {
 			regions_dict = data;
 		}
 	});
-	/*$.ajax({
+	$.ajax({
 		url: 'get_countries',
 		dataType: "json",
 		async: false,
@@ -84,47 +110,27 @@ $(document).ready(function() {
 		}
 	});
 
-	process_regions(true);
+	//process_regions(true);
 	process_countries(true);
 	process_subregions(true);
 
-	$('#f_header_region').change(function(){
+	/*$('#f_header_region').change(function(){
 		process_countries();
 		process_subregions();
-	});
+	});*/
 
 	$('#f_header_country').change(function(){
-		process_regions();
+		//process_regions();
 		process_subregions();
 	});
 
 	$('#f_header_subregion').change(function(){
-		process_regions();
+		//process_regions();
 		process_countries();
 		process_subregions();
 	});
 
-	/*if (selected_subregions.length==0){
-		var visible_subregions = false;
-		var selected_countries = get_list('country', true);
-		for (var index in selected_countries){
-			var available_subregions = subregions_dict[selected_countries[index]];
-			if (available_subregions != undefined){
-				visible_subregions = true;
-				for (var index in available_subregions){
-					var curr_region = available_subregions[index];
-					$('#f_header_subregion')
-						.append('<option value="'+curr_region+'">'+curr_region+'</option>');
-				};
-				$('#f_header_subregion').select2();
-			}
-		}
-		if (visible_subregions == false){
-			$('#f_header_subregion').parent().parent().hide();
-		}
-	}*/
-
-	function process_regions(onload){
+	/*function process_regions(onload){
 		var selected_regions = get_list('region', true);
 		var selected_countries = get_list('country', true);
 		$.each(selected_regions, function(index, region){
@@ -141,13 +147,13 @@ $(document).ready(function() {
 				$('#f_header_region').select2();
 			}
 		});
-	}
+	}*/
 
 	function process_countries(onload){
-		var selected_regions = get_list('region', true);
+		//var selected_regions = get_list('region', true);
 		var selected_countries = get_list('country', true);
 		var selected_subregions = get_list('subregion', true);
-		$.each(selected_regions, function(index, region){
+		/*$.each(selected_regions, function(index, region){
 			var new_region = true;
 			$.each(regions_dict[region], function(index, country){
 				if (indexOf(country, selected_countries) !== -1){
@@ -162,7 +168,7 @@ $(document).ready(function() {
 				});
 				$('#f_header_country').select2();
 			}
-		});
+		});*/
 		$.each(selected_countries, function(index,country){
 			if(subregions_dict[country] !== undefined){
 				var country_subregions = subregions_dict[country];
@@ -264,14 +270,6 @@ $(document).ready(function() {
 			});
 		}
 		return selected_list;
-	}
-
-	function get_selected_regions(){
-		var regions_list = [];
-		$('#f_header_region option:selected').each(function(){
-			regions_list.push($(this).val());
-		});
-		return regions_list;
 	}
 
 	function get_selected_subregions(){

@@ -115,7 +115,7 @@ def report_edit(report_id=None):
         form_data.update(schema.SerisReviewSchema.from_defaults().flatten())
         form_data.update(flask.request.form.to_dict())
         _expand_lists(form_data, ['header_region', 'header_country',
-            'header_subregion', 'format_lang_of_pub',
+            'header_subregion', 'details_translated_in',
             'details_original_language'])
 
         report_schema = schema.ReportSchema.from_flat(form_data)
@@ -133,7 +133,6 @@ def report_edit(report_id=None):
                 report_row['format_freq_of_upd'] = ''
                 report_row['format_size'] = ''
             if report_row['format_report_type'] == 'portals (dynamic source)':
-                report_row['format_format'] = ''
                 report_row['format_date_of_publication'] = ''
                 report_row['format_freq_of_pub'] = ''
                 report_row['format_no_of_pages'] = ''

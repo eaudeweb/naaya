@@ -32,7 +32,6 @@ CommonDict = fl.Dict.with_properties(widget="group")
 CommonBoolean = fl.Boolean.with_properties(widget="checkbox")
 RegistrationBoolean = fl.Boolean.with_properties(widget="registration_checkbox")
 
-report_formats = _load_json("refdata/report_formats.json")
 update_years = publication_years = [str(year) for year in xrange(1990,
                                            datetime.datetime.now().year+1)]
 publication_freq = _load_json("refdata/publication_freq.json")
@@ -45,7 +44,6 @@ for country in subregions_dict.keys():
     subregions_list += subregions_dict[country]
 countries_list = _load_json("refdata/countries_list.json")
 target_audience = _load_json("refdata/target_audience.json")
-legal_reference = _load_json("refdata/legal_reference.json")
 languages = _load_json("refdata/languages_list.json")
 language_codes = [pair[1] for pair in
                   sorted([(v,k) for (k,v) in languages.items()])]
@@ -78,7 +76,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                .using(label=u"Region", optional=True) \
                .with_properties(widget="multiple_select",
                                 widget_chosen=True,
-                                placeholder="Select region(s)...") \
+                                placeholder="Select region(s)...",
+                                field_type='hidden') \
                .of(
 
             CommonEnum.valued(*regions_list)
@@ -97,7 +96,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         fl.List.named('subregion') \
-               .using(label=u"Sub-regions", optional=True) \
+               .using(label=u"Sub-national", optional=True) \
                .with_properties(widget="multiple_select",
                                 widget_chosen=True,
                                 placeholder="Select sub-regions ...") \
@@ -126,7 +125,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
               .of(
 
         CommonString.named('original_name') \
-                    .using(label=u"Title",
+                    .using(label=u"Title - in original language",
                            optional=False)
                     .with_properties(css_class="input-big"),
 
@@ -139,6 +138,18 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
               CommonEnum.valued(*language_codes) \
                       .with_properties(value_labels=languages)
+        ),
+
+        fl.List.named('translated_in') \
+               .using(label=u"Translated in following languages") \
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
+                                placeholder="Select languages ...") \
+               .of(
+
+            CommonEnum.valued(*language_codes) \
+                      .with_properties(value_labels=languages)
+
         ),
 
         CommonString.named('english_name') \
@@ -157,14 +168,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.Enum.named('report_type') \
                .with_properties(widget="radioselect") \
-               .valued(*(["report (static source)", "portals (dynamic source)"])) \
+               .valued(*(["report (static source)", "portal (dynamic source)"])) \
                .using(label=u"Report type"),
-
-        CommonEnum.named('format') \
-                  .using(label=u"Format") \
-                  .valued(*report_formats) \
-                  .with_properties(css_class="select-small static-source",
-                                   hide_if_empty='True'),
 
         CommonEnum.named('date_of_publication') \
                     .using(label=u"Year of publication") \
@@ -207,20 +212,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         CommonEnum.named("separate_summary") \
                   #TODO implement values in json list
                   .valued(*(['Yes', 'No', 'Unknown'])) \
-                  .using(label=u"Summar report available?") \
+                  .using(label=u"Summar report available") \
                   .with_properties(css_class="select-small"),
-
-        fl.List.named('lang_of_pub') \
-               .using(label=u"Languages of publication") \
-               .with_properties(widget="multiple_select",
-                                widget_chosen=True,
-                                placeholder="Select languages ...") \
-               .of(
-
-            CommonEnum.valued(*language_codes) \
-                      .with_properties(value_labels=languages)
-
-        ),
 
         fl.Dict.named('availability') \
                .with_properties(widget="availability_section") \
@@ -229,7 +222,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
             fl.Enum.named('paper_or_web') \
                    .with_properties(widget="radioselect") \
-                   .valued(*(["paper only", "web"])) \
+                   .valued(*(["paper only", "web only", "web and print"])) \
                    .using(label=u""),
 
             CommonString.named("url") \
@@ -249,21 +242,27 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
     ),
 
     CommonDict.named('links') \
-              .using(label=u"LINKS") \
+              .using(label=u"AUDIENCE & CONTEXT") \
               .of(
 
-        CommonEnum.named('target_audience') \
-                    .using(label=u"Target audience") \
-                    .valued(*target_audience) \
-                    .with_properties(css_class="select-small"),
+        fl.List.named('target_audience') \
+               .using(label=u"Target audience", optional=True) \
+               .with_properties(widget="multiple_select",
+                                widget_chosen=True,
+                                placeholder="Select target audience(s)...") \
+               .of(
 
-        CommonEnum.named('legal_reference') \
+            CommonEnum.valued(*target_audience)
+
+        ),
+
+        CommonString.named('legal_reference') \
                     .using(label=u"Legal reference") \
-                    .valued(*legal_reference) \
-                    .with_properties(css_class="select-small"),
+                    .with_properties(widget="textarea",
+                                     hide_if_empty='True'),
 
         CommonString.named("explanatory_text") \
-                    .using(label=u"Explanatory text") \
+                    .using(label=u"Further information (if applicable)") \
                     .with_properties(widget="textarea",
                                      hide_if_empty='True'),
 
@@ -314,60 +313,60 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
               .using(label=u"STRUCTURE") \
               .of(
 
-        fl.Enum.named('reference') \
-               .with_properties(widget="radioselect") \
-               .valued(*(["Yes", "No"])) \
-               .using(label=u"DPSIR framework used?"),
-
         fl.Enum.named('indicator_based') \
                .with_properties(widget="radioselect") \
                .valued(*(["Yes", "No"])) \
-               .using(label=u"Indicators used?",
+               .using(label=u"Indicator based assessment",
                          optional=True),
 
         CommonEnum.named('indicators_estimation') \
                   .valued(*indicators_estimation) \
                   .with_properties(hide_if_empty='True') \
-                  .using(label=u"Indicators estimation:"),
+                  .using(label=u"Number of indicators"),
 
         fl.Dict.named('indicators_usage') \
-               .using(label=u"How are indicators used?") \
+               .using(label=u"How are indicators used") \
                .with_properties(widget="indicators_group", hidden_label="True") \
                .of(
 
+            IndicatorEnum.named('to_assess_progress') \
+                         .valued(*indicators_usage) \
+                         .using(label=u"To asses progress to target/threshold"),
+
             IndicatorEnum.named('to_compare_countries') \
                          .valued(*indicators_usage) \
-                         .using(label=u"To compare with other countries/EU?"),
+                         .using(label=u"To compare with other countries/EU"),
 
             IndicatorEnum.named('to_compare_subnational') \
                          .valued(*indicators_usage) \
-                         .using(label=u"To compare at sub-national level?"),
+                         .using(label=u"To compare at sub-national level"),
 
             IndicatorEnum.named('to_compare_eea') \
                          .valued(*indicators_usage) \
-                         .using(label=u"To link with EEA/EU indicators?"),
+                         .using(label=u"To relate with EEA/EU developments"),
 
             IndicatorEnum.named('to_compare_global') \
                          .valued(*indicators_usage) \
-                         .using(label=u"To link with global indicators?"),
-
-            IndicatorEnum.named('to_assess_progress') \
-                         .valued(*indicators_usage) \
-                         .using(label=u"To asses progress to target/threshold?"),
+                         .using(label=u"To relate to global developments"),
 
             IndicatorEnum.named('to_evaluate') \
                          .valued(*indicators_usage) \
-                         .using(label=u"To rank/evaluate (e.g. with 'smileys')?"),
+                         .using(label=u"To rank/evaluate (e.g. with 'smileys')"),
 
             CommonEnum.named("evaluation_method") \
                       .valued(*evaluation_methods) \
-                      .using(label=u"If yes, how?"),
+                      .using(label=u"If yes, how"),
         ),
 
         fl.Enum.named('policy_recommendations') \
                .with_properties(widget="radioselect") \
-               .valued(*(["Yes", "No"])) \
-               .using(label=u"Report gives policy recommendations?"),
+               .valued(*(["Explicitly", "Implicitly", "None"])) \
+               .using(label=u"Report gives policy recommendations"),
+
+        fl.Enum.named('reference') \
+               .with_properties(widget="radioselect") \
+               .valued(*(["Explicitly", "Implicitly", "Not used"])) \
+               .using(label=u"DPSIR framework used"),
 
     ),
 
