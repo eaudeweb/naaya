@@ -2,14 +2,20 @@ $(document).ready(function() {
 
 	if ($('#f_format_report_type_portaldynamicsource:checked').length > 0){
 		$('#f_format_availability_paper_or_web_paperonly')
-			.removeAttr('checked')
 			.attr('disabled', 'disabled');
+		if($('#f_format_availability_paper_or_web_paperonly:checked').length > 0){
+			$('#f_format_availability_paper_or_web_paperonly')
+				.removeAttr('checked');
+		}
 	}
 	$('input[name="format_report_type"]').change(function(){
 		if ($('#f_format_report_type_portaldynamicsource:checked').length > 0){
 			$('#f_format_availability_paper_or_web_paperonly')
-				.removeAttr('checked')
 				.attr('disabled', 'disabled');
+			if($('#f_format_availability_paper_or_web_paperonly:checked').length > 0){
+				$('#f_format_availability_paper_or_web_paperonly')
+					.removeAttr('checked');
+			}
 		}
 		else{
 			$('#f_format_availability_paper_or_web_paperonly')
@@ -27,15 +33,24 @@ $(document).ready(function() {
 	show_hide($('#f_format_availability_costs_withcosts').parent(),
 			['f_format_availability_paper_or_web_paperonly',
 			'f_format_availability_registration_required_1']);
+	if ($('input[name="format_availability_costs"]:visible').length == 0){
+		$('#f_format_availability_costs_free').attr('checked', 'checked');
+	}
 	$('input[name="format_availability_paper_or_web"]').change(function(){
 		show_hide($('#f_format_availability_costs_withcosts').parent(),
 				['f_format_availability_paper_or_web_paperonly',
 				'f_format_availability_registration_required_1']);
+		if ($('input[name="format_availability_costs"]:visible').length == 0){
+			$('#f_format_availability_costs_free').attr('checked', 'checked');
+		}
 	});
 	$('input[name="format_availability_registration_required"]').change(function(){
 		show_hide($('#f_format_availability_costs_withcosts').parent(),
 				['f_format_availability_paper_or_web_paperonly',
 				'f_format_availability_registration_required_1'], 'slow');
+		if ($('input[name="format_availability_costs"]:visible').length == 0){
+			$('#f_format_availability_costs_free').attr('checked', 'checked');
+		}
 	});
 
 	show_hide($('#f_format_availability_registration_required_1').parent(),

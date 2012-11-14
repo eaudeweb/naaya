@@ -138,7 +138,8 @@ def report_edit(report_id=None):
                 report_row['format_no_of_pages'] = ''
             if report_row['format_availability_paper_or_web'] == 'paper only':
                 report_row['format_availability_registration_required'] = ''
-            if report_row['format_availability_paper_or_web'] == 'web':
+            if report_row['format_availability_paper_or_web'] in [
+                    'web only', 'web and print']:
                 if not report_row['format_availability_registration_required']:
                     report_row['format_availability_costs'] = 'free'
             uploader = getattr(flask.g, 'user_id')
