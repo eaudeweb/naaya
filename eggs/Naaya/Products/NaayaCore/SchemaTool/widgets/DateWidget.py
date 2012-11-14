@@ -31,11 +31,22 @@ class DateWidget(Widget):
         """Get datamodel from form"""
         if not value:
             return None
-        try:
-            day, month, year = [int(i) for i in value.strip().split('/')]
-            value = DateTime(year, month, day)
-        except:
-            raise WidgetError('Invalid date string for "%s"' % self.title)
+        if len(value.strip().split('-')) == 3:
+            try:
+                year, month, day = [int(i) for i in value.strip().split('-')]
+                value = DateTime(year, month, day)
+            except:
+                raise WidgetError('Invalid date string for "%s"' % self.title)
+        else:
+            try:
+                day, month, year = [int(i) for i in value.strip().split('/')]
+                value = DateTime(year, month, day)
+            except:
+                try:
+                    year, month, day = [int(i) for i in value.strip().split('/')]
+                    value = DateTime(year, month, day)
+                except:
+                    raise WidgetError('Invalid date string for "%s"' % self.title)
         return value
 
     def _convert_to_form_string(self, value):

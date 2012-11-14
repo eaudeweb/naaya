@@ -1,5 +1,6 @@
 3.1.15 (unreleased)
 -------------------
+* bugfix #10017: DateWidget date conversion fix (import from file) [dumitval]
 
 3.1.14 (2012-11-09)
 -------------------
