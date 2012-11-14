@@ -40,7 +40,7 @@
   {% if (not field.is_empty) %}
     {% set url = url_for('views.download', db_id=field.u) %}
     {% if field.properties['widget_image'] %}
-      <img src="{{ url }}" width="120" height="160">
+      <a href="{{ url }}"><img src="{{ url }}" height="160"></a>
     {% else %}
       <a href="{{ url }}" rel="nofollow">download</a>
     {% endif %}

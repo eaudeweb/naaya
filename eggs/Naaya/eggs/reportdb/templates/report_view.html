@@ -53,7 +53,7 @@ $(document).ready(function() {
     {% set cover = report['data']['header']['soer_cover'] %}
     {% if (not cover.is_empty) %}
       {% set url = url_for('views.download', db_id=cover.u) %}
-      <img src="{{ url }}" class="report-header_soer_cover" width="120" height="160">
+      <a href="{{ url }}"><img src="{{ url }}" class="report-header_soer_cover" height="160"></a>
     {% endif %}
 
     <h1>{{ report['data']['details']['english_name'].value or
