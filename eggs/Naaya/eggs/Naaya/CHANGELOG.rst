@@ -1,6 +1,10 @@
-3.1.16 (unreleased)
+3.2.1 (unreleased)
+-------------------
+
+3.2.0 (2012-11-16)
 -------------------
 * ldap groups: using naaya.cache instead of volatile attributes [simiamih]
+* new dependency: naaya.cache [simiamih]
 
 3.1.15 (2012-11-14)
 -------------------
