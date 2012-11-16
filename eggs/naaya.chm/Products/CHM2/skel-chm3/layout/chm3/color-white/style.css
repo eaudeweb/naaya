@@ -22,8 +22,8 @@ body #menu ul.menu-bar {
 	border-bottom: 1px solid #C8C8C8;
 	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 6px;
-	border-radius-bottomleft: 6px;
-	border-radius-bottomright: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
 }
 
 #header {
@@ -223,7 +223,7 @@ body {
 	font-weight: normal;
 	font-size: 12px;
 	color: #000000;
-	line-height: 19px;
+	line-height: 18px; /*19px;*/
 }
 
 a {
@@ -423,7 +423,7 @@ body input[type="file"] {
 }
 
 .wrap {
-	/*width: 962px*/;
+	/*width: 962px;*/
 	margin: 0 auto;
 	clear: both;
 }
@@ -956,15 +956,15 @@ ul.menu-bar.mainsections-menu ul li:hover {
 
 .center-column .folder_description ul {
 	display: block;
-	margin-left: 45px;
-	padding-top: 25px;
+	/*margin-left: 45px;
+	padding-top: 25px;*/
 }
 
 .center-column .folder_description ul li {
 	list-style: disc;
 	color: #039749;
-	font-size: 16px;
-	margin-bottom: 25px;
+	/*font-size: 16px;
+	margin-bottom: 25px;*/
 }
 
 .center-column .folder_description ul li span {
