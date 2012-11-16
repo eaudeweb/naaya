@@ -1,6 +1,7 @@
 1.2.19 (unreleased)
 -------------------
 * tests bugfix: test_profileclient.InterestGroupsTestCase [nituacor]
+* improve style for Request access page [soniaand]
 
 1.2.18 (2012-11-09)
 -------------------

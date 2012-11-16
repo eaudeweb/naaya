@@ -78,3 +78,29 @@ a.ig_title {
 	font-weight: bold;
 	margin-bottom: 0.3em;
 }
+
+
+/* improve Request access page */
+ul.ig_listing li {
+  margin-bottom: 15px;
+}
+
+span.access-definition {
+	display: block;
+	margin-left: 26px;
+	margin-top: 5px;
+	color: #777;
+}
+
+label[for="explanatory_text"] {
+	margin-top: 30px;
+}
+
+#explanatory_text {
+	width: 500px;
+	font-family: Arial, sans-serif;
+}
+
+form[action="request_ig_access"] input[type="submit"] {
+	margin-left: 15px;
+}
