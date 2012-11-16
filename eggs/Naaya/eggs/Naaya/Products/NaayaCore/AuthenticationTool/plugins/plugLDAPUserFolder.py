@@ -27,6 +27,7 @@ from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEven
 
 from naaya.core.utils import is_ajax
 from naaya.core.zope2util import relative_object_path
+import naaya.cache.cache as naaya_cache
 
 import ldap_cache
 
@@ -395,19 +396,13 @@ class plugLDAPUserFolder(PlugBase):
                 url = REQUEST['HTTP_REFERER']
             return REQUEST.RESPONSE.redirect(url)
 
+    @naaya_cache.timed(300)
     def group_member_ids(self, group):
-        if not hasattr(self, '_v_ldap_groups_cache'):
-            cache = self._v_ldap_groups_cache = {}
-        cache = self._v_ldap_groups_cache
         ldap_folder = self.getUserFolder()
         root_dn = self.getRootDN(ldap_folder)
         scope = self.getGroupScope(ldap_folder)
-        if not cache.get(group, {}):
-            delegate = self.get_ldap_delegate()
-            result = delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
-            cache[group] = result
-        else:
-            result = cache[group]
+        delegate = self.get_ldap_delegate()
+        result = delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
         if result['size'] > 0:
             group_user_members = result['results'][result['size']-1]['uniqueMember']
             group_users = []
