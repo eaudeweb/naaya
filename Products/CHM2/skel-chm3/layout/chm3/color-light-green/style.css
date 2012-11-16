@@ -50,12 +50,14 @@ ul.menu-bar.mainsections-menu {
 	/*height: 74px; */
 	font-size: 14px;
 	border-radius: 6px;
-	background: #A7C91B;
+	-moz-border-radius: 6px;
+	background-color: #A7C91B;
 	background-image: -webkit-linear-gradient(top, #D8DCC4, #A7C91B);
 	background-image: -moz-linear-gradient(top, #D8DCC4, #A7C91B);
+	background-image: -o-linear-gradient(top, #D8DCC4, #A7C91B);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#D8DCC4', endColorstr='#A7C91B');
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#D8DCC4, endColorstr=#A7C91B)";
-	background-image: -o-linear-gradient(top, #D8DCC4, #A7C91B);
+	background-image: linear-gradient(top, #D8DCC4, #A7C91B);
 	border-top: 1px solid silver;
 	border-right: 1px solid silver;
 	border-left: 1px solid silver;
@@ -227,7 +229,7 @@ body {
 	font-weight: normal;
 	font-size: 12px;
 	color: #000000;
-	line-height: 19px;
+	line-height: 18px; /*19px;*/
 }
 
 a {
@@ -428,7 +430,7 @@ body input[type="file"] {
 }
 
 .wrap {
-	/*width: 962px*/;
+	/*width: 962px;*/
 	margin: 0 auto;
 	clear: both;
 }
@@ -962,15 +964,15 @@ ul.menu-bar.mainsections-menu ul li:hover {
 
 .center-column .folder_description ul {
 	display: block;
-	margin-left: 45px;
-	padding-top: 25px;
+	/*margin-left: 45px;
+	padding-top: 25px;*/
 }
 
 .center-column .folder_description ul li {
 	list-style: disc;
 	color: #039749;
-	font-size: 16px;
-	margin-bottom: 25px;
+	/*font-size: 16px;
+	margin-bottom: 25px;*/
 }
 
 .center-column .folder_description ul li span {
