@@ -1,7 +1,6 @@
 1.1 (unreleased)
 -------------------
-* make it work with Zope 2.10. Selective install_requires based on
-  Python version [simiamih]
+* make it work with Zope 2.10 (zope.location >= 3.5.4 requirement) [simiamih]
 
 1.0 (2012-11-16)
 -------------------
