@@ -1,5 +1,6 @@
 3.2.1 (unreleased)
 -------------------
+* bugfix: UnicodeEncodeError (LDAP encoding is now UTF-8) 
 
 3.2.0 (2012-11-16)
 -------------------
