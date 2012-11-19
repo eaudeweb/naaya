@@ -53,14 +53,15 @@ $(document).ready(function() {
 		}
 	});
 
-	show_hide($('#f_format_availability_registration_required_1').parent(),
+	$('#f_format_availability_registration_required_1').parent().hide();
+	/*show_hide($('#f_format_availability_registration_required_1').parent(),
 			['f_format_availability_paper_or_web_webonly',
 			'f_format_availability_paper_or_web_webandprint']);
 	$('input[name="format_availability_paper_or_web"]').change(function(){
 		show_hide($('#f_format_availability_registration_required_1').parent(),
 				['f_format_availability_paper_or_web_webonly',
 				'f_format_availability_paper_or_web_webandprint']);
-	});
+	});*/
 
 	show_hide($('.static-source').parent().parent(),
 			['f_format_report_type_reportstaticsource']);

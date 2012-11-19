@@ -42,6 +42,12 @@
     {% set link = url_for('views.report_edit') %}
 {% endif %}
 
+{% set cover = report_schema['header']['soer_cover'] %}
+{% if (not cover.is_empty) %}
+  {% set url = url_for('views.download', db_id=cover.u) %}
+  <a href="{{ url }}"><img src="{{ url }}" class="report-header_soer_cover" height="160"></a>
+{% endif %}
+
 <form action="{{ link }}" method="post" enctype=multipart/form-data>
   {{ mk.widget(report_schema) }}
   {{ mk.widget(seris_review_schema) }}
