@@ -63,7 +63,7 @@ class plugLDAPUserFolder(PlugBase):
 
     object_type = 'LDAPUserFolder'
     meta_type = 'Plugin for user folder'
-    default_encoding = 'latin-1' # TODO: this should be editable from ZMI
+    default_encoding = 'utf-8' # TODO: this should be editable from ZMI
     group_to_roles_mapping = PersistentDict()
 
     def __init__(self, id, source_obj, title):
