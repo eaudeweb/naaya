@@ -1,6 +1,10 @@
-3.2.1 (unreleased)
+3.2.2 (unreleased)
 -------------------
-* bugfix: UnicodeEncodeError (LDAP encoding is now UTF-8) 
+
+3.2.1 (2012-11-19)
+-------------------
+* naaya.cache is req to be 1.1 which works with Zope 2.10 [simiamih]
+* bugfix: UnicodeEncodeError (LDAP encoding is now UTF-8) [nituacor]
 
 3.2.0 (2012-11-16)
 -------------------
