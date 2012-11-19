@@ -82,7 +82,7 @@ a.ig_title {
 
 /* improve Request access page */
 ul.ig_listing li {
-  margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 span.access-definition {
@@ -92,15 +92,20 @@ span.access-definition {
 	color: #777;
 }
 
-label[for="explanatory_text"] {
+label.for-block {
 	margin-top: 30px;
 }
 
-#explanatory_text {
+#explanatory_text,
+#reason {
 	width: 500px;
 	font-family: Arial, sans-serif;
 }
 
-form[action="request_ig_access"] input[type="submit"] {
+input.request-access {
 	margin-left: 15px;
+}
+
+body label.for-checkbox {
+	display: inline-block;
 }
