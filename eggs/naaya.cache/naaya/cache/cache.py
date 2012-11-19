@@ -2,7 +2,10 @@
 
 import time
 
-from plone.memoize import ram, volatile
+try:
+    from plone.memoize import ram, volatile
+except ImportError, e:
+    from naaya.cache.backport import ram, volatile
 
 
 class SelfClearingRAMCacheAdapter(ram.RAMCacheAdapter):
