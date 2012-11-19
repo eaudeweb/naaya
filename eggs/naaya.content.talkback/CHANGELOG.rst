@@ -1,5 +1,6 @@
 1.4.14 (unreleased)
 -------------------
+* ugly temporary quickfix for flickering scrollbar of iframe [simiamih]
 
 1.4.13 (2012-08-16)
 -------------------
