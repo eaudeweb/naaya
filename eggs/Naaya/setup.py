@@ -50,7 +50,7 @@ setup(name='Naaya',
           'naaya.flowplayer',
           'naaya.content.bfile',
           'naaya.i18n > 1.0.14', # last one without overrides
-          'naaya.cache >= 1.0',
+          'naaya.cache >= 1.1',
 
           #Testing
           # 'twill',
