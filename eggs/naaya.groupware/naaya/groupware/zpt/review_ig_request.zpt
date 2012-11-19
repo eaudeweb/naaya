@@ -92,7 +92,7 @@
                     <textarea id="reason" name="reason" cols="40" rows="5"></textarea>
                 </div>
                 <div class="field">
-                    <label for="send_mail" i18n:translate="">Notify user by e-mail</label>
+                    <label for="send_mail" class="for-checkbox" i18n:translate="">Notify user by e-mail</label>
                     <input type="checkbox" id="send_mail" name="send_mail" value="1" />
                 </div>
 
