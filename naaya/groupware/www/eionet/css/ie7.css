@@ -41,3 +41,7 @@ body #workarea form[action="logged_in"] {
 body .right-floated-tip {
 	margin-right: 10px;
 }
+
+body label.for-checkbox {
+	display: inline;
+}
