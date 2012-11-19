@@ -27,7 +27,7 @@
                 Select the access level you want to request. The request will be reviewed by an administrator
                 of the interest group.
             </p>
-            <form action="request_ig_access" class="request-form" method="post" tal:condition="python:needs_permission and not mail_sent">
+            <form action="request_ig_access" method="post" tal:condition="python:needs_permission and not mail_sent">
                 <div class="field-inline" tal:condition="not:can_view">
                     <input type="radio" name="role" id="view_role" value="Viewer" tal:attributes="checked not:can_view"/>
                     <label for="view_role" i18n:translate="">Viewer access</label>
@@ -66,7 +66,7 @@
                     <div style="clear: both"></div>
                     <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
                 </div-->
-                <input type="submit" value="Request access" i18n:attributes="value"/>
+                <input type="submit" class="request-access" value="Request access" i18n:attributes="value" />
             </form>
             <tal:block tal:condition="python:logged_in and not needs_permission">
                 <p i18n:translate="">
