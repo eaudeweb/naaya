@@ -1,6 +1,7 @@
 1.4.14 (unreleased)
 -------------------
 * ugly temporary quickfix for flickering scrollbar of iframe [simiamih]
+* add "replies" column to comments tables [moregale]
 
 1.4.13 (2012-08-16)
 -------------------
