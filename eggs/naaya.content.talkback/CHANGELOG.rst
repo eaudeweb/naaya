@@ -1,5 +1,6 @@
 1.4.17 (unreleased)
 -------------------
+* (#10022) Improve comments summary. Add comments trend chart [mihaitab]
 
 1.4.16 (2012-11-20)
 -------------------
