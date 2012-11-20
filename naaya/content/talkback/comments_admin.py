@@ -177,6 +177,7 @@ class CommentsAdmin(SimpleItem):
             ('Paragraph', lambda i: (i['comment'].get_paragraph()
                                      .plaintext_summary())),
             ('Message Id', lambda i: i['comment'].getId()),
+            ('Replies', lambda i: str(len(i['children']))),
             ('In reply to', lambda i: i['comment'].reply_to or ''),
             ('Message', lambda i: plain(i['comment'].message)),
             ('Contributor', lambda i: i['comment'].get_contributor_name()),
