@@ -1,5 +1,6 @@
 3.2.3 (unreleased)
 -------------------
+* #10014 - List emails in Assign role to Users [mihaitab]
 
 3.2.2 (2012-11-20)
 -------------------
@@ -176,7 +177,7 @@
   [simiamih]
 * tests for Products.NaayaCore.managers.catalog_tool [simiamih]
 * Changed ReCaptcha warning message content and position [dumitval]
-* bugfix: get_or_create_site_logger creates log path if does not 
+* bugfix: get_or_create_site_logger creates log path if does not
   exists [bogdatan]
 
 2.13.15 (2012-06-13)
