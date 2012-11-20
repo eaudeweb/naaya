@@ -1,4 +1,7 @@
-1.2.20 (unreleased)
+1.2.21 (unreleased)
+-------------------
+
+1.2.20 (2012-11-20)
 -------------------
 * redirect to survey also for key-based-participants [dumitval]
 
