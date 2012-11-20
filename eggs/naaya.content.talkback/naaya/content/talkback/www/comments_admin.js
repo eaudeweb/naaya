@@ -26,4 +26,20 @@ $(document).ready(function(){
             });
         });
     });
+
+    $.ajax({
+        url: 'get_comments_trend',
+        success: function(data) {
+            var $graph = data;
+            Morris.Line({
+                element: 'comments_trend',
+                data: JSON.parse($graph),
+                xkey: 'day',
+                ykeys: ['comments'],
+                labels: ['Comments'],
+                parseTime: false,
+                hideHover: true
+            });
+        }
+    });
 });

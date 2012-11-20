@@ -4,6 +4,9 @@
 <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
 <script tal:content="string: var WWW_URL='${site_url}';"></script>
 
+<script type="text/javascript" src="/++resource++naaya.content.talkback/raphael.js"></script>
+<script type="text/javascript" src="/++resource++naaya.content.talkback/morris.js"></script>
+
 <script type="text/javascript" src="/++resource++naaya.content.talkback/comments_admin.js"></script>
 <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.talkback/comments_admin.css" />
 
@@ -21,6 +24,11 @@
     </div>
 
     <h1 i18n:translate="" tal:content="here/title_or_id" />
+
+    <div class="graph-container">
+        <div class="caption" i18n:translate="">Comments (Trend)</div>
+        <div class="graph" id="comments_trend"></div>
+    </div>
 
     <ul>
         <li>
@@ -111,7 +119,7 @@
            <tbody>
                 <tal:block repeat="contributor options/contributors_details">
                     <tr>
-                        <td tal:content="contributor/name" />
+                        <td tal:content="contributor/display_name" />
                         <td><a tal:attributes="href string:mailto:${contributor/email}"
                                tal:content="contributor/email"
                                tal:condition="contributor/email" />
