@@ -1,4 +1,7 @@
-1.4.15 (unreleased)
+1.4.16 (unreleased)
+-------------------
+
+1.4.15 (2012-11-20)
 -------------------
 * bugfix: #10002; write Byte Order Marker for the exported CSV [nituacor]
 
