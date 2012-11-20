@@ -1,5 +1,6 @@
 1.4.16 (unreleased)
 -------------------
+* (#10022) Improve comments summary [mihaitab]
 
 1.4.15 (2012-11-20)
 -------------------
