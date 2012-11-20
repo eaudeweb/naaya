@@ -22,6 +22,7 @@
 from cStringIO import StringIO
 import csv
 import codecs
+import json
 
 try:
     import xlwt
@@ -32,7 +33,9 @@ except ImportError:
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
+from App.ImageFile import ImageFile
 
 from Paragraph import Paragraph
 from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
@@ -93,6 +96,7 @@ class CommentsAdmin(SimpleItem):
             'invited_count': invited_count,
             'anonymous_count': anonymous_count,
             'comment_macros': Paragraph.comments_html.macros,
+            'get_comments_trend': self.get_comments_trend(),
         }
         return self._admin_template(REQUEST, **options)
 
@@ -109,7 +113,27 @@ class CommentsAdmin(SimpleItem):
             else:
                 contrib_stats[comment.contributor]['count'] += 1
         contrib_stats = [v for k, v in contrib_stats.items()]
+
         return contrib_stats
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'get_comments_trend')
+    def get_comments_trend(self):
+        """ get comments trend """
+        days = {
+            self.start_date.Date(): 0,
+            self.end_date.Date(): 0
+        }
+
+        for comment in self._iter_comments():
+            date = comment.comment_date.Date()
+            count = days.setdefault(date, 0)
+            days[date] = count + 1
+
+        data = []
+        for day, comments in days.items():
+            data.append({'day': day, 'comments': comments})
+
+        return json.dumps(sorted(data, key=lambda x: x['day']))
 
     security.declarePrivate('generate_csv_output')
     def generate_csv_output(self, fields, comments):

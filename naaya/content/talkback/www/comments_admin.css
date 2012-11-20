@@ -134,3 +134,22 @@ td.details {
 .list-header {
     background: #FFF;
 }
+
+/**
+ * Morris charts
+*/
+
+.graph-container {
+    float: right;
+}
+
+.graph-container .caption {
+    margin-left: 100px;
+    font-weight: bold;
+}
+
+.graph-container .graph {
+    width: 500px;
+    height: 250px;
+}
+
