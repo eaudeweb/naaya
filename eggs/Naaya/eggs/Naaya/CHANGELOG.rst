@@ -1,4 +1,7 @@
-3.2.3 (unreleased)
+3.2.4 (unreleased)
+-------------------
+
+3.2.3 (2012-11-20)
 -------------------
 * #10014 - List emails in Assign role to Users [mihaitab]
 
