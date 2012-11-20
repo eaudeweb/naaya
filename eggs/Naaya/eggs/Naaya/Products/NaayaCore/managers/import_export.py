@@ -385,14 +385,23 @@ def json_encode(ob):
         return str(ob)
     raise ValueError
 
+def attachment_header(filename):
+    assert isinstance(filename, str)
+    try:
+        filename.decode('ascii')
+    except UnicodeDecodeError:
+        value = "filename*=UTF-8''%s" % urllib.quote(filename)
+    else:
+        value = "filename=%s" % urllib.quote(filename)
+    return "attachment; " + value
+
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Content-Type', content_type)
     if length is not None:
         RESPONSE.setHeader('Content-Length', length)
     RESPONSE.setHeader('Pragma', 'public')
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
-    RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
-        % urllib.quote(filename))
+    RESPONSE.setHeader('Content-Disposition', attachment_header(filename))
 
 def relative_path_to_site(ob):
     site = ob.getSite()
