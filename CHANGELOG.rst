@@ -1,4 +1,7 @@
-1.4.16 (unreleased)
+1.4.17 (unreleased)
+-------------------
+
+1.4.16 (2012-11-20)
 -------------------
 * (#10022) Improve comments summary [mihaitab]
 
