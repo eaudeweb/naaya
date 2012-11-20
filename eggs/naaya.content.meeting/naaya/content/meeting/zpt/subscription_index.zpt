@@ -81,9 +81,9 @@
                     <td tal:content="signup/accepted"/>
                 </tr>
             </table>
-            <input type="submit" name="accept" value="Accept as participant(s)"/>
-            <input type="submit" name="reject" value="Reject signup(s)"/>
-            <input type="submit" name="delete" value="Reject and delete signup(s)"/>
+            <input type="submit" i18n:attributes="value" name="accept" value="Accept as participant(s)"/>
+            <input type="submit" i18n:attributes="value" name="reject" value="Reject signup(s)"/>
+            <input type="submit" i18n:attributes="value" name="delete" value="Reject and delete signup(s)"/>
         </form>
 
     </fieldset>
@@ -135,9 +135,12 @@
                             uid, question[0])"/>
                 </tr>
             </table>
-            <input type="submit" name="accept" value="Accept as participant(s)"/>
-            <input type="submit" name="reject" value="Reject subscription(s)"/>
-            <input type="submit" name="delete" value="Reject and delete subscription(s)"/>
+            <input type="submit" i18n:attributes="value" name="accept"
+              value="Accept as participant(s)"/>
+            <input type="submit" i18n:attributes="value" name="reject"
+              value="Reject subscription(s)"/>
+            <input type="submit" i18n:attributes="value" name="delete"
+              value="Reject and delete subscription(s)"/>
         </form>
 
     </fieldset>

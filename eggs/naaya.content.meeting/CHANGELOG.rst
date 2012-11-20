@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* Added some missing translation tags [dumitval]
 
 1.2.18 (2012-10-22)
 -------------------
