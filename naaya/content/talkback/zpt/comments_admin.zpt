@@ -23,7 +23,7 @@
         Export comments as CSV file.
     </span>
 
-    <form name="csv_export" action="" method="post">
+    <form name="csv_export" action="." method="post">
 
         <div class="field-inline" tal:condition="python:here.rstk.we_provide('Excel export')">
             <label for="file_type"
