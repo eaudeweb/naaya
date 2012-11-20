@@ -9,6 +9,7 @@
     <th>Location</th>
     <th>Author</th>
     <th>Comment</th>
+    <th>Replies</th>
 </thead>
 
 <tbody>
@@ -31,6 +32,9 @@
     </td>
 
     <td tal:content="structure comment/message"></td>
+
+    <td tal:define="children item/children"
+        tal:content="python:len(children)"></td>
 
 </tr>
 </tal:block>
