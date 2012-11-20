@@ -126,32 +126,32 @@
                       tal:attributes="href string:${here/absolute_url}/get_ics">
                     <img alt="" tal:attributes="src here/icalendar_icon" />
                     <br />
-                    iCalendar
+                    <tal:block i18n:translate="">iCalendar</tal:block>
                 </a>
                 <a tal:condition="here/agenda_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting agenda"
                      tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}">
                     <img alt="" tal:attributes="src here/agenda_icon" />
                     <br />
-                    Agenda
+                    <tal:block i18n:translate="">Agenda</tal:block>
                 </a>
             <tal:block condition="here/checkPermissionParticipateInMeeting">
                 <a tal:condition="here/minutes_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting minutes"
                      tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}">
                     <img alt="" tal:attributes="src here/minutes_icon" />
                     <br />
-                    Minutes
+                    <tal:block i18n:translate="">Minutes</tal:block>
                 </a>
                 <a tal:condition="here/survey_pointer" style="float: left; text-align: center; padding: 10px" title="Take the meeting survey"
                      tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}">
                     <img alt="" tal:attributes="src here/survey_icon" />
                     <br />
-                    Survey
+                    <tal:block i18n:translate="">Survey</tal:block>
                 </a>
                 <a style="float: left; text-align: center; padding: 10px" title="View the meeting participants"
                      tal:attributes="href string:${here/absolute_url}/participants">
                     <img alt="" tal:attributes="src here/attendees_icon" />
                     <br />
-                    Participants
+                    <tal:block i18n:translate="">Participants</tal:block>
                 </a>
             </tal:block>
             <tal:block condition="here/checkPermissionAdminMeeting">
@@ -159,7 +159,7 @@
                      tal:attributes="href string:${here/absolute_url}/email_sender">
                     <img alt="" tal:attributes="src here/email_icon" />
                     <br />
-                    Send emails
+                    <tal:block i18n:translate="">Send emails</tal:block>
                 </a>
             </tal:block>
             </p>
