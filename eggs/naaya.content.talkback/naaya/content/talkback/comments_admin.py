@@ -16,6 +16,7 @@
 # Authors:
 #
 # Alex Morega, Eau de Web
+# Mihai Tabara, Eau de Web
 
 #Python imports
 from cStringIO import StringIO
@@ -79,13 +80,36 @@ class CommentsAdmin(SimpleItem):
             elif comment.is_anonymous:
                 anonymous_count += 1
 
+        contributors = self._get_contributors_stats()
+        invited = filter(lambda x: x['invited'], contributors)
+        anonymous = filter(lambda x: x['anonymous'], contributors)
+
         options = {
+            'contributors_count': len(contributors),
+            'invited_contributors_count': len(invited),
+            'anonymous_contributors_count': len(anonymous),
+            'contributors_details': contributors,
             'total_count': total_count,
             'invited_count': invited_count,
             'anonymous_count': anonymous_count,
             'comment_macros': Paragraph.comments_html.macros,
         }
         return self._admin_template(REQUEST, **options)
+
+    def _get_contributors_stats(self):
+
+        contrib_stats = {}
+        for comment in self._iter_comments():
+            try:
+                test = contrib_stats[comment.contributor]
+            except KeyError:
+                new_user_info = comment.get_contributor_info()
+                new_user_info['count'] = 1
+                contrib_stats[comment.contributor] = new_user_info
+            else:
+                contrib_stats[comment.contributor]['count'] += 1
+        contrib_stats = [v for k, v in contrib_stats.items()]
+        return contrib_stats
 
     security.declarePrivate('generate_csv_output')
     def generate_csv_output(self, fields, comments):
