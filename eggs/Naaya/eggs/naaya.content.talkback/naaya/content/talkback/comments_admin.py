@@ -20,6 +20,8 @@
 #Python imports
 from cStringIO import StringIO
 import csv
+import codecs
+
 try:
     import xlwt
     excel_export_available = True
@@ -96,7 +98,8 @@ class CommentsAdmin(SimpleItem):
         for n, item in enumerate(comments):
             row = [field[1](item).encode('utf-8') for field in fields]
             csv_writer.writerow(row)
-        return output.getvalue()
+
+        return codecs.BOM_UTF8 + output.getvalue()
 
     security.declarePrivate('generate_excel_output')
     def generate_excel_output(self, fields, comments):
