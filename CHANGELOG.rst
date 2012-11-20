@@ -1,5 +1,6 @@
 1.2.20 (unreleased)
 -------------------
+* redirect to survey also for key-based-participants [dumitval]
 
 1.2.19 (2012-11-20)
 -------------------

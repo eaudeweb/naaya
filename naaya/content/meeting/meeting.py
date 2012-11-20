@@ -562,7 +562,8 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        if self.survey_required and self.registration_status():
+        if self.survey_required and (self.registration_status() or
+                                     self.isParticipant()):
             survey_ob = self.get_survey()
             if survey_ob is not None and survey_ob.meta_type == 'Naaya Mega Survey':
                 answers = survey_ob.getAnswers()
