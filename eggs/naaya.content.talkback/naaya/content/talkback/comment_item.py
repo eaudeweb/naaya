@@ -17,6 +17,7 @@
 #
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
+# Mihai Tabara, Eau de Web
 
 import re
 
@@ -63,6 +64,7 @@ def addComment(self, contributor, message,
 
     return id
 
+
 class TalkBackConsultationComment(NyFSFile):
     """ """
 
@@ -89,6 +91,7 @@ class TalkBackConsultationComment(NyFSFile):
         self.contributor_name = self.get_contributor_name()
 
     def get_contributor_name(self):
+        # TODO: To be merged with get_contributor_info and all calls replaced
         if self.contributor_name is not None:
             return self.contributor_name
 
@@ -106,6 +109,42 @@ class TalkBackConsultationComment(NyFSFile):
         else:
             name = auth_tool.name_from_userid(contributor)
             return "%s (%s)" % (name, contributor)
+
+    def get_contributor_info(self):
+        """
+        Returns a dict filled with information about the user posting this
+        comment. Keys to be returned in the dict are: <email<, <invited>,
+        <anonymous>, <name> and <display_name>. Main difference between
+        the last two keys is that display_name seizes more information
+        about current user (being invited, anonymous, inviter name, etc)
+
+        """
+        info = {
+            'display_name': self.get_contributor_name(),
+            'name': '',
+            'email': '',
+            'invited': False,
+            'anonymous': False,
+        }
+
+        auth_tool = self.getAuthenticationTool()
+        contributor = self.contributor
+
+        if contributor.startswith('invite'):
+            invite = self.invitations.get_invitation(contributor[7:])
+            info['name'] = invite.name
+            info['email'] = invite.email
+            info['invited'] = True
+        else:
+            if contributor.startswith('anonymous:'):
+                info['name'] = contributor
+                info['anonymous'] = True
+            else:
+                user = auth_tool.get_user_with_userid(contributor)
+                info['name'] = auth_tool.getUserFullName(user)
+                info['email'] = auth_tool.getUserEmail(user)
+
+        return info
 
     title = property(lambda self: 'Comment by %s' % self.contributor,
                      lambda self, value: None)
