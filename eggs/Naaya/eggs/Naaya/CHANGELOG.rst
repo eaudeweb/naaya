@@ -1,4 +1,7 @@
-3.2.2 (unreleased)
+3.2.3 (unreleased)
+-------------------
+
+3.2.2 (2012-11-20)
 -------------------
 * made RESPONSE headers compatible with IE browsers [nituacor]
 
