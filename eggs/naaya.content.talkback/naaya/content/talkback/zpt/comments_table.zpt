@@ -12,8 +12,9 @@
 </thead>
 
 <tbody>
-<tal:block repeat="comment here/all_comments">
-<tr tal:define="section comment/get_section;
+<tal:block repeat="item here/all_comments">
+<tr tal:define="comment item/comment;
+                section comment/get_section;
                 section_url section/absolute_url;
                 paragraph comment/get_paragraph;
                 paragraph_anchor paragraph/get_anchor">
