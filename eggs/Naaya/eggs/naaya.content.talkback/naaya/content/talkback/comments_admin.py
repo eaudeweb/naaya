@@ -93,8 +93,8 @@ class CommentsAdmin(SimpleItem):
 
         csv_writer.writerow([field[0] for field in fields])
 
-        for n, comment in enumerate(comments):
-            row = [field[1](comment).encode('utf-8') for field in fields]
+        for n, item in enumerate(comments):
+            row = [field[1](item).encode('utf-8') for field in fields]
             csv_writer.writerow(row)
         return output.getvalue()
 
@@ -110,10 +110,11 @@ class CommentsAdmin(SimpleItem):
         for col in range(len(fields)):
             ws.row(row).set_cell_text(col, fields[col][0], header_style)
 
-        for comment in comments:
+        for item in comments:
             row += 1
             for col in range(len(fields)):
-                ws.row(row).set_cell_text(col, fields[col][1](comment), normal_style)
+                ws.row(row).set_cell_text(col, fields[col][1](item),
+                                          normal_style)
         output = StringIO()
         wb.save(output)
 
@@ -135,10 +136,11 @@ class CommentsAdmin(SimpleItem):
         ws.col(1).width = 20000
         ws.col(2).width = 7500
         ws.col(3).width = 5000
-        for comment in comments:
+        for item in comments:
             row += 1
             for col in range(len(fields)):
-                ws.row(row).set_cell_text(col, fields[col][1](comment), normal_style)
+                ws.row(row).set_cell_text(col, fields[col][1](item),
+                                          normal_style)
             row += 1
             ws.row(row).set_cell_text(0, 'EEA Comments' , header_style)
         output = StringIO()
@@ -149,9 +151,9 @@ class CommentsAdmin(SimpleItem):
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'all_comments')
     def all_comments(self):
-        def replies(tree):
-            yield tree['comment']
-            for child_comment in tree['children']:
+        def replies(this_comment):
+            yield this_comment
+            for child_comment in this_comment['children']:
                 for c in replies(child_comment):
                     yield c
 
@@ -171,14 +173,17 @@ class CommentsAdmin(SimpleItem):
             return html2text(s, trim)
 
         fields = [
-            ('Section', lambda c: c.get_section().title_or_id()),
-            ('Paragraph', lambda c: c.get_paragraph().plaintext_summary()),
-            ('Message Id', lambda c: c.getId()),
-            ('In reply to', lambda c: c.reply_to or ''),
-            ('Message', lambda c: plain(c.message)),
-            ('Contributor', lambda c: c.get_contributor_name()),
-            ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
-            ('Paragraph url', lambda c: c.get_paragraph().absolute_url()),
+            ('Section', lambda i: i['comment'].get_section().title_or_id()),
+            ('Paragraph', lambda i: (i['comment'].get_paragraph()
+                                     .plaintext_summary())),
+            ('Message Id', lambda i: i['comment'].getId()),
+            ('In reply to', lambda i: i['comment'].reply_to or ''),
+            ('Message', lambda i: plain(i['comment'].message)),
+            ('Contributor', lambda i: i['comment'].get_contributor_name()),
+            ('Date', lambda i: (i['comment'].comment_date
+                                .strftime('%Y/%m/%d %H:%M'))),
+            ('Paragraph url', lambda i: (i['comment'].get_paragraph()
+                                         .absolute_url())),
         ]
 
         comments = self.all_comments()
