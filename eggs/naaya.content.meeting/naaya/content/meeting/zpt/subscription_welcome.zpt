@@ -23,10 +23,10 @@
         </tal:block>
         <tal:block condition="python:accepted == 'accepted'">
             <p i18n:translate="">
-                Welcome, <tal:block replace="signup/name"/>. You have been accepted to participate to this meeting.
+                Welcome, <tal:block i18n:name="name_of_subscriber" replace="signup/name"/>. You have been accepted to participate to this meeting.
             </p>
-            <p>
-                Go to meeting <a tal:attributes="href meeting/absolute_url">main page</a>.
+            <p i18n:translate="">
+                Go to meeting <a tal:attributes="href meeting/absolute_url" i18n:name="main_page_link" i18n:translate="">main page</a>.
             </p>
             <p>
                 <a tal:attributes="href string:${request/ACTUAL_URL}?logout=">Logout</a>
