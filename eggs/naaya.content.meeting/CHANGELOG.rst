@@ -1,4 +1,7 @@
-1.2.21 (unreleased)
+1.2.22 (unreleased)
+-------------------
+
+1.2.21 (2012-11-21)
 -------------------
 * Added some missing translation tags [dumitval]
 
