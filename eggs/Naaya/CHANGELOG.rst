@@ -1,5 +1,6 @@
 3.2.4 (unreleased)
 -------------------
+* reverted latin-1 encoding setting in ldap plugin [simiamih]
 
 3.2.3 (2012-11-20)
 -------------------
