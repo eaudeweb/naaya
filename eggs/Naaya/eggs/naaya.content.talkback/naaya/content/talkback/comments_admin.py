@@ -22,7 +22,11 @@
 from cStringIO import StringIO
 import csv
 import codecs
-import json
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 try:
     import xlwt
