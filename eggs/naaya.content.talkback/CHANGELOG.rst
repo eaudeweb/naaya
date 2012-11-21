@@ -1,5 +1,6 @@
 1.4.18 (unreleased)
 -------------------
+* backwards compatibility: simplejson as json [mihaitab]
 
 1.4.17 (2012-11-20)
 -------------------
