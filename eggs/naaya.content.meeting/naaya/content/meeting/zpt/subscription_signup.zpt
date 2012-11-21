@@ -63,7 +63,8 @@
         <tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
             content="structure python:here.show_recaptcha(here)" />
 
-        <input type="submit" name="add_signup" value="Sign Up" />
+        <input type="submit" name="add_signup" value="Sign Up"
+            i18n:attributes="value" />
 
     </form>
 
