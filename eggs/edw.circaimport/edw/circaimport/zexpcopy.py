@@ -6,14 +6,13 @@ Forum to move data from Archives instance to Forum/Projects.
 import re
 import transaction
 
-from App.config import getConfiguration
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.EmailTool.EmailTool import EmailTool
+from naaya.core.zope2util import get_zope_env
 
 
-CONFIG = getConfiguration()
-NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
+NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 export_completed_message_zpt = PageTemplateFile('zpt/zexpcopy/mail_export_done.zpt',
                                              globals())
 
