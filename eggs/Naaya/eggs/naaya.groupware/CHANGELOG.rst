@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* added meaningful error message on reviewing request access [mihaitab]
 * revised email texts #4600 [simiamih]
 * tests bugfix: test_profileclient.InterestGroupsTestCase [nituacor]
 * improve style for Request access page [soniaand]
@@ -91,7 +92,7 @@
 
 1.2.0 (2012-04-13)
 -------------------
-* Created a JSON view to return all portals from 
+* Created a JSON view to return all portals from
   archives.eionet.europa.eu for forum.eionet.europa.eu [bogdatan]
 
 1.1.22 (2012-04-12)
