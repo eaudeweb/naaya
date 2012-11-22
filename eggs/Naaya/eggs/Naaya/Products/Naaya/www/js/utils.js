@@ -158,6 +158,12 @@ function unserialize(data){
     return return_dict;
 }
 
+/**
+ * Redirect user to the specfied URL
+*/
+function redirect(redirect_URL) {
+    return window.location = redirect_URL;
+}
 
 /**
  * Set and check cookie consent... cookie

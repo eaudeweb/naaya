@@ -11,6 +11,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_statistics/admin_stats" title="Portal statistics" i18n:attributes="title" i18n:translate="">Portal statistics</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_layout_html" title="Change the portal layout and color scheme" i18n:attributes="title" i18n:translate="">Portal layout</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_users_html" title="Users and security settings" i18n:attributes="title" i18n:translate="">User management</a></li>
+    <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_saved_bulk_emails" title="Sent bulk emails list" i18n:attributes="title" i18n:translate="">Bulk emails</a></li>
 	<li tal:condition="canTranslate"><a tal:attributes="href string:${site_url}/admin_translations_html" title="Translate messages" i18n:attributes="title" i18n:translate="">Translate messages</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_linkslists_html" title="Manage lists of lists" i18n:attributes="title" i18n:translate="">Lists of links</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
