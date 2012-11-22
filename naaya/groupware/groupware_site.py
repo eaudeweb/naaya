@@ -18,6 +18,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as 
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
+from naaya.core.zope2util import get_zope_env
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -45,6 +46,7 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
 
 groupware_bundle = bundles.get("Groupware")
 groupware_bundle.set_parent(bundles.get("Naaya"))
+NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
 ACTION_LOG_TYPES={
     'role_request': 'IG role request',
@@ -283,6 +285,7 @@ class GroupwareSite(NySite):
                         'lastname': getattr(user_info, 'last_name', ''),
                         'location_title': log_entry.location_title,
                         'location_url': log_entry.location_url,
+                        'network_name': NETWORK_NAME,
                     })
                     mail_tool.sendEmail(mail_data['body_text'], mail_to,
                                         mail_from, mail_data['subject'])
@@ -372,6 +375,7 @@ class GroupwareSite(NySite):
             'location_url': location_url,
             'review_link': review_link,
             'explanatory_text': explanatory_text,
+            'network_name': NETWORK_NAME,
         })
         mail_tool.sendEmail(mail_data['body_text'], mail_to,
                             mail_from, mail_data['subject'])
