@@ -4,17 +4,15 @@ from profileoverview.profile import ProfileClient
 from constants import GROUPWARE_META_ID
 
 from naaya.core.backport import json
-
-from App.config import getConfiguration
+from naaya.core.zope2util import get_zope_env
 
 local_users_zpt = PageTemplateFile('zpt/local_users.zpt', globals())
 index_html_zpt = PageTemplateFile('zpt/index.zpt', globals())
 eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
                                                globals())
 
-CONFIG = getConfiguration()
-eionet_url = getattr(CONFIG, 'environment', {}).get('EIONET_LDAP_EXPLORER', '')
-NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
+eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
+NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
 class LocalUsersPage(BrowserPage):
     def __call__(self):
