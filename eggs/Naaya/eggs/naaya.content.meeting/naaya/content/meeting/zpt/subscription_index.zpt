@@ -49,21 +49,11 @@
                         <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSignups', 'keys:list')"/>
                     </th>
-                    <th>
-                        <span i18n:translate="">Name</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Email</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Organization</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Phone number</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Status</span>
-                    </th>
+                    <th i18n:translate="">Name</th>
+                    <th i18n:translate="">Email</th>
+                    <th i18n:translate="">Organization</th>
+                    <th i18n:translate="">Phone number</th>
+                    <th i18n:translate="">Status</th>
                 </tr>
                 <tr tal:repeat="signup here/getSignups">
                     <td>
