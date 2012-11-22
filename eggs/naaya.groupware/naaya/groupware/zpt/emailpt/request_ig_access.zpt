@@ -28,7 +28,7 @@ Alternatively you can choose to grant the request by following these steps:
  - Click on the `Assign role` button
 
 Best regards,
-<tal:block replace="python: site.title_or_id()" /> postmaster.
+<tal:block replace="options/network_name" />
 </tal:block>
 </body_text>
 <body_html>
@@ -61,6 +61,6 @@ Alternatively you can choose to grant the request by following these steps:<br i
 <br i18n:name="br"/>
 <br i18n:name="br"/>
 Best regards,<br i18n:name="br"/>
-<tal:block replace="python:site.title_or_id()" i18n:name="portal_title_2" /> postmaster.
+<tal:block replace="options/network_name" i18n:name="network_name" />
 </tal:block>
 </body_html>
