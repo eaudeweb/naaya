@@ -4,8 +4,8 @@
     <title>Pick Group</title>
 </head>
 <body>
-    <h1>Pick Group</h1>
-    <p class="info_text">Click on an item to insert it in the corresponding field.</p>
+    <h1 i18n:translate="">Pick Group</h1>
+    <p class="info_text" i18n:translate="">Click on an item to insert it in the corresponding field.</p>
 
     <form name="frm">
     <p style="text-align: center">
