@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* fixed session buffering: one can review a request only once
 * added meaningful error message on reviewing request access [mihaitab]
 * revised email texts #4600 [simiamih]
 * tests bugfix: test_profileclient.InterestGroupsTestCase [nituacor]
