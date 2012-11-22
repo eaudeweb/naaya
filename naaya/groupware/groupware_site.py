@@ -365,7 +365,7 @@ class GroupwareSite(NySite):
             'user': user,
             'firstname': getattr(user, 'firstname', '').decode('latin-1'),
             'lastname': getattr(user, 'lastname', '').decode('latin-1'),
-            'email': getattr(user, 'email', ''),
+            'email': getattr(user, 'mail', ''),
             'location_title': location_title,
             'user_admin_link': user_admin_link,
             'member_search_link': member_search_link,
