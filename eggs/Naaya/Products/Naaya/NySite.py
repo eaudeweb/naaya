@@ -47,7 +47,7 @@ from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertie
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
 from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
 from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
-from Products.NaayaCore.EmailTool.EmailTool import manage_addEmailTool
+from Products.NaayaCore.EmailTool.EmailTool import manage_addEmailTool, save_bulk_email
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3285,6 +3285,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_htmlportlets')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_saved_bulk_emails')
+    def admin_saved_bulk_emails(self, REQUEST=None, RESPONSE=None):
+        """ Display all saved bulk emails """
+        return self.getFormsTool().getContent({'here': self},
+            'site_admin_saved_bulk_emails')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):
         """ redirect to new notifications admin page """
@@ -3683,7 +3690,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         Sends bulk mail with the specified subject and body to
         all email addresses in 'mails'
         """
-        addr_from = self.getEmailTool().get_addr_from()
+        email_tool = self.getEmailTool()
+        addr_from = email_tool.get_addr_from()
+
         if mail_mappings:
             mail_mappings = json.loads(mail_mappings)
         else:
@@ -3692,11 +3701,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             mail_custom_body = mail_body
             for (k, v) in mail_mappings.get(mail.lower(), {}).items():
                 mail_custom_body = mail_custom_body.replace(k, v)
-            self.getEmailTool().sendEmail(mail_custom_body, mail, addr_from, mail_subject)
+            email_tool.sendEmail(mail_custom_body, mail, addr_from, mail_subject)
+
+        save_bulk_email(self.getSite().id, mails, addr_from,
+                        mail_subject, mail_body)
 
         if REQUEST:
-            self.setSessionInfoTrans('Mail sent. (${date})', date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html' % self.absolute_url())
+            self.setSessionInfoTrans('Mail sent. (${date})',
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html'
+                                      % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
     def export_contacts_vcard(self, location='', REQUEST=None):

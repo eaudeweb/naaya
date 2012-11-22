@@ -10,7 +10,19 @@ import smtplib
 import cStringIO
 from urlparse import urlparse
 import logging
-import email.Utils, email.Charset, email.Header
+import random
+from datetime import datetime
+try:
+    import email.utils as email_utils
+    import email.charset as email_charset
+    import email.header as email_header
+    import email.generator as email_generator
+except ImportError, e:
+    import email.Utils as email_utils
+    import email.Charset as email_charset
+    import email.Header as email_header
+    import email.Generator as email_generator
+from email import message_from_file
 from email.MIMEText import MIMEText
 
 from zope.component import queryUtility, getGlobalSiteManager
@@ -28,6 +40,7 @@ import EmailTemplate
 from EmailSender import build_email
 from naaya.core.permissions import naaya_admin
 from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import get_zope_env
 
 
 mail_logger = logging.getLogger('naaya.core.email')
@@ -191,6 +204,47 @@ class EmailTool(Folder):
         kwargs['_immediately'] = True
         self.sendEmail(*args, **kwargs)
 
+    def get_saved_bulk_emails(self):
+        """ Show all bulk emails saved on the disk """
+        save_path = get_zope_env('SAVE_MAIL_PATH')
+        join = os.path.join
+        emails = []
+
+        if save_path:
+            site_id = self.getSite().id
+            save_path = join(save_path, site_id)
+            if os.path.isdir(save_path):
+                # Get all messages files
+                messages = [join(save_path, filename)
+                            for filename in os.listdir(save_path)
+                            if not filename.startswith('.')]
+
+                # Sort them descending by the last modification time
+                sorted_messages = [(message, os.path.getmtime(message))
+                                   for message in messages]
+                sorted_messages.sort(key=lambda x: x[1], reverse=True)
+                messages = [message[0] for message in sorted_messages]
+
+                for message in messages:
+                    message_file = open(message, 'r+')
+                    mail = message_from_file(message_file)
+                    message_file.close()
+
+                    # Prepare the date to be formatted with utShowFullDateTime
+                    date = email_utils.parsedate_tz(mail.get('Date', ''))
+                    date = email_utils.mktime_tz(date)
+                    date = datetime.fromtimestamp(date)
+
+                    emails.append({
+                        'subject': mail.get('Subject', '(no-subject)'),
+                        'content': mail.get_payload(),
+                        'recipients': mail.get_all('To'),
+                        'sender': mail.get('From'),
+                        'date': date
+                    })
+
+        return emails
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
     def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
@@ -225,7 +279,7 @@ def divert_mail(enabled=True):
 def safe_header(value):
     """ prevent header injection attacks (the email library doesn't) """
     if '\n' in value:
-        return email.Header.Header(value.encode('utf-8'), 'utf-8')
+        return email_header.Header(value.encode('utf-8'), 'utf-8')
     else:
         return value
 
@@ -235,9 +289,9 @@ def hack_to_use_quopri(message):
     http://mail.python.org/pipermail/baypiggies/2008-September/003984.html
     """
 
-    charset = email.Charset.Charset('utf-8')
-    charset.header_encoding = email.Charset.QP
-    charset.body_encoding = email.Charset.QP
+    charset = email_charset.Charset('utf-8')
+    charset.header_encoding = email_charset.QP
+    charset.body_encoding = email_charset.QP
 
     del message['Content-Transfer-Encoding']
     message.set_charset(charset)
@@ -270,9 +324,55 @@ def create_message(text, addr_to, addr_from, subject):
     message['To'] = safe_header(addr_to)
     message['From'] = safe_header(addr_from)
     message['Subject'] = safe_header(subject)
-    message['Date'] = email.Utils.formatdate()
+    message['Date'] = email_utils.formatdate()
 
     return message
+
+def save_bulk_email(site_id, addr_to, addr_from, subject, content):
+    """ Save bulk email on disk
+
+        addr_to is always a list element, but if there is more than one
+        recipient add a 'To' header with each email address
+    """
+    save_path = get_zope_env('SAVE_MAIL_PATH', '')
+    join = os.path.join
+    filename = ''
+
+    if save_path:
+        save_path = join(save_path, site_id)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        # Generate email filename according to zope.sendmail.maildir
+        # but instead of hostname use site_id
+        randmax = 0x7fffffff
+        timestamp = int(time.time())
+        unique = '%d.%d.%s.%d' % (timestamp, os.getpid(), site_id,
+                                  random.randrange(randmax))
+        filename = join(save_path, unique)
+        message_file = os.open(filename,
+                               os.O_CREAT|os.O_EXCL|os.O_WRONLY,
+                               0600)
+        generator = email_generator.Generator(os.fdopen(message_file, 'w'))
+
+        # Add multiple 'To' headers if there is more one receipent
+        if len(addr_to) > 1:
+            email_message = create_message(content, addr_to[0], addr_from,
+                                           subject)
+            addr_to.remove(addr_to[0])
+            for mail in addr_to:
+                email_message['To'] = mail
+        else:
+            email_message = create_message(content, addr_to, addr_from,
+                                           subject)
+
+        # Save email in specified file
+        generator.flatten(email_message)
+    else:
+        mail_logger.warning("The bulk email could not be saved on the disk. "
+                            "Unknown value for SAVE_MAIL_PATH.")
+    return filename
+
 
 class BestEffortSMTPMailer(SMTPMailer):
     """
