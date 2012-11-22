@@ -15,11 +15,11 @@
         </span>
     </div>
 
-    <tal:block condition="python:result == 1">
+    <tal:block condition="python:result == 1" i18n:translate="">
         Your email was sent successfully.
     </tal:block>
 
-    <tal:block condition="python:result == 0">
+    <tal:block condition="python:result == 0" i18n:translate="">
         There was an error sending the email.
     </tal:block>
     </metal:block>
