@@ -293,6 +293,10 @@ class GroupwareSite(NySite):
                 new_log_entry.reason = reason
                 action_logger.append(new_log_entry)
 
+            # after reviewing the request access, session is cleared to prevent
+            # one administrator (or delegate) to access the link several times
+            del session_data[key]
+
             return self.review_ig_request_html(log_entry=log_entry,
                                                result=result)
 
