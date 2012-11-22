@@ -24,7 +24,7 @@
     <tal:block tal:define="meeting here/getMeeting">
     <h1>
         <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
-        <tal:block tal:replace="meeting/title" /> - <tal:block tal:replace="here/title" />
+        <tal:block tal:replace="meeting/title" /> - <tal:block replace="here/title" i18n:translate="" />
     </h1>
 
     <div class="floated-buttons">
@@ -97,21 +97,11 @@
                         <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageAccountSubscriptions', 'uids:list')"/>
                     </th>
-                    <th>
-                        <span i18n:translate="">Name</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Email</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Organization</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Phone number</span>
-                    </th>
-                    <th>
-                        <span i18n:translate="">Status</span>
-                    </th>
+                    <th i18n:translate="">Name</th>
+                    <th i18n:translate="">Email</th>
+                    <th i18n:translate="">Organization</th>
+                    <th i18n:translate="">Phone number</th>
+                    <th i18n:translate="">Status</th>
                     <th tal:repeat="question here/get_survey_questions"
                         tal:content="python:question[1]" />
                 </tr>

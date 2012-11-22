@@ -7,7 +7,7 @@
     <tal:block tal:define="meeting here/getMeeting">
     <h1>
         <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
-        <tal:block tal:replace="meeting/title" /> - Register
+        <tal:block tal:replace="meeting/title" /> - <tal:block i18n:translate="">Register</tal:block>
     </h1>
 
     <div class="floated-buttons">
