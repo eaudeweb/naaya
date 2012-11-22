@@ -202,6 +202,7 @@ class GroupwareSite(NySite):
         # get all user info from LDAP
         agent = agent_from_site(self)
         user_info = agent.user_info(log_entry.user)
+
         return self.review_ig_request_html(log_entry=log_entry, user=user_info,
                                            ldap_roles=leaf_roles_list,
                                user_admin_link=self._user_admin_link(log_entry))
@@ -236,11 +237,9 @@ class GroupwareSite(NySite):
                     count += 1
                     log_entry = log
                     log_entry_id = log_id
-                if count == 2: #Raise an error because this key is old
-                    self.setSessionErrorsTrans(
-                            "Key ${key} has already been used", key=key)
-                    return REQUEST.RESPONSE.redirect(
-                            self.getSite().absolute_url())
+                if count == 2: #Raise info message because this key is old
+                    return self.review_ig_request_html(log_entry=log_entry,
+                                        multiple_access=True)
             if log_entry == None:
                 self.setSessionErrorsTrans("Key ${key} not found", key=key)
                 return REQUEST.RESPONSE.redirect(self.getSite().absolute_url())
