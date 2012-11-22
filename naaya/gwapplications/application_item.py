@@ -4,15 +4,14 @@ from zope.interface import Interface, implements
 from zope.event import notify
 from OFS.SimpleItem import SimpleItem
 from Products.Five.browser import BrowserView
-from App.config import getConfiguration
 
 from Products.NaayaCore.managers.utils import genObjectId
 from naaya.groupware.groupware_site import manage_addGroupwareSite
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from naaya.core.zope2util import get_zope_env
 
 
-CONFIG = getConfiguration()
-NETWORK_NAME = getattr(CONFIG, 'environment', {}).get('NETWORK_NAME', 'EIONET')
+NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt', globals())
 rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt', globals())
 
