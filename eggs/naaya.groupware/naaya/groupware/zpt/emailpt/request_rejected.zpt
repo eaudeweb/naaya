@@ -12,8 +12,7 @@ The reason why it was rejected:
 </tal:block>
 
 Best regards,
-<tal:block replace="python: site.title_or_id()" />
-postmaster.
+<tal:block replace="options/network_name" />
 </tal:block>
 </body_text>
 
@@ -29,7 +28,6 @@ The reason why it was rejected:<br>
 </tal:block>
 
 Best regards,<br>
-<tal:block replace="python: site.title_or_id()" />
-postmaster.
+<tal:block replace="options/network_name" />
 </tal:block>
 </body_html>
