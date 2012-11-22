@@ -22,7 +22,7 @@ You can review the request and grant or reject the Role using the following URL:
 There you can also see the complete user profile, including memberships in Eionet Directory.
 You can delegate somebody else to review the request and grant or reject it. Simply forward the above link.
 
-Alternatively you can choose to grant the request by following these steps:
+Alternatively you can choose to grant rights by following these steps:
  - Open the User management page at <tal:block replace="options/user_admin_link" />
  - Keep or adjust Role and location to be granted
  - Click on the `Assign role` button
