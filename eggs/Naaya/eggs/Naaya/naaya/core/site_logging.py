@@ -21,13 +21,36 @@ USER_MAN = 'USER_MANAGEMENT'
 ALLOWED_SLUGS = {ACCESS: ("VIEW", "DOWNLOAD", ),
                  USER_MAN: ("ASSIGNED", "UNASSIGNED", ),
                 }
+LOG_FILENAME = 'site.log'
+
+def get_site_slug(site):
+    """ An identifier valid on filesystem """
+    return ofs_path(site).strip('/').replace('/', ',')
+
+def get_log_dir(site):
+    """
+    Each site has its own folder in SITES_LOG_PATH_VAR
+    Factory for returning that folder path.
+
+    """
+    abs_path = get_zope_env(SITES_LOG_PATH_VAR)
+    if abs_path:
+        abs_path = os.path.join(abs_path, get_site_slug(site))
+        if not os.path.exists(abs_path):
+            try:
+                os.makedirs(abs_path)
+            except Exception, e:
+                return None
+        return abs_path
+    else:
+        return None
 
 def get_site_logger(site):
     """
     Returns a logger based on site ID which will save actions on content types
 
     """
-    site_logger_slug = ofs_path(site).strip('/').replace('/', ',')
+    site_logger_slug = get_site_slug(site)
     logger = logging.getLogger('%s%s' % (site_logger_slug, SUFFIX))
     return logger
 
@@ -49,12 +72,10 @@ def create_site_logger(site):
             except Exception, e:
                 log.exception("Could not remove existing site logger handler")
     custom_format = '%(asctime) %(message)'
-    abs_path = get_zope_env(SITES_LOG_PATH_VAR)
+    abs_path = get_log_dir(site)
     if abs_path:
         try:
-            if not os.path.exists(abs_path):
-                os.makedirs(abs_path)
-            log_filename = os.path.join(abs_path, '%s.log' % logger.name)
+            log_filename = os.path.join(abs_path, LOG_FILENAME)
             if not os.access(log_filename, os.F_OK):
                 f = open(log_filename, 'a').close()
             if not os.access(log_filename, os.W_OK):
@@ -99,13 +120,12 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None):
     content
 
     """
-    logger = get_site_logger(site)
     lines = []
     plain_text_lines = []
     show_plain_text = False
     writeable = False
-    abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-    log_filename = os.path.join(abs_path, '%s.log' % logger.name)
+    abs_path = get_log_dir(site)
+    log_filename = os.path.join(abs_path, LOG_FILENAME)
     if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
         writeable = True
         log_file = open(log_filename)
@@ -139,16 +159,14 @@ def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
     """
     from Products.NaayaCore.managers.import_export import set_response_attachment
     from StringIO import StringIO
-    logger = get_site_logger(site)
-    abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-    log_filename = '%s.log' % logger.name
-    log_filepath = os.path.join(abs_path, log_filename)
+    abs_path = get_log_dir(site)
+    log_filepath = os.path.join(abs_path, LOG_FILENAME)
     log_file = open(log_filepath, 'r+')
     data = log_file.read()
     log_file.close()
     output = StringIO()
     output.write(data)
-    set_response_attachment(REQUEST.RESPONSE, log_filename,
+    set_response_attachment(REQUEST.RESPONSE, '%s.log' % get_site_slug(site),
                             'text/html; charset=utf-8', output.len)
     return output.getvalue()
 
@@ -160,10 +178,8 @@ def clear_log_file(site, REQUEST=None, RESPONSE=None):
     """
     from naaya.core.utils import is_ajax
     if is_ajax(REQUEST):
-        logger = get_site_logger(site)
-        abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-        log_filename = '%s.log' % logger.name
-        log_file = open(log_filename, 'r+')
+        abs_path = get_log_dir(site)
+        log_file = open(LOG_FILENAME, 'r+')
         log_file.truncate()
         log_file.close()
         return "SUCCESS"
