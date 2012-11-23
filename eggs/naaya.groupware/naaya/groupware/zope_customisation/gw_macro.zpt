@@ -128,7 +128,9 @@
 <div class="localnav">
  <h2>Account services</h2>
 <ul>
- <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
+ <div tal:define="user python:request.AUTHENTICATED_USER" tal:condition="python:user.getUserName() == 'Anonymous User'" tal:omit-tag="">
+   <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
+ </div>
  <li>Edit my <a href="/profile">user profile</a></li>
  <li>View my <a href="/profile_overview">memberships</a></li>
 </ul>
