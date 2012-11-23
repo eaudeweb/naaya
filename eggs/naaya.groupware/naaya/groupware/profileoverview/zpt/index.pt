@@ -12,12 +12,12 @@
           type="text/javascript" language="javascript"></script>
 
     <h1>Overview on memberships in interest groups,
- Roles and Subscriptions for user <tt tal:content="options/user_id" /></h1>
+ Groups and Subscriptions for user <tt tal:content="options/user_id" /></h1>
 
-    <h2>Interest group membership in <span tal:replace="meta_info/root_site_title" /></h2>
+    <h2>Interest group memberships in <span tal:replace="meta_info/root_site_title" /></h2>
     <input type="hidden" id="user" tal:attributes="value options/user_id" />
     <p>
-        Local roles are explicitly assigned by Administrators, while other
+        Local access roles are explicitly assigned by Administrators, while other
         access rights are inherited from a group.
     </p>
     <div id="ig_access">
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <h2>Member of Roles</h2>
+    <h2>Member of Groups (Eionet Directory Roles)</h2>
     <tal:block condition="options/roles">
 
     <table class="account-datatable sub-roles">
@@ -41,7 +41,7 @@
                 </td>
             </tr>
         </thead>
-    
+
         <tbody>
             <tal:block repeat="role options/roles">
                 <tr 
@@ -62,7 +62,7 @@
     </table>
     </tal:block>
     <tal:block condition="not: options/roles">
-        <tt tal:content="options/user_id" /> does not belong to any LDAP Roles.
+        <tt tal:content="options/user_id" /> does not belong to any Eionet Directory Roles.
     </tal:block>
 
     <h2>Subscriptions to interest group notifications in <span tal:replace="meta_info/root_site_title" /></h2>
