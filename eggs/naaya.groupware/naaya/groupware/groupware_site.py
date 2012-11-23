@@ -10,7 +10,9 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from zExceptions import BadRequest
 from zope.interface import implements
+from zope.event import notify
 
+from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
@@ -267,6 +269,14 @@ class GroupwareSite(NySite):
 
                 new_log_entry.action = 'Granted'
                 action_logger.append(new_log_entry)
+
+                # Add to site logger this grant of access
+                context = self.unrestrictedTraverse(log_entry.location, None)
+                notify(RoleAssignmentEvent(context,
+                                           REQUEST.AUTHENTICATED_USER.getUserName(),
+                                           log_entry.user,
+                                           [log_entry.role],
+                                           []))
 
             elif 'reject' in kw:
                 result['granted'] = False
