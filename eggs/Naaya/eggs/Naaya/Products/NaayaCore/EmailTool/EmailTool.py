@@ -287,7 +287,6 @@ def create_message(text, addr_to, addr_from, subject):
 
     return message
 
-# TODO: update calls for the next to, put a try-except on save_bu..
 def save_bulk_email(site, addr_to, addr_from, subject, content):
     """
     Save bulk email on disk.
@@ -334,7 +333,7 @@ def save_bulk_email(site, addr_to, addr_from, subject, content):
                             " Missing configuration for SITES_LOG_PATH?")
     return filename
 
-def get_saved_bulk_emails(site):
+def get_bulk_emails(site):
     """ Show all bulk emails saved on the disk """
     save_path = get_log_dir(site)
     join = os.path.join

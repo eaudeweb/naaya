@@ -49,7 +49,7 @@ from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manag
 from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
 from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
-                                                    get_saved_bulk_emails)
+                                                    get_bulk_emails)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3291,7 +3291,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_saved_bulk_emails')
     def admin_saved_bulk_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved bulk emails """
-        emails = get_saved_bulk_emails(self)
+        emails = get_bulk_emails(self)
         return self.getFormsTool().getContent({'here': self, 'emails': emails},
             'site_admin_saved_bulk_emails')
 
@@ -3706,7 +3706,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 mail_custom_body = mail_custom_body.replace(k, v)
             email_tool.sendEmail(mail_custom_body, mail, addr_from, mail_subject)
 
-        save_bulk_email(self, mails, addr_from, mail_subject, mail_body)
+        try:
+            save_bulk_email(self, mails, addr_from, mail_subject, mail_body)
+        except Exception, e:
+            log.exception("Failed saving bulk email on disk")
 
         if REQUEST:
             self.setSessionInfoTrans('Mail sent. (${date})',
