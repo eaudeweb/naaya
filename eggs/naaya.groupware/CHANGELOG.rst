@@ -1,6 +1,9 @@
-1.2.19 (unreleased)
+1.2.20 (unreleased)
 -------------------
 * logged granted access requests [mihaitab]
+
+1.2.19 (2012-11-23)
+-------------------
 * fixed session buffering: one can review a request only once [mihaitab]
 * added meaningful error message on reviewing request access [mihaitab]
 * revised email texts #4600 [simiamih]
