@@ -40,7 +40,7 @@ import EmailTemplate
 from EmailSender import build_email
 from naaya.core.permissions import naaya_admin
 from naaya.core.utils import force_to_unicode
-from naaya.core.zope2util import get_zope_env
+from naaya.core.site_logging import get_log_dir
 
 
 mail_logger = logging.getLogger('naaya.core.email')
@@ -204,47 +204,6 @@ class EmailTool(Folder):
         kwargs['_immediately'] = True
         self.sendEmail(*args, **kwargs)
 
-    def get_saved_bulk_emails(self):
-        """ Show all bulk emails saved on the disk """
-        save_path = get_zope_env('SAVE_MAIL_PATH')
-        join = os.path.join
-        emails = []
-
-        if save_path:
-            site_id = self.getSite().id
-            save_path = join(save_path, site_id)
-            if os.path.isdir(save_path):
-                # Get all messages files
-                messages = [join(save_path, filename)
-                            for filename in os.listdir(save_path)
-                            if not filename.startswith('.')]
-
-                # Sort them descending by the last modification time
-                sorted_messages = [(message, os.path.getmtime(message))
-                                   for message in messages]
-                sorted_messages.sort(key=lambda x: x[1], reverse=True)
-                messages = [message[0] for message in sorted_messages]
-
-                for message in messages:
-                    message_file = open(message, 'r+')
-                    mail = message_from_file(message_file)
-                    message_file.close()
-
-                    # Prepare the date to be formatted with utShowFullDateTime
-                    date = email_utils.parsedate_tz(mail.get('Date', ''))
-                    date = email_utils.mktime_tz(date)
-                    date = datetime.fromtimestamp(date)
-
-                    emails.append({
-                        'subject': mail.get('Subject', '(no-subject)'),
-                        'content': mail.get_payload(),
-                        'recipients': mail.get_all('To'),
-                        'sender': mail.get('From'),
-                        'date': date
-                    })
-
-        return emails
-
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
     def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
@@ -328,18 +287,20 @@ def create_message(text, addr_to, addr_from, subject):
 
     return message
 
-def save_bulk_email(site_id, addr_to, addr_from, subject, content):
-    """ Save bulk email on disk
-
-        addr_to is always a list element, but if there is more than one
-        recipient add a 'To' header with each email address
+# TODO: update calls for the next to, put a try-except on save_bu..
+def save_bulk_email(site, addr_to, addr_from, subject, content):
     """
-    save_path = get_zope_env('SAVE_MAIL_PATH', '')
+    Save bulk email on disk.
+    `addr_to` is a list; if there is more than one recipient,
+    adds a 'To' header with each email address.
+
+    """
+    save_path = get_log_dir(site)
     join = os.path.join
-    filename = ''
+    filename = None
 
     if save_path:
-        save_path = join(save_path, site_id)
+        save_path = join(save_path, 'sent-bulk')
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
@@ -347,7 +308,7 @@ def save_bulk_email(site_id, addr_to, addr_from, subject, content):
         # but instead of hostname use site_id
         randmax = 0x7fffffff
         timestamp = int(time.time())
-        unique = '%d.%d.%s.%d' % (timestamp, os.getpid(), site_id,
+        unique = '%d.%d.%s.%d' % (timestamp, os.getpid(), site.getId(),
                                   random.randrange(randmax))
         filename = join(save_path, unique)
         message_file = os.open(filename,
@@ -369,10 +330,49 @@ def save_bulk_email(site_id, addr_to, addr_from, subject, content):
         # Save email in specified file
         generator.flatten(email_message)
     else:
-        mail_logger.warning("The bulk email could not be saved on the disk. "
-                            "Unknown value for SAVE_MAIL_PATH.")
+        mail_logger.warning("The bulk email could not be saved on the disk."
+                            " Missing configuration for SITES_LOG_PATH?")
     return filename
 
+def get_saved_bulk_emails(site):
+    """ Show all bulk emails saved on the disk """
+    save_path = get_log_dir(site)
+    join = os.path.join
+    emails = []
+
+    if save_path:
+        save_path = join(save_path, 'sent-bulk')
+        if os.path.isdir(save_path):
+            # Get all messages files
+            messages = [join(save_path, filename)
+                        for filename in os.listdir(save_path)
+                        if not filename.startswith('.')]
+
+            # Sort them descending by the last modification time
+            sorted_messages = [(message, os.path.getmtime(message))
+                               for message in messages]
+            sorted_messages.sort(key=lambda x: x[1], reverse=True)
+            messages = [message[0] for message in sorted_messages]
+
+            for message in messages:
+                message_file = open(message, 'r+')
+                mail = message_from_file(message_file)
+                message_file.close()
+
+                # Prepare the date to be formatted with utShowFullDateTime
+                date = email_utils.parsedate_tz(mail.get('Date', ''))
+                date = email_utils.mktime_tz(date)
+                date = datetime.fromtimestamp(date)
+
+                emails.append({
+                    'subject': mail.get('Subject', '(no-subject)'),
+                    'content': mail.get_payload(),
+                    'recipients': mail.get_all('To'),
+                    'sender': mail.get('From'),
+                    'date': date
+                })
+
+    return emails
 
 class BestEffortSMTPMailer(SMTPMailer):
     """

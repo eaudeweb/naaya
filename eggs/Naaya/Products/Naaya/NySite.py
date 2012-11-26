@@ -47,7 +47,9 @@ from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertie
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
 from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
 from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
-from Products.NaayaCore.EmailTool.EmailTool import manage_addEmailTool, save_bulk_email
+from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
+                                                    save_bulk_email,
+                                                    get_saved_bulk_emails)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3289,7 +3291,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_saved_bulk_emails')
     def admin_saved_bulk_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved bulk emails """
-        return self.getFormsTool().getContent({'here': self},
+        emails = get_saved_bulk_emails(self)
+        return self.getFormsTool().getContent({'here': self, 'emails': emails},
             'site_admin_saved_bulk_emails')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
@@ -3703,8 +3706,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 mail_custom_body = mail_custom_body.replace(k, v)
             email_tool.sendEmail(mail_custom_body, mail, addr_from, mail_subject)
 
-        save_bulk_email(self.getSite().id, mails, addr_from,
-                        mail_subject, mail_body)
+        save_bulk_email(self, mails, addr_from, mail_subject, mail_body)
 
         if REQUEST:
             self.setSessionInfoTrans('Mail sent. (${date})',
