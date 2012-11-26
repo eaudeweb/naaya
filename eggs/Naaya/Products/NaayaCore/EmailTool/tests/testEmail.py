@@ -9,7 +9,8 @@ import unittest
 from mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
-from Products.NaayaCore.EmailTool.EmailTool import EmailTool, create_message, save_bulk_email
+from Products.NaayaCore.EmailTool.EmailTool import (EmailTool, create_message,
+                                             save_bulk_email, get_bulk_emails)
 
 class EmailTestCase(FunctionalTestCase):
     def test_mail(self):
@@ -66,10 +67,10 @@ class EmailSaveTestCase(unittest.TestCase):
         self.config_patch.stop()
         shutil.rmtree(self.TMP_FOLDER)
 
-    @patch('Products.NaayaCore.EmailTool.EmailTool.get_zope_env')
+    @patch('naaya.core.site_logging.get_zope_env')
     def test_save_mail(self, get_zope_env):
         get_zope_env.return_value = self.TMP_FOLDER
-        filename = save_bulk_email(self.portal.id, ['to1@edw.ro', 'to2@edw.ro'],
+        filename = save_bulk_email(self.portal, ['to1@edw.ro', 'to2@edw.ro'],
                                    'from@edw.ro', 'Hello!', 'Hello World!')
         self.assertTrue(os.path.isfile(filename))
         message_file = open(filename, 'r+')
@@ -81,7 +82,7 @@ class EmailSaveTestCase(unittest.TestCase):
         self.assertEqual(mail.get_all('To'), ['to1@edw.ro', 'to2@edw.ro'])
         self.assertEqual(mail.get('From'), 'from@edw.ro')
 
-        emails = self.portal.getEmailTool().get_saved_bulk_emails()
+        emails = get_bulk_emails(self.portal)
 
         self.assertEqual(len(emails), 1)
         self.failUnless('content' in emails[0])
