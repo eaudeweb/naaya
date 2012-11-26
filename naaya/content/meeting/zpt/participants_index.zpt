@@ -176,7 +176,7 @@
         </div>
         <p tal:condition="meeting/checkPermissionChangePermissions"
              i18n:translate="">Use this form to view and remove participants. You can also nominate participants to be administrators or not.</p>
-        <p>Currently <em tal:content="here/participantsCount"/> participants out of <em tal:content="here/max_participants"/> maximum participants.</p>
+        <p i18n:translate="">Currently <em i18n:name="participantsCount" tal:content="here/participantsCount"/> participants out of <em i18n:name="maxParticipants" tal:content="here/max_participants"/> maximum participants.</p>
         <tal:block define="sort_on python:request.get('sort_on', '');
                     users python:here.getAttendees(sort_on);">
 
