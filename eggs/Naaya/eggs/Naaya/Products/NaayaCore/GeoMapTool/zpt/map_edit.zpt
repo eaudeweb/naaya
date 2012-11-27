@@ -17,6 +17,14 @@
     </div>
 
     <div class="field-inline">
+        <label for="form-initial_zoom"
+               i18n:translate="">Zoom (1-17, blank means automatic)</label>
+        <input type="text" size="3" name="initial_zoom:utf8:ustring"
+               id="form-initial_zoom"
+               tal:attributes="value here/initial_zoom|string:" />
+    </div>
+
+    <div class="field-inline">
         <span i18n:translate="">Portal map</span>
         <label for="form-map_height_px"
                i18n:translate="">height (px)</label>
