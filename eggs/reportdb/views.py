@@ -116,7 +116,7 @@ def report_edit(report_id=None):
         form_data.update(flask.request.form.to_dict())
         _expand_lists(form_data, ['header_region', 'header_country',
             'header_subregion', 'details_translated_in',
-            'details_original_language'])
+            'details_original_language', 'links_target_audience'])
 
         report_schema = schema.ReportSchema.from_flat(form_data)
         seris_review_schema = schema.SerisReviewSchema.from_flat(form_data)

@@ -14,6 +14,7 @@
   "el": "Greek",
   "hu": "Hungarian",
   "ga": "Irish",
+  "is": "Islandic",
   "it": "Italian",
   "lv": "Latvian",
   "lt": "Lithuanian",
@@ -27,5 +28,6 @@
   "sk": "Slovak",
   "sl": "Slovene",
   "es": "Spanish",
-  "sv": "Swedish"
+  "sv": "Swedish",
+  "tr": "Turkish"
 }

@@ -196,7 +196,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                                    hide_if_empty='True'),
 
         fl.Integer.named('no_of_pages') \
-                  .using(label=u"No. of pages (main SOE report)",
+                  .using(label=u"No. of pages",
                          optional=True) \
                   .including_validators(IsInteger()) \
                   .with_properties(css_class="input-small static-source",
@@ -208,12 +208,6 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                   .including_validators(IsInteger()) \
                   .with_properties(css_class="input-small dynamic-source",
                                    hide_if_empty='True'),
-
-        CommonEnum.named("separate_summary") \
-                  #TODO implement values in json list
-                  .valued(*(['Yes', 'No', 'Unknown'])) \
-                  .using(label=u"Summar report available") \
-                  .with_properties(css_class="select-small"),
 
         fl.Dict.named('availability') \
                .with_properties(widget="availability_section") \
