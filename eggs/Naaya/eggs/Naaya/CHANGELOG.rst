@@ -1,4 +1,7 @@
-3.2.4 (unreleased)
+3.2.5 (unreleased)
+-------------------
+
+3.2.4 (2012-11-27)
 -------------------
 * new icon for NyFolder [simiamih]
 * support for utf-8 LDAP encoding [simiamih]
