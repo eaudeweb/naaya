@@ -1,5 +1,6 @@
 3.0.15 (unreleased)
 ------------------
+* new icon for NyFolder [simiamih]
 * show images in homepage slider in alphabetical order [dumitval]
 
 3.0.14 (2012-07-31)
