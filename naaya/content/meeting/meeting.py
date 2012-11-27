@@ -549,10 +549,11 @@ class NyMeeting(NyContentData, NyFolder):
     def get_survey_answer(self, uid, qid):
         survey = self.get_survey()
         if survey is not None and survey.meta_type == 'Naaya Mega Survey':
-            question = getattr(survey, qid)
-            for answer in survey.objectValues('Naaya Survey Answer'):
-                if answer.respondent == uid:
-                    return question.get_value(getattr(answer, qid))
+            question = getattr(survey, qid, None)
+            if question:
+                for answer in survey.objectValues('Naaya Survey Answer'):
+                    if answer.respondent in [uid, 'signup:'+uid]:
+                        return question.get_value(getattr(answer, qid))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

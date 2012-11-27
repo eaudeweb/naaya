@@ -194,6 +194,14 @@ class Participants(SimpleItem):
             email = getUserEmail(site, uid)
             organization = getUserOrganization(site, uid)
             phone = getUserPhoneNumber(site, uid)
+        if not organization:
+            organization = self.get_survey_answer(uid, 'w_organization')
+        if not organization:
+            organization = self.get_survey_answer(uid, 'w_organisation')
+        if not phone:
+            phone = self.get_survey_answer(uid, 'w_telephone')
+        if not phone:
+            phone = self.get_survey_answer(uid, 'w_phone')
         attendees = self._get_attendees()
         role = attendees[uid]
         ret = {'uid': uid, 'name': name, 'email': email,

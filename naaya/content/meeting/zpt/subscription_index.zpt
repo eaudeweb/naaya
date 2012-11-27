@@ -54,6 +54,10 @@
                     <th i18n:translate="">Organization</th>
                     <th i18n:translate="">Phone number</th>
                     <th i18n:translate="">Status</th>
+                    <tal:block repeat="question here/get_survey_questions">
+                        <th tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
+                        tal:content="python:question[1]" />
+                    </tal:block>
                 </tr>
                 <tr tal:repeat="signup here/getSignups">
                     <td>
@@ -69,6 +73,12 @@
                     <td tal:content="signup/organization"/>
                     <td tal:content="signup/phone"/>
                     <td tal:content="signup/accepted"/>
+                    <tal:block define="uid signup/key"
+                        repeat="question here/get_survey_questions">
+                        <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
+                            tal:content="python:here.get_survey_answer(
+                                uid, question[0])"/>
+                    </tal:block>
                 </tr>
             </table>
             <input type="submit" i18n:attributes="value" name="accept" value="Accept as participant(s)"/>
@@ -92,8 +102,10 @@
                     <th i18n:translate="">Organization</th>
                     <th i18n:translate="">Phone number</th>
                     <th i18n:translate="">Status</th>
-                    <th tal:repeat="question here/get_survey_questions"
+                    <tal:block repeat="question here/get_survey_questions">
+                        <th tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
                         tal:content="python:question[1]" />
+                    </tal:block>
                 </tr>
                 <tr tal:repeat="account_subscription here/getAccountSubscriptions">
                     <td>
@@ -109,10 +121,12 @@
                     <td tal:content="account_subscription/organization"/>
                     <td tal:content="account_subscription/phone"/>
                     <td tal:content="account_subscription/accepted"/>
-                    <td tal:define="uid account_subscription/uid"
-                        tal:repeat="question here/get_survey_questions"
-                        tal:content="python:here.get_survey_answer(
-                            uid, question[0])"/>
+                    <tal:block define="uid account_subscription/uid"
+                        repeat="question here/get_survey_questions">
+                        <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
+                            tal:content="python:here.get_survey_answer(
+                                uid, question[0])"/>
+                    </tal:block>
                 </tr>
             </table>
             <input type="submit" i18n:attributes="value" name="accept"
