@@ -1108,6 +1108,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         global_config = {
             'initial_address': self.initial_address,
+            'initial_zoom': self.initial_zoom,
             'icons': list(self.get_geotype_icons()),
             'objmap_zoom': self.get_object_map_zoom_level(),
             'cluster_points': self.cluster_points,
