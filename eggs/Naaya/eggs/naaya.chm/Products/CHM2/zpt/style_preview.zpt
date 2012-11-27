@@ -68,7 +68,7 @@
                   <input type="checkbox" name="id" value="global">
                 </td>
                 <td class="type" style="width: 4%;">
-                  <img src="misc_/Naaya/NyFolder.gif" alt="Folder" title="Folder">
+                  <img src="misc_/Naaya/NyFolder.png" alt="Folder" title="Folder">
                 </td>
                 <td class="title-column"><a href="#">Name of folder</a></td>
                 <td class="checkin">n/a</td>

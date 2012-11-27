@@ -202,7 +202,7 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
 
     meta_type = METATYPE_FOLDER
     meta_label = LABEL_NYFOLDER
-    icon = 'misc_/Naaya/NyFolder.gif'
+    icon = 'misc_/Naaya/NyFolder.png'
     icon_marked = 'misc_/Naaya/NyFolder_marked.gif'
 
     manage_options = (

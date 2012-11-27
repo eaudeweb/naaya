@@ -1,5 +1,6 @@
 3.2.4 (unreleased)
 -------------------
+* new icon for NyFolder [simiamih]
 * support for utf-8 LDAP encoding [simiamih]
 * deprecated cn forever-cache on zodb [simiamih]
 * save and display sent bulk emails [bogdatan, simiamih]
