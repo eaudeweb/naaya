@@ -293,6 +293,9 @@
         var points = map.points = engine.new_markers_collection('points');
         map.add(points);
         map.zoom_to_extent(engine.config['initial_bounds']);
+        if(engine.config['initial_zoom']) {
+            map.olmap.zoomTo(engine.config['initial_zoom']);
+        }
 
         map.display_points = function(places) {
             points.empty();
