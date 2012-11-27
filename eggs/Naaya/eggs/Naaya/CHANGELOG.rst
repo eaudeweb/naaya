@@ -1,7 +1,8 @@
 3.2.4 (unreleased)
 -------------------
+* support for utf-8 LDAP encoding [simiamih]
+* deprecated cn forever-cache on zodb [simiamih]
 * save and display sent bulk emails [bogdatan, simiamih]
-* reverted latin-1 encoding setting in ldap plugin [simiamih]
 * new "initial zoom level" option for portal map [moregale]
 
 3.2.3 (2012-11-20)
