@@ -63,15 +63,22 @@ class plugLDAPUserFolder(PlugBase):
 
     object_type = 'LDAPUserFolder'
     meta_type = 'Plugin for user folder'
-    default_encoding = 'latin-1' # TODO: this should be editable from ZMI
     group_to_roles_mapping = PersistentDict()
+
+    @property
+    def default_encoding(self):
+        try:
+            from Products.LDAPUserFolder.utils import encoding
+        except Exception, e:
+            return 'utf-8'
+        else:
+            return encoding
 
     def __init__(self, id, source_obj, title):
         """ constructor """
         super(plugLDAPUserFolder, self).__init__(id, source_obj, title)
         self._user_objs = {}
         self.located = {}
-        self.canonical_name = {}
         self.buffer = {}
 
     security = ClassSecurityInfo()
@@ -86,29 +93,6 @@ class plugLDAPUserFolder(PlugBase):
     def delUserLocation(self, user):
         try:
             del self.located[user]
-            self._p_changed = 1
-        except:
-            pass
-
-    def getUserCanonicalName(self, user):
-        value = self.canonical_name.get(user, '-')
-        if value == '-':
-            try:
-                user_info = self.get_source_user_info(user)
-                value = user_info.full_name
-                self.setUserCanonicalName(user, value)
-            except Exception, e:
-                logging.debug("Could not get user's full name for user %s : %s",
-                        user, str(e))
-        return self.decode_cn(value)
-
-    def setUserCanonicalName(self, user, user_name):
-        self.canonical_name[user] = user_name
-        self._p_changed = 1
-
-    def delUserCanonicalName(self, user):
-        try:
-            del self.canonical_name[user]
             self._p_changed = 1
         except:
             pass
@@ -161,7 +145,9 @@ class plugLDAPUserFolder(PlugBase):
         acl = self.getUserFolder()
         buf = []
         for user, value in self.getUsersRoles(acl).items():
-            buf.append((user, self.getUserCanonicalName(user), self.getUserLocation(user), value))
+            user_info = self.get_source_user_info(user)
+            buf.append((user, user_info.full_name,
+                        self.getUserLocation(user), value))
         if skey == 'user':
             return self.sort_list(buf, 0, rkey)
         elif skey == 'cn':

@@ -118,7 +118,6 @@ class PlugBase(SimpleItem):
                     pass
             try:
                 self.setUserLocation(n, user_location)
-                self.setUserCanonicalName(n, self.buffer[n])
             except:
                 pass
         if REQUEST is not None:
