@@ -131,6 +131,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     ) + Folder.manage_options[2:]
 
     cluster_points = True
+    initial_zoom = None
 
     def __init__(self, id, title):
         """
@@ -1085,6 +1086,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     'objmap_height_px', 'objmap_width_px', 'objmap_zoom',
                     'cluster_points'):
             setattr(self, key, form[key])
+        if form['initial_zoom']:
+            self.initial_zoom = int(form['initial_zoom'])
+        else:
+            self.initial_zoom = None
 
         new_engine = form['engine']
         if new_engine != self.current_engine:
