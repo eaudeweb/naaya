@@ -256,7 +256,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
         expected = [{'attributes': {'title': ''},
          'children': [{'attributes': {'title': 'info'},
                        'children': [],
-                       'data': {'icon': 'misc_/Naaya/NyFolder.gif',
+                       'data': {'icon': 'misc_/Naaya/NyFolder.png',
                                 'title': 'Information'}}],
          'data': {'title': 'Naaya Test Site', 'icon': 'misc_/Naaya/Site.gif'}}]
         self.assertEqual(notif_tool._sitemap_dict({'node': ''}), expected)

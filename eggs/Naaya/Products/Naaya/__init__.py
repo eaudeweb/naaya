@@ -25,7 +25,7 @@ def initialize(context):
                 NyFolder.folder_add_html,
                 NyFolder.addNyFolder,
                 ),
-        icon = 'www/NyFolder.gif'
+        icon = 'www/NyFolder.png'
         )
 
     #initialize NaayaContent
@@ -35,7 +35,7 @@ def initialize(context):
     allow_path('Products.Naaya:skel/layout/')
 
 misc_ = {
-    'NyFolder.gif':ImageFile('www/NyFolder.gif', globals()),
+    'NyFolder.png':ImageFile('www/NyFolder.png', globals()),
     'NyFolder_marked.gif':ImageFile('www/NyFolder_marked.gif', globals()),
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'addcomment.gif': ImageFile('www/addcomment.gif', globals()),
