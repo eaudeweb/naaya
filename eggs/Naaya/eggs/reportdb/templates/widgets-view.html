@@ -13,12 +13,12 @@
 {% endmacro %}
 
 {%- macro textarea(mk, field) %}
-    <div>
-         {% if field.value == '' %}
+    <div class="textarea">
+         {%- if field.value == '' -%}
              {{ '\u002d' }}
-         {% else %}
+         {%- else -%}
             {{ field.u }}
-         {% endif %}
+         {%- endif -%}
     </div>
 {% endmacro -%}
 
@@ -300,7 +300,7 @@
   {% set registration_required = schema['registration_required'] %}
   {% set costs = schema['costs'] %}
   <div class="field-inline">
-      <ul>
+      <ul class="no-indent-list">
               <li>{{ mk.widget(paper_or_web) }}
                   {%- if paper_or_web.value == 'web' -%}
                     {{ '\u002d' }} {{ mk.widget(url) }}
