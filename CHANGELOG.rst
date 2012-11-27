@@ -1,4 +1,7 @@
-1.2.25 (unreleased)
+1.2.26 (unreleased)
+-------------------
+
+1.2.25 (2012-11-27)
 -------------------
 * Show survey answers also in signup listing [dumitval] 
 * Hide specific survey questions from all listings (organisation, phone) [dumitval] 
