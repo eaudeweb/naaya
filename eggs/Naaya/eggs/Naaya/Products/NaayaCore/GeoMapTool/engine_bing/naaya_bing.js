@@ -130,10 +130,16 @@
         the_points_layer.AddShape(marker);
     }
 
-    function load_map_find_address(address) {
+    function load_map_find_address(address, zoom) {
         the_map.LoadMap(null, null, map_base_layer);
         after_load_map();
-        the_map.Find(null, address);
+        var fix_zoom = function() {
+            if(zoom) {
+                the_map.SetZoomLevel(zoom);
+            }
+        };
+        the_map.Find(null, address, null, null, 0, 1,
+                     true, false, false, true, fix_zoom);
     }
 
     function setup_editor(coord, click_callback) {
@@ -202,7 +208,8 @@
                 }
                 after_load_map();
             } else {
-                load_map_find_address(config.initial_address);
+                load_map_find_address(config.initial_address,
+                                      config.initial_zoom);
             }
 
             return {
