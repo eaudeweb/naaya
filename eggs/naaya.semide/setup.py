@@ -9,7 +9,7 @@ setup(name='naaya.semide',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya >= 3.2.24',
+        'Naaya >= 3.2.4',
         'Products.NaayaCalendar',
         'Products.NaayaForum',
         'Products.NaayaGlossary',
