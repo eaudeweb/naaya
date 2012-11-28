@@ -142,7 +142,8 @@ class EmailSender(SimpleItem):
 
         mail_opts = {'meeting': meeting,
                     'contact_person': meeting.contact_person,
-                    'name': account_subscription.name}
+                    'name': account_subscription.name,
+                    '_translate': self.getPortalI18n().get_translation}
 
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription',
                     from_email, to_email, mail_opts)
@@ -161,7 +162,8 @@ class EmailSender(SimpleItem):
         mail_opts = {'meeting': meeting,
                      'name': signup.name,
                      'login_url': login_url,
-                     'on_waiting_list': account_info['role'] == WAITING_ROLE}
+                     'on_waiting_list': account_info['role'] == WAITING_ROLE,
+                     '_translate': self.getPortalI18n().get_translation}
 
         return self._send_email_with_template('naaya.content.meeting.email_signup_accepted',
                     from_email, to_email, mail_opts)
@@ -174,7 +176,8 @@ class EmailSender(SimpleItem):
         to_email = signup.email
 
         mail_opts = {'meeting': meeting,
-                     'name': signup.name}
+                     'name': signup.name,
+                     '_translate': self.getPortalI18n().get_translation}
 
         return self._send_email_with_template('naaya.content.meeting.email_signup_rejected',
                     from_email, to_email, mail_opts)
@@ -191,7 +194,8 @@ class EmailSender(SimpleItem):
         mail_opts = {'meeting': meeting,
                      'uid': uid,
                      'name': account_subscription.name,
-                     'on_waiting_list': account_info['role'] == WAITING_ROLE}
+                     'on_waiting_list': account_info['role'] == WAITING_ROLE,
+                     '_translate': self.getPortalI18n().get_translation}
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_accepted',
                     from_email, to_email, mail_opts)
 
@@ -203,7 +207,8 @@ class EmailSender(SimpleItem):
         to_email = account_subscription.email
 
         mail_opts = {'meeting': meeting,
-                     'name': account_subscription.name}
+                     'name': account_subscription.name,
+                     '_translate': self.getPortalI18n().get_translation}
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_rejected',
                     from_email, to_email, mail_opts)
 
