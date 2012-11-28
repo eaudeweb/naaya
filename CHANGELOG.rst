@@ -1,4 +1,7 @@
-1.2.26 (unreleased)
+1.2.27 (unreleased)
+-------------------
+
+1.2.26 (2012-11-28)
 -------------------
 * Add organisation and phone data also on AccountSubscriptions [dumitval]
 
