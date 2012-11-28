@@ -1,4 +1,7 @@
-1.2.27 (unreleased)
+1.2.28 (unreleased)
+-------------------
+
+1.2.27 (2012-11-28)
 -------------------
 * Translate email messages [dumitval]
 
