@@ -1,5 +1,6 @@
 1.2.26 (unreleased)
 -------------------
+* Add organisation and phone data also on AccountSubscriptions [dumitval]
 
 1.2.25 (2012-11-27)
 -------------------

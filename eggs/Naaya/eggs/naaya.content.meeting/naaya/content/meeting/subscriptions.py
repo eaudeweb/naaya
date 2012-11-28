@@ -215,7 +215,15 @@ class Subscriptions(SimpleItem):
         name = getUserFullName(site, uid)
         email = getUserEmail(site, uid)
         organization = getUserOrganization(site, uid)
+        if not organization:
+            organization = self.get_survey_answer(uid, 'w_organization')
+        if not organization:
+            organization = self.get_survey_answer(uid, 'w_organisation')
         phone = getUserPhoneNumber(site, uid)
+        if not phone:
+            phone = self.get_survey_answer(uid, 'w_telephone')
+        if not phone:
+            phone = self.get_survey_answer(uid, 'w_phone')
 
         account_subscription = AccountSubscription(uid, name, email, organization, phone)
 
