@@ -1,6 +1,6 @@
 1.4.19 (unreleased)
 -------------------
-
+* bugfix: #10085: removed misleading prompt when leaving comments
 1.4.18 (2012-11-22)
 -------------------
 * backwards compatibility: simplejson as json [mihaitab]
