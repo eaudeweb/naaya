@@ -126,7 +126,8 @@ class EmailSender(SimpleItem):
 
         mail_opts = {'meeting': meeting,
                     'contact_person': meeting.contact_person,
-                    'name': signup.name}
+                    'name': signup.name,
+                    '_translate': self.getPortalI18n().get_translation}
 
         return self._send_email_with_template('naaya.content.meeting.email_signup',
                     from_email, to_email, mail_opts)

@@ -1,5 +1,6 @@
 1.2.27 (unreleased)
 -------------------
+* Translate email messages [dumitval]
 
 1.2.26 (2012-11-28)
 -------------------
