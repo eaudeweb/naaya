@@ -1,4 +1,7 @@
-1.2.28 (unreleased)
+1.2.29 (unreleased)
+-------------------
+
+1.2.28 (2012-11-29)
 -------------------
 * i18n:name correction [dumitval]
 
