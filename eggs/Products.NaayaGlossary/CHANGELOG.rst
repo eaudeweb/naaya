@@ -1,4 +1,7 @@
-1.1.11 (unreleased)
+1.1.12 (unreleased)
+------------------
+
+1.1.11 (2012-11-29)
 ------------------
 * index changes (description as textarea) [dumitval]
 
