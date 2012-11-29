@@ -22,6 +22,15 @@ NOMINATIM_USER_AGENT = "Naaya OpenLayers map engine"
 DEFAULT_ADDRESS = 'Europe'
 DEFAULT_BBOX = [36, 62, -10, 40] # bottom, top, left, right
 
+
+BASE_LAYERS = {
+    'osm': {'label': "OpenStreetMap",
+            'factory': 'OpenLayers.Layer.OSM'},
+    'google': {'label': "Google Streets",
+               'factory': 'OpenLayers.Layer.Google'},
+}
+
+
 class OpenLayersMapEngine(SimpleItem):
     """
     Openlayers maps plugin for Naaya GeoMapTool
@@ -32,6 +41,7 @@ class OpenLayersMapEngine(SimpleItem):
     _initial_address = DEFAULT_ADDRESS
     _initial_bounding_box = DEFAULT_BBOX
     mouse_wheel_zoom = True;
+    base_layer = 'osm';
 
     security = ClassSecurityInfo()
 
@@ -50,13 +60,14 @@ class OpenLayersMapEngine(SimpleItem):
         js_config.update(global_config)
         options = {
             'js_config': json.dumps(js_config),
+            'base_layers': BASE_LAYERS,
         }
         return self._html_setup(**options)
 
     _config_html = PageTemplateFile('configure', globals())
     security.declarePrivate('config_html')
     def config_html(self):
-        return self._config_html()
+        return self._config_html(base_layers=BASE_LAYERS)
 
     security.declarePrivate('save_config')
     def save_config(self, form_data):
@@ -87,6 +98,7 @@ class OpenLayersMapEngine(SimpleItem):
             self._initial_bounding_box = bounding_box
 
         self.mouse_wheel_zoom = form_data.get('openlayers_mouse_wheel_zoom', False)
+        self.base_layer = form_data['base_layer']
 
     security.declareProtected(view, 'naaya_openlayers_js')
     naaya_openlayers_js = ImageFile('naaya_openlayers.js', globals())
