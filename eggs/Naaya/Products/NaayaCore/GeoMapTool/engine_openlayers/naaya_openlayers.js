@@ -71,7 +71,9 @@
                 new OpenLayers.Control.Attribution()
             ]
         });
-        olmap.addLayer(new OpenLayers.Layer.OSM());
+        var factory = eval(engine.config['base_layer']['factory']);
+        var layer = new factory();
+        olmap.addLayer(layer);
         return olmap;
     };
 
