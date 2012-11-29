@@ -128,8 +128,8 @@ class OpenLayersMapEngine(SimpleItem):
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return data
 
-setattr(OpenLayersMapEngine, 'OpenLayers-2.11',
-        StaticServeFromFolder('OpenLayers-2.11', globals()))
+setattr(OpenLayersMapEngine, 'OpenLayers-2.12',
+        StaticServeFromFolder('OpenLayers-2.12', globals()))
 
 def register():
     register_map_engine(OpenLayersMapEngine)
