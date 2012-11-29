@@ -1,28 +1,5 @@
-<style>
-
-.olLayerGoogleCopyright {
-    right: 3px;
-    bottom: 2px;
-    left: auto;
-}
-.olLayerGoogleV3.olLayerGoogleCopyright {
-    bottom: 0px;
-    right: 0px !important;
-}
-.olLayerGooglePoweredBy {
-    left: 2px;
-    bottom: 2px;
-}
-.olLayerGoogleV3.olLayerGooglePoweredBy {
-    bottom: 0px !important;
-}
-
-.olControlScaleLine {
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 2px 5px;
-}
-
-</style>
+<link rel="stylesheet"
+      tal:attributes="href string:${here/absolute_url}/naaya_openlayers_css"/>
 
 <script tal:content="structure
     string:var naaya_openlayers_map_api_config = ${options/js_config};"></script>

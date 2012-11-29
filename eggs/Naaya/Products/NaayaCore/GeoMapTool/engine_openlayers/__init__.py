@@ -146,6 +146,9 @@ class OpenLayersMapEngine(SimpleItem):
     security.declareProtected(view, 'naaya_openlayers_js')
     naaya_openlayers_js = ImageFile('naaya_openlayers.js', globals())
 
+    security.declareProtected(view, 'naaya_openlayers_css')
+    naaya_openlayers_css = ImageFile('naaya_openlayers.css', globals())
+
     def _geocode_nominatim_request(self, address):
         opener = urllib2.build_opener()
         opener.addheaders = [('User-agent', NOMINATIM_USER_AGENT)]
