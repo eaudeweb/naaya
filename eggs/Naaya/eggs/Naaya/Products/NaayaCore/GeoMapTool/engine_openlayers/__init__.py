@@ -27,7 +27,8 @@ BASE_LAYERS = {
     'osm': {'label': "OpenStreetMap",
             'factory': 'OpenLayers.Layer.OSM'},
     'google': {'label': "Google Streets",
-               'factory': 'OpenLayers.Layer.Google'},
+               'factory': 'OpenLayers.Layer.Google',
+               'google_api': True},
 }
 
 
@@ -56,11 +57,12 @@ class OpenLayersMapEngine(SimpleItem):
             'server_url': self.absolute_url(),
             'initial_bounding_box': self._initial_bounding_box,
             'mouse_wheel_zoom': self.mouse_wheel_zoom,
+            'base_layer': BASE_LAYERS[self.base_layer],
         }
         js_config.update(global_config)
         options = {
             'js_config': json.dumps(js_config),
-            'base_layers': BASE_LAYERS,
+            'base_layer': BASE_LAYERS[self.base_layer],
         }
         return self._html_setup(**options)
 
