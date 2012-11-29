@@ -1,5 +1,6 @@
 1.1.11 (unreleased)
 ------------------
+* index changes (description as textarea) [dumitval]
 
 1.1.10 (2012-10-02)
 ------------------

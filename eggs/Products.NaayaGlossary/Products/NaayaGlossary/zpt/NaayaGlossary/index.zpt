@@ -175,10 +175,6 @@
             <h2><span tal:replace="selected_item/title_or_id"/> <span i18n:translate="">properties</span></h2>
 
             <div class="field">
-                <label for="item_title" i18n:translate="">Title</label>
-                <input type="text" name="item_title" size="35" tal:attributes="value selected_item/title"/>
-            </div>
-            <div class="field">
                 <label for="item_themes" i18n:translate="">Themes</label>
                 <tal:block tal:define="theme_list here/get_subjects_list">
                     <span tal:condition="python:not theme_list" i18n:translate="">no themes defined</span>
@@ -203,7 +199,7 @@
                 <input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
             </div>
 
-            <h2 i18n:translate="">Translations</h2>
+            <h2 i18n:translate="">Name translations</h2>
 
             <div class="field">
             <table class="datatable">
@@ -221,14 +217,14 @@
                         </td>
                         <td tal:content="python:test(translation, translation, '-')"/>
                         <td>
-                            <input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
+                            <textarea name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
                             <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
                         </td>
                     </tr>
                 </tal:block>
             </table>
             </div>
-            <h2 i18n:translate="">Definitions</h2>
+            <h2 i18n:translate="">Definition translations</h2>
 
             <div class="field">
             <table class="datatable">
@@ -247,7 +243,7 @@
                         </td>
                         <td tal:content="python:test(translation, translation, '-')"/>
                         <td>
-                            <input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
+                            <textarea name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
                             <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
                         </td>
                     </tr>
