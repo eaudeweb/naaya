@@ -53,6 +53,21 @@ BASE_LAYERS = [
      'google_map_type': 'terrain',
      'google_api': True},
 
+    {'id': 'bing_road',
+     'label': "Bing Road",
+     'bing_map_type': 'Road',
+     'factory': 'NaayaOpenLayers.bing_layer'},
+
+    {'id': 'bing_aerial',
+     'label': "Bing Aerial",
+     'bing_map_type': 'Aerial',
+     'factory': 'NaayaOpenLayers.bing_layer'},
+
+    {'id': 'bing_aerial_with_labels',
+     'label': "Bing Aerial with labels",
+     'bing_map_type': 'AerialWithLabels',
+     'factory': 'NaayaOpenLayers.bing_layer'},
+
 ]
 
 

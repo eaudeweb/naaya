@@ -1,14 +1,26 @@
 (function() {
 
     window.NaayaOpenLayers = {
+
         osm_layer: function() {
             return new OpenLayers.Layer.OSM();
         },
+
         google_layer: function(layer_info) {
             return new OpenLayers.Layer.Google(
                 layer_info['label'],
                 {type: layer_info['google_map_type']});
+        },
+
+        bing_layer: function(layer_info) {
+            return new OpenLayers.Layer.Bing({
+                name: layer_info['label'],
+                key: ("AlKaIe5F9S8XxrUxhKHFClkoL6hTuPSTF-"+
+                      "kcfqg47zP4A7pvna-FhyyzEc8IVkBw"),
+                type: layer_info['bing_map_type']
+            });
         }
+
     };
 
 
