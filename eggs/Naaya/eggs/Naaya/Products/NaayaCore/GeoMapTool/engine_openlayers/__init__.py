@@ -24,11 +24,30 @@ DEFAULT_BBOX = [36, 62, -10, 40] # bottom, top, left, right
 
 
 BASE_LAYERS = {
+
     'osm': {'label': "OpenStreetMap",
-            'factory': 'OpenLayers.Layer.OSM'},
-    'google': {'label': "Google Streets",
-               'factory': 'OpenLayers.Layer.Google',
+            'factory': 'NaayaOpenLayers.osm_layer'},
+
+    'google_streets': {'label': "Google Streets",
+               'factory': 'NaayaOpenLayers.google_layer',
+               'google_map_type': 'roadmap',
                'google_api': True},
+
+    'google_satellite': {'label': "Google Satellite",
+               'factory': 'NaayaOpenLayers.google_layer',
+               'google_map_type': 'sattelite',
+               'google_api': True},
+
+    'google_hybrid': {'label': "Google Hybrid",
+               'factory': 'NaayaOpenLayers.google_layer',
+               'google_map_type': 'hybrid',
+               'google_api': True},
+
+    'google_terrain': {'label': "Google Terrain",
+               'factory': 'NaayaOpenLayers.google_layer',
+               'google_map_type': 'terrain',
+               'google_api': True},
+
 }
 
 
