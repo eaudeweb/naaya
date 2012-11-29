@@ -81,7 +81,7 @@ class OpenLayersMapEngine(SimpleItem):
     _initial_address = DEFAULT_ADDRESS
     _initial_bounding_box = DEFAULT_BBOX
     mouse_wheel_zoom = True;
-    base_layer = 'osm';
+    base_layer = 'google_hybrid';
 
     security = ClassSecurityInfo()
 
