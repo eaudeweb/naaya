@@ -1,5 +1,17 @@
 (function() {
 
+    window.NaayaOpenLayers = {
+        osm_layer: function() {
+            return new OpenLayers.Layer.OSM();
+        },
+        google_layer: function(layer_info) {
+            return new OpenLayers.Layer.Google(
+                layer_info['label'],
+                {type: layer_info['google_map_type']});
+        }
+    };
+
+
     OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
         mapClicked: function() {},
 
@@ -71,8 +83,8 @@
                 new OpenLayers.Control.Attribution()
             ]
         });
-        var factory = eval(engine.config['base_layer']['factory']);
-        var layer = new factory();
+        var layer_factory = eval(engine.config['base_layer']['factory']);
+        var layer = layer_factory(engine.config['base_layer']);
         olmap.addLayer(layer);
         return olmap;
     };
