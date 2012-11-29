@@ -9,4 +9,15 @@
                                                'checked', None)" />
 </div>
 
+<div class="field-inline">
+    <label for="form-base_layer" i18n:translate="">Base layer</label>
+    <select name="base_layer" id="form-base_layer">
+        <option tal:repeat="layer_id options/base_layers"
+                tal:attributes="value layer_id;
+                                selected python:(layer_id == here.base_layer)"
+                tal:content="python:options['base_layers'][layer_id]['label']"
+                i18n:translate="" />
+    </select>
+</div>
+
 </fieldset>
