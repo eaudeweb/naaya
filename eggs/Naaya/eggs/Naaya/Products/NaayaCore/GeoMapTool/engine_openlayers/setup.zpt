@@ -1,6 +1,6 @@
 <script tal:content="structure
     string:var naaya_openlayers_map_api_config = ${options/js_config};"></script>
 <script tal:attributes="src
-    string:${here/absolute_url}/OpenLayers-2.11/OpenLayers.js"></script>
+    string:${here/absolute_url}/OpenLayers-2.12/OpenLayers.js"></script>
 <script tal:attributes="src
     string:${here/absolute_url}/naaya_openlayers_js"></script>
