@@ -1,5 +1,6 @@
 3.2.5 (unreleased)
 -------------------
+* choose base layer for OpenLayers map [moregale]
 
 3.2.4 (2012-11-27)
 -------------------
