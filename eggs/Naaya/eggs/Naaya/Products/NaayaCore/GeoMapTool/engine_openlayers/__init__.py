@@ -23,32 +23,37 @@ DEFAULT_ADDRESS = 'Europe'
 DEFAULT_BBOX = [36, 62, -10, 40] # bottom, top, left, right
 
 
-BASE_LAYERS = {
+BASE_LAYERS = [
 
-    'osm': {'label': "OpenStreetMap",
-            'factory': 'NaayaOpenLayers.osm_layer'},
+    {'id': 'osm',
+     'label': "OpenStreetMap",
+     'factory': 'NaayaOpenLayers.osm_layer'},
 
-    'google_streets': {'label': "Google Streets",
-               'factory': 'NaayaOpenLayers.google_layer',
-               'google_map_type': 'roadmap',
-               'google_api': True},
+    {'id': 'google_streets',
+     'label': "Google Streets",
+     'factory': 'NaayaOpenLayers.google_layer',
+     'google_map_type': 'roadmap',
+     'google_api': True},
 
-    'google_satellite': {'label': "Google Satellite",
-               'factory': 'NaayaOpenLayers.google_layer',
-               'google_map_type': 'sattelite',
-               'google_api': True},
+    {'id': 'google_satellite',
+     'label': "Google Satellite",
+     'factory': 'NaayaOpenLayers.google_layer',
+     'google_map_type': 'satellite',
+     'google_api': True},
 
-    'google_hybrid': {'label': "Google Hybrid",
-               'factory': 'NaayaOpenLayers.google_layer',
-               'google_map_type': 'hybrid',
-               'google_api': True},
+    {'id': 'google_hybrid',
+     'label': "Google Hybrid",
+     'factory': 'NaayaOpenLayers.google_layer',
+     'google_map_type': 'hybrid',
+     'google_api': True},
 
-    'google_terrain': {'label': "Google Terrain",
-               'factory': 'NaayaOpenLayers.google_layer',
-               'google_map_type': 'terrain',
-               'google_api': True},
+    {'id': 'google_terrain',
+     'label': "Google Terrain",
+     'factory': 'NaayaOpenLayers.google_layer',
+     'google_map_type': 'terrain',
+     'google_api': True},
 
-}
+]
 
 
 class OpenLayersMapEngine(SimpleItem):
@@ -72,16 +77,18 @@ class OpenLayersMapEngine(SimpleItem):
     _html_setup = PageTemplateFile('setup', globals())
     security.declarePrivate('html_setup')
     def html_setup(self, request, global_config):
+        [base_layer] = [layer for layer in BASE_LAYERS
+                        if layer['id'] == self.base_layer]
         js_config = {
             'server_url': self.absolute_url(),
             'initial_bounding_box': self._initial_bounding_box,
             'mouse_wheel_zoom': self.mouse_wheel_zoom,
-            'base_layer': BASE_LAYERS[self.base_layer],
+            'base_layer': base_layer,
         }
         js_config.update(global_config)
         options = {
             'js_config': json.dumps(js_config),
-            'base_layer': BASE_LAYERS[self.base_layer],
+            'base_layer': base_layer,
         }
         return self._html_setup(**options)
 
