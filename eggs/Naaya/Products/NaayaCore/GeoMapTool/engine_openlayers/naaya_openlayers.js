@@ -202,6 +202,13 @@
             });
         });
 
+        map.add_scale_line_control = function() {
+            var scale_line_control = new OpenLayers.Control.ScaleLine(
+                {geodesic: true});
+            map.olmap.addControl(scale_line_control);
+            scale_line_control.activate();
+        };
+
         return map;
     };
 
@@ -316,6 +323,7 @@
 
     engine.portal_map = function(div_id) {
         var map = engine.new_map(div_id);
+        map.add_scale_line_control();
         var points = map.points = engine.new_markers_collection('points');
         map.add(points);
         map.zoom_to_extent(engine.config['initial_bounds']);
