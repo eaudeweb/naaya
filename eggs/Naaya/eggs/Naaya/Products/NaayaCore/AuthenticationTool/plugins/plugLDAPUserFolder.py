@@ -168,20 +168,6 @@ class plugLDAPUserFolder(PlugBase):
             description = description[0].decode(self.default_encoding)
         return (dn, cn, description)
 
-    def _getRole(self, id):
-        """Get an object"""
-        try:
-            return self._user_objs[id]
-        except:
-            return None
-
-    def getRoleDescription(self, p_id):
-        """Get title"""
-        try:
-            return self._getRole(p_id).description
-        except:
-            return ''
-
     def getRoles(self, expand=[LDAP_ROOT_ID], role_id=LDAP_ROOT_ID, depth=0):
         """Return a piece of roles tree"""
         role = self._user_objs[role_id]
