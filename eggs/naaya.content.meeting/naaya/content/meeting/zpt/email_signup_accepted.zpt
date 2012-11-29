@@ -16,7 +16,7 @@ All the meeting places are full. You are added to the waiting list. If a place o
 
 <tal:block i18n:translate="">
 You can access the meeting using the following address:
-<tal:block content="options/login_url" i18n:name="login_url"/>
+<tal:block content="options/login_url" i18n:name="meeting_url"/>
 </tal:block>
 
 </body_text>
