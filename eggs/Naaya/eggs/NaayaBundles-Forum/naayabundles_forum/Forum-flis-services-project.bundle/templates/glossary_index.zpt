@@ -186,7 +186,19 @@
                 <input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
             </div>
 
-            <h2 i18n:translate="">Name translations</h2>
+            <div class="field">
+                <label for="item_source" i18n:translate="">English term</label>
+                <tal:block repeat="language selected_item/get_english_names">
+                  <tal:block condition="python:language == 'English'"
+                      define="translation python:selected_item.get_translation_by_language(language)">
+                        <textarea cols="55"
+                          name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                        <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
+                  </tal:block>
+                </tal:block>
+            </div>
+
+            <h3 i18n:translate="">Term translations</h3>
 
             <div class="field">
             <table class="datatable">
@@ -196,6 +208,7 @@
                     <th i18n:translate="">Translate</th>
                 </tr>
                 <tal:block repeat="language selected_item/get_english_names">
+                  <tal:block condition="python:language != 'English'">
                     <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(language)">
                         <td>
                             <div>
@@ -208,10 +221,24 @@
                             <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
                         </td>
                     </tr>
+                  </tal:block>
                 </tal:block>
             </table>
             </div>
-            <h2 i18n:translate="">Definition translations</h2>
+
+            <div class="field">
+                <label for="item_source" i18n:translate="">English definition</label>
+                <tal:block repeat="language selected_item/get_english_names">
+                  <tal:block condition="python:language == 'English'"
+                      define="def_lang python:selected_item.definition_lang(language);
+                              translation python:selected_item.get_translation_by_language(def_lang)">
+                        <textarea cols="55" name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                        <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
+                  </tal:block>
+                </tal:block>
+            </div>
+
+            <h3 i18n:translate="">Definition translations</h3>
 
             <div class="field">
             <table class="datatable">
@@ -221,7 +248,8 @@
                     <th i18n:translate="">Translate</th>
                 </tr>
                 <tal:block repeat="language selected_item/get_english_names">
-                  <tal:block define="def_lang python:selected_item.definition_lang(language)">
+                  <tal:block condition="python:language != 'English'"
+                    define="def_lang python:selected_item.definition_lang(language)">
                     <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(def_lang)">
                         <td>
                             <div>
