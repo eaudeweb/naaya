@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'
-    xmlns:zcml="http://namespaces.zope.org/zcml">
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:naaya="http://namespaces.zope.org/naaya">
 
     <utility name="plugUserFolder"
         provides=".interfaces.IAuthenticationToolPlugin"
@@ -20,6 +21,11 @@
         for=".interfaces.IRoleAssignmentEvent"
         handler=".subscribers.post_user_management_action" />
 
+    <naaya:simpleView
+         for="Products.Naaya.interfaces.INyFolder"
+         name="access_overview"
+         handler=".inspector.access_overview"
+         permission="zope2.ViewManagementScreens" />
 
    <configure zcml:condition="installed Products.naayaUpdater">
       <utility

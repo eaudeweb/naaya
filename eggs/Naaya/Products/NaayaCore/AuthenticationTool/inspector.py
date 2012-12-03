@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 from AccessControl.Permission import Permission
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from naaya.core.zope2util import ofs_path
 
@@ -61,3 +62,10 @@ def allowed2(context, permission=None):
             for role in set(all_roles) - set(['Anonymous']):
                 out[permission][role] = ('pseudorole', {'source': 'Anonymous'})
     return out
+
+# views
+def access_overview(context, request=None):
+    """ Render the overview template (widget) """
+    settings = allowed2(context, 'View')
+    pt = PageTemplateFile('zpt/inspector_overview.zpt', globals())
+    return pt.__of__(context)(settings=settings['View'])
