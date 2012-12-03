@@ -16,10 +16,11 @@ class InspectorTestCase(NaayaTestCase):
          {'View':
           {'Administrator': ('pseudorole', {'source': 'Anonymous'}),
            'Anonymous': ('inherited', {'source': '/portal'}),
-           'Anonymous': ('pseudorole', {'source': 'Anonymous'}),
+           'Authenticated': ('pseudorole', {'source': 'Anonymous'}),
            'Manager': ('pseudorole', {'source': 'Anonymous'}),
            'Owner': ('pseudorole', {'source': 'Anonymous'}),
-           'Contributor': ('pseudorole', {'source': 'Anonymous'})}})
+           'Contributor': ('pseudorole', {'source': 'Anonymous'}),
+           'Reviewer': ('pseudorole', {'source': 'Anonymous'})}})
 
     def test_allowed_view_restricted(self):
         self.portal._View_Permission = ('Administrator', 'Contributor', 'Owner')
