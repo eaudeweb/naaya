@@ -1,4 +1,7 @@
-1.1.12 (unreleased)
+1.1.13 (unreleased)
+------------------
+
+1.1.12 (2012-12-03)
 ------------------
 * Separation of the term and definition in English [dumitval]
 * bugfix: contributor was not saved [dumitval]
