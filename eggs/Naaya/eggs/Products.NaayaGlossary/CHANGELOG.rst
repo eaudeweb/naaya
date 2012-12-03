@@ -1,5 +1,7 @@
 1.1.12 (unreleased)
 ------------------
+* Separation of the term and definition in English [dumitval]
+* bugfix: contributor was not saved [dumitval]
 
 1.1.11 (2012-11-29)
 ------------------
