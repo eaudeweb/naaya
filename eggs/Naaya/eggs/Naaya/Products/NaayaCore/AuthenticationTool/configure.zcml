@@ -1,6 +1,13 @@
 <configure xmlns='http://namespaces.zope.org/zope'
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    xmlns:naaya="http://namespaces.zope.org/naaya">
+    xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <browser:resourceDirectory
+         name="Products.NaayaCore.AuthenticationTool"
+         directory="./www"
+         permission="zope.Public"
+         />
 
     <utility name="plugUserFolder"
         provides=".interfaces.IAuthenticationToolPlugin"
