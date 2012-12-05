@@ -42,8 +42,7 @@
                     <select id="params" name="params" tal:define="
                             ldap_schema python:here.getLDAPSchema(user_folder)">
                         <option tal:repeat="item ldap_schema"
-                            tal:attributes="value python:item[0];
-                                            selected python:test(item[0]=='uid', 'selected', '')"
+                            tal:attributes="value python:item[0]"
                             tal:content="python:'%s (%s)' % (item[1], item[0])"/>
                     </select>
                 </td>
