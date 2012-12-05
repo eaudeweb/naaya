@@ -66,6 +66,10 @@ def allowed2(context, permission=None):
 # views
 def access_overview(context, request=None):
     """ Render the overview template (widget) """
-    settings = allowed2(context, 'View')
-    pt = PageTemplateFile('zpt/inspector_overview.zpt', globals())
-    return pt.__of__(context)(settings=settings['View'])
+    settings = allowed2(context, 'View')['View']
+    for role, mapping in settings.items():
+        if mapping[0] == 'inherited':
+            mapping[1]['source'] = \
+               context.unrestrictedTraverse(mapping[1]['source'])
+
+    return settings
