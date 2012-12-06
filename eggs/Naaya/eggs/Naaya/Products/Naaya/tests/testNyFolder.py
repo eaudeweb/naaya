@@ -593,7 +593,7 @@ class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
         # index page is the same as folder_index
         self.browser.go('http://localhost/portal/info/testfolder')
         html = self.browser.get_html()
-        self.assertTrue('restrictions' not in html)
+        self.assertTrue('Restrictions' not in html)
 
         # create public interface
         self.browser_do_login('admin', '')
@@ -613,7 +613,7 @@ class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
         # index page is not the same as folder_index
         self.browser.go('http://localhost/portal/info/testfolder')
         html = self.browser.get_html()
-        self.assertTrue('restrictions' in html)
+        self.assertTrue('Restrictions' in html)
 
         # remove public interface
         self.browser_do_login('admin', '')
@@ -633,7 +633,7 @@ class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
         # index page back to folder_index
         self.browser.go('http://localhost/portal/info/testfolder')
         html = self.browser.get_html()
-        self.assertTrue('restrictions' not in html)
+        self.assertTrue('Restrictions' not in html)
 
     def test_form_save(self):
         self.browser_do_login('admin', '')
