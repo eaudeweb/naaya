@@ -66,7 +66,11 @@
             <select id="search_param" name="search_param">
                 <option value="cn"
                     tal:attributes="selected python:search_param=='cn'"
-                    i18n:translate="">User name
+                    i18n:translate="">Name
+                </option>
+                <option value="mail"
+                    tal:attributes="selected python:search_param=='mail'"
+                    i18n:translate="">Email
                 </option>
                 <option value="o"
                     tal:attributes="selected python:search_param=='o'"
@@ -98,6 +102,7 @@
                     <th i18n:translate="">User name</th>
                     <th i18n:translate="">User ID</th>
                     <th i18n:translate="">Organization</th>
+                    <th i18n:translate="">Email</th>
                     <th width="50%" i18n:translate="">Other information</th>
                 </tr>
                 <tr tal:repeat="item users"
@@ -106,6 +111,10 @@
                     <td><span tal:replace="item/cn"/></td>
                     <td><span tal:replace="item/uid"/></td>
                     <td><span tal:replace="item/organization"/></td>
+                    <td><a tal:attributes="href string:mailto:${item/mail}">
+                            <span tal:replace="item/mail"/>
+                        </a>
+                    </td>
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>
