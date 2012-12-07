@@ -485,6 +485,21 @@ def path_in_site(obj):
     """
     return relative_object_path(obj, obj.getSite())
 
+def parents_in_site_path(obj):
+    """
+    Returns the objects traversed from containing site to object, both included
+
+    """
+    site = obj.getSite()
+    parents = []
+    while obj != site:
+        parents.append(obj)
+        obj = obj.aq_parent
+    parents.append(site)
+    parents.reverse()
+    parents = map(lambda o: o.title_or_id(), parents)
+    return parents
+
 def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
     """
     Walk the Zope object graph and yield the objects it finds.
