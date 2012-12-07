@@ -1,6 +1,7 @@
 1.2.29 (unreleased)
 -------------------
 * fixed missing results in participants tab of a new meeting [mihaitab]
+* fixed decoding in participants tab of a new meeting [mihaitab]
 
 1.2.28 (2012-11-29)
 -------------------
