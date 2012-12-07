@@ -421,10 +421,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d.update({'portal': self.getSite(), '_translate': translate})
         mail_data = template(**d)
 
-        try:
-            sender_email = self.getNotificationTool().from_email
-        except AttributeError:
-            sender_email = email_tool.get_addr_from()
+        sender_email = email_tool.get_addr_from()
 
         try:
             recp_email = recp_email or auth_tool.getUserEmail(recipient)

@@ -1,5 +1,6 @@
 1.2.24 (unreleased)
 ===================
+* bugfix in sender_email getter [dumitval]
 
 1.2.23 (2012-11-06)
 ===================
