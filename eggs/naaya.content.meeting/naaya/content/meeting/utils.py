@@ -1,11 +1,10 @@
 # !!!! These should be moved to auth_tool
 
-def _encode(val):
+def _decode(val, encoding_schema='utf-8'):
     if val is None:
         return ''
-    if isinstance(val, unicode):
-        return val.encode('utf-8')
-    return unicode(val, 'iso-8859-1').encode('utf-8')
+
+    return val.decode(encoding_schema)
 
 def schemaHasParam(acl_folder, param):
     for item in acl_folder.getLDAPSchema():
@@ -18,14 +17,14 @@ def getUserFullName(site, uid):
     local_user = auth_tool.getUser(uid)
     if local_user is not None:
         username = auth_tool.getUserFullName(local_user)
-        return _encode(username)
+        return _decode(username)
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
         if schemaHasParam(acl_folder, 'cn'):
             user = acl_folder.getUserById(uid, None)
             if user is not None:
-                return _encode(user.getProperty('cn'))
+                return _decode(user.getProperty('cn'), source.default_encoding)
 
 def getUserEmail(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -38,7 +37,7 @@ def getUserEmail(site, uid):
         if schemaHasParam(acl_folder, 'mail'):
             user = acl_folder.getUserById(uid, None)
             if user is not None:
-                return _encode(user.getProperty('mail'))
+                return _decode(user.getProperty('mail'), source.default_encoding)
 
 def getUserOrganization(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -51,7 +50,7 @@ def getUserOrganization(site, uid):
         if schemaHasParam(acl_folder, 'o'):
             user = acl_folder.getUserById(uid, None)
             if user is not None:
-                return _encode(user.getProperty('o'))
+                return _decode(user.getProperty('o'), source.default_encoding)
 
 def getUserPhoneNumber(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -64,7 +63,8 @@ def getUserPhoneNumber(site, uid):
         if schemaHasParam(acl_folder, 'telephoneNumber'):
             user = acl_folder.getUserById(uid, None)
             if user is not None:
-                return _encode(user.getProperty('telephoneNumber'))
+                return _decode(user.getProperty('telephoneNumber'),
+                               source.default_encoding)
 
 def findUsers(site, search_param, search_term):
     def userMatched(uid, cn):
@@ -92,9 +92,9 @@ def findUsers(site, search_param, search_term):
             users = acl_folder.findUser(search_param=search_param, search_term=search_term)
             for user in users:
                 uid = user.get('uid', '')
-                cn = _encode(user.get('cn', ''))
+                cn = _decode(user.get('cn', ''), source.default_encoding)
                 mail = user.get('mail', '')
-                organization = _encode(user.get('o', ''))
+                organization = _decode(user.get('o', ''), source.default_encoding)
                 info = user.get('dn', '')
                 ret.append({
                     'uid': uid,
@@ -116,8 +116,8 @@ def listUsersInGroup(site, search_role):
         for user in users:
             ret.append({
                 'uid': user.user_id,
-                'cn': _encode(user.full_name),
-                'organization': _encode(user.organisation),
+                'cn': _decode(user.full_name, source.default_encoding),
+                'organization': _decode(user.organisation, source.default_encoding),
                 'info': user.dn,
             })
 
