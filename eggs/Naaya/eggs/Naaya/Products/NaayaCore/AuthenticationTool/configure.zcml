@@ -32,7 +32,7 @@
          for="Products.Naaya.interfaces.INyFolder"
          name="access_overview"
          handler=".inspector.access_overview"
-         permission="zope2.ViewManagementScreens" />
+         permission="zope2.View" />
 
    <configure zcml:condition="installed Products.naayaUpdater">
       <utility

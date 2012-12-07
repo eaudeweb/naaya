@@ -31,3 +31,7 @@
  .overview_current_settings .list_users {
 	max-width: 100px;
  }
+
+ .overview_current_settings .restrict_obs{
+	max-width: 240px;
+ }
