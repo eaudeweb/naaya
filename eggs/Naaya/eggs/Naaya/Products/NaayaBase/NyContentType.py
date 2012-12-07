@@ -19,6 +19,7 @@ from Products.NaayaBase.NyProperties import update_translation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
+from naaya.core.zope2util import parents_in_site_path
 
 log = logging.getLogger(__name__)
 
@@ -341,6 +342,18 @@ class NyContentType(object):
                 log.error("Unkown access event type %r", event_type)
                 return None
             notify(event_factory(self, REQUEST.AUTHENTICATED_USER.getUserName()))
+
+    security.declarePublic('pretty_path')
+    def pretty_path(self):
+        """
+        Returns the object path in a breadcrumbs-like representation, relative
+        to site - useful when referencing object, specially in Admin
+
+        """
+        parents = parents_in_site_path(self)
+        if len(parents) > 1:
+            parents.pop(0) # do not include site
+        return " &raquo; ".join(parents)
 
 
 InitializeClass(NyContentType)
