@@ -1,7 +1,15 @@
 <metal:block use-macro="here/standard_template_macro">
 		<metal:block fill-slot="head">
+				<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.css" />
+				<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/tipsy/naaya.tipsy.css" />
+				<script type="text/javascript" src="/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.js"></script>
 				<link type="text/css" rel="stylesheet"
 				   href="/++resource++Products.NaayaCore.AuthenticationTool/restrict_folder.css" />
+				<script type="text/javascript">
+						jQuery(document).ready(function(){
+  						  jQuery(".tipsy-title").tipsy({gravity: 'e', html: true});
+                        });
+				</script>
 		</metal:block>
 <metal:block fill-slot="body">
 
@@ -53,7 +61,8 @@
 				<th class="roles" i18n:translate="">Roles allowed to access this folder</th>
 				<th i18n:translate="">Reason for having access</th>
 				<th i18n:translate="">Go to settings for</th>
-				<th class="list_users" i18n:translate="">List all users with this role</th>
+                <th i18n:translate="">Obs</th>
+				<!--<th class="list_users" i18n:translate="">List all users with this role</th>-->
 			</tr>
 		</thead>
 		<tbody>
@@ -114,7 +123,18 @@
 										</td>
 										</tal:block>
 								</tal:block>
-								<td><input type="button" value="List users"></td>
+								<!--<td><input type="button" value="List users" />
+								</td>-->
+								<td class="restrict_obs" tal:define="blocker python:settings[role][2]">
+										<span tal:condition="blocker" i18n:translate="">
+												The "<span tal:content="role" i18n:name="role" />" Role is not allowed to access
+												parent location
+												<a i18n:name="location" class="tipsy-title"
+												tal:attributes="title here/pretty_path;
+												                href string:${blocker/absolute_url}/restrict_html"
+												tal:content="blocker/title_or_id" />.
+										</span>
+								</td>
 								</tr>
 						</tal:block>
 				</tal:block>
