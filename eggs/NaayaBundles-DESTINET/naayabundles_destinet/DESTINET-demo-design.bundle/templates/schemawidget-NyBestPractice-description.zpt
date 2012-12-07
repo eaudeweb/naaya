@@ -1,0 +1,35 @@
+<tal:block define="
+field_class string:field cleaner;
+curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <tal:block define="editor here/getEditorTool"
+            condition="here/tinymce|nothing"
+            replace="structure python:editor.render(prop_id, curr_lang, image_support=True)" />
+        <tal:block
+          define="strippedvalue python:here.html2text(value).strip();
+                  translate python:here.getPortalTranslations().gettext;
+                  my_text python:translate('<p>1. WHO: key people and organisations (initiator, leader, partners)</p>
+                    <p></p>
+                    <p>2. WHY: Issues faced (challenge/reason for taking the good practice action)</p>
+                    <p></p>
+                    <p>3. HOW: Methods /steps / tools used (to develop the good practice)</p>
+                    <p></p>
+                    <p>4. RESULT: Specific/measurable results, benefits and recognitions (e.g. awards)</p>
+                    <p></p>
+                    <p>5. REFLECTION: Lessons learned / challenges met / critical success factors</p>
+                    <p></p>
+                    <p>6. MORE (web-references, pictures, documents)</p>
+                    <p></p>');
+                  value python:test(strippedvalue, value, my_text);">
+          <textarea tal:attributes="
+              rows here/rows;
+              cols here/columns;
+              name string:${prop_id}:utf8:ustring;
+              id prop_id"
+              tal:content="value"></textarea>
+        </tal:block>
+    </metal:block>
+</metal:block>
+</tal:block>
