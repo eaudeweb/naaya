@@ -1,5 +1,6 @@
 3.2.5 (unreleased)
 -------------------
+* added tipsy tool-tip jquery plugin [simiamih]
 * overview of access in restrict folder [simiamih]
 * module for inspecting security settings [simiamih]
 * choose base layer for OpenLayers map [moregale]
