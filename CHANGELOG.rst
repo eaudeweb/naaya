@@ -1,5 +1,6 @@
 1.2.29 (unreleased)
 -------------------
+* fixed missing results in participants tab of a new meeting [mihaitab]
 
 1.2.28 (2012-11-29)
 -------------------
@@ -15,9 +16,9 @@
 
 1.2.25 (2012-11-27)
 -------------------
-* Show survey answers also in signup listing [dumitval] 
-* Hide specific survey questions from all listings (organisation, phone) [dumitval] 
-* Hide survey questions with ids starting with 'hide_' from all listings [dumitval] 
+* Show survey answers also in signup listing [dumitval]
+* Hide specific survey questions from all listings (organisation, phone) [dumitval]
+* Hide survey questions with ids starting with 'hide_' from all listings [dumitval]
 * Get organisation and phone info from all possible sources [dumitval]
 
 1.2.24 (2012-11-26)
@@ -67,7 +68,7 @@
 
 1.2.13 (2012-09-10)
 -------------------
-* Improvements in survey integration [dumitval] 
+* Improvements in survey integration [dumitval]
 
 1.2.12 (2012-04-27)
 -------------------

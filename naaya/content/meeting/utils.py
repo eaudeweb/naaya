@@ -93,9 +93,16 @@ def findUsers(site, search_param, search_term):
             for user in users:
                 uid = user.get('uid', '')
                 cn = _encode(user.get('cn', ''))
+                mail = user.get('mail', '')
                 organization = _encode(user.get('o', ''))
                 info = user.get('dn', '')
-                ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
+                ret.append({
+                    'uid': uid,
+                    'cn': cn,
+                    'mail': mail,
+                    'organization': organization,
+                    'info': info
+                })
 
     return ret
 
