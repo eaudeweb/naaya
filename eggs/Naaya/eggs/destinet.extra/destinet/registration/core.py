@@ -130,6 +130,10 @@ def handle_groups(ob, req_form):
     site = ob.getSite()
     groups = req_form.get('groups', [])
     for group in groups:
+        if group == 'european-ecotourism-network':
+            username = request.form['username']
+            site.admin_addroles([username], ['EEN Member', 'Contributor'],
+                                '', send_mail=True)
         if group in USER_GROUPS:
             pointer_location = site.unrestrictedTraverse(USER_GROUPS[group])
             place_pointer_to_contact(ob, pointer_location)
