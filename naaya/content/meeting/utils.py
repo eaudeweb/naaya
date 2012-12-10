@@ -81,10 +81,16 @@ def findUsers(site, search_param, search_term):
     for user in auth_tool.getUsers():
         uid = auth_tool.getUserAccount(user)
         cn = auth_tool.getUserFullName(user)
+        mail = getUserEmail(site, uid)
         info = 'Local user'
 
         if userMatched(uid, cn):
-            ret.append({'uid': uid, 'cn': cn, 'organization': '', 'info': info})
+            ret.append({
+                'uid': uid,
+                'cn': cn,
+                'mail': mail,
+                'organization': '',
+                'info': info})
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
