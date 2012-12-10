@@ -1,4 +1,7 @@
-1.2.4 (unreleased)
+1.2.5 (unreleased)
+====================
+
+1.2.4 (2012-12-10)
 ====================
 * add a special role ("EEN Members") to some of the new users [dumitval]
 
