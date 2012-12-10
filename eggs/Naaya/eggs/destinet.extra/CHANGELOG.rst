@@ -1,5 +1,6 @@
 1.2.7 (unreleased)
 ====================
+* do_geocoding on newly created contacts [dumitval]
 
 1.2.6 (2012-12-10)
 ====================
