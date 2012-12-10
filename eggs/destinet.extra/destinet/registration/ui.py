@@ -59,6 +59,10 @@ def process_create_account(context, request):
             # voodoo for setting ownership using AccessControl.Owned API
             new_user = site.acl_users.getUser(username).__of__(site.acl_users)
             ob.changeOwnership(new_user)
+
+            site.admin_addroles([username], ['Contributor'], '', send_mail=True)
+            handle_groups(ob, request.form, form_data)
+
             # hack to edit object without permissions (no auth)
             setattr(ob, 'checkPermissionEditObject', lambda: True)
             ob.manageProperties(title=contact_name,
@@ -69,8 +73,6 @@ def process_create_account(context, request):
                                 description=request.form['comments'],
                                 **form_data)
             delattr(ob, 'checkPermissionEditObject')
-            site.admin_addroles([username], ['Contributor'], '', send_mail=True)
-            handle_groups(ob, request.form)
         else:
             # also call this to prefill values in form for contact
             prepare_error_response(context, schema, register_schema, form_errors, request.form)

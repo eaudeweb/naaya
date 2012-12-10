@@ -1,5 +1,6 @@
 1.2.6 (unreleased)
 ====================
+* add keyword to new users if group members [dumitval]
 
 1.2.5 (2012-12-10)
 ====================
