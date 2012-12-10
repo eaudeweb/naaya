@@ -1,4 +1,7 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
+====================
+
+1.2.6 (2012-12-10)
 ====================
 * add keyword to new users if group members [dumitval]
 
