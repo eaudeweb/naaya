@@ -131,7 +131,7 @@ def handle_groups(ob, req_form):
     groups = req_form.get('groups', [])
     for group in groups:
         if group == 'european-ecotourism-network':
-            username = request.form['username']
+            username = req_form['username']
             site.admin_addroles([username], ['EEN Member', 'Contributor'],
                                 '', send_mail=True)
         if group in USER_GROUPS:
