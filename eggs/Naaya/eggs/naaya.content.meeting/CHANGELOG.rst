@@ -1,4 +1,7 @@
-1.2.30 (unreleased)
+1.2.31 (unreleased)
+-------------------
+
+1.2.30 (2012-12-10)
 -------------------
 * fixed bug - get missing email field for non-ldap users [mihaitab]
 
