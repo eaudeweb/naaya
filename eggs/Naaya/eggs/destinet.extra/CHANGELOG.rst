@@ -1,4 +1,7 @@
-1.2.7 (unreleased)
+1.2.8(unreleased)
+====================
+
+1.2.7 (2012-12-10)
 ====================
 * do_geocoding on newly created contacts [dumitval]
 
