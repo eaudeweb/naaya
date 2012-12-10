@@ -1,5 +1,6 @@
 1.2.5 (unreleased)
 ====================
+* bugfix ref special role [dumitval]
 
 1.2.4 (2012-12-10)
 ====================
