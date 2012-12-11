@@ -77,7 +77,6 @@ def process_create_account(context, request):
             ob.changeOwnership(new_user)
 
             site.admin_addroles([username], ['Contributor'], '', send_mail=True)
-            handle_groups(ob, request.form, form_data)
 
             # hack to edit object without permissions (no auth)
             setattr(ob, 'checkPermissionEditObject', lambda: True)
@@ -89,6 +88,7 @@ def process_create_account(context, request):
                                 approved=True,
                                 description=request.form['comments'],
                                 **form_data)
+            handle_groups(ob, request.form)
             delattr(ob, 'checkPermissionEditObject')
         else:
             # also call this to prefill values in form for contact

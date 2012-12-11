@@ -1,5 +1,6 @@
 1.2.8(unreleased)
 ====================
+* bugfix (call handle_groups after manageProperties) [dumitval]
 
 1.2.7 (2012-12-10)
 ====================
