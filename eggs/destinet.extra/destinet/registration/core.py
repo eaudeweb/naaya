@@ -137,6 +137,7 @@ def handle_groups(ob, req_form):
             lang = ob.gl_get_selected_language()
             ob._setLocalPropValue('keywords', lang,
                                   'European Ecotourism Network')
+            ob.recatalogNyObject(ob)
         if group in USER_GROUPS:
             pointer_location = site.unrestrictedTraverse(USER_GROUPS[group])
             place_pointer_to_contact(ob, pointer_location)
