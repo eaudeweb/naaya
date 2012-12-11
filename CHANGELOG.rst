@@ -1,5 +1,6 @@
 1.2.9 (unreleased)
 ====================
+* recatalog object in handle_groups [dumitval]
 
 1.2.8 (2012-12-11)
 ====================
