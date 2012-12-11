@@ -1,4 +1,7 @@
-1.2.8(unreleased)
+1.2.9 (unreleased)
+====================
+
+1.2.8 (2012-12-11)
 ====================
 * bugfix (call handle_groups after manageProperties) [dumitval]
 
