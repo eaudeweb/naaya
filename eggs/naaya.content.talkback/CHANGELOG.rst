@@ -1,4 +1,7 @@
-1.4.20 (unreleased)
+1.4.21 (unreleased)
+-------------------
+
+1.4.20 (2012-12-11)
 -------------------
 * comments are no longer subject of approval [simiamih]
 
