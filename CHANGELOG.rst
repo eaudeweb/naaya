@@ -1,5 +1,6 @@
 1.4.20 (unreleased)
 -------------------
+* comments are no longer subject of approval [simiamih]
 
 1.4.19 (2012-11-28)
 -------------------
