@@ -120,7 +120,7 @@ def place_pointer_to_contact(ob, pointer_parent):
             pointer.approveThis(0, None)
         return pointer
 
-def handle_groups(ob, req_form, form_data):
+def handle_groups(ob, req_form):
     """
     If user selected a group to be member/user of, then a pointer must
     be created to his profile (hist contact object) in folder of each
@@ -134,7 +134,9 @@ def handle_groups(ob, req_form, form_data):
             username = req_form['username']
             site.admin_addroles([username], ['EEN Member', 'Contributor'],
                                 '', send_mail=True)
-            form_data['keywords'] = 'European Ecotourism Network'
+            lang = ob.gl_get_selected_language()
+            ob._setLocalPropValue('keywords', lang,
+                                  'European Ecotourism Network')
         if group in USER_GROUPS:
             pointer_location = site.unrestrictedTraverse(USER_GROUPS[group])
             place_pointer_to_contact(ob, pointer_location)
