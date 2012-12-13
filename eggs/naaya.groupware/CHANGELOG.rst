@@ -1,4 +1,7 @@
-1.2.20 (unreleased)
+1.2.21 (unreleased)
+-------------------
+
+1.2.20 (2012-12-13)
 -------------------
 * Link to the bulk mail administration [dumitval]
 * logged granted access requests [mihaitab]
