@@ -1,5 +1,6 @@
 3.2.6 (unreleased)
 -------------------
+* Bulk mail improvements [dumitval]
 
 3.2.5 (2012-12-13)
 -------------------

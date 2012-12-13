@@ -49,6 +49,7 @@ from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manag
 from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
 from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
+                                                    get_bulk_email,
                                                     get_bulk_emails)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
@@ -3293,7 +3294,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ Display all saved bulk emails """
         emails = get_bulk_emails(self)
         return self.getFormsTool().getContent({'here': self, 'emails': emails},
-            'site_admin_saved_bulk_emails')
+            'site_admin_bulk_mail_listing')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_saved_bulk_emails')
+    def admin_view_bulk_email(self, filename, REQUEST=None, RESPONSE=None):
+        """ Display a specfic saved bulk email """
+        email = get_bulk_email(self, filename)
+        return self.getFormsTool().getContent({'here': self, 'email': email},
+            'site_admin_bulk_mail_view')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):
@@ -3707,7 +3716,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             email_tool.sendEmail(mail_custom_body, mail, addr_from, mail_subject)
 
         try:
-            save_bulk_email(self, mails, addr_from, mail_subject, mail_body)
+            save_bulk_email(self, mails, self.REQUEST.AUTHENTICATED_USER.getUserName(), mail_subject, mail_body)
         except Exception, e:
             log.exception("Failed saving bulk email on disk")
 
