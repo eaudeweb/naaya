@@ -46,8 +46,8 @@ def handle_object_approved(event):
 
 @check_skip_notifications
 def handle_object_add(event):
-    """An object has been created. Send instant notifications and create a log
-    entry
+    """An object has been created. Create a log entry. Notifications to
+    subscribers are only sent in object-approved handler.
 
     """
 
@@ -59,8 +59,6 @@ def handle_object_add(event):
 
     portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
-    notification_tool = portal.getNotificationTool()
-    notification_tool.notify_instant(ob, contributor)
 
     if ob.approved:
         #Create log entry

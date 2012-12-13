@@ -1,5 +1,6 @@
 3.2.5 (unreleased)
 -------------------
+* notifications to subscribers are only sent in object-approved handler [mihaitab]
 * pretty_path for NyContentType [simiamih]
 * added tipsy tool-tip jquery plugin [simiamih]
 * overview of access in restrict folder [simiamih]
