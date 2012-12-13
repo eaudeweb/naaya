@@ -1,4 +1,7 @@
-3.2.6 (unreleased)
+3.2.7 (unreleased)
+-------------------
+
+3.2.6 (2012-12-13)
 -------------------
 * Bulk mail improvements [dumitval]
 
