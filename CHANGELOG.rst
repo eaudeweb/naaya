@@ -1,4 +1,7 @@
-1.2.4 (unreleased)
+1.2.5 (unreleased)
+------------------
+
+1.2.4 (2012-12-13)
 ------------------
 * geocoding is now only done by google [dumitval]
 * check_item_title is now item_has_title [simiamih]
