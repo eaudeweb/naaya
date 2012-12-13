@@ -9,6 +9,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_metadata_html" title="Generic portal properties and modification of the logo icon" i18n:attributes="title" i18n:translate="">IG properties</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_layout_html" title="Change the portal layout and color scheme" i18n:attributes="title" i18n:translate="">IG layout</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_users_html" title="Users and security settings" i18n:attributes="title" i18n:translate="">User management</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" title="Bulk mail" i18n:attributes="title" i18n:translate="">Bulk email</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_linkslists_html" title="Manage lists of lists" i18n:attributes="title" i18n:translate="">Lists of links</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_notifications_html" title="Notifications" i18n:attributes="title" i18n:translate="">Notifications</a></li>
