@@ -365,13 +365,45 @@ def get_bulk_emails(site):
 
                 emails.append({
                     'subject': mail.get('Subject', '(no-subject)'),
-                    'content': mail.get_payload(),
+                    'content': mail.get_payload(decode=True),
                     'recipients': mail.get_all('To'),
                     'sender': mail.get('From'),
-                    'date': date
+                    'date': date,
+                    'filename': os.path.split(message)[-1]
                 })
 
     return emails
+
+def get_bulk_email(site, filename):
+    """ Show a specific bulk email saved on the disk """
+    save_path = get_log_dir(site)
+    join = os.path.join
+
+    if save_path:
+        save_path = join(save_path, 'sent-bulk')
+        if os.path.isdir(save_path):
+            message_path = join(save_path, filename)
+
+            try:
+                message_file = open(message_path, 'r+')
+            except IOError:
+                return None
+            mail = message_from_file(message_file)
+            message_file.close()
+
+            # Prepare the date to be formatted with utShowFullDateTime
+            date = email_utils.parsedate_tz(mail.get('Date', ''))
+            date = email_utils.mktime_tz(date)
+            date = datetime.fromtimestamp(date)
+
+            return {
+                'subject': mail.get('Subject', '(no-subject)'),
+                'content': mail.get_payload(decode=True).replace(
+                    '\n\n', '</p><p>').replace('\n', '<br/>'),
+                'recipients': mail.get_all('To'),
+                'sender': mail.get('From'),
+                'date': date,
+            }
 
 class BestEffortSMTPMailer(SMTPMailer):
     """

@@ -210,6 +210,7 @@ def html2text(html, trim_length=512, ellipsis=False):
     text = unescape_html_entities(''.join(soup.findAll(text=True))).strip()
     if trim_length and trim_length < len(text):
         text = text[:trim_length]
+        text = text.rsplit(None, 1)[0]
         if ellipsis:
             ELLIPSIS = u'\u2026'
             text = re.sub(r'(?<=\s)\S+$', ELLIPSIS, text)
