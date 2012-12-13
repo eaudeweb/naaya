@@ -3297,7 +3297,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             'site_admin_bulk_mail_listing')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_saved_bulk_emails')
+                              'admin_view_bulk_email')
     def admin_view_bulk_email(self, filename, REQUEST=None, RESPONSE=None):
         """ Display a specfic saved bulk email """
         email = get_bulk_email(self, filename)

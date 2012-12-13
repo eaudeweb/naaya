@@ -1,5 +1,6 @@
 3.2.7 (unreleased)
 -------------------
+* removed unnecessary change to html2text [dumitval]
 
 3.2.6 (2012-12-13)
 -------------------
