@@ -46,36 +46,6 @@ def location_geocode(address):
         output = google_geocode(address)
     return output
 
-
-def yahoo_geocode(address):
-    """ """
-    addresses = []
-    parms = {'appid': YAHOO_KEY, 'location': address}
-    try:
-        url = 'http://api.local.yahoo.com/MapsService/V1/geocode?%s' % urllib.urlencode(parms)
-        # parse the xml contents of the url into a dom
-        dom = parse(urllib.urlopen(url))
-        results = dom.getElementsByTagName('Result')
-        result_count = len(results)
-        for result in results:
-            d = {'precision': result.getAttribute('precision'), 'warning': result.getAttribute('warning')}
-            for itm in result.childNodes:
-                # if precision is zip, Address childNode will not exist
-                if itm.childNodes:
-                    d[itm.nodeName] = itm.childNodes[0].data
-                else:
-                    d[itm.nodeName] = ''
-            addresses.append(d)
-    except:
-        return None
-    if not addresses: return None
-    addr = addresses[0] #take the first one, it should be the good one
-    return (addr['Latitude'].encode('utf-8'), addr['Longitude'].encode('utf-8'))
-
 def geocode(portal_map, address):
-    if portal_map.current_engine == 'yahoo':
-        return yahoo_geocode(address)
-    elif portal_map.current_engine == 'google':
-        return location_geocode(address)
-    else:
-        return None
+    #kept for backward compatibility
+    return location_geocode(address)
