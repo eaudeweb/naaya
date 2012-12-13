@@ -4,6 +4,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, WidgetError, manage_addWidget
 from geo import Geo, geo_as_json
+from Products.NaayaCore.GeoMapTool.managers import geocoding
 
 def addGeoWidget(container, id="", title="Geo Widget", REQUEST=None, **kwargs):
     """ Contructor for Geo widget"""
@@ -40,7 +41,11 @@ class GeoWidget(Widget):
             lon = data.get('lon', None)
             if not lon:
                 lon = None
-            address = data.get('address', '')
+            address = data.get('address', '').strip()
+            if address and lat is lon is None:
+                coordinates = geocoding.location_geocode(address)
+                if coordinates is not None:
+                    lat, lon = coordinates
             return Geo(lat, lon, address)
         except ValueError, e:
             raise WidgetError(str(e))
