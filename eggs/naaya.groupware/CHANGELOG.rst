@@ -1,5 +1,6 @@
 1.2.20 (unreleased)
 -------------------
+* Link to the bulk mail administration [dumitval]
 * logged granted access requests [mihaitab]
 
 1.2.19 (2012-11-23)
