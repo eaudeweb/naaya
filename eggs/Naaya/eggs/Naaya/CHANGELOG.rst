@@ -1,4 +1,7 @@
-3.2.5 (unreleased)
+3.2.6 (unreleased)
+-------------------
+
+3.2.5 (2012-12-13)
 -------------------
 * notifications to subscribers are only sent in object-approved handler [mihaitab]
 * pretty_path for NyContentType [simiamih]
