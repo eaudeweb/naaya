@@ -1,5 +1,6 @@
 1.2.4 (unreleased)
 ------------------
+* geocoding is now only done by google [dumitval]
 * check_item_title is now item_has_title [simiamih]
 
 1.2.3 (2012-01-13)

@@ -223,10 +223,7 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         return ref_list
 
     def do_geocoding(self, address):
-        if self.portal_map.current_engine == 'yahoo':
-            coordinates = geocoding.yahoo_geocode(address)
-        elif self.portal_map.current_engine == 'google':
-            coordinates = geocoding.location_geocode(address)
+        coordinates = geocoding.location_geocode(address)
         if coordinates != None:
             return coordinates
         return ('', '')
