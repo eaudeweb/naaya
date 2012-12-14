@@ -40,7 +40,6 @@ portal_map here/getGeoMapTool;
         </p>
         <strong i18n:translate="">A. Identifying a location on the map:</strong>
         <ul>
-            <li i18n:translate="">Click <em i18n:translate="" i18n:name="show_map">Show map</em>;</li>
             <li i18n:translate="">
               Move inside the map and zoom in to the most relevant location;
             </li>
@@ -53,7 +52,6 @@ portal_map here/getGeoMapTool;
         <strong i18n:translate="">B. If you know the address:</strong>
         <ul>
             <li i18n:translate="">Type the address in the <em i18n:translate="" i18n:name="address">Address</em> field;</li>
-            <li i18n:translate="">Click <em i18n:translate="" i18n:name="show_map">Show map</em>;</li>
             <li i18n:translate="">
               Click on the <em i18n:translate="" i18n:name="center_map">Center map</em> button, right next to the
               <em i18n:translate="" i18n:name="address">Address</em>
@@ -63,7 +61,7 @@ portal_map here/getGeoMapTool;
     </div>
     <p>
         <a id="map-toggle" href="javascript:">[<tal:block
-            i18n:translate="">Show map</tal:block> &#x25bc;]</a>
+            i18n:translate="">Hide map</tal:block> &#x25bc;]</a>
     </p>
 
     <div class="field-inline">
@@ -90,7 +88,7 @@ portal_map here/getGeoMapTool;
     </p></noscript>
 
     <!-- Map widget -->
-    <div id="map-container" style="display:none">
+    <div id="map-container">
         <div id="map"></div>
     </div>
 
@@ -118,11 +116,12 @@ portal_map here/getGeoMapTool;
             "></script>
     <script type="text/javascript">
     (function() {
-        var map_visible = false;
+        var map_visible = true;
         var map_container = $('#map-container');
         var map_toggle_button = $('#map-toggle');
         var search_button = $('#' + prop_name + '-centermap');
-        var map_engine = null;
+        var map_engine = naaya_map_engine.object_edit_map(
+                            'map', coord_value, setLatLonValues);
         map_toggle_button.click(function(evt) {
             if(map_visible) {
                 map_toggle_button.html("[Show map &#x25bc;]");
@@ -134,10 +133,6 @@ portal_map here/getGeoMapTool;
                 map_toggle_button.html("[Hide map &#x25b2;]");
                 map_container.show();
                 search_button.show();
-                if(! map_engine) {
-                    map_engine = naaya_map_engine.object_edit_map(
-                            'map', coord_value, setLatLonValues);
-                }
                 map_visible = true;
             }
             return false;
