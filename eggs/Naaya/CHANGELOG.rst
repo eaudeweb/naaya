@@ -1,5 +1,6 @@
 3.2.7 (unreleased)
 -------------------
+* GeoWidget map initially visible [dumitval]
 * automatic geocoding where the address is available [dumitval]
 * removed unnecessary change to html2text [dumitval]
 
