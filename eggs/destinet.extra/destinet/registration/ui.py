@@ -6,24 +6,6 @@ from destinet.registration.core import (validate_widgets, prepare_error_response
                                         handle_groups)
 from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
                                              WIDGET_NAMES)
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from Products.NaayaCore.GeoMapTool.managers import geocoding
-
-def do_geocoding(portal_map, properties):
-    geo = properties.get('geo_location', None)
-    if geo:
-        lat = geo.lat
-        lon = geo.lon
-        address = geo.address
-        if lat is None and lon is None and address:
-            coordinates = geocoding.geocode(portal_map, address)
-            if coordinates != None:
-                lat, lon = coordinates
-                properties['geo_location'] = Geo(lat=lat, lon=lon,
-                                                 address=address)
-    return properties
-
-
 def render_create_account_tpl(context, widgets, request_form=None, errors=None):
     """ """
 
@@ -80,7 +62,6 @@ def process_create_account(context, request):
 
             # hack to edit object without permissions (no auth)
             setattr(ob, 'checkPermissionEditObject', lambda: True)
-            form_data = do_geocoding(site.portal_map, form_data)
             ob.manageProperties(title=contact_name,
                                 firstname=request.form['firstname'],
                                 lastname=request.form['lastname'],
