@@ -1,4 +1,7 @@
-1.2.10 (unreleased)
+1.2.11 (unreleased)
+====================
+
+1.2.10 (2012-12-14)
 ====================
 * removed redundant geocoding (now done by the widget) [dumitval]
 
