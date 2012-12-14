@@ -1,4 +1,7 @@
-3.2.7 (unreleased)
+3.2.8 (unreleased)
+-------------------
+
+3.2.7 (2012-12-14)
 -------------------
 * GeoWidget map initially visible [dumitval]
 * automatic geocoding where the address is available [dumitval]
