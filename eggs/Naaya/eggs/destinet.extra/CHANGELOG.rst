@@ -1,5 +1,6 @@
 1.2.10 (unreleased)
 ====================
+* removed redundant geocoding (now done by the widget) [dumitval]
 
 1.2.9 (2012-12-11)
 ====================
