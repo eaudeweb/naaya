@@ -259,10 +259,6 @@ class AnalyticsTool(SimpleItem, utils):
         import transaction
         transaction.get().note('(Saving new Google oauth2 token)')
 
-        for name in 'ga_service', 'gd_service':
-            if hasattr(self.aq_base, name):
-                delattr(self.aq_base, name)
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveAuthorizationCode')
     def saveAuthorizationCode(self, code, REQUEST=None):
         """ """

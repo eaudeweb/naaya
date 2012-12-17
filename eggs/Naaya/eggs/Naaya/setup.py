@@ -35,6 +35,7 @@ setup(name='Naaya',
           'Unidecode',
           'scrubber',
           'Pillow',
+          'gdata',
 
           #Zope
           'contentratings',
