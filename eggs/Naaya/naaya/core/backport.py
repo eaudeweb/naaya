@@ -134,3 +134,36 @@ except ImportError:
 
         return result
 
+
+try:
+    import requests
+
+except ImportError:
+    class _response_container(object):
+        pass
+
+    def _perform_request(url, data=None, headers={}):
+        import urllib2
+        request = urllib2.Request(url, data=data, headers=headers)
+        response = urllib2.urlopen(request)
+        rv = _response_container()
+        rv.status_code = response.code
+        try:
+            rv.json = json.load(response)
+        except:
+            rv.json = None
+        return rv
+
+    class requests(object):
+        """ Implements a subset of the API provided by the `requests` module. """
+
+        @staticmethod
+        def get(url, params={}, headers={}):
+            if params:
+                import urllib
+                url += '?' + urllib.urlencode(params)
+            return _perform_request(url, None, headers)
+
+        @staticmethod
+        def post(url, data, headers={}):
+            return _perform_request(url, None, headers)
