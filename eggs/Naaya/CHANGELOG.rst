@@ -1,10 +1,11 @@
 3.2.10 (unreleased)
 -------------------
+* bugfix for Google Analytics API [moregale]
 
 3.2.9 (2012-12-17)
 -------------------
 * Add `gdata` dependency because of broken objects [moregale]
-* Update script: remove `gdata` object instances [moregale]
+* *update* script: remove `gdata` object instances [moregale]
 
 3.2.8 (2012-12-17)
 -------------------
