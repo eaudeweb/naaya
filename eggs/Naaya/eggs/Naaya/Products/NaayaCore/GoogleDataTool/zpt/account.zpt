@@ -57,6 +57,9 @@
       <input type="hidden" name="profile_code"
              tal:attributes="value here/profile_code" />
     </div>
+    <script tal:define="url string:${here/absolute_url}/portal_statistics/getProfiles"
+            tal:content="structure python:'var STATISTICS_PROFILES_URL = %s;'
+                            % here.rstk['json_dumps'](url)"></script>
     <script>
       (function() {
           var old_profile_code = $('input[name=profile_code]').remove().val();
@@ -75,8 +78,7 @@
                   return;
               }
               profile_select_box.text('loading...');
-              var url = site_url + '/portal_statistics/getProfiles';
-              $.get(url, {account: value}, function(data) {
+              $.get(STATISTICS_PROFILES_URL, {account: value}, function(data) {
                   var profile_select = $('<select name="profile_code">');
                   profile_select.attr('id', 'profile-select');
                   $.each(data['profiles'], function(i, item) {
