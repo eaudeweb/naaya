@@ -1,5 +1,9 @@
-3.2.11 (unreleased)
+3.2.12 (unreleased)
 -------------------
+
+3.2.11 (2012-12-17)
+-------------------
+* yet another bugfix for Google Analytics API [moregale]
 
 3.2.10 (2012-12-17)
 -------------------
