@@ -166,4 +166,6 @@ except ImportError:
 
         @staticmethod
         def post(url, data, headers={}):
-            return _perform_request(url, None, headers)
+            import urllib
+            post_data = urllib.urlencode(data)
+            return _perform_request(url, post_data, headers)
