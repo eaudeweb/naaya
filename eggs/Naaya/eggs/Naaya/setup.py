@@ -27,7 +27,6 @@ setup(name='Naaya',
       install_requires=[
           #Python 3rd party
           'feedparser >= 4.1',
-          'gdata >= 2.0.5',
           'lxml',
           'BeautifulSoup',
           'mimeparse >= 0.1.2',

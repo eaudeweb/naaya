@@ -1,5 +1,6 @@
 3.2.8 (unreleased)
 -------------------
+* Update access to Google Analytics API [moregale]
 
 3.2.7 (2012-12-14)
 -------------------
