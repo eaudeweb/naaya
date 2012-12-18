@@ -31,24 +31,45 @@
 $(document).ready(function(){
 
 	$('#delete-folder').click(function() {
-		$( "#dialog-delete-folder-confirm" ).dialog({
-		    open: function() {
-                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
-		    },
-			resizable: false,
-			height: 240,
-			width: 600,
-			modal: true,
-			draggable: false,
-			buttons: {
-				"Delete Folder": function() {
-                                    window.location = folder_url + '/deleteThis';
-				},
-				"Cancel": function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
+        var no_selected_items = $('input[name=id]:checked').length;
+        if (no_selected_items > 0) {
+            $( "#dialog-unable-delete-folder" ).dialog({
+                open: function() {
+                    $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+                },
+                resizable: false,
+                height: 270,
+                width: 650,
+                modal: true,
+                draggable: false,
+                buttons: {
+                    "Go back": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+
+        }
+        else {
+            $( "#dialog-delete-folder-confirm" ).dialog({
+                open: function() {
+                    $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+                },
+                resizable: false,
+                height: 240,
+                width: 600,
+                modal: true,
+                draggable: false,
+                buttons: {
+                    "Delete Folder": function() {
+                                        window.location = folder_url + '/deleteThis';
+                    },
+                    "Cancel": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+        }
 	});
 
 	var deleteObjects = function(action) {
@@ -372,11 +393,29 @@ function submit_form_action(action){
 	</table>
 </form>
 
+<div id="dialog-unable-delete-folder" i18n:attributes="title" title="Unable to delete folder" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="" tal:define="folder_title here/title_or_id">
+                You are using the <strong i18n:name="delete_folder">Delete Folder</strong>
+                button while you have checked items inside it.
+                <br i18n:name="br" /> <br i18n:name="br" />
+                For security reasons, we ask you to uncheck all items, and then use this button
+                if you want to delete the entire <strong><span i18n:name="folder_title" tal:replace="folder_title"/></strong> folder.
+                <br i18n:name="br" /><br i18n:name="br" />
+                If you instead want to delete the checked items, then use the <strong i18n:name="delete">Delete</strong> button next to Cut/Copy.
+            </span>
+       </p>
+</div>
+
+
 <div id="dialog-delete-folder-confirm" i18n:attributes="title" title="Delete entire folder" style="display: none">
        <p>
             <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-            <span i18n:translate="dialog-delete-folder-confirm" tal:define="folder_title here/title_or_id">
-                The <strong>entire</strong> <span i18n:name="folder_title" tal:replace="folder_title" /> folder and all its contents will be deleted.
+            <span i18n:translate="" tal:define="folder_title here/title_or_id">
+                The <strong>entire <span style="color:red;"><span i18n:name="folder_title"
+                tal:replace="folder_title"/></span> folder</strong> and all its contents will be deleted.
+                <br i18n:name="br" />
                 <br i18n:name="br" />
                 If you want to delete specific checked items, use the <strong i18n:name="delete" i18n:translate="">Delete</strong> button next to Cut, Copy.
                 <br i18n:name="br" /><br i18n:name="br" />
