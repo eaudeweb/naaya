@@ -1,4 +1,7 @@
-1.2.21 (unreleased)
+1.2.22 (unreleased)
+-------------------
+
+1.2.21 (2012-12-18)
 -------------------
 * Alert on 'Delete Folder' if existing checked items inside [mihaitab]
 
