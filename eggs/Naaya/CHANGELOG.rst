@@ -1,5 +1,6 @@
 3.2.12 (unreleased)
 -------------------
+* eliminate redundant notifications sent by zip upload [mihaitab]
 
 3.2.11 (2012-12-17)
 -------------------

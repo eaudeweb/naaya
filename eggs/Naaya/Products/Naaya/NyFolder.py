@@ -125,7 +125,9 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    ob.approveThis(approved, approved_by)
+
+    _send_notif = kwargs.get('_send_notifications', True)
+    ob.approveThis(approved, approved_by, _send_notifications=_send_notif)
     ob.submitThis()
 
     if _publicinterface:
@@ -950,7 +952,7 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
                     if ids[0] != ids[1]:
                         self.manage_renameObject(ids[0], ids[1])
                     self.setSessionInfoTrans("Items(s) succesfully renamed.")
-                except: 
+                except:
                     self.setSessionErrorsTrans("Item %s could not be renamed." % ids[0])
 
         return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
