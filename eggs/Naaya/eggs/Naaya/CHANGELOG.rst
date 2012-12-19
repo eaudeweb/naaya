@@ -1,4 +1,7 @@
-3.2.12 (unreleased)
+3.2.13 (unreleased)
+-------------------
+
+3.2.12 (2012-12-19)
 -------------------
 * eliminate redundant notifications sent by zip upload [mihaitab]
 
