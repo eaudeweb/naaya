@@ -1,4 +1,7 @@
-1.3.9 (unreleased)
+1.3.10 (unreleased)
+------------------
+
+1.3.9 (2012-12-19)
 ------------------
 * #10213 - eliminate redundant notifications sent by zip upload [mihaitab]
 * opening file index page is not a view event [simiamih]
