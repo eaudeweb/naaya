@@ -132,7 +132,9 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    ob.approveThis(approved, approved_by)
+
+    _send_notif = kwargs.get('_send_notifications', True)
+    ob.approveThis(approved, approved_by, _send_notifications=_send_notif)
     ob.submitThis()
 
     self.recatalogNyObject(ob)
