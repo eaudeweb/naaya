@@ -148,7 +148,10 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         approved, approved_by = 0, None
     ob.submitThis()
-    ob.approveThis(approved, approved_by)
+
+    _send_notif = kwargs.get('_send_notifications', True)
+    ob.approveThis(approved, approved_by, _send_notifications=_send_notif)
+
     ob.handleUpload(_source, _file, _url)
 
     self.recatalogNyObject(ob)
