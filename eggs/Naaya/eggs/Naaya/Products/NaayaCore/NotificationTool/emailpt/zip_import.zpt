@@ -13,4 +13,7 @@
     Uploaded by <tal:block content="options/username" i18n:name="username" />
     on <tal:block content="options/datetime" i18n:name="datetime" />
 </tal:block>
+
+<tal:block condition="options/subscription|nothing" replace="structure python:options['here'].unsubscribe_links_html(**options)" />
+
 </body_text>
