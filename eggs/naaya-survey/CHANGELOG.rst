@@ -1,5 +1,6 @@
 1.2.25 (unreleased)
 ===================
+* bugfix in answers export [dumitval]
 
 1.2.24 (2012-12-07)
 ===================
