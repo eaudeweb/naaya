@@ -1,4 +1,7 @@
-1.2.25 (unreleased)
+1.2.26 (unreleased)
+===================
+
+1.2.25 (2013-01-09)
 ===================
 * bugfix in answers export [dumitval]
 
