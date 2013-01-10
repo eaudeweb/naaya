@@ -1,5 +1,6 @@
 3.2.13 (unreleased)
 -------------------
+* naaya.monitor zcml loaded if installed [simiamih]
 * update email message in notifications by zip upload [mihaitab]
 
 3.2.12 (2012-12-19)

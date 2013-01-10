@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'
     xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser">
     <include package=".adapter" />
 
@@ -98,6 +99,10 @@
   <include package="naaya.content.story" />
   <include package="naaya.content.url" />
   <include package="naaya.i18n" />
+  <!-- optional packages -->
+  <configure zcml:condition="installed naaya.monitor">
+    <include package="naaya.monitor" />
+  </configure>
 
   <naaya:call factory=".naaya_bundle_registration" />
   <naaya:call factory=".permissions.register_permissions" />
