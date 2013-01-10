@@ -55,7 +55,7 @@ class InvitationsContainer(SimpleItem):
         """ Create an invitation, send e-mail """
         keys = ('name', 'email', 'organization', 'notes', 'message')
         formerrors = {}
-        preview = {}
+        previews = []
 
         if REQUEST.REQUEST_METHOD == 'POST':
             do_preview = (REQUEST.form.get('do', '') == 'Preview')
@@ -69,9 +69,10 @@ class InvitationsContainer(SimpleItem):
 
             try:
                 if do_preview:
-                    preview.update(self._send_invitation(preview=True, **kwargs))
+                    preview = self._send_invitation(preview=True, **kwargs)
                     preview['preview_attribution'] = '%s (invited by %s)' % \
                         (formdata['name'], inviter_name)
+                    previews.append(preview)
                 else:
                     self._send_invitation(**kwargs)
                     self.setSessionInfoTrans('Invitation for ${name} '
@@ -87,7 +88,7 @@ class InvitationsContainer(SimpleItem):
             formdata = dict( (key, '') for key in keys )
 
         return self._create_html(formdata=formdata, formerrors=formerrors,
-                                 previews=[preview])
+                                 previews=previews)
 
     def bulk_create(self, REQUEST):
         """ Same as `create`, but input is an xls file """
@@ -111,19 +112,35 @@ class InvitationsContainer(SimpleItem):
                     ['Name', 'Email', 'Organization', 'Notes', 'Message']),\
                     "Unexpected table header in spreadsheet"
 
+                # on behalf situation
+                on_behalf_uid = REQUEST.form.get('on_behalf', '')
+                if on_behalf_uid != '':
+                    auth_tool = self.getAuthenticationTool()
+                    on_behalf_name = auth_tool.name_from_userid(on_behalf_uid)
+                    if on_behalf_name:
+                        # valid UID, overwriting the inviter
+                        inviter_userid, inviter_name = on_behalf_uid, on_behalf_name
+                    else:
+                        # UID is '', therefore it does not exist
+                        self.setSessionErrorsTrans('UID not found')
+                        return self._create_html(formdata=dict( (key, '') for key in keys ),
+                                                 formerrors={}, previews=previews)
+
                 errors = []
                 for i in range(1, sheet.nrows):
                     cells = sheet.row(i)
                     clean_it = lambda x: x.value.strip()
-                    formdata = dict( (key, clean_it(cells[i])) for (i, key) in enumerate(keys) )
+                    formdata = dict( (key, clean_it(cells[i])) for (i, key) in enumerate(keys))
+
                     kwargs = dict(formdata, web_form=True,
                           inviter_userid=inviter_userid,
                           inviter_name=inviter_name)
                     try:
                         if do_preview:
-                            previews.append(self._send_invitation(preview=True, **kwargs))
-                            previews[-1]['preview_attribution'] = '%s (invited by %s)' % \
+                            preview = self._send_invitation(preview=True, **kwargs)
+                            preview['preview_attribution'] = '%s (invited by %s)' % \
                                 (formdata['name'], inviter_name)
+                            previews.append(preview)
                         else:
                             self._send_invitation(**kwargs)
                             # todo: ugly quick fix
