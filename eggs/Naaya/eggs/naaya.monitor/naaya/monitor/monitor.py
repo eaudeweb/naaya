@@ -11,14 +11,6 @@ from naaya.monitor import blobusage
 ID_NAAYA_MONITOR = 'naaya_monitor'
 TITLE_NAAYA_MONITOR = METATYPE_NAAYA_MONITOR ='Naaya Monitor'
 
-def manage_addNaayaMonitor(self, REQUEST=None, RESPONSE=None):
-    """ Add a Naaya Monitor instance """
-    self._setObject(ID_NAAYA_MONITOR,
-                    NaayaMonitor(ID_NAAYA_MONITOR, TITLE_NAAYA_MONITOR))
-    if REQUEST is not None:
-        RESPONSE.redirect('manage_main')
-
-
 class NaayaMonitorAddView(BrowserView):
     """Add view for NaayaMonitor
     """
