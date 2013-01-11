@@ -5,7 +5,9 @@
 -------------------
 * naaya.monitor zcml loaded if installed [simiamih]
 * update email message in notifications by zip upload [mihaitab]
-* fix Google Analytics bugs; disallow changing the profile [moregale]
+* *update* fix Google Analytics bugs; disallow changing the profile.
+  Need to configure `GOOGLE_AUTH_CLIENT_ID` and
+  `GOOGLE_AUTH_CLIENT_SECRET` environment variables. [moregale]
 
 3.2.12 (2012-12-19)
 -------------------
