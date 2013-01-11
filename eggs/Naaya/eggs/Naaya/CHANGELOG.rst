@@ -1,4 +1,7 @@
-3.2.13 (unreleased)
+3.2.14 (unreleased)
+-------------------
+
+3.2.13 (2013-01-11)
 -------------------
 * naaya.monitor zcml loaded if installed [simiamih]
 * update email message in notifications by zip upload [mihaitab]
