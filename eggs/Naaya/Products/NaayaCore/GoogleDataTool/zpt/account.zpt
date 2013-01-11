@@ -36,6 +36,15 @@
 
   <form method="post" name="frmAccount" id="frmAccount"
         tal:attributes="action string:${here/absolute_url}/admin_account_save">
+
+    <tal:block condition="not: options/choose_profile">
+      <p i18n:translate="">
+        Current profile:
+        <tal:block i18n:name="name" tal:content="options/profile_name" />
+      </p>
+    </tal:block>
+
+    <tal:block condition="options/choose_profile">
     <p i18n:translate="">
       Select your website from the list below and save it as default account.
     </p>
@@ -93,6 +102,8 @@
           };
       })();
     </script>
+    </tal:block>
+
     <p i18n:translate="">
       By choosing below the start date for the statistics - either dynamic
       (last month/3 months/6 months/year) or a specific date, the statistics
