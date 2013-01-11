@@ -151,7 +151,18 @@ class AnalyticsTool(SimpleItem, utils):
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/authorize')
             return
 
-        return self._admin_account_zpt(REQUEST, accounts=self.getAccounts())
+        options = {}
+        if self.profile is None:
+            options.update(choose_profile=True, accounts=self.getAccounts())
+
+        else:
+            options.update(choose_profile=False, profile_name="")
+            profile_info = self._get_profile_info(self.account,
+                                                  self.profile_code)
+            if profile_info is not None:
+                options['profile_name'] = profile_info['name']
+
+        return self._admin_account_zpt(REQUEST, **options)
 
     def _update_access_token(self):
         if self._google_access_token is None:
@@ -199,23 +210,32 @@ class AnalyticsTool(SimpleItem, utils):
         else:
             return data
 
+    def _get_profile_info(self, account, profile_code):
+        resp_json = self._api_get('management/accounts/%s/'
+                                  'webproperties/%s/profiles'
+                                  % (account, profile_code))
+        if 'items' not in resp_json:
+            return None
+        else:
+            return resp_json['items'][0]
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account_save')
-    def admin_account_save(self, account, profile_code, date_interval='30',
-                           start_date='', REQUEST=None):
+    def admin_account_save(self, account=None, profile_code=None,
+                           date_interval='30', start_date='', REQUEST=None):
         """ """
         if account:
             self.account = account
 
-        if profile_code:
-            resp_json = self._api_get('management/accounts/%s/'
-                                      'webproperties/%s/profiles'
-                                      % (account, profile_code))
-            self.profile_code = profile_code
-            if 'items' not in resp_json:
+        if profile_code and self.profile is None:
+            # We check `self.profile is None` in order to disallow changing
+            # a profile. De-authorize the account first.
+            profile_info = self._get_profile_info(self.account, profile_code)
+            if profile_info is None:
                 self.setSessionErrorsTrans(
                     "The site you selected is not available.")
             else:
-                self.profile = resp_json['items'][0]['id']
+                self.profile_code = profile_code
+                self.profile = profile_info['id']
 
         if start_date:
             self.start_date = start_date
