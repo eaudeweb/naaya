@@ -311,6 +311,9 @@ class AnalyticsTool(SimpleItem, utils):
     def getSiteSummary(self):
         """ Get esential date about site usage """
         view_name = 'summary'
+        if self.profile is None:
+            return None
+
         cached_data = self.get_cache(view_name=view_name)
         if cached_data is not None:
             return cached_data
