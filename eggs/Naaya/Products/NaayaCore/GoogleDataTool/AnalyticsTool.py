@@ -119,8 +119,13 @@ class AnalyticsTool(SimpleItem, utils):
             return
         return self._admin_stats()
 
-    authorize = NaayaPageTemplateFile('zpt/authorize', globals(),
-                                      'site_admin_stats_authorize')
+    _authorize = NaayaPageTemplateFile('zpt/authorize', globals(),
+                                       'site_admin_stats_authorize')
+    def authorize(self):
+        """ """
+        is_configured = bool('GOOGLE_AUTH_CLIENT_ID' in os.environ and
+                             'GOOGLE_AUTH_CLIENT_SECRET' in os.environ)
+        return self._authorize(is_configured=is_configured)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'stats_info')
     def stats_info(self):

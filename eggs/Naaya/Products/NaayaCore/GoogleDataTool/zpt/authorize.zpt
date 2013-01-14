@@ -13,6 +13,7 @@
     </ul>
   </div>
 
+<tal:block condition="options/is_configured">
   <p i18n:translate="">
     Please get an access code for your Google Analytics account
     and paste it below.
@@ -40,6 +41,10 @@
           var login_window = window.open(url, title, options);
       });
   </script>
+</tal:block>
+<p tal:condition="not:options/is_configured">
+  Google API keys are not configured for this portal.
+</p>
 
 </tal:block>
 </tal:block>
