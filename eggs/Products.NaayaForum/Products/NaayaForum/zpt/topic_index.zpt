@@ -1,6 +1,24 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
+<style>
+    div.top_message{
+        font-weight:bold;
+    }
+    div.top_message div.forum_message_top{
+        background-color:#AAA;
+    }
+    div.top_message div.forum_message_author, div.top_message div.forum_message_description{
+        background-color:#DDD;
+    }
+    div.outdated_message{
+        font-style:italic;
+    }
+    div.outdated_message div.forum_message_author, div.outdated_message div.forum_message_description{
+        color:#888;
+    }
+</style>
+
 <h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
 	<metal:block use-macro="site_object_index/macros/icon"/>
 	<span tal:replace="here/title_or_id" />
@@ -51,19 +69,60 @@
 	</div>
 </div>
 
-<tal:block tal:define="messages here/get_messages_thread">
-
+<tal:block define="messages here/get_messages_thread;
+                   lang python:here.gl_get_selected_language()" >
 <tal:block tal:condition="python:len(messages)>0">
 
 <div class="forum_messages_slot">
 	<tal:block tal:repeat="tuple messages">
 	<div tal:define="depth python:tuple[0]*20; item python:tuple[1];
 					add_permission python:item.checkPermissionAddForumMessage() and item.is_topic_opened();
-					edit_permission python:item.checkPermissionModifyForumMessage() and item.is_topic_opened();"
-		tal:attributes="style string:margin-left:${depth}px;;" class="forum_message">
+					edit_permission python:item.checkPermissionModifyForumMessage() and item.is_topic_opened();
+          top_message_on python:here.aq_parent.message_top;
+          outdated_message_on python:here.aq_parent.message_outdated"
+		tal:attributes="style string:margin-left:${depth}px;;;
+                    class python:'forum_message' + test(item.is_top_message and top_message_on, ' top_message', test(item.is_outdated_message and outdated_message_on, ' outdated_message', ''))">
 		<a tal:attributes="name item/id"></a>
 		<div class="forum_message_top">
 			<div class="message_top_buttons" tal:condition="python:add_permission or edit_permission">
+        <strong tal:condition="python: top_message_on and item.is_top_message">
+            &ndash;&ndash;&ndash;
+            <tal:block i18n:translate="">Marked as</tal:block>
+            <tal:block
+                content="python:here.aq_parent.getLocalProperty('message_top', lang)"/>
+            &ndash;&ndash;&ndash;
+        </strong>
+        <strong tal:condition="python: outdated_message_on and item.is_outdated_message">
+            &ndash;&ndash;&ndash;
+            <tal:block i18n:translate="">Marked as</tal:block>
+            <tal:block
+                content="python:here.aq_parent.getLocalProperty('message_outdated', lang)"/>
+            &ndash;&ndash;&ndash;
+        </strong>
+				<a tal:condition="python:edit_permission and top_message_on and not item.is_top_message and depth > 20"
+            tal:attributes="href string:${item/absolute_url}/mark_top">
+            <tal:block i18n:translate="">Mark as</tal:block>
+            <tal:block i18n:translate=""
+              content="python:here.aq_parent.getLocalProperty('message_top', lang)" />
+        </a>
+				<a tal:condition="python:edit_permission and top_message_on and item.is_top_message"
+            tal:attributes="href string:${item/absolute_url}/remove_top">
+            <tal:block i18n:translate="">Unmark</tal:block>
+            <tal:block i18n:translate=""
+              content="python:here.aq_parent.getLocalProperty('message_top', lang)" />
+        </a>
+				<a tal:condition="python:edit_permission and outdated_message_on and not item.is_outdated_message and depth > 20"
+            tal:attributes="href string:${item/absolute_url}/mark_outdated">
+            <tal:block i18n:translate="">Mark as</tal:block>
+            <tal:block i18n:translate=""
+              content="python:here.aq_parent.getLocalProperty('message_outdated', lang)" />
+        </a>
+				<a tal:condition="python:edit_permission and outdated_message_on and item.is_outdated_message"
+            tal:attributes="href string:${item/absolute_url}/remove_outdated">
+            <tal:block i18n:translate="">Unmark</tal:block>
+            <tal:block i18n:translate=""
+              content="python:here.aq_parent.getLocalProperty('message_outdated', lang)" />
+        </a>
 				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Edit</a>
 				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/delete_html" i18n:translate="">Delete</a>
 				<a tal:condition="add_permission" tal:attributes="href string:${item/absolute_url}/reply_html" i18n:translate="">Reply</a>
