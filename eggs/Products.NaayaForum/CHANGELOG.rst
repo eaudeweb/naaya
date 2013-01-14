@@ -1,5 +1,6 @@
 1.2.14 (unreleased)
 -------------------
+* added top_message and outdated_message flags [dumitval]
 
 1.2.13 (2012-06-13)
 -------------------
