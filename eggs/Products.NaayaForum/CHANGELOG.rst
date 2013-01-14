@@ -1,4 +1,7 @@
-1.2.14 (unreleased)
+1.2.15 (unreleased)
+-------------------
+
+1.2.14 (2013-01-14)
 -------------------
 * added top_message and outdated_message flags [dumitval]
 
