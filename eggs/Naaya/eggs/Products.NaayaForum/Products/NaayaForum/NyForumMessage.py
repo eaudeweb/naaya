@@ -70,6 +70,8 @@ class NyForumMessage(NyForumBase, Folder):
     meta_type = METATYPE_NYFORUMMESSAGE
     meta_label = LABEL_NYFORUMMESSAGE
     icon = 'misc_/NaayaForum/NyForumMessage.gif'
+    is_top_message = False
+    is_outdated_message = False
 
     manage_options = (
         Folder.manage_options[0:2]
@@ -226,5 +228,41 @@ class NyForumMessage(NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'reply_html')
     reply_html = PageTemplateFile('zpt/message_reply', globals())
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'mark_top')
+    def mark_top(self, REQUEST=None):
+        """ """
+        for message in self.aq_parent.objectValues(METATYPE_NYFORUMMESSAGE):
+            message.remove_top()
+        self.is_top_message = True
+        self.is_outdated_message = False
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'remove_top')
+    def remove_top(self, REQUEST=None):
+        """ """
+        self.is_top_message = False
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'mark_outdated')
+    def mark_outdated(self, REQUEST=None):
+        """ """
+        self.is_outdated_message = True
+        self.is_top_message = False
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'remove_outdated')
+    def remove_outdated(self, REQUEST=None):
+        """ """
+        self.is_outdated_message = False
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
 InitializeClass(NyForumMessage)
