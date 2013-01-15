@@ -79,13 +79,13 @@
             <th i18n:translate="">Mobile</th>
             <td tal:content="here/cellphone">cellphone</td>
         </tr>
-        <!-- tr tal:condition="here/email">
+        <tr tal:condition="here/email">
             <th i18n:translate="">Email</th>
             <td>
                 <a tal:attributes="href string:mailto:${here/email}"
                     tal:content="here/email" />
             </td>
-        </tr -->
+        </tr>
         <tr tal:condition="here/webpage">
             <th i18n:translate="">Webpage</th>
             <td>
