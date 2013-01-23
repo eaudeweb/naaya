@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.1.2 (unrelease)
+-----------------
+
+1.1.1 (2013.01.23)
 -----------------
 * removed readme and history reference from setup.py [dumitval]
 
