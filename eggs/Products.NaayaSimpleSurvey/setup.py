@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 
 setup(name='Products.NaayaSimpleSurvey',
-      version='1.1',
+      version='1.1.1',
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
