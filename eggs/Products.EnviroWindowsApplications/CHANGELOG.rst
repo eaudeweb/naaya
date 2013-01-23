@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.1.2 (unreleased)
+----------------
+
+1.1.1 (2013-01-23)
 ----------------
 * Added MANIFEST.in for correct egg creation [dumitval]
 
