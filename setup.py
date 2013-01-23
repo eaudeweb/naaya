@@ -1,12 +1,8 @@
 from setuptools import setup, find_packages
 import os
 
-NAME = 'Products.NaayaSimpleSurvey'
-PATH = NAME.split('.') + ['version.txt']
-VERSION = open(os.path.join(*PATH)).read().strip()
-
-setup(name=NAME,
-      version=VERSION,
+setup(name='Products.NaayaSimpleSurvey',
+      version='1.1',
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
