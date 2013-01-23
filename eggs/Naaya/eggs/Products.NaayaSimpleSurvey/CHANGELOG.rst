@@ -1,5 +1,6 @@
 1.1.1 (unreleased)
 -----------------
+* removed readme and history reference from setup.py [dumitval]
 
 1.1 (2013.01.23)
 ----------------
