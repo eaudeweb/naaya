@@ -1,0 +1,27 @@
+Dear %firstname%,
+
+Presentations from the workshop on .. have been uploaded on a site which only workshop participants can access.
+
+You can access the presentations in PDF format and you can download them.
+
+The address of the restricted workspace hosting the files is:
+..
+
+Direct link to the list of files is:
+..
+
+
+You will be prompted for a user and a password.
+Your user is: %uid%
+Your password is: %pass%
+
+
+This is not an EIONET Account! This is a local account in the .. Interest Group.
+You can reset/change your password using the following URL:
+http://projects.eionet.europa.eu/../acl_users/recover_password
+
+
+Please do not reply to this message and keep it for future reference.
+For any technical issues or questions accessing the files, please contact ..
+For any other inquiries please contact ..
+
