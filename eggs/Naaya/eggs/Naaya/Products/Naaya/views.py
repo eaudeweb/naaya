@@ -53,6 +53,32 @@ def AdminAPIKeysStatus(context, request):
         'change_link': None
     }
 
+    google_client_id = getattr(conf, 'environment', {}).get('GOOGLE_AUTH_CLIENT_ID', '')
+    valid = False
+    if google_client_id:
+        valid = True
+
+    api_keys['google_client_id'] = {
+        'title': 'Google Authentication Client ID',
+        'description': 'Google Authentication Client ID',
+        'key': None,
+        'valid': valid,
+        'change_link': None
+    }
+
+    google_client_secret = getattr(conf, 'environment', {}).get('GOOGLE_AUTH_CLIENT_SECRET', '')
+    valid = False
+    if google_client_secret:
+        valid = True
+
+    api_keys['google_client_secret'] = {
+        'title': 'Google Authentication Client Secret Key',
+        'description': 'Google Authentication Client Secret Key',
+        'key': None,
+        'valid': valid,
+        'change_link': None
+    }
+
     master_ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
     valid = False
     if master_ga_id:

@@ -1,5 +1,7 @@
 3.2.15 (unreleased)
 -------------------
+* Statistics: redirect to profile selection if no profile selected [dumitval]
+* show Google client id and secret key in api key status [dumitval]
 
 3.2.14 (2013-01-25)
 -------------------
