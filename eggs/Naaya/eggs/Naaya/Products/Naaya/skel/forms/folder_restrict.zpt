@@ -30,7 +30,7 @@
 <form method="post" tal:attributes="action string:${here/absolute_url}/setRestrictions">
 <div style="margin-bottom:2em;">
 	<input type="radio" name="access" id="access_all" value="all" tal:attributes="checked python:not here.has_restrictions()" />
-	<label for="access_all" i18n:translate="">Allow access to all users</label>
+	<label for="access_all" i18n:translate="">Inherit settings (allow access to all users that can access parent)</label>
 </div>
 <div style="margin-bottom:2em;">
 	<input type="radio" name="access" id="access_to" value="other" tal:attributes="checked python:here.has_restrictions()" /> <label for="access_to" i18n:translate="">Allow access only to</label>
@@ -40,6 +40,10 @@
 			tal:attributes="value role;selected python:role in roles"
 			tal:content="role" />
 	</select>
+</div>
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_public" value="public" tal:attributes="checked python:here.is_public()" />
+	<label for="access_public" i18n:translate="">Allow public access (including anonymous visitors)</label>
 </div>
 <div>
 	<input type="submit" value="Save changes" i18n:attributes="value" />
