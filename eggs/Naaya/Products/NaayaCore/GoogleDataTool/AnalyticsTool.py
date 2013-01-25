@@ -117,6 +117,9 @@ class AnalyticsTool(SimpleItem, utils):
         if self._google_access_token is None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/authorize')
             return
+        elif self.profile is None:
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
+            return
         return self._admin_stats()
 
     _authorize = NaayaPageTemplateFile('zpt/authorize', globals(),
