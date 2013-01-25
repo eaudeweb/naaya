@@ -1,4 +1,7 @@
-3.2.14 (unreleased)
+3.2.15 (unreleased)
+-------------------
+
+3.2.14 (2013-01-25)
 -------------------
 * ldap_cache: unsuccessful init update behaves as cache miss [simiamih]
 * feature: restrict folder can be used to make folder public [simiamih]
