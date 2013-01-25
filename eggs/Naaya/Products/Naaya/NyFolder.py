@@ -913,12 +913,12 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')
     def setRestrictions(self, access='all', roles=[], REQUEST=None):
         """
-        Restrict access to current folder for given roles.
+        Restrict access to current folder for given roles or make folder public
         """
         err = ''
         success = False
         if access == 'all':
-            #remove restrictions
+            # remove restrictions
             try:
                 self.manage_permission(view, roles=[], acquire=1)
             except Exception, error:
@@ -926,9 +926,13 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
             else:
                 success = True
         else:
-            #restrict for given roles
             try:
-                roles = self.utConvertToList(roles)
+                if access == 'public':
+                    # grant view to Anonymous
+                    roles = ['Anonymous']
+                else:
+                    # restrict for given roles
+                    roles = self.utConvertToList(roles)
                 roles.extend(['Manager', 'Administrator'])
                 self.manage_permission(view, roles=roles, acquire=0)
             except Exception, error:
@@ -936,8 +940,11 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
             else:
                 success = True
         if REQUEST:
-            if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            if err:
+                self.setSessionErrorsTrans(err)
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'renameObjectsIds')

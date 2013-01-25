@@ -74,7 +74,8 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
 
     def has_restrictions(self):
         """Indicates if this folder has restrictions for the current user."""
-
+        if self.is_public():
+            return False
         return not self.acquiredRolesAreUsedBy(view)
 
     def get_roles_with_access(self):
@@ -87,6 +88,13 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
                  'Anonymous', 'Manager', 'Owner']:
                 ra(x['name'])
         return r
+
+    def is_public(self):
+        """Indicates if this folder is public (accessible by Anonymous)."""
+        for x in self.rolesOfPermission(view):
+            if x['selected'] and x['name'] == 'Anonymous':
+                return True
+        return False
 
     def generateItemId(self, p_prefix):
         """Returns a unique id within the container's context"""
