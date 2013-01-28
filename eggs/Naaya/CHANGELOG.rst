@@ -1,6 +1,6 @@
 3.2.15 (unreleased)
 -------------------
-* bugfix #13604: HTMl document weird replace
+* bugfix #13604: HTMl document weird replace [mihaitab]
 * bugfix #10266: Rename button for Contributors [mihaitab]
 * Statistics: redirect to profile selection if no profile selected [dumitval]
 * show Google client id and secret key in api key status [dumitval]
