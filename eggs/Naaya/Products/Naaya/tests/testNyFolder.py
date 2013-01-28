@@ -467,6 +467,53 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         #test if test_folder was removed from the initial location
         self.assertTrue(getattr(self.portal.info, 'test_folder', None) is None)
 
+    def test_rename_inside_folder(self):
+
+        from AccessControl import getSecurityManager
+
+        self._set_skip_approval_permission(self.portal.info, ('Contributor',))
+        self.portal._set_edit_own_content(edit_own_content=True)
+        self.portal.rename_id = True
+        transaction.commit()
+
+        #login
+        self.browser_do_login('contributor', 'contributor')
+        logged_user = getSecurityManager().getUser()
+
+        #add folders
+        addNyFolder(self.portal.info, 'test_folder')
+
+        # Change the ownership to the logged user
+        self.portal.info.test_folder.changeOwnership(logged_user)
+
+        transaction.commit()
+
+        #go to parent folder. Ckeck if the `Owner` role has permission to copy&cut folders.
+        self.browser.go(self.portal.info.absolute_url(1))
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+        checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
+                                                    'value': 'test_folder'})
+        self.assertEqual(len(checkboxes), 1)
+
+        #rename test_folder
+        form = self.browser.get_form('objectItems')
+        form['id'] = ['test_folder']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'renameobject_html:method'))
+        self.browser.submit()
+
+        form = self.browser.get_form('renameObjects')
+        form['new_ids:list'] = 'renamed_test_folder'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'renameBtn'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.assertTrue('Items(s) succesfully renamed' in html)
+
+        #test if test_folder was renamed
+        self.assertEqual(hasattr(self.portal.info, 'renamed_test_folder'), True)
+
+
     def test_view_adapter(self):
         self.assertTrue(INyContentObject.providedBy(self.portal.info))
         adapter = component.queryAdapter(self.portal.info, IObjectView)

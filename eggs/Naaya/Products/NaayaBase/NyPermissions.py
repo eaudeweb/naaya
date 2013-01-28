@@ -104,8 +104,21 @@ class NyPermissions(object):
 
         return all(permissions)
 
-    def checkPermissionCutObjects(self):
+    def checkPermissionRenameObjects(self, object_ids):
+        """ Check the permissions to rename objects. """
+        objects = [self[object_id] for object_id in object_ids]
+        permissions = [x.checkPermissionRenameObject() for x in objects]
+
+        return all(permissions)
+
+    def checkPermissionCutObject(self):
         """ Check the permissions to cut objects."""
+
+        return self.checkPermission(PERMISSION_COPY_OBJECTS) and \
+            self.checkPermission(PERMISSION_DELETE_OBJECTS)
+
+    def checkPermissionRenameObject(self):
+        """ Check the permissions to rename an object."""
 
         return self.checkPermission(PERMISSION_COPY_OBJECTS) and \
             self.checkPermission(PERMISSION_DELETE_OBJECTS)
