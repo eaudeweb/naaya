@@ -947,9 +947,11 @@ class NyFolder(NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProper
                                          date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'renameObjectsIds')
+    security.declareProtected(view, 'renameObjectsIds')
     def renameObjectsIds(self, old_ids, new_ids, REQUEST):
         """renames objects ids for this folder's selected items."""
+        if not self.checkPermissionRenameObjects(old_ids):
+            raise Unauthorized
 
         for ids in zip(old_ids, new_ids):
             if self._getOb(ids[0]).meta_type in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:

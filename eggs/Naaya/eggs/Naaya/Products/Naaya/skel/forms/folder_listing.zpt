@@ -112,7 +112,7 @@ function submit_form_action(action){
 				<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
 					i18n:attributes="value"
 					tal:condition="btn_delete" />
-				<input type="submit" value="Rename" class="action-button" name="renameobject_html:method"
+				<input type="submit" value="Change item ID" class="action-button" name="renameobject_html:method"
 					i18n:attributes="value"
 					tal:condition="python: here.rename_id and btn_delete" />
 			</metal:block>
