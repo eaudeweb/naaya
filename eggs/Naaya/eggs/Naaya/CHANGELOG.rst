@@ -1,11 +1,11 @@
 3.2.15 (unreleased)
 -------------------
+* bugfix #10266: Rename button for Contributors [mihaitab]
 * Statistics: redirect to profile selection if no profile selected [dumitval]
 * show Google client id and secret key in api key status [dumitval]
 
 3.2.14 (2013-01-25)
 -------------------
-* bugfix #10266: Rename button for Contributors [mihaitab]
 * ldap_cache: unsuccessful init update behaves as cache miss [simiamih]
 * feature: restrict folder can be used to make folder public [simiamih]
 
