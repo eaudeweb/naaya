@@ -323,12 +323,9 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                               removelist=[]),
                       lambda x: parent._getOb(x, None) is not None)
 
-        schema_raw_data['title'] = schema_raw_data.get('title', '').replace(
-                                                                self.id, id)
-        schema_raw_data['description'] = schema_raw_data.get('description',
-                                                    '').replace(self.id, id)
-        schema_raw_data['body'] = schema_raw_data.get('body',
-                                                    '').replace(self.id, id)
+        schema_raw_data['title'] = schema_raw_data.get('title', '')
+        schema_raw_data['description'] = schema_raw_data.get('description', '')
+        schema_raw_data['body'] = schema_raw_data.get('body', '')
 
         #check mandatory fiels
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
