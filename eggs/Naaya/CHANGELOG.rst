@@ -1,5 +1,6 @@
 3.2.15 (unreleased)
 -------------------
+* bugfix #13604: changed default placeholder [mihaitab]
 * fine adjustments to access overview in restrict folder [simiamih]
 * tipsy in site scripts, improved ig logger view [simiamih]
 * bugfix #13604: HTMl document weird replace [mihaitab]

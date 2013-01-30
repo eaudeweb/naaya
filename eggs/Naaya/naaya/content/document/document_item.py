@@ -33,6 +33,9 @@ from naaya.core.zope2util import get_site_manager
 
 from permissions import PERMISSION_ADD_DOCUMENT
 
+#global module constants
+ID_PLACEHOLDER = 'placeholder_for_id'
+
 #module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
@@ -86,7 +89,7 @@ config = {
 
 def document_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = uniqueId('doc', lambda x: self._getOb(x, None) is not None)
+    id = uniqueId(ID_PLACEHOLDER, lambda x: self._getOb(x, None) is not None)
     self.addNyDocument(id)
     if REQUEST:
         REQUEST.RESPONSE.redirect('%s/add_html' %
@@ -118,8 +121,8 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('body', '')
     _submit = bool(kwargs.get('submitted', 0))
 
-    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'doc',
-                          removelist=[]),
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or
+                  ID_PLACEHOLDER, removelist=[]),
                   lambda x: self._getOb(x, None) is not None)
     if contributor is None:
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -319,8 +322,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
             schema_raw_data.pop('releasedate', ''), self.releasedate)
 
         parent = self.getParentNode()
-        id = uniqueId(slugify(schema_raw_data.get('title', '') or 'doc',
-                              removelist=[]),
+        id = uniqueId(slugify(schema_raw_data.get('title', '') or
+                      ID_PLACEHOLDER, removelist=[]),
                       lambda x: parent._getOb(x, None) is not None)
 
         schema_raw_data['title'] = schema_raw_data.get('title', '')
