@@ -178,10 +178,10 @@
                         <td>
                             <span tal:replace="python:here.utShowFullDateTime(line['date'])" />
                         </td>
-            
+
                         <td>
-                            <a title="Profile overview"
-                               tal:attributes="href string:http://forum.eionet.europa.eu/profile_overview?user=${line/who};"
+                            <a title="User Profile"
+                               tal:attributes="href string:http://www.eionet.europa.eu/users/${line/who};"
                                tal:condition="python: line['who'] != 'Anonymous User'"
                                i18n:attributes="title"
                                target="_blank">
@@ -196,8 +196,10 @@
                         </td>
 
                         <td>
-                            <a tal:attributes="href line/content_path" tal:on-error="string: ">
-                                <span tal:replace="python:here.aq_parent.restrictedTraverse(line['content_path']).title_or_id()"  tal:on-error="string: " />
+                            <a tal:define="ob python:here.aq_parent.restrictedTraverse(line['content_path'])"
+                               tal:attributes="href line/content_path; title ob/pretty_path" tal:on-error="string: "
+                            class="tipsy-title">
+                                <span tal:replace="python:ob.title_or_id()"  tal:on-error="string: " />
                             </a>
                         </td>
 
