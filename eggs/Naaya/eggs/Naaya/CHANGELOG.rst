@@ -1,10 +1,11 @@
 3.2.15 (unreleased)
 -------------------
+* fine adjustments to access overview in restrict folder [simiamih]
+* tipsy in site scripts, improved ig logger view [simiamih]
 * bugfix #13604: HTMl document weird replace [mihaitab]
 * bugfix #10266: Rename button for Contributors [mihaitab]
 * Statistics: redirect to profile selection if no profile selected [dumitval]
 * show Google client id and secret key in api key status [dumitval]
-* tipsy in site scripts, improved ig logger view [simiamih]
 
 3.2.14 (2013-01-25)
 -------------------
