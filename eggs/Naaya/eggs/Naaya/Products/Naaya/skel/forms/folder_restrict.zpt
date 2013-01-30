@@ -1,15 +1,7 @@
 <metal:block use-macro="here/standard_template_macro">
 		<metal:block fill-slot="head">
-				<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.css" />
-				<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/tipsy/naaya.tipsy.css" />
-				<script type="text/javascript" src="/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.js"></script>
 				<link type="text/css" rel="stylesheet"
 				   href="/++resource++Products.NaayaCore.AuthenticationTool/restrict_folder.css" />
-				<script type="text/javascript">
-						jQuery(document).ready(function(){
-  						  jQuery(".tipsy-title").tipsy({gravity: 'e', html: true});
-                        });
-				</script>
 		</metal:block>
 <metal:block fill-slot="body">
 
