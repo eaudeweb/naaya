@@ -71,7 +71,12 @@ def inaccessible_parent(context, role):
     """
     ob = context
     while ofs_path(ob):
-        if role not in allowed2(ob, 'View')['View']:
+        having_view = allowed2(ob, 'View')['View']
+        if 'Anonymous' in having_view:
+            continue
+        if 'Authenticated' in having_view and role != 'Anonymous':
+            continue
+        if role not in having_view:
             return ob
         ob = ob.aq_parent
     return None
