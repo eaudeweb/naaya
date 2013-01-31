@@ -122,7 +122,7 @@
 								<!--<td><input type="button" value="List users" />
 								</td>-->
 								<td class="restrict_obs" tal:define="blocker python:settings[role][2]">
-										<span tal:condition="blocker" i18n:translate="">
+										<span tal:condition="python:blocker is not None" i18n:translate="">
 												The "<span tal:content="role" i18n:name="role" />" Role is not allowed to access
 												parent location
 												<a i18n:name="location" class="tipsy-title"
