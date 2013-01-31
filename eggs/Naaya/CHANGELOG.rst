@@ -1,4 +1,7 @@
-3.2.15 (unreleased)
+3.2.16 (unreleased)
+-------------------
+
+3.2.15 (2013-01-31)
 -------------------
 * bugfix #13604: changed default placeholder [mihaitab]
 * fine adjustments to access overview in restrict folder [simiamih]
