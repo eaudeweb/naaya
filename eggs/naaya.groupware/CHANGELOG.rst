@@ -1,4 +1,7 @@
-1.2.22 (unreleased)
+1.2.23 (unreleased)
+-------------------
+
+1.2.22 (2013-01-31)
 -------------------
 * #10266 - Rename button changed [mihaitab]
 
