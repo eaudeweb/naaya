@@ -1,6 +1,6 @@
 3.2.16 (unreleased)
 -------------------
-* bugfix in restrict view [simiamih]
+* bugfix in restrict view and improved speed [simiamih]
 
 3.2.15 (2013-01-31)
 -------------------

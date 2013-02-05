@@ -63,31 +63,38 @@ def allowed2(context, permission=None):
                 out[permission][role] = ('pseudorole', {'source': 'Anonymous'})
     return out
 
-def inaccessible_parent(context, role):
+def inaccessible_parents(context):
     """
-    Returns top-most parent that can not be accessed by Role, None otherwise.
+    Returns top-most parent that can not be accessed by each role.
     Pseudoroles inheritance is not disregarded.
+    E.g.:
+    {'Anonymous': <Library at ./..>, ..}
 
     """
+    roles = set(context.valid_roles())
     ob = context
+    result = {}
+    ob = ob.aq_parent
     while ofs_path(ob):
         having_view = allowed2(ob, 'View')['View']
         if 'Anonymous' in having_view:
+            ob = ob.aq_parent
             continue
-        if 'Authenticated' in having_view and role != 'Anonymous':
-            continue
-        if role not in having_view:
-            return ob
+        for role in roles - set(having_view.keys()):
+            result[role] = ob
+        roles = roles.intersection(set(having_view.keys()))
+        if not roles:
+            break
         ob = ob.aq_parent
-    return None
-
+    return result
 
 # pseudo-views (callables)
 def access_overview(context, request=None):
     """ Render the overview template (widget) """
     settings = allowed2(context, 'View')['View']
+    inaccessible = inaccessible_parents(context)
     for role, mapping in settings.items():
-        settings[role] += (inaccessible_parent(context, role), )
+        settings[role] += (inaccessible.get(role), )
         if mapping[0] == 'inherited':
             mapping[1]['source'] = \
                context.unrestrictedTraverse(mapping[1]['source'])
