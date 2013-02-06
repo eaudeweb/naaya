@@ -1,4 +1,7 @@
-3.0.15 (unreleased)
+3.0.16 (unreleased)
+------------------
+
+3.0.15 (2013-02-06)
 ------------------
 * links_group_html error handling [dumitval]
 * new icon for NyFolder [simiamih]
