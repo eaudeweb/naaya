@@ -1,5 +1,6 @@
 3.0.15 (unreleased)
 ------------------
+* links_group_html error handling [dumitval]
 * new icon for NyFolder [simiamih]
 * show images in homepage slider in alphabetical order [dumitval]
 
