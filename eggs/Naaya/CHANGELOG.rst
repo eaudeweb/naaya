@@ -1,5 +1,6 @@
 3.2.17 (unreleased)
 -------------------
+* added script channels to local ch. portlet administration page [dumitval]
 
 3.2.16 (2013-02-05)
 -------------------

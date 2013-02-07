@@ -3354,7 +3354,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #others
     def get_localch_noportlet(self):
-        return [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
+        local_channels = [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
+        local_channels.extend(
+            [x for x in self.getSyndicationTool().get_script_channels()
+                if not self.exists_portlet_for_object(x)])
+        return local_channels
 
     def get_remotech_noportlet(self):
         syndicationtool_ob = self.getSyndicationTool()
