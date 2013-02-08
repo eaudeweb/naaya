@@ -1,4 +1,7 @@
-1.1 (unreleased)
+1.2 (unreleased)
+-------------------
+
+1.1 (2013-02-08)
 -------------------
 * files are now stored in folder next to CLIENT_HOME [simiamih]
 
