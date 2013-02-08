@@ -1,5 +1,6 @@
-1.2.23 (unreleased)
+1.3.1 (unreleased)
 -------------------
+* changed index headers, groupedIGs can be removed in ZODB [simiamih]
 
 1.2.22 (2013-01-31)
 -------------------

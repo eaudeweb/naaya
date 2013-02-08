@@ -14,13 +14,37 @@ eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
+def get_user_id(request):
+    return request.AUTHENTICATED_USER.getId()
+
+def grouped_igs(context):
+    """
+    Return list of Groupware site-s grouped by user access for logged in user,
+    if any
+
+    """
+    portals = container.objectValues('Groupware site')
+    sorted_igs = {}
+    for portal in portals:
+        if portal.portal_is_archived:
+            sorted_igs.setdefault('archived', []).append(portal)
+        else:
+            sorted_igs.setdefault(portal.get_user_access(), []).append(portal)
+
+    for portal_list in sorted_igs.values():
+        portal_list.sort(key=lambda p: p.title_or_id())
+
+    return sorted_igs
+
+
 class LocalUsersPage(BrowserPage):
     def __call__(self):
         ctx = self.context.aq_inner # because self subclasses from Explicit
         local_users = {} #All local users per groupware site
         for site in ctx.objectValues('Groupware site'):
             local_users[site] = site.getAuthenticationTool().getUsers()
-        return local_users_zpt.__of__(ctx)(local_users=local_users)
+        return local_users_zpt.__of__(ctx)(local_users=local_users,
+                                           grouped_igs=grouped_igs(context))
 
 def nfp_admin_link(context, request):
     """
@@ -51,7 +75,10 @@ def index_html(context, request):
     """
     Render Forum's first page
     """
-    return index_html_zpt.__of__(context)(network_name=NETWORK_NAME)
+    options = {'network_name': NETWORK_NAME,
+               'grouped_igs': grouped_igs(context),
+               'is_authenticated': (get_user_id(request) is not None)}
+    return index_html_zpt.__of__(context)(**options)
 
 def gw_meta_info(context, request=None):
     """
@@ -71,13 +98,15 @@ def eionet_forum_index_html(context, request):
     """
     Render Forum's first page
     """
-    return eionet_forum_index_html_zpt.__of__(context)()
+    options = {'is_authenticated': (get_user_id(request) is not None),
+               'grouped_igs': grouped_igs(context)}
+    return eionet_forum_index_html_zpt.__of__(context)(**options)
 
 def archived_portals_json(context, request):
     """
     Return JSON with archived portals
     """
-    archived_portals = context.groupedIGs().get('archived', [])
+    archived_portals = grouped_igs(context).get('archived', [])
 
     portals = []
 

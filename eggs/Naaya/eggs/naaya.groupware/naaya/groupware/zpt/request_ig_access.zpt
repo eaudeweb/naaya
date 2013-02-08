@@ -7,8 +7,7 @@
             <a tal:attributes="href string:${here/absolute_url}/request_ig_access_html" i18n:translate="">Request Access</a>
         </div>
     </tal:block>
-    <div id="workarea" tal:define="portals here/groupedIGs;
-                                   mail_sent python:request.get('mail_sent', '');
+    <div id="workarea" tal:define="mail_sent python:request.get('mail_sent', '');
                                    location python:request.get('location', '');
                                    can_view here/checkPermissionView;
                                    can_review here/checkPermissionReview;
