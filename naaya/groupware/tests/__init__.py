@@ -69,10 +69,6 @@ class GWPortalTestPlugin(NaayaPortalTestPlugin):
         manage_addPageTemplate(app, 'gw_macro', '')
         app.gw_macro.write(get_content('gw_macro.zpt'))
 
-        #groupedIGs
-        manage_addPythonScript(app, 'groupedIGs')
-        app.groupedIGs.write(get_content('groupedIGs.py'))
-
         #CookieCrumbler
         manage_addCC(app, 'login')
         #login_form

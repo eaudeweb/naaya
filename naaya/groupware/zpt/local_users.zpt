@@ -1,5 +1,5 @@
 <metal:block use-macro="here/gw_macro/macros/main">
-    <div id="workarea" tal:define="portals here/groupedIGs" metal:fill-slot="div-workarea">
+    <div id="workarea" tal:define="portals options/grouped_igs" metal:fill-slot="div-workarea">
         <h1 i18n:translate="">Local users from all portals</h1>
         <ul>
             <li tal:repeat="portal python:options['local_users'].items()">
