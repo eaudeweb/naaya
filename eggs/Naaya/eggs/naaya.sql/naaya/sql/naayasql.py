@@ -12,9 +12,10 @@ from random import choice
 # Zope imports
 from Globals import Persistent
 
-DBS_FOLDER_PATH = os.path.join(CLIENT_HOME, "naaya.sql")
 # CLIENT_HOME is a Zope2 specific constant
-# usually referring to var/zope-instance
+# usually referring to var/zope-instance, we want to create
+# a similar directory sibling to it
+DBS_FOLDER_PATH = os.path.join(CLIENT_HOME, "..", "naaya.sql")
 
 class DbMissing(Exception):
     pass
