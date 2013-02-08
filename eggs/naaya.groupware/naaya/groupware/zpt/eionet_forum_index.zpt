@@ -1,5 +1,5 @@
 <metal:block use-macro="here/gw_macro/macros/main">
-    <div id="workarea" tal:define="portals here/groupedIGs;
+    <div id="workarea" tal:define="portals options/grouped_igs;
                                    meta_info here/gw_meta_info"
                        metal:fill-slot="div-workarea">
         <script src="++resource++naaya.groupware/jquery-1.4.4.min.js"
@@ -17,8 +17,7 @@ In order to become a member (i.e. obtain a username and a password) you should r
 supplied for each interest group and then follow the subscription instructions.
         </p>
         <tal:block define="igs python:portals.get('admin', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups you can access with your credentials</h2>
-            <p i18n:translate="">Including those publicly available</p>
+            <h2 i18n:translate="">Interest groups you administrate</h2>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
@@ -28,6 +27,7 @@ supplied for each interest group and then follow the subscription instructions.
         </tal:block>
         <tal:block define="igs python:portals.get('member', [])" condition="igs">
             <h2 i18n:translate="">Interest groups that you are a member of</h2>
+            <p>You have been assigned the Contributor role for these IGs, which means you are able to upload content.</p>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
@@ -36,7 +36,14 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups you can access without authentication</h2>
+            <tal:block condition="not: options/is_authenticated">
+                <h2 i18n:translate="">Public interest groups</h2>
+                <p>Interest groups you can access (view/download content) without authentication.</p>
+            </tal:block>
+            <tal:block condition="options/is_authenticated">
+                <h2 i18n:translate="">Interest groups you can access</h2>
+                <p>Interest groups that are open for public access and those where your account has been granted Viewer role.</p>
+            </tal:block>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
@@ -46,8 +53,13 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups you need to be logged in with an EIONET account</h2>
-            <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
+            <tal:block condition="not: options/is_authenticated">
+                <h2 i18n:translate="">Interest groups you need to be logged in with an Eionet account</h2>
+            </tal:block>
+            <tal:block condition="options/is_authenticated">
+                <h2 i18n:translate="">Restricted interest groups your Eionet account does not have permission to access</h2>
+                <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
+            </tal:block>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
