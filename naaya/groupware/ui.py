@@ -23,7 +23,7 @@ def grouped_igs(context):
     if any
 
     """
-    portals = container.objectValues('Groupware site')
+    portals = context.objectValues('Groupware site')
     sorted_igs = {}
     for portal in portals:
         if portal.portal_is_archived:
