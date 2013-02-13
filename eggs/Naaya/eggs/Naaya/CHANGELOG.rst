@@ -1,5 +1,6 @@
 3.2.18 (unreleased)
 -------------------
+* bugfix in multiple select widget [dumitval]
 
 3.2.17 (2013-02-07)
 -------------------
