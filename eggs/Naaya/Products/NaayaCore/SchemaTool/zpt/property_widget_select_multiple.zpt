@@ -94,7 +94,7 @@
                         },
                         ondeselect : function(NODE, TREE_OBJ){
                             var node_id = TREE_OBJ.get_node(NODE).attr('id');
-                            $('#'+prop_id+' option[value='+node_id+']').attr('selected', '');
+                            $('#'+prop_id+' option[value='+node_id+']').removeAttr('selected');
                         },
                         ondblclk : false
                     }
