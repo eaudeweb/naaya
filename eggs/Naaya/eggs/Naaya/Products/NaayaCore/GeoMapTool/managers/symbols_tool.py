@@ -214,7 +214,7 @@ class symbols_tool:
         try: return self.__symbol_collection[id].parent
         except: return id
 
-    def getSymbolPicture(self, id, REQUEST=None):
+    def getSymbolPicture(self, id='', REQUEST=None):
         """Get picture stream"""
         if id.startswith('symbol_cluster'):
             try:
