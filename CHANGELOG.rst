@@ -1,4 +1,7 @@
-3.0.16 (unreleased)
+3.0.17 (unreleased)
+------------------
+
+3.0.16 (2013-02-15)
 ------------------
 * error handling in links_group_html [dumitval]
 
