@@ -14,6 +14,7 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from zope import component
+from ZPublisher import NotFound
 from App.ImageFile import ImageFile
 
 from Products.NaayaCore.constants import *
@@ -246,10 +247,15 @@ class PortletsTool(Folder, utils):
 
     def getLinksListById(self, p_id):
         #return the links list with the given id
-        try: ob = self._getOb(p_id)
-        except: ob = None
-        if ob is not None:
-            if ob.meta_type != METATYPE_LINKSLIST: ob = None
+        if not p_id:
+            ob = None
+        else:
+            try:
+                ob = self._getOb(p_id)
+            except AttributeError:
+                raise NotFound('links group %s' % (p_id,))
+            if ob.meta_type != METATYPE_LINKSLIST:
+                ob = None
         return ob
 
     def getRefListById(self, p_id):
