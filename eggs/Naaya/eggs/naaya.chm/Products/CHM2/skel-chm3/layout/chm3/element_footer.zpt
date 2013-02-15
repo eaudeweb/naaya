@@ -8,9 +8,6 @@
         <a tal:attributes="href string:${site_url}/feedback_html"
             accesskey="9"
             i18n:translate="">Feedback</a>
-        <a tal:attributes="href string:${site_url}/info/cookie_policy"
-            accesskey="9"
-            i18n:translate="">Cookie policy</a>
         <a tal:attributes="href string:${site_url}/info/accessibility"
             accesskey="0"
             i18n:translate="">Accessibility statement</a>
