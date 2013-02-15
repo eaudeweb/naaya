@@ -1,4 +1,7 @@
-3.2.19 (unreleased)
+3.2.20 (unreleased)
+-------------------
+
+3.2.19 (2013-02-15)
 -------------------
 * error handling in getLinksListById [dumitval]
 
