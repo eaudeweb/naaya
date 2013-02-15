@@ -1,5 +1,6 @@
 3.0.16 (unreleased)
 ------------------
+* error handling in links_group_html [dumitval]
 
 3.0.15 (2013-02-06)
 ------------------
