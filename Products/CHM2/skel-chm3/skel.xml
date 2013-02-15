@@ -10,7 +10,6 @@
 			<template id="site_index" title=""/>
 			<template id="standard_template" title=""/>
 			<template id="element_breadcrumb" title=""/>
-			<template id="element_disclaimer" title=""/>
 			<template id="element_footer" title=""/>
 			<template id="element_footer_mainsections" title=""/>
 			<template id="element_header" title=""/>
