@@ -1,5 +1,6 @@
 3.2.19 (unreleased)
 -------------------
+* error handling in getLinksListById [dumitval]
 
 3.2.18 (2013-02-13)
 -------------------
