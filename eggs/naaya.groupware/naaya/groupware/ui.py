@@ -67,7 +67,8 @@ def nfp_admin_link(context, request):
                 country = leaf['id'].rsplit('-', 1)[-1]
 
         if country:
-            nfp_url = eionet_url + '/nfp_nrc/nrcs?nfp=' + country
+            nfp_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
+                       (context.getSite().absolute_url(), country))
 
     return nfp_url
 
