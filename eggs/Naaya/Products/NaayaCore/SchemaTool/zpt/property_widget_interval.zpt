@@ -21,7 +21,7 @@ opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
                         var prop_name = ${val};
                 "></script>
         <script type="text/javascript">
-        (function() {
+        jQuery(function() {
             var interval_form = {
                 'all_day': document.getElementById(prop_name + '.all_day'),
                 'start_date': document.getElementById(prop_name + '.start_date'),
@@ -43,7 +43,7 @@ opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
             update_interval_form();
             jQuery(interval_form['all_day']).change(update_interval_form);
 
-        })();
+        });
         </script>
 
     </metal:block>
