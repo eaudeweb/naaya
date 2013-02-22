@@ -46,7 +46,7 @@
   text-align: center;
 }
 
-.g-box-button input {
+/*.g-box-button input {
 background: #d5dde1;
 border: 2px solid #D5DDE1;
 color: #333333;
@@ -54,7 +54,7 @@ margin: 0.5em 0.3em 0.5em 0;
 padding: 0.1em 0.5em;
   height: 2em;
   width: 12em;
-}
+}*/
 
 .g-image-holder a {
   vertical-align: middle;
@@ -129,9 +129,9 @@ padding: 0.1em 0.5em;
   width: auto;
 }
 
-#selection_buttons input {
+/*#selection_buttons input {
 	cursor: pointer;
-}
+}*/
 
 .thumbnail-layout {
   float:left;
@@ -258,7 +258,7 @@ padding: 0.1em 0.5em;
   display: none;
 }
 
-#selection_buttons .action_button {
+/*#selection_buttons .action_button {
   background: #d5dde1;
   border: 1px solid #b0b0b0;
   color: #333333;
@@ -266,7 +266,7 @@ padding: 0.1em 0.5em;
   padding: 0.1em 0.2em;
   float: left;
   font-size: 90%;
-}
+}*/
 
 .album-public {
   color: green;
