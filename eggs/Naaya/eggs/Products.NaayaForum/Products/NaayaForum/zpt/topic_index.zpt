@@ -32,10 +32,10 @@
 	<div class="forum_message_top"
 		tal:define="add_permission python:here.checkPermissionAddForumMessage() and here.is_topic_opened();
 					edit_permission here/checkPermissionModifyForumTopic">
-		<div class="message_top_buttons2">
-			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
-			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span class="buttons" i18n:translate="">Post message</span></a>
-			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/restrict_html"><span class="buttons" i18n:translate="">Restrict</span></a>
+		<div id="admin_this_folder">
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span i18n:translate="">Edit</span></a>
+			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span i18n:translate="">Post message</span></a>
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/restrict_html"><span i18n:translate="">Restrict</span></a>
 
 			<tal:block define="notif_tool here/getNotificationTool;
 						notif_url notif_tool/absolute_url;
@@ -44,7 +44,7 @@
 				<a tal:attributes="href string:${subscripions_url}?location=${location}"
 					class="buttons notifications-link"
 					title="Subscribe to notifications"
-					i18n:attributes="title"><span class="buttons" i18n:translate="">Subscribe to notifications</span></a>
+					i18n:attributes="title"><span i18n:translate="">Subscribe to notifications</span></a>
 			</tal:block>
 
 		</div>

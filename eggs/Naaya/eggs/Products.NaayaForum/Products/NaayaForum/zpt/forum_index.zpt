@@ -47,15 +47,15 @@
 	tal:condition="python: here.checkPermissionAddForum() or here.checkPermissionAddForumTopic()">
 	<a tal:condition="here/checkPermissionAddForum"
 		tal:attributes="href string:${here/absolute_url}/edit_html">
-		<span class="buttons" i18n:translate="">Edit forum</span>
+		<span i18n:translate="">Edit forum</span>
 	</a>
 	<a tal:condition="here/checkPermissionAddForumTopic" style="margin-left: 5px;"
 		tal:attributes="href string:${here/absolute_url}/topic_add_html">
-		<span class="buttons" i18n:translate="">Add topic</span>
+		<span i18n:translate="">Add topic</span>
 	</a>
 	<a tal:condition="python:here.checkPermission('Change permissions')" style="margin-left: 5px;"
 		tal:attributes="href string:${here/absolute_url}/edit_access">
-		<span class="buttons" i18n:translate="">Edit Permissions</span>
+		<span i18n:translate="">Edit Permissions</span>
 	</a>
 </div>
 
