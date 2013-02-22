@@ -1,4 +1,7 @@
-3.2.20 (unreleased)
+3.2.21 (unreleased)
+-------------------
+
+3.2.20 (2013-02-22)
 -------------------
 * js fix for time interval widget [simiamih]
 
