@@ -361,6 +361,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         options = {'versions': versions}
         if versions:
             options['current_version'] = versions[-1]
+        versions.reverse()
 
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars, 'bfile_index')

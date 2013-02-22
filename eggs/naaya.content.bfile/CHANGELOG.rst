@@ -1,5 +1,6 @@
 1.3.10 (unreleased)
 ------------------
+* newest versions first [simiamih]
 
 1.3.9 (2012-12-19)
 ------------------
