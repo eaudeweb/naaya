@@ -4,11 +4,11 @@
 
 .overview_current_settings h1 img {
 	padding-right: 0px;
-    padding-bottom: 5px;
+  /*padding-bottom: 5px;*/
 }
 
 .overview_current_settings table {
-	width: 760px;
+	width: 720px; /*760px;*/
 	border: 1px solid #ddd;
 	border-collapse: collapse;
 }
