@@ -114,7 +114,7 @@
 </thead>
 <tbody>
 <tr tal:repeat="version options/versions">
-    <td tal:content="version/id" />
+    <td tal:content="string: v${version/id}" />
     <td>
         <a tal:attributes="href version/url"
            tal:content="version/filename"></a>
