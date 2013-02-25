@@ -160,8 +160,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     implements(INyPhoto)
 
     meta_type = METATYPE_NYPHOTO
-    icon = 'misc_/NaayaPhotoArchive/NyPhoto.gif'
-    icon_marked = 'misc_/NaayaPhotoArchive/NyPhoto_marked.gif'
+    icon = '++resource++naaya.photoarchive/NyPhoto.gif'
+    icon_marked = '++resource++naaya.photoarchive/NyPhoto_marked.gif'
 
     manage_options = ((
         {'label': 'Displays', 'action': 'manage_displays_html'},

@@ -20,7 +20,7 @@
 	follow_link python:True;">
 
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
+	href="/++resource++naaya.photoarchive/photo_archive.css" />
 
 <h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
 <metal:block use-macro="site_object_index/macros/icon"/>
@@ -69,7 +69,7 @@
 		<div class="album-image-holder" metal:define-slot="image">
 			<a tal:omit-tag="not:follow_link"
 				tal:attributes="href album/absolute_url; title album/title" tal:define="album_cover album/get_cover;
-					img_src python:test(album_cover, '/'.join((album.absolute_url(), album_cover, 'view?display=Gallery')), 'misc_/NaayaPhotoArchive/empty_album.png')">
+					img_src python:test(album_cover, '/'.join((album.absolute_url(), album_cover, 'view?display=Gallery')), '++resource++naaya.photoarchive/empty_album.png')">
 			<span tal:omit-tag="follow_link">
 				<img tal:attributes="src img_src; alt album/title"/>
 			</span>

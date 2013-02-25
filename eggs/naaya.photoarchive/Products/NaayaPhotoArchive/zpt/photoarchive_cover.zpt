@@ -10,7 +10,7 @@
 	follow_link python:False;">
 
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
+	href="/++resource++naaya.photoarchive/photo_archive.css" />
 
 <h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
 	<metal:block use-macro="site_object_index/macros/icon"/>

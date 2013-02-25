@@ -141,8 +141,8 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
 
     meta_type = METATYPE_NYPHOTOFOLDER
     meta_label = METALABEL_NYPHOTOFOLDER
-    icon = 'misc_/NaayaPhotoArchive/NyPhotoFolder.gif'
-    icon_marked = 'misc_/NaayaPhotoArchive/NyPhotoFolder_marked.gif'
+    icon = '++resource++naaya.photoarchive/NyPhotoFolder.gif'
+    icon_marked = '++resource++naaya.photoarchive/NyPhotoFolder_marked.gif'
 
     manage_options = (
         NyContainer.manage_options[0:2]
@@ -336,7 +336,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     @deprecate('NyPhotoFolder.query_photos is deprecated and will be removed in the next version.')
     def query_photos(self, q='', f='', p_start=0):
         #query/filter photos
-        lang = self.getLocalizer().get_selected_language()
+        lang = self.gl_get_selected_language()
         if q == '': q = None
         if f == '': f = None
         else: f = 1
@@ -627,21 +627,6 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             return 0
         else:
             return 1
-
-    security.declareProtected(view, 'slideshow')
-    def slideshow(self, startpic=''):
-        """
-        Return a list of photos starting at the given id and wrapping at the end
-        """
-        pics = self._list_photos()
-        try:
-            startpic_index = pics.index(startpic)
-        except ValueError:
-            startpic_index = 0
-        ordered_pics = pics[startpic_index:]
-        ordered_pics.extend(pics[:startpic_index])
-        ordered_pics = [self._getOb(pic) for pic in ordered_pics]
-        return PageTemplateFile('zpt/slideshow', globals()).__of__(self)(pics=ordered_pics)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopPhotoObjects')
     @deprecate('NyPhotoFolder.setTopPhotoObjects is deprecated and will be removed in the next version.')

@@ -89,32 +89,6 @@ def initialize(context):
 
     register_permissions()
 
-misc_ = {
-    'NyPhotoGallery.gif':ImageFile('www/NyPhotoGallery.gif', globals()),
-    'NyPhotoFolder.gif':ImageFile('www/NyPhotoFolder.gif', globals()),
-    'NyPhotoFolder_marked.gif':ImageFile('www/NyPhotoFolder_marked.gif', globals()),
-    'NyPhoto.gif':ImageFile('www/NyPhoto.gif', globals()),
-    'NyPhoto_marked.gif':ImageFile('www/NyPhoto_marked.gif', globals()),
-    'right.gif':ImageFile('www/right.gif', globals()),
-    'left.gif':ImageFile('www/left.gif', globals()),
-    'album_background.gif': ImageFile('www/album_background.gif', globals()),
-    'photo_background.png': ImageFile('www/photo_background.png', globals()),
-    'photo_background_hover.png': ImageFile('www/photo_background_hover.png', globals()),
-    'rotate_left.gif': ImageFile('www/rotate_left.gif', globals()),
-    'rotate_right.gif': ImageFile('www/rotate_right.gif', globals()),
-    'flip_vertically.gif': ImageFile('www/flip_vertically.gif', globals()),
-    'flip_horizontally.gif': ImageFile('www/flip_horizontally.gif', globals()),
-    'slideshow.gif': ImageFile('www/slideshow.gif', globals()),
-    'empty_album.png': ImageFile('www/empty_album.png', globals()),
-    'InfoIcon.png':ImageFile('www/InfoIcon.png', globals()),
-
-    'jquery.cycle.all.min.js': ImageFile('www/jquery.cycle.all.min.js', globals()),
-    'slideshow.css': ImageFile('www/slideshow.css', globals()),
-    'photo_archive.css': ImageFile('www/photo_archive.css', globals()),
-    'slideshow.js': ImageFile('www/slideshow.js', globals()),
-}
-
-
 def register_permissions():
     from Products.Naaya.permissions import register_naaya_permission
     register_naaya_permission(PERMISSION_ADD_PHOTO,
