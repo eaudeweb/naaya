@@ -1999,3 +1999,8 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	color: #333;
 	background: #FFFAE2;
 }
+
+/* generic class for hidden portions */
+.hidden {
+	display: none;
+}
