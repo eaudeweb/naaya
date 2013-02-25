@@ -42,7 +42,7 @@
 
 <form action="." name="objectItems" method="post" enctype="multipart/form-data">
 <!-- Admin section -->
-<div id="admin_this_folder">
+<div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject() or here.parent_is_gallery()">
 	<div class="floated-buttons">
 	<a tal:attributes="href python:here.getParentNode().absolute_url()"
 		tal:condition="here/parent_is_gallery">
