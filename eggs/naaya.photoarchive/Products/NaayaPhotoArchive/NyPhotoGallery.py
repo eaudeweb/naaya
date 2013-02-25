@@ -112,8 +112,8 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
 
     meta_type = METATYPE_NYPHOTOGALLERY
     meta_label = METALABEL_NYPHOTOGALLERY
-    icon = 'misc_/NaayaPhotoArchive/NyPhotoGallery.gif'
-    icon_marked = 'misc_/NaayaPhotoArchive/NyPhotoGallery.gif'
+    icon = '++resource++naaya.photoarchive/NyPhotoGallery.gif'
+    icon_marked = '++resource++naaya.photoarchive/NyPhotoGallery.gif'
 
     manage_options = NyContainer.manage_options
 

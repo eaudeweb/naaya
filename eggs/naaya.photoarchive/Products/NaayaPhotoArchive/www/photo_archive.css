@@ -141,14 +141,14 @@ padding: 0.1em 0.5em;
 }
 
 .image-holder {
-  background: transparent url(/misc_/NaayaPhotoArchive/photo_background.png) no-repeat scroll left center;
+  background: transparent url(/++resource++naaya.photoarchive/photo_background.png) no-repeat scroll left center;
   height: 120px;
   width: 120px;
   margin-bottom: 0.4em;
 }
 
 .image-holder:hover {
-  background: transparent url(/misc_/NaayaPhotoArchive/photo_background_hover.png) no-repeat scroll left center;
+  background: transparent url(/++resource++naaya.photoarchive/photo_background_hover.png) no-repeat scroll left center;
 }
 .image-holder a {
   text-decoration: none;
@@ -233,7 +233,7 @@ padding: 0.1em 0.5em;
 }
 
 .album-image-holder {
-  background:transparent url(/misc_/NaayaPhotoArchive/album_background.gif) no-repeat scroll left center;
+  background:transparent url(/++resource++naaya.photoarchive/album_background.gif) no-repeat scroll left center;
   height:240px;
   width:240px;
 }

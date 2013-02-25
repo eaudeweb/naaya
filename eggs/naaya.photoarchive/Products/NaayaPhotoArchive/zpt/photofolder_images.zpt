@@ -1,35 +1,88 @@
 <metal:block define-macro="images">
 
-<div class="g-album-content" id="album-content"
-tal:define="
-	nb_photos python:len(here.getObjects());
-	filter_q python:request.get('q', '');
-	page python:request.get('page', 0);
-	paginator paginator;
-	follow_link python:True;
-	">
-	<tal:block repeat="photo python:paginator.get_page(page)">
-	<div tal:define="ind repeat/photo/index" class="thumbnail-layout"
-		tal:attributes="style python:'z-index: %d' % (int(nb_photos) - int(ind))">
-		<tal:block define="photo_id photo/getId">
-		<div  tal:attributes="
-			onmouseover string:do_hover('div_${photo_id}', 'image-details-hover');
-			onmouseout string:do_out('div_${photo_id}', 'image-details')"
-			class="image-holder" metal:define-slot="image">
-			<a tal:omit-tag="not:follow_link" tal:attributes="href photo/absolute_url; title photo/title">
-				<img tal:attributes="src string:${photo/absolute_url}/view?display=Album; alt photo/title"/>
-			</a>
-		</div>
-		<div class="image-details" tal:attributes="id string:div_${photo_id}" metal:define-slot="details">
-			<input type="checkbox" name="ids:list" tal:attributes="value photo_id; id photo_id" />
-			<label tal:attributes="for photo_id" tal:content="structure python:here.word_break(photo.title_or_id())" />
-		</div>
-		</tal:block>
-	</div>
-	</tal:block>
-  <div class="cleaner">&nbsp;</div>
-  <div metal:use-macro="here/macro_utils/macros/paginator" />
-</div>
+<link href="++resource++naaya.photoarchive/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox.pack.js"></script>
+<link href="++resource++naaya.photoarchive/jquery.fancybox-thumbs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox-thumbs.js"></script>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.mousewheel-3.0.6.pack.js"></script>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+    $('.thumbnail-layout').each(function(){
+        var photo_url = $(this).find('a.fancybox-thumb').attr('href');
+        $(this).find('a.fancybox-thumb').attr('href', photo_url+'/view?display=XLarge');
+    });
+		$(".fancybox-thumb").fancybox({
+      beforeLoad: function() {
+          var el, id = $(this.element).data('title-id');
+
+          if (id) {
+              el = $('#' + id);
+          
+              if (el.length) {
+                  this.title = el.html();
+              }
+          }
+      },
+      type: 'image',
+      prevEffect: 'none',
+      nextEffect: 'none',
+      helpers: {
+        title: {
+          type: 'outside'
+        },
+        thumbs: {
+          width: 50,
+          height: 50
+        }
+      }
+    });
+	});
+</script>
+
+<div class="g-album-content" id="album-content"
+  tal:define="
+    nb_photos python:len(here.getObjects());
+    filter_q python:request.get('q', '');
+    page python:request.get('page', 0);
+    paginator paginator;
+    follow_link python:True;
+    ">
+    <tal:block repeat="photo python:paginator.get_page(page)">
+      <div tal:define="ind repeat/photo/index" class="thumbnail-layout"
+        tal:attributes="style python:'z-index: %d' % (int(nb_photos) - int(ind))">
+        <tal:block define="photo_id photo/getId;
+                          photo_id_slug python:photo_id.replace('.','-')">
+          <div  tal:attributes="
+              onmouseover string:do_hover('div_${photo_id}', 'image-details-hover');
+              onmouseout string:do_out('div_${photo_id}', 'image-details')"
+              class="image-holder" metal:define-slot="image">
+            <!--<a tal:omit-tag="not:follow_link" rel="fancybox-thumb" class="fancybox-thumb"
+              tal:attributes="href string:${photo/absolute_url}/view?display=XLarge;
+                title photo/title;
+                data-title-id string:details_${photo_id_slug}">
+              <img tal:attributes="src string:${photo/absolute_url}/view?display=Album; alt photo/title"/>
+            </a>-->
+            <a tal:omit-tag="not:follow_link" rel="fancybox-thumb" class="fancybox-thumb"
+              tal:attributes="href string:${photo/absolute_url};
+                title photo/title;
+                data-title-id string:details_${photo_id_slug}">
+              <img tal:attributes="src string:${photo/absolute_url}/view?display=Album; alt photo/title"/>
+            </a>
+          </div>
+          <div tal:attributes="id string:details_${photo_id_slug}" class="hidden">
+              <tal:block replace="photo/title" /><br/>
+              <a tal:attributes="href string:${photo/absolute_url}" i18n:translate="">see photo details</a>
+          </div>
+          <div class="image-details" tal:attributes="id string:div_${photo_id}" metal:define-slot="details">
+            <input type="checkbox" name="ids:list" tal:attributes="value photo_id; id photo_id" />
+            <label tal:attributes="for photo_id" tal:content="structure python:here.word_break(photo.title_or_id())" />
+          </div>
+        </tal:block>
+      </div>
+    </tal:block>
+    <div class="cleaner">&nbsp;</div>
+    <div metal:use-macro="here/macro_utils/macros/paginator" />
+</div>
 
 </metal:block>
