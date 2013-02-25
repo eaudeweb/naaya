@@ -26,7 +26,7 @@
 ">
 
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
+	href="/++resource++naaya.photoarchive/photo_archive.css" />
 <div class="g-header">
 	<form method="get" action="" class="g-header-form">
 		<label for="q" i18n:translate="">Search photos</label>
@@ -47,9 +47,6 @@
 	<a tal:attributes="href python:here.getParentNode().absolute_url()"
 		tal:condition="here/parent_is_gallery">
 		<span i18n:translate="">View gallery</span>
-	</a>
-	<a id="slideshow_link" href="">
-		<span i18n:translate="">View slideshow</span>
 	</a>
 	</div>
 	<div class="toolbar" tal:condition="here/checkPermissionEditObject">
@@ -87,14 +84,22 @@
 			<dl class="album-details">
 				<dt i18n:translate="">Photos in album</dt>
 				<dd tal:content="string:${nb_photos}" />
-				<dt tal:condition="here/author" i18n:translate="">Author</dt>
-				<dd tal:content="here/author" />
-				<dt tal:condition="here/source" i18n:translate="">Source</dt>
-				<dd tal:content="here/source" />
-				<dt tal:condition="here/coverage" i18n:translate="">Geographical coverage</dt>
-				<dd tal:content="here/coverage" />
-				<dt tal:condition="here/keywords" i18n:translate="">Keywords</dt>
-				<dd tal:content="here/keywords" />
+				<tal:block condition="here/author">
+					<dt i18n:translate="">Author</dt>
+					<dd tal:content="here/author" />
+				</tal:block>
+				<tal:block condition="here/source">
+					<dt i18n:translate="">Source</dt>
+					<dd tal:content="here/source" />
+				</tal:block>
+				<tal:block condition="here/coverage">
+					<dt i18n:translate="">Geographical coverage</dt>
+					<dd tal:content="here/coverage" />
+				</tal:block>
+				<tal:block condition="here/keywords">
+					<dt i18n:translate="">Keywords</dt>
+					<dd tal:content="here/keywords" />
+				</tal:block>
 				<metal:block define-slot="details-extra" />
 			</dl>
 		</div>
@@ -136,16 +141,14 @@
 	<div class="g-box" tal:condition="python:here.checkPermission('Naaya - Add Naaya Photo')"
 		metal:define-slot="upload_box">
 		<div class="title"><span  i18n:translate="">Add photos</span></div>
-		<div class="body" style="padding: .5em;">
-			<a tal:attributes="href string:${here/absolute_url}/upload_html"
-				style="background-color: #336399; border:1px solid #ccc; color:#fff;
-					padding:.3em 2em; text-decoration:none; display:block; text-align:center;"
+		<div class="body">
+			<a class="upload_photos" tal:attributes="href string:${here/absolute_url}/upload_html"
 				i18n:translate="">upload photos</a>
 		</div>
 	</div>
 </div>
 
-<div class="thumbnail-layout" id="selection_buttons">
+<div id="selection_buttons">
 
 	<tal:block condition="objects_list">
 	<input tal:condition="perm_zip_export" type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
@@ -174,34 +177,30 @@
 </form>
 
 <!-- Javascripts -->
-<link tal:attributes="href string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.js"></script>
-<script tal:condition="objects_list" language="javascript" type="text/javascript">
-<!--
-function toggleSelect(caller){
-  var caller = document.getElementById(caller);
-  var res = document.getElementById('album-content');
-  var res_inputs = res.getElementsByTagName('INPUT');
-  caller.checked = !caller.checked;
-  for(var i=0; i<res_inputs.length; i++){
-    res_inputs[i].checked = caller.checked;
+<script tal:condition="objects_list" type="text/javascript">
+  function toggleSelect(caller){
+    var caller = document.getElementById(caller);
+    var res = document.getElementById('album-content');
+    var res_inputs = res.getElementsByTagName('INPUT');
+    caller.checked = !caller.checked;
+    for(var i=0; i<res_inputs.length; i++){
+      res_inputs[i].checked = caller.checked;
+    }
   }
-}
 
-function do_hover(div_id, class_name) {
-  var div_ob = document.getElementById(div_id);
-  div_ob.className += ' ' + class_name;
-}
+  function do_hover(div_id, class_name) {
+    var div_ob = document.getElementById(div_id);
+    div_ob.className += ' ' + class_name;
+  }
 
-function do_out(div_id, class_name) {
-  var div_ob = document.getElementById(div_id);
-  div_ob.className = class_name;
-}
+  function do_out(div_id, class_name) {
+    var div_ob = document.getElementById(div_id);
+    div_ob.className = class_name;
+  }
 
-// Enable select all button if javascript is enabled
-document.getElementById('select_all_label').style.display = 'inline';
+  // Enable select all button if javascript is enabled
+  document.getElementById('select_all_label').style.display = 'inline';
 
-//-->
 </script>
 
 </tal:block>

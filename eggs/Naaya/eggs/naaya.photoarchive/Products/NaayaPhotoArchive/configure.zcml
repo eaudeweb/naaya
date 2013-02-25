@@ -1,5 +1,6 @@
-<configure xmlns='http://namespaces.zope.org/zope'
-      xmlns:naaya="http://namespaces.zope.org/naaya">
+<configure xmlns="http://namespaces.zope.org/zope"
+      xmlns:naaya="http://namespaces.zope.org/naaya"
+      xmlns:browser="http://namespaces.zope.org/browser">
   <include package=".adapter" />
 
   <naaya:call factory=".permissions.register_permissions" />
@@ -17,4 +18,11 @@
   <class class=".NyPhoto.NyPhoto">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
   </class>
+
+  <browser:resourceDirectory
+    name="naaya.photoarchive"
+    directory="./www"
+    permission="zope.Public"
+    />
+
 </configure>
