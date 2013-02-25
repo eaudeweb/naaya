@@ -1,4 +1,7 @@
-1.3.11 (unreleased)
+1.4.1 (unreleased)
+-------------------
+
+1.4.0 (2013-02-25)
 -------------------
 * replaced the old slideshow functionality by a lightbox library
 * replaced misc_ by browser:resourceDirectory (zcml)
