@@ -31,7 +31,7 @@
 
 <!-- Admin section -->
 <div id="admin_this_folder" tal:condition="here/checkPermissionEditObject">
-	<div class="toolbar" metal:define-slot="admin_buttons">
+	<div metal:define-slot="admin_buttons">
 		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit gallery</span></a>
 		<a tal:attributes="href string:${here/absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
 		<a tal:attributes="href string:${here/absolute_url}/photofolder_add_html"><span i18n:translate="">New album</span></a>
