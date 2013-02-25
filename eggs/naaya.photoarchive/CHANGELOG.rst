@@ -1,5 +1,9 @@
 1.3.11 (unreleased)
 -------------------
+* replaced the old slideshow functionality by a lightbox library
+* replaced misc_ by browser:resourceDirectory (zcml)
+* removed localizer reference (leftover)
+* structural html improvements in photo_index.zpt
 
 1.3.10 (2012-08-22)
 -------------------
