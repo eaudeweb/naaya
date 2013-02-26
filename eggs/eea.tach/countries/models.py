@@ -10,6 +10,7 @@ class Country(models.Model):
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'
         ordering = ('name',)
+        db_table = 'country'
 
     def __unicode__(self):
         return self.name
