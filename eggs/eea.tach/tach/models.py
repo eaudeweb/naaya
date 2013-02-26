@@ -5,9 +5,6 @@ from django.forms import ModelForm
 class Users(models.Model):
     pass
 
-class Countries(models.Model):
-    pass
-
 class A1Types(models.Model):
     title = models.CharField(max_length = 256)
 
