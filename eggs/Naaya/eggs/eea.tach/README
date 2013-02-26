@@ -1,0 +1,5 @@
+
+
+Load initial data for countries:
+
+    - ./manage.py loaddata countries data

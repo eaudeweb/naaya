@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'tach',
+    'countries',
 )
 
 # A sample logging configuration. The only tangible logging
