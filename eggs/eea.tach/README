@@ -3,3 +3,7 @@
 Load initial data for countries:
 
     - ./manage.py loaddata countries data
+
+Load inital data for A1Types
+
+    - ./manage.py loaddata a1 type
