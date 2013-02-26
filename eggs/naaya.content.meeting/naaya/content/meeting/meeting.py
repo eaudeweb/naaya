@@ -231,6 +231,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
     permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE])
+    ob.manage_addLocalRoles(contributor, [ADMINISTRATOR_ROLE])
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)

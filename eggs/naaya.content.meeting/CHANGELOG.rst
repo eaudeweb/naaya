@@ -1,5 +1,6 @@
 1.2.31 (unreleased)
 -------------------
+* temp fix: meeting owner becomes Administrator of the meeting [simiamih]
 
 1.2.30 (2012-12-10)
 -------------------
