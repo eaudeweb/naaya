@@ -1,5 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:zcml="http://namespaces.zope.org/zcml">
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           xmlns:browser="http://namespaces.zope.org/browser">
 
   <subscriber
     handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_add"
@@ -58,5 +59,11 @@
              component=".updates.AddPendingSubscriptionsContainer"
              permission="zope2.ViewManagementScreens" />
   </configure>
+
+  <browser:resourceDirectory
+    name="NaayaCore.NotificationTool"
+    directory="./www"
+    permission="zope.Public"
+  />
 
 </configure>
