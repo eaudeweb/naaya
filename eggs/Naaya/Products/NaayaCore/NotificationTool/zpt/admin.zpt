@@ -144,30 +144,26 @@
     <fieldset>
         <legend i18n:translate="">Add user subscription</legend>
         <div class="field">
-            <label for="user_id" i18n:translate="">User id</label>
+            <label for="user_id" i18n:translate="">Search user by name, user ID or email</label>
             <input type="text" id="user_id" name="user_id"/>
             <span id="pick-user-ui" style="display:none;">
-                <button i18n:translate="">Pick...</button>
+                <button i18n:translate="">Find user</button>
+                <div id="uid_wakeup">
+                </div>
                 <div class="search" style="display:none;">
                     <fieldset>
-                    <div id="user-search-results"></div>
-                    <legend i18n:translate="">Search for user</legend>
-                    <label for="user-query-input"
-                           i18n:translate="">Name or email:</label>
-                    <input id="user-query-input">
-                    <input i18n:attributes="value" value="Search"
-                           type="submit">
+                        <div id="user-search-results"></div>
                     </fieldset>
                 </div>
             </span>
         </div>
-        <div class="field">
+        <div class="field" id="location_id">
             <label for="location" i18n:translate="">Location</label>
             <div id="sitemap_tree" class="sitemap_tree"></div>
             <div style="clear: both"></div>
             <input type="text" id="location" name="location" class="sitemap_tree_target" style="width:40%;"/>
         </div>
-        <div class="field-inline">
+        <div class="field-inline" id="subscribe_to_id">
             <label for="notif_type" i18n:translate="">Subscribe to</label>
             <select name="notif_type" id="notif_type">
                 <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
@@ -176,7 +172,7 @@
                 <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
             </select>
         </div>
-        <div class="field-inline">
+        <div class="field-inline" id="language_id">
             <label for="lang" i18n:translate="">Language</label>
             <select name="lang" id="lang"
                     tal:define="translations python:here.getPortalI18n().get_translation">
@@ -186,7 +182,7 @@
                         tal:content="python:'['+item['id']+'] '+translations(item['title'])" />
             </select>
         </div>
-        <input type="submit" value="Subscribe user" i18n:attributes="value"/>
+        <input type="submit" id="subscribe_button_id" value="Subscribe user" i18n:attributes="value"/>
     </fieldset>
 </form>
 
@@ -312,67 +308,12 @@
 
 </tal:block>
 <!-- scripts -->
+<script type="text/javascript" src="/++resource++NaayaCore.NotificationTool/admin_user.js">
+</script>
 <tal:block define="tree_get_url string:${here/absolute_url}/sitemap">
   <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
 </tal:block>
 <script tal:content="python:('var notif_tool_url = %s' %
                      here.rstk['json_dumps'](here.absolute_url()))"></script>
-<script>
-$(function() {
-    // fix for IE
-    if(typeof String.prototype.trim !== 'function') {
-      String.prototype.trim = function() {
-        return this.replace(/^\s+|\s+$/g, '');
-      }
-    }
-
-    var pick_ui = $('span#pick-user-ui');
-    var pick_button = $('button', pick_ui);
-    var search_ui = $('div.search', pick_ui);
-    var results = $('div#user-search-results', pick_ui);
-    var user_id_input = $('input#user_id');
-    var search_button = $('input[type=submit]', pick_ui);
-    var orig_search_text = search_button.attr('value');
-
-    pick_button.click(function(evt) {
-        evt.preventDefault();
-        pick_button.hide();
-        $('div.search', pick_ui).show();
-        search_button.click(function(evt) {
-            evt.preventDefault();
-            var query = $('input[id=user-query-input]', pick_ui).val().trim();
-            if(! query) {
-                results.text("Please enter a search value");
-                return;
-            }
-            search_button.attr({disabled: 'disabled', value: "searching..."});
-            $.get(notif_tool_url+'/admin_search_user', {query: query},
-                  show_results);
-        });
-    });
-    pick_ui.show();
-
-    function show_results(users) {
-        results.empty();
-        search_button.attr({disabled: null, value: orig_search_text});
-        if(users.length > 0) {
-            results.append("Results:");
-            var results_list = $('<ul'+'>').appendTo(results);
-            $.each(users, function(n, user) {
-                var link = $('<'+'a href="#"><'+'/a>').click(function(evt) {
-                    evt.preventDefault();
-                    user_id_input.val(user.user_id);
-                    pick_button.show();
-                    search_ui.hide();
-                }).text(user.full_name);
-                var li = $('<li'+'>').append(link, ' &lt;', user.email, '&gt;');
-                li.appendTo(results_list);
-            });
-        } else {
-            results.text("No users match your search criteria");
-        }
-    }
-});
-</script>
 </tal:block>
 </metal:block>
