@@ -11,113 +11,34 @@
 }
 .information fieldset {
 	background: #f0f5fb !important;
-	border: 1px solid #cddff4;
+	border: 2px dashed #999;
 	color: #3d8101;
 }
 .error fieldset {
 	background: #f0f5fb !important;
-	border: 1px solid #cddff4;
 	color: #f40000;
 }
 .message-error, .error {
 	color: #f30;
 }
 .message-error fieldset,.error fieldset {
-	border: 1px solid #999 !important;
+	border: 2px dashed red;
 	color: #f40000;
 }
 .message-information fieldset, .information fieldset {
-	border: 1px solid #999 !important;
+	border: 2px dashed #999 !important;
 }
 .fieldset_div {
 	margin: 5px 0px;
 }
-
-/**
- * Admin comments list
- *
- * Added:  21 Mar 2012
- * Author: Bogdan Tanase
-*/
-#comments-list .actions-label {
-    position: relative;
-    top: 0px;
-    font-weight: bold;
+.form-errors {
+	color: red;
+	font-weight: bold;
+	font-size: 95%;
 }
-
-#comments-list .comment-actions {
-    opacity: 0;
-    -webkit-transition: opacity .1s ease-in-out;
-       -moz-transition: opacity .1s ease-in-out;
-            transition: opacity .1s ease-in-out;
+.mandatory_field {
+	color: blue;
 }
-
-#comments-list tr:hover .comment-actions {
-    opacity: 1;
-}
-
-.comment-actions a.toggle-spam-status .icon {
-    display: inline-block;
-    width: 24px;
-    height: 16px;
-}
-
-a.toggle-spam-status.spam-status .icon {
-    background: transparent url('/++resource++Products.Naaya/spam-icon.png') no-repeat scroll center center;
-}
-
-a.toggle-spam-status.ham-status .icon{
-    background: transparent url('/++resource++Products.Naaya/ham-icon.png') no-repeat scroll center center;
-}
-
-a.delete-comment .icon {
-    display: inline-block;
-    height: 16px;
-    width: 15px;
-    background: transparent url('/++resource++Products.Naaya/trash-icon.png') no-repeat scroll center center;
-}
-
-.akismet-loading {
-    display: none;
-}
-
-.akismet-loading .icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background: transparent url('/++resource++Products.Naaya/ajax-loader-small.gif') no-repeat scroll center center;
-    position: relative;
-    top: 3px;
-    margin-top: -4px;
-}
-
-#comments-list tr.spam-comment {
-    /*background: #FEE;*/
-}
-
-#comments-list tr.spam-comment a.comment-title {
-    color: red;
-}
-
-#comments-list tr.ham-comment a.comment-title {
-    color: blue;
-}
-
-#comments-list tr.spam-comment .spam-status,
-#comments-list tr.spam-comment .ham-status-label {
-    display: none;
-}
-
-#comments-list tr.ham-comment .ham-status,
-#comments-list tr.ham-comment .spam-status-label {
-    display: none;
-}
-
-#comments-list tr {
-    background: #FFF;
-}
-
-
 /* tip boxes */
 .right-floated-tip {
 	width: 20%;
@@ -641,6 +562,7 @@ a.logincomment, a.logincomment:visited {
 }
 .commentbox_add {
 	margin: 1em;
+	clear: both;
 }
 .hr_addcomment {
 	border-top: 1px solid #eaeaea;
@@ -1964,7 +1886,6 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	background-color: #FFFFDD;
 }
 
-
 /**
  * Added 15 Iun 2011
 */
@@ -2000,7 +1921,123 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	background: #FFFAE2;
 }
 
+/**
+ * Admin comments list
+ *
+ * Added:  21 Mar 2012
+ * Author: Bogdan Tanase
+*/
+#comments-list .actions-label {
+    position: relative;
+    top: 0px;
+    font-weight: bold;
+}
+
+#comments-list .comment-actions {
+    opacity: 0;
+    -webkit-transition: opacity .1s ease-in-out;
+       -moz-transition: opacity .1s ease-in-out;
+            transition: opacity .1s ease-in-out;
+}
+
+#comments-list tr:hover .comment-actions {
+    opacity: 1;
+}
+
+.comment-actions a.toggle-spam-status .icon {
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+}
+
+a.toggle-spam-status.spam-status .icon {
+    background: transparent url('/++resource++Products.Naaya/spam-icon.png') no-repeat scroll center center;
+}
+
+a.toggle-spam-status.ham-status .icon{
+    background: transparent url('/++resource++Products.Naaya/ham-icon.png') no-repeat scroll center center;
+}
+
+a.delete-comment .icon {
+    display: inline-block;
+    height: 16px;
+    width: 15px;
+    background: transparent url('/++resource++Products.Naaya/trash-icon.png') no-repeat scroll center center;
+}
+
+.akismet-loading {
+    display: none;
+}
+
+.akismet-loading .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: transparent url('/++resource++Products.Naaya/ajax-loader-small.gif') no-repeat scroll center center;
+    position: relative;
+    top: 3px;
+    margin-top: -4px;
+}
+
+#comments-list tr.spam-comment {
+    /*background: #FEE;*/
+}
+
+#comments-list tr.spam-comment a.comment-title {
+    color: red;
+}
+
+#comments-list tr.ham-comment a.comment-title {
+    color: blue;
+}
+
+#comments-list tr.spam-comment .spam-status,
+#comments-list tr.spam-comment .ham-status-label {
+    display: none;
+}
+
+#comments-list tr.ham-comment .ham-status,
+#comments-list tr.ham-comment .spam-status-label {
+    display: none;
+}
+
+#comments-list tr {
+    background: #FFF;
+}
+/**
+ * END Admin comments list
+*/
+
+/**
+ * Admin API Keys status
+ *
+ * Added: 23 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.api-keys-list tr.invalid {
+    background-color: #FFF9F9;
+}
+/**
+ * END Admin API Keys status
+*/
+
+.commentbutton:hover {
+    color: #333;
+}
+.commentbutton {
+    font-size: 90%;
+    float:right;
+    padding: 3px;
+    text-decoration: none;
+    margin-bottom: 0.5em;
+    margin-left: 10px;
+}
 /* generic class for hidden portions */
 .hidden {
 	display: none;
+}
+
+#flashcontent {
+	height: 400px;
+	/*height: 100%;*/
 }
