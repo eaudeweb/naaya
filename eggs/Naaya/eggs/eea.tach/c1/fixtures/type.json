@@ -1,0 +1,64 @@
+[   {
+        "pk": "1",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Overall transport system"
+        }
+    },
+
+    {
+        "pk": "2",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Roads"
+        }
+    },
+
+    {
+        "pk": "3",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Railways"
+        }
+    },
+
+    {
+        "pk": "4",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Air transport"
+        }
+    },
+
+     {
+        "pk": "5",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Inland Waterborne transport"
+        }
+    },
+
+     {
+        "pk": "6",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Maritime transport"
+        }
+    },
+
+     {
+        "pk": "7",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Urban transport"
+        }
+    },
+
+     {
+        "pk": "8",
+        "model": "c1.c1type",
+        "fields": {
+            "title": "Other"
+        }
+    }
+]
