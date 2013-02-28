@@ -1,0 +1,40 @@
+[   {
+        "pk": "1",
+        "model": "b1.b1type",
+        "fields": {
+            "title": "Climate change: Major recent (since 2008) assessment or study on vulnerability, resilience or adaptation of transport at national (or subnational level)"
+        }
+    },
+
+    {
+        "pk": "2",
+        "model": "b1.b1type",
+        "fields": {
+            "title": "Extreme weather events: Major recent (since 2008) assessment or study on the vulnerability, resilience or adaptation of transport at national (or subnational) level"
+        }
+    },
+
+    {
+        "pk": "3",
+        "model": "b1.b1type",
+        "fields": {
+            "title": "Relevant national (or subnational) research programme important for the adaptation of transport to climate change or to extreme weather events"
+        }
+    },
+
+    {
+        "pk": "4",
+        "model": "b1.b1type",
+        "fields": {
+            "title": "Relevant national (or subnational) knowledge and information initiative, platform or similar initiatives important for the adaptation of transport to climate change or to extreme weather events"
+        }
+    },
+
+     {
+        "pk": "5",
+        "model": "b1.b1type",
+        "fields": {
+            "title": "Systematically collected data that is relevant for assessing the impacts of climate change or extreme weather events on transport, disruption of transport operations, extraordinary infrastructure reconstruction costs, etc."
+        }
+    }
+]

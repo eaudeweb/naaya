@@ -2,7 +2,27 @@
 
 {% block content %}
   <form method='POST'>
-    {{ form.as_p }}
+    {{ form_a1.as_p }}
+    <button type='submit'>Scrie ceva</button>
+  </form>
+  <form method='POST'>
+    {{ form_b1.as_p }}
+    <button type='submit'>Scrie ceva</button>
+  </form>
+  <form method='POST'>
+    {{ form_c1.as_p }}
+    <button type='submit'>Scrie ceva</button>
+  </form>
+  <form method='POST'>
+    {{ form_c3.as_p }}
+    <button type='submit'>Scrie ceva</button>
+  </form>
+  <form method='POST'>
+    {{ form_d1.as_p }}
+    <button type='submit'>Scrie ceva</button>
+  </form>
+  <form method='POST'>
+    {{ form_d2.as_p }}
     <button type='submit'>Scrie ceva</button>
   </form>
 {% endblock content %}
