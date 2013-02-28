@@ -40,6 +40,7 @@ class B1(models.Model):
         db_table = 'b1_table'
 
     entry_type = models.ForeignKey(B1Type)
+    country = models.ForeignKey('countries.Country')
     title = models.CharField(max_length = 256)
     language = models.CharField(max_length = 256)
     year = models.IntegerField()

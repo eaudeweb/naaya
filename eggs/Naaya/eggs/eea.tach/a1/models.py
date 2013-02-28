@@ -45,6 +45,7 @@ class A1(models.Model):
         db_table = 'a1_table'
 
     entry_type = models.ForeignKey(A1Type)
+    country = models.ForeignKey('countries.Country')
     status = models.CharField(max_length = 50,
                                 choices = STATUS_CHOICES)
     title = models.CharField(max_length = 256)

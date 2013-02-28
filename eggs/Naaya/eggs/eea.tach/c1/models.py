@@ -19,6 +19,7 @@ class C1(models.Model):
         db_table = 'c1_table'
 
     entry_type = models.ForeignKey(C1Type)
+    country = models.ForeignKey('countries.Country')
     name = models.CharField(max_length = 256)
     website = models.CharField(max_length = 256)
 

@@ -20,6 +20,7 @@ class C3(models.Model):
     class Meta:
         db_table = 'c3_table'
 
+    country = models.ForeignKey('countries.Country')
     name = models.CharField(max_length = 256)
     short_information = models.CharField(max_length = 2000)
     parts_considered = MultiSelectField(max_length=256, choices=TRANSPORT_PARTS)

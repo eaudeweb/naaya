@@ -8,10 +8,16 @@ class Expert(models.Model):
     class Meta:
         db_table = 'expert_table'
 
+    country = models.ForeignKey('countries.Country')
+
     name = models.CharField(max_length = 256)
+
     area_of_expertise = models.CharField(max_length = 512)
+
     organisation = models.CharField(max_length = 256)
+
     website_address = models.CharField(max_length = 2000)
+
     contact_email_telephone = models.CharField(max_length = 2000)
 
 

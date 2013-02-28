@@ -15,6 +15,8 @@ class D1(models.Model):
     class Meta:
         db_table = 'd1_table'
 
+    country = models.ForeignKey('countries.Country')
+
     lack_of_awareness_relevance = models.CharField(max_length = 50,
                                 choices = RELEVANCE)
     lack_of_awareness_details = models.CharField(max_length = 2000)

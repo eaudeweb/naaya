@@ -15,6 +15,8 @@ class D2(models.Model):
     class Meta:
         db_table = 'd2_table'
 
+    country = models.ForeignKey('countries.Country')
+
     eu_adaptation_strategy_relevance = models.CharField(max_length = 50,
                                 choices = RELEVANCE)
     eu_adaptation_strategy_further = models.CharField(max_length = 2000)
