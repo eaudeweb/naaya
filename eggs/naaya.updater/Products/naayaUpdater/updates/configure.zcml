@@ -339,11 +339,11 @@
       component=".update_cleanup_mainsections.UpdateCleanupMainsections"
       permission="zope2.ViewManagementScreens" />
 
-        <utility 
-      name="analytics_template.update" 
-      provides="..interfaces.IUpdateScript" 
-      component=".update_analytics_template.UpdateAnalyticsTemplate" 
-      permission="zope2.ViewManagementScreens" /> 
+        <utility
+      name="analytics_template.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_analytics_template.UpdateAnalyticsTemplate"
+      permission="zope2.ViewManagementScreens" />
 
 	<utility
       name="gbif_use_openzoom.update"
@@ -466,4 +466,11 @@
       provides="..interfaces.IUpdateScript"
       component=".update_broken_back35.UpdateBrokenBack35"
       permission="zope2.ViewManagementScreens" />
+
+   	<utility
+      name="update_migrate_common_css.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_migrate_common_css.MigrateGwCommonCss"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
