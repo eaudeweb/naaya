@@ -1,4 +1,7 @@
-3.2.21 (unreleased)
+3.2.22 (unreleased)
+-------------------
+
+3.2.21 (2013-03-01)
 -------------------
 * frameservice changes to return more data [dumitval]
 * search fix for users from the notifications' admin page [mihaitab]
