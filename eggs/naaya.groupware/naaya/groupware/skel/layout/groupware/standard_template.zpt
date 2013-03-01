@@ -3,7 +3,7 @@
         <metal:block define-slot="standard-head-links">
         <metal:block define-macro="standard-head-links">
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/gw_style_css" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/gw_common_css" />
+            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/gw_common.css" />
             <link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/gw_print_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
