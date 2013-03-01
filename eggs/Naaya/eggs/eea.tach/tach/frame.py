@@ -35,9 +35,9 @@ class UserMiddleware(object):
         if getattr(settings, 'FRAME_URL', None):
             forwarded_cookies = get_forwarded_cookies(request)
             resp = requests.get(settings.FRAME_URL, cookies=forwarded_cookies)
-            if (resp.status_code == 200 and resp.json):
-                request.user_id = resp.json['user_id']
-                request.user_roles = resp.json['user_roles']
+            if (resp.status_code == 200 and resp.json()):
+                request.user_id = resp.json()['user_id']
+                request.user_roles = resp.json()['user_roles']
                 # request.user_roles = ['Authenticated']
 
 
@@ -73,8 +73,8 @@ class Loader(BaseLoader):
             forwarded_cookies = get_forwarded_cookies(request)
 
             resp = requests.get(settings.FRAME_URL, cookies=forwarded_cookies)
-            if (resp.status_code == 200 and resp.json):
-                frame_response = self._process_resp(resp.json['frame_html'])
+            if (resp.status_code == 200 and resp.json()):
+                frame_response = self._process_resp(resp.json()['frame_html'])
                 return frame_response, template_name
 
         raise TemplateDoesNotExist
