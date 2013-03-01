@@ -4,6 +4,7 @@ from django.forms import ModelForm, Textarea
 
 
 class D2(models.Model):
+
     RELEVANCE = (
                 ('none', 'None'),
                 ('low', 'Low'),
@@ -13,9 +14,12 @@ class D2(models.Model):
             )
 
     class Meta:
+
         db_table = 'd2_table'
 
     country = models.ForeignKey('countries.Country')
+
+    user = models.ForeignKey('tach.User')
 
     eu_adaptation_strategy_relevance = models.CharField(max_length = 50,
                                 choices = RELEVANCE)
@@ -65,7 +69,9 @@ class D2(models.Model):
 class D2Form(ModelForm):
 
     class Meta():
+
         model = D2
+
         widgets = {
             'lack_of_awareness_further': Textarea(attrs={'cols': 80, 'rows': 3}),
             'transport_information_further': Textarea(attrs={'cols': 80, 'rows': 3}),
