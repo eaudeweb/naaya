@@ -8,6 +8,7 @@ class A1Type(models.Model):
     title = models.CharField(max_length=256)
 
     class Meta:
+
         db_table = 'a1_type'
 
     def __unicode__(self):
@@ -45,17 +46,29 @@ class A1(models.Model):
         db_table = 'a1_table'
 
     entry_type = models.ForeignKey(A1Type)
+
     country = models.ForeignKey('countries.Country')
+
+    user = models.ForeignKey('tach.User')
+
     status = models.CharField(max_length = 50,
                                 choices = STATUS_CHOICES)
+
     title = models.CharField(max_length = 256)
+
     english_title = models.CharField(max_length = 256)
+
     year = models.IntegerField()
+
     parts_considered = MultiSelectField(max_length=256, choices=TRANSPORT_PARTS)
+
     transport_modes = MultiSelectField(max_length=512, choices=TRANSPORT_MODES)
+
     climate_change_impacts = MultiSelectField(max_length=512, choices=IMPACTS,
             verbose_name='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)')
+
     responsible_organisation = models.CharField(max_length = 256)
+
     link = models.CharField(max_length = 256)
 
 

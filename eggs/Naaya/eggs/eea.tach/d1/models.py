@@ -4,6 +4,7 @@ from django.forms import ModelForm, Textarea
 
 
 class D1(models.Model):
+
     RELEVANCE = (
                 ('none', 'None'),
                 ('low', 'Low'),
@@ -13,9 +14,12 @@ class D1(models.Model):
             )
 
     class Meta:
+
         db_table = 'd1_table'
 
     country = models.ForeignKey('countries.Country')
+
+    user = models.ForeignKey('tach.User')
 
     lack_of_awareness_relevance = models.CharField(max_length = 50,
                                 choices = RELEVANCE)
@@ -57,7 +61,9 @@ class D1(models.Model):
 class D1Form(ModelForm):
 
     class Meta():
+
         model = D1
+
         widgets = {
             'lack_of_awareness_details': Textarea(attrs={'cols': 80, 'rows': 3}),
             'knowledge_gaps_details': Textarea(attrs={'cols': 80, 'rows': 3}),
