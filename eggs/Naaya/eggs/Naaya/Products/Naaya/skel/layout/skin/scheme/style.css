@@ -413,7 +413,7 @@ input[name="query"] {
 
 body #center_content {
 	margin-top: 10px;
-	width: 730px; 
+	width: 730px;
 	overflow: hidden;
 }
 
@@ -671,7 +671,7 @@ div.boxes-right,
 form fieldset,
 .g-box,
 .tips_box,
-#middle_port.center-column form {
+form[name="frmEdit"] {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
@@ -693,10 +693,11 @@ fieldset,
 .admin-content ul.validation-results,
 #other_urls~ul li,
 .tips_box,
-#middle_port.center-column form {
+form[name="frmEdit"] {
   background: #F0F0F0;
   border: 1px solid #ccc;
 }
+
 
 /* ONE SINGLE BLOCK FOR padding:5px */
 body .admin-content .left-logo,
@@ -717,8 +718,9 @@ div.topic-box,
 #see-locations-link,
 .tips_box,
 dl,
-#middle_port.center-column form {
+form[name="frmEdit"] {
   padding: 5px;
+  margin-top: 5px;
 }
 
 .admin-content .admin-logos {
