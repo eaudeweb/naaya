@@ -1,9 +1,4 @@
-from AccessControl import ClassSecurityInfo
-
-from naaya.core.utils import force_to_unicode
-
 from Products.naayaUpdater.updates import UpdateScript
-from utils import get_standard_template
 
 class MigrateGwCommonCss(UpdateScript):
     """ Migrate gw_common_css from Naaya style to Naaya Disk file """
@@ -11,9 +6,7 @@ class MigrateGwCommonCss(UpdateScript):
     creation_date = 'Feb 28, 2013'
     authors = ['Mihai Tabara']
     description = 'Migrate gw_common_css from Naaya style to Naaya Disk file'
-    security = ClassSecurityInfo()
 
-    security.declarePrivate('_update')
     def _update(self, portal):
         layout_tool = portal.getLayoutTool()
         curr_scheme = layout_tool.getCurrentSkinScheme()

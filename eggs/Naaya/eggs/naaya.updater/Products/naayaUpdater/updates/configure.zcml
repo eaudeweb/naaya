@@ -467,10 +467,4 @@
       component=".update_broken_back35.UpdateBrokenBack35"
       permission="zope2.ViewManagementScreens" />
 
-   	<utility
-      name="update_migrate_common_css.update"
-      provides="..interfaces.IUpdateScript"
-      component=".update_migrate_common_css.MigrateGwCommonCss"
-      permission="zope2.ViewManagementScreens" />
-
 </configure>
