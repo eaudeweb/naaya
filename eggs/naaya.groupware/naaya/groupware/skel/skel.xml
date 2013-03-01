@@ -11,8 +11,8 @@
 		<form id="site_admin_template" title="Portal administration - macro"/>
 	</forms>
 	<layout default_skin_id="groupware"
-        default_scheme_id="eionet"
-        diskpath_prefix="naaya.groupware:skel">>
+		default_scheme_id="eionet"
+		diskpath_prefix="naaya.groupware:skel">
 		<skin id="groupware" title="Groupware">
 			<template id="standard_template" title="Customized standard template"/>
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
@@ -20,7 +20,7 @@
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="eionet" title="Eionet theme">
-                <diskfile path="gw_common.css" title="CSS with the common Naaya selectors"/>
+				<diskfile path="gw_common.css" title="CSS with the common Naaya selectors"/>
 				<style id="gw_print_css" title="CSS for print"/>
 				<style id="gw_style_css" title="CSS with this scheme selectors"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
