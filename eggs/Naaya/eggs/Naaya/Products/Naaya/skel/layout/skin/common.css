@@ -420,9 +420,9 @@ admin pages, anywhere a complex form is displayed)
 */
 
 .field label {
-	display: block;
+	display: inline-block;
 	font-weight: bold;
-	margin-bottom: 0.3em;
+	margin-bottom: 10px;
 }
 
 .field-inline label {
