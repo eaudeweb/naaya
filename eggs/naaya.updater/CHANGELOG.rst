@@ -1,6 +1,5 @@
 1.2.28 (unreleased)
 -------------------
-* update script for gw_common_css style to disk file migration [mihaitab]
 
 1.2.27 (2012-06-20)
 -------------------

@@ -21,5 +21,12 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_folders_release_date.UpdateFoldersReleaseDate"
       permission="zope2.ViewManagementScreens" />
+
+    <utility
+      name="update_migrate_common_css.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_migrate_common_css.MigrateGwCommonCss"
+      permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
