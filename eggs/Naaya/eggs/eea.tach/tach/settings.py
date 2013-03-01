@@ -101,13 +101,13 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'tach.frame.RequestMiddleware',
     'tach.frame.UserMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     #'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'tach.urls'
@@ -132,8 +132,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'tach',
     'countries',
+    'tach',
     'sugar',
     'a1',
     'b1',
@@ -172,6 +172,10 @@ LOGGING = {
         },
     }
 }
+
+FRAME_URL = 'http://projects.eionet.europa.eu/flis-services-project/flis_templates/frame'
+
+FRAME_COOKIES = ['__ac', '_ZopeId']
 
 try:
     from settings_local import *
