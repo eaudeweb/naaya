@@ -3,7 +3,7 @@ from Products.naayaUpdater.updates import UpdateScript
 class MigrateGwCommonCss(UpdateScript):
     """ Migrate gw_common_css from Naaya style to Naaya Disk file """
     title = 'Migrate gw_common_css from Naaya style to Naaya Disk file'
-    creation_date = 'Feb 28, 2013'
+    creation_date = 'Mar 1, 2013'
     authors = ['Mihai Tabara']
     description = 'Migrate gw_common_css from Naaya style to Naaya Disk file'
 
