@@ -15,15 +15,6 @@
 </metal:block>
 
 <metal:block fill-slot="body">
-<style>
-  #center_content {
-    max-width: 78% !important;
-  }
-
-  #right_port {
-    float: right !important;
-  }
-</style>
 
 <h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
 	<metal:block use-macro="site_object_index/macros/icon"/>
@@ -55,7 +46,7 @@
 	</a>
 	<a tal:condition="python:here.checkPermission('Change permissions')" style="margin-left: 5px;"
 		tal:attributes="href string:${here/absolute_url}/edit_access">
-		<span i18n:translate="">Edit Permissions</span>
+		<span i18n:translate="">Edit permissions</span>
 	</a>
 </div>
 
@@ -174,12 +165,6 @@
 </tal:block>
 </div>
 
-
-<div id="right_port">
-  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-  </tal:block>
-</div>
 
 </metal:block>
 </metal:block>
