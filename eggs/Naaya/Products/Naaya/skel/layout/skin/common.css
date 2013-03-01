@@ -149,7 +149,6 @@ markup used IDs.
 }
 
 
-
 /**********************************************************
 Menu bar that expands on JavaScript mouseover
 */
@@ -189,7 +188,6 @@ ul.menu-bar li.menu-bar-hover ul {
 }
 
 
-
 /**********************************************************
 Buttons, links, bars with buttons
 */
@@ -197,7 +195,6 @@ Buttons, links, bars with buttons
 .floated-buttons {
 	float: right;
 	margin-left: 0.5em;
-	/*margin-bottom: 0.5em;*/
 }
 
 .buttons a {
@@ -212,19 +209,6 @@ Buttons, links, bars with buttons
 .buttons a:visited {
 	color: #fff;
 }
-
-a.button-like,
-a.button-like:visited {
-	text-decoration: none;
-	background-color: #fff;
-	color: #000;
-	line-height: 2em;
-	border: 1px solid #bbb;
-	padding: 0.1em 0.4em;
-	margin: 0em 0.3em;
-	font-size: 90%;
-}
-
 
 
 /**********************************************************
@@ -295,7 +279,6 @@ Comment box
 }
 
 
-
 /**********************************************************
 Translate to portal's languages (edit content object,
 edit site metadata, edit html portlet ...)
@@ -307,12 +290,7 @@ edit site metadata, edit html portlet ...)
 	font-size: 95%;
 	font-weight: normal;
 	font-family:Arial, Helvetica, sans-serif;
-	/*line-height: 2.2em;*/
 	margin-top: 10px;
-}
-
-*html .translate {
-	padding: 0;
 }
 
 *:first-child+html .translate {
@@ -321,10 +299,6 @@ edit site metadata, edit html portlet ...)
 
 .translate span {
 	padding: 0.5em;
-}
-
-*html .translate span {
-	padding: 0;
 }
 
 *:first-child+html .translate span {
@@ -389,7 +363,6 @@ edit site metadata, edit html portlet ...)
 }
 
 
-
 /**********************************************************
 Pop up windows used as pickers
 */
@@ -441,7 +414,6 @@ Pop up windows used as pickers
 }
 
 
-
 /**********************************************************
 Form fields, used in lots of places (edit content, various
 admin pages, anywhere a complex form is displayed)
@@ -467,7 +439,6 @@ admin pages, anywhere a complex form is displayed)
 }
 
 
-
 /**********************************************************
 Menu bar with "edit" button, used by all content objects, not
 just folder
@@ -481,7 +452,7 @@ just folder
 	font-weight: bold;
 }
 
-#admin_this_folder a {
+/*#admin_this_folder a {
 	padding: 2px 0;
 	line-height: 2em;
 	font-size: 90%;
@@ -489,7 +460,7 @@ just folder
 	background-color: #fff;
 	color: #000;
 	text-decoration: none;
-}
+}*/
 
 #admin_this_folder span {
 	padding: 0em 0.4em;
@@ -508,7 +479,6 @@ just folder
 #admin_this_folder select.more_actions {
 	float: right;
 }
-
 
 
 /**********************************************************
@@ -542,15 +512,15 @@ forum
 	top:1px;
 }
 
-div#toolbar input {
+/*div#toolbar input {
 	border: 1px solid #CCC;
 	background: #F6F6F6;
 	overflow: visible;
 	vertical-align: middle;
 	white-space: nowrap;
 	cursor: pointer;
-}
-
+  color: #000;
+}*/
 
 
 /**********************************************************
@@ -659,7 +629,6 @@ td.title-column a:hover {
 }
 
 
-
 /**********************************************************
 Object language availability
 */
@@ -677,7 +646,6 @@ Object language availability
 .available_langs a:first-child {
 	border-left:1px solid #41ad00;
 }
-
 
 
 /**********************************************************
@@ -718,8 +686,6 @@ a.download_link {
 
 .folder_social {
 	width: 100%;
-	/*display: inline-block;
-	clear: both;*/
 	position: relative;
 }
 
@@ -760,7 +726,6 @@ div.xmlExportButtons a.xml {
 }
 
 
-
 /**********************************************************
 contentratings
 */
@@ -785,7 +750,6 @@ contentratings
 	position: relative;
 	top: -3px;
 }
-
 
 
 /**********************************************************
@@ -851,9 +815,7 @@ Pagination
 	font-size: 1.1em;
 	padding-left: 5px;
 	padding-right: 5px;
-	/*color: #36669d;*/
 }
-
 
 
 /**********************************************************
@@ -1004,7 +966,6 @@ div.separator {
 }
 
 
-
 /**********************************************************
 Administration - arrange portlets
 */
@@ -1020,7 +981,6 @@ td.portlet_arrange_right {
 td.portlet_arrange_center {
 	background-color: #dfd;
 }
-
 
 
 /**********************************************************
@@ -1055,7 +1015,6 @@ ul.boxy li {
 }
 
 
-
 /**********************************************************
 Administration - other
 */
@@ -1064,7 +1023,6 @@ Administration - other
 	max-width: 128px;
 	max-height: 128px;
 }
-
 
 
 /**********************************************************
@@ -1077,6 +1035,7 @@ Schema & widgets
 	margin-top: 0.5em;
 	padding: 0.5em;
 	width: 430px;
+	margin-bottom: 10px;
 }
 
 .schema-widget-geo #map {
@@ -1084,7 +1043,6 @@ Schema & widgets
 	height: 400px;
 	position: relative;
 }
-
 
 
 /**********************************************************
@@ -1177,7 +1135,7 @@ div.marker-body h3 {
 	padding: 4px;
 	background: #fff;
 	border: 1px solid #ccc;
-	margin: 121px 0 0; /*margin: 4em 0 0 10px;*/
+	margin: 121px 0 0; 
 	white-space: normal;
 }
 
@@ -1277,7 +1235,6 @@ div.marker-body h3 {
 
 .portalmap_portlet .map_filters ul .pin {
 	margin-right: -2px;
-	/*vertical-align: 1px;*/
 	width: 12px;
 	height: 12px;
 }
@@ -1440,12 +1397,11 @@ Naaya Calendar
 }
 
 
-
 /**********************************************************
 Naaya discussion Forum
 */
 
-.forum_message_top a {
+/*.forum_message_top a {
 	margin-right: 0px;
 	padding: 0px 3px;
 	text-decoration: none;
@@ -1453,7 +1409,7 @@ Naaya discussion Forum
 	background-color: #638FBC;
 	border: 1px solid #416B96;
 	position: relative;
-}
+}*/
 
 .forum_message_top a:visited {
 	color: white;
@@ -1461,7 +1417,7 @@ Naaya discussion Forum
 
 .message_top_buttons {
 	float: right;
-	margin-top: 2px;
+	/*margin-top: 2px;*/
 	position: relative;
 }
 
@@ -1516,9 +1472,9 @@ Naaya discussion Forum
 	color: #41ad00;
 }
 
-.forum_message_top a {
+/*.forum_message_top a {
 	color: white;
-}
+}*/
 
 .forum_message_top a:visited {
 	color: white;
@@ -1548,7 +1504,7 @@ Naaya discussion Forum
 	font-size: 90%;
 }
 
-.forum_message_top a {
+/*.forum_message_top a {
 	margin-right: 0px;
 	padding: 0.3em 0.4em;
 	text-decoration: none;
@@ -1560,16 +1516,10 @@ Naaya discussion Forum
 	border-bottom: 1px solid #416B96;
 	position: relative;
 	color: #41ad00;
-}
+}*/
 
 .forum_message_top a:visited {
 	color: white;
-}
-
-.message_top_buttons {
-	float: right;
-	margin-top: 2px;
-	position: relative;
 }
 
 .message_top_buttons2 {
@@ -1654,7 +1604,6 @@ Naaya discussion Forum
 	color: #666666;
 	font-size: 90%;
 }
-
 
 
 /**********************************************************
@@ -1705,7 +1654,6 @@ Naaya Thesaurus
 	margin: 10px 0px;
 	font-size: 85%;
 }
-
 
 
 /**********************************************************
@@ -1810,8 +1758,6 @@ and in naaya.content.municipality */
 	height: 7px !important;
 	border: 1px #eee solid;
 	background-color: #333;
-	*width: 9px;
-	*height: 9px;
 }
 
 .jcrop-tracker {
@@ -1851,3 +1797,135 @@ and in naaya.content.municipality */
 	padding-right:  5px;
 	vertical-align: text-top;
 }
+
+
+/* *********  LAYOUT ********* */
+#header,
+#content-holder,
+#footer {
+	width: 989px;
+}
+
+#topnav {
+  -moz-box-shadow: 0px -2px 2px 0px #C2C2C2;
+  -webkit-box-shadow: 0px -2px 2px 0px #C2C2C2;
+  box-shadow: 0px -2px 2px 0px #C2C2C2;
+  margin: 0px auto 0px;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-topleft: 6px;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  border-bottom: 1px dashed #CCC;
+  padding: 0.5em 0em;
+}
+
+#header .identity {
+  overflow: hidden;
+  padding: 20px 0px 5px;
+  clear: both;
+}
+
+#header .identity img {
+  margin: 0px 15px;
+}
+
+#footer {
+  -moz-box-shadow: 0px 2px 2px 0px #C2C2C2;
+  -webkit-box-shadow: 0px 2px 2px 0px #C2C2C2;
+  box-shadow: 0px 2px 2px 0px #C2C2C2;
+	margin: 0px auto 20px;
+	padding: 10px 0px;
+	border-top: 1px dashed #ccc;
+	line-height: 24px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.left_portlet, 
+.center_portlet, 
+.right_portlet {
+  -moz-box-shadow: 0 2px 2px 0 #c2c2c2;
+  -webkit-box-shadow: 0 2px 2px 0 #C2C2C2;
+  box-shadow: 0 2px 2px 0 #C2C2C2;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  margin-top: 30px;
+}
+
+
+/* Twitter-Bootstrap-like buttons */
+body a.button-like,
+body .floated-buttons a,
+body .toolbar a,
+body .action_button,
+body .upload_photos,
+.buttons.notifications-link span.buttons,
+.message_top_buttons2 a span.buttons,
+.message_top_buttons a,
+body input[type="submit"],
+body #admin_this_folder a,
+a span.buttons,
+span.buttons a,
+body .talkback-add_comment, 
+body .button_sect_edit, 
+body a.tb-button,
+#geo_location-centermap {
+	color: white !important; /* otherwise it's overriden by "a:hover, a:visited{}" from style.css:70 */
+	text-decoration: none;
+	-webkit-transition: background-position 0.1s linear;
+	-moz-transition: background-position 0.1s linear;
+	-o-transition: background-position 0.1s linear;
+	transition: background-position 0.1s linear;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background: #006DCC;
+	background: -moz-linear-gradient(top, #08C, #04C);
+	background: -webkit-linear-gradient(top, #08C, #04C);
+	background: -o-linear-gradient(top, #08C, #04C);
+	background: linear-gradient(to top, #08C, #04C);
+	background-repeat: repeat-x;
+	border: 1px solid #002A80;
+	padding: 0px 6px; /* mini button */
+	font-size: 12px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	display: inline-block;
+	margin: 0;
+	line-height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	font-weight: normal;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+body a.button-like:hover {
+	background: #04C;
+}
+
+#middle_port.center-column h2 {
+  margin-top: 20px;
+}
+
+body .upload_photos {
+  margin: 10px 35px;
+}
+
+#admin_this_folder a {
+ text-decoration: none; 
+}
+
+body .button_sect_edit,
+form[action="split_body"] input[type="submit"],
+/* #admin_this_folder a,*/
+form[name="frmAdd"] input[type="submit"] {
+  margin-top: 10px;
+}
+
+.photo-upload-form {
+  padding: 10px;
+}
+
