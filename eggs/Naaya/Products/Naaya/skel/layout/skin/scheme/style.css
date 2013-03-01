@@ -202,7 +202,6 @@ th {
 #toptitle {
 	margin: 0px 98px; /* the current logo occupies 98px width */
 	padding: 0.5em;
-	/*float: left;*/
 }
 
 #search {
@@ -253,8 +252,8 @@ th {
 }
 
 input[name="query"] {
-	border-radius: 2px;
 	-moz-border-radius: 2px;
+  border-radius: 2px;
 	border: 1px solid #999;
   padding: 5px;
 }
@@ -470,25 +469,12 @@ body .login-form .field label {
 	width: 60px;
 }
 
-/*body .login-form input[type="submit"] {
-	height: 30px;
-	font-size: 12px;
-	line-height: 12px;
-	margin: 10px 0px;
-	padding: 5px 10px;
-	background: #00549C;
-}*/
-
 .tips_box ul {
 	display: block;
 	list-style-type: disc;
 	margin: 1em 0;
 	padding-left: 40px;
 }
-
-/*.admin-recover-password-form input[type="submit"] {
-	background: #00549C;
-}*/
 
 
 /* ********* ADMINISTRATION PAGE ********* */
@@ -684,9 +670,10 @@ fieldset.admin-edit-htmlportlet {
 div.boxes-right,
 form fieldset,
 .g-box,
-.tips_box {
-  border-radius: 4px;
+.tips_box,
+#middle_port.center-column form {
   -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 
 /* ONE SINGLE BLOCK FOR SETTING THE BACKGROUND COLOR OF BIG SECTIONS */
@@ -705,9 +692,10 @@ fieldset,
 .meeting-send-email-form,
 .admin-content ul.validation-results,
 #other_urls~ul li,
-.tips_box {
+.tips_box,
+#middle_port.center-column form {
   background: #F0F0F0;
-  border: 1px solid #ccc; /* don't add form[name="frmEdit"] */
+  border: 1px solid #ccc;
 }
 
 /* ONE SINGLE BLOCK FOR padding:5px */
@@ -728,7 +716,8 @@ div.link-box,
 div.topic-box,
 #see-locations-link,
 .tips_box,
-dl {
+dl,
+#middle_port.center-column form {
   padding: 5px;
 }
 
@@ -1307,7 +1296,6 @@ div.center-column {
 }
 
 body .forum_topic {
-	/*background: #D6D6D6;*/
 	border: 1px solid #CCC;
 }
 
@@ -1342,16 +1330,6 @@ body .g-boxes {
 	height: auto;
 }
 
-/*body .g-box .title,
-body .g-box-button input {
-	background: #fff; override from photo_archive.css line 18
-}
-
-#selection_buttons input {
-	border-radius: 0;
-	-moz-border-radius: 0;
-}*/
-
 body .g-album-content {
 	margin-right: 180px; /* override from photo_archive.css line 123 */
 }
@@ -1370,16 +1348,6 @@ body .g-box {
 body .g-box .body {
 	margin: 0;
 }
-
-/*.g-box-button input[type="submit"] {
-	background: #008DA8;
-	border: none;
-	color: #fff;
-}
-
-body #selection_buttons .action_button {
-	margin-right: 1.3em;  override from photo_archive.css line 261 
-}*/
 
 body .thumbnail-layout {
 	margin-right: 2px;/*1em; */ /* override from photo_archive.css line 136 */
