@@ -35,7 +35,7 @@
     }
     </script>
     <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
-        <div id="center_content" tal:attributes="style python:test(request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here) or len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+        <div id="center_content">
         <metal:block define-slot="page-middle">
             <metal:block define-macro="folder-title">
             <h1 tal:define="path python:here.absolute_url(1);
@@ -204,17 +204,7 @@
         <span tal:replace="structure here/comments_box" />
     </div>
 
-    <div id="right_port">
-        <tal:block tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
-            <tal:block tal:content="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" on-error="python:here.log_page_error(error)" />
-        </tal:block>
-        <tal:block tal:repeat="item right_portlets">
-            <tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" on-error="python:here.log_page_error(error)" />
-        </tal:block>
-    </div>
-
     </tal:block>
     </metal:block>
 
 </metal:block>
-
