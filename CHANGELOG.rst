@@ -1,5 +1,6 @@
 1.3.2 (unreleased)
 -------------------
+* migrate gw_common_css from naaya style to Naaya Disk file [mihaitab]
 
 1.3.1 (2013-02-25)
 -------------------
