@@ -16,6 +16,7 @@ class A1Type(models.Model):
 
 
 class A1(models.Model):
+
     STATUS_CHOICES = (
                 ('approved', 'Approved'),
                 ('in_planning', 'In planning'),

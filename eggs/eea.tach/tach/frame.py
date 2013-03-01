@@ -4,6 +4,7 @@ from django.template.loader import BaseLoader
 
 import requests
 from threading import local
+from tach.models import User
 
 
 _thread_locals = local()
@@ -32,13 +33,33 @@ class UserMiddleware(object):
 
     def process_request(self, request):
         request = get_current_request()
+
         if getattr(settings, 'FRAME_URL', None):
             forwarded_cookies = get_forwarded_cookies(request)
             resp = requests.get(settings.FRAME_URL, cookies=forwarded_cookies)
+
             if (resp.status_code == 200 and resp.json()):
-                request.user_id = resp.json()['user_id']
-                request.user_roles = resp.json()['user_roles']
-                # request.user_roles = ['Authenticated']
+                json = resp.json()
+
+                if settings.DEBUG:
+                    user_id = settings.DEFAULT_USER_ID
+                    defaults = settings.DEFAULT_USER
+                else:
+                    user_id = json['user_id']
+                    defaults = {}
+
+                if user_id:
+                    defaults = defaults or {
+                        'phone': json.get('user_phone_number'),
+                        'first_name': json.get('user_first_name'),
+                        'last_name': json.get('user_last_name'),
+                        'email': json.get('email'),
+                    }
+                    user, created = User.objects.get_or_create(user_id=user_id,
+                        defaults=defaults)
+                    request.user = user
+                else:
+                    request.user = None
 
 
 class Loader(BaseLoader):
