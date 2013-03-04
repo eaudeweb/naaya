@@ -1,5 +1,6 @@
 3.0.17 (unreleased)
 ------------------
+* Added cookie disclaimer message to CHM3 [dumitval]
 
 3.0.16 (2013-02-15)
 ------------------
