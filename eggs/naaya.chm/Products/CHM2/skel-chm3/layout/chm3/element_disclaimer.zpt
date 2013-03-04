@@ -1,0 +1,6 @@
+<metal:block define-macro="content">
+  <div id="disclaimer">
+    <p><img src="misc_/Naaya/info.png" />This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/info/cookie_policy">cookie policy</a>.<br/>
+    <a href="javascript:void(0);" id="acknowledge">Agree and close</a></p>
+  </div>
+</metal:block>

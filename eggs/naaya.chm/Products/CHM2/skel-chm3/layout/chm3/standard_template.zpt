@@ -83,6 +83,9 @@
                                               test(no_right_portlets, [], ['has-right-portlets'])) ">
     <a class="hidden" href="#header" accesskey="2">Skip navigation</a>
 
+    <metal:block define-slot="disclaimer">
+      <metal:block use-macro="python:current_layout['element_disclaimer'].macros['content']"/>
+    </metal:block>
     <div id="header">
       <metal:block use-macro="python:current_layout['element_topmenu'].macros['content']"/>
       <metal:block use-macro="python:current_layout['element_header'].macros['content']"/>
