@@ -92,6 +92,44 @@
 </tal:block>
 </tal:block>
 
+<metal:block use-macro="python: here.getFormsTool().getForm('delete_confirmation').macros['delete_confirmation']"></metal:block>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	var deleteObjects = function() {
+		$( "#dialog-delete-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 200,
+			width: 500,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete items": function() {
+					return $('#pblForm').submit()
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	};
+
+	$('#pblForm input[type="submit"]').click(function(e){
+		e.preventDefault()
+
+		if($('input[name="delids"]:checked').length > 0) {
+			deleteObjects();
+		} else {
+			return form.submit();
+		}
+	});
+})
+
+</script>
 <script type="text/javascript">
 $(document).ready(function () {
 	$('input[name="appids"]').click(function () {
