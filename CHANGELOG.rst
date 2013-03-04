@@ -1,4 +1,7 @@
-1.3.2 (unreleased)
+1.3.3 (unreleased)
+-------------------
+
+1.3.2 (2013-03-04)
 -------------------
 * update gw_common_css to Naaya Disk File *update* [mihaitab]
 * migrate gw_common_css from naaya style to Naaya Disk file [mihaitab]
