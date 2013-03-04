@@ -304,12 +304,7 @@ function submit_form_action(action){
 	</table>
 </form>
 
-<div id="dialog-delete-confirm" title="Delete items" style="display: none" i18n:attributes="title">
-	<p>
-		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-		<span i18n:translate="">These items will be permanently deleted and may not be recovered. Are you sure?</span>
-	</p>
-</div>
+<metal:block use-macro="python: here.getFormsTool().getForm('delete_confirmation').macros['delete_confirmation']"></metal:block>
 
 </metal:block>
 <tal:block condition="iframe"><br />
