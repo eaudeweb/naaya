@@ -1,0 +1,111 @@
+[   {
+        "pk": "1",
+        "model": "survey.category",
+        "fields": {
+            "title": "National adaptation strategy",
+            "section": "1",
+            "multiple_answers": "0",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "2",
+        "model": "survey.category",
+        "fields": {
+            "title": "National adaptation action plan",
+            "section": "1",
+            "multiple_answers": "0",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "3",
+        "model": "survey.category",
+        "fields": {
+            "title": "Subnational adaptation strategy or action plans",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+
+        }
+    },
+
+    {
+        "pk": "4",
+        "model": "survey.category",
+        "fields": {
+            "title": "National (or subnational) transport strategy or transport plans which focuses on adaptation to climate change or extreme events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+     {
+        "pk": "5",
+        "model": "survey.category",
+        "fields": {
+            "title": "Transport sector plans (e.g road, rail, etc.) which consider adaptation to climate change or extreme events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+     {
+        "pk": "6",
+        "model": "survey.category",
+        "fields": {
+            "title": "Action plans from infrastructure managers or service providers, which focus on adaptation to climate change or extreme events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "7",
+        "model": "survey.category",
+        "fields": {
+            "title": "Risk management plans which focus on adaptation to climate change or extreme events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "8",
+        "model": "survey.category",
+        "fields": {
+            "title": "National transport standards or guidelines for design and operation which focus on adaptation to climate change or extreme weather events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "9",
+        "model": "survey.category",
+        "fields": {
+            "title": "Emergency protocols which focus on adaptation to climate change or extreme events",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    },
+
+    {
+        "pk": "10",
+        "model": "survey.category",
+        "fields": {
+            "title": "Any other plan, strategy, programme, guidelines, initiative, etc. that directly or indirectly considers transport adaptation and that you consider relevant in the context of this questionnaire",
+            "section": "1",
+            "multiple_answers": "1",
+            "widget": "SectionA"
+        }
+    }
+]

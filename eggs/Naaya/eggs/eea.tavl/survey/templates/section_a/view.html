@@ -1,0 +1,64 @@
+{% load utils %}
+
+<table cellpadding="0" cellspacing="0" class="datatable">
+
+  <tbody>
+
+    <tr>
+      <th style="text-align: left; width: 220px;">
+        {{ section_a_form.status.label }}</th>
+      <td>{{ answer.status }}</td>
+    </tr>
+
+      <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.title.label }}</th>
+      <td>{{ answer.title }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.english_title.label }}
+      </th>
+      <td>{{ answer.english_title }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.year.label }}</th>
+      <td>{{ answer.year }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.parts_considered.label }}</th>
+      <td>{{ answer.parts_considered|pretty_hstore }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+         {{ section_a_form.transport_modes.label }}</th>
+      <td>{{ answer.transport_modes|pretty_hstore }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.climate_change_impacts.label }}</th>
+      <td>{{ answer.climate_change_impacts|pretty_hstore }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.responsible_organisation.label }}</th>
+      <td>{{ answer.responsible_organisation }}</td>
+    </tr>
+
+    <tr>
+      <th style="text-align: left;">
+        {{ section_a_form.link.label }}</th>
+      <td>{{ answer.link }}</td>
+    </tr>
+
+  </tbody>
+
+</table>

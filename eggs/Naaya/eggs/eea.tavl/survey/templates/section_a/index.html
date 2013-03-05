@@ -1,0 +1,25 @@
+{% extends "frame.html" %}
+{% load utils %}
+
+
+{% block content %}
+
+  {% include "section_a/header.html" %}
+
+  {% for category in categories_section_a %}
+    <h4>{{ category }}</h3>
+
+    {% assign sections|get_answers:category as answers %}
+
+    {% for answer in answers %}
+      {% include "section_a/view.html" %}
+    {% endfor %}
+
+    {% if category.multiple_answers or not answers %}
+      <a href="{% url survey:section_a category.id %}">Add another</a>
+    {% endif %}
+
+
+  {% endfor %}
+
+{% endblock %}
