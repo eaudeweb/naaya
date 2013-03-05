@@ -1,0 +1,7 @@
+psycopg2==2.4.5
+South==0.7.6
+django==1.4.5
+django-hstore==1.1.1
+
+requests==1.1.0
+wsgiref==0.1.2
