@@ -12,12 +12,14 @@ DATABASES = {
 }
 
 DEBUG = True
+SENTRY_DSN = ''
 
 DEFAULT_USER = {
     'phone': '',
-    'first_name': 'Dragos',
-    'last_name': 'Catarahia',
-    'email': 'dragos.catarahia@gmail.com',
+    'first_name': 'Admin',
+    'last_name': 'Admin',
+    'email': 'admin@example.com',
 }
 
-DEFAULT_USER_ID = 'catardra'
+DEFAULT_USER_ID = 'edwe8tes' # ldap uid of default user
+
