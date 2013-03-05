@@ -30,11 +30,17 @@ class Survey(AuthDetailsRequired, View):
     def get(self, request):
         sections = survey_models.Survey.objects.filter(
             country=request.user.country)
+
+        # section A
         categories_section_a = survey_models.Category.objects.filter(
             section__pk=1)
-        section_a_form = survey_forms.SectionA()
+
+        # section B
+        categories_section_b = survey_models.Category.objects.filter(
+            section__pk=2)
+
         return render(request, 'survey.html', {
             'sections': sections,
-            'section_a_form': section_a_form,
             'categories_section_a': categories_section_a,
+            'categories_section_b': categories_section_b,
         })

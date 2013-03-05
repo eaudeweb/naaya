@@ -4,5 +4,13 @@
         "fields": {
             "name": "section_a"
         }
+    },
+
+     {
+        "pk": "2",
+        "model": "survey.section",
+        "fields": {
+            "name": "section_b"
+        }
     }
 ]

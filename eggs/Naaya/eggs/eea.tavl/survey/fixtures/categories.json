@@ -4,8 +4,8 @@
         "fields": {
             "title": "National adaptation strategy",
             "section": "1",
-            "multiple_answers": "0",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "0"
         }
     },
 
@@ -15,8 +15,8 @@
         "fields": {
             "title": "National adaptation action plan",
             "section": "1",
-            "multiple_answers": "0",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "0"
         }
     },
 
@@ -26,9 +26,8 @@
         "fields": {
             "title": "Subnational adaptation strategy or action plans",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
-
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -38,8 +37,8 @@
         "fields": {
             "title": "National (or subnational) transport strategy or transport plans which focuses on adaptation to climate change or extreme events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -49,8 +48,8 @@
         "fields": {
             "title": "Transport sector plans (e.g road, rail, etc.) which consider adaptation to climate change or extreme events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -60,8 +59,8 @@
         "fields": {
             "title": "Action plans from infrastructure managers or service providers, which focus on adaptation to climate change or extreme events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -71,8 +70,8 @@
         "fields": {
             "title": "Risk management plans which focus on adaptation to climate change or extreme events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -82,8 +81,8 @@
         "fields": {
             "title": "National transport standards or guidelines for design and operation which focus on adaptation to climate change or extreme weather events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -93,8 +92,8 @@
         "fields": {
             "title": "Emergency protocols which focus on adaptation to climate change or extreme events",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
         }
     },
 
@@ -104,8 +103,68 @@
         "fields": {
             "title": "Any other plan, strategy, programme, guidelines, initiative, etc. that directly or indirectly considers transport adaptation and that you consider relevant in the context of this questionnaire",
             "section": "1",
-            "multiple_answers": "1",
-            "widget": "SectionA"
+            "widget": "section_a",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "11",
+        "model": "survey.category",
+        "fields": {
+            "title": "B1 Climate change:  Please list any major recent (since 2008) assessments or study in your country on vulnerability, resilience or adaptation of transport at the national (or subnational level).",
+            "section": "2",
+            "widget": "section_b",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "12",
+        "model": "survey.category",
+        "fields": {
+            "title": "B2 Extreme weather events only: Please list any major recent (since 2008) assessments or study in your country on the vulnerability, resilience or adaptation of transport at the national (or subnational) level.",
+            "description": "(note: Here we ask for relevant additional studies which only consider extreme events but not climate change , for example, disaster risk management. Studies which consider both - extreme weather events under current and future conditions - should be inserted under section B1)",
+            "section": "2",
+            "widget": "section_b",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "13",
+        "model": "survey.category",
+        "fields": {
+            "title": "B3 Please list any relevant national (or subnational) research programme important for the adaptation of transport to climate change or to extreme weather events.",
+            "description": "Note: We are looking for broader (institutional) research programmes, not for specific research projects.",
+            "section": "2",
+            "widget": "section_b",
+            "multiple_answers": "1"
+        }
+    },
+
+
+    {
+        "pk": "14",
+        "model": "survey.category",
+        "fields": {
+            "title": "B4 Please list any relevant national (or subnational) knowledge and information initiative, platform or similar initiatives important for the adaptation of transport to climate change or to extreme weather events",
+            "description": "(e.g. Climate ADAPT at the European level: http://climate-adapt.eea.europa.eu)",
+            "section": "2",
+            "widget": "section_b",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "15",
+        "model": "survey.category",
+        "fields": {
+            "title": "B5 Please list any systematically collected data that is relevant for assessing the impacts of climate change or extreme weather events on transport, disruption of transport operations, extraordinary infrastructure reconstruction costs, etc.",
+            "section": "2",
+            "widget": "section_b",
+            "multiple_answers": "1"
         }
     }
+
 ]

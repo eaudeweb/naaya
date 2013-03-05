@@ -12,11 +12,6 @@ def get_answers(section, category):
 
 
 @register.assignment_tag
-def get_widget_for_category(category, instance=None):
-    return category.get_widget(instance)
-
-
-@register.assignment_tag
 def assign(value):
     return value
 
