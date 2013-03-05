@@ -1,0 +1,249 @@
+[   {
+        "pk": "sq",
+        "model": "survey.language",
+        "fields": {
+            "title": "Albanian"
+        }
+    },
+
+    {
+        "pk": "bs",
+        "model": "survey.language",
+        "fields": {
+            "title": "Bosnian"
+        }
+    },
+
+    {
+        "pk": "hr",
+        "model": "survey.language",
+        "fields": {
+            "title": "Croatian"
+        }
+    },
+
+    {
+        "pk": "bg",
+        "model": "survey.language",
+        "fields": {
+            "title": "Bulgarian"
+        }
+    },
+
+    {
+        "pk": "cs",
+        "model": "survey.language",
+        "fields": {
+            "title": "Czech"
+        }
+    },
+
+    {
+        "pk": "da",
+        "model": "survey.language",
+        "fields": {
+            "title": "Danish"
+        }
+    },
+
+     {
+        "pk": "nl",
+        "model": "survey.language",
+        "fields": {
+            "title": "Dutch"
+        }
+    },
+
+     {
+        "pk": "en",
+        "model": "survey.language",
+        "fields": {
+            "title": "English"
+        }
+    },
+
+    {
+        "pk": "et",
+        "model": "survey.language",
+        "fields": {
+            "title": "Estonian"
+        }
+    },
+
+    {
+        "pk": "fi",
+        "model": "survey.language",
+        "fields": {
+            "title": "Finnish"
+        }
+    },
+
+    {
+        "pk": "fr",
+        "model": "survey.language",
+        "fields": {
+            "title": "French"
+        }
+    },
+
+    {
+        "pk": "de",
+        "model": "survey.language",
+        "fields": {
+            "title": "German"
+        }
+    },
+
+    {
+        "pk": "el",
+        "model": "survey.language",
+        "fields": {
+            "title": "Greek"
+        }
+    },
+
+    {
+        "pk": "hu",
+        "model": "survey.language",
+        "fields": {
+            "title": "Hungarian"
+        }
+    },
+
+    {
+        "pk": "ga",
+        "model": "survey.language",
+        "fields": {
+            "title": "Irish"
+        }
+    },
+
+    {
+        "pk": "is",
+        "model": "survey.language",
+        "fields": {
+            "title": "Islandic"
+        }
+    },
+
+    {
+        "pk": "it",
+        "model": "survey.language",
+        "fields": {
+            "title": "Italian"
+        }
+    },
+
+    {
+        "pk": "lv",
+        "model": "survey.language",
+        "fields": {
+            "title": "Latvian"
+        }
+    },
+
+    {
+        "pk": "lt",
+        "model": "survey.language",
+        "fields": {
+            "title": "Lithuanian"
+        }
+    },
+
+    {
+        "pk": "mk",
+        "model": "survey.language",
+        "fields": {
+            "title": "Macedonian"
+        }
+    },
+
+    {
+        "pk": "mt",
+        "model": "survey.language",
+        "fields": {
+            "title": "Maltese"
+        }
+    },
+
+    {
+        "pk": "srp",
+        "model": "survey.language",
+        "fields": {
+            "title": "Montenegrin"
+        }
+    },
+
+    {
+        "pk": "pl",
+        "model": "survey.language",
+        "fields": {
+            "title": "Polish"
+        }
+    },
+
+    {
+        "pk": "pt",
+        "model": "survey.language",
+        "fields": {
+            "title": "Portuguese"
+        }
+    },
+
+    {
+        "pk": "ro",
+        "model": "survey.language",
+        "fields": {
+            "title": "Romanian"
+        }
+    },
+
+    {
+        "pk": "sr",
+        "model": "survey.language",
+        "fields": {
+            "title": "Serbian"
+        }
+    },
+
+    {
+        "pk": "sk",
+        "model": "survey.language",
+        "fields": {
+            "title": "Slovak"
+        }
+    },
+
+    {
+        "pk": "sl",
+        "model": "survey.language",
+        "fields": {
+            "title": "Slovene"
+        }
+    },
+
+    {
+        "pk": "es",
+        "model": "survey.language",
+        "fields": {
+            "title": "Spanish"
+        }
+    },
+
+    {
+        "pk": "sv",
+        "model": "survey.language",
+        "fields": {
+            "title": "Swedish"
+        }
+    },
+
+     {
+        "pk": "tr",
+        "model": "survey.language",
+        "fields": {
+            "title": "Turkish"
+        }
+    }
+
+]

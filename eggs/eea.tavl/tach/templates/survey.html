@@ -1,1 +1,9 @@
-{% include "section_a/index.html" %}
+{% extends "frame.html" %}
+
+{% block content %}
+
+    {% include "section_a/index.html" %}
+
+     {% include "section_b/index.html" %}
+
+{% endblock %}

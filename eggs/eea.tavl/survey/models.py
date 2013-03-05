@@ -1,6 +1,13 @@
 from django.db import models
 from django_hstore import hstore
 
+
+WIDGETS = {
+    'section_a': 'SectionA',
+    'section_b': 'SectionB',
+}
+
+
 class Section(models.Model):
 
     name = models.CharField(max_length=128)
@@ -17,10 +24,9 @@ class Category(models.Model):
 
     section = models.ForeignKey(Section)
 
+    widget = models.CharField(max_length=32)
+
     multiple_answers = models.BooleanField(default=True)
-
-    widget = models.CharField(max_length=128)
-
 
     class Meta:
         db_table = 'category'
@@ -29,16 +35,30 @@ class Category(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_widget(self, instance=None):
+    def get_widget(self):
         from survey import forms
-        form = getattr(forms, self.widget, None)
-        return form(instance=instance) if form else None
+        widget = getattr(forms, WIDGETS[self.widget])
+        return widget
+
+
+class Language(models.Model):
+
+    iso = models.CharField(max_length=3, primary_key=True)
+
+    title = models.CharField(max_length=64)
+
+    class Meta:
+        db_table = 'language'
 
 
 class Survey(models.Model):
 
     class Meta:
-        db_table='survey'
+        db_table = 'survey'
+
+    def __unicode__(self):
+        return self.title
+
 
     STATUS_CHOICES = (
         ('approved', 'Approved'),
@@ -75,8 +95,6 @@ class Survey(models.Model):
 
     user = models.ForeignKey('tach.User')
 
-    # section = models.ForeignKey(Section)
-
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
                             blank=True)
 
@@ -96,5 +114,9 @@ class Survey(models.Model):
                                                 blank=True)
 
     link = models.CharField(max_length=256, null=True, blank=True)
+
+    language = models.ForeignKey(Language, null=True, blank=True)
+
+    contact = models.CharField(max_length=256, null=True, blank=True)
 
     objects = hstore.HStoreManager()
