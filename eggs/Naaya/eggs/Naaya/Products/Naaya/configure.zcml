@@ -83,6 +83,11 @@
     for="Products.Naaya.interfaces.INySite zope.app.container.interfaces.IObjectMovedEvent"
     />
 
+    <subscriber
+    handler=".subscribers.zope_started"
+    for="zope.processlifetime.IProcessStarting"
+    />
+
   <include package="naaya.core" />
   <include package="naaya.component" />
   <include package="naaya.content.base" />

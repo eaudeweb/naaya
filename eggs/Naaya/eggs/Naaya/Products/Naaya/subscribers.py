@@ -1,3 +1,5 @@
+import logging
+
 from ZPublisher.BeforeTraverse import rewriteBeforeTraverse
 
 from naaya.core.site_logging import create_site_logger
@@ -62,3 +64,15 @@ def site_moved_or_added(site, event):
 
     """
     create_site_logger(site)
+
+def zope_started(event):
+    """ Handling IProcessStarting Event """
+    zlog = logging.getLogger("Zope")
+    from asyncore import socket_map
+    for server in socket_map.values():
+        if server.addr:
+            host, port = server.addr
+            if host in ('127.0.0.1', '0.0.0.0'):
+                host = 'localhost'
+            zlog.info("Instance available on http://%s:%d", host, port)
+            return
