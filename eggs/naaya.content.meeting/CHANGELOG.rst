@@ -1,5 +1,6 @@
 1.2.32 (unreleased)
 -------------------
+* fixing owner needs to be able to manage meeting [simiamih]
 
 1.2.31 (2013-02-26)
 -------------------
