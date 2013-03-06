@@ -1,4 +1,7 @@
-3.0.17 (unreleased)
+3.0.18 (unreleased)
+------------------
+
+3.0.17 (2013-03-06)
 ------------------
 * Update script to add cookie disclaimer message [dumitval]
 * Added cookie disclaimer message to CHM3 [dumitval]
