@@ -337,5 +337,62 @@
             "for_user": "1",
             "multiple_answers": "1"
         }
+    },
+
+    {
+        "pk": "31",
+        "model": "survey.category",
+        "fields": {
+            "title": "D1 What do you consider as barriers to better adaptation of transport to climate change?",
+            "section": "4",
+            "widget": "",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "32",
+        "model": "survey.category",
+        "fields": {
+            "title": "D2 Which EU activities could support a better adaptation of transport in your country?",
+            "section": "4",
+            "widget": "",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "33",
+        "model": "survey.category",
+        "fields": {
+            "title": "If necessary, please insert additional comment on this topic:",
+            "section": "4",
+            "widget": "section_d_comment",
+            "for_user": "1",
+            "multiple_answers": "0"
+        }
+    },
+
+    {
+        "pk": "34",
+        "model": "survey.category",
+        "fields": {
+            "title": "",
+            "section": "5",
+            "widget": "section_e_comment",
+            "for_user": "1",
+            "multiple_answers": "0"
+        }
+    },
+
+     {
+        "pk": "35",
+        "model": "survey.category",
+        "fields": {
+            "title": "",
+            "section": "5",
+            "widget": "section_e",
+            "multiple_answers": "1"
+        }
     }
 ]
