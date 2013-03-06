@@ -48,9 +48,18 @@ class Survey(View):
         categories_section_c = survey_models.Category.objects.filter(
             section__pk=3)
 
+
+        # section E
+        categories_section_e = survey_models.Category.objects.filter(
+            section__pk=5)
+        category_e_comment = categories_section_e[0]
+        category_e = categories_section_e[1]
+
         return render(request, 'survey.html', {
             'sections': sections,
             'categories_section_a': categories_section_a,
             'categories_section_b': categories_section_b,
             'categories_section_c': categories_section_c,
+            'category_e_comment': category_e_comment,
+            'category_e': category_e,
         })

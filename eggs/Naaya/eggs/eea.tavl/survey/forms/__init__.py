@@ -229,3 +229,45 @@ class SectionC3(SectionA):
         return survey
 
 
+class SectionE(forms.Form):
+
+    EDIT_TEMPLATE = 'section_e/form.html'
+
+    VIEW_TEMPLATE = 'section_e/view.html'
+
+    title = forms.CharField(max_length=256, label="Name", required=True)
+
+    area_of_expertise = forms.CharField(widget=forms.Textarea)
+
+    responsible_organisation = forms.CharField(max_length=256, required=False)
+
+    link = forms.CharField(max_length=256, required=False,
+                           label="Website and/or address")
+
+    contact = forms.CharField(max_length=256, required=False,
+                              label="Contact (email, telephone)")
+
+
+    def save(self, user, country, category):
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
+        return survey
+
+
+class SectionEComment(forms.Form):
+
+    EDIT_TEMPLATE = 'section_a/form_comment.html'
+
+    comment = forms.CharField(required=True, widget=forms.Textarea)
+
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_e_comment=self.cleaned_data['comment'],
+        )
+        return survey
