@@ -191,8 +191,32 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "16",
+        "pk": "18",
+        "model": "survey.category",
+        "fields": {
+            "title": "Optional: Are you aware of interesting cases in your country on the vulnerability of a critical part of the transport system (bridge, coastal road section…) to extreme weather events, which could be relevant to climate change adaptation?",
+            "description": "If yes, please provide some further information. We might want to explore this as case studies:",
+            "section": "2",
+            "widget": "section_b_info",
+            "multiple_answers": "0"
+        }
+    },
+
+    {
+        "pk": "19",
+        "model": "survey.category",
+        "fields": {
+            "title": "If necessary, please insert additional comment on this topic:",
+            "section": "2",
+            "widget": "section_b_comment",
+            "multiple_answers": "0"
+        }
+    },
+
+    {
+        "pk": "20",
         "model": "survey.category",
         "fields": {
             "title": "C1 a. Overall transport system",
@@ -201,8 +225,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "17",
+        "pk": "21",
         "model": "survey.category",
         "fields": {
             "title": "C1 b. Roads",
@@ -211,8 +236,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "18",
+        "pk": "22",
         "model": "survey.category",
         "fields": {
             "title": "C1 c. Railways",
@@ -222,7 +248,7 @@
         }
     },
     {
-        "pk": "19",
+        "pk": "23",
         "model": "survey.category",
         "fields": {
             "title": "C1 d. Air transport",
@@ -231,8 +257,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "20",
+        "pk": "24",
         "model": "survey.category",
         "fields": {
             "title": "C1 e. Inland Waterborne transport",
@@ -242,7 +269,7 @@
         }
     },
     {
-        "pk": "21",
+        "pk": "25",
         "model": "survey.category",
         "fields": {
             "title": "C1 f. Maritime transport",
@@ -251,8 +278,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "22",
+        "pk": "26",
         "model": "survey.category",
         "fields": {
             "title": "C1 g. Urban transport",
@@ -261,8 +289,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "23",
+        "pk": "27",
         "model": "survey.category",
         "fields": {
             "title": "C1 h. other",
@@ -271,8 +300,9 @@
             "multiple_answers": "1"
         }
     },
+
     {
-        "pk": "24",
+        "pk": "28",
         "model": "survey.category",
         "fields": {
             "title": "C2 Describe briefly how these bodies might interact, e.g. how are responsibilities distributed, how are they inter-dependant, what interaction takes place with other bodies at subnational levels, etc.",
@@ -281,15 +311,4 @@
             "multiple_answers": "0"
         }
     }
-    // {
-    //     "pk": "25",
-    //     "model": "survey.category",
-    //     "fields": {
-    //         "title": "C3 Are there any private stakeholders in your country (transport companies, unions, NGOs, etc.) which are particular active regarding transport adaptation?",
-    //         "description": "These private stakeholders could be an additional source of information to be consulted by EEA."
-    //         "section": "3",
-    //         "widget": "section_c_3",
-    //         "multiple_answers": "1"
-    //     }
-    // }
 ]
