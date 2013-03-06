@@ -87,6 +87,36 @@ class SectionAComment(SectionAInfo):
         return survey
 
 
+class SectionBInfo(forms.Form):
+
+    EDIT_TEMPLATE = 'section_a/form_comment.html'
+
+    VIEW_TEMPLATE = 'section_a/comment_view.html'
+
+    comment = forms.CharField(required=True, widget=forms.Textarea)
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_b_info=self.cleaned_data['comment'],
+        )
+        return survey
+
+
+class SectionBComment(SectionAInfo):
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_b_comment=self.cleaned_data['comment'],
+        )
+        return survey
+
+
 class SectionB(SectionA):
 
     language = forms.ChoiceField()

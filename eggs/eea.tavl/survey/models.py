@@ -8,6 +8,8 @@ WIDGETS = {
     'section_a_comment': 'SectionAComment',
     'section_b': 'SectionB',
     'section_b_4': 'SectionB4',
+    'section_b_info': 'SectionBInfo',
+    'section_b_comment': 'SectionBComment',
     'section_c': 'SectionC',
     'section_c_1_h': 'SectionC1Other',
     'section_c_3': 'SectionC3'

@@ -200,6 +200,7 @@
             "description": "If yes, please provide some further information. We might want to explore this as case studies:",
             "section": "2",
             "widget": "section_b_info",
+            "for_user": "1",
             "multiple_answers": "0"
         }
     },
@@ -211,6 +212,7 @@
             "title": "If necessary, please insert additional comment on this topic:",
             "section": "2",
             "widget": "section_b_comment",
+            "for_user": "1",
             "multiple_answers": "0"
         }
     },
@@ -308,6 +310,7 @@
             "title": "C2 Describe briefly how these bodies might interact, e.g. how are responsibilities distributed, how are they inter-dependant, what interaction takes place with other bodies at subnational levels, etc.",
             "section": "3",
             "widget": "section_c_2",
+            "for_user": "1",
             "multiple_answers": "0"
         }
     },
