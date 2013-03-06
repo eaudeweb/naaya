@@ -1,5 +1,6 @@
 3.0.17 (unreleased)
 ------------------
+* Update script to add cookie disclaimer message [dumitval]
 * Added cookie disclaimer message to CHM3 [dumitval]
 
 3.0.16 (2013-02-15)
