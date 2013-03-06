@@ -1,9 +1,12 @@
-1.2.33 (unreleased)
+1.2.34 (unreleased)
 -------------------
+
+1.2.33 (2013-03-06)
+-------------------
+* removed portlet within the meeting index [dumitval]
 
 1.2.32 (2013-03-06)
 -------------------
-* removed portlet within the meeting index [dumitval]
 * fixing owner needs to be able to manage meeting [simiamih]
 
 1.2.31 (2013-02-26)
