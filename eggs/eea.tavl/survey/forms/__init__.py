@@ -91,8 +91,6 @@ class SectionBInfo(forms.Form):
 
     EDIT_TEMPLATE = 'section_a/form_comment.html'
 
-    VIEW_TEMPLATE = 'section_a/comment_view.html'
-
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category):
@@ -105,7 +103,7 @@ class SectionBInfo(forms.Form):
         return survey
 
 
-class SectionBComment(SectionAInfo):
+class SectionBComment(SectionBInfo):
 
     def save(self, user, country, category):
         survey = Survey.objects.create(
@@ -164,8 +162,6 @@ class SectionC(forms.Form):
 
     EDIT_TEMPLATE = 'section_c/form.html'
 
-    VIEW_TEMPLATE = 'section_c/view.html'
-
     title = forms.CharField(max_length=256)
 
     link = forms.CharField(max_length=256, required=False)
@@ -176,6 +172,35 @@ class SectionC(forms.Form):
             setattr(survey, k, v)
         survey.save()
         return survey
+
+
+class SectionC2(forms.Form):
+
+    EDIT_TEMPLATE = 'section_a/form_comment.html'
+
+    comment = forms.CharField(required=True, widget=forms.Textarea)
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_c2=self.cleaned_data['comment'],
+        )
+        return survey
+
+
+class SectionCComment(SectionC2):
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_c_comment=self.cleaned_data['comment'],
+        )
+        return survey
+
 
 class SectionC1Other(SectionC):
 
@@ -202,3 +227,5 @@ class SectionC3(SectionA):
             setattr(survey, k, v)
         survey.save()
         return survey
+
+

@@ -314,6 +314,7 @@
             "multiple_answers": "0"
         }
     },
+
     {
         "pk": "29",
         "model": "survey.category",
@@ -322,6 +323,18 @@
             "description": "These private stakeholders could be an additional source of information to be consulted by EEA.",
             "section": "3",
             "widget": "section_c_3",
+            "multiple_answers": "1"
+        }
+    },
+
+    {
+        "pk": "30",
+        "model": "survey.category",
+        "fields": {
+            "title": "If necessary, please insert additional comment on this topic:",
+            "section": "3",
+            "widget": "section_c_comment",
+            "for_user": "1",
             "multiple_answers": "1"
         }
     }

@@ -17,7 +17,7 @@
     {% endfor %}
   {% else %}
     {% for survey in user_answers %}
-      {% include "section_a/preview_comment.html" %}
+      {% include "section_b/preview_comment.html" %}
     {% empty %}
       <a href="{% url survey:edit category.id %}">Add comment</a>
     {% endfor %}
