@@ -24,6 +24,11 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_workgroup_removal.UpdateWorkgroupRemoval"
       permission="zope2.ViewManagementScreens" />
+    <utility
+      name="add_disclaimer_message"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_add_disclaimer_message.AddDisclaimerMessage"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
