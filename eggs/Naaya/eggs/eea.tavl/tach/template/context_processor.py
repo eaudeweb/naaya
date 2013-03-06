@@ -1,6 +1,8 @@
 from django.conf import settings
 
-def util(request):
+
+def context(request):
     return {
+        'user': request.user,
         'HOSTNAME': settings.HOSTNAME,
     }

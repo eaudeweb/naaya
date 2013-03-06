@@ -4,6 +4,8 @@ from django_hstore import hstore
 
 WIDGETS = {
     'section_a': 'SectionA',
+    'section_a_info': 'SectionAInfo',
+    'section_a_comment': 'SectionAComment',
     'section_b': 'SectionB',
     'section_b_4': 'SectionB4',
 }
@@ -27,6 +29,8 @@ class Category(models.Model):
 
     widget = models.CharField(max_length=32)
 
+    for_user = models.BooleanField(default=False)
+
     multiple_answers = models.BooleanField(default=True)
 
     class Meta:
@@ -34,7 +38,7 @@ class Category(models.Model):
         ordering = ['pk']
 
     def __unicode__(self):
-        return self.title
+        return self.title or ''
 
     def get_widget(self):
         from survey import forms
@@ -121,5 +125,9 @@ class Survey(models.Model):
     contact = models.CharField(max_length=256, null=True, blank=True)
 
     focus = models.CharField(max_length=256, null=True, blank=True)
+
+    section_a_info = models.TextField(null=True, blank=True)
+
+    section_a_comment = models.TextField(null=True, blank=True)
 
     objects = hstore.HStoreManager()

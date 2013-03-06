@@ -112,6 +112,31 @@
         "pk": "11",
         "model": "survey.category",
         "fields": {
+            "title": "Could you provide any qualitative information on the state of implementation of adaptation measures for the transport sector?",
+            "description": "Please describe briefly: \nTo what level is the current transport infrastructure already adapted to climate change?\nHave transport services already undergone procedural change?\nHave adaptation measures in the transport sector been implemented or are they still in the planning phase?",
+            "section": "1",
+            "widget": "section_a_info",
+            "for_user": "1",
+            "multiple_answers": "0"
+        }
+    },
+
+    {
+        "pk": "12",
+        "model": "survey.category",
+        "fields": {
+            "title": "If needed, please insert additional comments on this topic, e.g. further qualifying the above information or which provide additional information",
+            "section": "1",
+            "widget": "section_a_comment",
+            "for_user": "1",
+            "multiple_answers": "0"
+        }
+    },
+
+    {
+        "pk": "13",
+        "model": "survey.category",
+        "fields": {
             "title": "B1 Climate change:  Please list any major recent (since 2008) assessments or study in your country on vulnerability, resilience or adaptation of transport at the national (or subnational level).",
             "section": "2",
             "widget": "section_b",
@@ -120,7 +145,7 @@
     },
 
     {
-        "pk": "12",
+        "pk": "14",
         "model": "survey.category",
         "fields": {
             "title": "B2 Extreme weather events only: Please list any major recent (since 2008) assessments or study in your country on the vulnerability, resilience or adaptation of transport at the national (or subnational) level.",
@@ -132,7 +157,7 @@
     },
 
     {
-        "pk": "13",
+        "pk": "15",
         "model": "survey.category",
         "fields": {
             "title": "B3 Please list any relevant national (or subnational) research programme important for the adaptation of transport to climate change or to extreme weather events.",
@@ -145,7 +170,7 @@
 
 
     {
-        "pk": "14",
+        "pk": "16",
         "model": "survey.category",
         "fields": {
             "title": "B4 Please list any relevant national (or subnational) knowledge and information initiative, platform or similar initiatives important for the adaptation of transport to climate change or to extreme weather events",
@@ -157,7 +182,7 @@
     },
 
     {
-        "pk": "15",
+        "pk": "17",
         "model": "survey.category",
         "fields": {
             "title": "B5 Please list any systematically collected data that is relevant for assessing the impacts of climate change or extreme weather events on transport, disruption of transport operations, extraordinary infrastructure reconstruction costs, etc.",

@@ -1,0 +1,18 @@
+{% extends "frame.html" %}
+
+{% block content %}
+
+<form action="{% url survey:edit category.id %}" method="POST">
+
+  <h4>{{ category }}</h4>
+  <p>{{ category.description|linebreaks }}</p>
+
+  {{ form.comment }}
+
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+
+</form>
+
+{% endblock %}

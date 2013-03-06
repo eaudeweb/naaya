@@ -87,7 +87,7 @@ SECRET_KEY = 'tyl8aja)&amp;yn0ov-z0u2j7j)%b_uo@1!ao&amp;uxn1z0tp_8frad&amp;l'
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-    'tach.context_processor.util',
+    'tach.template.context_processor.context',
 )
 
 # List of callables that know how to import templates from various sources.
