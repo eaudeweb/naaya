@@ -26,6 +26,16 @@
         </td>
       </tr>
 
+      {% if form.activity_type %}
+      <tr>
+        <th style="text-align: left;  width: 220px;">{{ form.activity_type.label_tag }}</th>
+        <td>
+          {{ form.activity_type }}
+          {{ form.activity_type.errors }}
+        </td>
+      </tr>
+      {% endif %}
+
       {% if form.focus %}
       <tr>
         <th style="text-align: left;">{{ form.focus.label_tag }}</th>
@@ -56,6 +66,7 @@
       </tr>
       {% endif %}
 
+      {% if form.year %}
       <tr>
         <th style="text-align: left;">{{ form.year.label_tag }}</th>
         <td>
@@ -63,6 +74,7 @@
           {{ form.year.errors }}
         </td>
       </tr>
+      {% endif %}
 
       <tr>
         <th style="text-align: left;">{{ form.parts_considered.label_tag }}</th>
@@ -80,6 +92,7 @@
         </td>
       </tr>
 
+      {% if form.climate_change_impacts %}
       <tr>
         <th style="text-align: left;">{{ form.climate_change_impacts.label_tag }}</th>
         <td>
@@ -87,7 +100,9 @@
           {{ form.climate_change_impacts.errors }}
         </td>
       </tr>
+      {% endif %}
 
+      {% if form.responsible_organisation %}
       <tr>
         <th style="text-align: left;">{{ form.responsible_organisation.label_tag }}</th>
         <td>
@@ -95,6 +110,7 @@
           {{ form.responsible_organisation.errors }}
         </td>
       </tr>
+      {% endif %}
 
       {% if form.contact %}
       <tr>
