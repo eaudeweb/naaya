@@ -51,6 +51,37 @@ class SectionA(forms.Form):
         survey = Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
+        survey.save()
+        return survey
+
+
+class SectionAInfo(forms.Form):
+
+    EDIT_TEMPLATE = 'section_a/form_comment.html'
+
+    VIEW_TEMPLATE = 'section_a/comment_view.html'
+
+    comment = forms.CharField(required=True, widget=forms.Textarea)
+
+    def save(self, user, country, category):
+        Survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_a_info=self.cleaned_data['comment'],
+        )
+        return survey
+
+
+class SectionAComment(SectionAInfo):
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_a_comment=self.cleaned_data['comment'],
+        )
         return survey
 
 
@@ -69,20 +100,13 @@ class SectionB(SectionA):
 
     def save(self, user, country, category):
         language = Language.objects.get(pk=self.cleaned_data['language'])
-        survey = Survey.objects.create(
-            user=user,
-            country=country,
-            category=category,
-            title=self.cleaned_data['title'],
-            language= language,
-            year=self.cleaned_data['year'],
-            parts_considered=self.cleaned_data['parts_considered'],
-            transport_modes=self.cleaned_data['transport_modes'],
-            climate_change_impacts=self.cleaned_data['climate_change_impacts'],
-            responsible_organisation=self.cleaned_data['responsible_organisation'],
-            contact=self.cleaned_data['contact'],
-            link=self.cleaned_data['link']
-        )
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            if k == 'language':
+                setattr(survey, k, language)
+            else:
+                setattr(survey, k, v)
+        survey.save()
         return survey
 
 
@@ -97,17 +121,8 @@ class SectionB4(SectionA):
         self.fields.pop('english_title')
 
     def save(self, user, country, category):
-        survey = Survey.objects.create(
-            user=user,
-            country=country,
-            category=category,
-            title=self.cleaned_data['title'],
-            focus=self.cleaned_data['focus'],
-            year=self.cleaned_data['year'],
-            parts_considered=self.cleaned_data['parts_considered'],
-            transport_modes=self.cleaned_data['transport_modes'],
-            climate_change_impacts=self.cleaned_data['climate_change_impacts'],
-            responsible_organisation=self.cleaned_data['responsible_organisation'],
-            link=self.cleaned_data['link']
-        )
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
         return survey
