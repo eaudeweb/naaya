@@ -1,3 +1,5 @@
+# -*- coding: utf-8
+
 from django import forms
 from survey.models import Survey, Language
 
@@ -86,7 +88,8 @@ class SectionB(SectionA):
 
 class SectionB4(SectionA):
 
-    focus = forms.CharField(max_length=256, required=False)
+    focus = forms.CharField(max_length=256, required=False,
+        label="Focus (e.g. adaptation in general, transport specific, …)")
 
     def __init__(self, *args, **kwargs):
         super(SectionB4, self).__init__(*args, **kwargs)
@@ -105,7 +108,6 @@ class SectionB4(SectionA):
             transport_modes=self.cleaned_data['transport_modes'],
             climate_change_impacts=self.cleaned_data['climate_change_impacts'],
             responsible_organisation=self.cleaned_data['responsible_organisation'],
-            contact=self.cleaned_data['contact'],
             link=self.cleaned_data['link']
         )
         return survey

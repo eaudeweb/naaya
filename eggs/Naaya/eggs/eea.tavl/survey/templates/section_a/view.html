@@ -21,6 +21,15 @@
       <td>{{ survey.title }}</td>
     </tr>
 
+    {% if form.focus %}
+    <tr>
+      <th style="text-align: left;">
+        {{ form.focus.label }}
+      </th>
+      <td>{{ survey.focus }}</td>
+    </tr>
+    {% endif %}
+
     {% if form.english_title %}
     <tr>
       <th style="text-align: left;">
