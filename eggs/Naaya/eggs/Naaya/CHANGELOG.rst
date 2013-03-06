@@ -1,5 +1,6 @@
 3.2.22 (unreleased)
 -------------------
+* Delete confirmation dialog in basketofapprovals [dumitval]
 * info message on startup with link of instance dev url [simiamih]
 
 3.2.21 (2013-03-01)
