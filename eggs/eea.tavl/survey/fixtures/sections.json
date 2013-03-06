@@ -18,5 +18,21 @@
         "fields": {
             "name": "section_c"
         }
+    },
+
+    {
+        "pk": "4",
+        "model": "survey.section",
+        "fields": {
+            "name": "section_d"
+        }
+    },
+
+    {
+        "pk": "5",
+        "model": "survey.section",
+        "fields": {
+            "name": "section_e"
+        }
     }
 ]
