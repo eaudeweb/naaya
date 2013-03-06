@@ -34,7 +34,6 @@
         }
     }
     </script>
-    <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
         <div id="center_content">
         <metal:block define-slot="page-middle">
             <metal:block define-macro="folder-title">
@@ -197,14 +196,9 @@
             </tal:block>
         </metal:block>
 
-        <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
-            <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
-        </tal:block>
-
         <span tal:replace="structure here/comments_box" />
     </div>
 
-    </tal:block>
     </metal:block>
 
 </metal:block>
