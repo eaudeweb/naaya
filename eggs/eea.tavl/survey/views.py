@@ -28,6 +28,7 @@ class Edit(View):
     def get(self, request, category_id):
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()()
+        import pdb; pdb.set_trace()
         return render(request, form.EDIT_TEMPLATE, {
             'form': form,
             'category': category,
