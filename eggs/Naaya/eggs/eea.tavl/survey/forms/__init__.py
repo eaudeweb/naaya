@@ -134,9 +134,9 @@ class SectionC(forms.Form):
 
     VIEW_TEMPLATE = 'section_c/view.html'
 
-    name = forms.CharField(max_length=256)
+    title = forms.CharField(max_length=256)
 
-    website = forms.CharField(max_length=256, required=False)
+    link = forms.CharField(max_length=256, required=False)
 
     def save(self, user, country, category):
         survey = Survey(user=user, country=country, category=category)
@@ -148,3 +148,14 @@ class SectionC(forms.Form):
 class SectionC1Other(SectionC):
 
     responsible_for = forms.CharField(max_length=256)
+
+
+# class SectionC3(forms.Form):
+
+#     name = forms.CharField(max_length=256)
+
+#     activity_type = 
+
+#     climate_change_impacts = forms.MultipleChoiceField(choices=Survey.IMPACTS,
+#         label='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)',
+#         widget=forms.CheckboxSelectMultiple,)
