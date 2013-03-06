@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Init file for tavl
+#
+# chkconfig: 2345 70 25
+# description: Tavl django server
+#
+# processname: tavl
+
+# source function library
+
+RETVAL=0
+NAME='tavl'
+SUCMD='su USERHERE -c'
+FCGI='/path/to/eea.tavl-checkout/fcgi'
+
+do_start() {
+    $SUCMD "$FCGI start"
+}
+
+do_stop() {
+    $SUCMD "$FCGI stop"
+}
+
+do_status() {
+    echo "$NAME: "
+    $SUCMD "$FCGI status"
+}
+
+case "$1" in
+  start)
+        do_start
+        ;;
+  stop)
+        do_stop
+        ;;
+  status)
+        do_status
+        ;;
+  restart)
+        do_stop
+        do_start
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|status|restart}"
+        RETVAL=1
+esac
+exit $RETVAL
+
