@@ -1,6 +1,5 @@
 from functools import wraps
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
 
 
 def auth_required(func):
@@ -21,19 +20,3 @@ def auth_details_required(func):
             return redirect('overview')
         return func(*args, **kwargs)
     return wrapper
-
-
-class AuthRequired(object):
-
-    @method_decorator(auth_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(AuthRequired, self).dispatch(request, *args, **kwargs)
-
-
-class AuthDetailsRequired(object):
-
-    @method_decorator(auth_required)
-    @method_decorator(auth_details_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(AuthDetailsRequired, self).dispatch(request, *args, **kwargs)
-

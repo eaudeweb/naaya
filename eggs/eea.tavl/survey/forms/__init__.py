@@ -1,8 +1,12 @@
 from django import forms
-from survey.models import Survey
+from survey.models import Survey, Language
 
 
 class SectionA(forms.Form):
+
+    EDIT_TEMPLATE = 'section_a/form.html'
+
+    VIEW_TEMPLATE = 'section_a/view.html'
 
     status = forms.ChoiceField(choices=Survey.STATUS_CHOICES, widget=forms.RadioSelect)
 
@@ -42,26 +46,66 @@ class SectionA(forms.Form):
         return climate_change_impacts_hstore
 
     def save(self, user, country, category):
-        survey = Survey.objects.create(
-            user=user,
-            country=country,
-            category=category,
-            status=self.cleaned_data['status'],
-            title=self.cleaned_data['title'],
-            english_title=self.cleaned_data['english_title'],
-            year=self.cleaned_data['year'],
-            parts_considered=self.cleaned_data['parts_considered'],
-            transport_modes=self.cleaned_data['transport_modes'],
-            climate_change_impacts=self.cleaned_data['climate_change_impacts'],
-            responsible_organisation=self.cleaned_data['responsible_organisation'],
-            link=self.cleaned_data['link']
-        )
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
         return survey
 
 
 class SectionB(SectionA):
 
-    def __init__(self, *args, **kwargs):
-        pdb
-        super(SectionB, self).__init__(*args, **kwargs)
+    language = forms.ChoiceField()
 
+    contact = forms.CharField(max_length=256, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(SectionB, self).__init__(*args, **kwargs)
+        self.fields.pop('status')
+        self.fields.pop('english_title')
+        languages = [(l.iso, l.title) for l in Language.objects.all()]
+        self.fields['language'].choices = languages
+
+    def save(self, user, country, category):
+        language = Language.objects.get(pk=self.cleaned_data['language'])
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            title=self.cleaned_data['title'],
+            language= language,
+            year=self.cleaned_data['year'],
+            parts_considered=self.cleaned_data['parts_considered'],
+            transport_modes=self.cleaned_data['transport_modes'],
+            climate_change_impacts=self.cleaned_data['climate_change_impacts'],
+            responsible_organisation=self.cleaned_data['responsible_organisation'],
+            contact=self.cleaned_data['contact'],
+            link=self.cleaned_data['link']
+        )
+        return survey
+
+
+class SectionB4(SectionA):
+
+    focus = forms.CharField(max_length=256, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(SectionB4, self).__init__(*args, **kwargs)
+        self.fields.pop('status')
+        self.fields.pop('english_title')
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            title=self.cleaned_data['title'],
+            focus=self.cleaned_data['focus'],
+            year=self.cleaned_data['year'],
+            parts_considered=self.cleaned_data['parts_considered'],
+            transport_modes=self.cleaned_data['transport_modes'],
+            climate_change_impacts=self.cleaned_data['climate_change_impacts'],
+            responsible_organisation=self.cleaned_data['responsible_organisation'],
+            contact=self.cleaned_data['contact'],
+            link=self.cleaned_data['link']
+        )
+        return survey

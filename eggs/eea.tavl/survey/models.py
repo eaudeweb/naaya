@@ -119,4 +119,6 @@ class Survey(models.Model):
 
     contact = models.CharField(max_length=256, null=True, blank=True)
 
+    focus = models.CharField(max_length=256, null=True, blank=True)
+
     objects = hstore.HStoreManager()

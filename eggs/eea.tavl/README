@@ -1,9 +1,12 @@
 
+Install:
+    virtualenv sandbox
+    . sandbox/bin/activate
+    pip install -r requirements-dev.txt
+    touch tach/local_settings.py
 
-Load initial data for countries:
 
-    - ./manage.py loaddata countries data
-
-Load inital data for A1Types
-
-    - ./manage.py loaddata a1 type
+Create database:
+    createdb tach
+    psql tach -c 'create extension hstore'
+    ./manage.py import
