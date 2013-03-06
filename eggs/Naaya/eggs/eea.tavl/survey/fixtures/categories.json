@@ -138,7 +138,7 @@
             "title": "B3 Please list any relevant national (or subnational) research programme important for the adaptation of transport to climate change or to extreme weather events.",
             "description": "Note: We are looking for broader (institutional) research programmes, not for specific research projects.",
             "section": "2",
-            "widget": "section_b",
+            "widget": "section_a",
             "multiple_answers": "1"
         }
     },
@@ -151,7 +151,7 @@
             "title": "B4 Please list any relevant national (or subnational) knowledge and information initiative, platform or similar initiatives important for the adaptation of transport to climate change or to extreme weather events",
             "description": "(e.g. Climate ADAPT at the European level: http://climate-adapt.eea.europa.eu)",
             "section": "2",
-            "widget": "section_b",
+            "widget": "section_b_4",
             "multiple_answers": "1"
         }
     },

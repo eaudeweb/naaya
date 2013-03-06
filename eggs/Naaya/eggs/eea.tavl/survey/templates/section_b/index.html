@@ -10,6 +10,10 @@
 
   {% assign sections|get_answers:category as answers %}
 
+  {% for survey in answers %}
+    {% include "section_a/preview.html" %}
+  {% endfor %}
+
   {% if category.multiple_answers or not answers %}
     <a href="{% url survey:edit category.id %}">Add another</a>
   {% endif %}

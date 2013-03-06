@@ -7,24 +7,28 @@
 
   <tbody>
 
+    {% if form.status %}
     <tr>
       <th style="text-align: left; width: 220px;">
         {{ form.status.label }}</th>
       <td>{{ survey.status }}</td>
     </tr>
+    {% endif %}
 
-      <tr>
-      <th style="text-align: left;">
+    <tr>
+      <th style="text-align: left; width: 220px;">
         {{ form.title.label }}</th>
       <td>{{ survey.title }}</td>
     </tr>
 
+    {% if form.english_title %}
     <tr>
       <th style="text-align: left;">
         {{ form.english_title.label }}
       </th>
       <td>{{ survey.english_title }}</td>
     </tr>
+    {% endif %}
 
     <tr>
       <th style="text-align: left;">
@@ -55,6 +59,14 @@
         {{ form.responsible_organisation.label }}</th>
       <td>{{ survey.responsible_organisation }}</td>
     </tr>
+
+    {% if form.contact %}
+    <tr>
+      <th style="text-align: left;">
+        {{ form.contact.label }}</th>
+      <td>{{ survey.contact }}</td>
+    </tr>
+    {% endif %}
 
     <tr>
       <th style="text-align: left;">
