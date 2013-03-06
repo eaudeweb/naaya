@@ -1,0 +1,29 @@
+{% load utils %}
+
+<h1>E  How could the EEA tailor the analysis to better fit your needs?</h1>
+
+<p>In this section you have the opportunity to provide us ideas on how we should prepare the results of this survey, which areas we should further explore, what we should focus on in the future, etc. This will enable us to better tailor our activities on adaptation and transport and to provide additional benefits for EEA member states.</p>
+
+{% assign sections|get_answers:category_e as answers %}
+
+{% assign sections|get_answers_for_user:category_e_comment as user_answers %}
+
+{% for survey in user_answers %}
+  {% include "section_e/preview_comment.html" %}
+{% empty %}
+  <a href="{% url survey:edit category_e_comment.id %}">Add comment</a>
+{% endfor %}
+
+<p>Thank you very much for taking the time to complete this survey. Your response is highly appreciated.</p>
+
+<p>We will review this information and will add  to it via additional interviews with you, the indicated contacts or further experts as recommended by you below. We will provide interim and final results of our analysis through documents which will be published at the EIONET project site under the “transport and adaptation” section.</p>
+
+<p>If there are additional professionals in your country who you would recommend us to contact, please provide their contact details:</p>
+
+{% for survey in answers %}
+  {% include "section_e/preview.html" %}
+{% endfor %}
+<a href="{% url survey:edit category_e.id %}">Add another</a>
+
+
+

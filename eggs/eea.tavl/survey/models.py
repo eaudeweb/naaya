@@ -14,7 +14,8 @@ WIDGETS = {
     'section_c_1_h': 'SectionC1Other',
     'section_c_2': 'SectionC2',
     'section_c_3': 'SectionC3',
-    'section_c_comment': 'SectionCComment',
+    'section_e_comment': 'SectionEComment',
+    'section_e': 'SectionE',
 }
 
 
@@ -144,5 +145,9 @@ class Survey(models.Model):
     section_c2 = models.TextField(null=True, blank=True)
 
     section_c_comment = models.TextField(null=True, blank=True)
+
+    section_e_comment = models.TextField(null=True, blank=True)
+
+    area_of_expertise = models.CharField(max_length=256, null=True, blank=True)
 
     objects = hstore.HStoreManager()
