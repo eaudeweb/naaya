@@ -10,7 +10,7 @@ WIDGETS = {
     'section_b_4': 'SectionB4',
     'section_c': 'SectionC',
     'section_c_1_h': 'SectionC1Other',
-    # 'section_c_3': 'SectionC3'
+    'section_c_3': 'SectionC3'
 }
 
 

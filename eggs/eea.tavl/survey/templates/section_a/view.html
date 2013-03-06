@@ -21,6 +21,15 @@
       <td>{{ survey.title }}</td>
     </tr>
 
+    {% if form.activity_type %}
+    <tr>
+      <th style="text-align: left;">
+        {{ form.activity_type.label }}
+      </th>
+      <td>{{ survey.activity_type }}</td>
+    </tr>
+    {% endif %}
+
     {% if form.focus %}
     <tr>
       <th style="text-align: left;">
@@ -39,11 +48,13 @@
     </tr>
     {% endif %}
 
+    {% if form.year %}
     <tr>
       <th style="text-align: left;">
         {{ form.year.label }}</th>
       <td>{{ survey.year }}</td>
     </tr>
+    {% endif %}
 
     <tr>
       <th style="text-align: left;">
@@ -57,17 +68,21 @@
       <td>{{ survey.transport_modes|pretty_hstore }}</td>
     </tr>
 
+    {% if form.climate_change_impacts %}
     <tr>
       <th style="text-align: left;">
         {{ form.climate_change_impacts.label }}</th>
       <td>{{ survey.climate_change_impacts|pretty_hstore }}</td>
     </tr>
+    {% endif %}
 
+    {% if form.responsible_organisation %}
     <tr>
       <th style="text-align: left;">
         {{ form.responsible_organisation.label }}</th>
       <td>{{ survey.responsible_organisation }}</td>
     </tr>
+    {% endif %}
 
     {% if form.contact %}
     <tr>

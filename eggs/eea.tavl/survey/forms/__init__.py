@@ -19,14 +19,16 @@ class SectionA(forms.Form):
     year = forms.IntegerField(required=False)
 
     parts_considered = forms.MultipleChoiceField(choices=Survey.TRANSPORT_PARTS,
-         widget=forms.CheckboxSelectMultiple)
+                    label='Part(s) of the transport system considered (Tick any relevant categories)',
+                    widget=forms.CheckboxSelectMultiple)
 
     transport_modes = forms.MultipleChoiceField(choices=Survey.TRANSPORT_MODES,
-        widget=forms.CheckboxSelectMultiple)
+                    label='Transport mode(s) considered (Tick any relevant categories)',
+                    widget=forms.CheckboxSelectMultiple)
 
     climate_change_impacts = forms.MultipleChoiceField(choices=Survey.IMPACTS,
-        label='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)',
-        widget=forms.CheckboxSelectMultiple,)
+                    label='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)',
+                    widget=forms.CheckboxSelectMultiple)
 
     responsible_organisation = forms.CharField(max_length=256, required=False)
 
@@ -150,12 +152,23 @@ class SectionC1Other(SectionC):
     responsible_for = forms.CharField(max_length=256)
 
 
-# class SectionC3(forms.Form):
+class SectionC3(SectionA):
 
-#     name = forms.CharField(max_length=256)
+    activity_type = forms.CharField(max_length=256,
+            label='Short information of type of activity, transport mode, etc.',
+            required=False)
 
-#     activity_type = 
+    def __init__(self, *args, **kwargs):
+        super(SectionC3, self).__init__(*args, **kwargs)
+        self.fields.pop('status')
+        self.fields.pop('english_title')
+        self.fields.pop('year')
+        self.fields.pop('climate_change_impacts')
+        self.fields.pop('responsible_organisation')
 
-#     climate_change_impacts = forms.MultipleChoiceField(choices=Survey.IMPACTS,
-#         label='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)',
-#         widget=forms.CheckboxSelectMultiple,)
+    def save(self, user, country, category):
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
+        return survey

@@ -310,5 +310,16 @@
             "widget": "section_c_2",
             "multiple_answers": "0"
         }
+    },
+    {
+        "pk": "29",
+        "model": "survey.category",
+        "fields": {
+            "title": "C3 Are there any private stakeholders in your country (transport companies, unions, NGOs, etc.) which are particular active regarding transport adaptation?",
+            "description": "These private stakeholders could be an additional source of information to be consulted by EEA.",
+            "section": "3",
+            "widget": "section_c_3",
+            "multiple_answers": "1"
+        }
     }
 ]
