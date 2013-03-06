@@ -126,3 +126,25 @@ class SectionB4(SectionA):
             setattr(survey, k, v)
         survey.save()
         return survey
+
+
+class SectionC(forms.Form):
+
+    EDIT_TEMPLATE = 'section_c/form.html'
+
+    VIEW_TEMPLATE = 'section_c/view.html'
+
+    name = forms.CharField(max_length=256)
+
+    website = forms.CharField(max_length=256, required=False)
+
+    def save(self, user, country, category):
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
+        return survey
+
+class SectionC1Other(SectionC):
+
+    responsible_for = forms.CharField(max_length=256)

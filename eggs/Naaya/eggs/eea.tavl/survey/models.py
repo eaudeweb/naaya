@@ -8,6 +8,8 @@ WIDGETS = {
     'section_a_comment': 'SectionAComment',
     'section_b': 'SectionB',
     'section_b_4': 'SectionB4',
+    'section_c': 'SectionC',
+    'section_c_1_h': 'SectionC1Other'
 }
 
 
@@ -103,6 +105,8 @@ class Survey(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
                             blank=True)
 
+    name = models.CharField(max_length=256, null=True, blank=True)
+
     title = models.CharField(max_length=256, null=True, blank=True)
 
     english_title = models.CharField(max_length=256, null=True, blank=True)
@@ -129,5 +133,7 @@ class Survey(models.Model):
     section_a_info = models.TextField(null=True, blank=True)
 
     section_a_comment = models.TextField(null=True, blank=True)
+
+    website = models.CharField(max_length=256, null=True, blank=True)
 
     objects = hstore.HStoreManager()

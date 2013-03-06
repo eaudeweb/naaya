@@ -1,0 +1,21 @@
+{% load utils %}
+
+
+{% include "section_c/header.html" %}
+
+{% for category in categories_section_c %}
+
+  <h4 style="margin: 0; padding: 0;">{{ category }}</h3>
+  <p class="description">{{ category.description }}</p>
+
+  {% assign sections|get_answers:category as answers %}
+
+  {% for survey in answers %}
+    {% include "section_c/preview.html" %}
+  {% endfor %}
+
+  {% if category.multiple_answers or not answers %}
+    <a href="{% url survey:edit category.id %}">Add another</a>
+  {% endif %}
+
+{% endfor %}

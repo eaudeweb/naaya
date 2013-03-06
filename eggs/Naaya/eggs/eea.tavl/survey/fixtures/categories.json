@@ -190,6 +190,95 @@
             "widget": "section_b",
             "multiple_answers": "1"
         }
+    },
+    {
+        "pk": "16",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 a. Overall transport system",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "17",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 b. Roads",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "18",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 c. Railways",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "19",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 d. Air transport",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "20",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 e. Inland Waterborne transport",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "21",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 f. Maritime transport",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "22",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 g. Urban transport",
+            "section": "3",
+            "widget": "section_c",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "23",
+        "model": "survey.category",
+        "fields": {
+            "title": "C1 h. other",
+            "section": "3",
+            "widget": "section_c_1_h",
+            "multiple_answers": "1"
+        }
+    },
+    {
+        "pk": "24",
+        "model": "survey.category",
+        "fields": {
+            "title": "C2 Describe briefly how these bodies might interact, e.g. how are responsibilities distributed, how are they inter-dependant, what interaction takes place with other bodies at subnational levels, etc.",
+            "section": "3",
+            "widget": "section_c_2",
+            "multiple_answers": "0"
+        }
     }
-
 ]

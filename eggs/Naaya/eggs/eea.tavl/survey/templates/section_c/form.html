@@ -1,0 +1,45 @@
+{% extends "frame.html" %}
+
+{% block content %}
+
+<form action="{% url survey:edit category.id %}" method="POST">
+
+  <table cellpadding="0" cellspacing="0" class="datatable">
+
+    <tbody>
+
+      {% if form.responsible_for %}
+      <tr>
+        <th style="text-align: left;  width: 220px;">{{ form.responsible_for.label_tag }}</th>
+        <td>
+          {{ form.responsible_for }}
+          {{ form.responsible_for.errors }}
+        </td>
+      </tr>
+      {% endif %}
+
+      <tr>
+        <th style="text-align: left;  width: 220px;">{{ form.name.label_tag }}</th>
+        <td>
+          {{ form.name }}
+          {{ form.name.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.website.label_tag }}</th>
+        <td>
+          {{ form.website }}
+          {{ form.website.errors }}
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <button type="submit">Submit</button>
+
+</form>
+
+{% endblock %}
