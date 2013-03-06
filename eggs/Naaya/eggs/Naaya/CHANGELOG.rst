@@ -1,4 +1,7 @@
-3.2.22 (unreleased)
+3.2.23 (unreleased)
+-------------------
+
+3.2.22 (2013-03-06)
 -------------------
 * Delete confirmation dialog in basketofapprovals [dumitval]
 * info message on startup with link of instance dev url [simiamih]
