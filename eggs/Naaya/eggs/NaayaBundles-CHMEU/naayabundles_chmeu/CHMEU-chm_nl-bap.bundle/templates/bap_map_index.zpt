@@ -32,8 +32,7 @@
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>
 
-<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-	<div id="center_content">
+<div id="center_content">
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
     <div class="folder_description">
         <p tal:condition="python:here.description!=''"
@@ -50,6 +49,7 @@
       <metal:block fill-slot="table_objects_default"></metal:block>
     </metal:block>
     </div>
+	<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 			<div class="map_filters">
 				<p id="js_links" style="display: none;">
 					<strong id="record_counter"></strong>
@@ -60,7 +60,7 @@
 					<tal:block repeat="item parentsList">
 						<tal:block define="children python:portal_map.getSymbolChildrenOrdered(item.id);">
 						<li style="list-style-type:none">
-							<input type="checkbox" style="display:none"
+							<input type="checkbox"
 							name="geo_types:list"
 							class="map_hidden_checkbox"
 							tal:attributes="value item/id; id item/id"
@@ -71,7 +71,7 @@
 							<ul tal:condition="children" class="category_child">
 								<li tal:repeat="child children">
 
-									<input type="checkbox" style="display:none"
+									<input type="checkbox"
 									name="geo_types:list"
 									tal:attributes="value child/id; id child/id; checked python:child.id in geo_types"
 									onclick="javascript: startMapRefresh()" />
@@ -122,8 +122,8 @@
 		</p>
 		<br clear="all" style="clear:both"/>
 		<div id="map_links_js" class="hidden"></div>
-	</div>
-</form>
+	</form>
+</div>
 <form id="list_locations_form" action="list_locations" method="get" style="display:none">
 	<input type="hidden" name="lat_min" />
 	<input type="hidden" name="lat_max" />
