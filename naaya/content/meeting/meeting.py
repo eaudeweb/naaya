@@ -41,7 +41,7 @@ from Products.Naaya.NySite import NySite
 
 #Meeting imports
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
-        ADMINISTRATOR_ROLE, MANAGER_ROLE)
+        ADMINISTRATOR_ROLE, MANAGER_ROLE, OWNER_ROLE)
 from permissions import (PERMISSION_ADD_MEETING,
                          PERMISSION_PARTICIPATE_IN_MEETING,
                          PERMISSION_ADMIN_MEETING)
@@ -224,14 +224,14 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    # add change permission to administrator
+    # add change permission to administrator and owner
     permission = Permission(change_permissions, (), ob)
-    permission.setRoles([ADMINISTRATOR_ROLE])
+    permission.setRoles([ADMINISTRATOR_ROLE, OWNER_ROLE])
     permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (), ob)
     permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
     permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
-    permission.setRoles([ADMINISTRATOR_ROLE])
-    ob.manage_addLocalRoles(contributor, [ADMINISTRATOR_ROLE])
+    permission.setRoles([ADMINISTRATOR_ROLE, OWNER_ROLE])
+    ob.manage_addLocalRoles(contributor, [OWNER_ROLE])
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -261,7 +261,7 @@ def _restrict_meeting_item_view(item):
     permission = Permission(view, (), item)
     # tuple means no inheritance for permission
     permission.setRoles((OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
-                         ADMINISTRATOR_ROLE, MANAGER_ROLE))
+                         ADMINISTRATOR_ROLE, MANAGER_ROLE, OWNER_ROLE))
 
 def _unrestrict_meeting_item_view(item):
     permission = Permission(view, (), item)
