@@ -26,6 +26,16 @@
         </td>
       </tr>
 
+      {% if form.focus %}
+      <tr>
+        <th style="text-align: left;">{{ form.title.label_tag }}</th>
+        <td>
+          {{ form.title }}
+          {{ form.title.errors }}
+        </td>
+      </tr>
+      {% endif %}
+
       <tr>
         <th style="text-align: left;">{{ form.english_title.label_tag }}</th>
         <td>

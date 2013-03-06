@@ -5,6 +5,7 @@ from django_hstore import hstore
 WIDGETS = {
     'section_a': 'SectionA',
     'section_b': 'SectionB',
+    'section_b_4': 'SectionB4',
 }
 
 
