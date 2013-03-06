@@ -64,7 +64,7 @@ class SectionAInfo(forms.Form):
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category):
-        Survey = Survey.objects.create(
+        survey = Survey.objects.create(
             user=user,
             country=country,
             category=category,
