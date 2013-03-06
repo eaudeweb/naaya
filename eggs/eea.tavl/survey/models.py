@@ -133,4 +133,6 @@ class Survey(models.Model):
 
     section_a_comment = models.TextField(null=True, blank=True)
 
+    section_b_info = models.TextField(null=True, blank=True)
+
     objects = hstore.HStoreManager()
