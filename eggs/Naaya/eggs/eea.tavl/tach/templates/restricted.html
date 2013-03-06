@@ -1,13 +1,14 @@
 {% extends 'frame.html' %}
-      <script>
+
+
+{% block content %}
+    <script>
         //Overwrite the came_from value for a correct redirect
         $(function(){
             $('a[href^="http://projects.eionet.europa.eu/questionnaire-transport-adaptation/login_html?came_from"]')
             .attr('href', 'http://projects.eionet.europa.eu/questionnaire-transport-adaptation/login/login_form?disable_cookie_login__=1&came_from='+$(location).attr('href'));
         });
     </script>
-
-{% block content %}
 
 <h3>Restricted</h3>
 
