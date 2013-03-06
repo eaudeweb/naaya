@@ -1,0 +1,183 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+
+<metal:block fill-slot="head">
+  <link rel="stylesheet" href="++resource++Products.Naaya/lib/chosen/chosen.css" />
+</metal:block>
+
+<h1 metal:fill-slot="title" i18n:translate="">Arrange portlets</h1>
+
+<metal:block fill-slot="section">
+
+<p i18n:translate="">
+  This page allows the administration of portlets and the creation of new ones.
+</p>
+
+<metal:block use-macro="template/macros/body" />
+
+</metal:block>
+
+</metal:block>
+
+<tal:block condition="nothing">
+<!-- we define a macro for the body, so the `manage` template can re-use it -->
+
+<metal:block define-macro="body">
+
+<style>
+    form[name=assign_portlet] .field,
+    form[name=assign_portlet] .field-inline {
+        clear: both;
+    }
+    form[name=assign_portlet] select {
+        width: 300px;
+    }
+</style>
+
+<script src="++resource++Products.Naaya/lib/chosen/chosen.jquery.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+    $('table.datatable tbody').each(function() {
+        var group_jq = $(this);
+        group_jq.sortable({
+            axis: 'y',
+            handle: '.sort-handle',
+            stop: on_stop
+        });
+
+        $('.sort-handle', group_jq).css('cursor', 'move');
+
+        function on_stop(evt, ui) {
+            var container = $('form#portlet-sortorder div.sort_container');
+
+            container.empty();
+            var order = $('table#assigned-portlets tbody tr').map(function() {
+                var hashkey = $(this).attr('ny_hashkey');
+                var input = $('<' + 'input type="hidden">');
+                input.attr('name', "portlet_order:list");
+                input.attr('value', hashkey);
+                container.append(input);
+            });
+
+            $('form#portlet-sortorder').show();
+        }
+    });
+
+    $('select[name="portlet_id"]').chosen();
+});
+</script>
+
+<table class="datatable" id="assigned-portlets">
+<thead>
+    <tr>
+        <th title="Folder where the portlet should appear"
+          i18n:translate="" i18n:attributes="title">Location</th>
+        <th title="Position within the page"
+          i18n:translate="" i18n:attributes="title">Position</th>
+        <th title="Show portlet in subfolders of `location`"
+          i18n:translate="" i18n:attributes="title">Inherit</th>
+        <th title="Title of portlet"
+          i18n:translate="" i18n:attributes="title">Portlet</th>
+        <th></th>
+    </tr>
+</thead>
+<tal:block define="rstk here/rstk"
+           repeat="keyvalue options/portlet_layout">
+<tbody tal:define="items python:keyvalue[1]"
+       tal:attributes="ny_folder_path python:items[0]['folder_path'];
+                       ny_position python:items[0]['position']">
+    <tal:block repeat="item items">
+    <tr tal:define="button_options python:{'location': item['folder_path'],
+                                           'position': item['position'],
+                                           'portlet_id': item['portlet'].id}"
+        tal:attributes="ny_hashkey item/hashkey">
+        <td tal:define="folder_path item/folder_path;
+                        folder python:here.getFolderByPath(folder_path);
+                        folder_url folder/absolute_url|nothing;
+                        folder_title folder/title_or_id|string:[missing]">
+            <a tal:attributes="href folder_url"
+               tal:content="folder_title"
+               tal:omit-tag="not:folder_url"
+               i18n:translate=""></a>
+            &nbsp;
+            <small tal:define="path python:test(folder_path, '/'+folder_path,
+                                                             'home page')"
+                   tal:content="path"></small>
+        </td>
+        <td title="Click and drag to change ordering" i18n:attributes="title"
+            tal:content="item/position"
+            tal:attributes="class string:sort-handle portlet_arrange_${item/position}" />
+        <td tal:define="label python:test(item['inherit'], 'yes', 'no')"
+            tal:content="structure python:rstk['button_form'](
+                label=label,
+                formdata=dict(action='ToggleInherit', **button_options),
+                button_title='Click to toggle inheritance')" />
+        <td tal:content="item/portlet/title_or_id"
+            tal:attributes="title item/portlet/getId" />
+        <td>
+            <em tal:condition="item/oldstyle">[needs update]</em>
+            <tal:block condition="not:item/oldstyle">
+            <tal:block content="structure python:rstk['button_form'](
+                label='Remove',
+                formdata=dict(action='Unassign', **button_options),
+                button_title='Stop displaying the portlet')" />
+            </tal:block>
+        </td>
+    </tr>
+    </tal:block>
+</tbody>
+</tal:block>
+</table>
+
+<form id="portlet-sortorder" action="sort_portlets" style="display: none">
+<div class="sort_container"></div>
+<input type="submit" value="Save sort order" />
+</form>
+
+
+<form name="assign_portlet" class="portlet-assign-form" method="POST">
+<fieldset><legend i18n:translate="">Assign portlet</legend>
+    <div class="field-inline">
+    <label for="position" i18n:translate="">Position</label>
+    <select id="position" name="position">
+        <option value="left" i18n:translate="">Left</option>
+        <option value="center" i18n:translate="">Center</option>
+        <option value="right" i18n:translate="">Right</option>
+    </select>
+    </div>
+
+    <div class="field-inline">
+    <label for="portlet_id" i18n:translate="">Portlet</label>
+    <select id="portlet_id" name="portlet_id">
+        <option tal:repeat="portlet here/get_all_portlets"
+          tal:attributes="value portlet/id">
+            <tal:block content="string:${portlet/title_or_id} (${portlet/id})" />
+            (<span i18n:translate="" tal:omit-tag=""
+              tal:content="portlet/get_type_label" />)
+        </option>
+    </select>
+    </div>
+
+    <div class="field-inline">
+    <label for="inherit" i18n:translate="">Inherit</label>
+    <input type="checkbox" id="inherit" name="inherit:boolean" checked="checked" />
+    <small><em>(show portlet in subfolders of location)</em></small>
+    </div>
+
+    <div class="field-inline">
+    <label for="location" i18n:translate="">Location</label>
+    <input name="location" class="sitemap_tree_target" id="location" type="text" />
+    <small><em>(choose a location from the tree below)</em></small>
+
+    <div id="sitemap_tree" class="sitemap_tree"></div>
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+    </div>
+
+    <div class="field">
+    <input type="submit" name="action" value="Assign" />
+    </div>
+</fieldset>
+</form>
+</metal:block>
+</tal:block>
