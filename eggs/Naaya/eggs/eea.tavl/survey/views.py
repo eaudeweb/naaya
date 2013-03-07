@@ -1,6 +1,9 @@
+from json import dumps
 from django.views.generic import View
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
 
 from survey import models, forms
 from sugar.views import auth_required, auth_details_required
@@ -42,12 +45,20 @@ class Edit(View):
         form = category.get_widget()(request.POST)
 
         if form.is_valid():
-            form.save(user=request.user, country=request.user.country,
-                      category=category)
-            return redirect('survey_overview')
+            survey = form.save(user=request.user, country=request.user.country,
+                               category=category)
+            response = {
+                'status': 'success',
+                'html': render_to_string(form.PREVIEW_TEMPLATE,
+                                         {'survey': survey, 'category': category})
+            }
+            return HttpResponse(dumps(response), mimetype='application/json')
+
 
         template = getattr(form, 'EDIT_TEMPLATE', 'form.html')
-        return render(request, template, {
-            'form': form,
-            'category': category,
-        })
+        response = {
+            'status': 'error',
+            'html': render_to_string(template,
+                                     {'form': form, 'category': category})
+        }
+        return HttpResponse(dumps(response), mimetype='application/json')

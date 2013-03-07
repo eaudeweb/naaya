@@ -22,3 +22,5 @@ def auth_details_required(func):
             return redirect('overview')
         return func(*args, **kwargs)
     return wrapper
+
+

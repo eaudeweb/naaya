@@ -1,20 +1,24 @@
 {% extends "frame.html" %}
 {% load static %}
 {% block head %}
+
   {{ block.super }}
-  <link rel="stylesheet" href="{% static "css/style.css" %}" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="{% static 'js/main.js' %}" type="text/javascript"></script>
+
 {% endblock %}
 
 {% block content %}
 
-    {% include "section_a/index.html" %}
+  {% include "section_a/index.html" %}
 
-    {% include "section_b/index.html" %}
+  {% include "section_b/index.html" %}
 
-    {% include "section_c/index.html" %}
+  {% include "section_c/index.html" %}
 
-    {% include "section_d/index.html" %}
+  {% include "section_d/index.html" %}
 
-    {% include "section_e/index.html" %}
+  {% include "section_e/index.html" %}
 
 {% endblock %}
