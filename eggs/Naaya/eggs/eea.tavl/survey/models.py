@@ -225,5 +225,8 @@ class Survey(models.Model):
     awareness_lack_eu_level = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
                             blank=True)
 
-    objects = hstore.HStoreManager()
+    d1_comments = models.TextField(null=True, blank=True)
 
+    d2_comments = models.TextField(null=True, blank=True)
+
+    objects = hstore.HStoreManager()
