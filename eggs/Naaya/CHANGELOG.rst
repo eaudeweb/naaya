@@ -1,4 +1,7 @@
-3.2.26 (unreleased)
+3.2.27 (unreleased)
+-------------------
+
+3.2.26 (2013-03-07)
 -------------------
 * added siteurl in front of ++ressource (frameservice compatibility) [dumitval]
 
