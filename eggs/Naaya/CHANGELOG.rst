@@ -1,4 +1,7 @@
-3.2.27 (unreleased)
+3.2.28 (unreleased)
+-------------------
+
+3.2.27 (2013-03-07)
 -------------------
 * temp disabled of tipsy
 * actual fix of change in 3.2.24 [simiamih]
