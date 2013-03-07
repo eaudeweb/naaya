@@ -1,4 +1,7 @@
-3.2.24 (unreleased)
+3.2.25 (unreleased)
+-------------------
+
+3.2.24 (2013-03-07)
 -------------------
 * use member_search in frameservice, if available [simiamih]
 
