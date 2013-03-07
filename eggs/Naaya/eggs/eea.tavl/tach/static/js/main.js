@@ -1,8 +1,9 @@
 $(function () {
 
   var closeContainer = function (container) {
-    container.html('');
-    container.hide();
+    container.slideUp('fast', function () {
+      container.html('');
+    });
   }
 
   $('.add').on('click', function () {
@@ -17,7 +18,7 @@ $(function () {
       var form =  add_container.find('form');
       form.data('target', target);
       form.data('multiple', multiple);
-      add_container.show();
+      add_container.slideDown('fast');
     });
 
   });
