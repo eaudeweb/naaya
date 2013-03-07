@@ -62,7 +62,7 @@ class SectionAInfo(forms.Form):
 
     EDIT_TEMPLATE = 'form_comment.html'
 
-    PREVIEW_TEMPLATE = 'section_a/preview.html'
+    PREVIEW_TEMPLATE = 'section_a/preview_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
@@ -120,7 +120,7 @@ class SectionBComment(SectionBInfo):
 
 class SectionB(SectionA):
 
-    PREVIEW_TEMPLATE = 'section_b/preview.html'
+    PREVIEW_TEMPLATE = 'section_a/preview.html'
 
     language = forms.ChoiceField()
 
