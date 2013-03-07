@@ -229,6 +229,52 @@ class SectionC3(SectionA):
         return survey
 
 
+class SectionD1(forms.Form):
+
+    EDIT_TEMPLATE = 'section_d/form.html'
+
+    VIEW_TEMPLATE = 'section_d/view.html'
+
+    lack_of_awareness = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            widget=forms.RadioSelect)
+
+    knowledge_gaps = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            widget=forms.RadioSelect)
+
+    data_gaps = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            widget=forms.RadioSelect)
+
+    lack_of_training = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            widget=forms.RadioSelect)
+
+    lack_of_capacities = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Lack of capacities (e.g. appropriate staff)',
+            widget=forms.RadioSelect)
+
+    lack_of_resources = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Lack of financial resources',
+            widget=forms.RadioSelect)
+
+    access_to_funding = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Difficult access to funding',
+            widget=forms.RadioSelect)
+
+    lack_of_coordination = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Lack of coordination or conflicting sectoral policies such as transport-economy-nature protection etc.',
+            widget=forms.RadioSelect)
+
+    awareness_lack_eu_level = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Lack of coordination or conflicting policies between different government levels – between the local, regional, national, EU level',
+            widget=forms.RadioSelect)
+
+    def save(self, user, country, category):
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
+        return survey
+
+
 class SectionE(forms.Form):
 
     EDIT_TEMPLATE = 'section_e/form.html'

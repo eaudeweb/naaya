@@ -1,0 +1,93 @@
+{% extends "frame.html" %}
+
+{% block content %}
+
+<form action="{% url survey:edit category.id %}" method="POST">
+
+  <table cellpadding="0" cellspacing="0" class="datatable">
+
+    <tbody>
+
+      {% if form.lack_of_awareness %}
+      <tr>
+        <th style="text-align: left;  width: 220px;">{{ form.lack_of_awareness.label_tag }}</th>
+        <td>
+          {{ form.lack_of_awareness }}
+          {{ form.lack_of_awareness.errors }}
+        </td>
+      </tr>
+      {% endif %}
+
+      <tr>
+        <th style="text-align: left;  width: 220px;">{{ form.knowledge_gaps.label_tag }}</th>
+        <td>
+          {{ form.knowledge_gaps }}
+          {{ form.knowledge_gaps.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.data_gaps.label_tag }}</th>
+        <td>
+          {{ form.data_gaps }}
+          {{ form.data_gaps.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.lack_of_training.label_tag }}</th>
+        <td>
+          {{ form.lack_of_training }}
+          {{ form.lack_of_training.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.lack_of_capacities.label_tag }}</th>
+        <td>
+          {{ form.lack_of_capacities }}
+          {{ form.lack_of_capacities.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.lack_of_resources.label_tag }}</th>
+        <td>
+          {{ form.lack_of_resources }}
+          {{ form.lack_of_resources.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.access_to_funding.label_tag }}</th>
+        <td>
+          {{ form.access_to_funding }}
+          {{ form.access_to_funding.errors }}
+        </td>
+      </tr>
+
+      <tr>
+        <th style="text-align: left;">{{ form.lack_of_coordination.label_tag }}</th>
+        <td>
+          {{ form.lack_of_coordination }}
+          {{ form.lack_of_coordination.errors }}
+        </td>
+      </tr>    
+
+      <tr>
+        <th style="text-align: left;">{{ form.awareness_lack_eu_level.label_tag }}</th>
+        <td>
+          {{ form.awareness_lack_eu_level }}
+          {{ form.awareness_lack_eu_level.errors }}
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <button type="submit">Submit</button>
+
+</form>
+
+{% endblock %}
