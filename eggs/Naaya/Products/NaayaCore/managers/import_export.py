@@ -74,7 +74,7 @@ class CSVImportTool(Implicit, Item):
             filename = schema.title_or_id() + ' bulk upload.xls'
 
         else: raise ValueError('unknown file format %r' % file_type)
-        
+
         if REQUEST is not None:
             set_response_attachment(REQUEST.RESPONSE, filename,
                 content_type, len(ret))
@@ -142,7 +142,7 @@ class CSVImportTool(Implicit, Item):
                 rows = []
                 for i in range(ws.nrows)[1:]:
                     rows.append(ws.row_values(i))
-                
+
             except xlrd.XLRDError:
                 msg = 'Invalid Excel file'
                 if REQUEST is None:
@@ -168,7 +168,7 @@ class CSVImportTool(Implicit, Item):
                     errors.append('CSV file is not utf-8 encoded')
 
         else: raise ValueError('unknown file format %r' % file_type)
-        
+
         record_number = 0
         obj_ids = []
 
@@ -240,6 +240,7 @@ InitializeClass(CSVImportTool)
 
 class ExportTool(Implicit, Item):
     title = "Spreadsheet export"
+    CELL_CHAR_LIMIT = 32000
 
     security = ClassSecurityInfo()
 
@@ -319,7 +320,28 @@ class ExportTool(Implicit, Item):
     def generate_excel_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
-        return generate_excel(dump_header, dump_items)
+        def validate_column_size(header, rows_generator):
+            from itertools import tee
+            rows, rows_backup = tee(rows_generator)
+            try:
+                for item in rows:
+                    for col in range(len(item)):
+                        if len(item[col]) >= self.CELL_CHAR_LIMIT:
+                            org = item[0]
+                            object_type =  meta_type.replace('Naaya ', '', 1)
+                            oversized_col = header[col]
+                            error_msg = ("Unable to export to Excel file."
+                                         "There is a %s (%s) with "
+                                         "a column (%s) exceeding the Excel "
+                                         "cell size limit"
+                                         % (object_type, org, oversized_col))
+                            raise ValueError(error_msg.encode('utf-8'))
+            except Exception, error:
+                return error
+            else:
+                return generate_excel(header, rows_backup)
+
+        return validate_column_size(dump_header, dump_items)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
     def export(self, meta_type, file_type="CSV", as_attachment=False, REQUEST=None):
@@ -343,6 +365,10 @@ class ExportTool(Implicit, Item):
             filename = '%s Export.xls' % meta_type
 
         else: raise ValueError('unknown file format %r' % file_type)
+
+        if isinstance(ret, ValueError):
+            self.setSessionErrors(ret)
+            return self.REQUEST.RESPONSE.redirect(self.REQUEST.HTTP_REFERER)
 
         if as_attachment and REQUEST is not None:
             filesize = len(ret)
@@ -499,5 +525,6 @@ def generate_excel(header, rows):
         for col in range(0, len(item)):
             ws.row(row).set_cell_text(col, item[col], style)
     output = StringIO()
+
     wb.save(output)
     return output.getvalue()
