@@ -14,9 +14,9 @@
     <link rel="stylesheet" type="text/css" tal:attributes="href string:${site_url}/++resource++Products.Naaya/lib/tipsy/naaya.tipsy.css" />
     <script type="text/javascript" tal:attributes="href string:${site_url}/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-          jQuery(".tipsy-title").tipsy({gravity: 'e', html: true});
-    });
+    //    jQuery(document).ready(function(){
+    //      jQuery(".tipsy-title").tipsy({gravity: 'e', html: true});
+    //});
     </script>
 
 </tal:block>
