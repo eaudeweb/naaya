@@ -17,7 +17,12 @@
     <tbody>
     {% for field in form %}
       <tr>
-        <th>{{ field.label_tag }}</th>
+        <th>
+          {{ field.label_tag }}
+          {% if field.field.required %}
+            <img src="/static/images/mandatory.gif" />
+          {% endif %}
+        </th>
         <td>
           {{ field }}
           {{ field.errors }}
@@ -27,7 +32,9 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="2"><input type="submit" class="primary-button" value="Save and continue" />
+        <td colspan="2">
+          <input type="submit" class="primary-button" value="Save and continue" />
+          <img src="/static/images/mandatory.gif" /> <em>required fields</em> 
         </td>
       </tr>
   </table>
