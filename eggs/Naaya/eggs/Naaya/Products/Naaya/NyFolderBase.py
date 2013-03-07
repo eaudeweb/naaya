@@ -148,6 +148,7 @@ class NyFolderBase(Folder, NyPermissions):
             f_view = IObjectView(f)
             versionable, editable = f_view.version_status()
             info = {
+                'view_permission': f.checkPermissionView(),
                 'del_permission': f.checkPermissionDeleteObject(),
                 'copy_permission': f.checkPermissionCopyObject(),
                 'edit_permission': f.checkPermissionEditObject(),
@@ -158,7 +159,11 @@ class NyFolderBase(Folder, NyPermissions):
                 'view': f_view,
             }
 
-            if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
+            #folders for which the user doesn't have the view permission
+            #must still be listed if they are approved
+            if (info['view_permission'] or info['approved']) and (
+                    info['del_permission'] or info['copy_permission']
+                    or info['edit_permission']):
                 ret.append(info)
 
         return ret
@@ -174,6 +179,7 @@ class NyFolderBase(Folder, NyPermissions):
             o_view = IObjectView(o)
             versionable, editable = o_view.version_status()
             info = {
+                'view_permission': o.checkPermissionView(),
                 'del_permission': o.checkPermissionDeleteObject(),
                 'copy_permission': o.checkPermissionCopyObject(),
                 'edit_permission': o.checkPermissionEditObject(),
@@ -183,7 +189,9 @@ class NyFolderBase(Folder, NyPermissions):
                 'self': o,
                 'view': o_view,
             }
-            if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
+            if info['view_permission'] and (
+                    info['approved'] or info['del_permission'] or
+                    info['copy_permission'] or info['edit_permission']):
                 ret.append(info)
 
         return ret
