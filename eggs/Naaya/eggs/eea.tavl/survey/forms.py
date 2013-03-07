@@ -55,7 +55,7 @@ class SectionA(forms.Form):
 
 class SectionAInfo(forms.Form):
 
-    EDIT_TEMPLATE = 'section_a/form_comment.html'
+    EDIT_TEMPLATE = 'form_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
@@ -83,7 +83,7 @@ class SectionAComment(SectionAInfo):
 
 class SectionBInfo(forms.Form):
 
-    EDIT_TEMPLATE = 'section_a/form_comment.html'
+    EDIT_TEMPLATE = 'form_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
@@ -154,8 +154,6 @@ class SectionB4(SectionA):
 
 class SectionC(forms.Form):
 
-    EDIT_TEMPLATE = 'section_c/form.html'
-
     title = forms.CharField(max_length=256)
 
     link = forms.CharField(max_length=256, required=False)
@@ -170,7 +168,7 @@ class SectionC(forms.Form):
 
 class SectionC2(forms.Form):
 
-    EDIT_TEMPLATE = 'section_a/form_comment.html'
+    EDIT_TEMPLATE = 'form_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
