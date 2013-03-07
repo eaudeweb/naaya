@@ -160,4 +160,67 @@ class Survey(models.Model):
 
     area_of_expertise = models.CharField(max_length=256, null=True, blank=True)
 
+    # section D
+
+    adaptation_strategy = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    transport_information = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    trans_national_cooperation = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    stakeholders_cooperaton = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    integration_of_climate_change = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    funding = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    revision_of_design = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    climate_proof = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    development_methodologies = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    data_collection = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    transport_research = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    lack_of_awareness = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    knowledge_gaps = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    data_gaps = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    lack_of_training = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    lack_of_capacities = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    lack_of_resources = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    access_to_funding = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    lack_of_coordination = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
+    awareness_lack_eu_level = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
+                            blank=True)
+
     objects = hstore.HStoreManager()
+
