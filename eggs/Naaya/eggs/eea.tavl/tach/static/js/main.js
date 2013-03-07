@@ -9,11 +9,15 @@ $(function () {
 
     var parent = $(this).parents('.answers-container');
     var target = $(this).data('target');
+    var multiple = $(this).data('multiple');
 
     $.get($(this).data('href'), function (data) {
-      parent.find('.add-container').html(data);
-      parent.find('.add-container').find('form').data('target', target);
-      parent.find('.add-container').show();
+      var add_container = parent.find('.add-container');
+      add_container.html(data);
+      var form =  add_container.find('form');
+      form.data('target', target);
+      form.data('multiple', multiple);
+      add_container.show();
     });
 
   });
@@ -30,13 +34,15 @@ $(function () {
     e.preventDefault();
     var parent = $(this).parents('.answers-container');
     var target = $(this).data('target');
-    console.log(target);
+    var multiple = $(this).data('multiple');
 
     $.post($(this).attr('action'), $(this).serialize(), function (data) {
       if(data.status == 'success') {
-        console.log(target, $(target));
         $(target).append(data.html);
-        closeContainer(parent);
+        closeContainer(parent.find('.add-container'));
+        if(!multiple) {
+          parent.find('.add').remove();
+        }
       } else {
         parent.find('.add-container').html(data.html);
       }

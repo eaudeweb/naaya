@@ -14,6 +14,7 @@ WIDGETS = {
     'section_c_1_h': 'SectionC1Other',
     'section_c_2': 'SectionC2',
     'section_c_3': 'SectionC3',
+    'section_c_comment': 'SectionCComment',
     'section_e_comment': 'SectionEComment',
     'section_e': 'SectionE',
     'section_d_1': 'SectionD1',
@@ -71,10 +72,6 @@ class Survey(models.Model):
 
     class Meta:
         db_table = 'survey'
-
-    def __unicode__(self):
-        return self.title
-
 
     STATUS_CHOICES = (
         ('approved', 'Approved'),
