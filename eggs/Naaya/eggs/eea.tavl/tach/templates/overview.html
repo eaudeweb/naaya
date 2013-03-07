@@ -1,8 +1,10 @@
 {% extends "frame.html" %}
+{% load static %}
+
 
 {% block head %}
   {{ block.super }}
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="{% static "css/style.css" %}" />
 {% endblock %}
 
 {% block content %}
@@ -20,7 +22,7 @@
         <th>
           {{ field.label_tag }}
           {% if field.field.required %}
-            <img src="/static/images/mandatory.gif" />
+            <img src="{% static "images/mandatory.gif" %}" />
           {% endif %}
         </th>
         <td>
@@ -34,7 +36,7 @@
       <tr>
         <td colspan="2">
           <input type="submit" class="primary-button" value="Save and continue" />
-          <img src="/static/images/mandatory.gif" /> <em>required fields</em> 
+          <img src="{% static "images/mandatory.gif" %}"  /> <em>required fields</em> 
         </td>
       </tr>
   </table>
