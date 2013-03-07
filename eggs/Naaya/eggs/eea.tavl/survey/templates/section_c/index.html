@@ -26,7 +26,9 @@
       </div>
       {% if not user_answers %}
         <a data-href="{% url survey:edit category.id %}"
-           class="add" data-target="#section-c-user-answers-{{ category.id }}">
+           class="add" data-target="#section-c-user-answers-{{ category.id }}"
+           data-closetext="Close"
+           data-opentext="Add comment">
            Add comment</a>
       {% endif %}
     {% endif %}
@@ -35,7 +37,9 @@
       {% if not category.for_user %}
         <a data-href="{% url survey:edit category.id %}"
            class="add" data-target="#section-c-answers-{{ category.id }}"
-           data-multiple="{{ category.multiple_answers|lower }}">Add another</a>
+           data-multiple="{{ category.multiple_answers|lower }}"
+           data-closetext="Close"
+           data-opentext="Add another">Add another</a>
       {% endif %}
     {% endif %}
 
