@@ -6,6 +6,7 @@ import requests
 from threading import local
 from tach.models import User
 
+UNAUTHORIZED_USER = object()
 
 _thread_locals = local()
 def get_current_request():
@@ -48,7 +49,7 @@ class UserMiddleware(object):
                     user_id = json['user_id']
                     defaults = {}
 
-                if user_id:
+                if user_id and json.get('email'):
                     defaults = defaults or {
                         'phone': json.get('user_phone_number'),
                         'first_name': json.get('user_first_name'),
@@ -59,7 +60,10 @@ class UserMiddleware(object):
                         defaults=defaults)
                     request.user = user
                 else:
-                    request.user = None
+                    if user_id:
+                        request.user = UNAUTHORIZED_USER
+                    else:
+                        request.user = None
 
 
 class Loader(BaseLoader):
