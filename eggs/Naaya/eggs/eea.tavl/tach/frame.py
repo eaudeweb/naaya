@@ -49,7 +49,7 @@ class UserMiddleware(object):
                     user_id = json['user_id']
                     defaults = {}
 
-                if user_id and json.get('email'):
+                if user_id and (json.get('email') or settings.DEBUG):
                     defaults = defaults or {
                         'phone': json.get('user_phone_number'),
                         'first_name': json.get('user_first_name'),
