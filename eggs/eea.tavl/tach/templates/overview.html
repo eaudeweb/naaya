@@ -27,7 +27,9 @@
         </th>
         <td>
           {{ field }}
-          {{ field.errors }}
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
         </td>
       </tr>
     {% endfor %}
@@ -39,6 +41,7 @@
           <img src="{% static "images/mandatory.gif" %}"  /> <em>required fields</em> 
         </td>
       </tr>
+    </tfoot>
   </table>
   <p>
     <strong>Note:</strong>

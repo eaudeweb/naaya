@@ -15,15 +15,18 @@ class SectionA(forms.Form):
     year = forms.IntegerField(required=False)
 
     parts_considered = forms.MultipleChoiceField(choices=Survey.TRANSPORT_PARTS,
-                    label='Part(s) of the transport system considered (Tick any relevant categories)',
+                    label='Part(s) of the transport system considered',
+                    help_text='Tick any relevant categories',
                     widget=forms.CheckboxSelectMultiple)
 
     transport_modes = forms.MultipleChoiceField(choices=Survey.TRANSPORT_MODES,
-                    label='Transport mode(s) considered (Tick any relevant categories)',
+                    label='Transport mode(s) considered',
+                    help_text='Tick any relevant categories',
                     widget=forms.CheckboxSelectMultiple)
 
     climate_change_impacts = forms.MultipleChoiceField(choices=Survey.IMPACTS,
-                    label='Climate change/extreme weather impact(s) considered for transport (Tick any relevant categories)',
+                    label='Climate change/extreme weather impact(s) considered for transport',
+                    help_text='Tick any relevant categories',
                     widget=forms.CheckboxSelectMultiple)
 
     responsible_organisation = forms.CharField(max_length=256, required=False)
