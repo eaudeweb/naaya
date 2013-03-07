@@ -1,4 +1,7 @@
-3.2.23 (unreleased)
+3.2.24 (unreleased)
+-------------------
+
+3.2.23 (2013-03-07)
 -------------------
 * bugfix in delete confirmation dialog, basketofapprovals [dumitval]
 
