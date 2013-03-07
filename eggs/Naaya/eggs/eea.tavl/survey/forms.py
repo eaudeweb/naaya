@@ -61,8 +61,6 @@ class SectionAInfo(forms.Form):
 
     EDIT_TEMPLATE = 'section_a/form_comment.html'
 
-    VIEW_TEMPLATE = 'section_a/comment_view.html'
-
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category):
@@ -333,6 +331,18 @@ class SectionD2(forms.Form):
         survey.save()
         return survey
 
+
+class SectionDComment(SectionAInfo):
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            section_d_comment=self.cleaned_data['comment'],
+        )
+        return survey
+
+
 class SectionE(forms.Form):
 
     EDIT_TEMPLATE = 'section_e/form.html'
@@ -360,12 +370,7 @@ class SectionE(forms.Form):
         return survey
 
 
-class SectionEComment(forms.Form):
-
-    EDIT_TEMPLATE = 'section_a/form_comment.html'
-
-    comment = forms.CharField(required=True, widget=forms.Textarea)
-
+class SectionEComment(SectionAInfo):
 
     def save(self, user, country, category):
         survey = Survey.objects.create(
