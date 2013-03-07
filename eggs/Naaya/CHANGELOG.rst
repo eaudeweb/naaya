@@ -1,4 +1,7 @@
-3.2.25 (unreleased)
+3.2.26 (unreleased)
+-------------------
+
+3.2.25 (2013-03-07)
 -------------------
 * restrictions on objects listing (view permission required) [dumitval]
 * meaningful error message - column exceeds Excell cell size limit [mihaitab]
