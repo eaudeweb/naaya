@@ -25,6 +25,8 @@ def assign(value):
 
 @register.filter
 def pretty_hstore(value):
+    if not isinstance(value, dict):
+        return value
     page = markup.page()
     page.ul()
     for k, v in value.items():

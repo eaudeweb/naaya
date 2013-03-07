@@ -15,7 +15,8 @@ class View(View):
         survey = get_object_or_404(models.Survey, pk=survey_id,
                                    country=request.user.country)
         form = category.get_widget()()
-        return render(request, form.VIEW_TEMPLATE, {
+        template = getattr(form, 'VIEW_TEMPLATE', 'view.html')
+        return render(request, template, {
             'form': form,
             'survey': survey,
         })
@@ -28,7 +29,8 @@ class Edit(View):
     def get(self, request, category_id):
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()()
-        return render(request, form.EDIT_TEMPLATE, {
+        template = getattr(form, 'EDIT_TEMPLATE', 'form.html')
+        return render(request, template, {
             'form': form,
             'category': category,
         })
@@ -44,7 +46,8 @@ class Edit(View):
                       category=category)
             return redirect('survey_overview')
 
-        return render(request, form.EDIT_TEMPLATE, {
+        template = getattr(form, 'EDIT_TEMPLATE', 'form.html')
+        return render(request, template, {
             'form': form,
             'category': category,
         })
