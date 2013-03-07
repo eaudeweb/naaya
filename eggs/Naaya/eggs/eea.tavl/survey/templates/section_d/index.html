@@ -5,28 +5,41 @@
 
 {% for category in categories_section_d %}
 
-  <h4 style="margin: 0; padding: 0;">{{ category }}</h3>
-  <p class="description">{{ category.description }}</p>
+  <div class="answers-container">
 
-  {% assign sections|get_answers:category as answers %}
-  {% assign sections|get_answers_for_user:category as user_answers %}
+    <h4 style="margin: 0; padding: 0;">{{ category }}</h4>
+    <p class="description">{{ category.description }}</p>
 
-  {% if not category.for_user %}
-    {% for survey in answers %}
-      {% include "section_d/preview.html" %}
-    {% endfor %}
-  {% else %}
-    {% for survey in user_answers %}
-      {% include "section_d/preview_comment.html" %}
-    {% empty %}
-      <a href="{% url survey:edit category.id %}">Add comment</a>
-    {% endfor %}
-  {% endif %}
+    {% assign sections|get_answers:category as answers %}
+    {% assign sections|get_answers_for_user:category as user_answers %}
 
-  {% if category.multiple_answers or not answers %}
     {% if not category.for_user %}
-      <a href="{% url survey:edit category.id %}">Add another</a>
+      <div id="section-d-answers-{{ category.id }}">
+        {% for survey in answers %}
+          {% include "section_d/preview.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div id="section-d-user-answers-{{ category.id }}">
+      {% for survey in user_answers %}
+        {% include "section_d/preview_comment.html" %}
+      {% endfor %}
+      </div>
+      {% if not user_answers %}
+        <a data-href="{% url survey:edit category.id %}"
+           class="add" data-target="#section-d-user-answers-{{ category.id }}">
+           Add comment</a>
+      {% endif %}
     {% endif %}
-  {% endif %}
+
+    {% if category.multiple_answers or not answers %}
+      {% if not category.for_user %}
+        <a data-href="{% url survey:edit category.id %}"
+           class="add" data-target="#section-d-answers-{{ category.id }}"
+           data-multiple="{{ category.multiple_answers|lower }}">Add another</a>
+      {% endif %}
+    {% endif %}
+    <div class="add-container" style="display: none;"></div>
+  </div>
 
 {% endfor %}
