@@ -1,0 +1,85 @@
+table.account-table {
+	font-size: 0.9em;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table.account-table label {
+	font-weight: bold;
+	text-align: right !important;
+	vertical-align: middle;
+	font-size: 1.1em !important;
+	cursor: pointer;
+}
+
+table.account-table input {
+	width: 200px;
+	background-color: #FFFFFF;
+	border: 1px solid #A5CED1;
+	font-size: 1.1em !important;
+	padding: 0.5em;
+}
+
+table.account-table select {
+	max-width: 200px !important;
+	background-color: #FFFFFF;
+	border: 1px solid #A5CED1;
+	font-size: 1.1em !important;
+	padding: 0.5em;
+}
+
+table.account-table th {
+	text-align: left;
+	width: 10em;
+}
+
+table.account-table tr {
+	border-top: 1px solid #EAEAEA;
+}
+
+tr.no-border {
+	border: none !important;
+}
+
+table.account-table td {
+	padding: 0.5em 0 0.5em 1em;
+}
+
+td.top {
+	vertical-align: top !important;
+}
+
+.primary-button {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 11px;
+	border: 1px solid #BBBBBB !important;
+	color: #333333 !important;
+	padding: 5px !important;
+	text-decoration: none !important;
+	display: inline !important;
+	/* Mozilla: */
+	background: -moz-linear-gradient(top, #FFFFFF, #EFEFEF);
+	-moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	/* Chrome, Safari:*/
+	background: -webkit-gradient(linear,
+		left top, left bottom, from(#FFFFFF), to(#EFEFEF));
+	-webkit-box-shadow: 0px 1px 0px #000;
+	/* MSIE */
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+		StartColorStr='#FFFFFF', EndColorStr='#EFEFEF', GradientType=0);
+	box-shadow: 0px 1px 0px #000;
+	font-weight: bold;
+}
+
+.primary-button:hover {
+	cursor: pointer;
+	background: -moz-linear-gradient(top, #EFEFEF, #FFFFFF);
+	/* Chrome, Safari:*/
+	background: -webkit-gradient(linear,
+		left top, left bottom, from(#EFEFEF), to(#FFFFFF));
+	/* MSIE */
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+		StartColorStr='#EFEFEF', EndColorStr='#FFFFFF', GradientType=0);
+}
