@@ -2,7 +2,11 @@
 
 <h1>E How could the EEA tailor the analysis to better fit your needs?</h1>
 
-<p>In this section you have the opportunity to provide us ideas on how we should prepare the results of this survey, which areas we should further explore, what we should focus on in the future, etc. This will enable us to better tailor our activities on adaptation and transport and to provide additional benefits for EEA member states.</p>
+<p class="description">
+	In this section you have the opportunity to provide us ideas on how we should prepare the results of this survey, 
+	which areas we should further explore, what we should focus on in the future, etc. 
+	This will enable us to better tailor our activities on adaptation and transport and to provide additional benefits for EEA member states.
+</p>
 
 <div class="answers-container">
 
@@ -18,8 +22,8 @@
   {% if not user_answers %}
     <a data-href="{% url survey:edit category_e_comment.id %}"
        class="add" data-target="#section-e-user-answers-{{ category.id }}"
-       data-closetext="Close"
-       data-opentext="Add comment">Add comment</a>
+       data-closetext="[Close]"
+       data-opentext="[ Add ]">[ Add ]</a>
   {% endif %}
 
   <div class="add-container" style="display: none;"></div>
@@ -43,9 +47,8 @@
 
   <a data-href="{% url survey:edit category_e.id %}"
      class="add" data-target="#section-e-answers-{{ category.id }}" data-multiple="true"
-     data-closetext="Close"
-     data-opentext="Add another">Add another</a>
+     data-closetext="[Close]"
+     data-opentext="[ Add ]">[ Add ]</a>
   <div class="add-container" style="display: none;"></div>
 
 </div>
-

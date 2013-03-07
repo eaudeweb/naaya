@@ -1,11 +1,5 @@
-
 <form action="{% url survey:edit category.id %}" method="POST">
   <table class="account-table" style="width:100%">
-    <thead>
-      <tr>
-        <th>{{ category }}</th>
-      </tr>
-    </thead>
     <tbody>
       {% if category.description %}
       <tr>
