@@ -1,5 +1,6 @@
 3.2.23 (unreleased)
 -------------------
+* bugfix in delete confirmation dialog, basketofapprovals [dumitval]
 
 3.2.22 (2013-03-06)
 -------------------

@@ -124,23 +124,21 @@ $(document).ready(function(){
 		if($('input[name="delids"]:checked').length > 0) {
 			deleteObjects();
 		} else {
-			return form.submit();
+			return $('#pblForm').submit();
 		}
 	});
-})
 
-</script>
-<script type="text/javascript">
-$(document).ready(function () {
 	$('input[name="appids"]').click(function () {
 		var value = $(this).val();
 		$('input[name="delids"][value="' + value + '"]').attr('checked', false);
 	});
+
 	$('input[name="delids"]').click(function () {
 		var value = $(this).val();
 		$('input[name="appids"][value="' + value + '"]').attr('checked', false);
 	});
 });
+
 </script>
 
 </metal:block>
