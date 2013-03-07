@@ -1,29 +1,47 @@
 {% load utils %}
 
-<h1>E  How could the EEA tailor the analysis to better fit your needs?</h1>
+<h1>E How could the EEA tailor the analysis to better fit your needs?</h1>
 
 <p>In this section you have the opportunity to provide us ideas on how we should prepare the results of this survey, which areas we should further explore, what we should focus on in the future, etc. This will enable us to better tailor our activities on adaptation and transport and to provide additional benefits for EEA member states.</p>
 
-{% assign sections|get_answers:category_e as answers %}
+<div class="answers-container">
 
-{% assign sections|get_answers_for_user:category_e_comment as user_answers %}
+  {% assign sections|get_answers:category_e as answers %}
 
-{% for survey in user_answers %}
-  {% include "section_e/preview_comment.html" %}
-{% empty %}
-  <a href="{% url survey:edit category_e_comment.id %}">Add comment</a>
-{% endfor %}
+  {% assign sections|get_answers_for_user:category_e_comment as user_answers %}
 
-<p>Thank you very much for taking the time to complete this survey. Your response is highly appreciated.</p>
+  <div id="section-e-user-answers-{{ category.id }}">
+  {% for survey in user_answers %}
+    {% include "section_e/preview_comment.html" %}
+  {% endfor %}
+  </div>
+  {% if not user_answers %}
+    <a data-href="{% url survey:edit category_e_comment.id %}"
+       class="add" data-target="#section-e-user-answers-{{ category.id }}">Add comment</a>
+  {% endif %}
 
-<p>We will review this information and will add  to it via additional interviews with you, the indicated contacts or further experts as recommended by you below. We will provide interim and final results of our analysis through documents which will be published at the EIONET project site under the “transport and adaptation” section.</p>
+  <div class="add-container" style="display: none;"></div>
 
-<p>If there are additional professionals in your country who you would recommend us to contact, please provide their contact details:</p>
+</div>
 
-{% for survey in answers %}
-  {% include "section_e/preview.html" %}
-{% endfor %}
-<a href="{% url survey:edit category_e.id %}">Add another</a>
+  <p>Thank you very much for taking the time to complete this survey. Your response is highly appreciated.</p>
+
+  <p>We will review this information and will add  to it via additional interviews with you, the indicated contacts or further experts as recommended by you below. We will provide interim and final results of our analysis through documents which will be published at the EIONET project site under the “transport and adaptation” section.</p>
+
+  <p>If there are additional professionals in your country who you would recommend us to contact, please provide their contact details:</p>
+
+<div class="answers-container">
 
 
+  <div id="section-e-answers-{{ category.id }}">
+    {% for survey in answers %}
+      {% include "section_e/preview.html" %}
+    {% endfor %}
+  </div>
+
+  <a data-href="{% url survey:edit category_e.id %}"
+     class="add" data-target="#section-e-answers-{{ category.id }}" data-multiple="true">Add another</a>
+  <div class="add-container" style="display: none;"></div>
+
+</div>
 

@@ -47,10 +47,6 @@ $(function () {
       } else {
         parent.find('.add-container').html(data.html);
       }
-
     });
-
-
   });
-
 });
