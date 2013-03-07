@@ -17,7 +17,8 @@ WIDGETS = {
     'section_e_comment': 'SectionEComment',
     'section_e': 'SectionE',
     'section_d_1': 'SectionD1',
-    'section_d_2': 'SectionD2'
+    'section_d_2': 'SectionD2',
+    'section_d_comment': 'SectionDComment',
 }
 
 
@@ -153,6 +154,8 @@ class Survey(models.Model):
     section_b_comment = models.TextField(null=True, blank=True)
 
     section_c2 = models.TextField(null=True, blank=True)
+
+    section_d_comment = models.TextField(null=True, blank=True)
 
     section_c_comment = models.TextField(null=True, blank=True)
 
