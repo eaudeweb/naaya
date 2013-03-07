@@ -1,5 +1,9 @@
 {% extends "frame.html" %}
 
+{% block head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="/static/css/style.css" />
+{% endblock %}
 
 {% block content %}
 
@@ -10,71 +14,22 @@
 
 <form action="" method="POST">
 
-  <table cellspacing="0" cellpadding="0">
-
+  <table class="account-table">
     <tbody>
+    {% for field in form %}
       <tr>
-        <td style="width: 120px;">{{ form.first_name.label_tag }}</td>
+        <th>{{ field.label_tag }}</th>
         <td>
-          {{ form.first_name }}
-          {{ form.first_name.errors }}
+          {{ field }}
+          {{ field.errors }}
         </td>
       </tr>
-
-      <tr>
-        <td>{{ form.last_name.label_tag }}</td>
-        <td>
-          {{ form.last_name }}
-          {{ form.last_name.errors }}
-        </td>
-      </tr>
-
-      <tr>
-        <td>{{ form.country.label_tag }}</td>
-        <td>
-          {{ form.country }}
-          {{ form.country.errors }}
-        </td>
-      </tr>
-
-      <tr>
-        <td>{{ form.affiliation.label_tag }}</td>
-        <td>
-          {{ form.affiliation }}
-          {{ form.affiliation.errors }}
-        </td>
-      </tr>
-
-      <tr>
-        <td>{{ form.position.label_tag }}</td>
-        <td>
-          {{ form.position }}
-          {{ form.position.errors }}
-        </td>
-      </tr>
-
-      <tr>
-        <td>{{ form.email.label_tag }}</td>
-        <td>
-          {{ form.email }}
-          {{ form.email.errors }}
-        </td>
-      </tr>
-
-      <tr>
-        <td>{{ form.phone.label_tag }}</td>
-        <td>
-          {{ form.phone }}
-          {{ form.phone.errors }}
-        </td>
-      </tr>
-
+    {% endfor %}
     </tbody>
-
   </table>
 
   <div>
-    <button type="submit">Save</button>
+    <button type="submit" class="primary-button">Save and continue</button>
   </div>
 
 </form>
