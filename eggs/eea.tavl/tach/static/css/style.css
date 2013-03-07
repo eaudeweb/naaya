@@ -150,3 +150,16 @@ ul.errorlist {
   padding: 0;
   color: red;
 }
+
+p.description, div.help p{
+    margin-left: 20px;
+    font-size: 0.9em;
+}
+
+.answers-container a.add {
+  margin-left: 20px;
+  color: #0088cc;
+  text-decoration: none;
+  background-color: #EBF4FA;
+  cursor: pointer;
+}

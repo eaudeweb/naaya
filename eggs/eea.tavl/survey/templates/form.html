@@ -1,15 +1,26 @@
+{% load static %}
 
 <form action="{% url survey:edit category.id %}" method="POST">
   <table class="account-table" style="width:100%">
     <tbody>
+
+    {% if category.description %}
+      <tr>
+        <td colspan="3">{{ category.description|linebreaks }}</td>
+      </tr>
+    {% endif %}
+
     {% for field in form %}
       {% if field %}
       <tr>
         <th style="width:30%">
           {{ field.label_tag }}
+          {% if field.field.required %}
+            <img src="{% static "images/mandatory.gif" %}" />
+          {% endif %}
         </th>
         <td style="width:30%">
-          {{ field }} <br />
+          {{ field }}
           {{ field.errors }}
         </td>
         <td style="width:40%">
@@ -18,7 +29,9 @@
       </tr>
       {% endif %}
     {% endfor %}
+
     </tbody>
+
     <tfoot>
       <tr>
         <td colspan="3">

@@ -5,10 +5,7 @@
 
 {% for category in categories_section_a %}
   <div class="answers-container">
-    <h4>{{ category }}</h4>
-    {% if category.description %}
-      <p>{{ category.description|linebreaks }}</p>
-    {% endif %}
+    <h3>{{ category }}</h3>
 
     {% assign sections|get_answers:category as answers %}
     {% assign sections|get_answers_for_user:category as user_answers %}
@@ -30,7 +27,7 @@
            class="add" data-target="#section-a-user-answers-{{ category.id }}"
            data-closetext="Close"
            data-opentext="Add comment">
-           Add comment</a>
+           [ Add comment ]</a>
       {% endif %}
     {% endif %}
 
@@ -39,8 +36,8 @@
         <a data-href="{% url survey:edit category.id %}"
            class="add" data-target="#section-a-answers-{{ category.id }}"
            data-multiple="{{ category.multiple_answers|lower }}"
-           data-closetext="Close"
-           data-opentext="Add another">Add another</a>
+           data-closetext="[Close]"
+           data-opentext="[ Add ]">[ Add ]</a>
       {% endif %}
     {% endif %}
 
@@ -48,4 +45,3 @@
   </div>
 
 {% endfor %}
-

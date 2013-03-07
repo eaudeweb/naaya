@@ -6,8 +6,7 @@
 
   <div class="answers-container">
 
-    <h4 style="margin: 0; padding: 0;">{{ category }}</h4>
-    <p class="description">{{ category.description }}</p>
+    <h3>{{ category }}</h3>
 
     {% assign sections|get_answers:category as answers %}
     {% assign sections|get_answers_for_user:category as user_answers %}
@@ -29,7 +28,7 @@
            class="add" data-target="#section-c-user-answers-{{ category.id }}"
            data-closetext="Close"
            data-opentext="Add comment">
-           Add comment</a>
+           [ Add comment ]</a>
       {% endif %}
     {% endif %}
 
@@ -38,8 +37,8 @@
         <a data-href="{% url survey:edit category.id %}"
            class="add" data-target="#section-c-answers-{{ category.id }}"
            data-multiple="{{ category.multiple_answers|lower }}"
-           data-closetext="Close"
-           data-opentext="Add another">Add another</a>
+           data-closetext="[Close]"
+           data-opentext="[ Add ]">[ Add ]</a>
       {% endif %}
     {% endif %}
 
