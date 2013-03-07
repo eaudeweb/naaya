@@ -13,7 +13,8 @@ def frame_view(context, request):
     phone_number = ''
     try:
         if hasattr(site, "member_search"):
-            user_ob = site.member_search._search_users(user.getId())[0]
+            user_ob = site.member_search._search_users(user.getId())[0] #ldap
+            user_ob = users_tool.get_user_info(user_ob['userid']) # zope user
         else:
             user_ob = users_tool.search_users(user.getId(), all_users=True)[0]
         first_name = user_ob.first_name
