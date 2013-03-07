@@ -9,8 +9,7 @@
 
 {% include "overview_header.html" %}
 
-<h4 style="margin: 0; padding: 0;">Please indicate the contact details of the person who has completed this questionnaire.</h4>
-<p>(Note, additional contact names can be provided at the end of the questionnaire)
+<h2>Please indicate the contact details of the person who has completed this questionnaire.</h2>
 
 <form action="" method="POST">
 
@@ -26,12 +25,16 @@
       </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><input type="submit" class="primary-button" value="Save and continue" />
+        </td>
+      </tr>
   </table>
-
-  <div>
-    <button type="submit" class="primary-button">Save and continue</button>
-  </div>
-
+  <p>
+    <strong>Note:</strong>
+    additional contact names can be provided at the end of the questionnaire
+  </p>
 </form>
 
 {% endblock %}
