@@ -6,10 +6,6 @@ from survey.models import Survey, Language
 
 class SectionA(forms.Form):
 
-    EDIT_TEMPLATE = 'section_a/form.html'
-
-    VIEW_TEMPLATE = 'section_a/view.html'
-
     status = forms.ChoiceField(choices=Survey.STATUS_CHOICES, widget=forms.RadioSelect)
 
     title = forms.CharField(max_length=256)
@@ -229,10 +225,6 @@ class SectionC3(SectionA):
 
 class SectionD1(forms.Form):
 
-    EDIT_TEMPLATE = 'section_d/form.html'
-
-    VIEW_TEMPLATE = 'section_d/view.html'
-
     lack_of_awareness = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
             widget=forms.RadioSelect)
 
@@ -274,10 +266,6 @@ class SectionD1(forms.Form):
 
 
 class SectionD2(forms.Form):
-
-    EDIT_TEMPLATE = 'section_d/form.html'
-
-    VIEW_TEMPLATE = 'section_d/view.html'
 
     adaptation_strategy = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
             label='EU adaptation strategy',
@@ -333,6 +321,7 @@ class SectionD2(forms.Form):
 
 
 class SectionDComment(SectionAInfo):
+
     def save(self, user, country, category):
         survey = Survey.objects.create(
             user=user,
@@ -344,10 +333,6 @@ class SectionDComment(SectionAInfo):
 
 
 class SectionE(forms.Form):
-
-    EDIT_TEMPLATE = 'section_e/form.html'
-
-    VIEW_TEMPLATE = 'section_e/view.html'
 
     title = forms.CharField(max_length=256, label="Name", required=True)
 

@@ -9,9 +9,9 @@
     {% for field in form %}
       {% if field %}
       <tr>
-        <th style="text-align: left; width: 220px;">{{ field.label_tag }}</th>
+        <th style="textalign: left; width: 220px;">{{ field.label_tag }}</th>
         <td>
-          {{ survey|getattribute:field.name }}
+          {{ survey|getattribute:field.name|pretty_hstore }}
         </td>
       </tr>
       {% endif %}
