@@ -275,6 +275,64 @@ class SectionD1(forms.Form):
         return survey
 
 
+class SectionD2(forms.Form):
+
+    EDIT_TEMPLATE = 'section_d/form.html'
+
+    VIEW_TEMPLATE = 'section_d/view.html'
+
+    adaptation_strategy = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='EU adaptation strategy',
+            widget=forms.RadioSelect)
+
+    transport_information = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Transport information in the Climate ADAPT platform, e.g. risk maps at the European level, guidelines, tools …',
+            widget=forms.RadioSelect)
+
+    trans_national_cooperation = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Facilitating trans-national cooperation',
+            widget=forms.RadioSelect)
+
+    stakeholders_cooperaton = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Facilitating the cooperation with key stakeholders, bridging the gap among the transport community and climate change scientists',
+            widget=forms.RadioSelect)
+
+    integration_of_climate_change = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Integration of climate change adaptation into other EU policy areas (such as cohesion, transport social, and other policies',
+            widget=forms.RadioSelect)
+
+    funding = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Funding',
+            widget=forms.RadioSelect)
+
+    revision_of_design = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Revision of design standards',
+            widget=forms.RadioSelect)
+
+    climate_proof = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Introducing “climate-proof” as a conditionality to support any transport project or policy (e.g. as proposed for EU Structural Funds 2014-2020)',
+            widget=forms.RadioSelect)
+
+    development_methodologies = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Development of methodologies, indicators and thresholds on resilience and vulnerabilities',
+            widget=forms.RadioSelect)
+
+    data_collection = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Revision of data collection needs and development of new data collection standards',
+            widget=forms.RadioSelect)
+
+    transport_research = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
+            label='Transport research for adaptation to climate change',
+            widget=forms.RadioSelect)
+
+
+    def save(self, user, country, category):
+        survey = Survey(user=user, country=country, category=category)
+        for k, v in self.cleaned_data.items():
+            setattr(survey, k, v)
+        survey.save()
+        return survey
+
 class SectionE(forms.Form):
 
     EDIT_TEMPLATE = 'section_e/form.html'

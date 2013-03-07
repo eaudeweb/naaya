@@ -4,56 +4,20 @@
 {% block content %}
 
 <table cellpadding="0" cellspacing="0" class="datatable">
-
   <tbody>
 
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.lack_of_awareness.label }}</th>
-      <td>{{ survey.lack_of_awareness }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.knowledge_gaps.label }}</th>
-      <td>{{ survey.knowledge_gaps }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.data_gaps.label }}</th>
-      <td>{{ survey.data_gaps }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.lack_of_training.label }}</th>
-      <td>{{ survey.lack_of_training }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.lack_of_capacities.label }}</th>
-      <td>{{ survey.lack_of_capacities }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.lack_of_resources.label }}</th>
-      <td>{{ survey.lack_of_resources }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.access_to_funding.label }}</th>
-      <td>{{ survey.access_to_funding }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.lack_of_coordination.label }}</th>
-      <td>{{ survey.lack_of_coordination }}</td>
-    </tr>
-
-    <tr>
-      <th style="text-align: left; width: 220px;">{{ form.awareness_lack_eu_level.label }}</th>
-      <td>{{ survey.awareness_lack_eu_level }}</td>
-    </tr>
+    {% for field in form %}
+      {% if field %}
+      <tr>
+        <th style="text-align: left; width: 220px;">{{ field.label_tag }}</th>
+        <td>
+          {{ survey|getattr:field.name }}
+        </td>
+      </tr>
+      {% endif %}
+    {% endfor %}
 
   </tbody>
-
 </table>
 
 {% endblock %}

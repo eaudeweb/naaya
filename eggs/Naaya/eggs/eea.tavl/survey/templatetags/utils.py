@@ -34,3 +34,7 @@ def pretty_hstore(value):
             page.li.close()
     page.ul.close()
     return mark_safe(page)
+
+@register.filter
+def getattr(value, name):
+    return getattr(value, name, None)
