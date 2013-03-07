@@ -141,7 +141,8 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
         ),
 
         fl.List.named('translated_in') \
-               .using(label=u"Translated in following languages") \
+               .using(label=u"Translated in following languages",
+               optional=True) \
                .with_properties(widget="multiple_select",
                                 widget_chosen=True,
                                 placeholder="Select languages ...") \
