@@ -6,6 +6,8 @@ from survey.models import Survey, Language
 
 class SectionA(forms.Form):
 
+    PREVIEW_TEMPLATE = 'section_a/preview.html'
+
     status = forms.ChoiceField(choices=Survey.STATUS_CHOICES, widget=forms.RadioSelect)
 
     title = forms.CharField(max_length=256)
@@ -60,6 +62,8 @@ class SectionAInfo(forms.Form):
 
     EDIT_TEMPLATE = 'form_comment.html'
 
+    PREVIEW_TEMPLATE = 'section_a/preview.html'
+
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category):
@@ -88,6 +92,8 @@ class SectionBInfo(forms.Form):
 
     EDIT_TEMPLATE = 'form_comment.html'
 
+    PREVIEW_TEMPLATE = 'section_a/preview_comment.html'
+
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category):
@@ -113,6 +119,8 @@ class SectionBComment(SectionBInfo):
 
 
 class SectionB(SectionA):
+
+    PREVIEW_TEMPLATE = 'section_b/preview.html'
 
     language = forms.ChoiceField()
 
@@ -157,6 +165,8 @@ class SectionB4(SectionA):
 
 class SectionC(forms.Form):
 
+    PREVIEW_TEMPLATE = 'section_c/preview.html'
+
     title = forms.CharField(max_length=256)
 
     link = forms.CharField(max_length=256, required=False)
@@ -172,6 +182,8 @@ class SectionC(forms.Form):
 class SectionC2(forms.Form):
 
     EDIT_TEMPLATE = 'form_comment.html'
+
+    PREVIEW_TEMPLATE = 'section_c/preview_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
@@ -226,6 +238,8 @@ class SectionC3(SectionA):
 
 class SectionD1(forms.Form):
 
+    PREVIEW_TEMPLATE = 'section_d/preview.html'
+
     lack_of_awareness = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
             widget=forms.RadioSelect)
 
@@ -267,6 +281,8 @@ class SectionD1(forms.Form):
 
 
 class SectionD2(forms.Form):
+
+    PREVIEW_TEMPLATE = 'section_d/preview.html'
 
     adaptation_strategy = forms.ChoiceField(choices=Survey.RELEVANT_CHOICES,
             label='EU adaptation strategy',
@@ -323,6 +339,8 @@ class SectionD2(forms.Form):
 
 class SectionDComment(SectionAInfo):
 
+    PREVIEW_TEMPLATE = 'section_c/preview_comment.html'
+
     def save(self, user, country, category):
         survey = Survey.objects.create(
             user=user,
@@ -334,6 +352,8 @@ class SectionDComment(SectionAInfo):
 
 
 class SectionE(forms.Form):
+
+    PREVIEW_TEMPLATE = 'section_e/preview.html'
 
     title = forms.CharField(max_length=256, label="Name", required=True)
 
@@ -357,6 +377,8 @@ class SectionE(forms.Form):
 
 
 class SectionEComment(SectionAInfo):
+
+    PREVIEW_TEMPLATE = 'section_e/preview_comment.html'
 
     def save(self, user, country, category):
         survey = Survey.objects.create(

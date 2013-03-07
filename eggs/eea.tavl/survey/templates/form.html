@@ -1,11 +1,3 @@
-{% extends "frame.html" %}
-
-{% block head %}
-  {{ block.super }}
-  <link rel="stylesheet" href="/static/css/style.css" />
-{% endblock %}
-
-{% block content %}
 
 <form action="{% url survey:edit category.id %}" method="POST">
   <table class="account-table" style="width:100%">
@@ -35,6 +27,9 @@
       </tr>
     </tfoot>
   </table>
+
+  <button type="submit">Submit</button> or
+  <a class="cancel">Cancel</a>
+
 </form>
 
-{% endblock %}
