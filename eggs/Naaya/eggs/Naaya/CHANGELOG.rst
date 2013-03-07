@@ -1,5 +1,6 @@
 3.2.24 (unreleased)
 -------------------
+* use member_search in frameservice, if available [simiamih]
 
 3.2.23 (2013-03-07)
 -------------------
@@ -7,11 +8,13 @@
 
 3.2.22 (2013-03-06)
 -------------------
+* first version that requires Zope 2.12 [simiamih]
 * Delete confirmation dialog in basketofapprovals [dumitval]
 * info message on startup with link of instance dev url [simiamih]
 
 3.2.21 (2013-03-01)
 -------------------
+* last version supporting Zope 2.10 [simiamih]
 * frameservice changes to return more data [dumitval]
 * search fix for users from the notifications' admin page [mihaitab]
 
