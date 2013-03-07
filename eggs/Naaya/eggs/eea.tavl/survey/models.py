@@ -16,6 +16,8 @@ WIDGETS = {
     'section_c_3': 'SectionC3',
     'section_e_comment': 'SectionEComment',
     'section_e': 'SectionE',
+    'section_d_1': 'SectionD1',
+    'section_d_2': 'SectionD2'
 }
 
 
@@ -100,6 +102,14 @@ class Survey(models.Model):
         ('storms', 'Storms'),
         ('ice_snow', 'Ice and snow'),
         ('water_scarcity_droughts', 'Water scarcity and droughts'),
+    )
+
+    RELEVANT_CHOICES = (
+        ('none', 'None'),
+        ('low', 'low'),
+        ('medium', 'medium'),
+        ('high', 'high'),
+        ('don\'t know', 'don\'t know'),
     )
 
     category = models.ForeignKey(Category)
