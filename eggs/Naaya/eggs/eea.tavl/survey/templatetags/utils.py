@@ -35,6 +35,7 @@ def pretty_hstore(value):
     page.ul.close()
     return mark_safe(page)
 
+
 @register.filter
-def getattr(value, name):
+def getattribute(value, name):
     return getattr(value, name, None)
