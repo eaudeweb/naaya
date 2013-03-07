@@ -1,11 +1,5 @@
-{% extends "frame.html" %}
+{% extends "layout.html" %}
 {% load static %}
-
-
-{% block head %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static "css/style.css" %}" />
-{% endblock %}
 
 {% block content %}
 
@@ -38,7 +32,7 @@
       <tr>
         <td colspan="2">
           <input type="submit" class="primary-button" value="Save and continue" />
-          <img src="{% static "images/mandatory.gif" %}"  /> <em>required fields</em> 
+          <img src="{% static "images/mandatory.gif" %}"  /> <em>required fields</em>
         </td>
       </tr>
     </tfoot>

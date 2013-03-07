@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     'django.contrib.staticfiles',
     'raven.contrib.django',
+    'django_assets',
     'django_hstore',
     'countries',
     'tach',
@@ -184,6 +185,8 @@ LOGGING = {
 FRAME_URL = 'http://projects.eionet.europa.eu/questionnaire-transport-adaptation/templates/frame'
 
 FRAME_COOKIES = ['__ac', '_ZopeId']
+
+ASSETS_DEBUG = True
 
 try:
     from local_settings import *
