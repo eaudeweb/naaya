@@ -1,22 +1,24 @@
+{% load static %}
+
 <div class="preview-container">
-  <table cellpadding="0" cellspacing="0" class="datatable preview-table">
+  <div class="answer">
 
-    <tbody>
+    <div class="icon">
+      <img src="{% static "images/ok.png" %}" />
+    </div>
 
-      <tr>
-        <th>
-          <a data-href="{% url survey:view category.id survey.id %}"
-             class="preview">{{ survey.title }}</a>
-        </th>
-        <td>answered by <span class="answer-author">
-        {% if survey.user == request.user %} you {% else %}
+    <div class="response">
+      <a data-href="{% url survey:view category.id survey.id %}"
+               class="preview">{{ survey.title }}</a>
+    </div>
+
+    <div class="author">
+      (answered by 
+      {% if survey.user == request.user %}you{% else %}
         {{ survey.user }}
-      {% endif %}</span></td>
-      </tr>
+      {% endif %})
+    </div>
+  </div>
 
-    </tbody>
-
-  </table>
-
-  <div class="hide-preview" style="display: none;">[ hide ]</div>
+  <div class="hide-answer" style="display: none;">[ hide ]</div>
 </div>

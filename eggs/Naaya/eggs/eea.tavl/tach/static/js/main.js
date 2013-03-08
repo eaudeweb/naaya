@@ -72,21 +72,21 @@ $(function () {
 
     var parents = $(this).parents('.preview-container');
     $.get($(this).data('href'), function (data) {
-      parents.find('.preview-table').hide();
-      parents.find('.hide-preview').show();
+      parents.find('.answer').hide();
+      parents.find('.hide-answer').show();
       parents.append(data);
       parents.find('.view-table').slideDown('fast');
     });
 
   });
 
-  $('.answers-container').on('click', '.hide-preview', function () {
+  $('.answers-container').on('click', '.hide-answer', function () {
 
     var parents = $(this).parents('.preview-container');
     parents.find('.view-table').slideUp('fast', function () {
-      parents.find('.hide-preview').hide()
+      parents.find('.hide-answer').hide()
       $(this).remove();
-      parents.find('.preview-table').slideDown('fast');
+      parents.find('.answer').slideDown('fast');
     });
 
   });
