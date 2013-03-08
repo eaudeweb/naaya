@@ -38,4 +38,6 @@ class UserForm(forms.ModelForm):
         self.fields['last_name'].required = True
         self.fields['email'].required = True
         self.fields['country'].required = True
+        self.fields['affiliation'].required = True
+        self.fields['position'].required = True
         # self.fields['country'].empty_label = None
