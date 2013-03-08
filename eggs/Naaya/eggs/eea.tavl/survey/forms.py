@@ -127,7 +127,7 @@ class SectionB(SectionA):
 
     PREVIEW_TEMPLATE = 'section_a/preview.html'
 
-    language = forms.ChoiceField()
+    language = forms.ChoiceField(initial='en')
 
     contact = forms.CharField(max_length=256, required=False)
 
@@ -135,6 +135,10 @@ class SectionB(SectionA):
         super(SectionB, self).__init__(*args, **kwargs)
         self.fields.pop('status')
         self.fields.pop('english_title')
+        req_in_addition_to_a = ('year', 'parts_considered', 'transport_modes',
+                         'climate_change_impacts', 'responsible_organisation')
+        for req_field in req_in_addition_to_a:
+            self.fields[req_field].required = True
         languages = [(l.iso, l.title) for l in Language.objects.all()]
         self.fields['language'].choices = languages
 
@@ -159,6 +163,10 @@ class SectionB4(SectionA):
         super(SectionB4, self).__init__(*args, **kwargs)
         self.fields.pop('status')
         self.fields.pop('english_title')
+        req_in_addition_to_a = ('year', 'parts_considered', 'transport_modes',
+                         'climate_change_impacts', 'responsible_organisation')
+        for req_field in req_in_addition_to_a:
+            self.fields[req_field].required = True
 
     def save(self, user, country, category):
         survey = Survey(user=user, country=country, category=category)
