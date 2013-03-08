@@ -4,17 +4,23 @@
   {% assign category_e as category %}
 {% endif %}
 
-<table cellpadding="0" cellspacing="0" class="datatable">
+<div class="preview-container">
 
-  <tbody>
+  <table cellpadding="0" cellspacing="0" class="datatable ">
 
-    <tr>
-      <th style="text-align: left; width: 220px;">Name</th>
-      <td>
-        <a href="{% url survey:view category.id survey.id %}">{{ survey.title }}</a>
-      </td>
-    </tr>
+    <tbody>
 
-  </tbody>
+      <tr>
+        <th style="text-align: left; width: 220px;">Name</th>
+        <td>
+          <a data-href="{% url survey:view category.id survey.id %}" class="preview">{{ survey.title }}</a>
+        </td>
+      </tr>
 
-</table>
+    </tbody>
+
+  </table>
+
+  <div class="hide-preview" style="display: none;">[ hide ]</div>
+
+</div>
