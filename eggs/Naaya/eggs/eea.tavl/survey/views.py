@@ -50,7 +50,8 @@ class Edit(View):
             response = {
                 'status': 'success',
                 'html': render_to_string(form.PREVIEW_TEMPLATE,
-                                         {'survey': survey, 'category': category})
+                                         {'survey': survey, 'category': category,
+                                          'user': request.user})
             }
             return HttpResponse(dumps(response), mimetype='application/json')
 
