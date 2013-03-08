@@ -43,7 +43,6 @@ $(function () {
 
   });
 
-
   $('.add-container').on('submit', 'form', function (e) {
 
     e.preventDefault();
@@ -68,4 +67,30 @@ $(function () {
       }
     });
   });
+
+  $('.answers-container').on('click', '.preview', function () {
+
+    var parents = $(this).parents('.preview-container');
+    $.get($(this).data('href'), function (data) {
+      parents.find('.preview-table').hide();
+      parents.find('.hide-preview').show();
+      parents.append(data);
+      parents.find('.view-table').slideDown('fast');
+    });
+
+  });
+
+  $('.answers-container').on('click', '.hide-preview', function () {
+
+    var parents = $(this).parents('.preview-container');
+    parents.find('.view-table').slideUp('fast', function () {
+      parents.find('.hide-preview').hide()
+      $(this).remove();
+      parents.find('.preview-table').slideDown('fast');
+    });
+
+  });
+
+
+
 });
