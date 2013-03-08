@@ -194,3 +194,8 @@ div.answer div.response a {
   text-decoration: underline;
   cursor: pointer;  
 }
+
+.hover {
+  background: #FFFFD3;
+}
+
