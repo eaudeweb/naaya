@@ -199,3 +199,33 @@ div.answer div.response a {
   background: #FFFFD3;
 }
 
+div.view-answer{
+/*  background-color: #FDFDFD;*/
+  border-left: 2px solid #36c;
+  padding: 6px 8px 6px 10px;
+  font-size: 100%;
+  font-family: Arial,sans-serif;
+}
+
+div.view-answer ul.entry {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+
+div.view-answer ul.entry li {
+  line-height: 1.4em;
+  margin-top: 0.5em;
+}
+
+div.view-answer ul.entry li ul li {
+  line-height: 1.5em;
+  margin-top: 0;
+  list-style-type: disc;
+}
+
+div.view-answer ul.entry li span.key{
+  color: #007000;
+  font-size: 95%;
+}

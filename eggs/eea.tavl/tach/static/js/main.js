@@ -103,7 +103,7 @@ $(function () {
       parents.find('.answer').hide();
       parents.find('.hide-answer').show();
       parents.append(data);
-      parents.find('.view-table').slideDown('fast');
+      parents.find('.view-answer').slideDown('fast');
     });
 
   });
@@ -111,7 +111,7 @@ $(function () {
   $('.answers-container').on('click', '.hide-answer', function () {
 
     var parents = $(this).parents('.preview-container');
-    parents.find('.view-table').slideUp('fast', function () {
+    parents.find('.view-answer').slideUp('fast', function () {
       parents.find('.hide-answer').hide()
       $(this).remove();
       parents.find('.answer').slideDown('fast');
