@@ -163,3 +163,17 @@ p.description, div.help p{
   background-color: #EBF4FA;
   cursor: pointer;
 }
+
+div.hide-preview{
+  background-color: #EBF4FA;
+  cursor: pointer;
+  color: #0088cc;
+  display: inline-block;
+}
+
+a.preview{
+  cursor: pointer;
+}
+.cancel{
+  cursor: pointer;
+}
