@@ -240,6 +240,9 @@ class SectionC3(SectionA):
         self.fields.pop('year')
         self.fields.pop('climate_change_impacts')
         self.fields.pop('responsible_organisation')
+        self.fields['transport_modes'].required = True
+        self.fields['parts_considered'].required = True
+        self.fields['link'].required = True
 
     def save(self, user, country, category):
         survey = Survey(user=user, country=country, category=category)
