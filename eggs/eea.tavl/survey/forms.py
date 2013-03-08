@@ -379,7 +379,7 @@ class SectionD1Other(forms.Form):
     relevance = forms.ChoiceField(label="Relevance",
                                   widget=forms.RadioSelect,
                                   required=True,
-                                  choices=Survey.RELEVANT_CHOICES)
+                                  choices=Survey.RELEVANT_CHOICES[1:-1])
 
     def save(self, user, country, category):
         survey = Survey.objects.create(
