@@ -380,7 +380,7 @@ class SectionE(forms.Form):
     link = forms.CharField(max_length=256, required=False,
                            label="Website and/or address")
 
-    contact = forms.CharField(max_length=256, required=False,
+    contact = forms.CharField(max_length=256, required=True,
                               label="Contact (email, telephone)")
 
 
