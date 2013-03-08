@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+from  django.template import  RequestContext
 
 from survey import models, forms
 from sugar.views import auth_required, auth_details_required
@@ -51,7 +52,8 @@ class Edit(View):
                 'status': 'success',
                 'html': render_to_string(form.PREVIEW_TEMPLATE,
                                          {'survey': survey, 'category': category,
-                                          'user': request.user})
+                                          'user': request.user},
+                                         context_instance=RequestContext(request))
             }
             return HttpResponse(dumps(response), mimetype='application/json')
 
