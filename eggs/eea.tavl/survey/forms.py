@@ -8,7 +8,9 @@ class SectionA(forms.Form):
 
     PREVIEW_TEMPLATE = 'section_a/preview.html'
 
-    status = forms.ChoiceField(choices=Survey.STATUS_CHOICES, widget=forms.RadioSelect)
+    status = forms.ChoiceField(choices=Survey.STATUS_CHOICES,
+                               required=False,
+                               widget=forms.RadioSelect)
 
     title = forms.CharField(max_length=256)
 
@@ -19,16 +21,19 @@ class SectionA(forms.Form):
     parts_considered = forms.MultipleChoiceField(choices=Survey.TRANSPORT_PARTS,
                     label='Part(s) of the transport system considered',
                     help_text='Tick any relevant categories',
+                    required=False,
                     widget=forms.CheckboxSelectMultiple)
 
     transport_modes = forms.MultipleChoiceField(choices=Survey.TRANSPORT_MODES,
                     label='Transport mode(s) considered',
                     help_text='Tick any relevant categories',
+                    required=False,
                     widget=forms.CheckboxSelectMultiple)
 
     climate_change_impacts = forms.MultipleChoiceField(choices=Survey.IMPACTS,
                     label='Climate change/extreme weather impact(s) considered for transport',
                     help_text='Tick any relevant categories',
+                    required=False,
                     widget=forms.CheckboxSelectMultiple)
 
     responsible_organisation = forms.CharField(max_length=256, required=False)

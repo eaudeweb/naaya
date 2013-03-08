@@ -62,7 +62,9 @@ $(function () {
           parent.find('.add').remove();
         }
       } else {
+        var form_data = parent.find('.add-container form').data();
         parent.find('.add-container').html(data.html);
+        parent.find('.add-container form').data(form_data);
       }
     });
   });
