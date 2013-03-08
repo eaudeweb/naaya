@@ -9,7 +9,7 @@ class SectionA(forms.Form):
     PREVIEW_TEMPLATE = 'section_a/preview.html'
 
     status = forms.ChoiceField(choices=Survey.STATUS_CHOICES,
-                               required=False,
+                               required=True,
                                widget=forms.RadioSelect)
 
     title = forms.CharField(max_length=256)
@@ -180,9 +180,10 @@ class SectionC(forms.Form):
 
     PREVIEW_TEMPLATE = 'section_c/preview.html'
 
-    title = forms.CharField(max_length=256)
+    title = forms.CharField(max_length=256, label="Name")
 
-    link = forms.CharField(max_length=256, required=False)
+    link = forms.CharField(max_length=256, label="Website / contact",
+                           required=True)
 
     def save(self, user, country, category):
         survey = Survey(user=user, country=country, category=category)
@@ -243,6 +244,8 @@ class SectionC3(SectionA):
         self.fields['transport_modes'].required = True
         self.fields['parts_considered'].required = True
         self.fields['link'].required = True
+        self.fields['title'].label = "Name"
+        self.fields['link'].label = "Website / contact"
 
     def save(self, user, country, category):
         survey = Survey(user=user, country=country, category=category)
