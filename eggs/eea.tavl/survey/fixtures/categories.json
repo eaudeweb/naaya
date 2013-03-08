@@ -346,8 +346,7 @@
             "title": "D.1. What do you consider as barriers to better adaptation of transport to climate change?",
             "section": "4",
             "widget": "section_d_1",
-            "for_user": "1",
-            "multiple_answers": "0"
+            "multiple_answers": "1"
         }
     },
 
@@ -369,8 +368,7 @@
             "title": "D.2. Which EU activities could support a better adaptation of transport in your country?",
             "section": "4",
             "widget": "section_d_2",
-            "for_user": "1",
-            "multiple_answers": "0"
+            "multiple_answers": "1"
         }
     },
 
