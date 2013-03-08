@@ -358,7 +358,7 @@ class SectionD2(forms.Form):
 
 class SectionDComment(SectionAInfo):
 
-    PREVIEW_TEMPLATE = 'section_c/preview_comment.html'
+    PREVIEW_TEMPLATE = 'section_d/preview_comment.html'
 
     def save(self, user, country, category):
         survey = Survey.objects.create(
@@ -378,6 +378,7 @@ class SectionD1Other(forms.Form):
 
     relevance = forms.ChoiceField(label="Relevance",
                                   widget=forms.RadioSelect,
+                                  required=True,
                                   choices=Survey.RELEVANT_CHOICES)
 
     def save(self, user, country, category):
