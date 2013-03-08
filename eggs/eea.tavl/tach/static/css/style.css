@@ -177,3 +177,20 @@ a.preview{
 .cancel{
   cursor: pointer;
 }
+
+div.preview-container {
+  margin-left: 20px;
+  padding: 0 0 0.5em 0;
+}
+
+div.answer div.icon, 
+div.answer div.response,
+div.answer div.author {
+  display: inline;
+}
+
+div.answer div.response a {
+  color: #0088cc;
+  text-decoration: underline;
+  cursor: pointer;  
+}
