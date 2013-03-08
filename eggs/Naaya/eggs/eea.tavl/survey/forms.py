@@ -97,7 +97,7 @@ class SectionBInfo(forms.Form):
 
     EDIT_TEMPLATE = 'form_comment.html'
 
-    PREVIEW_TEMPLATE = 'section_a/preview_comment.html'
+    PREVIEW_TEMPLATE = 'section_b/preview_comment.html'
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
