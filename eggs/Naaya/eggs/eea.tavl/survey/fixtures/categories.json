@@ -2,7 +2,7 @@
         "pk": "1",
         "model": "survey.category",
         "fields": {
-            "title": "National adaptation strategy",
+            "title": "A.1. National adaptation strategy",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "0"
@@ -13,7 +13,7 @@
         "pk": "2",
         "model": "survey.category",
         "fields": {
-            "title": "National adaptation action plan",
+            "title": "A.2. National adaptation action plan",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "0"
@@ -24,7 +24,7 @@
         "pk": "3",
         "model": "survey.category",
         "fields": {
-            "title": "Subnational adaptation strategy or action plans",
+            "title": "A.3. Subnational adaptation strategy or action plans",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -35,7 +35,7 @@
         "pk": "4",
         "model": "survey.category",
         "fields": {
-            "title": "National (or subnational) transport strategy or transport plans which focuses on adaptation to climate change or extreme events",
+            "title": "A.4. National (or subnational) transport strategy or transport plans which focuses on adaptation to climate change or extreme events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -46,7 +46,7 @@
         "pk": "5",
         "model": "survey.category",
         "fields": {
-            "title": "Transport sector plans (e.g road, rail, etc.) which consider adaptation to climate change or extreme events",
+            "title": "A.5. Transport sector plans (e.g road, rail, etc.) which consider adaptation to climate change or extreme events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -57,7 +57,7 @@
         "pk": "6",
         "model": "survey.category",
         "fields": {
-            "title": "Action plans from infrastructure managers or service providers, which focus on adaptation to climate change or extreme events",
+            "title": "A.6. Action plans from infrastructure managers or service providers, which focus on adaptation to climate change or extreme events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -68,7 +68,7 @@
         "pk": "7",
         "model": "survey.category",
         "fields": {
-            "title": "Risk management plans which focus on adaptation to climate change or extreme events",
+            "title": "A.7. Risk management plans which focus on adaptation to climate change or extreme events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -79,7 +79,7 @@
         "pk": "8",
         "model": "survey.category",
         "fields": {
-            "title": "National transport standards or guidelines for design and operation which focus on adaptation to climate change or extreme weather events",
+            "title": "A.8. National transport standards or guidelines for design and operation which focus on adaptation to climate change or extreme weather events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -90,7 +90,7 @@
         "pk": "9",
         "model": "survey.category",
         "fields": {
-            "title": "Emergency protocols which focus on adaptation to climate change or extreme events",
+            "title": "A.9. Emergency protocols which focus on adaptation to climate change or extreme events",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -101,7 +101,7 @@
         "pk": "10",
         "model": "survey.category",
         "fields": {
-            "title": "Any other plan, strategy, programme, guidelines, initiative, etc. that directly or indirectly considers transport adaptation and that you consider relevant in the context of this questionnaire",
+            "title": "A.10. Any other plan, strategy, programme, guidelines, initiative, etc. that directly or indirectly considers transport adaptation and that you consider relevant in the context of this questionnaire",
             "section": "1",
             "widget": "section_a",
             "multiple_answers": "1"
@@ -112,7 +112,7 @@
         "pk": "11",
         "model": "survey.category",
         "fields": {
-            "title": "Could you provide any qualitative information on the state of implementation of adaptation measures for the transport sector?",
+            "title": "A.11. Could you provide any qualitative information on the state of implementation of adaptation measures for the transport sector?",
             "description": "Please describe briefly: \nTo what level is the current transport infrastructure already adapted to climate change?\nHave transport services already undergone procedural change?\nHave adaptation measures in the transport sector been implemented or are they still in the planning phase?",
             "section": "1",
             "widget": "section_a_info",
@@ -125,7 +125,7 @@
         "pk": "12",
         "model": "survey.category",
         "fields": {
-            "title": "If needed, please insert additional comments on this topic, e.g. further qualifying the above information or which provide additional information",
+            "title": "A.12. If needed, please insert additional comments on this topic, e.g. further qualifying the above information or which provide additional information",
             "section": "1",
             "widget": "section_a_comment",
             "for_user": "1",
