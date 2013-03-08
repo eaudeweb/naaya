@@ -164,7 +164,7 @@ p.description, div.help p{
   cursor: pointer;
 }
 
-div.hide-preview{
+div.hide-answer{
   background-color: #EBF4FA;
   cursor: pointer;
   color: #0088cc;
