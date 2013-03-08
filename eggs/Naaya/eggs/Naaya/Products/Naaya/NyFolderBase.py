@@ -159,11 +159,8 @@ class NyFolderBase(Folder, NyPermissions):
                 'view': f_view,
             }
 
-            #folders for which the user doesn't have the view permission
-            #must still be listed if they are approved
-            if (info['view_permission'] or info['approved']) and (
-                    info['del_permission'] or info['copy_permission']
-                    or info['edit_permission']):
+            if info['approved'] or info['del_permission'] or \
+                    info['copy_permission'] or info['edit_permission']:
                 ret.append(info)
 
         return ret
