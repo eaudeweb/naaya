@@ -1,5 +1,6 @@
 3.2.28 (unreleased)
 -------------------
+* added change-ownership file in extra [mihaitab]
 * restrictions on objects listing (reverted setting for folders) [dumitval]
 
 3.2.27 (2013-03-07)
