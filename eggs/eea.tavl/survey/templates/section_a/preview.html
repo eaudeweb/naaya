@@ -4,11 +4,14 @@
     <tbody>
 
       <tr>
-        <th style="text-align: left; width: 220px;">Name</th>
-        <td>
+        <th>
           <a data-href="{% url survey:view category.id survey.id %}"
              class="preview">{{ survey.title }}</a>
-        </td>
+        </th>
+        <td>answered by <span class="answer-author">
+        {% if survey.user == request.user %} you {% else %}
+        {{ survey.user }}
+      {% endif %}</span></td>
       </tr>
 
     </tbody>
