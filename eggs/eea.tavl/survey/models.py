@@ -18,8 +18,10 @@ WIDGETS = {
     'section_e_comment': 'SectionEComment',
     'section_e': 'SectionE',
     'section_d_1': 'SectionD1',
+    'section_d1_other': 'SectionD1Other',
+    'section_d2_other': 'SectionD2Other',
     'section_d_2': 'SectionD2',
-    'section_d_comment': 'SectionDComment',
+    'section_d2_comment': 'SectionDComment',
 }
 
 
@@ -221,6 +223,8 @@ class Survey(models.Model):
 
     awareness_lack_eu_level = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
                             blank=True)
+
+    relevance = models.CharField(max_length=50, choices=RELEVANT_CHOICES, null=True, blank=True)
 
     d1_comments = models.TextField(null=True, blank=True)
 

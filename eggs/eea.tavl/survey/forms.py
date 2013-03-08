@@ -370,6 +370,34 @@ class SectionDComment(SectionAInfo):
         return survey
 
 
+class SectionD1Other(forms.Form):
+
+    PREVIEW_TEMPLATE = 'section_a/preview.html'
+
+    title = forms.CharField(max_length=256, label="Name another barrier")
+
+    relevance = forms.ChoiceField(label="Relevance",
+                                  widget=forms.RadioSelect,
+                                  choices=Survey.RELEVANT_CHOICES)
+
+    def save(self, user, country, category):
+        survey = Survey.objects.create(
+            user=user,
+            country=country,
+            category=category,
+            title=self.cleaned_data['title'],
+            relevance=self.cleaned_data['relevance'],
+        )
+        return survey
+
+
+class SectionD2Other(SectionD1Other):
+
+    def __init__(self, *args, **kwargs):
+        super(SectionD2Other, self).__init__(*args, **kwargs)
+        self.fields['title'].label = "Name another activity"
+
+
 class SectionE(forms.Form):
 
     PREVIEW_TEMPLATE = 'section_e/preview.html'
