@@ -6,6 +6,33 @@ $(function () {
     });
   }
 
+  var blink = function (objs, scroll_to_it){
+    if (scroll_to_it == undefined)
+      scroll_to_it = false;
+    var htimes = [0, 3000];
+    //var htimes = [0, 500, 1000, 1500, 2000, 2500];
+    var effect = function(){objs.addClass('hover');};
+    var noEffect = function(){objs.removeClass('hover');};
+
+    var i;
+    for(i =0; i<htimes.length; i++){
+      if (i%2)
+        window.setTimeout(noEffect, htimes[i]);
+      else
+        window.setTimeout(effect, htimes[i]);
+    }
+
+    // Scroll to element if not in window port:
+    if (scroll_to_it){
+      var top = jQuery(window).scrollTop();
+      var bottom = top + jQuery(window).height();
+      var x = jQuery(objs[0]).offset()['top'];
+      if (x > bottom || x < top){
+        jQuery("html,body").animate({'scrollTop': (x - (bottom - top)/2)}, 1000);
+      }
+    }
+  }
+
   $('.add').on('click', function () {
 
     var parent = $(this).parents('.answers-container');
@@ -60,6 +87,7 @@ $(function () {
         if(!multiple) {
           parent.find('.add').remove();
         }
+        blink(parent, true);
       } else {
         var form_data = parent.find('.add-container form').data();
         parent.find('.add-container').html(data.html);
