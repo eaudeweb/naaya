@@ -20,7 +20,6 @@
       <div id="section-a-user-answers-{{ category.id }}">
         {% for survey in user_answers %}
             {% include "section_a/preview_comment.html" %}
-          </div>
         {% endfor %}
       </div>
       {% if not user_answers %}
