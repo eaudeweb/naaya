@@ -71,8 +71,8 @@ class SectionAInfo(forms.Form):
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -83,8 +83,8 @@ class SectionAInfo(forms.Form):
 
 class SectionAComment(SectionAInfo):
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -101,8 +101,8 @@ class SectionBInfo(forms.Form):
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -113,8 +113,8 @@ class SectionBInfo(forms.Form):
 
 class SectionBComment(SectionBInfo):
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -142,9 +142,9 @@ class SectionB(SectionA):
         languages = [(l.iso, l.title) for l in Language.objects.all()]
         self.fields['language'].choices = languages
 
-    def save(self, user, country, category):
+    def save(self, user, country, category, survey):
         language = Language.objects.get(pk=self.cleaned_data['language'])
-        survey = Survey(user=user, country=country, category=category)
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             if k == 'language':
                 setattr(survey, k, language)
@@ -168,8 +168,8 @@ class SectionB4(SectionA):
         for req_field in req_in_addition_to_a:
             self.fields[req_field].required = True
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
@@ -185,8 +185,8 @@ class SectionC(forms.Form):
     link = forms.CharField(max_length=256, label="Website / contact",
                            required=True)
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
@@ -201,8 +201,8 @@ class SectionC2(forms.Form):
 
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -213,8 +213,8 @@ class SectionC2(forms.Form):
 
 class SectionCComment(SectionC2):
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -247,8 +247,8 @@ class SectionC3(SectionA):
         self.fields['title'].label = "Name"
         self.fields['link'].label = "Website / contact"
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
@@ -291,8 +291,8 @@ class SectionD1(forms.Form):
             label='Lack of coordination or conflicting policies between different government levels – between the local, regional, national, EU level',
             widget=forms.RadioSelect)
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
@@ -360,8 +360,8 @@ class SectionDComment(SectionAInfo):
 
     PREVIEW_TEMPLATE = 'section_d/preview_comment.html'
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -381,8 +381,8 @@ class SectionD1Other(forms.Form):
                                   required=True,
                                   choices=Survey.RELEVANT_CHOICES[1:-1])
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,
@@ -416,8 +416,8 @@ class SectionE(forms.Form):
                               label="Contact (email, telephone)")
 
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
@@ -428,8 +428,8 @@ class SectionEComment(SectionAInfo):
 
     PREVIEW_TEMPLATE = 'section_e/preview_comment.html'
 
-    def save(self, user, country, category):
-        survey = Survey.objects.create(
+    def save(self, user, country, category, survey):
+        survey = survey or Survey.objects.create(
             user=user,
             country=country,
             category=category,

@@ -73,7 +73,7 @@ class Edit(View):
 
 
         template = getattr(form, 'EDIT_TEMPLATE', 'form.html')
-        data = {'form': form, 'category': category}
+        data = {'form': form, 'category': category, 'survey': survey}
         response = {
             'status': 'error',
             'html': render_to_string(template, data,
