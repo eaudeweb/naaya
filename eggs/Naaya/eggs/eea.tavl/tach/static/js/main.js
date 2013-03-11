@@ -52,13 +52,17 @@ $(function () {
       return
     }
 
+    parent.find('.loading').show();
+
     $this.text($(this).data('closetext'));
     $this.data('close', true);
     $this.data('ajax', true);
 
 
     $.get($this.data('href'), function (data) {
+      parent.find('.loading').hide();
       $this.data('ajax', '');
+
       var add_container = parent.find('.add-container');
       add_container.html(data);
       var form = add_container.find('form');
@@ -94,9 +98,13 @@ $(function () {
     var multiple = $this.data('multiple');
     var add = parent.find('.add');
 
+    parent.find('form .loading').show();
+
     $this.data('ajax', true);
     $.post($this.attr('action'), $this.serialize(), function (data) {
+      parent.find('form .loading').hide();
       $this.data('ajax', '');
+
       if(data.status == 'success') {
         $(target).append(data.html);
         closeContainer(parent.find('.add-container'));
@@ -123,8 +131,12 @@ $(function () {
     var parents = $this.parents('.preview-container');
     $this.data('ajax', true);
 
+    parents.find('.answer .loading').show();
+
     $.get($this.data('href'), function (data) {
+      parents.find('.answer .loading').hide();
       $this.data('ajax', '');
+
       parents.find('.answer').hide();
       parents.find('.options').show();
       parents.append(data);
@@ -175,12 +187,16 @@ $(function () {
       return
     }
 
+    parents.find('.options .loading').show();
+
     $this.text(closetext);
     $this.data('close', true);
     $this.data('ajax', true);
 
     $.get(href, function (data) {
+      parents.find('.options .loading').hide();
       $this.data('ajax', '');
+
       parents.find('.view-answer').slideUp('fast', function () {
         parents.append(data);
         parents.find('form').slideDown('fast');
@@ -216,9 +232,13 @@ $(function () {
     var parents = $this.parents('.preview-container');
     var upper = parents.parent();
 
+    parents.find('form .loading').show();
+
     $this.data('ajax', true);
     $.post($this.attr('action'), $this.serialize(), function (data) {
+      parents.find('form .loading').hide();
       $this.data('ajax', '');
+
       if(data.status == 'success') {
         parents.slideDown('fast', function () {
           $(this).remove();

@@ -229,3 +229,7 @@ div.view-answer ul.entry li span.key{
   color: #007000;
   font-size: 95%;
 }
+
+.loading {
+  display: none;
+}
