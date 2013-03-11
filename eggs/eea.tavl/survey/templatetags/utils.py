@@ -1,3 +1,4 @@
+import string
 from django import template
 from django.utils.safestring import mark_safe
 from sugar import markup
@@ -34,7 +35,7 @@ def pretty_hstore(value):
     for k, v in value.items():
         if v == '1':
             page.li()
-            page.span(k.title())
+            page.span(string.capwords(k).replace('_', ' '))
             page.li.close()
     page.ul.close()
     return mark_safe(page)
