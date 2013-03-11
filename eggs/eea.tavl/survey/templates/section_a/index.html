@@ -19,7 +19,8 @@
     {% else %}
       <div id="section-a-user-answers-{{ category.id }}">
         {% for survey in user_answers %}
-          {% include "section_a/preview_comment.html" %}
+            {% include "section_a/preview_comment.html" %}
+          </div>
         {% endfor %}
       </div>
       {% if not user_answers %}
@@ -41,7 +42,7 @@
       {% endif %}
     {% endif %}
 
-    <div class="add-container" style="display: none;"></div>
+    <div class="add-container"></div>
   </div>
 
 {% endfor %}

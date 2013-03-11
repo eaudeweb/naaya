@@ -164,7 +164,7 @@ p.description, div.help p{
   cursor: pointer;
 }
 
-div.hide-answer{
+.options span{
   background-color: #EBF4FA;
   cursor: pointer;
   color: #0088cc;
@@ -183,7 +183,7 @@ div.preview-container {
   padding: 0 0 0.5em 0;
 }
 
-div.answer div.icon, 
+div.answer div.icon,
 div.answer div.response,
 div.answer div.author {
   display: inline;
@@ -192,7 +192,7 @@ div.answer div.author {
 div.answer div.response a {
   color: #0088cc;
   text-decoration: underline;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 .hover {
