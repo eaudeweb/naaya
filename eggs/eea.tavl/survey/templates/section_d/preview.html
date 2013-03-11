@@ -11,6 +11,8 @@
           [ edit ]</span>
     {% endif %}
     <span class="hide-answer">[ hide ]</span>
+    <i class="loading">
+      <img src="http://forum.eionet.europa.eu/++resource++naaya.groupware/ajax-loader.gif" alt="loading" width="16" height="16" /></i>
   </div>
 
   <div class="answer">
@@ -29,6 +31,10 @@
       {% if survey.user == request.user %}you{% else %}
         {{ survey.user }}
       {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }})
+
+      <i class="loading">
+        <img src="http://forum.eionet.europa.eu/++resource++naaya.groupware/ajax-loader.gif" alt="loading" width="16" height="16" /></i>
+
     </div>
   </div>
 
