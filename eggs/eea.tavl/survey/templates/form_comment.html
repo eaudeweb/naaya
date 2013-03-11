@@ -1,4 +1,11 @@
-<form action="{% url survey:edit category.id %}" method="POST">
+{% if survey %}
+  {% url survey:edit category.id survey.id as url %}
+{% else %}
+  {% url survey:edit category.id as url %}
+{% endif %}
+
+
+<form action="{{ url }}" method="POST" class="{% if survey %}edit-form{% endif %}">
   <table class="account-table" style="width:100%">
     <tbody>
       {% if category.description %}

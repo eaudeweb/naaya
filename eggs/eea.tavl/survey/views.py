@@ -11,6 +11,16 @@ from survey import models, forms
 from sugar.views import auth_required, auth_details_required
 
 
+def survey_model_to_dict(survey):
+    data = model_to_dict(survey)
+    for k, v in data.items():
+        if k in ('section_a_info', 'section_a_comment', 'section_b_info',
+                 'section_b_comment', 'section_d_comment', 'section_c_comment',
+                 'section_e_comment', 'd1_comments', 'd2_comments') and v:
+            data['comment'] = v
+    return data
+
+
 class View(View):
 
     @method_decorator(auth_required)
@@ -43,7 +53,7 @@ class Edit(View):
 
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()(
-            initial=model_to_dict(survey) if survey else {})
+            initial=survey_model_to_dict(survey) if survey else {})
         template = getattr(form, 'EDIT_TEMPLATE', 'form.html')
         return render(request, template, {
             'form': form,

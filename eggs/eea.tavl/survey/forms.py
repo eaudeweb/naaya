@@ -72,24 +72,26 @@ class SectionAInfo(forms.Form):
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_a_info=self.cleaned_data['comment'],
         )
+        survey.section_a_info = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
 class SectionAComment(SectionAInfo):
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_a_comment=self.cleaned_data['comment'],
         )
+        survey.section_a_comment = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
@@ -102,12 +104,13 @@ class SectionBInfo(forms.Form):
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_b_info=self.cleaned_data['comment'],
         )
+        survey.section_b_info = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
@@ -118,8 +121,9 @@ class SectionBComment(SectionBInfo):
             user=user,
             country=country,
             category=category,
-            section_b_comment=self.cleaned_data['comment'],
         )
+        survey.section_b_comment = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
@@ -202,24 +206,26 @@ class SectionC2(forms.Form):
     comment = forms.CharField(required=True, widget=forms.Textarea)
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_c2=self.cleaned_data['comment'],
         )
+        survey.section_c2 = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
 class SectionCComment(SectionC2):
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_c_comment=self.cleaned_data['comment'],
         )
+        survey.section_c_comment = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
@@ -361,12 +367,13 @@ class SectionDComment(SectionAInfo):
     PREVIEW_TEMPLATE = 'section_d/preview_comment.html'
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_d_comment=self.cleaned_data['comment'],
         )
+        survey.section_d_comment = self.cleaned_data['comment']
+        survey.save()
         return survey
 
 
@@ -429,10 +436,11 @@ class SectionEComment(SectionAInfo):
     PREVIEW_TEMPLATE = 'section_e/preview_comment.html'
 
     def save(self, user, country, category, survey):
-        survey = survey or Survey.objects.create(
+        survey = survey or Survey(
             user=user,
             country=country,
             category=category,
-            section_e_comment=self.cleaned_data['comment'],
         )
+        survey.section_e_comment = self.cleaned_data['comment']
+        survey.save()
         return survey
