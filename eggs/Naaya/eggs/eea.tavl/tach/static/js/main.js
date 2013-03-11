@@ -35,29 +35,37 @@ $(function () {
 
   $('.add').on('click', function () {
 
-    var parent = $(this).parents('.answers-container');
-    var target = $(this).data('target');
-    var multiple = $(this).data('multiple');
-    var opentext = $(this).data('opentext');
-    var closetext = $(this).data('closetext');
-    var close = $(this).data('close');
+    var $this = $(this);
+    if($this.data('ajax')) {return;}
+
+    var parent = $this.parents('.answers-container');
+    var target = $this.data('target');
+    var multiple = $this.data('multiple');
+    var opentext = $this.data('opentext');
+    var closetext = $this.data('closetext');
+    var close = $this.data('close');
 
     if(close) {
       closeContainer(parent.find('.add-container'));
-      $(this).text(opentext);
-      $(this).data('close', '');
+      $this.text(opentext);
+      $this.data('close', '');
       return
     }
-    $(this).text($(this).data('closetext'));
-    $(this).data('close', true);
-    $.get($(this).data('href'), function (data) {
+
+    $this.text($(this).data('closetext'));
+    $this.data('close', true);
+    $this.data('ajax', true);
+
+
+    $.get($this.data('href'), function (data) {
+      $this.data('ajax', '');
       var add_container = parent.find('.add-container');
       add_container.html(data);
       var form = add_container.find('form');
       form.data('target', target);
       form.data('multiple', multiple);
       form.slideDown('fast', function () {
-        $(this).find('input:first').focus();
+        $this.find('input:first').focus();
       });
 
     });
@@ -66,23 +74,29 @@ $(function () {
 
   $('.add-container').on('click', '.cancel', function () {
 
-    var parent = $(this).parents('.answers-container');
+    var $this = $(this);
+    var parent = $this.parents('.answers-container');
     var add = parent.find('.add');
     add.text(add.data('opentext'));
     add.data('close', '');
-    closeContainer($(this).parents('.add-container'));
+    closeContainer($this.parents('.add-container'));
 
   });
 
   $('.add-container').on('submit', 'form', function (e) {
 
     e.preventDefault();
-    var parent = $(this).parents('.answers-container');
-    var target = $(this).data('target');
-    var multiple = $(this).data('multiple');
+    var $this = $(this);
+    if($this.data('ajax')) {return;}
+
+    var parent = $this.parents('.answers-container');
+    var target = $this.data('target');
+    var multiple = $this.data('multiple');
     var add = parent.find('.add');
 
-    $.post($(this).attr('action'), $(this).serialize(), function (data) {
+    $this.data('ajax', true);
+    $.post($this.attr('action'), $this.serialize(), function (data) {
+      $this.data('ajax', '');
       if(data.status == 'success') {
         $(target).append(data.html);
         closeContainer(parent.find('.add-container'));
@@ -103,8 +117,14 @@ $(function () {
 
   $('.answers-container').on('click', '.preview', function () {
 
-    var parents = $(this).parents('.preview-container');
-    $.get($(this).data('href'), function (data) {
+    var $this = $(this);
+    if($this.data('ajax')) {return;}
+
+    var parents = $this.parents('.preview-container');
+    $this.data('ajax', true);
+
+    $.get($this.data('href'), function (data) {
+      $this.data('ajax', '');
       parents.find('.answer').hide();
       parents.find('.options').show();
       parents.append(data);
@@ -136,26 +156,31 @@ $(function () {
 
   $('.answers-container').on('click', '.edit-answer', function () {
 
-    var parents = $(this).parents('.preview-container');
-    var href = $(this).data('href');
-    var opentext = $(this).data('opentext');
-    var closetext = $(this).data('closetext');
-    var close = $(this).data('close');
+    var $this = $(this);
+    if($this.data('ajax')) {return;}
+
+    var parents = $this.parents('.preview-container');
+    var href = $this.data('href');
+    var opentext = $this.data('opentext');
+    var closetext = $this.data('closetext');
+    var close = $this.data('close');
 
     if(close) {
       parents.find('form').slideUp('fast', function () {
-        $(this).remove();
+        $this.remove();
       });
       parents.find('.view-answer').slideDown('fast');
-      $(this).text(opentext);
-      $(this).data('close', '');
+      $this.text(opentext);
+      $this.data('close', '');
       return
     }
 
-    $(this).text(closetext);
-    $(this).data('close', true);
+    $this.text(closetext);
+    $this.data('close', true);
+    $this.data('ajax', true);
 
     $.get(href, function (data) {
+      $this.data('ajax', '');
       parents.find('.view-answer').slideUp('fast', function () {
         parents.append(data);
         parents.find('form').slideDown('fast');
@@ -185,10 +210,15 @@ $(function () {
   $('.answers-container').on('submit', '.edit-form', function (e) {
 
     e.preventDefault();
-    var parents = $(this).parents('.preview-container');
+    var $this = $(this);
+    if($this.data('ajax')) {return;}
+
+    var parents = $this.parents('.preview-container');
     var upper = parents.parent();
 
-    $.post($(this).attr('action'), $(this).serialize(), function (data) {
+    $this.data('ajax', true);
+    $.post($this.attr('action'), $this.serialize(), function (data) {
+      $this.data('ajax', '');
       if(data.status == 'success') {
         parents.slideDown('fast', function () {
           $(this).remove();
