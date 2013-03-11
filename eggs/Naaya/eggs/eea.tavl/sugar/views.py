@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from tach.settings import HOSTNAME
 from tach.frame import UNAUTHORIZED_USER
 
+
 def auth_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -25,5 +26,3 @@ def auth_details_required(func):
             return redirect('overview')
         return func(*args, **kwargs)
     return wrapper
-
-

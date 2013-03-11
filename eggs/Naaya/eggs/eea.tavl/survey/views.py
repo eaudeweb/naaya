@@ -3,7 +3,7 @@ from django.views.generic import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.template import  RequestContext
 from django.forms.models import model_to_dict
 
@@ -38,6 +38,9 @@ class Edit(View):
         else:
             survey = None
 
+        if survey and request.user != survey.user:
+            return HttpResponseForbidden()
+
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()(
             initial=model_to_dict(survey) if survey else {})
@@ -56,6 +59,9 @@ class Edit(View):
                                        country=request.user.country)
         else:
             survey = None
+
+        if survey and request.user != survey.user:
+            return HttpResponseForbidden()
 
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()(request.POST)

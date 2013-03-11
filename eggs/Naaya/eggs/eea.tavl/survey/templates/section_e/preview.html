@@ -8,11 +8,13 @@
 <div class="preview-container">
 
   <div class="options" style="display: none;">
+    {% if survey and request.user == survey.user %}
     <span class="edit-answer"
           data-href="{% url survey:edit category.id survey.id %}"
           data-opentext="[ edit ]"
           data-closetext="[ close ]">
           [ edit ]</span>
+    {% endif %}
     <span class="hide-answer">[ hide ]</span>
   </div>
 
