@@ -6,6 +6,17 @@
 {% endif %}
 
 <div class="preview-container">
+
+  <div class="options" style="display: none;">
+    <span class="edit-answer"
+          data-href="{% url survey:edit category.id survey.id %}"
+          data-opentext="[ edit ]"
+          data-closetext="[ close ]">
+          [ edit ]</span>
+    <span class="hide-answer">[ hide ]</span>
+  </div>
+
+
   <div class="answer">
 
     <div class="icon">
@@ -18,12 +29,11 @@
     </div>
 
     <div class="author">
-      (answered by 
+      (answered by
       {% if survey.user == request.user %}you{% else %}
         {{ survey.user }}
       {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }})
     </div>
   </div>
 
-  <div class="hide-answer" style="display: none;">[ hide ]</div>
 </div>

@@ -104,7 +104,6 @@ $(function () {
   $('.answers-container').on('click', '.preview', function () {
 
     var parents = $(this).parents('.preview-container');
-    console.log(parents);
     $.get($(this).data('href'), function (data) {
       parents.find('.answer').hide();
       parents.find('.options').show();
@@ -117,14 +116,23 @@ $(function () {
   $('.answers-container').on('click', '.hide-answer', function () {
 
     var parents = $(this).parents('.preview-container');
+    var edit = parents.find('.edit-answer');
+    var opentext = edit.data('closetext');
+
     parents.find('.view-answer').slideUp('fast', function () {
       parents.find('.options').hide()
       $(this).remove();
       parents.find('.answer').slideDown('fast');
     });
 
-  });
+    parents.find('form').slideUp('fast', function () {
+      $(this).remove();
+    });
 
+    edit.text(opentext);
+    edit.data('close', '');
+
+  });
 
   $('.answers-container').on('click', '.edit-answer', function () {
 
