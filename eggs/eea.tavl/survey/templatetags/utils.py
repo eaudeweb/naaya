@@ -26,6 +26,8 @@ def assign(value):
 @register.filter
 def pretty_hstore(value):
     if not isinstance(value, dict):
+        if value is None:
+            return '-'
         return value
     page = markup.page()
     page.ul()
