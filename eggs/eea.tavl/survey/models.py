@@ -118,6 +118,8 @@ class Survey(models.Model):
 
     user = models.ForeignKey('tach.User')
 
+    date = models.DateTimeField(auto_now=True)
+
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, null=True,
                             blank=True)
 

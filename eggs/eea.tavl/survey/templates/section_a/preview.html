@@ -16,7 +16,7 @@
       (answered by 
       {% if survey.user == request.user %}you{% else %}
         {{ survey.user }}
-      {% endif %})
+      {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }})
     </div>
   </div>
 
