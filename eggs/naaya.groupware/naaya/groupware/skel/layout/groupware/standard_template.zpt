@@ -79,7 +79,7 @@
                             <ul class="site_actions">
                                 <li><a href="javascript:this.print();" title="Print this page"><img src="misc_/Groupware/printer.gif" alt="print this page" /></a></li>
                                 <li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()"></a></li>
-                                <li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
+                                <li><a tal:attributes="href string:${site_url}/feedback_html" title="Feedback"  accesskey="9">Feedback</a>
                             </ul>
                         </div>
                         <div id="left_topnav">
