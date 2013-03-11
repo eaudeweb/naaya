@@ -7,7 +7,11 @@
       <li>
         <span class="key">{{ field.label }}:</span>
         <span class="value">
-          {{ survey|getattribute:field.name|pretty_hstore }}
+          {% if field.name == 'link' %}
+            {{ survey|getattribute:field.name|urlize }}
+          {% else %}
+            {{ survey|getattribute:field.name|pretty_hstore }}
+          {% endif %}
         </span>
       </li>
       {% endif %}
