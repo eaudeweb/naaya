@@ -65,7 +65,7 @@ $(function () {
       form.data('target', target);
       form.data('multiple', multiple);
       form.slideDown('fast', function () {
-        $this.find('input:first').focus();
+        $(this).find('input:first').focus();
       });
 
     });
@@ -137,7 +137,7 @@ $(function () {
 
     var parents = $(this).parents('.preview-container');
     var edit = parents.find('.edit-answer');
-    var opentext = edit.data('closetext');
+    var opentext = edit.data('opentext');
 
     parents.find('.view-answer').slideUp('fast', function () {
       parents.find('.options').hide()
@@ -167,7 +167,7 @@ $(function () {
 
     if(close) {
       parents.find('form').slideUp('fast', function () {
-        $this.remove();
+        $(this).remove();
       });
       parents.find('.view-answer').slideDown('fast');
       $this.text(opentext);
