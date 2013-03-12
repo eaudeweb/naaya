@@ -3,6 +3,7 @@
 
 3.2.28 (2013-03-12)
 -------------------
+* changed Stard-End labels in interval widget [mihaitab]
 * "Center map" button initially visible on map widget [dumitval]
 * added change-ownership file in extra [mihaitab]
 * restrictions on objects listing (reverted setting for folders) [dumitval]
