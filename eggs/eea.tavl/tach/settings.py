@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'tach',
     'sugar',
     'survey',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -190,6 +191,8 @@ FRAME_URL = 'http://projects.eionet.europa.eu/questionnaire-transport-adaptation
 FRAME_COOKIES = ['__ac', '_ZopeId']
 
 ASSETS_DEBUG = True
+
+SOUTH_DATABASE_ADAPTERS = {'default': 'south.db.postgresql_psycopg2'}
 
 try:
     from local_settings import *

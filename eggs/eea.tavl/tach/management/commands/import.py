@@ -6,6 +6,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         call_command('syncdb')
+        call_command('migrate')
         call_command('loaddata', 'sections')
         call_command('loaddata', 'categories')
         call_command('loaddata', 'countries')
