@@ -87,6 +87,7 @@ SECRET_KEY = 'tyl8aja)&amp;yn0ov-z0u2j7j)%b_uo@1!ao&amp;uxn1z0tp_8frad&amp;l'
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
+    'django.contrib.auth.context_processors.auth',
     'tach.template.context_processor.context',
 )
 
@@ -104,7 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -126,8 +127,10 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.staticfiles',
     'raven.contrib.django',
     'django_assets',

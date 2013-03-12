@@ -58,12 +58,12 @@ class UserMiddleware(object):
                     }
                     user, created = User.objects.get_or_create(user_id=user_id,
                         defaults=defaults)
-                    request.user = user
+                    request.account = user
                 else:
                     if user_id:
-                        request.user = UNAUTHORIZED_USER
+                        request.account = UNAUTHORIZED_USER
                     else:
-                        request.user = None
+                        request.account = None
 
 
 class Loader(BaseLoader):

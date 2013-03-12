@@ -215,7 +215,10 @@ $(function () {
 
     parents.find('form').slideUp('fast', function () {
       $(this).remove();
-      parents.find('.view-answer').slideDown('fast');
+      parents.find('.view-answer').slideDown('fast', function () {
+        blink(parents, true);
+      });
+
     });
 
     edit.text(opentext);
@@ -243,6 +246,7 @@ $(function () {
         parents.slideDown('fast', function () {
           $(this).remove();
           upper.append(data.html);
+          blink(upper, true);
         });
       } else {
         parents.find('form').remove();

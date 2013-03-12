@@ -3,7 +3,7 @@
 <div class="preview-container">
 
   <div class="options" style="display: none;">
-    {% if survey and request.user == survey.user %}
+    {% if survey and account == survey.user %}
     <span class="edit-answer"
           data-href="{% url survey:edit category.id survey.id %}"
           data-opentext="[ edit ]"
@@ -28,7 +28,7 @@
 
     <div class="author">
       (answered by
-      {% if survey.user == request.user %}you{% else %}
+      {% if survey.user == account %}you{% else %}
         {{ survey.user }}
       {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }})
 

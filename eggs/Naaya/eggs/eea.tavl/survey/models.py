@@ -32,6 +32,9 @@ class Section(models.Model):
     class Meta:
         db_table = 'section'
 
+    def __unicode__(self):
+        return self.name
+
 
 class Category(models.Model):
 
@@ -49,6 +52,7 @@ class Category(models.Model):
 
     class Meta:
         db_table = 'category'
+        verbose_name_plural = 'categories'
         ordering = ['pk']
 
     def __unicode__(self):

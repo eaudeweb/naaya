@@ -28,7 +28,7 @@ class View(View):
     def get(self, request, category_id, survey_id):
         category = get_object_or_404(models.Category, pk=category_id)
         survey = get_object_or_404(models.Survey, pk=survey_id,
-                                   country=request.user.country)
+                                   country=request.account.country)
         form = category.get_widget()()
         template = getattr(form, 'VIEW_TEMPLATE', 'view.html')
         return render(request, template, {
@@ -44,11 +44,11 @@ class Edit(View):
     def get(self, request, category_id, survey_id=None):
         if survey_id:
             survey = get_object_or_404(models.Survey, pk=survey_id,
-                                       country=request.user.country)
+                                       country=request.account.country)
         else:
             survey = None
 
-        if survey and request.user != survey.user:
+        if survey and request.account != survey.user:
             return HttpResponseForbidden()
 
         category = get_object_or_404(models.Category, pk=category_id)
@@ -66,18 +66,18 @@ class Edit(View):
     def post(self, request, category_id, survey_id=None):
         if survey_id:
             survey = get_object_or_404(models.Survey, pk=survey_id,
-                                       country=request.user.country)
+                                       country=request.account.country)
         else:
             survey = None
 
-        if survey and request.user != survey.user:
+        if survey and request.account != survey.user:
             return HttpResponseForbidden()
 
         category = get_object_or_404(models.Category, pk=category_id)
         form = category.get_widget()(request.POST)
 
         if form.is_valid():
-            survey = form.save(user=request.user, country=request.user.country,
+            survey = form.save(user=request.account, country=request.account.country,
                                category=category, survey=survey)
             data =  {'survey': survey, 'category': category}
             response = {

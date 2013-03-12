@@ -3,6 +3,6 @@ from django.conf import settings
 
 def context(request):
     return {
-        'user': request.user,
+        'account': request.account,
         'HOSTNAME': settings.HOSTNAME,
     }
