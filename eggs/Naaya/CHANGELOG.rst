@@ -1,4 +1,7 @@
-3.2.28 (unreleased)
+3.2.29 (unreleased)
+-------------------
+
+3.2.28 (2013-03-12)
 -------------------
 * "Center map" button initially visible on map widget [dumitval]
 * added change-ownership file in extra [mihaitab]
