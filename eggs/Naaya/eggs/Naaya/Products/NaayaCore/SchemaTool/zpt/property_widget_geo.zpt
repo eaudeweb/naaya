@@ -107,7 +107,7 @@ portal_map here/getGeoMapTool;
 
     <input type="button" name="address_button" value="Center map"
            tal:attributes="id string:${prop_id}-centermap"
-           style="display: none;" i18n:attributes="value"/>
+           i18n:attributes="value"/>
 
     <script tal:define="val python:here.rstk['json_dumps'](prop_id)"
             tal:content="structure string:
