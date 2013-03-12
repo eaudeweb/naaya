@@ -1,5 +1,6 @@
 3.2.28 (unreleased)
 -------------------
+* "Center map" button initially visible on map widget [dumitval]
 * added change-ownership file in extra [mihaitab]
 * restrictions on objects listing (reverted setting for folders) [dumitval]
 
