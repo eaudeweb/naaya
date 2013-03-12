@@ -2,7 +2,7 @@
 <div class="preview-container">
 
   <div class="options">
-    {% if survey and request.user == survey.user %}
+    {% if survey and account == survey.user %}
     <span class="edit-answer"
           data-href="{% url survey:edit category.id survey.id %}"
           data-opentext="[ edit ]"

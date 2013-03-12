@@ -16,7 +16,7 @@ def get_answers(section, category):
 @register.filter
 def get_answers_for_user(section, category):
     request = get_current_request()
-    return section.filter(category=category, user=request.user)
+    return section.filter(category=category, user=request.account)
 
 
 @register.assignment_tag

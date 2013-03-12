@@ -12,7 +12,7 @@
 
 <h3>Restricted</h3>
 
-{% if request.user_id %}
+{% if request.account %}
   <p class="alert alert-error">Your account doesn't have access to this survey.</p>
 {% else %}
   <p class="alert">This page is restricted. Please logon to check credentials.</p>

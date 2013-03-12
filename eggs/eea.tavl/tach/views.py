@@ -12,14 +12,14 @@ class Overview(View):
 
     @method_decorator(auth_required)
     def get(self, request):
-        form = tach_models.UserForm(instance=request.user)
+        form = tach_models.UserForm(instance=request.account)
         return render(request, 'overview.html', {
             'form': form,
         })
 
     @method_decorator(auth_required)
     def post(self, request):
-        form = tach_models.UserForm(request.POST, instance=request.user)
+        form = tach_models.UserForm(request.POST, instance=request.account)
         if form.is_valid():
             form.save()
             return redirect('survey_overview')
@@ -34,7 +34,7 @@ class Survey(View):
     @method_decorator(auth_details_required)
     def get(self, request):
         sections = survey_models.Survey.objects.filter(
-            country=request.user.country)
+            country=request.account.country)
 
         # section A
         categories_section_a = survey_models.Category.objects.filter(
