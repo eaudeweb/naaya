@@ -354,8 +354,8 @@ class SectionD2(forms.Form):
             widget=forms.RadioSelect)
 
 
-    def save(self, user, country, category):
-        survey = Survey(user=user, country=country, category=category)
+    def save(self, user, country, category, survey):
+        survey = survey or Survey(user=user, country=country, category=category)
         for k, v in self.cleaned_data.items():
             setattr(survey, k, v)
         survey.save()
