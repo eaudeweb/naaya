@@ -70,7 +70,7 @@ opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
 
         <label style="display:inline"
                class="widget-title" i18n:translate=""
-               tal:attributes="for start_date_id">Start time</label>
+               tal:attributes="for start_date_id">Start date</label>
         <input type="text" class="vDateField"
                size="10" maxlength="10" placeholder="dd/mm/yyyy"
                tal:attributes="value opt_value_start_date|nothing;
@@ -89,7 +89,7 @@ opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
 
         <label style="display:inline"
                class="widget-title" i18n:translate=""
-               tal:attributes="for end_date_id">End time</label>&nbsp;
+               tal:attributes="for end_date_id">End date</label>&nbsp;
         <input type="text" class="vDateField"
                size="10" maxlength="10" placeholder="dd/mm/yyyy"
                tal:attributes="value opt_value_end_date|nothing;
