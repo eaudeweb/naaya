@@ -23,14 +23,13 @@
 
     <div class="response">
       <a data-href="{% url survey:view category.id survey.id %}"
-               class="preview">{{ survey.title }}</a>
+               class="preview">Answer</a> by
     </div>
 
     <div class="author">
-      (answered by
       {% if survey.user == account %}you{% else %}
         {{ survey.user }}
-      {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }})
+      {% endif %} on {{ survey.date|date:"l, jS" }} of {{survey.date|date:"N"}}, at {{survey.date|date:"H:i" }}
 
       <i class="loading">
         <img src="http://forum.eionet.europa.eu/++resource++naaya.groupware/ajax-loader.gif" alt="loading" width="16" height="16" /></i>
