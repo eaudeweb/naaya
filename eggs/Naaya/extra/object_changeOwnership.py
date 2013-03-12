@@ -2,8 +2,8 @@
 
 def change_ownership_for_object(ob, username):
     """ Example of changing ownsership for a specific object """
-
-    acl_users = ob.getSite().getAuthenticationTool()
-    new_owner = acl_users.getUser(username)
+    app = ob.unrestrictedTraverse("/")
+    user = app.acl_users.getUser(username)
+    new_owner = user.__of__(app.acl_users)
     ob.changeOwnership(user=new_owner)
 
