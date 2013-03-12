@@ -1,5 +1,6 @@
 1.2.34 (unreleased)
 -------------------
+* changed labels for geo_type and interval schema fields [mihaitab]
 
 1.2.33 (2013-03-06)
 -------------------
