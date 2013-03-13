@@ -8,9 +8,11 @@
 												dummy python:photos.sort(key=lambda x: x.getId())">
 					<li tal:repeat="photo photos">
 						<img tal:attributes="src string:${photo/absolute_url}; alt photo/title_or_id" style="width: 980px; height: 240px" />
-						<div class="lof-main-item-desc">
-							<h2 tal:on-error="string:" tal:content="python:photo.title.split('|')[0]" />
-							<p tal:on-error="string:" tal:content="python:photo.title.split('|')[1]" />
+						<div tal:define="photo_details python:photo.title.split('|');
+									photo_heading python:photo_details[0]"
+								tal:attributes="class python:test(photo_heading or len(photo_details)>1, 'lof-main-item-desc', 'hidden')">
+							<h2 tal:on-error="string:" i18n:translate="" tal:content="photo_heading" />
+							<p tal:on-error="string:" i18n:translate="" tal:content="python:photo_details[1]" />
 						</div>
 					</li>
 				</ul>

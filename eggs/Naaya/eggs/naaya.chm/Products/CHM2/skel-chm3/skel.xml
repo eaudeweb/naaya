@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
+	<forms>
+		<form id="site_admin_layout" title="Portal layout administration "/>
+	</forms>
 	<layout default_skin_id="chm3"
 		default_scheme_id="color-green"
 		diskpath_prefix="Products.CHM2:skel-chm3">

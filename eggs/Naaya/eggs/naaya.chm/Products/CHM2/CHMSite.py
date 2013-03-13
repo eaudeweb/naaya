@@ -176,6 +176,7 @@ class CHMSite(NySite):
         portal_layout = self['portal_layout']
         if 'chm3' in portal_layout.objectIds():
             portal_layout['chm3']._setProperty('main_section_image_size', '978x75')
+            portal_layout['chm3']._setProperty('slider_image_size', '978x240')
 
     def get_data_path(self):
         """ """
@@ -603,6 +604,15 @@ class CHMSite(NySite):
             manage_addFolder(skin, 'main_section_images')
         return skin._getOb('main_section_images')
 
+    def _get_slider_images_folder(self):
+        layout_tool = self.getLayoutTool()
+        # not using get_current_skin to make it work for CHMBE
+        skin = layout_tool._getOb(layout_tool.getCurrentSkinId()) # to work for CHMBE
+        # add images folder if it doesn't exist
+        if not skin.hasObject('slider-images'):
+            manage_addFolder(skin, 'slider-images')
+        return skin._getOb('slider-images')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'upload_maintopic_temp_image')
     def upload_maintopic_temp_image(self, REQUEST):
         """ """
@@ -620,7 +630,31 @@ class CHMSite(NySite):
         image_size = map(int, skin.main_section_image_size.split("x"))
 
         try:
-            data = maintopic_image_to_crop(ob, image_size)
+            data = crop_image(ob, image_size)
+        except AssertionError, e:
+            data = {"error": str(e)}
+
+        return json_response(data, REQUEST.RESPONSE)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'upload_slider_temp_image')
+    def upload_slider_temp_image(self, REQUEST):
+        """ """
+        temp_folder = self.getSite().temp_folder
+        file = REQUEST.form.get("upload_file", None)
+        if file is None:
+            return json_response({'error': "no file"}, REQUEST.RESPONSE)
+
+        filename = file.filename
+        id = make_id(temp_folder, id=filename)
+        manage_addImage(temp_folder, id, file=file)
+        ob = getattr(temp_folder, id)
+
+        skin = self.getLayoutTool().getCurrentSkin()
+        skin_image_size = getattr(skin, 'slider_image_size', '978x240')
+        image_size = map(int, skin_image_size.split("x"))
+
+        try:
+            data = crop_image(ob, image_size)
         except AssertionError, e:
             data = {"error": str(e)}
 
@@ -639,75 +673,135 @@ class CHMSite(NySite):
         try:
             assert ob is not None, "no current image"
             # will throw an AssertionEerror if image is not valid
-            data = maintopic_image_to_crop(ob, image_size)
+            data = crop_image(ob, image_size)
+        except AssertionError, e:
+            data = {"error": str(e)}
+
+        return json_response(data, REQUEST.RESPONSE)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'load_current_slider_image')
+    def load_current_slider_image(self, REQUEST):
+        """ """
+        slider_images = self._get_slider_images_folder()
+        name = REQUEST.form.get("name", None)
+        ob = slider_images._getOb(name, None)
+
+        skin = self.getLayoutTool().getCurrentSkin()
+        skin_image_size = getattr(skin, 'slider_image_size', '978x240')
+        image_size = map(int, skin_image_size.split("x"))
+
+        try:
+            assert ob is not None, "no current image"
+            # will throw an AssertionEerror if image is not valid
+            data = crop_image(ob, image_size)
         except AssertionError, e:
             data = {"error": str(e)}
 
         return json_response(data, REQUEST.RESPONSE)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
-    def admin_savemaintopic_image(self, mainsection, upload_picture_url,
-            x1, y1, x2, y2, width, height, REQUEST=None):
+    def _admin_save_image(self, picture_id, upload_picture_url,
+            x1, y1, x2, y2, width, height, def_width, def_height,
+            container_folder, title='', subtitle='',
+            REQUEST=None):
         """ """
 
         if width and height:
             F_WIDTH = width
             F_HEIGHT = height
         else:
-            F_WIDTH = 962
-            F_HEIGHT = 143
+            F_WIDTH = def_width
+            F_HEIGHT = def_height
 
-        def process_picture(picture, crop_coordinates):
-            image_string = picture2stringIO(picture)
-            img = Image.open(image_string)
-            fmt = img.format
-            crop_size = F_WIDTH
-            if crop_coordinates[2] - crop_coordinates[0] == 0:
-                x = img.size[0]
-                y = img.size[1]
-                if F_HEIGHT * x > F_WIDTH * y:
-                    crop_coordinates = ((x - F_WIDTH * y / F_HEIGHT) / 2, 0, (x + F_WIDTH * y / F_HEIGHT) / 2, y)
-                else:
-                    crop_coordinates = (0, (y - (F_HEIGHT * x / F_WIDTH)) / 2, x, (y + (F_HEIGHT * x / F_WIDTH)) / 2)
-
-            img = img.crop(crop_coordinates)
-            try:
-                img = img.resize((F_WIDTH, F_HEIGHT), Image.ANTIALIAS)
-            except AttributeError:
-                img = img.resize((F_WIDTH, F_HEIGHT))
-            newimg = StringIO()
-            img.save(newimg, fmt, quality=85)
-            return newimg.getvalue()
-
-        main_section_images = self._get_mainsection_images_folder()
         temp_folder = self.getSite().temp_folder
 
         upload_picture_url = urllib.unquote(upload_picture_url)
-        # fetch image from temp folder or from main_section_images folder
+        # fetch image from temp folder or from container_folder folder
         if upload_picture_url.startswith(temp_folder.absolute_url()):
             folder =  temp_folder
-        elif upload_picture_url.startswith(main_section_images.absolute_url()):
-            folder = main_section_images
+        elif upload_picture_url.startswith(container_folder.absolute_url()):
+            folder = container_folder
         else:
             raise ValueError()
 
         # get image
-        picture_id = upload_picture_url.split('/')[-1]
-        picture = folder[picture_id]
+        new_picture = upload_picture_url.split('/')[-1]
+        picture = folder[new_picture]
+        if not picture_id:
+            picture_id = new_picture
 
         # crop image
         crop_coordinates = (x1, y1, x2, y2)
-        croped_picture = process_picture(picture, crop_coordinates)
+        croped_picture = process_picture(picture, crop_coordinates,
+                                        F_WIDTH, F_HEIGHT)
 
         # remove old image if exists
-        if main_section_images.hasObject(mainsection):
-            main_section_images.manage_delObjects([mainsection])
+        if container_folder.hasObject(picture_id):
+            container_folder.manage_delObjects([picture_id])
 
         # add image to folder
-        manage_addImage(main_section_images, mainsection, croped_picture)
+        if title or subtitle:
+            picture_title = '%s|%s' % (title, subtitle)
+        else:
+            picture_title = ''
+        manage_addImage(container_folder, picture_id, croped_picture,
+                        title=picture_title)
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
+    def admin_savemaintopic_image(self, mainsection, upload_picture_url,
+            x1, y1, x2, y2, width, height, REQUEST=None):
+        """ """
+        def_width = 978
+        def_height = 75
+        main_section_images = self._get_mainsection_images_folder()
+
+        return self._admin_save_image(mainsection, upload_picture_url,
+            x1, y1, x2, y2, width, height, def_width, def_height,
+            main_section_images, REQUEST)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_save_slider_image')
+    def admin_save_slider_image(self, sliderimage, upload_picture_url,
+            x1, y1, x2, y2, width, height, picture_title, picture_subtitle,
+            delete_picture=None, REQUEST=None):
+        """ """
+
+        if delete_picture:
+            return self.admin_delete_slider_image(sliderimage, REQUEST)
+
+        if width and height:
+            skin = self.getLayoutTool().getCurrentSkin()
+            setattr(skin, 'slider_image_size', '%sx%s' % (width, height))
+
+        def_width = 978
+        def_height = 240
+        slider_images = self._get_slider_images_folder()
+
+        return self._admin_save_image(sliderimage, upload_picture_url,
+            x1, y1, x2, y2, width, height, def_width, def_height,
+            slider_images, picture_title, picture_subtitle, REQUEST)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delete_slider_image')
+    def admin_delete_slider_image(self, sliderimage, REQUEST=None):
+        """ """
+
+        slider_images = self._get_slider_images_folder()
+        slider_images.manage_delObjects([sliderimage])
+
+        return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(view, 'getSliderImages')
+    def getSliderImages(self):
+        """
+        Returns a list of the ids of all slider images
+        """
+        skin = self.getLayoutTool().getCurrentSkin()
+        if 'slider-images' in skin.objectIds():
+            return [ob for ob in skin['slider-images'].objectValues('Image')]
+        else:
+            return []
 
     security.declareProtected(view, 'get_mainsection')
     def get_mainsection(self, ob):
@@ -800,6 +894,28 @@ def update_chm_terms_glossary(glossary):
     glossary.dump_import(dump_data)
     import transaction; transaction.commit()
 
+def process_picture(picture, crop_coordinates, F_WIDTH, F_HEIGHT):
+    image_string = picture2stringIO(picture)
+    img = Image.open(image_string)
+    fmt = img.format
+    crop_size = F_WIDTH
+    if crop_coordinates[2] - crop_coordinates[0] == 0:
+        x = img.size[0]
+        y = img.size[1]
+        if F_HEIGHT * x > F_WIDTH * y:
+            crop_coordinates = ((x - F_WIDTH * y / F_HEIGHT) / 2, 0, (x + F_WIDTH * y / F_HEIGHT) / 2, y)
+        else:
+            crop_coordinates = (0, (y - (F_HEIGHT * x / F_WIDTH)) / 2, x, (y + (F_HEIGHT * x / F_WIDTH)) / 2)
+
+    img = img.crop(crop_coordinates)
+    try:
+        img = img.resize((F_WIDTH, F_HEIGHT), Image.ANTIALIAS)
+    except AttributeError:
+        img = img.resize((F_WIDTH, F_HEIGHT))
+    newimg = StringIO()
+    img.save(newimg, fmt, quality=85)
+    return newimg.getvalue()
+
 def get_image_size(file):
     """
     Test if the specified uploaded B{file} is a valid image.
@@ -812,13 +928,16 @@ def get_image_size(file):
         file.seek(0)
         return image.size
 
-def maintopic_image_to_crop(ob, image_default_size):
+def crop_image(ob, image_default_size):
     image_file = picture2stringIO(ob)
     image_size = get_image_size(image_file)
 
     assert image_size, "can't determine image size"
 
     x, y = image_size[0], image_size[1]
+    title = ob.title
+    if '|' not in ob.title:
+        title = '%s|' % ob.title
     if (image_default_size[1] * x) > (image_default_size[0] * y):
         data = {
             'url': ob.absolute_url(),
@@ -826,6 +945,7 @@ def maintopic_image_to_crop(ob, image_default_size):
             'y': 0,
             'x2': (x + image_default_size[0] * y / image_default_size[1]) / 2,
             'y2': y,
+            'title': title,
         }
     else:
         data = {
@@ -834,6 +954,7 @@ def maintopic_image_to_crop(ob, image_default_size):
             'y': (y - (image_default_size[1] * x / image_default_size[0])) / 2,
             'x2': x,
             'y2': (y + (image_default_size[1] * x / image_default_size[0])) / 2,
+            'title': title,
         }
 
     return data
