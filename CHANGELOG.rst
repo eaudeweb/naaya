@@ -1,4 +1,7 @@
-3.0.18 (unreleased)
+3.0.19 (unreleased)
+------------------
+
+3.0.18 (2013-03-13)
 ------------------
 * slider images management + update script [dumitval]
 
