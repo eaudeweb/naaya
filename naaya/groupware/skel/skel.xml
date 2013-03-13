@@ -104,6 +104,7 @@
 		</role>
 
                 <role name="Reviewer">
+                        <permission name="View" />
                         <permission name="Naaya - Review TalkBack Consultation" />
                 </role>
 
