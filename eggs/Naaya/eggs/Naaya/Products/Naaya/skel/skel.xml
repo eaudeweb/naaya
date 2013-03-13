@@ -231,6 +231,7 @@
 		</role>
 
 		<role name="Reviewer">
+                        <permission name="View" />
 			<permission name="Naaya - Review Consultation" />
 			<permission name="Naaya - Review Simple Consultation" />
 		</role>
