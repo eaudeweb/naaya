@@ -16,6 +16,6 @@ urlpatterns = patterns('',
 
     url(r'^survey/', include('survey.urls', namespace='survey')),
 
-    url(r'^management/', include(admin.site.urls)),
+    url(r'^manage/', include(admin.site.urls)),
 
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
