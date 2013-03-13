@@ -50,3 +50,5 @@ admin.site.register(survey_models.Category, CategoryAdmin)
 
 admin.site.register(survey_models.Survey, SurveyAdmin)
 
+admin.site.register(country_models.Country, CountryAdmin)
+
