@@ -1,5 +1,6 @@
 3.2.29 (unreleased)
 -------------------
+* same slots for add and edit schema forms [simiamih]
 * View for Reviewer [simiamih]
 
 3.2.28 (2013-03-12)
