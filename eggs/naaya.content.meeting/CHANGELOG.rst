@@ -1,5 +1,6 @@
 1.2.35 (unreleased)
 -------------------
+* fixed form fields dependancy in add/eddit meeting [mihaitab]
 
 1.2.34 (2013-03-14)
 -------------------

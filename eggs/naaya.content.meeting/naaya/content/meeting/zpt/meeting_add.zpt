@@ -5,7 +5,7 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties" tal:define="eventtypes here/getEventTypesList">
-
+<script type="text/javascript" src="/++resource++naaya.content.meeting-www/meeting_manage.js"></script>
 <p class="form-errors" tal:define="captcha_err python:here.getSession('captcha-errors', None)"
 	tal:condition="captcha_err" tal:content="captcha_err" />
 <tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
