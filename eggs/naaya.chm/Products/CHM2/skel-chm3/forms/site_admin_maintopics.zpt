@@ -133,11 +133,28 @@
 	<script src="misc_/CHM2/jquery.ajaxupload.min.js"></script>
 	<script src="++resource++Products.CHM2-www/mainsection-image-admin.js"></script>
 
+<noscript>
+	<fieldset>
+		<legend i18n:translate="">Select main section image</legend>
+		<p>Please enable javascript in your browser to activate this functionality</p>
+</noscript>
+
 <fieldset tal:define="skin python:here.getLayoutTool().getCurrentSkin();
                       resolution_spec skin/main_section_image_size|nothing"
-          tal:condition="resolution_spec">
+          tal:condition="resolution_spec"
+					id="main_section_image" style="display:none">
 	<legend i18n:translate="">Select main section image</legend>
 	<form method="post" tal:attributes="action string:${site_url}/admin_savemaintopic_image" enctype="multipart/form-data">
+
+		<div class="field">
+			<label for="inherit_mainsection_image" i18n:translate="">
+				Show main section images in all folders of the main section</label>
+			<input type="checkbox" name="inherit_mainsection_image"
+				id="inherit_mainsection_image" tal:define="site here/getSite"
+				tal:attributes="checked python:getattr(
+					site, 'inherit_mainsection_image', True)" />
+		</div>
+
 		<div class="field">
 			<label for="main-section-image-selection-box" class="invisible" i18n:translate="">Select main section</label>
 			<select id="main-section-image-selection-box" name="mainsection">

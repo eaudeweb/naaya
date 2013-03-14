@@ -1,8 +1,4 @@
-import re
-from BeautifulSoup import BeautifulSoup
-
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from Products.naayaUpdater.updates.utils import get_standard_template
 
 OLD_CODE = '''						<div class="lof-main-item-desc">
 							<h2 tal:on-error="string:" tal:content="python:photo.title.split('|')[0]" />
@@ -38,6 +34,7 @@ class UpdateElementSplashContent(UpdateScript):
                 else:
                     self.log.error('element_splash_content not really '
                                     'how we expect it to be')
+                    return False
             else:
                 first_part, second_part = template.split(OLD_CODE)
                 template = '%s%s%s' % (first_part, NEW_CODE, second_part)
@@ -46,5 +43,6 @@ class UpdateElementSplashContent(UpdateScript):
         else:
             self.log.error('No element_splash_content in active skin, '
                             'maybe not a CHM3 portal?')
+            return False
 
         return True
