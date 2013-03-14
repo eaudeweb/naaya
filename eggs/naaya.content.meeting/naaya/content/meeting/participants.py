@@ -159,15 +159,15 @@ class Participants(SimpleItem):
         site = self.getSite()
 
         if sort_on == 'o':
-            key = lambda x: getUserOrganization(site, x)
+            key = lambda x: self.getAttendeeInfo(x)['organization'].lower()
         elif sort_on == 'name':
-            key = lambda x: getUserFullName(site, x)
+            key = lambda x: self.getAttendeeInfo(x)['name'].lower()
         elif sort_on == 'email':
-            key = lambda x: getUserEmail(site, x)
+            key = lambda x: self.getAttendeeInfo(x)['email'].lower()
         elif sort_on == 'uid':
-            key = lambda x: x
+            key = lambda x: x.lower()
         elif sort_on == 'role':
-            key = lambda x: attendees[x]
+            key = lambda x: attendees[x].lower()
         else:
             key = None
 
