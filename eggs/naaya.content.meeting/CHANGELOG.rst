@@ -1,4 +1,7 @@
-1.2.34 (unreleased)
+1.2.35 (unreleased)
+-------------------
+
+1.2.34 (2013-03-14)
 -------------------
 * bugfix in participants sorting [dumitval]
 * changed labels for geo_type and interval schema fields [mihaitab]
