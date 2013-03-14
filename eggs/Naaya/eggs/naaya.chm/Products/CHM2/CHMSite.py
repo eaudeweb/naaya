@@ -699,7 +699,7 @@ class CHMSite(NySite):
 
         return json_response(data, REQUEST.RESPONSE)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, '_admin_save_image')
     def _admin_save_image(self, picture_id, upload_picture_url,
             x1, y1, x2, y2, width, height, def_width, def_height,
             container_folder, title='', subtitle='',
@@ -757,6 +757,9 @@ class CHMSite(NySite):
         def_width = 978
         def_height = 75
         main_section_images = self._get_mainsection_images_folder()
+        self.inherit_mainsection_image = REQUEST.has_key(
+                                            'inherit_mainsection_image')
+        self._p_changed = True
 
         return self._admin_save_image(mainsection, upload_picture_url,
             x1, y1, x2, y2, width, height, def_width, def_height,
@@ -820,6 +823,20 @@ class CHMSite(NySite):
         else:
             return self.get_mainsection(ob.aq_parent)
 
+    security.declareProtected(view, 'show_main_section_image')
+    def show_mainsection_image(self, ob):
+        """
+        Returns true/false - should the main section image be shown
+        in the current folder (based on inherit_mainsection_image flag)
+        """
+        mainsection = self.get_mainsection(ob)
+
+        if not mainsection:
+            return False
+        elif ob.getId() == mainsection:
+            return True
+        elif getattr(self, 'inherit_mainsection_image', True):
+            return True
 
 InitializeClass(CHMSite)
 

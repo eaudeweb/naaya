@@ -4,7 +4,7 @@
                      mainsection_id python:here.get_mainsection(here)"
              condition="python:skin.hasObject('main_section_images')">
     <tal:block define="main_section_images python:skin['main_section_images']"
-               condition="python:main_section_images.hasObject(mainsection_id)">
+               condition="python:main_section_images.hasObject(mainsection_id) and here.show_mainsection_image(here)">
       <div tal:define="image python:main_section_images[mainsection_id]"
            class="main-section-image-holder">
         <img tal:attributes="src image/absolute_url"/>

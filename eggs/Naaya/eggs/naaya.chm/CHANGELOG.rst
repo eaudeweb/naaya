@@ -1,5 +1,6 @@
 3.0.19 (unreleased)
 ------------------
+* main section images inheritance [dumitval]
 
 3.0.18 (2013-03-13)
 ------------------
