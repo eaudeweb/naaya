@@ -1,4 +1,5 @@
 $(function () {
+	$('#main_section_image').show();
     var upload_button = $("#picture_upload_button"),
         url_input = $("#upload_picture_url"),
         image_holder = $("#main_section_picture");
