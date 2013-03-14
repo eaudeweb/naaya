@@ -2,41 +2,46 @@
         curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 
 <metal:block use-macro="python:here.standard_template_macro('light')">
-<metal:block fill-slot="body">
 
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>
-<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+<!-- Scripts -->
+<metal:block fill-slot="body">
+<metal:block define-slot="scripts">
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>
+    <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+    <script type="text/javascript">
+    <!--
+    function fPick(glossary_url)
+    {
+        var frm = document.frmAdd;
+        var wnd = window.open(glossary_url + '&amp;lang=' + frm.lang[frm.lang.selectedIndex].value, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+        wnd.focus();
+    }
+
+    function fSet(ctrl, value)
+    {
+        var frm = document.frmAdd;
+        var items = frm[ctrl + ':utf8:ustring'];
+        if (value != '')
+        {
+            if (items.value == '')
+                items.value = value;
+            else
+                items.value = items.value + ', ' + value;
+        }
+    }
+    // -->
+    </script>
+</metal:block>
+<metal:block define-slot="custom_scripts" />
+
+
 
 <h1 metal:define-slot="title" tal:content="string:Submit ${form_helper/get_meta_label}" i18n:translate="" />
 
 <p metal:define-slot="description"><!--description--></p>
-
-<script type="text/javascript">
-<!--
-function fPick(glossary_url)
-{
-    var frm = document.frmAdd;
-    var wnd = window.open(glossary_url + '&amp;lang=' + frm.lang[frm.lang.selectedIndex].value, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
-    wnd.focus();
-}
-
-function fSet(ctrl, value)
-{
-    var frm = document.frmAdd;
-    var items = frm[ctrl + ':utf8:ustring'];
-    if (value != '')
-    {
-        if (items.value == '')
-            items.value = value;
-        else
-            items.value = items.value + ', ' + value;
-    }
-}
-// -->
-</script>
 
 <form name="frmAdd" class="add-object-form" method="post" tal:attributes="action action" enctype="multipart/form-data">
 
