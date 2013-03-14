@@ -2,8 +2,8 @@
     define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
     metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
 
-<tal:block metal:fill-slot="custom_properties">
-<script type="text/javascript" src="/++resource++naaya.content.meeting-www/meeting_manage.js"></script>
+<tal:block metal:fill-slot="custom_scripts">
+    <script type="text/javascript" src="/++resource++naaya.content.meeting-www/meeting_manage.js"></script>
 </tal:block>
 
 <h1 metal:fill-slot="title" i18n:translate="">Edit Meeting</h1>
