@@ -57,8 +57,8 @@ from lxml.builder import ElementMaker
 DEFAULT_SCHEMA = {
     'interval':             dict(sortorder=140, widget_type='Interval', label='Meeting Interval', data_type='interval', required=True),
     'location':             dict(sortorder=143, widget_type='String',   label='Organization/Building/Room'),
-    'auto_register':        dict(sortorder=147, widget_type='Checkbox', label='Automatically approve participants when they register', data_type='bool'),
-    'allow_register':       dict(sortorder=148, widget_type='Checkbox', label='Allow people to register to participate', data_type='bool'),
+    'allow_register':       dict(sortorder=147, widget_type='Checkbox', label='Allow people to register to participate', data_type='bool'),
+    'auto_register':        dict(sortorder=148, widget_type='Checkbox', label='Automatically approve participants when they register', data_type='bool'),
     'restrict_items':       dict(sortorder=149, widget_type='Checkbox', label='Restrict user access to the contents in the meeting', default=True, data_type='bool'),
     'max_participants':     dict(sortorder=150, widget_type='String',   label='Maximum number of participants', data_type='int'),
     'contact_person':       dict(sortorder=150, widget_type='String',   label='Contact person'),
