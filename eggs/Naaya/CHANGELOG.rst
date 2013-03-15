@@ -1,5 +1,6 @@
 3.2.29 (unreleased)
 -------------------
+* import_export change - inconsistent content will still export [dumitval]
 * same slots for add and edit schema forms [simiamih]
 * View for Reviewer [simiamih]
 
