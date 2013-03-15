@@ -1,4 +1,7 @@
-3.0.20 (unreleased)
+3.0.21 (unreleased)
+------------------
+
+3.0.20 (2013-03-15)
 ------------------
 * main_section_images Saved changes message + small bugfix [dumitval]
 
