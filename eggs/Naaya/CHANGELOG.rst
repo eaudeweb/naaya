@@ -1,4 +1,7 @@
-3.2.29 (unreleased)
+3.2.30 (unreleased)
+-------------------
+
+3.2.29 (2013-03-15)
 -------------------
 * import_export change - inconsistent content will still export [dumitval]
 * same slots for add and edit schema forms [simiamih]
