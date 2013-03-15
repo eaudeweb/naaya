@@ -38,7 +38,7 @@ class SelectMultipleWidget(Widget):
         list_values = {}
         for node in self.get_list_nodes(self.list_id):
             list_values[node.id] = node.title
-        return ';'.join([list_values[value] for value in values])
+        return ';'.join([list_values.get(value, value) for value in values])
 
     def get_selection_list(self):
         listing = self.get_list_nodes(self.list_id)
