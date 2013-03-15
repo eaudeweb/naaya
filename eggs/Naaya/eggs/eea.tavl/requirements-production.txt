@@ -1,2 +1,0 @@
--r requirements.txt
-flup==1.0.2
