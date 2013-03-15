@@ -702,8 +702,7 @@ class CHMSite(NySite):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, '_admin_save_image')
     def _admin_save_image(self, picture_id, upload_picture_url,
             x1, y1, x2, y2, width, height, def_width, def_height,
-            container_folder, title='', subtitle='',
-            REQUEST=None):
+            container_folder, REQUEST=None, title='', subtitle=''):
         """ """
 
         if width and height:
@@ -747,6 +746,7 @@ class CHMSite(NySite):
         manage_addImage(container_folder, picture_id, croped_picture,
                         title=picture_title)
 
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
