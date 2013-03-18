@@ -1,5 +1,6 @@
 3.2.31 (unreleased)
 -------------------
+* narrow Zip import to .zip files only [mihaitab]
 
 3.2.30 (2013-03-18)
 -------------------

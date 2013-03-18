@@ -137,6 +137,13 @@ class ZipImportTool(Implicit, Item):
         errors = []
         container = self.getParentNode()
 
+        # test if file uploaded is Zip archive
+        if data.filename.split('.')[-1] != 'zip':
+            self.setSessionErrorsTrans("Error while uploading."
+                                       "You are not importing "
+                                       "a Zip archive file.")
+            raise ValueError("Bad zip file")
+
         try:
             folder_tree, zip_files = read_zipfile_contents(data)
         except ValueError, e:
@@ -321,11 +328,11 @@ class FileIterator(object):
     Copied from ``ZPublisher.Iterators.filestream_iterator`` and modified.
     """
 
-    if issubclass(IStreamIterator, interface.Interface): 
-        interface.implements(IStreamIterator) 
-    else: 
-        # old-stye zope interface (before ZCA) 
-        __implements__ = (IStreamIterator,) 
+    if issubclass(IStreamIterator, interface.Interface):
+        interface.implements(IStreamIterator)
+    else:
+        # old-stye zope interface (before ZCA)
+        __implements__ = (IStreamIterator,)
 
     def __init__(self, data_file):
         self._data_file = data_file
