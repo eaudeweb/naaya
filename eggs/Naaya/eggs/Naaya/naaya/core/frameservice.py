@@ -11,6 +11,8 @@ def frame_view(context, request):
     last_name = ''
     email = ''
     phone_number = ''
+    site_roles = []
+
     try:
         if hasattr(site, "member_search"):
             user_ob = site.member_search._search_users(user.getId())[0] #ldap
@@ -23,6 +25,12 @@ def frame_view(context, request):
         email = user_ob.email
     except:
         pass
+
+    all_site_roles = site.get_local_roles()
+    for (username, role_names) in all_site_roles:
+        if username == user:
+            site_roles = list(role_names)
+            break
     response_data = {
         'frame_html': context['frame.html'](),
         'user_id': user.getId(),
@@ -30,6 +38,7 @@ def frame_view(context, request):
         'user_first_name': first_name,
         'user_last_name': last_name,
         'email': email,
-        'user_phone_number': phone_number
+        'user_phone_number': phone_number,
+        'site_roles': site_roles, # user local roles for site obj.
     }
     return json_response(response_data, request.RESPONSE)
