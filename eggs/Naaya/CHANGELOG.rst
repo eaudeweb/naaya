@@ -1,5 +1,6 @@
 3.2.30 (unreleased)
 -------------------
+* inline styling for delete_confirmation [dumitval]
 * #14158 frameservice provides user groups (eionet roles) [simiamih]
 * #14093 fixed tipsy [simiamih]
 
