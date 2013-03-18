@@ -27,14 +27,21 @@
 					}
 					$('#select-name-assessment-report').append($('<'+'option>').attr('value', '0').text(please_select));
 
+					// sort labels according to display text
+					var labels_array = [];
 					$.each(labels, function(k,v){
-						/* If the current language has no value in the library
-						the first language available will be used */
 						display_text = get_value(v, curr_lang, true);
 						if (display_text.length>104)
 						{
 							display_text = display_text.slice(0,104) + '...'
 						}
+						labels_array.push(display_text + ' ' + k);
+					});
+					labels_array.sort();
+					$.each(labels_array, function(i, value){
+						var index = value.search(/ [^ ]*$/);
+						var k = value.slice(index + 1);
+						var display_text = value.slice(0, index);
 						$('#select-name-assessment-report').append($('<'+'option>').attr('value', k).text(display_text));
 					});
 
@@ -101,7 +108,7 @@
 					width: 820,
 					height: 500,
 					modal: true,
-					title: 'Example of an empty in report',
+					title: 'Example of an empty review template',
 					buttons: { "Close": function() { $(this).dialog("close"); } }
 				});
 
@@ -340,11 +347,11 @@
 		}
 	</style>
 	<span class="surveyPreview" tal:condition="not:request/edit|nothing">
-		<input type="submit" id="empty_opener" value="Preview the full Review Template" />
+		<input i18n:attributes="value" type="submit" id="empty_opener" value="Preview the full Review Template" />
 		<div id="empty_report_preview"></div>
 	</span>
 	<span class="surveyPreview" tal:condition="not:request/edit|nothing">
-		<input type="submit" id="opener" value="Preview a model Review Template" />
+		<input i18n:attributes="value" type="submit" id="opener" value="Preview a model Review Template" />
 		<div id="report_preview"></div>
 	</span>
 <script type="text/javascript">
