@@ -1,5 +1,6 @@
 1.0.2 (unreleased)
 ------------------
+* uncommited changes to validation_html (Review Template) [dumitval]
 
 1.0.1 (2012-04-03)
 ------------------
