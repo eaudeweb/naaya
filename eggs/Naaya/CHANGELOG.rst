@@ -1,4 +1,7 @@
-3.2.30 (unreleased)
+3.2.31 (unreleased)
+-------------------
+
+3.2.30 (2013-03-18)
 -------------------
 * inline styling for delete_confirmation [dumitval]
 * #14158 frameservice provides user groups (eionet roles) [simiamih]
