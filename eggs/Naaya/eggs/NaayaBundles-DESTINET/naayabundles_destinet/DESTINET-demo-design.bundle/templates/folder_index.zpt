@@ -31,7 +31,11 @@
 			var plus_url = 'misc_/Naaya/plus.gif';
 			var minus_url = 'misc_/Naaya/minus.gif';
 			$('.hidden').hide();
-			$('.hidden').before('<img class="show_more" src="'+plus_url+'"/>');
+			$('.hidden').each(function(){
+				if ($(this).attr('id') != 'dialog-delete-confirm'){
+					$(this).before('<img class="show_more" src="'+plus_url+'"/>');
+				}
+			});
 			$('.show_more').click(function(){
 				if ($(this).attr('src') == plus_url){
 					$(this).attr('src', minus_url);
