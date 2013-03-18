@@ -1,6 +1,6 @@
 3.2.30 (unreleased)
 -------------------
-* #14158 frameservice provides user local roles for site ob [simiamih]
+* #14158 frameservice provides user groups (eionet roles) [simiamih]
 * #14093 fixed tipsy [simiamih]
 
 3.2.29 (2013-03-15)

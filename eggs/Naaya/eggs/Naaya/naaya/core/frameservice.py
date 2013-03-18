@@ -6,13 +6,12 @@ def frame_view(context, request):
     # TODO documentation
     user = request.AUTHENTICATED_USER
     site = context.getSite()
-    users_tool = site.acl_users
+    users_tool = site.getAuthenticationTool()
     first_name = ''
     last_name = ''
     email = ''
     phone_number = ''
-    site_roles = []
-
+    groups = []
     try:
         if hasattr(site, "member_search"):
             user_ob = site.member_search._search_users(user.getId())[0] #ldap
@@ -23,14 +22,23 @@ def frame_view(context, request):
         last_name = user_ob.last_name
         phone_number = user_ob.phone_number
         email = user_ob.email
+        # Get groups (Eionet Roles)
+        sources = users_tool.getSources()
+        if sources:
+            try:
+                from eea.usersdb.factories import agent_from_uf
+            except ImportError, e:
+                pass
+            else:
+                agent = agent_from_uf(sources[0].getUserFolder())
+                ldap_roles = sorted(agent.member_roles_info('user',
+                                                            user.getId(),
+                                                            ('description',)))
+                for (role_id, attrs) in ldap_roles:
+                    groups.append((role_id, attrs.get('description', ('', ))[0]))
     except:
         pass
 
-    all_site_roles = site.get_local_roles()
-    for (username, role_names) in all_site_roles:
-        if username == user:
-            site_roles = list(role_names)
-            break
     response_data = {
         'frame_html': context['frame.html'](),
         'user_id': user.getId(),
@@ -39,6 +47,6 @@ def frame_view(context, request):
         'user_last_name': last_name,
         'email': email,
         'user_phone_number': phone_number,
-        'site_roles': site_roles, # user local roles for site obj.
+        'groups': groups
     }
     return json_response(response_data, request.RESPONSE)
