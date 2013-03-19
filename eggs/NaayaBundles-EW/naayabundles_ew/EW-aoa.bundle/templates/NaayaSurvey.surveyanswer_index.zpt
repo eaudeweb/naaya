@@ -12,11 +12,8 @@
 </metal:block>
 
 <metal:block fill-slot="body">
-<h1>
-	<img tal:attributes="
-		src python:test(here.approved, here.icon, here.icon_marked);
-		title here/meta_label;
-		alt here/meta_label" />
+<h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
+	<metal:block use-macro="site_object_index/macros/icon"/>
 	<tal:block tal:replace="here/title_or_id" />
 </h1>
 
@@ -77,7 +74,7 @@
 									Upon saving an interim version, your answer will not be considered a final answer anymore.
 								</p>
 								<p tal:condition="python: editing and can_delete" i18n:translate="">
-									If you want to remove the questionnaire, click the <strong i18n:name="delete_answer">Delete answer</strong> button at the end. (Note: you will not be able to recover the answer afterwards).
+									If you want to remove the questionnaire, click the <strong i18n:name="delete_answer">Delete answer</strong> button at the end. (Note: you will not be able to recover the responses afterwards).
 								</p>
 								<p tal:condition="python: editing and not can_delete" i18n:translate="">
 									You can't remove the questionnaire, because there is at least one Review Template attached to it.
@@ -119,7 +116,6 @@
 
 			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
 					content="structure python:here.show_recaptcha(here)" />
-
 
 			<div class="surveySubmit">
 				<input type="submit"
