@@ -27,14 +27,9 @@
 </metal:block>
 
 <metal:block fill-slot="body">
-    
 
-
-<h1>
-	<img tal:attributes="
-		src python:test(here.approved, here.icon, here.icon_marked);
-		title here/meta_label;
-		alt here/meta_label" />
+<h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
+	<metal:block use-macro="site_object_index/macros/icon"/>
 	<tal:block tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>
@@ -72,15 +67,13 @@
     user_anonymous python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
 ">
 
-<div class="survey-content" tal:condition="here/description" tal:content="structure here/description" />
-
 <noscript>
 	<p i18n:translate="" class="message-error">
 		You must have Javascript turned on to access these features.
 	</p>
 </noscript>
 
-<form name="frmAdd" method="post" action="." enctype="multipart/form-data" style="display: none">
+<form name="frmAdd" method="post" action="." enctype="multipart/form-data">
 
 <div class="survey-box" tal:define="days_left python:here.get_days_left()">
 	<h3 class="survey-box-title" i18n:translate="">
@@ -103,12 +96,12 @@
 					tal:condition="python:'bibliography-details-each-assessment' not in here.absolute_url() and 'general-template' not in here.absolute_url()">
 					<span tal:condition="python:(days_left[0] == 1 and days_left[1] > 0) or here.allow_overtime">
 						<tal:block condition="python: days_left[1] == 1" i18n:translate="">
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="today"
 								  i18n:translate="">Today</span>
 							is the last day for this survey.
 						</tal:block>
 						<tal:block condition="python: days_left[1] == 2" i18n:translate="">
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="tomorrow"
 								  i18n:translate="">Tomorrow</span>
 							is the last day for this survey.
 						</tal:block>
@@ -127,7 +120,7 @@
 						</tal:block>
 						<tal:block condition="python: days_left[1] <= 1" i18n:translate="">
 							This survey starts
-							<span class="survey-important-detail" i18n:name="when"
+							<span class="survey-important-detail" i18n:name="tomorrow"
 								  i18n:translate="">tomorrow</span>.
 						</tal:block>
 					</span>
@@ -186,10 +179,11 @@
 							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end.
 						</p>
 						<p tal:condition="python: not editing and here.allow_drafts and user_anonymous" i18n:translate="">
-							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end.
+							Fill the questionnaire and click the <strong i18n:name="submit">Submit</strong> button at the end.
+							<a tal:attributes="href string:${here/getSitePath}/login_html?came_from=${request/ACTUAL_URL}&amp;disable_cookie_login__=1" i18n:name="login" i18n:translate="">Login</a> with your account if you wish to save an interim version.
 						</p>
 						<p tal:condition="python: not editing and here.allow_drafts and not user_anonymous" i18n:translate="">
-							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end or use the <strong i18n:name="save_as_draft">Save as draft</strong> button if you wish to save an interim version.
+							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end or use the <strong i18n:name="save_as_draft" i18n:translate="">Save as draft</strong> button if you wish to save an interim version.
 						</p>
 
 						<p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
@@ -225,6 +219,8 @@
 	</div>
 </div>
 
+<div class="survey-content" tal:condition="here/description" tal:content="structure here/description" />
+
 <tal:block condition="python: not here.expired() or here.checkPermissionPublishObjects()">
 
 		<p class="message-information" style="font-size:100%" tal:condition="not: here/checkPermissionAddAnswer"><strong>&ndash; <tal:block i18n:translate="">For preview only</tal:block> &ndash;</strong></p>
@@ -238,8 +234,16 @@
 						<tal:block tal:replace="structure attachment/description">description</tal:block>
 						<br/>
 						<tal:block tal:define="download_url attachment/getDownloadUrl">
-							<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
-								<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
+							<a tal:define="size python:attachment.utShowSizeKb(attachment.size());
+							content_type attachment/content_type;
+							icon python:here.rstk.icon_for_content_type(content_type);
+							title python:icon['title'];
+							url python:icon['url']"
+							tal:attributes="href download_url">
+								<img tal:attributes="src url;
+													alt title;
+													title title" />
+								<span tal:replace="string:${attachment/downloadfilename} (${title}, ${size} Kb)"/>
 							</a>
 						</tal:block>
 					</li>
@@ -254,7 +258,7 @@
 			<tal:block tal:content="structure python:here.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {}))" />
 
 			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
-					content="structure python: here.show_recaptcha(here)" />
+			           content="structure python:here.show_recaptcha(here)" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">

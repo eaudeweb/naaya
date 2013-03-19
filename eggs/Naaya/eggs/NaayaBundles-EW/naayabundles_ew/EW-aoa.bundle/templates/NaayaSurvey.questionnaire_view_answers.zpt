@@ -32,7 +32,6 @@
     </a>
 </div>
 
-
 <tal:block define="can_edit here/checkPermissionEditAnswers;
 					auth_tool python:here.getSite().getAuthenticationTool()">
 <tal:block define="answers python:here.getAnswers()">
@@ -41,11 +40,11 @@
 		<ol>
 			<tal:block repeat="answer answers">
 				<li>
-					<a tal:attributes="href answer/absolute_url">
+					<a tal:attributes="href answer/absolute_url" i18n:translate="">
 						Answered by
-						<tal:block replace="python: auth_tool.name_from_userid(answer.respondent) or answer.respondent">username</tal:block>
+						<tal:block replace="python: auth_tool.name_from_userid(answer.respondent) or answer.respondent" i18n:name="respondent">username</tal:block>
 						on
-						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)">date</tal:block>
+						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)" i18n:name="answer-date">date</tal:block>
 					</a>
 					<span tal:condition="can_edit">(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
 				</li>
@@ -63,11 +62,11 @@
 		<ol>
 			<tal:block repeat="draft drafts">
 				<li>
-					<a tal:attributes="href draft/absolute_url">
+					<a tal:attributes="href draft/absolute_url" i18n:translate="">
 						Draft by
-						<tal:block replace="python: auth_tool.name_from_userid(draft.respondent) or draft.respondent">username</tal:block>
+						<tal:block replace="python: auth_tool.name_from_userid(draft.respondent) or draft.respondent" i18n:name="respondent">username</tal:block>
 						on
-						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)">date</tal:block>
+						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)" i18n:name="answer-date">date</tal:block>
 					</a>
 					<span tal:condition="can_edit">(<a tal:attributes="href string:${draft/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
 				</li>
@@ -86,9 +85,9 @@
 		<ol>
 			<tal:block repeat="draft my_drafts">
 				<li>
-					<a tal:attributes="href draft/absolute_url">
+					<a tal:attributes="href draft/absolute_url" i18n:translate="">
 						Draft on
-						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)">date</tal:block>
+						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)" i18n:name="answer-date">date</tal:block>
 					</a>
 					<span>(<a tal:attributes="href string:${draft/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
 				</li>
