@@ -228,10 +228,10 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     permission = Permission(change_permissions, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE, OWNER_ROLE])
     permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (), ob)
-    permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
+    permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
+                         ADMINISTRATOR_ROLE, OWNER_ROLE])
     permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE, OWNER_ROLE])
-    ob.manage_addLocalRoles(contributor, [OWNER_ROLE])
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
