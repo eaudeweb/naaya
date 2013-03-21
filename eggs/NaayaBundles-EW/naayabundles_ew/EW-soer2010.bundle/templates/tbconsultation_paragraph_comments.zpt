@@ -6,8 +6,7 @@ to show a whole tree of comments.
 <tal:block condition="nothing">
 <li class="tb-comment-box"
     metal:define-macro="comment"
-    tal:define="embedded embedded|nothing"
-    tal:condition="python:comment.visible_to_user(request)">
+    tal:define="embedded embedded|nothing">
     <div class="tb-comment"
          tal:define="comment_id comment/id">
         <div class="tb-comment-head"
