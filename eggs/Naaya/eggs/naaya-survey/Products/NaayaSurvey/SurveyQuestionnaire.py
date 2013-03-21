@@ -311,7 +311,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 self.setSession('title', 'Thank you for taking the survey')
                 self.setSession('body', '')
                 self.setSession('referer', self.absolute_url())
-                REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
+                if self.aq_parent.meta_type == 'Naaya Meeting':
+                    REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
+                else:
+                    REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
             else:
                 REQUEST.RESPONSE.redirect('%s?edit=1' % answer.absolute_url())
         return answer_id

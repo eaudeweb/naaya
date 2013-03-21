@@ -1,5 +1,7 @@
 1.2.27 (unreleased)
 ===================
+* redirect to the parent after answer submit ONLY IF IN MEETING [dumitval]
+* small template improvements [dumitval]
 
 1.2.26 (2013-02-28)
 ===================
