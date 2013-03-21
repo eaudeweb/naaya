@@ -14,16 +14,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </metal:block>
 
-<metal:block fill-slot="body">
-<link rel="stylesheet" type="text/css" media="all"
-	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+<metal:block fill-slot="head">
+    <link rel="stylesheet" type="text/css" media="all"
+    tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+    <script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+	    type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+</metal:block>
 
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-<script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
-	type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+<metal:block fill-slot="body">
 
 <h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
 	<metal:block use-macro="site_object_index/macros/icon"/>
