@@ -1,5 +1,6 @@
 1.2.36 (unreleased)
 -------------------
+* permission fix for meetings added by contributors [simiamih]
 * bugfix in meeting list participants [mihaitab]
 * clear session on meeting index [mihaitab]
 
