@@ -554,8 +554,10 @@ class NyMeeting(NyContentData, NyFolder):
             if question:
                 for answer in survey.objectValues('Naaya Survey Answer'):
                     if answer.respondent in [uid, 'signup:'+uid]:
-                        return question.get_value(getattr(answer, qid))
-
+                        try:
+                            return question.get_value(getattr(answer.aq_base, qid))
+                        except AttributeError:
+                            return ''
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/meeting_manage_edit', globals())
