@@ -1,6 +1,6 @@
 <metal:block use-macro="here/standard_template_macro">
-<metal:block fill-slot="body">
 
+<metal:block fill-slot="head">
 <link rel="stylesheet" type="text/css" media="all"
 	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
 
@@ -8,7 +8,9 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+</metal:block>
 
+<metal:block fill-slot="body">
 <h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
 	<metal:block use-macro="site_object_index/macros/icon"/>
 	<tal:block tal:replace="here/title_or_id" />
