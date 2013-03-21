@@ -1,4 +1,7 @@
-1.2.27 (unreleased)
+1.2.28 (unreleased)
+===================
+
+1.2.27 (2013-03-21)
 ===================
 * redirect to the parent after answer submit ONLY IF IN MEETING [dumitval]
 * small template improvements [dumitval]
