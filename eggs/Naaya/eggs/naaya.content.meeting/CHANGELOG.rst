@@ -1,4 +1,7 @@
-1.2.36 (unreleased)
+1.2.37 (unreleased)
+-------------------
+
+1.2.36 (2013-03-21)
 -------------------
 * permission fix for meetings added by contributors [simiamih]
 * bugfix in meeting list participants [mihaitab]
