@@ -566,9 +566,6 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        # clean any data on session to avoid overwriting in editing
-        REQUEST.SESSION.clear()
-
         if self.survey_required and (self.registration_status() or
                                      self.isParticipant()):
             survey_ob = self.get_survey()
