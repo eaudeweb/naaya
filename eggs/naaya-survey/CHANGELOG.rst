@@ -1,5 +1,6 @@
 1.2.28 (unreleased)
 ===================
+* bugifx in survey session [nituacor]
 
 1.2.27 (2013-03-21)
 ===================
