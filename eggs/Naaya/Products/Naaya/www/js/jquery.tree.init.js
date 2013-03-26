@@ -1,15 +1,10 @@
-$(document).ready(function(){
-    load_js_tree();
-});
-/**
- * Load JSTree
-*/
-function load_js_tree(){
-    var initial_url = TREE_GET_URL;
-    if(TREE_INITIAL_NODE) {
-        initial_url += "?node=" + TREE_INITIAL_NODE;
+function load_js_tree(options){
+    var initial_url = options.TREE_GET_URL;
+    if(options.TREE_INITIAL_NODE) {
+        var separator = (initial_url.indexOf('?') > -1) ? '&' : '?';
+        initial_url += separator + "node=" + options.TREE_INITIAL_NODE;
     }
-    $(TREE_CONTAINER).tree({
+    $(options.TREE_CONTAINER).tree({
         data:{
             type : "json",
             opts : {
@@ -27,7 +22,7 @@ function load_js_tree(){
             onopen: function(NODE, TREE_OBJ){
                 if ($.inArray(NODE, TREE_OBJ.opened_nodes) == -1){//Reload
                     TREE_OBJ.opened_nodes.push(NODE);
-                    $.getJSON(TREE_GET_URL, {'node': $(NODE).attr('title')}, function(data){
+                    $.getJSON(options.TREE_GET_URL, {'node': $(NODE).attr('title')}, function(data){
                         $.each($(NODE).children().children('li'), function(i, node){
                             TREE_OBJ.remove(node);
                         })
@@ -41,7 +36,7 @@ function load_js_tree(){
                 // If the tree_container has xxx_tree id the target input should have xxx_tree_target class
                 var target = $('.' + TREE_OBJ.container.attr('id') + '_target');
                 if (target.length){
-                    target.val(TREE_URL_PREFIX + $(NODE).attr('title'));
+                    target.val(options.TREE_URL_PREFIX + $(NODE).attr('title'));
                 } else {
                     alert('Error: Please set up the target input class');
                 }
