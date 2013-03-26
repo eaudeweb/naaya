@@ -9,6 +9,8 @@
 		<form id="folder_listing" title="Folder contents customisation for Groupware"/>
 		<form id="site_index" title="IG index customisation for Groupware"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
+		<form id="schemawidget-NyMeeting-pointer" title="Custom form for Meeting pointer"/>
+		<form id="schemawidget-NyMeeting-survey_pointer" title="Custom form for Meeting survey pointer"/>
 	</forms>
 	<layout default_skin_id="groupware"
 		default_scheme_id="eionet"
