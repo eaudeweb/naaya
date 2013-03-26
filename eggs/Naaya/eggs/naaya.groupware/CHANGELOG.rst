@@ -1,4 +1,7 @@
-1.3.3 (unreleased)
+1.3.4 (unreleased)
+-------------------
+
+1.3.3 (2013-03-26)
 -------------------
 * Update Meeting pointer widgets + update script [nituacor]
 * View for Reviewer [simiamih]
