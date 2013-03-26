@@ -1,4 +1,7 @@
-1.2.37 (unreleased)
+1.2.38 (unreleased)
+-------------------
+
+1.2.37 (2013-03-26)
 -------------------
 * revert deleted session [nituacor]
 
