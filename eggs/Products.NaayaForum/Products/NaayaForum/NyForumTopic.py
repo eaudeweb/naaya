@@ -115,6 +115,16 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         self.releasedate = postdate
         self.sort_reverse = sort_reverse
 
+    def __getitem__(self, key):
+        """ """
+        if key.startswith('msg') or key.isdigit():
+            try:
+                return getattr(self, key)
+            except AttributeError:
+                self.setSessionInfo(['This message has been deleted by the owner or by a forum administrator.'])
+                return self
+        raise KeyError, key
+
     #api
     def get_topic_object(self): return self
     def get_topic_path(self, p=0): return self.absolute_url(p)
