@@ -1433,21 +1433,23 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
     def getNavigationSiteMap(self, REQUEST=None, all=False, only_folders=False,
-                             subportals=False, **kwargs):
+                             subportals=False, filter_meta_types=None, **kwargs):
         """
         Return JSON tree of the sitemap
         Used with javascript tree libraries
         """
+
         node = REQUEST.form.get('node', '')
         if not node or node == '/':
             node = ''
 
-        ret = self.getNavigationObjects(node, all, only_folders, subportals)
+        ret = self.getNavigationObjects(node, all, only_folders, subportals, meta_types=filter_meta_types)
+
         return json.dumps(ret)
 
     security.declarePrivate('getNavigationObjects')
     def getNavigationObjects(self, node='', all=False, only_folders=False,
-                             subportals=False, root_site=None):
+                             subportals=False, root_site=None, meta_types=None):
         """
         Returns list of objects needed by getNavigationSiteMap to construct
         JSON for js tree
@@ -1464,7 +1466,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             res = []
             for item in items:
                 if INySite.providedBy(item):
-                    res.append(item.getNavigationObjects('', all, only_folders, subportals, root_site=root_site))
+                    res.append(item.getNavigationObjects('', all, only_folders, subportals, 
+                                                         root_site=root_site, meta_types=meta_types))
                     continue
 
                 children_items = []
@@ -1472,7 +1475,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     node = path_in_site(item)
                     containers = self.getContents(node, published=(not all),
                                                   only_folders=only_folders,
-                                                  subportals=subportals)
+                                                  subportals=subportals,
+                                                  meta_types=meta_types)
                     children_items = recurse(containers, level+1, stop_level)
 
                 res.append(dict(
@@ -1488,7 +1492,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return res
 
         items = self.getContents(node, published=(not all),
-                               only_folders=only_folders, subportals=subportals)
+                               only_folders=only_folders, subportals=subportals, meta_types=meta_types)
         ret = recurse(items)
 
         # Adding the portal if we are in root
@@ -1525,7 +1529,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePrivate('getContainerContents')
     def getContents(self, path='', only_folders=False,
-                    published=True, subportals=False):
+                    published=True, subportals=False, meta_types=None):
         """
         Lookup location can be folder specified by `path` or portal in self.
         * If only_folders is True, only return METATYPE_FOLDER objects.
@@ -1567,6 +1571,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 if INySite.providedBy(ob):
                     continue
                 if not getattr(ob, 'approved', False):
+                    objects.remove(ob)
+
+                if meta_types and ob.meta_type not in meta_types:
                     objects.remove(ob)
 
         return objects
