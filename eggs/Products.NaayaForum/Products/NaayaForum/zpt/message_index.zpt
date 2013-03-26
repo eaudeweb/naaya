@@ -1,1 +1,2 @@
-<span tal:replace="python:request.RESPONSE.redirect(here.get_topic_path())" />
+<span tal:define="topic_url string:${here/get_topic_path}#${here/id}"
+		tal:replace="python:request.RESPONSE.redirect(topic_url)" />
