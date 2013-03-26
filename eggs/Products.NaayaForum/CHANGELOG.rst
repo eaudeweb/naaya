@@ -1,4 +1,7 @@
-1.2.15 (unreleased)
+1.2.16 (unreleased)
+-------------------
+
+1.2.15 (2013-03-26)
 -------------------
 * Warning if the message was deleted since the notification was sent [nituacor]
 * style improvements
