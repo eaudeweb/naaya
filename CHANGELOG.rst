@@ -1,5 +1,6 @@
 1.2.37 (unreleased)
 -------------------
+* revert deleted session [nituacor]
 
 1.2.36 (2013-03-21)
 -------------------
