@@ -1,4 +1,7 @@
-3.2.31 (unreleased)
+3.2.32 (unreleased)
+-------------------
+
+3.2.31 (2013-03-26)
 -------------------
 * optional filters by meta_type added to Ajax tree [nituacor]
 * narrow Zip import to .zip files only [mihaitab]
