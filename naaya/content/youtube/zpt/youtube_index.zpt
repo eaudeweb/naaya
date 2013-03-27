@@ -1,0 +1,73 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'));
+															lang here/gl_get_selected_language;
+															iframe_width python:int(here.iframe_width or 640);
+															input_width python:int(here.iframe_width or 640)-6;
+															iframe_height python:int(here.iframe_height or 360)"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+        <metal:block use-macro="site_object_index/macros/action_buttons"/>
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+				<tal:block condition="here/youtube_id">
+					<iframe frameborder="0" allowfullscreen
+					tal:attributes="width iframe_width;
+					height iframe_height;
+					src string:http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=${here/captions}"></iframe>
+					<br/>
+					<input id="videoEmbed" name="videoEmbed" type="text"
+						style="width: 500px;" readonly="true"
+						onclick="javascript:this.select();"
+						tal:attributes='style string:width:${input_width}px;
+						value string:<!-- Embed video - copy & paste -->
+						<iframe frameborder="0" allowfullscreen
+						width="${iframe_width}" height="${iframe_height}"
+						src ="http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=1"></iframe>'/>
+				</tal:block>
+				<tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>
