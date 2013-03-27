@@ -44,7 +44,7 @@
     <input id="subfolders"
       type="checkbox" name="subfolders" value="Recursively for subfolders"
       i18n:attributes="value"  />
-    <label for="load_default" i18n:translate="">Recursively for subfolders</label>
+    <label for="subfolders" i18n:translate="">Recursively for subfolders</label>
   </div>
   <div id="nypluggable_meta_types"
        tal:define="all_meta_types python:here.get_meta_types(1)">
