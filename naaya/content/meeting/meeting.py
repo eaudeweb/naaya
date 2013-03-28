@@ -240,10 +240,8 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
 
-    subobjects = ob.get_meta_types(1)
-    default_subobjects = ['Naaya Folder', 'Naaya File', 'Naaya URL', 'Naaya Document', 'Naaya Forum', 'Naaya Mega Survey', 'Naaya Media File', 'Naaya Contact']
-    subobjects = list(set(subobjects) & set(default_subobjects))
-    ob.manageSubobjects(ny_subobjects=subobjects)
+    # load default meta_types on meetings (the `use default` logic)
+    ob.manageSubobjects(default='default')
 
     #redirect if case
     if REQUEST is not None:
