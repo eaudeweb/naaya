@@ -1,4 +1,7 @@
-1.2.16 (unreleased)
+1.2.17 (unreleased)
+-------------------
+
+1.2.16 (2013-03-28)
 -------------------
 * first reply can also be marked as top or outdated message [dumitval]
 
