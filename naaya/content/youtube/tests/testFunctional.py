@@ -67,6 +67,19 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('The form contains errors' in html)
         self.failUnless('Value required for "Title"' in html)
 
+        form = self.browser.get_form('frmAdd')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['title:utf8:ustring'] = 'test_youtube'
+        form['description:utf8:ustring'] = 'test_youtube_description'
+        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        # enter an invalid Youtube ID
+        form['youtube_id:utf8:ustring'] = 'aaaaaaaaaaa'
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.failUnless('The form contains errors' in html)
+        self.failUnless('Invalid Youtube ID (inexisting video)' in html)
+
     def test_edit(self):
         self.browser_do_login('admin', '')
 
