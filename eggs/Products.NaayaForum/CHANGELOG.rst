@@ -1,5 +1,6 @@
 1.2.16 (unreleased)
 -------------------
+* first reply can also be marked as top or outdated message [dumitval]
 
 1.2.15 (2013-03-26)
 -------------------
