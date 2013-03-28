@@ -99,7 +99,7 @@
                 content="python:here.aq_parent.getLocalProperty('message_outdated', lang)"/>
             &ndash;&ndash;&ndash;
         </strong>
-				<a tal:condition="python:edit_permission and top_message_on and not item.is_top_message and depth > 20"
+				<a tal:condition="python:edit_permission and top_message_on and not item.is_top_message"
             tal:attributes="href string:${item/absolute_url}/mark_top">
             <tal:block i18n:translate="">Mark as</tal:block>
             <tal:block i18n:translate=""
@@ -111,7 +111,7 @@
             <tal:block i18n:translate=""
               content="python:here.aq_parent.getLocalProperty('message_top', lang)" />
         </a>
-				<a tal:condition="python:edit_permission and outdated_message_on and not item.is_outdated_message and depth > 20"
+				<a tal:condition="python:edit_permission and outdated_message_on and not item.is_outdated_message"
             tal:attributes="href string:${item/absolute_url}/mark_outdated">
             <tal:block i18n:translate="">Mark as</tal:block>
             <tal:block i18n:translate=""
