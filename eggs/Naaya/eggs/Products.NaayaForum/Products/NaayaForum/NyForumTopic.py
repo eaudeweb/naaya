@@ -194,14 +194,11 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         if self.sort_reverse:
             items = self.utSortObjsListByAttr(items, 'postdate')
         messages_thread = self.__get_messages_thread(items, None, 1)
+        #insert the top message also at the top, if it is not already there
         for (depth, message) in messages_thread:
-            if message.is_top_message:
-                messages_thread = [messages_thread[0]] + [(2, message)] + messages_thread[1:]
-        #If the first reply is the one marked as top message
-        #then it shouldn't appear twice in the listing
-        if len(messages_thread) > 2:
-            if messages_thread[1] == messages_thread[2]:
-                messages_thread.pop(1)
+            if message.is_top_message and depth > 1:
+                messages_thread = [(1, message)] + messages_thread
+                break
         return messages_thread
 
     security.declarePublic('get_last_message')
