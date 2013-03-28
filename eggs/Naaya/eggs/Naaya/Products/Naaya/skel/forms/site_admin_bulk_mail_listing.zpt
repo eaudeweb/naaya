@@ -20,8 +20,8 @@
 
 <div id="tabbedmenu">
 <ul>
-	<li><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" i18n:translate="">Send new bulk email</a></li>
-	<li id="currenttab"><a i18n:translate="">View sent emails</a></li>
+    <li><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" i18n:translate="">Send new bulk email</a></li>
+    <li id="currenttab"><a i18n:translate="">View sent emails</a></li>
 </ul>
 </div>
 <div id="tabbedmenuend"></div>
@@ -99,8 +99,8 @@
                 Date
             </th>
 
-            <th i18n:translate="" width="10%">
-                Sender
+            <th i18n:translate="" width="30%">
+                Subject
             </th>
 
             <th i18n:translate="" width="20%">
@@ -108,11 +108,11 @@
             </th>
 
             <th i18n:translate="" width="30%">
-                Subject
+                Content
             </th>
 
-            <th i18n:translate="" width="30%">
-                Content
+            <th i18n:translate="" width="10%">
+                Sender
             </th>
         </tr>
     </tfoot>

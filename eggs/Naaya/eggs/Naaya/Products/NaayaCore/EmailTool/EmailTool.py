@@ -204,9 +204,10 @@ class EmailTool(Folder):
         kwargs['_immediately'] = True
         self.sendEmail(*args, **kwargs)
 
-    #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
-    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
+    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='',
+                       mail_address_from='', notify_on_errors_email='',
+                       notify_on_webex_email='', REQUEST=None):
         """ """
         site = self.getSite()
         try: mail_server_port = int(mail_server_port)
@@ -216,6 +217,7 @@ class EmailTool(Folder):
         site.mail_address_from = mail_address_from
         site.administrator_email = administrator_email
         site.notify_on_errors_email = notify_on_errors_email
+        site.notify_on_webex_email = notify_on_webex_email
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
@@ -287,7 +289,8 @@ def create_message(text, addr_to, addr_from, subject):
 
     return message
 
-def save_bulk_email(site, addr_to, addr_from, subject, content):
+def save_bulk_email(site, addr_to, addr_from, subject, content,
+                    where_to_save='sent-bulk'):
     """
     Save bulk email on disk.
     `addr_to` is a list; if there is more than one recipient,
@@ -299,7 +302,7 @@ def save_bulk_email(site, addr_to, addr_from, subject, content):
     filename = None
 
     if save_path:
-        save_path = join(save_path, 'sent-bulk')
+        save_path = join(save_path, where_to_save)
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
@@ -333,14 +336,14 @@ def save_bulk_email(site, addr_to, addr_from, subject, content):
                             " Missing configuration for SITES_LOG_PATH?")
     return filename
 
-def get_bulk_emails(site):
+def get_bulk_emails(site, where_to_read='sent-bulk'):
     """ Show all bulk emails saved on the disk """
     save_path = get_log_dir(site)
     join = os.path.join
     emails = []
 
     if save_path:
-        save_path = join(save_path, 'sent-bulk')
+        save_path = join(save_path, where_to_read)
         if os.path.isdir(save_path):
             # Get all messages files
             messages = [join(save_path, filename)
@@ -374,13 +377,13 @@ def get_bulk_emails(site):
 
     return emails
 
-def get_bulk_email(site, filename):
+def get_bulk_email(site, filename, where_to_read='sent-bulk'):
     """ Show a specific bulk email saved on the disk """
     save_path = get_log_dir(site)
     join = os.path.join
 
     if save_path:
-        save_path = join(save_path, 'sent-bulk')
+        save_path = join(save_path, where_to_read)
         if os.path.isdir(save_path):
             message_path = join(save_path, filename)
 
