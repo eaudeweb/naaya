@@ -1,5 +1,6 @@
 1.3.4 (unreleased)
 -------------------
+* bugfixes, refactorting WebEx planning email [mihaitab]
 * Adding the WebEx planning email *update* [nituacor]
 
 1.3.3 (2013-03-26)
