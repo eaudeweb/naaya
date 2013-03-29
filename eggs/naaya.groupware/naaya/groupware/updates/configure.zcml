@@ -34,5 +34,11 @@
       component=".update_meeting_schema.UpdateMeetingSchema"
       permission="zope2.ViewManagementScreens" />
 
+    <utility
+      name="update_webex.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_webex.UpdateWebEx"
+      permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
