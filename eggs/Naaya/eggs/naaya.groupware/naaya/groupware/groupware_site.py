@@ -19,7 +19,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
-from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email, get_bulk_emails
+from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email, get_bulk_emails, get_bulk_email
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
 from naaya.core.zope2util import get_zope_env
@@ -208,83 +208,105 @@ class GroupwareSite(NySite):
         return self.getFormsTool().getContent({'here': self, 'email': email},
             'site_admin_webex_mail_view')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_webex_mail')
-    def send_webex_mail(self, meeting_title, organizer_name, organizer_email,
-                        start_date_id, end_date_id, start_hour, start_minute,
-                        end_hour, end_minute, other_comments='', REQUEST=None):
+    def _validate_form_date(self, value):
+        from DateTime import DateTime
+        try:
+            day, month, year = [int(i) for i in value.strip().split('/')]
+            value = DateTime(year, month, day)
+        except:
+            return False
+
+        return True
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_webex_mail_html')
+    def admin_webex_mail_html(self, REQUEST=None):
         """
         Send email to request a new WebEx meeting booking - all_fields are
         form-dependant
         """
-        email_tool = self.getEmailTool()
-        addr_from = email_tool.get_addr_from()
 
         errors = []
-        if not meeting_title.strip():
-            errors.append("Value required for \"Meeting Title\"")
-        if not organizer_name.strip():
-            errors.append("Value required for \"Organizer full name\"")
-        if not organizer_email.strip():
-            errors.append("Value required for \"Organizer email address\"")
-        if not start_date_id or not start_hour or not start_minute:
-            errors.append("Start date and time must be specified")
-        if not end_date_id or not end_hour or not end_minute:
-            errors.append("End date and time must be specified")
+        options = {'errors': errors}
 
-        if errors:
-            self.setSessionErrorsTrans(errors)
-            return REQUEST.RESPONSE.redirect('%s/admin_webex_mail_html'
-                                      % self.absolute_url())
+        auth_user = self.REQUEST.AUTHENTICATED_USER
+        meeting_requester = " ".join([auth_user.firstname,
+                                      auth_user.lastname])
+
         # get list of recipients (comma-separated)
-        try:
-           mail_recipients = self.notify_on_webex_email
-        except AttributeError:
-            pass
-            # TODO extract the emails from environment variable
+        mail_recipients = self.notify_on_webex_email.strip()
+        if not mail_recipients:
+            self.setSessionErrorsTrans('Invalid value. Please set from {0}/admin_email_html'.format(
+                    self.getSite().absolute_url()))
 
-        # extract list of emails
-        mails = mail_recipients.split(',')
+        if REQUEST.REQUEST_METHOD == 'POST' and mail_recipients:
 
-        requester_obj = self.REQUEST.AUTHENTICATED_USER
-        meeting_requester = " ".join([requester_obj.firstname,
-                                      requester_obj.lastname])
-        mail_subject = "New WebEx meeting booking request"
-        mail_body = ("%s is asking for a new meeting to be added.\n"
-                     "The new meeting is defined by the following properties:\n\n"
-                     "Meeting title: %s\n"
-                     "Meeting organizer: %s (%s)\n"
-                     "Meeting start date(dd/mm/yyyy): %s\n"
-                     "Meeting end date(dd/mm/yyyy): %s\n"
-                     "Meeting start time(hh:mm): %s:%s\n"
-                     "Meeting end time(hh:mm): %s:%s\n"
-                     % (meeting_requester, meeting_title, organizer_name,
-                        organizer_email, start_date_id, end_date_id,
-                        start_hour, start_minute, end_hour, end_minute))
+            email_tool = self.getEmailTool()
+            addr_from = email_tool.get_addr_from()
 
-        if other_comments:
-            mail_body = "".join([mail_body,
-                                 "Observations regarding the new meeting: %s\n"
-                                 % (other_comments)])
+            meeting_title = REQUEST.form.get('meeting_title', '').strip()
+            organizer_name = REQUEST.form.get('organizer_name', '').strip()
+            organizer_email = REQUEST.form.get('organizer_email', '').strip()
+            start_date_id = REQUEST.form.get('start_date_id', '').strip()
+            end_date_id = REQUEST.form.get('end_date_id', '').strip()
+            other_comments = REQUEST.form.get('other_comments', '').strip()
 
-        for mail in mails:
-            email_tool.sendEmail(mail_body, mail, addr_from, mail_subject)
+            if not meeting_title:
+                errors.append('meeting_title')
+            if not organizer_name.strip():
+                errors.append('organizer_name')
+            if not organizer_email.strip():
+                errors.append('organizer_email')
+            if not start_date_id or not self._validate_form_date(start_date_id):
+                errors.append('start_date_id')
+            if not end_date_id or not self._validate_form_date(end_date_id):
+                errors.append('end_date_id')
 
-        try:
-            save_bulk_email(self, mails, meeting_requester, mail_subject,
-                            mail_body, where_to_save='sent-webex')
-        except Exception, e:
-            log.exception("Failed saving webex email on disk")
+            if errors:
+                self.setSessionErrorsTrans('The form contains errors. Please correct them and try again.')
+            else:
 
-        if REQUEST:
-            self.setSessionInfoTrans('WebEx meeting request mail sent. (${date})',
-                                     date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_webex_mail_html'
-                                      % self.absolute_url())
+                # extract list of emails
+                mails = mail_recipients.split(',')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_webex_mail_html')
-    def admin_webex_mail_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return PageTemplateFile('skel/forms/site_admin_webex_mail', globals()).__of__(self)()
+                mail_subject = "New WebEx meeting booking request"
+                mail_body = ("%s is asking for a new meeting to be added.\n"
+                             "The new meeting is defined by the following properties:\n\n"
+                             "Meeting title: %s\n"
+                             "Meeting organizer: %s (%s)\n"
+                             "Meeting start date (dd/mm/yyyy): %s\n"
+                             "Meeting end date (dd/mm/yyyy): %s\n"
+                             % (meeting_requester, meeting_title, organizer_name,
+                                organizer_email, start_date_id, end_date_id))
+
+                if other_comments:
+                    mail_body = mail_body + "Observations regarding the new meeting:\n\n {0}\n".format(
+                                                                                        other_comments)
+
+                for mail in mails:
+                    email_tool.sendEmail(mail_body, mail, addr_from, mail_subject)
+
+                try:
+                    save_bulk_email(self, mails, meeting_requester, mail_subject,
+                                    mail_body, where_to_save='sent-webex')
+                except Exception, e:
+                    log.exception("Failed saving webex email on disk")
+
+                self.setSessionInfoTrans('WebEx meeting request mail sent. (${date})',
+                                         date=self.utGetTodayDate())
+
+                options = {'errors': errors}
+                REQUEST.form.clear()
+
+                #keep initial form data
+                REQUEST['organizer_name'] = meeting_requester
+                REQUEST['organizer_email'] = auth_user.mail
+
+        else:
+
+            REQUEST['organizer_name'] = meeting_requester
+            REQUEST['organizer_email'] = auth_user.mail
+
+        return self._admin_webex_mail(**options)
 
     security.declarePrivate('_user_admin_link')
     def _user_admin_link(self, log_entry):
@@ -563,6 +585,9 @@ class GroupwareSite(NySite):
                                   'naaya.groupware.request_ig_access')
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(),
                                       'naaya.groupware.relinquish_membership')
+
+    _admin_webex_mail = nptf('skel/forms/site_admin_webex_mail', globals(),
+                                  'naaya.groupware.site_admin_webex_mail')
 
     member_search = MemberSearch(id='member_search')
 
