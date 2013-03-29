@@ -1,11 +1,11 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
-    <tal:block metal:fill-slot="title">
-        <h1 i18n:translate="">WebEx planning email</h1>
-    </tal:block>
+  <tal:block metal:fill-slot="title">
+    <h1 i18n:translate="">WebEx planning email</h1>
+  </tal:block>
 
-    <tal:block metal:fill-slot="section"
-        tal:define="logged_user user">
+  <tal:block metal:fill-slot="section"
+    tal:define="logged_user user">
 
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
@@ -13,89 +13,89 @@
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>
 
     <div id="tabbedmenu">
-    <ul>
-      <li id="currenttab"><a i18n:translate="">Send new WebEx conference request</a> </li>
-      <li>
-        <a tal:attributes="href string:${site_url}/admin_saved_webex_emails" i18n:translate="">View sent WebEx requests</a>
-      </li>
-    </ul>
+      <ul>
+        <li id="currenttab"><a i18n:translate="">Send new WebEx conference request</a></li>
+        <li>
+          <a tal:attributes="href string:${site_url}/admin_saved_webex_emails" i18n:translate="">View sent WebEx requests</a>
+        </li>
+      </ul>
     </div>
-    <div id="tabbedmenuend"></div>
 
-  <p>&nbsp;</p>
-        <p i18n:translate="">Send an email to request a new WebEx meeting booking
-            to Eionet HelpDesk (or appointed contacts).
-        </p>
+    <p i18n:translate="">Send an email to request a new WebEx meeting booking
+      to Eionet HelpDesk (or appointed contacts).
+    </p>
 
-        <form action="send_webex_mail" method="post">
-            <div class="field">
-                <label for="meeting_title" i18n:translate="">Meeting Title
-                    <span class="mandatory_field">*</span>
-                </label>
-                <input type="text" id="meeting_title" name="meeting_title" size="50" />
-            </div>
-            <div class="field">
-                <label for="organizer_name" i18n:translate="">Organizer full name
-                    <span class="mandatory_field">*</span>
-                </label>
-                <input tal:attributes="value python:' '.join([logged_user.firstname, logged_user.lastname])"
-                       type="text" id="organizer_name" name="organizer_name"
-                size="50" />
-            </div>
-            <div class="field">
-                <label for="organizer_email" i18n:translate="">Organizer email address
-                    <span class="mandatory_field">*</span>
-                </label>
-                <input tal:attributes="value python:logged_user.mail" type="text" id="organizer_email" name="organizer_email" size="50" />
-            </div>
-            <div class="field">
-                <div class="tooltips">
-                    <label i18n:translate="">Meeting interval
-                        <span class="mandatory_field">*</span>
-                    </label>
-                    <label style="display:inline-block; width: 70px;" i18n:translate="" for="start_date_id">
-                        Start date
-                    </label>
-                    <input type="text" class="vDateField" size="10" maxlength="10"
-                           placeholder="dd/mm/yyyy" id="start_date_id" name="start_date_id"/>
-                    <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+    <form method="post" tal:define="errors options/errors | nothing">
 
-                    <select name="start_hour" tal:define="hours python:[x for x in range(1,25)]">
-                      <option value="" selected="selected"></option>
-                      <option tal:repeat="hour hours" tal:attributes="value hour" tal:content="hour"></option>
-                    </select>
-                    <select name="start_minute" tal:define="hours python:['00', '15', '30', '45']">
-                      <option value="" selected="selected"></option>
-                      <option tal:repeat="hour hours" tal:attributes="value hour" tal:content="hour"></option>
-                    </select>
-                    <span>hh:mm</span>
-                    <br />
+      <div class="field">
+        <label for="meeting_title" i18n:translate="">Meeting Title
+          <span i18n:name="mandatory" class="mandatory_field">*</span>
+        </label>
+        <input type="text" id="meeting_title" name="meeting_title" size="50" 
+            tal:attributes="value request/meeting_title | nothing" />
+        <span class="form-errors"
+            tal:condition="python: 'meeting_title' in errors"
+            i18n:translate="">Value required for "Meeting Title"</span>
+      </div>
 
-                    <label style="display:inline-block; width: 70px;" i18n:translate="" for="end_date_id">
-                        End date
-                    </label>
-                    <input type="text" class="vDateField" size="10" maxlength="10"
-                           placeholder="dd/mm/yyyy" id="end_date_id" name="end_date_id"/>
-                    <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+      <div class="field">
+        <label for="organizer_name" i18n:translate="">Organizer full name
+          <span i18n:name="mandatory" class="mandatory_field">*</span>
+        </label>
+        <input tal:attributes="value request/organizer_name | nothing"
+             type="text" id="organizer_name" name="organizer_name"
+            size="50" />
+        <span class="form-errors"
+            tal:condition="python: 'organizer_name' in errors"
+            i18n:translate="">Value required for "Organizer full name"</span>
+      </div>
 
-                    <select name="end_hour" tal:define="hours python:[x for x in range(1,25)]">
-                      <option value="" selected="selected"></option>
-                      <option tal:repeat="hour hours" tal:attributes="value hour" tal:content="hour"></option>
-                    </select>
-                    <select name="end_minute" tal:define="hours python:['00', '15', '30', '45']">
-                      <option value="" selected="selected"></option>
-                      <option tal:repeat="hour hours" tal:attributes="value hour" tal:content="hour"></option>
-                    </select>
-                    <span>hh:mm</span>
-                </div>
-            </div>
+      <div class="field">
+        <label for="organizer_email" i18n:translate="">Organizer email address
+          <span i18n:name="mandatory" class="mandatory_field">*</span>
+        </label>
+        <input tal:attributes="value request/organizer_email | nothing" 
+            type="text" id="organizer_email" name="organizer_email" size="50" />
+        <span class="form-errors"
+            tal:condition="python: 'organizer_email' in errors"
+            i18n:translate="">Value required for "Organizer email address"</span>
+      </div>
 
-            <div class="field">
-                <label for="other_comments" i18n:translate="">Other comments
-                </label>
-                <textarea type="text" id="other_comments" name="other_comments" cols="50" rows="7"></textarea>
-            </div>
-            <input type="submit" value="Send mail" i18n:attributes="value">
-        </form>
-    </tal:block>
+      <div class="field">
+        <label i18n:translate="" for="start_date_id">
+          Start date<span i18n:name="mandatory" class="mandatory_field">*</span>
+        </label>
+        <input type="text" class="vDateField" size="12" maxlength="10"
+            placeholder="dd/mm/yyyy" id="start_date_id" name="start_date_id"
+            tal:attributes="value request/start_date_id | nothing" />
+        <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+        <span class="form-errors"
+          tal:condition="python: 'start_date_id' in errors"
+          i18n:translate="">Value required for "Start date"</span>
+      </div>
+
+      <div class="field">
+        <label i18n:translate="" for="end_date_id">
+          End date<span i18n:name="mandatory" class="mandatory_field">*</span>
+        </label>
+        <input type="text" class="vDateField" size="12" maxlength="10"
+             placeholder="dd/mm/yyyy" id="end_date_id" name="end_date_id"
+             tal:attributes="value request/end_date_id | nothing" />
+        <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+        <span class="form-errors"
+          tal:condition="python: 'end_date_id' in errors"
+          i18n:translate="">Value required for "End date"</span>
+      </div>
+
+      <div class="field">
+        <label for="other_comments" i18n:translate="">Other comments
+        </label>
+        <textarea type="text" id="other_comments" name="other_comments" cols="50" rows="7"
+            tal:content="request/other_comments | nothing"></textarea>
+      </div>
+
+      <input type="submit" value="Send mail" i18n:attributes="value">
+
+    </form>
+  </tal:block>
 </tal:block>

@@ -1,9 +1,10 @@
 1.3.4 (unreleased)
 -------------------
+* Adding the WebEx planning email *update* [nituacor]
 
 1.3.3 (2013-03-26)
 -------------------
-* Update Meeting pointer widgets + update script [nituacor]
+* Update Meeting pointer widgets *update* [nituacor]
 * View for Reviewer [simiamih]
 
 1.3.2 (2013-03-04)
