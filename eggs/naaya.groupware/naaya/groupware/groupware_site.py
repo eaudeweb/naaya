@@ -209,14 +209,13 @@ class GroupwareSite(NySite):
             'site_admin_webex_mail_view')
 
     def _validate_form_date(self, value):
-        from DateTime import DateTime
+        from datetime import datetime
         try:
-            day, month, year = [int(i) for i in value.strip().split('/')]
-            value = DateTime(year, month, day)
-        except:
+            date = datetime.strptime(value, "%d/%m/%Y %H:%M")
+        except ValueError:
             return False
 
-        return True
+        return date
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_webex_mail_html')
     def admin_webex_mail_html(self, REQUEST=None):
@@ -235,8 +234,10 @@ class GroupwareSite(NySite):
         # get list of recipients (comma-separated)
         mail_recipients = self.notify_on_webex_email.strip()
         if not mail_recipients:
-            self.setSessionErrorsTrans('Invalid value. Please set from {0}/admin_email_html'.format(
-                    self.getSite().absolute_url()))
+            self.setSessionErrorsTrans("Missing Eionet HelpDesk recipient(s) email address."
+                                       "Please complete it through "
+                                       "\"IG properties\" -> \"Email"
+                                       " Settings\" from Administration panel")
 
         if REQUEST.REQUEST_METHOD == 'POST' and mail_recipients:
 
@@ -248,7 +249,12 @@ class GroupwareSite(NySite):
             organizer_email = REQUEST.form.get('organizer_email', '').strip()
             start_date_id = REQUEST.form.get('start_date_id', '').strip()
             end_date_id = REQUEST.form.get('end_date_id', '').strip()
+            start_timing = REQUEST.form.get('start_timing', '').strip()
+            end_timing = REQUEST.form.get('end_timing', '').strip()
             other_comments = REQUEST.form.get('other_comments', '').strip()
+
+            start_date = " ".join([start_date_id, start_timing])
+            end_date = " ".join([end_date_id, end_timing])
 
             if not meeting_title:
                 errors.append('meeting_title')
@@ -256,13 +262,20 @@ class GroupwareSite(NySite):
                 errors.append('organizer_name')
             if not organizer_email.strip():
                 errors.append('organizer_email')
-            if not start_date_id or not self._validate_form_date(start_date_id):
+
+            validated_start_date = self._validate_form_date(start_date)
+            validated_end_date = self._validate_form_date(end_date)
+            if not validated_start_date:
                 errors.append('start_date_id')
-            if not end_date_id or not self._validate_form_date(end_date_id):
-                errors.append('end_date_id')
+            if not validated_end_date:
+               errors.append('end_date_id')
+            if validated_start_date and validated_end_date:
+                if validated_start_date > validated_end_date:
+                    errors.append('twisted_dates')
 
             if errors:
-                self.setSessionErrorsTrans('The form contains errors. Please correct them and try again.')
+                self.setSessionErrorsTrans("The form contains errors. "
+                                           "Please correct them and try again.")
             else:
 
                 # extract list of emails
@@ -273,14 +286,17 @@ class GroupwareSite(NySite):
                              "The new meeting is defined by the following properties:\n\n"
                              "Meeting title: %s\n"
                              "Meeting organizer: %s (%s)\n"
-                             "Meeting start date (dd/mm/yyyy): %s\n"
-                             "Meeting end date (dd/mm/yyyy): %s\n"
+                             "Meeting start date: %s\n"
+                             "Meeting end date: %s\n"
                              % (meeting_requester, meeting_title, organizer_name,
-                                organizer_email, start_date_id, end_date_id))
+                                organizer_email,
+                                validated_start_date.strftime("%d/%m/%Y %H:%M"),
+                                validated_end_date.strftime("%d/%m/%Y %H:%M")))
 
                 if other_comments:
-                    mail_body = mail_body + "Observations regarding the new meeting:\n\n {0}\n".format(
-                                                                                        other_comments)
+                    mail_body = mail_body + ("Observations regarding the "
+                                             "new meeting:\n\n "
+                                             "{0}\n".format(other_comments))
 
                 for mail in mails:
                     email_tool.sendEmail(mail_body, mail, addr_from, mail_subject)

@@ -31,7 +31,7 @@
         <label for="meeting_title" i18n:translate="">Meeting Title
           <span i18n:name="mandatory" class="mandatory_field">*</span>
         </label>
-        <input type="text" id="meeting_title" name="meeting_title" size="50" 
+        <input type="text" id="meeting_title" name="meeting_title" size="50"
             tal:attributes="value request/meeting_title | nothing" />
         <span class="form-errors"
             tal:condition="python: 'meeting_title' in errors"
@@ -54,7 +54,7 @@
         <label for="organizer_email" i18n:translate="">Organizer email address
           <span i18n:name="mandatory" class="mandatory_field">*</span>
         </label>
-        <input tal:attributes="value request/organizer_email | nothing" 
+        <input tal:attributes="value request/organizer_email | nothing"
             type="text" id="organizer_email" name="organizer_email" size="50" />
         <span class="form-errors"
             tal:condition="python: 'organizer_email' in errors"
@@ -69,9 +69,13 @@
             placeholder="dd/mm/yyyy" id="start_date_id" name="start_date_id"
             tal:attributes="value request/start_date_id | nothing" />
         <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+        <input type="text" size="4" maxlength="5" placeholder="00:00"
+               id="start_timing" name="start_timing"
+               tal:attributes="value request/start_timing | nothing" />
+        <span>hh:mm</span>
         <span class="form-errors"
           tal:condition="python: 'start_date_id' in errors"
-          i18n:translate="">Value required for "Start date"</span>
+          i18n:translate="">Invalid "Start date"</span>
       </div>
 
       <div class="field">
@@ -82,11 +86,19 @@
              placeholder="dd/mm/yyyy" id="end_date_id" name="end_date_id"
              tal:attributes="value request/end_date_id | nothing" />
         <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+        <input type="text" size="4" maxlength="5" placeholder="00:00"
+               id="end_timing" name="end_timing"
+               tal:attributes="value request/end_timing | nothing" />
+        <span>hh:mm</span>
         <span class="form-errors"
           tal:condition="python: 'end_date_id' in errors"
-          i18n:translate="">Value required for "End date"</span>
+          i18n:translate="">Invalid "End date"</span>
       </div>
-
+      <div class="field">
+        <span class="form-errors"
+        tal:condition="python: 'twisted_dates' in errors"
+        i18n:translate="">Twisted invalid dates</span>
+      </div>
       <div class="field">
         <label for="other_comments" i18n:translate="">Other comments
         </label>
