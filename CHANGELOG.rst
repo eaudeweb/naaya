@@ -1,4 +1,7 @@
-1.3.4 (unreleased)
+1.3.5 (unreleased)
+-------------------
+
+1.3.4 (2013-03-29)
 -------------------
 * bugfixes, refactorting WebEx planning email [mihaitab]
 * Adding the WebEx planning email *update* [nituacor]
