@@ -1,4 +1,7 @@
-1.2.38 (unreleased)
+1.2.39 (unreleased)
+-------------------
+
+1.2.38 (2013-03-29)
 -------------------
 * load default meta_types for new meeting [mihaitab]
 
