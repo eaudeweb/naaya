@@ -1,5 +1,6 @@
 3.2.32 (unreleased)
 -------------------
+* frameservice modification (groups are now independently searched) [dumitval]
 
 3.2.31 (2013-03-26)
 -------------------
