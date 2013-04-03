@@ -1,5 +1,6 @@
 3.2.33 (unreleased)
 -------------------
+* bugfix in frameservice (in case of Anonymous) [dumitval]
 
 3.2.32 (2013-04-03)
 -------------------
