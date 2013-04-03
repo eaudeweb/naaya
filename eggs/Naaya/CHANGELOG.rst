@@ -1,4 +1,7 @@
-3.2.32 (unreleased)
+3.2.33 (unreleased)
+-------------------
+
+3.2.32 (2013-04-03)
 -------------------
 * frameservice modification (groups are now independently searched) [dumitval]
 
