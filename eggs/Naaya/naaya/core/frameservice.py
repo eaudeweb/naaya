@@ -25,20 +25,22 @@ def frame_view(context, request):
     except:
         pass
 
-    # Get groups (Eionet Roles)
-    sources = users_tool.getSources()
-    if sources:
-        try:
-            from eea.usersdb.factories import agent_from_uf
-        except ImportError, e:
-            pass
-        else:
-            agent = agent_from_uf(sources[0].getUserFolder())
-            ldap_roles = sorted(agent.member_roles_info('user',
-                                                        user.getId(),
-                                                        ('description',)))
-            for (role_id, attrs) in ldap_roles:
-                groups.append((role_id, attrs.get('description', ('', ))[0]))
+    user_id = user.getId()
+    if user_id is not None:
+        # Get groups (Eionet Roles)
+        sources = users_tool.getSources()
+        if sources:
+            try:
+                from eea.usersdb.factories import agent_from_uf
+            except ImportError, e:
+                pass
+            else:
+                agent = agent_from_uf(sources[0].getUserFolder())
+                ldap_roles = sorted(agent.member_roles_info('user',
+                                                            user.getId(),
+                                                            ('description',)))
+                for (role_id, attrs) in ldap_roles:
+                    groups.append((role_id, attrs.get('description', ('', ))[0]))
 
     response_data = {
         'frame_html': context['frame.html'](),
