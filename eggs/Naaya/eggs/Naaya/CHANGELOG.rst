@@ -1,4 +1,7 @@
-3.2.33 (unreleased)
+3.2.34 (unreleased)
+-------------------
+
+3.2.33 (2013-04-03)
 -------------------
 * bugfix in frameservice (in case of Anonymous) [dumitval]
 
