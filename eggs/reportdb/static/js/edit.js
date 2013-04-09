@@ -146,6 +146,13 @@ $(document).ready(function() {
 		process_subregions();
 	});
 
+	if ($('#f_header_country option').length == 1)
+	{
+		setTimeout(function(){
+				$('#f_header_country').select2('disable');
+		}, 1);
+	}
+
 	/*function process_regions(onload){
 		var selected_regions = get_list('region', true);
 		var selected_countries = get_list('country', true);
@@ -166,6 +173,30 @@ $(document).ready(function() {
 	}*/
 
 	function process_countries(onload){
+		if (onload)
+		{
+			$.ajax({
+				url: 'get_countries',
+				dataType: "json",
+				async: false,
+				success: function(data)
+				{
+					for (var i=0;i<data.length;i++)
+					{
+						$('#f_header_country option').each(function(){
+							if (indexOf(this.value, data) == -1)
+								$(this).remove()
+						})
+					}
+					if (data.length == 1)
+					{
+						$('#f_header_country option[value="'+data[0]+'"]')
+							.attr('selected', 'selected');
+						$('#f_header_country').select2('disable');
+					}
+				}
+			});
+		}
 		//var selected_regions = get_list('region', true);
 		var selected_countries = get_list('country', true);
 		var selected_subregions = get_list('subregion', true);

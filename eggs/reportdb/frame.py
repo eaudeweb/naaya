@@ -54,3 +54,7 @@ def get_frame_before_request():
     flask.g.frame_response = frame_response = flask.json.loads(response.text)
     flask.g.user_id = frame_response.get('user_id')
     flask.g.user_roles = frame_response.get('user_roles', [])
+    flask.g.user_first_name = frame_response.get('user_first_name', [])
+    flask.g.user_last_name = frame_response.get('user_last_name', [])
+    flask.g.email = frame_response.get('email', [])
+    flask.g.groups = frame_response.get('groups', [])
