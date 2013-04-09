@@ -93,9 +93,6 @@
         {{ mk.input(field, type='radio', value=value) }}
         {{ value }}
     {% endfor %}
-    {% for message in field.errors %}
-        <span class="help-inline {{ error_cls }}">{{ message }}</span>
-    {% endfor %}
 {% endmacro %}
 
 {% macro checkbox(mk, field) %}
@@ -165,7 +162,7 @@
               <div class="controls">
                   {{ mk.widget(field) }}
                   {% for message in field.errors %}
-                  <span class="help-inline">{{ message }}</span>
+                  <span class="help-newline">{{ message }}</span>
                   {% endfor %}
               </div>
             {% else %}
@@ -263,7 +260,7 @@
         {{ mk.widget(field) }}
         <span class="controls">
             {% for message in field.errors %}
-                <span class="help-inline">{{ message }}</span>
+                <span class="help-newline">{{ message }}</span>
             {% endfor %}
         </span>
     {%- endfor %}
@@ -321,9 +318,13 @@
 {% macro availability_section(mk, schema) %}
   {%- for name in mk.children_order(schema) %}
     {% set field = schema[name] %}
-    <div class="field-inline">
+    {% set error_cls = 'error' if field.errors else '' %}
+    <div class="field-inline {{ error_cls }}">
         {{ mk.widget(field) }}
         {{ field.label }}
+				{% for message in field.errors %}
+					<span class="help-inline">{{ message }}</span>
+				{% endfor %}
     </div>
   {% endfor -%}
 {% endmacro %}

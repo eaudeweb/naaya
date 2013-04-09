@@ -9,7 +9,7 @@ import schema
 import file_upload
 from gtranslate import translate
 import frame
-from schema import countries_list, regions_dict, subregions_dict
+from schema import countries_list, countries_dict, regions_dict, subregions_dict, check_common
 
 class MarkupGenerator(flatland.out.markup.Generator):
 
@@ -35,21 +35,50 @@ views = flask.Blueprint('views', __name__)
 
 views.before_request(frame.get_frame_before_request)
 
-
-def edit_is_allowed():
+def edit_is_allowed(report_id=None):
     if flask.current_app.config.get('SKIP_EDIT_AUTHORIZATION', False):
         return True
     roles = getattr(flask.g, 'user_roles', [])
-    return bool('Authenticated' in roles)
+    if 'Administrator' in roles:
+        return True
+    groups = getattr(flask.g, 'groups', [])
+    group_ids = [group[0] for group in groups]
+    if check_common(schema.administrators, group_ids):
+        return True
+    if report_id is not None:
+        report_row = database.get_report_or_404(report_id)
+        for i in range(0, 40):
+            country = report_row.get('header_country_%s' % i)
+            if not country:
+                break
+            if not check_common(schema.countries_dict[country], group_ids):
+                return False
+        process_country_list(group_ids)
+        return True
+    else:
+        if check_common(schema.all_contributors, group_ids):
+            process_country_list(group_ids)
+            return True
 
+
+def process_country_list(group_ids):
+    for country in list(countries_list):
+        for group_id in countries_dict[country]:
+            if group_id in group_ids:
+                break
+        else:
+            countries_list.remove(country)
 
 def require_edit_permission(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if edit_is_allowed():
+        report_id = kwargs.get('report_id')
+        if edit_is_allowed(report_id):
             return func(*args, **kwargs)
         else:
-            return "Please log in to access this view."
+            return flask.render_template('restricted.html', **{
+                'user_id': getattr(flask.g, 'user_id')
+            })
     return wrapper
 
 

@@ -1,9 +1,10 @@
 import flatland as fl
+import flask
 import os
 import json
 import database
 import datetime
-from flatland.validation import Validator, Converted
+from flatland.validation import Validator, Converted, Present
 from file_upload import CommonFile
 
 
@@ -42,7 +43,15 @@ subregions_dict = _load_json("refdata/subregions_list.json")
 subregions_list = []
 for country in subregions_dict.keys():
     subregions_list += subregions_dict[country]
-countries_list = _load_json("refdata/countries_list.json")
+countries_data = _load_json("refdata/countries_list.json")
+countries_dict = {}
+countries_list = []
+all_contributors = []
+for country_data in countries_data:
+    countries_list.append(country_data[0])
+    all_contributors.extend(country_data[1])
+    countries_dict[country_data[0]] = country_data[1]
+administrators = _load_json("refdata/administrators.json")
 target_audience = _load_json("refdata/target_audience.json")
 languages = _load_json("refdata/languages_list.json")
 language_codes = [pair[1] for pair in
@@ -65,6 +74,32 @@ class IsInteger(Validator):
 
         return True
 
+
+class AccessibleCountries(Validator):
+
+    fail = None
+
+    def validate(self, element, state):
+        user_id = getattr(flask.g, 'user_id', '')
+        groups = getattr(flask.g, 'groups', [])
+        group_ids = [group[0] for group in groups]
+        accessible_countries = []
+        for country in countries_list:
+            if check_common(countries_dict[country], group_ids):
+                accessible_countries.append(country)
+        if element.value == []:
+            element.errors.append('%s field is mandatory' % (element.label))
+            return False
+        if not set(element.value).issubset(set(accessible_countries)):
+            element.errors.append("User %s has access only for: %s" %
+                (user_id, (', ').join(accessible_countries)))
+            return False
+
+        return True
+
+def check_common(needed_rights, existing_rights):
+    return not set(needed_rights).isdisjoint(set(existing_rights))
+
 ReportSchema = fl.Dict.with_properties(widget="schema") \
                       .of(
 
@@ -86,6 +121,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
 
         fl.List.named('country') \
                .using(label=u"Country") \
+               .including_validators(AccessibleCountries()) \
                .with_properties(widget="multiple_select",
                                 widget_chosen=True,
                                 placeholder="Select countries ...") \
