@@ -211,6 +211,20 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         permission_object = Permission(permission, (), self)
         return 'Anonymous' in permission_object.getRoles()
 
+    security.declarePrivate('dont_inherit_view_permission')
+    def dont_inherit_view_permission(self):
+        permission = Permission(view, (), self)
+        roles = permission.getRoles()
+        roles = tuple(set(roles) | set(['Manager', 'Administrator', 'Owner']))
+        permission.setRoles(roles)
+
+    security.declarePrivate('inherit_view_permission')
+    def inherit_view_permission(self):
+        permission = Permission(view, (), self)
+        roles = permission.getRoles()
+        roles = list(roles)
+        permission.setRoles(roles)
+
 InitializeClass(MegaSurvey)
 
 def get_content_type_config():

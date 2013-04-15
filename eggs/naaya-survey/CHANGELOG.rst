@@ -1,5 +1,6 @@
 1.2.29 (unreleased)
 ===================
+* added inherit_view_permission method [dumitval]
 
 1.2.28 (2013-03-26)
 ===================
