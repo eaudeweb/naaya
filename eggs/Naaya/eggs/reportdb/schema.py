@@ -84,13 +84,15 @@ class AccessibleCountries(Validator):
         groups = getattr(flask.g, 'groups', [])
         group_ids = [group[0] for group in groups]
         accessible_countries = []
+        roles = getattr(flask.g, 'user_roles', [])
         for country in countries_list:
             if check_common(countries_dict[country], group_ids):
                 accessible_countries.append(country)
         if element.value == []:
             element.errors.append('%s field is mandatory' % (element.label))
             return False
-        if not set(element.value).issubset(set(accessible_countries)):
+        if not (set(element.value).issubset(set(accessible_countries))
+                or 'Administrator' in roles):
             element.errors.append("User %s has access only for: %s" %
                 (user_id, (', ').join(accessible_countries)))
             return False
