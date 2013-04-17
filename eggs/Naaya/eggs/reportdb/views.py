@@ -84,17 +84,34 @@ def require_edit_permission(func):
 
 @views.route('/')
 def index():
-    #TODO remove redirect when index will be implemented
-    return flask.redirect(flask.url_for('views.report_list'))
-    #return flask.render_template('index.html')
+    countries = []
+    report_list = [schema.ReportSchema.from_flat(row)
+                    for row in database.get_all_reports()]
+    for country in countries_list:
+        count = 0
+        for report in report_list:
+            if country in report['header']['country']:
+                count += 1
+        countries.append((country, count))
+    return flask.render_template('index.html', **{
+        'countries_list': countries,
+    })
 
 
 @views.route('/reports/')
 def report_list():
+    report_list = [{
+                    'id': row.id,
+                    'extended_info': row['format_availability_paper_or_web'] and 'Yes' or 'No',
+                    'data': schema.ReportSchema.from_flat(row)}
+                        for row in database.get_all_reports()]
+    country = flask.request.args.get('country')
+    if country:
+        report_list = [report for report in report_list
+            if country in report['data']['header']['country']]
     return flask.render_template('report_list.html', **{
-        'report_list': [{'id': row.id,
-                         'data': schema.ReportSchema.from_flat(row)}
-                        for row in database.get_all_reports()],
+        'report_list': report_list,
+        'country': country,
     })
 
 

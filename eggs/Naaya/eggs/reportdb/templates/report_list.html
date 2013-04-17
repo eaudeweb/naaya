@@ -14,11 +14,16 @@
 
 {% if report_list %}
 <div class="reports-listing">
-<h1>Reports:</h1>
+{% if country %}
+	<h1>Reports for {{ country }}:</h1>
+{% else %}
+	<h1>Reports:</h1>
+{% endif %}
 <table class="table table-bordered table-striped report-listing">
 	<thead>
 		<th>Name</th>
 		<th>Coverage</th>
+		<th>Extended content information</th>
 		<th>Published on</th>
 		<th>Factsheet prepared by</th>
 		<th>Prepared on</th>
@@ -34,6 +39,7 @@
 			<td>
 				{{ ', '.join(report['data']['header']['country'].value) }}
 			</td>
+			<td>{{ report['extended_info'] }}</td>
 			<td>{{ report['data']['details']['date_of_publication'] }}</td>
 			<td>{{ report['data']['header']['uploader'] }}</td>
 			<td>{{ report['data']['header']['upload_date'] }}</td>
@@ -43,9 +49,13 @@
 </table>
 </div>
 {% else %}
-<p>No reports yet. Click  
-<a href="{{url_for('views.report_edit')}}">here</a>
- to add a new report.</p>
+	{% if country %}
+		<p>No reports for {{ country }} yet. Click
+			<a href="{{url_for('views.report_edit')}}">here</a> to add a new report.</p>
+	{% else %}
+		<p>No reports yet. Click <a href="{{url_for('views.report_edit')}}">here</a>
+		 to add a new report.</p>
+	{% endif %}
 {% endif %}
 
 {% endblock %}
