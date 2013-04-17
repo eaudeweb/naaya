@@ -2,6 +2,9 @@
 {% block action_buttons %}
 
 <div class="report-actions">
+	[<a href="{{ url_for('views.index') }}">
+		Back to country overview
+	</a>]
 	[<a href="{{ url_for('views.report_edit') }}">
 		Add Report
 	</a>]
@@ -24,7 +27,7 @@
 		<th>Name</th>
 		<th>Coverage</th>
 		<th>Extended content information</th>
-		<th>Published on</th>
+		<th>Published by</th>
 		<th>Factsheet prepared by</th>
 		<th>Prepared on</th>
 	</thead>
@@ -40,7 +43,7 @@
 				{{ ', '.join(report['data']['header']['country'].value) }}
 			</td>
 			<td>{{ report['extended_info'] }}</td>
-			<td>{{ report['data']['details']['date_of_publication'] }}</td>
+			<td>{{ report['data']['details']['publisher'] }}</td>
 			<td>{{ report['data']['header']['uploader'] }}</td>
 			<td>{{ report['data']['header']['upload_date'] }}</td>
 		</tr>
