@@ -2,7 +2,17 @@
 
 {% block seris_content %}
 
-<h1>SERIS prototype</h1>
+	<h1>Countries' SoER - State of the Environment Reporting Information System (SERIS)</h1>
 
+	<p>SERIS is an inventory of national state of the environment reports. The database contains brief publications details for recent (1997 onwards) reports for countries included in the EEA's third assessment report. SERIS contains links to the reports and to the main organisation involved in the report. Reports can be identified by their geographic coverage or the year of publication. National and multi-national reports are included in the database.</p>
+
+	{# <h2>EEA member countries</h2> #}
+
+	{% for country, count in countries_list %}
+		<div class="country-box">
+			<a href="reports?country={{ country }}"><img src="static/lib/datatables/forward_enabled.png" alt="Forward" />
+			{{- country }}</a> ({{ count }})
+		</div>
+	{% endfor %}
 
 {% endblock %}
