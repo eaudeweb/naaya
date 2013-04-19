@@ -93,8 +93,14 @@ def index():
             if country in report['header']['country']:
                 count += 1
         countries.append((country, count))
+    eea_count = 0
+    for report in report_list:
+        if 'European Environment Agency' in report['header']['region']:
+            eea_count += 1
+    countries.append((country, count))
     return flask.render_template('index.html', **{
         'countries_list': countries,
+        'regions_list': [('European Environment Agency', eea_count)]
     })
 
 
@@ -106,9 +112,13 @@ def report_list():
                     'data': schema.ReportSchema.from_flat(row)}
                         for row in database.get_all_reports()]
     country = flask.request.args.get('country')
+    region = flask.request.args.get('region')
     if country:
         report_list = [report for report in report_list
             if country in report['data']['header']['country']]
+    if region:
+        report_list = [report for report in report_list
+            if region in report['data']['header']['region']]
     return flask.render_template('report_list.html', **{
         'report_list': report_list,
         'country': country,
