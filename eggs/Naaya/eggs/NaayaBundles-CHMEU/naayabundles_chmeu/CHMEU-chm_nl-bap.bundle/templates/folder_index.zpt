@@ -63,6 +63,7 @@
 		    tal:content="structure here/description" />
 	</div>
 
+	<tal:block condition="here/checkPermissionSkipCaptcha">
 	<div class="folder_content">
 	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
@@ -70,6 +71,7 @@
 		</metal:block>
 	</metal:block>
 	</div>
+	</tal:block>
 	</metal:block>
 
 	<metal:block metal:define-slot="folder_footer">
