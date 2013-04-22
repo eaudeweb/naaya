@@ -245,7 +245,6 @@ def report_edit(report_id=None):
                 flask.flash("Report saved.", "success")
                 url = flask.url_for('views.report_view',
                                     report_id=report_row.id)
-                import pdb;pdb.set_trace()
                 if country:
                     url = url+'?country='+country
                 if region:
