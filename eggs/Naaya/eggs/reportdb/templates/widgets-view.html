@@ -300,22 +300,27 @@
   {% set registration_required = schema['registration_required'] %}
   {% set costs = schema['costs'] %}
   <div class="field-inline">
-      <ul class="no-indent-list">
-              <li>{{ mk.widget(paper_or_web) }}
-                  {%- if paper_or_web.value == 'web' -%}
-                    {{ '\u002d' }} {{ mk.widget(url) }}
-                  {% endif -%}
-              </li>
-              {% if registration_required.value %}
-                <li>registration required</li>
-              {% endif %}
-              <li>{{ mk.widget(costs) }}</li>
-              {# {{ field.label }} #}
-              {%- if paper_or_web.value != 'web' and url -%}
-                <li>
-                    URL: {{ mk.widget(url) }}
-                </li>
-              {% endif -%}
-      </ul>
+		<ul class="no-indent-list">
+			{%- if paper_or_web.value
+				or not paper_or_web.properties.get('hide_if_empty') -%}
+				<li>{{ mk.widget(paper_or_web) }}
+						{%- if paper_or_web.value == 'web' -%}
+							{{ '\u002d' }} {{ mk.widget(url) }}
+						{% endif -%}
+				</li>
+			{% endif -%}
+				{% if registration_required.value %}
+					<li>registration required</li>
+				{% endif %}
+			{%- if costs.value or not costs.properties.get('hide_if_empty') -%}
+				<li>{{ mk.widget(costs) }}</li>
+			{% endif -%}
+			{# {{ field.label }} #}
+			{%- if paper_or_web.value != 'web' and url -%}
+				<li>
+						URL: {{ mk.widget(url) }}
+				</li>
+			{% endif -%}
+		</ul>
   </div>
 {% endmacro %}
