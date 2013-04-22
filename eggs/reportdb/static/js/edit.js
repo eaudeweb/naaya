@@ -198,6 +198,9 @@ $(document).ready(function() {
 			});
 		}
 		else {
+			/*this part should not execute on load because in the case of
+			Belgium (the only country with subregions), since no subregions
+			were imported from SERIS 1, this code would remove the country, too*/
 			//var selected_regions = get_list('region', true);
 			var selected_countries = get_list('country', true);
 			var selected_subregions = get_list('subregion', true);

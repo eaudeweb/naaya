@@ -4,136 +4,154 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#delete_report').click(function() {
-        $( "#dialog-delete-confirm" ).dialog({
-            open: function() {
-                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
-            },
-            resizable: false,
-            height: 200,
-            width: 500,
-            modal: true,
-            draggable: false,
-            buttons: {
-                "Delete report": function() {
-                    var form = $('#fdelete_report');
-                    return form.submit();
-                },
-                "Cancel": function() {
-                    $( this ).dialog( "close" );
-                }
-            }
-        });
-    });
+		$('#delete_report').click(function() {
+				$( "#dialog-delete-confirm" ).dialog({
+						open: function() {
+								$(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+						},
+						resizable: false,
+						height: 200,
+						width: 500,
+						modal: true,
+						draggable: false,
+						buttons: {
+								"Delete report": function() {
+										var form = $('#fdelete_report');
+										return form.submit();
+								},
+								"Cancel": function() {
+										$( this ).dialog( "close" );
+								}
+						}
+				});
+		});
 })
 </script>
 
 <div class="report-content">
-    <div class="report-actions">
-        [<a href="{{ url_for('views.index') }}">
-            Back to country overview
-        </a>]
-        [<a href="{{url_for('views.report_list')}}">
-            Back to reports list
-        </a>]
-        [<a href="{{url_for('views.report_edit',
-            report_id=report['id'])}}">
-            Edit Report
-        </a>]
-        [<a id="delete_report" href="javascript:void(0);">
-            Delete Report
-        </a>]
+		<div class="report-actions">
+				[<a href="{{ url_for('views.index') }}">
+						Back to country overview
+				</a>]
+				{% if country %}
+					[<a href="{{url_for('views.report_list')}}?country={{country}}">
+				{% elif region %}
+					[<a href="{{url_for('views.report_list')}}?region={{region}}">
+				{% else %}
+					[<a href="{{url_for('views.report_list')}}">
+				{% endif %}
+						Back to reports list
+				</a>]
+				{% if country %}
+					[<a href="{{url_for('views.report_edit',
+							report_id=report['id'])}}?country={{country}}">
+				{% elif region %}
+					[<a href="{{url_for('views.report_edit',
+							report_id=report['id'])}}?region={{region}}">
+				{% else %}
+					[<a href="{{url_for('views.report_edit',
+							report_id=report['id'])}}">
+				{% endif %}
+						Edit Report
+				</a>]
+				[<a id="delete_report" href="javascript:void(0);">
+						Delete Report
+				</a>]
 </div>
 <div id="dialog-delete-confirm" title="Delete report" style="display: none">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-        This report will be permanently deleted and cannot be recovered. Are you sure?
-    </p>
-    <form id="fdelete_report" action="{{url_for('views.report_delete', report_id=report['id'])}}" method="POST"></form>
+		<p>
+				<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+				This report will be permanently deleted and cannot be recovered. Are you sure?
+		</p>
+		{% if country %}
+			<form id="fdelete_report" action="{{url_for('views.report_delete', report_id=report['id'])}}?country={{country}}" method="POST"></form>
+		{% elif region %}
+			<form id="fdelete_report" action="{{url_for('views.report_delete', report_id=report['id'])}}?region={{region}}" method="POST"></form>
+		{% else %}
+			<form id="fdelete_report" action="{{url_for('views.report_delete', report_id=report['id'])}}" method="POST"></form>
+		{% endif %}
 </div>
-    <hr/>
+		<hr/>
 
-    {% set cover = report['data']['header']['soer_cover'] %}
-    {% if (not cover.is_empty) %}
-      {% set url = url_for('views.download', db_id=cover.u) %}
-      <a href="{{ url }}"><img src="{{ url }}" class="report-header_soer_cover" height="160"></a>
-    {% endif %}
+		{% set cover = report['data']['header']['soer_cover'] %}
+		{% if (not cover.is_empty) %}
+			{% set url = url_for('views.download', db_id=cover.u) %}
+			<a href="{{ url }}"><img src="{{ url }}" class="report-header_soer_cover" height="160"></a>
+		{% endif %}
 
-    <h1>{{ report['data']['details']['english_name'].value or
-           report['data']['details']['original_name'].value }}</h1>
+		<h1>{{ report['data']['details']['english_name'].value or
+					 report['data']['details']['original_name'].value }}</h1>
 
-    <div class="section">
-      <h3>REPORT COVERAGE</h3>
-    </div>
-    <div>
-      {% if report['data']['header']['region'].value %}
-      <div class="field">
-        <label class="control-label">
-          {#% if %#}
-          {% if report['data']['header']['region']|length > 1 %}
-            Regions
-          {% else %}
-            Region
-          {% endif %}
-        </label>
-        <div class="controls">
-          {{ ', '.join(report['data']['header']['region'].value) }}
-        </div>
-      </div>
-      {% endif %}
-      <div class="field">
-        <label class="control-label">
-          {#% if %#}
-          {% if report['data']['header']['country']|length > 1 %}
-            Countries
-          {% else %}
-            Country
-          {% endif %}
-        </label>
-        <div class="controls country-listing">
-          {{ ', '.join(report['data']['header']['country'].value) }}
-        </div>
-      </div>
-      {% if report['data']['header']['subregion'].value %}
-      <div class="field">
-        <label class="control-label">
-            Sub-national
-        </label>
-        <div class="controls">
-          {{ ', '.join(report['data']['header']['subregion'].value) }}
-        </div>
-      </div>
-      {% endif %}
+		<div class="section">
+			<h3>REPORT COVERAGE</h3>
+		</div>
+		<div>
+			{% if report['data']['header']['region'].value %}
+			<div class="field">
+				<label class="control-label">
+					{% if report['data']['header']['region']|length > 1 %}
+						Regions
+					{% else %}
+						Region
+					{% endif %}
+				</label>
+				<div class="controls">
+					{{ ', '.join(report['data']['header']['region'].value) }}
+				</div>
+			</div>
+			{% endif %}
+			<div class="field">
+				<label class="control-label">
+					{% if report['data']['header']['country']|length > 1 %}
+						Countries
+					{% else %}
+						Country
+					{% endif %}
+				</label>
+				<div class="controls country-listing">
+					{{ ', '.join(report['data']['header']['country'].value) }}
+				</div>
+			</div>
+			{% if report['data']['header']['subregion'].value %}
+			<div class="field">
+				<label class="control-label">
+						Sub-national
+				</label>
+				<div class="controls">
+					{{ ', '.join(report['data']['header']['subregion'].value) }}
+				</div>
+			</div>
+			{% endif %}
 
-      <div class="field">
-        <label class="control-label">Fact-sheet prepared on:</label>
-        <div class="controls">{{ report['data']['header']['upload_date'] }}</div>
-      </div>
+			<div class="field">
+				<label class="control-label">Fact-sheet prepared on:</label>
+				<div class="controls">{{ report['data']['header']['upload_date'] }}</div>
+			</div>
 
-      <div class="field">
-        <label class="control-label">Prepared by:</label>
-        <div class="controls">{{ report['data']['header']['uploader'] }}</div>
-      </div>
+			<div class="field">
+				<label class="control-label">Prepared by:</label>
+				<div class="controls">{{ report['data']['header']['uploader'] }}</div>
+			</div>
 
-      <p class="report-format-paper-or-url">
-        {% if report['data']['format']['availability']['paper_or_web'].value == 'web'
-          and report['data']['format']['availability']['url'] %}
-          <strong>The report/portal is accessible at</strong>:
-          {{ mk.widget(report['data']['format']['availability']['url']) }}
-        {% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
-          <strong>This fact-sheet is available only on paper</strong>
-        {% endif %}
-      </p>
-    </div>
+			<p class="report-format-paper-or-url">
+				{% if report['data']['format']['availability']['paper_or_web'].value == 'web'
+					and report['data']['format']['availability']['url'] %}
+					<strong>The report/portal is accessible at</strong>:
+					{{ mk.widget(report['data']['format']['availability']['url']) }}
+				{% elif report['data']['format']['availability']['paper_or_web'].value == 'paper only'%}
+					<strong>This fact-sheet is available only on paper</strong>
+				{% endif %}
+			</p>
+		</div>
 
-    {{ mk.widget(report['data']) }}
-    {% if report['seris_reviews'] %}
-        {{ mk.widget(report['seris_reviews'][0]['data']) }}
-    {% endif %}
+		{{ mk.widget(report['data']) }}
+		{% if report['seris_reviews'] %}
+				{{ mk.widget(report['seris_reviews'][0]['data']) }}
+		{% endif %}
 </div>
 
 {% endblock %}
 
 {% block scripts %}
-    {{ script_src("js/main.js") }}
+		{{ script_src("js/main.js") }}
 {% endblock %}
