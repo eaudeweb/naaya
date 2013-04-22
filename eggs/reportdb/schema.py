@@ -254,7 +254,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                .of(
 
             fl.Enum.named('paper_or_web') \
-                   .with_properties(widget="radioselect") \
+                   .with_properties(widget="radioselect", hide_if_empty='True') \
                    .valued(*(["paper only", "web only", "web and print"])) \
                    .using(label=u""),
 
@@ -266,7 +266,7 @@ ReportSchema = fl.Dict.with_properties(widget="schema") \
                    .using(label=u"registration required"),
 
             fl.Enum.named('costs') \
-                   .with_properties(widget="radioselect") \
+                   .with_properties(widget="radioselect", hide_if_empty='True') \
                    .valued(*(["free", "with costs"])) \
                    .using(label=u""),
 
