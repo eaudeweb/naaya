@@ -35,7 +35,15 @@
 	{% for report in report_list %}
 		<tr>
 			<td>
-			<a href="{{url_for('views.report_view', report_id=report['id'])}}">
+			{% if country %}
+				<a href="{{url_for('views.report_view',
+										report_id=report['id'])}}?country={{country}}">
+			{% elif region %}
+				<a href="{{url_for('views.report_view',
+										report_id=report['id'])}}?region={{region}}">
+			{% else %}
+				<a href="{{url_for('views.report_view', report_id=report['id'])}}">
+			{% endif %}
 				{{ report['data']['details']['original_name'] }}
 			</a>
 			</td>

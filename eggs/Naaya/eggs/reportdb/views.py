@@ -128,6 +128,7 @@ def report_list():
     return flask.render_template('report_list.html', **{
         'report_list': report_list,
         'country': country,
+        'region': region,
     })
 
 
@@ -158,6 +159,16 @@ def get_subregions(report_id=None):
 @views.route('/reports/<int:report_id>/edit/', methods=['GET', 'POST'])
 @require_edit_permission
 def report_edit(report_id=None):
+    country = flask.request.args.get('country')
+    if not country:
+        country = flask.request.form.get('country')
+    if country == u'None':
+        country = None
+    region = flask.request.args.get('region')
+    if not region:
+        region = flask.request.form.get('region')
+    if region == u'None':
+        region = None
     if report_id is None:
         report_row = database.ReportRow()
         seris_review_row = database.SerisReviewRow()
@@ -234,6 +245,11 @@ def report_edit(report_id=None):
                 flask.flash("Report saved.", "success")
                 url = flask.url_for('views.report_view',
                                     report_id=report_row.id)
+                import pdb;pdb.set_trace()
+                if country:
+                    url = url+'?country='+country
+                if region:
+                    url = url+'?region='+region
                 return flask.redirect(url)
 
         session.rollback()
@@ -252,6 +268,8 @@ def report_edit(report_id=None):
         'report_id': report_id,
         'report_schema': report_schema,
         'seris_review_schema': seris_review_schema,
+        'country': country,
+        'region': region,
         })
 
 
@@ -269,13 +287,22 @@ def report_delete(report_id):
         session.table(database.ReportRow).delete(report_id)
         session.commit()
         flask.flash("Report deleted.", "success")
-        return flask.redirect(flask.url_for('views.report_list'))
+        url = flask.url_for('views.report_list')
+        country = flask.request.args.get('country')
+        if country:
+            url = url+'?country='+country
+        region = flask.request.args.get('region')
+        if region:
+            url = url+'?region='+region
+        return flask.redirect(url)
 
 
 @views.route('/reports/<int:report_id>/')
 def report_view(report_id):
     app = flask.current_app
     report = database.get_report_or_404(report_id)
+    country = flask.request.args.get('country')
+    region = flask.request.args.get('region')
     return flask.render_template('report_view.html', **{
             'mk': MarkupGenerator(app.jinja_env.get_template('widgets-view.html')),
             'report': {'id': report_id,
@@ -284,7 +311,9 @@ def report_view(report_id):
                           {'id': row.id,
                            'data': schema.SerisReviewSchema.from_flat(row)}
                           for row in database.get_seris_reviews_list(report_id)]
-                      }
+                      },
+            'country': country,
+            'region': region
         }
     )
 
