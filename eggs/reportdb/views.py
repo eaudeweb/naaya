@@ -11,6 +11,8 @@ from gtranslate import translate
 import frame
 from schema import countries_list, countries_dict, regions_dict, subregions_dict, check_common
 
+processed_country_list = list(countries_list)
+
 class MarkupGenerator(flatland.out.markup.Generator):
 
     def __init__(self, template):
@@ -62,12 +64,14 @@ def edit_is_allowed(report_id=None):
 
 
 def process_country_list(group_ids):
-    for country in list(countries_list):
+    global processed_country_list
+    processed_country_list = list(countries_list)
+    for country in countries_list:
         for group_id in countries_dict[country]:
             if group_id in group_ids:
                 break
         else:
-            countries_list.remove(country)
+            processed_country_list.remove(country)
 
 def require_edit_permission(func):
     @wraps(func)
@@ -90,12 +94,13 @@ def index():
     for country in countries_list:
         count = 0
         for report in report_list:
-            if country in report['header']['country']:
+            if country in report['header']['country'].value \
+                    and len(report['header']['country'].value) == 1:
                 count += 1
         countries.append((country, count))
     eea_count = 0
     for report in report_list:
-        if 'European Environment Agency' in report['header']['region']:
+        if 'European Environment Agency' in report['header']['region'].value:
             eea_count += 1
     countries.append((country, count))
     return flask.render_template('index.html', **{
@@ -115,10 +120,11 @@ def report_list():
     region = flask.request.args.get('region')
     if country:
         report_list = [report for report in report_list
-            if country in report['data']['header']['country']]
+            if country in report['data']['header']['country'].value
+           and len(report['data']['header']['country'].value) == 1]
     if region:
         report_list = [report for report in report_list
-            if region in report['data']['header']['region']]
+            if region in report['data']['header']['region'].value]
     return flask.render_template('report_list.html', **{
         'report_list': report_list,
         'country': country,
@@ -141,7 +147,7 @@ def get_regions(report_id=None):
 @views.route('/reports/new/get_countries', methods=['GET'])
 @views.route('/reports/<int:report_id>/edit/get_countries', methods=['GET'])
 def get_countries(report_id=None):
-    return flask.json.dumps(countries_list)
+    return flask.json.dumps(processed_country_list)
 
 @views.route('/reports/new/get_subregions', methods=['GET'])
 @views.route('/reports/<int:report_id>/edit/get_subregions', methods=['GET'])
