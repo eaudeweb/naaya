@@ -3,6 +3,7 @@ from functools import wraps
 import flask
 import jinja2
 import flatland.out.markup
+import flatland as fl
 
 import database
 import schema
@@ -272,6 +273,42 @@ def report_edit(report_id=None):
         })
 
 
+@views.route('/json/', methods=['GET'])
+def reports_export():
+    #TODO change when multiple reviews will be implemented
+    export = {}
+    reports = []
+    properties = {}
+    reviews_dict = database.get_seris_reviews_dict()
+    for report in database.get_all_reports():
+        seris_review = reviews_dict[str(report.id)]
+        reports.append(dict(report, **seris_review))
+    count = [0]
+    get_schema_items(schema.ReportSchema(), properties, count)
+    get_schema_items(schema.SerisReviewSchema(), properties, count)
+    export['items'] = reports
+    export['properties'] = properties
+    return flask.Response(flask.json.dumps(export))
+
+def get_schema_items(ob, properties, count):
+    if hasattr(ob, 'field_schema'):
+        for child_schema in ob.field_schema:
+            child = ob[child_schema.name]
+            get_schema_items(child, properties, count)
+    else:
+        if isinstance(ob, fl.List):
+            valueType = 'list'
+        elif isinstance(ob, fl.String):
+            valueType = 'text'
+        elif isinstance(ob, fl.Integer):
+            valueType = 'integer'
+        elif isinstance(ob, fl.Enum):
+            valueType = 'text'
+        elif isinstance(ob, fl.Boolean):
+            valueType = 'bool'
+        properties[ob.flattened_name()] = {'valueType': valueType, 'order': count[0]}
+        count[0] += 1
+
 @views.route('/reports/<int:report_id>/delete/', methods=['POST'])
 @require_edit_permission
 def report_delete(report_id):
@@ -281,7 +318,7 @@ def report_delete(report_id):
         if reviews_list:
             #TODO change when multiple reviews will be implemented
             session.table(database.SerisReviewRow) \
-                   .delete(database.get_seris_reviews_list(report_id)[0].id)
+                   .delete(reviews_list[0].id)
 
         session.table(database.ReportRow).delete(report_id)
         session.commit()
