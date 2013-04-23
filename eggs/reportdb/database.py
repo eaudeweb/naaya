@@ -26,12 +26,20 @@ def get_seris_or_404(seris_id):
 
 
 def get_seris_reviews_list(report_id):
-    # for the demo it only returns one review
+    #TODO change when multiple reviews will be implemented
     all_reviews = get_all_seris_reviews()
     reviews_list = []
     for item in all_reviews:
         if item['report_id'] == str(report_id): reviews_list.append(item)
     return reviews_list
+
+def get_seris_reviews_dict():
+    #TODO change when multiple reviews will be implemented
+    all_reviews = get_all_seris_reviews()
+    reviews_dict = {}
+    for item in all_reviews:
+        reviews_dict[item['report_id']] = item
+    return reviews_dict
 
 
 def get_all_seris_reviews():
