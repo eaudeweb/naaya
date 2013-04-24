@@ -281,6 +281,25 @@ def reports_export():
     properties = {}
     reviews_dict = database.get_seris_reviews_dict()
     for report in database.get_all_reports():
+        header_country = []
+        header_region = []
+        details_original_language = []
+        for i in range(0, 50):
+            country = report.get('header_country_%s' % i)
+            if country:
+                header_country.append(country)
+                del(report['header_country_%s' % i])
+            region = report.get('header_region_%s' % i)
+            if region:
+                header_region.append(region)
+                del(report['header_region_%s' % i])
+            language = report.get('details_original_language_%s' % i)
+            if language:
+                details_original_language.append(language)
+                del(report['details_original_language_%s' % i])
+        report['header_country'] = header_country
+        report['header_region'] = header_region
+        report['details_original_language'] = details_original_language
         seris_review = reviews_dict[str(report.id)]
         reports.append(dict(report, **seris_review))
     count = [0]
