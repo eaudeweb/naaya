@@ -307,8 +307,7 @@ def reports_export():
     get_schema_items(schema.SerisReviewSchema(), properties, count)
     export['items'] = reports
     export['properties'] = properties
-    return flask.Response(flask.json.dumps(export),
-        content_type='application/json')
+    return flask.jsonify(export)
 
 def get_schema_items(ob, properties, count):
     if hasattr(ob, 'field_schema'):
