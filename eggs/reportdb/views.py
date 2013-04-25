@@ -4,7 +4,8 @@ import flask
 import jinja2
 import flatland.out.markup
 import flatland as fl
-
+from urlparse import urljoin
+from werkzeug.contrib.atom import AtomFeed
 import database
 import schema
 import file_upload
@@ -273,12 +274,40 @@ def report_edit(report_id=None):
         })
 
 
+@views.route('/atom/', methods=['GET'])
+def reports_atom():
+    from datetime import datetime
+    #TODO change when multiple reviews will be implemented
+    feed = AtomFeed('SERIS Reports',
+                    feed_url='http://projects.eionet.europa.eu/seris-revision/seris/atom/',
+                    url='http://projects.eionet.europa.eu/seris-revision/seris')
+    for report in get_reports(with_url=True):
+        feed.add(report['details_original_name'],
+                 unicode(report['short_description']),
+                 content_type='html', author=report['header_uploader'],
+                 url=make_external(report['url']),
+                 updated=datetime.strptime(report['header_upload_date'],
+                        '%d %b %Y, %H:%M'))
+    return feed.get_response()
+
 @views.route('/json/', methods=['GET'])
-def reports_export():
+def reports_json():
     #TODO change when multiple reviews will be implemented
     export = {}
-    reports = []
     properties = {}
+    count = [0]
+    get_schema_items(schema.ReportSchema(), properties, count)
+    get_schema_items(schema.SerisReviewSchema(), properties, count)
+    export['items'] = get_reports()
+    export['properties'] = properties
+    return flask.jsonify(export)
+
+def make_external(url):
+    #return urljoin(flask.request.url_root, url)
+    return urljoin('http://projects.eionet.europa.eu/seris-revision/seris', url)
+
+def get_reports(with_url=None):
+    reports = []
     reviews_dict = database.get_seris_reviews_dict()
     for report in database.get_all_reports():
         header_country = []
@@ -300,14 +329,13 @@ def reports_export():
         report['header_country'] = header_country
         report['header_region'] = header_region
         report['details_original_language'] = details_original_language
+        if with_url:
+            report['url'] = make_external(flask.url_for('views.report_view',
+                            report_id=report.id))
         seris_review = reviews_dict[str(report.id)]
         reports.append(dict(report, **seris_review))
-    count = [0]
-    get_schema_items(schema.ReportSchema(), properties, count)
-    get_schema_items(schema.SerisReviewSchema(), properties, count)
-    export['items'] = reports
-    export['properties'] = properties
-    return flask.jsonify(export)
+    return reports
+
 
 def get_schema_items(ob, properties, count):
     if hasattr(ob, 'field_schema'):
