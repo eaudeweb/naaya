@@ -31,7 +31,7 @@ from gdata.service import RequestError
 
 DEFAULT_SCHEMA = {
     'youtube_id': dict(sortorder=100, widget_type='String',
-                label='YouTube ID', required=True),
+                label='YouTube ID', required=True, help_text="Tip: you can paste the youtube video URL, too"),
     'iframe_width': dict(sortorder=110, widget_type='String',
                 label='Video width'),
     'iframe_height': dict(sortorder=120, widget_type='String',
@@ -101,6 +101,14 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
         schema_raw_data['iframe_width'] = 640
     if schema_raw_data['iframe_height'] in ['', '0']:
         schema_raw_data['iframe_height'] = 360
+
+    if len(schema_raw_data['youtube_id']) > 11:
+        try:
+            schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                'watch?v=')[1][:11]
+        except IndexError:
+            schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                '&v=')[1][:11]
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -209,6 +217,14 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckControl
         if schema_raw_data['iframe_height'] in ['', '0']:
             schema_raw_data['iframe_height'] = 360
 
+        if len(schema_raw_data['youtube_id']) > 11:
+            try:
+                schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                    'watch?v=')[1][:11]
+            except IndexError:
+                schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                    '&v=')[1][:11]
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         try:
             schema_raw_data['iframe_width'] = int(schema_raw_data['iframe_width'])
@@ -259,6 +275,14 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckControl
             schema_raw_data['iframe_width'] = 640
         if schema_raw_data['iframe_height'] in ['', '0']:
             schema_raw_data['iframe_height'] = 360
+
+        if len(schema_raw_data['youtube_id']) > 11:
+            try:
+                schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                    'watch?v=')[1][:11]
+            except IndexError:
+                schema_raw_data['youtube_id'] = schema_raw_data['youtube_id'].split(
+                    '&v=')[1][:11]
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
