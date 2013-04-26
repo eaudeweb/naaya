@@ -8,7 +8,7 @@
 
 	<div class="report-actions">
 		<a href="{{ url_for('views.report_list') }}">
-			<img src="static/lib/datatables/forward_enabled.png" alt="Forward" />Full report listing
+			<img src="{{url_for('static', filename='lib/datatables/forward_enabled.png')}}" alt="Forward" />Full report listing
 		</a>
 	</div>
 
@@ -16,7 +16,7 @@
 
 	{% for country, count in countries_list %}
 		<div class="country-box">
-			<a href="reports?country={{ country }}"><img src="static/lib/datatables/forward_enabled.png" alt="Forward" />
+			<a href="{{url_for('views.report_list') }}?country={{ country }}"><img src="{{url_for('static', filename='lib/datatables/forward_enabled.png')}}" alt="Forward" />
 			{{- country }}</a> ({{ count }})
 		</div>
 	{% endfor %}
@@ -27,7 +27,7 @@
 
 	{% for region, region_count in regions_list %}
 		<div class="region-box">
-			<a href="reports?region={{ region }}"><img src="static/lib/datatables/forward_enabled.png" alt="Forward" />
+			<a href="{{url_for('views.report_list') }}?region={{ region }}"><img src="{{url_for('static', filename='lib/datatables/forward_enabled.png')}}" alt="Forward" />
 			{{- region }}</a> ({{ region_count }})
 		</div>
 	{% endfor %}
