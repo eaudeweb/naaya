@@ -1,5 +1,6 @@
 1.3.5 (unreleased)
 -------------------
+* bugfix in meeting pointer custom templates [dumitval]
 
 1.3.4 (2013-03-29)
 -------------------
