@@ -12,6 +12,13 @@
     <metal:block fill-slot="input">
         <div tal:attributes="id string:sitemap_tree_${prop_id}" class="sitemap_tree"></div>
         <div style="clear: both"></div>
+        <input type="text" tal:attributes="
+            class string:sitemap_tree_${prop_id}_target;
+            value value;
+            size here/width;
+            maxlength python:test(here.size_max, here.size_max, None);
+            name string:${prop_id}:utf8:ustring;
+            id prop_id" />
     </metal:block>
 </metal:block>
 </tal:block>
