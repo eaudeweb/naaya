@@ -304,8 +304,8 @@ def reports_json():
     return flask.jsonify(export)
 
 def make_external(url):
-    #return urljoin(flask.request.url_root, url)
-    return urljoin('http://projects.eionet.europa.eu/seris-revision/seris', url)
+    return urljoin(flask.request.url_root, url)
+    #return urljoin('http://projects.eionet.europa.eu/seris-revision/seris', url)
 
 def get_reports(with_url=None):
     reports = []
