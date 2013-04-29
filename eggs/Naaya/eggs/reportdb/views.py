@@ -279,8 +279,9 @@ def reports_atom():
     from datetime import datetime
     #TODO change when multiple reviews will be implemented
     feed = AtomFeed('SERIS Reports',
-                    feed_url='http://projects.eionet.europa.eu/seris-revision/seris/atom/',
-                    url='http://projects.eionet.europa.eu/seris-revision/seris')
+                    feed_url=make_external('atom'),
+                    url=make_external('')
+                    )
     for report in get_reports(with_url=True):
         feed.add(report['details_original_name'],
                  unicode(report['short_description']),
