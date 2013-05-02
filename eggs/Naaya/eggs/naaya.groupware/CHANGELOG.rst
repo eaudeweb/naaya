@@ -1,4 +1,7 @@
-1.3.6 (unreleased)
+1.3.7 (unreleased)
+-------------------
+
+1.3.6 (2013-05-02)
 -------------------
 * moved help files to disk [dumitval]
 
