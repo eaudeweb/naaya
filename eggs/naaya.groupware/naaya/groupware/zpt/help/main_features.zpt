@@ -1,0 +1,182 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+	<div id="workarea" metal:fill-slot="div-workarea">
+		<h1>Naaya main features</h1>
+
+		<p>Naaya is a multilingual content management system. It is built as a set of core Zope products, to which additional Naaya-specific components can be added (e.g. Survey tool, Photo Gallery), as well as generic Zope products (e.g. RDF Calendar). </p>
+
+		<p>Naaya portals address the need to have the administration and content management operations done by non-technical people from the portal pages. The Managers can access the ZMI in order to make changes, but this requires some technical understanding and can result in errors. Therefore, Administrators and Contributors have folder-level and portal level administration pages which allow executing the operations most frequently requested.</p>
+
+		<h2>License<a id="anchor001"></a></h2>
+
+		<p>All Open Source, including the components created for customers other than EEA.</p>
+
+		<h3>Content types<a id="anchor002"></a></h3>
+
+		<p>The Naaya content consists of Folders, which can contain the following Naaya specific sub-objects:</p>
+		<ul>
+			<li>Naaya HTML Document &ndash; HTML page that can contain images (folderish)</li>
+			<li>Naaya File &ndash; an object containing one single file for all languages, but multilingual metadata</li>
+			<li>Naaya Extended File &ndash; an object containing one file per language</li>
+			<li>Naaya Media File &ndash; an object containing a Flash file which is displayed using a Flash editor; along with multilingual subtitles; providing a converter is installed on the server, it is able to transform a movie in all common formats into Flash at upload or editing time</li>
+			<li>Naaya URL &ndash; an object containing an URL to an external page</li>
+			<li>Naaya Pointer &ndash; an object containing a reference to an internal page; when adding or editing such an object, the referred page can be chosen from a sitemap </li>
+			<li>Naaya Contact &ndash; an object containing data about individuals or organisations</li>
+			<li>Naaya News &ndash; a news item with an expiration data</li>
+			<li>Naaya Event &ndash; an object containing data about an event, for which the </li>
+			<li>Naaya Story &ndash; an object containing data on a timeless story, with the possibility to add images</li>
+			<li>Naaya GeoPoint &ndash; contains data about a location of a certain type; when the location is added or edited, the coordinates are calculated by the system based on the address, using a Yahoo API. The location types are defined at portal level and a Yahoo or Google map displays all locations at portal level with the possibility to filter by type of location</li>
+		</ul>
+		<p>In the case of all types that contain files, the files are kept on the hard disk.</p>
+		<p>All Naaya content types have:</p>
+		<ul>
+			<li>a common set of properties &ndash; metadata (e.g. title, description, release date, contributor);</li>
+			<li>a custom set of properties (e.g. location for events , expiration date for news);</li>
+			<li>a dynamic set of properties, which are are only relevant for one website and are defined by Managers for each portal, individually (e,g, CV for experts).</li>
+		</ul>
+		<p>Since multiple Naaya portals can reside together on the same Zope server, dynamic properties of objects allow fulfilling the needs of each portal without impacting on the genericness of the software product.</p>
+		<p>Recently, the possibility to geo-code all content types has been added. For instance, there were requests to see events and contacts on the map. Now it is possibly to define for each Naaya portal which types of content will allow geo-coding.</p>
+		<p>At the time of writing this document, a new feature is about to become available: the properties schema for Naaya content types can be changed at portal level. This means that Administrators can decide how each property will be called, if it will be displayed or not and if its value will be chosen from a selection list or or have free input.</p>
+		<p> Aside from the generic content types, others have been built over the time for specific types of portals. For instance, SEMIDE portals include by default objects for &ldquo;Funding source&rdquo;, &ldquo;Project &rdquo; and a more complex type of &ldquo;Organisation&rdquo;. Naaya portals have a Control Panel for content which allows to install/uninstall types of content available in the NaayaContent Zope product. This allows keeping individual instances of Naaya as simple as needed. </p>
+
+		<h2>Content management<a id="anchor003"></a></h2>
+		<h3>Publishing workflow<a id="anchor004"></a></h3>
+
+		<p>The Naaya publishing workflow for content is &ldquo;hardcoded&rdquo; into the product, because the need for another approach was never expressed by the users. </p>
+		<p>The states an item can be in are approved and pending. Pending content does not appear in the folder listing for regular users and is not found in searches. At submission time, the content is added as pending or approved depending on the type of user that submits it: </p>
+		<ul>
+			<li>if the user has the &ldquo;Naaya Publish Objects&rdquo; permission (granted by default to Administrators and Managers), the item is approved</li>
+			<li>otherwise, the item is in a state of pending and can be later approved and again un-approved by Administrators and Managers using a form called &ldquo;Basket of approvals&rdquo; </li>
+		</ul>
+
+		<h3>Comments on content<a id="anchor005"></a></h3>
+
+		<p>Naaya content can be commented on by users if that particular item has the option &ldquo;Open for comments&rdquo; enabled. By default, Authenticated users can comment, but the security settings for the commenting can be changed. </p>
+		<p>Comments can be deleted by Administrators, but not changed. </p>
+
+		<h3>Notifications <a id="anchor006"></a></h3>
+
+		<p>If the email setting are filled in at portal level, notifications are send to the list of emails set there and to local folder Administrators when content is added in the portal. Additionally, email notifications can be send in case of errors encountered by end users while accessing the portal pages.</p>
+
+		<h3>Versions<a id="anchor007"></a></h3>
+
+		<p>Naaya objects have an editing form which allows changing their properties with immediate effect to the users and also a versioning form which makes a copy of the object and allows repeated savings of that copy until the needed version is reached. </p>
+		<p>The version is closed when either of the &ldquo;Save version&rdquo; or &ldquo;Discard changes&rdquo; are pressed. While the version is edited, all users aside from the owner see the online version. When the version is saved, the existing online one is replaced by the new version and this one is deleted. </p>
+		<p>When a user starts a version, editing from other users is blocked until that version is closed.</p>
+
+		<h3>Folder view<a id="anchor008"></a></h3>
+
+		<p>By default, the folders display its title, the HTML description with links and images and the listing of its subobjects. It is possible to have a different view for individual folders. From the ZMI, a copy of the default folder index is made and Managers can edit the Page Template to change it.</p>
+
+		<h3>Portal level content management<a id="anchor009"></a></h3>
+
+		<p>The portal-level content management operations are:</p>
+		<ul>
+			<li>setting the main sections of a the portal, which are folders that can be displayed in the standard header, in the chosen order. This allows quick access to the most important entry points</li>
+			<li>basket of approvals &ndash; listing of all pending items from the portal, with links to the corresponding folder-level basket of approvals</li>
+			<li>versions &ndash; a listing of all opened versions across the portal. Administrators can see and edit their own and discard others, if they for instance have left the job and forgot the versions opened</li>
+			<li>map settings &ndash; the API used, center of the map, level of zoom and other similar properties can be set for the map that displays geo-codable content published in the portal</li>
+		</ul>
+
+		<h3>Folder level content management<a id="anchor010"></a></h3>
+
+		<p>Portal Administrators or local ones can execute the following operations at folder level:</p>
+		<ul>
+			<li>users' management (add users and grant them local roles)</li>
+			<li>set a folder logo that will be displayed in that folder</li>
+			<li>configure the right portlets displayed in that folder</li>
+			<li>restrict the folder and its content for certain roles</li>
+			<li>set the sub-objects that can be added in that folder</li>
+			<li>approve/un-approve content</li>
+			<li>cut/copy/paste/delete items</li>
+			<li>add content</li>
+			<li>customise the feedback form that visitors call from that folder</li>
+			<li>change the order the contained items are showed in</li>
+			<li>edit the folder and, in particular, setting the option for users to apply for a Contributor or Administrator role for that folder</li>
+		</ul>
+
+		<h3>Translate the content<a id="anchor011"></a></h3>
+
+		<p>Each item of content can be added in one language and individually translated from its edit form. When a new language is added in the portal, all content receives that language version. When the content is migrated from one portal to another, it maintains all language versions. </p>
+		<p>If an item is not translated in one language and it is also not available in the portal default language, its id is shown, along with a message informing users what language version(s) are available for that item. </p>
+		<p>When an item is edited and a language version was marked wrongly (e.g. the content provided added an item in German and the adding language was English), it is possible to mark that version as being from another language (which corresponds to the English version being deleted and the German version being added in the previous example). </p>
+
+		<h3>Indexing content from controlled sources<a id="anchor012"></a></h3>
+
+
+		<p>The properties Geographical coverage and Keywords common for all Naaya content can be freely entered by content managers or picked from glossaries or thesauri if this option is enabled at portal level. </p>
+		<p>Naaya has two additional products to support this facility, NaayaGlossary and NaayaThesaurus. They both allow import and export in SKOS format and translation of terms and themes.</p>
+		<h2>Portal administration <a id="anchor013"></a></h2>
+
+		<ul>
+		<li>User management &ndash; aside from the acl_users which is by default added in Naaya and that keeps an enhanced set of properties for each user, additional users sources can be used. In particular an interface was written for searching and assigning roles to LDAP users.</li>
+		<li>layout customisation
+			<ul>
+				<li>select the skin or colour schemes</li>
+				<li>change the portal logos, title, subtitle</li>
+				<li>edit the HTML text from the front page</li>
+			</ul>
+		</li>
+		<li>content management (described above)</li>
+		<li>syndication - allows defining and managing local and remote channels in RSS/RDF and ATOM format</li>
+		<li>translation centre for the messages across the portal, with import/export in PO, XLIFF and CSV</li>
+		<li>Link checker configurable to search for broken links in any subset of properties of certain types of content </li>
+		<li>portlets' management &ndash; various types of portlets (e.g. lists of links, remote channels, HTML content) can be easily defined and arranged on the left side, front page or right side of the pages</li>
+		</ul>
+
+		<h2>Additional components<a id="anchor014"></a></h2>
+
+		<p>All the components described below are Naaya objects that can be added either inside a Zope object or in a Naaya folder. </p>
+
+		<h3>Discussion forum<a id="anchor015"></a></h3>
+
+		<p>A forum contains discussion topics on certain themes. Each topic contains a description, on which users can post messages, either referring to that topic or in response to other messages. </p>
+		<p>Permissions are defined for adding topics, messages, managing topics and messages, etc., which allows tailoring any kind of open or closed forums. </p>
+		<p>The forum is not moderated, but Administrators can delete messages. </p>
+		<p>Notifications can be sent when messages are posted.</p>
+
+		<h3>Photo gallery<a id="anchor016"></a></h3>
+
+		<p>A photo gallery can contain albums, which contain photos, all described by metadata. Photos can be added either one by one or from a zip file. Visitors can download a subset of the photos in an album as zip.</p>
+		<p>A photo can be chosen as album cover. Administrators can fully manage this content. A search is made to find photos inside a gallery. </p>
+		<p>The navigation in an album can be made from the listing or to the next/previous photo. When displaying a photo, Administrators can rotate it in any direction. </p>
+		<p>Photos are displayed as thumbnails, but 6 sizes of thumbnails can be generated at first use and users can also download the original image.</p>
+
+		<h3>Survey<a id="anchor017"></a></h3>
+
+		<p>The survey tool is a folderish object that can be added anywhere in a portal. It requires Administrators to define the questions one by one and choose their type:</p>
+		<ul><li>simple text</li>
+		<li>longer text</li>
+		<li>file</li>
+		<li>date</li>
+		<li>matrix of questions with only one answer option on a row/culumn</li>
+		<li>matrix of questions with multiple answers on a row/column</li>
+		<li>single pick from a list of options (possibility for the respondents to add own option is available)</li>
+		<li>multiple piks from a list of options (possibility for the respondents to add own option is available)</li>
+		<li>etc.</li>
+		</ul>
+		<p>The survey has a start and an end date, before and after which users cannot comment. The answers are available (to Administrators) one by one, with details about the respondent. Also, statistics are generated for each question in a tabular form, graphs, lists or pie-charts, using the Google API. </p>
+		<p>Respondents can receive a link to their answer by email.</p>
+
+		<h3>Consultation tool<a id="anchor018"></a></h3>
+
+		<p>This tool allows uploading a file for each portal language, on which users can comment:</p>
+		<ul><li>freely, as overall comments</li>
+		<li>on each line, in which case case the PDF must contain line numbers</li>
+		<li>by answering guided questions previously defined by Administrators</li>
+		<li>by adding files in support to their answers</li>
+		</ul>
+		<p>Email notifications can be sent when users respond to the consultation. There is a start and end date, before and after which users cannot comment anymore. </p>
+		<p>Statistics are automatically generated for the answers. In case more significant statistics are needed, Administrators can rate answers by various criteria, which will conduct to additional statistics. </p>
+
+		<h3>TalkBack commenting tool<a id="anchor019"></a></h3>
+
+		<p>This tool allows defining chapters like an online book, each chapter being divided by the system in paragraphs on which users can add comments. Administrators can merge the paragraphs (which can be images, objects, or other types of HTML tags), delete them and edit each one.</p>
+		<p>Visitors can see the text of each chapter with or without the comments.</p>
+
+		<h3>Online chat<a id="anchor020"></a></h3>
+
+		<p>A chat room can be added by Administrators and access can be granted to certain roles or individual users for it. When entering a chat room, users see who's participating to the chat and the chronological list of messages like in any other chat. </p>
+		<p>The history of a chat room is kept after the room is closed &ndash; access to it can be granted to a certain role of users.</p>
+		<p>When chatting in a room, private chat rooms can be opened for two users if there is a need for them to discuss separately.</p>
+	</div>
+</metal:block>
