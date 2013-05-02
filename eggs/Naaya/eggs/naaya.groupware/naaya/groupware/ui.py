@@ -14,6 +14,13 @@ eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
+index_zpt = PageTemplateFile('zpt/help/index.zpt', globals())
+main_features_zpt = PageTemplateFile('zpt/help/main_features.zpt', globals())
+content_zpt = PageTemplateFile('zpt/help/content.zpt', globals())
+ig_admin_zpt = PageTemplateFile('zpt/help/ig_admin.zpt', globals())
+user_roles_zpt = PageTemplateFile('zpt/help/user_roles.zpt', globals())
+
+
 def get_user_id(request):
     return request.AUTHENTICATED_USER.getId()
 
@@ -124,3 +131,33 @@ def archived_portals_json(context, request):
         return "%s(%s)" % (jsonp, json.dumps(portals))
     else:
         return json.dumps(portals)
+
+def help(context, request):
+    """
+    Render help content
+    """
+    return index_zpt.__of__(context)()#(**options)
+
+def help_content(context, request):
+    """
+    Render help content - main content
+    """
+    return content_zpt.__of__(context)()#(**options)
+
+def help_main_features(context, request):
+    """
+    Render help content - main features
+    """
+    return main_features_zpt.__of__(context)()#(**options)
+
+def help_ig_admin(context, request):
+    """
+    Render help content - IG admin
+    """
+    return ig_admin_zpt.__of__(context)()#(**options)
+
+def help_user_roles(context, request):
+    """
+    Render help content - user roles
+    """
+    return user_roles_zpt.__of__(context)()#(**options)

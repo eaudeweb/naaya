@@ -1,5 +1,6 @@
 1.3.6 (unreleased)
 -------------------
+* moved help files to disk [dumitval]
 
 1.3.5 (2013-04-26)
 -------------------
