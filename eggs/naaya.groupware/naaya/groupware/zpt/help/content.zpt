@@ -1,0 +1,214 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+	<div id="workarea" metal:fill-slot="div-workarea">
+		<h1>Content types in an Interest Group</h1>
+
+		<style>
+		img {
+			-moz-box-shadow: 5px 5px 1px #ccc;
+			-webkit-box-shadow: 5px 5px 1px #ccc;
+			box-shadow: 5px 5px 1px #ccc;
+			border-top: 1px solid #ccc;
+			border-left: 1px solid #ddd;
+		}
+		</style>
+
+		<p>Groupware Interest Groups have a hierarchical structure of folders,
+		in which different types of content can be added, depending on the type of information needs to be published.</p>
+
+		<p>In the following we shall refer to "<em>content providers</em>" as users that have permissions to add or edit content,
+		such as those having the role of Contributor or Administrator.</p>
+
+		<p>All content types are structured in <em>properties</em> (or <em>attributes</em>), called <em>metadata</em>. In order to add or edit an item, content providers
+		have to fill in specific fields for each of these properties. Although having to fill in multiple fields (as opposed to just writing bulk text in a text area) may seem
+		to be more work for content providers, this structuring is important in searching and categorising the content.</p>
+
+		<p>The content types included in an IG are:</p>
+		<ul>
+			<li><em><a href="#folder">Folder</a></em> - container of other content</li>
+			<li><em><a href="#file">File</a></em> - file upload</li>
+			<li><em><a href="#document">HTML Document</a></em> - Web page</li>
+			<li><em><a href="#url">URL</a></em> - link to an external page</li>
+			<li><em><a href="#pointer">Pointer</a></em> - link to an internal page</li>
+			<li><em><a href="#news">News</a></em> - newly received or noteworthy information</li>
+			<li><em><a href="#event">Event</a></em> - information about events</li>
+			<li><em><a href="#meeting">Meeting</a></em> - meeting registration and management tool, collaborative</li>
+			<li><em><a href="#photos">Photo Gallery, Photo Folder and Photo</a></em> - containers for images and image itself</li>
+			<li><em><a href="#forum">Forum</a></em> - discussion forum, collaborative</li>
+			<li><em><a href="#talkback">TalkBack Consultation</a></em> - online consultation tool, collaborative</li>
+			<li><em><a href="#survey">Survey</a></em> - online survey tool, collaborative</li>
+		</ul>
+
+		<h2>HTML editor</h2>
+
+		<img src="/++resource++naaya.groupware/help/editor.png" alt="HTML editor screen shot" title="HTML editor screen shot" style="float: right; width: 50%;" />
+
+		<p>In order to allow users to submit items that contain HTML content (links, images, tables, formatted text), the forms for adding and editing each content type
+		display a friendly editor for the description fields, and sometimes for other fields as well.</p>
+
+		<p>This interface is meant for the non-technical content providers to rapidly create Web content by using a Word-like interface; technical users can also click on the
+		"<em>HTML</em> button of this editor and edit the HTML code directly, in case they need very specific layout.<em>
+
+		<h3>Copying text from other sources</h3>
+
+		<p>You should always be careful when copying text from other sources (e.g. other Web pages, Word documents) because this content might come with its own style,
+		that doesn't fit into the style of the IG you are publishing the data in; additional styles is usually carried even if the text looks clean when inspected visually.
+		Moreover, MS Word and other text editors bring styles or characters that are not suited for the Web, which can later generate errors in visualization or break the rest
+		of the styles in the page.</p>
+
+		<p>Therefore, when copying text from other sources, it is always a good practice to use the buttons  - "<em>Paste as Plain Text</em>" or "<em>Paste from word</em>"
+		from the editor. When pasting "<em>as plain text</em>" the text is stripped of all formatting and you may have to re-format some of it later.
+		In the second case - "<em>paste from word</em>" - some of the formatting is lost, but most of it remains in place (e.g. font colours, lists, paragraphs, tables).</p>
+
+		<p>As a rule of thumb, it is always a good practice to style the content in the Web pages as little as possible, and to rely on the styles already available in the website instead.
+		For instance, do not change the font face, colours or sizes too often, but rather try to reuse existing ones.</p>
+
+		<h2>Content types, explained</h2>
+
+		<h3><a name="folder"></a>Folder</h3>
+
+		<p>Folders are containers of information, similar to the ones from the operating systems. They also have metadata attached, in order to help describe and the index
+		the data inside them. When opening a folder, it displays the title, the description and the listing of the sub-objects. When the user is logged and has a role that
+		allows executing different operations on the content, the corresponding buttons and links appear on that page.</p>
+
+		<img src="/++resource++naaya.groupware/help/folder-index.png" alt="Folder index view" title="Folder index view" style="width: 700px;" />
+
+		<h3><a name="file"></a>File</h3>
+
+		<p>The files uploaded in an IG can be downloaded directly from the containing folder listing, or by entering the file page, where the file's metadata
+		(title, upload date, contributor, description) can be also consulted, along with previous versions of that file, if available.</p>
+
+		<p>When editing a file object, content providers can choose to upload a new file, either by replacing the existing one, or by adding a new version of it.
+		Replacing a file with a typo inside it should result in a simple replacement, meaning that the previous version should be deleted. If, on the other hand,
+		you want to upload a new variant of a file and maintain the older versions for consultation by the end users, you will choose not to remove the existing version(s).</p>
+
+		<img src="/++resource++naaya.groupware/help/file.png" alt="File edit - versions" title="File edit - versions" />
+
+		<p>The following video tutorial guides you through the process of adding and editing folders and files:<br /><br />
+		<iframe width="720" height="540" src="/++resource++naaya.groupware/help/http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720" frameborder="0" allowfullscreen></iframe>
+		</p>
+
+		<h3><a name="document"></a>HTML Document</h3>
+
+		<p>HTML Documents are basically Web pages which, besides the description field also has the body field for uploading HTML content.
+		The description should be always kept short, because its purpose is to just to offer a glimpse into the content of the page, while
+		the body of the page should contain the actual content.</p>
+
+		<h3><a name="url"></a>URL</h3>
+
+		<p>Use this content type when you want to point to an external page, meaning a page which is published outside the IG. One of the most frequent
+		usages of the URL is adding such an item in folders that contain documentation about a certain topic, and some of the documentation is already 
+		published elsewhere, or when the referenced website is located elsewhere.</p>
+
+		<p>It is well known that links may become "<em>broken</em>" in time, either because documents and pages are moved or deleted, or because websites
+		are reorganised. An Administrative tool called the <em>LinkChecker</em> runs at regular basis (e.g. once a week) and allows IG Administrators to visualize
+		a list with the broken links published in their portal. This tool checks the URL addresses published in URL items, in Pointers (see their description below),
+		as well as in the descriptions of other content types.</p>
+
+		<h3><a name="pointer"></a>Pointer</h3>
+		<p>These are items that point to a page inside the IG, used in order to avoid duplication of content. When content providers add or edit a Pointer,
+		they see a sitemap of the IG and can choose the desired page to reference by clicking on it.</p>
+
+		<p>Sometimes it is useful to refer to a file or a document from another folder than the original one, so the natural inclination of people is to copy
+		and paste such item in more places around the portal. However, duplicating the item makes it difficult to update it later (e.g. publish another version of a file)
+		and also makes it difficult to send the link to it to other people - which one is the "<em>original</em>"? The Pointer solves this problem by just linking to the original item.</p>
+
+		<h3><a name="news"></a>News</h3>
+		<p>News items are short pieces of information with a limited timeframe of relevance, such a vacancy announcements or information about the launch of a new report.
+		Such announcements become obsolete after a while. In structure they are similar to HTML Documents, but they key difference is the "<em>expiration date</em>",\
+		which makes it possible not to publish "old" news or to generate feeds with them. In case the information published in a news item is taken from another source,
+		this needs to be clearly mentioned in the corresponding field.</p>
+
+		<p>A channel with the latest five news items can be displayed on the front page of the IG, or offered as a news feed (RSS or ATOM format) to other websites,
+		to publish in their pages. That's why it is important to use this content type when and only when you want to say something relevant for just a few weeks,
+		because displaying obsolete content makes a website seem not updated or abandoned.</p>
+
+		<h3><a name="event"></a>Event</h3>
+		<img src="/++resource++naaya.groupware/help/calendar.png" alt="Calendar of events" title="Calendar of events" style="float: right;" />
+
+		<p>Information about meetings, conferences, workshops or other gatherings can be published inside an Event.</p>
+
+		<p>Aside from the regular metadata, this content type has fields for  the location, its address, URL of the relevant website, period, host, agenda and the contact person.
+		Similar to the news, the latest or upcoming events can be displayed on the front page and offered as feed for external websites to harvest. In addition, the events
+		(together with the <em>Meetings</em>, see below) can be shown in the form of a calendar, which is displayed for instance on the front page of your IG.
+		Visitors of the IG can see the dates when events take place and click on the corresponding link, or they can click on a certain month and see the meetings and events
+		taking place in that particular month.</p>
+
+		<h3><a name="meeting"></a>Meeting</h3>
+		<p>Meeting objects are interactive, and allow registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
+
+		<p>Users having the permission to administrate a meeting can decide whether people can register to participate, in which case a maximum number of participants
+		can be specified. Registrants may be approved by the meeting administrator before being able to attend the meeting, in case that the option "<em>Automatically approve participants
+		when they register</em>" is not chosen. Therefore, a meeting organised through the <em>Meeting</em> object allows a refined management, as needed:
+		open participation or not, open registration or not.</p>
+
+		<p>Due to the fact that sometimes materials distributed and shared between meeting attendees are not in a final version, or may be confidential, administrators can
+		choose to "<em>Restrict user access to the contents in the meeting</em>". This option allows the details of the meeting to be publicly available (and therefore the
+		meeting can be listed on the front page or on other websites), but not the documents published inside it.</p>
+
+		<p>The meeting details can be downloaded by the visitors in <em>iCal</em> format, which is supported by various calendars such as MS Outlook Calendar; this makes it
+		easy to bookmark the dates on your computer.</p>
+
+		<p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all registered participants. Moreover, users can
+		register to receive email notifications when new materials are uploaded in a <em>Meeting</em> object, so they are constantly kept informed without the need of circulating
+		a large number of emails.</p>
+
+		<img src="/++resource++naaya.groupware/help/meeting.png" alt="Meeting view" title="Meeting view" />
+
+		<h3><a name="photos"></a>Photo Gallery</h3>
+		<p>This tool is a collection of <em>Photo Albums</em>, which are containers for <em>Photos</em>. Photos can be added individually, or by uploading a zip file with multiple images at once.</p>
+
+		<p>As most Web photo viewers allow, photos can be visualised as a slideshow or one by one, in which case they can be viewed or downloaded in various sizes:</p>
+		<ol>
+			<li>Very small (200px width)</li>
+			<li>Small (320px width) </li>
+			<li>Medium (480px width) </li>
+			<li>Large (768px width) </li>
+			<li>Very large (1024px width) </li>
+			<li>Original size in which the image was uploaded</li>
+		</ol>
+
+		<p>Metadata about each image and album are available for consultation, such as: author, source, rights, type, size in KB and geographical location. Content providers can pick
+		a location from an interactive map when they add or edit <em>Albums</em> or <em>Photos</em>. If a location is specified, a small map shows on the page of the photo or album,
+		with a pin in the location(s) where photos refer to.</p>
+
+		<img src="/++resource++naaya.groupware/help/photo.png" alt="View of a Photo" title="View of a Photo" />
+
+		<h3><a name="forum"></a>Forum</h3>
+		<p>A forum contains discussion <em>topics</em> on certain themes. Each <em>topic</em> contains a description, on which users can post messages,
+		either referring to that topic or in response to other messages.</p>
+
+		<p>Permissions are defined for adding topics, messages, managing topics and messages, etc., which allows tailoring any kind of open or closed forums.
+		The forum is not moderated, but Administrators can delete or edit messages. Notifications can be sent when messages are posted.</p>
+
+		<h3><a name="talkback"></a>TalkBack Consultation</h3>
+		<p>This tool allows defining chapters like an online book, each chapter being divided by the system in paragraphs on which users can add comments.
+		Administrators can merge the paragraphs (which can be images, objects, or other types of HTML tags), delete them and edit each one.</p>
+
+		<p>Visitors can see the text of each chapter with or without the comments.</p>
+
+		<p>The Consultation object is used by people who want to get feedback from a community on a draft report, before this can be released in a final version
+		or who want to get the opinions of a community before making a decision. The usual procedure in this case is to circulate a document by email to a list of people,
+		and get back their opinions in the document modified with "<em>Track changes</em>". Such process is cumbersome, as the initiators of the consultation need to aggregate
+		all annotations and proposals for text changes from different documents and analyse them, in order to decide what the final version of the document should be like.
+		The TalkBack Consultation does this aggregation of comments automatically, and allows all feedback to be displayed together with the text, or separately, in an Excel file.</p>
+
+		<h3><a name="survey"></a>Survey</h3>
+		<p>The survey tool is a folderish object that can be added anywhere in a portal. It requires Administrators to define the questions one by one and choose their type:</p>
+		<ul>
+			<li>simple text</li>
+			<li>longer text</li>
+			<li>file</li>
+			<li>date</li>
+			<li>matrix of questions with only one answer option on a row/culumn</li>
+			<li>matrix of questions with multiple answers on a row/column</li>
+			<li>single pick from a list of options (possibility for the respondents to add own option is available)</li>
+			<li>multiple piks from a list of options (possibility for the respondents to add own option is available)</li>
+			<li>etc.</li>
+		</ul>
+		<p>The survey has a start and an end date, before and after which users cannot comment. The answers are available (to Administrators) one by one,
+		with details about the respondent. Also, statistics are generated for each question in a tabular form, graphs, lists or pie-charts, using the Google API.</p>
+
+		<p>Respondents can receive a link to their answer by email.</p>
+
+	</div>
+</metal:block>
