@@ -1,0 +1,38 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+	<div id="workarea" metal:fill-slot="div-workarea">
+		<div class="dropshadow figure-right" style="width: 15em">
+			<div class="shadowed">
+				<h2>More information</h2>
+				<ul>
+					<li><a href="main_features">Main features</a></li>
+					<li><a href="content">Content types</a>
+						<ul><li>Folders</li></ul>
+					</li>
+					<li><a href="ig_admin">IG administration</a></li>
+					<li><a href="user_roles">User management</a></li>
+					<!-- li><a href="Naaya_administrator_manual.pdf">
+						Naaya administrator's manual</a></li -->
+				</ul>
+			</div>
+		</div>
+
+		<h1>Introduction &amp; Help</h1>
+		<h2>Content types in an Interest Group</h2>
+		<h3>Folders - documentation</h3>
+		<p>Folders are containers of information, similar to the ones from your computer's operating system. They also have metadata attached, in order to help describe and index the data contained in them. When opening a folder, it displays the title, the description and the listing of the sub-objects.</p>
+		<p> When the user is logged on and has a role that allows executing different operations on the content, the corresponding buttons and links appear on that page.</p>
+		<img src="/++resource++naaya.gwhelp/folder-index.png"
+			alt="Folder index view" title="Folder index view" />
+
+		<h4>1. Adding content</h4>
+		<p>The following video tutorial guides you through the process of adding and editing folders and files:<br /><br />
+			<iframe width="720" height="540" src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720" frameborder="0" allowfullscreen></iframe>
+		</p>
+		<h4>2. Editing folder description and metadata</h4>
+		<p>Clicking the <em>"Edit folder"</em> button opens the edit page, where you will be able to change the folder's title, description and other specific properties.</p>
+		<img src="/++resource++naaya.gwhelp/folder-edit.png"
+			alt="Folder edit view" title="Folder edit view" />
+		<p>If you select the <em>"Open for comments"</em> checkbox, then users with the appropriate rights will have the possibility to attach comments to this folder.</p>
+		<p>The email address of the folder's maintainer should be entered in the <em>"Maintainer email"</em> field, and then the maintainer will be notified of all changes to this folder (adding content, changing properties).</p>
+	</div>
+</metal:block>
