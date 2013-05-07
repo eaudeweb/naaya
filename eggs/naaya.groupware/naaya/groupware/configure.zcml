@@ -75,39 +75,4 @@
   <include package=".profileoverview" />
   <include package=".updates" />
 
-  <naaya:simpleView
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="help"
-    handler=".ui.help"
-    permission="zope2.View"
-    />
-
-  <naaya:simpleView
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="help-main-features"
-    handler=".ui.help_main_features"
-    permission="zope2.View"
-    />
-
-  <naaya:simpleView
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="help-ig-admin"
-    handler=".ui.help_ig_admin"
-    permission="zope2.View"
-    />
-
-  <naaya:simpleView
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="help-user-roles"
-    handler=".ui.help_user_roles"
-    permission="zope2.View"
-    />
-
-  <naaya:simpleView
-    for="naaya.groupware.interfaces.IGroupwareApplication"
-    name="help-content"
-    handler=".ui.help_content"
-    permission="zope2.View"
-    />
-
 </configure>
