@@ -41,6 +41,12 @@ class GWHelp(Folder):
         """ Content type: folder page """
         return self._content_folder_html()
 
+    _content_file_html = PageTemplateFile('zpt/content_file', globals())
+    security.declareProtected(view, 'content_file')
+    def content_file(self):
+        """ Content type: file page """
+        return self._content_file_html()
+
     _ig_admin_html = PageTemplateFile('zpt/ig_admin', globals())
     security.declareProtected(view, 'ig_admin')
     def ig_admin(self):
