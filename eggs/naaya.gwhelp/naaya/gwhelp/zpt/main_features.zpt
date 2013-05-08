@@ -1,12 +1,12 @@
-<metal:block use-macro="here/gw_macro/macros/main">
-	<div id="workarea" metal:fill-slot="div-workarea">
-		<h1>Naaya main features</h1>
+<metal:block use-macro="here/help_index_html/macros/help_index">
+	<metal:block fill-slot="main_content">
+		<h2>Naaya main features</h2>
 
 		<p>Naaya is a multilingual content management system. It is built as a set of core Zope products, to which additional Naaya-specific components can be added (e.g. Survey tool, Photo Gallery), as well as generic Zope products (e.g. RDF Calendar). </p>
 
 		<p>Naaya portals address the need to have the administration and content management operations done by non-technical people from the portal pages. The Managers can access the ZMI in order to make changes, but this requires some technical understanding and can result in errors. Therefore, Administrators and Contributors have folder-level and portal level administration pages which allow executing the operations most frequently requested.</p>
 
-		<h2>License<a id="anchor001"></a></h2>
+		<h3>License<a id="anchor001"></a></h3>
 
 		<p>All Open Source, including the components created for customers other than EEA.</p>
 
@@ -38,8 +38,8 @@
 		<p>At the time of writing this document, a new feature is about to become available: the properties schema for Naaya content types can be changed at portal level. This means that Administrators can decide how each property will be called, if it will be displayed or not and if its value will be chosen from a selection list or or have free input.</p>
 		<p> Aside from the generic content types, others have been built over the time for specific types of portals. For instance, SEMIDE portals include by default objects for &ldquo;Funding source&rdquo;, &ldquo;Project &rdquo; and a more complex type of &ldquo;Organisation&rdquo;. Naaya portals have a Control Panel for content which allows to install/uninstall types of content available in the NaayaContent Zope product. This allows keeping individual instances of Naaya as simple as needed. </p>
 
-		<h2>Content management<a id="anchor003"></a></h2>
-		<h3>Publishing workflow<a id="anchor004"></a></h3>
+		<h3>Content management<a id="anchor003"></a></h3>
+		<h4>Publishing workflow<a id="anchor004"></a></h4>
 
 		<p>The Naaya publishing workflow for content is &ldquo;hardcoded&rdquo; into the product, because the need for another approach was never expressed by the users. </p>
 		<p>The states an item can be in are approved and pending. Pending content does not appear in the folder listing for regular users and is not found in searches. At submission time, the content is added as pending or approved depending on the type of user that submits it: </p>
@@ -105,7 +105,7 @@
 
 		<p>The properties Geographical coverage and Keywords common for all Naaya content can be freely entered by content managers or picked from glossaries or thesauri if this option is enabled at portal level. </p>
 		<p>Naaya has two additional products to support this facility, NaayaGlossary and NaayaThesaurus. They both allow import and export in SKOS format and translation of terms and themes.</p>
-		<h2>Portal administration <a id="anchor013"></a></h2>
+		<h3>Portal administration <a id="anchor013"></a></h3>
 
 		<ul>
 		<li>User management &ndash; aside from the acl_users which is by default added in Naaya and that keeps an enhanced set of properties for each user, additional users sources can be used. In particular an interface was written for searching and assigning roles to LDAP users.</li>
@@ -123,7 +123,7 @@
 		<li>portlets' management &ndash; various types of portlets (e.g. lists of links, remote channels, HTML content) can be easily defined and arranged on the left side, front page or right side of the pages</li>
 		</ul>
 
-		<h2>Additional components<a id="anchor014"></a></h2>
+		<h3>Additional components<a id="anchor014"></a></h3>
 
 		<p>All the components described below are Naaya objects that can be added either inside a Zope object or in a Naaya folder. </p>
 
@@ -178,5 +178,5 @@
 		<p>A chat room can be added by Administrators and access can be granted to certain roles or individual users for it. When entering a chat room, users see who's participating to the chat and the chronological list of messages like in any other chat. </p>
 		<p>The history of a chat room is kept after the room is closed &ndash; access to it can be granted to a certain role of users.</p>
 		<p>When chatting in a room, private chat rooms can be opened for two users if there is a need for them to discuss separately.</p>
-	</div>
+	</metal:block>
 </metal:block>
