@@ -1,5 +1,9 @@
-1.3.7 (unreleased)
+1.3.8 (unreleased)
 -------------------
+
+1.3.7 (2013-05-08)
+-------------------
+* moved help to a separate package [dumitval]
 
 1.3.6 (2013-05-02)
 -------------------
