@@ -4,6 +4,7 @@
 			<li>Folders
 				<ul>
 					<li><a href="#adding-content">Adding content</a></li>
+					<li><a href="#managing-content">Managing content</a></li>
 					<li><a href="#edit">Edit folder</a></li>
 					<li><a href="#subobjects">Folder subobjects</a></li>
 					<li><a href="#approvals">Approval system</a></li>
@@ -19,15 +20,28 @@
 		<h2>Folders</h2>
 		<p>Folders are containers of information, similar to the ones from your computer's operating system. They also have metadata attached, in order to help describe and index the data contained in them. When opening a folder, it displays the title, the description and the listing of the sub-objects.</p>
 		<p> When the user is logged on and has a role that allows executing different operations on the content, the corresponding buttons and links appear on that page.</p>
-		<img class="screenshot" src="/++resource++naaya.gwhelp/folder-index.png"
-			alt="Folder index view" title="Folder index view" />
 
 		<a id="adding-content"></a><h3>Adding content</h3>
-		<p>The following video tutorial guides you through the process of adding and editing folders and files:<br /><br />
+		<p>The following video tutorial guides you through the process of adding and editing folders and files:</p>
+		<p>
 			<iframe width="720" height="540"
-			src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720"
+				src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720"
 			frameborder="0" allowfullscreen></iframe>
 		</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="managing-content"></a><h3>Managing content</h3>
+			<p>
+				<img class="screenshot" src="/++resource++naaya.gwhelp/folder-index.png"
+					alt="Folder index view" title="Folder index view" />
+			</p>
+			<p>All content of a folder can be copied or moved to another folder, or deleted, 
+			directly from the folder listing. Once the targeted objects are selected (the checkbox in the first column of the listing), just click on <em>Copy</em> or <em>Cut</em>, navigate to the target folder and there click on <em>Paste</em>.</p>
+			<p><strong>Note.</strong> The <em>Paste</em> button only appears if you already copied or cut any content.</p>
+			<p>If instead you click on <em>Delete</em>, a confirmation window will open, and if you click "Yes", the objects will be deleted.</p>
+			<p><strong>Important.</strong> There is no easy way to recover deleted objects, so please pay attention to what objects are selected before clicking on the <em>Delete</em> button.</p>
 		<p>
 			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
 		</p>
