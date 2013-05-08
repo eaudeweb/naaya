@@ -1,38 +1,121 @@
-<metal:block use-macro="here/gw_macro/macros/main">
-	<div id="workarea" metal:fill-slot="div-workarea">
-		<div class="dropshadow figure-right" style="width: 15em">
-			<div class="shadowed">
-				<h2>More information</h2>
+<metal:block use-macro="here/help_index_html/macros/help_index">
+	<metal:block fill-slot="content_extension">
+		<ul>
+			<li>Folders
 				<ul>
-					<li><a href="main_features">Main features</a></li>
-					<li><a href="content">Content types</a>
-						<ul><li>Folders</li></ul>
-					</li>
-					<li><a href="ig_admin">IG administration</a></li>
-					<li><a href="user_roles">User management</a></li>
-					<!-- li><a href="Naaya_administrator_manual.pdf">
-						Naaya administrator's manual</a></li -->
+					<li><a href="#adding-content">Adding content</a></li>
+					<li><a href="#edit">Edit folder</a></li>
+					<li><a href="#subobjects">Folder subobjects</a></li>
+					<li><a href="#approvals">Approval system</a></li>
+					<li><a href="#sort">Sort order</a></li>
+					<li><a href="#restrictions">Restrictions</a></li>
+					<li><a href="#import">Imports from external sources</a></li>
 				</ul>
-			</div>
-		</div>
-
-		<h1>Introduction &amp; Help</h1>
-		<h2>Content types in an Interest Group</h2>
-		<h3>Folders - documentation</h3>
+			</li>
+		</ul>
+	</metal:block>
+	<metal:block fill-slot="main_content">
+		<a id="top"></a><h1>Content types in an Interest Group</h1>
+		<h2>Folders</h2>
 		<p>Folders are containers of information, similar to the ones from your computer's operating system. They also have metadata attached, in order to help describe and index the data contained in them. When opening a folder, it displays the title, the description and the listing of the sub-objects.</p>
 		<p> When the user is logged on and has a role that allows executing different operations on the content, the corresponding buttons and links appear on that page.</p>
-		<img src="/++resource++naaya.gwhelp/folder-index.png"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/folder-index.png"
 			alt="Folder index view" title="Folder index view" />
 
-		<h4>1. Adding content</h4>
+		<a id="adding-content"></a><h3>Adding content</h3>
 		<p>The following video tutorial guides you through the process of adding and editing folders and files:<br /><br />
-			<iframe width="720" height="540" src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720" frameborder="0" allowfullscreen></iframe>
+			<iframe width="720" height="540"
+			src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720"
+			frameborder="0" allowfullscreen></iframe>
 		</p>
-		<h4>2. Editing folder description and metadata</h4>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="edit"></a><h3>Editing folder description and metadata</h3>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-edit.png"
+			alt="Edit folder" title="Edit folder" />
 		<p>Clicking the <em>"Edit folder"</em> button opens the edit page, where you will be able to change the folder's title, description and other specific properties.</p>
 		<img src="/++resource++naaya.gwhelp/folder-edit.png"
 			alt="Folder edit view" title="Folder edit view" />
 		<p>If you select the <em>"Open for comments"</em> checkbox, then users with the appropriate rights will have the possibility to attach comments to this folder.</p>
-		<p>The email address of the folder's maintainer should be entered in the <em>"Maintainer email"</em> field, and then the maintainer will be notified of all changes to this folder (adding content, changing properties).</p>
-	</div>
+		<p>The email address of the folder's maintainer should be entered in the <em>"Maintainer email"</em> field, and then notifications of all changes to this folder (adding content, changing properties) will be sent to this address.</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="subobjects"></a><h3>Folder subobjects</h3>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-subobjects.png"
+			alt="Folder - subobjects" title="Folder - subobjects" />
+		<p>For each folder, administrators can specify what type of content it is allowed to be added.</p>
+		<p>If the <em>"Use default subobjects"</em> checkbox is selected, then the site-wide settings configured in the site administration area are applied:</p>
+		<img src="/++resource++naaya.gwhelp/folder-subobjects.png"
+			alt="Folder subobjects" title="Folder subobjects" />
+		<p>If the checkbox is not selected, then the user is presented with a list of all possible content types:</p>
+		<img src="/++resource++naaya.gwhelp/folder-subobjects-custom.png"
+			alt="Folder subobjects - custom list" title="Folder subobjects - custom list" />
+		<p>The option<em>"Recursively for subfolders"</em> determines if the currently selected subobjects should be applied recursively throughout all subfolders or not.</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="approvals"></a><h3>Approvals</h3>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-approvals.png"
+			alt="Folder - Basket of approvals" title="Folder - Basket of approvals" />
+		<p>While, depending on the IG settings, several users can upload content, only a limited group will have the right to publish (<em>Approve</em>), i.e. to make that content available to the public.</p>
+		<p>The <em>"Approvals"</em> page offers an overview of a folder's content, and the possibility to approve/un-approve/delete content:</p>
+		<img src="/++resource++naaya.gwhelp/folder-approvals.png"
+			alt="Folder - approvals" title="Folder - approvals" />
+		<p>Unapproved content is marked in the folder listing by having a red circle inside the object's icon. Until their approval, these objects will <em>not appear in the listing</em> for anyone other than the object's owner (the owner is the user who created the object) and folder administrators.</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="sort"></a><h3>Sort order</h3>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-sort.png"
+			alt="Folder - Sort order" title="Folder - Sort order" />
+		<p>Although all folders have a basic alphabetical object ordering system, it is possible to override this with a custom setting in the <em>Sort order</em> page. Numbers can be assigned to each object of the folder, subsequently these being sorted numerically.</p>
+		<p><strong>Note.</strong> Folders will always display before all other content types.</p>
+		<h4>Temporary sorting</h4>
+		<p>If you need to sort the objects of a folder only for the current visit of the page, you can click on the column headers (<em>Title</em>, <em>Owner</em> or <em>Modification date and time</em>), and the content will be sorted by that column. Clicking again on the same column header will reverse the sorting direction.</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="restrictions"></a><h3>Restrictions</h3>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-restrict.png"
+			alt="Folder - Restrictions" title="Folder - Restrictions" />
+		<p>Viewing access to each folder can be modified in the <em>Restrict</em> page. It is possible to:</p>
+		<ul>
+			<li>inherit viewing restrictions from the parent folders (or the IG)</li>
+			<li>only give access to certain roles (like <em>Viewer</em> or <em>Contributor</em>)</li>
+			<li>to allow public access (including anonymous &ndash; unauthenticated &ndash; users).</li>
+		</ul>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+
+		<a id="import"></a><h3>Content import</h3>
+		<p>The Eionet Forum and Projects platforms allow importing of content from outside sources.</p>
+		<h4>CSV/Excel import</h4>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-csv.png"
+			alt="Folder - CSV or Excel import" title="Folder - CSV or Excel import" />
+		<p>If you have content that would fit into any of the content types available, then this content can be automatically imported, without having to manually create each object.</p>
+		<p>The procedure is:</p>
+		<ol>
+			<li>Select the content type that your data fits (objects of this type will be created upon import)</li>
+			<li>Select the type of file you will use for import (comma delimited text &ndash; CSV &ndash; or Excel</li>
+			<li>Click on <em>Download template</em> and fill in the data in the downloaded file.<br/>
+			<strong>Important.</strong> The order of columns cannot be changed, please observe each column header. If either of the mandatory fields of the content type (like <em>Title</em> for example) are left empty in the import file, the import procedure will fail, and the no object will be created in the database.</li>
+			<li>Select the finished import file and click <em>Upload data</em>.</li>
+		</ol>
+		<h4>ZIP import</h4>
+		<img src="/++resource++naaya.gwhelp/folder-buttons-zip.png"
+			alt="Folder - Zip import" title="Folder - Zip import" />
+		<p>If your content doesn't fit any of the existing content types, it can be imported as files. Files cannot be edited inside the portal, but can be downloaded for local editing and then re-uploaded.</p>
+		<p>This import procedure is simple. Just create a zip file with your content, structured as needed (in folders, subfolders, etc.), select the zip file and click <em>Upload data</em>.</p>
+		<p>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
+		</p>
+	</metal:block>
 </metal:block>

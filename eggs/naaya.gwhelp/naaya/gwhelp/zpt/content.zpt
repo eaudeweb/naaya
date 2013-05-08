@@ -1,31 +1,7 @@
-<metal:block use-macro="here/gw_macro/macros/main">
-	<div id="workarea" metal:fill-slot="div-workarea">
-		<style>
-		img {
-			-moz-box-shadow: 5px 5px 1px #ccc;
-			-webkit-box-shadow: 5px 5px 1px #ccc;
-			box-shadow: 5px 5px 1px #ccc;
-			border-top: 1px solid #ccc;
-			border-left: 1px solid #ddd;
-		}
-		</style>
+<metal:block use-macro="here/help_index_html/macros/help_index">
+	<tal:block metal:fill-slot="main_content">
 
-		<div class="dropshadow figure-right" style="width: 15em">
-			<div class="shadowed">
-				<h2>More information</h2>
-				<ul>
-					<li><a href="main_features">Main features</a></li>
-					<li><a href="content">Content types</a></li>
-					<li><a href="ig_admin">IG administration</a></li>
-					<li><a href="user_roles">User management</a></li>
-					<!-- li><a href="Naaya_administrator_manual.pdf">
-						Naaya administrator's manual</a></li -->
-				</ul>
-			</div>
-		</div>
-
-		<h1>Introduction &amp; Help</h1>
-		<h2>Content types in an Interest Group</h2>
+		<h1>Content types in an Interest Group</h1>
 
 		<p>Groupware Interest Groups have a hierarchical structure of folders,
 		in which different types of content can be added, depending on the type of
@@ -61,7 +37,9 @@
 
 		<h2>HTML editor</h2>
 
-		<img src="/++resource++naaya.gwhelp/editor.png" alt="HTML editor screen shot" title="HTML editor screen shot" style="float: right; width: 50%;" />
+		<img class="screenshot right" src="/++resource++naaya.gwhelp/editor.png"
+		alt="HTML editor screen shot" title="HTML editor screen shot"
+		style="width: 50%;" />
 
 		<p>In order to allow users to submit items that contain HTML content (links,
 		images, tables, formatted text), the forms for adding and editing each
@@ -73,6 +51,7 @@
 		click on the <em>HTML</em> button of this editor and edit the HTML code
 		directly, in case they need very specific layout.<em>
 
+		<div class="clear"></div>
 		<h3>Copying text from other sources</h3>
 
 		<p>You should always be careful when copying text from other sources (e.g.
@@ -112,18 +91,15 @@
 		<p>The files uploaded in an IG can be downloaded directly from the containing folder listing, or by entering the file page, where the file's metadata
 		(title, upload date, contributor, description) can be also consulted, along with previous versions of that file, if available.</p>
 
-		<div id="more_nyfile" class="hidden">
-			<p>When editing a file object, content providers can choose to upload a new file, either by replacing the existing one, or by adding a new version of it.
-			Replacing a file with a typo inside it should result in a simple replacement, meaning that the previous version should be deleted. If, on the other hand,
-			you want to upload a new variant of a file and maintain the older versions for consultation by the end users, you will choose not to remove the existing version(s).</p>
+		<p>When editing a file object, content providers can choose to upload a new file, either by replacing the existing one, or by adding a new version of it.
+		Replacing a file with a typo inside it should result in a simple replacement, meaning that the previous version should be deleted. If, on the other hand,
+		you want to upload a new variant of a file and maintain the older versions for consultation by the end users, you will choose not to remove the existing version(s).</p>
 
-			<img src="/++resource++naaya.gwhelp/file.png" alt="File edit &ndash; versions" title="File edit &ndash; versions" />
+		<img class="screenshot" src="/++resource++naaya.gwhelp/file.png"
+			alt="File edit &ndash; versions" title="File edit &ndash; versions" />
 		<p>The following video tutorial guides you through the process of adding and editing folders and files:<br /><br />
 		<iframe width="720" height="540" src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720" frameborder="0" allowfullscreen></iframe>
 		</p>
-
-		</div>
-		<a class="more" id="nyfile" href="javascript:void(0);">More...</a>
 
 		<h3><a id="document"></a>HTML Document</h3>
 
@@ -161,7 +137,8 @@
 		because displaying obsolete content makes a website seem not updated or abandoned.</p>
 
 		<h3><a id="event"></a>Event</h3>
-		<img src="/++resource++naaya.gwhelp/calendar.png" alt="Calendar of events" title="Calendar of events" style="float: right;" />
+		<img class="screenshot right" src="/++resource++naaya.gwhelp/calendar.png"
+			alt="Calendar of events" title="Calendar of events" />
 
 		<p>Information about meetings, conferences, workshops or other gatherings can be published inside an Event.</p>
 
@@ -190,7 +167,8 @@
 		register to receive email notifications when new materials are uploaded in a <em>Meeting</em> object, so they are constantly kept informed without the need of circulating
 		a large number of emails.</p>
 
-		<img src="/++resource++naaya.gwhelp/meeting.png" alt="Meeting view" title="Meeting view" />
+		<img class="screenshot" src="/++resource++naaya.gwhelp/meeting.png"
+			alt="Meeting view" title="Meeting view" />
 
 		<h3><a id="photos"></a>Photo Gallery</h3>
 		<p>This tool is a collection of <em>Photo Albums</em>, which are containers for <em>Photos</em>. Photos can be added individually, or by uploading a zip file with multiple images at once.</p>
@@ -209,7 +187,8 @@
 		a location from an interactive map when they add or edit <em>Albums</em> or <em>Photos</em>. If a location is specified, a small map shows on the page of the photo or album,
 		with a pin in the location(s) where photos refer to.</p>
 
-		<img src="/++resource++naaya.gwhelp/photo.png" alt="View of a Photo" title="View of a Photo" />
+		<img class="screenshot" src="/++resource++naaya.gwhelp/photo.png"
+			alt="View of a Photo" title="View of a Photo" />
 
 		<h3><a id="forum"></a>Forum</h3>
 		<p>A forum contains discussion <em>topics</em> on certain themes. Each <em>topic</em> contains a description, on which users can post messages,
@@ -248,5 +227,5 @@
 
 		<p>Respondents can receive a link to their answer by email.</p>
 
-	</div>
+	</tal:block>
 </metal:block>

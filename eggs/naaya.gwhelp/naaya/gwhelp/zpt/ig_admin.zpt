@@ -1,24 +1,7 @@
-<metal:block use-macro="here/gw_macro/macros/main">
-	<div id="workarea" metal:fill-slot="div-workarea">
-		<h1>Administration of an Interest Group</h1>
+<metal:block use-macro="here/help_index_html/macros/help_index">
+	<metal:block fill-slot="main_content">
 
-		<style>
-			img {
-				-moz-box-shadow: 5px 5px 1px #ccc;
-				-webkit-box-shadow: 5px 5px 1px #ccc;
-				box-shadow: 5px 5px 1px #ccc;
-				border-top: 1px solid #ccc;
-				border-left: 1px solid #ddd;
-			}
-			.floated-left {
-				float: left;
-				width: 60%;
-				margin: 1em 1em 1em 0;
-			}
-			em {
-				color: #03647C;
-			}
-		</style>
+		<h2>Administration of an Interest Group</h2>
 
 		<p>The Administration area of each IG is accessible from the upper link
 		<em>Admin</em>, when the authenticated user has the proper rights.
@@ -55,7 +38,7 @@
 		Administrative area do not solve your problem, you can always refer to the
 		Eionet Helpdesk for more options.</p>
 
-		<h2>Portal properties</h2>
+		<h3>Portal properties</h3>
 
 		<p>This set of pages is available from the <em>Portal properties</em> link
 		of the Administration area. It has four tabs for the configuration of:</p>
@@ -98,11 +81,11 @@
 			</li>
 		</ul>
 
-		<h2>Access statistics</h2>
+		<h3>Access statistics</h3>
 
 		<p></p>
 
-		<h2>User management</h2>
+		<h3>User management</h3>
 
 		<p>The security priciples of an IG are based on users (coming from the
 		Eionet Directory), <em>permissions</em> to execute different operations,
@@ -110,7 +93,7 @@
 		Detailed information about the administration of these can be found at the
 		<a href="/help/userroles">dedicated section of this help</a>.</p>
 
-		<h2>Notifications</h2>
+		<h3>Notifications</h3>
 
 		<p>The page for the management of notifications is accessible from the
 		<em>Notifications</em> link of the Administration area. It is divided in
@@ -194,9 +177,9 @@
 			alt="List of existing subscriptions"
 			title="List of existing subscriptions" />
 
-		<h2><a name="map"></a>Map management</h2>
+		<h3><a name="map"></a>Map management</h3>
 
-		<h3><a name="about-map"></a>First about the map</h3>
+		<h4><a name="about-map"></a>First about the map</h4>
 
 		<p><em>Naaya map</em> searches for all content that is <em>geo-taggable</em>
 		and <em>geo-tagged</em> and displays points on a map for these item. Each
@@ -299,13 +282,13 @@
 		will define some categories as having a "parent" category from the add/edit
 		location type form.</p>
 
-		<h3><a name="other-admin-map"></a>Other map management options</h3>
+		<h4><a name="other-admin-map"></a>Other map management options</h4>
 
-		<h2>Content management</h2>
+		<h3>Content management</h3>
 
-		<h3><a name="manage-content-types"></a>Manage content types</h3>
+		<h4><a name="manage-content-types"></a>Manage content types</h4>
 		<!--h2>Syndication</h2>
 		<h2>Portlets</h2 -->
 
-	</div>
+	</metal:block>
 </metal:block>

@@ -1,6 +1,6 @@
-<metal:block use-macro="here/gw_macro/macros/main">
-	<div id="workarea" metal:fill-slot="div-workarea">
-		<h1>User roles</h1>
+<metal:block use-macro="here/help_index_html/macros/help_index">
+	<metal:block fill-slot="main_content">
+		<h2>User roles</h2>
 		<dl>
 			<dt>Viewer</dt>
 				<dd>Can add comments</dd>
@@ -12,5 +12,5 @@
 			<dt>Manager</dt>
 				<dd>Full access to management system</dd>
 		</dl>
-	</div>
+	</metal:block>
 </metal:block>
