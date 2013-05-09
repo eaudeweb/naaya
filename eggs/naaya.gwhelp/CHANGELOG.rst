@@ -1,5 +1,6 @@
 0.0.2 (unreleased)
 -------------------
+* Naaya Survey extended help [dumitval]
 * Naaya file extended help [dumitval]
 * Naaya folder (extension) [dumitval]
 
