@@ -1,4 +1,7 @@
-0.0.2 (unreleased)
+0.0.3 (unreleased)
+-------------------
+
+0.0.2 (2013-05-09)
 -------------------
 * Naaya Survey extended help [dumitval]
 * Naaya file extended help [dumitval]
