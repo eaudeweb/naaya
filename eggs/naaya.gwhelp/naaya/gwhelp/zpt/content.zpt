@@ -41,9 +41,10 @@
 				src="http://www.youtube.com/embed/PFtSdNqDAWE?rel=0&vq=hd720"
 				frameborder="0" allowfullscreen></iframe>
 			</p>
-			<p>
-				<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-			</p>
+			<div class="right">
+				<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+				<a href="#top">Back to top</a>
+			</div>
 
 		<h2>HTML editor</h2>
 
@@ -84,9 +85,10 @@
 		in the Web pages as little as possible, and to rely on the styles already
 		available in the website instead. For instance, do not change the font face,
 		colours or sizes too often, but rather try to reuse existing ones.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h2>Content types, explained</h2>
 
@@ -95,21 +97,22 @@
 		computer's operating system. They also have metadata attached, in order
 		to help describe and index the data contained in them. When opening a folder,
 		it displays the title, the description and the listing of the sub-objects.</p>
-		<a href="content_folder">More...</a>
+		<p><a href="content_folder"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 
 		<h3><a id="file"></a>File</h3>
 		<p>The files uploaded in an IG can be downloaded directly from the containing folder listing, or by entering the file page, where the file's metadata
 		(title, upload date, contributor, description) can be also consulted, along with previous versions of that file, if available.</p>
-		<a href="content_file">More...</a>
+		<a href="content_file"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a>
 
 		<h3><a id="document"></a>HTML Document</h3>
 
 		<p>HTML Documents are basically Web pages which, besides the description field also has the body field for uploading HTML content.
 		The description should be always kept short, because its purpose is to just to offer a glimpse into the content of the page, while
 		the body of the page should contain the actual content.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="url"></a>URL</h3>
 
@@ -121,9 +124,10 @@
 		are reorganised. An Administrative tool called the <em>LinkChecker</em> runs at regular basis (e.g. once a week) and allows IG Administrators to visualize
 		a list with the broken links published in their portal. This tool checks the URL addresses published in URL items, in Pointers (see their description below),
 		as well as in the descriptions of other content types.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="pointer"></a>Pointer</h3>
 		<p>These are items that point to a page inside the IG, used in order to avoid duplication of content. When content providers add or edit a Pointer,
@@ -132,9 +136,10 @@
 		<p>Sometimes it is useful to refer to a file or a document from another folder than the original one, so the natural inclination of people is to copy
 		and paste such item in more places around the portal. However, duplicating the item makes it difficult to update it later (e.g. publish another version of a file)
 		and also makes it difficult to send the link to it to other people &ndash; which one is the "<em>original</em>"? The Pointer solves this problem by just linking to the original item.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="news"></a>News</h3>
 		<p>News items are short pieces of information with a limited timeframe of relevance, such a vacancy announcements or information about the launch of a new report.
@@ -145,9 +150,10 @@
 		<p>A channel with the latest five news items can be displayed on the front page of the IG, or offered as a news feed (RSS or ATOM format) to other websites,
 		to publish in their pages. That's why it is important to use this content type when and only when you want to say something relevant for just a few weeks,
 		because displaying obsolete content makes a website seem not updated or abandoned.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="event"></a>Event</h3>
 		<img class="screenshot right" src="/++resource++naaya.gwhelp/calendar.png"
@@ -160,9 +166,10 @@
 		(together with the <em>Meetings</em>, see below) can be shown in the form of a calendar, which is displayed for instance on the front page of your IG.
 		Visitors of the IG can see the dates when events take place and click on the corresponding link, or they can click on a certain month and see the meetings and events
 		taking place in that particular month.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="meeting"></a>Meeting</h3>
 		<p>Meeting objects are interactive, and allow registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
@@ -185,9 +192,10 @@
 
 		<img class="screenshot" src="/++resource++naaya.gwhelp/meeting.png"
 			alt="Meeting view" title="Meeting view" />
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="photos"></a>Photo Gallery</h3>
 		<p>This tool is a collection of <em>Photo Albums</em>, which are containers for <em>Photos</em>. Photos can be added individually, or by uploading a zip file with multiple images at once.</p>
@@ -208,9 +216,10 @@
 
 		<img class="screenshot" src="/++resource++naaya.gwhelp/photo.png"
 			alt="View of a Photo" title="View of a Photo" />
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="forum"></a>Forum</h3>
 		<p>A forum contains discussion <em>topics</em> on certain themes. Each <em>topic</em> contains a description, on which users can post messages,
@@ -219,6 +228,14 @@
 		<p>Permissions are defined for adding topics, messages, managing topics and messages, etc., which allows tailoring any kind of open or closed forums.
 		The forum is not moderated, but Administrators can delete or edit messages. Notifications can be sent when messages are posted.</p>
 
+		<h3><a id="survey"></a>Survey</h3>
+		<p>The survey is a tool with which user surveys can be performed, using a multitude of question types and configuration options.</p>
+		<p><a href="content_survey"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
+
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 		<h3><a id="talkback"></a>TalkBack Consultation</h3>
 		<p>This tool allows defining chapters like an online book, each chapter being divided by the system in paragraphs on which users can add comments.
 		Administrators can merge the paragraphs (which can be images, objects, or other types of HTML tags), delete them and edit each one.</p>
@@ -230,27 +247,10 @@
 		and get back their opinions in the document modified with "<em>Track changes</em>". Such process is cumbersome, as the initiators of the consultation need to aggregate
 		all annotations and proposals for text changes from different documents and analyse them, in order to decide what the final version of the document should be like.
 		The TalkBack Consultation does this aggregation of comments automatically, and allows all feedback to be displayed together with the text, or separately, in an Excel file.</p>
-		<p>
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />Up</a>
-		</p>
-
-		<h3><a id="survey"></a>Survey</h3>
-		<p>The survey tool is a folderish object that can be added anywhere in a portal. It requires Administrators to define the questions one by one and choose their type:</p>
-		<ul>
-			<li>simple text</li>
-			<li>longer text</li>
-			<li>file</li>
-			<li>date</li>
-			<li>matrix of questions with only one answer option on a row/culumn</li>
-			<li>matrix of questions with multiple answers on a row/column</li>
-			<li>single pick from a list of options (possibility for the respondents to add own option is available)</li>
-			<li>multiple piks from a list of options (possibility for the respondents to add own option is available)</li>
-			<li>etc.</li>
-		</ul>
-		<p>The survey has a start and an end date, before and after which users cannot comment. The answers are available (to Administrators) one by one,
-		with details about the respondent. Also, statistics are generated for each question in a tabular form, graphs, lists or pie-charts, using the Google API.</p>
-
-		<p>Respondents can receive a link to their answer by email.</p>
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 	</tal:block>
 </metal:block>
