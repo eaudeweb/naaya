@@ -16,6 +16,7 @@
 			}
 			.right {
 				float: right;
+				margin: 0.5em;
 			}
 			em {
 				color: #03647C;
@@ -26,6 +27,9 @@
 			}
 			.clear{
 				clear:both;
+			}
+			.center{
+				text-align:center;
 			}
 			</style>
 			<metal:block define-slot="content">
