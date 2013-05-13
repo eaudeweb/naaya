@@ -46,7 +46,7 @@
 				<a href="#top">Back to top</a>
 			</div>
 
-		<h2>HTML editor</h2>
+		<a id="html-editor"></a><h2>HTML editor</h2>
 
 		<img class="screenshot right" src="/++resource++naaya.gwhelp/editor.png"
 		alt="HTML editor screen shot" title="HTML editor screen shot"
@@ -237,16 +237,8 @@
 			<a href="#top">Back to top</a>
 		</div>
 		<h3><a id="talkback"></a>TalkBack Consultation</h3>
-		<p>This tool allows defining chapters like an online book, each chapter being divided by the system in paragraphs on which users can add comments.
-		Administrators can merge the paragraphs (which can be images, objects, or other types of HTML tags), delete them and edit each one.</p>
-
-		<p>Visitors can see the text of each chapter with or without the comments.</p>
-
-		<p>The Consultation object is used by people who want to get feedback from a community on a draft report, before this can be released in a final version
-		or who want to get the opinions of a community before making a decision. The usual procedure in this case is to circulate a document by email to a list of people,
-		and get back their opinions in the document modified with "<em>Track changes</em>". Such process is cumbersome, as the initiators of the consultation need to aggregate
-		all annotations and proposals for text changes from different documents and analyse them, in order to decide what the final version of the document should be like.
-		The TalkBack Consultation does this aggregation of comments automatically, and allows all feedback to be displayed together with the text, or separately, in an Excel file.</p>
+		<p>This tool allows systematic, per-paragraph commenting for documents. It is best suited for draft version of reports, on which a (large) group of involved persons should give feedback before issuing the final version. Comments are easily manageable, can be viewed inline with the related paragraph, or exported to Excel files for futher processing.</p>
+		<p><a href="content_consultation"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 		<div class="right">
 			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
 			<a href="#top">Back to top</a>

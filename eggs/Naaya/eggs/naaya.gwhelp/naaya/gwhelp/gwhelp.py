@@ -53,6 +53,12 @@ class GWHelp(Folder):
         """ Content type: survey page """
         return self._content_survey_html()
 
+    _content_consultation_html = PageTemplateFile('zpt/content_consultation', globals())
+    security.declareProtected(view, 'content_consultation')
+    def content_consultation(self):
+        """ Content type: consultation page """
+        return self._content_consultation_html()
+
     _ig_admin_html = PageTemplateFile('zpt/ig_admin', globals())
     security.declareProtected(view, 'ig_admin')
     def ig_admin(self):
