@@ -124,11 +124,11 @@
 		<p>Several question types are available:</p>
 		<p>The <em>Edit reports</em> button leads to the reports administration page. Here you can either manually create a report based on the surveys questions and the compatible statistical widgets &ndash; just enter a report title and click on <em>Add report</em> &ndash; or let the survey automatically generate a full report with all possible statistical widgets for each question &ndash; again enter a report title but this time click on <em>Generate full report</em>.</p>
 		<p>The automatic option has the advantage of discarding statistical widgets that are incompatible, for each question type (like pie chart for a text input). After the generation of such a full report, the administrator can easily remove the statistical widgets that ar not very relevant (while several statistical widgets can be compatible with a question type, not all maybe present the same informative value).</p>
-		<p><img class="screenshot"
+		<div><img class="screenshot"
 			src="/++resource++naaya.gwhelp/survey-report.png"
-			alt="Survey - Report" title="Survey - Report" /><br/>
-			<strong>Figure 6.</strong> Fragment of a report
-		</p>
+			alt="Survey - Report" title="Survey - Report" />
+			<p class="center"><strong>Figure 6.</strong> Fragment of a report</p>
+		</div>
 		<div class="right">
 			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
 			<a href="#top">Back to top</a>
