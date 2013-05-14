@@ -13,7 +13,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import generate_excel
 
 #Meeting imports
-from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
+from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
+                                   ADMINISTRATOR_ROLE, OWNER_ROLE)
 from permissions import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 from utils import findUsers, listUsersInGroup
@@ -94,9 +95,16 @@ class Participants(SimpleItem):
             return
 
         if can_set_role():
-            meeting.manage_setLocalRoles(uid, [role])
+            new_roles = [role]
         else:
-            meeting.manage_setLocalRoles(uid, [WAITING_ROLE])
+            new_roles = [WAITING_ROLE]
+
+        # special case - don't lose ownership
+        sources, owner = meeting.getOwnerTuple()
+        if owner == uid:
+            new_roles.append(OWNER_ROLE)
+
+        meeting.manage_setLocalRoles(uid, new_roles)
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'setAttendees')
     @postonly
