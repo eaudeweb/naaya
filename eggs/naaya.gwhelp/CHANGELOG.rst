@@ -1,4 +1,7 @@
-0.0.4 (unreleased)
+0.0.5 (unrelease)
+-------------------
+
+0.0.4 (2013-05-14)
 -------------------
 * User management extended help [dumitval]
 
