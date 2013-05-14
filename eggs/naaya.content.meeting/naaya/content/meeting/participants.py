@@ -100,7 +100,7 @@ class Participants(SimpleItem):
             new_roles = [WAITING_ROLE]
 
         # special case - don't lose ownership
-        sources, owner = meeting.getOwnerTuple()
+        sources, owner = meeting.getOwnerTuple() or (None, None)
         if owner == uid:
             new_roles.append(OWNER_ROLE)
 
