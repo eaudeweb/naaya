@@ -1,4 +1,7 @@
-1.2.39 (unreleased)
+1.2.40 (unreleased)
+-------------------
+
+1.2.39 (2013-05-14)
 -------------------
 * #14435 if owner sets himself as participant, ownership is lost [simiamih]
 
