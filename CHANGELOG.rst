@@ -1,5 +1,6 @@
 1.2.39 (unreleased)
 -------------------
+* #14435 if owner sets himself as participant, ownership is lost [simiamih]
 
 1.2.38 (2013-03-29)
 -------------------
