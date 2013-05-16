@@ -1,5 +1,6 @@
 0.0.5 (unrelease)
 -------------------
+* Naaya Meeting extended help [dumitval]
 
 0.0.4 (2013-05-14)
 -------------------

@@ -1,7 +1,7 @@
 <metal:block define-macro="help_index">
 	<metal:block use-macro="here/gw_macro/macros/main">
 		<div id="workarea" metal:fill-slot="div-workarea">
-			<style>
+			<style type="text/css">
 			img.screenshot {
 				-moz-box-shadow: 5px 5px 1px #ccc;
 				-webkit-box-shadow: 5px 5px 1px #ccc;
@@ -45,7 +45,7 @@
 							<li><a href="ig_admin">IG administration</a>
 								<metal:block define-slot="it_admin_extension"></metal:block>
 							</li>
-							<li><a href="user_roles">User management</a>
+							<li><a href="user_management">User management</a>
 								<metal:block define-slot="user_management_extension"></metal:block>
 							</li>
 							<!-- li><a href="Naaya_administrator_manual.pdf">
