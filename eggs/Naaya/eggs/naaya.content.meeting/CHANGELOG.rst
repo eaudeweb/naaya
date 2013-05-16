@@ -1,5 +1,6 @@
 1.2.40 (unreleased)
 -------------------
+* Javascript fix in meeting edit [dumitval]
 
 1.2.39 (2013-05-14)
 -------------------
