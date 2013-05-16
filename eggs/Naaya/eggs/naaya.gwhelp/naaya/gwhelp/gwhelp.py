@@ -59,17 +59,23 @@ class GWHelp(Folder):
         """ Content type: consultation page """
         return self._content_consultation_html()
 
+    _content_meeting_html = PageTemplateFile('zpt/content_meeting', globals())
+    security.declareProtected(view, 'content_meeting')
+    def content_meeting(self):
+        """ Content type: meeting page """
+        return self._content_meeting_html()
+
     _ig_admin_html = PageTemplateFile('zpt/ig_admin', globals())
     security.declareProtected(view, 'ig_admin')
     def ig_admin(self):
         """ IG-Admin page """
         return self._ig_admin_html()
 
-    _user_roles_html = PageTemplateFile('zpt/user_roles', globals())
-    security.declareProtected(view, 'user_roles')
-    def user_roles(self):
-        """ User roles page """
-        return self._user_roles_html()
+    _user_management_html = PageTemplateFile('zpt/user_management', globals())
+    security.declareProtected(view, 'user_management')
+    def user_management(self):
+        """ User management page """
+        return self._user_management_html()
 
 def manage_addGWHelp(parent, id, title, REQUEST=None):
     """ instantiate the Help package """
