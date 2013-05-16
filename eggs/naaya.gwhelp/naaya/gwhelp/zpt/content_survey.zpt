@@ -31,7 +31,7 @@
 				</ul></li>
 		</ul>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="questions"></a><h4>Adding questions</h4>
@@ -114,7 +114,7 @@
 			<strong>Figure 5.</strong> Geographical location widget
 		</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="reports"></a><h3>Reports</h3>
@@ -130,7 +130,7 @@
 			<p class="center"><strong>Figure 6.</strong> Fragment of a report</p>
 		</div>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="permissions"></a><h3>Permissions</h3>
@@ -150,7 +150,7 @@
 			<strong>Figure 8.</strong> Permission table - no inheritance for answer submission.
 		</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 	</metal:block>

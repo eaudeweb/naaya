@@ -42,7 +42,7 @@
 				frameborder="0" allowfullscreen></iframe>
 			</p>
 			<div class="right">
-				<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+				<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 				<a href="#top">Back to top</a>
 			</div>
 
@@ -63,6 +63,7 @@
 		directly, in case they need very specific layout.<em>
 
 		<div class="clear"></div>
+
 		<h3>Copying text from other sources</h3>
 
 		<p>You should always be careful when copying text from other sources (e.g.
@@ -85,10 +86,6 @@
 		in the Web pages as little as possible, and to rely on the styles already
 		available in the website instead. For instance, do not change the font face,
 		colours or sizes too often, but rather try to reuse existing ones.</p>
-		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
-			<a href="#top">Back to top</a>
-		</div>
 
 		<h2>Content types, explained</h2>
 
@@ -99,10 +96,20 @@
 		it displays the title, the description and the listing of the sub-objects.</p>
 		<p><a href="content_folder"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top">Back to top</a>
+		</div>
+
 		<h3><a id="file"></a>File</h3>
 		<p>The files uploaded in an IG can be downloaded directly from the containing folder listing, or by entering the file page, where the file's metadata
 		(title, upload date, contributor, description) can be also consulted, along with previous versions of that file, if available.</p>
-		<a href="content_file"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a>
+		<p><a href="content_file"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
+
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="document"></a>HTML Document</h3>
 
@@ -110,7 +117,7 @@
 		The description should be always kept short, because its purpose is to just to offer a glimpse into the content of the page, while
 		the body of the page should contain the actual content.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -125,7 +132,7 @@
 		a list with the broken links published in their portal. This tool checks the URL addresses published in URL items, in Pointers (see their description below),
 		as well as in the descriptions of other content types.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -137,7 +144,7 @@
 		and paste such item in more places around the portal. However, duplicating the item makes it difficult to update it later (e.g. publish another version of a file)
 		and also makes it difficult to send the link to it to other people &ndash; which one is the "<em>original</em>"? The Pointer solves this problem by just linking to the original item.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -151,7 +158,7 @@
 		to publish in their pages. That's why it is important to use this content type when and only when you want to say something relevant for just a few weeks,
 		because displaying obsolete content makes a website seem not updated or abandoned.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -167,33 +174,17 @@
 		Visitors of the IG can see the dates when events take place and click on the corresponding link, or they can click on a certain month and see the meetings and events
 		taking place in that particular month.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
 		<h3><a id="meeting"></a>Meeting</h3>
-		<p>Meeting objects are interactive, and allow registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
+		<p>Meeting objects are interactive tools supporting physical or virtual meetings, allow registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
 
-		<p>Users having the permission to administrate a meeting can decide whether people can register to participate, in which case a maximum number of participants
-		can be specified. Registrants may be approved by the meeting administrator before being able to attend the meeting, in case that the option "<em>Automatically approve participants
-		when they register</em>" is not chosen. Therefore, a meeting organised through the <em>Meeting</em> object allows a refined management, as needed:
-		open participation or not, open registration or not.</p>
+		<p><a href="content_meeting"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 
-		<p>Due to the fact that sometimes materials distributed and shared between meeting attendees are not in a final version, or may be confidential, administrators can
-		choose to "<em>Restrict user access to the contents in the meeting</em>". This option allows the details of the meeting to be publicly available (and therefore the
-		meeting can be listed on the front page or on other websites), but not the documents published inside it.</p>
-
-		<p>The meeting details can be downloaded by the visitors in <em>iCal</em> format, which is supported by various calendars such as MS Outlook Calendar; this makes it
-		easy to bookmark the dates on your computer.</p>
-
-		<p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all registered participants. Moreover, users can
-		register to receive email notifications when new materials are uploaded in a <em>Meeting</em> object, so they are constantly kept informed without the need of circulating
-		a large number of emails.</p>
-
-		<img class="screenshot" src="/++resource++naaya.gwhelp/meeting.png"
-			alt="Meeting view" title="Meeting view" />
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -217,7 +208,7 @@
 		<img class="screenshot" src="/++resource++naaya.gwhelp/photo.png"
 			alt="View of a Photo" title="View of a Photo" />
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -233,14 +224,14 @@
 		<p><a href="content_survey"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<h3><a id="talkback"></a>TalkBack Consultation</h3>
 		<p>This tool allows systematic, per-paragraph commenting for documents. It is best suited for draft version of reports, on which a (large) group of involved persons should give feedback before issuing the final version. Comments are easily manageable, can be viewed inline with the related paragraph, or exported to Excel files for futher processing.</p>
 		<p><a href="content_consultation"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 

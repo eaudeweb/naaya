@@ -29,7 +29,7 @@
 			frameborder="0" allowfullscreen></iframe>
 		</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -44,7 +44,7 @@
 			<p>If instead you click on <em>Delete</em>, a confirmation window will open, and if you click "Yes", the objects will be deleted.</p>
 			<p><strong>Important.</strong> There is no easy way to recover deleted objects, so please pay attention to what objects are selected before clicking on the <em>Delete</em> button.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -57,7 +57,7 @@
 		<p>If you select the <em>"Open for comments"</em> checkbox, then users with the appropriate rights will have the possibility to attach comments to this folder.</p>
 		<p>The email address of the folder's maintainer should be entered in the <em>"Maintainer email"</em> field, and then notifications of all changes to this folder (adding content, changing properties) will be sent to this address.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -75,7 +75,7 @@
 			alt="Folder subobjects - custom list" title="Folder subobjects - custom list" />
 		<p>The option<em>"Recursively for subfolders"</em> determines if the currently selected subobjects should be applied recursively throughout all subfolders or not.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -90,7 +90,7 @@
 			alt="Folder - approvals" title="Folder - approvals" />
 		<p>Unapproved content is marked in the folder listing by having a red circle inside the object's icon. Until their approval, these objects will <em>not appear in the listing</em> for anyone other than the object's owner (the owner is the user who created the object) and folder administrators.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -103,7 +103,7 @@
 		<h4>Temporary sorting</h4>
 		<p>If you need to sort the objects of a folder only for the current visit of the page, you can click on the column headers (<em>Title</em>, <em>Owner</em> or <em>Modification date and time</em>), and the content will be sorted by that column. Clicking again on the same column header will reverse the sorting direction.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -118,7 +118,7 @@
 			<li>to allow public access (including anonymous &ndash; unauthenticated &ndash; users).</li>
 		</ul>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 
@@ -144,7 +144,7 @@
 		<p>If your content doesn't fit any of the existing content types, it can be imported as files. Files cannot be edited inside the portal, but can be downloaded for local editing and then re-uploaded.</p>
 		<p>This import procedure is simple. Just create a zip file with your content, structured as needed (in folders, subfolders, etc.), select the zip file and click <em>Upload data</em>.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 	</metal:block>

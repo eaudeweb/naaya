@@ -29,7 +29,7 @@
 			src="/++resource++naaya.gwhelp/consultation-comments-inline.png"
 			alt="Inline comments" title="Inline comments" />
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="section-edit"></a><h3>Section edit</h3>
@@ -44,7 +44,7 @@
 			src="/++resource++naaya.gwhelp/consultation-section-edit.png"
 			alt="Section edit" title="Section edit" /></p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="invitations"></a><h3>Invitations</h3>
@@ -59,7 +59,7 @@
 			alt="Send invitations via Excel" title="Send invitations via Excel" />
 		<p>As detailed also in the invitation page, in case of using Excel templates please use the <em>Preview</em> button to check any errors (most likely because of missing data in mandatory fields). Correct the Excel file and try again. When there are no more errors, click on <em>Send invitation</em>.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<h4>Manage invitations</h4>
@@ -72,7 +72,7 @@
 			alt="Manage invitations" title="Manage invitations" />
 		<p><strong>Note.</strong> Invitations can be revoked but not deleted, they will always appear in the <em>Revoked invitations</em> list for conformity. They can also be re-enabled from there.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="comments"></a><h3>Comments administration</h3>
@@ -88,7 +88,7 @@
 			src="/++resource++naaya.gwhelp/consultation-all-comments.png"
 			alt="Comments administration" title="Comments administration" />
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="permissions"></a><h3>Edit permissions</h3>
@@ -100,7 +100,7 @@
 			src="/++resource++naaya.gwhelp/consultation-permissions.png"
 			alt="Permissions administration" title="Permissions administration" />
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" /></a>
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 	</metal:block>
