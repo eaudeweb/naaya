@@ -1,5 +1,6 @@
 0.0.7 (unreleased)
 -------------------
+* removed some invalid menu links in content_forum [dumitval]
 
 0.0.6 (2013-05-17)
 -------------------
