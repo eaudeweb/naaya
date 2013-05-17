@@ -1,4 +1,7 @@
-1.3.8 (unreleased)
+1.3.9 (unreleased)
+-------------------
+
+1.3.8 (2013-05-17)
 -------------------
 * auto-create meeting in webex request, improvements [mihaitab]
 
