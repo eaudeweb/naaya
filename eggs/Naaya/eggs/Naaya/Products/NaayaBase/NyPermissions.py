@@ -97,6 +97,11 @@ class NyPermissions(object):
 
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
+    def checkPermissionRequestWebex(self):
+        """ Check the permissions to request webex."""
+
+        return self.checkPermission(PERMISSION_REQUEST_WEBEX)
+
     def checkPermissionCopyObjects(self, object_ids):
         """ Check the permissions to copy objects. """
         objects = [self[object_id] for object_id in object_ids]
