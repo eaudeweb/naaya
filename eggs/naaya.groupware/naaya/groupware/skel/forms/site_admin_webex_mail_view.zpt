@@ -39,12 +39,18 @@
   <tr>
     <th i18n:translate="">Content</th>
     <td tal:content="structure email/content" />
-  </tr>
 </table>
 
 <div class="message-error" tal:condition="not:email">
   <p i18n:translate="">The requested email id was not found in the archive.</p>
 </div>
+
+<form method="post">
+   <label i18n:translate="">*To be used after request has been approved.</label>
+   <br />
+   <input name="webex" type="hidden" tal:attributes="value email/webex" />
+   <input type="submit" value="Create meeting" i18n:attributes="value">
+</form>
 
 <p><a title="Back to WebEx email archive overview" i18n:attributes="title"
     i18n:translate=""
