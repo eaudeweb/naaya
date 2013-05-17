@@ -56,6 +56,11 @@
 		<h3>Notifications <a id="anchor006"></a></h3>
 
 		<p>If the email setting are filled in at portal level, notifications are send to the list of emails set there and to local folder Administrators when content is added in the portal. Additionally, email notifications can be send in case of errors encountered by end users while accessing the portal pages.</p>
+		<p>Here is a short tutorial on how you can subscribe to notifications:</p>
+		<p><iframe width="720" height="540"
+			src="http://www.youtube.com/embed/Lj2giZmqsBY?rel=0&vq=hd720"
+			frameborder="0" allowfullscreen></iframe>
+		</p>
 
 		<h3>Versions<a id="anchor007"></a></h3>
 
