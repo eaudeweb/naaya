@@ -1,4 +1,7 @@
-0.0.6 (unreleased)
+0.0.7 (unreleased)
+-------------------
+
+0.0.6 (2013-05-17)
 -------------------
 * Naaya Forum extended help [dumitval]
 
