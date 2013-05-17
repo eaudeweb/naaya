@@ -67,7 +67,7 @@
     </td>
 </tr>
 <tr tal:condition="current_version">
-    <th i18n:translate="">Upload date</th>
+    <th i18n:translate="">Latest uploaded version</th>
     <td tal:content="current_version/pretty_timestamp" />
 </tr>
 <tr tal:condition="here/contributor">
@@ -78,7 +78,10 @@
            content="structure python: here.prop_display_tr('coverage')" />
 <tal:block condition="here/keywords"
            content="structure python: here.prop_display_tr('keywords')" />
-<tal:block content="structure python: here.prop_display_tr('releasedate')" />
+<tr tal:condition="here/contributor">
+    <th i18n:translate="">Original release date</th>
+    <td tal:content="python:here.releasedate.strftime('%d %b %Y')" />
+</tr>
 
 <tal:block condition="here/is_geo_enabled">
 	<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
@@ -104,8 +107,6 @@
     <tr>
         <th i18n:translate="">#</th>
         <th i18n:translate="">File name</th>
-        <th i18n:translate="">Contributor</th>
-        <th i18n:translate="">Release date</th>
         <th i18n:translate="">Uploaded by</th>
         <th i18n:translate="">Upload date</th>
         <th i18n:translate="">Size</th>
@@ -121,9 +122,7 @@
         <em tal:condition="version/is_current"
             i18n:translate="">(current)</em>
     </td>
-    <td tal:content="python:here.getAuthenticationTool().name_from_userid(here.contributor) or here.contributor" />
-    <td tal:content="python: options['current_version']['pretty_timestamp']" />
-    <td tal:content="version/contributor" />
+    <td tal:content="python:u'%s (%s)' % (version['contributor'], here.getAuthenticationTool().name_from_userid(version['contributor']))" />
     <td tal:content="version/pretty_timestamp" />
     <td tal:content="version/pretty_size" />
     <td>
