@@ -1,4 +1,7 @@
-0.0.7 (unreleased)
+0.0.8 (unreleased)
+-------------------
+
+0.0.7 (2013-05-17)
 -------------------
 * integrated some video tutorials [dumitval]
 * removed some invalid menu links in content_forum [dumitval]
