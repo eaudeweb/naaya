@@ -1,5 +1,6 @@
 0.0.6 (unreleased)
 -------------------
+* Naaya Forum extended help [dumitval]
 
 0.0.5 (2013-05-16)
 -------------------
