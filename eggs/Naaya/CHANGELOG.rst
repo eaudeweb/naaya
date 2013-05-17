@@ -1,4 +1,7 @@
-3.2.34 (unreleased)
+3.2.35 (unreleased)
+-------------------
+
+3.2.34 (2013-05-17)
 -------------------
 * add new permission for webex requests [mihaitab]
 
