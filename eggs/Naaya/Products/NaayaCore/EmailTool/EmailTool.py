@@ -12,6 +12,8 @@ from urlparse import urlparse
 import logging
 import random
 from datetime import datetime
+import json
+
 try:
     import email.utils as email_utils
     import email.charset as email_charset
@@ -206,8 +208,7 @@ class EmailTool(Folder):
 
     security.declareProtected(view_management_screens, 'manageSettings')
     def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='',
-                       mail_address_from='', notify_on_errors_email='',
-                       notify_on_webex_email='', REQUEST=None):
+                       mail_address_from='', notify_on_errors_email='', REQUEST=None):
         """ """
         site = self.getSite()
         try: mail_server_port = int(mail_server_port)
@@ -217,7 +218,6 @@ class EmailTool(Folder):
         site.mail_address_from = mail_address_from
         site.administrator_email = administrator_email
         site.notify_on_errors_email = notify_on_errors_email
-        site.notify_on_webex_email = notify_on_webex_email
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
@@ -328,7 +328,6 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
         else:
             email_message = create_message(content, addr_to, addr_from,
                                            subject)
-
         # Save email in specified file
         generator.flatten(email_message)
     else:
@@ -336,8 +335,61 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
                             " Missing configuration for SITES_LOG_PATH?")
     return filename
 
+def save_webex_email(site, addr_to, addr_from, subject, content,
+                    where_to_save='sent-webex', others=None):
+    """
+    Save webex email on disk.
+    `addr_to` is a list; if there is more than one recipient,
+    adds a 'To' header with each email address.
+
+    """
+    save_path = get_log_dir(site)
+    join = os.path.join
+    filename = None
+
+    if save_path:
+        save_path = join(save_path, where_to_save)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        # Generate email filename according to zope.sendmail.maildir
+        # but instead of hostname use site_id
+        randmax = 0x7fffffff
+        timestamp = int(time.time())
+        unique = '%d.%d.%s.%d' % (timestamp, os.getpid(), site.getId(),
+                                  random.randrange(randmax))
+        filename = join(save_path, unique)
+        message_file = os.open(filename,
+                               os.O_CREAT|os.O_EXCL|os.O_WRONLY,
+                               0600)
+        generator = email_generator.Generator(os.fdopen(message_file, 'w'))
+
+        # Add multiple 'To' headers if there is more than one recipient
+        if len(addr_to) > 1:
+            email_message = create_message(content, addr_to[0], addr_from,
+                                           subject)
+            addr_to.remove(addr_to[0])
+            for mail in addr_to:
+                email_message['To'] = mail
+        else:
+            email_message = create_message(content, addr_to, addr_from,
+                                           subject)
+        # hide meeting info in header field
+        email_message['X-Accept-Webex-Data'] = json.dumps(others)
+
+        # Save email in specified file
+        generator.flatten(email_message)
+    else:
+        mail_logger.warning("The webex email could not be saved on the disk."
+                            "There is missing configuration(SITES_LOG_PATH)."
+                            "Please contact the platform maintainers.")
+    return filename
+
 def get_bulk_emails(site, where_to_read='sent-bulk'):
-    """ Show all bulk emails saved on the disk """
+    """
+    Show all bulk emails saved on the disk
+    (Used for webex email too)
+    """
     save_path = get_log_dir(site)
     join = os.path.join
     emails = []
@@ -406,6 +458,39 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk'):
                 'recipients': mail.get_all('To'),
                 'sender': mail.get('From'),
                 'date': date,
+                'webex': mail.get('X-Accept-Webex-Data', '')
+            }
+
+def get_webex_email(site, filename, where_to_read='sent-webex'):
+    """ Show a specific webex email saved on the disk """
+    save_path = get_log_dir(site)
+    join = os.path.join
+
+    if save_path:
+        save_path = join(save_path, where_to_read)
+        if os.path.isdir(save_path):
+            message_path = join(save_path, filename)
+
+            try:
+                message_file = open(message_path, 'r+')
+            except IOError:
+                return None
+            mail = message_from_file(message_file)
+            message_file.close()
+
+            # Prepare the date to be formatted with utShowFullDateTime
+            date = email_utils.parsedate_tz(mail.get('Date', ''))
+            date = email_utils.mktime_tz(date)
+            date = datetime.fromtimestamp(date)
+
+            return {
+                'subject': mail.get('Subject', '(no-subject)'),
+                'content': mail.get_payload(decode=True).replace(
+                    '\n\n', '</p><p>').replace('\n', '<br/>'),
+                'recipients': mail.get_all('To'),
+                'sender': mail.get('From'),
+                'date': date,
+                'webex': mail.get('X-Accept-Webex-Data', '')
             }
 
 class BestEffortSMTPMailer(SMTPMailer):

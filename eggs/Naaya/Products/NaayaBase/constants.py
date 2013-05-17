@@ -23,6 +23,7 @@ PERMISSION_BULK_DOWNLOAD = 'Naaya - Bulk download'
 PERMISSION_SKIP_APPROVAL = 'Naaya - Skip approval'
 PERMISSION_ZIP_EXPORT = 'Naaya - Zip export'
 PERMISSION_CREATE_USER = 'Naaya - Create user'
+PERMISSION_REQUEST_WEBEX = 'Naaya - Request Webex'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'
