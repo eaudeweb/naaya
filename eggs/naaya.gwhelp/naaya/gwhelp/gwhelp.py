@@ -41,6 +41,12 @@ class GWHelp(Folder):
         """ Content type: folder page """
         return self._content_folder_html()
 
+    _content_forum_html = PageTemplateFile('zpt/content_forum', globals())
+    security.declareProtected(view, 'content_forum')
+    def content_forum(self):
+        """ Content type: forum page """
+        return self._content_forum_html()
+
     _content_file_html = PageTemplateFile('zpt/content_file', globals())
     security.declareProtected(view, 'content_file')
     def content_file(self):

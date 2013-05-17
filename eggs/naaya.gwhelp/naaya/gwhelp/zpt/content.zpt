@@ -216,8 +216,12 @@
 		<p>A forum contains discussion <em>topics</em> on certain themes. Each <em>topic</em> contains a description, on which users can post messages,
 		either referring to that topic or in response to other messages.</p>
 
-		<p>Permissions are defined for adding topics, messages, managing topics and messages, etc., which allows tailoring any kind of open or closed forums.
-		The forum is not moderated, but Administrators can delete or edit messages. Notifications can be sent when messages are posted.</p>
+		<p><a href="content_forum"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow-normal.png" />More...</a></p>
+
+		<div class="right">
+			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top">Back to top</a>
+		</div>
 
 		<h3><a id="survey"></a>Survey</h3>
 		<p>The survey is a tool with which user surveys can be performed, using a multitude of question types and configuration options.</p>
