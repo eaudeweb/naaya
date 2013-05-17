@@ -1,5 +1,6 @@
 1.3.8 (unreleased)
 -------------------
+* auto-create meeting in webex request, improvements [mihaitab]
 
 1.3.7 (2013-05-08)
 -------------------
