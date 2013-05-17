@@ -1,4 +1,4 @@
-1.3.11 (unreleased)
+1.3.11 (2013-05-17)
 --------------------
 * #4547 comment#9; bfile_index tpl small changes in labels [simiamih]
 
