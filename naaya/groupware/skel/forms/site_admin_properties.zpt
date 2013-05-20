@@ -34,11 +34,19 @@
 	<dd><input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/get_http_proxy; disabled python:test(here.buildout_http_proxy(), 'disabled', None)" /></dd>
 	<dt><label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="recaptcha">reCAPTCHA</a> public key</label></dt>
 	<dd><input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/get_recaptcha_public_key" />
-	<p i18n:translate="" tal:condition="python:here.buildout_recaptcha_public() != here.get_recaptcha_public_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
+	<p i18n:translate=""
+		tal:condition="python:here.buildout_recaptcha_public() and here.buildout_recaptcha_public() != here.get_recaptcha_public_key()">
+		<strong i18n:translate="" i18n:name="information">Information:</strong>
+		This key overrides a server-wide key. If this is not intended, please
+		delete it in order to apply the server-wide setting.</p></dd>
 </dd>
 	<dt><label for="recaptcha_private_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="recaptcha">reCAPTCHA</a> private key</label></dt>
 	<dd><input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/get_recaptcha_private_key" />
-	<p i18n:translate="" tal:condition="python:here.buildout_recaptcha_private() != here.get_recaptcha_private_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p></dd>
+	<p i18n:translate=""
+		tal:condition="python:here.buildout_recaptcha_private() and here.buildout_recaptcha_private() != here.get_recaptcha_private_key()">
+		<strong i18n:translate="" i18n:name="information">Information:</strong>
+		This key overrides a server-wide key. If this is not intended, please
+		delete it in order to apply the server-wide setting.</p></dd>
 	<dt><label for="rdf_max_items" i18n:translate="">RDF maximum number of items</label></dt>
 	<dd i18n:translate="">Specify the maximum number of items a rdf channel should include. Use 0 for all.</dd>
 	<dd><input type="text" name="rdf_max_items:int" id="rdf_max_items" size="10" tal:attributes="value here/rdf_max_items|python:0" /></dd>
