@@ -68,7 +68,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
         return context.manage_main(context, REQUEST, update_menu=1)
     elif l_referer == 'megasurvey_add_html':
         context.setSession('referer', context.absolute_url())
-        REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
+        REQUEST.RESPONSE.redirect(context.absolute_url())
 
 class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     """ """
