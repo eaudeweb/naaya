@@ -1,5 +1,6 @@
 1.2.30 (unreleased)
 ===================
+* skip messages_html when adding a survey [dumitval]
 
 1.2.29 (2013-04-15)
 ===================
