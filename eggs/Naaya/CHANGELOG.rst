@@ -1,4 +1,7 @@
-3.2.35 (unreleased)
+3.2.36 (unreleased)
+-------------------
+
+3.2.35 (2013-05-20)
 -------------------
 * set reCAPTCHA keys also in buildout [dumitval]
 
