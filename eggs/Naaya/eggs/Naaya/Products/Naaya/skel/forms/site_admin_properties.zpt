@@ -66,12 +66,12 @@
   <div class="field">
     <label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> public key</label>
     <input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/get_recaptcha_public_key" />
-    <p tal:condition="python:here.buildout_recaptcha_public() != here.get_recaptcha_public_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
+    <p i18n:translate="" tal:condition="python:here.buildout_recaptcha_public() != here.get_recaptcha_public_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
   </div>
   <div class="field">
     <label for="recaptcha_private_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> private key</label>
     <input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/get_recaptcha_private_key" />
-    <p tal:condition="python:here.buildout_recaptcha_private() != here.get_recaptcha_private_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
+    <p i18n:translate="" tal:condition="python:here.buildout_recaptcha_private() != here.get_recaptcha_private_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
   </div>
   <div class="field">
     <label for="rdf_max_items" i18n:translate="">RDF maximum number of items</label>
