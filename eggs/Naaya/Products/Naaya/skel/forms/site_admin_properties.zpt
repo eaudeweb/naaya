@@ -17,7 +17,10 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_properties">
   <div class="field">
     <label for="show_releasedate" i18n:translate="">Show release date</label>
-    <p>The front page usually displays portlets containing the latest news, events, etc. You can decide not to show their release date if, for instance, the items are too old and this would impact on the vitality of your portal.</p>
+    <p i18n:translate="">
+      The front page usually displays portlets containing the latest news, events, etc.
+      You can decide not to show their release date if, for instance, the items are too
+      old and this would impact on the vitality of your portal.</p>
     <input type="checkbox" name="show_releasedate" id="show_releasedate" tal:attributes="checked here/show_releasedate" />
   </div>
   <div class="field">
@@ -51,22 +54,24 @@
   </div>
   <div class="field">
     <label for="http_proxy" i18n:translate="">HTTP Proxy</label>
-    <p tal:condition="not:here/buildout_http_proxy"  i18n:translate="">
+    <p tal:condition="not:here/buildout_http_proxy" i18n:translate="">
       If your server is behind a proxy, specify its address followed by the port number. 
       Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128</p>
     <p tal:condition="here/buildout_http_proxy" i18n:translate="">
       The proxy server is set by the portal's configuration and cannot be changed here.</p>
     <input type="text" name="http_proxy" id="http_proxy" size="40"
-        tal:attributes="value here/http_proxy;
+        tal:attributes="value here/get_http_proxy;
             disabled python:test(here.buildout_http_proxy(), 'disabled', None)" />
   </div>
   <div class="field">
     <label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> public key</label>
-    <input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/recaptcha_public_key" />
+    <input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/get_recaptcha_public_key" />
+    <p tal:condition="python:here.buildout_recaptcha_public() != here.get_recaptcha_public_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
   </div>
   <div class="field">
     <label for="recaptcha_private_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> private key</label>
-    <input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/recaptcha_private_key" />
+    <input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/get_recaptcha_private_key" />
+    <p tal:condition="python:here.buildout_recaptcha_private() != here.get_recaptcha_private_key()"><strong i18n:translate="" i18n:name="information">Information:</strong>This key overrides a server-wide key. If this is not intended, please delete it in order to apply the server-wide setting.</p>
   </div>
   <div class="field">
     <label for="rdf_max_items" i18n:translate="">RDF maximum number of items</label>
