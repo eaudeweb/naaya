@@ -1,5 +1,6 @@
 1.3.9 (unreleased)
 -------------------
+* support for reCAPTCHA keys from buildout [dumitval]
 
 1.3.8 (2013-05-17)
 -------------------
