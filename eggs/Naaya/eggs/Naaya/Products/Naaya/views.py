@@ -121,7 +121,7 @@ def AdminAPIKeysStatus(context, request):
     }
 
     #reCaptcha
-    recaptcha_private_key = getattr(context, 'recaptcha_private_key', '')
+    recaptcha_private_key = context.get_recaptcha_private_key()
     valid = False
     if recaptcha_private_key:
         valid = True
@@ -134,7 +134,7 @@ def AdminAPIKeysStatus(context, request):
         'change_link': '/admin_properties_html'
     }
 
-    recaptcha_public_key = getattr(context, 'recaptcha_public_key', '')
+    recaptcha_public_key = context.get_recaptcha_public_key()
     valid = False
     if recaptcha_public_key:
         valid = True

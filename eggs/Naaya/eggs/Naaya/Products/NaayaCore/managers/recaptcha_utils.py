@@ -20,13 +20,13 @@ def render_captcha(context):
     return "".join(('<span class="errormsg">',
                     escape(err),
                     '</span>',
-                    displayhtml(context.getSite().recaptcha_public_key)))
+                    displayhtml(context.getSite().get_recaptcha_public_key())))
 
 def is_valid_captcha(context, REQUEST):
     """Test if captcha was passed."""
     is_valid = submit(REQUEST.get('recaptcha_challenge_field', ''),
                       REQUEST.get('recaptcha_response_field', ''),
-                      context.getSite().recaptcha_private_key,
+                      context.getSite().get_recaptcha_private_key,
                       REQUEST.get('REMOTE_ADDR', '')).is_valid
     if not is_valid:
         context.setSession('err_recaptcha',
@@ -132,8 +132,8 @@ class CaptchaProvider(object):
 
     @property
     def is_available(self):
-        return (self.site.recaptcha_private_key and
-                self.site.recaptcha_public_key)
+        return (self.site.get_recaptcha_private_key() and
+                self.site.get_recaptcha_public_key())
 
     def render_captcha(self):
         return render_captcha(self.site)

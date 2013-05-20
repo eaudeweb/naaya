@@ -4040,4 +4040,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def get_http_proxy(self):
         return self.buildout_http_proxy() or self.http_proxy
 
+    def buildout_recaptcha_public(self):
+        conf = getConfiguration()
+        return getattr(conf, 'environment', {}).get('reCAPTCHA_PUBLIC_KEY', '')
+
+    def get_recaptcha_public_key(self):
+        return self.recaptcha_public_key or self.buildout_recaptcha_public()
+
+    def buildout_recaptcha_private(self):
+        conf = getConfiguration()
+        return getattr(conf, 'environment', {}).get('reCAPTCHA_PRIVATE_KEY', '')
+
+    def get_recaptcha_private_key(self):
+        return self.recaptcha_private_key or self.buildout_recaptcha_private()
+
 InitializeClass(NySite)
