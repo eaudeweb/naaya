@@ -1,4 +1,7 @@
-3.0.21 (unreleased)
+3.0.22 (unreleased)
+------------------
+
+3.0.21 (2013-05-20)
 ------------------
 * support for reCAPTCHA keys from buildout [dumitval]
 
