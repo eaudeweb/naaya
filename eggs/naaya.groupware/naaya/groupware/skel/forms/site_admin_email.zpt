@@ -47,11 +47,6 @@
     <input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /><br />
     <em i18n:translate="">comma separated, leave empty to prevent error notifications</em>
   </div>
-  <div class="field">
-    <label for="notify_on_webex_email" i18n:translate="">Email address for WebEx conference requests</label>
-    <input type="text" name="notify_on_webex_email" size="50" tal:attributes="value here/notify_on_webex_email|nothing" /><br />
-    <em i18n:translate="">comma separated</em>
-  </div>
   <p>
     <input type="submit" value="Save changes" i18n:attributes="value" />
   </p>
