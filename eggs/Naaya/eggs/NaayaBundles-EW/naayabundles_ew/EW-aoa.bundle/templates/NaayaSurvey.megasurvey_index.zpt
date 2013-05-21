@@ -52,7 +52,7 @@
 	<div class="message-error">
 		<fieldset style="width:70%">
 		<legend i18n:translate="">Warning</legend>
-		<span i18n:translate="">The site's keys for Recaptcha are not set or are invalid. Since this survey is accessible to annonymous users, and annonymous users don't have the permission to skip Recaptcha, the survey will not work for them. To solve this, you can either set a correct pair of Recaptcha keys in the <a tal:attributes="href python:here.getSite().absolute_url()+'/admin_properties_html'" i18n:name="portal_properties" i18n:translate="">portal properties</a> or give anonymous user the skip Recaptcha permission.</span>
+		<span i18n:translate="">The site's keys for Recaptcha are not set or are invalid. Since this survey is accessible to anonymous users, and anonymous users don't have the permission to skip Recaptcha, the survey will not work for them. To solve this, you can either set a correct pair of Recaptcha keys in the <a tal:attributes="href python:here.getSite().absolute_url()+'/admin_properties_html'" i18n:name="portal_properties" i18n:translate="">portal properties</a> or give anonymous user the skip Recaptcha permission.</span>
 		</fieldset>
 	</div>
 </tal:block>
