@@ -1,5 +1,6 @@
 1.3.11 (unreleased)
 -------------------
+* #14545 override getMaintainersEmails() from NySite [mihaitab]
 
 1.3.10 (2013-05-20)
 -------------------
