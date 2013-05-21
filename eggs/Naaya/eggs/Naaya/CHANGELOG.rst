@@ -1,5 +1,6 @@
 3.2.38 (unreleased)
 -------------------
+* remove getFolderMaintainersEmails() - never used [mihaitab]
 
 3.2.37 (2013-05-20)
 -------------------

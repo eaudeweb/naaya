@@ -1231,25 +1231,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         auth_tool = self.getAuthenticationTool()
         return auth_tool.getUsersFullNames(usernames)
 
-    def getFolderMaintainersEmails(self, node):
-        #returns a list of emails for given folder until the site object
-        l_emails = []
-        auth_tool = self.getAuthenticationTool()
-        if node is self: return l_emails
-        else:
-            while 1:
-                if node == self:
-                    if len(l_emails) == 0:
-                        l_emails.append(node.administrator_email)
-                    break
-                if hasattr(node, 'maintainer_email'):
-                    if node.maintainer_email != '' and node.maintainer_email not in l_emails:
-                        l_emails.append(node.maintainer_email)
-                admins = self.get_administrator(node)
-                l_emails.extend(auth_tool.getUsersEmails(admins))
-                node = node.getParentNode()
-        return l_emails
-
     security.declarePrivate('get_administrators')
     def get_administrator(self, node):
         l_users = []
@@ -1466,7 +1447,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             res = []
             for item in items:
                 if INySite.providedBy(item):
-                    res.append(item.getNavigationObjects('', all, only_folders, subportals, 
+                    res.append(item.getNavigationObjects('', all, only_folders, subportals,
                                                          root_site=root_site, meta_types=meta_types))
                     continue
 
