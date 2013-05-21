@@ -36,7 +36,7 @@ class InspectorViewTestCase(NaayaFunctionalTestCase):
         self.assertEqual(self.browser.get_html().count('title="provides"'), 2)
 
     def test_permission(self):
-        """ Make sure annonymous users can't get in. """
+        """ Make sure anonymous users can't get in. """
         self.browser_do_logout()
         self.browser.go(self.portal.absolute_url() + '/inspector_view')
         self.assertTrue('Login' in self.browser.get_html())
