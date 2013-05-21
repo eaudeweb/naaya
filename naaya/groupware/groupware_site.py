@@ -161,6 +161,28 @@ class GroupwareSite(NySite):
         view_perm = getattr(self, '_View_Permission', [])
         return isinstance(view_perm, tuple) and ('Anonymous' not in view_perm)
 
+
+    def getMaintainersEmails(self, node):
+        """
+        Override method from NySite. Administrators are skipped
+        when returning maintainers list
+        """
+        #returns a list of emails for given folder until the site object
+        l_emails = []
+        auth_tool = self.getAuthenticationTool()
+        if node is self: return l_emails
+        else:
+            while 1:
+                if node == self:
+                    l_emails.extend(node.administrator_email.split(','))
+                    break
+                if hasattr(node, 'maintainer_email'):
+                    if node.maintainer_email != '' and node.maintainer_email not in l_emails:
+                        l_emails.extend(node.maintainer_email.split(','))
+                node = node.getParentNode()
+        return l_emails
+
+
     security.declarePrivate('toggle_portal_restricted')
     def toggle_portal_restricted(self, status):
         permission = getattr(self, '_View_Permission', [])
