@@ -1,4 +1,7 @@
-3.2.38 (unreleased)
+3.2.39 (unreleased)
+-------------------
+
+3.2.38 (2013-05-22)
 -------------------
 * bugfix in recaptcha keys from buildout [dumitval]
 * removed getFolderMaintainersEmails() - never used [mihaitab]
