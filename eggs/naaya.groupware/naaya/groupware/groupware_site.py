@@ -237,9 +237,9 @@ class GroupwareSite(NySite):
 
             # automatically add meeting using info from email and some default data
             extra_args = {
-                    'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
-                    'geo_location.lat': u'49.61840170000000',
-                    'geo_location.lon': u'6.14396720000000',
+                    'geo_location.address': 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark',
+                    'geo_location.lat': u'55.681365',
+                    'geo_location.lon': u'12.586484',
                     'geo_type': u'symbol326',
                     'sortorder': u'100',
                     'releasedate': datetime.utcnow().strftime("%d/%m/%Y"),
@@ -267,24 +267,33 @@ class GroupwareSite(NySite):
         return self.getFormsTool().getContent({'here': self, 'email': email},
             'site_admin_webex_mail_view')
 
-    def _validate_form_date(self, value):
-        try:
-            date = datetime.strptime(value, "%d/%m/%Y %H:%M")
-        except ValueError:
-            return False
+    def _validate_form_date(self, value, all_day):
+        if all_day is True:
+            try:
+                date = datetime.strptime(value, "%d/%m/%Y")
+            except ValueError:
+                return False
+        else:
+            try:
+                date = datetime.strptime(value, "%d/%m/%Y %H:%M")
+            except ValueError:
+                return False
 
         return date
 
     def _get_webex_mail_body(self, meeting_info):
-        return ("%(requester)s is asking for a new meeting to be added.\n"
+        mail_body = ("%(requester)s is asking for a new meeting to be added.\n"
                      "The new meeting is defined by the following properties:\n\n"
                      "Meeting title: %(title)s\n"
                      "Meeting organizer: %(contact_person)s (%(contact_email)s)\n"
                      "Meeting start date: %(interval.start_date)s\n"
-                     "Meeting start time: %(interval.start_time)s\n"
                      "Meeting end date: %(interval.end_date)s\n"
-                     "Meeting end time: %(interval.end_time)s\n"
                      % meeting_info)
+        if 'interval.all_day' not in meeting_info:
+            mail_body += ("Meeting start time: %(interval.start_time)s\n"
+                          "Meeting end time: %(interval.end_time)s\n"
+                          % meeting_info)
+        return mail_body
 
     security.declareProtected(PERMISSION_REQUEST_WEBEX, 'admin_webex_mail_html')
     def admin_webex_mail_html(self, REQUEST=None):
@@ -309,21 +318,21 @@ class GroupwareSite(NySite):
                                        "WEBEX_CONTACTS environment variable.")
 
         if REQUEST.REQUEST_METHOD == 'POST' and mail_recipients:
-
             email_tool = self.getEmailTool()
             addr_from = email_tool.get_addr_from()
 
             meeting_title = REQUEST.form.get('meeting_title', '').strip()
             organizer_name = REQUEST.form.get('organizer_name', '').strip()
             organizer_email = REQUEST.form.get('organizer_email', '').strip()
+            all_day = REQUEST.form.get('all_day', False)
             start_date_id = REQUEST.form.get('start_date_id', '').strip()
             end_date_id = REQUEST.form.get('end_date_id', '').strip()
             start_timing = REQUEST.form.get('start_timing', '').strip()
             end_timing = REQUEST.form.get('end_timing', '').strip()
             other_comments = REQUEST.form.get('other_comments', '').strip()
 
-            start_date = " ".join([start_date_id, start_timing])
-            end_date = " ".join([end_date_id, end_timing])
+            start_date = " ".join([start_date_id, start_timing]).strip()
+            end_date = " ".join([end_date_id, end_timing]).strip()
 
             if not meeting_title:
                 errors.append('meeting_title')
@@ -332,8 +341,8 @@ class GroupwareSite(NySite):
             if not organizer_email.strip():
                 errors.append('organizer_email')
 
-            validated_start_date = self._validate_form_date(start_date)
-            validated_end_date = self._validate_form_date(end_date)
+            validated_start_date = self._validate_form_date(start_date, all_day)
+            validated_end_date = self._validate_form_date(end_date, all_day)
             if not validated_start_date:
                 errors.append('start_date_id')
             if not validated_end_date:
@@ -347,7 +356,7 @@ class GroupwareSite(NySite):
                                            "Please correct them and try again.")
             else:
 
-                # extract list of emails
+                # extract list of email contacts
                 mails = mail_recipients.split(',')
                 # prepare dictionary with useful information
                 meeting_info = {
@@ -357,10 +366,14 @@ class GroupwareSite(NySite):
                     'contact_person': organizer_name,
                     'contact_email': organizer_email,
                     'interval.start_date': validated_start_date.strftime("%d/%m/%Y"),
-                    'interval.start_time': validated_start_date.strftime("%H:%M"),
                     'interval.end_date': validated_end_date.strftime("%d/%m/%Y"),
-                    'interval.end_time': validated_end_date.strftime("%H:%M"),
                 }
+
+                if not all_day:
+                    meeting_info['interval.start_time'] = validated_start_date.strftime("%H:%M")
+                    meeting_info['interval.end_time'] = validated_end_date.strftime("%H:%M")
+                else:
+                    meeting_info['interval.all_day'] = True
 
                 mail_subject = "New WebEx meeting booking request"
                 mail_body = self._get_webex_mail_body(meeting_info)
