@@ -6,7 +6,7 @@
 
   <tal:block metal:fill-slot="section"
     tal:define="logged_user user">
-
+    <script src="++resource++naaya.groupware/webex_request.js" type="text/javascript" language="javascript"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
@@ -21,8 +21,7 @@
       </ul>
     </div>
 
-    <p i18n:translate="">Send an email to request a new WebEx meeting booking
-      to Eionet HelpDesk (or appointed contacts).
+    <p i18n:translate="">Send an email to request a new WebEx meeting booking to the appointed manager.
     </p>
 
     <form method="post" tal:define="errors options/errors | nothing">
@@ -62,6 +61,9 @@
       </div>
 
       <div class="field">
+        <input type="checkbox" name="all_day:boolean" id="all_day"/>
+        <label style="display: inline" for="all_day">All day</label>
+
         <label i18n:translate="" for="start_date_id">
           Start date<span i18n:name="mandatory" class="mandatory_field">*</span>
         </label>
@@ -69,16 +71,16 @@
             placeholder="dd/mm/yyyy" id="start_date_id" name="start_date_id"
             tal:attributes="value request/start_date_id | nothing" />
         <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
-        <input type="text" size="4" maxlength="5" placeholder="00:00"
-               id="start_timing" name="start_timing"
-               tal:attributes="value request/start_timing | nothing" />
-        <span>hh:mm</span>
+        <div id="start_time_pack" style="display:inline">
+            <input type="text" size="4" maxlength="5" placeholder="00:00"
+                   id="start_timing" name="start_timing"
+                   tal:attributes="value request/start_timing | nothing" />
+            <span>hh:mm</span>
+        </div>
         <span class="form-errors"
           tal:condition="python: 'start_date_id' in errors"
           i18n:translate="">Invalid "Start date"</span>
-      </div>
 
-      <div class="field">
         <label i18n:translate="" for="end_date_id">
           End date<span i18n:name="mandatory" class="mandatory_field">*</span>
         </label>
@@ -86,10 +88,12 @@
              placeholder="dd/mm/yyyy" id="end_date_id" name="end_date_id"
              tal:attributes="value request/end_date_id | nothing" />
         <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
-        <input type="text" size="4" maxlength="5" placeholder="00:00"
-               id="end_timing" name="end_timing"
-               tal:attributes="value request/end_timing | nothing" />
-        <span>hh:mm</span>
+        <div id="end_time_pack" style="display:inline">
+            <input type="text" size="4" maxlength="5" placeholder="00:00"
+                   id="end_timing" name="end_timing"
+                   tal:attributes="value request/end_timing | nothing" />
+            <span>hh:mm</span>
+        </div>
         <span class="form-errors"
           tal:condition="python: 'end_date_id' in errors"
           i18n:translate="">Invalid "End date"</span>
@@ -97,7 +101,7 @@
       <div class="field">
         <span class="form-errors"
         tal:condition="python: 'twisted_dates' in errors"
-        i18n:translate="">Twisted invalid dates</span>
+        i18n:translate="">End timing can not precede start timing</span>
       </div>
       <div class="field">
         <label for="other_comments" i18n:translate="">Other comments

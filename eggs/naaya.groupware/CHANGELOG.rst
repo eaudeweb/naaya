@@ -1,5 +1,6 @@
 1.3.11 (unreleased)
 -------------------
+* refs: #14214; improvements to webex meeting request [mihaitab]
 * remove contact webex form from Email settings page [mihaitab]
 * #14545 override getMaintainersEmails() from NySite [mihaitab]
 
