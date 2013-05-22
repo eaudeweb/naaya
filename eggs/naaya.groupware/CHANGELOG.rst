@@ -1,4 +1,7 @@
-1.3.11 (unreleased)
+1.3.12 (unreleased)
+-------------------
+
+1.3.11 (2013-05-22)
 -------------------
 * refs: #14214; improvements to webex meeting request [mihaitab]
 * remove contact webex form from Email settings page [mihaitab]
