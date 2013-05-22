@@ -26,7 +26,7 @@ def is_valid_captcha(context, REQUEST):
     """Test if captcha was passed."""
     is_valid = submit(REQUEST.get('recaptcha_challenge_field', ''),
                       REQUEST.get('recaptcha_response_field', ''),
-                      context.getSite().get_recaptcha_private_key,
+                      context.getSite().get_recaptcha_private_key(),
                       REQUEST.get('REMOTE_ADDR', '')).is_valid
     if not is_valid:
         context.setSession('err_recaptcha',
