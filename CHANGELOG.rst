@@ -1,4 +1,7 @@
-1.3.12 (unreleased)
+1.3.13 (unreleased)
+-------------------
+
+1.3.12 (2013-05-23)
 -------------------
 * #14601 update script to give skip captcha to Authenticated [dumitval]
 
