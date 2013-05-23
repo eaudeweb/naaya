@@ -39,7 +39,6 @@
 		<strong i18n:translate="" i18n:name="information">Information:</strong>
 		This key overrides a server-wide key. If this is not intended, please
 		delete it in order to apply the server-wide setting.</p></dd>
-</dd>
 	<dt><label for="recaptcha_private_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="recaptcha">reCAPTCHA</a> private key</label></dt>
 	<dd><input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/get_recaptcha_private_key" />
 	<p i18n:translate=""

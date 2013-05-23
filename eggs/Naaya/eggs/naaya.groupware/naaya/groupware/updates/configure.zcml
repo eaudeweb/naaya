@@ -40,5 +40,11 @@
       component=".update_webex.UpdateWebEx"
       permission="zope2.ViewManagementScreens" />
 
+    <utility
+      name="update_authenticated_skip_captcha.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_authenticated_skip_captcha.AuthenticatedSkipCaptcha"
+      permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
