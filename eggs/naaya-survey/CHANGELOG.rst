@@ -1,4 +1,7 @@
-1.2.30 (unreleased)
+1.2.31 (unreleased)
+===================
+
+1.2.30 (2013-05-24)
 ===================
 * now the contributor property is set [dumitval]
 * skip messages_html when adding a survey [dumitval]
