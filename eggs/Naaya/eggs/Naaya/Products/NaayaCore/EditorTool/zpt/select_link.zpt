@@ -67,11 +67,14 @@
 								tree_initial_node tree_initial_node|string:;
 								tree_get_url tree_get_url|string:${here/absolute_url}/getNavigationSiteMap/"
 					tal:content="string:
-								var TREE_URL_PREFIX = '${site/absolute_url}/';
-								var TREE_GET_URL = '${tree_get_url}';
-								var TREE_INITIAL_NODE = '${tree_initial_node}';
-								var TREE_CONTAINER = '.sitemap_tree'
-				"></script>
+						$(document).ready(function(){
+							load_js_tree({
+								TREE_URL_PREFIX: '${site/absolute_url}/',
+								TREE_GET_URL: '${tree_get_url}',
+								TREE_INITIAL_NODE: '${tree_initial_node}',
+								TREE_CONTAINER: '.sitemap_tree'
+						});
+					});"></script>
 			</metal:block>
 		</metal:block>
 	</body>

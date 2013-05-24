@@ -1,5 +1,6 @@
 3.2.39 (unreleased)
 -------------------
+* fix for the tree browser in link editor [dumitval]
 * moved skipt captcha update script from naaya.groupware [dumitval]
 
 3.2.38 (2013-05-22)
