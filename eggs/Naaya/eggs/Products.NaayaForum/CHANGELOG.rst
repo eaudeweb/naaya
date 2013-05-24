@@ -1,5 +1,6 @@
 1.2.17 (unreleased)
 -------------------
+* now the contributor property is set [dumitval]
 
 1.2.16 (2013-03-28)
 -------------------

@@ -116,6 +116,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         """ """
         if REQUEST:
             kwargs.update(REQUEST.form)
+            kwargs.setdefault('contributor', REQUEST.AUTHENTICATED_USER.getUserName())
+
         lang = kwargs.get('lang', self.get_selected_language())
 
         kwargs.setdefault('title', '')
