@@ -1,5 +1,7 @@
 1.2.28 (unreleased)
 -------------------
+* modified "Set contributor if None" update to include Naaya Mega Survey
+  and Naaya Forum [dumitval]
 
 1.2.27 (2012-06-20)
 -------------------
