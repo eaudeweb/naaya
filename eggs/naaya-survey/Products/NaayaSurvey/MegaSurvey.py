@@ -48,6 +48,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
     kwargs.setdefault('id', id)
     kwargs.setdefault('title', title)
     kwargs.setdefault('lang', lang)
+    kwargs.setdefault('contributor', contributor)
 
     ob = MegaSurvey(**kwargs)
     context.gl_add_languages(ob)
@@ -93,6 +94,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         """ """
         #BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
+        self.contributor = kwargs.get('contributor')
         self.approved = 1
 
     def can_be_seen(self):
