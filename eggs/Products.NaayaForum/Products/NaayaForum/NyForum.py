@@ -32,7 +32,8 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
     id = make_id(self, id=id, title=title, prefix=PREFIX_NYFORUM)
     categories = self.utConvertLinesToList(categories)
     file_max_size = abs(int(file_max_size))
-    ob = NyForum(id, title, description, categories, file_max_size)
+    contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    ob = NyForum(id, title, description, categories, file_max_size, contributor)
     ob.releasedate = self.process_releasedate()
     self._setObject(id, ob)
     self[id].loadDefaultData()
@@ -91,13 +92,14 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addNyForumTopic')
     addNyForumTopic = addNyForumTopic
 
-    def __init__(self, id, title, description, categories, file_max_size):
+    def __init__(self, id, title, description, categories, file_max_size, contributor):
         """ """
         self.id = id
         self.title = title
         self.description = description
         self.categories = categories
         self.file_max_size = file_max_size
+        self.contributor = contributor
         NyForumBase.__dict__['__init__'](self)
         #make this object available for portal search engine
         self.submitted = 1
@@ -299,6 +301,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', categories='', file_max_size='', topics_listing='', topics_ordering='', REQUEST=None):
         """ """
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.contributor = contributor
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
@@ -314,6 +318,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
         file_max_size='', topics_listing='', topics_ordering='',
         message_top='', message_outdated='', REQUEST=None):
         """ """
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.contributor = contributor
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)

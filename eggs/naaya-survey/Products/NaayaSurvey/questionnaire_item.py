@@ -45,3 +45,4 @@ class questionnaire_item(Implicit, NyProperties):
         self.allow_multiple_answers = int(kwargs.get('allow_multiple_answers',
                                                      '0'))
         self.allow_drafts = int(kwargs.get('allow_drafts', '0'))
+        self.contributor = kwargs.get('contributor')
