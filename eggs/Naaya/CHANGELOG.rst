@@ -1,5 +1,6 @@
 3.2.39 (unreleased)
 -------------------
+* moved skipt captcha update script from naaya.groupware [dumitval]
 
 3.2.38 (2013-05-22)
 -------------------

@@ -44,6 +44,11 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".GeoMapTool.updates.AddObjMapZoom"
              permission="zope2.ViewManagementScreens" />
-  </configure>
 
+	<utility name="authenticated_skip_captcha.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.update_authenticated_skip_captcha.AuthenticatedSkipCaptcha"
+             permission="zope2.ViewManagementScreens" />
+
+  </configure>
 </configure>
