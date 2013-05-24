@@ -1,5 +1,6 @@
 1.3.13 (unreleased)
 -------------------
+* fixed rel path in std template [simiamih]
 
 1.3.12 (2013-05-23)
 -------------------

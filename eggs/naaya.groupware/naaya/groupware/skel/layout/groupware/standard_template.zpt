@@ -66,12 +66,12 @@
                                 <div id="search">
                                     <label for="query"><span i18n:translate="">site search</span></label>
                                     <input id="query" type="text" name="query:utf8:ustring" accesskey="4" />
-                                    <input id="freesrchbtn" type="image" alt="Go" src="misc_/Groupware/button_go.gif"/>
+                                    <input id="freesrchbtn" type="image" alt="Go" tal:attributes="src string:${site_url}/misc_/Groupware/button_go.gif" />
                                 </div>
                             </form>
                             <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
                                 <li><a tal:condition="python:username == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">Login</a></li>
-                                <li><a tal:condition="python:username != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout <tal:block tal:content="string:(${username})" i18n:name="username"/></a></li>
+                                <li><a tal:condition="python:username != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout <tal:block tal:content="string:(${username})" i18n:name="username" /></a></li>
                                 <tal:block tal:repeat="item l_list">
                                     <li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
                                 </tal:block>
