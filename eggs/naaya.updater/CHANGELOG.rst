@@ -1,4 +1,7 @@
-1.2.29 (unreleased)
+1.2.30 (unreleased)
+-------------------
+
+1.2.29 (2013-05-27)
 -------------------
 * modified "Set contributor if None" update to change contributor to str
   if it was saved as unicode [dumitval]
