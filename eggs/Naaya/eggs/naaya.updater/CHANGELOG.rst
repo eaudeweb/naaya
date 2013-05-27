@@ -1,4 +1,9 @@
-1.2.28 (unreleased)
+1.2.29 (unreleased)
+-------------------
+* modified "Set contributor if None" update to change contributor to str
+  if it was saved as unicode [dumitval]
+
+1.2.28 (2013-05-24)
 -------------------
 * modified "Set contributor if None" update to include Naaya Mega Survey
   and Naaya Forum [dumitval]

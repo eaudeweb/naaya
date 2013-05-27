@@ -7,7 +7,7 @@ class SetContributor(UpdateScript):
     title = 'Set contributor if None'
     creation_date = 'May 24, 2013'
     authors = ['Valentin Dumitru']
-    description = 'Updates the contributor from the owner role if contributor is None or for Naaya Survey and Forum if the property does not exist.'
+    description = 'Updates the contributor from the owner role if contributor is None or for Naaya Survey and Forum if the property does not exist. If the contributor is saved as unicode, it is converted to str.'
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')
@@ -19,8 +19,12 @@ class SetContributor(UpdateScript):
                 if item.meta_type not in ['Naaya Forum', 'Naaya Mega Survey']:
                     continue
             elif item.contributor is not None:
+                if isinstance(item.contributor, unicode):
+                    item.contributor = str(item.contributor)
+                    self.log.debug('%s contributor changed from unicode to str'
+                        % item.absolute_url())
                 continue
             self.log.debug('%s has no "contributor"' % item.absolute_url())
-            item.contributor = item.getOwner().name
+            item.contributor = str(item.getOwner().name)
             self.log.debug('new owner is %s' % item.contributor)
         return True
