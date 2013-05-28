@@ -25,7 +25,12 @@
             .attr('href', 'http://projects.eionet.europa.eu/seris-revision/login/login_form?disable_cookie_login__=1&came_from='+$(location).attr('href'));
         $('a[href^="http://forum.eionet.europa.eu/nrc-state-environment/login_html?came_from"]')
             .attr('href', 'http://forum.eionet.europa.eu/nrc-state-environment/login/login_form?disable_cookie_login__=1&came_from='+$(location).attr('href'));
-        $('.breadcrumbitemlast a').attr('href', '/nrc-state-environment/seris');
+        if (location.host.indexOf('forum') == 0){
+          $('.breadcrumbitemlast a').attr('href', '/nrc-state-environment/seris');
+        }
+        else {
+          $('.breadcrumbitemlast a').attr('href', '/seris-revision/seris');
+        }
       });
     </script>
     <div class="messages">
