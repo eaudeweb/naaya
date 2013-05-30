@@ -1,4 +1,7 @@
-1.2.17 (unreleased)
+1.2.18 (unreleased)
+-------------------
+
+1.2.17 (2013-05-24)
 -------------------
 * now the contributor property is set [dumitval]
 
