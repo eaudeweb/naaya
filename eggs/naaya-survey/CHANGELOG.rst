@@ -1,4 +1,7 @@
-1.2.31 (unreleased)
+1.2.32 (unreleased)
+===================
+
+1.2.31 (2013-06-03)
 ===================
 * label and text change for anonymous responder email [dumitval]
 
