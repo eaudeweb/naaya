@@ -249,9 +249,9 @@
 			</tal:block>
 
 			<div class="widgetEditMode" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
-				<label class="widget-title" for="anonymous_responder_email" i18n:translate="">Responder email</label>
+				<label class="widget-title" for="anonymous_responder_email" i18n:translate="">Optional: edit your answer later</label>
 				<div class="tooltips" i18n:translate="">
-					Instructions and a password allowing you to edit this answer at a later time will be sent to this address.
+					Optionally, you can provide an email address where you will receive a password and instructions to edit your answers after submission. The email address is not part of the answer and visible only for administrators. In case you'd like to provide a real anonymous answer - please do not use this feature.
 				</div>
 				<input id="anonymous_responder_email" type="text" size="100" value="" name="anonymous_responder_email:utf8:ustring">
 			</div>
