@@ -1,5 +1,6 @@
 1.2.31 (unreleased)
 ===================
+* label and text change for anonymous responder email [dumitval]
 
 1.2.30 (2013-05-24)
 ===================
