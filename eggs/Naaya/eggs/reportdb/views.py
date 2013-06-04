@@ -8,11 +8,20 @@ from urlparse import urljoin
 from werkzeug.contrib.atom import AtomFeed
 import database
 import schema
+import os
+import json
 import file_upload
 from gtranslate import translate
 import frame
 from schema import countries_list, countries_dict, regions_dict, subregions_dict, check_common
 
+def _load_json(name):
+    with open(os.path.join(os.path.dirname(__file__), name), "rb") as f:
+        return json.load(f)
+
+
+eea_countries = _load_json("refdata/eea_countries.json")
+cooperating_countries = _load_json("refdata/cooperating_countries.json")
 processed_country_list = list(countries_list)
 
 class MarkupGenerator(flatland.out.markup.Generator):
@@ -90,23 +99,31 @@ def require_edit_permission(func):
 
 @views.route('/')
 def index():
-    countries = []
+    eea_countries_list = []
+    cooperating_countries_list = []
     report_list = [schema.ReportSchema.from_flat(row)
                     for row in database.get_all_reports()]
-    for country in countries_list:
+    for country in eea_countries:
         count = 0
         for report in report_list:
             if country in report['header']['country'].value \
                     and len(report['header']['country'].value) == 1:
                 count += 1
-        countries.append((country, count))
+        eea_countries_list.append((country, count))
+    for country in cooperating_countries:
+        count = 0
+        for report in report_list:
+            if country in report['header']['country'].value \
+                    and len(report['header']['country'].value) == 1:
+                count += 1
+        cooperating_countries_list.append((country, count))
     eea_count = 0
     for report in report_list:
         if 'European Environment Agency' in report['header']['region'].value:
             eea_count += 1
-    countries.append((country, count))
     return flask.render_template('index.html', **{
-        'countries_list': countries,
+        'eea_countries_list': eea_countries_list,
+        'cooperating_countries_list': cooperating_countries_list,
         'regions_list': [('European Environment Agency', eea_count)]
     })
 
@@ -131,6 +148,7 @@ def report_list():
         'report_list': report_list,
         'country': country,
         'region': region,
+        'edit_is_allowed': edit_is_allowed(),
     })
 
 
@@ -397,7 +415,8 @@ def report_view(report_id):
                           for row in database.get_seris_reviews_list(report_id)]
                       },
             'country': country,
-            'region': region
+            'region': region,
+            'edit_is_allowed': edit_is_allowed(),
         }
     )
 
