@@ -12,9 +12,9 @@
 		</a>
 	</div>
 
-	<h2>Country listings</h2>
+	<h2>SOE reports in EEA member countries</h2>
 
-	{% for country, count in countries_list %}
+	{% for country, count in eea_countries_list %}
 		<div class="country-box">
 			<a href="{{url_for('views.report_list') }}?country={{ country }}"><img src="{{url_for('static', filename='lib/datatables/forward_enabled.png')}}" alt="Forward" />
 			{{- country }}</a> ({{ count }})
@@ -23,7 +23,18 @@
 
 	<div class="clearer"></div>
 
-	<h2>EEA listings</h2>
+	<h2>SOE reports in EEA cooperating countries</h2>
+
+	{% for country, count in cooperating_countries_list %}
+		<div class="country-box">
+			<a href="{{url_for('views.report_list') }}?country={{ country }}"><img src="{{url_for('static', filename='lib/datatables/forward_enabled.png')}}" alt="Forward" />
+			{{- country }}</a> ({{ count }})
+		</div>
+	{% endfor %}
+
+	<div class="clearer"></div>
+
+	<h2>SOE reports covering groups of countries and/or regions</h2>
 
 	{% for region, region_count in regions_list %}
 		<div class="region-box">

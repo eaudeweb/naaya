@@ -5,9 +5,11 @@
 	[<a href="{{ url_for('views.index') }}">
 		Back to country overview
 	</a>]
-	[<a href="{{ url_for('views.report_edit') }}">
-		Add Report
-	</a>]
+	{% if edit_is_allowed %}
+		[<a href="{{ url_for('views.report_edit') }}">
+			Add Report
+		</a>]
+	{% endif %}
 </div>
 <hr/>
 
@@ -61,11 +63,17 @@
 </div>
 {% else %}
 	{% if country %}
-		<p>No reports for {{ country }} yet. Click
-			<a href="{{url_for('views.report_edit')}}">here</a> to add a new report.</p>
+		<p>No reports for {{ country }} yet.
+			{% if edit_is_allowed %}
+				Click <a href="{{url_for('views.report_edit')}}">here</a>
+				to add a new report.</p>
+			{% endif %}
 	{% else %}
-		<p>No reports yet. Click <a href="{{url_for('views.report_edit')}}">here</a>
-		 to add a new report.</p>
+		<p>No reports yet.
+			{% if edit_is_allowed %}
+				Click <a href="{{url_for('views.report_edit')}}">here</a>
+				to add a new report.</p>
+			{% endif %}
 	{% endif %}
 {% endif %}
 

@@ -42,21 +42,23 @@ $(document).ready(function() {
 				{% endif %}
 						Back to reports list
 				</a>]
-				{% if country %}
-					[<a href="{{url_for('views.report_edit',
-							report_id=report['id'])}}?country={{country}}">
-				{% elif region %}
-					[<a href="{{url_for('views.report_edit',
-							report_id=report['id'])}}?region={{region}}">
-				{% else %}
-					[<a href="{{url_for('views.report_edit',
-							report_id=report['id'])}}">
+				{% if edit_is_allowed %}
+					{% if country %}
+						[<a href="{{url_for('views.report_edit',
+								report_id=report['id'])}}?country={{country}}">
+					{% elif region %}
+						[<a href="{{url_for('views.report_edit',
+								report_id=report['id'])}}?region={{region}}">
+					{% else %}
+						[<a href="{{url_for('views.report_edit',
+								report_id=report['id'])}}">
+					{% endif %}
+							Edit Report
+					</a>]
+					[<a id="delete_report" href="javascript:void(0);">
+							Delete Report
+					</a>]
 				{% endif %}
-						Edit Report
-				</a>]
-				[<a id="delete_report" href="javascript:void(0);">
-						Delete Report
-				</a>]
 </div>
 <div id="dialog-delete-confirm" title="Delete report" style="display: none">
 		<p>
