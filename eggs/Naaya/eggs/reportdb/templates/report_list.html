@@ -29,9 +29,9 @@
 		<th>Name</th>
 		<th>Coverage</th>
 		<th>Extended content information</th>
+		<th>Year of publication</th>
 		<th>Published by</th>
 		<th>Factsheet prepared by</th>
-		<th>Prepared on</th>
 	</thead>
 	<tbody>
 	{% for report in report_list %}
@@ -53,9 +53,9 @@
 				{{ ', '.join(report['data']['header']['country'].value) }}
 			</td>
 			<td>{{ report['extended_info'] }}</td>
+			<td>{{ report['data']['format']['date_of_publication'] }}</td>
 			<td>{{ report['data']['details']['publisher'] }}</td>
 			<td>{{ report['data']['header']['uploader'] }}</td>
-			<td>{{ report['data']['header']['upload_date'] }}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
