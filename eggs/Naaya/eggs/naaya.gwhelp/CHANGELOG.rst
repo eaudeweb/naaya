@@ -1,5 +1,6 @@
 0.0.8 (unreleased)
 -------------------
+* updated youtube video ids [dumitval]
 
 0.0.7 (2013-05-17)
 -------------------
