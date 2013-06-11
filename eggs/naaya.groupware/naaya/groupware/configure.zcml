@@ -42,6 +42,13 @@
     />
 
   <naaya:simpleView
+    for="naaya.groupware.interfaces.IArchivesForumApplication"
+    name="index_html"
+    handler=".ui.archives_index_html"
+    permission="zope2.View"
+    />
+
+  <naaya:simpleView
     for="naaya.groupware.interfaces.IGroupwareApplication"
     name="index_html"
     handler=".ui.index_html"
