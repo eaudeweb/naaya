@@ -10,6 +10,7 @@ local_users_zpt = PageTemplateFile('zpt/local_users.zpt', globals())
 index_html_zpt = PageTemplateFile('zpt/index.zpt', globals())
 eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
                                                globals())
+archives_index_html_zpt = PageTemplateFile('zpt/archives_index.zpt', globals())
 
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
@@ -80,6 +81,15 @@ def index_html(context, request):
                'grouped_igs': grouped_igs(context),
                'is_authenticated': (get_user_id(request) is not None)}
     return index_html_zpt.__of__(context)(**options)
+
+def archives_index_html(context, request):
+    """
+    Render Archives Forum's first page
+    """
+    options = {'network_name': NETWORK_NAME,
+               'grouped_igs': grouped_igs(context),
+               'is_authenticated': (get_user_id(request) is not None)}
+    return archives_index_html_zpt.__of__(context)(**options)
 
 def gw_meta_info(context, request=None):
     """
