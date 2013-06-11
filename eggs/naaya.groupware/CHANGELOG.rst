@@ -1,4 +1,7 @@
-1.3.14 (unreleased)
+1.3.15 (unreleased)
+-------------------
+
+1.3.14 (2013-06-11)
 -------------------
 * #4525 archives' index page [simiamih]
 
