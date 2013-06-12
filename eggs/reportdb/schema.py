@@ -80,6 +80,8 @@ class AccessibleCountries(Validator):
     fail = None
 
     def validate(self, element, state):
+        if flask.current_app.config.get('SKIP_EDIT_AUTHORIZATION', False):
+            return True
         user_id = getattr(flask.g, 'user_id', '')
         groups = getattr(flask.g, 'groups', [])
         group_ids = [group[0] for group in groups]
