@@ -58,6 +58,7 @@ language_codes = [pair[1] for pair in
                   sorted([(v,k) for (k,v) in languages.items()])]
 
 indicators_estimation = _load_json("refdata/indicators_estimation.json")
+mappings = _load_json("refdata/rdf_mappings.json")
 
 class IsInteger(Validator):
 
@@ -311,7 +312,7 @@ topics_ratings = _load_json("refdata/topics_ratings.json")
 evaluation_methods = _load_json("refdata/evaluation_methods.json")
 
 TopicEnum = fl.Enum.using(optional=True) \
-                   .with_properties(widget="topics_radioselect", 
+                   .with_properties(widget="topics_radioselect",
                                     extra_topic="True") \
                    .valued(*topics_ratings)
 
@@ -460,7 +461,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(extra_topic="True", 
+                         .with_properties(extra_topic="True",
                                           hidden_label="True") \
             ),
 
@@ -504,7 +505,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(extra_topic="True", 
+                         .with_properties(extra_topic="True",
                                           hidden_label="True") \
             ),
         ),
@@ -532,7 +533,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(extra_topic="True", 
+                         .with_properties(extra_topic="True",
                                           hidden_label="True") \
             ),
         ),
@@ -561,7 +562,7 @@ SerisReviewSchema = fl.Dict.with_properties(widget="schema") \
                                              css_class="input-medium"),
 
                 TopicDict.named('other_radio') \
-                         .with_properties(enclosed_in_div="False", 
+                         .with_properties(enclosed_in_div="False",
                                           hidden_label="True"),
             ),
         ),
