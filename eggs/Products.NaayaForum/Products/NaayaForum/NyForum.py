@@ -289,9 +289,12 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
                 topics_category.sort(key=lambda x:
                         x[2].get_last_message().postdate, reverse=rkey)
             else:
-                topics_category.sort(key=lambda x: getattr(x[2], skey),
+                try:
+                    topics_category.sort(key=lambda x: getattr(x[2], skey),
                         reverse=rkey)
-        
+                except AttributeError:
+                    #This means the sort key was wrong (manually altered)
+                    pass
         return btn_select, btn_delete, can_operate, topics, skey, rkey
 
     def checkPermissionSkipCaptcha(self):

@@ -1,5 +1,6 @@
 1.2.18 (unreleased)
 -------------------
+* handle incorrect sort key for forum index [dumitval]
 
 1.2.17 (2013-05-24)
 -------------------
