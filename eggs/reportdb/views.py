@@ -13,7 +13,9 @@ import json
 import file_upload
 from gtranslate import translate
 import frame
-from schema import countries_list, countries_dict, regions_dict, subregions_dict, check_common
+from schema import countries_list, countries_dict, regions_dict, subregions_dict, check_common, mappings
+from rdflib import Graph, Literal, BNode, Namespace, RDF, URIRef
+from rdflib.namespace import DC, FOAF, DCTERMS, SKOS, RDFS
 
 def _load_json(name):
     with open(os.path.join(os.path.dirname(__file__), name), "rb") as f:
@@ -49,6 +51,7 @@ views = flask.Blueprint('views', __name__)
 views.before_request(frame.get_frame_before_request)
 
 def edit_is_allowed(report_id=None):
+
     if flask.current_app.config.get('SKIP_EDIT_AUTHORIZATION', False):
         return True
     roles = getattr(flask.g, 'user_roles', [])
@@ -290,6 +293,314 @@ def report_edit(report_id=None):
         'country': country,
         'region': region,
         })
+
+
+@views.route('/rdf-mapping/', methods=['GET'])
+def reports_rdf_mapping():
+    return flask.jsonify(mappings)
+
+
+@views.route('/rdf/', methods=['GET'])
+def reports_rdf():
+    g = Graph()
+    count = [0]
+    properties = {}
+    get_schema_items(schema.ReportSchema(), properties, count)
+    get_schema_items(schema.SerisReviewSchema(), properties, count)
+    export = get_reports()
+
+    bibo = Namespace('http://uri.gbv.de/ontology/bibo/')
+    nao = Namespace('http://www.semanticdesktop.org/ontologies/2007/08/15/nao#')
+    theme = Namespace('http://www.eea.europa.eu/themes/')
+    bibtex = Namespace('http://purl.org/net/nknouf/ns/bibtex#')
+    seris = Namespace('http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema.rdf#')
+    mitype = Namespace('http://purl.org/dc/dcmitype/')
+
+    for entry in export:
+        current_id = entry['report_id']
+        current_uri = "http://projects.eionet.europa.eu/seris-revision/seris/reports/%s" % current_id
+        node = URIRef(current_uri)
+        report = Namespace(current_uri)
+
+        g.add((node, DCTERMS.type, mitype.Collection))
+        g.add((node, DCTERMS.type, bibo.Document))
+        g.add((node, DCTERMS.type, bibtex.Entry))
+        g.add((node, DCTERMS.identifier, Literal(current_id)))
+
+        for region in entry['header_region']:
+            item = BNode()
+            g.add((node, DCTERMS.spatial, item))
+            g.add((item, DCTERMS.type, DCTERMS.Location))
+            g.add((item, RDFS.label, Literal('Region of report')))
+            g.add((item, DCTERMS.subject, Literal(region)))
+
+        for country in entry['header_country']:
+            g.add((node, DC.coverage, Literal(country)))
+
+        if 'header_subregion' in entry.keys():
+            for subregion in entry['header_subregion']:
+                item = BNode()
+                g.add((node, DCTERMS.spatial, item))
+                g.add((item, DCTERMS.type, DCTERMS.Location))
+                g.add((item, RDFS.label, Literal('Subregion of country')))
+                g.add((item, DCTERMS.subject, Literal(subregion)))
+
+        if entry['header_soer_cover']:
+            g.add((node, DCTERMS.source, Literal(entry['header_soer_cover'])))
+
+        if entry['details_original_name']:
+            g.add((node, DC.title, Literal(entry['details_original_name'])))
+
+        for lang in entry['details_original_language']:
+            g.add((node, DC.language, Literal(lang)))
+
+        if 'details_translated_in_0' in entry.keys():
+            for lang in entry['details_translated_in_0']:
+                item = BNode()
+                g.add((node, DCTERMS.language, item))
+                g.add((item, DCTERMS.type, DCTERMS.LinguisticSystem))
+                g.add((
+                    item,
+                    RDFS.label,
+                    Literal('Language in which the report was translated')))
+                g.add((item, DCTERMS.subject, Literal(lang)))
+
+        if entry['details_english_name']:
+            g.add((
+                  node,
+                  DC.title,
+                  Literal(entry['details_english_name'], lang="en")))
+
+        if entry['details_publisher']:
+            g.add((
+                node,
+                DC.publisher,
+                Literal(entry['details_publisher'])))
+
+        if entry['format_report_type']:
+            g.add((node, DC.type, Literal(entry['format_report_type'])))
+
+        if entry['format_date_of_publication']:
+            g.add((
+                node,
+                DCTERMS.issued,
+                Literal(entry['format_date_of_publication'])))
+
+        if entry['format_freq_of_pub']:
+            item = BNode()
+            g.add((node, DCTERMS.accrualPeriodicity, item))
+            g.add((item, DCTERMS.type, DCTERMS.Frequency))
+            g.add((item, RDFS.label, Literal('Frequency of publication')))
+            g.add((item, RDF.value, Literal(entry['format_freq_of_pub'])))
+
+        if entry['format_date_of_last_update']:
+            g.add((
+                node,
+                DCTERMS.modified,
+                Literal(entry['format_date_of_last_update'])))
+
+        if entry['format_freq_of_upd']:
+            item = BNode()
+            g.add((node, DCTERMS.accrualPeriodicity, item))
+            g.add((item, DCTERMS.type, DCTERMS.Frequency))
+            g.add((item, RDFS.label, Literal('Frequency of update')))
+            g.add((item, RDF.value, Literal(entry['format_freq_of_upd'])))
+
+        if entry['format_no_of_pages']:
+            g.add((node, bibo.numpages, Literal(entry['format_no_of_pages'])))
+
+        if entry['format_size']:
+            item = BNode()
+            g.add((node, DCTERMS.extent, item))
+            g.add((item, DCTERMS.type, DCTERMS.SizeOrDuration))
+            g.add((item, RDFS.label, Literal('Size in MBytes')))
+            g.add((item, RDF.value, Literal(entry['format_size'])))
+
+        if entry['format_availability_paper_or_web']:
+            g.add((
+                node,
+                DC['format'],
+                Literal(entry['format_availability_paper_or_web'])))
+
+        if entry['format_availability_url']:
+            g.add((
+                node,
+                bibtex.hasURL,
+                Literal(entry['format_availability_url'])))
+
+        if entry['format_availability_registration_required']:
+            g.add((
+                node,
+                DC.rights,
+                Literal(entry['format_availability_registration_required'])))
+
+        if entry['format_availability_costs']:
+            g.add((
+                node,
+                RDFS.comment,
+                Literal('(cost)' + entry['format_availability_costs'])))
+
+        if 'links_target_audience' in entry.keys():
+            for audience in entry['links_target_audience']:
+                item = BNode()
+                g.add((node, DCTERMS.audience, item))
+                g.add((item, DCTERMS.type, DCTERMS.AgentClass))
+                g.add((item, RDFS.label, Literal('Target audience')))
+                g.add((item, RDF.value, Literal(audience)))
+
+        if entry['links_legal_reference']:
+            item = BNode()
+            g.add((node, DCTERMS.conformTo, item))
+            g.add((item, DCTERMS.type, DCTERMS.Standard))
+            g.add((item, RDFS.label, Literal('Legal reference')))
+            g.add((item, RDF.value, Literal(entry['links_legal_reference'])))
+
+        if entry['links_explanatory_text']:
+            g.add((
+                node,
+                bibo.shortDescription,
+                Literal(entry['links_explanatory_text'])))
+
+        topics = { "env_issues": ['air',
+                                  'biodiversity',
+                                  'chemicals',
+                                  'climate',
+                                  'human',
+                                  'landuse',
+                                  'natural',
+                                  'noise',
+                                  'soil',
+                                  'waste',
+                                  'water',
+                                  'other_issues'],
+                  'sectors_and_activities' : ['agriculture',
+                                              'energy',
+                                              'fishery',
+                                              'households',
+                                              'industry',
+                                              'economy',
+                                              'tourism',
+                                              'transport'],
+                  'across_env': ['technology',
+                                 'policy',
+                                 'scenarios'],
+                  'env_regions': ['coast_sea',
+                                  'regions',
+                                  'urban']}
+
+        for key in topics.keys():
+            for topic in topics[key]:
+                focus = 'topics_' + key + '_' + topic + '_focus'
+                indicators = 'topics_' + key + '_' + topic + '_indicators'
+                current_item = "http://www.eea.europa.eu/themes/%(topic)s" % {"topic": topic}
+                item = BNode()
+                if (entry[focus] or entry[indicators]):
+                    g.add((node, nao.hasTopic, item))
+                    g.add((item, RDFS.label, Literal(topic)))
+                    g.add((item, DCTERMS.type, bibtex.Entry))
+                    g.add((item, bibtex.hasURL, Literal(current_item)))
+                    if entry[focus]:
+                        g.add((
+                            item,
+                            seris.hasFocusValue,
+                            Literal(entry[focus])))
+                    if entry[indicators]:
+                        g.add((
+                            item,
+                            seris.hasIndicatorCount,
+                            Literal(entry[indicators])))
+            topic = 'topics_' + key + '_extra_topic_extra_topic_input'
+            focus = 'topics_' + key + '_extra_topic_other_radio_focus'
+            indicators = 'topics_' + key + '_extra_topic_other_radio_indicators'
+            if entry[topic]:
+                item = BNode()
+                g.add((node, nao.hasTopic, item))
+                g.add((item, RDFS.label, Literal(entry[topic])))
+                g.add((item, DCTERMS.type, bibtex.Entry))
+                if entry[focus]:
+                    g.add((
+                        item,
+                        seris.hasFocusValue,
+                        Literal(entry[focus])))
+                if entry[indicators]:
+                    g.add((
+                        item,
+                        seris.hasIndicatorCount,
+                        Literal(entry[indicators])))
+
+        if entry['structure_indicator_based']:
+            item = BNode()
+            g.add((node, seris.structure, item))
+            g.add((item, RDFS.label, Literal('indicator based')))
+            if entry['structure_indicators_estimation']:
+                g.add((
+                    item,
+                    RDF.value,
+                    Literal(entry['structure_indicators_estimation'])))
+            usage = ''
+            if entry['structure_indicators_usage_to_assess_progress']:
+                usage += entry['structure_indicators_usage_to_assess_progress']
+                usage += ' to assess progress to target/treshold.'
+            if entry['structure_indicators_usage_to_compare_countries']:
+                usage += entry['structure_indicators_usage_to_compare_countries']
+                usage += ' to compare with other countries/EU.'
+            if entry['structure_indicators_usage_to_compare_subnational']:
+                usage += entry['structure_indicators_usage_to_compare_subnational']
+                usage += ' to compare at subnational level.'
+            if entry['structure_indicators_usage_to_compare_eea']:
+                usage += entry['structure_indicators_usage_to_compare_eea']
+                usage += ' to relate with EEA/EU developments.'
+            if entry['structure_indicators_usage_to_compare_global']:
+                usage += entry['structure_indicators_usage_to_compare_global']
+                usage += ' to relate to global developments.'
+            if entry['structure_indicators_usage_to_evaluate']:
+                usage += entry['structure_indicators_usage_to_evaluate']
+                usage += ' to rank/evaluate.'
+                if entry['structure_indicators_usage_evaluation_method']:
+                    usage += 'evaluation method: '
+                    usage += entry['structure_indicators_usage_evaluation_method']
+            if usage:
+                g.add((item, SKOS.scopeNote, Literal(usage)))
+
+        if entry['structure_policy_recommendations']:
+            g.add((
+                node,
+                seris.policyRecommendationsQuantifier,
+                Literal(entry['structure_policy_recommendations'])))
+
+        if entry['structure_reference']:
+            quantifier = entry['structure_reference']
+            if quantifier[0] == 'N':
+                quantifier = 'No'
+
+            text = '[%s] DPSIR framework used' % quantifier
+            g.add((node, DCTERMS.references, Literal(text)))
+
+        if entry['short_description']:
+            g.add((
+                node,
+                DCTERMS.description,
+                Literal(entry['short_description'])))
+
+        if entry['table_of_contents']:
+            g.add((
+                node,
+                DCTERMS.tableOfContents,
+                Literal(entry['table_of_contents'])))
+
+    g.bind("dcterms", DCTERMS)
+    g.bind("dc", DC)
+    g.bind("bibo", bibo)
+    g.bind("foaf", FOAF)
+    g.bind("nao", nao)
+    g.bind("theme", theme)
+    g.bind("report", report)
+    g.bind("bibtex", bibtex)
+    g.bind("skos", SKOS)
+    g.bind("rdfs", RDFS)
+    g.bind("seris", seris)
+
+    return flask.Response(g.serialize(format='xml'), mimetype='text/xml')
 
 
 @views.route('/atom/', methods=['GET'])
