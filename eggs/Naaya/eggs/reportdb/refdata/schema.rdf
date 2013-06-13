@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdfs:Property rdf:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#structure">
+    <rdf:id>structure</rdf:id>
+    <rdfs:label xml:lang="en">Structure</rdfs:label>
+    <rdfs:comment xml:lang="en">Information about the indicators present in a report's structure</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </rdfs:Property>
+  <rdfs:Property rdf:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#hasFocusValue">
+    <rdfs:id>hasFocusValue</rdfs:id>
+    <rdfs:label xml:lang="en">has focus value</rdfs:label>
+    <rdfs:comment xml:lang="en">Information about how much the report is focused on several topics. Possible values are: major(chapter), some(sections), minor(ocasionally mentioned), none
+    </rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </rdfs:Property>
+  <rdfs:Property rdfs:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#hasIndicatorCount">
+    <rdf:id>hasIndicatorCount</rdf:id>
+    <rdfs:label xml:lang="en">has indicator count</rdfs:label>
+    <rdfs:comment xml:lang="en">Information about the number of indicators present in the report. Possible values are: Several(>5), Some(3-5), Few(1-2) or None(0)
+    </rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </rdfs:Property>
+  <rdfs:Property rdf:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#policyRecommendationQuantifier">
+    <rdf:id>policyRecommendationQuantifier</rdf:id>
+    <rdfs:label xml:lang="en">policy recommendation quantifier</rdfs:label>
+    <rdfs:comment xml:lang="en">Quentification on whether the report gives policy recommendations. Possible values are: explicitly, implicitly and none.
+    </rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </rdfs:Property>
