@@ -30,7 +30,7 @@
 "structure_indicators_usage_to_compare_subnational": ["skos:scopeNote",""],
 "structure_indicators_usage_to_compare_eea": ["skos:scopeNote",""],
 "structure_indicators_usage_to_compare_global": ["skos:scopeNote",""],
-"structure_indicators_usage_to_evaluate": ["skos:scopeNote",""]
+"structure_indicators_usage_to_evaluate": ["skos:scopeNote",""],
 "structure_indicators_usage_evaluation_method": ["skos:scopeNote",""],
 "structure_reference": ["dcterms:bibliographicCitation", ""],
 "topics_env_issues_air_indicators": ["nao:hasTopic", ""],
