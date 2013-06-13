@@ -1,4 +1,7 @@
-1.2.18 (unreleased)
+1.2.19 (unreleased)
+-------------------
+
+1.2.18 (2013-06-13)
 -------------------
 * handle incorrect sort key for forum index [dumitval]
 
