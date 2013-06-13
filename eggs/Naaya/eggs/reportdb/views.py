@@ -299,6 +299,11 @@ def report_edit(report_id=None):
 def reports_rdf_mapping():
     return flask.jsonify(mappings)
 
+@views.route('/ontology/schema', methods=['GET'])
+def reports_ontology():
+    g = Graph()
+    result = g.parse("refdata/schema.rdf")
+    return flask.Response(g.serialize(format='xml'), mimetype='text/xml')
 
 @views.route('/rdf/', methods=['GET'])
 def reports_rdf():
