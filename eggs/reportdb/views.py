@@ -313,7 +313,7 @@ def reports_rdf():
     nao = Namespace('http://www.semanticdesktop.org/ontologies/2007/08/15/nao#')
     theme = Namespace('http://www.eea.europa.eu/themes/')
     bibtex = Namespace('http://purl.org/net/nknouf/ns/bibtex#')
-    seris = Namespace('http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema.rdf#')
+    seris = Namespace('http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#')
     mitype = Namespace('http://purl.org/dc/dcmitype/')
 
     for entry in export:
