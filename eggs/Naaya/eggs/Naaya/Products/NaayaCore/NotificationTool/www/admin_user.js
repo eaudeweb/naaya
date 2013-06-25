@@ -14,6 +14,8 @@ $(function() {
 
     var location_div = $('#location_id');
     var subscribe_to_div = $('#subscribe_to_id');
+    var all_content_types_div = $('#all_content_types');
+    var content_types_div = $('#content_types');
     var lang_div = $('#language_id');
     var subscribe_button = $('#subscribe_button_id');
 
@@ -21,6 +23,9 @@ $(function() {
 
     location_div.hide();
     subscribe_to_div.hide();
+    all_content_types_div.hide();
+    content_types_div.hide();
+    content_types_div.hide();
     lang_div.hide();
     subscribe_button.hide();
 
@@ -64,6 +69,7 @@ $(function() {
 
                     location_div.show();
                     subscribe_to_div.show();
+                    all_content_types_div.show();
                     lang_div.show();
                     subscribe_button.show();
 
@@ -78,5 +84,14 @@ $(function() {
                           was found using the indicated criteria.");
         }
     }
+    $('#subscribe_me-all_content_types').click(function(){
+        if ($(this).is(':checked')){
+            $('#subscribe_me-content_types option').removeProp('selected')
+            content_types_div.hide();
+        }
+        else{
+            content_types_div.show();
+        };
+    });
 });
 

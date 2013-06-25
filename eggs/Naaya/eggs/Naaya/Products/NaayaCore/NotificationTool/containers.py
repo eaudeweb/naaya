@@ -48,10 +48,11 @@ class SubscriptionContainer(Persistent):
 class AccountSubscription(object):
     interface.implements(ISubscription)
 
-    def __init__(self, user_id, notif_type, lang):
+    def __init__(self, user_id, notif_type, lang, content_types):
         self.user_id = user_id
         self.lang = lang
         self.notif_type = notif_type
+        self.content_types = content_types
 
     def check_permission(self, obj):
         acl_users = obj.getSite().getAuthenticationTool()
@@ -124,6 +125,7 @@ class AnonymousSubscription(object):
         self.country = kw.get('country')
         self.notif_type = kw.pop('notif_type')
         self.lang = kw.pop('lang')
+        self.content_types = kw.pop('content_types')
         self.location = kw.pop('location')
         self.key = sha("%s%s" % (time(),
                                      random.randrange(1, 10000))).hexdigest()

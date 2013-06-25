@@ -172,6 +172,22 @@
                 <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
             </select>
         </div>
+        <div class="field-inline" id="all_content_types">
+            <label for="subscribe_me-all_content_types" i18n:translate="">All content types</label>
+            <input id="subscribe_me-all_content_types" type="checkbox" checked="checked"/>
+        </div>
+        <div class="field" id="content_types">
+            <label for="subscribe_me-content_types" i18n:translate="">Select content types</label>
+            <select size="15" multiple name="content_types"
+                    id="subscribe_me-content_types"
+                    tal:define="gettext python:here.getPortalI18n().get_translation;
+                                meta_types python:here.get_meta_types(1)">
+              <tal:block repeat="item meta_types">
+                  <option tal:define="item_label python:here.get_meta_type_label(item);"
+                    tal:attributes="value item" tal:content="item_label" />
+              </tal:block>
+            </select>
+        </div>
         <div class="field-inline" id="language_id">
             <label for="lang" i18n:translate="">Language</label>
             <select name="lang" id="lang"
@@ -267,6 +283,9 @@
             <th tal:condition="python:skey!='lang'" scope="col">
                 <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?query=${query}&amp;skey=lang#notification_table"><span i18n:translate="">Language</span><img src="misc_/Naaya/sort_not.gif" width="12" height="12" /></a>
             </th>
+            <th scope="col">
+                <span i18n:translate="">Content types</span>
+            </th>
 
             <th></th>
         </thead>
@@ -284,6 +303,10 @@
                 </td>
                 <td tal:define="lang sub_data/lang">
                     <span tal:content="python:here.gl_get_language_name(lang)"/>
+                </td>
+                <td tal:define="content_types sub_data/content_types;
+                                content_types python:', '.join(content_types) or 'ALL'">
+                    <span tal:content="content_types"/>
                 </td>
                 <td>
                     <form id="delSubscriptionForm" method="post"
