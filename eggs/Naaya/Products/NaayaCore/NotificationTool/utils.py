@@ -166,6 +166,9 @@ def get_subscribers_data(self, ob, notif_type='instant', **kw):
         email = subscription.get_email(ob)
         if email is None:
             continue
+        content_types = getattr(subscription, 'content_types', [])
+        if content_types and ob.meta_type not in content_types:
+            continue
 
         data[email] = {
             'ob': ob,

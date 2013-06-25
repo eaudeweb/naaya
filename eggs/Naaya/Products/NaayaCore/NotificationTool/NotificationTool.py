@@ -224,14 +224,16 @@ class NotificationTool(Folder):
         return json.dumps(self._sitemap_dict(form))
 
     security.declarePrivate('add_account_subscription')
-    def add_account_subscription(self, user_id, location, notif_type, lang):
+    def add_account_subscription(self, user_id, location, notif_type,
+                                lang, content_types):
         """ Subscribe the user `user_id` """
         self._validate_subscription(user_id=user_id, location=location,
                                     notif_type=notif_type, lang=lang)
 
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
-        subscription = AccountSubscription(user_id, notif_type, lang)
+        subscription = AccountSubscription(user_id, notif_type, lang,
+                                            content_types)
         subscription_container.add(subscription)
 
     security.declarePrivate('add_anonymous_subscription')
@@ -381,6 +383,9 @@ class NotificationTool(Folder):
                 email = subscription.get_email(ob)
                 if email is None:
                     continue
+                content_types = getattr(subscription, 'content_types', [])
+                if content_types and ob.meta_type not in content_types:
+                    continue
                 notif_logger.info('.. .. sending notification to %r', email)
                 objects_by_email.setdefault(email, []).append({'ob': ob})
                 langs_by_email[email] = subscription.lang
@@ -491,6 +496,7 @@ class NotificationTool(Folder):
             out.append({
                 'object': obj,
                 'notif_type': subscription.notif_type,
+                'content_types': getattr(subscription, 'content_types', []),
                 'lang': subscription.lang
             })
 
@@ -515,7 +521,8 @@ class NotificationTool(Folder):
         return subscriptions
 
     security.declareProtected(view, 'subscribe_me')
-    def subscribe_me(self, REQUEST, location, notif_type, lang=None):
+    def subscribe_me(self, REQUEST, location, notif_type,
+        lang=None, content_types=[]):
         """ add subscription for currently-logged-in user """
         if lang is None:
             lang = self.gl_get_selected_language()
@@ -528,11 +535,20 @@ class NotificationTool(Folder):
         try:
             if user_id:
                 self.add_account_subscription(user_id, location, notif_type,
-                                              lang)
-                self.setSessionInfoTrans(
-                    'You will receive ${notif_type} notifications'
-                    ' for any changes in "${location}".',
-                    notif_type=notif_type, location=location)
+                                              lang, content_types)
+                if content_types:
+                    self.setSessionInfoTrans(
+                        'You will receive ${notif_type} notifications'
+                        ' for any changes in "${location}" for objects of types'
+                        ' ${content_types}.',
+                        notif_type=notif_type,
+                        location=location or self.getSite().title,
+                        content_types=', '.join(content_types))
+                else:
+                    self.setSessionInfoTrans(
+                        'You will receive ${notif_type} notifications'
+                        ' for any changes in "${location}".',
+                        notif_type=notif_type, location=location)
             else:
                 self.add_anonymous_subscription(**dict(REQUEST.form))
                 self.setSessionInfoTrans(
@@ -540,7 +556,7 @@ class NotificationTool(Folder):
                 'Follow the instructions to subscribe to ${notif_type} '
                 'notifications for any changes in "${location}".',
                 notif_type=notif_type, location=location,
-                email=REQUEST.form.get('email'))
+                content_types=content_types, email=REQUEST.form.get('email'))
         except ValueError, msg:
             self.setSessionErrors([unicode(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
@@ -563,7 +579,8 @@ class NotificationTool(Folder):
             self.setSessionInfoTrans(
                 'You will not receive any more ${notif_type} '
                 'notifications for changes in "${location}".',
-                notif_type=notif_type, location=location)
+                notif_type=notif_type,
+                location=location or self.getSite().title)
         except ValueError, msg:
             self.setSessionErrors([unicode(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
@@ -594,7 +611,8 @@ class NotificationTool(Folder):
                             'You succesfully subscribed to ${notif_type} '
                             'notifications for any changes in "${location}".',
                             notif_type=subscription.notif_type,
-                            location=subscription.location)
+                            location=subscription.location or
+                                    self.getSite().title)
                     break
             else:
                 if REQUEST is not None:
@@ -631,19 +649,20 @@ class NotificationTool(Folder):
                     'sub_id': sub_id,
                     'lang': subscription.lang,
                     'notif_type': subscription.notif_type,
+                    'content_types': getattr(subscription, 'content_types', []),
                 }
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_add_account_subscription')
     def admin_add_account_subscription(self, REQUEST, user_id,
-                                       location, notif_type, lang):
+                                   location, notif_type, lang, content_types):
         """ """
         if location == '/': location = ''
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
         try:
             self.add_account_subscription(user_id.strip(), location,
-                                          notif_type, lang)
+                                          notif_type, lang, content_types)
         except ValueError, msg:
             self.setSessionErrorsTrans(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
