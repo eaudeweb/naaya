@@ -225,7 +225,7 @@ class NotificationTool(Folder):
 
     security.declarePrivate('add_account_subscription')
     def add_account_subscription(self, user_id, location, notif_type,
-                                lang, content_types):
+                                lang, content_types=[]):
         """ Subscribe the user `user_id` """
         self._validate_subscription(user_id=user_id, location=location,
                                     notif_type=notif_type, lang=lang)

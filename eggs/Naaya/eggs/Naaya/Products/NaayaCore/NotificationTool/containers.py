@@ -48,7 +48,7 @@ class SubscriptionContainer(Persistent):
 class AccountSubscription(object):
     interface.implements(ISubscription)
 
-    def __init__(self, user_id, notif_type, lang, content_types):
+    def __init__(self, user_id, notif_type, lang, content_types=[]):
         self.user_id = user_id
         self.lang = lang
         self.notif_type = notif_type
