@@ -1,5 +1,6 @@
 3.2.40 (unreleased)
 -------------------
+* subscribe to notifications by content type [dumitval]
 
 3.2.39 (2013-05-24)
 -------------------
