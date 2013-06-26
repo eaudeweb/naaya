@@ -131,7 +131,8 @@ class NotificationsUnitTest(BaseNotificationsTest):
         diverted_mail = EmailTool.divert_mail()
         notif_tool = self.portal.getNotificationTool()
         notif_tool.add_anonymous_subscription(email='some@email.com', lang='en',
-                                              location='', notif_type='instant')
+                                              location='', notif_type='instant',
+                                              content_types=[])
         assert diverted_mail[0][1] == ['some@email.com']
         assert diverted_mail[0][2] == 'from.zope@example.com'
         assert diverted_mail[0][0].find('confirm?key=') != -1
