@@ -28,7 +28,7 @@ class SubscriptionTest(NaayaTestCase):
         sub2 = AccountSubscription('user2', 'instant', 'en')
         sub3 = AnonymousSubscription(email='test@email.com',
                                      location='', notif_type='instant',
-                                     lang='en')
+                                     lang='en', content_types=[])
         sc.add(sub1)
         sc.add(sub2)
         sc.add(sub3)
