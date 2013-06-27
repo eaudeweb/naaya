@@ -327,9 +327,7 @@ def reports_rdf():
         node = URIRef(current_uri)
         report = Namespace(current_uri)
 
-        g.add((node, DCTERMS.type, mitype.Collection))
-        g.add((node, DCTERMS.type, bibo.Document))
-        g.add((node, DCTERMS.type, bibtex.Entry))
+        g.add((node, DCTERMS.type, seris.SERISReport))
         g.add((node, DCTERMS.identifier, Literal(current_id)))
 
         for region in entry['header_region']:
@@ -359,16 +357,19 @@ def reports_rdf():
         for lang in entry['details_original_language']:
             g.add((node, DC.language, Literal(lang)))
 
-        if 'details_translated_in_0' in entry.keys():
-            for lang in entry['details_translated_in_0']:
-                item = BNode()
-                g.add((node, DCTERMS.language, item))
-                g.add((item, DCTERMS.type, DCTERMS.LinguisticSystem))
-                g.add((
-                    item,
-                    RDFS.label,
-                    Literal('Language in which the report was translated')))
-                g.add((item, DCTERMS.subject, Literal(lang)))
+        lang_id = 0
+        lang_field = 'details_translated_in_%s' % lang_id
+        while lang_field in entry.keys():
+            item = BNode()
+            g.add((node, DCTERMS.language, item))
+            g.add((item, DCTERMS.type, DCTERMS.LinguisticSystem))
+            g.add((
+                item,
+                RDFS.label,
+                Literal('Language in which the report was translated')))
+            g.add((item, DCTERMS.subject, Literal(entry[lang_field])))
+            lang_id +=1
+            lang_field = 'details_translated_in_%s' % lang_id
 
         if entry['details_english_name']:
             g.add((
