@@ -10,6 +10,8 @@
     national state of the environment reports (SERIS).
     </rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://purl.org/net/nknouf/ns/bibtex#Entry"/>
+    <rdfs:subClassOf rdf:resource="http://uri.gbv.de/ontology/bibo/Document"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/dc/dcmitype/Collection"/>
   </rdfs:Class>
   <rdfs:Property rdf:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#structure">
     <rdf:id>structure</rdf:id>
