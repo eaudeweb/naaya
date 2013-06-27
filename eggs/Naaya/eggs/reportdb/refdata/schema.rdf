@@ -3,7 +3,7 @@
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 >
-  <rdfs:Class rdf:ID="SERISReport">
+  <rdfs:Class rdf:about="http://forum.eionet.europa.eu/nrc-state-environment/seris/ontology/schema#SERISReport">
     <rdfs:label xml:lang="en">National state of the environment report
     </rdfs:label>
     <rdfs:comment xml:lang="en">A bibliographic item in the inventory of
