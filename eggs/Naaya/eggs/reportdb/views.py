@@ -301,9 +301,8 @@ def reports_rdf_mapping():
 
 @views.route('/ontology/schema', methods=['GET'])
 def reports_ontology():
-    g = Graph()
-    result = g.parse("refdata/schema.rdf")
-    return flask.Response(g.serialize(format='xml'), mimetype='text/xml')
+    f = open('refdata/schema.rdf','r')
+    return flask.Response(f.read(), mimetype='text/xml')
 
 @views.route('/rdf/', methods=['GET'])
 def reports_rdf():
@@ -327,7 +326,7 @@ def reports_rdf():
         node = URIRef(current_uri)
         report = Namespace(current_uri)
 
-        g.add((node, DCTERMS.type, seris.SERISReport))
+        g.add((node, RDF.type, seris.SERISReport))
         g.add((node, DCTERMS.identifier, Literal(current_id)))
 
         for region in entry['header_region']:
