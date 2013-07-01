@@ -1,4 +1,7 @@
-1.4.1 (unreleased)
+1.4.2 (unreleased)
+-------------------
+
+1.4.1 (2013-07-01)
 -------------------
 * #9607; Eionet full profile client implementation [simiamih]
 
