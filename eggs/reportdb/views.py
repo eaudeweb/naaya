@@ -332,7 +332,7 @@ def reports_rdf():
         for region in entry['header_region']:
             item = BNode()
             g.add((node, DCTERMS.spatial, item))
-            g.add((item, DCTERMS.type, DCTERMS.Location))
+            g.add((item, RDF.type, DCTERMS.Location))
             g.add((item, RDFS.label, Literal('Region of report')))
             g.add((item, DCTERMS.subject, Literal(region)))
 
@@ -343,7 +343,7 @@ def reports_rdf():
             for subregion in entry['header_subregion']:
                 item = BNode()
                 g.add((node, DCTERMS.spatial, item))
-                g.add((item, DCTERMS.type, DCTERMS.Location))
+                g.add((item, RDF.type, DCTERMS.Location))
                 g.add((item, RDFS.label, Literal('Subregion of country')))
                 g.add((item, DCTERMS.subject, Literal(subregion)))
 
@@ -361,7 +361,7 @@ def reports_rdf():
         while lang_field in entry.keys():
             item = BNode()
             g.add((node, DCTERMS.language, item))
-            g.add((item, DCTERMS.type, DCTERMS.LinguisticSystem))
+            g.add((item, RDF.type, DCTERMS.LinguisticSystem))
             g.add((
                 item,
                 RDFS.label,
@@ -394,7 +394,7 @@ def reports_rdf():
         if entry['format_freq_of_pub']:
             item = BNode()
             g.add((node, DCTERMS.accrualPeriodicity, item))
-            g.add((item, DCTERMS.type, DCTERMS.Frequency))
+            g.add((item, RDF.type, DCTERMS.Frequency))
             g.add((item, RDFS.label, Literal('Frequency of publication')))
             g.add((item, RDF.value, Literal(entry['format_freq_of_pub'])))
 
@@ -407,7 +407,7 @@ def reports_rdf():
         if entry['format_freq_of_upd']:
             item = BNode()
             g.add((node, DCTERMS.accrualPeriodicity, item))
-            g.add((item, DCTERMS.type, DCTERMS.Frequency))
+            g.add((item, RDF.type, DCTERMS.Frequency))
             g.add((item, RDFS.label, Literal('Frequency of update')))
             g.add((item, RDF.value, Literal(entry['format_freq_of_upd'])))
 
@@ -417,7 +417,7 @@ def reports_rdf():
         if entry['format_size']:
             item = BNode()
             g.add((node, DCTERMS.extent, item))
-            g.add((item, DCTERMS.type, DCTERMS.SizeOrDuration))
+            g.add((item, RDF.type, DCTERMS.SizeOrDuration))
             g.add((item, RDFS.label, Literal('Size in MBytes')))
             g.add((item, RDF.value, Literal(entry['format_size'])))
 
@@ -449,14 +449,14 @@ def reports_rdf():
             for audience in entry['links_target_audience']:
                 item = BNode()
                 g.add((node, DCTERMS.audience, item))
-                g.add((item, DCTERMS.type, DCTERMS.AgentClass))
+                g.add((item, RDF.type, DCTERMS.AgentClass))
                 g.add((item, RDFS.label, Literal('Target audience')))
                 g.add((item, RDF.value, Literal(audience)))
 
         if entry['links_legal_reference']:
             item = BNode()
             g.add((node, DCTERMS.conformTo, item))
-            g.add((item, DCTERMS.type, DCTERMS.Standard))
+            g.add((item, RDF.type, DCTERMS.Standard))
             g.add((item, RDFS.label, Literal('Legal reference')))
             g.add((item, RDF.value, Literal(entry['links_legal_reference'])))
 
@@ -502,7 +502,7 @@ def reports_rdf():
                 if (entry[focus] or entry[indicators]):
                     g.add((node, nao.hasTopic, item))
                     g.add((item, RDFS.label, Literal(topic)))
-                    g.add((item, DCTERMS.type, bibtex.Entry))
+                    g.add((item, RDF.type, bibtex.Entry))
                     g.add((item, bibtex.hasURL, Literal(current_item)))
                     if entry[focus]:
                         g.add((
@@ -521,7 +521,7 @@ def reports_rdf():
                 item = BNode()
                 g.add((node, nao.hasTopic, item))
                 g.add((item, RDFS.label, Literal(entry[topic])))
-                g.add((item, DCTERMS.type, bibtex.Entry))
+                g.add((item, RDF.type, bibtex.Entry))
                 if entry[focus]:
                     g.add((
                         item,
