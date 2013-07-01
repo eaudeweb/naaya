@@ -1,5 +1,9 @@
 import operator
 import urllib
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
@@ -236,3 +240,34 @@ def ProfileView(context, request):
         return subscriptions_pt.__of__(context)(sorted_func=sorted,
                                                 subscriptions=notifications,
                                                 user_id=user.getId())
+
+def show_local_roles(context, request):
+    """ method for Eionet Full Profile """
+    userid = request.form.get('userid')
+    zope_app = context.unrestrictedTraverse("/")
+    user = zope_app.acl_users.getUser(userid)
+    client = ProfileClient(zope_app, user)
+    ig_access = client.access_in_igs()
+
+    if 'restricted' in ig_access:
+        del ig_access['restricted']
+    ig_details = {}
+    all_igs = []
+    roles = set()
+    for igs in ig_access.values():
+        all_igs.extend(igs)
+    result = []
+    for ig in all_igs:
+        auth_tool = ig.getAuthenticationTool()
+        local_roles = auth_tool.getUserLocalRoles(user, try_groups=False)
+        for (roles, location) in local_roles:
+            location = ig.unrestrictedTraverse(location)
+            if location != ig:
+                title = '%s > %s' % (ig.title_or_id(), location.title_or_id())
+            else:
+                title = location.title_or_id()
+            result.append({'roles': roles, 'ob_url': location.absolute_url(),
+                           'ob_title': title,
+                           'extra': {'ig': ig.getId()}})
+    request.RESPONSE.setHeader('Content-type', 'application/json')
+    return json.dumps({userid: result})

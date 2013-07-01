@@ -3,11 +3,24 @@
   xmlns:naaya="http://namespaces.zope.org/naaya"
   xmlns:browser="http://namespaces.zope.org/browser">
 
+  <include package="collective.autopermission" />
+  <permission
+    id="naaya.ViewUserRoles"
+    title="View user roles"
+   />
+
   <naaya:simpleView
     for="naaya.groupware.interfaces.IGroupwareApplication"
     name="profile_overview"
     handler=".profile.ProfileView"
     permission="zope2.View"
+    />
+
+    <naaya:simpleView
+    for="naaya.groupware.interfaces.IGroupwareApplication"
+    name="show_local_roles"
+    handler=".profile.show_local_roles"
+    permission="naaya.ViewUserRoles"
     />
 
   <browser:resourceDirectory
