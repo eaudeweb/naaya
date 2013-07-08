@@ -120,8 +120,13 @@ class AdminI18n(Implicit):
         if skey == 0:
             #sort by message
             default_locale = locale.setlocale(locale.LC_ALL)
-            try: locale.setlocale(locale.LC_ALL, 'en')
-            except: locale.setlocale(locale.LC_ALL, '')
+            try:
+                locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
+            except locale.Error:
+                try:
+                    locale.setlocale(locale.LC_ALL, 'en')
+                except locale.Error:
+                    locale.setlocale(locale.LC_ALL, '')
             t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
             locale.setlocale(locale.LC_ALL, default_locale)
         else:
