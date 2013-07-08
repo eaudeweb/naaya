@@ -1,5 +1,6 @@
 1.1.5 (unreleased)
 -------------------
+* fix for a chmbe error in locale setting [dumitval]
 
 1.1.4 (2012-10-04)
 -------------------
