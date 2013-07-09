@@ -131,8 +131,10 @@ class EmailTool(Folder):
     security.declareProtected(naaya_admin, 'configuration_errors_report')
     def configuration_errors_report(self):
         errors = []
-        if not (self.mail_server_name and self.mail_server_port):
-            errors.append('Mail server address/port not configured')
+        delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
+        if delivery is None:
+            if not (self.mail_server_name and self.mail_server_port):
+                errors.append('Mail server address/port not configured')
         if not self.get_addr_from():
             errors.append('"From" address not configured')
         return self._errors_report(errors=errors)
