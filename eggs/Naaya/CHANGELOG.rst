@@ -1,5 +1,6 @@
 3.2.40 (unreleased)
 -------------------
+* #14873 email settings warnings [simiamih]
 * `update` Introduced administrative notifications [dumitval]
 * links to eionet user profiles from user administration [dumitval]
 * subscribe to notifications by content type [dumitval]
