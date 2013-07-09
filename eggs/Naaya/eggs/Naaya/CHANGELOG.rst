@@ -2,7 +2,7 @@
 -------------------
 * #14873 email settings warnings [simiamih]
 * `update` Introduced administrative notifications [dumitval]
-* links to eionet user profiles from user administration and other pages[dumitval]
+* links to eionet user profiles from user administration and other pages [dumitval]
 * subscribe to notifications by content type [dumitval]
 
 3.2.39 (2013-05-24)
