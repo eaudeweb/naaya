@@ -79,7 +79,7 @@
 
                 <td width="1">
                     <input type="button" name="pickroles2" value="Pick"
-						i18n:attributes="value"
+            i18n:attributes="value"
                         tal:define="
                             url string:${here/getPluginPath}/pickroles_html;
                             js_code string:fPickRoles('${url}', 'dn');"
@@ -127,7 +127,7 @@
     <tal:block condition="ldap_users">
     <div class="separator"></div>
     <h3 tal:condition="is_user_search" i18n:translate="">
-		Users found for '<strong i18n:name="search-text" tal:content="search_term" />' search term
+    Users found for '<strong i18n:name="search-text" tal:content="search_term" />' search term
     </h3>
     <p tal:condition="is_role_search" i18n:translate="">
         Users found with <strong i18n:name="role-name" tal:content="role" /> role
@@ -163,7 +163,14 @@
                         tal:attributes="value item/user_id" CHECKED/>
                 </td>
                 <td tal:define="uid item/user_id">
-                    <tal:block replace="uid"></tal:block>
+                    <tal:block condition="python: source_title=='EIONET'"
+                      define="user_quoted python:here.utUrlEncode(uid)">
+                      <a rel="external" tal:content="user_quoted"
+                      tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
+                    </tal:block>
+                    <tal:block condition="python: source_title!='EIONET'"
+                      define="user_quoted python:here.utUrlEncode(uid)"
+                      content="user_quoted" />
                     <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
                         <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"
                              i18n:attributes="alt" tal:define="global any_username_conflict python:True" />
@@ -187,8 +194,8 @@
 
         <div class="tip cleaner" tal:condition="any_username_conflict|nothing">
             <p i18n:translate="">
-				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"
-				title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="image" /> local and LDAP accounts for the same username
+        <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"
+        title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="image" /> local and LDAP accounts for the same username
             </p>
         </div>
         <tal:block tal:condition="python:len(ldap_users) > 10">

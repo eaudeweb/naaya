@@ -159,7 +159,13 @@
 							user_group python:user[2];
 							user_roles python:user[3];">
 			<td>
-				<span tal:content="string:${user_name} (${user_id})" />
+				<tal:block condition="python: source_title=='EIONET'"
+					define="user_quoted python:here.utUrlEncode(user_id)">
+					<a rel="external" tal:content="string:${user_name} (${user_id})"
+					tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
+				</tal:block>
+				<tal:block condition="python: source_title!='EIONET'"
+									content="string:${user_name} (${user_id})" />
 				<tal:block define="user_photo_url python: here.get_user_photo_url(user_id)">
 					<a tal:condition="user_photo_url"
 						tal:attributes="href user_photo_url"
