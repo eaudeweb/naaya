@@ -115,8 +115,8 @@ class NotificationTool(Folder):
 
         """
         if (kw['notif_type'] not in self.available_notif_types(kw['location']) and
-            (kw['notif_type'] == 'administrative' and
-            not self.checkPermissionPublishObjects())):
+                    not (kw['notif_type'] == 'administrative' and
+                    self.checkPermissionPublishObjects())):
             raise i18n_exception(ValueError, 'Subscribing to ${notif_type} '
                         'notifications in "${location}" not allowed',
                         location=kw['location'] or self.getSite().title, notif_type=kw['notif_type'])

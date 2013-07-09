@@ -529,10 +529,12 @@ class NotificationsUiApiTest(BaseNotificationsTest):
         notif_tool = self.portal.getNotificationTool()
 
         self.assertRaisesWithMessage(ValueError,
-                                     'Subscribing to notifications in "" not allowed',
+                                     'Subscribing to instant notifications in '
+                                     '"Naaya Test Site" not allowed',
             self.add_account_subscription, 'user1', '', 'instant', 'en')
         self.assertRaisesWithMessage(ValueError,
-                                     'Subscribing to notifications in "fol1" not allowed',
+                                     'Subscribing to weekly notifications in '
+                                     '"fol1" not allowed',
             self.add_account_subscription, 'user2', 'fol1', 'weekly', 'en')
 
         notif_tool.config['enable_instant'] = True
