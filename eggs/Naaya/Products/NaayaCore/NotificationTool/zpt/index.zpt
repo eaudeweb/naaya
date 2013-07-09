@@ -8,7 +8,28 @@
 <script type="text/javascript">
     $(function() {
       $('#content_types').hide();
-      $('#subscribe_me-all_content_types').click(function(){
+      if ($('#subscribe_me-notif_type').val() == 'administrative'){
+          $('#subscribe_me-content_types option').removeProp('selected')
+          $('#content_types').hide();
+          $('#subscribe_me-all_content_types').prop('checked', 'checked');
+          $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+      }
+
+      $('#subscribe_me-notif_type').change(function(){
+          if ($(this).val() == 'administrative'){
+              if (!$('#subscribe_me-all_content_types').is(':checked')){
+                  $('#subscribe_me-content_types option').removeProp('selected')
+                  $('#content_types').hide();
+                  $('#subscribe_me-all_content_types').prop('checked', 'checked');
+              }
+              $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+          } else {
+              if ($('#subscribe_me-all_content_types').is(':disabled')){
+                  $('#subscribe_me-all_content_types').removeProp('disabled');
+              }
+          }
+      });
+      $('#subscribe_me-all_content_types').change(function(){
           if ($(this).is(':checked')){
               $('#subscribe_me-content_types option').removeProp('selected')
               $('#content_types').hide();
@@ -23,11 +44,11 @@
 <h1 i18n:translate="">Subscribe to notifications</h1>
 
 <tal:block define="can_subscribe_to python:list(here.available_notif_types())">
-<p tal:condition="not:can_subscribe_to" i18n:translate="">
+<p tal:condition="python:not(can_subscribe_to or here.checkPermissionPublishObjects())" i18n:translate="">
     Notifications are disabled.
 </p>
 
-<form tal:condition="can_subscribe_to"
+<form tal:condition="python:can_subscribe_to or here.checkPermissionPublishObjects()"
       tal:attributes="action string:${here/absolute_url}/subscribe_me"
       name="subscribe_me" action="subscribe_me" method="post">
 <fieldset>
@@ -43,6 +64,9 @@
 <div class="field-inline">
     <label for="subscribe_me-notif_type" i18n:translate="">Subscribe to</label>
     <select name="notif_type" id="subscribe_me-notif_type">
+        <option value="administrative"
+                tal:condition="here/checkPermissionPublishObjects"
+                i18n:translate="">Administrative notifications (uploaded objects)</option>
         <option value="instant"
                 tal:condition="python:'instant' in can_subscribe_to"
                 i18n:translate="">Instant notifications</option>

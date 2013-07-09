@@ -72,6 +72,12 @@ $(function() {
                     all_content_types_div.show();
                     lang_div.show();
                     subscribe_button.show();
+                    if ($('#subscribe_me-notif_type').val() == 'administrative'){
+                        $('#subscribe_me-content_types option').removeProp('selected')
+                        $('#content_types').hide();
+                        $('#subscribe_me-all_content_types').prop('checked', 'checked');
+                        $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+                    }
 
                     search_ui.hide();
                 }).text(user.full_name);
@@ -84,7 +90,21 @@ $(function() {
                           was found using the indicated criteria.");
         }
     }
-    $('#subscribe_me-all_content_types').click(function(){
+    $('#subscribe_me-notif_type').change(function(){
+      if ($(this).val() == 'administrative'){
+          if (!$('#subscribe_me-all_content_types').is(':checked')){
+              $('#subscribe_me-content_types option').removeProp('selected')
+              $('#content_types').hide();
+              $('#subscribe_me-all_content_types').prop('checked', 'checked');
+          }
+          $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+      } else {
+          if ($('#subscribe_me-all_content_types').is(':disabled')){
+              $('#subscribe_me-all_content_types').removeProp('disabled');
+          }
+      }
+    });
+    $('#subscribe_me-all_content_types').change(function(){
         if ($(this).is(':checked')){
             $('#subscribe_me-content_types option').removeProp('selected')
             content_types_div.hide();

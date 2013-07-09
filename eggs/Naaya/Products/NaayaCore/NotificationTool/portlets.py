@@ -9,7 +9,11 @@ class NotificationsPortlet(object):
 
     def __call__(self, context, position):
         notif_tool = self.site.getNotificationTool()
-        if not list(notif_tool.available_notif_types()):
+        #The portlet should only be rendered if at least one notification type
+        #is activated, of if the user has administrative rights, so he should
+        #be able to subscribe to administrative notifications
+        if not list(notif_tool.available_notif_types()) and not \
+                    self.site.checkPermissionPublishObjects():
             return ''
 
         macro = self.site.getPortletsTool()._get_macro(position)

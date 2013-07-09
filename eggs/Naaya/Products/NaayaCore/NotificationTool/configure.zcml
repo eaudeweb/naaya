@@ -31,6 +31,10 @@
                    Products.Naaya.interfaces.IHeartbeat"
               handler=".subscribers.heartbeat_notification" />
 
+  <subscriber
+    for="Products.NaayaCore.AuthenticationTool.interfaces.IRoleAssignmentEvent"
+    handler=".subscribers.change_user_roles" />
+
   <adapter
     factory=".portlets.NotificationsPortlet"
     for="Products.Naaya.interfaces.INySite"
@@ -58,7 +62,11 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.AddPendingSubscriptionsContainer"
              permission="zope2.ViewManagementScreens" />
-  </configure>
+    <utility name="subscribe_administrative_notifications.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.SubscribeAdministrativeNotifications"
+             permission="zope2.ViewManagementScreens" />
+</configure>
 
   <browser:resourceDirectory
     name="NaayaCore.NotificationTool"

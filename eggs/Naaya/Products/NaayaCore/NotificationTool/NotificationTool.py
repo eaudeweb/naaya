@@ -43,6 +43,8 @@ import utils
 notif_logger = logging.getLogger('naaya.core.notif')
 
 email_templates = {
+    'administrative': EmailPageTemplateFile('emailpt/administrative.zpt',
+                                            globals()),
     'instant': EmailPageTemplateFile('emailpt/instant.zpt', globals()),
     'daily': EmailPageTemplateFile('emailpt/daily.zpt', globals()),
     'weekly': EmailPageTemplateFile('emailpt/weekly.zpt', globals()),
@@ -112,9 +114,12 @@ class NotificationTool(Folder):
         """ Validate add/edit subscription for authorized and anonymous users
 
         """
-        if kw['notif_type'] not in self.available_notif_types(kw['location']):
-            raise i18n_exception(ValueError, 'Subscribing to notifications in '
-                        '"${location}" not allowed', location=kw['location'])
+        if (kw['notif_type'] not in self.available_notif_types(kw['location']) and
+            (kw['notif_type'] == 'administrative' and
+            not self.checkPermissionPublishObjects())):
+            raise i18n_exception(ValueError, 'Subscribing to ${notif_type} '
+                        'notifications in "${location}" not allowed',
+                        location=kw['location'] or self.getSite().title, notif_type=kw['notif_type'])
         try:
             obj = self.getSite().restrictedTraverse(kw['location'])
         except:
@@ -128,7 +133,7 @@ class NotificationTool(Folder):
         if not kw.get('anonymous', False):
             n = utils.match_account_subscription(subscription_container,
                                            kw['user_id'], kw['notif_type'],
-                                           kw['lang'])
+                                           kw['lang'], kw.get('content_types', []))
             if n is not None:
                 raise i18n_exception(ValueError, 'Subscription already exists')
         else: #Check if subscription exists for this anonymous subscriber
@@ -256,11 +261,12 @@ class NotificationTool(Folder):
                              email_data['subject'])
 
     security.declarePrivate('remove_account_subscription')
-    def remove_account_subscription(self, user_id, location, notif_type, lang):
+    def remove_account_subscription(self, user_id, location, notif_type, lang,
+                                    content_types=[]):
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         n = utils.match_account_subscription(subscription_container,
-                                       user_id, notif_type, lang)
+                                       user_id, notif_type, lang, content_types)
         if n is None:
             raise ValueError('Subscription not found')
         subscription_container.remove(n)
@@ -301,6 +307,24 @@ class NotificationTool(Folder):
             yield 'weekly'
         if self.config['enable_monthly']:
             yield 'monthly'
+
+    security.declarePrivate('notify_administrative')
+    def notify_administrative(self, ob, user_id, ob_edited=False):
+        """
+        send instant notifications because object `ob` was changed by
+        the user `user_id`, regardless of approval status (administrative)
+        """
+        notif_logger.info('Administrative notifications on %r', ofs_path(ob))
+
+        subscribers_data = utils.get_subscribers_data(self, ob, **{
+            'person': user_id,
+            'ob_edited': ob_edited,
+            'approved': ob.approved,
+            'container_basket': '%s/basketofapprovals_html' % ob.aq_parent.absolute_url(),
+        })
+
+        template = self._get_template('administrative')
+        self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_instant')
     def notify_instant(self, ob, user_id, ob_edited=False):
@@ -524,6 +548,10 @@ class NotificationTool(Folder):
     def subscribe_me(self, REQUEST, location, notif_type,
         lang=None, content_types=[]):
         """ add subscription for currently-logged-in user """
+        #Even if some content types were selected (by turning off javascript)
+        #they should be ignored, no filtering in administrative notifications
+        if notif_type == 'administrative':
+            content_types = []
         if lang is None:
             lang = self.gl_get_selected_language()
             REQUEST.form['lang'] = lang
@@ -645,7 +673,7 @@ class NotificationTool(Folder):
                                           re.IGNORECASE):
                 yield {
                     'user': user,
-                    'location': path_in_site(obj),
+                    'location': relative_object_path(obj, self.getSite()),
                     'sub_id': sub_id,
                     'lang': subscription.lang,
                     'notif_type': subscription.notif_type,
@@ -657,6 +685,10 @@ class NotificationTool(Folder):
     def admin_add_account_subscription(self, REQUEST, user_id,
                                    location, notif_type, lang, content_types):
         """ """
+        #Even if some content types were selected (by turning off javascript)
+        #they should be ignored, no filtering in administrative notifications
+        if notif_type == 'administrative':
+            content_types = []
         if location == '/': location = ''
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
