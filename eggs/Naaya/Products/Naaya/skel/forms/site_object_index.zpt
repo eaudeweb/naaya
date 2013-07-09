@@ -3,7 +3,7 @@
                 submitter_name here/submitter_info/name|nothing;
                 submitter_email here/submitter_info/email|nothing;
                 auth_tool here/getAuthenticationTool;
-                username python: submitter_name or auth_tool.name_from_userid(contributor);
+                username python: submitter_name or auth_tool.name_from_userid(contributor) or contributor;
                 user_quoted python:here.utUrlEncode(contributor);
                 source_title python: auth_tool.source_name_from_userid(contributor);"
     tal:condition="python: here.display_contributor or here.checkPermissionEditObjects()">
@@ -12,19 +12,19 @@
         <tal:block condition="python:source_title == 'EIONET'" >
           <a rel="external"
           tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
-          tal:content="contributor"/>
+          tal:content="username"/>
         </tal:block>
         <tal:block condition="python:source_title == 'Local' and
                               here.checkPermissionPublishObjects()" >
           <a rel="external"
           tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
-          tal:content="contributor"/>
+          tal:content="username"/>
         </tal:block>
         <tal:block condition="python:source_title not in ['Local', 'EIONET'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
-          content="contributor" />
-        (<tal:block content="username" /><tal:block condition="python:submitter_email and here.checkPermissionPublishObjects()">
-          , <a tal:attributes="href string:mailto:${submitter_email}"
-                   tal:content="submitter_email" /></tal:block>)
+          content="username" />
+        <tal:block condition="python:submitter_email and here.checkPermissionPublishObjects()">
+          <em>(<a tal:attributes="href string:mailto:${submitter_email}"
+                   tal:content="submitter_email" />)</em></tal:block>
     </td>
 </tr>
 </metal:block>
