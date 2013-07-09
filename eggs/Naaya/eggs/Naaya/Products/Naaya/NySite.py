@@ -1221,9 +1221,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 if hasattr(node, 'maintainer_email'):
                     if node.maintainer_email != '' and node.maintainer_email not in l_emails:
                         l_emails.extend(node.maintainer_email.split(','))
-                admins = self.get_administrator(node)
-
-                l_emails.extend(auth_tool.getUsersEmails(admins))
                 node = node.getParentNode()
         return l_emails
 

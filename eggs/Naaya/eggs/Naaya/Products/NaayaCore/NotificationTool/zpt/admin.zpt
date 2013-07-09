@@ -165,7 +165,10 @@
         </div>
         <div class="field-inline" id="subscribe_to_id">
             <label for="notif_type" i18n:translate="">Subscribe to</label>
-            <select name="notif_type" id="notif_type">
+            <select name="notif_type" id="subscribe_me-notif_type">
+                <option value="administrative"
+                        tal:condition="here/checkPermissionPublishObjects"
+                        i18n:translate="">Administrative notifications (uploaded objects)</option>
                 <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
                 <option value="daily" tal:condition="python:'daily' in available_subscriptions" i18n:translate="">Daily digest</option>
                 <option value="weekly" tal:condition="python:'weekly' in available_subscriptions" i18n:translate="">Weekly digest</option>

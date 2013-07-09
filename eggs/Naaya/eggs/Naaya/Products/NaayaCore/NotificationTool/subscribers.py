@@ -5,6 +5,7 @@ from naaya.core.zope2util import path_in_site
 
 import constants
 import utils
+from interfaces import ISubscriptionContainer
 
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
@@ -38,6 +39,7 @@ def handle_object_approved(event):
     portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
     notification_tool = portal.getNotificationTool()
+    notification_tool.notify_administrative(ob, contributor)
     notification_tool.notify_instant(ob, contributor)
 
     action_logger = portal.getActionLogger()
@@ -59,6 +61,8 @@ def handle_object_add(event):
 
     portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
+    notification_tool = portal.getNotificationTool()
+    notification_tool.notify_administrative(ob, contributor)
 
     if ob.approved:
         #Create log entry
@@ -115,6 +119,25 @@ def handle_zip_import(event):
     send_notifications_for_event(event, subscriber_data_default,
                                  zip_email_template)
 
+
+def change_user_roles(event):
+    """Update subscriptions when a user's roles were updated:
+       If he now gets the Administrator role, he should be subscribed
+       to administrative notifications. If he loses the role, his subscription
+       should be revoked"""
+
+    notif_tool = event.context.getNotificationTool()
+    portal = event.context.getSite()
+    if 'Administrator' in event.assigned:
+        if not utils.match_account_subscription(ISubscriptionContainer(event.context),
+                                    event.user_id, 'administrative', 'en', []):
+            notif_tool.add_account_subscription(event.user_id,
+                path_in_site(event.context), 'administrative', 'en', [])
+    if 'Administrator' in event.unassigned:
+        if utils.match_account_subscription(ISubscriptionContainer(event.context),
+                                    event.user_id, 'administrative', 'en', []):
+            notif_tool.remove_account_subscription(event.user_id,
+                path_in_site(event.context), 'administrative', 'en', [])
 
 def send_notifications_for_event(event, subscriber_data_default, template):
     """Send notifications to site maintainers and subscribers. Create event
