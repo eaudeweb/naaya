@@ -1,5 +1,6 @@
 1.4.2 (unreleased)
 -------------------
+* links to eionet user profiles from folder listing [dumitval]
 
 1.4.1 (2013-07-01)
 -------------------
