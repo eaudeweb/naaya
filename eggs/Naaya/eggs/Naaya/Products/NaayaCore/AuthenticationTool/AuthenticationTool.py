@@ -1074,6 +1074,25 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return u''
 
+    security.declarePublic('source_name_from_userid')
+    def source_name_from_userid(self, userid):
+        """
+        Given a userid, return the source name (local, EIONET, or...)
+        """
+        if userid is None:
+            return u''
+
+        if userid in self.user_names():
+            return 'Local'
+
+        for source in self.getSources():
+            source_acl = source.getUserFolder()
+            name = source.getUserFullName(userid, source_acl)
+            if name is not None:
+                return getattr(source, 'title', u'')
+
+        return u''
+
     security.declarePrivate('get_current_userid')
     def get_current_userid(self):
         """

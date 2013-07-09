@@ -1,16 +1,30 @@
 <metal:block define-macro="contributor_tr">
-<tr tal:condition="python: here.display_contributor or here.checkPermissionEditObjects()">
+<tr tal:define="contributor here/contributor;
+                submitter_name here/submitter_info/name|nothing;
+                submitter_email here/submitter_info/email|nothing;
+                auth_tool here/getAuthenticationTool;
+                username python: submitter_name or auth_tool.name_from_userid(contributor);
+                user_quoted python:here.utUrlEncode(contributor);
+                source_title python: auth_tool.source_name_from_userid(contributor);"
+    tal:condition="python: here.display_contributor or here.checkPermissionEditObjects()">
     <th i18n:translate="">Contributor</th>
-    <td tal:define="submitter_info here/submitter_info|nothing">
-        <tal:block condition="not:submitter_info"
-                   content="here/contributor" />
-        <tal:block condition="submitter_info">
-            <tal:block content="submitter_info/name" />
-            <i tal:condition="here/checkPermissionPublishObjects">
-                (<a tal:attributes="href string:mailto:${submitter_info/email}"
-                   tal:content="submitter_info/email"></a>)
-            </i>
+    <td>
+        <tal:block condition="python:source_title == 'EIONET'" >
+          <a rel="external"
+          tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+          tal:content="contributor"/>
         </tal:block>
+        <tal:block condition="python:source_title == 'Local' and
+                              here.checkPermissionPublishObjects()" >
+          <a rel="external"
+          tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
+          tal:content="contributor"/>
+        </tal:block>
+        <tal:block condition="python:source_title not in ['Local', 'EIONET'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+          content="contributor" />
+        (<tal:block content="username" /><tal:block condition="python:submitter_email and here.checkPermissionPublishObjects()">
+          , <a tal:attributes="href string:mailto:${submitter_email}"
+                   tal:content="submitter_email" /></tal:block>)
     </td>
 </tr>
 </metal:block>
