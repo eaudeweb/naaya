@@ -1,5 +1,6 @@
 3.2.40 (unreleased)
 -------------------
+* links to eionet user profiles from user administration [dumitval]
 * subscribe to notifications by content type [dumitval]
 
 3.2.39 (2013-05-24)
