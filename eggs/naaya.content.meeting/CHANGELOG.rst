@@ -1,4 +1,7 @@
-1.2.40 (unreleased)
+1.2.41 (unreleased)
+-------------------
+
+1.2.40 (2013-07-10)
 -------------------
 * link from meeting index to contributor's user profile [dumitval]
 * Javascript fix in meeting edit [dumitval]
