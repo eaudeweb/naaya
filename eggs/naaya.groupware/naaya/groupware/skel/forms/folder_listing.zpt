@@ -26,6 +26,45 @@
 	</tal:block>
 	<tal:block replace="structure python:'<' +'body>'"></tal:block>
 </tal:block>
+<link href="++resource++naaya.photoarchive/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox.pack.js"></script>
+<link href="++resource++naaya.photoarchive/jquery.fancybox-thumbs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox-thumbs.js"></script>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+    $('.thumbnail-layout').each(function(){
+        var photo_url = $(this).find('a.fancybox-thumb').attr('href');
+        $(this).find('a.fancybox-thumb').attr('href', photo_url);
+    });
+		$(".fancybox-thumb").fancybox({
+      beforeLoad: function() {
+          var el, id = $(this.element).data('title-id');
+
+          if (id) {
+              el = $('#' + id);
+          
+              if (el.length) {
+                  this.title = el.html();
+              }
+          }
+      },
+      type: 'image',
+      prevEffect: 'none',
+      nextEffect: 'none',
+      helpers: {
+        title: {
+          type: 'outside'
+        },
+        thumbs: {
+          width: 50,
+          height: 50
+        }
+      }
+    });
+	});
+</script>
 <script type="text/javascript" tal:content="structure string:var folder_url = '${here/absolute_url}';"></script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -291,9 +330,10 @@ function submit_form_action(action){
 									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
 					<td>
-						<img style="max-width:20px; max-height:20px"
-							tal:condition="user_photo_url"
-							tal:attributes="src user_photo_url" />
+						<a class="fancybox-thumb" tal:condition="user_photo_url" tal:attributes="href user_photo_url">
+							<img style="max-width:20px; max-height:20px"
+								tal:attributes="src user_photo_url" />
+						</a>
 					</td>
 					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
@@ -386,9 +426,10 @@ function submit_form_action(action){
 									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
 					<td>
-						<img style="max-width:20px; max-height:20px"
-							tal:condition="user_photo_url"
-							tal:attributes="src user_photo_url" />
+						<a class="fancybox-thumb" tal:condition="user_photo_url" tal:attributes="href user_photo_url">
+							<img style="max-width:20px; max-height:20px"
+								tal:attributes="src user_photo_url" />
+						</a>
 					</td>
 					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
