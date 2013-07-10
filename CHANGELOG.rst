@@ -1,5 +1,6 @@
 1.2.40 (unreleased)
 -------------------
+* link from meeting index to contributor's user profile [dumitval]
 * Javascript fix in meeting edit [dumitval]
 
 1.2.39 (2013-05-14)
