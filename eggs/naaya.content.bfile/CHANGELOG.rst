@@ -1,4 +1,7 @@
-1.3.12 (unreleased)
+1.3.13 (unreleased)
+--------------------
+
+1.3.12 (2013-07-10)
 --------------------
 * link to the contributor profile from the index page [dumitval]
 
