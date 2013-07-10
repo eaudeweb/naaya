@@ -1,3 +1,25 @@
+<metal:block define-macro="version_contributor"
+    tal:define="contributor version/contributor;
+                auth_tool here/getAuthenticationTool;
+                username python: auth_tool.name_from_userid(contributor) or contributor;
+                user_quoted python:here.utUrlEncode(contributor);
+                source_title python: auth_tool.source_name_from_userid(contributor);">
+      <tal:block condition="python:source_title == 'EIONET'" >
+        <a rel="external"
+        tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+        tal:content="username"/>
+      </tal:block>
+      <tal:block condition="python:source_title == 'Local' and
+                            here.checkPermissionPublishObjects()" >
+        <a rel="external"
+        tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
+        tal:content="username"/>
+      </tal:block>
+      <tal:block condition="python:source_title not in ['Local', 'EIONET'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+        content="username" />
+
+</metal:block>
+
 <metal:block define-macro="contributor_tr">
 <tr tal:define="contributor here/contributor;
                 submitter_name here/submitter_info/name|nothing;
