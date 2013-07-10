@@ -1,5 +1,6 @@
 1.4.3 (unreleased)
 -------------------
+* identify user source after lowering case [dumitval]
 
 1.4.2 (2013-07-10)
 -------------------
