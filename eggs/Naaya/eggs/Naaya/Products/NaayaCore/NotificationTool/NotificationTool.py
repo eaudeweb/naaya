@@ -316,12 +316,14 @@ class NotificationTool(Folder):
         """
         notif_logger.info('Administrative notifications on %r', ofs_path(ob))
 
-        subscribers_data = utils.get_subscribers_data(self, ob, **{
-            'person': user_id,
-            'ob_edited': ob_edited,
-            'approved': ob.approved,
-            'container_basket': '%s/basketofapprovals_html' % ob.aq_parent.absolute_url(),
-        })
+        subscribers_data = utils.get_subscribers_data(self, ob,
+                notif_type='administrative',
+                **{
+                    'person': user_id,
+                    'ob_edited': ob_edited,
+                    'approved': ob.approved,
+                    'container_basket': '%s/basketofapprovals_html' % ob.aq_parent.absolute_url(),
+                })
 
         template = self._get_template('administrative')
         self._send_notifications(subscribers_data, template)
@@ -683,7 +685,7 @@ class NotificationTool(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_add_account_subscription')
     def admin_add_account_subscription(self, REQUEST, user_id,
-                                   location, notif_type, lang, content_types):
+                                   location, notif_type, lang, content_types=[]):
         """ """
         #Even if some content types were selected (by turning off javascript)
         #they should be ignored, no filtering in administrative notifications

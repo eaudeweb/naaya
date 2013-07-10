@@ -48,9 +48,11 @@ def handle_object_approved(event):
 
 @check_skip_notifications
 def handle_object_add(event):
-    """An object has been created. Create a log entry. Notifications to
-    subscribers are only sent in object-approved handler.
-
+    """An object has been created. Create a log entry.
+    Notifications to subscribers are only sent in object-approved handler.
+    Administrative notifications are only sent if the object is not approved.
+    It it is already approved, then notifications are already sent in
+    object-approved handler.
     """
 
     if not event.schema.get('_send_notifications', True):
@@ -58,11 +60,12 @@ def handle_object_add(event):
 
     ob = event.context
     portal = ob.getSite()
-
-    portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
-    notification_tool = portal.getNotificationTool()
-    notification_tool.notify_administrative(ob, contributor)
+
+    if not ob.approved:
+        portal.notifyFolderMaintainer(ob.aq_parent, ob)
+        notification_tool = portal.getNotificationTool()
+        notification_tool.notify_administrative(ob, contributor)
 
     if ob.approved:
         #Create log entry
