@@ -1,4 +1,7 @@
-3.3.3 (unreleased)
+3.3.4 (unreleased)
+-------------------
+
+3.3.3 (2013-07-10)
 -------------------
 * Fixed duplicate sending of administrative emails [dumitval]
 
