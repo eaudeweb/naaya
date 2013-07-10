@@ -163,12 +163,12 @@
                         tal:attributes="value item/user_id" CHECKED/>
                 </td>
                 <td tal:define="uid item/user_id">
-                    <tal:block condition="python: source_title=='EIONET'"
+                    <tal:block condition="python: source_title.lower()=='eionet'"
                       define="user_quoted python:here.utUrlEncode(uid)">
                       <a rel="external" tal:content="user_quoted"
                       tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
                     </tal:block>
-                    <tal:block condition="python: source_title!='EIONET'"
+                    <tal:block condition="python: source_title.lower()!='eionet'"
                       define="user_quoted python:here.utUrlEncode(uid)"
                       content="user_quoted" />
                     <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
