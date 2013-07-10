@@ -1,4 +1,4 @@
-<tal:block i18n:translate="">If you want to unsubscribe from this notifications follow the link below:</tal:block>
+<tal:block i18n:translate="">If you want to unsubscribe from these notifications follow the link below:</tal:block>
 <tal:block define="if python:options['anonymous']">
 <tal:block condition="if"><tal:block define="email options/subscription/email;
                                             location options/subscription/location;
