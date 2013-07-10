@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.groupware',
-      version='1.4.5',
+      version='1.4.6',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
