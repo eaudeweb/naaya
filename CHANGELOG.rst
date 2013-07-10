@@ -1,5 +1,6 @@
 1.0.5 (unreleased)
 ------------------
+* link to the contributor profile from the index page [dumitval]
 * revert: opening file index page is not a view event [simiamih]
 * view/download events are triggered [simiamih]
 

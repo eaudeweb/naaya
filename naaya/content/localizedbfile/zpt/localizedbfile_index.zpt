@@ -70,10 +70,7 @@
     <th i18n:translate="">Upload date</th>
     <td tal:content="current_version/pretty_timestamp" />
 </tr>
-<tr tal:condition="here/contributor">
-    <th i18n:translate="">Contributor</th>
-    <td tal:content="python:here.getAuthenticationTool().name_from_userid(here.contributor) or here.contributor" />
-</tr>
+<metal:block use-macro="site_object_index/macros/contributor_tr" />
 <tal:block condition="here/coverage"
            content="structure python: here.prop_display_tr('coverage')" />
 <tal:block condition="here/keywords"
@@ -119,7 +116,9 @@
         <em tal:condition="version/is_current"
             i18n:translate="">(current)</em>
     </td>
-    <td tal:content="version/contributor" />
+    <td>
+      <metal:block use-macro="site_object_index/macros/version_contributor" />
+    </td>
     <td tal:content="version/pretty_timestamp" />
     <td tal:content="version/pretty_size" />
     <td>
