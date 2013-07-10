@@ -1,4 +1,7 @@
-3.2.40 (unreleased)
+3.3.1 (unreleased)
+-------------------
+
+3.3.0 (2013-07-10)
 -------------------
 * #14873 email settings warnings [simiamih]
 * `update` Introduced administrative notifications [dumitval]
