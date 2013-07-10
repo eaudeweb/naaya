@@ -1,4 +1,7 @@
-1.0.5 (unreleased)
+1.0.6 (unreleased)
+------------------
+
+1.0.5 (2013-07-10)
 ------------------
 * link to the contributor profile from the index page [dumitval]
 * revert: opening file index page is not a view event [simiamih]
