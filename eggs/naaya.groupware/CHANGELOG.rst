@@ -1,4 +1,7 @@
-1.4.4 (unreleased)
+1.4.5 (unreleased)
+-------------------
+
+1.4.4 (2013-07-10)
 -------------------
 * added user pictures in folder listing (if available) [dumitval]
 * deleted getMaintainersEmails override [dumitval]
