@@ -196,7 +196,7 @@ function submit_form_action(action){
                          src="misc_/Naaya/sort_desc.gif" />
                 </th>
 
-                <th class="title-column">
+                <th class="title-column" colspan="2">
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=contributor"
                         tal:condition="python: skey != 'contributor' or rkey"
                         i18n:translate="">Owner</a>
@@ -285,10 +285,17 @@ function submit_form_action(action){
 						</tal:block>
 					</td>
 
-					<td tal:define="contributor folder/contributor;
+					<tal:block define="contributor folder/contributor;
 									user_quoted python:here.utUrlEncode(contributor);
 									username python: auth_tool.name_from_userid(contributor) or contributor;
+									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
+					<td>
+						<img style="max-width:20px; max-height:20px"
+							tal:condition="user_photo_url"
+							tal:attributes="src user_photo_url" />
+					</td>
+					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
 							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
@@ -299,6 +306,7 @@ function submit_form_action(action){
 						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
 							content="username" />
 					</td>
+					</tal:block>
 					<td tal:define="modif folder_info/view/get_modification_date"
 						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
 					</td>
@@ -372,10 +380,17 @@ function submit_form_action(action){
 						</tal:block>
 					</td>
 
-					<td tal:define="contributor object/contributor;
+					<tal:block define="contributor object/contributor;
 									user_quoted python:here.utUrlEncode(contributor);
 									username python: auth_tool.name_from_userid(contributor) or contributor;
+									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
+					<td>
+						<img style="max-width:20px; max-height:20px"
+							tal:condition="user_photo_url"
+							tal:attributes="src user_photo_url" />
+					</td>
+					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
 							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
@@ -386,6 +401,7 @@ function submit_form_action(action){
 						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
 							content="username" />
 					</td>
+					</tal:block>
 					<td tal:define="modif object_info/view/get_modification_date"
 						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
 					</td>
