@@ -101,7 +101,8 @@
             </td>
         </tr>
         <tal:block condition="here/checkPermissionPublishObjects" content="structure python: here.prop_display_tr('releasedate')" />
-        <tal:block condition="here/checkPermissionPublishObjects" content="structure python: here.prop_display_tr('contributor')" />
+        <metal:block tal:condition="here/checkPermissionPublishObjects"
+            use-macro="site_object_index/macros/contributor_tr" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
 		<tal:block condition="here/is_geo_enabled">
 			<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);

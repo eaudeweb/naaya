@@ -1,5 +1,6 @@
 3.3.2 (unreleased)
 -------------------
+* link from event index to contributor's user profile [dumitval]
 
 3.3.1 (2013-07-10)
 -------------------
