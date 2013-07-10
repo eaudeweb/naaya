@@ -1,5 +1,6 @@
 1.3.12 (unreleased)
 --------------------
+* link to the contributor profile from the index page [dumitval]
 
 1.3.11 (2013-05-17)
 --------------------
