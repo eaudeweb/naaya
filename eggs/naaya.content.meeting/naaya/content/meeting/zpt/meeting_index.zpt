@@ -35,10 +35,10 @@
     }
     </script>
         <div id="center_content">
-        <metal:block define-slot="page-middle">
+        <metal:block define-slot="page-middle"
+          tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
             <metal:block define-macro="folder-title">
-            <h1 tal:define="path python:here.absolute_url(1);
-                            site_object_index python:here.getFormsTool()['site_object_index']">
+            <h1 tal:define="path python:here.absolute_url(1)">
                 <a class="b_download" tal:condition="here/showBulkDownloadButton|nothing"
                         tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
                     <span i18n:translate="">Bulk download</span>
@@ -102,7 +102,7 @@
                 </td>
             </tr>
             <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-            <tal:block content="structure python: here.prop_display_tr('contributor')" />
+            <metal:block use-macro="site_object_index/macros/contributor_tr" />
             <tal:block content="structure python: here.prop_display_tr('coverage')" />
 			<tal:block condition="here/is_geo_enabled">
 				<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
