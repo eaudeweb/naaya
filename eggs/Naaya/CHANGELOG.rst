@@ -1,4 +1,7 @@
-3.3.1 (unreleased)
+3.3.2 (unreleased)
+-------------------
+
+3.3.1 (2013-07-10)
 -------------------
 * identify user source after lowering case [dumitval]
 
