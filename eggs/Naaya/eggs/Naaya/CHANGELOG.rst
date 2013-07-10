@@ -1,4 +1,7 @@
-3.3.2 (unreleased)
+3.3.3 (unreleased)
+-------------------
+
+3.3.2 (2013-07-10)
 -------------------
 * link from event index to contributor's user profile [dumitval]
 
