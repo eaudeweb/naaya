@@ -10,5 +10,6 @@ setup(name='naaya.content.bestpractice',
       zip_safe=False,
       install_requires=[
           'naaya.content.bfile',
+          'Naaya >= 3.3.0',
       ]
 )
