@@ -1,5 +1,6 @@
 1.4.5 (unreleased)
 -------------------
+* linked icon-sized photo to the main photo using lightbox [dumitval]
 
 1.4.4 (2013-07-10)
 -------------------
