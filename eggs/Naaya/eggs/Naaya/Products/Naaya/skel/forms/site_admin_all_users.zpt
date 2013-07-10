@@ -75,17 +75,17 @@
 					<td tal:condition="python: index == 0"
 						tal:attributes="rowspan python: user_nrows">
 						<strong>
-							<tal:block condition="python:user_source_title == 'Local'">
+							<tal:block condition="python:user_source_title.lower() == 'local'">
 							<a tal:define="user_quoted python:here.utUrlEncode(user_id)"
 								tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
 								tal:content="user_id">username</a>
 							</tal:block>
-							<tal:block condition="python: user_source_title == 'EIONET'">
+							<tal:block condition="python: user_source_title.lower() == 'eionet'">
 							<a rel="external" tal:define="user_quoted python:here.utUrlEncode(user_id)"
 								tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 								tal:content="user_id">username</a>
 							</tal:block>
-							<tal:block condition="python: user_source_title not in ['Local', 'EIONET']" tal:content="user_id"></tal:block>
+							<tal:block condition="python: user_source_title.lower() not in ['local', 'eionet']" tal:content="user_id"></tal:block>
 						</strong>
 						<tal:block define="user_photo_url python: user_tool.get_user_photo_url(user_id)">
 							<a tal:condition="user_photo_url"
