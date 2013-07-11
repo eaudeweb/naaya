@@ -1,4 +1,7 @@
-3.3.4 (unreleased)
+3.3.5 (unreleased)
+-------------------
+
+3.3.4 (2013-07-10)
 -------------------
 * added possibility to edit existing subscriptions [dumitval]
 
