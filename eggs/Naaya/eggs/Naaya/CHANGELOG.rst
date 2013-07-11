@@ -1,5 +1,6 @@
 3.3.5 (unreleased)
 -------------------
+* Subscriptions editing improvements [dumitval]
 
 3.3.4 (2013-07-10)
 -------------------

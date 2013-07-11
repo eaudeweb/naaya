@@ -22,6 +22,10 @@
           $('#content_types').hide();
           $('#subscribe_me-all_content_types').prop('checked', 'checked');
           $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+          $('#administrative_help').show()
+      }
+      else if ($('#subscribe_me-all_content_types').is(':checked')){
+          $('#all_content_types_help').show()
       }
 
       $('#subscribe_me-notif_type').change(function(){
@@ -32,10 +36,14 @@
                   $('#subscribe_me-all_content_types').prop('checked', 'checked');
               }
               $('#subscribe_me-all_content_types').prop('disabled', 'disabled');
+              $('#all_content_types_help').hide()
+              $('#administrative_help').show()
           } else {
               if ($('#subscribe_me-all_content_types').is(':disabled')){
                   $('#subscribe_me-all_content_types').removeProp('disabled');
               }
+              $('#administrative_help').hide()
+              $('#all_content_types_help').show()
           }
       });
       $('#subscribe_me-all_content_types').change(function(){
@@ -101,7 +109,9 @@
 <div class="field-inline" id="all_content_types">
     <label for="subscribe_me-all_content_types" i18n:translate="">All content types</label>
     <input id="subscribe_me-all_content_types" type="checkbox"
-      tal:attributes="checked python:test(len(first_content_types)==0, 'checked', '')"/> <span id="all_content_types_help" i18n:translate="">(uncheck to select content types)</span>
+      tal:attributes="checked python:test(len(first_content_types)==0, 'checked', '')"/>
+      <span id="all_content_types_help" style="display:none" i18n:translate="">(uncheck to select content types)</span>
+      <span id="administrative_help" style="display:none" i18n:translate="">(content type filtering is disabled for administrative notifications)</span>
 </div>
 
 <div class="field" id="content_types">
@@ -180,10 +190,14 @@
         <td tal:content="subscription/notif_type"/>
         <td tal:define="lang subscription/lang"
             tal:content="python:here.gl_get_language_name(lang)"/>
-        <td>
+        <td tal:condition="python:subscription['notif_type']!='administrative'">
 					<a tal:content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"
 						tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}" />
-						<tal:block i18n:translate="">(click to change)</tal:block>
+						<tal:block i18n:translate="">(click to edit)</tal:block>
+				</td>
+        <td tal:condition="python:subscription['notif_type']=='administrative'"
+					i18n:translate="">ALL
+				</td>
         <td>
             <form method="post"
                   tal:define="url here/absolute_url"
