@@ -3,11 +3,20 @@
     <title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 
-<metal:block fill-slot="body">
+<metal:block fill-slot="body"
+	tal:define="req_location request/form/location|string:;
+							req_notif_type request/form/notif_type|nothing;
+							my_subscriptions python:here.list_my_subscriptions(request);
+							location_subscription python:here.get_location_subscription(req_location, req_notif_type);
+							first_location location_subscription/location|nothing;
+							first_notif_type location_subscription/notif_type|nothing;
+							first_content_types location_subscription/content_types|python:[];">
 
 <script type="text/javascript">
     $(function() {
-      $('#content_types').hide();
+      if ($('#subscribe_me-all_content_types').is(':checked')){
+        $('#content_types').hide();
+      }
       if ($('#subscribe_me-notif_type').val() == 'administrative'){
           $('#subscribe_me-content_types option').removeProp('selected')
           $('#content_types').hide();
@@ -33,9 +42,11 @@
           if ($(this).is(':checked')){
               $('#subscribe_me-content_types option').removeProp('selected')
               $('#content_types').hide();
+              $('#all_content_types_help').show()
           }
           else{
               $('#content_types').show();
+              $('#all_content_types_help').hide()
           };
       });
     });
@@ -58,7 +69,7 @@
     <div id="subscribe_me-sitemap_tree" class="sitemap_tree"></div>
     <div style="clear: both"></div>
     <input type="text" size="50" id="subscribe_me-location" name="location"
-           tal:attributes="value request/form/location|string:"
+           tal:attributes="value req_location"
            class="subscribe_me-sitemap_tree_target" />
 </div>
 <div class="field-inline">
@@ -66,25 +77,31 @@
     <select name="notif_type" id="subscribe_me-notif_type">
         <option value="administrative"
                 tal:condition="here/checkPermissionPublishObjects"
-                i18n:translate="">Administrative notifications (uploaded objects)</option>
+                i18n:translate=""
+                tal:attributes="selected python:test(first_notif_type=='administrative', 'selected', '')">Administrative notifications (uploaded objects)</option>
         <option value="instant"
                 tal:condition="python:'instant' in can_subscribe_to"
-                i18n:translate="">Instant notifications</option>
+                i18n:translate=""
+                tal:attributes="selected python:test(first_notif_type=='instant', 'selected', '')">Instant notifications</option>
         <option value="daily"
                 tal:condition="python:'daily' in can_subscribe_to"
-                i18n:translate="">Daily digest</option>
+                i18n:translate=""
+                tal:attributes="selected python:test(first_notif_type=='daily', 'selected', '')">Daily digest</option>
         <option value="weekly"
                 tal:condition="python:'weekly' in can_subscribe_to"
-                i18n:translate="">Weekly digest</option>
+                i18n:translate=""
+                tal:attributes="selected python:test(first_notif_type=='weekly', 'selected', '')">Weekly digest</option>
         <option value="monthly"
                 tal:condition="python:'monthly' in can_subscribe_to"
-                i18n:translate="">Monthly digest</option>
+                i18n:translate=""
+                tal:attributes="selected python:test(first_notif_type=='monthly', 'selected', '')">Monthly digest</option>
     </select>
 </div>
 
 <div class="field-inline" id="all_content_types">
     <label for="subscribe_me-all_content_types" i18n:translate="">All content types</label>
-    <input id="subscribe_me-all_content_types" type="checkbox" checked="checked"/>
+    <input id="subscribe_me-all_content_types" type="checkbox"
+      tal:attributes="checked python:test(len(first_content_types)==0, 'checked', '')"/> <span id="all_content_types_help" i18n:translate="">(uncheck to select content types)</span>
 </div>
 
 <div class="field" id="content_types">
@@ -94,8 +111,10 @@
             tal:define="gettext python:here.getPortalI18n().get_translation;
                         meta_types python:here.get_meta_types(1)">
       <tal:block repeat="item meta_types">
-          <option tal:define="item_label python:here.get_meta_type_label(item);"
-            tal:attributes="value item" tal:content="item_label" />
+          <option tal:content="item_label"
+            tal:define="item_label python:here.get_meta_type_label(item);"
+            tal:attributes="value item;
+                            selected python:test(item in first_content_types, 'selected', '')" />
       </tal:block>
     </select>
 </div>
@@ -133,8 +152,7 @@
 </tal:block>
 
 
-<tal:block define="my_subscriptions python:here.list_my_subscriptions(request)"
-           condition="my_subscriptions">
+<tal:block condition="my_subscriptions">
 
 <h2 i18n:translate="">Your subscriptions</h2>
 
@@ -143,6 +161,7 @@
     <th i18n:translate="">Location</th>
     <th i18n:translate="">Notification type</th>
     <th i18n:translate="">Language</th>
+    <th i18n:translate="">Content types</th>
     <th>&nbsp;</th>
 </thead>
 <tbody>
@@ -161,6 +180,10 @@
         <td tal:content="subscription/notif_type"/>
         <td tal:define="lang subscription/lang"
             tal:content="python:here.gl_get_language_name(lang)"/>
+        <td>
+					<a tal:content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"
+						tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}" />
+						<tal:block i18n:translate="">(click to change)</tal:block>
         <td>
             <form method="post"
                   tal:define="url here/absolute_url"

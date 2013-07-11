@@ -308,7 +308,7 @@
                     <span tal:content="python:here.gl_get_language_name(lang)"/>
                 </td>
                 <td tal:define="content_types sub_data/content_types;
-                                content_types python:', '.join(content_types) or 'ALL'">
+                                content_types python:', '.join(content_types).replace('Naaya ', '') or 'ALL'">
                     <span tal:content="content_types"/>
                 </td>
                 <td>

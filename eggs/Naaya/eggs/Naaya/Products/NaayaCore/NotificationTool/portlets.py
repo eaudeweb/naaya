@@ -18,7 +18,10 @@ class NotificationsPortlet(object):
 
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
+        location = path_in_site(context)
+        if context == notif_tool:
+            location = ''
         return tmpl(macro=macro, notif_tool=notif_tool,
-                    location=path_in_site(context))
+                    location=location)
 
     template = NaayaPageTemplateFile('zpt/portlet', globals(), 'naaya.core.notifications.notifications_portlet')
