@@ -144,14 +144,16 @@ def divert_notifications(testing, save_to=[]):
     else:
         send_notification = _send_notification
 
-def match_account_subscription(subs, user_id, notif_type, lang, content_types=[]):
+def match_account_subscription(subs, user_id, notif_type, lang, content_types=None):
     for n, subscription in subs.list_with_keys():
         if not isinstance(subscription, AccountSubscription):
             continue
         if (subscription.user_id == user_id and
             subscription.notif_type == notif_type and
             subscription.lang == lang and
-            getattr(subscription, 'content_types', []) == content_types):
+                (content_types is None or
+                    getattr(subscription, 'content_types', None) == content_types)
+            ):
             return n
 
 def get_subscribers_data(self, ob, notif_type='instant', **kw):

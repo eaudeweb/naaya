@@ -130,13 +130,8 @@ class NotificationTool(Folder):
         except:
             raise i18n_exception(ValueError, 'Cannot subscribe to this folder')
 
-        if not kw.get('anonymous', False):
-            n = utils.match_account_subscription(subscription_container,
-                                           kw['user_id'], kw['notif_type'],
-                                           kw['lang'], kw.get('content_types', []))
-            if n is not None:
-                raise i18n_exception(ValueError, 'Subscription already exists')
-        else: #Check if subscription exists for this anonymous subscriber
+        if kw.get('anonymous', False):
+            #Check if subscription exists for this anonymous subscriber
             if not is_valid_email(kw.get('email', '')):
                 raise i18n_exception(ValueError,
                             'Your e-mail address does not appear to be valid.')
@@ -233,7 +228,14 @@ class NotificationTool(Folder):
                                 lang, content_types=[]):
         """ Subscribe the user `user_id` """
         self._validate_subscription(user_id=user_id, location=location,
-                                    notif_type=notif_type, lang=lang)
+                                    notif_type=notif_type, lang=lang,
+                                    content_types=content_types)
+
+        try:
+            self.remove_account_subscription(user_id, location, notif_type,
+                                            lang)
+        except ValueError:
+            pass
 
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
@@ -262,7 +264,7 @@ class NotificationTool(Folder):
 
     security.declarePrivate('remove_account_subscription')
     def remove_account_subscription(self, user_id, location, notif_type, lang,
-                                    content_types=[]):
+                                    content_types=None):
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         n = utils.match_account_subscription(subscription_container,
@@ -546,6 +548,20 @@ class NotificationTool(Folder):
 
         return subscriptions
 
+    security.declareProtected(view, 'my_first_subscription')
+    def get_location_subscription(self, location, notif_type=None):
+        """
+        Returns the first of the authenticated user's subscriptions in location
+
+        """
+        for subscription in self.list_my_subscriptions(self.REQUEST):
+            if subscription['location'] == location:
+                if notif_type:
+                    if subscription['notif_type'] == notif_type:
+                        return subscription
+                else:
+                        return subscription
+
     security.declareProtected(view, 'subscribe_me')
     def subscribe_me(self, REQUEST, location, notif_type,
         lang=None, content_types=[]):
@@ -554,6 +570,8 @@ class NotificationTool(Folder):
         #they should be ignored, no filtering in administrative notifications
         if notif_type == 'administrative':
             content_types = []
+        if isinstance(content_types, basestring):
+            content_types = [content_types]
         if lang is None:
             lang = self.gl_get_selected_language()
             REQUEST.form['lang'] = lang

@@ -133,14 +133,14 @@ def change_user_roles(event):
     portal = event.context.getSite()
     if 'Administrator' in event.assigned:
         if not utils.match_account_subscription(ISubscriptionContainer(event.context),
-                                    event.user_id, 'administrative', 'en', []):
+                                    event.user_id, 'administrative', 'en'):
             notif_tool.add_account_subscription(event.user_id,
                 path_in_site(event.context), 'administrative', 'en', [])
     if 'Administrator' in event.unassigned:
         if utils.match_account_subscription(ISubscriptionContainer(event.context),
-                                    event.user_id, 'administrative', 'en', []):
+                                    event.user_id, 'administrative', 'en'):
             notif_tool.remove_account_subscription(event.user_id,
-                path_in_site(event.context), 'administrative', 'en', [])
+                path_in_site(event.context), 'administrative', 'en')
 
 def send_notifications_for_event(event, subscriber_data_default, template):
     """Send notifications to site maintainers and subscribers. Create event
