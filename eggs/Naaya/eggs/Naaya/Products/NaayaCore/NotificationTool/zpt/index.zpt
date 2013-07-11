@@ -71,7 +71,8 @@
       tal:attributes="action string:${here/absolute_url}/subscribe_me"
       name="subscribe_me" action="subscribe_me" method="post">
 <fieldset>
-<legend i18n:translate="">New subscription</legend>
+<legend tal:condition="not:req_notif_type" i18n:translate="">New subscription</legend>
+<legend tal:condition="req_notif_type" i18n:translate="">Edit subscription</legend>
 <div class="field">
     <label for="subscribe_me-location" i18n:translate="">Location</label>
     <div id="subscribe_me-sitemap_tree" class="sitemap_tree"></div>
@@ -191,9 +192,9 @@
         <td tal:define="lang subscription/lang"
             tal:content="python:here.gl_get_language_name(lang)"/>
         <td tal:condition="python:subscription['notif_type']!='administrative'">
-					<a tal:content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"
-						tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}" />
-						<tal:block i18n:translate="">(click to edit)</tal:block>
+					<tal:block content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"/>
+					(<a i18n:translate=""
+						tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}">click to edit</a>)
 				</td>
         <td tal:condition="python:subscription['notif_type']=='administrative'"
 					i18n:translate="">ALL

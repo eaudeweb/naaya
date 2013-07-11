@@ -1,5 +1,6 @@
 3.3.6 (unreleased)
 -------------------
+* my_subscriptions_html: change legend (edit/new) accordingly [dumitval]
 
 3.3.5 (2013-07-11)
 -------------------
