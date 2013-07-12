@@ -111,10 +111,10 @@
             <permission name="Take ownership" />
         </role>
 
-                <role name="Reviewer">
-                        <permission name="View" />
-                        <permission name="Naaya - Review TalkBack Consultation" />
-                </role>
+        <role name="Reviewer">
+            <permission name="View" />
+            <permission name="Naaya - Review TalkBack Consultation" />
+        </role>
 
         <role name="Owner">
             <permission name="View" />
