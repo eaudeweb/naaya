@@ -15,9 +15,10 @@
 <metal:block tal:define="
     role options/role;
     has_permission python:lambda zp: options['zope_perm_for_role'][zp];">
-    
+
     <p>If you have trouble setting up permission, you can always choose to
     <a class="tipsy-title"
+       onclick="return confirm('This will reset all permissions to defaults for this role. Are you sure you want to continue?')"
 	tal:attributes="title string:Reset permission settings to defaults, for ${role} role;
 		        href string:${site_url}/admin_resetrole_html?role=${role}">start over</a>.</p>
 
