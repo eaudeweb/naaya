@@ -35,3 +35,8 @@ class SkelTestCase(NaayaTestCase):
             for permission in role.permissions:
                 self.assertNotEqual(permission.name, None)
                 self.assertNotEqual(permission.name, '')
+            if role == 'Authenticated':
+                expected = ["Naaya - Add comments for content",
+                            "Naaya - Bulk download", "Naaya - Skip Captcha"]
+                self.assertEqual(set(map(role.permissions, lambda x: x.name)),
+                                 set(expected))

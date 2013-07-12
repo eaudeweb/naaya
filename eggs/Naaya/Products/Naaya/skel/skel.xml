@@ -210,6 +210,8 @@
 
 		<role name="Authenticated">
 			<permission name="Naaya - Add comments for content" />
+			<permission name="Naaya - Bulk download" />
+			<permission name="Naaya - Skip Captcha" />
 		</role>
 
 		<role name="Contributor">

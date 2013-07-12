@@ -11,6 +11,7 @@ from urlparse import urlparse
 import logging
 import time
 import os
+import sys
 import operator
 
 import zLOG
@@ -2400,9 +2401,38 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             p.setRoles(ty(perm_roles))
 
         if REQUEST is not None:
-            self.setSessionInfoTrans("Role edited")
-            REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
-                                      self.absolute_url())
+            self.setSessionInfoTrans("Your changes have been saved.")
+            REQUEST.RESPONSE.redirect("%s/admin_editrole_html?role=%s" %
+                                  (self.absolute_url(), role))
+
+    security.declareProtected(change_permissions, 'admin_resetrole_html')
+    def admin_resetrole_html(self, role, REQUEST):
+        """ resets permissions to defaults for `role` """
+        # reload skel, make sure we use child class
+        product_path = os.path.dirname(sys.modules[self.__module__].__file__)
+        skel_handler = self.get_skel_handler(product_path)
+        role_in_skel = False
+        sk_permissions = []
+        for sk_role in skel_handler.root.security.roles:
+            if sk_role.name == role:
+                role_in_skel = True
+                sk_permissions = map(lambda x: x.name, sk_role.permissions)
+        if not role_in_skel:
+            self.setSessionErrorTrans(("This is a custom role - we don't have "
+                                       "any defaults to reset to."))
+        else:
+            ny_permissions = self.get_naaya_permissions_in_site().values()
+            for perm in ny_permissions:
+                zope_perm = perm['zope_permission']
+                p = Permission(zope_perm, (), self)
+                if role in p.getRoles():
+                    permission_del_role(self, zope_perm, role)
+            for perm in sk_permissions:
+                permission_add_role(self, perm, role)
+            self.setSessionInfoTrans("Settings have been reset to defaults")
+
+        REQUEST.RESPONSE.redirect("%s/admin_editrole_html?role=%s" %
+                                  (self.absolute_url(), role))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
     def admin_addroles(self, names=[], roles=[], location='', send_mail='',
