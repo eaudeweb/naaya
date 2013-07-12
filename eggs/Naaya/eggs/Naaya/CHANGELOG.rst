@@ -1,4 +1,7 @@
-3.3.6 (unreleased)
+3.3.7 (unreleased)
+-------------------
+
+3.3.6 (2013-07-12)
 -------------------
 * feature: #14233 - reset default permissions for a role [simiamih]
 * my_subscriptions_html: change legend (edit/new) accordingly [dumitval]
