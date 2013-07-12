@@ -2418,7 +2418,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 role_in_skel = True
                 sk_permissions = map(lambda x: x.name, sk_role.permissions)
         if not role_in_skel:
-            self.setSessionErrorTrans(("This is a custom role - we don't have "
+            self.setSessionErrorsTrans(("This is a custom role - we don't have "
                                        "any defaults to reset to."))
         else:
             ny_permissions = self.get_naaya_permissions_in_site().values()
