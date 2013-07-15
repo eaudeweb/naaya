@@ -322,9 +322,9 @@ def reports_rdf():
 
     for entry in export:
         current_id = entry['report_id']
-        current_uri = "http://projects.eionet.europa.eu/seris-revision/seris/reports/%s" % current_id
+        current_uri = flask.url_for('views.report_view', report_id = current_id, _external = True)
+
         node = URIRef(current_uri)
-        report = Namespace(current_uri)
 
         g.add((node, RDF.type, seris.SERISReport))
         g.add((node, DCTERMS.identifier, Literal(current_id)))
@@ -353,13 +353,13 @@ def reports_rdf():
         if entry['details_original_name']:
             g.add((node, DC.title, Literal(entry['details_original_name'])))
 
-        for lang in entry['details_original_language']:
-            g.add((node, DC.language, Literal(lang)))
+        for language in entry['details_original_language']:
+            g.add((node, DC.language, Literal(language)))
 
         lang_id = 0
         lang_field = 'details_translated_in_%s' % lang_id
         while lang_field in entry.keys():
-            item = BNode()
+            idtem = BNode()
             g.add((node, DCTERMS.language, item))
             g.add((item, RDF.type, DCTERMS.LinguisticSystem))
             g.add((
@@ -367,8 +367,9 @@ def reports_rdf():
                 RDFS.label,
                 Literal('Language in which the report was translated')))
             g.add((item, DCTERMS.subject, Literal(entry[lang_field])))
-            lang_id +=1
+            lang_id += 1
             lang_field = 'details_translated_in_%s' % lang_id
+
 
         if entry['details_english_name']:
             g.add((
@@ -599,7 +600,6 @@ def reports_rdf():
     g.bind("foaf", FOAF)
     g.bind("nao", nao)
     g.bind("theme", theme)
-    g.bind("report", report)
     g.bind("bibtex", bibtex)
     g.bind("skos", SKOS)
     g.bind("rdfs", RDFS)
