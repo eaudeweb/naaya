@@ -82,19 +82,17 @@
     <security>
 
         <role name="Viewer">
-            <permission name="Naaya - Add comments for content" />
             <permission name="View" />
         </role>
 
         <role name="Authenticated">
             <permission name="Naaya - Add comments for content" />
-            <permission name="Naaya - Bulk download" />
+            <permission name="Naaya - Zip export" />
             <permission name="Naaya - Skip Captcha" />
         </role>
 
         <role name="Contributor">
-            <permission name="Naaya - Access administrative area" />
-            <permission name="Naaya - Add Naaya Consultation objects" />
+            <permission name="View" />
             <permission name="Naaya - Add Naaya Document objects" />
             <permission name="Naaya - Add Naaya Event objects" />
             <permission name="Naaya - Add Naaya File objects" />
@@ -106,13 +104,13 @@
             <permission name="Naaya - Add Naaya Simple Consultation objects" />
             <permission name="Naaya - Add Naaya Story objects" />
             <permission name="Naaya - Add Naaya URL objects" />
-            <permission name="Naaya - Skip Captcha" />
             <permission name="Naaya - Skip approval" />
             <permission name="Take ownership" />
         </role>
 
         <role name="Reviewer">
             <permission name="View" />
+            <permission name="Naaya - Add comments for content" />
             <permission name="Naaya - Review TalkBack Consultation" />
         </role>
 

@@ -1,5 +1,6 @@
 1.4.6 (unreleased)
 -------------------
+* updated default permissions [simiamih]
 
 1.4.5 (2013-07-10)
 -------------------
