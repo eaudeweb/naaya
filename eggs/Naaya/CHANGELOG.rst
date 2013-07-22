@@ -1,5 +1,6 @@
 3.3.7 (unreleased)
 -------------------
+* updated default permissions [simiamih]
 
 3.3.6 (2013-07-12)
 -------------------
