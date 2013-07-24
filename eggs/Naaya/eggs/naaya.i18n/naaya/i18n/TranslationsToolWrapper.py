@@ -41,7 +41,8 @@ class TranslationsToolWrapper(Implicit):
     security.declarePublic('__call__')
     def __call__(self, message, lang=None, add=1, default=None):
         """ use getPortalTranslations instance as gettext callable """
-        return self.gettext(message, lang, add, default)
+        return self.portal_i18n.get_translation(message, lang=lang,
+                                                add=add, default=default)
 
     ## used to be in Localizer/MessageCatalog
     # In Naaya: Session messages are translated using this

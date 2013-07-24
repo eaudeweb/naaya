@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 -------------------
+* added the possibility to pass lang to get_translation [dumitval]
 
 1.1.5 (2013-06-08)
 -------------------
