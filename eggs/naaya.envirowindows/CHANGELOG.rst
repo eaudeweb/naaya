@@ -1,5 +1,6 @@
 1.1.13 (unreleased)
 -------------------
+* updated link to jquery.js [dumitval]
 * removed unused code [simiamih]
 * typo in email_requestrole [simiamih]
 
