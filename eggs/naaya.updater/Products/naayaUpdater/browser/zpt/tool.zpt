@@ -5,7 +5,7 @@
 
 <tal:block metal:fill-slot="head">
   <title>Naaya updater</title>
-  <script type="text/javascript" src="/++resource++Products.Naaya/js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="/misc_/Naaya/jquery.js"></script>
   <script type="text/javascript" src="++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
   <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />

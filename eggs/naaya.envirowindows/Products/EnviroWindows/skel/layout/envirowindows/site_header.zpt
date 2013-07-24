@@ -24,7 +24,7 @@
 		<link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
 		<link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
 	</tal:block>
-	<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 	<script type="text/javascript">
 	//<![CDATA[
 	// required for the replacement of target="_blank"

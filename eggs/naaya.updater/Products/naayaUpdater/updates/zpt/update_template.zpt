@@ -3,8 +3,8 @@
 <tal:block content="structure here/manage_tabs"/>
 <metal:block define-slot="head">
     <link rel="stylesheet" href="/misc_/naayaUpdater/updater.css" type="text/css" media="screen" charset="utf-8" />
-    <script type="text/javascript" src="/++resource++Products.Naaya/js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="/++resource++Products.Naaya/js/jquery-ui-1.8.1.custom.min.js"></script>
+    <script type="text/javascript" src="/misc_/Naaya/jquery.js"></script>
+    <script type="text/javascript" src="/misc_/Naaya/jquery-ui.js"></script>
     <link rel="stylesheet" href="/++resource++Products.Naaya/js/css/jquery-ui.css" type="text/css" media="screen" charset="utf-8" />
 
 	<script>

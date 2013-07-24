@@ -110,15 +110,11 @@ misc_ = {
 
     # jQuery
     # Use jquery.js if version is of no importance
-    'jquery.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
-    'jquery.min.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
-    'jquery-1.7.1.min.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
-    'jquery-1.4.2.min.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
-
-    'jquery-1.3.2.min.js':ImageFile('www/js/jquery-1.3.2.min.js', globals()), # DEPRECATED
+    'jquery.js':ImageFile('www/js/jquery-1.7.2.min.js', globals()),
+    'jquery.min.js':ImageFile('www/js/jquery-1.7.2.min.js', globals()),
 
     # jQuery plugins
-    'jquery-ui.js':ImageFile('www/js/jquery-ui-1.8.1.custom.min.js', globals()),
+    'jquery-ui.js':ImageFile('www/js/jquery-ui-1.9.2.min.js', globals()),
     'jquery.cookie.js':ImageFile('www/js/jquery.cookie.js', globals()),
     'jquery.bgiframe.min.js':ImageFile('www/js/jquery.bgiframe.min.js', globals()),
     'jquery.autocomplete.min.js':ImageFile('www/js/jquery.autocomplete.min.js', globals()),
@@ -128,7 +124,6 @@ misc_ = {
 
     #CSS files
     'jquery-ui.css':ImageFile('www/js/css/jquery-ui.css', globals()),
-    'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui.css', globals()),
     'jquery.autocomplete.css':ImageFile('www/js/css/jquery.autocomplete.css', globals()),
     'jquery.tooltip.css':ImageFile('www/js/css/jquery.tooltip.css', globals()),
 
