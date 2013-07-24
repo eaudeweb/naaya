@@ -55,12 +55,33 @@
 
 		<h3>Notifications <a id="anchor006"></a></h3>
 
-		<p>If the email setting are filled in at portal level, notifications are send to the list of emails set there and to local folder Administrators when content is added in the portal. Additionally, email notifications can be send in case of errors encountered by end users while accessing the portal pages.</p>
+		<p>If the email setting are filled in at portal level, notifications are send to the list of emails set there. Additionally, email notifications can be send in case of errors encountered by end users while accessing the portal pages.</p>
 		<p>Here is a short tutorial on how you can subscribe to notifications:</p>
 		<p><iframe width="720" height="540"
 			src="http://www.youtube.com/embed/IU4k34EXk2A?rel=0&vq=hd720"
 			frameborder="0" allowfullscreen></iframe>
 		</p>
+		<p>Steps for subscribing to notifications:</p>
+		<ol>
+			<li>click on the "Subscribe to notifications" button on the left menu</li>
+			<li>check the location in the IG you want to be subscribed to
+				(the entire portal or just a specific folder)</li>
+			<li>choose the type of notifications from the available ones</li>
+			<li><strong>Optional.</strong>
+			<ul>
+				<li>Uncheck the "All content types" checkbox</li>
+				<li>Select the content types for which the subscription should be valid</li>
+			</ul>
+			This is helpful when you are only interested in a few content types and
+			don't want to receive notifications for everything.</li>
+		</ol>
+		<p>If a user should be subscribed to more than one folder, or to receive
+		more than one types of notifications, the operation needs to be repeated.</p>
+		<p>In the lower part of the page you can see a list of your current
+			subscriptions, with the possibility to edit (<em>Click to edit</em>) or delete each one (<em>unsubscribe</em>).</p>
+		<img class="screenshot" src="/++resource++naaya.gwhelp/notif5.png"
+			alt="Subscribe users to receive notifications"
+			title="Subscribe users to receive notifications" />
 
 		<h3>Versions<a id="anchor007"></a></h3>
 

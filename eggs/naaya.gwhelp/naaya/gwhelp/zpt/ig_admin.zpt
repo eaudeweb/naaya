@@ -22,7 +22,7 @@
 			<li>etc.</li>
 		</ul>
 
-		<img src="/++resource++naaya.gwhelp/admin2.png" alt="Administration area" title="Administration area" class="floated-left" />
+		<img class="screenshot" src="/++resource++naaya.gwhelp/admin2.png" alt="Administration area" title="Administration area" class="floated-left" />
 
 		<p>Most of the configurations available to Administrators from this area
 		come from the default <a href="http://www.naaya.eu">Naaya</a> Content
@@ -124,9 +124,10 @@
 			always part of the Eionet community, which entails they already have an
 			Eionet account</li>
 		</ul>
-		<img src="/++resource++naaya.gwhelp/notif1.png"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/notif1.png"
 			alt="Configuration of notifications"
 			title="Configuration of notifications" />
+		<p>On each portal there is another notification type (that cannot be turned off): the <em>Administrative notification</em>. As suggested by the name, only users with an administrator role can subscribe to these notifications. They are sent whenever an object is created, added, or commented, regardless of its approval status. It is a tool for administrators to keep an overview of the site's events, especially to be notified when they need to review and possibly approve new items. This functionality replaces the old one where each user with an administrator role would automatically receive similar notifications, and there was no unsubscribe possibility.</p>
 
 		<h3>Disable notifications</h3>
 		<p>It is sometimes useful to disable notifications for the items uploaded by
@@ -135,20 +136,30 @@
 		This can be accomplished by clicking the <em>Disable notifications</em>, in
 		which case it is important to remember to turn the notifications back on when
 		the maintenance  work is completed.</p>
-		<img src="/++resource++naaya.gwhelp/notif2.png"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/notif2.png"
 			alt="Disabling notifications" title="Disabling notifications" />
 
 		<h3>Subscribe users</h3>
 		<p>Although the system assumes that the users subscribe themselves to receive
 		notifications, and tailor their options based on their preferences, there are
-		situations when administrators
-		need to do this for the users. You can search for a specific user, select it
-		from the lsit fo results, and then check the location in the IG that user
-		will be subscribed to (the entire portal or just a specific folder), and choose
-		the type of notifications from the available ones. If a user should be
-		subscribed to more than one folder, or to receive more than one types of
-		notifications, the operation needs to be repeated.</p>
-		<img src="/++resource++naaya.gwhelp/notif3.png"
+		situations when administrators need to do this for the users. The steps are:</p>
+		<ol>
+			<li>search for a specific user (by Name, Username or eMail)</li>
+			<li>select it from the list of results</li>
+			<li>check the location in the IG that user will be subscribed to
+				(the entire portal or just a specific folder)</li>
+			<li>choose the type of notifications from the available ones</li>
+			<li><strong>Optional.</strong>
+				<ul>
+					<li>Uncheck the "All content types" checkbox</li>
+					<li>Select the content types for which the subscription should be valid</li>
+				</ul>
+				This is helpful when certain administrators are only interested in a few
+				content types and don't want to receive notifications for everything.</li>
+		</ol>
+		<p>If you want subscribed to more than one folder, or to receive
+		more than one types of notifications, the operation needs to be repeated.</p>
+		<img class="screenshot" src="/++resource++naaya.gwhelp/notif3.png"
 			alt="Subscribe users to receive notifications"
 			title="Subscribe users to receive notifications" />
 
@@ -173,7 +184,7 @@
 		or email address in the upper <em>Search users</em> box.</p>
 		<p>The list of subscriptions is exportable in CSV and Excel formats, for
 		more options of sorting and filtering.</p>
-		<img src="/++resource++naaya.gwhelp/notif4.png"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/notif4.png"
 			alt="List of existing subscriptions"
 			title="List of existing subscriptions" />
 
@@ -199,7 +210,7 @@
 		<p>The map then shows all items (meetings, events, picturs, etc.) that have
 		geographical coordinates. The map is available in each IG at the address
 		<code>&lt;IG_URL>/portal_map</code></p>
-		<img src="/++resource++naaya.gwhelp/map2.png" alt="IG map"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/map2.png" alt="IG map"
 			title="IG map" />
 
 		<p>When two or more points are close to each other, they appear with a
@@ -245,7 +256,7 @@
 		that engine are shown. They are different from one service to another, as each
 		service implements the maps a bit differently.</p>
 
-		<img src="/++resource++naaya.gwhelp/map3.png"
+		<img class="screenshot" src="/++resource++naaya.gwhelp/map3.png"
 			alt="Map configurations" title="Map configurations" />
 
 		<p>The last part of this form shows the code to be used if you want to
@@ -255,8 +266,8 @@
 		(folder) from which to get the items. The code displayed in this form shows how
 		to write all these filters.</p>
 
-		<img src="/++resource++naaya.gwhelp/map5.png" alt="Map as an iFrame"
-			title="Map as an iFrame" />
+		<img class="screenshot" src="/++resource++naaya.gwhelp/map5.png"
+			alt="Map as an iFrame" title="Map as an iFrame" />
 
 		<h3><a name="locations-admin-map"></a>Types of locations</h3>
 
@@ -281,14 +292,6 @@
 		long, it is useful to organise it in groups of locations, in which case you
 		will define some categories as having a "parent" category from the add/edit
 		location type form.</p>
-
-		<h4><a name="other-admin-map"></a>Other map management options</h4>
-
-		<h3>Content management</h3>
-
-		<h4><a name="manage-content-types"></a>Manage content types</h4>
-		<!--h2>Syndication</h2>
-		<h2>Portlets</h2 -->
 
 	</metal:block>
 </metal:block>
