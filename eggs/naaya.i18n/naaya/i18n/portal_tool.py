@@ -245,7 +245,7 @@ class NaayaI18n(SimpleItem):
         in selected language.
 
         """
-        lang = self.get_selected_language()
+        lang = kwargs.get('lang') or self.get_selected_language()
         msg = self.get_message_catalog().gettext(msg, lang, default=_default)
         return interpolate(msg, kwargs)
 
