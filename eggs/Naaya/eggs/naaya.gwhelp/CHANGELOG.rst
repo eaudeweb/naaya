@@ -1,4 +1,7 @@
-0.0.9 (unreleased)
+1.0.1 (unreleased)
+-------------------
+
+1.0.0 (2013-07-24)
 -------------------
 * updated help on subscriptions to notifications by content type [dumitval]
 * updated help on administrative notifications [dumitval]
