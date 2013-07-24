@@ -1,13 +1,10 @@
 <subject i18n:translate="">Changed items - weekly digest</subject>
 
 <body_text><tal:block i18n:translate="">
-This is an automatically generated weekly message listing modified items
-in the "<tal:block content="options/portal/title_or_id" i18n:name="title" />"
+Folowing items were modified/added in the "<tal:block content="options/portal/title_or_id" i18n:name="title" />"
 portal.</tal:block>
 
-<tal:block repeat="item options/objs" i18n:translate="">
-<tal:block content="item/ob/title_or_id" i18n:name="title" />
-    (at <tal:block content="item/ob/absolute_url" i18n:name="url" />)
+<tal:block repeat="item options/objs"><tal:block content="item/type" />: <tal:block content="item/ob/title_or_id" /> (<tal:block content="item/ob/absolute_url" />)
 </tal:block>
 
 <tal:block replace="structure python:options['here'].unsubscribe_links_html(**options)" />

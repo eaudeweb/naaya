@@ -1,5 +1,6 @@
 3.3.7 (unreleased)
 -------------------
+* added notifications on comments (to owner, subscribers) [dumitval]
 * updated default permissions [simiamih]
 
 3.3.6 (2013-07-12)

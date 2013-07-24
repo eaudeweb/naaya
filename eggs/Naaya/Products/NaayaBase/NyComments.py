@@ -11,12 +11,9 @@ from warnings import warn
 
 from zope.interface import implements
 from zope.component import adapter
-try:
-    from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
-                                                IObjectMovedEvent)
-except ImportError: #<2.12
-    from zope.app.container.interfaces import (IObjectAddedEvent,
-                                               IObjectMovedEvent)
+from zope.event import notify
+from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
+                                            IObjectMovedEvent)
 from App.config import getConfiguration
 from zope.component.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
@@ -26,6 +23,7 @@ from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
 from OFS.Folder import Folder
 
+from Products.NaayaBase.events import NyCommentAddEvent
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from constants import *
 from Products.NaayaCore.managers.utils import utils
@@ -293,7 +291,7 @@ class NyCommentable:
         site = self.getSitePath()
         user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
         user_ip = self.REQUEST.get('REMOTE_ADDR', '127.0.0.1')
-	text = unidecode(text)
+        text = unidecode(text)
 
         is_spam = False
         if has_api_key:
@@ -309,13 +307,13 @@ class NyCommentable:
         return is_spam
 
     def _submit_comment_to_akismet(self, text, status):
-	"""
-	Submit spam comment to akismet
-	"""
-	site = self.getSitePath()
+        """
+        Submit spam comment to akismet
+        """
+        site = self.getSitePath()
         user_agent = self.REQUEST.get('HTTP_USER_AGENT', '')
         user_ip = self.REQUEST.get('REMOTE_ADDR', '127.0.0.1')
-	text = unidecode(text)
+        text = unidecode(text)
 
         if has_api_key and akismet_api_key:
             if akismet.verify_key(akismet_api_key, site):
@@ -346,6 +344,8 @@ class NyCommentable:
         id = self.utGenRandomId()
         ob = NyComment(id, title, body, author, releasedate, spamstatus)
         container._setObject(id, ob)
+
+        notify(NyCommentAddEvent(ob, author, self))
 
         return ob
 
@@ -382,8 +382,6 @@ class NyCommentable:
                                author = author,
                                releasedate = self.utGetTodayDate())
 
-        self.notifyFolderMaintainer(self, ob,
-                                    p_template = "email_notifyoncomment")
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
 

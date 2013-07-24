@@ -16,6 +16,12 @@ class INyCommentable(Interface):
     """ Interface for NyCommentable """
     pass
 
+class INyCommentAddEvent(Interface):
+    """ A comment was added """
+
+    context = Attribute("INyContentObject instance")
+    contributor = Attribute("user_id of user who added the comment")
+
 class INyComment(Interface):
     """ Interface for NyComment """
     pass

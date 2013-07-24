@@ -35,11 +35,11 @@ def handle_object_approved(event):
 
     ob = event.context
     portal = ob.getSite()
-
-    portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
     notification_tool = portal.getNotificationTool()
+
     notification_tool.notify_administrative(ob, contributor)
+    notification_tool.notify_maintainer(ob, ob.aq_parent, contributor=contributor)
     notification_tool.notify_instant(ob, contributor)
 
     action_logger = portal.getActionLogger()
@@ -63,9 +63,10 @@ def handle_object_add(event):
     contributor = event.contributor
 
     if not ob.approved:
-        portal.notifyFolderMaintainer(ob.aq_parent, ob)
         notification_tool = portal.getNotificationTool()
         notification_tool.notify_administrative(ob, contributor)
+        notification_tool.notify_maintainer(ob, ob.aq_parent,
+            contributor=contributor)
 
     if ob.approved:
         #Create log entry
@@ -81,15 +82,39 @@ def handle_object_edit(event):
     """
     ob = event.context
     portal = ob.getSite()
-
     contributor = event.contributor
     notification_tool = portal.getNotificationTool()
-    notification_tool.notify_instant(ob, contributor, ob_edited=True)
+
+    notification_tool.notify_administrative(ob, contributor, ob_edited=True)
+    notification_tool.notify_maintainer(ob, ob.aq_parent,
+        contributor=contributor, ob_edited=True)
 
     if ob.approved: #Create log entry
+        notification_tool.notify_instant(ob, contributor, ob_edited=True)
         action_logger = portal.getActionLogger()
         action_logger.create(type=constants.LOG_TYPES['modified'],
                              contributor=contributor, path=path_in_site(ob))
+
+@check_skip_notifications
+def handle_comment_added(event):
+    """An comment has been added to an object. Send notifications and
+    create a log entry
+
+    """
+    ob = event.context
+    parent_ob = event.parent_ob
+    portal = parent_ob.getSite()
+    contributor = event.contributor
+    notification_tool = portal.getNotificationTool()
+
+    notification_tool.notify_comment_administrative(ob, parent_ob, contributor)
+    notification_tool.notify_comment_maintainer(ob, parent_ob,
+        contributor=contributor)
+    notification_tool.notify_comment_instant(ob, parent_ob, contributor)
+
+    action_logger = portal.getActionLogger()
+    action_logger.create(type=constants.LOG_TYPES['commented'],
+                         contributor=contributor, path=path_in_site(parent_ob))
 
 @check_skip_notifications
 def handle_csv_import(event):
@@ -178,10 +203,10 @@ def send_notifications_for_event(event, subscriber_data_default, template):
     action_logger.create(type=constants.LOG_TYPES['bulk_import'],
                          path=path_in_site(folder))
 
-def heartbeat_notification(site, hearthbeat):
+def heartbeat_notification(site, heartbeat):
     """notifications are delayed by 1 minute to allow for non-committed
     transactions (otherwise there's a remote chance that objects added
     or changed when heartbeat runs would be missed)"""
 
-    when = hearthbeat.when - timedelta(minutes=1)
+    when = heartbeat.when - timedelta(minutes=1)
     site.getNotificationTool()._cron_heartbeat(when)

@@ -55,7 +55,7 @@ class BaseNotificationsTest(NaayaTestCase):
         def get_modified_objects(site, when_start, when_end):
             for ob_path, modif_datetime in self.object_timestamps:
                 if when_start < modif_datetime < when_end:
-                    yield site.unrestrictedTraverse(ob_path)
+                    yield ('', site.unrestrictedTraverse(ob_path))
 
         self.patches.append(mock.patch(
             'Products.NaayaCore.NotificationTool.utils.get_modified_objects',

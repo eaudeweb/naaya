@@ -35,6 +35,11 @@
     for="Products.NaayaCore.AuthenticationTool.interfaces.IRoleAssignmentEvent"
     handler=".subscribers.change_user_roles" />
 
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_comment_added"
+    for="Products.NaayaBase.interfaces.INyCommentAddEvent"
+    />
+
   <adapter
     factory=".portlets.NotificationsPortlet"
     for="Products.Naaya.interfaces.INySite"
