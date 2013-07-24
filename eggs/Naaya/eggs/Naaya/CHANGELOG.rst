@@ -1,5 +1,7 @@
 3.3.7 (unreleased)
 -------------------
+* updated jquery to version 1.7.2 [dumitval]
+* updated jquery-ui to version 1.9.2 [dumitval]
 * added notifications on comments (to owner, subscribers) [dumitval]
 * updated default permissions [simiamih]
 

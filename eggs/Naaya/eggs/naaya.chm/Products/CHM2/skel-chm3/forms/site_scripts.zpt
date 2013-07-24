@@ -1,7 +1,7 @@
 <tal:block define="
     site_url here/getSitePath;
     curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
-    <script tal:attributes="src string:${site_url}/++resource++Products.CHM2-www/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-ui.js"></script>
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.form.js"></script>
     <script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js?lang=${curr_lang}"></script><!-- Translated messages in json format -->
