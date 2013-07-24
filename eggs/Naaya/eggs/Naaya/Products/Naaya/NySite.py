@@ -28,6 +28,7 @@ from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from Globals import DTMLFile
 from zope.interface import implements
+from zope.deprecation import deprecate
 from App.ImageFile import ImageFile
 from zope import component
 import transaction
@@ -1249,18 +1250,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def get_portal_mail_address(self):
         return self.getEmailTool().get_addr_from()
 
+    @deprecate(("portal/notifyFolderMaintainer is deprecated, use "
+                "portal.getNotificationTool().notify_maintainer(ob, folder, **kwargs)"))
     def notifyFolderMaintainer(self, p_folder, p_object, **kwargs):
         """
         Process and notify by email that B{p_object} has been
         uploaded into the B{p_folder}.
         """
-        if (hasattr(p_object, 'submitted') and p_object.submitted==1) or not hasattr(p_object, 'submitted'):
-            l_emails = self.getMaintainersEmails(p_folder)
-            if len(l_emails) > 0:
-                #old way gets mails rejected
-                #mail_from = self.get_portal_mail_address()
-                mail_from = self.getEmailTool().get_addr_from()
-                self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url(), **kwargs)
+        return self.getNotificationTool().notify_maintainer(p_object, p_folder,
+                                                            **kwargs)
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
@@ -3528,7 +3526,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
-    def notifyMaintainerEmail(self, p_to, p_from, p_item, p_container_path, p_container_basketpath, p_template='email_notifyonupload', **kwargs):
+    def notifyMaintainerEmail(self, p_to, p_from, p_item, p_container_path,
+            p_container_basketpath, p_template='email_notifyonupload', **kwargs):
         #notify folder maintainer when a new upload is done
         user = self.REQUEST.AUTHENTICATED_USER
         user_name = user.getUserName()

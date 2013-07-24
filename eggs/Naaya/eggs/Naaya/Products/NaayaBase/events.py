@@ -1,8 +1,10 @@
 from zope.interface import implements
 
-from interfaces import INyAddLocalRoleEvent, INySetLocalRoleEvent, INyDelLocalRoleEvent
-from interfaces import INyAddUserRoleEvent, INySetUserRoleEvent, INyDelUserRoleEvent
+from interfaces import INyAddLocalRoleEvent, INySetLocalRoleEvent
+from interfaces import INyDelLocalRoleEvent, INyAddUserRoleEvent
+from interfaces import INySetUserRoleEvent, INyDelUserRoleEvent
 from interfaces import INyAddGroupRoleEvent, INyRemoveGroupRoleEvent
+from interfaces import INyCommentAddEvent
 
 class NyAddLocalRoleEvent(object):
     """ Local role will be added """
@@ -69,4 +71,11 @@ class NyRemoveGroupRoleEvent(object):
         super(NyRemoveGroupRoleEvent, self).__init__()
         self.context, self.group, self.roles = context, group, roles
 
+class NyCommentAddEvent(object):
+    """ A comment was added """
+    implements(INyCommentAddEvent)
 
+    def __init__(self, context, contributor, parent_ob):
+        self.parent_ob = parent_ob
+        self.context = context
+        self.contributor = contributor

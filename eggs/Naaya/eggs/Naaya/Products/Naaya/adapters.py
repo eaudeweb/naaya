@@ -98,7 +98,7 @@ class NyFolderViewAdapter(NyContentTypeViewAdapter):
                     and self.ob.checkPermissionEditObject())):
             return ""
 
-        trans = self.ob.getPortalTranslations().trans
+        trans = self.ob.getPortalI18n().get_translation
         msg = []
 
         lenfol = len(self.ob.listed_folders_info())

@@ -89,5 +89,5 @@ class CustomI18nContext(Context):
         if translate is None:
             translate = lambda msgid, lang: msgid
 
-        msg = translate(msgid, lang)
+        msg = translate(msgid, lang=lang)
         return interpolate(msg, mapping)

@@ -36,13 +36,14 @@ from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
-from containers import (SubscriptionContainer, AccountSubscription,
-                        AnonymousSubscription)
+from containers import AccountSubscription, AnonymousSubscription
 import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
 email_templates = {
+    'maintainer': EmailPageTemplateFile('emailpt/maintainer.zpt',
+                                            globals()),
     'administrative': EmailPageTemplateFile('emailpt/administrative.zpt',
                                             globals()),
     'instant': EmailPageTemplateFile('emailpt/instant.zpt', globals()),
@@ -310,25 +311,99 @@ class NotificationTool(Folder):
         if self.config['enable_monthly']:
             yield 'monthly'
 
+    security.declarePrivate('notify_maintainer')
+    def notify_maintainer(self, ob, folder, **kwargs):
+        """
+        Process and notify by email that B{p_object} has been
+        uploaded into the B{p_folder}.
+        """
+
+        auth_tool = self.getSite().getAuthenticationTool()
+        emails = self.getMaintainersEmails(ob)
+        person = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if len(emails) > 0:
+            maintainers_data = {}
+            for email in emails:
+                maintainers_data[email] = {
+                    'ob': ob,
+                    'here': self,
+                    'person': auth_tool.name_from_userid(person),
+                    'ob_edited': kwargs.get('ob_edited'),
+                    'approved': ob.approved,
+                    'container_basket': '%s/basketofapprovals_html' % folder.absolute_url(),
+                        }
+            notif_logger.info('Maintainer notifications on %r', ofs_path(ob))
+            template = self._get_template('maintainer')
+            self._send_notifications(maintainers_data, template)
+
+    security.declarePrivate('notify_comment_maintainer')
+    def notify_comment_maintainer(self, comment, parent, **kwargs):
+        """
+        Process and notify by email that a comment B{comemnt} has been added
+        to the object B{parent}.
+        """
+
+        auth_tool = self.getSite().getAuthenticationTool()
+        emails = self.getMaintainersEmails(parent)
+        if len(emails) > 0:
+            maintainers_data = {}
+            for email in emails:
+                maintainers_data[email] = {
+                    'parent': parent,
+                    'here': self,
+                    'comment': comment,
+                    'person': auth_tool.name_from_userid(comment.author),
+                    'container_basket': '%s/basketofapprovals_html' % parent.absolute_url(),
+                        }
+            notif_logger.info('Maintainer comment notifications on %r', ofs_path(parent
+            ))
+            template = self._get_template('maintainer')
+            self._send_notifications(maintainers_data, template)
+
     security.declarePrivate('notify_administrative')
     def notify_administrative(self, ob, user_id, ob_edited=False):
         """
-        send instant notifications because object `ob` was changed by
-        the user `user_id`, regardless of approval status (administrative)
+        send administrative notifications because object `ob` was added or
+        edited by the user `user_id`
         """
-        notif_logger.info('Administrative notifications on %r', ofs_path(ob))
 
+        auth_tool = self.getSite().getAuthenticationTool()
         subscribers_data = utils.get_subscribers_data(self, ob,
                 notif_type='administrative',
                 **{
-                    'person': user_id,
+                    'person': auth_tool.name_from_userid(user_id),
                     'ob_edited': ob_edited,
                     'approved': ob.approved,
                     'container_basket': '%s/basketofapprovals_html' % ob.aq_parent.absolute_url(),
                 })
 
-        template = self._get_template('administrative')
-        self._send_notifications(subscribers_data, template)
+        if len(subscribers_data.keys()) > 0:
+            notif_logger.info('Administrative notifications on %r', ofs_path(ob))
+            template = self._get_template('administrative')
+            self._send_notifications(subscribers_data, template)
+
+    security.declarePrivate('notify_comment_administrative')
+    def notify_comment_administrative(self, comment, parent, user_id):
+        """
+        send administrative notifications because a comment was added to
+        object `ob` by the user `user_id`
+        """
+
+        auth_tool = self.getSite().getAuthenticationTool()
+        subscribers_data = utils.get_subscribers_data(self, parent,
+            notif_type='administrative',
+            **{
+            'comment': comment,
+            'parent': parent,
+            'here': self,
+            'person': auth_tool.name_from_userid(user_id),
+        })
+
+        if len(subscribers_data.keys()) > 0:
+            notif_logger.info('Administrative comment notifications on %r',
+                ofs_path(parent))
+            template = self._get_template('administrative')
+            self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_instant')
     def notify_instant(self, ob, user_id, ob_edited=False):
@@ -336,7 +411,6 @@ class NotificationTool(Folder):
         send instant notifications because object `ob` was changed by
         the user `user_id`
         """
-        notif_logger.info('Instant notifications on %r', ofs_path(ob))
         if not self.config['enable_instant']:
             return
 
@@ -345,16 +419,50 @@ class NotificationTool(Folder):
         if not ob.approved:
             return
 
+        auth_tool = self.getSite().getAuthenticationTool()
         subscribers_data = utils.get_subscribers_data(self, ob, **{
-            'person': user_id,
+            'person': auth_tool.name_from_userid(user_id),
             'ob_edited': ob_edited,
         })
 
-        template = self._get_template('instant')
-        self._send_notifications(subscribers_data, template)
+        if len(subscribers_data.keys()) > 0:
+            notif_logger.info('Instant notifications on %r', ofs_path(ob))
+            template = self._get_template('instant')
+            self._send_notifications(subscribers_data, template)
+
+    security.declarePrivate('notify_comment_instant')
+    def notify_comment_instant(self, comment, parent, user_id):
+        """
+        send instant notifications because a comment was added to
+        object `ob` by the user `user_id`
+        """
+        if not self.config['enable_instant']:
+            return
+
+        #Don't send notifications if the object is unapproved, but store them
+        #into a queue to send them later when it becomes approved
+        if not parent.approved:
+            return
+
+        auth_tool = self.getSite().getAuthenticationTool()
+        subscribers_data = utils.get_subscribers_data(self, parent, **{
+            'comment': comment,
+            'parent': parent,
+            'person': auth_tool.name_from_userid(user_id),
+        })
+
+        if len(subscribers_data.keys()) > 0:
+            notif_logger.info('Comment instant notifications on %r', ofs_path(parent))
+            template = self._get_template('instant')
+            self._send_notifications(subscribers_data, template)
 
     def _get_template(self, name):
+
         template = self._getOb('emailpt_%s' % name, None)
+        if template is not None:
+            return template.render_email
+
+        template = self._getOb(name, None)
         if template is not None:
             return template.render_email
 
@@ -377,7 +485,7 @@ class NotificationTool(Folder):
         email_tool = portal.getEmailTool()
         addr_from = email_tool.get_addr_from()
         for addr_to, kwargs in messages_by_email.iteritems():
-            translate = self.getSite().getPortalTranslations()
+            translate = self.portal_i18n.get_translation
             kwargs.update({'portal': portal, '_translate': translate})
             mail_data = template(**kwargs)
             notif_logger.info('.. sending notification to %r', addr_to)
@@ -400,8 +508,8 @@ class NotificationTool(Folder):
         langs_by_email = {}
         subscriptions_by_email = {}
         anonymous_users = {}
-        for ob in utils.get_modified_objects(self.getSite(), when_start,
-                                              when_end):
+        for log_type, ob in utils.get_modified_objects(self.getSite(),
+                                                    when_start, when_end):
             notif_logger.info('.. modified object: %r', ofs_path(ob))
             for subscription in utils.fetch_subscriptions(ob, inherit=True):
                 if subscription.notif_type != notif_type:
@@ -414,8 +522,11 @@ class NotificationTool(Folder):
                 content_types = getattr(subscription, 'content_types', [])
                 if content_types and ob.meta_type not in content_types:
                     continue
-                notif_logger.info('.. .. sending notification to %r', email)
-                objects_by_email.setdefault(email, []).append({'ob': ob})
+                notif_logger.info('.. .. sending newsletter to %r', email)
+                objects_by_email.setdefault(email, []).append({
+                                                'ob': ob,
+                                                'type': log_type,
+                                                })
                 langs_by_email[email] = subscription.lang
 
                 subscriptions_by_email[email] = subscription

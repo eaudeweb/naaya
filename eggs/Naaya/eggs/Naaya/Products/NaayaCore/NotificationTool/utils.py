@@ -116,7 +116,8 @@ def get_modified_objects(site, when_start, when_end, log_type=None):
             if (DT_when_start.lessThanEqualTo(log_entry.created_datetime) and
                 DT_when_end.greaterThanEqualTo(log_entry.created_datetime)):
                     try:
-                        yield site.unrestrictedTraverse(log_entry.path)
+                        yield (log_entry.type,
+                               site.unrestrictedTraverse(log_entry.path))
                     except KeyError:
                         notif_logger.error('Found nonexistent path: %r',
                                            log_entry.path)

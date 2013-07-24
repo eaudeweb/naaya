@@ -49,7 +49,7 @@ setup(name='Naaya',
           'naaya.content-compat',
           'naaya.flowplayer',
           'naaya.content.bfile',
-          'naaya.i18n > 1.0.14', # last one without overrides
+          'naaya.i18n > 1.1.5',
           'naaya.cache >= 1.1',
 
           #Testing
