@@ -637,8 +637,8 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
+            notify(NyContentObjectEditEvent(self, contributor))
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
