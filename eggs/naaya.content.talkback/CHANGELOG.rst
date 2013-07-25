@@ -1,5 +1,6 @@
 1.4.22 (unreleased)
 -------------------
+* removed duplicated notification to maintainer [dumitval]
 
 1.4.21 (2013-02-27)
 -------------------
