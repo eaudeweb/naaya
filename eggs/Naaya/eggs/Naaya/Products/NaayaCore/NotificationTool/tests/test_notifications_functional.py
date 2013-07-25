@@ -16,7 +16,24 @@ class NotificationsTest(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self._notifications = []
         divert_notifications(True, save_to=self._notifications)
-        addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
+
+        #Login with admin and set skip_notifications in administration
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/portal_notification/admin_html')
+        form = self.browser.get_form('skip_notifications')
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'submit-button'))
+        self.browser.submit()
+
+        #create folders and other content in browser, so the skip_notification
+        #flag will be respected (the REQUEST.SESSION is checked for it)
+        self.browser.go('http://localhost/portal/folder_add_html')
+        form = self.browser.get_form('frmAdd')
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:ustring'] = 'notifol'
+        self.browser.submit()
+
         addNyDocument(self.portal.notifol, id='notidoc',
             title='Notifying document', submitted=1, contributor='contributor')
         self.portal.notifol.notidoc.approved = True # Approve this document
@@ -28,6 +45,14 @@ class NotificationsTest(NaayaFunctionalTestCase):
         _notif.config['enable_weekly'] = True
         _notif.config['enable_monthly'] = True
         transaction.commit()
+
+        #Unset skip_notifications in administration
+        self.browser.go('http://localhost/portal/portal_notification/admin_html')
+        form = self.browser.get_form('skip_notifications')
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'submit-button'))
+        self.browser.submit()
+        self.browser_do_logout()
 
     def beforeTearDown(self):
         _notif = self.portal.portal_notification
@@ -63,11 +88,13 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
         notifications = self._fetch_test_notifications()
-        self.assertEqual(len(notifications), 1)
-        test_notification = notifications[0]
+        self.assertTrue(len(notifications) > 0)
+        for notification in notifications:
+            if notification[2].startswith('Instant'):
+                test_notification = notification
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
-        assert test_notification[2] == u'Change notification - Notifying document'
+        assert test_notification[2] == u'Instant notification for object: Notifying document'
 
         remove_account_subscription = \
             self.portal.portal_notification.remove_account_subscription
@@ -96,8 +123,10 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
         notifications = self._fetch_test_notifications()
-        self.assertEqual(len(notifications), 1)
-        self.assertEqual(notifications[0][1], 'reviewer@example.com')
+        self.assertTrue(len(notifications) > 0)
+        for notification in notifications:
+            if notification[2].startswith('Instant'):
+                self.assertEqual(notification[1], 'reviewer@example.com')
 
         remove_account_subscription = \
             self.portal.portal_notification.remove_account_subscription
@@ -154,7 +183,7 @@ class NotificationsTest(NaayaFunctionalTestCase):
         transaction.commit()
 
 
-        def change_title(value):
+        def change_description(value):
             self.browser_do_login('admin', '')
 
             self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
@@ -167,32 +196,33 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
             self.browser_do_logout()
 
-        change_title('some new title')
+        change_description('some new description')
         notifications = self._fetch_test_notifications()
         self.assertTrue(len(notifications) > 0)
-        test_notification = notifications[0]
+        for notification in notifications:
+            if notification[2].startswith('Instant'):
+                test_notification = notification
 
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
-        assert test_notification[2] == u'Change notification - Notifying document'
+        assert test_notification[2] == u'Instant notification for object: Notifying document'
 
         notif.emailpt_instant._text = (
-            '<subject>i can haz changez on <tal:block '
-                'content="options/ob/title_or_id" /></subject>\n'
+            '<subject>Instant email on <tal:block '
+                'content="options/ob/title_or_id|options/parent/title_or_id" /></subject>\n'
             '\n'
-            '<body_text>thing changed, yo! '
-                '"<tal:block content="options/ob/title_or_id" />", '
-                '<tal:block content="options/ob/absolute_url" />, '
-                '"<tal:block content="options/person" />".</body_text>\n')
+            '<body_text>Body changed, too.</body_text>\n')
         transaction.commit()
 
-        change_title('some other new title')
+        change_description('some other new description')
         notifications = self._fetch_test_notifications()
         self.assertTrue(len(notifications) > 0)
-        test_notification = notifications[0]
+        for notification in notifications:
+            if notification[2].startswith('Instant'):
+                test_notification = notification
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
-        assert test_notification[2] == u'i can haz changez on Notifying document'
+        assert test_notification[2] == u'Instant email on Notifying document'
 
         notif.manage_delObjects('emailpt_instant')
         self.portal.portal_notification.remove_account_subscription(

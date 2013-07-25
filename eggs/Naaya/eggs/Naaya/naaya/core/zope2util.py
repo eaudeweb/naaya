@@ -572,9 +572,7 @@ def sha_hexdigest(f):
 
 def get_template_source(template):
     """ Returns the source text of a template """
-    if not isinstance(template, PageTemplate):
-        raise ValueError(("get_template_source wraps a PageTemplate, got"
-                          " a '%s'") % type(template))
+
     template._cook_check()
     return template._text
 

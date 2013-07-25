@@ -8,7 +8,7 @@ from naaya.core.zope2util import permission_add_role
 
 class TestApproval(NaayaTestCase):
     def setUp(self):
-        self.notify_maintainer = self.portal.notifyFolderMaintainer = Mock()
+        self.notify_maintainer = self.portal.getNotificationTool().notify_maintainer = Mock()
 
     def tearDown(self):
         self.logout()
