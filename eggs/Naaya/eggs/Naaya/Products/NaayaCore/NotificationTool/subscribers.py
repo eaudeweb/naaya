@@ -51,7 +51,7 @@ def handle_object_add(event):
     """An object has been created. Create a log entry.
     Notifications to subscribers are only sent in object-approved handler.
     Administrative notifications are only sent if the object is not approved.
-    It it is already approved, then notifications are already sent in
+    If it is already approved, then notifications were already sent in the
     object-approved handler.
     """
 
