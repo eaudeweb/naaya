@@ -26,30 +26,30 @@ class BaseNotificationsTest(NaayaTestCase):
         addNyFolder(self.portal, 'fol1', contributor='contributor')
         addNyFolder(self.portal, 'fol2', contributor='contributor')
 
-        def _get_template(self, template_name):
-            """ Replacement for _get_template """
-            def single_tmpl(ob, person, portal, **kwargs):
-                return {'subject': 'notifications',
-                        'body_text': 'instant [%s] %s' %
-                            (path_in_site(ob), portal.title_or_id())}
+        #def _get_template(self, template_name):
+        #    """ Replacement for _get_template """
+        #    def single_tmpl(ob, person, portal, **kwargs):
+        #        return {'subject': 'notifications',
+        #                'body_text': 'instant [%s] %s' %
+        #                    (path_in_site(ob), portal.title_or_id())}
 
-            def group_tmpl(portal, objs, **kwargs):
-                keyer = lambda item: path_in_site(item['ob'])
-                sorted_items = sorted(objs, key=keyer)
-                items_str = ''.join('[%s]' % path_in_site(item['ob']) for
-                                    item in sorted_items)
-                body = '%s %s %s' % (template_name, items_str,
-                                     portal.title_or_id())
-                return {'subject': 'notifications', 'body_text': body}
+        #    def group_tmpl(portal, objs, **kwargs):
+        #        keyer = lambda item: path_in_site(item['ob'])
+        #        sorted_items = sorted(objs, key=keyer)
+        #        items_str = ''.join('[%s]' % path_in_site(item['ob']) for
+        #                            item in sorted_items)
+        #        body = '%s %s %s' % (template_name, items_str,
+        #                             portal.title_or_id())
+        #        return {'subject': 'notifications', 'body_text': body}
 
-            if template_name == 'instant':
-                return single_tmpl
-            else:
-                return group_tmpl
+        #    if template_name == 'instant':
+        #        return single_tmpl
+        #    else:
+        #        return group_tmpl
 
-        self.patches.append(mock.patch(
-            'Products.NaayaCore.NotificationTool.NotificationTool.'
-            'NotificationTool._get_template', _get_template))
+        #self.patches.append(mock.patch(
+        #    'Products.NaayaCore.NotificationTool.NotificationTool.'
+        #    'NotificationTool._get_template', _get_template))
 
 
         def get_modified_objects(site, when_start, when_end):
@@ -162,10 +162,18 @@ class NotificationsUnitTest(BaseNotificationsTest):
         notif_tool._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'user1@example.com', 'notifications',
-                'weekly [fol1/doc_b] Naaya Test Site'),
-            ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol1/doc_b] Naaya Test Site'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
+            ('from.zope@example.com', 'user1@example.com',
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+            ('from.zope@example.com', 'user2@example.com',
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_notification_type_checking(self):
@@ -185,15 +193,23 @@ class NotificationsUnitTest(BaseNotificationsTest):
         notif_tool._send_newsletter('daily',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'daily [fol1/doc_b] Naaya Test Site'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
+            ('from.zope@example.com', 'user2@example.com',
+                u'Changed items - daily digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
         notif_tool._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'weekly [fol1/doc_b] Naaya Test Site'),
+            ('from.zope@example.com', 'user3@example.com',
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
         notif_tool._send_newsletter('monthly',
@@ -222,12 +238,27 @@ class NotificationsUnitTest(BaseNotificationsTest):
         notif_tool._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: g',
+                u'The item "g" has been created at http://nohost/portal/fol1/g by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: h',
+                u'The item "h" has been created at http://nohost/portal/fol1/h by "".'),
             ('from.zope@example.com', 'user1@example.com',
-                'notifications', 'weekly [fol1/g/doc_a] Naaya Test Site'),
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+            ('from.zope@example.com', 'user3@example.com',
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n: doc_c (http://nohost/portal/fol1/doc_c)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user2@example.com',
-                'notifications', 'weekly [fol1/h/doc_b] Naaya Test Site'),
-            ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'weekly [fol1/doc_c][fol1/g/doc_a][fol1/h/doc_b] Naaya Test Site'),
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_instant_notifications(self):
@@ -244,10 +275,18 @@ class NotificationsUnitTest(BaseNotificationsTest):
         ]
         notif_tool.notify_instant(self.portal['fol1']['doc_a'], 'somebody')
         self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'user1@example.com', 'notifications',
-                'instant [fol1/doc_a] Naaya Test Site'),
-            ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'instant [fol1/doc_a] Naaya Test Site'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
+            ('from.zope@example.com', 'user1@example.com',
+                u'Instant notification for object: doc_a',
+                u'The item "doc_a" has been created at http://nohost/portal/fol1/doc_a by "".\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+            ('from.zope@example.com', 'user3@example.com',
+                u'Instant notification for object: doc_a',
+                u'The item "doc_a" has been created at http://nohost/portal/fol1/doc_a by "".\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_sitemap(self):
@@ -293,10 +332,18 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
         notif_tool.notify_instant(self.portal['fol1']['doc_b'], 'somebody')
         notifications = self._fetch_test_notifications()
         self.assertEqual(set(notifications), set([
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
             ('from.zope@example.com', 'reviewer@example.com',
-                'notifications', 'instant [fol1/doc_a] Naaya Test Site'),
+                u'Instant notification for object: doc_a',
+                u'The item "doc_a" has been created at http://nohost/portal/fol1/doc_a by "".\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user2@example.com',
-                'notifications', 'instant [fol1/doc_b] Naaya Test Site'),
+                u'Instant notification for object: doc_b',
+                u'The item "doc_b" has been created at http://nohost/portal/fol1/doc_b by "".\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_restricted_periodic(self):
@@ -320,10 +367,17 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
 
         self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'reviewer@example.com', 'notifications',
-                'weekly [fol1/doc_a] Naaya Test Site'),
-            ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol1/doc_b] Naaya Test Site'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
+            ('from.zope@example.com', 'reviewer@example.com',
+                u'Changed items - weekly digest', u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+            ('from.zope@example.com', 'user2@example.com',
+                u'Changed items - weekly digest',
+                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
 class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
@@ -364,7 +418,14 @@ class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
         notif_tool.notify_instant(self.portal['fol1']['doc_a'], 'somebody')
 
         #No notifications should be sent at this point
-        self.assertEqual(self._fetch_test_notifications(), [])
+        self.assertEqual(set(self._fetch_test_notifications()), set([
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".')
+            ]))
 
 
     def test_periodic(self):
@@ -381,7 +442,14 @@ class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
         notif_tool._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
 
-        self.assertEqual(self._fetch_test_notifications(), [])
+        self.assertEqual(set(self._fetch_test_notifications()), set([
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol1',
+                u'The item "fol1" has been created at http://nohost/portal/fol1 by "".'),
+            ('from.zope@example.com', 'site.admin@example.com',
+                u'Maintainer notification for object: fol2',
+                u'The item "fol2" has been created at http://nohost/portal/fol2 by "".')
+            ]))
 
 class NotificationsCronUnitTest(BaseNotificationsTest):
     """ unit test for notifications """
