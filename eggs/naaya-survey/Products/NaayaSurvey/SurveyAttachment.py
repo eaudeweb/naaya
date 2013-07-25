@@ -56,7 +56,6 @@ def addSurveyAttachment(container, id='', title='', description='', coverage='',
     ob.createversion(container.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
     if discussion: ob.open_for_comments()
     container.recatalogNyObject(ob)
-    container.notifyFolderMaintainer(container, ob)
     #log post date
     auth_tool = container.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
