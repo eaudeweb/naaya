@@ -229,7 +229,6 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
     ob.show_contributor_request_role = ob.public_registration
     self.recatalogNyObject(ob)
 
-    self.notifyFolderMaintainer(self, ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
 
     #log post date
