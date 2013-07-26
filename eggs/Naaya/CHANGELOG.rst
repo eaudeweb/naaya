@@ -1,4 +1,7 @@
-3.3.7 (unreleased)
+3.3.8 (unreleased)
+-------------------
+
+3.3.7 (2013-07-26)
 -------------------
 * nyexfile: notification only sent if there is a REQUEST [dumitval]
 * updated jquery to version 1.7.2 [dumitval]
