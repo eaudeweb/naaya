@@ -1,4 +1,7 @@
-1.4.22 (unreleased)
+1.4.23 (unreleased)
+-------------------
+
+1.4.22 (2013-07-26)
 -------------------
 * removed duplicated notification to maintainer [dumitval]
 
