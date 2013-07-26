@@ -1,4 +1,7 @@
-1.2.30 (unreleased)
+1.2.31 (unreleased)
+-------------------
+
+1.2.30 (2013-07-26)
 -------------------
 * updated references to jquery and jquery-ui [dumitval]
 
