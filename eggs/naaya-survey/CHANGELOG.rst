@@ -1,4 +1,7 @@
-1.2.32 (unreleased)
+1.2.33 (unreleased)
+===================
+
+1.2.32 (2013-07-26)
 ===================
 * removed duplicated notification to maintainer [dumitval]
 
