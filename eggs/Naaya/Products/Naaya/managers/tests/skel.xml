@@ -212,8 +212,6 @@
 		<emailtemplate id="email_feedback" title="Feedback"/>
 		<emailtemplate id="email_notifyonerrors" title="Notification on errors"/>
 		<emailtemplate id="email_requestrole" title="Request role"/>
-		<emailtemplate id="email_notifyonupload" title="Upload notification"/>
-		<emailtemplate id="email_notifyoncomment" title="Comment notification"/>
 		<emailtemplate id="email_createaccount" title="Create account notification"/>
 		<emailtemplate id="email_confirmuser" title="New user registration confirmation"/>
 		<emailtemplate id="email_modifyaccount" title="Account modified notification"/>

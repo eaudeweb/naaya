@@ -36,7 +36,8 @@ from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
-from containers import AccountSubscription, AnonymousSubscription
+from containers import (SubscriptionContainer, AccountSubscription,
+                        AnonymousSubscription)
 import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')

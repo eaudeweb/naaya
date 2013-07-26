@@ -1,5 +1,6 @@
 3.3.8 (unreleased)
 -------------------
+* removed old email templates and old method notifyMaintainerEmail [dumitval]
 
 3.3.7 (2013-07-26)
 -------------------
