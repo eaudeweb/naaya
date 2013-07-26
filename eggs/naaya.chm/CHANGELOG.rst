@@ -1,4 +1,7 @@
-3.0.24 (unreleased)
+3.0.25 (unreleased)
+------------------
+
+3.0.24 (2013-07-26)
 ------------------
 * removed jquery js, the one from Naaya should be used [dumitval]
 
