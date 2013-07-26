@@ -1,4 +1,7 @@
-1.1.13 (unreleased)
+1.1.14 (unreleased)
+-------------------
+
+1.1.13(2013-07-26)
 -------------------
 * updated link to jquery.js [dumitval]
 * removed unused code [simiamih]
