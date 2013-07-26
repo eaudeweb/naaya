@@ -1,5 +1,9 @@
-3.3.8 (unreleased)
+3.3.9 (unreleased)
 -------------------
+
+3.3.8 (2013-07-26)
+-------------------
+* reverted an import cleanup, it seems it broke something [dumitval]
 * removed old email templates and old method notifyMaintainerEmail [dumitval]
 
 3.3.7 (2013-07-26)
