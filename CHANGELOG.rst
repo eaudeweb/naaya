@@ -1,4 +1,7 @@
-1.4.6 (unreleased)
+1.4.7 (unreleased)
+-------------------
+
+1.4.6 (2013-07-26)
 -------------------
 * updated default permissions [simiamih]
 
