@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 -------------------
+* fixed AttributeError getSite in zope root [dumitval]
 
 1.1.6 (2013-07-26)
 -------------------
