@@ -72,8 +72,8 @@ class AccountSubscription(object):
         user_obj = auth_tool.getUser(self.user_id)
         if user_obj is not None:
             full_name = u'%s %s' % (
-                    auth_tool.getUserFirstName(user_obj),
-                    auth_tool.getUserLastName(user_obj))
+                    auth_tool.getUserFirstName(user_obj).decode('utf-8'),
+                    auth_tool.getUserLastName(user_obj).decode('utf-8'))
             email = auth_tool.getUserEmail(user_obj)
             return (full_name, email)
 

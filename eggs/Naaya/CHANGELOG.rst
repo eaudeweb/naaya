@@ -1,5 +1,6 @@
 3.3.9 (unreleased)
 -------------------
+* fix for a notification tool crash with unicode names [dumitval]
 
 3.3.8 (2013-07-26)
 -------------------
