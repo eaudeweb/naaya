@@ -1,4 +1,7 @@
-1.1.7 (unreleased)
+1.1.8 (unreleased)
+-------------------
+
+1.1.7 (2013-08-01)
 -------------------
 * fixed AttributeError getSite in zope root [dumitval]
 
