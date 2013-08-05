@@ -1,5 +1,7 @@
 3.3.10 (unreleased)
 -------------------
+* changed default depth for tree objects [dumitval]
+
 3.3.9 (2013-08-01)
 -------------------
 * fix for a notification tool crash with unicode names [dumitval]
