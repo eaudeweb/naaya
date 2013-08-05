@@ -1438,7 +1438,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if root_site is None:
             root_site = self
 
-        def recurse(items, level=0, stop_level=2):
+        def recurse(items, level=0, stop_level=7):
             """ Create a dict with node properties and children """
             res = []
             for item in items:
