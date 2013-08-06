@@ -1,4 +1,7 @@
-3.3.10 (unreleased)
+3.3.11 (unreleased)
+-------------------
+
+3.3.10 (2013-08-06)
 -------------------
 * changed default depth for tree objects [dumitval]
 
