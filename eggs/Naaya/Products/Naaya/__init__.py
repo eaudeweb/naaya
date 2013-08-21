@@ -110,8 +110,8 @@ misc_ = {
 
     # jQuery
     # Use jquery.js if version is of no importance
-    'jquery.js':ImageFile('www/js/jquery-1.7.2.min.js', globals()),
-    'jquery.min.js':ImageFile('www/js/jquery-1.7.2.min.js', globals()),
+    'jquery.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
+    'jquery.min.js':ImageFile('www/js/jquery-1.7.1.min.js', globals()),
 
     # jQuery plugins
     'jquery-ui.js':ImageFile('www/js/jquery-ui-1.9.2.min.js', globals()),

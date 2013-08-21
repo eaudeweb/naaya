@@ -71,9 +71,14 @@ class AccountSubscription(object):
         auth_tool = site.getAuthenticationTool()
         user_obj = auth_tool.getUser(self.user_id)
         if user_obj is not None:
-            full_name = u'%s %s' % (
+            try:
+                full_name = u'%s %s' % (
                     auth_tool.getUserFirstName(user_obj).decode('utf-8'),
                     auth_tool.getUserLastName(user_obj).decode('utf-8'))
+            except UnicodeEncodeError:
+                full_name = u'%s %s' % (
+                    auth_tool.getUserFirstName(user_obj),
+                    auth_tool.getUserLastName(user_obj))
             email = auth_tool.getUserEmail(user_obj)
             return (full_name, email)
 
