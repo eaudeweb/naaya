@@ -1,4 +1,4 @@
-3.3.11 (unreleased)
+3.3.11 (2013-08-21)
 -------------------
 * reverted jquery to version 1.7.1 because of jstree issues [dumitval]
 
