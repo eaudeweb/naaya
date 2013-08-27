@@ -1,3 +1,7 @@
+3.3.12 (unreleased)
+-------------------
+* fixes to zip_import so it works with unicode folder and file names [dumitval]
+
 3.3.11 (2013-08-21)
 -------------------
 * reverted jquery to version 1.7.1 because of jstree issues [dumitval]

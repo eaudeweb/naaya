@@ -66,6 +66,10 @@ def read_zipfile_contents(data):
     file_paths = set()
     folder_tree = []
     def add_to_folder_tree(folder_path):
+        try:
+            folder_path = folder_path.decode('utf-8')
+        except UnicodeDecodeError:
+            folder_path = folder_path.decode('CP437')
         node = folder_tree
         for path_element in folder_path.split('/'):
             for name, contents in node:
@@ -93,6 +97,10 @@ def read_zipfile_contents(data):
     def iterate_zipfile_files():
         for file_path in file_paths:
             file_data = zf.read(file_path)
+            try:
+                file_path = file_path.decode('utf-8')
+            except UnicodeDecodeError:
+                file_path = file_path.decode('CP437')
             yield file_path, file_data
 
     return folder_tree, iterate_zipfile_files()
@@ -159,11 +167,7 @@ class ZipImportTool(Implicit, Item):
                 else:
                     file_container_path, file_name = '', file_path
 
-                try:
-                    file_name.decode('utf-8')
-                except UnicodeDecodeError:
-                    #Try to decode the filename using the WinZip encoding ('DOS Latin')
-                    file_name = file_name.decode('CP437').encode('utf-8')
+                file_name = file_name.encode('utf-8')
                 assert file_container_path in folder_map
                 try:
                     file_container = folder_map[file_container_path]

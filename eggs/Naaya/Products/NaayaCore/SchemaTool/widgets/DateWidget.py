@@ -25,7 +25,7 @@ class DateWidget(Widget):
     # Constructor
     _constructors = (addDateWidget,)
 
-    default = None
+    default = DateTime().strftime('%d/%m/%Y')
 
     def parseFormData(self, value):
         """Get datamodel from form"""
