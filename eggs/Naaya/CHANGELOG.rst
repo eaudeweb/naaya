@@ -1,4 +1,7 @@
-3.3.12 (unreleased)
+3.3.13 (unreleased)
+-------------------
+
+3.3.12 (2013-08-27)
 -------------------
 * fixes to zip_import so it works with unicode folder and file names [dumitval]
 
