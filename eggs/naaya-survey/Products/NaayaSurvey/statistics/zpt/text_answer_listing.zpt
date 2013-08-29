@@ -1,4 +1,7 @@
-<div tal:define="answers options/data; question options/question" class="statistic">
+<div class="statistic"
+	tal:define="answers options/data;
+							question options/question;
+							auth_tool python:here.getSite().getAuthenticationTool();" >
 
 <p i18n:translate="">
 If you want to view the entire answer of the respondent, click on the user displayed in the first column.
@@ -13,7 +16,13 @@ If you want to view the entire answer of the respondent, click on the user displ
 		</thead>
 		<tbody>
 			<tr tal:repeat="answer answers">
-				<th tal:condition="here/checkPermissionPublishObjects"><a tal:content="python:answer.respondent" tal:attributes="href python:answer.absolute_url()" /></th>
+				<th tal:condition="here/checkPermissionPublishObjects">
+					<a tal:condition="not:answer/anonymous_answer"
+						tal:content="python:auth_tool.name_from_userid(answer.respondent) or answer.respondent"
+						tal:attributes="href python:answer.absolute_url()" />
+					<a i18n:translate="" tal:condition="answer/anonymous_answer"
+						tal:attributes="href python:answer.absolute_url()" >Anonymous user</a>
+				</th>
 				<td tal:content="python:here.utShowDateTime(answer.modification_time)" />
 				<td tal:content="structure python:here.utLinkifyURLs(answer.get(question.id, '', lang=here.gl_get_selected_language())) or 'No response.'" />
 			</tr>

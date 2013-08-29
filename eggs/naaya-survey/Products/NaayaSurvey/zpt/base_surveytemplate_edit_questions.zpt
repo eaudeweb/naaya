@@ -11,7 +11,7 @@ function toggleSelect(caller){
 //-->
 </script>
 
-<form action="." method="post" class="surveyAddWidgetsForm">
+<form action="." method="post" class="surveyAddWidgetsForm" name="frmAdd">
 <!-- Title -->
 <div>
 	<label for="title">

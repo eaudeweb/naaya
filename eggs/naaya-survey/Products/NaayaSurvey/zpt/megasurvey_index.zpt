@@ -63,6 +63,8 @@
     editing python: my_answer and not here.allow_multiple_answers;
     editing_draft python: editing and my_answer.is_draft();
     editing_answer python: editing and not my_answer.is_draft();
+    anonymous_answer my_answer/anonymous_answer|nothing;
+    anonymous_answer python: test(editing, anonymous_answer, None);
     user_anonymous python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
 ">
 
@@ -233,6 +235,23 @@
 			           condition="tmpl">
 				<metal:block use-macro="tmpl/macros/validate" />
 			</tal:block>
+
+			<div class="widgetEditMode"
+				tal:condition="python:here.allow_anonymous and not here.isAnonymousUser()">
+				<label class="widget-title" for="w_wewe" i18n:translate="">
+					<span>Do you want your answer to be anonymous?</span>
+					<span class="required">*</span>
+				</label>
+				<select id="anonymous_answer" name="anonymous_answer:int">
+					<option value="7" i18n:translate=""></option>
+					<option value="1" i18n:translate=""
+						tal:attributes="selected python:test(anonymous_answer==1,
+							'selected', None)">Yes</option>
+					<option value="0" i18n:translate=""
+						tal:attributes="selected python:test(anonymous_answer==0,
+							'selected', None)">No</option>
+				</select>
+			</div>
 
 			<tal:block tal:content="structure python:here.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {}))" />
 

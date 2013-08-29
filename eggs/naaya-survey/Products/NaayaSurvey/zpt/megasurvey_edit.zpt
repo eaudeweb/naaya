@@ -96,5 +96,17 @@
 				</option>
 			</select>
 		</div>
+		<!-- Allow Anonymous answers -->
+		<div class="field">
+			<label for="allow_anonymous" i18n:translate="">
+				Allow registered users to submit anonymous answers?
+			</label>
+			<select id="allow_anonymous" name="allow_anonymous">
+				<option value="1" i18n:translate=""
+					tal:attributes="selected here/allow_anonymous">Yes</option>
+				<option value="0" i18n:translate=""
+					tal:attributes="selected not:here/allow_anonymous">No</option>
+			</select>
+		</div>
 	</metal:block>
 </tal:block>
