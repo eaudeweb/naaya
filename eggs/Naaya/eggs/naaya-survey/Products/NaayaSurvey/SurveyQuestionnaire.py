@@ -94,6 +94,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     notify_respondents = 'LET_THEM_CHOOSE_YES'
     allow_overtime = 0
     allow_drafts = False
+    allow_anonymous = False
     allow_multiple_answers = False
 
     def __init__(self, id, survey_template, lang=None, **kwargs):
@@ -186,12 +187,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     def addSurveyAnswer(self, REQUEST=None, notify_respondent=False,
             draft=False, **kwargs):
         """Add someone's answer"""
+        translate = self.getPortalI18n().get_translation
         if REQUEST:
             kwargs.update(REQUEST.form)
 
         #check survey expiration
         if self.expired() and not self.checkPermissionPublishObjects():
-            error_msg = "The survey has expired"
+            error_msg = translate("The survey has expired")
             if not REQUEST:
                 raise SurveyQuestionnaireException(error_msg)
             self.setSessionErrorsTrans(error_msg)
@@ -201,6 +203,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         #check datamodel
         datamodel = {}
         errors = []
+        anonymous_answer = kwargs.get('anonymous_answer')
+        if anonymous_answer not in [0, 1]:
+            errors.append(translate('Please specify if you want your answer '
+                          'to be anonymous'))
+
         for widget in self.getWidgets():
             try:
                 value = widget.getDatamodel(kwargs)
@@ -210,12 +217,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 if not REQUEST:
                     raise
                 value = None
-                errors.append(str(ex))
+                errors.append(translate(ex.message))
             datamodel[widget.getWidgetId()] = value
-
         if draft:
             if not self.canAddAnswerDraft():
-                error_msg = "Can't add draft (not logged in or not allowed)"
+                error_msg = translate(
+                    "Can't add draft (not logged in or not allowed)")
                 if not REQUEST:
                     raise SurveyQuestionnaireException(error_msg)
                 errors.append(error_msg)
@@ -289,6 +296,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             answer.suggestions = suggestions
         if cf_approval_list:
             answer.cf_approval_list = cf_approval_list
+        answer.anonymous_answer = bool(anonymous_answer)
 
         if self.isAnonymousUser():
             if anonymous_editing_key:
@@ -353,7 +361,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if respondent_name == 'Anonymous User':
             d['RESPONDENT'] = ("%s, email: %s" % (respondent_name, answer.get('anonymous_responder_email', 'Not available')))
         else:
-            d['RESPONDENT'] = ("User %s" % auth_tool.getUserFullName(respondent))
+            if answer.anonymous_answer:
+                d['RESPONDENT'] = ("Anonymous user")
+            else:
+                d['RESPONDENT'] = ("User %s" % auth_tool.getUserFullName(respondent))
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()

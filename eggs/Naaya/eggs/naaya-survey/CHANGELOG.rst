@@ -1,5 +1,6 @@
 1.2.33 (unreleased)
 ===================
+* allow auth. users to answer anonymously [dumitval]
 
 1.2.32 (2013-07-26)
 ===================

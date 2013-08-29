@@ -104,3 +104,10 @@ class SavePropertiesTestCase(unittest.TestCase):
         for value in [0, 1]:
             survey.saveProperties(allow_drafts=value)
             self.assertEqual(survey.__dict__['allow_drafts'], value)
+
+    def test_allow_anonymous(self):
+        survey = self.survey
+
+        for value in [0, 1]:
+            survey.saveProperties(allow_anonymous=value)
+            self.assertEqual(survey.__dict__['allow_anonymous'], value)
