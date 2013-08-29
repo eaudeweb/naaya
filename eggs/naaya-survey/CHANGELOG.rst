@@ -1,4 +1,7 @@
-1.2.33 (unreleased)
+1.2.34 (unreleased)
+===================
+
+1.2.33 (2013-08-29)
 ===================
 * allow auth. users to answer anonymously [dumitval]
 
