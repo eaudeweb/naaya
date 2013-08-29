@@ -42,7 +42,8 @@
 				<li>
 					<a tal:attributes="href answer/absolute_url" i18n:translate="">
 						Answered by
-						<tal:block replace="python: auth_tool.name_from_userid(answer.respondent) or answer.respondent" i18n:name="respondent">username</tal:block>
+						<tal:block condition="answer/anonymous_answer" i18n:name="anonymous" i18n:translate="">Anonymous user</tal:block>
+						<tal:block condition="not:answer/anonymous_answer" replace="python: auth_tool.name_from_userid(answer.respondent) or answer.respondent" i18n:name="respondent">username</tal:block>
 						on
 						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)" i18n:name="answer-date">date</tal:block>
 					</a>
@@ -64,7 +65,8 @@
 				<li>
 					<a tal:attributes="href draft/absolute_url" i18n:translate="">
 						Draft by
-						<tal:block replace="python: auth_tool.name_from_userid(draft.respondent) or draft.respondent" i18n:name="respondent">username</tal:block>
+						<tal:block condition="answer/anonymous_answer" i18n:name="anonymous" i18n:translate="">Anonymous user</tal:block>
+						<tal:block condition="not:answer/anonymous_answer" replace="python: auth_tool.name_from_userid(draft.respondent) or draft.respondent" i18n:name="respondent">username</tal:block>
 						on
 						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)" i18n:name="answer-date">date</tal:block>
 					</a>

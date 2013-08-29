@@ -19,7 +19,8 @@ from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 gUtil = utils()
 
 def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
-                           REQUEST=None, id=None, creation_date=None):
+                           REQUEST=None, id=None, creation_date=None,
+                           anonymous_answer=None):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
@@ -41,6 +42,9 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
     context._setObject(id, ob)
     ob = context._getOb(id)
 
+    if anonymous_answer:
+        ob.anonymous_answer = True
+
     ob.set_datamodel(datamodel)
     # handle files
     for key, value in datamodel.items():
@@ -61,6 +65,7 @@ class SurveyAnswer(Folder, NyProperties):
     meta_label = "Survey Answer"
     icon = 'misc_/NaayaSurvey/NySurveyAnswer.gif'
     creation_date = None
+    anonymous_answer = False
 
     _constructors = (manage_addSurveyAnswer,)
     _properties=()
@@ -168,9 +173,12 @@ class SurveyAnswer(Folder, NyProperties):
         """
         datamodel=self.getDatamodel()
         widgets = self.getSortedWidgets()
-        atool = self.getSite().getAuthenticationTool()
-        respondent = atool.getUserFullNameByID(self.respondent)
-        res = [respondent]
+        if self.anonymous_answer:
+            res = ['Anonymous user']
+        else:
+            atool = self.getSite().getAuthenticationTool()
+            respondent = atool.name_from_userid(self.respondent)
+            res = [respondent]
         for widget in widgets:
             res.append(widget.get_value(
                 datamodel=datamodel.get(widget.id, None), **kwargs))

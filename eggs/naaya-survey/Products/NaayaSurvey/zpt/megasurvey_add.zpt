@@ -139,6 +139,16 @@ function fSet(ctrl, value)
 			<option value="1" i18n:translate="">Yes</option>
 		</select>
 	</div>
+	<!-- Allow Anonymous answers -->
+	<div class="field">
+		<label for="allow_anonymous" i18n:translate="">
+			Allow registered users to submit anonymous answers?
+		</label>
+		<select id="allow_anonymous" name="allow_anonymous">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
 
 	<!-- Submit buttons-->
 	<div class="field">
