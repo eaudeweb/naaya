@@ -361,12 +361,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d = {}
         d['NAME'] = auth_tool.getUserFullName(owner)
         if respondent_name == 'Anonymous User':
-            d['RESPONDENT'] = ("%s, email: %s" % (respondent_name, answer.get('anonymous_responder_email', 'Not available')))
+            d['RESPONDENT'] = ("%s, email: %s" % (
+                respondent_name,
+                answer.get('anonymous_responder_email', 'Not available')))
         else:
-            if answer.anonymous_answer:
-                d['RESPONDENT'] = ("Anonymous user")
-            else:
-                d['RESPONDENT'] = ("User %s" % auth_tool.getUserFullName(respondent))
+            d['RESPONDENT'] = ("User %s" %
+                answer.get_respondent_name())
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()

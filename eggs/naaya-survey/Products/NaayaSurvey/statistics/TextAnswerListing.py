@@ -87,10 +87,7 @@ class TextAnswerListing(BaseStatistic):
         for answer in data:
             if self.checkPermissionPublishObjects():
                 answer_url = answer.absolute_url()
-                if answer.anonymous_answer:
-                    respondent = 'Anonymous user'
-                else:
-                    respondent = answer.respondent
+                respondent = answer.get_respondent_name()
                 ws.write(current_row, 1, xlwt.Formula('HYPERLINK' + '("%s"; "%s")'
                     % (answer_url, respondent)), hyper_style)
             ws.write(current_row, 2,
