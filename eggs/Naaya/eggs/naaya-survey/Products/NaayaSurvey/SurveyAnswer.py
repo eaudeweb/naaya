@@ -173,12 +173,7 @@ class SurveyAnswer(Folder, NyProperties):
         """
         datamodel=self.getDatamodel()
         widgets = self.getSortedWidgets()
-        if self.anonymous_answer:
-            res = ['Anonymous user']
-        else:
-            atool = self.getSite().getAuthenticationTool()
-            respondent = atool.name_from_userid(self.respondent)
-            res = [respondent]
+        res = [self.get_respondent_name()]
         for widget in widgets:
             res.append(widget.get_value(
                 datamodel=datamodel.get(widget.id, None), **kwargs))
@@ -231,6 +226,24 @@ class SurveyAnswer(Folder, NyProperties):
                 return self.respondent != 'Anonymous User' or (
                     key and key == REQUEST.get('key'))
 
+    security.declareProtected(view, 'get_respondent_name')
+    def get_respondent_name(self):
+        """
+        Try to return the person's name, based on authenticated user,
+        subscriptions (if included in a meeting), while taking
+        the anonymous_answer option into account
+        """
+        if self.anonymous_answer:
+            return 'Anonymous (authenticated user)'
+        if (self.aq_parent.aq_parent.meta_type == 'Naaya Meeting' and
+                'signup:' in self.respondent):
+            meeting = self.aq_parent.aq_parent
+            signup_id = self.respondent.split(':')[1]
+            signup = meeting.participants.subscriptions.getSignup(signup_id)
+            if signup is not None:
+                return signup.name
+        auth_tool = self.getSite().getAuthenticationTool()
+        return auth_tool.name_from_userid(self.respondent) or self.respondent
 
 class NySurveyAnswerAddEvent(object):
     """ """
