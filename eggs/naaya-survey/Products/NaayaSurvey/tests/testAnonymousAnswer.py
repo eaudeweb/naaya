@@ -42,7 +42,7 @@ class SurveyTestCase(NaayaFunctionalTestCase):
 
         self.browser.go(self.survey_url+'/view_answers_html')
         html = self.browser.get_html()
-        self.assertTrue('Answered by Anonymous user' in html)
+        self.assertTrue('Answered by Anonymous authenticated user' in html)
         self.assertFalse('Answered by admin' in html)
 
         self.browser_do_logout()
@@ -53,7 +53,7 @@ class SurveyTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')
         html = self.browser.get_html()
         self.assertFalse('>admin<' in html)
-        self.assertTrue('>Anonymous user<' in html)
+        self.assertTrue('>Anonymous authenticated user<' in html)
 
         self.browser_do_logout()
 
@@ -70,7 +70,7 @@ class SurveyTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.survey_url+'/view_answers_html')
         html = self.browser.get_html()
         self.assertTrue('Answered by admin' in html)
-        self.assertFalse('Answered by Anonymous user' in html)
+        self.assertFalse('Answered by Anonymous authenticated user' in html)
 
         self.browser_do_logout()
 
@@ -87,7 +87,83 @@ class SurveyTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')
         html = self.browser.get_html()
         self.assertTrue('>admin<' in html)
-        self.assertFalse('>Anonymous user<' in html)
+        self.assertFalse('>Anonymous authenticated user<' in html)
+
+        self.browser_do_logout()
+
+    def test_anonymous_disabled_view_old_answer(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go(self.survey_url+'/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['allow_anonymous'] = ['0']
+        self.browser.clicked(form, form.find_control('allow_anonymous'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url+'/view_answers_html')
+        html = self.browser.get_html()
+        self.assertTrue('Answered by Anonymous authenticated user' in html)
+        self.assertFalse('Answered by admin' in html)
+
+        self.browser_do_logout()
+
+    def test_anonymous_disabled_view_answers(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go(self.survey_url+'/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['allow_anonymous'] = ['0']
+        self.browser.clicked(form, form.find_control('allow_anonymous'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url)
+        form = self.browser.get_form('frmAdd')
+        form['w_question:utf8:ustring'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url+'/view_answers_html')
+        html = self.browser.get_html()
+        self.assertTrue('Answered by admin' in html)
+        self.assertFalse('Answered by Anonymous authenticated user' in html)
+
+        self.browser_do_logout()
+
+    def test_anonymous_disabled_old_answer_reports(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go(self.survey_url+'/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['allow_anonymous'] = ['0']
+        self.browser.clicked(form, form.find_control('allow_anonymous'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')
+        html = self.browser.get_html()
+        self.assertFalse('>admin<' in html)
+        self.assertTrue('>Anonymous authenticated user<' in html)
+
+        self.browser_do_logout()
+
+    def test_anonymous_disabled_reports(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go(self.survey_url+'/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['allow_anonymous'] = ['0']
+        self.browser.clicked(form, form.find_control('allow_anonymous'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url)
+        form = self.browser.get_form('frmAdd')
+        form['w_question:utf8:ustring'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        self.browser.submit()
+
+        self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')
+        html = self.browser.get_html()
+        self.assertTrue('>admin<' in html)
+        self.assertFalse('>Anonymous authenticated user<' in html)
 
         self.browser_do_logout()
 

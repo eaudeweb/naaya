@@ -234,7 +234,7 @@ class SurveyAnswer(Folder, NyProperties):
         the anonymous_answer option into account
         """
         if self.anonymous_answer:
-            return 'Anonymous (authenticated user)'
+            return 'Anonymous authenticated user'
         if (self.aq_parent.aq_parent.meta_type == 'Naaya Meeting' and
                 'signup:' in self.respondent):
             meeting = self.aq_parent.aq_parent
