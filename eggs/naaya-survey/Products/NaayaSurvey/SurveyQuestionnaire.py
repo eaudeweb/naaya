@@ -203,10 +203,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         #check datamodel
         datamodel = {}
         errors = []
-        anonymous_answer = kwargs.get('anonymous_answer')
-        if anonymous_answer not in [0, 1]:
-            errors.append(translate('Please specify if you want your answer '
-                          'to be anonymous'))
+        if self.allow_anonymous and not self.isAnonymousUser():
+            anonymous_answer = kwargs.get('anonymous_answer')
+            if anonymous_answer not in [0, 1]:
+                errors.append(translate('Please specify if you want your answer '
+                              'to be anonymous'))
 
         for widget in self.getWidgets():
             try:
@@ -296,7 +297,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             answer.suggestions = suggestions
         if cf_approval_list:
             answer.cf_approval_list = cf_approval_list
-        answer.anonymous_answer = bool(anonymous_answer)
+        if self.allow_anonymous and not self.isAnonymousUser():
+            answer.anonymous_answer = bool(anonymous_answer)
 
         if self.isAnonymousUser():
             if anonymous_editing_key:

@@ -1,5 +1,6 @@
 1.2.34 (unreleased)
 ===================
+* bugfix in anonymous aswering system [dumitval]
 
 1.2.33 (2013-08-29)
 ===================
