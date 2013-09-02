@@ -16,7 +16,11 @@ log = logging.getLogger('naaya.ldapdump')
 log.setLevel(logging.DEBUG)
 
 def get_config(config_path):
-    file = open(config_path)
+    try:
+        file = open(config_path)
+    except IOError, e:
+        return {'_root_path': os.path.dirname(__file__),
+                'sqlite': {'path': ''}}
     try:
         config = yaml.load(file)
         config['_root_path'] = os.path.abspath(os.path.dirname(config_path))
