@@ -107,7 +107,11 @@
                 </tr>
                 <tr tal:repeat="item users"
                         tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
-                    <td><input type="checkbox" name="uids:list" tal:attributes="value item/uid"/></td>
+                <tal:block
+                  define="existing python:here.registration_status(username=item['uid'])">
+                    <td><input type="checkbox" name="uids:list"
+                      tal:attributes="value item/uid;
+                                    disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
                     <td><span tal:replace="item/cn"/></td>
                     <td><span tal:replace="item/uid"/></td>
                     <td><span tal:replace="item/organization"/></td>
@@ -115,7 +119,13 @@
                             <span tal:replace="item/mail"/>
                         </a>
                     </td>
-                    <td><span tal:replace="item/info"/></td>
+                  <td>
+                    <tal:block condition="existing" i18n:translate="">
+                      User already subscribed, subscription status is
+                        "<tal:block i18n:translate="" i18n:name="subscription_status" tal:content="existing" />"
+                    </tal:block>
+                  </td>
+                </tal:block>
                 </tr>
             </table>
             <input type="hidden" name="role" tal:attributes="value here/getParticipantRole"/>
@@ -159,11 +169,21 @@
                 </tr>
                 <tr tal:repeat="item users"
                         tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
-                    <td><input type="checkbox" name="uids:list" tal:attributes="value item/uid"/></td>
+                <tal:block
+                  define="existing python:here.registration_status(username=item['uid'])">
+                    <td><input type="checkbox" name="uids:list"
+                      tal:attributes="value item/uid;
+                                    disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
                     <td><span tal:replace="item/cn"/></td>
                     <td><span tal:replace="item/uid"/></td>
                     <td><span tal:replace="item/organization"/></td>
-                    <td><span tal:replace="item/info"/></td>
+                    <td>
+                      <tal:block condition="existing" i18n:translate="">
+                        User already subscribed, subscription status is
+                          "<tal:block i18n:translate="" i18n:name="subscription_status" tal:content="existing" />"
+                      </tal:block>
+                    </td>
+                  </tal:block>
                 </tr>
             </table>
             <input type="hidden" name="role" tal:attributes="value here/getParticipantRole"/>
