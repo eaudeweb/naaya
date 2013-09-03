@@ -67,8 +67,13 @@
       <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()"
          tal:attributes="href string:${here/absolute_url}/edit_html"
          ><span i18n:translate="">Version control</span></a>
-      <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"
-         i18n:translate="">This item has been checked out by another user</strong>
+      <tal:block condition="python:here.hasVersion() and not here.isVersionAuthor()">
+        <strong i18n:translate="">This item has been checked out by another user</strong>
+        <a tal:attributes="href string:${here/absolute_url}/discardVersion"
+          onclick="return confirm(gettext('Are you sure?'))">
+          <span i18n:translate="">Discard unpublished changes</span>
+        </a>
+      </tal:block>
     </tal:block>
     <a tal:condition="here/checkPermissionDeleteObject"
        tal:attributes="href string:${here/absolute_url}/deleteThis"
