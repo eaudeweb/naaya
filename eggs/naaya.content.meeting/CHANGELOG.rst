@@ -1,4 +1,7 @@
-1.2.41 (unreleased)
+1.2.42 (unreleased)
+-------------------
+
+1.2.41 (2013-09-03)
 -------------------
 * added option to search and signup users (as authenticated) [dumitval]
 
