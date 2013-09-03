@@ -30,7 +30,7 @@
 
     <table class="meeting-registration-methods">
 
-    <tr tal:define="url1 string:${here/absolute_url}/subscribe_account;
+    <tr tal:define="url1 string:${here/absolute_url}/subscribe_my_account;
                     url2 string:${site/absolute_url}/login_html?came_from=${request/ACTUAL_URL};
                     url python:test(is_anonymous, url2, url1)">
         <td>
@@ -41,9 +41,7 @@
         <td>
         <p tal:condition="is_anonymous"
             i18n:translate="">
-            If you already have a local or EIONET LDAP account you can
-            <a tal:attributes="href url" i18n:name="login" i18n:translate="">login</a>
-             and request to participate with your account.
+            Please <a tal:attributes="href url" i18n:name="login" i18n:translate="">click here to login</a> if you have an Eionet account in order to participate in the meeting (you will have the option to recover your password if you lost it).
         </p>
         <p tal:condition="python:not is_anonymous and not here.registration_status()"
             i18n:translate="">
@@ -77,10 +75,10 @@
         </td>
         <td>
         <p tal:condition="is_anonymous" i18n:translate="">
-            You can
+            If you don't have an Eionet account, you can
             <a tal:attributes="href string:${here/absolute_url}/signup"
-               i18n:name="sign-up-link" i18n:translate="">sign up</a>
-            for a new account to participate in this meeting.
+               i18n:name="sign-up-link" i18n:translate="">sign up for a local account</a>
+            as a participant in this meeting.
         </p>
         <p tal:condition="not: is_anonymous" i18n:translate="">
             You can

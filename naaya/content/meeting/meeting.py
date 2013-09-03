@@ -513,9 +513,9 @@ class NyMeeting(NyContentData, NyFolder):
         participants = self.getParticipants()
         return participants.isParticipant(userid)
 
-    def registration_status(self):
+    def registration_status(self, username=None):
         """ """
-        username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        username = username or self.REQUEST.AUTHENTICATED_USER.getUserName()
         participants = self.getParticipants()
         subscriptions = participants.subscriptions.getAccountSubscriptions()
         for subscriber in subscriptions:

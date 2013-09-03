@@ -248,8 +248,22 @@ class Subscriptions(SimpleItem):
 
         self._account_subscriptions.update({uid: account_subscription})
 
-    security.declareProtected(view, 'subscribe_account')
-    def subscribe_account(self, REQUEST):
+    security.declareProtected(view, 'subscribe_accounts')
+    def subscribe_accounts(self, REQUEST):
+        """ """
+        meeting = self.getMeeting()
+        if not meeting.allow_register:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
+
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        for uid in uids:
+            self._add_account_subscription(uid)
+        return REQUEST.RESPONSE.redirect(self.absolute_url() +
+            '/subscribe_account_successful?uids='+','.join(uids))
+
+    security.declareProtected(view, 'subscribe_my_account')
+    def subscribe_my_account(self, REQUEST):
         """ """
         meeting = self.getMeeting()
         if not meeting.allow_register:
