@@ -4,6 +4,9 @@ def _decode(val, encoding_schema='utf-8'):
     if val is None:
         return ''
 
+    if isinstance(val, unicode):
+        return val
+
     return val.decode(encoding_schema)
 
 def schemaHasParam(acl_folder, param):

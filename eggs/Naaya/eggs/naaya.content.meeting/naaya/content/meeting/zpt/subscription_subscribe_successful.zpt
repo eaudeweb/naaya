@@ -4,7 +4,8 @@
     </metal:block>
 
     <metal:block fill-slot="body">
-    <tal:block tal:define="meeting here/getMeeting">
+    <tal:block tal:define="meeting here/getMeeting;
+                           uids python:request.get('uids', '')">
     <h1>
         <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
         <tal:block tal:replace="meeting/title" /> - <tal:block
@@ -17,12 +18,24 @@
         </span>
     </div>
 
-    <p i18n:translate="">
+    <p i18n:translate="" tal:condition="not:uids">
         You have successfully registered to participate in this meeting. You
         will be notified when the administrator approves your request. If the
         administrator accepts your request you will be listed as attendee to
         the meeting.
     </p>
+
+    <tal:block condition="uids" define="auth_tool python:here.getSite().getAuthenticationTool()">
+			<p i18n:translate="">
+					You have successfully registered following users to participate in this meeting:
+			</p>
+			<ul tal:define="uids python:uids.split(',')">
+				<li tal:repeat="uid uids"><tal:block content="python:auth_tool.name_from_userid(uid)" />
+				(<tal:block content="uid" />)</li>
+			</ul>
+			<p i18n:translate="">They will be notified when the administrator approves or denies this request. Participants accepted by the administrator will be listed as attendees to the meeting.
+			</p>
+		</tal:block>
 
     </tal:block>
     </metal:block>
