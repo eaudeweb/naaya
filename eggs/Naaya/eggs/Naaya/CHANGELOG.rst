@@ -1,5 +1,6 @@
 3.3.13 (unreleased)
 -------------------
+* display 'discard version' also on the checked-out item's index [dumitval]
 
 3.3.12 (2013-08-27)
 -------------------
