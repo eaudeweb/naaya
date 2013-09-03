@@ -899,9 +899,9 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/login_html?came_from=http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html())
         self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
-        self.assertTrue('http://localhost/portal/login_html?came_from=http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account' not in self.browser.get_html())
-        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account' in self.browser.get_html())
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account')
+        self.assertTrue('http://localhost/portal/login_html?came_from=http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_my_account' not in self.browser.get_html())
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_my_account' in self.browser.get_html())
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_my_account')
 
         self.assertEqual(len(self.diverted_mail), 1)
         body, addr_to, addr_from, subject = self.diverted_mail[0]
@@ -1217,7 +1217,7 @@ class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
         self.assertTrue('/participants/subscriptions/subscribe' not in self.browser.get_html())
 
         base_url = 'http://localhost/portal/info/mymeeting/participants/subscriptions/'
-        for rel_url in ['subscribe', 'signup', 'subscribe_account']:
+        for rel_url in ['subscribe', 'signup', 'subscribe_my_account']:
             self.browser.go(base_url + rel_url)
             self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/subscription_not_allowed')
 
