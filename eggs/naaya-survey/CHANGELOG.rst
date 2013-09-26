@@ -1,4 +1,7 @@
-1.2.35 (unreleased)
+1.2.36 (unreleased)
+===================
+
+1.2.35 (2013-09-26)
 ===================
 * define a local messages_html (view permission issues) [dumitval]
 * specify anonymous status in confirmation mail [dumitval]
