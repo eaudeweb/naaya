@@ -1742,6 +1742,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 'text/csv; charset=utf-8', output.len)
         return output.getvalue()
 
+    security.declareProtected(view, 'get_ldap_user_groups')
+    def get_ldap_user_groups(self, user_id):
+        """ """
+        try:
+            from eea.usersdb.factories import agent_from_site
+        except ImportError, e:
+            return []
+        agent = agent_from_site(self)
+        ldap_roles = sorted(agent.member_roles_info('user',
+                                                    user_id,
+                                                    ('description',)))
+
+        return ldap_roles
+
     manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
     manage_editUser_html = PageTemplateFile('zpt/authentication_edituser', globals())
