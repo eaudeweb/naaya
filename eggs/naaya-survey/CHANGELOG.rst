@@ -1,5 +1,7 @@
 1.2.35 (unreleased)
 ===================
+* define a local messages_html (view permission issues) [dumitval]
+* specify anonymous status in confirmation mail [dumitval]
 
 1.2.34 (2013-08-30)
 ===================
