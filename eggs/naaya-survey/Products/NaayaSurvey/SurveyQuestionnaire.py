@@ -183,6 +183,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return self.addSurveyAnswer(REQUEST, notify_respondent, draft=True,
                                     **kwargs)
 
+    messages_html = NaayaPageTemplateFile('zpt/survey_messages', globals(),
+                                            'NaayaSurvey.survey_messages')
+
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
     def addSurveyAnswer(self, REQUEST=None, notify_respondent=False,
             draft=False, **kwargs):
@@ -325,7 +328,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                     REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
                 else:
                     self.setSession('title', 'Thank you for taking the survey')
-                    self.setSession('body', '')
+                    if answer.anonymous_answer:
+                        self.setSession('body', 'You answer was recorded anonymously')
                     self.setSession('referer', self.absolute_url())
                     REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
             else:
@@ -392,6 +396,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = "%s" % answer.absolute_url()
+        if answer.anonymous_answer:
+            d['anonymous_answer'] = True
 
         self._sendEmailNotification('email_to_respondent', d,
                 respondent)
