@@ -1,5 +1,6 @@
 1.4.7 (unreleased)
 -------------------
+* added link to nfp organisations [dumitval]
 
 1.4.6 (2013-07-26)
 -------------------
