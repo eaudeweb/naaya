@@ -73,6 +73,32 @@ def nfp_admin_link(context, request):
 
     return nfp_url
 
+def organisations_link(context, request):
+    """
+    Check if LDAP user is NFP and return the URL to 'Edit organisations' section
+    """
+    organisations_url = ''
+
+    user = context.REQUEST.AUTHENTICATED_USER
+    site_id = context.getSite().getId()
+
+    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
+        zope_app = context.unrestrictedTraverse('/')
+        client = ProfileClient(zope_app, user)
+        roles_list = client.roles_list_in_ldap()
+        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+
+        country = ''
+        for leaf in leaf_roles_list:
+            if 'eionet-nfp-' in leaf['id']:
+                country = leaf['id'].rsplit('-', 1)[-1]
+
+        if country:
+            organisations_url = ("%s/organisations" %
+                                context.getSite().absolute_url())
+
+    return organisations_url
+
 def index_html(context, request):
     """
     Render Forum's first page
