@@ -1,4 +1,7 @@
-1.4.7 (unreleased)
+1.4.8 (unreleased)
+-------------------
+
+1.4.7 (2013-10-10)
 -------------------
 * added link to nfp organisations [dumitval]
 
