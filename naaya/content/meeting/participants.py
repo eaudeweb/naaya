@@ -3,6 +3,7 @@
 #Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
+from AccessControl.unauthorized import Unauthorized
 from AccessControl.Permissions import change_permissions, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
@@ -15,7 +16,7 @@ from Products.NaayaCore.managers.import_export import generate_excel
 #Meeting imports
 from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
                                    ADMINISTRATOR_ROLE, OWNER_ROLE)
-from permissions import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
+from permissions import PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 from utils import findUsers, listUsersInGroup
 from subscriptions import Subscriptions
@@ -30,24 +31,27 @@ class Participants(SimpleItem):
         self.id = id
         self.subscriptions = Subscriptions('subscriptions')
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getMeeting')
     def getMeeting(self):
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self.aq_parent
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSubscriptions')
     def getSubscriptions(self):
         return self.subscriptions
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsers')
     def findUsers(self, search_param, search_term):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         if len(search_term) == 0:
             return []
         return findUsers(self.getSite(), search_param, search_term)
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'listUsersInGroup')
     def listUsersInGroup(self, search_role):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         if len(search_role) == 0:
             return []
         return listUsersInGroup(self.getSite(), search_role)
@@ -63,17 +67,19 @@ class Participants(SimpleItem):
 
         return userid in self.getParticipants()
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getParticipants')
     def getParticipants(self):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         meeting = self.getMeeting()
         participants = meeting.users_with_local_role(PARTICIPANT_ROLE)
         administrators = meeting.users_with_local_role(ADMINISTRATOR_ROLE)
         return administrators + participants
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'participantsCount')
     def participantsCount(self):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return len(self.getParticipants())
 
     def _set_attendee(self, uid, role):
@@ -106,14 +112,46 @@ class Participants(SimpleItem):
 
         meeting.manage_setLocalRoles(uid, new_roles)
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'setAttendees')
     @postonly
     def setAttendees(self, role, REQUEST):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)
         for uid in uids:
             self._set_attendee(uid, role)
+            self.getSubscriptions()._add_account_subscription(uid, accept=True)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    @postonly
+    def setRepresentatives(self, REQUEST, remove=False):
+        """ """
+        if not self.nfp_for_country():
+            raise Unauthorized
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        keys = REQUEST.form.get('keys', [])
+        assert isinstance(keys, list)
+        ids = uids + keys
+        if remove:
+            nfp_country_code = None
+        else:
+            nfp_country_code = self.nfp_for_country()
+        self.setAttendeeInfo(ids, 'country', nfp_country_code)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    @postonly
+    def setReimbursement(self, REQUEST, remove=False):
+        """ """
+        if not self.nfp_for_country():
+            raise Unauthorized
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        keys = REQUEST.form.get('keys', [])
+        assert isinstance(keys, list)
+        ids = uids + keys
+        self.setAttendeeInfo(ids, 'reimbursed', not remove)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
@@ -135,16 +173,25 @@ class Participants(SimpleItem):
             self._del_attendee(uid)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
     @postonly
     def onAttendees(self, REQUEST):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         if 'del_attendees' in REQUEST.form:
             return self.delAttendees(REQUEST)
         elif 'set_administrators' in REQUEST.form:
             return self.setAttendees('Administrator', REQUEST)
         elif 'set_participants' in REQUEST.form:
             return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
+        elif 'set_representative' in REQUEST.form:
+            return self.setRepresentatives(REQUEST)
+        elif 'set_reimbursement' in REQUEST.form:
+            return self.setReimbursement(REQUEST)
+        elif 'unset_representative' in REQUEST.form:
+            return self.setRepresentatives(REQUEST, remove=True)
+        elif 'unset_reimbursement' in REQUEST.form:
+            return self.setReimbursement(REQUEST, remove=True)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -153,16 +200,28 @@ class Participants(SimpleItem):
         meeting = self.getMeeting()
         attendees = {}
         for uid in meeting.users_with_local_role(WAITING_ROLE):
-            attendees[uid] = WAITING_ROLE
+            attendees[uid] = {'role': WAITING_ROLE}
         for uid in meeting.users_with_local_role(PARTICIPANT_ROLE):
-            attendees[uid] = PARTICIPANT_ROLE
+            attendees[uid] = {'role': PARTICIPANT_ROLE}
         for uid in meeting.users_with_local_role(ADMINISTRATOR_ROLE):
-            attendees[uid] = ADMINISTRATOR_ROLE
+            attendees[uid] = {'role': ADMINISTRATOR_ROLE}
+        subscriptions = self.getSubscriptions()
+        for uid in attendees.keys():
+            if subscriptions._is_signup(uid):
+                attendee = subscriptions.getSignup(uid)
+            else:
+                attendee = subscriptions.getAccountSubscription(uid)
+            attendees[uid]['country'] = getattr(attendee, 'country', '-') or '-'
+            if getattr(attendee, 'reimbursed', False):
+                attendees[uid]['reimbursed'] = 'Yes'
+            else:
+                attendees[uid]['reimbursed'] = 'No'
         return attendees
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getAttendees')
     def getAttendees(self, sort_on=''):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         attendees = self._get_attendees()
         site = self.getSite()
 
@@ -175,7 +234,11 @@ class Participants(SimpleItem):
         elif sort_on == 'uid':
             key = lambda x: x.lower()
         elif sort_on == 'role':
-            key = lambda x: attendees[x].lower()
+            key = lambda x: attendees[x]['role'].lower()
+        elif sort_on == 'country':
+            key = lambda x: attendees[x]['country']
+        elif sort_on == 'reimbursed':
+            key = lambda x: attendees[x]['reimbursed']
         else:
             key = None
 
@@ -186,9 +249,10 @@ class Participants(SimpleItem):
 
         return attendee_uids
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getAttendeeInfo')
     def getAttendeeInfo(self, uid):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         subscriptions = self.getSubscriptions()
         if subscriptions._is_signup(uid):
             user = subscriptions.getSignup(uid)
@@ -211,22 +275,39 @@ class Participants(SimpleItem):
         if not phone:
             phone = self.get_survey_answer(uid, 'w_phone')
         attendees = self._get_attendees()
-        role = attendees[uid]
+        role = attendees[uid]['role']
+        country = attendees[uid]['country']
+        reimbursed = attendees[uid]['reimbursed']
         ret = {'uid': uid, 'name': name, 'email': email,
-                 'organization': organization, 'phone': phone, 'role': role}
+                 'organization': organization, 'phone': phone, 'role': role,
+                 'country': country, 'reimbursed': reimbursed}
         for k, v in ret.items():
             if not isinstance(v, basestring):
                 ret[k] = u''
         return ret
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
+    def setAttendeeInfo(self, ids, prop, val):
+        """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
+        subscriptions = self.getSubscriptions()
+        for attendee_id in ids:
+            if subscriptions._is_signup(attendee_id):
+                user = subscriptions.getSignup(attendee_id)
+            else:
+                user = subscriptions.getAccountSubscription(attendee_id)
+            setattr(user, prop, val)
+
     def getParticipantRole(self):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         return PARTICIPANT_ROLE
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'index_html')
     def index_html(self, REQUEST):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self.getFormsTool().getContent({'here': self},
                         'naaya.content.meeting.participants_index')
 
@@ -237,9 +318,10 @@ class Participants(SimpleItem):
         return self.getFormsTool().getContent({'here': self, 'sources': sources},
                         'naaya.content.meeting.participants_pickrole')
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'participants_table')
     def participants_table(self, form_name, input_name):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self.getFormsTool().getContent({'here': self,
                                                 'form_name': form_name,
                                                 'input_name': input_name},
