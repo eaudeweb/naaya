@@ -5,6 +5,7 @@ from random import randrange
 #Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
+from AccessControl.unauthorized import Unauthorized
 from Globals import InitializeClass
 from Persistence import Persistent
 from BTrees.OOBTree import OOBTree
@@ -119,9 +120,10 @@ class Subscriptions(SimpleItem):
 
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe')
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignups')
     def getSignups(self):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self._signups.itervalues()
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignup')
@@ -129,9 +131,10 @@ class Subscriptions(SimpleItem):
         """ """
         return self._signups.get(key, None)
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'index_html')
     def index_html(self, REQUEST):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_index')
 
     def _accept_signup(self, key):
@@ -175,9 +178,10 @@ class Subscriptions(SimpleItem):
         """ """
         return self._signups.has_key(key) and self._signups[key].accepted == 'accepted'
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'manageSignups')
     def manageSignups(self, REQUEST):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         keys = REQUEST.form.get('keys', [])
         assert isinstance(keys, list)
         if 'accept' in REQUEST.form:
@@ -189,6 +193,14 @@ class Subscriptions(SimpleItem):
         elif 'delete' in REQUEST.form:
             for key in keys:
                 self._delete_signup(key)
+        elif 'set_representative' in REQUEST.form:
+            self.setRepresentatives(REQUEST)
+        elif 'unset_representative' in REQUEST.form:
+            self.setRepresentatives(REQUEST, remove=True)
+        elif 'set_reimbursement' in REQUEST.form:
+            self.setReimbursement(REQUEST)
+        elif 'unset_reimbursement' in REQUEST.form:
+            self.setReimbursement(REQUEST, remove=True)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -208,7 +220,7 @@ class Subscriptions(SimpleItem):
                                                 'signup': signup},
                                          'naaya.content.meeting.subscription_welcome')
 
-    def _add_account_subscription(self, uid):
+    def _add_account_subscription(self, uid, accept=False):
         """ """
         site = self.getSite()
         meeting = self.getMeeting()
@@ -229,7 +241,7 @@ class Subscriptions(SimpleItem):
 
         self._account_subscriptions.insert(uid, account_subscription)
 
-        if meeting.auto_register:
+        if meeting.auto_register or accept:
             self._accept_account_subscription(uid)
 
         email_sender = self.getMeeting().getEmailSender()
@@ -290,9 +302,10 @@ class Subscriptions(SimpleItem):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe_successful')
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getAccountSubscriptions')
     def getAccountSubscriptions(self):
         """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
         return self._account_subscriptions.itervalues()
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getAccountSubscription')
@@ -304,9 +317,10 @@ class Subscriptions(SimpleItem):
         """ """
         return self._account_subscriptions.has_key(uid) and self._account_subscriptions[uid].accepted == 'accepted'
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'manageSignups')
     def manageAccountSubscriptions(self, REQUEST):
         """ """
+        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
+            raise Unauthorized
         uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)
         if 'accept' in REQUEST.form:
@@ -316,8 +330,18 @@ class Subscriptions(SimpleItem):
             for uid in uids:
                 self._reject_account_subscription(uid)
         elif 'delete' in REQUEST.form:
+            if not self.checkPermissionAdminMeeting():
+                raise Unauthorized
             for uid in uids:
                 self._delete_account_subscription(uid)
+        elif 'set_representative' in REQUEST.form:
+            self.setRepresentatives(REQUEST)
+        elif 'unset_representative' in REQUEST.form:
+            self.setRepresentatives(REQUEST, remove=True)
+        elif 'set_reimbursement' in REQUEST.form:
+            self.setReimbursement(REQUEST)
+        elif 'unset_reimbursement' in REQUEST.form:
+            self.setReimbursement(REQUEST, remove=True)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -394,7 +418,7 @@ class SignupUsersTool(BasicUserFolder):
 
         key = REQUEST.SESSION.get('nymt-current-key', None)
         if subscriptions._is_signup(key):
-            role = participants._get_attendees()[key]
+            role = participants._get_attendees()[key]['role']
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
             return None

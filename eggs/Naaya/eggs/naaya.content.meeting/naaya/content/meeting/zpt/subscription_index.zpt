@@ -42,16 +42,23 @@
 
     <fieldset>
         <legend i18n:translate="">List of signups</legend>
-        <form method="post" action="manageSignups" name="formManageSignups">
+        <form method="post" action="manageSignups" name="formManageSignups"
+                  tal:define="nfp_country_code meeting/nfp_for_country;
+                      nfp_country python:meeting.get_country(nfp_country_code)">
             <table class="datatable" width="95%">
                 <tr>
-                    <th width="30px">
+                    <th width="30px"
+                      tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                         <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSignups', 'keys:list')"/>
                     </th>
                     <th i18n:translate="">Name</th>
                     <th i18n:translate="">Email</th>
                     <th i18n:translate="">Organization</th>
+                    <tal:block condition="here/is_eionet_meeting">
+                      <th i18n:translate="">Represented country</th>
+                      <th i18n:translate="">Reimbursed participation</th>
+                    </tal:block>
                     <th i18n:translate="">Phone number</th>
                     <th i18n:translate="">Status</th>
                     <tal:block repeat="question here/get_survey_questions">
@@ -60,7 +67,7 @@
                     </tal:block>
                 </tr>
                 <tr tal:repeat="signup here/getSignups">
-                    <td>
+                    <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                         <input type="checkbox" name="keys:list"
                             tal:attributes="value signup/key"/>
                     </td>
@@ -71,6 +78,14 @@
                             tal:content="email"></a>
                     </td>
                     <td tal:content="signup/organization"/>
+                    <tal:block condition="here/is_eionet_meeting">
+                      <td tal:define="country_code signup/country|nothing;
+                                      country_name python:here.get_country(country_code)"
+                                      tal:content="country_name"/>
+                      <td tal:define="reimbursed signup/reimbursed|nothing"
+                        tal:content="python:test(reimbursed, 'Yes', 'No')"
+                        i18n:translate=""/>
+                    </tal:block>
                     <td tal:content="signup/phone"/>
                     <td tal:content="signup/accepted"/>
                     <tal:block define="uid signup/key"
@@ -81,25 +96,53 @@
                     </tal:block>
                 </tr>
             </table>
-            <input type="submit" i18n:attributes="value" name="accept" value="Accept as participant(s)"/>
-            <input type="submit" i18n:attributes="value" name="reject" value="Reject signup(s)"/>
-            <input type="submit" i18n:attributes="value" name="delete" value="Reject and delete signup(s)"/>
+            <input type="submit" i18n:attributes="value" name="accept"
+              value="Accept as participant(s)"
+              tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()" />
+            <input type="submit" i18n:attributes="value" name="reject"
+              value="Reject signup(s)"
+              tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()"/>
+            <input type="submit" i18n:attributes="value" name="delete"
+              tal:condition="here/checkPermissionAdminMeeting"
+              value="Reject and delete signup(s)"/>
+            <tal:block condition="here/is_eionet_meeting">
+              <input tal:condition="here/nfp_for_country" type="submit"
+                name="set_representative" i18n:attributes="value"
+                tal:attributes="value string:Set representative for ${nfp_country}"/>
+              <input tal:condition="here/nfp_for_country" type="submit"
+                name="unset_representative" i18n:attributes="value"
+                tal:attributes="value string:Un-set representative"/>
+              <input tal:condition="here/nfp_for_country" type="submit"
+                name="set_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Set reimbursed participation"/>
+              <input tal:condition="here/nfp_for_country" type="submit"
+                name="unset_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Un-set reimbursed"/>
+            </tal:block>
         </form>
 
     </fieldset>
 
     <fieldset>
         <legend i18n:translate="">List of account subscriptions</legend>
-        <form method="post" action="manageAccountSubscriptions" name="formManageAccountSubscriptions">
+        <form method="post" action="manageAccountSubscriptions"
+            name="formManageAccountSubscriptions"
+            tal:define="nfp_country_code meeting/nfp_for_country;
+                        nfp_country python:meeting.get_country(nfp_country_code)">
             <table class="datatable" width="95%">
                 <tr>
-                    <th width="30px">
+                    <th width="30px"
+                      tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                         <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageAccountSubscriptions', 'uids:list')"/>
                     </th>
                     <th i18n:translate="">Name</th>
                     <th i18n:translate="">Email</th>
                     <th i18n:translate="">Organization</th>
+                    <tal:block condition="here/is_eionet_meeting">
+                      <th i18n:translate="">Represented country</th>
+                      <th i18n:translate="">Reimbursed participation</th>
+                    </tal:block>
                     <th i18n:translate="">Phone number</th>
                     <th i18n:translate="">Status</th>
                     <tal:block repeat="question here/get_survey_questions">
@@ -108,7 +151,7 @@
                     </tal:block>
                 </tr>
                 <tr tal:repeat="account_subscription here/getAccountSubscriptions">
-                    <td>
+                    <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                         <input type="checkbox" name="uids:list"
                             tal:attributes="value account_subscription/uid"/>
                     </td>
@@ -119,6 +162,14 @@
                             tal:content="email"></a>
                     </td>
                     <td tal:content="account_subscription/organization"/>
+                    <tal:block condition="here/is_eionet_meeting">
+                      <td tal:define="country_code account_subscription/country|nothing;
+                                      country_name python:here.get_country(country_code)"
+                                      tal:content="country_name"/>
+                      <td tal:define="reimbursed account_subscription/reimbursed|nothing"
+                        tal:content="python:test(reimbursed, 'Yes', 'No')"
+                        i18n:translate=""/>
+                    </tal:block>
                     <td tal:content="account_subscription/phone"/>
                     <td tal:content="account_subscription/accepted"/>
                     <tal:block define="uid account_subscription/uid"
@@ -130,11 +181,28 @@
                 </tr>
             </table>
             <input type="submit" i18n:attributes="value" name="accept"
-              value="Accept as participant(s)"/>
+              value="Accept as participant(s)"
+              tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()" />
             <input type="submit" i18n:attributes="value" name="reject"
-              value="Reject subscription(s)"/>
+              value="Reject subscription(s)"
+              tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()" />
             <input type="submit" i18n:attributes="value" name="delete"
+              tal:condition="here/checkPermissionAdminMeeting"
               value="Reject and delete subscription(s)"/>
+            <tal:block condition="here/is_eionet_meeting">
+              <input tal:condition="nfp_country_code" type="submit"
+                name="set_representative" i18n:attributes="value"
+                tal:attributes="value string:Set representative for ${nfp_country}"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="unset_representative" i18n:attributes="value"
+                tal:attributes="value string:Un-set representative"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="set_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Set reimbursed participation"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="unset_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Un-set reimbursed"/>
+            </tal:block>
         </form>
 
     </fieldset>
