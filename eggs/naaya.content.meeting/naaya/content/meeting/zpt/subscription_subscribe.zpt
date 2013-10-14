@@ -84,7 +84,8 @@
             You can
             <a tal:attributes="href url"
                i18n:name="sign-up-link" i18n:translate="">sign up</a>
-            for a new account for someone else to participate in this meeting.
+            for someone else to participate in this meeting
+            (with an existing or a new account).
         </p>
         </td>
     </tr>

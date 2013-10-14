@@ -36,6 +36,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import relative_object_path
+from naaya.core.zope2util import get_zope_env
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 
@@ -53,20 +54,49 @@ from subscriptions import SignupUsersTool
 from lxml import etree
 from lxml.builder import ElementMaker
 
+from countries import country_from_country_code
+
 #module constants
+NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
 DEFAULT_SCHEMA = {
-    'interval':             dict(sortorder=140, widget_type='Interval', label='Meeting Interval', data_type='interval', required=True),
-    'location':             dict(sortorder=143, widget_type='String',   label='Organization/Building/Room'),
-    'allow_register':       dict(sortorder=147, widget_type='Checkbox', label='Allow people to register to participate', data_type='bool'),
-    'auto_register':        dict(sortorder=148, widget_type='Checkbox', label='Automatically approve participants when they register', data_type='bool'),
-    'restrict_items':       dict(sortorder=149, widget_type='Checkbox', label='Restrict user access to the contents in the meeting', default=True, data_type='bool'),
-    'max_participants':     dict(sortorder=150, widget_type='String',   label='Maximum number of participants', data_type='int'),
-    'contact_person':       dict(sortorder=150, widget_type='String',   label='Contact person'),
-    'contact_email':        dict(sortorder=160, widget_type='String',   label='Contact email', required=True),
-    'survey_pointer':       dict(sortorder=230, widget_type='Pointer',  label='Link to the Meeting Survey', relative=True),
-    'survey_required':      dict(sortorder=240, widget_type='Checkbox', label='Survey Required', data_type='bool'),
-    'agenda_pointer':       dict(sortorder=310, widget_type='Pointer',  label='Link to the Meeting Agenda', relative=True),
-    'minutes_pointer':      dict(sortorder=320, widget_type='Pointer',  label='Link to the Meeting Minutes', relative=True),
+    'interval':             dict(sortorder=140, widget_type='Interval',
+                                label='Meeting Interval', data_type='interval',
+                                required=True),
+    'location':             dict(sortorder=143, widget_type='String',
+                                label='Organization/Building/Room'),
+    'allow_register':       dict(sortorder=147, widget_type='Checkbox',
+                                label='Allow people to register to participate',
+                                data_type='bool'),
+    'auto_register':        dict(sortorder=148, widget_type='Checkbox',
+                                label=('Automatically approve participants '
+                                'when they register'),
+                                data_type='bool'),
+    'restrict_items':       dict(sortorder=149, widget_type='Checkbox',
+                                label=('Restrict user access to the contents '
+                                'in the meeting'), default=True,
+                                data_type='bool'),
+    'max_participants':     dict(sortorder=150, widget_type='String',
+                                label='Maximum number of participants',
+                                data_type='int'),
+    'contact_person':       dict(sortorder=150, widget_type='String',
+                                label='Contact person'),
+    'contact_email':        dict(sortorder=160, widget_type='String',
+                                label='Contact email', required=True),
+    'is_eionet_meeting':    dict(sortorder=220, widget_type='Checkbox',
+                                label='This is an EIONET meeting',
+                                data_type='bool',
+                                visible=NETWORK_NAME.lower()=='eionet'),
+    'survey_pointer':       dict(sortorder=230, widget_type='Pointer',
+                                label='Link to the Meeting Survey',
+                                relative=True),
+    'survey_required':      dict(sortorder=240, widget_type='Checkbox',
+                                label='Survey Required', data_type='bool'),
+    'agenda_pointer':       dict(sortorder=310, widget_type='Pointer',
+                                label='Link to the Meeting Agenda',
+                                relative=True),
+    'minutes_pointer':      dict(sortorder=320, widget_type='Pointer',
+                                label='Link to the Meeting Minutes',
+                                relative=True),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
@@ -232,6 +262,9 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
                          ADMINISTRATOR_ROLE, OWNER_ROLE])
     permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE, OWNER_ROLE])
+    #add view permission for signups - useful in restricted portals
+    permission = Permission('View', (), ob)
+    permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,])
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -291,6 +324,7 @@ class NyMeeting(NyContentData, NyFolder):
     survey_icon = 'misc_/NaayaContent/survey.gif'
 
     default_form_id = 'meeting_index'
+    is_eionet_meeting = False
 
     manage_options = NyFolder.manage_options
 
@@ -307,6 +341,7 @@ class NyMeeting(NyContentData, NyFolder):
         self.survey_required = False
         self.allow_register = True
         self.restrict_items = True
+        self.is_eionet_meeting = False
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getParticipants')
     def getParticipants(self):
@@ -498,7 +533,9 @@ class NyMeeting(NyContentData, NyFolder):
 
     def checkPermissionParticipateInMeeting(self):
         """ """
-        return self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING)
+        return (self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING) or
+                self.checkPermissionAdminMeeting() or
+                self.nfp_for_country())
 
     def checkPermissionAdminMeeting(self):
         """ """
@@ -506,7 +543,7 @@ class NyMeeting(NyContentData, NyFolder):
 
     def checkPermissionChangePermissions(self):
         """ """
-        return self.checkPermission(change_permissions)
+        return self.nfp_for_country() or self.checkPermission(change_permissions)
 
     def isParticipant(self, userid=None):
         """ """
@@ -522,11 +559,13 @@ class NyMeeting(NyContentData, NyFolder):
             if username == subscriber.uid:
                 return subscriber.accepted
         attendees = participants._get_attendees()
-        attendee_role = attendees.get(username)
-        if attendee_role == 'Meeting Participant':
-            return 'accepted'
-        elif attendee_role == 'Meeting Waiting List':
-            return 'new'
+        attendee_data = attendees.get(username)
+        if attendee_data:
+            attendee_role = attendee_data['role']
+            if attendee_role == 'Meeting Participant':
+                return 'accepted'
+            elif attendee_role == 'Meeting Waiting List':
+                return 'new'
         return None
 
     security.declareProtected(view, 'get_survey')
@@ -647,6 +686,29 @@ class NyMeeting(NyContentData, NyFolder):
         REQUEST.RESPONSE.setHeader('Content-Disposition',
                            'attachment;filename=%s.ics' % self.getId())
         REQUEST.RESPONSE.write(ics_data)
+
+    security.declareProtected(view, 'nfp_for_country')
+    def nfp_for_country(self):
+        """ """
+        #if we are not in an Eionet meeting, NFP don't get special treatment
+        if not self.is_eionet_meeting:
+            return ''
+        auth_tool = self.getAuthenticationTool()
+        user_id = self.REQUEST.AUTHENTICATED_USER.getId()
+        if user_id:
+            ldap_groups = auth_tool.get_ldap_user_groups(user_id)
+            for group in ldap_groups:
+                if 'eionet-nfp-cc-' in group[0]:
+                    return group[0].replace('eionet-nfp-cc-', '')
+                if 'eionet-nfp-mc-'  in group[0]:
+                    return group[0].replace('eionet-nfp-mc-', '')
+
+    security.declareProtected(view, 'get_country')
+    def get_country(self, country_code):
+        """ """
+        if country_code is None:
+            return '-'
+        return country_from_country_code.get(country_code, country_code)
 
     ### Compatibility code
 

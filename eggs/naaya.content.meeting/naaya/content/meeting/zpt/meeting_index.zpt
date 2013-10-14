@@ -166,20 +166,19 @@
             <!-- Make sure the folder listing is displayed after the map -->
             <div style="clear: both"></div>
 
-            <tal:block condition="python: not(here.checkPermissionParticipateInMeeting() and here.isParticipant())">
-            <tal:block condition="here/allow_register">
             <p tal:define="site here/getSite">
                 <span class="buttons">
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
-                      i18n:translate="" tal:condition="not: here/registration_status">
-                        Register to attend</a>
+                      i18n:translate="" tal:condition="python: here.allow_register and not here.registration_status()">
+                        Register to attend (self or another user)</a>
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
-                      i18n:translate="" tal:condition="here/registration_status">
+                      i18n:translate="" tal:condition="python: here.allow_register and here.registration_status()">
                         Register another user</a>
+                    <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions"
+                      i18n:translate="" tal:condition="here/nfp_for_country">
+                        View subscriptions</a>
                 </span>
             </p>
-            </tal:block>
-            </tal:block>
 
             <tal:block condition="python:(not here.restrict_items) or here.checkPermissionParticipateInMeeting()">
 

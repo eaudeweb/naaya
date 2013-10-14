@@ -1,5 +1,8 @@
 1.2.42 (unreleased)
 -------------------
+* update view permission for OBSERVER and WAITING roles [dumitval]
+* NFPs get access to participants and subscribers listings [dumitval]
+* all participants are now either signups or subscribers [dumitval]
 
 1.2.41 (2013-09-03)
 -------------------

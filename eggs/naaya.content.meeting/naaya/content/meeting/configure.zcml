@@ -56,6 +56,27 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="add_schema_widget.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddSchemaWidget"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="make_participants_subscribers.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.MakeParticipantsSubscribers"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="update_view_permission.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.UpdateViewPermission"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
   <browser:resourceDirectory
       name="naaya.content.meeting-www"
       directory="www"
