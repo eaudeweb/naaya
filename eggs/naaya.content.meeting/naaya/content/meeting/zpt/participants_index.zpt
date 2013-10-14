@@ -37,7 +37,7 @@
     </h1>
 
     <div class="floated-buttons">
-        <span tal:condition="meeting/checkPermissionChangePermissions" class="buttons">
+        <span tal:condition="meeting/checkPermissionParticipateInMeeting" class="buttons">
             <a tal:attributes="href meeting/participants/subscriptions/absolute_url" i18n:translate="">Applicants management</a>
         </span>
         <span class="buttons">
@@ -48,7 +48,7 @@
     <p tal:condition="meeting/checkPermissionChangePermissions" i18n:translate="">This page is for managing the meeting participants. You can search and add participants, remove participants and select administrators for this meeting.</p>
     <p tal:condition="not:meeting/checkPermissionChangePermissions" i18n:translate="">This page is for viewing the meeting participants.</p>
 
-    <fieldset tal:condition="meeting/checkPermissionChangePermissions">
+    <fieldset tal:condition="python:meeting.checkPermissionChangePermissions()">
         <legend i18n:translate="">Search and Add Users</legend>
         <p i18n:translate="">Use this form to find EIONET LDAP or local users and assign them to the meeting.</p>
 
@@ -214,12 +214,31 @@
         </tal:block>
 
         <tal:block condition="python:len(users)!=0">
-        <form method="post" action="onAttendees" name="formOnAttendees">
+        <form method="post" action="onAttendees" name="formOnAttendees"
+          tal:define="nfp_country_code meeting/nfp_for_country;
+                      nfp_country python:meeting.get_country(nfp_country_code)">
             <tal:block replace="structure python:here.participants_table(form_name='formOnAttendees', input_name='uids:list')"/>
 
-            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
-            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
-            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="set_participants" value="Make participants"/>
+            <input tal:condition="python: meeting.checkPermissionChangePermissions()"
+              type="submit" name="del_attendees"
+              value="Remove selected participants"/>
+            <input tal:condition="meeting/checkPermissionAdminMeeting"
+              type="submit" name="set_administrators"
+              value="Make administrators"/>
+            <tal:block condition="here/is_eionet_meeting">
+              <input tal:condition="nfp_country_code" type="submit"
+                name="set_representative" i18n:attributes="value"
+                tal:attributes="value string:Set as representative for ${nfp_country}"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="unset_representative" i18n:attributes="value"
+                tal:attributes="value string:Un-set asrepresentative"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="set_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Set reimbursed participation"/>
+              <input tal:condition="nfp_country_code" type="submit"
+                name="unset_reimbursement" i18n:attributes="value"
+                tal:attributes="value string:Un-Set reimbursed"/>
+            </tal:block>
         </form>
         </tal:block>
 

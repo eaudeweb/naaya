@@ -3,9 +3,10 @@ from datetime import datetime
 
 from AccessControl.Permission import Permission
 
-from Products.naayaUpdater.updates import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 from naaya.core.custom_types import Interval
+from naaya.core.zope2util import get_zope_env
 try:
     from naaya.content.base.discover import get_pluggable_content
 except ImportError:
@@ -251,4 +252,78 @@ class ConvertMeetingDates(UpdateScript):
             else:
                 self.log.debug('Skipping new-version/patched meeting object at %s' %
                                meeting.absolute_url(1))
+        return True
+
+class AddSchemaWidget(UpdateScript):
+    title = '"This is an Eionet Meeting" schema widget'
+    authors = ('Valentin Dumitru', )
+    creation_date = 'Sep 11, 2013'
+    description = ('NyMeeting: Add the "This is an Eionet Meeting" '
+                    'schema widget, if missing')
+
+    def _update(self, portal):
+        meta_type = 'Naaya Meeting'
+        NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
+        if not portal.is_pluggable_item_installed(meta_type):
+            self.log.debug('Meeting not installed')
+            return True
+
+        self.log.debug('Changing meeting schema')
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
+        crt_widgets = schema.objectIds()
+        if widgetid_from_propname('is_eionet_meeting') not in crt_widgets:
+            property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['is_eionet_meeting']
+            if NETWORK_NAME.lower() != 'eionet':
+                property_schema['visible'] = False
+            schema.addWidget('is_eionet_meeting', **property_schema)
+            self.log.debug(('Naaya Meeting schema changes: '
+                            'added the "Eionet Meeting" widget'))
+        else:
+            self.log.debug('Meeting schema already contained is_eionet_meeting-property')
+
+        return True
+
+class MakeParticipantsSubscribers(UpdateScript):
+    title = 'Participants to subscribers'
+    authors = ['Valentin Dumitru']
+    creation_date = 'Sep 23, 2013'
+    priority = PRIORITY['HIGH']
+    description = ('Make all meeting participants subscribers '
+            '(if they are not signups)')
+
+    def _update(self, portal):
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            subscriptions = meeting.getParticipants().getSubscriptions()
+            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            for attendee in meeting.getParticipants().getAttendees():
+                if not (subscriptions._is_signup(attendee) or
+                        subscriptions.getAccountSubscription(attendee)):
+                    subscriptions._add_account_subscription(attendee, accept=True)
+                    self.log.debug('Added account subscription for user %s'
+                                    % attendee)
+        return True
+
+class UpdateViewPermission(UpdateScript):
+    """ Setting view permission for observer and waiting role  """
+    title = 'View permission for observer and waiting roles'
+    creation_date = 'Sep 25, 2013'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ('Sets view permission for observer and waiting roles. '
+                    'Useful in case of signups')
+
+
+    def _update(self, portal):
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            view_perm = Permission('View', (), meeting)
+            for role in [OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE]:
+                roles = view_perm.getRoles()
+                if role not in roles:
+                    roles.append(role)
+                    view_perm.setRoles(roles)
+                    self.log.info("View Permission set for %s on %s" %
+                            (role, meeting.absolute_url()))
         return True
