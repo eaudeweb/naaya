@@ -233,10 +233,11 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     form_errors = ob.meeting_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
+    if REQUEST:
+        if not self.checkPermissionSkipCaptcha():
+            captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+            if captcha_validator:
+                form_errors['captcha'] = captcha_validator
 
     if form_errors:
         if REQUEST is None:
@@ -554,7 +555,7 @@ class NyMeeting(NyContentData, NyFolder):
         """ """
         username = username or self.REQUEST.AUTHENTICATED_USER.getUserName()
         participants = self.getParticipants()
-        subscriptions = participants.subscriptions.getAccountSubscriptions()
+        subscriptions = participants.subscriptions._account_subscriptions.itervalues()
         for subscriber in subscriptions:
             if username == subscriber.uid:
                 return subscriber.accepted
@@ -709,6 +710,13 @@ class NyMeeting(NyContentData, NyFolder):
         if country_code is None:
             return '-'
         return country_from_country_code.get(country_code, country_code)
+
+    security.declareProtected(view, 'is_signup')
+    def is_signup(self):
+        """ """
+        username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        key = username.replace('signup:', '')
+        return self.participants.getSubscriptions()._is_signup(key)
 
     ### Compatibility code
 

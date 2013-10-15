@@ -222,6 +222,13 @@ class Subscriptions(SimpleItem):
 
     def _add_account_subscription(self, uid, accept=False):
         """ """
+        #If the subscription already exists or the user is alread signed up
+        #skip the whole thing
+        if self._is_account_subscription(uid):
+            return
+        key = uid.replace('signup:', '')
+        if self._is_signup(key):
+            return
         site = self.getSite()
         meeting = self.getMeeting()
         name = getUserFullName(site, uid)
