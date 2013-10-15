@@ -32,8 +32,6 @@ class Participants(SimpleItem):
         self.subscriptions = Subscriptions('subscriptions')
 
     def getMeeting(self):
-        if not self.checkPermissionParticipateInMeeting():
-            raise Unauthorized
         return self.aq_parent
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSubscriptions')
@@ -67,20 +65,22 @@ class Participants(SimpleItem):
 
         return userid in self.getParticipants()
 
-    def getParticipants(self):
+    def _get_participants(self):
         """ """
-        if not self.checkPermissionParticipateInMeeting():
-            raise Unauthorized
         meeting = self.getMeeting()
         participants = meeting.users_with_local_role(PARTICIPANT_ROLE)
         administrators = meeting.users_with_local_role(ADMINISTRATOR_ROLE)
         return administrators + participants
 
-    def participantsCount(self):
+    def getParticipants(self):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        return len(self.getParticipants())
+        return self._get_participants()
+
+    def participantsCount(self):
+        """ """
+        return len(self._get_participants())
 
     def _set_attendee(self, uid, role):
         def can_set_role():
@@ -120,8 +120,8 @@ class Participants(SimpleItem):
         uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)
         for uid in uids:
-            self._set_attendee(uid, role)
             self.getSubscriptions()._add_account_subscription(uid, accept=True)
+            self._set_attendee(uid, role)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     @postonly
@@ -181,7 +181,7 @@ class Participants(SimpleItem):
         if 'del_attendees' in REQUEST.form:
             return self.delAttendees(REQUEST)
         elif 'set_administrators' in REQUEST.form:
-            return self.setAttendees('Administrator', REQUEST)
+            return self.setAttendees(ADMINISTRATOR_ROLE, REQUEST)
         elif 'set_participants' in REQUEST.form:
             return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
         elif 'set_representative' in REQUEST.form:
