@@ -1,4 +1,7 @@
-1.2.42 (unreleased)
+1.2.43 (unreleased)
+-------------------
+
+1.2.42 (2013-10-15)
 -------------------
 * several test fixes
 * update view permission for OBSERVER and WAITING roles [dumitval]
