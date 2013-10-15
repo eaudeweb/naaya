@@ -1,4 +1,7 @@
-3.3.13 (unreleased)
+3.3.14 (unreleased)
+-------------------
+
+3.3.13 (2013-10-15)
 -------------------
 * added get_ldap_user_groups method [dumitval]
 * display 'discard version' also on the checked-out item's index [dumitval]
