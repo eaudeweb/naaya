@@ -409,6 +409,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_reports(self):
+        self.browser_do_login('test_participant1', 'participant')
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
         self.assertTrue(PARTICIPANT_ROLE in self.portal.info.mymeeting.__ac_roles__)
 
@@ -546,7 +547,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         def assert_access():
             self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in self.browser.get_html())
+            self.assertTrue('Register another user' in self.browser.get_html())
             self.browser_do_logout()
         def assert_no_access():
             self.browser_do_login('test_participant1', 'participant')
@@ -883,7 +884,7 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
             self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' in html)
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+            self.assertTrue('Register another user' in html)
             self.browser_do_logout()
 
         def assert_access():
@@ -891,7 +892,7 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
             self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+            self.assertTrue('Register another user' in html)
             self.browser_do_logout()
 
         # submit the subscription
@@ -947,11 +948,11 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
         assert_admin_access()
 
-
 class NyMeetingAccess(NaayaFunctionalTestCase):
     """ Access TestCase for NyMeeting object """
 
-    def afterSetUp(self):
+    def setUp(self):
+        super(NyMeetingAccess, self).setUp()
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
         extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
@@ -966,9 +967,9 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
         addPortalMeetingUsers(self.portal)
-        self.portal.info.mymeeting.participants._set_attendee('test_admin', ADMINISTRATOR_ROLE)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant2', PARTICIPANT_ROLE)
+        self.portal.info.mymeeting.manage_setLocalRoles('test_admin', [ADMINISTRATOR_ROLE])
+        self.portal.info.mymeeting.manage_setLocalRoles('test_participant1', [PARTICIPANT_ROLE])
+        self.portal.info.mymeeting.manage_setLocalRoles('test_participant2', [PARTICIPANT_ROLE])
 
         meeting = self.portal.info.mymeeting
         manage_addMegaSurvey(meeting, title='MySurvey')
@@ -976,12 +977,13 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
 
         import transaction; transaction.commit()
 
-    def beforeTearDown(self):
+    def tearDown(self):
         removePortalMeetingUsers(self.portal)
         divert_mail(False)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
         import transaction; transaction.commit()
+        super(NyMeetingAccess, self).tearDown()
 
     def testAnonymous(self):
         # no login
@@ -1031,7 +1033,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
         self.assertAccessDenied()
         #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
@@ -1056,11 +1058,11 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
         self.assertAccessDenied()
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
         self.assertAccessDenied()
         self.browser_do_logout()
@@ -1072,7 +1074,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
         self.assertAccessDenied()
         #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
@@ -1097,11 +1099,11 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
         self.assertAccessDenied()
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
         self.assertAccessDenied()
         self.browser_do_logout()
@@ -1113,7 +1115,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
         self.assertAccessDenied()
         #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
@@ -1138,11 +1140,11 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
         self.assertAccessDenied()
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
-        self.assertAccessDenied()
+        self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
         self.assertAccessDenied()
         self.browser_do_logout()
@@ -1279,7 +1281,6 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/login_html?came_from='
                             in self.browser.get_url())
 
-
 class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
     """ """
 
@@ -1336,5 +1337,3 @@ class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
 
         self.browser.go(folder_url)
         self.assertNotEqual(folder_url, self.browser.get_url())
-
-

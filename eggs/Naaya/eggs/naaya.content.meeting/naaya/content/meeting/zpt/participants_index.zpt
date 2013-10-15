@@ -223,6 +223,9 @@
               type="submit" name="del_attendees"
               value="Remove selected participants"/>
             <input tal:condition="meeting/checkPermissionAdminMeeting"
+              type="submit" name="set_participants"
+              value="Set participants"/>
+            <input tal:condition="meeting/checkPermissionAdminMeeting"
               type="submit" name="set_administrators"
               value="Make administrators"/>
             <tal:block condition="here/is_eionet_meeting">
