@@ -1,5 +1,6 @@
 1.2.43 (unreleased)
 -------------------
+* fix for meeting listing in case of viewer role [dumitval]
 
 1.2.42 (2013-10-15)
 -------------------
