@@ -63,7 +63,7 @@ class Participants(SimpleItem):
             if userid.startswith('signup:'):
                 userid = userid[len('signup:'):]
 
-        return userid in self.getParticipants()
+        return userid in self._get_participants()
 
     def _get_participants(self):
         """ """
@@ -72,7 +72,7 @@ class Participants(SimpleItem):
         administrators = meeting.users_with_local_role(ADMINISTRATOR_ROLE)
         return administrators + participants
 
-    def getParticipants(self):
+    def get_participants(self):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
@@ -90,7 +90,7 @@ class Participants(SimpleItem):
                 return True
             # can also change rights even if meeting is full
             if meeting.max_participants == participants_count:
-                if uid in self.getParticipants():
+                if uid in self.get_participants():
                     return True
             return False
 
