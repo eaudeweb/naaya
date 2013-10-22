@@ -1001,7 +1001,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertAccessDenied()
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/get_participants')
         self.assertAccessDenied()
         self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
         self.assertAccessDenied()
@@ -1042,7 +1042,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertAccessDenied()
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/get_participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
         self.assertAccessDenied(False)
@@ -1083,7 +1083,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertAccessDenied()
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/get_participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
         self.assertAccessDenied(False)
@@ -1124,7 +1124,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertAccessDenied()
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/get_participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
         self.assertAccessDenied(False)
@@ -1165,7 +1165,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertAccessDenied(False)
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/get_participants')
         self.assertAccessDenied(False)
         self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
         self.assertAccessDenied(False)
