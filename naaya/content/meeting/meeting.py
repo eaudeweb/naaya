@@ -344,7 +344,7 @@ class NyMeeting(NyContentData, NyFolder):
         self.restrict_items = True
         self.is_eionet_meeting = False
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getParticipants')
+    security.declareProtected(view, 'getParticipants')
     def getParticipants(self):
         return self.participants
 
