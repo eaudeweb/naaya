@@ -1,4 +1,7 @@
-1.2.43 (unreleased)
+1.2.44 (unreleased)
+-------------------
+
+1.2.43 (2013-10-22)
 -------------------
 * fix for meeting listing in case of viewer role [dumitval]
 
