@@ -1,5 +1,6 @@
 3.3.14 (unreleased)
 -------------------
+* Removed LDAP users from search results (assign role page) [dumitval]
 
 3.3.13 (2013-10-15)
 -------------------

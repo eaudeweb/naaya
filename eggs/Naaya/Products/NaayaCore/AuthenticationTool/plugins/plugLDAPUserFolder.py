@@ -421,9 +421,13 @@ class plugLDAPUserFolder(PlugBase):
             if params and term:
                 try:
                     self.buffer = {}
-                    users = acl_folder.findUser(search_param=params, search_term=term)
-                    [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn'])) for u in users ]
-                    return [self.get_source_user_info(u['uid']) for u in users]
+                    users = acl_folder.findUser(search_param=params,
+                        search_term=term,
+                        attrs=['employeeType'] + acl_folder.getSchemaConfig().keys())
+                    [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn']))
+                        for u in users if not u.get('employeeType') == 'disabled']
+                    return [self.get_source_user_info(u['uid']) for u in users
+                            if not u.get('employeeType') == 'disabled']
                 except: return ()
             else:   return ()
         elif self.REQUEST.has_key('search_role'):
@@ -654,6 +658,7 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),
         'dn': extract('dn'),
+        'status': extract('employeeType'),
         '_get_zope_user': lambda: zope_user,
         '_source': ldap_plugin,
     }
@@ -688,6 +693,7 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),
         'dn': extract('dn'),
+        'status': extract('employeeType'),
         '_get_zope_user': get_zope_user,
         '_source': ldap_plugin,
     }
