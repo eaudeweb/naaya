@@ -968,9 +968,9 @@ ul.menu-bar.mainsections-menu ul li:hover {
 
 .center-column .folder_description ul li {
 	list-style: disc;
-	color: #039749;
+	/*color: #039749;
 	font-size: 16px;
-	margin-bottom: 25px;
+	margin-bottom: 25px;*/
 }
 
 .center-column .folder_description ul li span {
