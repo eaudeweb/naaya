@@ -1,5 +1,6 @@
 3.3.14 (unreleased)
 -------------------
+* Mandatory file upload in Naaya File [dumitval]
 
 3.3.14 (2013-10-30)
 -------------------

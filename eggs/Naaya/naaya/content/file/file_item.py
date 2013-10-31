@@ -46,7 +46,7 @@ PROPERTIES_OBJECT = {
     'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
     'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':       (0, '', ''),
-    'file':             (0, '', ''),
+    'file':             (0, MUST_BE_NONEMPTY, ''),
     'url':              (0, '', ''),
     'lang':             (0, '', '')
 }
@@ -128,6 +128,8 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    if not _file.read() and not _url:
+        form_errors['file'] = ['File upload or URL is mandatory']
 
     if REQUEST is not None:
         submitter_errors = submitter.info_check(self, REQUEST, ob)
