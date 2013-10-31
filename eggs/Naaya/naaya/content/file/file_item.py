@@ -128,7 +128,7 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    if not _file.read() and not _url:
+    if hasattr(_file, 'read') and not _file.read() and not _url:
         form_errors['file'] = ['File upload or URL is mandatory']
 
     if REQUEST is not None:
