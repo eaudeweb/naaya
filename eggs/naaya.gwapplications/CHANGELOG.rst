@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ------------------
+* default from address changed to no-reply@eionet.europa.eu [dumitval]
 
 1.1.6 (2012-10-03)
 ------------------
