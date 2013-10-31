@@ -94,7 +94,7 @@ class GWApplication(SimpleItem):
                               kwargs.get('description', ''))
 
         portal.administrator_email = self.application_data.get('useremail', '')
-        portal.mail_address_from = 'no-reply@eea.europa.eu'
+        portal.mail_address_from = 'no-reply@eionet.europa.eu'
 
         acl_path = self.acl_users.absolute_url(1)
         ac_tool = portal.getAuthenticationTool()
