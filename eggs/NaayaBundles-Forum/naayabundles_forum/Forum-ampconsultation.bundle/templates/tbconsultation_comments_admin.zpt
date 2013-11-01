@@ -31,7 +31,10 @@
             <select id="file_type" name="file_type">
                 <option value="CSV" i18n:translate="">CSV</option>
                 <option value="Excel" i18n:translate="">Microsoft Excel</option>
-                <option tal:condition="python: 'amp-2012' in here.absolute_url()" value="CustomExcel" i18n:translate="">Custom Excel format</option>
+                <option tal:condition="python: 'amp-2012' in here.absolute_url() or
+                                      'amp-2013' in here.absolute_url()"
+                        value="CustomExcel" i18n:translate="">
+                            Custom Excel format</option>
             </select>
         </div>
 
@@ -59,14 +62,14 @@
                i18n:name="anonymous_count" />
 </p>
 
-<p i18n:translate="" tal:condition="options/unapproved_count">
+<p i18n:translate="" tal:condition="options/unapproved_count|nothing">
     Unapproved:
     <tal:block content="options/unapproved_count"
                i18n:name="unapproved_count" />
 </p>
 
 <dl class="tb-comments-unapproved">
-<tal:block repeat="comment_group options/unapproved_comments">
+<tal:block repeat="comment_group options/unapproved_comments|nothing">
     <tal:block define="section python:comment_group[0];
                        comments python:comment_group[1];">
 
