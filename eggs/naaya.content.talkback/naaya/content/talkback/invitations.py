@@ -232,7 +232,7 @@ class InvitationsContainer(SimpleItem):
 
         auth_tool = self.getAuthenticationTool()
 
-        admin = self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+        admin = self.checkPermissionManageTalkBackConsultation()
         if not admin:
             userid = auth_tool.get_current_userid()
 
@@ -260,7 +260,7 @@ class InvitationsContainer(SimpleItem):
 
         auth_tool = self.getAuthenticationTool()
 
-        admin = self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+        admin = self.checkPermissionManageTalkBackConsultation()
         if not admin:
             userid = auth_tool.get_current_userid()
 
