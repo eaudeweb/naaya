@@ -14,7 +14,10 @@
 <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/js/css/jquery-ui.css" />
 </metal:block>
 
-<metal:block fill-slot="body">
+<metal:block fill-slot="body"
+  tal:define="perm_manage here/checkPermissionManageTalkBackConsultation;
+              perm_invite here/checkPermissionInviteToTalkBackConsultation;
+              own_comments here/own_comments">
     <div class="floated-buttons">
         <span class="buttons">
             <a tal:define="section here/get_consultation"
@@ -25,60 +28,60 @@
 
     <h1 i18n:translate="" tal:content="here/title_or_id" />
 
-    <div class="graph-container">
-        <div class="caption" i18n:translate="">Comments (Trend)</div>
-        <div class="graph" id="comments_trend"></div>
-    </div>
+    <tal:block condition="python:perm_manage or perm_invite">
+      <div class="graph-container">
+          <div class="caption" i18n:translate="">Comments (Trend)</div>
+          <div class="graph" id="comments_trend"></div>
+      </div>
 
-    <ul>
-        <li>
-            <p i18n:translate="">
-                <tal:block content="options/total_count"
-                   i18n:name="comment_count" /> total comments
-            </p>
-            <ul>
-                <li tal:condition="options/invited_count">
-                    <p i18n:translate="">
-                        out of which <tal:block content="options/invited_count"
-                        i18n:name="invited_count" /> comments are from invited users
-                    </p>
-                </li>
-                <li tal:condition="options/anonymous_count">
-                    <p i18n:translate="">
-                        out of which <tal:block content="options/anonymous_count"
-                        i18n:name="anonymous_count" /> comments are from anonymous users
-                    </p>
-                </li>
-            </ul>
-        </li>
-    </ul>
+      <ul>
+          <li>
+              <p i18n:translate="">
+                  <tal:block content="options/total_count"
+                     i18n:name="comment_count" /> total comments
+              </p>
+              <ul>
+                  <li tal:condition="options/invited_count">
+                      <p i18n:translate="">
+                          out of which <tal:block content="options/invited_count"
+                          i18n:name="invited_count" /> comments are from invited users
+                      </p>
+                  </li>
+                  <li tal:condition="options/anonymous_count">
+                      <p i18n:translate="">
+                          out of which <tal:block content="options/anonymous_count"
+                          i18n:name="anonymous_count" /> comments are from anonymous users
+                      </p>
+                  </li>
+              </ul>
+          </li>
+      </ul>
 
-    <ul>
-        <li>
-            <p i18n:translate="">
-                <tal:block content="options/contributors_count"
-                   i18n:name="contributors_count" /> users have commented
-            </p>
-            <ul>
-                <li tal:condition="options/invited_contributors_count">
-                    <p i18n:translate="">
-                        out of which <tal:block content="options/invited_contributors_count"
-                   i18n:name="invited_count" /> users are invited users
-                    </p>
-                </li>
-                <li tal:condition="options/anonymous_contributors_count">
-                    <p i18n:translate="">
-                        out of which <tal:block content="options/anonymous_contributors_count"
-                   i18n:name="invited_count" /> users are anonymous users
-                    </p>
-                </li>
+      <ul>
+          <li>
+              <p i18n:translate="">
+                  <tal:block content="options/contributors_count"
+                     i18n:name="contributors_count" /> users have commented
+              </p>
+              <ul>
+                  <li tal:condition="options/invited_contributors_count">
+                      <p i18n:translate="">
+                          out of which <tal:block content="options/invited_contributors_count"
+                     i18n:name="invited_count" /> users are invited users
+                      </p>
+                  </li>
+                  <li tal:condition="options/anonymous_contributors_count">
+                      <p i18n:translate="">
+                          out of which <tal:block content="options/anonymous_contributors_count"
+                     i18n:name="invited_count" /> users are anonymous users
+                      </p>
+                  </li>
 
-            </ul>
-        </li>
-    </ul>
-
-    <tal:block condition="python:
-                    here.checkPermissionManageTalkBackConsultation()">
+              </ul>
+          </li>
+      </ul>
+    </tal:block>
+    <tal:block condition="python: perm_manage or own_comments">
         <span tal:condition="python:not here.rstk.we_provide('Excel export')" i18n:translate="">
             Export comments as CSV file.
         </span>
@@ -102,10 +105,14 @@
         </form>
 
         <p><a tal:attributes="href string:${here/absolute_url}/comments_table_html"
-              i18n:translate="">View all comments</a></p>
+              i18n:translate="">
+                  <tal:block condition="perm_manage">View all comments</tal:block>
+                  <tal:block condition="python: not perm_manage and own_comments">
+                      View my comments</tal:block>
+            </a></p>
     </tal:block>
 
-    <div id="log-table-holder">
+    <div id="log-table-holder" tal:condition="python: perm_manage or perm_invite">
         <table class="datatable display listing" id="actions-on-content-list">
             <caption i18n:translate="">Reviewers that submitted comments</caption>
             <thead>
