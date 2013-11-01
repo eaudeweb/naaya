@@ -5,6 +5,7 @@ from AccessControl.Permission import Permission
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
+from Products.NaayaCore.EmailTool import EmailTool
 from naaya.core.custom_types import Interval
 from naaya.core.zope2util import get_zope_env
 try:
@@ -293,6 +294,7 @@ class MakeParticipantsSubscribers(UpdateScript):
             '(if they are not signups)')
 
     def _update(self, portal):
+        diverted_mail = EmailTool.divert_mail()
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
             subscriptions = meeting.getParticipants().getSubscriptions()
@@ -303,6 +305,7 @@ class MakeParticipantsSubscribers(UpdateScript):
                     subscriptions._add_account_subscription(attendee, accept=True)
                     self.log.debug('Added account subscription for user %s'
                                     % attendee)
+        EmailTool.divert_mail(False)
         return True
 
 class UpdateViewPermission(UpdateScript):

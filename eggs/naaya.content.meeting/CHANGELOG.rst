@@ -1,5 +1,6 @@
 1.2.44 (unreleased)
 -------------------
+* updated script changed to not sent user notifications [dumitval]
 
 1.2.43 (2013-10-22)
 -------------------
