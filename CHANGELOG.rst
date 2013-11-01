@@ -1,4 +1,7 @@
-1.2.44 (unreleased)
+1.2.45 (unreleased)
+-------------------
+
+1.2.44 (2013-11-01)
 -------------------
 * updated script changed to not sent user notifications [dumitval]
 
