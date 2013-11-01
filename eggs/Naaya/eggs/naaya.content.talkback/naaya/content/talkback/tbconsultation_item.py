@@ -551,6 +551,14 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         """
         return self.checkPermission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
+    def own_comments(self):
+        """
+        Check if the current user has any comments on the consultation
+        """
+        return [comment for comment in self.admin_comments._all_comments()
+                    if comment['comment'].contributor ==
+                        self.REQUEST.AUTHENTICATED_USER.getUserName()]
+
     security.declareProtected(view, 'custom_editor')
     def custom_editor(self, editor_tool, lang, dom_id):
         extra_options = {
