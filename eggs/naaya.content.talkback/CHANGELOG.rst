@@ -1,5 +1,6 @@
 1.4.23 (unreleased)
 -------------------
+* added export of own comments for normal users [dumitval]
 
 1.4.22 (2013-07-26)
 -------------------

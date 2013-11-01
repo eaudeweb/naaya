@@ -22,6 +22,7 @@
 from cStringIO import StringIO
 import csv
 import codecs
+from DateTime import DateTime
 
 try:
     import json
@@ -37,13 +38,10 @@ except ImportError:
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
-from App.ImageFile import ImageFile
 
 from Paragraph import Paragraph
-from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                       PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
+from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
 
@@ -69,9 +67,11 @@ class CommentsAdmin(SimpleItem):
     def index_html(self, REQUEST):
         """ the admin page for comments """
 
-        if self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION):
+        if self.checkPermissionManageTalkBackConsultation():
             pass
-        elif self.checkPermission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION):
+        elif self.checkPermissionInviteToTalkBackConsultation():
+            pass
+        elif self.own_comments():
             pass
         else:
             raise Unauthorized
@@ -145,11 +145,16 @@ class CommentsAdmin(SimpleItem):
         output = StringIO()
         csv_writer = csv.writer(output)
 
+        csv_writer.writerow(['Consultation deadline',
+                             (self.end_date + 1).strftime('%Y/%m/%d %H:%M')])
+        csv_writer.writerow(['Date of export', DateTime().strftime('%Y/%m/%d %H:%M')])
+
         csv_writer.writerow([field[0] for field in fields])
 
         for n, item in enumerate(comments):
             row = [field[1](item).encode('utf-8') for field in fields]
             csv_writer.writerow(row)
+
 
         return codecs.BOM_UTF8 + output.getvalue()
 
@@ -161,7 +166,15 @@ class CommentsAdmin(SimpleItem):
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
-        row = 0
+
+        ws.row(0).set_cell_text(0, 'Consultation deadline', header_style)
+        ws.row(0).set_cell_text(1, (self.end_date + 1).strftime('%Y/%m/%d %H:%M'),
+                                normal_style)
+        ws.row(1).set_cell_text(0, 'Date of export', header_style)
+        ws.row(1).set_cell_text(1, DateTime().strftime('%Y/%m/%d %H:%M'),
+                                normal_style)
+
+        row = 2
         for col in range(len(fields)):
             ws.row(row).set_cell_text(col, fields[col][0], header_style)
 
@@ -203,9 +216,8 @@ class CommentsAdmin(SimpleItem):
 
         return output.getvalue()
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                              'all_comments')
-    def all_comments(self):
+    def _all_comments(self):
+
         def replies(this_comment):
             yield this_comment
             for child_comment in this_comment['children']:
@@ -219,9 +231,20 @@ class CommentsAdmin(SimpleItem):
                         yield c
 
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'export')
+    def all_comments(self):
+        perm_manage = self.checkPermissionManageTalkBackConsultation()
+        if perm_manage:
+            return self._all_comments()
+        own_comments = self.own_comments()
+        if own_comments:
+            return own_comments
+        raise Unauthorized
+
     def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
         """ """
+        perm_manage = self.checkPermissionManageTalkBackConsultation()
+        if not (perm_manage or self.own_comments):
+            raise Unauthorized
 
         html2text = self.getSite().html2text
         def plain(s, trim=None):
@@ -275,9 +298,19 @@ class CommentsAdmin(SimpleItem):
                 content_type, filesize)
         return ret
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                              'comments_table_html')
-    comments_table_html = NaayaPageTemplateFile('zpt/comments_table',
+    _comments_table_html = NaayaPageTemplateFile('zpt/comments_table',
                                 globals(), 'tbconsultation_comments_table')
+
+    def comments_table_html(self):
+        """ table showing all comments from all participants (manager)
+        or all the user's comments, if the user is just a commenter """
+        if self.checkPermissionManageTalkBackConsultation():
+            pass
+        elif self.own_comments():
+            pass
+        else:
+            raise Unauthorized
+
+        return self._comments_table_html()
 
 InitializeClass(CommentsAdmin)
