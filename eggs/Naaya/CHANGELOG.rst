@@ -1,5 +1,6 @@
 3.3.17 (unreleased)
 -------------------
+* Changed latestuploads_rdf.zpt to sort reversed on last_modification [dumitval]
 
 3.3.16 (2013-11-04)
 -------------------

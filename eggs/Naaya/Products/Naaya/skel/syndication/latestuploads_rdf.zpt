@@ -1,5 +1,5 @@
 <tal:block tal:define="channel python:here.getSyndicationTool().latestuploads_rdf;
-                        items channel/get_objects_for_rdf"
+                        items python:channel.get_objects_for_rdf(attr='last_modification', reversed=True)"
         condition="items">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">
