@@ -1,4 +1,7 @@
-1.4.23 (unreleased)
+1.4.24 (unreleased)
+-------------------
+
+1.4.23 (2013-11-04)
 -------------------
 * added export of own comments for normal users [dumitval]
 
