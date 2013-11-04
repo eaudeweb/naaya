@@ -19,7 +19,8 @@
 				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 				<tal:block content="item/title_or_id" />
 			</a>
-			<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(item.releasedate)"/>]</span>
+			<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span>
+			<tal:block define="last_modification item/last_modification|item/bobobase_modification_time" tal:content="python:here.utShowDateTime(last_modification)"/>]</span>
 		</li>
 	</ul>
 </tal:block>

@@ -1,5 +1,6 @@
 3.3.16 (unreleased)
 -------------------
+* script to update latestuploads.zpt portlet from skel [dumitval]
 
 3.3.15 (2013-10-31)
 -------------------
