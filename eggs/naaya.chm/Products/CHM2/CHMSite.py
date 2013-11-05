@@ -784,7 +784,7 @@ class CHMSite(NySite):
 
         return self._admin_save_image(sliderimage, upload_picture_url,
             x1, y1, x2, y2, width, height, def_width, def_height,
-            slider_images, picture_title, picture_subtitle, REQUEST)
+            slider_images, REQUEST, picture_title, picture_subtitle)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delete_slider_image')
     def admin_delete_slider_image(self, sliderimage, REQUEST=None):
