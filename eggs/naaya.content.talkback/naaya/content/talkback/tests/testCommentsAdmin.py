@@ -105,6 +105,13 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.cons_url)
+        self.assertTrue('admin_comments' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/admin_comments')
+        self.assertAccessDenied(False)
+        self.browser_do_logout()
+
+        self.browser_do_login('user1', 'user1')
+        self.browser.go(self.cons_url)
         self.assertTrue('admin_comments' not in self.browser.get_html())
         self.browser.go(self.cons_url + '/admin_comments')
         self.assertAccessDenied(True)
