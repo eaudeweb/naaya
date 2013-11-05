@@ -1,5 +1,6 @@
 1.4.24 (unreleased)
 -------------------
+* testfix admin_comments [dumitval]
 
 1.4.23 (2013-11-04)
 -------------------
