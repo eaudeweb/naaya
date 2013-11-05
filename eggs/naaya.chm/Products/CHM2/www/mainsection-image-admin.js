@@ -69,6 +69,8 @@ $(function () {
 
     var handleSectionImage = function (data) {
         if(data.error) {
+            upload_button.text(gettext('Upload an image'));
+            image_holder.html($("<img />").attr("src", ""));
             return;
         }
 
