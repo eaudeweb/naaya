@@ -76,11 +76,14 @@ class SchemaFormHelper(object):
         if prop_type is None:
             return val or None
         if val in ('', None):
-            if widget.default not in (None, ''):
-                return prop_type(widget.default)
-            elif prop_name == 'releasedate':
+            if prop_name == 'releasedate':
                 # special case for releasedate - default to "today"
                 return DateTime().strftime('%d/%m/%Y')
+            elif widget.default not in (None, ''):
+                if prop_type is DateTime:
+                    return prop_type(widget.default, datefmt='international')
+                else:
+                    return prop_type(widget.default)
             else:
                 if prop_type is DateTime:
                     return ''
