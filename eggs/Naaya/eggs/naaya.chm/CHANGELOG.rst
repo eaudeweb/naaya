@@ -1,5 +1,6 @@
 3.0.25 (unreleased)
 ------------------
+* bugfix in admin_slider_image [dumitval]
 
 3.0.24 (2013-07-26)
 ------------------
