@@ -1,4 +1,7 @@
-3.3.17 (unreleased)
+3.3.18 (unreleased)
+-------------------
+
+3.3.17 (2013-11-06)
 -------------------
 * mark new users in admin_assignroles (except in EEA sites) [dumitval]
 * fix for naaya.content.url DateTime parsing [dumitval]
