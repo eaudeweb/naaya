@@ -27,7 +27,7 @@ from persistent.list import PersistentList
 from zope.event import notify
 
 from naaya.core.utils import is_ajax, render_macro, force_to_unicode
-from naaya.core.zope2util import relative_object_path
+from naaya.core.zope2util import relative_object_path, get_zope_env
 from naaya.core.exceptions import ValidationError, i18n_exception
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import \
@@ -693,13 +693,25 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             return 2, []
 
+    def get_zope_env(self, key):
+        return get_zope_env(key)
+
     security.declareProtected(manage_users, 'get_local_usernames')
     def get_local_usernames(self):
         local_users = self.user_names()
         ret = [{'name': self.getUserFullName(self.getUser(user_id)),
-                'uid': user_id}
+                'uid': user_id,
+                'is_new_user': self.isNewUser(self.getUser(user_id))}
                     for user_id in local_users]
-        return sorted(ret, key=lambda user: user['name'].lower())
+        user_list = sorted(ret, key=lambda user: user['name'].lower())
+        #Move new users to the top if we are not in EEA (=no external sources)
+        old_users = list(user_list)
+        new_users = []
+        if not get_zope_env('NETWORK_NAME').lower() == 'eionet':
+            for user in user_list:
+                if user['is_new_user']:
+                    new_users.append(old_users.pop(old_users.index(user)))
+        return new_users + old_users
 
     security.declareProtected(manage_users, 'isNewUser')
     def isNewUser(self, user_obj, days=5):

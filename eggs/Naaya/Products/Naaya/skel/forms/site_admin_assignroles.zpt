@@ -31,9 +31,12 @@
             <div class="field">
                 <label for="select-usernames" i18n:translate="">Username:</label>
                 <select name="names" size="10" multiple="multiple" id="select-usernames">
-                    <option tal:repeat="user users"
+                  <tal:block repeat="user users">
+                    <option tal:define="is_new user/is_new_user;
+                                        marker_for_new python:test(is_new and not here.getAuthenticationTool().get_zope_env('NETWORK_NAME').lower() == 'eionet', '*', '')"
                         tal:attributes="value user/uid; selected python: user['uid'] in selected_users"
-                        tal:content="string:${user/name} (${user/uid})" />
+                        tal:content="string:${user/name} (${user/uid}) ${marker_for_new}" />
+                  </tal:block>
                 </select>
             </div>
         </metal:block>

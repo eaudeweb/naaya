@@ -1,5 +1,6 @@
 3.3.17 (unreleased)
 -------------------
+* mark new users in admin_assignroles (except in EEA sites) [dumitval]
 * fix for naaya.content.url DateTime parsing [dumitval]
 * Changed latestuploads_rdf.zpt to sort reversed on last_modification [dumitval]
 
