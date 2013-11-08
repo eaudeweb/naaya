@@ -1,5 +1,6 @@
 1.2.45 (unreleased)
 -------------------
+* save sent mails in an archive + listing [dumitval]
 
 1.2.44 (2013-11-01)
 -------------------

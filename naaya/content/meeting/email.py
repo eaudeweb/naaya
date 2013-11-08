@@ -9,10 +9,15 @@ import zLOG
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate, EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import (EmailPageTemplate,
+                                                            EmailPageTemplateFile)
+from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
+                                                    get_bulk_emails,
+                                                    get_bulk_email)
 
 #naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
+from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_ADMIN_MEETING
 from utils import getUserEmail
 
@@ -107,9 +112,13 @@ class EmailSender(SimpleItem):
         result = 0
         if to_uids is not None:
             assert isinstance(to_uids, list)
-            to_emails = [getUserEmail(self.getSite(), uid) for uid in to_uids]
+            to_emails = [self.getParticipants().getAttendeeInfo(uid)['email']
+                            for uid in to_uids]
 
             result = self._send_email(from_email, to_emails, subject, body_text)
+
+            save_bulk_email(self.getSite(), to_emails, from_email, subject, body_text,
+                where_to_save=path_in_site(self.getMeeting()))
 
         return self.getFormsTool().getContent({'here': self,
                                                 'meeting': self.getMeeting(),
@@ -212,9 +221,33 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_rejected',
                     from_email, to_email, mail_opts)
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'saved_emails')
+    def saved_emails(self, REQUEST=None, RESPONSE=None):
+        """ Display all saved bulk emails """
+        emails = get_bulk_emails(self.getSite(),
+                                where_to_read=path_in_site(self.getMeeting()))
+        return self.getFormsTool().getContent({'here': self,
+                                               'emails': emails,
+                                               'meeting': self.getMeeting()},
+                                              'naaya.content.meeting.email_archive')
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING,
+                              'view_email')
+    def view_email(self, filename, REQUEST=None, RESPONSE=None):
+        """ Display a specfic saved email """
+        email = get_bulk_email(self.getSite(), filename,
+                                where_to_read=path_in_site(self.getMeeting()))
+        return self.getFormsTool().getContent({'here': self,
+                                                'email': email,
+                                                'meeting': self.getMeeting()},
+            'naaya.content.meeting.email_view_email')
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
         'naaya.content.meeting.email_index')
 NaayaPageTemplateFile('zpt/email_sendstatus', globals(),
         'naaya.content.meeting.email_sendstatus')
+NaayaPageTemplateFile('zpt/email_archive', globals(),
+        'naaya.content.meeting.email_archive')
+NaayaPageTemplateFile('zpt/email_view_email', globals(),
+        'naaya.content.meeting.email_view_email')
 
