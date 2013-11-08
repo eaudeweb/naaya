@@ -3,58 +3,69 @@
         <title tal:content="string:${meeting/title} | ${here/site_title}" />
     </metal:block>
 
-    <metal:block fill-slot="body">
-    <script type="text/javascript">
-    function toggleHideShow(linkid, id) {
-        var link = document.getElementById(linkid);
-        var element = document.getElementById(id);
-        if (element.style.display == 'none') {
-            link.innerHTML = "Hide recipients";
-            element.style.display = 'block';
-        } else {
-            link.innerHTML = "Show recipients";
-            element.style.display = 'none';
+    <metal:block fill-slot="head">
+        <script type="text/javascript">
+        function toggleHideShow(linkid, id) {
+            var link = document.getElementById(linkid);
+            var element = document.getElementById(id);
+            if (element.style.display == 'none') {
+                link.innerHTML = "Hide recipients";
+                element.style.display = 'block';
+            } else {
+                link.innerHTML = "Show recipients";
+                element.style.display = 'none';
+            }
         }
-    }
-    </script>
-    <h1>
-        <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title meeting/get_meta_label; alt meeting/get_meta_label" />
-        <tal:block tal:replace="meeting/title_or_id" /> - <tal:block tal:replace="here/title_or_id" />
-    </h1>
-
-    <div class="floated-buttons">
-        <span class="buttons">
-            <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
-        </span>
-    </div>
-
-    <p i18n:translate="">This page allows the administrators to send emails to the participants of the meeting. The meeting contact email is used as default for the sender address.</p>
-
-    <form method="post" action="send_email" name="formSendEmail"
-          class="meeting-send-email-form">
-        <div class="field">
-            <label class="widget-title" for="from_email" i18n:translate="">From:</label>
-            <input type="text" name="from_email:utf8:ustring" id="from_email" size="50"
-                tal:attributes="value meeting/contact_email"/>
+        </script>
+    </metal:block>
+    <metal:block fill-slot="body">
+        <div class="floated-buttons">
+            <span class="buttons">
+                <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
+            </span>
         </div>
-        <div class="field">
-            <label class="widget-title" i18n:translate="">To:</label>
-            <a id="show_hide_attendees" href="javascript:toggleHideShow('show_hide_attendees', 'attendees_table')">Hide recipients</a>
+        <h1>
+            <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title meeting/get_meta_label; alt meeting/get_meta_label" />
+            <tal:block tal:replace="meeting/title_or_id" />
+        </h1>
+        <div id="tabbedmenu">
+          <ul>
+              <li id="currenttab"><a i18n:translate="">
+                  Send new email</a></li>
+              <li><a i18n:translate=""
+                     tal:attributes="href string:${here/absolute_url}/saved_emails">
+                      View sent emails</a></li>
+          </ul>
+        </div>
+        <div class="clearer"></div>
 
-            <div id="attendees_table">
-                <tal:block replace="structure python:meeting.participants.participants_table(form_name='formSendEmail', input_name='to_uids:list')"/>
+        <p i18n:translate="">This page allows the administrators to send emails to the participants of the meeting. The meeting contact email is used as default for the sender address.</p>
+
+        <form method="post" action="send_email" name="formSendEmail"
+              class="meeting-send-email-form">
+            <div class="field">
+                <label class="widget-title" for="from_email" i18n:translate="">From:</label>
+                <input type="text" name="from_email:utf8:ustring" id="from_email" size="50"
+                    tal:attributes="value meeting/contact_email"/>
             </div>
-        </div>
-        <div class="field">
-            <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
-            <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
-        </div>
-        <div class="field">
-            <label class="widget-title" for="body_text" i18n:translate="">Body:</label>
-            <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
-        </div>
-        <input type="submit" name="send_email" value="Send newsletter"/>
-    </form>
+            <div class="field">
+                <label class="widget-title" i18n:translate="">To:</label>
+                <a id="show_hide_attendees" href="javascript:toggleHideShow('show_hide_attendees', 'attendees_table')">Hide recipients</a>
+
+                <div id="attendees_table">
+                    <tal:block replace="structure python:meeting.participants.participants_table(form_name='formSendEmail', input_name='to_uids:list')"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
+                <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
+            </div>
+            <div class="field">
+                <label class="widget-title" for="body_text" i18n:translate="">Body:</label>
+                <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
+            </div>
+            <input type="submit" name="send_email" value="Send newsletter"/>
+        </form>
     </metal:block>
 
 </metal:block>

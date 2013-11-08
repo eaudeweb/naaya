@@ -161,6 +161,15 @@
                     <tal:block i18n:translate="">Send emails</tal:block>
                 </a>
             </tal:block>
+            <tal:block condition="here/checkPermissionAdminMeeting">
+                <a style="float: left; text-align: center; padding: 10px"
+                    title="View email archive"
+                    tal:attributes="href string:${here/absolute_url}/email_sender/saved_emails">
+                    <img alt="" tal:attributes="src here/email_icon" />
+                    <br />
+                    <tal:block i18n:translate="">Saved emails</tal:block>
+                </a>
+            </tal:block>
             </p>
 
             <!-- Make sure the folder listing is displayed after the map -->
