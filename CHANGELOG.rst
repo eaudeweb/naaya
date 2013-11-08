@@ -1,4 +1,7 @@
-1.2.45 (unreleased)
+1.2.46 (unreleased)
+-------------------
+
+1.2.45 (2013-11-08)
 -------------------
 * save sent mails in an archive + listing [dumitval]
 
