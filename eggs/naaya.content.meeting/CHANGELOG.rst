@@ -1,4 +1,7 @@
-1.2.46 (unreleased)
+1.2.47 (unreleased)
+-------------------
+
+1.2.46 (2013-11-11)
 -------------------
 * show if mail is still in mail_queue, or even failed sending [dumitval]
 
