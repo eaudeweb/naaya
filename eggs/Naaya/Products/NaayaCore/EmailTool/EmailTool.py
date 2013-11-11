@@ -463,6 +463,42 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk'):
                 'webex': mail.get('X-Accept-Webex-Data', '')
             }
 
+def get_mail_queue(site):
+    """ Get a list of files that are still in the NEW mail_queue folder """
+    join = os.path.join
+
+    queue_path = os.environ.get('NAAYA_MAIL_QUEUE', None)
+    if queue_path is None:
+        return []
+
+    mail_queue = []
+    new_queue_path = join(queue_path, 'new')
+    if os.path.isdir(new_queue_path):
+        # Get all messages files
+        messages = [join(new_queue_path, filename)
+                    for filename in sorted(os.listdir(new_queue_path))]
+
+        for message in messages:
+            message_file = open(message, 'r+')
+            mail = message_from_file(message_file)
+            message_file.close()
+
+            # Prepare the date to be formatted with utShowFullDateTime
+            date = email_utils.parsedate_tz(mail.get('Date', ''))
+            date = email_utils.mktime_tz(date)
+            date = datetime.fromtimestamp(date)
+
+            mail_queue.append({
+                'subject': mail.get('Subject', '(no-subject)'),
+                'content': mail.get_payload(decode=True),
+                'recipients': mail.get_all('To'),
+                'sender': mail.get('From'),
+                'date': date,
+                'filename': os.path.split(message)[-1]
+            })
+
+    return mail_queue
+
 def get_webex_email(site, filename, where_to_read='sent-webex'):
     """ Show a specific webex email saved on the disk """
     save_path = get_log_dir(site)
