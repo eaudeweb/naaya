@@ -1,5 +1,6 @@
 1.2.46 (unreleased)
 -------------------
+* show if mail is still in mail_queue, or even failed sending [dumitval]
 
 1.2.45 (2013-11-08)
 -------------------
