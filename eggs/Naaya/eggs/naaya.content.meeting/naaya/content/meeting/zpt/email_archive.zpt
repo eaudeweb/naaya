@@ -65,6 +65,10 @@
                     <th i18n:translate="" width="10%">
                         Sender
                     </th>
+ 
+                    <th i18n:translate="" width="10%">
+                        Send status
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -100,6 +104,8 @@
 
                     <td tal:content="email/sender" />
 
+                    <td tal:content="python:here.mail_in_queue(email['filename'])" />
+
                 </tr>
             </tal:block>
             </tbody>
@@ -120,9 +126,13 @@
                     <th i18n:translate="" width="30%">
                         Content
                     </th>
-
+ 
                     <th i18n:translate="" width="10%">
                         Sender
+                    </th>
+
+                    <th i18n:translate="" width="10%">
+                        Send status
                     </th>
                 </tr>
             </tfoot>
