@@ -1,4 +1,7 @@
-3.3.18 (unreleased)
+3.3.19 (unreleased)
+-------------------
+
+3.3.18 (2013-11-11)
 -------------------
 * added method to retrieve current mail_queue [dumitval]
 
