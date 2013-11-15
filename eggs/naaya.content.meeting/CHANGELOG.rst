@@ -1,5 +1,6 @@
 1.2.47 (unreleased)
 -------------------
+* _mail_in_queue moved to EmailTool [dumitval]
 
 1.2.46 (2013-11-11)
 -------------------

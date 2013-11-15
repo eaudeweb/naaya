@@ -15,7 +15,7 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import (EmailPageTemplate,
 from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
-                                                    get_mail_queue)
+                                                    _mail_in_queue)
 
 #naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
@@ -244,34 +244,15 @@ class EmailSender(SimpleItem):
             'naaya.content.meeting.email_view_email')
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'mail_in_queue')
-    def mail_in_queue(self, filename, REQUEST=None, RESPONSE=None):
+    def mail_in_queue(self, filename):
         """ Check if a specific message is still in queue """
         COMMON_KEYS = ['sender', 'recipients', 'subject', 'content', 'date']
-        new_mail_queue = get_mail_queue(self.getSite())
-        filename_split = filename.split('.')
-        for queued_email in new_mail_queue:
-            send_error = False
-            if queued_email['filename'].startswith('.sending-'):
-                send_error = True
-                queued_email['filename'] = queued_email['filename'].replace('.sending-', '')
-            email_split = queued_email['filename'].split('.')
-            if (filename_split[0] == email_split[0] and
-                filename_split[1] == email_split[1]):
-                    archived_email = get_bulk_email(self.getSite(), filename,
-                            where_to_read=path_in_site(self.getMeeting()))
-                    for k in COMMON_KEYS:
-                        if k == 'recipients':
-                            queued_recipients = set(queued_email[k][0].split(', '))
-                            if queued_recipients != set(archived_email[k]):
-                                break
-                        elif queued_email.get(k) != archived_email[k]:
-                            break
-                    else:
-                        if send_error:
-                            if datetime.now() > queued_email['date'] + timedelta(minutes=5):
-                                return 'Send error'
-                        return 'In sending queue'
-        return 'Sent'
+        check_values = {}
+        archived_email = get_bulk_email(self.getSite(), filename,
+                                where_to_read=path_in_site(self.getMeeting()))
+        for key in COMMON_KEYS:
+            check_values[key] = archived_email[key]
+        return _mail_in_queue(self.getSite(), filename, check_values)
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
         'naaya.content.meeting.email_index')
