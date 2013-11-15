@@ -44,6 +44,9 @@
     <a tal:attributes="href string:${here/absolute_url}/invitations/create"
       tal:condition="perm_invite"
       rel="nofollow" i18n:translate="">Send review invitation</a>
+    <a tal:attributes="href string:${here/absolute_url}/invitations/saved_emails"
+      tal:condition="perm_invite"
+      rel="nofollow" i18n:translate="">View sent invitation emails</a>
     <a tal:attributes="href string:${here/absolute_url}/admin_comments"
       tal:condition="python:perm_invite or perm_manage"
       rel="nofollow" i18n:translate="">Manage comments</a>

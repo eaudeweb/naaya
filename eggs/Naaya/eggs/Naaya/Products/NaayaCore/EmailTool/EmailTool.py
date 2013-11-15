@@ -5,6 +5,7 @@ templates, e-mail sending and logging of all e-mail traffic.
 """
 
 import os
+import re
 import time
 import smtplib
 import cStringIO
@@ -598,3 +599,34 @@ def configure_mail_queue():
                         IMailDelivery, "naaya-mail-delivery")
 
     mail_logger.info("Mail queue: %r", queue_path)
+
+def _mail_in_queue(site, filename, check_values):
+    """ Check if a specific message is still in queue """
+    mail_queue = get_mail_queue(site)
+    filename_split = filename.split('.')
+    for queued_email in mail_queue:
+        sending = False
+        if queued_email['filename'].startswith('.sending-'):
+            sending = True
+            queued_email['filename'] = queued_email['filename'].replace('.sending-', '')
+        email_split = queued_email['filename'].split('.')
+        if (filename_split[0] == email_split[0] and
+            filename_split[1] == email_split[1]):
+                for k, v in check_values.items():
+                    if k == 'recipients':
+                        queued_recipients = set(
+                            re.split(", |,\n\t|,\n", queued_email[k][0]))
+                        if queued_recipients != set(v):
+                            break
+                    elif isinstance(v, basestring):
+                        if _strip_code(queued_email.get(k)) != _strip_code(v):
+                            break
+                else:
+                    if sending:
+                        if datetime.now() > queued_email['date'] + timedelta(minutes=5):
+                            return 'Send error'
+                    return 'In sending queue'
+    return 'Sent'
+
+def _strip_code(text_str):
+    return text_str.replace('\n', '').replace('</p><p>', '')
