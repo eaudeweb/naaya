@@ -1,5 +1,6 @@
 1.4.24 (unreleased)
 -------------------
+* archive sent invitation mails + listing and individual view [dumitval]
 * testfix admin_comments [dumitval]
 
 1.4.23 (2013-11-04)

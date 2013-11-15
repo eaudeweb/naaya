@@ -31,6 +31,11 @@ from OFS.SimpleItem import SimpleItem
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
+                                                    get_bulk_emails,
+                                                    get_bulk_email,
+                                                    _mail_in_queue)
+from naaya.core.zope2util import path_in_site
 from permissions import (PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                        PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
@@ -218,6 +223,9 @@ class InvitationsContainer(SimpleItem):
         email_tool.sendEmail(mail_data['body_text'],
                              email, email_tool.get_addr_from(),
                              mail_data['subject'])
+        save_bulk_email(self.getSite(), [email], email_tool.get_addr_from(),
+                        mail_data['subject'], mail_data['body_text'],
+                        where_to_save=path_in_site(self.get_consultation()))
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'index_html')
     def index_html(self, REQUEST):
@@ -319,6 +327,41 @@ class InvitationsContainer(SimpleItem):
                               'get_invitation')
     def get_invitation(self, key):
         return self._invites.get(key, None)
+
+    NaayaPageTemplateFile('zpt/email_archive', globals(),
+        'tbconsultation-email_archive')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'saved_mails')
+    def saved_emails(self, REQUEST=None, RESPONSE=None):
+        """ Display all saved invitation emails """
+        emails = get_bulk_emails(self.getSite(),
+                                where_to_read=path_in_site(self.get_consultation()))
+        return self.getFormsTool().getContent({'here': self,
+                                               'emails': emails,
+                                               'consultation': self.get_consultation()},
+                                               'tbconsultation-email_archive')
+
+    NaayaPageTemplateFile('zpt/email_view', globals(),
+        'tb_consultation-view_email')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'view_email')
+    def view_email(self, filename, REQUEST=None, RESPONSE=None):
+        """ Display a specfic saved email """
+        email = get_bulk_email(self.getSite(), filename,
+                                where_to_read=path_in_site(self.get_consultation()))
+        return self.getFormsTool().getContent({'here': self,
+                                                'email': email,
+                                                'consultation': self.get_consultation()},
+            'tb_consultation-view_email')
+
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'mail_in_queue')
+    def mail_in_queue(self, filename):
+        """ Check if a specific message is still in queue """
+        COMMON_KEYS = ['sender', 'recipients', 'subject', 'content', 'date']
+        check_values = {}
+        archived_email = get_bulk_email(self.getSite(), filename,
+                                where_to_read=path_in_site(self.get_consultation()))
+        for key in COMMON_KEYS:
+            check_values[key] = archived_email[key]
+        return _mail_in_queue(self.getSite(), filename, check_values)
 
 InitializeClass(InvitationsContainer)
 

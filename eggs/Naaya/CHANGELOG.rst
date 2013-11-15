@@ -1,5 +1,6 @@
 3.3.19 (unreleased)
 -------------------
+* _mail_in_queue moved to EmailTool [dumitval]
 
 3.3.18 (2013-11-11)
 -------------------
