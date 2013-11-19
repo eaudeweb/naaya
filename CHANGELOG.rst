@@ -1,4 +1,7 @@
-1.4.24 (unreleased)
+1.4.25 (unreleased)
+-------------------
+
+1.4.24 (2013-11-19)
 -------------------
 * archive sent invitation mails + listing and individual view [dumitval]
 * testfix admin_comments [dumitval]
