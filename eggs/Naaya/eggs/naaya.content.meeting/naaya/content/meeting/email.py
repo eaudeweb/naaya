@@ -236,10 +236,8 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
     def view_email(self, filename, REQUEST=None, RESPONSE=None):
         """ Display a specfic saved email """
-        verify_recipients = REQUEST.get('verify_recipients')
         email = get_bulk_email(self.getSite(), filename,
-                                where_to_read=path_in_site(self.getMeeting()),
-                               verify_recipients=verify_recipients)
+                                where_to_read=path_in_site(self.getMeeting()))
         return self.getFormsTool().getContent({'here': self,
                                                 'email': email,
                                                 'meeting': self.getMeeting()},

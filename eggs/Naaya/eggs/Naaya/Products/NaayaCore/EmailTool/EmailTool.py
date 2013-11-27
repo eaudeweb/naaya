@@ -14,9 +14,6 @@ import logging
 import random
 from datetime import datetime
 import json
-from validate_email import validate_email
-from functools import partial
-validate_email = partial(validate_email, check_mx=True, verify=True)
 
 try:
     import email.utils as email_utils
@@ -391,12 +388,6 @@ def save_webex_email(site, addr_to, addr_from, subject, content,
                             "Please contact the platform maintainers.")
     return filename
 
-def get_valid_addresses(receipents):
-    return filter(validate_email, receipents)
-
-def get_invalid_addresses(recipients):
-    return filter(lambda x: not validate_email(x), recipients)
-
 def _get_message_path(site, where_to_read):
     save_path = get_log_dir(site)
     if not save_path:
@@ -406,7 +397,7 @@ def _get_message_path(site, where_to_read):
         return None
     return save_path
 
-def get_bulk_emails(site, where_to_read='sent-bulk', verify_recipients=False):
+def get_bulk_emails(site, where_to_read='sent-bulk'):
     """
     Show all bulk emails saved on the disk
     (Used for webex email too)
@@ -428,15 +419,13 @@ def get_bulk_emails(site, where_to_read='sent-bulk', verify_recipients=False):
     emails = []
     for message in messages:
         filename = os.path.split(message)[-1]
-        email = get_bulk_email(site, filename, message_file_path=message,
-                               verify_recipients=verify_recipients)
+        email = get_bulk_email(site, filename, message_file_path=message)
         if email:
             email['filename'] = filename
             emails.append(email)
     return emails
 
-def get_bulk_email(site, filename, where_to_read='sent-bulk',
-                   message_file_path=None, verify_recipients=False):
+def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=None):
     """ Show a specific bulk email saved on the disk """
     try:
         if not message_file_path:
@@ -454,22 +443,16 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk',
     date = email_utils.mktime_tz(date)
     date = datetime.fromtimestamp(date)
 
-    recipients = mail.get_all('To')
-    invalid_recipients = []
-    if verify_recipients:
-        invalid_recipients = get_invalid_addresses(recipients)
     r = {
         'subject': mail.get('Subject', '(no-subject)'),
         'content': mail.get_payload(decode=True).replace(
             '\n\n', '</p><p>').replace('\n', '<br/>'),
         'recipients': mail.get_all('To'),
-        'invalid_recipients': invalid_recipients,
         'sender': mail.get('From'),
         'date': date,
         'webex': mail.get('X-Accept-Webex-Data', '')
     }
     return r
-
 
 def get_mail_queue(site):
     """ Get a list of files that are still in the NEW mail_queue folder """
