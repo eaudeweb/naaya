@@ -15,6 +15,17 @@
             <tal:block tal:replace="meeting/title_or_id" />
         </h1>
 
+        <div>
+            <span i18n:translate="">You may verify whether the recipiens have real email addresses. This may take a long time (5 seconds per address on average)
+            </span>
+            <span class="buttons">
+                <a tal:attributes="href string: ${request/URL}?filename=${request/filename}&verify_recipients=True;
+                    title string: Check each of the recipients email address (it may take minutes!)"
+                    i18n:translate=""
+                    i18n:attributes="title">Validate recipients</a>
+            </span>
+        </div>
+
         <div id="tabbedmenu">
             <ul>
                 <li><a tal:attributes="href string:${here/absolute_url}" i18n:translate="">
@@ -53,12 +64,6 @@
                         i18n:attributes="title" /><tal:block condition="not:repeat/recipient/end">, </tal:block>
                 </tal:block>
               </tal:block>
-              <span class="buttons">
-                  <a tal:attributes="href string: ${request/URL}?filename=${request/filename}&verify_recipients=True;
-                     title string: Check each of the recipients email address (it may take minutes!)"
-                     i18n:translate=""
-                     i18n:attributes="title">Validate recipients (it takes time!)</a>
-              </span>
             </td>
           </tr>
           <tr>
