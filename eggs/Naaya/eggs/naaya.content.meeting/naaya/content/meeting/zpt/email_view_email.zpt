@@ -42,7 +42,7 @@
               <a tal:attributes="href string:mailto:${recipient};
                                  title string:Send email to ${recipient}"
                  tal:content="recipient"
-                 i18n:attributes="title" /><tal:block condition="not:repeat/recipient/last">, </tal:block>
+                 i18n:attributes="title" /><tal:block condition="not:repeat/recipient/end">, </tal:block>
               </tal:block>
             </td>
           </tr>
