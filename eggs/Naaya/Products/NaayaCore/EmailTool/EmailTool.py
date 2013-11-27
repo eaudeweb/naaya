@@ -14,6 +14,9 @@ import logging
 import random
 from datetime import datetime
 import json
+from validate_email import validate_email
+from functools import partial
+validate_email = partial(validate_email, check_mx=True, verify=True)
 
 try:
     import email.utils as email_utils
@@ -388,7 +391,13 @@ def save_webex_email(site, addr_to, addr_from, subject, content,
                             "Please contact the platform maintainers.")
     return filename
 
-def get_bulk_emails(site, where_to_read='sent-bulk'):
+def get_valid_addresses(receipents):
+    return filter(validate_email, receipents)
+
+def get_invalid_addresses(recipients):
+    return filter(lambda x: not validate_email(x), recipients)
+
+def get_bulk_emails(site, where_to_read='sent-bulk', verify_recipients=False):
     """
     Show all bulk emails saved on the disk
     (Used for webex email too)
@@ -421,10 +430,15 @@ def get_bulk_emails(site, where_to_read='sent-bulk'):
                 date = email_utils.mktime_tz(date)
                 date = datetime.fromtimestamp(date)
 
+                recipients = mail.get_all('To')
+                invalid_recipients = []
+                if verify_recipients:
+                    invalid_recipients = get_invalid_addresses(recipients)
                 emails.append({
                     'subject': mail.get('Subject', '(no-subject)'),
                     'content': mail.get_payload(decode=True),
-                    'recipients': mail.get_all('To'),
+                    'recipients': recipients,
+                    'invalid_recipients': invalid_recipients,
                     'sender': mail.get('From'),
                     'date': date,
                     'filename': os.path.split(message)[-1]
@@ -432,7 +446,7 @@ def get_bulk_emails(site, where_to_read='sent-bulk'):
 
     return emails
 
-def get_bulk_email(site, filename, where_to_read='sent-bulk'):
+def get_bulk_email(site, filename, where_to_read='sent-bulk', verify_recipients=False):
     """ Show a specific bulk email saved on the disk """
     save_path = get_log_dir(site)
     join = os.path.join
@@ -454,15 +468,22 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk'):
             date = email_utils.mktime_tz(date)
             date = datetime.fromtimestamp(date)
 
-            return {
+            recipients = mail.get_all('To')
+            invalid_recipients = []
+            if verify_recipients:
+                invalid_recipients = get_invalid_addresses(recipients)
+            r = {
                 'subject': mail.get('Subject', '(no-subject)'),
                 'content': mail.get_payload(decode=True).replace(
                     '\n\n', '</p><p>').replace('\n', '<br/>'),
                 'recipients': mail.get_all('To'),
+                'invalid_recipients': invalid_recipients,
                 'sender': mail.get('From'),
                 'date': date,
                 'webex': mail.get('X-Accept-Webex-Data', '')
             }
+            return r
+
 
 def get_mail_queue(site):
     """ Get a list of files that are still in the NEW mail_queue folder """
