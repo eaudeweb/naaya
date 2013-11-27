@@ -73,23 +73,15 @@ class EmailSaveTestCase(unittest.TestCase):
         get_zope_env.return_value = self.TMP_FOLDER
         tos = ['to1@edw.ro', 'to2@edw.ro']
         filename = save_bulk_email(self.portal, tos[:],
-                                   'from@edw.ro', 'Hello!', 'Hello World!')
+                                   'from@edw.ro', 'Hello!', '\nHello World!\n\n')
         self.assertTrue(os.path.isfile(filename))
-        message_file = open(filename, 'r+')
-        mail = message_from_file(message_file)
-        message_file.close()
-
-        self.assertEqual(mail.get('Subject'), 'Hello!')
-        self.assertEqual(mail.get_payload(), 'Hello World!')
-        self.assertEqual(mail.get_all('To'), tos)
-        self.assertEqual(mail.get('From'), 'from@edw.ro')
 
         # TODO How do you mock patch two diffrent objects?
         true_function = module_EmailTool.get_invalid_addresses
         expected_invalid_recipients = [tos[0]]
         module_EmailTool.get_invalid_addresses = MagicMock(
             return_value=expected_invalid_recipients)
-        emails = get_bulk_emails(self.portal)
+        emails = get_bulk_emails(self.portal, verify_recipients=True)
         module_EmailTool.get_invalid_addresses = true_function
 
         self.assertEqual(len(emails), 1)
@@ -99,7 +91,7 @@ class EmailSaveTestCase(unittest.TestCase):
         self.failUnless('sender' in emails[0])
         self.failUnless('recipients' in emails[0])
 
-        self.assertEqual(emails[0]['content'], 'Hello World!')
+        self.assertEqual(emails[0]['content'], '<br/>Hello World!</p><p>')
         self.assertEqual(emails[0]['subject'], 'Hello!')
         self.assertEqual(emails[0]['sender'], 'from@edw.ro')
         self.assertEqual(emails[0]['recipients'], tos)
