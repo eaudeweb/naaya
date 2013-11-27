@@ -78,7 +78,7 @@ class EmailSaveTestCase(unittest.TestCase):
 
         # TODO How do you mock patch two diffrent objects?
         true_function = module_EmailTool.get_invalid_addresses
-        expected_invalid_recipients = [tos[0]]
+        expected_invalid_recipients = set([tos[0]])
         module_EmailTool.get_invalid_addresses = MagicMock(
             return_value=expected_invalid_recipients)
         emails = get_bulk_emails(self.portal, verify_recipients=True)
