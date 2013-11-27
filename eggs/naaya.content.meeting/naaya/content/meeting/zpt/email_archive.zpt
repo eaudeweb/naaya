@@ -1,146 +1,131 @@
 <metal:block define-macro="page" extend-macro="here/standard_template_macro">
-    <metal:block metal:fill-slot="header-title">
-        <title tal:content="string:${meeting/title} | ${here/site_title}" />
-    </metal:block>
+  <metal:block metal:fill-slot="header-title">
+    <title tal:content="string:${meeting/title} | ${here/site_title}" />
+  </metal:block>
 
-    <metal:block fill-slot="head">
-        <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                if ($('#emails-list').length){
-                    $('#emails-list').dataTable({
-                        'aaSorting': [[0, "desc"]],
-                        'sPaginationType': 'full_numbers',
-                        "aLengthMenu": [[10, 25, 50, -1],
-                                        [10, 25, 50, "All"]]
-                    });
-                }
-            });
-        </script>
-        <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-        <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
-    </metal:block>
-    <metal:block fill-slot="body">
+  <metal:block fill-slot="head">
+    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        if ($('#emails-list').length){
+          $('#emails-list').dataTable({
+            'aaSorting': [[0, "desc"]],
+            'sPaginationType': 'full_numbers',
+            "aLengthMenu": [[10, 25, 50, -1],
+                    [10, 25, 50, "All"]]
+          });
+        }
+      });
+    </script>
+    <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+    <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
+  </metal:block>
+  <metal:block fill-slot="body">
 
-        <div class="floated-buttons">
-            <span class="buttons">
-                <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
-            </span>
-        </div>
-        <h1>
-            <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title meeting/get_meta_label; alt meeting/get_meta_label" />
-            <tal:block tal:replace="meeting/title_or_id" />
-        </h1>
-        <div id="tabbedmenu">
-          <ul>
-              <li><a tal:attributes="href string:${here/absolute_url}" i18n:translate="">
-                  Send new email</a></li>
-              <li id="currenttab"><a i18n:translate="">View sent emails</a></li>
-          </ul>
-        </div>
-        <div class="clearer"></div>
+    <div class="floated-buttons">
+      <span class="buttons">
+        <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
+      </span>
+    </div>
+    <h1>
+      <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title meeting/get_meta_label; alt meeting/get_meta_label" />
+      <tal:block tal:replace="meeting/title_or_id" />
+    </h1>
+    <div id="tabbedmenu">
+      <ul>
+        <li><a tal:attributes="href string:${here/absolute_url}" i18n:translate="">
+          Send new email</a></li>
+        <li id="currenttab"><a i18n:translate="">View sent emails</a></li>
+      </ul>
+    </div>
+    <div class="clearer"></div>
 
-        <p i18n:translate="">This page lists all emails sent to participants.</p>
+    <p i18n:translate="">This page lists all emails sent to participants.</p>
 
-        <table tal:condition="emails" cellpadding="0" cellspacing="0"
-            class="datatable display listing" id="emails-list">
-            <thead>
-                <tr class="list-header">
-                    <th i18n:translate="" width="10%">
-                        Date
-                    </th>
+    <table tal:condition="emails" cellpadding="0" cellspacing="0"
+      class="datatable display listing" id="emails-list">
+      <thead>
+        <tr class="list-header">
+          <th i18n:translate="" width="10%">
+            Date
+          </th>
 
-                    <th i18n:translate="" width="30%">
-                        Subject
-                    </th>
+          <th i18n:translate="" width="30%">
+            Subject
+          </th>
 
-                    <th i18n:translate="" width="20%">
-                        Recipients
-                    </th>
+          <th i18n:translate="" width="20%">
+            Recipients
+          </th>
 
-                    <th i18n:translate="" width="30%">
-                        Content
-                    </th>
+          <th i18n:translate="" width="30%">
+            Content
+          </th>
 
-                    <th i18n:translate="" width="10%">
-                        Sender
-                    </th>
+          <th i18n:translate="" width="10%">
+            Sender
+          </th>
  
-                    <th i18n:translate="" width="10%">
-                        Send status
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-            <tal:block repeat="email emails">
-                <tr>
-                    <td tal:content="python:here.utShowFullDateTime(email['date'])" />
+          <th i18n:translate="" width="10%">
+            Send status
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tal:block1 repeat="email emails">
+        <tr>
+          <td tal:content="python:here.utShowFullDateTime(email['date'])" />
+          <td><a tal:content="email/subject" tal:attributes="href string:${here/absolute_url}/view_email?filename=${email/filename}" /></td>
+          <td><tal:block2 define="recp_count python: len(email['recipients'])">
+            <tal:block3 repeat="recipient python:email['recipients'][:3]">
+              <a tal:attributes="href string:mailto:${recipient};
+                title string:Send email to ${recipient}"
+                tal:content="recipient"
+                i18n:attributes="title" />
+              <br />
+            </tal:block3>
+            <tal:block3 condition="python:recp_count > 3">
+            ... <tal:block4 i18n:translate=""> and <tal:block content="python:recp_count - 3" i18n:name="recipients_count"/> more.</tal:block4>
+            </tal:block3>
+          </tal:block2></td>
+          <td tal:content="python:here.html2text(email['content'], 30, True)" />
+          <td tal:content="email/sender" />
+          <td tal:content="python:here.mail_in_queue(email['filename'])" />
+        </tr>
+      </tal:block1>
+      </tbody>
+      <tfoot>
+        <tr class="list-header">
+          <th i18n:translate="" width="10%">
+            Date
+          </th>
 
-                    <td><a tal:content="email/subject" tal:attributes="href string:${here/absolute_url}/view_email?filename=${email/filename}" /></td>
+          <th i18n:translate="" width="30%">
+            Subject
+          </th>
 
-                    <td>
-                        <tal:block condition="python: len(email['recipients']) <= 3" repeat="recipient email/recipients">
-                        <a tal:attributes="href string:mailto:${recipient};
-                                           title string:Send email to ${recipient}"
-                           tal:content="recipient"
-                           i18n:attributes="title" />
-                        <br />
-                        </tal:block>
-                        <tal:block  define="recp_count python: len(email['recipients'])"
-                          condition="python:recp_count > 3">
-                          <tal:block
-                            repeat="recipient python:email['recipients'][:3]">
-                            <a tal:attributes="href string:mailto:${recipient};
-                                               title string:Send email to ${recipient}"
-                               tal:content="recipient"
-                               i18n:attributes="title" />
-                            <br />
-                          </tal:block>
-                          ... <tal:block i18n:translate="">and <tal:block content="python:recp_count-3" i18n:name="recipients_count"/> more.</tal:block>
-                        </tal:block>
-                    </td>
+          <th i18n:translate="" width="20%">
+            Recipients
+          </th>
 
-                    <td tal:content="python:here.html2text(email['content'], 30, True)" />
-
-                    <td tal:content="email/sender" />
-
-                    <td tal:content="python:here.mail_in_queue(email['filename'])" />
-
-                </tr>
-            </tal:block>
-            </tbody>
-            <tfoot>
-                <tr class="list-header">
-                    <th i18n:translate="" width="10%">
-                        Date
-                    </th>
-
-                    <th i18n:translate="" width="30%">
-                        Subject
-                    </th>
-
-                    <th i18n:translate="" width="20%">
-                        Recipients
-                    </th>
-
-                    <th i18n:translate="" width="30%">
-                        Content
-                    </th>
+          <th i18n:translate="" width="30%">
+            Content
+          </th>
  
-                    <th i18n:translate="" width="10%">
-                        Sender
-                    </th>
+          <th i18n:translate="" width="10%">
+            Sender
+          </th>
 
-                    <th i18n:translate="" width="10%">
-                        Send status
-                    </th>
-                </tr>
-            </tfoot>
-        </table>
+          <th i18n:translate="" width="10%">
+            Send status
+          </th>
+        </tr>
+      </tfoot>
+    </table>
 
-        <div class="message-error" tal:condition="not:emails">
-          <p i18n:translate="">No emails found in archive.</p>
-        </div>
+    <div class="message-error" tal:condition="not:emails">
+      <p i18n:translate="">No emails found in archive.</p>
+    </div>
 
-    </metal:block>
+  </metal:block>
 </metal:block>
