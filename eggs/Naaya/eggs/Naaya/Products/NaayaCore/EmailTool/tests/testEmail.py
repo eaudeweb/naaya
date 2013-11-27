@@ -6,11 +6,12 @@ import tempfile
 import shutil
 import unittest
 
-from mock import patch
+from mock import patch, MagicMock
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
-from Products.NaayaCore.EmailTool.EmailTool import (EmailTool, create_message,
-                                             save_bulk_email, get_bulk_emails)
+from Products.NaayaCore.EmailTool.EmailTool import (
+                            EmailTool, save_bulk_email, get_bulk_emails)
+from Products.NaayaCore.EmailTool import EmailTool as module_EmailTool
 
 class EmailTestCase(FunctionalTestCase):
     def test_mail(self):
@@ -70,7 +71,8 @@ class EmailSaveTestCase(unittest.TestCase):
     @patch('naaya.core.site_logging.get_zope_env')
     def test_save_mail(self, get_zope_env):
         get_zope_env.return_value = self.TMP_FOLDER
-        filename = save_bulk_email(self.portal, ['to1@edw.ro', 'to2@edw.ro'],
+        tos = ['to1@edw.ro', 'to2@edw.ro']
+        filename = save_bulk_email(self.portal, tos[:],
                                    'from@edw.ro', 'Hello!', 'Hello World!')
         self.assertTrue(os.path.isfile(filename))
         message_file = open(filename, 'r+')
@@ -79,10 +81,16 @@ class EmailSaveTestCase(unittest.TestCase):
 
         self.assertEqual(mail.get('Subject'), 'Hello!')
         self.assertEqual(mail.get_payload(), 'Hello World!')
-        self.assertEqual(mail.get_all('To'), ['to1@edw.ro', 'to2@edw.ro'])
+        self.assertEqual(mail.get_all('To'), tos)
         self.assertEqual(mail.get('From'), 'from@edw.ro')
 
+        # TODO How do you mock patch two diffrent objects?
+        true_function = module_EmailTool.get_invalid_addresses
+        expected_invalid_recipients = [tos[0]]
+        module_EmailTool.get_invalid_addresses = MagicMock(
+            return_value=expected_invalid_recipients)
         emails = get_bulk_emails(self.portal)
+        module_EmailTool.get_invalid_addresses = true_function
 
         self.assertEqual(len(emails), 1)
         self.failUnless('content' in emails[0])
@@ -94,4 +102,5 @@ class EmailSaveTestCase(unittest.TestCase):
         self.assertEqual(emails[0]['content'], 'Hello World!')
         self.assertEqual(emails[0]['subject'], 'Hello!')
         self.assertEqual(emails[0]['sender'], 'from@edw.ro')
-        self.assertEqual(emails[0]['recipients'], ['to1@edw.ro', 'to2@edw.ro'])
+        self.assertEqual(emails[0]['recipients'], tos)
+        self.assertEqual(emails[0]['invalid_recipients'], expected_invalid_recipients)
