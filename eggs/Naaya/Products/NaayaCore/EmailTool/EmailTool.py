@@ -392,10 +392,10 @@ def save_webex_email(site, addr_to, addr_from, subject, content,
     return filename
 
 def get_valid_addresses(receipents):
-    return set(filter(validate_email, receipents))
+    return filter(validate_email, receipents)
 
 def get_invalid_addresses(recipients):
-    return set(filter(lambda x: not validate_email(x), recipients))
+    return filter(lambda x: not validate_email(x), recipients)
 
 def _get_message_path(site, where_to_read):
     save_path = get_log_dir(site)
@@ -455,9 +455,9 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk',
     date = datetime.fromtimestamp(date)
 
     recipients = mail.get_all('To')
-    invalid_recipients = set()
+    invalid_recipients = []
     if verify_recipients:
-        invalid_recipients = get_invalid_addresses(set(recipients))
+        invalid_recipients = get_invalid_addresses(recipients)
     r = {
         'subject': mail.get('Subject', '(no-subject)'),
         'content': mail.get_payload(decode=True).replace(
