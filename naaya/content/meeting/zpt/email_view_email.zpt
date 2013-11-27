@@ -16,7 +16,7 @@
         </h1>
 
         <div>
-            <span i18n:translate="">You may verify whether the recipients have real email addresses. This may take a long time (5 seconds per address on average)
+            <span i18n:translate="">You may verify whether the recipiens have real email addresses. This may take a long time (5 seconds per address on average)
             </span>
             <span class="buttons">
                 <a tal:attributes="href string: ${request/URL}?filename=${request/filename}&verify_recipients=True;
