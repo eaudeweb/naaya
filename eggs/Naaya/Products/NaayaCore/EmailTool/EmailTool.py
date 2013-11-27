@@ -397,92 +397,78 @@ def get_valid_addresses(receipents):
 def get_invalid_addresses(recipients):
     return filter(lambda x: not validate_email(x), recipients)
 
+def _get_message_path(site, where_to_read):
+    save_path = get_log_dir(site)
+    if not save_path:
+        return None
+    save_path = os.path.join(save_path, where_to_read)
+    if not os.path.isdir(save_path):
+        return None
+    return save_path
+
 def get_bulk_emails(site, where_to_read='sent-bulk', verify_recipients=False):
     """
     Show all bulk emails saved on the disk
     (Used for webex email too)
     """
-    save_path = get_log_dir(site)
-    join = os.path.join
+    save_path = _get_message_path(site, where_to_read)
+    if not save_path:
+        return []
+    # Get all messages files
+    messages = [os.path.join(save_path, filename)
+                for filename in os.listdir(save_path)
+                if not filename.startswith('.')]
+
+    # Sort them descending by the last modification time
+    sorted_messages = [(message, os.path.getmtime(message))
+                        for message in messages]
+    sorted_messages.sort(key=lambda x: x[1], reverse=True)
+    messages = [message[0] for message in sorted_messages]
+
     emails = []
-
-    if save_path:
-        save_path = join(save_path, where_to_read)
-        if os.path.isdir(save_path):
-            # Get all messages files
-            messages = [join(save_path, filename)
-                        for filename in os.listdir(save_path)
-                        if not filename.startswith('.')]
-
-            # Sort them descending by the last modification time
-            sorted_messages = [(message, os.path.getmtime(message))
-                               for message in messages]
-            sorted_messages.sort(key=lambda x: x[1], reverse=True)
-            messages = [message[0] for message in sorted_messages]
-
-            for message in messages:
-                message_file = open(message, 'r+')
-                mail = message_from_file(message_file)
-                message_file.close()
-
-                # Prepare the date to be formatted with utShowFullDateTime
-                date = email_utils.parsedate_tz(mail.get('Date', ''))
-                date = email_utils.mktime_tz(date)
-                date = datetime.fromtimestamp(date)
-
-                recipients = mail.get_all('To')
-                invalid_recipients = []
-                if verify_recipients:
-                    invalid_recipients = get_invalid_addresses(recipients)
-                emails.append({
-                    'subject': mail.get('Subject', '(no-subject)'),
-                    'content': mail.get_payload(decode=True),
-                    'recipients': recipients,
-                    'invalid_recipients': invalid_recipients,
-                    'sender': mail.get('From'),
-                    'date': date,
-                    'filename': os.path.split(message)[-1]
-                })
-
+    for message in messages:
+        filename = os.path.split(message)[-1]
+        email = get_bulk_email(site, filename, message_file_path=message,
+                               verify_recipients=verify_recipients)
+        if email:
+            email['filename'] = filename
+            emails.append(email)
     return emails
 
-def get_bulk_email(site, filename, where_to_read='sent-bulk', verify_recipients=False):
+def get_bulk_email(site, filename, where_to_read='sent-bulk',
+                   message_file_path=None, verify_recipients=False):
     """ Show a specific bulk email saved on the disk """
-    save_path = get_log_dir(site)
-    join = os.path.join
+    try:
+        if not message_file_path:
+            save_path = _get_message_path(site, where_to_read)
+            message_file_path = os.path.join(save_path, filename)
+        message_file = open(message_file_path, 'r+')
+    except (IOError, TypeError, AttributeError):
+        return None
 
-    if save_path:
-        save_path = join(save_path, where_to_read)
-        if os.path.isdir(save_path):
-            message_path = join(save_path, filename)
+    mail = message_from_file(message_file)
+    message_file.close()
 
-            try:
-                message_file = open(message_path, 'r+')
-            except IOError:
-                return None
-            mail = message_from_file(message_file)
-            message_file.close()
+    # Prepare the date to be formatted with utShowFullDateTime
+    date = email_utils.parsedate_tz(mail.get('Date', ''))
+    date = email_utils.mktime_tz(date)
+    date = datetime.fromtimestamp(date)
 
-            # Prepare the date to be formatted with utShowFullDateTime
-            date = email_utils.parsedate_tz(mail.get('Date', ''))
-            date = email_utils.mktime_tz(date)
-            date = datetime.fromtimestamp(date)
-
-            recipients = mail.get_all('To')
-            invalid_recipients = []
-            if verify_recipients:
-                invalid_recipients = get_invalid_addresses(recipients)
-            r = {
-                'subject': mail.get('Subject', '(no-subject)'),
-                'content': mail.get_payload(decode=True).replace(
-                    '\n\n', '</p><p>').replace('\n', '<br/>'),
-                'recipients': mail.get_all('To'),
-                'invalid_recipients': invalid_recipients,
-                'sender': mail.get('From'),
-                'date': date,
-                'webex': mail.get('X-Accept-Webex-Data', '')
-            }
-            return r
+    recipients = mail.get_all('To')
+    invalid_recipients = []
+    if verify_recipients:
+        invalid_recipients = get_invalid_addresses(recipients)
+    r = {
+        'subject': mail.get('Subject', '(no-subject)'),
+        'content': mail.get_payload(decode=True).replace(
+            '\n\n', '</p><p>').replace('\n', '<br/>'),
+        'recipients': mail.get_all('To'),
+        'invalid_recipients': invalid_recipients,
+        'sender': mail.get('From'),
+        'date': date,
+        'webex': mail.get('X-Accept-Webex-Data', '')
+    }
+    return r
 
 
 def get_mail_queue(site):
