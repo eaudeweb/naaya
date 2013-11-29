@@ -520,6 +520,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             for res in single_obs:
                 if res.geo_location is None:
                     continue
+                if not res.geo_type:
+                    #TODO: add logging?
+                    continue
                 points.append({
                     'lat': res.geo_location.lat,
                     'lon': res.geo_location.lon,

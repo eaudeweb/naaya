@@ -1,5 +1,13 @@
 3.3.20 (unreleased)
 -------------------
+* Updated naaya.core.ggeocoding to use GoogleMaps api v3
+  [tiberich #16938]
+* Updated GeoMapTool to use naaya.core.ggeocoding methods instead of
+  reimplementing
+  [tiberich #17553]
+* Added a few missing methods to OpenLayers JS engine, to improve
+  compatibility with older geomaptool.js file from Destinet.
+  [tiberich #17553]
 
 3.3.19 (2013-11-19)
 -------------------
