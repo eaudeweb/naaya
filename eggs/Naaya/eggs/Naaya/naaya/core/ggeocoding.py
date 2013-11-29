@@ -6,7 +6,7 @@ class GeocoderServiceError(Exception):
     pass
 
 def _build_url(params):
-    GOOGLE_GEOCODE_BASE_URL = 'http://maps.google.com/maps/api/geocode/json'
+    GOOGLE_GEOCODE_BASE_URL = 'http://maps.googleapis.com/maps/api/geocode/json'
     return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.urlencode(params)
 
 def _get_url_data(url):

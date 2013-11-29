@@ -114,6 +114,14 @@
             return point.clone().transform(map.projection, engine.wgs84);
         };
 
+        map.get_center_and_zoom = function() {
+            var center = map.olmap.center;
+            var lat_lon = map.to_wgs84(new OpenLayers.LonLat(center.lon, center.lat));
+            return {lat_center: lat_lon.lat,
+                    lon_center: lat_lon.lon,
+                    map_zoom: map.olmap.zoom};
+        };
+
         map.set_zoom_and_center = function(position) {
             var lonlat = new OpenLayers.LonLat(position.lon, position.lat);
             var center = map.from_wgs84(lonlat);
@@ -141,7 +149,7 @@
                 'lat_max': tl.lat,
                 'lon_min': tl.lon,
                 'lon_max': br.lon
-            }
+            };
         };
 
         map.get_resolution = function() {
@@ -209,6 +217,10 @@
             scale_line_control.activate();
         };
 
+        map.get_map_layer = function() {
+            return map.olmap.baseLayer.type;
+        };
+
         return map;
     };
 
@@ -237,6 +249,9 @@
         collection._ol_layer = new OpenLayers.Layer.Markers(name);
 
         collection.add = function(something) {
+            if (typeof something == 'undefined'){
+                throw "Undefined collection";
+            }
             something.collection(collection);
         };
 
@@ -283,6 +298,7 @@
         };
 
         return marker;
+        // unused code?
 
         function setup_event_handlers() {
             marker._ol_marker.events.register("click", null, function() {
