@@ -13,4 +13,6 @@ def geocode(portal_map, address):
     if address == None:
         address = location_geocode(address)
 
-    return address
+    lat, lon = address
+
+    return (str(lat), str(lon))
