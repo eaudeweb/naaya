@@ -1,5 +1,7 @@
 3.3.21 (unreleased)
 -------------------
+* Return address as strings in geocoding manager module
+  [tiberich #16938]
 
 3.3.20 (2013-11-29)
 -------------------
