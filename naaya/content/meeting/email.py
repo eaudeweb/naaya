@@ -15,10 +15,9 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import (EmailPageTemplate,
 from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
-                                                    _mail_in_queue)
-from validate_email import validate_email
-from functools import partial
-validate_email = partial(validate_email, check_mx=True, verify=True)
+                                                    _mail_in_queue,
+                                                    check_and_update_valid_emails,
+                                                    check_and_update_valid_email)
 import json
 
 #naaya.content.meeting imports
@@ -254,17 +253,19 @@ class EmailSender(SimpleItem):
         emails = REQUEST.form.get('emails[]')
         if not emails:
             return None
+        invalid_emails = check_and_update_valid_emails(self.getMeeting(), emails)
+        return json.dumps(dict(invalid_emails=invalid_emails))
 
-        meeting = self.getMeeting()
-        invalid_emails = []
-        for email in emails:
-            check_value = meeting.checked_emails.get(email);
-            if check_value is None:
-                check_value = validate_email(email)
-                meeting.checked_emails[email] = check_value
-            if not check_value:
-                invalid_emails.append(email)
-        r = dict(invalid_emails=invalid_emails)
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
+    def check_email(self, REQUEST=None, RESPONSE=None):
+        """ Check whether specific email address is real.
+        Use previously calculated results.
+        To be used with multiple ajax call in parallel"""
+        email = REQUEST.form.get('email')
+        if not email:
+            return None
+        r = {}
+        r[email] = check_and_update_valid_email(self.getMeeting(), email)
         return json.dumps(r)
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'mail_in_queue')
