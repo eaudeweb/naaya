@@ -14,6 +14,11 @@
 
 <h1 i18n:translate="">Invitations administration</h1>
 
+<p i18n:translate="">
+Email addresses listed below are now one by one automatically checked for validity
+(i.e. the email server is online and the address exists at there).
+As this happens, each invalid address will change colour to red.
+</p>
 <tal:block condition="nothing"><metal:block define-macro="invitation">
     <dt>
         <strong tal:content="invite/name"></strong>
