@@ -16,6 +16,10 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
                                                     _mail_in_queue)
+from validate_email import validate_email
+from functools import partial
+validate_email = partial(validate_email, check_mx=True, verify=True)
+import json
 
 #naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
@@ -242,6 +246,26 @@ class EmailSender(SimpleItem):
                                                 'email': email,
                                                 'meeting': self.getMeeting()},
             'naaya.content.meeting.email_view_email')
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
+    def check_emails(self, REQUEST=None, RESPONSE=None):
+        """ Check whether specific email addresses are real.
+        Use previously calculated results."""
+        emails = REQUEST.form.get('emails[]')
+        if not emails:
+            return None
+
+        meeting = self.getMeeting()
+        invalid_emails = []
+        for email in emails:
+            check_value = meeting.checked_emails.get(email);
+            if check_value is None:
+                check_value = validate_email(email)
+                meeting.checked_emails[email] = check_value
+            if not check_value:
+                invalid_emails.append(email)
+        r = dict(invalid_emails=invalid_emails)
+        return json.dumps(r)
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'mail_in_queue')
     def mail_in_queue(self, filename):

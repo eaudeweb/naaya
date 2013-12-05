@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 
 from AccessControl.Permission import Permission
+from Persistence.mapping import PersistentMapping
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
@@ -329,4 +330,29 @@ class UpdateViewPermission(UpdateScript):
                     view_perm.setRoles(roles)
                     self.log.info("View Permission set for %s on %s" %
                             (role, meeting.absolute_url()))
+        return True
+
+class AddValidateEmails(UpdateScript):
+    """Adds the validate displayed recipients in email archive.
+     Adds the instance cache for the already validated addreses"""
+    title = "NyMeeting: Add email validation cache to the instance"
+    authors = ('Daniel Baragan', )
+    creation_date = 'Dec 2, 2013'
+
+    def _update(self, portal):
+        meta_type = 'Naaya Meeting'
+
+        if not portal.is_pluggable_item_installed(meta_type):
+            self.log.debug('Meeting not installed')
+            return True
+
+        self.log.debug('Patching meeting objects')
+
+        meetings = portal.getCatalogedObjects(meta_type)
+        for meeting in meetings:
+            if getattr(meeting, 'checked_emails', None) is None:
+                setattr(meeting, 'checked_emails', PersistentMapping())
+            else:
+                self.log.debug('Skipping new-version/patched meeting object at %s' %
+                               meeting.absolute_url(1))
         return True
