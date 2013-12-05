@@ -28,7 +28,11 @@
         </div>
 
         <h1 i18n:translate="">Archive of sent invitation mails - view email</h1>
-
+        <p i18n:translate="">
+        Email addresses listed below are now one by one automatically checked for validity
+        (i.e. the email server is online and the address exists at there).
+        As this happens, each invalid address will change colour to red.
+        </p>
         <table class="datatable" tal:condition="email">
           <tr>
             <th i18n:translate="">Date</th>
