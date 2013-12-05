@@ -1,4 +1,6 @@
 
+from pyquery import PyQuery
+
 #Zope imports
 from Testing import ZopeTestCase
 
@@ -350,6 +352,37 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser_do_logout()
+
+    def test_saved_emails(self):
+        self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('http://localhost/portal/info/mymeeting/email_sender' in self.browser.get_html())
+
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertTrue('http://localhost/portal/info/mymeeting/email_sender/saved_emails' in self.browser.get_html())
+
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender/saved_emails')
+        pq = PyQuery(self.browser.get_html())
+        goto_archive_page = None
+        for link in pq('td>a'):
+            if 'Test subject' == link.text:
+                goto_archive_page = link
+                break
+        self.assertNotEqual(None, goto_archive_page)
+        self.assertTrue(goto_archive_page.attrib.get('href'))
+        self.browser.go(goto_archive_page.attrib['href'])
+        pq = PyQuery(self.browser.get_html())
+        validate_button = None
+        for link in pq('span.buttons>a'):
+            if 'Validate recipients' == link.text:
+                validate_button = link
+                break
+        self.assertNotEqual(None, validate_button)
+        self.assertTrue(validate_button.attrib.get('href'))
+        expected_button_link = goto_archive_page.attrib['href'].strip() + '&verify_recipients=True'
+        self.assertEqual(validate_button.attrib['href'].strip(), expected_button_link)
 
     def test_send_emails_page(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
