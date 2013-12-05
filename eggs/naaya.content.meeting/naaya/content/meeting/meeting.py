@@ -22,7 +22,6 @@ from zope.component import adapts
 import zLOG
 from AccessControl.Permission import Permission
 from DateTime import DateTime
-from Persistence.mapping import PersistentMapping
 
 #Naaya imports
 from Products.Naaya.NyFolder import NyFolder
@@ -344,7 +343,6 @@ class NyMeeting(NyContentData, NyFolder):
         self.allow_register = True
         self.restrict_items = True
         self.is_eionet_meeting = False
-        self.checked_emails = PersistentMapping()
 
     security.declareProtected(view, 'getParticipants')
     def getParticipants(self):
