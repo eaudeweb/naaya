@@ -2,7 +2,6 @@ import re
 from datetime import datetime
 
 from AccessControl.Permission import Permission
-from Persistence.mapping import PersistentMapping
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
