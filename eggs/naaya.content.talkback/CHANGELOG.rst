@@ -1,6 +1,6 @@
 1.4.25 (unreleased)
 -------------------
-* Add email validation [baragdan]
+* Added email validation [baragdan]
 
 1.4.24 (2013-11-19)
 -------------------
