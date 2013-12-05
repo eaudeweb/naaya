@@ -1,4 +1,7 @@
-1.2.47 (unreleased)
+1.2.48 (unreleased)
+-------------------
+
+1.2.47 (2013-12-05)
 -------------------
 * email validation [baragdan]
 * _mail_in_queue moved to EmailTool [dumitval]
