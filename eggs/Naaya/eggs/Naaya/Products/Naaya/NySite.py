@@ -37,6 +37,7 @@ from zope.app.component.site import LocalSiteManager, SiteManagerContainer
 from App.config import getConfiguration
 import pytz
 from zope.event import notify
+from Persistence.mapping import PersistentMapping
 
 from interfaces import INySite, IActionLogger
 from action_logger import ActionLogger
@@ -52,7 +53,8 @@ from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndica
 from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
                                                     get_bulk_email,
-                                                    get_bulk_emails)
+                                                    get_bulk_emails,
+                                                    check_and_update_valid_email)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -255,6 +257,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.display_subobject_count = ""
         self.display_subobject_count_for_admins = ""
         self.default_logo = ''
+        self.checked_emails = PersistentMapping()
         CookieCrumbler.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)
@@ -3316,6 +3319,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         email = get_bulk_email(self, filename)
         return self.getFormsTool().getContent({'here': self, 'email': email},
             'site_admin_bulk_mail_view')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_view_bulk_email')
+    def check_email(self, REQUEST):
+        """Check whether email address is valid and exists in the MX."""
+        email = REQUEST.get("email")
+        if not email:
+            return None
+        valid = check_and_update_valid_email(self, email)
+        return json.dumps({email: valid})
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):

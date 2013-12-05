@@ -36,6 +36,8 @@ setup(name='Naaya',
           'scrubber',
           'Pillow',
           'gdata',
+          'validate_email',
+          'pydns',
 
           #Zope
           'contentratings',
