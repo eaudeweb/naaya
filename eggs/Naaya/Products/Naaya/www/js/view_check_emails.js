@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(function () {
     var recipients = [];
     invalid_email_text = gettext("cannot be reached!");
     $("td#recipients-cell>a").each(function () {recipients.push($(this))});
@@ -7,7 +7,6 @@ $(function () {
         function alterDom(data, textStatus, jqXHR) {
             if (data[recipientValue] === false) {
                 recipient.removeAttr("href");
-                // alter the style, that is apparently stored in 0
                 recipient[0].style.color = "red";
                 recipient.attr("title", recipientValue + " " + invalid_email_text);
             }

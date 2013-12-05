@@ -21,6 +21,7 @@ from base64 import urlsafe_b64encode
 from random import randrange
 from datetime import date
 import xlrd
+import json
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
@@ -34,10 +35,10 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
-                                                    _mail_in_queue)
+                                                    _mail_in_queue,
+                                                    check_and_update_valid_email)
 from naaya.core.zope2util import path_in_site
-from permissions import (PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
-                       PERMISSION_MANAGE_TALKBACKCONSULTATION)
+from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
 
 class FormError(Exception):
     def __init__(self, errors):
@@ -235,6 +236,16 @@ class InvitationsContainer(SimpleItem):
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'admin_html')
     _admin_html = NaayaPageTemplateFile('zpt/invitations_admin', globals(),
                                         'tbconsultation_invitations_admin')
+    def check_email(self, REQUEST):
+        """ Check whether specific email address is real.
+        Use previously calculated results.
+        To be used with multiple ajax call in parallel"""
+        email = REQUEST.form.get('email')
+        if not email:
+            return None
+        valid = check_and_update_valid_email(self.getSite(), email)
+        return json.dumps({email: valid})
+
     def admin_html(self, REQUEST):
         """ the admin view """
 

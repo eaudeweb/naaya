@@ -13,6 +13,11 @@ from urlparse import urlparse
 import logging
 import random
 from datetime import datetime
+from validate_email import validate_email
+from functools import partial
+validate_email = partial(validate_email, verify=True)
+VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
+VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
 import json
 
 try:
@@ -453,6 +458,32 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=
         'webex': mail.get('X-Accept-Webex-Data', '')
     }
     return r
+
+def check_and_update_valid_emails(obj, emails):
+    """Instance calling this (obj) must have a dict like member checked_emails on it.
+    This breaks encapsulation and should be done better, probably in NySite"""
+    invalid_emails = []
+    for email in emails:
+        check_value = check_and_update_valid_email(obj, email)
+        if not check_value:
+            invalid_emails.append(email)
+    return invalid_emails
+
+def check_and_update_valid_email(obj, email):
+    """Instance calling this (obj) must have a dict like member checked_emails on it.
+    This breaks encapsulation and should be done better, probably in NySite"""
+    now = time.time()
+    check_value, check_ts = obj.checked_emails.get(email, (None, None));
+    if ( check_value is None
+        or (check_value is False and check_ts < now - VERIFY_EMAIL_BADADDRESS_TTL)
+        or (check_value is True and check_ts < now - VERIFY_EMAIL_GOODADDRESS_TTL) ):
+        try:
+            check_value = validate_email(email)
+        except:
+            check_value = False
+        obj.checked_emails[email] = (check_value, now)
+    return check_value
+
 
 def get_mail_queue(site):
     """ Get a list of files that are still in the NEW mail_queue folder """
