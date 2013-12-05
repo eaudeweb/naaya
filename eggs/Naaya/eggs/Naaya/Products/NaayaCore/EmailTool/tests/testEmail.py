@@ -81,7 +81,7 @@ class EmailSaveTestCase(unittest.TestCase):
         expected_invalid_recipients = [tos[0]]
         module_EmailTool.get_invalid_addresses = MagicMock(
             return_value=expected_invalid_recipients)
-        emails = get_bulk_emails(self.portal)
+        emails = get_bulk_emails(self.portal, verify_recipients=True)
         module_EmailTool.get_invalid_addresses = true_function
 
         self.assertEqual(len(emails), 1)
