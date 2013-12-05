@@ -365,16 +365,21 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender/saved_emails')
         pq = PyQuery(self.browser.get_html())
-        goto_archive_page = pq('td>a:contains("Test subject")')
-        self.assertTrue(len(goto_archive_page) >= 1)
-        goto_archive_page = goto_archive_page[0]
+        goto_archive_page = None
+        for link in pq('td>a'):
+            if 'Test subject' == link.text:
+                goto_archive_page = link
+                break
+        self.assertNotEqual(None, goto_archive_page)
         self.assertTrue(goto_archive_page.attrib.get('href'))
-
         self.browser.go(goto_archive_page.attrib['href'])
         pq = PyQuery(self.browser.get_html())
-        validate_button = pq('span.buttons>a:contains("Validate recipients")')
-        self.assertTrue(len(validate_button) >= 1)
-        validate_button = validate_button[0]
+        validate_button = None
+        for link in pq('span.buttons>a'):
+            if 'Validate recipients' == link.text:
+                validate_button = link
+                break
+        self.assertNotEqual(None, validate_button)
         self.assertTrue(validate_button.attrib.get('href'))
         expected_button_link = goto_archive_page.attrib['href'].strip() + '&verify_recipients=True'
         self.assertEqual(validate_button.attrib['href'].strip(), expected_button_link)
