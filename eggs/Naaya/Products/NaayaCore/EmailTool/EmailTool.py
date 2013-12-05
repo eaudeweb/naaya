@@ -14,6 +14,9 @@ import logging
 import random
 from datetime import datetime
 import json
+from validate_email import validate_email
+from functools import partial
+validate_email = partial(validate_email, check_mx=True, verify=True)
 
 try:
     import email.utils as email_utils

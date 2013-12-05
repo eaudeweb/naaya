@@ -2,3 +2,6 @@ table.meeting-registration-methods {
     width: 50%;
     margin-left: 50px;
 }
+a.invalid-recipient {
+    color: red !important;
+}

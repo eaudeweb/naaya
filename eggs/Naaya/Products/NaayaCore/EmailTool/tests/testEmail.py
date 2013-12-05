@@ -6,11 +6,12 @@ import tempfile
 import shutil
 import unittest
 
-from mock import patch
+from mock import patch, MagicMock
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
-from Products.NaayaCore.EmailTool.EmailTool import (EmailTool,
-                                             save_bulk_email, get_bulk_emails)
+from Products.NaayaCore.EmailTool.EmailTool import (
+                            EmailTool, save_bulk_email, get_bulk_emails)
+from Products.NaayaCore.EmailTool import EmailTool as module_EmailTool
 
 class EmailTestCase(FunctionalTestCase):
     def test_mail(self):
@@ -75,7 +76,13 @@ class EmailSaveTestCase(unittest.TestCase):
                                    'from@edw.ro', 'Hello!', '\nHello World!\n\n')
         self.assertTrue(os.path.isfile(filename))
 
+        # TODO How do you mock patch two diffrent objects?
+        true_function = module_EmailTool.get_invalid_addresses
+        expected_invalid_recipients = [tos[0]]
+        module_EmailTool.get_invalid_addresses = MagicMock(
+            return_value=expected_invalid_recipients)
         emails = get_bulk_emails(self.portal)
+        module_EmailTool.get_invalid_addresses = true_function
 
         self.assertEqual(len(emails), 1)
         self.failUnless('content' in emails[0])
@@ -87,4 +94,5 @@ class EmailSaveTestCase(unittest.TestCase):
         self.assertEqual(emails[0]['content'], '<br/>Hello World!</p><p>')
         self.assertEqual(emails[0]['subject'], 'Hello!')
         self.assertEqual(emails[0]['sender'], 'from@edw.ro')
-        self.assertEqual(emails[0]['recipients'], ['to1@edw.ro', 'to2@edw.ro'])
+        self.assertEqual(emails[0]['recipients'], tos)
+        self.assertEqual(emails[0]['invalid_recipients'], expected_invalid_recipients)
