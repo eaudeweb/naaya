@@ -1,4 +1,7 @@
-3.3.21 (unreleased)
+3.3.22 (unreleased)
+-------------------
+
+3.3.21 (2013-12-05)
 -------------------
 * `update` Email address validation for syntax and existence [baragdan]
 * Return address as strings in geocoding manager module
