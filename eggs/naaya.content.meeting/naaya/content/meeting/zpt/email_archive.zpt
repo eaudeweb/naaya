@@ -72,42 +72,27 @@
                 </tr>
             </thead>
             <tbody>
-            <tal:block repeat="email emails">
-                <tr>
+                <tal:block1 repeat="email emails">
+                    <tr>
                     <td tal:content="python:here.utShowFullDateTime(email['date'])" />
-
                     <td><a tal:content="email/subject" tal:attributes="href string:${here/absolute_url}/view_email?filename=${email/filename}" /></td>
-
-                    <td>
-                        <tal:block condition="python: len(email['recipients']) <= 3" repeat="recipient email/recipients">
+                    <td><tal:block2 define="recp_count python: len(email['recipients'])">
+                        <tal:block3 repeat="recipient python:email['recipients'][:3]">
                         <a tal:attributes="href string:mailto:${recipient};
-                                           title string:Send email to ${recipient}"
-                           tal:content="recipient"
-                           i18n:attributes="title" />
+                            title string:Send email to ${recipient}"
+                            tal:content="recipient"
+                            i18n:attributes="title" />
                         <br />
-                        </tal:block>
-                        <tal:block  define="recp_count python: len(email['recipients'])"
-                          condition="python:recp_count > 3">
-                          <tal:block
-                            repeat="recipient python:email['recipients'][:3]">
-                            <a tal:attributes="href string:mailto:${recipient};
-                                               title string:Send email to ${recipient}"
-                               tal:content="recipient"
-                               i18n:attributes="title" />
-                            <br />
-                          </tal:block>
-                          ... <tal:block i18n:translate="">and <tal:block content="python:recp_count-3" i18n:name="recipients_count"/> more.</tal:block>
-                        </tal:block>
-                    </td>
-
+                        </tal:block3>
+                        <tal:block3 condition="python:recp_count > 3">
+                        ... <tal:block4 i18n:translate=""> and <tal:block content="python:recp_count - 3" i18n:name="recipients_count"/> more.</tal:block4>
+                        </tal:block3>
+                    </tal:block2></td>
                     <td tal:content="python:here.html2text(email['content'], 30, True)" />
-
                     <td tal:content="email/sender" />
-
                     <td tal:content="python:here.mail_in_queue(email['filename'])" />
-
-                </tr>
-            </tal:block>
+                    </tr>
+                </tal:block1>
             </tbody>
             <tfoot>
                 <tr class="list-header">
