@@ -1,4 +1,7 @@
-1.4.25 (unreleased)
+1.4.26 (unreleased)
+-------------------
+
+1.4.25 (2013-12-05)
 -------------------
 * Added email validation [baragdan]
 
