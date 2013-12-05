@@ -1,5 +1,6 @@
 3.3.21 (unreleased)
 -------------------
+* `update` Email address validation for syntax and existence [baragdan]
 * Return address as strings in geocoding manager module
   [tiberich #16938]
 
