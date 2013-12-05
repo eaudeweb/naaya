@@ -2,6 +2,8 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
+<script type="text/javascript" src="/++resource++naaya.content.talkback/invitation_check_emails.js"></script>
+
 <div class="floated-buttons">
     <span class="buttons">
         <a tal:define="section here/get_consultation"
@@ -36,9 +38,12 @@
 <tal:block repeat="invite options/invites_active">
     <metal:block use-macro="template/macros/invitation">
     <metal:block fill-slot="other_info">
-    <dd i18n:translate="">
-        E-mail address:
-        <code tal:content="invite/email" i18n:name="email" />
+    <dd tal:define="emails invite/email">
+        <tal:block i18n:translate="">E-mail address:</tal:block>
+        <tal:block repeat="addr python: emails.split(',')">
+            <code tal:content="addr"/>
+            <span tal:condition="not: repeat/addr/end">,</span>
+        </tal:block>
     </dd>
     <dd i18n:translate="">
         Private URL:

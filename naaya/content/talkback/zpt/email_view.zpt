@@ -17,6 +17,8 @@
     </metal:block>
     <metal:block fill-slot="body">
 
+        <script type="text/javascript" src="/++resource++naaya.content.talkback/archive_check_emails.js"></script>
+
         <div class="floated-buttons">
             <span class="buttons">
                 <a tal:define="section here/get_consultation"
@@ -38,12 +40,15 @@
           </tr>
           <tr>
             <th i18n:translate="">Recipients</th>
-            <td>
-              <tal:block repeat="recipient email/recipients">
-              <a tal:attributes="href string:mailto:${recipient};
-                                 title string:Send email to ${recipient}"
-                 tal:content="recipient"
-                 i18n:attributes="title" /><tal:block condition="not:repeat/recipient/last">, </tal:block>
+            <td id="recipients-cell">
+              <tal:block repeat="recipient_comma_list email/recipients">
+                  <tal:block repeat="recipient python: recipient_comma_list.split(',')">
+                    <a tal:attributes="href string:mailto:${recipient};
+                                        title string:Send email to ${recipient}"
+                        tal:content="recipient"
+                        i18n:attributes="title" />
+                    <tal:block condition="not:repeat/recipient/end">, </tal:block>
+                  </tal:block>
               </tal:block>
             </td>
           </tr>
