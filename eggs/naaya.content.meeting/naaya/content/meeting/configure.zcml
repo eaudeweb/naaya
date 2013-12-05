@@ -77,7 +77,14 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
-  <browser:resourceDirectory
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="validate_emails.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddValidateEmails"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
+ <browser:resourceDirectory
       name="naaya.content.meeting-www"
       directory="www"
   />
