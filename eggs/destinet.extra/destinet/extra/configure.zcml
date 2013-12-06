@@ -1,6 +1,17 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure 
+    xmlns="http://namespaces.zope.org/zope" 
+    xmlns:browser="http://namespaces.zope.org/browser">
+
     <include package="destinet.publishing" />
     <include package="destinet.keywords" />
     <include package="destinet.roles" />
     <include package="destinet.registration" />
+
+    <browser:page 
+        name="migrate" 
+        class=".views.MigrationCreateContactForOldUsers" 
+        for="*"
+        permission="zope2.NaayaAdministrate"
+        />
+
 </configure>
