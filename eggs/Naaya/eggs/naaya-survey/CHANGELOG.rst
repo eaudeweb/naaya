@@ -1,5 +1,6 @@
 1.2.36 (unreleased)
 ===================
+* added possibility to answer in a participant's name [dumitval]
 
 1.2.35 (2013-09-26)
 ===================

@@ -1,28 +1,28 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="meta">
-    <meta tal:define="description here/description;
-                      content python:here.html2text(description);"
-          tal:condition="content"
-          tal:attributes="content content" name="description" />
-    <meta tal:condition="here/keywords"
-          tal:attributes="content here/keywords" name="keywords" />
-    <meta tal:attributes="content here/contributor" name="author" />
-    <meta tal:attributes="content here/gl_get_selected_language"
-          name="dc.language" />
-    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
-          name="title" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta tal:define="description here/description;
+											content python:here.html2text(description);"
+					tal:condition="content"
+					tal:attributes="content content" name="description" />
+		<meta tal:condition="here/keywords"
+					tal:attributes="content here/keywords" name="keywords" />
+		<meta tal:attributes="content here/contributor" name="author" />
+		<meta tal:attributes="content here/gl_get_selected_language"
+					name="dc.language" />
+		<meta tal:attributes="content string:${here/title} | ${here/site_title}"
+					name="title" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </metal:block>
 
 <metal:block fill-slot="head">
-    <link rel="stylesheet" type="text/css" media="all"
-    tal:attributes="href string:${here/absolute_url}/css_survey_common" />
-    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-    <script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
-	    type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
-    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
-    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+		<link rel="stylesheet" type="text/css" media="all"
+		tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+		<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+		<script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+			type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
+		<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+		<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
 </metal:block>
 
 <metal:block fill-slot="body">
@@ -57,15 +57,15 @@
 </tal:block>
 
 <tal:block define="
-    my_answer here/getMyAnswer;
-    my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
-    my_answerdatamodel my_answer/getDatamodel|python:{};
-    editing python: my_answer and not here.allow_multiple_answers;
-    editing_draft python: editing and my_answer.is_draft();
-    editing_answer python: editing and not my_answer.is_draft();
-    anonymous_answer my_answer/anonymous_answer|nothing;
-    anonymous_answer python: test(editing, anonymous_answer, None);
-    user_anonymous python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
+		my_answer here/getMyAnswer;
+		my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
+		my_answerdatamodel my_answer/getDatamodel|python:{};
+		editing python: my_answer and not here.allow_multiple_answers;
+		editing_draft python: editing and my_answer.is_draft();
+		editing_answer python: editing and not my_answer.is_draft();
+		anonymous_answer my_answer/anonymous_answer|nothing;
+		anonymous_answer python: test(editing, anonymous_answer, None);
+		user_anonymous python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
 ">
 
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
@@ -91,31 +91,31 @@
 					<span tal:condition="python:(days_left[0] == 1 and days_left[1] > 0) or here.allow_overtime">
 						<tal:block condition="python: days_left[1] == 1" i18n:translate="">
 							<span class="survey-important-detail" i18n:name="today"
-								  i18n:translate="">Today</span>
+									i18n:translate="">Today</span>
 							is the last day for this survey.
 						</tal:block>
 						<tal:block condition="python: days_left[1] == 2" i18n:translate="">
 							<span class="survey-important-detail" i18n:name="tomorrow"
-								  i18n:translate="">Tomorrow</span>
+									i18n:translate="">Tomorrow</span>
 							is the last day for this survey.
 						</tal:block>
 						<tal:block condition="python: days_left[1] not in (1, 2)"
-								   i18n:translate="">
+									 i18n:translate="">
 							<span class="survey-important-detail" i18n:name="days"
-								  tal:content="python:days_left[1]" />
+									tal:content="python:days_left[1]" />
 							days left for this survey.
 						</tal:block>
 					</span>
 					<span tal:condition="python:days_left[0] == 0 and days_left[1] > 0">
 						<tal:block condition="python: days_left[1] > 1" i18n:translate="">
 							<span class="survey-important-detail" i18n:name="days"
-								  tal:content="python:days_left[1]" />
+									tal:content="python:days_left[1]" />
 							days until this survey starts.
 						</tal:block>
 						<tal:block condition="python: days_left[1] <= 1" i18n:translate="">
 							This survey starts
 							<span class="survey-important-detail" i18n:name="tomorrow"
-								  i18n:translate="">tomorrow</span>.
+									i18n:translate="">tomorrow</span>.
 						</tal:block>
 					</span>
 					<span tal:condition="here/expired" i18n:translate="" class="survey-important-detail">Survey's deadline has been reached.</span>
@@ -127,7 +127,7 @@
 							Your answers so far:
 						</h4>
 						<ul id="my-answers-list">
-							<li  tal:repeat="answer my_answers">
+							<li	tal:repeat="answer my_answers">
 								<a tal:attributes="href string:${answer/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(answer.modification_time)"></a>
 							</li>
 						</ul>
@@ -138,7 +138,7 @@
 					<div class="survey-detail">
 						<h4 i18n:translate="">Your drafts:</h4>
 						<ul id="my-answers-list">
-							<li  tal:repeat="draft my_drafts">
+							<li	tal:repeat="draft my_drafts">
 								<a tal:attributes="href string:${draft/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(draft.modification_time)"></a>
 							</li>
 						</ul>
@@ -203,7 +203,8 @@
 
 <div class="survey-content" tal:condition="here/description" tal:content="structure here/description" />
 
-<tal:block condition="python: not here.expired() or here.checkPermissionPublishObjects()">
+<tal:block define="meeting_eionet_survey here/meeting_eionet_survey|nothing"
+		condition="python: not here.expired() or here.checkPermissionPublishObjects()">
 
 		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
 		<p class="message-information" i18n:translate="" tal:condition="python: my_answer and not here.allow_multiple_answers">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
@@ -232,13 +233,32 @@
 			</tal:block>
 
 			<tal:block define="tmpl nocall:here/validation_html|nothing"
-			           condition="tmpl">
+								 condition="tmpl">
 				<metal:block use-macro="tmpl/macros/validate" />
 			</tal:block>
 
 			<div class="widgetEditMode"
+				tal:condition="python:here.checkPermissionPublishObjects() and
+						meeting_eionet_survey">
+				<label class="widget-title" for="respondent" i18n:translate="">
+					<span>Select respondent</span>
+					<span class="required">*</span>
+				</label>
+				<select id="respondent" name="respondent"
+          tal:define="participants_container here/aq_parent/participants;
+                      uids participants_container/get_participants;
+                      participants python:[participants_container.getAttendeeInfo(uid) for uid in uids];
+                      dummy python: participants.sort(key=lambda x: x.get('name'))">
+					<option value="" i18n:translate=""></option>
+					<tal:block repeat="participant participants">
+						<option tal:attributes="value participant/uid" tal:content="participant/name"
+                    tal:condition="python:not here.getAnswerForRespondent(respondent=participant['uid'])"/>
+					</tal:block>
+				</select>
+			</div>
+			<div class="widgetEditMode"
 				tal:condition="python:here.allow_anonymous and not here.isAnonymousUser()">
-				<label class="widget-title" for="w_wewe" i18n:translate="">
+				<label class="widget-title" for="anonymous_answer:int" i18n:translate="">
 					<span>Do you want your answer to be anonymous?</span>
 					<span class="required">*</span>
 				</label>
@@ -256,7 +276,7 @@
 			<tal:block tal:content="structure python:here.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {}))" />
 
 			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
-			           content="structure python:here.show_recaptcha(here)" />
+								 content="structure python:here.show_recaptcha(here)" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">

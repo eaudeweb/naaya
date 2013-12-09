@@ -233,17 +233,30 @@ class SurveyAnswer(Folder, NyProperties):
         subscriptions (if included in a meeting), while taking
         the anonymous_answer option into account
         """
+        on_behalf_prefix = ''
+        if not self.respondent_is_owner():
+            on_behalf_prefix = 'admin on behalf of '
         if self.anonymous_answer:
-            return 'Anonymous authenticated user'
+            return on_behalf_prefix + 'Anonymous authenticated user'
         if (self.aq_parent.aq_parent.meta_type == 'Naaya Meeting' and
                 'signup:' in self.respondent):
             meeting = self.aq_parent.aq_parent
             signup_id = self.respondent.split(':')[1]
             signup = meeting.participants.subscriptions.getSignup(signup_id)
             if signup is not None:
-                return signup.name
+                return on_behalf_prefix + signup.name
         auth_tool = self.getSite().getAuthenticationTool()
-        return auth_tool.name_from_userid(self.respondent) or self.respondent
+        respondent = auth_tool.name_from_userid(self.respondent) or self.respondent
+        return on_behalf_prefix + respondent
+
+    security.declareProtected(view, 'respondent_is_owner')
+    def respondent_is_owner(self):
+        """
+        Return true if the respondent is the actual owner of the answer.
+        This doesn't happen if the answer was edited or even typed in by
+        an administrator, on behalf of the respondent.
+        """
+        return 'Owner' in self.__ac_local_roles__.get(self.respondent, [])
 
 class NySurveyAnswerAddEvent(object):
     """ """
