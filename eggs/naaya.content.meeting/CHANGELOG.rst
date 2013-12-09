@@ -1,5 +1,8 @@
 1.2.48 (unreleased)
 -------------------
+
+1.2.48 (2013-12-09)
+-------------------
 * Email Validation - controll js parallelism (avoid server load) [baragdan]
 
 1.2.47 (2013-12-05)
