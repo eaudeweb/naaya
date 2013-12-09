@@ -1,5 +1,9 @@
 1.2.11 (unreleased)
 ====================
+* WIP: added migration code for destinet users that have no Naaya Contact attached
+  Added migration code to set the "Destinet user" keyword to all Naaya Contact entries
+  attached to users
+  [tiberich #17643 Destinet, 17644 Destinet]
 
 1.2.10 (2012-12-14)
 ====================
