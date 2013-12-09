@@ -9,7 +9,6 @@ var check_emails = {
 		$(cssSelection).each(function () {
 			that.names.push($(this));
 			that.validate_names.push($(this).text());
-			console.log(that.validate_names[that.validate_names.length - 1]);
 		})
 	},
 
@@ -24,7 +23,7 @@ var check_emails = {
 
 	resolveTheRest: function (i, stop, items, callback, th) {
 		that = this;
-		console.log(" + send from: " + th + "; mail: " + that.validate_names[i]);
+		//console.log(" + send from: " + th + "; mail: " + that.validate_names[i]);
         $.ajax({url: "check_email",
                 data: {"email": items[i]},
                 dataType: "json",
@@ -52,7 +51,6 @@ var check_emails = {
 		dataType: "json",
 		type: "POST"}).done(function(data, textStatus, jqXHR) {
 			if ( ! $.isEmptyObject(data.invalid)) {
-				//console.log(data.invalid);
 				that.findInvalidDomItems(data.invalid, domModifierCallback);
 			}
 			if ( ! $.isEmptyObject(data.notResolved)) {
