@@ -60,8 +60,10 @@ class EmailTestCase(FunctionalTestCase):
                               'alreadyBadButExpired@edw.ro': (False, now - (EmailToolModule.VERIFY_EMAIL_BADADDRESS_TTL + 1)),
                             }
         expected_invalid = ['alreadyBad@edw.ro']
-        invalid_emails = check_and_update_valid_emails(obj, emails)
+        expected_notResolved = ['alreadyBadButExpired@edw.ro', 'notInCache@edw.ro']
+        invalid_emails, notResolved_emails = check_and_update_valid_emails(obj, emails)
         self.assertEqual(invalid_emails, expected_invalid)
+        self.assertEqual(notResolved_emails, expected_notResolved)
 
 class EmailSaveTestCase(unittest.TestCase):
     def setUp(self):

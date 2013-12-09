@@ -463,13 +463,16 @@ def check_and_update_valid_emails(obj, emails):
     """Instance calling this (obj) must have a dict like member checked_emails on it.
     This breaks encapsulation and should be done better, probably in NySite"""
     invalid_emails = []
+    not_resolved_emails = []
     for email in emails:
-        check_value = check_and_update_valid_email(obj, email)
-        if not check_value:
+        check_value = check_and_update_valid_email(obj, email, cacheOnly=True)
+        if check_value is False:
             invalid_emails.append(email)
-    return invalid_emails
+        elif check_value is None:
+            not_resolved_emails.append(email)
+    return invalid_emails, not_resolved_emails
 
-def check_and_update_valid_email(obj, email):
+def check_and_update_valid_email(obj, email, cacheOnly=False):
     """Instance calling this (obj) must have a dict like member checked_emails on it.
     This breaks encapsulation and should be done better, probably in NySite"""
     now = time.time()
@@ -477,6 +480,9 @@ def check_and_update_valid_email(obj, email):
     if ( check_value is None
         or (check_value is False and check_ts < now - VERIFY_EMAIL_BADADDRESS_TTL)
         or (check_value is True and check_ts < now - VERIFY_EMAIL_GOODADDRESS_TTL) ):
+
+        if cacheOnly:
+            return None
         try:
             check_value = validate_email(email)
         except:
