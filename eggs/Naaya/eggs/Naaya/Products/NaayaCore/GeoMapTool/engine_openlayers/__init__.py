@@ -101,6 +101,7 @@ class OpenLayersMapEngine(SimpleItem):
             'base_layer': base_layer,
         }
         js_config.update(global_config)
+        js_config['base_layer'] = base_layer    # this is more then a string
         options = {
             'js_config': json.dumps(js_config),
             'base_layer': base_layer,
