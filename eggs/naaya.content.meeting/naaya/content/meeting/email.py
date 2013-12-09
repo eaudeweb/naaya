@@ -247,6 +247,16 @@ class EmailSender(SimpleItem):
             'naaya.content.meeting.email_view_email')
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
+    def check_emails(self, REQUEST=None, RESPONSE=None):
+        """Return already resolved email addresses
+        and a list with those to be resolved by a different call"""
+        emails = REQUEST.get("emails[]")
+        if not emails:
+            return None
+        invalid, not_resolved = check_and_update_valid_emails(self, emails)
+        return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
     def check_email(self, REQUEST=None, RESPONSE=None):
         """ Check whether specific email address is real.
         Use previously calculated results.
@@ -254,9 +264,8 @@ class EmailSender(SimpleItem):
         email = REQUEST.form.get('email')
         if not email:
             return None
-        r = {}
-        r[email] = check_and_update_valid_email(self.getMeeting(), email)
-        return json.dumps(r)
+        valid = check_and_update_valid_email(self.getMeeting(), email)
+        return json.dumps({email: valid})
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'mail_in_queue')
     def mail_in_queue(self, filename):
