@@ -1,5 +1,11 @@
 3.3.22 (unreleased)
 -------------------
+* Bug fix: don't override the base_layer in openlayers engine with the
+  global defaults, the global default is just a string while the OpenLayer
+  engine expects a mapping
+  [tiberich #17700 Destinet]
+* Bug fix: don't crash when a contact is found with no values filled in
+  [tiberich #17643 Destinet]
 
 3.3.21 (2013-12-05)
 -------------------
