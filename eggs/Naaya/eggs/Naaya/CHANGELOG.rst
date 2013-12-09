@@ -1,5 +1,8 @@
 3.3.22 (unreleased)
 -------------------
+
+3.3.22 (2013-12-09)
+-------------------
 * Email Validation - controll js parallelism (avoid server load) [baragdan]
 * Bug fix: don't override the base_layer in openlayers engine with the
   global defaults, the global default is just a string while the OpenLayer
