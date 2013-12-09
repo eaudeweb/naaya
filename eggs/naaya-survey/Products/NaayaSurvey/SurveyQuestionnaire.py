@@ -262,7 +262,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         suggestions = []
         cf_approval_list = []
-        respondent = None
+        if getattr(self, 'meeting_eionet_survey', None):
+            respondent = REQUEST.get('respondent')
+        else:
+            respondent = None
         creation_date = None
         anonymous_editing_key = None
         if answer_id is not None:
