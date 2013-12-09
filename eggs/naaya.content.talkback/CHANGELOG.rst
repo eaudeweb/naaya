@@ -1,5 +1,6 @@
 1.4.26 (unreleased)
 -------------------
+* Email Validation - controll js parallelism (avoid server load) [baragdan]
 
 1.4.25 (2013-12-05)
 -------------------
