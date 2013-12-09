@@ -54,7 +54,8 @@ from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
                                                     get_bulk_email,
                                                     get_bulk_emails,
-                                                    check_and_update_valid_email)
+                                                    check_and_update_valid_email,
+                                                    check_and_update_valid_emails)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3319,6 +3320,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         email = get_bulk_email(self, filename)
         return self.getFormsTool().getContent({'here': self, 'email': email},
             'site_admin_bulk_mail_view')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_view_bulk_email')
+    def check_emails(self, REQUEST):
+        """Return already resolved email addresses
+        and a list with those to be resolved by a different call"""
+        emails = REQUEST.get("emails[]")
+        if not emails:
+            return None
+        invalid, not_resolved = check_and_update_valid_emails(self, emails)
+        return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_view_bulk_email')
     def check_email(self, REQUEST):
