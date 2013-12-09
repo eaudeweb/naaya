@@ -1,4 +1,7 @@
-1.2.36 (unreleased)
+1.2.37 (undeleased)
+===================
+
+1.2.36 (2013-12-09)
 ===================
 * added possibility to answer in a participant's name [dumitval]
 
