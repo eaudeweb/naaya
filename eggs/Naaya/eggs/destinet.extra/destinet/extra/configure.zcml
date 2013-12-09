@@ -8,8 +8,15 @@
     <include package="destinet.registration" />
 
     <browser:page 
-        name="migrate" 
+        name="migrate_users" 
         class=".views.MigrationCreateContactForOldUsers" 
+        for="*"
+        permission="zope2.NaayaAdministrate"
+        />
+
+    <browser:page 
+        name="migrate_user_keywords" 
+        class=".views.MigrationSetKeywordsForDestinetUsers" 
         for="*"
         permission="zope2.NaayaAdministrate"
         />
