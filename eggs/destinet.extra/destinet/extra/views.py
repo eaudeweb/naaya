@@ -57,3 +57,26 @@ class MigrationCreateContactForOldUsers(BrowserView):
         EmailTool.divert_mail(False)
         logger.info("Migration: end migration")
         return "Migrated %s contacts" % counter
+
+
+class MigrationSetKeywordsForDestinetUsers(BrowserView):
+    """ Migration: create NaayaContact for old users which don't have one
+    """
+
+    def __call__(self):
+        context = self.context.restrictedTraverse('who-who/destinet-users')
+        langs = self.context.gl_get_languages()
+        #import pdb; pdb.set_trace()  # XXX BREAKPOINT
+
+        for obj in context.objectValues("Naaya Contact"):
+            for lang in langs:
+                v = obj.getLocalAttribute("keywords", lang)
+                if not "Destinet User" in v:
+                    if v.strip():
+                        v += ", Destinet User"
+                    else:
+                        v = "Destinet User"
+                obj.set_localpropvalue('keywords', lang, 'Destinet user')
+                context.recatalogNyObject(obj)
+
+        return "done"
