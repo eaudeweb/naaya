@@ -17,6 +17,7 @@
     </metal:block>
     <metal:block fill-slot="body">
 
+        <script type="text/javascript" src="/++resource++Products.Naaya/js/check_emails.js"></script>
         <script type="text/javascript" src="/++resource++naaya.content.talkback/archive_check_emails.js"></script>
 
         <div class="floated-buttons">
