@@ -1,4 +1,7 @@
-1.4.27 (unreleased)
+1.4.28 (unreleased)
+-------------------
+
+1.4.27 (2013-12-10)
 -------------------
 * added option to skip paragraph splitting [dumitval]
 
