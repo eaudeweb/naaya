@@ -185,19 +185,19 @@ def handle_add_content(event):
         place_pointers(obj, exclude=['target-groups'])
 
     # Make sure that the Destinet User keyword is added
-    if obj.meta_type == "Naaya Contact":
+    if obj.meta_type == "Naaya Contact" and \
+        obj.aq_parent.getId() == "destinet-users":
         langs = obj.aq_parent.gl_get_languages()
-        if obj.aq_parent.getId() == "destinet-users":
 
-            for lang in langs:
-                v = obj.getLocalAttribute("keywords", lang)
-                if not "Destinet User" in v:
-                    if v.strip():
-                        v += ", Destinet User"
-                    else:
-                        v = "Destinet User"
-                obj.set_localpropvalue('keywords', lang, 'Destinet user')
-                obj.aq_parent.recatalogNyObject(obj)
+        for lang in langs:
+            v = obj.getLocalAttribute("keywords", lang)
+            if not "Destinet User" in v:
+                if v.strip():
+                    v += ", Destinet User"
+                else:
+                    v = "Destinet User"
+            obj.set_localpropvalue('keywords', lang, 'Destinet user')
+            obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_edit_content(event):
@@ -232,18 +232,18 @@ def handle_edit_content(event):
 
     # Make sure that the Destinet User keyword is added
     langs = obj.aq_parent.gl_get_languages()
-    if obj.meta_type == "Naaya Contact":
-        if obj.aq_parent.getId() == "destinet-users":
+    if obj.meta_type == "Naaya Contact" and \
+        obj.aq_parent.getId() == "destinet-users":
 
-            for lang in langs:
-                v = obj.getLocalAttribute("keywords", lang)
-                if not "Destinet User" in v:
-                    if v.strip():
-                        v += ", Destinet User"
-                    else:
-                        v = "Destinet User"
-                obj.set_localpropvalue('keywords', lang, 'Destinet user')
-                obj.aq_parent.recatalogNyObject(obj)
+        for lang in langs:
+            v = obj.getLocalAttribute("keywords", lang)
+            if not "Destinet User" in v:
+                if v.strip():
+                    v += ", Destinet User"
+                else:
+                    v = "Destinet User"
+            obj.set_localpropvalue('keywords', lang, 'Destinet user')
+            obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_del_content(obj, event):
