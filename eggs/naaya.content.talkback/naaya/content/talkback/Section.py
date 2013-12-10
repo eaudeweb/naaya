@@ -36,7 +36,8 @@ from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 
 addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),
                                         'tbconsultation_section_add')
-def addSection(self, id='', title='', body='', REQUEST=None):
+def addSection(self, id='', title='', body='', skip_splitting='',
+                REQUEST=None):
     """ """
 
     errors = []
@@ -63,7 +64,10 @@ def addSection(self, id='', title='', body='', REQUEST=None):
     ob = Section(id, title)
     self._setObject(id, ob)
     ob = self._getOb(id)
-    ob.parseBody(body)
+    if skip_splitting:
+        addParagraph(ob, body=body)
+    else:
+        ob.parseBody(body)
     if REQUEST is not None:
         self.REQUEST.RESPONSE.redirect(self.absolute_url())
 

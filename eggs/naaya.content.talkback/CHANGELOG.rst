@@ -1,5 +1,6 @@
 1.4.27 (unreleased)
 -------------------
+* added option to skip paragraph splitting [dumitval]
 
 1.4.26 (2013-12-09)
 -------------------

@@ -20,6 +20,11 @@
 	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="body"></textarea>
 </div>
 
+<div class="field-inline">
+	<label for="skip_splitting" i18n:translate="">Do not perform splitting by paragraph</label>
+	<input type="checkbox" id="skip_splitting" name="skip_splitting" value="skip" />
+</div>
+
 <input type="submit" i18n:attributes="value" value="Add Section" />
 </form>
 
