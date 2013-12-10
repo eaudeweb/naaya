@@ -66,7 +66,6 @@ class MigrationSetKeywordsForDestinetUsers(BrowserView):
     def __call__(self):
         context = self.context.restrictedTraverse('who-who/destinet-users')
         langs = self.context.gl_get_languages()
-        #import pdb; pdb.set_trace()  # XXX BREAKPOINT
 
         for obj in context.objectValues("Naaya Contact"):
             for lang in langs:
