@@ -1,6 +1,6 @@
 import logging
 
-from OFS.interfaces import IObjectWillBeAddedEvent
+#from OFS.interfaces import IObjectWillBeAddedEvent
 
 from naaya.core.zope2util import is_descendant_of, path_in_site, ofs_path
 from naaya.content.pointer.pointer_item import addNyPointer
@@ -168,6 +168,7 @@ def get_linked_pointer_brains(obj):
 
     return pointers
 
+
 def handle_add_content(event):
     """
     Tests whether this requires adding pointers and perform the action
@@ -177,10 +178,27 @@ def handle_add_content(event):
     site = obj.getSite()
     if not getattr(site, 'destinet.publisher', False):
         return None
+
     if _qualifies_for_both(obj):
         place_pointers(obj)
     elif _qualifies_for_topics_only(obj):
         place_pointers(obj, exclude=['target-groups'])
+
+    # Make sure that the Destinet User keyword is added
+    if obj.meta_type == "Naaya Contact":
+        langs = obj.aq_parent.gl_get_languages()
+        if obj.aq_parent.getId() == "destinet-users":
+
+            for lang in langs:
+                v = obj.getLocalAttribute("keywords", lang)
+                if not "Destinet User" in v:
+                    if v.strip():
+                        v += ", Destinet User"
+                    else:
+                        v = "Destinet User"
+                obj.set_localpropvalue('keywords', lang, 'Destinet user')
+                obj.aq_parent.recatalogNyObject(obj)
+
 
 def handle_edit_content(event):
     """
@@ -191,6 +209,7 @@ def handle_edit_content(event):
     site = obj.getSite()
     if not getattr(site, 'destinet.publisher', False):
         return None
+
     q_both = _qualifies_for_both(obj)
     q_topics = _qualifies_for_topics_only(obj)
     if q_topics or q_both:
@@ -210,6 +229,22 @@ def handle_edit_content(event):
             place_pointers(obj)
         else:
             place_pointers(obj, exclude=['target-groups'])
+
+    # Make sure that the Destinet User keyword is added
+    langs = obj.aq_parent.gl_get_languages()
+    if obj.meta_type == "Naaya Contact":
+        if obj.aq_parent.getId() == "destinet-users":
+
+            for lang in langs:
+                v = obj.getLocalAttribute("keywords", lang)
+                if not "Destinet User" in v:
+                    if v.strip():
+                        v += ", Destinet User"
+                    else:
+                        v = "Destinet User"
+                obj.set_localpropvalue('keywords', lang, 'Destinet user')
+                obj.aq_parent.recatalogNyObject(obj)
+
 
 def handle_del_content(obj, event):
     """
