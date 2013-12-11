@@ -1,5 +1,8 @@
 1.2.49 (unreleased)
 -------------------
+
+1.2.49 (2013-12-11)
+-------------------
 * Email Validation - resolve validation in backend threads (avoid server load) [baragdan]
 
 1.2.48 (2013-12-09)
