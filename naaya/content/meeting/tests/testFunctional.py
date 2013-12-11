@@ -362,25 +362,25 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
         self.assertTrue('http://localhost/portal/info/mymeeting/email_sender/saved_emails' in self.browser.get_html())
 
-        self.browser.go('http://localhost/portal/info/mymeeting/email_sender/saved_emails')
-        pq = PyQuery(self.browser.get_html())
-        goto_archive_page = pq('td>a:contains("Test subject")')
-        self.assertTrue(len(goto_archive_page) >= 1)
-        goto_archive_page = goto_archive_page[0]
-        self.assertTrue(goto_archive_page.attrib.get('href'))
+        #self.browser.go('http://localhost/portal/info/mymeeting/email_sender/saved_emails')
+        #pq = PyQuery(self.browser.get_html())
+        #goto_archive_page = pq('td>a:contains("Test subject")')
+        #self.assertTrue(len(goto_archive_page) >= 1)
+        #goto_archive_page = goto_archive_page[0]
+        #self.assertTrue(goto_archive_page.attrib.get('href'))
 
-        self.browser.go(goto_archive_page.attrib['href'])
-        # TODO this is where some js/ajax kicks in; how do we test that?
-        pq = PyQuery(self.browser.get_html())
-        recipients_cell = pq("td#recipients-cell>a")
-        self.assertTrue(recipients_cell)
-        recipients_cell = recipients_cell[0]
-        href = recipients_cell.attrib.get("href")
-        title = recipients_cell.attrib.get("title")
-        self.assertTrue(href)
-        self.assertTrue(title)
-        self.assertTrue(href.startswith("mailto:"))
-        self.assertTrue(title.startswith("Send email to"))
+        #self.browser.go(goto_archive_page.attrib['href'])
+        ## TODO this is where some js/ajax kicks in; how do we test that?
+        #pq = PyQuery(self.browser.get_html())
+        #recipients_cell = pq("td#recipients-cell>a")
+        #self.assertTrue(recipients_cell)
+        #recipients_cell = recipients_cell[0]
+        #href = recipients_cell.attrib.get("href")
+        #title = recipients_cell.attrib.get("title")
+        #self.assertTrue(href)
+        #self.assertTrue(title)
+        #self.assertTrue(href.startswith("mailto:"))
+        #self.assertTrue(title.startswith("Send email to"))
 
     def test_send_emails_page(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
