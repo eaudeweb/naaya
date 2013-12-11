@@ -1,4 +1,7 @@
-3.3.23 (unreleased)
+3.3.24 (unreleased)
+-------------------
+
+3.3.23 (2013-12-11)
 -------------------
 * Email Validation - resolve validation in backend threads (avoid server load) [baragdan]
 * Bug fix: don't crash when offloading to disk bundles the templates that have
