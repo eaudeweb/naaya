@@ -54,8 +54,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
                                                     get_bulk_email,
                                                     get_bulk_emails,
-                                                    check_and_update_valid_email,
-                                                    check_and_update_valid_emails)
+                                                    check_cached_valid_emails)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3321,24 +3320,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.getFormsTool().getContent({'here': self, 'email': email},
             'site_admin_bulk_mail_view')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_view_bulk_email')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'check_emails')
     def check_emails(self, REQUEST):
         """Return already resolved email addresses
         and a list with those to be resolved by a different call"""
         emails = REQUEST.get("emails[]")
         if not emails:
             return None
-        invalid, not_resolved = check_and_update_valid_emails(self, emails)
+        invalid, not_resolved = check_cached_valid_emails(self, emails)
         return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_view_bulk_email')
-    def check_email(self, REQUEST):
-        """Check whether email address is valid and exists in the MX."""
-        email = REQUEST.get("email")
-        if not email:
-            return None
-        valid = check_and_update_valid_email(self, email)
-        return json.dumps({email: valid})
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):
