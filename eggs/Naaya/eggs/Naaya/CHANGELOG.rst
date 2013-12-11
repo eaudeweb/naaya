@@ -1,5 +1,8 @@
 3.3.23 (unreleased)
 -------------------
+* Bug fix: don't crash when offloading to disk bundles the templates that have
+  non-ascii characters (unicode)
+  [tiberich]
 
 3.3.22 (2013-12-09)
 -------------------

@@ -38,6 +38,8 @@ class FilesystemTemplateWriter(object):
         if not os.path.isdir(self.templates_path):
             os.makedirs(self.templates_path)
 
+        if isinstance(content, unicode):
+            content = content.encode('utf-8')
         f = open(os.path.join(self.templates_path, name+'.zpt'), 'wb')
         f.write(content)
         f.close()
