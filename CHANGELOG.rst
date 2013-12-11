@@ -1,5 +1,6 @@
 1.4.28 (unreleased)
 -------------------
+* Email Validation - resolve validation in backend threads (avoid server load) [baragdan]
 
 1.4.27 (2013-12-10)
 -------------------
