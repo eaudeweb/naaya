@@ -1,5 +1,6 @@
 3.3.23 (unreleased)
 -------------------
+* Email Validation - resolve validation in backend threads (avoid server load) [baragdan]
 * Bug fix: don't crash when offloading to disk bundles the templates that have
   non-ascii characters (unicode)
   [tiberich]
