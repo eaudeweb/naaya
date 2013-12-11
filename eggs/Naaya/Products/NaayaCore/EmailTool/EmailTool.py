@@ -13,12 +13,10 @@ from urlparse import urlparse
 import logging
 import random
 from datetime import datetime
-from validate_email import validate_email
-from functools import partial
-validate_email = partial(validate_email, verify=True)
-VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
-VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
 import json
+from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
+email_validator = EmailValidator("checked_emails", maxWorkers=10)
+
 
 try:
     import email.utils as email_utils
@@ -459,37 +457,29 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=
     }
     return r
 
-def check_and_update_valid_emails(obj, emails):
+def check_cached_valid_emails(obj, emails):
     """Instance calling this (obj) must have a dict like member checked_emails on it.
     This breaks encapsulation and should be done better, probably in NySite"""
     invalid_emails = []
     not_resolved_emails = []
+    if type(emails) == str:
+        emails = [emails]
+    email_validator.bind(obj)
     for email in emails:
-        check_value = check_and_update_valid_email(obj, email, cacheOnly=True)
+        check_value = email_validator.validate_from_cache(email)
         if check_value is False:
             invalid_emails.append(email)
         elif check_value is None:
             not_resolved_emails.append(email)
+    if not_resolved_emails:
+        _defer_check_valid_emails(obj, not_resolved_emails)
     return invalid_emails, not_resolved_emails
 
-def check_and_update_valid_email(obj, email, cacheOnly=False):
-    """Instance calling this (obj) must have a dict like member checked_emails on it.
-    This breaks encapsulation and should be done better, probably in NySite"""
-    now = time.time()
-    check_value, check_ts = obj.checked_emails.get(email, (None, None));
-    if ( check_value is None
-        or (check_value is False and check_ts < now - VERIFY_EMAIL_BADADDRESS_TTL)
-        or (check_value is True and check_ts < now - VERIFY_EMAIL_GOODADDRESS_TTL) ):
-
-        if cacheOnly:
-            return None
-        try:
-            check_value = validate_email(email)
-        except:
-            check_value = False
-        obj.checked_emails[email] = (check_value, now)
-    return check_value
-
+def _defer_check_valid_emails(obj, emails):
+    emails = set(emails)
+    email_validator.bind(obj)
+    for email in emails:
+        email_validator.enqueue(email)
 
 def get_mail_queue(site):
     """ Get a list of files that are still in the NEW mail_queue folder """

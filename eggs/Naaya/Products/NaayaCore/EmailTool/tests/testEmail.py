@@ -4,15 +4,14 @@ import random
 from email import message_from_file
 import tempfile
 import shutil
-import unittest
-
+import unittest2
 from mock import patch, MagicMock
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import (EmailTool,
                                              save_bulk_email, get_bulk_emails,
-                                             check_and_update_valid_emails)
-from Products.NaayaCore.EmailTool import EmailTool as EmailToolModule
+                                             check_cached_valid_emails)
+from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
 
 class EmailTestCase(FunctionalTestCase):
     def test_mail(self):
@@ -46,26 +45,7 @@ class EmailTestCase(FunctionalTestCase):
         self.failUnless('test_to_1@example.com' in to)
         self.failUnless('test_to_2@example.com' in to)
 
-    @patch('Products.NaayaCore.EmailTool.EmailTool.validate_email')
-    def test_check_and_update_valid_emails(self, mock_validate_email):
-        # make resolvation function always return true (valid)
-        mock_validate_email.return_value = True
-        emails = ['alreadyBad@edw.ro', 'alreadyBadButExpired@edw.ro', 'notInCache@edw.ro']
-        now = time.time()
-
-        obj = MagicMock()
-        # init the cache with one value already resolved to invalid
-        # we expect the resolvation function not to be called for this email
-        obj.checked_emails = {'alreadyBad@edw.ro': (False, now),
-                              'alreadyBadButExpired@edw.ro': (False, now - (EmailToolModule.VERIFY_EMAIL_BADADDRESS_TTL + 1)),
-                            }
-        expected_invalid = ['alreadyBad@edw.ro']
-        expected_notResolved = ['alreadyBadButExpired@edw.ro', 'notInCache@edw.ro']
-        invalid_emails, notResolved_emails = check_and_update_valid_emails(obj, emails)
-        self.assertEqual(invalid_emails, expected_invalid)
-        self.assertEqual(notResolved_emails, expected_notResolved)
-
-class EmailSaveTestCase(unittest.TestCase):
+class EmailSaveTestCase(unittest2.TestCase):
     def setUp(self):
         from App.config import getConfiguration
         from Products.Naaya.NySite import NySite
@@ -109,3 +89,29 @@ class EmailSaveTestCase(unittest.TestCase):
         self.assertEqual(emails[0]['subject'], 'Hello!')
         self.assertEqual(emails[0]['sender'], 'from@edw.ro')
         self.assertEqual(emails[0]['recipients'], ['to1@edw.ro', 'to2@edw.ro'])
+
+class EmailUnittest(unittest2.TestCase):
+    @patch('Products.NaayaCore.EmailTool.EmailTool._defer_check_valid_emails')
+    def test_check_cached_valid_emails(self, mock_defer):
+        # make resolvation function always return true (valid)
+        #mock_defer.return_value = True
+        emails = ['alreadyBad@edw.ro',
+                  'alreadyBadButExpired@edw.ro',
+                  'notInCache@edw.ro',
+                  'alreadyGoodButExpired']
+        now = time.time()
+        obj = MagicMock()
+        # init the cache with one value already resolved to invalid
+        # we expect the resolvation function not to be called for this email
+        obj.checked_emails = {'alreadyBad@edw.ro': (False, now),
+                              'alreadyGood@edw.ro': (True, now),
+                              'alreadyBadButExpired@edw.ro':
+                                (False, now - (EmailValidator.VERIFY_EMAIL_BADADDRESS_TTL + 1)),
+                              'alreadyGoodButExpired@edw.ro':
+                                (False, now - (EmailValidator.VERIFY_EMAIL_GOODADDRESS_TTL + 1)),
+                            }
+        expected_invalid = ['alreadyBad@edw.ro']
+        expected_notResolved = ['alreadyBadButExpired@edw.ro', 'alreadyGoodButExpired', 'notInCache@edw.ro']
+        invalid_emails, notResolved_emails = check_cached_valid_emails(obj, emails)
+        self.assertSetEqual(set(invalid_emails), set(expected_invalid))
+        self.assertSetEqual(set(notResolved_emails), set(expected_notResolved))

@@ -16,8 +16,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
                                                     _mail_in_queue,
-                                                    check_and_update_valid_emails,
-                                                    check_and_update_valid_email)
+                                                    check_cached_valid_emails)
 import json
 
 #naaya.content.meeting imports
@@ -246,26 +245,15 @@ class EmailSender(SimpleItem):
                                                 'meeting': self.getMeeting()},
             'naaya.content.meeting.email_view_email')
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'check_emails')
     def check_emails(self, REQUEST=None, RESPONSE=None):
         """Return already resolved email addresses
         and a list with those to be resolved by a different call"""
         emails = REQUEST.get("emails[]")
         if not emails:
             return None
-        invalid, not_resolved = check_and_update_valid_emails(self, emails)
+        invalid, not_resolved = check_cached_valid_emails(self, emails)
         return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
-
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
-    def check_email(self, REQUEST=None, RESPONSE=None):
-        """ Check whether specific email address is real.
-        Use previously calculated results.
-        To be used with multiple ajax call in parallel"""
-        email = REQUEST.form.get('email')
-        if not email:
-            return None
-        valid = check_and_update_valid_email(self.getMeeting(), email)
-        return json.dumps({email: valid})
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'mail_in_queue')
     def mail_in_queue(self, filename):

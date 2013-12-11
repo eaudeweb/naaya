@@ -1,74 +1,49 @@
 // make this a global object to be used later
 var check_emails = {
-	names: [],
-    validate_names: [],
+	toBeResolvedText: [],
     invalid_email_text: gettext("cannot be reached!"),
 
-	setupWorkingData: function (cssSelection) {
+	setupWorkingData: function (cssSelection, callback) {
 		that = this;
+		that.callback = callback;
+		that.cssSelection = cssSelection;
 		$(cssSelection).each(function () {
-			that.names.push($(this));
-			that.validate_names.push($(this).text());
+			that.toBeResolvedText.push($(this).text());
 		})
 	},
 
-    findInvalidDomItems: function (invalidItems, callback) {
+    findInvalidDomItems: function (invalidItems) {
 		that = this;
-        for (i=0; i < that.names.length; ++i) {
-            if (jQuery.inArray(that.names[i].text(), invalidItems) >= 0) {
-				callback(that.names[i], that.validate_names[i]);
-            }
+        for (i=0; i < invalidItems.length; ++i) {
+			// FIXME: if an email name contains the other then this method will match both
+			specificSelection = that.cssSelection + ":contains('"+ invalidItems[i]+"')";
+			$(specificSelection).each(
+					function () {
+						that.callback($(this), $(this).text());
+					});
         }
     },
 
-	resolveTheRest: function (i, stop, items, callback, th) {
-		that = this;
-		//console.log(" + send from: " + th + "; mail: " + that.validate_names[i]);
-        $.ajax({url: "check_email",
-                data: {"email": items[i]},
-                dataType: "json",
-                type: "GET"}).done(function(data, textStatus, jqXHR) {
-                    if (data[items[i]] === false) {
-                        domIdx = jQuery.inArray(items[i], that.validate_names);
-                        if (domIdx >= 0) {
-							callback(that.names[domIdx], that.validate_names[domIdx]);
-                        }
-                    }
-                }).always(function() {
-                    ++i;
-                    if (i < stop) {
-                        that.resolveTheRest(i, stop, items, callback, th);
-                    }
-				});
+	resolveTheRest: function () {
+		$.ajax({url: "check_emails",
+			data: {"emails[]": that.toBeResolvedText},
+			dataType: "json",
+			type: "POST"}).done(
+			function(data, textStatus, jqXHR) {
+				if ( ! $.isEmptyObject(data.invalid)) {
+					that.findInvalidDomItems(data.invalid);
+				}
+				if ( ! $.isEmptyObject(data.notResolved)) {
+					that.toBeResolvedText = data.notResolved;
+					setTimeout(that.resolveTheRest, 3000);
+				}
+			});
     },
 
-	resolve: function(cssSelection, domModifierCallback, multiplexFactor) {
-		this.setupWorkingData(cssSelection);
+	resolve: function(cssSelection, domModifierCallback) {
+		this.setupWorkingData(cssSelection, domModifierCallback);
 		that = this;
 
-		$.ajax({url: "check_emails",
-		data: {"emails[]": this.validate_names},
-		dataType: "json",
-		type: "POST"}).done(function(data, textStatus, jqXHR) {
-			if ( ! $.isEmptyObject(data.invalid)) {
-				that.findInvalidDomItems(data.invalid, domModifierCallback);
-			}
-			if ( ! $.isEmptyObject(data.notResolved)) {
-				if (multiplexFactor <= data.notResolved.length) {
-					chunkSize = Math.ceil(data.notResolved.length / multiplexFactor);
-					start = 0;
-					stop = chunkSize;
-					stop = stop <= data.notResolved.length ? stop : data.notResolved.length;
-					for (i=0; i < multiplexFactor; ++i) {
-						that.resolveTheRest(start, stop, data.notResolved, domModifierCallback, i);
-						start = stop;
-						stop += chunkSize;
-						stop = stop <= data.notResolved.length ? stop : data.notResolved.length;
-					}
-				} else {
-					that.resolveTheRest(0, data.notResolved.length, data.notResolved, domModifierCallback, 0);
-				}
-			}
-		});
+		that.resolveTheRest();
 	}
 }
