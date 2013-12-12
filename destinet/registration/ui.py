@@ -1,29 +1,41 @@
 """ User interface methods (views) regarding registration in Destinet """
+
 from Products.NaayaBase.NyContentType import SchemaFormHelper
+from destinet.registration.constants import EW_REGISTER_FIELD_NAMES
+from destinet.registration.constants import WIDGET_NAMES
+from destinet.registration.core import prepare_error_response, handle_groups
+from destinet.registration.core import validate_widgets
 from naaya.content.contact.contact_item import _create_NyContact_object
 
-from destinet.registration.core import (validate_widgets, prepare_error_response,
-                                        handle_groups)
-from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
-                                             WIDGET_NAMES)
+
 def render_create_account_tpl(context, widgets, request_form=None, errors=None):
     """ """
 
+
 def create_destinet_account_html(context, request):
     """ """
-    ns = {'here': context}
-    contact_schema = context.getSite().getSchemaTool()['NyContact']
-    sh = SchemaFormHelper(contact_schema, context)
-    widgets = []
-    for wid in WIDGET_NAMES:
-        widgets.append(sh._get_renderer(wid, contact_schema["%s-property" % wid], False))
-    register_extra_schema = context.getSite().getSchemaTool()['registration']
-    sh = SchemaFormHelper(register_extra_schema, context)
-    groups_widget = sh._get_renderer('groups', register_extra_schema['groups-property'], False)
+    schema_tool = context.getSite().getSchemaTool()
+
+    contact_schema = schema_tool['NyContact']
+    register_extra_schema = schema_tool['registration']
+
+    contact_helper = SchemaFormHelper(contact_schema, context)
+    register_helper = SchemaFormHelper(register_extra_schema, context)
+
+    widgets = {}
+    for name in WIDGET_NAMES:
+        widgets[name] = contact_helper._get_renderer(
+            name, contact_schema["%s-property" % name], False)
+
+    groups_widget = register_helper._get_renderer(
+        'groups', register_extra_schema['groups-property'], False)
+
     ns = {'widgets': widgets,
           'here': context,
           'groups_widget': groups_widget}
+
     return context.getFormsTool().getContent(ns, 'site_createaccount')
+
 
 def process_create_account(context, request):
     """ """
