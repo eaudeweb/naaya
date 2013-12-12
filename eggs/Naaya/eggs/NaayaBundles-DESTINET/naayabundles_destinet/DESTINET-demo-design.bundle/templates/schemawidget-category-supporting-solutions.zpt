@@ -23,40 +23,7 @@
                 tal:attributes="value geo_type_item/id;
                   selected python:geo_type_item.id == value" />
         </select>
-        <script>
-            jQuery(document).ready(function(){
-                // record the value in the rel attribute because
-                // we want to reset the select when we hide it
-                jQuery(".category-selector").change(function(){
-                    var $select = jQuery(this);
-                    $select.attr('rel', $select.val());
-                });
-                jQuery(".select-enabler").change(function(){
-                    var $parent = jQuery(this).parent();
-
-                    // uncheck the 'disable' radio control
-                    $parent.find('.select-disabler').attr('checked', false);
-
-                    // set the selected option to the value saved in rel
-                    var $select = $parent.find('select');
-                    $select.find(':selected').attr('selected', false);
-                    $select.find("option[value='" + $select.attr('rel') + "']").attr('selected', true);
-                    $select.show();
-                });
-                jQuery(".select-disabler").change(function(){
-                    var $parent = jQuery(this).parent();
-
-                    // uncheck the 'enable' radio control
-                    $parent.find('.select-enabler').attr('checked', false);
-
-                    // set the selected option to the empty value
-                    var $select = $parent.find('select');
-                    $select.find(':selected').attr('selected', false);
-                    $select.find("option[value='']").attr('selected', true);
-                    $select.hide();
-                });
-            });
-        </script>
+        
     </metal:block>
 </metal:block>
 </tal:block>
