@@ -130,6 +130,7 @@ class MigrationMigrateGeoTypeProperty(BrowserView):
                 else:
                     logger.info("Symbol without parent: %s", tfs(symbol))
 
+                contact._p_changed = True
                 counter += 1
 
         EmailTool.divert_mail(False)
