@@ -1,0 +1,37 @@
+<tal:block define="
+    field_class string:field-inline;
+    maptool python:here.getSite().getGeoMapTool();
+    parent python: maptool.getParentByTitle('MARKET SOLUTIONS');
+    geo_type_list python:maptool.getSymbolChildrenOrdered(parent.id);
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <input type="radio" value="No" tal:attributes="checked python:(not value) and 'checked' or None" class="select-disabler" />No
+        <input type="radio" value="Yes" tal:attributes="checked python:value and 'checked' or None" class="select-enabler" />Yes
+        <select tal:attributes="
+            name string:${prop_id}:utf8:ustring; 
+            id prop_id;
+            style python:(not value) and 'display:none' or ''">
+            <option value="">--- Pick one ---</option>
+            <option tal:repeat="geo_type_item geo_type_list"
+                tal:content="geo_type_item/title" i18n:translate=""
+                tal:attributes="value geo_type_item/id;
+                  selected python:geo_type_item.id == value" />
+        </select>
+        <script>
+            jQuery(document).ready(function(){
+                jQuery(".select-enabler").change(function(){
+                    var $parent = jQuery(this).parent();
+                    $parent.find('.select-disabler').attr('checked', false);
+                    $parent.find('select').show();
+                });
+                jQuery(".select-disabler").change(function(){
+                    var $parent = jQuery(this).parent();
+                    $parent.find('.select-enabler').attr('checked', false);
+                    $parent.find('select').hide();
+                });
+            });
+        </script>
+    </metal:block>
+</metal:block>
+</tal:block>
