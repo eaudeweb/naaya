@@ -154,6 +154,18 @@ class symbols_tool:
         """ Get a list with all parent objects ordered by sortorder """
         return self.utSortObjsListByAttr(self.getParentsList(), 'sortorder', 0)
 
+    def getParentByTitle(self, title):
+        for parent in self.getParentsList():
+            if parent.title == title:
+                return parent
+        raise ValueError(u"Parent not found for this title: %s" % title)
+
+    def getSymbolByTitle(self, title):
+        for symbol in self.getSymbolsList():
+            if symbol.title == title:
+                return symbol
+        raise ValueError(u"Symbol not found for this title: %s" % title)
+
     def getSymbolChildren(self, parent):
         """Get a list with all the children of a parent object"""
         try: return [ obj for obj in self.__symbol_collection.values() if obj.parent == parent ]
