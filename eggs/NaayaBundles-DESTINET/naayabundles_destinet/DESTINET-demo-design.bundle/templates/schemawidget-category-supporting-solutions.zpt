@@ -6,10 +6,15 @@
 ">
 <metal:block use-macro="here/widget_macro/macros/widget">
     <metal:block fill-slot="input">
-        <input type="radio" value="No" tal:attributes="checked python:(not value) and 'checked' or None" class="select-disabler" />No
-        <input type="radio" value="Yes" tal:attributes="checked python:value and 'checked' or None" class="select-enabler" />Yes
-        <select tal:attributes="
+        <input type="radio" value="No" 
+            tal:attributes="checked python:(not value) and 'checked' or None" 
+            class="select-disabler" />No
+        <input type="radio" value="Yes" 
+            tal:attributes="checked python:value and 'checked' or None" 
+            class="select-enabler" />Yes
+        <select class="category-selector" tal:attributes="
             name string:${prop_id}:utf8:ustring; 
+            rel value;
             id prop_id;
             style python:(not value) and 'display:none' or ''">
             <option value="">--- Pick one ---</option>
@@ -20,15 +25,35 @@
         </select>
         <script>
             jQuery(document).ready(function(){
+                // record the value in the rel attribute because
+                // we want to reset the select when we hide it
+                jQuery(".category-selector").change(function(){
+                    var $select = jQuery(this);
+                    $select.attr('rel', $select.val());
+                });
                 jQuery(".select-enabler").change(function(){
                     var $parent = jQuery(this).parent();
+
+                    // uncheck the 'disable' radio control
                     $parent.find('.select-disabler').attr('checked', false);
-                    $parent.find('select').show();
+
+                    // set the selected option to the value saved in rel
+                    var $select = $parent.find('select');
+                    $select.find(':selected').attr('selected', false);
+                    $select.find("option[value='" + $select.attr('rel') + "']").attr('selected', true);
+                    $select.show();
                 });
                 jQuery(".select-disabler").change(function(){
                     var $parent = jQuery(this).parent();
+
+                    // uncheck the 'enable' radio control
                     $parent.find('.select-enabler').attr('checked', false);
-                    $parent.find('select').hide();
+
+                    // set the selected option to the empty value
+                    var $select = $parent.find('select');
+                    $select.find(':selected').attr('selected', false);
+                    $select.find("option[value='']").attr('selected', true);
+                    $select.hide();
                 });
             });
         </script>
