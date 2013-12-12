@@ -197,7 +197,17 @@ def handle_add_content(event):
                 else:
                     v = "Destinet User"
             obj.set_localpropvalue('keywords', lang, 'Destinet user')
-            obj.aq_parent.recatalogNyObject(obj)
+
+        # See #17642 for details on this
+        if getattr(obj, 'category-supporting-solutions'):
+            obj.geotype = getattr(obj, 'category-supporting-solutions')
+        elif getattr(obj, 'category-marketplace'):
+            obj.geotype = getattr(obj, 'category-marketplace')
+        else:
+            obj.geotype = getattr(obj, 'category-organization')
+
+        obj._p_changed = True
+        obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_edit_content(event):
@@ -243,7 +253,17 @@ def handle_edit_content(event):
                 else:
                     v = "Destinet User"
             obj.set_localpropvalue('keywords', lang, 'Destinet user')
-            obj.aq_parent.recatalogNyObject(obj)
+
+        # See #17642 for details on this
+        if getattr(obj, 'category-supporting-solutions'):
+            obj.geotype = getattr(obj, 'category-supporting-solutions')
+        elif getattr(obj, 'category-marketplace'):
+            obj.geotype = getattr(obj, 'category-marketplace')
+        else:
+            obj.geotype = getattr(obj, 'category-organization')
+
+        obj._p_changed = True
+        obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_del_content(obj, event):
