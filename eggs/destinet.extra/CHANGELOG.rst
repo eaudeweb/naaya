@@ -2,7 +2,7 @@
 ====================
 * Feature: added migration code for destinet users that have no Naaya Contact attached
   Added migration code to set the "Destinet user" keyword to all Naaya Contact entries
-  attached to users
+  attached to users; Split category field in 3 other properties.
   [tiberich #17643 Destinet, 17644 Destinet]
 
 1.2.10 (2012-12-14)
