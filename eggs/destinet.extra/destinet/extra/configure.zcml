@@ -21,4 +21,11 @@
         permission="zope2.NaayaAdministrate"
         />
 
+    <browser:page 
+        name="migrate_geo_type" 
+        class=".views.MigrationMigrateGeoTypeProperty" 
+        for="*"
+        permission="zope2.NaayaAdministrate"
+        />
+
 </configure>
