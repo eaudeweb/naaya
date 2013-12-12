@@ -1,5 +1,8 @@
 3.3.24 (unreleased)
 -------------------
+* Feature: added a couple of methods to symbols_tool to improve API and ease migration
+  of destinet contacts
+  [tiberich #17642]
 
 3.3.23 (2013-12-11)
 -------------------
