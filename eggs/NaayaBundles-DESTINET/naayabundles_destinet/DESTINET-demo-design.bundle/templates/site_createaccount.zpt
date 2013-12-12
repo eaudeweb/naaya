@@ -26,8 +26,42 @@ My role and interest in sustainable and responsible tourism is ..
                     com.val('');
                 }
             });
+
+            // ------- category widgets code ---------//
+            // record the value in the rel attribute because
+            // we want to reset the select when we hide it
+            jQuery(".category-selector").change(function(){
+                var $select = jQuery(this);
+                $select.attr('rel', $select.val());
+            });
+            jQuery(".select-enabler").change(function(){
+                var $parent = jQuery(this).parent();
+
+                // uncheck the 'disable' radio control
+                $parent.find('.select-disabler').attr('checked', false);
+
+                // set the selected option to the value saved in rel
+                var $select = $parent.find('select');
+                $select.find(':selected').attr('selected', false);
+                $select.find("option[value='" + $select.attr('rel') + "']").attr('selected', true);
+                $select.show();
+            });
+            jQuery(".select-disabler").change(function(){
+                var $parent = jQuery(this).parent();
+
+                // uncheck the 'enable' radio control
+                $parent.find('.select-enabler').attr('checked', false);
+
+                // set the selected option to the empty value
+                var $select = $parent.find('select');
+                $select.find(':selected').attr('selected', false);
+                $select.find("option[value='']").attr('selected', true);
+                $select.hide();
+            });
+
         });
 })();
+
 </script>
 
 <!-- /createaccount_html -> /create_destinet_account_html -->
@@ -39,65 +73,183 @@ My role and interest in sustainable and responsible tourism is ..
 <h1 i18n:translate="">DestiNet account application</h1>
 
 <p i18n:translate="">
-	Fill your data in the form below and press the <strong>Submit request</strong> button.
-	The Webmaster will be informed of your application.
-	You will be notified about the result of your request.
+Registration here will link you into a global responsible and sustainable tourism knowledge
+network, and give you access to the networks' knowledge bases, market places and monttoring
+systems. For now we need a minimum amount of information to list you on a global map of
+tourism stakeholders - later you can complete your full profile to save time now.
 </p>
 
 <form method="post" tal:attributes="action string:${here/getSitePath}/processRequestDestinetRoleForm">
-<input type="hidden" name="location" value="" />
-<table border="0" cellspacing="2" cellpadding="2">
-	<tr>
-		<td valign="top" i18n:translate="">Username</td>
-		<td><input type="text" name="username:utf8:ustring" size="40" tal:attributes="value here/getSessionUserName" />*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">First name</td>
-		<td><input type="text" name="firstname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">Last name</td>
-		<td><input type="text" name="lastname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">Email address</td>
-		<td><input type="text" name="email:utf8:ustring" size="40" tal:attributes="value here/getSessionUserEmail" />*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">Password:</td>
-		<td><input type="password" name="password:utf8:ustring" size="30" value="" maxlength="255">*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">Password verification:</td>
-		<td><input type="password" name="confirm:utf8:ustring" value="" size="30" maxlength="255">*</td>
-	</tr>
-	<tr>
-		<td i18n:translate="">Organisation</td>
-		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
-	</tr>
-        <tal:block repeat="widget widgets" tal:on-error="string: ">
+    <fieldset>
+        <legend>Basic info</legend>
+        <input type="hidden" name="location" value="" />
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td valign="top" i18n:translate="">Create a username for this site</td>
+                <td><input type="text" name="username:utf8:ustring" size="40" 
+                        tal:attributes="value here/getSessionUserName" />*</td>
+            </tr>
+            <tr>
+                <td i18n:translate="">First name</td>
+                <td><input type="text" name="firstname:utf8:ustring" size="40" 
+                        tal:attributes="value here/getSessionUserFirstname" />*</td>
+            </tr>
+            <tr>
+                <td i18n:translate="">Last name</td>
+                <td><input type="text" name="lastname:utf8:ustring" size="40" 
+                        tal:attributes="value here/getSessionUserLastname" />*</td>
+            </tr>
+            <tr>
+                <td i18n:translate="">Email address</td>
+                <td><input type="text" name="email:utf8:ustring" size="40" 
+                        tal:attributes="value here/getSessionUserEmail" />*</td>
+            </tr>
+
             <tr><td colspan="2">
-                <tal:block replace="structure widget" />
+                    <tal:block replace="structure python:widgets['category-organization']()" />
             </td></tr>
-        </tal:block>
-        <tr><td colspan="2">
-                <tal:block replace="structure groups_widget" tal:on-error="string: " />
+            <tr><td colspan="2">
+                    <strong>Full address</strong><br/>
+                    <tal:block replace="structure python:widgets['postaladdress']()" />
             </td></tr>
-	<tr>
-		<td valign="top" i18n:translate="">About Me</td>
-		<td><textarea name="comments:utf8:ustring" id="about-me-comments"
-                rows="6" cols="70" tal:content="here/getSessionUserComments"></textarea>*</td>
-	</tr>
-	<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
-		<td></td>
-		<td tal:content="structure python: here.show_recaptcha(here)" />
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="submit" id="submit-request" value="Submit request" i18n:attributes="value" /></td>
-	</tr>
-</table>
-</form>
+            <tr><td colspan="2">
+                    <tal:block replace="structure python:widgets['coverage']()" />
+            </td></tr>
+
+            <tr>
+                <td i18n:translate="">Password:</td>
+                <td><input type="password" name="password:utf8:ustring" size="30" 
+                        value="" maxlength="255">*</td>
+                </tr>
+                <tr>
+                    <td i18n:translate="">Password verification:</td>
+                    <td><input type="password" name="confirm:utf8:ustring" value="" 
+                            size="30" maxlength="255">*</td>
+                    </tr>
+                    <tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
+                        <td></td>
+                        <td tal:content="structure python: here.show_recaptcha(here)" />
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <p>This is the minimum information we require. You can submit
+                                the form now and fill the rest in later if you want to make
+                                the best use of the DestiNet Portal.</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" id="submit-request" 
+                                value="Submit request now and fill in more later" 
+                                i18n:attributes="value" />
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset>
+                <legend>Further information</legend>
+
+                <table border="0" cellspacing="2" cellpadding="2">
+
+                    <tr>
+                        <td colspan="2">
+                            <p>
+                                Further Information that will give you more access to the
+                                global knowledge base and market place - fill this in to let
+                                other tourism stakeholders know who you are, what topics
+                                interest you, what is your area of activity or expertise and/or
+                                what products/services you offer.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td i18n:translate="">Name of your organisation</td>
+                        <td><input type="text" name="organisation:utf8:ustring" size="40" 
+                                tal:attributes="value here/getSessionUserOrganisation" /></td>
+                    </tr>
+
+                    <tr><td colspan="2">
+                            <tal:block replace="structure python:widgets['geo_location']()" />
+                    </td></tr>
+
+
+
+                    <tr><td colspan="2">
+                            <strong>LOCAL TO GLOBAL QUALITY-ASSESSED MARKET PLACE LISTINGS.</strong>
+                            <p>List yourself in DestINet's Quality Assessed Sustainable Tourism Global Market Place
+                    (NB. Listing here will be charged according to the DestiNet Market Access Services current
+                    price list.)</p>
+                            <tal:block replace="structure python:widgets['category-marketplace']()" />
+                    </td></tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <strong>Solutions Supporting Sustainable Tourism. Do you offer products or services to
+                                support sustainable tourism development?</strong>
+                            <p>(NB. Listing here will be charged according to the DestiNet Market Access Services current
+                                price list.)</p>
+                            <tal:block replace="structure python:widgets['category-supporting-solutions']()" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <strong>ABOUT YOU OR YOUR ORGANISATION</strong>
+                            <p>Operational level - At what territorial level is
+                               your organisation operating? Click on the items
+                               from the list below to select/deselect them.
+                            </p>
+                            <tal:block replace="structure python:widgets['administrative_level']()" />
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="2">
+                    Landscape Type - Do you have a focus on a specific landscape type?
+                            <tal:block replace="structure python:widgets['landscape_type']()" />
+                    </td></tr>
+
+
+                    <tr><td colspan="2">
+                            Topics - Please select the topics of main interest /fields of activity/ competence) to you.
+                            <tal:block replace="structure python:widgets['geo_location']()" />
+                    </td></tr>
+
+                    <tr><td colspan="2">
+                            <tal:block replace="structure groups_widget" tal:on-error="string: " />
+                    </td></tr>
+
+
+                    <tr>
+                        <td valign="top" i18n:translate="">
+                            About Me. Please provide a short profile that will give others
+                            the opportunity to know your work and interests.
+                        </td>
+                        <td><textarea name="comments:utf8:ustring" id="about-me-comments"
+                                rows="6" cols="70" tal:content="here/getSessionUserComments"></textarea>*</td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" id="submit-request" value="Submit request" i18n:attributes="value" /></td>
+                    </tr>
+
+
+<!--  -->
+<!--                     <div tal:content="python:widgets" /> -->
+<!--                     <tal:block repeat="name widgets" > -->
+<!--                         <tr><td colspan="2"> -->
+<!--                                 <tal:block replace="structure python:widgets[name]()" /> -->
+<!--                         </td></tr> -->
+<!--                     </tal:block> -->
+<!--  -->
+
+                </table>
+            </fieldset>
+        </form>
 <span tal:replace="python:here.delSessionErrors()" />
 <span tal:replace="python:here.delRequestRoleSession()" />
 
