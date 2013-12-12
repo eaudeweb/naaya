@@ -8,8 +8,10 @@
     <metal:block fill-slot="input">
         <input type="radio" value="No" tal:attributes="checked python:(not value) and 'checked' or None" class="select-disabler" />No
         <input type="radio" value="Yes" tal:attributes="checked python:value and 'checked' or None" class="select-enabler" />Yes
-        <select tal:attributes="
+        <select class="category-selector"
+            tal:attributes="
             name string:${prop_id}:utf8:ustring; 
+            rel value;
             id prop_id;
             style python:(not value) and 'display:none' or ''">
             <option value="">--- Pick one ---</option>
