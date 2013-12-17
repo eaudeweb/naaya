@@ -7,25 +7,4 @@
     <include package="destinet.roles" />
     <include package="destinet.registration" />
 
-    <browser:page 
-        name="migrate_users" 
-        class=".views.MigrationCreateContactForOldUsers" 
-        for="*"
-        permission="zope2.NaayaAdministrate"
-        />
-
-    <browser:page 
-        name="migrate_user_keywords" 
-        class=".views.MigrationSetKeywordsForDestinetUsers" 
-        for="*"
-        permission="zope2.NaayaAdministrate"
-        />
-
-    <browser:page 
-        name="migrate_geo_type" 
-        class=".views.MigrationMigrateGeoTypeProperty" 
-        for="*"
-        permission="zope2.NaayaAdministrate"
-        />
-
 </configure>

@@ -6,6 +6,7 @@
 
    <five:registerPackage package="." initialize=".initialize" />
 
+
    <zope:utility
       name="CountriesFoldersFromGlossary.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
@@ -17,6 +18,25 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_rebuild_pointers.RebuildPointers"
       permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
+      name="SetKeywordsForDestinetUsers.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_set_keyword_for_users.SetKeywordsForDestinetUsers"
+      permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
+      name="MigrateGeoTypeProperty.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_migrate_destinet_users_geotype.MigrateGeoTypeProperty"
+      permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
+      name="CreateContactForOldUsers.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_create_naaya_contact_for_old_users.CreateContactForOldUsers"
+      permission="zope2.ViewManagementScreens" />
+
 
    <naaya:call factory=".patches.patch_addNyContact" />
 
