@@ -1,6 +1,7 @@
 import os
 import tempfile
 import shutil
+import unittest
 from mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
@@ -40,7 +41,7 @@ class EmailTestCase(FunctionalTestCase):
         self.failUnless('test_to_1@example.com' in to)
         self.failUnless('test_to_2@example.com' in to)
 
-class EmailSaveTestCase(unittest2.TestCase):
+class EmailSaveTestCase(unittest.TestCase):
     def setUp(self):
         from App.config import getConfiguration
         from Products.Naaya.NySite import NySite

@@ -5,16 +5,22 @@ from threading import Thread, Lock, Semaphore
 from Products.NaayaCore.EmailTool.SharedSet import SharedSet, Full, Empty
 
 from validate_email import validate_email
-from functools import partial
-validate_email = partial(validate_email, verify=True)
 
 import transaction
 
 class EmailValidator(object):
-    # Note that while we avoid most of the duplicate validations, they may still occur
-    # when one thread spend time waiting for validation, email is not in Q, and some client js
-    # asks for the same email to be validated (another thread will pick it up, will not find it in
-    # the cache, and will start validating it). This is benign however
+    """Runs mail addresses through validate_email lib using detached threads
+    to parallelize this action and not keep the curent op waiting in I/O
+    Make sure to use bind() befaore enqueue() so that the result can be stored
+    asynchronously. outputObj must have a dict like property named by string
+    storage_name."""
+
+    # Note that while we avoid most of the duplicate validations,
+    # they may still occur when one thread spends time waiting for validation,
+    # email was thus removed from Q, and some client js asks for the same email
+    # to be validated (it willnot be a Q duplicate,
+    # another thread will pick it up, it will not find it in the cache
+    # and will start validating it). This is benign however.
     VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
     VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
     THREAD_IDLE_SEC = 60
@@ -24,7 +30,8 @@ class EmailValidator(object):
         # FIXME this is a per _outputObj lock, and should depend on it
         # while we can chenge the _outputObj, we still share the same lock
         # but we are going to use only the portal level object anyway
-        # and yes, this is not encapsulation friendly; perhaps the storing obj should live here?
+        # and yes, this is not encapsulation friendly;
+        # perhaps the storing obj should live here?
         self._outputObjLock = Lock()
         self._storage_name = storage_name
         self._workersLock = Lock()
@@ -37,13 +44,14 @@ class EmailValidator(object):
         while self._workerCountSemaphore.acquire(False):
             name = "emailValidationThread_%d"%self._seq
             self._workersLock.acquire()
-            self._workers[name] = {'th': Thread(target=EmailValidator._worker, name=name, args=(self,name)),
+            self._workers[name] = {'th': Thread(
+                target=EmailValidator._worker, name=name, args=(self,name)),
                                   'running': None}
             self._workersLock.release()
             self._seq += 1
 
         self._workersLock.acquire()
-        # Altering dict size during iteration; don't use generator based iterators like iteritems
+        # Altering dict size during iteration; avoid generator based iterators
         for name, th in self._workers.items():
             if th['running'] is None:
                 th['th'].daemon = True
@@ -90,7 +98,7 @@ class EmailValidator(object):
             if check_value is None:
                 # long I/O bound operation
                 try:
-                    check_value = validate_email(email)
+                    check_value = validate_email(email, verify=True)
                 except:
                     check_value = False
 
