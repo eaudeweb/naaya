@@ -55,6 +55,9 @@ def process_create_account(context, request):
         request.RESPONSE.redirect(referer)
     else:
         # OBS: email is already sent here:
+        real_comment = request.form.get('comments')
+        if not real_comment:
+            request.form['comments'] = " "
         site.processRequestRoleForm(request)
         redirect = request.RESPONSE.headers.get('location')
         if redirect != referer:
@@ -79,15 +82,16 @@ def process_create_account(context, request):
                                 lastname=request.form['lastname'],
                                 organisation=request.form['organisation'],
                                 approved=True,
-                                description=request.form.get('comments'),
+                                description=real_comment,
                                 **form_data)
             handle_groups(ob, request.form)
             delattr(ob, 'checkPermissionEditObject')
         else:
             # also call this to prefill values in form for contact
             prepare_error_response(context, schema, register_schema, form_errors, request.form)
+            # NOTE: disabled because the comments field is now optional
             # ugly hack as a conseq of renaming Comments field
-            if isinstance(request.SESSION.get('site_errors'), (tuple, list)):
-                if 'Required field: Comments' in request.SESSION['site_errors']:
-                    request.SESSION['site_errors'].remove('Required field: Comments')
-                    request.SESSION['site_errors'].append('Required field: About Me')
+            # if isinstance(request.SESSION.get('site_errors'), (tuple, list)):
+            #     if 'Required field: Comments' in request.SESSION['site_errors']:
+            #         request.SESSION['site_errors'].remove('Required field: Comments')
+            #         request.SESSION['site_errors'].append('Required field: About Me')
