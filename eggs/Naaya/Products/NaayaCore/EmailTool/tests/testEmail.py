@@ -1,7 +1,6 @@
 import os
 import tempfile
 import shutil
-import unittest2
 from mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
