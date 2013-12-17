@@ -79,7 +79,7 @@ def process_create_account(context, request):
                                 lastname=request.form['lastname'],
                                 organisation=request.form['organisation'],
                                 approved=True,
-                                description=request.form['comments'],
+                                description=request.form.get('comments'),
                                 **form_data)
             handle_groups(ob, request.form)
             delattr(ob, 'checkPermissionEditObject')
