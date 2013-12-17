@@ -20,11 +20,12 @@ My role and interest in sustainable and responsible tourism is ..
                     }
                 });
             }
-            jQuery("#submit-request").click(function(){
+            jQuery("#create-account").on("submit", function(){
                 if (!com.data('first_click')
                     && (com.val() == about_me_tip)){
                     com.val('');
                 }
+                return true;
             });
 
             // ------- category widgets code ---------//
@@ -91,9 +92,10 @@ tourism stakeholders - later you can complete your full profile to save time now
     .geo-widget-location label {float:none}
     .geo-widget-location p {margin:0 0 1em 0;}
     .schema-widget-geo .field-inline label {float:left !important; width:100px !important;}
+    .glossary-widget-mode-single-input {padding:1em 0em}
 </style>
 
-<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestDestinetRoleForm">
+<form id="create-account" method="post" tal:attributes="action string:${here/getSitePath}/processRequestDestinetRoleForm">
     <fieldset>
         <legend>Basic info</legend>
         <input type="hidden" name="location" value="" />
@@ -120,12 +122,6 @@ tourism stakeholders - later you can complete your full profile to save time now
                     tal:attributes="value here/getSessionUserEmail" />*
             </div>
 
-            <tal:block replace="structure python:widgets['category&#45;organization']()" />
-
-            <h3>Full address</h3>
-            <tal:block replace="structure python:widgets['postaladdress']()" />
-            <tal:block replace="structure python:widgets['coverage']()" />
-
             <div class="field-inline">
                 <label i18n:translate="" >Password</label>
                 <input type="password" name="password:utf8:ustring" size="30" value="" maxlength="255" />*
@@ -136,6 +132,13 @@ tourism stakeholders - later you can complete your full profile to save time now
                 <input type="password" name="confirm:utf8:ustring" value="" 
                     size="30" maxlength="255" />*
             </div>
+
+
+            <tal:block replace="structure python:widgets['category&#45;organization']()" />
+
+            <h3>Full address</h3>
+            <tal:block replace="structure python:widgets['postaladdress']()" />
+            <tal:block replace="structure python:widgets['coverage']()" />
 
             <div class="field-inline" tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
                 <label i18n:translate="" ></label>
@@ -207,7 +210,6 @@ tourism stakeholders - later you can complete your full profile to save time now
 
         <div class="field-inline">
             <label i18n:translate="" >About Me *</label>
-
             <p>
                 Please provide a short profile that will give others
                 the opportunity to know your work and interests.</p>
