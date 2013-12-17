@@ -200,11 +200,11 @@ def handle_add_content(event):
 
         # See #17642 for details on this
         if getattr(obj, 'category-supporting-solutions'):
-            obj.geotype = getattr(obj, 'category-supporting-solutions')
+            obj.geo_type = getattr(obj, 'category-supporting-solutions')
         elif getattr(obj, 'category-marketplace'):
-            obj.geotype = getattr(obj, 'category-marketplace')
+            obj.geo_type = getattr(obj, 'category-marketplace')
         else:
-            obj.geotype = getattr(obj, 'category-organization')
+            obj.geo_type = getattr(obj, 'category-organization')
 
         obj._p_changed = True
         obj.aq_parent.recatalogNyObject(obj)
@@ -256,11 +256,11 @@ def handle_edit_content(event):
 
         # See #17642 for details on this
         if getattr(obj, 'category-supporting-solutions'):
-            obj.geotype = getattr(obj, 'category-supporting-solutions')
+            obj.geo_type = getattr(obj, 'category-supporting-solutions')
         elif getattr(obj, 'category-marketplace'):
-            obj.geotype = getattr(obj, 'category-marketplace')
+            obj.geo_type = getattr(obj, 'category-marketplace')
         else:
-            obj.geotype = getattr(obj, 'category-organization')
+            obj.geo_type = getattr(obj, 'category-organization')
 
         obj._p_changed = True
         obj.aq_parent.recatalogNyObject(obj)
