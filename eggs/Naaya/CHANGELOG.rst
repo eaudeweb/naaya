@@ -1,4 +1,7 @@
-3.3.24 (unreleased)
+3.3.25 (unreleased)
+-------------------
+
+3.3.24 (2013-12-18)
 -------------------
 * class-based selection of cells with emails to be validated [dumitval]
 * getUserFullName returns "Anonymous User" for anonymous, instead of '' [dumitval]
