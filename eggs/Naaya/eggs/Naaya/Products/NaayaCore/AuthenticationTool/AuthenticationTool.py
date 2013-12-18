@@ -1328,6 +1328,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         Given a user object, returns the concatenation of first+last names
         """
+        if user_obj.getUserName() == 'Anonymous User':
+            return 'Anonymous User'
         try:
             return u'%s %s' % (force_to_unicode(user_obj.firstname),
                                force_to_unicode(user_obj.lastname))

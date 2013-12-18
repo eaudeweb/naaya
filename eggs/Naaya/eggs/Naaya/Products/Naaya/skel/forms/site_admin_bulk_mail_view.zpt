@@ -28,7 +28,7 @@ As this happens, each invalid address will change colour to red.</p>
   </tr>
   <tr>
     <th i18n:translate="">Recipients</th>
-    <td id="recipients-cell">
+    <td class="recipients-cell">
       <tal:block repeat="recipient email/recipients">
       <a tal:attributes="href string:mailto:${recipient};
                          title string:Send email to ${recipient}"
