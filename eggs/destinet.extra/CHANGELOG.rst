@@ -1,12 +1,13 @@
-1.2.11 (unreleased)
+1.2.11 (2013-12-18)
 ====================
 * Feature: added migration code for destinet users that have no Naaya Contact attached
-* Added migration code to set the "Destinet user" keyword to all Naaya Contact entries
+* Feature: Added migration code to set the "Destinet user" keyword to all Naaya Contact entries
   attached to users; 
-* Split category field in 3 other properties (category-organization, category-marketplace, 
-  category-supporting-solution). 
-* Add these 3 fields to the contact_index template (in DESTINET bundle)
-* Deprecate and automatically fill in the geo_type property with a value from one of the 3
+* Feature: Added migration code to change schema for NaayaContact
+* Feature: Split category field in 3 other properties 
+  (category-organization, category-marketplace, category-supporting-solution). 
+* Feature: Add these 3 fields to the contact_index template (in DESTINET bundle)
+* Feature: Deprecate and automatically fill in the geo_type property with a value from one of the 3
   new categories, using subscription handlers on add/modify events
   [tiberich #17643 Destinet, 17644 Destinet]
 

@@ -37,6 +37,12 @@
       component=".updates.update_create_naaya_contact_for_old_users.CreateContactForOldUsers"
       permission="zope2.ViewManagementScreens" />
 
+   <zope:utility
+      name="ChangeNaayaContactSchema.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_naaya_contact_schema.ChangeNaayaContactSchema"
+      permission="zope2.ViewManagementScreens" />
+
 
    <naaya:call factory=".patches.patch_addNyContact" />
 
