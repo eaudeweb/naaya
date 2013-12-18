@@ -169,6 +169,19 @@ def get_linked_pointer_brains(obj):
     return pointers
 
 
+def _get_geo_type(obj):
+    """ Returns the computed value for geo_type based on the new
+    category fields
+    """
+    # See #17642 for details on this
+    if getattr(obj, 'category-supporting-solutions'):
+        return getattr(obj, 'category-supporting-solutions')
+    elif getattr(obj, 'category-marketplace'):
+        return getattr(obj, 'category-marketplace')
+    else:
+        return getattr(obj, 'category-organization')
+
+
 def handle_add_content(event):
     """
     Tests whether this requires adding pointers and perform the action
@@ -198,14 +211,7 @@ def handle_add_content(event):
                     v = "Destinet User"
             obj.set_localpropvalue('keywords', lang, 'Destinet user')
 
-        # See #17642 for details on this
-        if getattr(obj, 'category-supporting-solutions'):
-            obj.geo_type = getattr(obj, 'category-supporting-solutions')
-        elif getattr(obj, 'category-marketplace'):
-            obj.geo_type = getattr(obj, 'category-marketplace')
-        else:
-            obj.geo_type = getattr(obj, 'category-organization')
-
+        obj.geo_type = _get_geo_type(obj)
         obj._p_changed = True
         obj.aq_parent.recatalogNyObject(obj)
 
@@ -254,13 +260,7 @@ def handle_edit_content(event):
                     v = "Destinet User"
             obj.set_localpropvalue('keywords', lang, 'Destinet user')
 
-        # See #17642 for details on this
-        if getattr(obj, 'category-supporting-solutions'):
-            obj.geo_type = getattr(obj, 'category-supporting-solutions')
-        elif getattr(obj, 'category-marketplace'):
-            obj.geo_type = getattr(obj, 'category-marketplace')
-        else:
-            obj.geo_type = getattr(obj, 'category-organization')
+        obj.geo_type = _get_geo_type(obj)
 
         obj._p_changed = True
         obj.aq_parent.recatalogNyObject(obj)

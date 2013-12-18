@@ -3,6 +3,19 @@ from subscribers import get_category_location
 from Products.Naaya.NyFolder import NyFolder
 
 
+def _get_geo_type(schema):
+    """ Returns the computed value for geo_type based on the new
+    category fields
+    """
+    # See #17642 for details on this
+    if schema.get('category-supporting-solutions'):
+        return schema.get('category-supporting-solutions')
+    elif schema.get('category-marketplace'):
+        return schema.get('category-marketplace')
+    else:
+        return schema.get('category-organization')
+
+
 def patch_addNyContact():
     original = contact_item.addNyContact
     def patched(self, id='', REQUEST=None, contributor=None, **kwargs):
@@ -27,7 +40,7 @@ def patch_addNyContact():
             or self != site['who-who']):
             return original(self, **kwargs)
 
-        geo_type = schema_raw_data.get('geo_type', None)
+        geo_type = _get_geo_type(schema_raw_data)   #.get('geo_type', None)
         new_parent = get_category_location(site, geo_type)
         if not new_parent:
             new_parent = self
