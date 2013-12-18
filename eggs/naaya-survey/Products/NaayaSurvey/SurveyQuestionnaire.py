@@ -316,12 +316,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                     answer.anonymous_editing_key = self.utGenRandomId(16)
                     self.sendNotificationToUnauthenticatedRespondent(answer)
         elif not draft:
-            if self.notify_owner:
-                self.sendNotificationToOwner(answer)
             if (self.notify_respondents == 'ALWAYS'
                 or (self.notify_respondents.startswith('LET_THEM_CHOOSE')
                     and notify_respondent)):
                 self.sendNotificationToRespondent(answer)
+        if self.notify_owner:
+            self.sendNotificationToOwner(answer)
 
         if REQUEST:
             self.delSessionKeys(datamodel.keys())
