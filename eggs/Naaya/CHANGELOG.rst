@@ -1,5 +1,6 @@
 3.3.25 (unreleased)
 -------------------
+* added some missing changes to the cc email functionality [dumitval]
 
 3.3.24 (2013-12-18)
 -------------------

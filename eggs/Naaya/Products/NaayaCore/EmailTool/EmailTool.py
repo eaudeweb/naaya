@@ -145,7 +145,7 @@ class EmailTool(Folder):
 
     #api
     security.declarePrivate('sendEmail')
-    def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False):
+    def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False, p_cc=[]):
         """
         Send email message on transaction commit. If the transaction fails,
         the message is discarded.
@@ -154,6 +154,11 @@ class EmailTool(Folder):
             p_to = [e.strip() for e in p_to.split(',')]
 
         p_to = filter(None, p_to) # filter out blank recipients
+
+        if not isinstance(p_cc, list):
+            p_cc = [e.strip() for e in p_cc.split(',')]
+
+        p_cc = filter(None, p_cc) # filter out blank recipients
 
         try:
             site = self.getSite()
@@ -164,7 +169,7 @@ class EmailTool(Folder):
 
         try:
             if diverted_mail is not None: # we're inside a unit test
-                diverted_mail.append([p_content, p_to, p_from, p_subject])
+                diverted_mail.append([p_content, p_to, p_cc, p_from, p_subject])
                 return 1
 
             delivery = delivery_for_site(site)
@@ -188,9 +193,9 @@ class EmailTool(Folder):
                 delivery = _ImmediateDelivery(delivery)
 
             mail_logger.info('Sending email from site: %r '
-                             'to: %r subject: %r',
-                             site_path, p_to, p_subject)
-            l_message = create_message(p_content, p_to, p_from, p_subject)
+                             'to: %r, cc: %r, subject: %r',
+                             site_path, p_to, p_cc, p_subject)
+            l_message = create_message(p_content, p_to, p_from, p_subject, addr_cc=p_cc)
             send_by_delivery(delivery, p_from, p_to, l_message)
             return 1
 
@@ -279,16 +284,21 @@ def send_by_delivery(delivery, p_from, p_to, message):
         else:
             raise
 
-def create_message(text, addr_to, addr_from, subject):
+def create_message(text, addr_to, addr_from, subject, addr_cc=[]):
     if isinstance(addr_to, basestring):
         addr_to = (addr_to,)
     addr_to = ', '.join(addr_to)
+    if isinstance(addr_cc, basestring):
+        addr_cc = (addr_cc,)
+    addr_cc = ', '.join(addr_cc)
     subject = force_to_unicode(subject)
     text = force_to_unicode(text)
 
     message = create_plain_message(text.encode('utf-8'))
     hack_to_use_quopri(message)
     message['To'] = safe_header(addr_to)
+    if addr_cc:
+        message['Cc'] = safe_header(addr_cc)
     message['From'] = safe_header(addr_from)
     message['Subject'] = safe_header(subject)
     message['Date'] = email_utils.formatdate()
@@ -296,7 +306,7 @@ def create_message(text, addr_to, addr_from, subject):
     return message
 
 def save_bulk_email(site, addr_to, addr_from, subject, content,
-                    where_to_save='sent-bulk'):
+                    where_to_save='sent-bulk', addr_cc=[]):
     """
     Save bulk email on disk.
     `addr_to` is a list; if there is more than one recipient,
@@ -334,6 +344,8 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
         else:
             email_message = create_message(content, addr_to, addr_from,
                                            subject)
+        for mail in addr_cc:
+            email_message['Cc'] = mail
         # Save email in specified file
         generator.flatten(email_message)
     else:
@@ -451,6 +463,7 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=
         'content': mail.get_payload(decode=True).replace(
             '\n\n', '</p><p>').replace('\n', '<br/>'),
         'recipients': mail.get_all('To'),
+        'cc_recipients': mail.get_all('Cc'),
         'sender': mail.get('From'),
         'date': date,
         'webex': mail.get('X-Accept-Webex-Data', '')
