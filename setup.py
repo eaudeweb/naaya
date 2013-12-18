@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='destinet.extra',
-    version='1.2.11',
+    version='1.2.12',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro',
@@ -9,7 +9,7 @@ setup(name='destinet.extra',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya >= 3.2.7', 'Products.NaayaContent.NyPublication >= 1.1.4',
+        'Naaya >= 3.3.24', 'Products.NaayaContent.NyPublication >= 1.1.4',
         'naaya.envirowindows', 'naayabundles-destinet'
     ]
 )
