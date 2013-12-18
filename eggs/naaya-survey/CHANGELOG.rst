@@ -1,5 +1,6 @@
-1.2.37 (undeleased)
+1.2.37 (unreleased)
 ===================
+* Send notification to owner also for anonymous users + email formatting [dumitval] 
 
 1.2.36 (2013-12-09)
 ===================
