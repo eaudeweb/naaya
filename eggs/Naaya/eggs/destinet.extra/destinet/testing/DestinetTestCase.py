@@ -36,6 +36,14 @@ class DestinetTestCase(NaayaTestCase):
         self.portal.getSchemaTool().addSchema('registration', 'registration')
         schema = self.portal.portal_schemas['registration']
         schema.addWidget('groups', widget_type='SelectMultiple', data_type='list')
+
+        nycontactschema = self.portal.portal_schemas['NyContact']
+        nycontactschema.addWidget('category-organization', widget_type="GeoType", data_type='str', required=True)
+        nycontactschema.addWidget('category-marketplace', widget_type="GeoType", data_type='str', required=False)
+        nycontactschema.addWidget('category-supporting-solutions', widget_type="GeoType", data_type='str', required=False)
+
+        #import pdb; pdb.set_trace()
+
         manage_addDestinetPublisher(self.portal)
         cat = self.portal.getCatalogTool()
         cat.addIndex('pointer', 'FieldIndex')
