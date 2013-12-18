@@ -1,4 +1,7 @@
-1.2.50 (unreleased)
+1.2.51 (unreleased)
+-------------------
+
+1.2.50 (2013-12-18)
 -------------------
 * class-based selection of cells with emails to be validated [dumitval]
 * added cc field in email sending interface [dumitval]
