@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <th i18n:translate="">Recipients</th>
-            <td id="recipients-cell">
+            <td class="recipients-cell">
               <tal:block repeat="recipient_comma_list email/recipients">
                   <tal:block repeat="recipient python: recipient_comma_list.split(',')">
                     <a tal:attributes="href string:mailto:${recipient};
