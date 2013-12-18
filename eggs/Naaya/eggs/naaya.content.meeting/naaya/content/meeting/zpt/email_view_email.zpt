@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <th i18n:translate="">Recipients</th>
-            <td id="recipients-cell">
+            <td class="recipients-cell">
               <tal:block repeat="recipient email/recipients">
               <a tal:attributes="href string:mailto:${recipient};
                                  title string:Send email to ${recipient}"
@@ -55,7 +55,7 @@
           </tr>
           <tr>
             <th i18n:translate="">CC</th>
-            <td id="recipients-cell">
+            <td class="recipients-cell">
               <tal:block repeat="cc email/cc_recipients">
               <a tal:attributes="href string:mailto:${cc};
                                  title string:Send email to ${cc}"
