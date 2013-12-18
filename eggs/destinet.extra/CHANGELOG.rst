@@ -1,3 +1,8 @@
+1.2.12 (2013-12-18)
+====================
+* Bug fix: added dependency on Naaya 3.3.24, because of needed API
+  [tiberich Destinet #17642]
+
 1.2.11 (2013-12-18)
 ====================
 * Feature: added migration code for destinet users that have no Naaya Contact attached
