@@ -46,11 +46,11 @@
             class="datatable display listing" id="emails-list">
             <thead>
                 <tr class="list-header">
-                    <th i18n:translate="" width="10%">
+                    <th i18n:translate="" width="5%">
                         Date
                     </th>
 
-                    <th i18n:translate="" width="30%">
+                    <th i18n:translate="" width="20%">
                         Subject
                     </th>
 
@@ -58,7 +58,11 @@
                         Recipients
                     </th>
 
-                    <th i18n:translate="" width="30%">
+                    <th i18n:translate="" width="20%">
+                        CC
+                    </th>
+
+                    <th i18n:translate="" width="20%">
                         Content
                     </th>
 
@@ -66,7 +70,7 @@
                         Sender
                     </th>
  
-                    <th i18n:translate="" width="10%">
+                    <th i18n:translate="" width="5%">
                         Send status
                     </th>
                 </tr>
@@ -76,16 +80,30 @@
                     <tr>
                     <td tal:content="python:here.utShowFullDateTime(email['date'])" />
                     <td><a tal:content="email/subject" tal:attributes="href string:${here/absolute_url}/view_email?filename=${email/filename}" /></td>
-                    <td><tal:block2 define="recp_count python: len(email['recipients'])">
-                        <tal:block3 repeat="recipient python:email['recipients'][:3]">
+                    <td>
+                        <tal:block2 repeat="recipient python:email['recipients'][:3]">
                         <a tal:attributes="href string:mailto:${recipient};
                             title string:Send email to ${recipient}"
                             tal:content="recipient"
                             i18n:attributes="title" />
                         <br />
+                        </tal:block2>
+                        <tal:block2 define="recp_count python: len(email['recipients'])"
+                            condition="python:recp_count > 3">
+                        ... <tal:block3 i18n:translate=""> and <tal:block content="python:recp_count - 3" i18n:name="recipients_count"/> more.</tal:block3>
+                        </tal:block2>
+                    </td>
+                    <td><tal:block2 condition="email/cc_recipients">
+                        <tal:block3 repeat="cc python:email['cc_recipients'][:3]">
+                        <a tal:attributes="href string:mailto:${cc};
+                            title string:Send email to ${cc}"
+                            tal:content="cc"
+                            i18n:attributes="title" />
+                        <br />
                         </tal:block3>
-                        <tal:block3 condition="python:recp_count > 3">
-                        ... <tal:block4 i18n:translate=""> and <tal:block content="python:recp_count - 3" i18n:name="recipients_count"/> more.</tal:block4>
+                        <tal:block3 define="cc_count python: len(email['cc_recipients'])"
+                            condition="python:cc_count > 3">
+                        ... <tal:block4 i18n:translate=""> and <tal:block content="python:cc_count - 3" i18n:name="cc_count"/> more.</tal:block4>
                         </tal:block3>
                     </tal:block2></td>
                     <td tal:content="python:here.html2text(email['content'], 30, True)" />
@@ -96,11 +114,11 @@
             </tbody>
             <tfoot>
                 <tr class="list-header">
-                    <th i18n:translate="" width="10%">
+                    <th i18n:translate="" width="5%">
                         Date
                     </th>
 
-                    <th i18n:translate="" width="30%">
+                    <th i18n:translate="" width="20%">
                         Subject
                     </th>
 
@@ -108,15 +126,19 @@
                         Recipients
                     </th>
 
-                    <th i18n:translate="" width="30%">
-                        Content
+                    <th i18n:translate="" width="20%">
+                        CC
                     </th>
- 
-                    <th i18n:translate="" width="10%">
-                        Sender
+
+                    <th i18n:translate="" width="20%">
+                        Content
                     </th>
 
                     <th i18n:translate="" width="10%">
+                        Sender
+                    </th>
+ 
+                    <th i18n:translate="" width="5%">
                         Send status
                     </th>
                 </tr>

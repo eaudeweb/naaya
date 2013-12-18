@@ -57,6 +57,14 @@
                 </div>
             </div>
             <div class="field">
+                <label class="widget-title" for="cc_emails" i18n:translate="">CC:</label>
+                <p class="tip" tal:condition="here/is_eionet_meeting|nothing"
+                  i18n:translate="">
+                  eionet-nfp@roles.eea.eionet.europa.eu is already part of the CC</p>
+                <p i18n:translate="">Add CC addresses one per line, no separator</p>
+                <textarea name="cc_emails:lines" id="cc_emails" cols="50" rows="3"></textarea>
+            </div>
+            <div class="field">
                 <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
                 <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
             </div>

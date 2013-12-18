@@ -76,12 +76,13 @@ class EmailSender(SimpleItem):
                                                  'meeting': self.getMeeting()},
                         'naaya.content.meeting.email_index')
 
-    def _send_email(self, p_from, p_to, p_subject, p_content):
+    def _send_email(self, p_from, p_to, p_cc, p_subject, p_content):
         """ """
         try:
             email_tool = self.getEmailTool()
             return email_tool.sendEmail(p_content=p_content,
                                 p_to=p_to,
+                                p_cc=p_cc,
                                 p_from=p_from,
                                 p_subject=p_subject)
         except Exception, e:
@@ -111,7 +112,8 @@ class EmailSender(SimpleItem):
             return 0
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_email')
-    def send_email(self, from_email, subject, body_text, REQUEST, to_uids=None):
+    def send_email(self, from_email, subject, body_text, cc_emails, REQUEST,
+                    to_uids=None):
         """ """
         result = 0
         if to_uids is not None:
@@ -119,10 +121,16 @@ class EmailSender(SimpleItem):
             to_emails = [self.getParticipants().getAttendeeInfo(uid)['email']
                             for uid in to_uids]
 
-            result = self._send_email(from_email, to_emails, subject, body_text)
+            if (self.is_eionet_meeting and
+                'eionet-nfp@roles.eea.eionet.europa.eu' not in cc_emails):
+                cc_emails.append('eionet-nfp@roles.eea.eionet.europa.eu')
+            #TODO validate cc_emails
+            result = self._send_email(from_email, to_emails, cc_emails, subject,
+                                        body_text)
 
-            save_bulk_email(self.getSite(), to_emails, from_email, subject, body_text,
-                where_to_save=path_in_site(self.getMeeting()))
+            save_bulk_email(self.getSite(), to_emails, from_email, subject,
+                body_text, where_to_save=path_in_site(self.getMeeting()),
+                addr_cc=cc_emails)
 
         return self.getFormsTool().getContent({'here': self,
                                                 'meeting': self.getMeeting(),
