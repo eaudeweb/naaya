@@ -54,6 +54,17 @@
             </td>
           </tr>
           <tr>
+            <th i18n:translate="">CC</th>
+            <td id="recipients-cell">
+              <tal:block repeat="cc email/cc_recipients">
+              <a tal:attributes="href string:mailto:${cc};
+                                 title string:Send email to ${cc}"
+                 tal:content="cc"
+                 i18n:attributes="title" /><tal:block condition="not:repeat/cc/end">, </tal:block>
+              </tal:block>
+            </td>
+          </tr>
+          <tr>
             <th i18n:translate="">Subject</th>
             <td tal:content="email/subject" />
           </tr>
