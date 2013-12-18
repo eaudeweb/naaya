@@ -1,1 +1,3 @@
 *.pyc
+
+/naaya_survey.egg-info
