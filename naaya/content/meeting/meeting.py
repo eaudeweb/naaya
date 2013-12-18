@@ -13,23 +13,19 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view, change_permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from zope.interface import implements
-from zope.component import adapts
-import zLOG
 from AccessControl.Permission import Permission
 from DateTime import DateTime
 
 #Naaya imports
 from Products.Naaya.NyFolder import NyFolder
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NyContentData, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
