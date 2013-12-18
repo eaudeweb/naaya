@@ -175,8 +175,8 @@ class NyCSVImportTest(NaayaTestCase):
         self.assertEqual(expected_recipients[0], diverted_mail[0][1][0])
         self.assertEqual(expected_recipients[1], diverted_mail[1][1][0])
         self.assertEqual(expected_recipients[2], diverted_mail[2][1][0])
-        self.assertEqual(expected_sender, mail[2])
-        self.assertEqual(expected_subject, mail[3])
+        self.assertEqual(expected_sender, mail[3])
+        self.assertEqual(expected_subject, mail[4])
         EmailTool.divert_mail(False)
 
     def test_import_default_values(self):

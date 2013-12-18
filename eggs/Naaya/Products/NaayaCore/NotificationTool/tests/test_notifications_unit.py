@@ -134,7 +134,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
                                               location='', notif_type='instant',
                                               content_types=[])
         assert diverted_mail[0][1] == ['some@email.com']
-        assert diverted_mail[0][2] == 'from.zope@example.com'
+        assert diverted_mail[0][3] == 'from.zope@example.com'
         assert diverted_mail[0][0].find('confirm?key=') != -1
         confirm_key = re.search('confirm\?key=(\w+)',
                                     diverted_mail[0][0]).group(1)

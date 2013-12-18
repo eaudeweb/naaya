@@ -1,5 +1,6 @@
 3.3.26 (unreleased)
 -------------------
+* updated some tests to work with the new cc field in diverted mail [dumitval]
 
 3.3.25 (2013-12-18)
 -------------------
