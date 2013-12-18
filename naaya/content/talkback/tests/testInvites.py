@@ -67,7 +67,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         self.assertEqual(i.inviter_userid, 'someguy')
 
         self.assertEqual(len(self.diverted_mail), 1)
-        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        body, addr_to, addr_cc, addr_from, subject = self.diverted_mail[0]
         self.assertEqual(addr_to, [data['email']])
         # we modify `body` because the message is automatically wrapped.
         self.assertTrue(data['message'] in body.replace('\n', ' '))
@@ -104,7 +104,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         self.assertEqual(i.create_date, date.today())
 
         self.assertEqual(len(self.diverted_mail), 1)
-        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        body, addr_to, addr_cc, addr_from, subject = self.diverted_mail[0]
         self.assertEqual(addr_to, [data['email']])
         # we modify `body` because the message is automatically wrapped.
         self.assertTrue(data['message'] in body.replace('\n', ' '))
