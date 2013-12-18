@@ -26,7 +26,10 @@ class RegistrationTestCase(DestinetTestCase):
             'location': '',
             'geo_type': 'Forest',
             'coverage': 'Australia',
-            'groups': []
+            'groups': [],
+            'category-organization':'Forest',
+            'category-marketplace':'Forest',
+            'category-supporting-solutions':'Forest',
         }
 
     @property
@@ -60,13 +63,14 @@ class RegistrationTestCase(DestinetTestCase):
                                               sendCreateAccountEmail))
         for patch in self.patches:
             patch.start()
+
         # schema for NyContact
         schema = self.portal.portal_schemas['NyContact']
         schema.addWidget('topics', widget_type='SelectMultiple', data_type='list')
         schema.addWidget('target-groups', widget_type='SelectMultiple', data_type='list')
         schema.addWidget('administrative_level', widget_type='Select', data_type='str')
         schema.addWidget('landscape_type', widget_type='SelectMultiple', data_type='list')
-        schema['geo_type-property'].required = True
+        schema['geo_type-property'].required = False
         schema['coverage-property'].required = True
 
     def tearDown(self):
@@ -107,6 +111,7 @@ class RegistrationTestCase(DestinetTestCase):
         """ test destinet registration when group is selected """
         self.portal.REQUEST.form.update(self.initial_data)
         self.portal.REQUEST.form.update(groups=['test-group'])
+        #import pdb; pdb.set_trace()
         process_create_account(self.context, self.portal.REQUEST)
         contact = self.portal['who-who']['destinet-users'].objectValues()[0]
         pointer = self.portal.resources._getOb(contact.getId())
