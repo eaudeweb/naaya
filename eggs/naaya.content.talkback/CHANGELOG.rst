@@ -1,5 +1,6 @@
 1.4.29 (unreleased)
 -------------------
+class-based selection of cells with emails to be validated [dumitval]
 
 1.4.28 (2013-12-11)
 -------------------
