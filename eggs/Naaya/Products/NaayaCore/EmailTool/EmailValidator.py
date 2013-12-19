@@ -24,6 +24,7 @@ class EmailValidator(object):
     VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
     VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
     THREAD_IDLE_SEC = 60
+    VALIDATION_ATTEMPTS = 3 # number of consecutive attempt to avoid false negatives
 
     def __init__(self, storage_name, maxWorkers=10, maxPoolSize=4000):
         self._outputObj = None
@@ -96,11 +97,14 @@ class EmailValidator(object):
                 break
             check_value = self.validate_from_cache(email)
             if check_value is None:
-                # long I/O bound operation
-                try:
-                    check_value = validate_email(email, verify=True)
-                except:
-                    check_value = False
+                for i in range(self.VALIDATION_ATTEMPTS):
+                    # long I/O bound operation
+                    try:
+                        check_value = validate_email(email, verify=True)
+                    except:
+                        check_value = False
+                    if check_value:
+                        break
 
                 self._outputObjLock.acquire()
                 now = time.time()

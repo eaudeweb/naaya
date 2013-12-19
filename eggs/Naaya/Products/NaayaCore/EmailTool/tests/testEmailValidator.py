@@ -6,8 +6,9 @@ from mock import patch, MagicMock
 from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
 
 class EmailValidatorTest(unittest.TestCase):
-    def setUp(self):
-        self.maxW = 2
+    def setUp(self, maxW=2):
+        self.maxW = maxW
+        EmailValidator.THREAD_IDLE_SEC = 0.1
         self.email_validator = EmailValidator("checked_emails", maxWorkers=self.maxW)
         now = time.time()
         obj = MagicMock()
@@ -42,8 +43,6 @@ class EmailValidatorTest(unittest.TestCase):
     def test_enqueue(self, mock_validate_email):
         # make resolvation function always return true (valid)
         mock_validate_email.return_value = True
-        old_val = EmailValidator.THREAD_IDLE_SEC
-        EmailValidator.THREAD_IDLE_SEC = 0.1
         emails = ['alreadyBad@edw.ro', 'alreadyGood@edw.ro', 'alreadyBadButExpired@edw.ro', 'notInCache@edw.ro']
         for email in emails:
             self.email_validator.enqueue(email)
@@ -57,5 +56,17 @@ class EmailValidatorTest(unittest.TestCase):
         # after the sleep period all the threads exited
         for th in self.email_validator._workers.values():
             self.assertFalse(th['running'])
-        EmailValidator.THREAD_IDLE_SEC = old_val
+
+    @patch('Products.NaayaCore.EmailTool.EmailValidator.validate_email')
+    def test_enqueue_retry(self, mock_validate_email):
+        self.setUp(1)
+        # make resolvation function return invalid for nr of retries - 1
+        return_sequence = [False] * EmailValidator.VALIDATION_ATTEMPTS
+        return_sequence[-1] = True
+        mock_validate_email.side_effect = return_sequence
+
+        email = 'newInvalidOne@edw.ro'
+        self.email_validator.enqueue(email)
+        time.sleep(0.1)
+        self.assertTrue(self.email_validator.validate_from_cache(email))
 

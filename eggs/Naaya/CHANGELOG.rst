@@ -1,5 +1,6 @@
 3.3.26 (unreleased)
 -------------------
+* EmailValidator - added validation attempts to repeat test for invalid addresses (avoid false negatives)
 * updated some tests to work with the new cc field in diverted mail [dumitval]
 
 3.3.25 (2013-12-18)
