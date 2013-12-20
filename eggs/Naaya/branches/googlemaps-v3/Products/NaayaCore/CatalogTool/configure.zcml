@@ -1,0 +1,9 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+  xmlns:naaya="http://namespaces.zope.org/naaya">
+
+  <naaya:call factory=".CatalogTool.patch_zope_catalog_indexing" />
+
+  <subscriber handler=".subscribers.auto_catalog_object" />
+  <subscriber handler=".subscribers.auto_uncatalog_object" />
+
+</configure>

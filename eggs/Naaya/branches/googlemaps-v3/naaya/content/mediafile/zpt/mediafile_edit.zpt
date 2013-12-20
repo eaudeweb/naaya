@@ -1,0 +1,127 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
+<metal:block fill-slot="custom_scripts">
+<script type="text/javascript">
+<!--
+function check_srt(file_obj) {
+	var ext = file_obj.value;
+	ext = ext.substring(ext.length - 3, ext.length);
+	ext = ext.toLowerCase();
+	if(ext != 'srt') {
+	file_obj.value = "";
+	alert('You selected a .' + ext +
+		' file. Please select a .srt file instead!');
+	}
+}
+
+function displayToolTips(tips_id, style){
+	var tips = document.getElementById(tips_id);
+	tips.style.display = style;
+}
+// -->
+</script>
+</metal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<!-- Subtitle field -->
+<div id="subtitle_tips" style="display: none; float: right;" class="tooltip">
+<pre>
+Example:
+
+	1
+	00:00:20,000 --> 00:00:24,400
+	In connection with a dramatic increase
+	in crime in certain neighbourhoods,
+
+	2
+	00:00:24,600 --> 00:00:27,800
+	The government is implementing a new policy...
+</pre>
+</div>
+<div class="field">
+	<label for="subtitle"><span i18n:translate="" tal:omit-tag="">Subtitle</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span></label>
+	<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">Tip:</strong> you can edit subtitle in text area below or upload it from a local file.</p>
+	<textarea
+		onfocus="javascript:displayToolTips('subtitle_tips', 'block')"
+		onblur="javascript:displayToolTips('subtitle_tips', 'none')"
+		id="subtitle" name="subtitle:utf8:ustring" rows="15" cols="70"
+		tal:content="python:here.getSession('subtitle', here.getVersionLocalProperty('subtitle', curr_lang))"></textarea>
+	<label for="subtitle_file"><span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span></label>
+	<input type="file" onchange="javascript:check_srt(this);" size="50" name="subtitle_file" id="subtitle_file" value=""/>
+</div>
+<div class="field">
+	<label for="startup_image" i18n:translate="">Startup image</label>
+    <tal:block condition="here/startup_image">
+        <img tal:attributes="src string:${here/absolute_url}/get_startup_image"
+        width="400px"/>
+    </tal:block>
+</div>
+<div class="field-inline">
+    <tal:block condition="here/startup_image">
+        <label class="widget-title" for="startup_image" i18n:translate="">
+            Delete image</label>
+        <input id="delete_startup_image" type="checkbox" name="delete_startup_image">
+    </tal:block>
+</div>
+<div class="field">
+	<label for="startup_image" i18n:translate="">
+			Upload startup image (preferably in jpeg format)
+	</label>
+	<label for="startup_image" i18n:translate=""
+		tal:define="aspect_ratio python:here.get_aspect_ratio(aspect_ratio=0)"
+		tal:condition="aspect_ratio">
+			Recommended aspect ratio: <tal:block i18n:name="aspect_ratio"
+				define="rounded_ratio python:round(aspect_ratio, 2)"
+				content="string:${rounded_ratio} : 1" />
+	</label>
+	<input type="file" size="50" name="startup_image" id="startup_image" value=""/>
+</div>
+
+<fieldset style="background-color: #F9FCFE"
+	tal:define="ready here/mediaReady;
+				broken here/mediaBroken;
+				here_url here/absolute_url;
+				media_id here/getSingleMediaId;
+				flvpath string:${here_url}/${media_id};">
+<legend>
+	<span i18n:translate="">Attached file</span>
+	<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file')" class="mandatory_field"> *</span>
+</legend>
+
+<div style="float: right">
+
+<tal:block tal:condition="not:ready"
+	tal:define="broken here/mediaBroken">
+	<div tal:condition="broken" class="flvPlayerBroken" style="width: 200px; padding: 5px">
+		<img src="misc_/NaayaContent/NyMediaFileBroken.gif" /><br />
+		<label i18n:translate="">
+		An error occurred when trying to process uploaded video file. This may be
+		because uploaded file is not a valid video file, or not supported.
+		</label>
+	</div>
+	<div tal:condition="not:broken" class="flvPlayerNotReady" style="width: 200px; padding: 20px; 0 20px 0">
+		<img src="misc_/NaayaContent/NyMediaFileLoading.gif" /><br />
+		<label i18n:translate="" >
+		  Video file is being processed. Please try again later.
+		</label>
+	</div>
+</tal:block>
+</div>
+
+<div class="field-inline" tal:condition="python:here.getSize()>0 and ready">
+	<input type="radio" name="source" id="source-none" value="" checked="checked" />
+	<label for="source-none" i18n:translate="">Keep</label>
+	<a tal:attributes="href flvpath">
+		<span tal:content="media_id" />
+		<span tal:content="python:'(' + here.utShowSize(here.getSize()) + ')'" />
+	</a>
+</div>
+<div class="field-inline" tal:condition="python:ready or broken">
+	<input type="radio" name="source" id="source-file" value="file" tal:attributes="checked python:test(here.getSize()<=0, 'checked', None)"/>
+	<label i18n:translate="">Upload media file</label>
+	<input type="file" name="file" id="file" size="40" value="" onclick="document.getElementById('source-file').checked='checked'"/>
+</div>
+
+</fieldset>
+</tal:block>
+
+</tal:block>

@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<tal:block define="
+	global site_url python: here.getSite().absolute_url();
+	global document_url request/document|nothing;
+	global document python:here.getEnclosingDocument(request);
+	global req_album request/album|nothing;
+	global req_query request/query|nothing;
+" />
+<html>
+	<head>
+		<title i18n:translate="">Select image</title>
+		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
+	</head>
+	<body>
+		<p i18n:translate="">
+			Insert an image by uploading it from your computer (<em i18n:name="Computer" i18n:translate="">Computer</em>),
+			taking it from a remote page (<em i18n:name="URL" i18n:translate="">URL</em>) or selecting it from the ones already available in the portal (<em i18n:name="Browse" i18n:translate="">Browse</em>):
+		</p>
+		<div class="tabs">
+			<ul>
+				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;" i18n:translate="">Computer</a></span></li>
+				<li id="link_tab"><span><a href="javascript:mcTabs.displayTab('link_tab','link_panel');" onmousedown="return false;" i18n:translate="">URL</a></span></li>
+				<li id="browse_tab" class="current"><span><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></span></li>
+			</ul>
+		</div>
+		<div class="panel_wrapper">
+			<div id="computer_panel" class="panel">
+				<br />
+				<form id="comp_upload_form" tal:attributes="action string:${here/absolute_url}/prepare_image" method="post" enctype="multipart/form-data">
+					<label for="comp_file" i18n:translate="">Selected file</label>
+					<input id="comp_file" type="file" name="file" size="50" />
+					<input id="comp_document" type="hidden" name="document" tal:attributes="value document_url" />
+					<input type="hidden" name="mode" value="upload" />
+				</form>
+				<p i18n:translate="">
+					Click <strong i18n:name="Browse"><code i18n:translate="">Browse...</code></strong> to select one picture from your computer.
+				</p>
+				<div class="tip">
+				<strong i18n:translate="">Tips:</strong>
+				<ul>
+					<li i18n:translate="">To use multiple pictures create new photo gallery first, upload them there (all in one ZIP file) and
+						go to <code i18n:name="Browse"><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;" i18n:translate="">Browse</a></code> tab.
+					</li>
+					<li i18n:translate="">Small pictures are loading faster. Modern cameras creates very big pictures. It is prefferable to bring them to a reasonable size before upload.</li>
+				</ul>
+				</div>
+			</div>
+
+			<div id="link_panel" class="panel">
+				<br />
+				<form tal:attributes="action string:${here/absolute_url}/prepare_image" method="post">
+					<label for="" i18n:translate="">Picture URL</label>
+					<input id="fe_url_file" type="text" name="url" value="" style="width: 50em;" />
+					<input type="submit" i18n:attributes="value" value="Fetch" style="width: 10em;" />
+					<input id="fe_document" type="hidden" name="document" value="" />
+					<input type="hidden" name="mode" value="url" />
+				</form>
+				<p i18n:translate="">Use this feature to insert picture into your document from another website.</p>
+				<br />
+				<div class="tip">
+				<strong i18n:translate="">Notes:</strong>
+				<ul>
+					<li i18n:translate="">Small pictures load faster. Modern cameras takes very big pictures. Bring them to reasonable size before upload</li>
+					<li i18n:translate="">Consider copyright terms before using other peoples work</li>
+					<li i18n:translate="">In time websites change, this link may become invalid breaking your image as well</li>
+					<li i18n:translate="">Linking to another websites generates additional overhead traffic for them. Owners may not agree with that</li>
+				</ul>
+				</div>
+			</div>
+			<div id="browse_panel" class="panel current">
+				<tal:block define="src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));">
+				<p i18n:translate="">
+					Pick an image from one of the available repositories below:
+				</p>
+				<div id="source" style="margin: 0;">
+					<ul>
+						<li tal:condition="python:here.isImageContainer(document)">
+							<a tal:attributes="class python:test(src == 'document', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=document" i18n:translate="">document</a>
+						</li>
+						<li>
+							<a tal:attributes="class python:test(src == 'website', 'selected', ''); href string:${here/absolute_url}/select_image?document=${document_url}&src=website" i18n:translate="">website</a>
+						</li>
+						<tal:block repeat="album here/enumeratePhotoAlbums">
+						<li>
+							<a tal:attributes="
+									class python:test(req_album == album.absolute_url(1), 'selected', '');
+									href python:'%s/select_image?document=%s&src=album&album=%s' % (here.absolute_url(), document_url, album.absolute_url(1))"
+								tal:content="album/title_or_id" />
+						</li>
+						</tal:block>
+					</ul>
+					<br clear="all" style="clear: both;" />
+					<br/>
+					<br/>
+					<div style="margin: 0;" tal:condition="python: src == 'album'"
+                                                                >
+						<div>
+							<input id="query" name="query" type="text" tal:attributes="value req_query"/>
+						</div>
+						<br/>
+						<div>
+							<input id="insert" type="button" value="Search images" tal:attributes="onclick python:'filter_images(\'%s\', \'%s\', \'%s\')' % (here.absolute_url(), document_url, req_album)"/>
+						</div>
+					</div>
+				</div>
+				<div id="browser" class="pagination-content">
+                                    <div id="loading">
+                                        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Loading images" i18n:attributes="alt; title" />&nbsp;<span i18n:translate="">Loading... please wait!</span>
+                                    </div>
+                                    <div id="images_holder" class="holder">&nbsp;</div>
+                                        <div id="ajax-paginator" class="pagination"></div>
+                                        <div class="cleaner">&nbsp;</div>
+				</div>
+				</tal:block>
+			</div>
+		</div>
+		<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/form_utils.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/editable_selects.js"></script>
+		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
+                <script type="text/javascript" src="++resource++Products.Naaya/js/jquery.paginate.js"></script>
+                <link rel="stylesheet" type="text/css" href="++resource++Products.Naaya/js/css/jquery.paginate.css" />
+
+                <script type="text/javascript"
+                        tal:define="
+                            src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));
+                            options python:here.enumerateImages(src, 0, req_query, request);
+                            total_images python:here.rstk['json_loads'](options)['total_images'];
+                            album_url python: test(req_album, req_album, '')"
+                        tal:content="string:
+                            var total_images = ${total_images};
+                            var src = '${src}';
+                            var album_url = '${album_url}';
+                            var req_query = '${req_query}';
+                            var url = '${here/absolute_url}';
+                        "></script>
+
+		<script type="text/javascript">
+                    $(window).ready(function(){
+                        $("#ajax-paginator").pagination(total_images, {
+                            items_per_page: 12,
+                            callback: pageSelectCallback
+                        });
+                    });
+
+                    function pageSelectCallback(page_index){
+                        params = 'page=' + page_index + '&source=' + src;
+                        if (album_url) {
+                            params = params + "&album=" + album_url;
+                        }
+                        if( req_query != 'None' ){
+                            params += "&query=" + req_query;
+                        }
+
+                        $.ajax({
+                            type: 'GET',
+                            async: false,
+                            url: url + '/enumerateImages',
+                            data: params,
+                            dataType: 'json',
+                            beforeSend: function(){
+                                $('#images_holder').empty();
+                                $('#loading').show();
+                            },
+                            complete: function(){
+                                $('#loading').hide();
+                            },
+                            success: function(response){
+                                images = response.images;
+
+                                for( index = 0; index < images.length; index++) {
+                                    image_url = images[index].url;
+                                    image_title = images[index].title;
+                                    if (src != "album") {
+                                        image = "<img src='" + image_url + "' class='thumbnail' />";
+                                        link = "<" + "a href='" + url + "/prepare_image?src=url&url=" + image_url + "'>" + image + "<" + "/a>";
+                                    }else {
+                                        image_source = images[index].source;
+                                        image_author = images[index].author;
+                                        image = '<img src="' + image_url + '/view?display=XSmall" class="thumbnail" />';
+                                        link = "<" + "a href='" + url + "/select_image_size?src=url&title=" + image_title + " " + image_author + " " + image_source + "&image_url=" + image_url + "'>" + image + "<" + "/a>";
+                                    }
+
+                                    $('#images_holder').append(link);
+                                }
+                            }
+                        });
+
+                        return false;
+                    }
+
+                    $('#comp_file').change(function() {
+                        $('#comp_upload_form').submit();
+                    });
+		</script>
+	</body>
+</html>

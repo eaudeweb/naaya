@@ -1,0 +1,9 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+    xmlns:zcml="http://namespaces.zope.org/zcml">
+    <configure zcml:condition="installed Products.naayaUpdater">
+        <utility name="migrate_to_url_widget.update"
+                 provides="Products.naayaUpdater.interfaces.IUpdateScript"
+                 component=".migrate_to_url_widget.MigrateToURLWidget"
+                 permission="zope2.ViewManagementScreens" />
+   </configure>
+</configure>

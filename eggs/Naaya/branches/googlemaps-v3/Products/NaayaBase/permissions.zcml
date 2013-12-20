@@ -1,0 +1,13 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+    <permission
+        id="zope2.NaayaPublishContent"
+        title="Naaya - Publish content"
+        />
+
+    <permission
+        id="zope2.NaayaAdministrate"
+        title="Naaya - Access administrative area"
+        />
+
+</configure>

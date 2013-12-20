@@ -1,0 +1,61 @@
+<tal:block define="global current_tab_url string:admin_maplocations_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+
+<metal:block fill-slot="tab_contents"
+		tal:define="map_url here/getGeoMapToolPath;
+					map_ob here/getGeoMapTool;
+					portal_map here/getGeoMapTool;
+					first_letter python:request.get('first_letter', '');
+					sort_on python:request.get('sort_on', 'title');
+					sort_order python:request.get('sort_order', '');">
+
+<script type="text/javascript">
+<!--
+	function toggleSelect(caller, name)
+	{
+		var frm = caller.form;
+		for(var i=0; i<frm.elements.length; i++){
+			if (frm.elements[i].name != name)
+				continue;
+			frm.elements[i].checked = caller.checked;
+		}
+	}
+//-->;
+</script>
+
+<p i18n:translate="" class="cleaner">Use this form to edit/delete the locations present in this portal.</p>
+
+<br clear="all" />
+
+<form method="post" name="frmDeleteLocations" id="frmDeleteLocations" action="deleteLocations">
+	<tal:block define="
+			start python:int(request.get('start', '0'));
+			step python:int(request.get('step', '50'));
+			end python:int(request.get('end', start + step));
+			next_start python:end;
+			next_end python:end + step;
+			prev_start python:start - step;
+			prev_end python:end - step;
+			records python:here.search_geo_objects(sort_on=sort_on, sort_order=sort_order, geo_types=None, first_letter=first_letter);
+			records_len python:len(records);
+			records python:records[start:end];
+			edit_mode python:True;
+			sortable python:True;
+			base_link_url string:${request/ACTUAL_URL}?">
+		<a tal:condition="python:prev_start >=0" tal:attributes="href string:./admin_maplocations_html?start=${prev_start}&amp;end=${prev_end}&amp;sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${first_letter}" i18n:translate=""><<< Prev 50</a>
+		<a tal:condition="python:next_start < records_len" tal:attributes="href string:./admin_maplocations_html?start=${next_start}&amp;end=${next_end}&amp;sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${first_letter}" i18n:translate="">Next 50 >>></a>
+		<tal:block tal:condition="here/can_filter_by_first_letter">
+			<br />
+			<a tal:attributes="href string:./admin_maplocations_html?sort_on=${sort_on}&amp;sort_order=${sort_order}" i18n:translate="">List all</a>
+			<tal:block tal:repeat="letter python:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'">
+				<a tal:attributes="href string:./admin_maplocations_html?sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${letter}" i18n:translate="" tal:content="letter"/>
+			</tal:block>
+		</tal:block>
+		<table metal:use-macro="here/locations_table_html/macros/main">
+		</table>
+	</tal:block>
+</form>
+
+</metal:block>
+
+</metal:block>

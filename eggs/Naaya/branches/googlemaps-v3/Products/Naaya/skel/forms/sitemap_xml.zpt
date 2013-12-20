@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<span tal:replace="python:request.RESPONSE.setHeader('content-type','text/xml;charset=utf-8')" />
+
+  <url tal:repeat="doc python:here.getCatalogedObjectsCheckView(
+          meta_type=['Naaya Document', 'Naaya File', 'Naaya Folder'],
+          approved=1, howmany=-1,
+          path=['/'.join(x.getPhysicalPath()) for x in here.getMainTopics()])">
+    <loc tal:content="python:doc.absolute_url() + '/'"></loc>
+    <lastmod tal:content="python:doc.releasedate.strftime('%Y-%m-%d')"></lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url tal:repeat="doc python:here.getCatalogedObjectsCheckView(
+          meta_type=['Naaya Event'], approved=1)">
+    <loc tal:content="python:doc.absolute_url() + '/'"></loc>
+    <lastmod tal:content="python:doc.releasedate.strftime('%Y-%m-%d')"></lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+
+  <url tal:repeat="doc python:here.getCatalogedObjectsCheckView(
+          meta_type=['Naaya News'], approved=1)">
+    <loc tal:content="python:doc.absolute_url() + '/'"></loc>
+    <lastmod tal:content="python:doc.releasedate.strftime('%Y-%m-%d')"></lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+
+</urlset>

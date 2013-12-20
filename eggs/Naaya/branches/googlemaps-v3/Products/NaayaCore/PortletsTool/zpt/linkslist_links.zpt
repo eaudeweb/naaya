@@ -1,0 +1,91 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<p class="page-title">Links</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<p class="page-description">
+	This page presents the list of links. Add/Modify/Delete this list using the forms below.
+</p>
+
+<tal:block tal:define="record_id python:request.get('id', None); record_data python:here.get_link_item_data(record_id)">
+<form method="post" tal:attributes="action python:test(record_data[0]=='add', 'manage_add_link_item', 'manage_update_link_item')">
+<table border=0 width="70%" cellspacing="3">
+<tr>
+    <td>
+        <input type="hidden" name="id" tal:attributes="value python:record_data[1]">
+        <fieldset>
+        <table border="0" cellspacing="2" cellpadding="2" width="100%">
+            <tr>
+                <td class="form-label">Title</td>
+                <td><input type="text" name="title" size="30" tal:attributes="value python:record_data[2]"></td>
+            </tr>
+            <tr>
+                <td class="form-label">Description</td>
+                <td><input type="text" name="description" size="50" tal:attributes="value python:record_data[3]"></td>
+            </tr>
+            <tr>
+                <td class="form-label">URL</td>
+                <td><input type="text" name="url" size="50" tal:attributes="value python:record_data[4]"></td>
+            </tr>
+            <tr>
+                <td class="form-label"></td>
+                <td><input type="checkbox" name="relative" tal:attributes="checked python:record_data[5]==1"> check if it is a local link (relative path will be provided)</td>
+            </tr>
+            <tr>
+                <td class="form-label">Permission</td>
+                <td>
+                    <select name="permission">
+                        <option value="">[None]</option>
+                        <option tal:repeat="item here/get_naaya_permissions_in_site"
+                                tal:attributes="value item; selected python:record_data[6]==item"
+                                tal:content="item">permission</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form-label">Order</td>
+                <td><input type="text" name="order" size="3" tal:attributes="value python:record_data[7]"></td>
+            </tr>
+             <tr>
+                <td class="form-label">&nbsp;</td>
+                <td><input type="submit" tal:attributes="value python:test(record_data[0]=='add', 'Add', 'Update')"></td>
+             </tr>
+        </table>
+        </fieldset>
+    </td>
+</tr>
+</table>
+</form>
+</tal:block>
+
+<form method="post" action="manage_delete_links">
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
+    <tr class="row-header">
+        <td width="1%" class="cell-header">&nbsp;</td>
+        <td width="10%" class="cell-header">Title</td>
+        <td width="25%" class="cell-header">Description</td>
+        <td width="30%" class="cell-header">Url</td>
+        <td width="30%" class="cell-header">Permission</td>
+        <td width="5%" class="cell-header">Order</td>
+    </tr>
+    <tr tal:repeat="record here/get_links_list"
+        tal:attributes="class python:test(path('repeat/record/odd'), 'row-odd', 'row-even')">
+        <td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
+        <td><a tal:attributes="href string:manage_links_html?id=${record/id}" tal:content="record/title">title</a></td>
+        <td tal:content="record/description">description</td>
+        <td tal:content="python:test(record.relative, '%s%s' % (here.getSitePath(), record.url), record.url)">url</td>
+        <td tal:content="record/permission">permission</td>
+        <td tal:content="record/order">Order</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="5"><input type="submit" name="delete" value="Delete"/></td>
+    </tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer"/>
