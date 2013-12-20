@@ -1,0 +1,13 @@
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <tal:block condition="value">
+            <p>
+            Current file: <tt tal:content="value/filename"/>
+            (<tt tal:content="value/size"/> bytes). Uploading
+            a new file will replace it.
+        </tal:block>
+        <input type="file"
+               tal:attributes="name prop_id;
+                               id prop_id" />
+    </metal:block>
+</metal:block>

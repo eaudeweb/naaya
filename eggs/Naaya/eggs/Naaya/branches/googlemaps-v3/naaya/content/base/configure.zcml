@@ -1,0 +1,33 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <utility provides=".meta.INaayaContent"
+    factory=".meta.NaayaContent" />
+
+  <subscriber handler=".events.notify_content_object_moved" />
+
+  <subscriber
+      for="naaya.content.base.interfaces.INyContentObjectAddEvent"
+      handler=".events.update_last_modification" />
+
+  <subscriber
+      for="naaya.content.base.interfaces.INyContentObjectEditEvent"
+      handler=".events.update_last_modification" />
+
+  <subscriber
+      for="naaya.content.base.interfaces.INyContentObjectViewEvent"
+      handler=".subscribers.log_view_event"
+    />
+
+  <subscriber
+      for="naaya.content.base.interfaces.INyContentObjectDownloadEvent"
+      handler=".subscribers.log_download_event"
+    />
+
+  <adapter factory=".publish.NyContentPublishTraverse" />
+
+  <adapter factory=".publish.DefaultRdfView"
+           for=".interfaces.INyContentObject"
+           provides=".interfaces.INyRdfView" />
+
+</configure>
+

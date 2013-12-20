@@ -1,0 +1,30 @@
+<tal:block metal:use-macro="template/macro_manage_add/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Fill the properties in the form below and click <strong>Add</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<tr>
+	<td class="form-label" style="vertical-align: top">Body (HTML)</td>
+	<td><textarea name="body" rows="5" cols="50"></textarea></td>
+</tr>
+<tr>
+	<td class="form-label">On front</td>
+	<td><input type="checkbox" name="topitem" /></td>
+</tr>
+<tr>
+	<td class="form-label" style="vertical-align: top">Concerned URL</td>
+	<td><input type="text" name="resourceurl" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" style="vertical-align: top">Source</td>
+	<td><input type="text" name="source" size="50" value="" /></td>
+</tr>
+<tr>
+	<td class="form-label">Front page picture</td>
+	<td><input type="file" name="frontpicture" value="" /></td>
+</tr>
+</tal:block>
+
+</tal:block>

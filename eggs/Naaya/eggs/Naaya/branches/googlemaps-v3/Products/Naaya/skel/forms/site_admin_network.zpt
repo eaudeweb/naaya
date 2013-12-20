@@ -1,0 +1,56 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portals in your network</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				portals here/get_networkportals_list">
+<p i18n:translate="">
+	This page presents the list of portals that participate in your network.
+	This list will be used in the <a tal:attributes="href string:${site_url}/external_search_html" i18n:name="external-search-form" i18n:translate="">external search form</a> where users can choose
+	to search on a subset of these sites.
+</p>
+<fieldset>
+<legend i18n:translate="">Add new portal</legend>
+<form method="post" tal:attributes="action string:${site_url}/admin_addnetworkportal">
+  <div class="field">
+    <label for="title" i18n:translate="">Title</label>
+    <input type="text" name="title:utf8:ustring" id="title" size="50" value="" />
+  </div>
+  <div class="field">
+    <label for="title" i18n:translate="">Portal URL</label>
+    <input type="text" name="url" id="url" size="50" value="http://" />
+  </div>
+  <p>
+    <input type="submit" value="Add" i18n:attributes="value" />
+  </p>
+</form>
+</fieldset>
+<br />
+<form method="post" tal:attributes="action string:${site_url}/admin_deletenetworkportal">
+	<table class="datatable">
+	<thead>
+		<tr>
+			<th class="scope-col" scope="col">&nbsp;</th>
+			<th class="scope-col" scope="col" i18n:translate="">Title</th>
+			<th class="scope-col" scope="col" i18n:translate="">URL</th>
+			<th class="scope-col" scope="col" i18n:translate="">Languages</th>
+			<th class="scope-col" scope="col">&nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="portal portals" tal:attributes="class python:test(path('repeat/portal/odd'), 'zebraodd', 'zebraeven')">
+			<td><input type="checkbox" name="ids" tal:attributes="value portal/url" /></td>
+			<td tal:content="portal/title" />
+			<td><a tal:attributes="href portal/url" tal:content="portal/url" /></td>
+			<td tal:content="python:here.get_networkportal_langs(portal.id)" />
+			<td><a tal:attributes="href string:${site_url}/admin_updatenetworkportal?id=${portal/id}" i18n:translate="">Update</a></td>
+		</tr>
+	</tbody>
+	</table>
+	<input type="submit" value="Delete" i18n:attributes="value" />
+</form>
+
+</tal:block>
+
+</tal:block>

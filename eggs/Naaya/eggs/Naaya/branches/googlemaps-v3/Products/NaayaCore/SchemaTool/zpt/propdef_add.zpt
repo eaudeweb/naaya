@@ -1,0 +1,18 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure python:here.manage_form_title(here, here, form_title='Add Content Property Definition')" />
+
+<form method="post" action="manage_addPropDef">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <td class="form-label" width="20%">Property name</td>
+        <td width="80%"><input type="text" name="name" value="" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Widget</td>
+        <td>TODO: this should be a drop-down menu<input type="text" name="title" size="50" value="" /></td>
+    </tr>
+    <tr><td></td><td><input type="submit" value="Add" /></td></tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

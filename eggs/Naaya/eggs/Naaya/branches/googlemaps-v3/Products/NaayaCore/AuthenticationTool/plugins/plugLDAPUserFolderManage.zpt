@@ -1,0 +1,203 @@
+<div id="section_parent" tal:define="
+    skey python:request.get('skey', '');
+    rkey python:request.get('rkey', '');
+    users_roles python:here.getSortedUserRoles(skey, rkey);
+    id python:request.get('id', 0);
+    site_path python:here.getSitePath();
+    source_url string:${site_path}/admin_sources_html?id=${id};
+    section_url string:${source_url}&s=manage_all;
+    source_title python:here.getAuthenticationTool().getSourceObj(id).title_or_id();
+    ">
+
+    <div class="cleaner">&nbsp;</div>
+	
+	<tal:block define="groups_roles_map here/get_groups_roles_map;">
+    
+    <h3 i18n:translate="">
+        <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups
+    </h3>
+
+    <div class="cleaner"></div>
+    <div class="description-text">
+        <p tal:condition="groups_roles_map" i18n:translate="">
+            Roles currently granted for <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups are listed in the table
+            below. Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt; title" /> to revoke role assigned to a group.
+        </p>
+    </div>
+    
+    <p tal:condition="not:groups_roles_map" i18n:translate="" class="message-empty">
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal. 
+        You can <a i18n:name="assign-role-link" tal:attributes="href string:${source_url}&s=assign_to_groups" title="Assign roles to groups" i18n:attributes="title">assign roles to groups</a>.
+    </p>
+
+    <div id="group_roles_waiting_response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting for group roles.
+        </p>
+    </div>
+
+    <div id="group_roles_error_response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error displaying group roles.
+        </p>
+    </div>
+
+    <tal:block tal:condition="groups_roles_map">
+        <table class="ldap_groups datatable sortable" cellpadding="2" cellspacing="0">
+            <thead>
+                <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
+                <th i18n:translate="">Roles/Location</th>
+                <th width="1" i18n:translate="">Revoke roles</th>
+            </thead>
+            <tbody>
+                <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
+                    <td>
+                        <a class="group_link"
+                            tal:attributes="
+                                href string:${source_url}&s=group_members&group_id=${group_id};
+                                title string:Click to see members of ${group_id};"
+                            tal:content="group_id"></a>
+                    </td>
+                    <td>
+                        <ul tal:define="group_roles python:groups_roles_map[group_id]">
+                            <li tal:repeat="role_and_location group_roles">
+                                <label tal:define="role python:role_and_location[0];
+                                        location python:role_and_location[1];">
+                                <em tal:content="role"></em> on
+                                <a tal:condition="not:location/is_site"
+                                   tal:content="location/ob/title_or_id"
+                                   tal:attributes="href location/ob/absolute_url"
+                                   ></a>
+                                <em tal:condition="location/is_site"
+                                    >entire portal</em>
+                                </label>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul tal:define="group_roles python:groups_roles_map[group_id]">
+                            <li tal:repeat="role_and_location group_roles">
+                                <tal:block tal:define="role python:role_and_location[0];
+                                        location python:role_and_location[1];">
+                                <a class="revoke-role" tal:attributes="href string:${here/absolute_url}/revoke_group_role?group_id=${group_id}&role=${role}&location=${location/path}">
+                                    <img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+                                </a>
+                                </tal:block>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </tal:block>
+
+	<div class="separator"></div>
+	
+    <h3 i18n:translate="">
+        <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
+    </h3>
+
+    <div class="description-text" tal:condition="users_roles">
+        <p i18n:translate="">
+            The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
+            this portal.
+            Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt; title" /> to revoke role(s) assigned to a user.
+        </p>
+    </div>
+
+    <p tal:condition="not:users_roles" i18n:translate="" class="message-empty">
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal. 
+        You can <a i18n:name="assign-users-link" tal:attributes="href string:${source_url}&s=assign_to_users" title="Assign roles to source`s users">assign roles to these users</a>.
+    </p>
+
+    <div id="users_roles_waiting_response" style="display:none" class="cleaner">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting for users roles.
+        </p>
+    </div>
+
+    <div id="users_roles_error_response" class="message-error cleaner"
+        style="display:none">
+        <p i18n:translate="">
+            Error displaying users roles.
+        </p>
+    </div>
+    
+	<table cellspacing="0" cellpadding="4" class="datatable sortable">
+		<tr tal:condition="users_roles">
+			<th align="left">
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
+					<span i18n:translate="">Username</span>
+				</a>
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user&rkey=1" tal:condition="python: (skey == 'user' and not rkey) or not skey">
+					<span i18n:translate="">Username</span>
+				</a>
+				<img tal:condition="python: (skey == 'user' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+				<img tal:condition="python: skey == 'user' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</th>
+			<th align="left">
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group" tal:condition="python: (skey == 'group' and rkey) or skey != 'group'" >
+					<span i18n:translate="">Group</span>
+				</a>
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group&rkey=1" tal:condition="python: skey == 'group' and not rkey" >
+					<span i18n:translate="">Group</span>
+				</a>
+				<img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+				<img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</th>
+			<th align="left"><span i18n:translate="">Roles/Location</span></th>
+			<th width="1" i18n:translate="">Revoke roles</th>
+		</tr>
+		<tr tal:repeat="user users_roles"
+			tal:attributes="class python:test(path('repeat/user/odd'),
+											 'row-odd', 'row-even')">
+		<tal:block define="user_id python:user[0];
+							user_name python:user[1];
+							user_group python:user[2];
+							user_roles python:user[3];">
+			<td>
+				<tal:block condition="python: source_title.lower()=='eionet'"
+					define="user_quoted python:here.utUrlEncode(user_id)">
+					<a rel="external" tal:content="string:${user_name} (${user_id})"
+					tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
+				</tal:block>
+				<tal:block condition="python: source_title.lower()!='eionet'"
+									content="string:${user_name} (${user_id})" />
+				<tal:block define="user_photo_url python: here.get_user_photo_url(user_id)">
+					<a tal:condition="user_photo_url"
+						tal:attributes="href user_photo_url"
+						class="preview">[view photo]</a>
+				</tal:block>
+			</td>
+			<td tal:content="user_group"></td>
+
+			<td>
+				<div class="user-role" tal:repeat="role user_roles">
+					<tal:block condition="python: role[0]">
+					<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+					<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+					</tal:block>
+				</div>
+				<tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
+			</td>
+
+			<td>
+				<div class="user-role-revoke" tal:repeat="role user_roles">
+					<tal:block condition="python: role[0]">
+					<a class="revoke-role" i18n:attributes="title" title="Revoke role"
+						tal:define="location python: role[1]"
+						tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${user_id}&location=${location}">
+						<img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+					</a>
+					</tal:block>
+				</div>
+			</td>
+		</tal:block>
+		</tr>
+	</table>
+
+    </tal:block>
+</div>
