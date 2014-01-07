@@ -1,4 +1,7 @@
-3.3.26 (unreleased)
+3.3.27 (unreleased)
+-------------------
+
+3.3.26 (2014-01-07)
 -------------------
 * task 17799 - export mail list to xcel [baragdan]
 * EmailValidator - added validation attempts to repeat test for invalid addresses (avoid false negatives)
