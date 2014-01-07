@@ -10,6 +10,8 @@ except ImportError:
     from Globals import InitializeClass
 import operator
 
+from destinet.registration.core import handle_groups
+from Products.NaayaBase.NyContentType import SchemaFormHelper
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
@@ -252,12 +254,20 @@ class DestinetPublisher(SimpleItem):
         """ Show your organisation on the global DestiNet Atlas """
         meta_type = 'Naaya Contact'
         form_helper = get_schema_helper_for_metatype(self, meta_type)
+
+        schema_tool = self.getSite().getSchemaTool()
+        register_extra_schema = schema_tool['registration']
+        register_helper = SchemaFormHelper(register_extra_schema, self)
+        groups_widget = register_helper._get_renderer(
+            'groups', register_extra_schema['groups-property'], False)
+
         return self.getFormsTool().getContent({
             'here': self,
             'kind': meta_type,
             'action': 'addNyContact_who_who',
             'form_helper': form_helper,
             'submitter_info_html': submitter.info_html(self, REQUEST),
+            'groups_widget':groups_widget,
         }, 'contact_add')
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH, "market_place_contact")
@@ -320,6 +330,9 @@ class DestinetPublisher(SimpleItem):
 
         response = contact_item.addNyContact(self.restrictedTraverse('who-who'),
                                          '', REQUEST)
+        form = REQUEST.form.copy()
+        form['username'] = response.contributor
+        handle_groups(response, form)
         if isinstance(response, NyContact):
             REQUEST.RESPONSE.redirect(response.absolute_url())
             pass # Contacts are now redirected from post-add event
