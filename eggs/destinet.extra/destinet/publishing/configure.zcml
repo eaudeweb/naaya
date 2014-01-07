@@ -38,6 +38,12 @@
       permission="zope2.ViewManagementScreens" />
 
    <zope:utility
+      name="RecreateContactForOldUsers.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_recreate_naaya_contact_for_old_users.RecreateContactForOldUsers"
+      permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
       name="ChangeNaayaContactSchema.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_naaya_contact_schema.ChangeNaayaContactSchema"

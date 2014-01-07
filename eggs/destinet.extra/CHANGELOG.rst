@@ -1,3 +1,8 @@
+1.2.13 (unreleased)
+====================
+* Bug fix: redo the update script that creates contacts for old users
+  [tiberich Destinet #17642]
+
 1.2.12 (2013-12-18)
 ====================
 * Bug fix: added dependency on Naaya 3.3.24, because of needed API
