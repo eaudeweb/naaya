@@ -132,8 +132,11 @@ def handle_groups(ob, req_form):
     for group in groups:
         if group == 'european-ecotourism-network':
             username = req_form['username']
-            site.admin_addroles([username], ['EEN Member', 'Contributor'],
+            try:
+                site.admin_addroles([username], ['EEN Member', 'Contributor'],
                                 '', send_mail=True)
+            except AttributeError:  # this happens for user not located in site/acl_users
+                pass
             lang = ob.gl_get_selected_language()
             ob._setLocalPropValue('keywords', lang,
                                   'European Ecotourism Network')
