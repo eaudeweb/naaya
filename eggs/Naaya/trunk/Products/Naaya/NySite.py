@@ -54,7 +54,8 @@ from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
                                                     save_bulk_email,
                                                     get_bulk_email,
                                                     get_bulk_emails,
-                                                    check_cached_valid_emails)
+                                                    check_cached_valid_emails,
+                                                    export_email_list_xcel)
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
@@ -3903,6 +3904,27 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_list_export')
+    def admin_bulk_mail_list_export(self, REQUEST=None, RESPONSE=None):
+        """ Aggregate an xcel file from emails on disk
+        (just like get_bulk_emails does to populate the web page)"""
+        if not REQUEST:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = REQUEST.get('headers')
+        keys = REQUEST.get('keys')
+        if not headers or not keys:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = headers.split(',')
+        keys = keys.split(',')
+        if len(headers) != len(keys):
+            RESPONSE.badRequestError("MALFORMED_URL")
+
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Disposition',
+                            'attachment; filename=admin_bulk_email_list.xls')
+        cols = zip(headers, keys)
+        return export_email_list_xcel(self, cols)
 
     def standard_template_macro(self, macro='page'):
         """

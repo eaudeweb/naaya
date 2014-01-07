@@ -27,6 +27,15 @@
 
         <h1 i18n:translate="">Archive of sent invitation mails</h1>
 
+        <div class="floated-buttons">
+            <span class="buttons">
+                <a tal:attributes="href string: ${here/absolute_url}/saved_emails_export?headers=Date,Subject,Recipients,Content,Sender,Send%20Status&keys=date,subject,recipients,content,sender,status">
+                    Export to xcel
+                </a>
+            </span>
+        </div>
+
+
         <table tal:condition="emails" cellpadding="0" cellspacing="0"
             class="datatable display listing" id="emails-list">
             <thead>

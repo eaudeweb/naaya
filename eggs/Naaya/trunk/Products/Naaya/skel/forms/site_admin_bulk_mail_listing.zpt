@@ -26,7 +26,14 @@
 </div>
 <div id="tabbedmenuend"></div>
 
-<p>&nbsp</p>
+<p>&nbsp;</p>
+<div class="floated-buttons">
+    <span class="buttons">
+        <a tal:attributes="href string: ${site_url}/admin_bulk_mail_list_export?headers=Date,Subject,Recipients,CC%20Recipients,Content,Sender&keys=date,subject,recipients,cc_recipients,content,sender">
+            Export to xcel
+        </a>
+    </span>
+</div>
 <p i18n:translate="">This page lists all sent bulk emails.</p>
 
 <!--<input type="button" title="Send new bulk email" i18n:attributes="title; value"
@@ -65,15 +72,7 @@
             <td><a tal:content="email/subject" tal:attributes="href string:${site_url}/admin_view_bulk_email?filename=${email/filename}" /></td>
 
             <td>
-                <tal:block condition="python: len(email['recipients']) <= 3" repeat="recipient email/recipients">
-                <a tal:attributes="href string:mailto:${recipient};
-                                   title string:Send email to ${recipient}"
-                   tal:content="recipient"
-                   i18n:attributes="title" />
-                <br />
-                </tal:block>
-                <tal:block  define="recp_count python: len(email['recipients'])"
-                  condition="python:recp_count > 3">
+                <tal:block  define="recp_count python: len(email['recipients'])">
                   <tal:block
                     repeat="recipient python:email['recipients'][:3]">
                     <a tal:attributes="href string:mailto:${recipient};
@@ -82,7 +81,9 @@
                        i18n:attributes="title" />
                     <br />
                   </tal:block>
+                  <tal:block condition="python:recp_count > 3">
                   ... <tal:block i18n:translate="">and <tal:block content="python:recp_count-3" i18n:name="recipients_count"/> more.</tal:block>
+                  </tal:block>
                 </tal:block>
             </td>
 

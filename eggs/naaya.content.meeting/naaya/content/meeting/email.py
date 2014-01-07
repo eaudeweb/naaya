@@ -16,7 +16,8 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
                                                     _mail_in_queue,
-                                                    check_cached_valid_emails)
+                                                    check_cached_valid_emails,
+                                                    export_email_list_xcel)
 import json
 
 #naaya.content.meeting imports
@@ -242,6 +243,28 @@ class EmailSender(SimpleItem):
                                                'emails': emails,
                                                'meeting': self.getMeeting()},
                                               'naaya.content.meeting.email_archive')
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'saved_emails_export')
+    def saved_emails_export(self, REQUEST=None, RESPONSE=None):
+        """ Aggregate an xcel file from emails on disk
+        (just like saved_emails does to populate the web page)"""
+        if not REQUEST:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = REQUEST.get('headers')
+        keys = REQUEST.get('keys')
+        if not headers or not keys:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = headers.split(',')
+        keys = keys.split(',')
+        if len(headers) != len(keys):
+            RESPONSE.badRequestError("MALFORMED_URL")
+
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Disposition',
+                            'attachment; filename=meeting_email_list.xls')
+        cols = zip(headers, keys)
+        return export_email_list_xcel(self.getSite(), cols,
+                    where_to_read=path_in_site(self.getMeeting()))
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'view_email')
     def view_email(self, filename, REQUEST=None, RESPONSE=None):
