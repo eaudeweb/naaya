@@ -20,7 +20,6 @@
 from base64 import urlsafe_b64encode
 from random import randrange
 from datetime import date
-import xlrd
 import json
 
 from BTrees.OOBTree import OOBTree
@@ -36,9 +35,26 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
                                                     _mail_in_queue,
-                                                    check_cached_valid_emails)
+                                                    check_cached_valid_emails,
+                                                    export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
+try:
+    import xlwt
+    excel_export_available = True
+except:
+    excel_export_available = False
+try:
+    import xlrd
+    excel_read_available = True
+except:
+    excel_read_available = False
+
+from datetime import datetime
+from Products.NaayaCore.managers import utils
+g_utils = utils.utils()
+from StringIO import StringIO
+
 
 class FormError(Exception):
     def __init__(self, errors):
@@ -243,12 +259,7 @@ class InvitationsContainer(SimpleItem):
         invalid, not_resolved = check_cached_valid_emails(self, emails)
         return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'admin_html')
-    _admin_html = NaayaPageTemplateFile('zpt/invitations_admin', globals(),
-                                        'tbconsultation_invitations_admin')
-    def admin_html(self, REQUEST):
-        """ the admin view """
-
+    def _get_invitations(self):
         auth_tool = self.getAuthenticationTool()
 
         admin = self.checkPermissionManageTalkBackConsultation()
@@ -265,12 +276,97 @@ class InvitationsContainer(SimpleItem):
             else:
                 revoked.append(invite)
         name_from_userid = lambda user_id: auth_tool.name_from_userid(user_id)
-        options = {
+        return {
             'invites_active': active,
             'invites_revoked': revoked,
             'name_from_userid': name_from_userid,
         }
+
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'admin_html')
+    _admin_html = NaayaPageTemplateFile('zpt/invitations_admin', globals(),
+                                        'tbconsultation_invitations_admin')
+    def admin_html(self, REQUEST):
+        """ the admin view """
+        options = self._get_invitations()
         return self._admin_html(**options)
+
+    def _xcel_prepare_data(self, invitation, keys):
+        """Extracts a ready for xcel export row out of invitation
+        Only the keys enumerates in keys are look for.
+
+        Specifically looks for fields 'private_url' and 'name_from_userid'
+        and resolve them to values not directly available in invitation obj """
+        _separator = ', '
+        _max_cell = 32767
+        row_data = []
+        for k in keys:
+            if k == 'private_url':
+                v = self.absolute_url() + '/welcome?key=' + invitation.key
+            elif k == 'name_from_userid':
+                v = self.getAuthenticationTool().name_from_userid(
+                    invitation.inviter_userid)
+            else:
+                v = getattr(invitation, k, None)
+            if not v:
+                row_data.append('')
+            elif isinstance(v, tuple) or isinstance(v, list):
+                # FIXME: elements inside iteratable must be strings...
+                row_data.append(_separator.join(v))
+            elif isinstance(v, datetime):
+                row_data.append(g_utils.utShowFullDateTime(v))
+            else:
+                row_data.append(unicode(v))
+            # xcel limit for cell content
+            if len(row_data[-1]) > _max_cell:
+                row_data[-1] = row_data[-1][:_max_cell]
+        return row_data
+
+    def _xcel_populate_sheet(self, wb, sheet_name, header, keys, invitations):
+        style = xlwt.XFStyle()
+        normalfont = xlwt.Font()
+        headerfont = xlwt.Font()
+        headerfont.bold = True
+        style.font = headerfont
+
+        ws = wb.add_sheet(sheet_name)
+        for col_idx, col_name in enumerate(header):
+            ws.row(0).set_cell_text(col_idx, col_name, style)
+        style.font = normalfont
+        for row_idx, invitation in enumerate(invitations, 1):
+            row = self._xcel_prepare_data(invitation, keys)
+            for col_idx, col_value in enumerate(row):
+                ws.row(row_idx).set_cell_text(col_idx, col_value, style)
+
+    def _xcel_export_invitations(self, header, keys, options):
+        wb = xlwt.Workbook(encoding='utf-8')
+        self._xcel_populate_sheet(wb, 'Active Invitations', header, keys,
+                                  options['invites_active'])
+        self._xcel_populate_sheet(wb, 'Revoked Invitations', header, keys,
+                                  options['invites_revoked'])
+        output = StringIO()
+        wb.save(output)
+        return output.getvalue()
+
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'invitations_export')
+    def invitations_export(self, REQUEST, RESPONSE):
+        """Aggregate an xcel file from invitations on this object
+        (just like admin_html does to populate the web page)"""
+        if not REQUEST:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = REQUEST.get('headers')
+        keys = REQUEST.get('keys')
+        if not headers or not keys:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = headers.split(',')
+        keys = keys.split(',')
+        if len(headers) != len(keys):
+            RESPONSE.badRequestError("MALFORMED_URL")
+
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Disposition',
+                            'attachment; filename=consultation_invitations.xls')
+        options = self._get_invitations()
+        return self._xcel_export_invitations(headers, keys, options)
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                               'admin_invitation_enabled')
@@ -350,6 +446,28 @@ class InvitationsContainer(SimpleItem):
                                                'emails': emails,
                                                'consultation': self.get_consultation()},
                                                'tbconsultation-email_archive')
+
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'saved_emails_export')
+    def saved_emails_export(self, REQUEST=None, RESPONSE=None):
+        """ Aggregate an xcel file from emails on disk
+        (just like saved_emails does to populate the web page)"""
+        if not REQUEST:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = REQUEST.get('headers')
+        keys = REQUEST.get('keys')
+        if not headers or not keys:
+            RESPONSE.badRequestError("MALFORMED_URL")
+        headers = headers.split(',')
+        keys = keys.split(',')
+        if len(headers) != len(keys):
+            RESPONSE.badRequestError("MALFORMED_URL")
+
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Disposition',
+                            'attachment; filename=consultation_invitation_emails.xls')
+        cols = zip(headers, keys)
+        return export_email_list_xcel(self.getSite(), cols,
+                    where_to_read=path_in_site(self.get_consultation()))
 
     NaayaPageTemplateFile('zpt/email_view', globals(),
         'tb_consultation-view_email')
