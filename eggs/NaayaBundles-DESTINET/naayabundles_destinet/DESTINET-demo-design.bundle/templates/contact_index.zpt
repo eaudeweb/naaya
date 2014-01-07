@@ -39,54 +39,54 @@
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
-        <tr tal:condition="here/personaltitle">
+        <tr tal:condition="here/personaltitle | nothing">
             <th i18n:translate="">Personal Title</th>
             <td tal:content="here/personaltitle">personaltitle</td>
         </tr>
-        <tr tal:condition="here/firstname">
+        <tr tal:condition="here/firstname | nothing">
             <th i18n:translate="">Firstname</th>
             <td tal:content="here/firstname">firstname</td>
         </tr>
-        <tr tal:condition="here/lastname">
+        <tr tal:condition="here/lastname | nothing">
             <th i18n:translate="">Lastname</th>
             <td tal:content="here/lastname">lastname</td>
         </tr>
-        <tr tal:condition="here/jobtitle">
+        <tr tal:condition="here/jobtitle | nothing">
             <th i18n:translate="">Job Title</th>
             <td tal:content="here/jobtitle">jobtitle</td>
         </tr>
-        <tr tal:condition="here/department">
+        <tr tal:condition="here/department | nothing">
             <th i18n:translate="">Department</th>
             <td tal:content="here/department">department</td>
         </tr>
-        <tr tal:condition="here/organisation">
+        <tr tal:condition="here/organisation | nothing">
             <th i18n:translate="">Organisation</th>
             <td tal:content="here/organisation">organisation</td>
         </tr>
-        <tr tal:condition="here/postaladdress">
+        <tr tal:condition="here/postaladdress | nothing">
             <th i18n:translate="">Postal Address</th>
             <td tal:content="here/postaladdress">postaladdress</td>
         </tr>
-        <tr tal:condition="here/phone">
+        <tr tal:condition="here/phone | nothing">
             <th i18n:translate="">Phone Number</th>
             <td tal:content="here/phone">phone</td>
         </tr>
-        <tr tal:condition="here/fax">
+        <tr tal:condition="here/fax | nothing">
             <th i18n:translate="">Fax Number</th>
             <td tal:content="here/fax">fax</td>
         </tr>
-        <tr tal:condition="here/cellphone">
+        <tr tal:condition="here/cellphone | nothing">
             <th i18n:translate="">Mobile</th>
             <td tal:content="here/cellphone">cellphone</td>
         </tr>
-        <tr tal:condition="here/email">
+        <tr tal:condition="here/email | nothing">
             <th i18n:translate="">Email</th>
             <td>
                 <a tal:attributes="href string:mailto:${here/email}"
                     tal:content="here/email" />
             </td>
         </tr>
-        <tr tal:condition="here/webpage">
+        <tr tal:condition="here/webpage | nothing">
             <th i18n:translate="">Webpage</th>
             <td>
                 <a tal:attributes="href here/webpage" tal:content="here/webpage"/>
@@ -97,11 +97,11 @@
             <th i18n:translate="">Released</th>
             <td tal:content="python:here.utShowDateTime(here.releasedate)"/>
         </tr>
-        <tr tal:condition="here/display_contributor">
+        <tr tal:condition="here/display_contributor | nothing">
             <th i18n:translate="">Contributor</th>
             <td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
         </tr>
-        <tr tal:condition="here/coverage">
+        <tr tal:condition="here/coverage | nothing">
             <th i18n:translate="">Country</th>
             <td tal:content="here/coverage" />
         </tr>
@@ -116,37 +116,37 @@
         <!-- </tr> -->
 
     <tal:block define="categories python:
-        {'Organization Category': getattr(here, 'category-organization'),
-        'Marketplace Category': getattr(here, 'category-marketplace'),
-        'Supporting Solutions Category': getattr(here, 'category-supporting-solutions')};"
+        {'Organization Category': getattr(here, 'category-organization', None),
+        'Marketplace Category': getattr(here, 'category-marketplace', None),
+        'Supporting Solutions Category': getattr(here, 'category-supporting-solutions', None)};"
         >
-        <tal:cond tal:define="category python:categories['Organization Category']" condition="category">
+        <tal:cond tal:define="category python:categories['Organization Category']" condition="category | nothing">
             <tr tal:define="
                 title python:portal_map.getSymbolTitle(category);
                 picture python:portal_map.getSymbolPicture(category)"
                 tal:condition="python: title != ''">
                 <th i18n:translate="">Organization Type</th>
                 <td>
-                    <img tal:condition="picture" 
+                    <img tal:condition="picture | nothing" 
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
                     <span tal:replace="title" />
                 </td>
             </tr>
         </tal:cond>
-        <tal:cond tal:define="category python:categories['Marketplace Category']" condition="category">
+        <tal:cond tal:define="category python:categories['Marketplace Category']" condition="category | nothing">
             <tr tal:define="
                 title python:portal_map.getSymbolTitle(category);
                 picture python:portal_map.getSymbolPicture(category)"
                 tal:condition="python: title != ''">
                 <th i18n:translate="">Marketplace Type</th>
                 <td>
-                    <img tal:condition="picture" 
+                    <img tal:condition="picture | nothing" 
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
                     <span tal:replace="title" />
                 </td>
             </tr>
         </tal:cond>
-        <tal:cond tal:define="category python:categories['Supporting Solutions Category']" condition="category">
+        <tal:cond tal:define="category python:categories['Supporting Solutions Category']" condition="category | nothing">
             <tr tal:define="
                 title python:portal_map.getSymbolTitle(category);
                 picture python:portal_map.getSymbolPicture(category)"
@@ -176,7 +176,7 @@
 
         <tr>
             <th i18n:translate="">Operational level</th>
-            <td tal:content="here/administrative_level" />
+            <td tal:content="here/administrative_level | nothing" />
         </tr>
 
         <tr>
