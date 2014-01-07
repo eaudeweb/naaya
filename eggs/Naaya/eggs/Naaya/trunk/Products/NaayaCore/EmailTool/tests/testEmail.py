@@ -3,11 +3,14 @@ import tempfile
 import shutil
 import unittest
 from mock import patch
+import Globals
+import os.path
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import (EmailTool,
                                              save_bulk_email, get_bulk_emails,
-                                             check_cached_valid_emails)
+                                             export_email_list_xcel
+                                             )
 
 class EmailTestCase(FunctionalTestCase):
     def test_mail(self):
@@ -86,3 +89,45 @@ class EmailSaveTestCase(unittest.TestCase):
         self.assertEqual(emails[0]['sender'], 'from@edw.ro')
         self.assertEqual(emails[0]['recipients'], ['to1@edw.ro', 'to2@edw.ro'])
 
+
+class EmailToolTestCase(unittest.TestCase):
+    def setUp(self):
+        from App.config import getConfiguration
+        from Products.Naaya.NySite import NySite
+
+        self.config = getConfiguration()
+        self.config_patch = patch.object(self.config, 'environment', {},
+                                         create=True)
+        self.config_patch.start()
+
+        self.environ_patch = patch.dict(os.environ)
+        self.environ_patch.start()
+
+        self.portal = NySite('test')
+        self.portal.portal_email = EmailTool('id_email_tool', 'Test email tool')
+
+        self.TMP_FOLDER = tempfile.mkdtemp()
+
+    def tearDown(self):
+        self.environ_patch.stop()
+        self.config_patch.stop()
+        shutil.rmtree(self.TMP_FOLDER)
+
+    @patch('Products.NaayaCore.EmailTool.EmailTool.get_bulk_emails')
+    def test_export_email_list_xcel(self, mock_get_bulk_emails):
+        # TODO include datetime and cell limit in test
+        cols = [
+            ('Subject', "subject"),
+            ('Recipients', 'recipients'),
+            ('onlyInRequest', 'onlyInRequest'),
+        ]
+        mock_get_bulk_emails.return_value = [{
+            'subject': "bla",
+            'recipients': ['bla@bla.com', 'blaxxx@bla.com'],
+            'onlyInEmails': 'X',
+        }]
+        r = export_email_list_xcel(None, cols)
+        expected = open(os.path.join(
+            Globals.package_home(globals()), 'data/emailList.xls'),
+            'r').read()
+        self.assertEqual(r, expected)

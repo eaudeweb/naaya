@@ -17,7 +17,8 @@
 #
 # Alex Morega, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, makeSuite, TestCase
+from mock import Mock, MagicMock
 from datetime import date, timedelta
 
 import transaction
@@ -26,7 +27,10 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
+from naaya.content.talkback.invitations import InvitationsContainer
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
+import Globals
+import os
 
 
 class InvitationTestCase(NaayaFunctionalTestCase):
@@ -352,8 +356,47 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+class InvitationsContainerTestCase(TestCase):
+    def setUp(self):
+       self.invitation = InvitationsContainer('bla')
+       auth_tool = Mock()
+       auth_tool.name_from_userid = Mock(return_value='anUserName')
+       self.invitation.getAuthenticationTool = Mock(return_value=auth_tool)
+
+    def test_xcel_export(self):
+        # add datetime, list, tuple to the invite object
+        keys_in_invite = ['name', 'name_from_userid', 'onlyInInvite']
+        keys_in_request = ['name', 'name_from_userid', 'onlyInRequest']
+        headers = ['Name', 'Name From Usaerid', 'OnlyInRequest']
+        act1 = MagicMock()
+        act2 = MagicMock()
+        rev1 = MagicMock()
+        active = [act1, act2]
+        revoked = [rev1]
+        for i, inv in enumerate(active + revoked):
+            for j, k in enumerate(keys_in_invite):
+                setattr(inv, k, 'aValue%d%d' % (i,j))
+            # set this also, aotherwise Mock will report a MagicMock as attr fetch
+            # and the id inside repr will always vary, ruining our test
+            # this way we also test the replacement of None with ''
+            setattr(inv, 'onlyInRequest', None)
+
+        options = {
+            'invites_active': active,
+            'invites_revoked': revoked,
+        }
+        r = self.invitation._xcel_export_invitations(headers, keys_in_request, options)
+        # This is a little extreme - we test xlwt/xlrd this way...
+        # What if the lib changes, the xcel version does,
+        # any small change in the binary xcel file produced could affect our test.
+        expected = open(os.path.join(Globals.package_home(globals()),
+                            'data/invitationList.xls'),'r').read()
+        self.assertEqual(r, expected)
+
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(InvitationTestCase))
     suite.addTest(makeSuite(InviteeCommentTestCase))
+    suite.addTest(makeSuite(InvitationsContainerTestCase))
     return suite

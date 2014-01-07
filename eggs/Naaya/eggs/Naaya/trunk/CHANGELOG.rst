@@ -1,5 +1,6 @@
 3.3.26 (unreleased)
 -------------------
+* task 17799 - export mail list to xcel [baragdan]
 * EmailValidator - added validation attempts to repeat test for invalid addresses (avoid false negatives)
 * updated some tests to work with the new cc field in diverted mail [dumitval]
 
