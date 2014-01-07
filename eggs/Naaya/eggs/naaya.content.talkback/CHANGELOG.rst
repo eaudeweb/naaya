@@ -1,4 +1,7 @@
-1.4.30 (unreleased)
+1.4.31 (unreleased)
+-------------------
+
+1.4.30 (2014-01-07)
 -------------------
 * task 17799 - export mail list to xcel [baragdan]
 
