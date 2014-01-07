@@ -17,6 +17,7 @@ from Products.NaayaCore.managers.utils import slugify
 
 logger = logging.getLogger(__name__)
 
+
 def get_countries(ob):
     """
     Extracts coverage from ob, iterates countries and returns
@@ -44,6 +45,7 @@ def get_countries(ob):
                             country)
     return ret
 
+
 def get_category_location(site, geo_type):
     """
     Based on geo_type (Category) value, returns the corresponding location
@@ -57,13 +59,14 @@ def get_category_location(site, geo_type):
     title = widget.convert_to_user_string(geo_type).replace('&', 'and')
     slug = slugify(title, removelist=[])
     who_who = site['who-who']
-    candidates = map(lambda x: (x, x.objectIds('Naaya Folder')),
-                [who_who, who_who['market-place'], who_who['market-solutions']])
+    candidates = map(lambda x: (x, x.objectIds('Naaya Folder')), [
+        who_who, who_who['market-place'], who_who['market-solutions']])
     for (candidate_parent, candidate_ids) in candidates:
         if slug in candidate_ids:
             return candidate_parent[slug]
 
     return None
+
 
 def place_pointers(ob, exclude=[]):
     """ Ads pointers to ob in target_groups, topics and countries """
@@ -92,13 +95,15 @@ def place_pointers(ob, exclude=[]):
     site = ob.getSite()
     target_groups = ob.__dict__.get("target-groups", [])
     topics = ob.__dict__.get("topics", [])
-    locations = [] # pointer locations
+    locations = []  # pointer locations
     if 'target-groups' not in exclude and isinstance(target_groups, list):
         for tgrup in target_groups:
-            locations.append(site.unrestrictedTraverse("resources/%s" % str(tgrup)))
+            locations.append(
+                site.unrestrictedTraverse("resources/%s" % str(tgrup)))
     if isinstance(topics, list):
         for topic in topics:
-            locations.append(site.unrestrictedTraverse("topics/%s" % str(topic)))
+            locations.append(
+                site.unrestrictedTraverse("topics/%s" % str(topic)))
     locations.extend(get_countries(ob))
     for loc in locations:
         if not props['sortorder']:
@@ -110,6 +115,7 @@ def place_pointers(ob, exclude=[]):
                 pointer.approveThis(1, ob.contributor)
             else:
                 pointer.approveThis(0, None)
+
 
 def _qualifies_for_both(obj):
     """
@@ -129,6 +135,7 @@ def _qualifies_for_both(obj):
         (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication, NyNews, NyEvent))
           and is_descendant_of(obj, who_who))
         )
+
 
 def _qualifies_for_topics_only(obj):
     """
@@ -209,7 +216,7 @@ def handle_add_content(event):
                     v += ", Destinet User"
                 else:
                     v = "Destinet User"
-            obj.set_localpropvalue('keywords', lang, 'Destinet user')
+            obj.set_localpropvalue('keywords', lang, v)
 
         obj.geo_type = _get_geo_type(obj)
         obj._p_changed = True
@@ -248,9 +255,8 @@ def handle_edit_content(event):
 
     # Make sure that the Destinet User keyword is added
     langs = obj.aq_parent.gl_get_languages()
-    if obj.meta_type == "Naaya Contact" and \
-        obj.aq_parent.getId() == "destinet-users":
-
+    if (obj.meta_type == "Naaya Contact") and \
+            (obj.aq_parent.getId() == "destinet-users"):
         for lang in langs:
             v = obj.getLocalAttribute("keywords", lang)
             if not "Destinet User" in v:
@@ -258,7 +264,7 @@ def handle_edit_content(event):
                     v += ", Destinet User"
                 else:
                     v = "Destinet User"
-            obj.set_localpropvalue('keywords', lang, 'Destinet user')
+            obj.set_localpropvalue('keywords', lang, v)
 
         obj.geo_type = _get_geo_type(obj)
 
@@ -291,6 +297,7 @@ def handle_del_content(obj, event):
             pointer = brain.getObject()
             pointer.aq_parent._delObject(pointer.id)
 
+
 def handle_approval_unapproval(obj, approved, approved_by):
     """
     Approve/Unapprove pointers. Used by the two event handlers for approval
@@ -305,11 +312,13 @@ def handle_approval_unapproval(obj, approved, approved_by):
             logger.exception("Can set approve=%s by %s for pointer %s",
                              approved, approved_by, ofs_path(pointer))
 
+
 def handle_approve_content(event):
     """ Also approve pointers if this object is synced with pointers. """
     if not getattr(event.context.getSite(), 'destinet.publisher', False):
         return
     handle_approval_unapproval(event.context, 1, event.contributor)
+
 
 def handle_unapprove_content(event):
     """ Also unapprove pointers if this object is synced with pointers. """
