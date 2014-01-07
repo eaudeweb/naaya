@@ -2,6 +2,8 @@
 ====================
 * Bug fix: redo the update script that creates contacts for old users
   [tiberich Destinet #17642]
+* Bug fix: also show the group widget on the show_on_atlas page
+  [tiberich Destinet #17642]
 
 1.2.12 (2013-12-18)
 ====================
