@@ -1,10 +1,13 @@
 1.2.13 (unreleased)
 ====================
+* Bug fix: make the postal address / geo_location fields take
+  value from each other if one of them is missing value
+  [tiberich #17641]
 * correct releasedate for contacts created for users [dumitval]
 * Bug fix: redo the update script that creates contacts for old users
-  [tiberich Destinet #17642]
+  [tiberich Destinet #17641]
 * Bug fix: also show the group widget on the show_on_atlas page
-  [tiberich Destinet #17642]
+  [tiberich Destinet #17641]
 
 1.2.12 (2013-12-18)
 ====================
