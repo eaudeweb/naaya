@@ -15,7 +15,7 @@ def validate_widgets(contact_schema, registration_schema, form):
     """
     form_data = {}
     form_errors = {}
-    widgets = [contact_schema["%s-property" % w] for w in WIDGET_NAMES ]
+    widgets = [contact_schema["%s-property" % w] for w in WIDGET_NAMES]
     widgets.extend(registration_schema.objectValues())
     for widget in widgets:
         field_name = widget.prop_name()
@@ -26,7 +26,7 @@ def validate_widgets(contact_schema, registration_schema, form):
             raw_value = {}
             for key, value in form.iteritems():
                 if key.startswith(field_name + '.'):
-                    raw_value[key[len(field_name)+1:]] = value
+                    raw_value[key[len(field_name) + 1:]] = value
             if not raw_value:
                 raw_value = None
         else:
@@ -53,23 +53,26 @@ def validate_widgets(contact_schema, registration_schema, form):
             form_errors[field_name] = errors
     return form_data, form_errors
 
+
 def prepare_error_response(context, contact_schema, register_schema,
                            form_errors, req_form):
     """
     Almost the same as
-    :meth:`~Products.NaayaBase.NyContentType.NyContentType._prepare_error_response`
+    :meth:`~Products.NaayaBase.NyContentType.\
+    NyContentType._prepare_error_response`
     but we have our own list of widgets, not a schema.
 
     """
     if form_errors:
-        context.setSessionErrorsTrans('The form contains errors. Please correct them and try again.')
+        context.setSessionErrorsTrans('The form contains errors. '
+                                      'Please correct them and try again.')
     for key, value in form_errors.iteritems():
         if value:
             context.setSession('%s-errors' % key, '; '.join(value))
 
     for prop_name in WIDGET_NAMES:
         for key in req_form:
-            if key == prop_name or key.startswith(prop_name+'.'):
+            if key == prop_name or key.startswith(prop_name + '.'):
                 widget = contact_schema.getWidget(prop_name)
                 value = widget.convert_to_session(req_form[key])
                 context.setSession(key, value)
@@ -77,9 +80,10 @@ def prepare_error_response(context, contact_schema, register_schema,
     for widget in register_schema.objectValues():
         prop_name = widget.prop_name()
         for key in req_form:
-            if key == prop_name or key.startswith(prop_name+'.'):
+            if key == prop_name or key.startswith(prop_name + '.'):
                 value = widget.convert_to_session(req_form[key])
                 context.setSession(key, value)
+
 
 def place_pointer_to_contact(ob, pointer_parent):
     """
@@ -111,7 +115,8 @@ def place_pointer_to_contact(ob, pointer_parent):
     if not props['sortorder']:
         props['sortorder'] = '200'
 
-    p_id = addNyPointer(pointer_parent, ob.getId(), contributor=ob.contributor, **props)
+    p_id = addNyPointer(pointer_parent, ob.getId(),
+                        contributor=ob.contributor, **props)
     pointer = pointer_parent._getOb(p_id, None)
     if pointer:
         if ob.approved:
@@ -119,6 +124,7 @@ def place_pointer_to_contact(ob, pointer_parent):
         else:
             pointer.approveThis(0, None)
         return pointer
+
 
 def handle_groups(ob, req_form):
     """
@@ -132,8 +138,11 @@ def handle_groups(ob, req_form):
     for group in groups:
         if group == 'european-ecotourism-network':
             username = req_form['username']
-            site.admin_addroles([username], ['EEN Member', 'Contributor'],
-                                '', send_mail=True)
+            try:
+                site.admin_addroles([username], ['EEN Member', 'Contributor'],
+                                    '', send_mail=True)
+            except AttributeError:
+                pass    # This happens when user is root acl user
             lang = ob.gl_get_selected_language()
             ob._setLocalPropValue('keywords', lang,
                                   'European Ecotourism Network')
