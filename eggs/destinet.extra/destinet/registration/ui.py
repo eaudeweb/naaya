@@ -66,6 +66,7 @@ def process_create_account(context, request):
             username = request.form['username']
             contact_name = "%(firstname)s %(lastname)s" % request.form
             ob = _create_NyContact_object(where, username, username)
+            ob.releasedate = site.utGetTodayDate()
             ob.approveThis(1, username)
             ob.submitThis()
             ob.giveEditRights()

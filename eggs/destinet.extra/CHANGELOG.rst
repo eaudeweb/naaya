@@ -1,5 +1,6 @@
 1.2.13 (unreleased)
 ====================
+* correct releasedate for contacts created for users [dumitval]
 * Bug fix: redo the update script that creates contacts for old users
   [tiberich Destinet #17642]
 * Bug fix: also show the group widget on the show_on_atlas page
