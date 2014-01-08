@@ -1,4 +1,7 @@
-1.2.13 (unreleased)
+1.2.14 (unreleased)
+====================
+
+1.2.13 (2014-01-08)
 ====================
 * Bug fix: make the postal address / geo_location fields take
   value from each other if one of them is missing value
