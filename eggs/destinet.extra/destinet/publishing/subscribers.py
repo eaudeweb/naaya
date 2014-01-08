@@ -1,19 +1,18 @@
-import logging
-
-#from OFS.interfaces import IObjectWillBeAddedEvent
-
-from naaya.core.zope2util import is_descendant_of, path_in_site, ofs_path
-from naaya.content.pointer.pointer_item import addNyPointer
-from naaya.content.event.event_item import NyEvent
-from naaya.content.news.news_item import NyNews
-from naaya.content.contact.contact_item import NyContact
-from naaya.content.url.url_item import NyURL
-from naaya.content.file.file_item import NyFile_extfile
-from naaya.content.bfile.bfile_item import NyBFile
-from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
 from Products.NaayaContent.NyPublication.NyPublication import NyPublication
+from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import slugify
+from naaya.content.bfile.bfile_item import NyBFile
+from naaya.content.contact.contact_item import NyContact
+from naaya.content.event.event_item import NyEvent
+from naaya.content.file.file_item import NyFile_extfile
+from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
+from naaya.content.news.news_item import NyNews
+from naaya.content.pointer.pointer_item import addNyPointer
+from naaya.content.url.url_item import NyURL
+from naaya.core.zope2util import is_descendant_of, path_in_site, ofs_path
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -128,13 +127,13 @@ def _qualifies_for_both(obj):
     events = site.events
     who_who = getattr(site, 'who-who')
     return ((isinstance(obj, NyEvent) and is_descendant_of(obj, events)) or
-        (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
-        (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication))
-          and is_descendant_of(obj, resources))
-         or
-        (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile, NyURL, NyPublication, NyNews, NyEvent))
-          and is_descendant_of(obj, who_who))
-        )
+            (isinstance(obj, NyNews) and is_descendant_of(obj, news)) or
+            (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile,
+                              NyURL, NyPublication)) and
+             is_descendant_of(obj, resources)) or
+            (isinstance(obj, (NyFile_extfile, NyBFile, NyMediaFile_extfile,
+                              NyURL, NyPublication, NyNews, NyEvent)) and
+             is_descendant_of(obj, who_who)))
 
 
 def _qualifies_for_topics_only(obj):
@@ -145,13 +144,12 @@ def _qualifies_for_topics_only(obj):
     site = obj.getSite()
     market_place = getattr(site, 'market-place')
     who_who = getattr(site, 'who-who')
-    return (
-          (isinstance(obj, NyContact)
-           and (is_descendant_of(obj, market_place) or is_descendant_of(obj, who_who))
-           )
-        or
-          (isinstance(obj, NyPublication) and is_descendant_of(obj, market_place))
-        )
+    return ((isinstance(obj, NyContact) and
+             (is_descendant_of(obj, market_place) or
+              is_descendant_of(obj, who_who))) or
+            (isinstance(obj, NyPublication) and
+             is_descendant_of(obj, market_place)))
+
 
 def get_linked_pointer_brains(obj):
     """
@@ -189,6 +187,46 @@ def _get_geo_type(obj):
         return getattr(obj, 'category-organization')
 
 
+def alter_contact(obj):
+    """ Make various changes to contact objects
+
+    * add the Destinet User keyword
+    * set the geo_type property
+    """
+    lang = 'en'
+    v = obj.getLocalAttribute("keywords", lang)
+    if not "Destinet User" in v:
+        if v.strip():
+            v += ", Destinet User"
+        else:
+            v = "Destinet User"
+    obj.set_localpropvalue('keywords', lang, v)
+    obj.geo_type = _get_geo_type(obj)
+
+    obj._p_changed = True
+
+
+def set_address(obj):
+    """ Set the postal address based on geo address and viceversa
+    """
+    # convert postaladdress to geolocation
+    if obj.postaladdress and not obj.geo_location:
+        try:
+            lat, lon = geocoding.location_geocode(obj.postaladdress)
+            obj.geo_location = Geo(lat, lon, obj.postaladdress)
+        except:
+            pass
+
+        return
+
+    # convert geolocation to postal address
+    lang = 'en'
+    v = obj.getLocalAttribute("postaladdress", lang)
+    if obj.geo_location and not v:
+        obj.set_localpropvalue('postaladdress', lang, obj.geo_location.address)
+        return
+
+
 def handle_add_content(event):
     """
     Tests whether this requires adding pointers and perform the action
@@ -205,22 +243,11 @@ def handle_add_content(event):
         place_pointers(obj, exclude=['target-groups'])
 
     # Make sure that the Destinet User keyword is added
-    if obj.meta_type == "Naaya Contact" and \
-        obj.aq_parent.getId() == "destinet-users":
-        langs = obj.aq_parent.gl_get_languages()
-
-        for lang in langs:
-            v = obj.getLocalAttribute("keywords", lang)
-            if not "Destinet User" in v:
-                if v.strip():
-                    v += ", Destinet User"
-                else:
-                    v = "Destinet User"
-            obj.set_localpropvalue('keywords', lang, v)
-
-        obj.geo_type = _get_geo_type(obj)
-        obj._p_changed = True
-        obj.aq_parent.recatalogNyObject(obj)
+    if obj.meta_type == "Naaya Contact":
+        set_address(obj)
+        if obj.aq_parent.getId() == "destinet-users":
+            alter_contact(obj)
+            obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_edit_content(event):
@@ -254,22 +281,12 @@ def handle_edit_content(event):
             place_pointers(obj, exclude=['target-groups'])
 
     # Make sure that the Destinet User keyword is added
-    langs = obj.aq_parent.gl_get_languages()
-    if (obj.meta_type == "Naaya Contact") and \
-            (obj.aq_parent.getId() == "destinet-users"):
-        for lang in langs:
-            v = obj.getLocalAttribute("keywords", lang)
-            if not "Destinet User" in v:
-                if v.strip():
-                    v += ", Destinet User"
-                else:
-                    v = "Destinet User"
-            obj.set_localpropvalue('keywords', lang, v)
-
-        obj.geo_type = _get_geo_type(obj)
-
-        obj._p_changed = True
-        obj.aq_parent.recatalogNyObject(obj)
+    #langs = obj.aq_parent.gl_get_languages()
+    if (obj.meta_type == "Naaya Contact"):
+        set_address(obj)
+        if (obj.aq_parent.getId() == "destinet-users"):
+            alter_contact(obj)
+            obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_del_content(obj, event):

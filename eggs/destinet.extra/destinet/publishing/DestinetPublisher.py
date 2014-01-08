@@ -328,15 +328,15 @@ class DestinetPublisher(SimpleItem):
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
             return
 
-        response = contact_item.addNyContact(self.restrictedTraverse('who-who'),
-                                         '', REQUEST)
-        form = REQUEST.form.copy()
-        form['username'] = response.contributor
-        handle_groups(response, form)
+        who_who = self.restrictedTraverse('who-who')
+        response = contact_item.addNyContact(who_who, '', REQUEST)
         if isinstance(response, NyContact):
+            form = REQUEST.form.copy()
+            form['username'] = response.contributor
+            handle_groups(response, form)
             REQUEST.RESPONSE.redirect(response.absolute_url())
-            pass # Contacts are now redirected from post-add event
-        else: # we have errors
+            pass    # Contacts are now redirected from post-add event
+        else:       # we have errors
             REQUEST.RESPONSE.redirect('%s/show_on_atlas' % self.absolute_url())
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyContact_market")
