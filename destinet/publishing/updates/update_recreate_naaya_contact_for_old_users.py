@@ -52,7 +52,7 @@ class RecreateContactForOldUsers(UpdateScript):
 
                 ob = _create_NyContact_object(context, id, user.name)
 
-                ob.approveThis()    # 1, manager
+                ob.approveThis(1, user.name)    # 1, manager
                 #ob.submitThis()
 
                 ob.set_localpropvalue('title', 'en', fullname)
@@ -60,6 +60,7 @@ class RecreateContactForOldUsers(UpdateScript):
                 #ob.release_date = DateTime()
                 new_user = user.__of__(acl_users)
                 ob.changeOwnership(user=new_user)
+                ob.giveEditRights()
 
                 context.recatalogNyObject(ob)
                 #crashes with unicodedecodeerror:
