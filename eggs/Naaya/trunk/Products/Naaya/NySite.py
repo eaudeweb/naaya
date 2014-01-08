@@ -2474,7 +2474,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         else:
                             loc, location_ob = 'other', self.unrestrictedTraverse(location, None)
                         self.sendAccountModifiedEmail(email, roles,
-                                                      loc, location_ob)
+                                                      loc, location_ob, username=name)
                     except:
                         err = 'Could not send confirmation mail.'
 
@@ -3459,7 +3459,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         mail_from = email_tool.get_addr_from()
         email_tool.sendEmail(l_content, p_email, mail_from, l_subject)
 
-    def sendAccountModifiedEmail(self, email, roles, loc, location):
+    def sendAccountModifiedEmail(self, email, roles, loc, location, username=None):
         #sends an email informing the user about the modifications to its account
         emailtool_ob = self.getEmailTool()
         email_template = emailtool_ob._getOb('email_modifyaccount', None)
@@ -3486,6 +3486,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         content = content.replace('@@PORTAL_TITLE@@', self.site_title)
         content = content.replace('@@PORTAL_URL@@', self.portal_url)
         content = content.replace('@@ROLES@@', roles)
+        if username:
+            content = content.replace('@@USERNAME@@', username)
 
         #send mail
         email_tool = self.getEmailTool()
