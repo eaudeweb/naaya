@@ -1,4 +1,7 @@
-1.2.14 (unreleased)
+1.2.15 (unreleased)
+====================
+
+1.2.14 (2014-01-08)
 ====================
 * Bug fix: don't fail when adding a contact with root acl user
   [tiberich #17641]
