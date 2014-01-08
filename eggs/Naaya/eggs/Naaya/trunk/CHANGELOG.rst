@@ -1,5 +1,7 @@
 3.3.27 (unreleased)
 -------------------
+* Change: also show the username in the account modified email that is sent
+  [tiberich #17642]
 
 3.3.26 (2014-01-07)
 -------------------

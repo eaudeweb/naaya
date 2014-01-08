@@ -113,7 +113,8 @@ class PlugBase(SimpleItem):
                 try:
                     email = auth_tool.getUsersEmails([n])[0]
                     fullname = auth_tool.getUsersFullNames([n])[0]
-                    site.sendAccountModifiedEmail(email, roles, loc, location_ob)
+                    site.sendAccountModifiedEmail(email, roles, loc,
+                                                  location_ob, username=n)
                 except:
                     pass
             try:
