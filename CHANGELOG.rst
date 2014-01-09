@@ -1,4 +1,4 @@
-1.2.15 (unreleased)
+1.2.15 (2014-01-09)
 ====================
 * Bug fix: make the landscape and topic widgets required if a value is 
   set in organization/marketplace/supporting solutions widgets
