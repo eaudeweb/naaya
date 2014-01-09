@@ -1,5 +1,6 @@
 1.2.38 (unreleased)
 ===================
+* Fix for survey reports with anonymous users [dumitval]
 
 1.2.37 (2013-12-18)
 ===================
