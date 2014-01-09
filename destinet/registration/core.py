@@ -17,6 +17,16 @@ def validate_widgets(contact_schema, registration_schema, form):
     form_errors = {}
     widgets = [contact_schema["%s-property" % w] for w in WIDGET_NAMES]
     widgets.extend(registration_schema.objectValues())
+
+    any_of = ["category-organization",
+              "category-marketplace",
+              "category-supporting-solutions"]
+
+    extra_required = ["landscape_type", "topics"]
+
+    required_flag = False   # if any field in any_of has value,
+                            # then all widgets in extra_required are required
+
     for widget in widgets:
         field_name = widget.prop_name()
 
@@ -49,8 +59,15 @@ def validate_widgets(contact_schema, registration_schema, form):
             errors.append(str(e))
             form_data[field_name] = value
 
+        if field_name in any_of and value:
+            required_flag = True
+
+        if (field_name in extra_required) and required_flag and not value:
+            errors.append(u'Value required for "%s"' % widget.title)
+
         if errors:
             form_errors[field_name] = errors
+
     return form_data, form_errors
 
 
