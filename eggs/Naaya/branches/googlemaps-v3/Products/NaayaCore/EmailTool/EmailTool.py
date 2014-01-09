@@ -10,12 +10,16 @@ import time
 import smtplib
 import cStringIO
 from urlparse import urlparse
+from datetime import datetime
 import logging
 import random
 from datetime import datetime
 import json
 from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
 email_validator = EmailValidator("checked_emails", maxWorkers=10)
+from Products.NaayaCore.managers import import_export
+from Products.NaayaCore.managers import utils
+g_utils = utils.utils()
 
 
 try:
@@ -470,6 +474,53 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=
     }
     return r
 
+# alter mutable email to fit xcel row
+def _prepare_xcel_data(email, site, check_status):
+    _separator = ', '
+    _max_cell = 32767
+    if check_status:
+        # no dict comprehension in python 2.6 :((  beautify this when we get to 2.7
+        check_values = {}
+        for k in ['sender', 'recipients', 'subject', 'content', 'date']:
+            check_values[k] = email.get(k, '')
+        email['status'] = _mail_in_queue(site, email['filename'], check_values)
+    for k, v in email.items():
+        if v is None:
+            email[k] = ''
+        elif isinstance(v, tuple) or isinstance(v, list):
+            # FIXME: elements inside iteratable must be strings...
+            email[k] = _separator.join(v)
+        elif isinstance(v, datetime):
+            email[k] = g_utils.utShowFullDateTime(v)
+        else:
+            email[k] = unicode(v)
+        # xcel limit for cell content
+        if len(email[k]) > _max_cell:
+            email[k] = email[k][:_max_cell]
+    return email
+
+def export_email_list_xcel(site, cols, where_to_read='sent-bulk'):
+    """Generate excel file with columns named after first value of
+    tuples in cols, and the contets of the cells set by the key in
+    the second value of the tuple in cols
+
+    If key named exactly 'status' is present make a status check
+    and include it in the resulting excel.
+    """
+    emails = get_bulk_emails(site, where_to_read=where_to_read)
+    header = [ v[0] for v in cols ]
+    rows = []
+    check_status = True if 'status' in [ v[1] for v in cols ] else False
+    for email in emails:
+        _prepare_xcel_data(email, site, check_status)
+        r = []
+        for _, key in cols:
+            r.append(email.get(key, ''))
+        rows.append(r)
+    r = import_export.generate_excel(header, rows)
+    return r
+
+
 def check_cached_valid_emails(obj, emails):
     """Instance calling this (obj) must have a dict like member checked_emails on it.
     This breaks encapsulation and should be done better, probably in NySite"""
@@ -643,7 +694,7 @@ def _mail_in_queue(site, filename, check_values):
         if (filename_split[0] == email_split[0] and
             filename_split[1] == email_split[1]):
                 for k, v in check_values.items():
-                    if k == 'recipients':
+                    if k in [ 'recipients', 'cc_recipients' ]:
                         queued_recipients = set(
                             re.split(", |,\n\t|,\n", queued_email[k][0]))
                         if queued_recipients != set(v):
