@@ -256,7 +256,12 @@ class SurveyAnswer(Folder, NyProperties):
         This doesn't happen if the answer was edited or even typed in by
         an administrator, on behalf of the respondent.
         """
-        return 'Owner' in self.__ac_local_roles__.get(self.respondent, [])
+        try:
+            return 'Owner' in self.__ac_local_roles__.get(self.respondent, [])
+        except AttributeError:
+            #this happens when the answer comes from anonymous - no __ac_local_roles__
+            #and in this case the ower is still anonymous, so return True
+            return True
 
 class NySurveyAnswerAddEvent(object):
     """ """
