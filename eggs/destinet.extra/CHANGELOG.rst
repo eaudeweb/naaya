@@ -1,3 +1,6 @@
+1.2.16-dev (unreleased)
+=======================
+
 1.2.15 (2014-01-09)
 ====================
 * Bug fix: make the landscape and topic widgets required if a value is 
