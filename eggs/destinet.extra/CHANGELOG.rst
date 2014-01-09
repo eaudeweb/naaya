@@ -1,5 +1,8 @@
 1.2.15 (unreleased)
 ====================
+* Bug fix: make the landscape and topic widgets required if a value is 
+  set in organization/marketplace/supporting solutions widgets
+  [tiberich #17641]
 
 1.2.14 (2014-01-08)
 ====================
