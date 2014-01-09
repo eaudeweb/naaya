@@ -232,7 +232,7 @@ class plugLDAPUserFolder(PlugBase):
                 user_location, send_mail, REQUEST)
         if REQUEST is not None:
             if is_ajax(REQUEST):
-                url = (REQUEST['HTTP_REFERER'] + 
+                url = (REQUEST['HTTP_REFERER'] +
                        ('?id=%s&s=assign_to_users' % self.id))
             else:
                 url = REQUEST['HTTP_REFERER'] + '?id=' + self.id
@@ -334,9 +334,10 @@ class plugLDAPUserFolder(PlugBase):
         if send_mail:
             site = self.getSite()
             auth_tool = site.getAuthenticationTool()
-            user_id_list = self.group_member_ids(group)
-            for user_email in auth_tool.getUsersEmails(user_id_list):
-                site.sendAccountModifiedEmail(user_email, roles, loc, ob)
+            for user_id in self.group_member_ids(group):
+                email = auth_tool.getUsersEmails([user_id])[0]
+                site.sendAccountModifiedEmail(user_email, roles,
+                                              loc, ob, username=user_id)
 
         if REQUEST is not None:
             from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent

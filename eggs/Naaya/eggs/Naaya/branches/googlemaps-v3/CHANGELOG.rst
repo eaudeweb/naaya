@@ -1,5 +1,14 @@
-3.3.26 (unreleased)
+3.3.28-dev (unreleased)
+-----------------------
+
+3.3.27 (2014-01-08)
 -------------------
+* Change: also show the username in the account modified email that is sent
+  [tiberich #17642]
+
+3.3.26 (2014-01-07)
+-------------------
+* task 17799 - export mail list to xcel [baragdan]
 * EmailValidator - added validation attempts to repeat test for invalid addresses (avoid false negatives)
 * updated some tests to work with the new cc field in diverted mail [dumitval]
 
