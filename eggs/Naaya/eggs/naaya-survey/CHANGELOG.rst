@@ -1,5 +1,6 @@
 1.2.39 (unreleased)
 ===================
+* remove anonymous from view reports permission [dumitval]
 
 1.2.38 (2014-01-09)
 ===================
