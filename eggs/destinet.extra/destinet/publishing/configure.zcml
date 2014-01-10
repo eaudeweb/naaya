@@ -26,6 +26,12 @@
       permission="zope2.ViewManagementScreens" />
 
    <zope:utility
+      name="FixKeywordsForDestinetUsers.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_fix_user_keywords.FixKeywordsForDestinetUsers"
+      permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
       name="MigrateGeoTypeProperty.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_migrate_destinet_users_geotype.MigrateGeoTypeProperty"
