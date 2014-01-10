@@ -1,6 +1,7 @@
 (function() {
     var config = naaya_google_map_api_config;       // a mapping of conf options
     var the_map;                                    // the google.maps.Map instance
+    var the_map_div;                                // the map container DOM element
     var the_geocoder = new google.maps.Geocoder();  // the geocoder service
     var icons = {};                                 // icon definitions
     var current_places = [];                        // cache of curent places
@@ -35,8 +36,8 @@
 
     function setup_map(map_div_id) {
         // Initialize the Google Map control
-        console.log(config);
-        the_map = new google.maps.Map(document.getElementById(map_div_id), {  // ex GMap2
+        the_map_div = document.getElementById(map_div_id);
+        the_map = new google.maps.Map(the_map_div, {  // ex GMap2
             mapTypes: [
                 google.maps.MapTypeId.HYBRID,
                 google.maps.MapTypeId.ROADMAP,
@@ -67,7 +68,7 @@
         // translates the given map x/y position to a geographical coordinate
         // TODO: check this
 
-        var point = new maps.google.Point(x, y);
+        var point = new google.maps.Point(x, y);
         var projection = the_map.getProjection();
         var latlng = projection.fromPointToLatLng(point);
         return {'lat': latlng.lat(), 'lon': latlng.lng()};
@@ -110,6 +111,34 @@
         });
     }
 
+    function getBoundsZoomLevel(bounds, mapDim) {
+        var WORLD_DIM = { height: 256, width: 256 };
+        var ZOOM_MAX = 21;
+
+        function latRad(lat) {
+            var sin = Math.sin(lat * Math.PI / 180);
+            var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+            return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+        }
+
+        function zoom(mapPx, worldPx, fraction) {
+            return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+        }
+
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();
+
+        var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+        var lngDiff = ne.lng() - sw.lng();
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        return Math.min(latZoom, lngZoom, ZOOM_MAX);
+    }
+
     function get_bounds() {
         var bounds = the_map.getBounds();
         var sw = bounds.getSouthWest();
@@ -123,19 +152,24 @@
 
         var center_lat = the_map.getCenter().lat();
 
-        // TODO: this is used when the map is so zoomed out that it shows the continents multiple times
+        // NOTE: this is used when the map is so zoomed out that 
+        // it shows the continents multiple times.
         // This will set the bounds to only the "main" area of the map
+        // The problem is that adding a marker with a lat/lng position will 
+        // show it multiple times by the map engine
 
-        // TODO: this is disabled, should re-enable
-        // var horiz_bounds = new google.maps.LatLngBounds(
-        //         new google.maps.LatLng(center_lat, -180),
-        //         new google.maps.LatLng(center_lat, 180));
-        // var zoom_level_for_full_360 = the_map.getBoundsZoomLevel(horiz_bounds);
-        // if(the_map.getZoom() <= zoom_level_for_full_360) {
-        //     // looks like the map fits horizontally in the viewport
-        //     output['lon_min'] = -180;
-        //     output['lon_max'] = 180;
-        // }
+        var horiz_bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(center_lat, -180),
+                new google.maps.LatLng(center_lat, 180));
+        var mapDim = {'height':$(the_map_div).height(), 
+                      'width':$(the_map_div).width()};
+        var zoom_level_for_full_360 = getBoundsZoomLevel(horiz_bounds, mapDim); //the_map.getBoundsZoomLevel(horiz_bounds);
+
+        if(the_map.getZoom() <= zoom_level_for_full_360) {
+            // looks like the map fits horizontally in the viewport
+            output['lon_min'] = -180;
+            output['lon_max'] = 180;
+        }
 
         return output;
     }
@@ -157,10 +191,7 @@
             var bounds = place.geometry.bounds;
             var zoom_level = [3, 6, 8, 10,12, 14, 16, 17, 18, 19];
 
-            console.log(place);
-
             callback(point, bounds, zoom_level[place.address_components.length - 1]);
-
             //callback(point, bounds);    //zoom_level[place.AddressDetails.Accuracy]);
         });
     }
@@ -170,6 +201,7 @@
         if(! zoom) {
             return go_to_address(address);
         }
+        console.log("Geocoding", address);
         geocode_address(address, function(point, bounds, zoom) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
@@ -182,11 +214,13 @@
 
     function go_to_address(address) {
         // given a query address, it finds the coordinates and zooms to it
+        console.log("Geocoding", address);
         geocode_address(address, function(point, bounds, zoom) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
                 return;
             }
+            console.log("Finish geocoding", point, bounds, zoom);
             //the_map.fitBounds(bounds);
             the_map.setCenter(point);
             the_map.setZoom(zoom);
@@ -217,7 +251,6 @@
 
     function editor_marker_at_address(address, callback) {
         geocode_address(address, function(point, bounds, zoom) {
-            console.log("Will show point with zoom", zoom, point, bounds);
             editor_show_point(point, zoom);
             callback(point_to_coord(point));   // changed how this is called
         });
@@ -225,9 +258,9 @@
 
     function setup_editor(coord, click_callback) {
         // set up current value
-        console.log("Coord for setup_editor", coord);
         if(coord) {
-            editor_show_point(new GLatLng(coord.lat, coord.lon));
+            var point = new google.maps.LatLng(coord.lat, coord.lon);
+            editor_show_point(point);
         } else {
             go_to_address(config.initial_address);
         }
@@ -242,10 +275,12 @@
 
     function draw_points_on_map(points) {
         $.each(points, function(i, p) {
-            the_map.addOverlay(new GMarker(new GLatLng(p.lat, p.lon)));
+            var point = new google.maps.LatLng(p.lat, p.lon);
+            addMarker(point);
         });
-        var first_point = new GLatLng(points[0].lat, points[0].lon);
-        the_map.setCenter(first_point, 10);
+        var first_point = new google.maps.LatLng(points[0].lat, points[0].lon);
+        the_map.setCenter(first_point);
+        the_map.setZoom(10);
     }
 
     function get_current_places() {
@@ -301,12 +336,13 @@
         },
         object_index_map: function(map_div_id, coord) {
             setup_map(map_div_id);
-            var point = new google.map.LatLng(coord.lat, coord.lon);
-            the_map.setCenter(point, config.objmap_zoom);
-            var marker = new google.maps.Marker({'point':point, 'map':the_map});
-            //the_map.addOverlay(marker);
+            var point = new google.maps.LatLng(coord.lat, coord.lon);
+            the_map.setCenter(point);
+            the_map.setZoom(config.objmap_zoom);
+            addMarker(point);
         },
         object_edit_map: function(map_div_id, coord, click_callback) {
+            debugger;
             setup_map(map_div_id);
             setup_editor(coord, click_callback);
             return {
