@@ -30,6 +30,8 @@ class RegistrationTestCase(DestinetTestCase):
             'category-organization':'Forest',
             'category-marketplace':'Forest',
             'category-supporting-solutions':'Forest',
+            'topics':['Something Topic'],
+            'landscape_type':['Something Landscape'],
         }
 
     @property
@@ -111,7 +113,6 @@ class RegistrationTestCase(DestinetTestCase):
         """ test destinet registration when group is selected """
         self.portal.REQUEST.form.update(self.initial_data)
         self.portal.REQUEST.form.update(groups=['test-group'])
-        #import pdb; pdb.set_trace()
         process_create_account(self.context, self.portal.REQUEST)
         contact = self.portal['who-who']['destinet-users'].objectValues()[0]
         pointer = self.portal.resources._getOb(contact.getId())
