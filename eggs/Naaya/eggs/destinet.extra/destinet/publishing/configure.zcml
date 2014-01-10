@@ -55,6 +55,12 @@
       component=".updates.update_naaya_contact_schema.ChangeNaayaContactSchema"
       permission="zope2.ViewManagementScreens" />
 
+   <zope:utility
+      name="AssignKeywordForUserRole.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_assign_keyword_for_role.AssignKeywordForUserRole"
+      permission="zope2.ViewManagementScreens" />
+
 
    <naaya:call factory=".patches.patch_addNyContact" />
 

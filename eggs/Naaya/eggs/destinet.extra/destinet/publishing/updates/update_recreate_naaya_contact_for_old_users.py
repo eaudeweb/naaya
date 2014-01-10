@@ -38,7 +38,7 @@ class RecreateContactForOldUsers(UpdateScript):
 
         counter = 0
         for user in users:
-            fullname = auth_tool.getUserFullNameByID(user.name).decode('utf-8')
+            fullname = auth_tool.getUserFullNameByID(user.name)
             contacts = cat.searchResults(path=ofs_path(context),
                                          contributor=user.name)
 
