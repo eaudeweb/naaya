@@ -23,7 +23,7 @@ class SetKeywordsForDestinetUsers(UpdateScript):
                     else:
                         v = "Destinet User"
 
-                obj.set_localpropvalue('keywords', lang, 'Destinet user')
+                obj.set_localpropvalue('keywords', lang, v)
             self.log.info("Set the destinet user keyword for %s",
                               obj.absolute_url())
             context.recatalogNyObject(obj)
