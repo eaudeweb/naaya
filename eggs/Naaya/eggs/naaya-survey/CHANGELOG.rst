@@ -1,4 +1,7 @@
-1.2.39 (unreleased)
+1.2.40 (unreleased)
+===================
+
+1.2.39 (2014-01-10)
 ===================
 * remove anonymous from view reports permission [dumitval]
 
