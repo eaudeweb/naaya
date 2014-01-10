@@ -18,8 +18,7 @@ def validate_widgets(contact_schema, registration_schema, form):
     widgets = [contact_schema["%s-property" % w] for w in WIDGET_NAMES]
     widgets.extend(registration_schema.objectValues())
 
-    any_of = ["category-organization",
-              "category-marketplace",
+    any_of = ["category-marketplace",
               "category-supporting-solutions"]
 
     extra_required = ["landscape_type", "topics"]

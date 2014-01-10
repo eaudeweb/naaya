@@ -195,12 +195,12 @@ def alter_contact(obj):
     """
     lang = 'en'
     v = obj.getLocalAttribute("keywords", lang)
-    if not "Destinet User" in v:
-        if v.strip():
-            v += ", Destinet User"
-        else:
-            v = "Destinet User"
-    obj.set_localpropvalue('keywords', lang, v)
+    keywords = [x.strip() for x in v.split(',') if x.strip()]
+
+    if not "Destinet User" in keywords:
+	keywords.append("Destinet User")
+
+    obj.set_localpropvalue('keywords', lang, ", ".join(set(keywords)))
     obj.geo_type = _get_geo_type(obj)
 
     obj._p_changed = True
@@ -342,3 +342,4 @@ def handle_unapprove_content(event):
     if not getattr(event.context.getSite(), 'destinet.publisher', False):
         return
     handle_approval_unapproval(event.context, 0, event.contributor)
+
