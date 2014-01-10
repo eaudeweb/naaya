@@ -1,4 +1,7 @@
-1.2.38 (unreleased)
+1.2.39 (unreleased)
+===================
+
+1.2.38 (2014-01-09)
 ===================
 * Fix for survey reports with anonymous users [dumitval]
 
