@@ -255,7 +255,7 @@ def install_permissions(site):
     site.manage_permission(PERMISSION_ADD_REPORT, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
     site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', ), acquire=0)
-    site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', ), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_REPORTS, ('Manager', 'Administrator', 'Owner'), acquire=0)
     site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor', 'Owner'), acquire=0)
     site.manage_permission(PERMISSION_EDIT_ANSWERS, ('Manager', 'Administrator', ), acquire=0)
 

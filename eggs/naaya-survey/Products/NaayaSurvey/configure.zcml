@@ -13,6 +13,11 @@
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
 		component=".updates.update_survey_permission.UpdatePermission"
 		permission="zope2.ViewManagementScreens" />
+	<utility
+		name="correct_report_permissions.update"
+		provides="Products.naayaUpdater.interfaces.IUpdateScript"
+		component=".updates.update_survey_permission.CorrectReportPermission"
+		permission="zope2.ViewManagementScreens" />
   </configure>
 
   <naaya:content factory=".MegaSurvey.get_content_type_config" />
