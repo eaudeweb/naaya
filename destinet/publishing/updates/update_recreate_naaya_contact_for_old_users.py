@@ -1,4 +1,3 @@
-from DateTime import DateTime
 from Products.NaayaCore.EmailTool import EmailTool
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from Products.naayaUpdater.updates import UpdateScript
@@ -39,7 +38,7 @@ class RecreateContactForOldUsers(UpdateScript):
 
         counter = 0
         for user in users:
-            fullname = auth_tool.getUserFullNameByID(user.name)
+            fullname = auth_tool.getUserFullNameByID(user.name).decode('utf-8')
             contacts = cat.searchResults(path=ofs_path(context),
                                          contributor=user.name)
 

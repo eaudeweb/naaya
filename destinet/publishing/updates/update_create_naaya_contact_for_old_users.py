@@ -56,6 +56,3 @@ class CreateContactForOldUsers(UpdateScript):
         self.log.info("Migration: end migration")
 
         return True
-
-
-
