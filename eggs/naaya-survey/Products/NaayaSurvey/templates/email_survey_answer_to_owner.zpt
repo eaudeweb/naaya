@@ -4,7 +4,11 @@
 <tal:block i18n:translate="">
 Hello <tal:block content="options/NAME" i18n:name="admin_name"/>,</tal:block>
 
-<tal:block i18n:translate=""><tal:block content="options/RESPONDENT" i18n:name="respondent_name"/> has answered to survey <tal:block content="options/SURVEY_TITLE" i18n:name="survey_title"/> <tal:block content="options/SURVEY_URL" i18n:name="survey_url"/>. You can see his/her answers at:</tal:block>
+<tal:block i18n:translate=""><tal:block content="options/RESPONDENT" i18n:name="respondent_name"/> has answered the survey "<tal:block content="options/SURVEY_TITLE" i18n:name="survey_title" />":</tal:block>
+
+<tal:block content="options/SURVEY_URL" />
+
+<tal:block i18n:translate="">You can see his/her answers at:</tal:block>
 
 <tal:block content="options/LINK" />
 </body_text>

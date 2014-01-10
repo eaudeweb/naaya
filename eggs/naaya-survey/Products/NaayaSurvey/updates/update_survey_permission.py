@@ -34,7 +34,6 @@ class CorrectReportPermission(UpdateScript):
         else:
             acquire = 0
         if 'Anonymous' in roles_with_view_reports:
-            #import pdb;pdb.set_trace()
             corrected_roles = set(role for role in roles_with_view_reports
                                if role != 'Anonymous')
             corrected_roles.update(['Administrator', 'Manager', 'Owner'])
