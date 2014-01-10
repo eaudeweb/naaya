@@ -1,4 +1,7 @@
-1.2.40 (unreleased)
+1.2.41 (unreleased)
+===================
+
+1.2.40 (2014-01-10)
 ===================
 * customisations of the email templates [dumitval]
 
