@@ -1,3 +1,11 @@
+1.2.18-dev (unreleased)
+=======================
+
+1.2.17 (2014-01-10)
+=======================
+* Bug fix: fix user keywords - the EEN keyword for users with that role
+  [tiberich #17641]
+
 1.2.16 (2014-01-10)
 =======================
 * Bug fix: fix user keywords
