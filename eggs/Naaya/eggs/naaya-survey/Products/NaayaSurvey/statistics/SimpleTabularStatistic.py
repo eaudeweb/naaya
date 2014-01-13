@@ -17,11 +17,7 @@
 #
 # Cristian Ciupitu, Eau de Web
 
-try:
-    import xlwt
-    excel_export_available = True
-except:
-    excel_export_available = False
+import xlwt
 
 # Zope imports
 from Globals import InitializeClass
@@ -86,7 +82,6 @@ class SimpleTabularStatistic(BaseStatistic):
     security.declarePrivate('add_to_excel')
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific statistic type """
-        import xlwt
         answers = state['answers']
         ws = state['ws']
         current_row = state['current_row']
