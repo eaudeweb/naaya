@@ -1,5 +1,7 @@
 3.3.28-dev (unreleased)
 -----------------------
+* Feature: use the Google Maps API v3, by merging the special branch
+  [tiberich #16938]
 
 3.3.27 (2014-01-08)
 -------------------
