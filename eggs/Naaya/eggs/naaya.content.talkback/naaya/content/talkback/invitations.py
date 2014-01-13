@@ -39,16 +39,8 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
-try:
-    import xlwt
-    excel_export_available = True
-except:
-    excel_export_available = False
-try:
-    import xlrd
-    excel_read_available = True
-except:
-    excel_read_available = False
+import xlwt
+import xlrd
 
 from datetime import datetime
 from Products.NaayaCore.managers import utils
