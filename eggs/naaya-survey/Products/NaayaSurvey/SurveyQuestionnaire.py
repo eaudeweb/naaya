@@ -5,11 +5,7 @@ import shutil
 import os.path
 from cStringIO import StringIO
 
-try:
-    import xlwt
-    excel_export_available = True
-except:
-    excel_export_available = False
+import xlwt
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -593,7 +589,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         report = self.getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
-        assert excel_export_available
         if answers is None:
             answers = self.getAnswers()
         ret = self.generate_excel(report, answers=answers)
