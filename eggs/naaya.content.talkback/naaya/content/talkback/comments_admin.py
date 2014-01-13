@@ -29,11 +29,7 @@ try:
 except ImportError:
     import simplejson as json
 
-try:
-    import xlwt
-    excel_export_available = True
-except ImportError:
-    excel_export_available = False
+import xlwt
 
 #Zope imports
 from Globals import InitializeClass
@@ -273,7 +269,6 @@ class CommentsAdmin(SimpleItem):
             filename = 'comments.csv'
 
         elif file_type == 'Excel':
-            assert excel_export_available
             ret = self.generate_excel_output(fields, comments)
             content_type = 'application/vnd.ms-excel'
             filename = 'comments.xls'
@@ -285,7 +280,6 @@ class CommentsAdmin(SimpleItem):
                 ('Contributor', lambda c: c.get_contributor_name()),
                 ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ]
-            assert excel_export_available
             ret = self.generate_custom_excel_output(fields, comments)
             content_type = 'application/vnd.ms-excel'
             filename = 'comments.xls'
