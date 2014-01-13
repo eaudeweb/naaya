@@ -246,7 +246,7 @@
         clearMarkers();
         addMarker(point);
         the_map.setCenter(point);
-        if (zoom !== null) the_map.setZoom(zoom);
+        (zoom !== null) ? the_map.setZoom(10) : the_map.setZoom(zoom);
     }
 
     function editor_marker_at_address(address, callback) {
@@ -342,7 +342,6 @@
             addMarker(point);
         },
         object_edit_map: function(map_div_id, coord, click_callback) {
-            debugger;
             setup_map(map_div_id);
             setup_editor(coord, click_callback);
             return {
