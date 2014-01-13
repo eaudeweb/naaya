@@ -1,25 +1,59 @@
+import simplejson as json
+import time
 import urllib
 import urllib2
-import simplejson as json
+
+RETRIES = 3
 
 class GeocoderServiceError(Exception):
     pass
+
+
+class GeocoderOverQuotaLimit(Exception):
+    pass
+
 
 def _build_url(params):
     GOOGLE_GEOCODE_BASE_URL = 'http://maps.googleapis.com/maps/api/geocode/json'
     return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.urlencode(params)
 
+
 def _get_url_data(url):
-    try:
-        return urllib2.urlopen(url)
-    except urllib2.URLError, e:
-        raise GeocoderServiceError('URLError: %s' % e.reason)
+    """ Given a url, return a JSON result or raise error
+
+    Code as recommended by:
+    https://developers.google.com/maps/documentation/business/articles/usage_limits
+    """
+
+    attempts = 0
+
+    while attempts < RETRIES:
+        try:
+            response = urllib2.urlopen(url)
+        except urllib2.URLError, e:
+            raise GeocoderServiceError('URLError: %s' % e.reason)
+
+        try:
+            result = json.load(response)
+            _check_result_is_valid(result)
+            return result
+        except GeocoderOverQuotaLimit:
+            attempts += 1
+            time.sleep(2)
+            continue
+
+        if attempts == RETRIES:
+            # this means that the daily limit has been reached
+            raise GeocoderServiceError('URLError: %s' % e.reason)
+
 
 def _check_result_is_valid(result):
     if result is None:
         raise GeocoderServiceError('Geocoding service unavailable')
     elif not result.has_key('status'):
         raise GeocoderServiceError('Geocoding result parse error')
+    elif result['status'] == 'OVER_QUERY_LIMIT':
+        raise GeocoderOverQuotaLimit("Geocoding over quota")
     elif result['status'] != 'OK':
         raise GeocoderServiceError('Geocoding status error: %s'
                 % result['status'])
@@ -28,8 +62,8 @@ def _check_result_is_valid(result):
     elif len(result['results']) == 0:
         raise GeocoderServiceError('No geocoding results')
 
+
 def _unpack_geocode_data(result):
-    _check_result_is_valid(result)
 
     fresult = result['results'][0]
     if not fresult.has_key('geometry'):
@@ -58,7 +92,6 @@ def _unpack_geocode_data(result):
 
 
 def _unpack_reverse_geocode_data(result):
-    _check_result_is_valid(result)
 
     fresult = result['results'][0]
 
@@ -91,10 +124,10 @@ def geocode(address):
     """
     params = [('address', address), ('sensor', 'false')]
     url = _build_url(params)
-    page = _get_url_data(url)
-    result = json.load(page)
+    result = _get_url_data(url)
     location = _unpack_geocode_data(result)['location']
     return location['lat'], location['lon']
+
 
 def geocode2(address):
     """
@@ -111,14 +144,14 @@ def geocode2(address):
     """
     params = [('address', address), ('sensor', 'false')]
     url = _build_url(params)
-    page = _get_url_data(url)
-    result = json.load(page)
+    result = _get_url_data(url)
     return _unpack_geocode_data(result)
 
+
 def reverse_geocode(lat, lng):
+    """ Given a geo coordinate, returns the human readable name of address
+    """
     params = [('latlng', str(lat) + ',' + str(lng)), ('sensor', 'false')]
     url = _build_url(params)
-    page = _get_url_data(url)
-    result = json.load(page)
+    result = _get_url_data(url)
     return _unpack_reverse_geocode_data(result)
-
