@@ -39,6 +39,8 @@ setup(name='Naaya',
           'validate_email',
           'pydns',
           'pyquery',
+          'xlwt',
+          'xlrd',
 
           #Zope
           'contentratings',
