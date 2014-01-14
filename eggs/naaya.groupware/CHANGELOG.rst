@@ -1,5 +1,6 @@
 1.4.8 (unreleased)
 -------------------
+* changed logout link to directly logout [dumitval]
 
 1.4.7 (2013-10-10)
 -------------------
