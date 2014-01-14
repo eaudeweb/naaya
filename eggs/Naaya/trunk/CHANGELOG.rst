@@ -5,6 +5,9 @@
   [tiberich #16938]
 * Bug fix: don't throw error when uploading an image with non-ascii chars
   [tiberich #17797]
+* Feature: added the possibility to customize tinymce styles by adding
+  a DTML Document called custom_css in the portal_editor.
+  [tiberich #17451]
 
 3.3.27 (2014-01-08)
 -------------------
