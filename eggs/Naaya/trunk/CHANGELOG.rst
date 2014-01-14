@@ -1,5 +1,8 @@
-3.3.28-dev (unreleased)
------------------------
+3.3.29 (unreleased)
+-------------------
+
+3.3.28 (2014-01-14)
+-------------------
 * xlwt and xlrd added to Naaya as dependencies. No need to assert availability. [dumitval]
 * Feature: use the Google Maps API v3, by merging the special branch
   [tiberich #16938]
