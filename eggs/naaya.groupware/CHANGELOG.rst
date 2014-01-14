@@ -3,7 +3,7 @@
 
 1.4.8 (2014-01-14)
 -------------------
-* changed logout link to directly logout [dumitval]
+* `update` changed logout link to directly logout [dumitval]
 
 1.4.7 (2013-10-10)
 -------------------
