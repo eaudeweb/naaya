@@ -223,6 +223,7 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         if REQUEST.form.has_key('mode'):
             mode = REQUEST.form['mode']
             if mode == 'upload':
+                #import pdb; pdb.set_trace()
                 url = self._upload_image(REQUEST)
 
         if not url.startswith('http') and not url.startswith('/'):

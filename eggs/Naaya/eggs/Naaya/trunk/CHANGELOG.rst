@@ -3,6 +3,8 @@
 * xlwt and xlrd added to Naaya as dependencies. No need to assert availability. [dumitval]
 * Feature: use the Google Maps API v3, by merging the special branch
   [tiberich #16938]
+* Bug fix: don't throw error when uploading an image with non-ascii chars
+  [tiberich #17797]
 
 3.3.27 (2014-01-08)
 -------------------
