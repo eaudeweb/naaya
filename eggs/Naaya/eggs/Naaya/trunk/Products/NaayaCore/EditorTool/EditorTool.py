@@ -107,6 +107,13 @@ class EditorTool(Folder):
         if styleselect is not None:
             ret += styleselect
 
+        # custom local syles. Add a DTML Document called "custom_css" inside
+        # portal_editor to benefit from this.
+        custom = self.get('custom_css')
+        if custom:
+            ret += custom(self.REQUEST)
+
+        self.REQUEST.RESPONSE.setHeader( 'Content-Type', 'text/css' )
         return ret
 
     def _get_styleselect_styles(self):
