@@ -1,4 +1,8 @@
-1.2.41 (unreleased)
+1.2.42 (unreleased)
+===================
+* fixed a email template bug [dumitval]
+
+1.2.41 (2014-01-15)
 ===================
 * fixed a email template bug [dumitval]
 * xlwt and xlrd added to Naaya as dependencies. No need to assert availability. [dumitval]
