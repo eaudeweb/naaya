@@ -4,23 +4,38 @@ templates, e-mail sending and logging of all e-mail traffic.
 
 """
 
-import os
-import re
-import time
-import smtplib
-import cStringIO
-from urlparse import urlparse
-from datetime import datetime
-import logging
-import random
-from datetime import datetime
-import json
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens   # , view
+from Globals import InitializeClass
+from OFS.Folder import Folder
 from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
-email_validator = EmailValidator("checked_emails", maxWorkers=10)
+from Products.NaayaCore.constants import ID_EMAILTOOL
+from Products.NaayaCore.constants import METATYPE_EMAILTEMPLATE
+from Products.NaayaCore.constants import METATYPE_EMAILTOOL
+from Products.NaayaCore.constants import PERMISSION_ADD_NAAYACORE_TOOL
+from Products.NaayaCore.constants import TITLE_EMAILTOOL
 from Products.NaayaCore.managers import import_export
 from Products.NaayaCore.managers import utils
-g_utils = utils.utils()
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from datetime import datetime, timedelta
+from email import message_from_file
+from email.MIMEText import MIMEText
+from email.utils import make_msgid
+from naaya.core.permissions import naaya_admin
+from naaya.core.site_logging import get_log_dir
+from naaya.core.utils import force_to_unicode
+from urlparse import urlparse
+from zope.component import queryUtility, getGlobalSiteManager
+from zope.deprecation import deprecate
+from zope.sendmail.interfaces import IMailDelivery
+from zope.sendmail.mailer import SMTPMailer
+import EmailTemplate
+import json
+import logging
+import os
+import random
+import re
+import time
 
 try:
     import email.utils as email_utils
@@ -32,25 +47,12 @@ except ImportError, e:
     import email.Charset as email_charset
     import email.Header as email_header
     import email.Generator as email_generator
-from email import message_from_file
-from email.MIMEText import MIMEText
 
-from zope.component import queryUtility, getGlobalSiteManager
-from zope.sendmail.interfaces import IMailDelivery
-from zope.sendmail.mailer import SMTPMailer
-from zope.deprecation import deprecate
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
-from OFS.Folder import Folder
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+#import cStringIO
+#import smtplib
 
-from Products.NaayaCore.constants import *
-import EmailTemplate
-from EmailSender import build_email
-from naaya.core.permissions import naaya_admin
-from naaya.core.utils import force_to_unicode
-from naaya.core.site_logging import get_log_dir
+email_validator = EmailValidator("checked_emails", maxWorkers=10)
+g_utils = utils.utils()
 
 
 mail_logger = logging.getLogger('naaya.core.email')
@@ -648,7 +650,10 @@ class _ImmediateDelivery(object):
         self._d = delivery
 
     def send(self, fromaddr, toaddrs, message):
-        message_id = self._d.newMessageId()
+        try:
+            message_id = self._d.newMessageId()
+        except AttributeError:      # repose.sendmail compatibility
+            message_id = make_msgid('repoze.sendmail')
         email_message = create_plain_message(message)
         email_message['Message-Id'] = '<%s>' % message_id
         # make data_manager think it's being called by a transaction

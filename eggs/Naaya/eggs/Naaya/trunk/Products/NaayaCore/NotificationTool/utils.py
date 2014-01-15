@@ -1,15 +1,13 @@
+from DateTime import DateTime
+from Products.NaayaCore.EmailTool.EmailSender import build_email
+from containers import AccountSubscription, AnonymousSubscription
 from datetime import timedelta
+from interfaces import ISubscriptionContainer
+#from naaya.core.zope2util import DT2dt
+import constants
 import logging
 import warnings
 
-from interfaces import ISubscriptionContainer
-from DateTime import DateTime
-
-from Products.NaayaCore.EmailTool.EmailTool import build_email
-from naaya.core.zope2util import DT2dt
-from containers import AccountSubscription, AnonymousSubscription
-
-import constants
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
@@ -123,7 +121,7 @@ def get_modified_objects(site, when_start, when_end, log_type=None):
                                            log_entry.path)
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
-    mail = build_email(addr_from, addr_to, subject, body)
+    build_email(addr_from, addr_to, subject, body)
     #TODO: send using the EmailSender
     email_tool.sendEmail(body, addr_to, addr_from, subject)
 

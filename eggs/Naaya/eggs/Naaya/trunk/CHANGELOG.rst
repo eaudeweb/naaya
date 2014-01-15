@@ -1,5 +1,7 @@
 3.3.29 (unreleased)
 -------------------
+* Bug fix: fix direct email delivery when deployed with repoze.sendmail
+  [tiberich #17998]
 
 3.3.28 (2014-01-14)
 -------------------
