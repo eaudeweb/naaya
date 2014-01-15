@@ -247,7 +247,7 @@ def handle_add_content(event):
         obj.geo_type = _get_geo_type(obj)
         if obj.aq_parent.getId() == "destinet-users":
             alter_contact(obj)
-            obj.aq_parent.recatalogNyObject(obj)
+        obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_edit_content(event):
@@ -284,10 +284,10 @@ def handle_edit_content(event):
     #langs = obj.aq_parent.gl_get_languages()
     if (obj.meta_type == "Naaya Contact"):
         set_address(obj)
+        obj.geo_type = _get_geo_type(obj)
         if (obj.aq_parent.getId() == "destinet-users"):
-            obj.geo_type = _get_geo_type(obj)
             alter_contact(obj)
-            obj.aq_parent.recatalogNyObject(obj)
+        obj.aq_parent.recatalogNyObject(obj)
 
 
 def handle_del_content(obj, event):
