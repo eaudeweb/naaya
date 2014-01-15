@@ -1,5 +1,7 @@
-1.2.18-dev (unreleased)
+1.2.18 - (2014-01-15)
 =======================
+* Bug fix: set the geo type regardless of contact location
+  [tiberich]
 
 1.2.17 (2014-01-10)
 =======================
