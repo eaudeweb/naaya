@@ -1,7 +1,9 @@
-3.3.29 (unreleased)
+3.3.29 (2014-01-15)
 -------------------
 * Bug fix: fix direct email delivery when deployed with repoze.sendmail
   [tiberich #17998]
+* Bug fix: fix google map setup code
+  [tiberich]
 
 3.3.28 (2014-01-14)
 -------------------
