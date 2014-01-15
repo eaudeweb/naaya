@@ -1,3 +1,8 @@
+3.3.30 (2014-01-15)
+-------------------
+* Fixed bug related to notification tool relative import
+  [tiberich]
+
 3.3.29 (2014-01-15)
 -------------------
 * Bug fix: fix direct email delivery when deployed with repoze.sendmail

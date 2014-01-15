@@ -38,7 +38,7 @@ from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
 from containers import (SubscriptionContainer, AccountSubscription,
                         AnonymousSubscription)
-import utils
+from Products.NaayaCore.NotificationTool import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
@@ -216,7 +216,7 @@ class NotificationTool(Folder):
         tree (sitemap)
 
         """
-        
+
         form = {}
         if REQUEST is not None:
             form = REQUEST.form
