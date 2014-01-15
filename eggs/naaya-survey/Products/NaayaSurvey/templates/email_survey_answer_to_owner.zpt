@@ -1,8 +1,7 @@
 <subject i18n:translate="">Survey answered</subject>
 
 <body_text>
-<tal:block i18n:translate="">
-Hello <tal:block content="options/NAME" i18n:name="admin_name"/>,</tal:block>
+<tal:block i18n:translate="">Hello</tal:block> <tal:block content="options/NAME" />,
 
 <tal:block i18n:translate=""><tal:block content="options/RESPONDENT" i18n:name="respondent_name"/> has answered the survey "<tal:block content="options/SURVEY_TITLE" i18n:name="survey_title" />":</tal:block>
 

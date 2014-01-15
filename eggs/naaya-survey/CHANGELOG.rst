@@ -1,5 +1,6 @@
 1.2.41 (unreleased)
 ===================
+* fixed a email template bug [dumitval]
 * xlwt and xlrd added to Naaya as dependencies. No need to assert availability. [dumitval]
 
 1.2.40 (2014-01-10)
