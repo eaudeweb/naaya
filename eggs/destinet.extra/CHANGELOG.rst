@@ -1,3 +1,8 @@
+1.2.19 - (2014-01-15)
+=======================
+* Bug fix: fixed setting the geotype when the edit action happens
+  [tiberich]
+
 1.2.18 - (2014-01-15)
 =======================
 * Bug fix: set the geo type regardless of contact location
