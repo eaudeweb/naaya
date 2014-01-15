@@ -52,7 +52,7 @@ class RecreateContactForOldUsers(UpdateScript):
                 ob = _create_NyContact_object(context, id, user.name)
 
                 ob.approveThis(1, user.name)    # 1, manager
-                #ob.submitThis()
+                ob.submitThis()
 
                 ob.set_localpropvalue('title', 'en', fullname)
                 ob.set_localpropvalue('description', 'en', "")
