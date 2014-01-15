@@ -198,10 +198,9 @@ def alter_contact(obj):
     keywords = [x.strip() for x in v.split(',') if x.strip()]
 
     if not "Destinet User" in keywords:
-	keywords.append("Destinet User")
+        keywords.append("Destinet User")
 
     obj.set_localpropvalue('keywords', lang, ", ".join(set(keywords)))
-    obj.geo_type = _get_geo_type(obj)
 
     obj._p_changed = True
 
@@ -245,6 +244,7 @@ def handle_add_content(event):
     # Make sure that the Destinet User keyword is added
     if obj.meta_type == "Naaya Contact":
         set_address(obj)
+        obj.geo_type = _get_geo_type(obj)
         if obj.aq_parent.getId() == "destinet-users":
             alter_contact(obj)
             obj.aq_parent.recatalogNyObject(obj)
@@ -285,6 +285,7 @@ def handle_edit_content(event):
     if (obj.meta_type == "Naaya Contact"):
         set_address(obj)
         if (obj.aq_parent.getId() == "destinet-users"):
+            obj.geo_type = _get_geo_type(obj)
             alter_contact(obj)
             obj.aq_parent.recatalogNyObject(obj)
 
