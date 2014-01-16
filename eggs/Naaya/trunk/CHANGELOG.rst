@@ -1,5 +1,7 @@
 3.3.32 (unreleased)
 -------------------
+* Bug fix: make sure the over query limit error is raised when geocoding
+  [tiberich]
 
 3.3.31 (2014-01-16)
 -------------------
