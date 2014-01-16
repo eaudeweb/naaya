@@ -195,8 +195,8 @@ class CSVImportTool(Implicit, Item):
                     if address:
                         setattr(ob, self.geo_fields['address'].split('.')[0],
                                 Geo(address=address))
-                        user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-                        notify(NyContentObjectEditEvent(ob, user))
+                        #user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+                        #notify(NyContentObjectEditEvent(ob, user))
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
