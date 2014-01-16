@@ -191,7 +191,6 @@ def alter_contact(obj):
     """ Make various changes to contact objects
 
     * add the Destinet User keyword
-    * set the geo_type property
     """
     lang = 'en'
     v = obj.getLocalAttribute("keywords", lang)
