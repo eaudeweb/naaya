@@ -1,29 +1,29 @@
 """ Bulk upload contacts, urls, experts """
 
-#Python import
-import csv, codecs
-from StringIO import StringIO
-import urllib
-import simplejson as json
-import xlwt
-import xlrd
-
-import transaction
-from Acquisition import Implicit
-from OFS.SimpleItem import Item
-from Globals import InitializeClass
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, Unauthorized
+from Acquisition import Implicit
 from DateTime import DateTime
-from zope.event import notify
-import logging
-
-from Products.NaayaCore.events import CSVImportEvent
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Globals import InitializeClass
+from OFS.SimpleItem import Item
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
+from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from StringIO import StringIO
+from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core.ggeocoding import GeocoderServiceError
+from zope.event import notify
+import csv, codecs
+import logging
+import simplejson as json
+import transaction
+import urllib
+import xlrd
+import xlwt
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +92,7 @@ class CSVImportTool(Implicit, Item):
             raise Unauthorized
 
         errors = []
+        warnings = []
 
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
@@ -169,6 +170,7 @@ class CSVImportTool(Implicit, Item):
                     #TODO: extract this block into a separate function
                     properties = {}
                     extra_properties = {}
+                    address = None
                     for column, value in zip(header, row):
                         if value == '':
                             continue
@@ -178,10 +180,23 @@ class CSVImportTool(Implicit, Item):
                         key = prop_map[column]['column']
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
-                    properties = self.do_geocoding(properties)
+                    try:
+                        properties = self.do_geocoding(properties)
+                    except GeocoderServiceError, e:
+                        msg = ('Warnings: could not find a valid address '
+                               'for row ${record_number}: ${error}',
+                               {'record_number': record_number + 1,     # account for header
+                                'error': str(e)})
+                        warnings.append(msg)
+                        address = properties.pop(self.geo_fields['address'])
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
                     ob = location_obj._getOb(ob_id)
+                    if address:
+                        setattr(ob, self.geo_fields['address'].split('.')[0],
+                                Geo(address=address))
+                        user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+                        notify(NyContentObjectEditEvent(ob, user))
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
@@ -197,7 +212,8 @@ class CSVImportTool(Implicit, Item):
                 except Exception, e:
                     self.log_current_error()
                     msg = ('Error while importing from file, row ${record_number}: ${error}',
-                           {'record_number': record_number, 'error': str(e)})
+                           {'record_number': record_number + 1,     # account for header
+                            'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
                     else:
@@ -217,6 +233,8 @@ class CSVImportTool(Implicit, Item):
                 transaction.abort()
                 self.setSessionErrorsTrans(errors)
             else:
+                if warnings:
+                    self.setSessionErrorsTrans(warnings)
                 self.setSessionInfoTrans('${records} object(s) of type "${title}" successfully imported.',
                 records=record_number, title=schema.title_or_id())
             return self.index_html(REQUEST, meta_type=meta_type)

@@ -1,5 +1,7 @@
-3.3.31 (unreleased)
+3.3.31 (2014-01-16)
 -------------------
+* Bug fix: fix csv import when trying to geocode records and failing
+  [tiberich]
 
 3.3.30 (2014-01-15)
 -------------------
