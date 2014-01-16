@@ -1,4 +1,7 @@
-1.2.43 (unreleased)
+1.2.44 (unreleased)
+===================
+
+1.2.43 (2014-01-16)
 ===================
 * fix several draft answers issue [dumitval]
 
