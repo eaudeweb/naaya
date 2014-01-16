@@ -134,7 +134,7 @@
 					</div>
 				</tal:block>
 				
-				<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts and here.allow_multiple_answers">
+				<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts">
 					<div class="survey-detail">
 						<h4 i18n:translate="">Your drafts:</h4>
 						<ul id="my-answers-list">

@@ -280,12 +280,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 'Deleted previous answer %s while editing' % answer_id)
 
         if not self.allow_multiple_answers:
-            # look for an old answer and remove it
-            old_answer = self.getAnswerForRespondent(respondent=respondent)
-            if old_answer is not None:
-                self._delObject(old_answer.id)
-                LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                    'Deleted previous answer %s' % old_answer.absolute_url())
+            # look for all old answers and remove them
+            # (there can be more than one because of a previous bug)
+            while True:
+                old_answer = self.getAnswerForRespondent(respondent=respondent, draft=True)
+                if old_answer is None:
+                    break
+                else:
+                    self._delObject(old_answer.id)
+                    LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
+                        'Deleted previous answer %s' % old_answer.absolute_url())
 
         #If we are in edit mode, keep the answer_id from the "old answer"
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
