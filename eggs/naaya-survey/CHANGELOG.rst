@@ -1,5 +1,6 @@
 1.2.43 (unreleased)
 ===================
+* fix several draft answers issue [dumitval]
 
 1.2.42 (2014-01-15)
 ===================
