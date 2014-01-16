@@ -180,15 +180,20 @@ class CSVImportTool(Implicit, Item):
                         key = prop_map[column]['column']
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
-                    try:
-                        properties = self.do_geocoding(properties)
-                    except GeocoderServiceError, e:
-                        msg = ('Warnings: could not find a valid address '
-                               'for row ${record_number}: ${error}',
-                               {'record_number': record_number + 1,     # account for header
-                                'error': str(e)})
-                        warnings.append(msg)
-                        address = properties.pop(self.geo_fields['address'])
+
+                    #temp
+                    properties.pop('geo_location.address')
+                    # try:
+                    #     properties = self.do_geocoding(properties)
+                    # except GeocoderServiceError, e:
+                    #     msg = ('Warnings: could not find a valid address '
+                    #            'for row ${record_number}: ${error}',
+                    #            {'record_number': record_number + 1,     # account for header
+                    #             'error': str(e)})
+                    #     warnings.append(msg)
+                    #     address = properties.pop(self.geo_fields['address'])
+                    #endtemp
+
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
                     ob = location_obj._getOb(ob_id)
