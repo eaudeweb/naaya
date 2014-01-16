@@ -42,9 +42,9 @@ def _get_url_data(url):
             time.sleep(2)
             continue
 
-        if attempts == RETRIES:
-            # this means that the daily limit has been reached
-            raise GeocoderServiceError('URLError: %s' % e.reason)
+    # this means that the daily limit has been reached
+    raise GeocoderServiceError('URLError: Google servers report geocoding '
+                               'query limit has been reached')
 
 
 def _check_result_is_valid(result):
