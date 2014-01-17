@@ -62,7 +62,7 @@ to show a whole tree of comments.
 
 <ul class="tb-comments-tree">
 <tal:block define="embedded options/embedded|nothing;
-                   can_reply python:True"
+                   can_reply not:here/check_cannot_comment"
            repeat="comment_data here/get_comment_tree">
     <tal:block define="comment comment_data/comment">
         <metal:block use-macro="template/macros/comment" />
