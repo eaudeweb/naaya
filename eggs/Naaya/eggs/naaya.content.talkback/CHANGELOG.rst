@@ -1,4 +1,7 @@
-1.4.31 (unreleased)
+1.4.32 (unreleased)
+-------------------
+
+1.4.31 (2014-01-17)
 -------------------
 * hide "Reply" button if the user doesn't have commenting rights [dumitval]
 * xlwt and xlrd added to Naaya as dependencies. No need to assert availability. [dumitval]
