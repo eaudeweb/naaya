@@ -5,6 +5,10 @@
 * Bug fix: don't fail when going to the IG Logging page when there's no
   SITES_LOG_PATH env variable set
   [tiberich #17131]
+* Bug fix: don't throw error when failing to parse a line in the JSON file
+  Note: this should be regarded as catastrophic failure, there should be
+  no real cause that the log file is not a valid JSON file
+  [tiberich #17131]
 
 3.3.31 (2014-01-16)
 -------------------
