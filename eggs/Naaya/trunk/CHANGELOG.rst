@@ -2,6 +2,9 @@
 -------------------
 * Bug fix: make sure the over query limit error is raised when geocoding
   [tiberich]
+* Bug fix: don't fail when going to the IG Logging page when there's no
+  SITES_LOG_PATH env variable set
+  [tiberich #17131]
 
 3.3.31 (2014-01-16)
 -------------------

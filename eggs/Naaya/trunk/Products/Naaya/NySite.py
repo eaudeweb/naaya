@@ -3360,6 +3360,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_site_logging_html')
     def admin_site_logging_html(self, REQUEST=None, RESPONSE=None):
         """ Web viewer for site logger """
+
         return self.getFormsTool().getContent({'here': self}, 'site_admin_logging')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')

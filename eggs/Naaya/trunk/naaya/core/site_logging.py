@@ -1,14 +1,12 @@
-import os
-import re
-import logging
-import time
+from Products.Naaya.interfaces import INySite
 from datetime import datetime
-
 from naaya.core.backport import json
-from naaya.core.zope2util import get_zope_env, ofs_path
 from naaya.core.jsonlogger import JSONFormatter
 from naaya.core.utils import file_length
-from Products.Naaya.interfaces import INySite
+from naaya.core.zope2util import get_zope_env, ofs_path
+import logging
+import os
+import time
 
 
 log = logging.getLogger(__name__)
@@ -34,16 +32,18 @@ def get_log_dir(site):
 
     """
     abs_path = get_zope_env(SITES_LOG_PATH_VAR)
-    if abs_path:
-        abs_path = os.path.join(abs_path, get_site_slug(site))
-        if not os.path.exists(abs_path):
-            try:
-                os.makedirs(abs_path)
-            except Exception, e:
-                return None
-        return abs_path
-    else:
+    if not abs_path:
+        log.warning("Could not find SITES_LOG_PATH_VAR env variable")
         return None
+
+    abs_path = os.path.join(abs_path, get_site_slug(site))
+    if not os.path.exists(abs_path):
+        try:
+            os.makedirs(abs_path)
+        except Exception:
+            return None
+
+    return abs_path
 
 def get_site_logger(site):
     """
@@ -69,7 +69,7 @@ def create_site_logger(site):
         for handler in existing:
             try:
                 logger.removeHandler(handler)
-            except Exception, e:
+            except Exception:
                 log.exception("Could not remove existing site logger handler")
     custom_format = '%(asctime) %(message)'
     abs_path = get_log_dir(site)
@@ -77,13 +77,13 @@ def create_site_logger(site):
         try:
             log_filename = os.path.join(abs_path, LOG_FILENAME)
             if not os.access(log_filename, os.F_OK):
-                f = open(log_filename, 'a').close()
+                open(log_filename, 'a').close()
             if not os.access(log_filename, os.W_OK):
                 log.warn(("Could not add file handler for site logger %r"
                            " (log file write permissions)"), site)
                 return logger
             handler = logging.FileHandler(log_filename)
-        except Exception, e:
+        except Exception:
             handler = logging.StreamHandler()
             log.exception("Could not create file handler for site logger %r",
                           site)
@@ -99,7 +99,7 @@ def init_site_loggers():
         if INySite.providedBy(ob):
             try:
                 create_site_logger(ob)
-            except Exception, e:
+            except Exception:
                 log.exception("Exception creating site logger for %r", ob)
 
 ## Views ##
@@ -125,8 +125,15 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None):
     show_plain_text = False
     writeable = False
     abs_path = get_log_dir(site)
+    if not abs_path:
+        return {
+            'writeable': writeable,
+            'lines': lines,
+            'plain_text_lines': plain_text_lines,
+        }
+
     log_filename = os.path.join(abs_path, LOG_FILENAME)
-    if abs_path and os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
+    if os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
         writeable = True
         log_file = open(log_filename)
         file_len = file_length(log_filename)
@@ -178,7 +185,7 @@ def clear_log_file(site, REQUEST=None, RESPONSE=None):
     """
     from naaya.core.utils import is_ajax
     if is_ajax(REQUEST):
-        abs_path = get_log_dir(site)
+        get_log_dir(site)   # TODO: is this needed?
         log_file = open(LOG_FILENAME, 'r+')
         log_file.truncate()
         log_file.close()
@@ -193,7 +200,7 @@ def admin_toggle_logger(site, enabled=False, REQUEST=None, RESPONSE=None):
 
     """
     from naaya.core.utils import str2bool
-    lang = site.gl_get_selected_language()
+    site.gl_get_selected_language()     # TODO: is this needed?
     enabled = str2bool(REQUEST.form.get('enabled', False))
     if enabled in [True, False]:
         site.content_action_logging = enabled
