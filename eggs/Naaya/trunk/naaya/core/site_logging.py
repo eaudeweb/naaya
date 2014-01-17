@@ -141,11 +141,17 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None):
         if file_len < 200:
             show_plain_text = True
 
+        c = 0
         for line in log_file:
+            c += 1
             if show_plain_text:
                 plain_text_lines.append(line)
 
-            line = json.loads(line)
+            try:
+                line = json.loads(line)
+            except json.JSONDecodeError:
+                log.error("Could not parse line %s from file %s", c, log_filename)
+                continue
             line_data = line['message']
             date_str = line['asctime']
             time_tuple = time.strptime(date_str, "%y-%m-%d %H:%M:%S,%f")
