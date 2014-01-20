@@ -1,115 +1,157 @@
-import urllib
 try:
     import simplejson as json
 except ImportError:
     import json
-from os.path import join, dirname
-from urllib import quote
-from zipfile import ZipFile
-from datetime import datetime, timedelta
-from urlparse import urlparse
-import logging
-import time
-import os
-import sys
-import operator
 
-import zLOG
-from OFS.Folder import Folder
-from OFS.Image import manage_addImage
-from Globals import InitializeClass
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+#from OFS.Image import manage_addImage
+#from Products.NaayaBase.constants import *
+#from constants import *
+#from urllib import quote
+
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
-from AccessControl.Permissions import view_management_screens, view
 from AccessControl.Permissions import change_permissions
-from ZPublisher import BeforeTraverse
-from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
-from Globals import DTMLFile
-from zope.interface import implements
-from zope.deprecation import deprecate
+from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
-from zope import component
-import transaction
-from zope.deprecation import deprecate
-from zope.app.component.site import LocalSiteManager, SiteManagerContainer
 from App.config import getConfiguration
-import pytz
-from zope.event import notify
+from Globals import DTMLFile
+from Globals import InitializeClass
+from NyFolder import folder_add_html, addNyFolder, importNyFolder
+from NyFolderBase import NyFolderBase
+from OFS.Folder import Folder
 from Persistence.mapping import PersistentMapping
-
-from interfaces import INySite, IActionLogger
-from action_logger import ActionLogger
-from constants import *
-from Products.NaayaBase.constants import *
-from Products.NaayaCore.constants import *
-import naaya.content.base
-from naaya.content.base.constants import *
-from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
-from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
-from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
-from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
-from Products.NaayaCore.EmailTool.EmailTool import (manage_addEmailTool,
-                                                    save_bulk_email,
-                                                    get_bulk_email,
-                                                    get_bulk_emails,
-                                                    check_cached_valid_emails,
-                                                    export_email_list_xcel)
-from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
-from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
-from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
-from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
-from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
-from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
-from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
-from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
-from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
-from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
-from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
-from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
-from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsTool
-
+from Products.Naaya.constants import DEFAULT_MAILSERVERNAME
+from Products.Naaya.constants import DEFAULT_MAILSERVERPORT
+from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_CODE
+from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_NAME
+from Products.Naaya.constants import ID_IMAGESFOLDER
+from Products.Naaya.constants import JS_MESSAGES
+from Products.Naaya.constants import LABEL_NYFOLDER
+from Products.Naaya.constants import METATYPE_FOLDER
+from Products.Naaya.constants import METATYPE_NYSITE
+from Products.Naaya.constants import NAAYA_PRODUCT_PATH
+from Products.Naaya.constants import NYEXP_SCHEMA_LOCATION
+from Products.Naaya.constants import PERMISSION_ADD_FOLDER
+from Products.Naaya.constants import PREFIX_SITE
 from Products.NaayaBase.NyBase import NyBase
+from Products.NaayaBase.NyCommonView import NyCommonView
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.NaayaBase.NyCommonView import NyCommonView
-from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
+from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.constants import EXCEPTION_PARSINGFILE
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_ADMINISTRATE
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_CREATE_USER
+from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_DIRECT
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_SKIP_APPROVAL
+from Products.NaayaBase.constants import PERMISSION_VALIDATE_OBJECTS
+from Products.NaayaBase.gtranslate import translate, translate_url
+from Products.NaayaBase.managers.import_parser import import_parser
+from Products.NaayaCore import ID_ANALYTICSTOOL
+from Products.NaayaCore import ID_AUTHENTICATIONTOOL
+from Products.NaayaCore import ID_CATALOGTOOL
+from Products.NaayaCore import ID_DYNAMICPROPERTIESTOOL
+from Products.NaayaCore import ID_EDITORTOOL
+from Products.NaayaCore import ID_EMAILTOOL
+from Products.NaayaCore import ID_FORMSTOOL
+from Products.NaayaCore import ID_GEOMAPTOOL
+from Products.NaayaCore import ID_LAYOUTTOOL
+from Products.NaayaCore import ID_NOTIFICATIONTOOL
+from Products.NaayaCore import ID_PORTLETSTOOL
+from Products.NaayaCore import ID_PROPERTIESTOOL
+from Products.NaayaCore import ID_SCHEMATOOL
+from Products.NaayaCore import ID_SYNDICATIONTOOL
+from Products.NaayaCore import METATYPE_REMOTECHANNEL
+from Products.NaayaCore import METATYPE_REMOTECHANNELFACADE
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
+from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
+from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
+from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
+from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
+from Products.NaayaCore.EmailTool.EmailTool import check_cached_valid_emails
+from Products.NaayaCore.EmailTool.EmailTool import export_email_list_xcel
+from Products.NaayaCore.EmailTool.EmailTool import get_bulk_email
+from Products.NaayaCore.EmailTool.EmailTool import get_bulk_emails
+from Products.NaayaCore.EmailTool.EmailTool import manage_addEmailTool
+from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email
+from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
+from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsTool
+from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
+from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
+from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
+from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
+from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
+from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
+from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
+from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
+from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
+from Products.NaayaCore.constants import PREFIX_PORTLET
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
-from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
+from Products.NaayaCore.managers.import_export import CSVImportTool
+from Products.NaayaCore.managers.import_export import ExportTool
+from Products.NaayaCore.managers.import_export import UnicodeReader
+from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
-from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
+from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
+from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.utils import vcard_file
-from Products.NaayaCore.managers.import_export import (CSVImportTool,
-                                                       ExportTool, UnicodeReader)
+from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
-from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from managers.skel_parser import skel_handler_for_path
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
+from ZPublisher import BeforeTraverse
+from action_logger import ActionLogger
+from datetime import datetime, timedelta
+from events import NyPluggableItemInstalled, SkelLoad
+from interfaces import INySite, IActionLogger
 from managers.networkportals_manager import networkportals_manager
-from Products.NaayaBase.managers.import_parser import import_parser
-from NyFolder import folder_add_html, addNyFolder, importNyFolder
-from Products.NaayaBase.gtranslate import translate, translate_url
-from NyFolderBase import NyFolderBase
+from managers.skel_parser import skel_handler_for_path
+from naaya.component import bundles
+from naaya.content.base.constants import MUST_BE_CAPTCHA
+from naaya.content.base.constants import MUST_BE_DATETIME
+from naaya.content.base.constants import MUST_BE_DATETIME_STRICT
+from naaya.content.base.constants import MUST_BE_NONEMPTY
+from naaya.content.base.constants import MUST_BE_POSITIV_FLOAT
+from naaya.content.base.constants import MUST_BE_POSITIV_INT
+from naaya.core import site_logging
+from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
+from naaya.core.exceptions import ValidationError
+from naaya.core.exceptions import i18n_exception
 from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
-from naaya.core.zope2util import redirect_to, get_zope_env
-from naaya.core.exceptions import ValidationError
-from Products.NaayaBase.NyRoleManager import NyRoleManager
-from naaya.i18n.portal_tool import manage_addNaayaI18n
-from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
+from naaya.core.zope2util import redirect_to    #, get_zope_env
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
-
-from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
-from naaya.component import bundles
-from naaya.core.exceptions import i18n_exception
-from naaya.core import site_logging
-
-from events import NyPluggableItemInstalled, SkelLoad
+from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
+from naaya.i18n.portal_tool import manage_addNaayaI18n
+from os.path import join    #, dirname
+from urlparse import urlparse
+from zipfile import ZipFile
+from zope import component
+from zope.app.component.site import LocalSiteManager, SiteManagerContainer
+from zope.deprecation import deprecate
+from zope.event import notify
+from zope.interface import implements
+import logging
+import naaya.content.base
+import operator
+import os
+import pytz
+import sys
+import time
+import transaction
+import urllib
+import zLOG
 
 log = logging.getLogger(__name__)
 
@@ -350,15 +392,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def _load_skel_from_handler(self, skel_handler):
         skel_path = skel_handler.skel_path
         if skel_handler is not None:
-            properties_tool = self.getPropertiesTool()
+            self.getPropertiesTool()    # TODO: is this needed?
             i18n_tool = self.getPortalI18n()
-            formstool_ob = self.getFormsTool()
+            self.getFormsTool()     # TODO: is this needed?
             layouttool_ob = self.getLayoutTool()
             syndicationtool_ob = self.getSyndicationTool()
             portletstool_ob = self.getPortletsTool()
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
-            notificationtool_ob = self.getNotificationTool()
+            self.getNotificationTool()      # TODO: is this needed?
 
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
@@ -1217,7 +1259,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getMaintainersEmails(self, node):
         #returns a list of emails for given folder until the site object
         l_emails = []
-        auth_tool = self.getAuthenticationTool()
+        self.getAuthenticationTool()    # TODO: is this needed?
         if node is self: return l_emails
         else:
             while 1:
@@ -1834,7 +1876,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         try:
             f.write(json.dumps({'error_time': str(datetime.now()),
                                 'portal_url': self.get_portal_url(),
-                                'INSTANCE_HOME': INSTANCE_HOME,
+                                'INSTANCE_HOME': INSTANCE_HOME, # comes from Globals()
                                 'error_type': str(error_type),
                                 'error_value': str(error_value)})
                     + '\n')
@@ -2468,7 +2510,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 for name in names:
                     try:
                         email = auth_tool.getUsersEmails([name])[0]
-                        fullname = auth_tool.getUsersFullNames([name])[0]
+                        #fullname = auth_tool.getUsersFullNames([name])[0]
                         if location == "/" or location == '':
                             loc, location_ob = 'all', self.getSite()
                         else:
@@ -3364,13 +3406,20 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.getFormsTool().getContent({'here': self}, 'site_admin_logging')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
-    def get_site_logger_content(self, REQUEST=None, RESPONSE=None):
+    def get_site_logger_content(self, REQUEST=None, RESPONSE=None, month=None):
         """
         Returns plain text and parsed lines of logging files for actions on
         content
 
         """
-        return site_logging.get_site_logger_content(self, REQUEST, RESPONSE)
+        return site_logging.get_site_logger_content(self, REQUEST, RESPONSE, month=month)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
+    def get_logged_months(self, REQUEST=None, RESPONSE=None):
+        """
+        Returns a list of logged months
+        """
+        return site_logging.get_logged_months(self, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_download_log_file')
     def admin_download_log_file(self, REQUEST=None, RESPONSE=None):
@@ -3592,24 +3641,24 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def check_pluggable_item_properties(self, meta_type, **args):
         l = []
         la = l.append
-        translate = self.getPortalI18n().get_translation
+        gt = self.getPortalI18n().get_translation
         for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
             if v[0] == 1 or v[1]:   #this property is mandatory
                 if args.has_key(k):    #property found in parameters list
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
-                        if self.utIsEmptyString(value): la(translate(v[2]))
+                        if self.utIsEmptyString(value): la(gt(v[2]))
                     elif v[1] == MUST_BE_DATETIME:
-                        if not self.utIsValidDateTime(value): la(translate(v[2]))
+                        if not self.utIsValidDateTime(value): la(gt(v[2]))
                     elif v[1] == MUST_BE_DATETIME_STRICT:
                         if self.utIsEmptyString(value) or not self.utIsValidDateTime(value):
-                            la(translate(v[2]))
+                            la(gt(v[2]))
                     elif v[1] == MUST_BE_POSITIV_INT:
-                        if not self.utIsAbsInteger(value): la(translate(v[2]))
+                        if not self.utIsAbsInteger(value): la(gt(v[2]))
                     elif v[1] == MUST_BE_POSITIV_FLOAT:
-                        if not value or not self.utIsFloat(value, positive=0): la(translate(v[2]))
+                        if not value or not self.utIsFloat(value, positive=0): la(gt(v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
-                        if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(translate(v[2]))
+                        if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(gt(v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
@@ -3628,7 +3677,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         If the content specifies an `on_install` function in it's `config`
         this method will call `[on_install](self)`
         """
-        data_path = join(self.get_data_path(), 'skel', 'forms')
+        #data_path = join(self.get_data_path(), 'skel', 'forms')
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
             if pitem == None:
@@ -3699,7 +3748,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         if uid==self.get_site_uid():
             today = self.utGetTodayDate()
-            catalog_tool = self.getCatalogTool()
+            self.getCatalogTool()   # TODO: is this needed?
             for x in self.getCatalogedUnsubmittedObjects():
                 if x.bobobase_modification_time() + 1 < today:
                     #delete only unsubmitted objects older than 1 day
@@ -3728,7 +3777,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         try:
             save_bulk_email(self, mails, self.REQUEST.AUTHENTICATED_USER.getUserName(), mail_subject, mail_body)
-        except Exception, e:
+        except Exception:
             log.exception("Failed saving bulk email on disk")
 
         if REQUEST:
@@ -3763,7 +3812,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ Import contacts in vCard format from a zip file """
         from naaya.content.contact.contact_item import addNyContact, parse_vcard_data
         container = self.restrictedTraverse(location)
-        error = []
+        errors = []
         success = False
         objects_created = 0
         vcard_zip = ZipFile(vcard_zipfile)

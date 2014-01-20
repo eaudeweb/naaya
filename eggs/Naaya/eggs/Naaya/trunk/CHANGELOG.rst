@@ -1,4 +1,10 @@
-3.3.32 (unreleased)
+3.3.33 (unreleased)
+-------------------
+* Use a monthly based file handler for logging the site logging activity
+  This improves performance in the site logger viewer page.
+  [tiberich #17131]
+
+3.3.32 (2014-01-17)
 -------------------
 * Bug fix: make sure the over query limit error is raised when geocoding
   [tiberich]

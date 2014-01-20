@@ -1,11 +1,12 @@
 from Products.Naaya.interfaces import INySite
-from datetime import datetime
+from datetime import datetime, date
 from naaya.core.backport import json
 from naaya.core.jsonlogger import JSONFormatter
-from naaya.core.utils import file_length
 from naaya.core.zope2util import get_zope_env, ofs_path
+import codecs
 import logging
 import os
+import re
 import time
 
 
@@ -19,7 +20,8 @@ USER_MAN = 'USER_MANAGEMENT'
 ALLOWED_SLUGS = {ACCESS: ("VIEW", "DOWNLOAD", ),
                  USER_MAN: ("ASSIGNED", "UNASSIGNED", ),
                 }
-LOG_FILENAME = 'site.log'
+#LOG_FILENAME = 'site.log'
+LOG_PREFIX = 'splitlog'
 
 def get_site_slug(site):
     """ An identifier valid on filesystem """
@@ -54,6 +56,82 @@ def get_site_logger(site):
     logger = logging.getLogger('%s%s' % (site_logger_slug, SUFFIX))
     return logger
 
+
+class MonthBasedFileHandler(logging.StreamHandler):
+    """
+    A handler class which writes formatted logging records to monthly-separated files.
+
+    Code copied and modified from Standard Library logging.__init__
+    """
+
+    _last_recorded_month = None
+
+    def __init__(self, prefix, mode='a', encoding=None, delay=0):
+        """
+        Open the specified file and use it as the stream for logging.
+        """
+
+        #keep the absolute path, otherwise derived classes which use this
+        #may come a cropper when the current directory changes
+        if codecs is None:
+            encoding = None
+
+        self.baseFilename = os.path.abspath(prefix)
+        self.mode = mode
+        self.encoding = encoding
+        if delay:
+            #We don't open the stream, but we still need to call the
+            #Handler constructor to set level, formatter, lock etc.
+            logging.Handler.__init__(self)
+            self.stream = None
+        else:
+            logging.StreamHandler.__init__(self, self._open())
+
+    def close(self):
+        """
+        Closes the stream.
+        """
+        if self.stream:
+            self.flush()
+            if hasattr(self.stream, "close"):
+                self.stream.close()
+            logging.StreamHandler.close(self)
+            self.stream = None
+
+    def _open(self):
+        """
+        Open the current base file with the (original) mode and encoding.
+        Return the resulting stream.
+        """
+        if self._last_recorded_month == None:
+            self._last_recorded_month = date.today().strftime("%y-%m")
+
+        filename = "%s-%s.log" % (self.baseFilename, self._last_recorded_month)
+
+        if self.encoding is None:
+            stream = open(filename, self.mode)
+        else:
+            stream = codecs.open(filename, self.mode, self.encoding)
+
+        return stream
+
+    def emit(self, record):
+        """
+        Emit a record.
+
+        If the stream was not opened because 'delay' was specified in the
+        constructor, open it before calling the superclass's emit.
+        """
+
+        if date.today().strftime("%y-%m") != self._last_recorded_month:
+            self.close()
+
+        if self.stream is None:
+            self.stream = self._open()
+
+        logging.StreamHandler.emit(self, record)
+
+
 def create_site_logger(site):
     """
     Sets proper file handler to corresponding site logger.
@@ -75,14 +153,15 @@ def create_site_logger(site):
     abs_path = get_log_dir(site)
     if abs_path:
         try:
-            log_filename = os.path.join(abs_path, LOG_FILENAME)
-            if not os.access(log_filename, os.F_OK):
-                open(log_filename, 'a').close()
-            if not os.access(log_filename, os.W_OK):
-                log.warn(("Could not add file handler for site logger %r"
-                           " (log file write permissions)"), site)
-                return logger
-            handler = logging.FileHandler(log_filename)
+            # log_filename = os.path.join(abs_path, LOG_FILENAME)
+            # if not os.access(log_filename, os.F_OK):
+            #     open(log_filename, 'a').close()
+            # if not os.access(log_filename, os.W_OK):
+            #     log.warn(("Could not add file handler for site logger %r"
+            #                " (log file write permissions)"), site)
+            #     return logger
+            prefix = os.path.join(abs_path, LOG_PREFIX)
+            handler = MonthBasedFileHandler(prefix=prefix)
         except Exception:
             handler = logging.StreamHandler()
             log.exception("Could not create file handler for site logger %r",
@@ -90,6 +169,7 @@ def create_site_logger(site):
         else:
             handler.setFormatter(JSONFormatter(custom_format))
             logger.addHandler(handler)
+
     return logger
 
 def init_site_loggers():
@@ -114,44 +194,81 @@ def readable_action(line_data):
     elif line_data['type'] == ACCESS:
         return ("%sED the content" % line_data['action'])
 
-def get_site_logger_content(site, REQUEST=None, RESPONSE=None):
+
+LOGGED_MONTH_REGEXP = re.compile("^" + LOG_PREFIX + "-(.*).log$")
+
+def get_logged_months(site, REQUEST=None, RESPONSE=None):
+    """ Returns a list of months that are in the site logged folder
+    """
+    abs_path = get_log_dir(site)
+    if not abs_path:
+        return []
+
+    matches = sorted((m.groups()[0] for m in
+                      filter(None,
+                            [LOGGED_MONTH_REGEXP.match(n) for n in os.listdir(abs_path)])),
+                     reverse=True)
+    today = date.today()
+    this_month = today.strftime("%y-%m")
+    if not this_month in matches:
+        matches.insert(0, this_month)
+    return matches
+
+
+def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
     """
     Returns plain text and parsed lines of logging files for actions on
     content
 
+    month is an optional string in form of "shortyear-month", ex: '13-05'
     """
     lines = []
     plain_text_lines = []
-    show_plain_text = False
-    writeable = False
+    #show_plain_text = False
     abs_path = get_log_dir(site)
+
     if not abs_path:
         return {
-            'writeable': writeable,
+            'writeable': False,
             'lines': lines,
             'plain_text_lines': plain_text_lines,
         }
 
-    log_filename = os.path.join(abs_path, LOG_FILENAME)
-    if os.path.exists(log_filename) and os.access(log_filename, os.W_OK):
-        writeable = True
-        log_file = open(log_filename)
-        file_len = file_length(log_filename)
+    if month:
+        if month == 'current':
+            today = date.today()
+            month = today.strftime("%y-%m")
+        log_filenames = [LOG_PREFIX + "-%s.log" % month]
+    else:
+        log_filenames = [n for n in os.listdir(abs_path) if n.startswith(LOG_PREFIX)]
 
-        if file_len < 200:
-            show_plain_text = True
+    log_filenames.sort()
+
+    lines = []
+    writeables = []
+
+    for logname in log_filenames:
+        lfname = os.path.join(abs_path, logname)
+
+        if (not os.path.exists(lfname)) and os.access(lfname, os.W_OK):
+            log.error("Could not access log file %s", lfname)
+            writeables.append(False)
+            continue
+
+        log_file = open(lfname)
+        writeables.append(True)
 
         c = 0
         for line in log_file:
             c += 1
-            if show_plain_text:
-                plain_text_lines.append(line)
+            plain_text_lines.append(line)
 
             try:
                 line = json.loads(line)
             except json.JSONDecodeError:
-                log.error("Could not parse line %s from file %s", c, log_filename)
+                log.error("Could not parse line %s from file %s", c, lfname)
                 continue
+
             line_data = line['message']
             date_str = line['asctime']
             time_tuple = time.strptime(date_str, "%y-%m-%d %H:%M:%S,%f")
@@ -160,7 +277,7 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None):
             lines.append(line_data)
 
     return {
-        'writeable': writeable,
+        'writeable': all(writeables),
         'lines': lines,
         'plain_text_lines': plain_text_lines,
     }
