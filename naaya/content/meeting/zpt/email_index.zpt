@@ -15,7 +15,10 @@
                 link.innerHTML = "Show recipients";
                 element.style.display = 'none';
             }
-        }
+        };
+        function insert_link(){
+          $('#body_text').val($('#body_text').val()+' '+$('#url').val());
+        };
         </script>
     </metal:block>
     <metal:block fill-slot="body">
@@ -70,6 +73,34 @@
             </div>
             <div class="field">
                 <label class="widget-title" for="body_text" i18n:translate="">Body:</label>
+                <div id="link_prepare">
+                    <div i18n:translate="">To insert links to objects from this portal at the end of the mail body, click on the desired item from the sitemap below and then on <strong>Insert</strong></div>
+                    <div id="sitemap_tree" class="sitemap_tree"></div>
+                    <input class="sitemap_tree_target" type="hidden" id="url"
+                        name="url" style="width: 32em;" />
+                  <div class="clearer insert-button">
+                    <input id="insert" type="button" i18n:attributes="value"
+                        value="Insert" onclick="insert_link();" />
+                  </div>
+                </div>
+                <metal:block use-macro="here/macro_utils/macros/ajaxtree">
+                  <metal:block fill-slot="treedefinitions">
+                    <script type="text/javascript"
+                      tal:define="site here/getSite;
+                            tree_initial_node string:;
+                            tree_get_url string:${here/absolute_url}/getNavigationSiteMap/"
+                      tal:content="string:
+                        $(document).ready(function(){
+                          load_js_tree({
+                            TREE_URL_PREFIX: '${site/absolute_url}/',
+                            TREE_GET_URL: '${tree_get_url}',
+                            TREE_INITIAL_NODE: '${tree_initial_node}',
+                            TREE_CONTAINER: '.sitemap_tree'
+                        });
+                        $$('#link_prepare').show();
+                      });"></script>
+                  </metal:block>
+                </metal:block>
                 <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
             </div>
             <input type="submit" name="send_email" value="Send newsletter"/>
