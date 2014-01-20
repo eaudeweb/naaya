@@ -18,19 +18,18 @@
 # Ghica Alexandru, Finsiel Romania
 
 
-from DateTime import DateTime
-from types import UnicodeType, StringType
-import string
-from xml.sax import make_parser, handler, InputSource
-from cStringIO import StringIO
-from Globals import MessageDialog
-
 #product imports
-from Products.NaayaGlossary.utils import utils
-from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
+from DateTime import DateTime
+from Globals import MessageDialog
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_ELEMENT_METATYPE
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
 from Products.NaayaGlossary.parsers.tmx_parser import tmx_parser
+#from Products.NaayaGlossary.utils import utils
+#from cStringIO import StringIO
 from naaya.core.zope2util import ofs_path
+from types import UnicodeType   #, StringType
+#from xml.sax import handler     # InputSource    # make_parser,
+import string
 
 
 class glossary_export:
@@ -42,7 +41,8 @@ class glossary_export:
     def xliff_http_header(self, RESPONSE):
         """ set the HTTP headers for xliff export """
         RESPONSE.setHeader('Content-Type', 'application/data; charset=UTF-8')
-        filename = '"%s_%s_%s.xliff"' % (self.id, folders, language)
+        language = self.REQUEST.form.get('language', 'English')
+        filename = '"%s_%s.xliff"' % (self.id, language)
         RESPONSE.setHeader('Content-Disposition',
                            'attachment; filename=' + filename)
 
@@ -83,7 +83,6 @@ class glossary_export:
     def xliff_export(self, folder='', language='',
                      published=0, empty_folders=False, REQUEST=None):
         """ Exports the content to an XLIFF file """
-        from types import UnicodeType
         results_list = []
         results = []
         terms = []
@@ -227,11 +226,10 @@ class glossary_export:
 
     def tmx_import(self, file, REQUEST=None):
         """ Imports a TMX file """
-        
-        from types import UnicodeType, StringType
+
         import string
-        from xml.sax import make_parser, handler, InputSource
-        from cStringIO import StringIO
+        #from xml.sax import make_parser, handler, InputSource
+        #from cStringIO import StringIO
 
         parser = tmx_parser()
 
@@ -241,7 +239,7 @@ class glossary_export:
         if chandler is None:
             return MessageDialog(title = 'Parse error',
              message = 'Unable to parse TMX file' ,  action = 'manage_main',)
-                        
+
         l_list = chandler.TMXContent.keys()
         l_list.sort()
         for k in l_list:
@@ -251,7 +249,7 @@ class glossary_export:
                 try:
                     self.manage_addGlossaryFolder(folder_id, '', [], '', '', 1)
                     folder = self._getOb(folder_id)
-                except Exception, error:
+                except Exception:   #, error:
                     #print error
                     pass
             elem_ob = folder._getOb(k, None)
@@ -264,7 +262,7 @@ class glossary_export:
                 try:
                     elem_name = self.utf8_to_latin1(chandler.TMXContent[k]['English'])
                     folder.manage_addGlossaryElement(elem_name, elem_name, '', [], '', 1)
-                except Exception, error:
+                except Exception:   #, error
                     #print error
                     pass
                 elem_ob = folder._getOb(elem_name, None)
