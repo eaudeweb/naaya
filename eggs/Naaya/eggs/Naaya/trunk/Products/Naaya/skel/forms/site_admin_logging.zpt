@@ -1,11 +1,13 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
     <h1 metal:fill-slot="title" i18n:translate="">Interest Group Logger</h1>
 
-    <tal:block metal:fill-slot="section"
-               define="site_logger here/get_site_logger_content;
-                       plain_text_lines python: site_logger['plain_text_lines'];
-                       lines python: site_logger['lines'];
-                       site_url python: here.getSite().absolute_url();">
+    <tal:block metal:fill-slot="section" define="
+        current_month python:here.REQUEST.form.get('current_month', 'current'); 
+        site_logger python:here.get_site_logger_content(month=current_month); 
+        logged_months here/get_logged_months; 
+        plain_text_lines python: site_logger['plain_text_lines']; 
+        lines python: site_logger['lines']; 
+        site_url python: here.getSite().absolute_url();">
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <script tal:content="string: var WWW_URL='${site_url}';"></script>
         <script type="text/javascript">
@@ -17,6 +19,10 @@
                         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
                     });
                 }
+
+                $('#month_selector').change(function(){
+                    $('#month_selector_form').submit();
+                });
 
                 //$('#clear-log-files').click(function(){
                 //    clearLogFiles();
@@ -146,12 +152,21 @@
             <a i18n:translate="" tal:attributes="href string:${site_url}/admin_set_log_content?enabled=true">Enable</a>
         </p>-->
 
-        <a href="javascript:void(0); " title="View logs as plain text" i18n:translate="" i18n:attributes="title" id="plain-text-switch">View as plain text</a>
-        <a href="javascript:void(0); " title="View logs as plain text" i18n:translate="" i18n:attributes="title" id="table-switch">View as table</a>
-        <br />
-        <br />
+        <form method="GET" action="" id="month_selector_form">
+            <div style="float:right">
+                <a href="javascript:void(0); " title="View logs as plain text" i18n:translate="" i18n:attributes="title" id="plain-text-switch">View as plain text</a>
+                <a href="javascript:void(0); " title="View logs as plain text" i18n:translate="" i18n:attributes="title" id="table-switch">View as table</a>
+            </div>
+            <p>Select month for the logs:
+                <select id="month_selector" name="current_month">
+                    <option tal:repeat="month logged_months" 
+                        tal:attributes="value month; selected python:month == current_month"
+                        tal:content="python:'20' + month.replace('-', ' / ')"></option>
+                </select>
+            </p>
+        </form>
 
-        <div id="log-table-holder">
+        <div id="log-table-holder" style="margin-top:30px">
             <table cellpadding="0" cellspacing="0" class="datatable display listing" id="actions-on-content-list">
                 <thead>
                     <tr class="list-header">
