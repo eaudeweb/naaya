@@ -1,5 +1,7 @@
 1.1.13 (unreleased)
 ------------------
+* Bug fix: fix export of glossary terms
+  [tiberich #18069]
 
 1.1.12 (2012-12-03)
 ------------------
