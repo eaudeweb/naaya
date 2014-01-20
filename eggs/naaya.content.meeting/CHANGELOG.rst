@@ -1,5 +1,6 @@
 1.2.52 (unreleased)
 -------------------
+* insert links to meeting objects in mails to participants [dumitval]
 
 1.2.51 (2014-01-07)
 -------------------
