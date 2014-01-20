@@ -2,3 +2,18 @@ table.meeting-registration-methods {
     width: 50%;
     margin-left: 50px;
 }
+#link_prepare {
+	width: 40%;
+	float: right;
+	display:none;
+}
+.insert-button{
+	padding-top: 5px;
+}
+.tree li a, .tree li span{
+	white-space:normal !important;
+	height:auto !important;
+}
+.sitemap_tree{
+	padding-top: 5px;
+}
