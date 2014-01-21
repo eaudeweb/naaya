@@ -420,8 +420,8 @@ def rewrite_logs(path):
                 try:
                     data = json.loads(line)
                 except:
-                    print "Line %s could not be parsed in file %s" % (
-                        counter, fname)
+                    log.warning("Line %s could not be parsed in file %s" % (
+                        counter, fname))
                     continue
                 date = data['asctime']
                 ident = date[:5]  # date looks like: "12-09-17 17:02:49,451019"
