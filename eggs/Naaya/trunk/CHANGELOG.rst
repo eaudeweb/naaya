@@ -1,4 +1,4 @@
-3.3.33 (unreleased)
+3.3.33 (2014-01-21)
 -------------------
 * Use a monthly based file handler for logging the site logging activity
   This improves performance in the site logger viewer page.
