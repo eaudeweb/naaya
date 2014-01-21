@@ -1,4 +1,4 @@
-1.1.13 (unreleased)
+1.1.13 (2014-01-21)
 ------------------
 * Bug fix: fix export of glossary terms
   [tiberich #18069]
