@@ -31,6 +31,10 @@ from types import UnicodeType   #, StringType
 #from xml.sax import handler     # InputSource    # make_parser,
 import string
 
+def escape(s):
+    return s.replace('&', '&amp;').replace('"', '&quot;').\
+        replace("'", '&apos;').replace('<', '&lt;').replace('>', '&gt;')
+
 
 class glossary_export:
     """ """
@@ -120,11 +124,11 @@ class glossary_export:
             r_append(trans_unit_template % {
                 'term_id': term.id,
                 'approved': term.approved,
-                'source_trans': term.get_translation_by_language('English'),
-                'target_trans': translation,
-                'def_trans': term.get_def_trans_by_language(language),
+                'source_trans': escape(term.get_translation_by_language('English')),
+                'target_trans': escape(translation),
+                'def_trans': escape(term.get_def_trans_by_language(language)),
                 'folder_id': l_folder.id,
-                'folder_trans': l_folder.get_translation_by_language(language),
+                'folder_trans': escape(l_folder.get_translation_by_language(language)),
             })
 
         if empty_folders:

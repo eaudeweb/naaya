@@ -1,41 +1,45 @@
-import string
-from copy import copy
-from os.path import join
-import simplejson as json
-from zipfile import ZipFile
-from cStringIO import StringIO
-import logging
-import lxml.etree
-
-import transaction
-from persistent.mapping import PersistentMapping
-import Products
-from OFS.Folder import Folder
-from ZPublisher.HTTPRequest import record
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Products.ZCatalog.ZCatalog import ZCatalog
+from AccessControl.Permissions import view_management_screens, view
 from Globals import MessageDialog, InitializeClass
+from OFS.Folder import Folder
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.managers.utils import file_utils
+from Products.NaayaCore.managers.utils import genObjectId
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_CATALOG_NAME
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_CENTRE_METATYPE
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_ELEMENT_METATYPE
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_PATH
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_PRODUCT_NAME
+from Products.NaayaGlossary.constants import PERMISSION_MANAGE_NAAYAGLOSSARY
+from Products.NaayaGlossary.constants import unicode_character_map
+from Products.NaayaGlossary.parsers.import_parsers import glossary_export
+from Products.NaayaGlossary.parsers.stop_words_parser import stop_words_parser
+from Products.NaayaGlossary.parsers.subjects_parser import subjects_parser
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from AccessControl.Permissions import view_management_screens, view
-from zope.app.container.interfaces import (IObjectAddedEvent,
-        IObjectRemovedEvent)
-
-import NyGlossaryFolder
-from constants import *
-from utils import utils, catalog_utils
-from parsers.xliff_parser import xliff_parser
-from Products.NaayaCore.managers.utils import file_utils
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaGlossary.parsers.subjects_parser import subjects_parser
-from Products.NaayaGlossary.parsers.stop_words_parser import stop_words_parser
-from Products.NaayaGlossary.parsers.import_parsers import glossary_export
-
-from Products.NaayaCore.managers.utils import genObjectId
-from naaya.core.zope2util import ofs_walk, ofs_path, relative_object_path
-from naaya.core.utils import download_to_temp_file
-from naaya.core.folderutils import sort_folder
+from Products.ZCatalog.ZCatalog import ZCatalog
+from ZPublisher.HTTPRequest import record
+from cStringIO import StringIO
+from copy import copy
 from interfaces import INyGlossaryItem, IItemTranslationChanged
+from naaya.core.folderutils import sort_folder
+from naaya.core.utils import download_to_temp_file
+from naaya.core.zope2util import ofs_walk, ofs_path, relative_object_path
+from os.path import join
+from parsers.xliff_parser import xliff_parser
+from persistent.mapping import PersistentMapping
+from utils import utils, catalog_utils
+from zipfile import ZipFile
+from zope.app.container.interfaces import IObjectAddedEvent
+from zope.app.container.interfaces import IObjectRemovedEvent
+import NyGlossaryFolder
+import Products
+import logging
+import lxml.etree
+import simplejson as json
+import string
+import transaction
 
 log = logging.getLogger('Products.NaayaGlossary')
 
@@ -853,13 +857,23 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
         body_info = chandler.getBody() #return a dictionary {id: (source, target)}
         obj = mapTiny()
-        for ids, translation in body_info.items():
-            elem_id = ids[0].encode('utf-8')
 
-            if elem_id!='':
-                l_context_name = translation['context-name']
+        #import pdb; pdb.set_trace()
+        for ids, translation in body_info.items():
+            print "Processing", ids
+            # ids is (u'voluntary-sector', u'V')
+            # translation is {'approved': u'1',
+            #                 'context': u'V',
+            #                 'context-name': u'V',
+            #                 'note': u'voluntary sector',
+            #                 'source': u'voluntary sector',
+            #                 'target': u'voluntary sector'}
+            elem_id = ids[0].encode('utf-8')    # := 'voluntary-sector'
+
+            if elem_id != '':
+                l_context_name = translation['context-name']    # := 'V'
                 if l_context_name:
-                    folder_id = ids[1].encode('utf-8')
+                    folder_id = ids[1].encode('utf-8')          # := 'V'
                 else:
                     folder_id = string.upper(elem_id[:1])
                 folder = self._getOb(folder_id, None)
@@ -871,7 +885,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         if add_themes_from_folders:
                             self.addTheme(name=translation['context'], code=l_context_name)
                             self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
-                    except Exception, error:
+                    except Exception:   #, error:
                         #print error
                         pass
                 else:
@@ -881,6 +895,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 if target_language in self.get_english_names():
                     obj.entry = translation['source']
                     obj.translations[target_language] = translation['target']
+
                 if obj.entry!='':
                     elem_ob = folder._getOb(obj.entry.encode('utf-8'), None)
                     if elem_ob is not None:
@@ -892,7 +907,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                             if add_themes_from_folders:
                                 elem_subjects = [l_context_name]
                             folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
-                        except Exception, error:
+                        except Exception:   #, error:
                             #print error
                             pass
                         elem_ob = folder._getOb(elem_id, None)
@@ -905,6 +920,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                             #definition translation
                             elem_ob.set_def_trans_list(target_language, translation['note'])
             obj.emptyObject()
+
         if REQUEST: return REQUEST.RESPONSE.redirect('import_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_import')
