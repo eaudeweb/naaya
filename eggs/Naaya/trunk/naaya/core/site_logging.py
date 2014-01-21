@@ -12,20 +12,22 @@ import time
 
 log = logging.getLogger(__name__)
 
-SITES_LOG_PATH_VAR = 'SITES_LOG_PATH' # name of config env. var
-SUFFIX = '-site-logger' # for naming loggers
+SITES_LOG_PATH_VAR = 'SITES_LOG_PATH'  # name of config env. var
+SUFFIX = '-site-logger'  # for naming loggers
 
 ACCESS = 'ACCESS'
 USER_MAN = 'USER_MANAGEMENT'
 ALLOWED_SLUGS = {ACCESS: ("VIEW", "DOWNLOAD", ),
                  USER_MAN: ("ASSIGNED", "UNASSIGNED", ),
-                }
+                 }
 #LOG_FILENAME = 'site.log'
 LOG_PREFIX = 'splitlog'
+
 
 def get_site_slug(site):
     """ An identifier valid on filesystem """
     return ofs_path(site).strip('/').replace('/', ',')
+
 
 def get_log_dir(site):
     """
@@ -47,6 +49,7 @@ def get_log_dir(site):
 
     return abs_path
 
+
 def get_site_logger(site):
     """
     Returns a logger based on site ID which will save actions on content types
@@ -58,6 +61,7 @@ def get_site_logger(site):
 
 
 class MonthBasedFileHandler(logging.StreamHandler):
+
     """
     A handler class which writes formatted logging records to monthly-separated files.
 
@@ -71,8 +75,8 @@ class MonthBasedFileHandler(logging.StreamHandler):
         Open the specified file and use it as the stream for logging.
         """
 
-        #keep the absolute path, otherwise derived classes which use this
-        #may come a cropper when the current directory changes
+        # keep the absolute path, otherwise derived classes which use this
+        # may come a cropper when the current directory changes
         if codecs is None:
             encoding = None
 
@@ -80,8 +84,8 @@ class MonthBasedFileHandler(logging.StreamHandler):
         self.mode = mode
         self.encoding = encoding
         if delay:
-            #We don't open the stream, but we still need to call the
-            #Handler constructor to set level, formatter, lock etc.
+            # We don't open the stream, but we still need to call the
+            # Handler constructor to set level, formatter, lock etc.
             logging.Handler.__init__(self)
             self.stream = None
         else:
@@ -142,7 +146,8 @@ def create_site_logger(site):
     logger = get_site_logger(site)
     logger.propagate = 0
     logger.setLevel(logging.INFO)
-    if hasattr(logger.handlers, '__iter__'): # for testing - i really give up!!
+    # for testing - i really give up!!
+    if hasattr(logger.handlers, '__iter__'):
         existing = list(logger.handlers)
         for handler in existing:
             try:
@@ -152,6 +157,12 @@ def create_site_logger(site):
     custom_format = '%(asctime) %(message)'
     abs_path = get_log_dir(site)
     if abs_path:
+
+        # First, we look to see if the site logs have been migrated
+        is_migrated = bool([n for n in os.listdir(abs_path) if 'splitlog' in n])
+        if not is_migrated:
+            rewrite_logs(abs_path)
+
         try:
             # log_filename = os.path.join(abs_path, LOG_FILENAME)
             # if not os.access(log_filename, os.F_OK):
@@ -172,6 +183,7 @@ def create_site_logger(site):
 
     return logger
 
+
 def init_site_loggers():
     """ Called once on App startup """
     import Zope2
@@ -182,7 +194,9 @@ def init_site_loggers():
             except Exception:
                 log.exception("Exception creating site logger for %r", ob)
 
-## Views ##
+# Views ##
+
+
 def readable_action(line_data):
     """ Returns the human-readable message of the log line """
     if line_data['type'] not in ALLOWED_SLUGS:
@@ -197,6 +211,7 @@ def readable_action(line_data):
 
 LOGGED_MONTH_REGEXP = re.compile("^" + LOG_PREFIX + "-(.*).log$")
 
+
 def get_logged_months(site, REQUEST=None, RESPONSE=None):
     """ Returns a list of months that are in the site logged folder
     """
@@ -206,7 +221,8 @@ def get_logged_months(site, REQUEST=None, RESPONSE=None):
 
     matches = sorted((m.groups()[0] for m in
                       filter(None,
-                            [LOGGED_MONTH_REGEXP.match(n) for n in os.listdir(abs_path)])),
+                             [LOGGED_MONTH_REGEXP.match(
+                                 n) for n in os.listdir(abs_path)])),
                      reverse=True)
     today = date.today()
     this_month = today.strftime("%y-%m")
@@ -240,7 +256,8 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
             month = today.strftime("%y-%m")
         log_filenames = [LOG_PREFIX + "-%s.log" % month]
     else:
-        log_filenames = [n for n in os.listdir(abs_path) if n.startswith(LOG_PREFIX)]
+        log_filenames = [
+            n for n in os.listdir(abs_path) if n.startswith(LOG_PREFIX)]
 
     log_filenames.sort()
 
@@ -282,14 +299,18 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
         'plain_text_lines': plain_text_lines,
     }
 
+
 def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
     """
     Download logging files for actions made on content types
 
     """
+    raise NotImplementedError
+
     from Products.NaayaCore.managers.import_export import set_response_attachment
     from StringIO import StringIO
     abs_path = get_log_dir(site)
+    # TODO: redo this
     log_filepath = os.path.join(abs_path, LOG_FILENAME)
     log_file = open(log_filepath, 'r+')
     data = log_file.read()
@@ -300,21 +321,26 @@ def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
                             'text/html; charset=utf-8', output.len)
     return output.getvalue()
 
+
 def clear_log_file(site, REQUEST=None, RESPONSE=None):
     """
     Truncate log file
     OBS: Not used
 
     """
+    raise NotImplementedError
+
     from naaya.core.utils import is_ajax
     if is_ajax(REQUEST):
         get_log_dir(site)   # TODO: is this needed?
+        # TODO: redo this
         log_file = open(LOG_FILENAME, 'r+')
         log_file.truncate()
         log_file.close()
         return "SUCCESS"
     else:
         REQUEST.RESPONSE.redirect(site.absolute_url())
+
 
 def admin_toggle_logger(site, enabled=False, REQUEST=None, RESPONSE=None):
     """
@@ -327,12 +353,13 @@ def admin_toggle_logger(site, enabled=False, REQUEST=None, RESPONSE=None):
     enabled = str2bool(REQUEST.form.get('enabled', False))
     if enabled in [True, False]:
         site.content_action_logging = enabled
-    #site.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+    # site.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
     #                         date=site.utGetTodayDate())
     REQUEST.RESPONSE.redirect('%s/admin_site_logging_html'
                               % (site.absolute_url()))
 
-## Common Site Logging Api ##
+# Common Site Logging Api ##
+
 
 def log_user_access(context, who, how):
     """ On open/download of a content type """
@@ -347,6 +374,7 @@ def log_user_access(context, who, how):
     }
     site_logger = get_site_logger(context.getSite())
     site_logger.info(data)
+
 
 def log_user_management_action(context, who, whom, assigned, unassigned):
     """
@@ -369,3 +397,40 @@ def log_user_management_action(context, who, whom, assigned, unassigned):
         site_logger.info(dict(data, action='UNASSIGNED', roles=unassigned))
     if assigned:
         site_logger.info(dict(data, action='ASSIGNED', roles=assigned))
+
+
+def rewrite_logs(path):
+    """ This is called by the site logger initialization code to migrate
+    the logs from being written in site.log to being written in separate files
+    """
+    log.info("Migrating logs old storage to new storage for %s", path)
+    to_process = []
+    for name in os.listdir(path):
+        if name.startswith('site.log'):
+            to_process.append(name)
+
+    entries = {}
+
+    for name in to_process:
+        fname = os.path.join(path, name)
+        with open(fname) as f:
+            counter = 0
+            for line in f:
+                counter += 1
+                try:
+                    data = json.loads(line)
+                except:
+                    print "Line %s could not be parsed in file %s" % (
+                        counter, fname)
+                    continue
+                date = data['asctime']
+                ident = date[:5]  # date looks like: "12-09-17 17:02:49,451019"
+                if not ident in entries:
+                    entries[ident] = []
+
+                entries[ident].append(line)
+
+    for ident in entries.keys():
+        flog = os.path.join(path, "splitlog-" + ident + '.log')
+        with open(flog, 'w') as _log:
+            _log.writelines(entries[ident])
