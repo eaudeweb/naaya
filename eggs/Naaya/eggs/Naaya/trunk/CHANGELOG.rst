@@ -1,3 +1,8 @@
+3.3.34 (2014-01-20)
+-------------------
+* Bug fix: improve performance of security inspector
+  [tiberich #18127]
+
 3.3.33 (2014-01-21)
 -------------------
 * Use a monthly based file handler for logging the site logging activity

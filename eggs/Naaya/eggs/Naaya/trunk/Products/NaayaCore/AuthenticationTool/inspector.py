@@ -3,7 +3,7 @@
 from copy import deepcopy
 
 from AccessControl.Permission import Permission
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+#from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from naaya.core.zope2util import ofs_path
 
@@ -32,8 +32,8 @@ def allowed(context, permission=None):
             maps[role] = ('assigned', None)
 
         if isinstance(roles, list):
+            from_parent = allowed(context.aq_parent, name)
             for role in set(all_roles) - set(roles):
-                from_parent = allowed(context.aq_parent, name)
                 parent_permission = from_parent[name].get(role)
                 if parent_permission:
                     reason, meta = parent_permission
