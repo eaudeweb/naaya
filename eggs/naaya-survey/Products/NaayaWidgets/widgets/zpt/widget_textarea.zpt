@@ -5,11 +5,16 @@
 <tal:block define="
 	mode options/mode|string:view;
 	datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;">
+	widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode textareaWidget">
-	<strong tal:content="here/title" class="widget-title" />
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<br />
 	<p tal:condition="datamodel" class="textareaWidgetAnswer">
 		<tal:block repeat="line datamodel/splitlines">
@@ -27,10 +32,10 @@
 	 tal:define="datamodel python:here.getSession(widget_id, datamodel);
 				 datamodel python:datamodel or '';">
 	<label tal:attributes="for widget_id" class="widget-title">
-		<span tal:content="here/title" />
+		<span tal:content="nonEmptyTitle" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="structure here/tooltips" />
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
 	<textarea tal:attributes="
 		rows here/rows;
 		cols here/columns;

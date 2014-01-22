@@ -19,3 +19,10 @@ class MatrixWidget(Widget):
         Widget.__init__(self, id, lang, **kwargs)
         self.set_localproperty('choices', 'lines', lang, [])
         self.set_localproperty('rows', 'lines', lang, [])
+
+    def getChoices(self, anyLangNonEmpty=False):
+        """ """
+        if anyLangNonEmpty and not self.choices:
+            return self.getLocalAttribute('choices', langFallback=True)
+        else:
+            return self.choices

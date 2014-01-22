@@ -47,6 +47,9 @@ class CheckboxMatrixWidget(MatrixWidget):
     _constructors = (addCheckboxMatrixWidget,)
     render_meth = PageTemplateFile('zpt/widget_checkboxmatrix.zpt', globals())
 
+    def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
+        return super(CheckboxMatrixWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
+
     def getDatamodel(self, form):
         """Get datamodel from form"""
         widget_id = self.getWidgetId()

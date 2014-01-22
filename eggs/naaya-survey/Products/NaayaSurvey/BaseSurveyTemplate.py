@@ -195,6 +195,11 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         """ Return sorted widget"""
         return sort(self.getWidgets(), ( (sort_by, 'cmp', 'asc'), ))
 
+    security.declareProtected(view, 'getNonEmptyAttribute')
+    def getNonEmptyAttribute(self, attr):
+        """ Return the value of the first non empty <attr> local atribute."""
+        return self.getLocalAttribute(attr, langFallback=True)
+
     #
     # Widget edit methods
     #

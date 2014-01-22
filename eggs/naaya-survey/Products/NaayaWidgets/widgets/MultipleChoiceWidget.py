@@ -23,8 +23,11 @@ class MultipleChoiceWidget(Widget):
         self.set_localproperty('choices', 'lines', lang, [])
         Widget.__init__(self, id, lang, **kwargs)
 
-    def getChoices(self):
+    def getChoices(self, anyLangNonEmpty=False):
         """ """
-        return self.choices
+        if anyLangNonEmpty and not self.choices:
+            return self.getLocalAttribute('choices', langFallback=True)
+        else:
+            return self.choices
 
 InitializeClass(MultipleChoiceWidget)

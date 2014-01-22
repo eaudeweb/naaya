@@ -1,6 +1,6 @@
 # Pythons imports
 import unittest
-from mock import Mock
+from mock import Mock, MagicMock
 
 # Zope imports
 from Testing import ZopeTestCase
@@ -68,6 +68,24 @@ class MegaSurveyTestCase(NaayaTestCase):
         self.assertTrue(SurveyQuestionnaire.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
         self.assertTrue(SurveyQuestionnaire.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
 
+    def test_missingLanguageFallback(self):
+        self.portal.gl_add_site_language('de', 'Deutsch')
+        self.portal.gl_add_site_language('fr', 'French')
+        title = 'question'
+        req = MagicMock()
+        req.form = {'lang': 'fr'}
+        for widget_class in AVAILABLE_WIDGETS:
+            wId = self.survey.addWidget(REQUEST=req, title=title, meta_type=widget_class.meta_type)
+            w = self.survey._getOb(wId, None)
+            self.assertNotEqual(w, None)
+            self.assert_(isinstance(w, widget_class))
+            self.assertEqual(self.portal.gl_get_selected_language(), 'en')
+            self.assertEqual(w.getLocalAttribute('title'), '')
+            self.assertEqual(w.getLocalAttribute('title', 'en'), '')
+            self.assertEqual(w.getLocalAttribute('title', 'de'), '')
+            self.assertEqual(w.getLocalAttribute('title', 'fr'), title)
+            self.assertEqual(w.getNonEmptyAttribute('title'), title)
+
 class MegaSurveyTestCaseNoLogin(NaayaTestCase):
     """Mega Survey test cases"""
 
@@ -86,7 +104,6 @@ class MegaSurveyTestCaseNoLogin(NaayaTestCase):
 
         self.survey.expirationdate = DateTime() - 5
         self.assertRaises(SurveyQuestionnaireException, self.survey.addSurveyAnswer, notify_respondent=False)
-
 
 class SavePropertiesTestCase(unittest.TestCase):
     def setUp(self):

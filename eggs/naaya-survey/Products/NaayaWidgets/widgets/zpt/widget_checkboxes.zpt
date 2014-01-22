@@ -5,11 +5,16 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-    widget_id here/getWidgetId;">
+    widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget">
-	<strong tal:content="here/title" class="widget-title" />
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<br />
 	<ul tal:attributes="id widget_id" tal:condition="datamodel">
 		<li tal:repeat="answer python:[here.getChoices()[i] for i in datamodel]">
@@ -26,11 +31,11 @@
      tal:define="datamodel python:here.getSession(widget_id, datamodel);
 	             datamodel python:test(datamodel is None, [], datamodel)">
 	<label tal:attributes="for widget_id" class="widget-title">
-		<span tal:content="here/title" />
+		<span tal:content="nonEmptyTitle" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="structure here/tooltips" />
-	<tal:block repeat="choice here/getChoices">
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
+	<tal:block repeat="choice python: here.getChoices(anyLangNonEmpty=True)">
 		<tal:block define="choice_idx repeat/choice/index;
 		                   input_id python:'%s_%d' % (widget_id, choice_idx);">
 			<input type="checkbox" tal:attributes="

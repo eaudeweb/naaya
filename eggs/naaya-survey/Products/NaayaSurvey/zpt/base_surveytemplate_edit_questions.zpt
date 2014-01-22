@@ -81,11 +81,12 @@ function toggleSelect(caller){
 				<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
 				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 			</td>
-			<td class="title-column">
+			<td class="title-column"
+                tal:define="nonEmptyTitle python:test(object.title, object.title, object.getNonEmptyAttribute('title'))">
 			<a tal:attributes="
 				href string:${object/absolute_url}/preview_html;
-				title object/title"
-				tal:content="object/title" />
+				title nonEmptyTitle"
+				tal:content="nonEmptyTitle" />
 			</td>
 			<td class="edit">
 				<input type="text" size="3" tal:attributes="

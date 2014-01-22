@@ -59,30 +59,32 @@ class RadioWidget(MultipleChoiceWidget):
         """ """
         return ['vertical', 'horizontal']
 
-    def getChoices(self, REQUEST=None):
+    def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
         """ """
+        choices = super(RadioWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
         if self.add_extra_choice:
-            L = list(self.choices)
+            L = list(choices)
             catalog = self.getPortalTranslations()
             L.append(catalog('Other', lang=self.gl_get_selected_language(), add=True))
             return L
         else:
-            return self.choices
+            return choices
 
     def getExtraChoiceInputId(self):
         """ -> the id of the INPUT element used for the extra choice"""
         return "extra_choice_" + self.id
 
 
-    def getDatamodel(self, form):
+    def getDatamodel(self, form, anyLangNonEmpty=False):
         """Get datamodel from form"""
+        choices = super(RadioWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
         value = form.get(self.getWidgetId(), None)
         if value is None:
             return None
         value = int(value)
         if not self.add_extra_choice:
             return value
-        if value != len(self.choices):
+        if value != len(choices):
             return (value, None)
         return (value, form.get(self.getExtraChoiceInputId(), None))
 
@@ -94,13 +96,14 @@ class RadioWidget(MultipleChoiceWidget):
             return datamodel
         return datamodel[0]
 
-    def getChoice(self, datamodel, REQUEST=None):
+    def getChoice(self, datamodel, REQUEST=None, anyLangNonEmpty=False):
         """ -> the exact choice made by the respondent; might be the text of the extra choice"""
         choiceIdx = self.getChoiceIdx(datamodel)
         if choiceIdx is None:
             return None
-        if choiceIdx < len(self.choices):
-            return self.choices[choiceIdx]
+        choices = super(RadioWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
+        if choiceIdx < len(choices):
+            return choices[choiceIdx]
         return datamodel[1]
 
     def get_value(self, datamodel=None, **kwargs):
