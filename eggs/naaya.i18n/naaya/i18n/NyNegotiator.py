@@ -122,7 +122,7 @@ class NyNegotiator(object):
                     # if xx-yy not found, but xx-zz is available, return xx-zz
                     elif first_code in secondary.keys():
                         return secondary[first_code]
-        if fallback:
+        if fallback and available:
             return available[0]
         else:
             return None
