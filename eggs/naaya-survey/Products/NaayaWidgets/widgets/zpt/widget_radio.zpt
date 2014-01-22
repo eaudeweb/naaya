@@ -5,13 +5,18 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;">
+	widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python: test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode">
-	<strong tal:content="here/title" class="widget-title" />
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<br />
-	<tal:block define="choice python:here.getChoice(datamodel)">
+	<tal:block define="choice python:here.getChoice(datamodel, anyLangNonEmpty=True)">
 		<tal:block condition="python: choice is not None">
 			<span tal:condition="choice" tal:content="choice"></span>
 			<span tal:condition="not: choice" i18n:translate="">Other</span>
@@ -24,13 +29,15 @@
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-	 tal:define="datamodel python:here.getSession(widget_id, datamodel)">
+	 tal:define="datamodel python:here.getSession(widget_id, datamodel);">
+
 	<label tal:attributes="for widget_id" class="widget-title">
-		<span tal:content="here/title" />
+		<span tal:content="nonEmptyTitle" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="structure here/tooltips" />
-	<tal:block repeat="choice here/getChoices" define="datamodel python:here.getChoiceIdx(datamodel)">
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
+	<tal:block repeat="choice python: here.getChoices(anyLangNonEmpty=True)"
+               define="datamodel python:here.getChoiceIdx(datamodel)">
 		<tal:block define="choice_idx repeat/choice/index;
 		                   input_id python:'%s_%d' % (widget_id, choice_idx);">
 			<input type="radio" tal:attributes="
@@ -45,7 +52,7 @@
 	<tal:block tal:condition="here/add_extra_choice" tal:define="input_id here/getExtraChoiceInputId">
 		<div> 
 			<label tal:attributes="for input_id" i18n:translate="">Your choice</label>
-			<input tal:attributes="id input_id; name string:${input_id}:ustring:utf8; value python:datamodel is not None and datamodel[1] or ''" type="text" />
+			<input tal:attributes="id input_id; name string:${input_id}:ustring:utf8; value python:datamodel and datamodel[1] or ''" type="text" />
 		</div>
 	</tal:block>
 </div>

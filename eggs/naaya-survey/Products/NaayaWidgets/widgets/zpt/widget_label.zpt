@@ -4,18 +4,22 @@
 
 <tal:block define="
     mode options/mode|string:view;
-	widget_id here/getWidgetId;">
+	widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyText python:test(here.text, here.text,
+        here.getNonEmptyAttribute('text'));">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode labelWidget">
-	<strong tal:content="here/title" class="widget-title" />
-	<span tal:replace="structure here/text">text of the label</span>
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
+	<span tal:replace="structure nonEmptyText">text of the label</span>
 </div>
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode">
-	<strong tal:content="here/title" class="widget-title" />
-	<span tal:replace="structure here/text">text of the label</span>
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
+	<span tal:replace="structure nonEmptyText">text of the label</span>
 </div>
 
 <!-- Edit widget properties -->

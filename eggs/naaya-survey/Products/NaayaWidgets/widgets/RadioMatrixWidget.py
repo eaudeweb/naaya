@@ -47,6 +47,9 @@ class RadioMatrixWidget(MatrixWidget):
     _constructors = (addRadioMatrixWidget,)
     render_meth = PageTemplateFile('zpt/widget_radiomatrix.zpt', globals())
 
+    def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
+        return super(RadioMatrixWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
+
     def getDatamodel(self, form):
         """Get datamodel from form"""
         widget_id = self.getWidgetId()

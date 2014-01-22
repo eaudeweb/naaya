@@ -142,9 +142,19 @@ class LocalPropertyManager(object):
         """Returns a copy of the properties metadata."""
         return tuple([ x.copy() for x in self._local_properties_metadata ])
 
+    def _getValue(self, idName, lang):
+        value = self._local_properties[idName][lang]
+        if isinstance(value, tuple): # (value, timestamp)
+            return value[0]
+        else:
+            return value
+
     security.declarePublic('getLocalAttribute')
-    def getLocalAttribute(self, id, lang=None):
-        """Returns a local property"""
+    def getLocalAttribute(self, id, lang=None, langFallback=False):
+        """Returns a local property
+        Note that langFallback is fallback to the bitter end - it will both try
+        to find a non default language present and yet other languages
+        if the one it found had empty values."""
         if id not in self._local_properties:
             return ''
         # No language, look for the first non-empty available version or def.
@@ -157,7 +167,7 @@ class LocalPropertyManager(object):
                 neg = NyNegotiator()
                 # need to negotiate lang based on available langs for this prop.
                 lang = neg.getLanguage(self._local_properties[id].keys(),
-                                       request, fallback=False)
+                                       request, fallback=langFallback)
             if lang is None:
                 # eg: we ask default (en), id has only 'de', lang is then None
                 # because fallback=False (or else it would have been `de`)
@@ -167,12 +177,19 @@ class LocalPropertyManager(object):
                     lang = 'en'
 
         if lang not in self._local_properties[id]:
-                return ''
-        value = self._local_properties[id][lang]
-        if isinstance(value, tuple): # (value, timestamp)
-            return value[0]
-        else:
-            return value
+            return ''
+
+        value = self._getValue(id, lang)
+        # perhaps we found a non default language but the values there are empty
+        # TODO: do we really want such aggressive behaviour?
+        # what if the client wants empty value for some languages?
+        if langFallback and not value:
+            for ln in self._local_properties[id]:
+                value = self._getValue(id, ln)
+                if value:
+                    break
+        return value
+
 
     # XXX For backwards compatibility (<= 0.8.0)
     getLocalProperty = getLocalAttribute

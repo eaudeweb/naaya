@@ -5,14 +5,19 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;">
+	widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode comboboxWidget">
-	<strong tal:content="here/title" class="widget-title" />
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<br />
 	<span tal:condition="python: datamodel is not None"
-		  tal:content="python: here.getChoices()[datamodel]" />
+		  tal:content="python: here.getChoices(anyLangNonEmpty=True)[datamodel]" />
 	<span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
 		-
 	</span>
@@ -22,12 +27,12 @@
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
 	 tal:define="datamodel python:here.getSession(widget_id, datamodel)">
 	<label tal:attributes="for widget_id" class="widget-title">
-		<span tal:content="here/title" />
+		<span tal:content="nonEmptyTitle" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="structure here/tooltips" />
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
 	<select tal:attributes="name string:${widget_id}:int; id widget_id">
-		<tal:block repeat="choice here/getChoices">
+		<tal:block repeat="choice python: here.getChoices(anyLangNonEmpty=True)">
 			<tal:block define="choice_id python:widget_id + choice.strip().replace(' ', '_');">
 				<option tal:attributes="value repeat/choice/index; selected python:repeat['choice'].index==datamodel"
 				        tal:content="choice">
