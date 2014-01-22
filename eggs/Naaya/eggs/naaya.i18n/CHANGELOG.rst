@@ -1,6 +1,9 @@
-1.1.8 (unreleased)
+1.1.9 (unreleased)
 -------------------
-* 17695 Add survey content from other language when the current one has none
+
+1.1.8 (2013-01-22)
+-------------------
+* 17695 Add survey content from other languages when the current one has none
 
 1.1.7 (2013-08-01)
 -------------------
