@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='naaya-survey',
-    version="1.2.44",
+    version="1.2.45",
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro/',
@@ -10,5 +10,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=['Naaya', 'xlwt'],
+    install_requires=['Naaya',
+                      'xlwt',
+                      'naaya.i18n >= 1.1.8'],
 )
