@@ -208,4 +208,8 @@ class Widget(Folder, LocalPropertyManager):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
     index_html = preview_html
 
+    def getNonEmptyAttribute(self, attrName):
+        """ Return the value of the first non empty <attrName> local atribute."""
+        return self.getLocalAttribute(attrName, langFallback=True)
+
 InitializeClass(Widget)

@@ -33,18 +33,27 @@
 		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>
 			<span tal:repeat="lang here/gl_get_languages_map">
-				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])"></a>
+				<a tal:content="python:' %s' % lang['title']"
+                    tal:condition="python:not lang['selected']
+                        and here.getLocalProperty('title', lang['id'])"
+                    tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])">
+                </a>
 			</span>
 		</span>
 </h1>
 
 <tal:block condition="here/checkPermissionEditObjects">
 	<div class="buttons">
-		<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit</a>
-		<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html" i18n:translate="">Edit Attachments</a>
-		<a tal:attributes="href string:${here/absolute_url}/edit_questions_html" i18n:translate="">Edit Questions</a>
-		<a tal:attributes="href string:${here/absolute_url}/edit_reports_html" i18n:translate="">Edit Reports</a>
-		<a tal:attributes="href string:${here/absolute_url}/edit_access" i18n:translate="">Edit Permissions</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"
+            i18n:translate="">Edit</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html"
+            i18n:translate="">Edit Attachments</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_questions_html"
+            i18n:translate="">Edit Questions</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_reports_html"
+            i18n:translate="">Edit Reports</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_access"
+            i18n:translate="">Edit Permissions</a>
 	</div>
 </tal:block>
 <tal:block condition="here/display_admin_warning">
@@ -201,7 +210,11 @@
 	</div>
 </div>
 
-<div class="survey-content" tal:condition="here/description" tal:content="structure here/description" />
+
+<div class="survey-content"
+    tal:define="nonEmptyDescription python: test(here.description, here.description,
+                        here.getNonEmptyAttribute('description'));"
+    tal:condition="nonEmptyDescription" tal:content="structure nonEmptyDescription" />
 
 <tal:block define="meeting_eionet_survey here/meeting_eionet_survey|nothing"
 		condition="python: not here.expired() or here.checkPermissionPublishObjects()">

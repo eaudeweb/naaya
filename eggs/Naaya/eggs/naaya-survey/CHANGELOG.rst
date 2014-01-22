@@ -1,5 +1,6 @@
 1.2.44 (unreleased)
 ===================
+* 17695 Add survey content from other language when the current one has none
 
 1.2.43 (2014-01-16)
 ===================

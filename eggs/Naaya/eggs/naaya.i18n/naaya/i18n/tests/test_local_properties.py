@@ -14,10 +14,16 @@ from naaya.i18n.LocalPropertyManager import LocalAttribute, LocalPropertyManager
 
 class LocalPropertyManagerTestSuite(NaayaFunctionalTestCase):
 
-    def assertAttrValue(self, name, localized_value, effective_value):
-        self.assertEqual(self.ob.getLocalProperty(name), localized_value)
-        atr = getattr(self.ob, name)
-        self.assertEqual(getattr(self.ob, name), effective_value)
+    def assertAttrValue(self, name, expected_localized_value,
+                        expected_effective_value, **kwargs):
+        if 'fallback' in kwargs:
+            localized_value = self.ob.getLocalProperty(name,
+                                langFallback=kwargs['fallback'])
+        else:
+            localized_value = self.ob.getLocalProperty(name)
+        self.assertEqual(localized_value, expected_localized_value)
+        effective_value = getattr(self.ob, name)
+        self.assertEqual(effective_value, expected_effective_value)
 
 
     def setUp(self):
@@ -45,6 +51,13 @@ class LocalPropertyManagerTestSuite(NaayaFunctionalTestCase):
         self.ob._setLocalPropValue('unspecific', 'en', 'English')
         setattr(self.ob, 'unspecific', 'unlocalized_value')
         self.assertAttrValue('unspecific', 'English', 'unlocalized_value')
+
+    def test_fallback(self):
+        self.ob._setLocalPropValue('noDefaultLangValue', 'fr', 'fr text')
+        # no fallback (default should be false)
+        self.assertAttrValue('noDefaultLangValue', '', '')
+        # fallback to another language if the default one has no value
+        self.assertAttrValue('noDefaultLangValue', 'fr text', '', fallback=True)
 
     def test_override_class_variables(self):
         class SuperClass(object):

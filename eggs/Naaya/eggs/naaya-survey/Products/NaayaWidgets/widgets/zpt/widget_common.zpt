@@ -3,23 +3,48 @@
                          title python:here.getSession('title', here.getLocalProperty('title', lang));
                          required python:here.getSession('required', here.getProperty('required', False));
                          tooltips python:here.getSession('tooltips', here.getLocalProperty('tooltips', lang));
-                         sortorder python:here.getSession('sortorder', here.getProperty('sortorder', 100));">
+                         sortorder python:here.getSession('sortorder', here.getProperty('sortorder', 100));
+                         nonEmptyTitle python: here.getNonEmptyAttribute('title');
+                         nonEmptyTooltips python: here.getNonEmptyAttribute('tooltips');
+                         ">
 	<metal:block define-slot="common_fields">
 		<!-- Language -->
 		<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />
-		<!-- Title -->
-		<div class="field">
-			<label for="title" i18n:translate="">Title</label>
-			<input type="text" size="50" name="title" id="title" tal:attributes="value title"/>
-		</div>
-		<!-- Tooltips -->
-		<div class="field" tal:define="editor here/getEditorTool">
-			<tal:block replace="structure editor/includeLibs" />
-			<tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
-					   replace="structure python:editor.render('tooltips', curr_lang, image_support=False)" />
-			<label for="tooltips" i18n:translate="">Tooltips</label>
-			<textarea name="tooltips" cols="50" rows="7" id="tooltips" tal:content="tooltips" />
-		</div>
+        <div class="horizontal-pairs" style="overflow:hidden">
+            <!-- Title -->
+            <div class="field" style="float: left; width: 45%;">
+                <label for="title" i18n:translate="">Title</label>
+                <input type="text" size="50" name="title" id="title" tal:attributes="value title"/>
+            </div>
+            <!-- Title (translation tip) -->
+            <tal:block tal:condition="python: not title and nonEmptyTitle">
+            <br/>
+            <div class="tip" style="float: right; width: 45%; ">
+                <em i18n:translate="">Title (as found in other language)</em>
+                <p tal:content="nonEmptyTitle"/>
+            </div>
+            </tal:block>
+        </div>
+
+        <div class="horizontal-pairs" style="overflow:hidden">
+            <!-- Tooltips -->
+            <div class="field" style="float: left; width: 45%;"
+                tal:define="editor here/getEditorTool">
+                <tal:block replace="structure editor/includeLibs" />
+                <tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
+                        replace="structure python:editor.render('tooltips', curr_lang, image_support=False)" />
+                <label for="tooltips" i18n:translate="">Tooltips</label>
+                <textarea name="tooltips" cols="50" rows="7" id="tooltips" tal:content="tooltips" />
+            </div>
+            <!-- Tooltips (traslation tip) -->
+            <tal:block tal:condition="python: not tooltips and nonEmptyTooltips">
+            <br/>
+            <div class="tip" style="float: right; width: 45%;">
+                <em i18n:translate="">Tooltips (as found in other language)<br/><br/><br/><br/></em>
+                <p tal:content="structure nonEmptyTooltips" />
+            </div>
+            </tal:block>
+        </div>
 		<!-- Sort order -->
 		<div class="field">
 			<label for="sortorder" i18n:translate="">Sort Order</label>

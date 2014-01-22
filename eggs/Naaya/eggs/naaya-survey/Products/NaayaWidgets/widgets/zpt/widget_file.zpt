@@ -9,11 +9,16 @@
     required python:here.getSession('required', here.getProperty('required', None));
     size_max python:here.getSession('size_max', here.getProperty('size_max', 0));
     width python:here.getSession('width', here.getProperty('width', 50));
-	parent options/parent|nothing">
+	parent options/parent|nothing;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode fileWidget">
-	<strong tal:content="here/title" class="widget-title" />
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<br />
 	<tal:block condition="datamodel">
 		<a tal:condition="not:parent" tal:attributes="href string:${datamodel/absolute_url}/index_html?as_attachment:int=1"
@@ -34,10 +39,10 @@
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode">
 	<label tal:attributes="for widget_id" class="widget-title">
-		<span tal:content="here/title" />
+		<span tal:content="nonEmptyTitle" />
 		<span tal:condition="required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="structure here/tooltips" />
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
 	<input type="file" tal:attributes="
 		size width;
 		name widget_id;
