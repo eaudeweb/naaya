@@ -3,7 +3,7 @@
 
 1.1.8 (2013-01-22)
 -------------------
-* 17695 Add survey content from other languages when the current one has none
+* 17695 getLocalAttribute() may fallback to a language with non-empty content
 
 1.1.7 (2013-08-01)
 -------------------
