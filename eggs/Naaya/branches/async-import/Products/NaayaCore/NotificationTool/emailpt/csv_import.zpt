@@ -1,0 +1,16 @@
+<subject i18n:translate="">CSV Import -
+    <tal:block content="options/ob/title_or_id" i18n:name="title" /></subject>
+
+<body_text>
+<tal:block i18n:translate="">
+    This is automatically generated message to inform you that
+    the following <tal:block content="options/item_count" i18n:name="count" />
+    items have been uploaded in <tal:block content="string:${options/ob/title_or_id} (${options/ob/absolute_url}):" i18n:name="title" />
+</tal:block>
+<tal:block repeat="title options/obj_titles" content="string: - ${title}" />
+
+<tal:block i18n:translate="">
+    Uploaded by <tal:block content="options/username" i18n:name="username" />
+    on <tal:block content="options/datetime" i18n:name="datetime" />
+</tal:block>
+</body_text>

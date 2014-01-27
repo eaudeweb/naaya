@@ -1,0 +1,13 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:naaya="http://namespaces.zope.org/naaya">
+
+  <include package=".updates" />
+
+  <naaya:simpleView
+    for="naaya.content.base.interfaces.INyContentObject"
+    name="download_file"
+    handler=".widgets.FileWidget.download_file"
+    permission="zope2.View"
+    />
+
+</configure>

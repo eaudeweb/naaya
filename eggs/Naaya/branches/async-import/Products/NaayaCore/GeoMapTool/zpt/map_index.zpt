@@ -1,0 +1,151 @@
+<metal:block use-macro="python:here.standard_template_macro('light')">
+
+<metal:block metal:fill-slot="header-title">
+	<title><tal:block i18n:translate="">Portal Geo Map</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+	<meta i18n:attributes="content" content="Interactive map for the Geo-tagged information" name="description" />
+</metal:block>
+
+<metal:block fill-slot="breadcrumb"></metal:block>
+
+<metal:block metal:fill-slot="body">
+<tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds());
+                       geo_query python:request.get('geo_query', '');
+                       path python:request.get('path', '');
+                       height python:request.get('height', here.map_height_px)">
+<tal:block content="structure python:here.setup_map_engine_html(request)" />
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
+<script tal:content="structure python:'var portal_map_url=%s;' % here.rstk['json_dumps'](here.absolute_url())"></script>
+
+<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
+	<div id="center_content" class="portalmap-map-box">
+		<h1 i18n:translate="" tal:content="here/title_or_id" />
+		<noscript>
+			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
+			<p i18n:translate="">
+			You can <span i18n:name="view-link"><a tal:attributes="href python: 'list_locations?geo_types='+','.join(geo_types)"
+							       i18n:translate="">view locations as a list</a></span>
+			or <span i18n:name="geo-rss-link"><a tal:attributes="href python: 'export_geo_rss?geo_types='+','.join(geo_types)"
+							     i18n:translate="">download them in GeoRSS format</a></span>.
+			</p>
+		</noscript>
+
+		<div id="portalmap_center">
+			<div id="portalmap_top">
+				<div class="portalmap_portlet">
+					<div class="portalmap_location_filters">
+						<input type="text" class="text_input" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" />
+						<input type="button" name="address_button" id="address_button" value="Zoom in" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
+					</div>
+					<div class="portalmap_location_filters">
+						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" />
+						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
+						<noscript>
+							<p><small i18n:translate="">eg: "water supply"</small></p>
+						</noscript>
+					</div>
+
+				</div>
+			</div>
+			<br clear="all" style="clear:both"/>
+			<div id="map" tal:attributes="style string:height: ${height}px;;"></div>
+		</div>
+		<br clear="all" style="clear:both"/>
+		<div style="display:none" id="map_markers"></div>
+		<p i18n:translate="" id="map_links_js" class="hidden">
+			You can also <span i18n:name="view-link"><a href="." id="view_as_list" i18n:translate="">view locations as a list</a></span>,
+			<span i18n:name="view-google-earth-link"><a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a></span>
+			or <span i18n:name="geo-rss-link"><a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a></span>.
+		</p>
+	</div>
+	<div id="portalmap">
+		<div class="portalmap_portlet">
+
+			<div class="map_filters">
+						<p id="js_links" style="display: none;">
+							<strong id="record_counter"></strong>
+							 <span i18n:translate="">location(s)</span>
+						</p>
+
+					<ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsListOrdered" tal:condition="parentsList">
+						<tal:block repeat="item parentsList">
+							<tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
+							<li>
+								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox"
+									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types"
+									onclick="javascript:toggleChildren(this)" />
+								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title; class string:pin" />
+								<label tal:attributes="for item/id; class string:pin_text" i18n:translate="" tal:content="item/title" />
+								<ul tal:condition="children" class="category_child">
+									<li tal:repeat="child children">
+										<input type="checkbox" name="geo_types:list"
+											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types"
+											onclick="javascript: startMapRefresh()" />
+										<img tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
+										<label tal:attributes="for child/id; class string:pin_text" i18n:translate="" tal:content="child/title" />
+									</li>
+								</ul>
+							</li>
+							</tal:block>
+						</tal:block>
+					</ul>
+					<p class="map_right_control">
+						<img src="../++resource++geomaptool.icons/progress.gif" class="hidden" id="toggle-progress" />
+						<a href="javascript:toggleSelect();" style="display: none;" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall">Hide All</a></p>
+					<div>
+						<input type="hidden" id="path" name="path" tal:attributes="value path" />
+						<noscript>
+							<input type="submit" value="List locations" class="map-button" name="list_locations:method" i18n:attributes="value" />
+						</noscript>
+						<noscript>
+							<input type="submit" value="Download GeoRSS" class="map-button" name="export_geo_rss:method" i18n:attributes="value" />
+						</noscript>
+					</div>
+			</div>
+		</div>
+	</div>
+</form>
+<form id="list_locations_form" action="list_locations" method="get" style="display:none">
+	<input type="hidden" name="lat_min" />
+	<input type="hidden" name="lat_max" />
+	<input type="hidden" name="lon_min" />
+	<input type="hidden" name="lon_max" />
+	<input type="hidden" name="symbols" />
+	<input type="hidden" name="geo_query" />
+</form>
+
+<script type="text/javascript">
+// not using document.ready because then IE6 won't load yahoo maps :(
+showPageElements();
+if (naaya_map_engine.name == 'bing') {
+    // bing has problems sometimes on FF, need to wait to init
+    var interval = setInterval(function(){
+        if ((eval("typeof VEMap") != "undefined")
+        && (document.getElementById("map").attachEvent != undefined))
+        {
+            clearInterval(interval);
+            window.naaya_portal_map = naaya_map_engine.portal_map('map');
+            window.map_engine = naaya_portal_map;
+        }
+    }, 10);
+} else {
+    window.naaya_portal_map = naaya_map_engine.portal_map('map');
+    // TODO `map_engine` is for backwards compatibility because the name is
+    // wrong; we should remove it at some point.
+    window.map_engine = naaya_portal_map;
+
+    window.naaya_map_url_hash = map_url_hash();
+    naaya_map_url_hash.map(naaya_portal_map);
+    naaya_map_url_hash.on_change(update_map_filter_values);
+    naaya_map_url_hash.activate();
+}
+
+</script>
+</tal:block>
+
+</metal:block>
+</metal:block>

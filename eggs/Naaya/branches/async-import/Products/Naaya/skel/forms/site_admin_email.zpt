@@ -1,0 +1,56 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Email Settings</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<div class="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+    <li class="currenttab"><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+	Change the settings for the email services offered by this portal in the form below and click Save changes.
+</p>
+
+
+<form method="post" tal:attributes="action string:${site_url}/admin_email" enctype="multipart/form-data">
+  <tal:block condition="not:queue_enabled">
+    <div class="field">
+      <label for="mail_server_name" i18n:translate="">Mail server name</label>
+      <input type="text" name="mail_server_name" tal:attributes="value here/mail_server_name" />
+    </div>
+    <div class="field">
+      <label for="mail_server_port" i18n:translate="">Mail server port</label>
+      <input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" />
+    </div>
+  </tal:block>
+  <p class="tip" tal:condition="queue_enabled" i18n:translate="">
+    Outgoing messages are being sent to a queue on disk.
+  </p>
+
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Default from address</label>
+    <input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" />
+  </div>
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Administrators' emails</label>
+    <input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /><br />
+    <em i18n:translate="">comma separated</em>
+  </div>
+  <div class="field">
+    <label for="mail_address_from" i18n:translate="">Email address for notifications on errors</label>
+    <input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /><br />
+    <em i18n:translate="">comma separated, leave empty to prevent error notifications</em>
+  </div>
+  <p>
+    <input type="submit" value="Save changes" i18n:attributes="value" />
+  </p>
+</form>
+</tal:block>
+
+</tal:block>
