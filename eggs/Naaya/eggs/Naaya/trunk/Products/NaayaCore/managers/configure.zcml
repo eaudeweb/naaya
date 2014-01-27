@@ -1,5 +1,4 @@
-<configure xmlns='http://namespaces.zope.org/zope' 
-           xmlns:browser="http://namespaces.zope.org/browser">
+<configure xmlns='http://namespaces.zope.org/zope'>
 
   <adapter for="Products.Naaya.interfaces.INyFolder"
            factory=".zip_export_adapters.FolderZipAdapter" />
@@ -24,17 +23,5 @@
 
   <adapter for="naaya.content.url.interfaces.INyURL"
            factory=".zip_export_adapters.URLZipAdapter" />
-
-<browser:page 
-    name='queue_info' 
-    for="*" 
-    permission='zope.Public' 
-    class='.import_export.QueueInfo' />
-
-<browser:page 
-    name='clear_queues' 
-    for="*" 
-    permission='zope.Public' 
-    class='.import_export.RemoveAllActiveJobs' />
 
 </configure>
