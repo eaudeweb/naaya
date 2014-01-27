@@ -94,6 +94,8 @@ class ScriptChannel(PythonScript, utils):
         #return the objects to be syndicated
         #sorted by the attribute attr
         objects = self._exec({'context': self, 'container': self}, {}, {})
+        if not objects:
+            objects = []
         if attr is not None:
             return utils.utSortObjsListByAttr(self, objects, attr, reversed)
         return objects
