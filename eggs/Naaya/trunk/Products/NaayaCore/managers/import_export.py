@@ -1,14 +1,10 @@
 """ Bulk upload contacts, urls, experts """
 
-#from naaya.content.base.events import NyContentObjectEditEvent
-
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import Implicit
-from App.config import getConfiguration
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.SimpleItem import Item
-from Products.Five.browser import BrowserView
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
@@ -18,169 +14,18 @@ from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from StringIO import StringIO
-from ZODB.interfaces import IDatabase
-from itertools import tee
+from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.ggeocoding import GeocoderServiceError
-from persistent.list import PersistentList
-from random import randint
-from zc.async import dispatcher
-from zc.async.interfaces import KEY as ZCASYNC_KEY
-from zc.async.job import Job
-from zc.async.queue import Queue
-from zc.async.subscribers import QueueInstaller
-from zc.async.subscribers import threaded_dispatcher_installer
-from zope.app.appsetup.interfaces import DatabaseOpened
-from zope.component import provideUtility
 from zope.event import notify
 import csv, codecs
 import logging
 import simplejson as json
-import time
 import transaction
 import urllib
 import xlrd
 import xlwt
 
-
 logger = logging.getLogger(__name__)
-
-
-class BaseImportConverterTask(object):
-    """ Base class for converter tasks.
-
-    This is an object that is used to store info
-    about the import task and do the actual import
-    """
-
-    status = 'unfinished'
-    payload = None
-    template = None
-    error = None
-
-    def __init__(self, *args, **kwargs):
-
-        # the payload which needs to be processed
-        self.payload = kwargs.pop('payload')
-
-        # the template (not zpt!) which the payload needs to follow
-        self.template = kwargs.pop('template')
-
-        # a human meaningful id after which the task can be
-        # recognized (for example row number)
-        self.rec_id = kwargs.pop('rec_id')
-
-        self.__dict__.update(**kwargs)
-
-        self.warnings = PersistentList()
-        self.errors = PersistentList()
-
-    def __call__(self, *args, **kwargs):
-        self.run(*args, **kwargs)
-
-    def on_success(self, *args, **kwargs):
-        print "on success"
-
-    def on_failure(self, *args, **kwargs):
-        print "on failure"
-
-    def run(self, *args, **kwargs):
-        raise NotImplementedError
-
-
-class CSVImporterTask(BaseImportConverterTask):
-    """ An import task for rows from Excel/CSV files
-    """
-
-    def run(self, *args, **kwargs):
-
-        location_obj = kwargs['context']
-        import_tool = kwargs['import_tool']
-        meta_type = kwargs['meta_type']
-
-        header = self.template
-        row = self.payload
-        record_number = self.rec_id
-
-        content_type = location_obj.getSite().get_pluggable_item(meta_type)
-        add_object = content_type['add_method']
-
-        properties = {}
-        extra_properties = {}
-        address = None
-        for column, value in zip(header, row):
-            if value == '':
-                continue
-            if column not in self.prop_map:
-                extra_properties[column] = value
-                continue
-            key = self.prop_map[column]['column']
-            convert = self.prop_map[column]['convert']
-            properties[key] = convert(value)
-
-        try:
-            properties = do_geocoding(import_tool, properties)
-        except GeocoderServiceError, e:
-            msg = ('Warnings: could not find a valid address '
-                    'for row ${record_number}: ${error}',
-                    {'record_number': record_number + 1,     # account for header
-                    'error': str(e)})
-            self.warnings.append(msg)
-            address = properties.pop(self.geo_fields['address'])
-
-        ob_id = add_object(location_obj, _send_notifications=False,
-                                **properties)
-        ob = location_obj._getOb(ob_id)
-        if address:
-            setattr(ob, self.geo_fields['address'].split('.')[0],
-                    Geo(address=address))
-            #user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            #notify(NyContentObjectEditEvent(ob, user))
-        if extra_properties:
-            adapter = ICSVImportExtraColumns(ob, None)
-            if adapter is not None:
-                extra_props_messages = adapter.handle_columns(
-                    extra_properties)
-                if extra_props_messages:
-                    self.errors.append(extra_props_messages)
-        #obj_ids.append(ob.getId())
-        ob.submitThis()
-        ob.approveThis(_send_notifications=False)
-
-    # except UnicodeDecodeError, e:
-    #     raise
-    # except Exception, e:
-    #     self.log_current_error()
-    #     msg = ('Error while importing from file, row ${record_number}: ${error}',
-    #             {'record_number': record_number + 1,     # account for header
-    #             'error': str(e)})
-    #     if REQUEST is None:
-    #         raise ValueError(msg)
-    #     else:
-    #         errors.append(msg)
-
-    #     except UnicodeDecodeError, e:
-    #         if REQUEST is None:
-    #             raise
-    #         else:
-    #             errors.append('CSV file is not utf-8 encoded')
-
-
-def do_geocoding(import_tool, properties):
-    time.sleep(1)
-    lat = properties.get(import_tool.geo_fields['lat'], '')
-    lon = properties.get(import_tool.geo_fields['lon'], '')
-    address = properties.get(import_tool.geo_fields['address'], '')
-
-    if lat.strip() == '' and lon.strip() == '' and address:
-        coordinates = geocoding.geocode(import_tool.portal_map, address)
-        print "Got coordinated", coordinates, address
-        if coordinates != None:
-            lat, lon = coordinates
-            properties[import_tool.geo_fields['lat']] = lat
-            properties[import_tool.geo_fields['lon']] = lon
-
-    return properties
-
 
 
 class CSVImportTool(Implicit, Item):
@@ -227,6 +72,19 @@ class CSVImportTool(Implicit, Item):
 
         return ret
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
+    def do_geocoding(self, properties):
+        lat = properties.get(self.geo_fields['lat'], '')
+        lon = properties.get(self.geo_fields['lon'], '')
+        address = properties.get(self.geo_fields['address'], '')
+        if lat.strip() == '' and lon.strip() == '' and address:
+            coordinates = geocoding.geocode(self.portal_map, address)
+            if coordinates != None:
+                lat, lon = coordinates
+                properties[self.geo_fields['lat']] = lat
+                properties[self.geo_fields['lon']] = lon
+        return properties
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
     def do_import(self, meta_type, file_type, data, REQUEST=None):
         """ """
@@ -240,13 +98,15 @@ class CSVImportTool(Implicit, Item):
         if schema is None:
             raise ValueError('Schema for meta-type not found: "%s"' % meta_type)
 
+        content_type = self.getSite().get_pluggable_item(meta_type)
+        add_object = content_type['add_method']
+
         location_obj = self.getParentNode()
 
         # build a list of property names based on the object schema
         # TODO: extract this loop into a separate function
         prop_map = {}
         for widget in schema.listWidgets():
-            widget = widget.__of__(location_obj)
             prop_name = widget.prop_name()
 
             if widget.multiple_form_values:
@@ -292,7 +152,7 @@ class CSVImportTool(Implicit, Item):
                 else:
                     errors.append(msg)
                     rows = []
-            except UnicodeDecodeError:
+            except UnicodeDecodeError, e:
                 if REQUEST is None:
                     raise
                 else:
@@ -303,26 +163,67 @@ class CSVImportTool(Implicit, Item):
         record_number = 0
         obj_ids = []
 
-        queue, queue_id = make_queue(self)
-        for row in rows:
-            record_number += 1
-            c = CSVImporterTask(payload=row, template=header,
-                                rec_id=record_number, prop_map=prop_map,
-                                )
+        try:
+            for row in rows:
+                try:
+                    record_number += 1
+                    #TODO: extract this block into a separate function
+                    properties = {}
+                    extra_properties = {}
+                    address = None
+                    for column, value in zip(header, row):
+                        if value == '':
+                            continue
+                        if column not in prop_map:
+                            extra_properties[column] = value
+                            continue
+                        key = prop_map[column]['column']
+                        convert = prop_map[column]['convert']
+                        properties[key] = convert(value)
+                    try:
+                        properties = self.do_geocoding(properties)
+                    except GeocoderServiceError, e:
+                        msg = ('Warnings: could not find a valid address '
+                               'for row ${record_number}: ${error}',
+                               {'record_number': record_number + 1,     # account for header
+                                'error': str(e)})
+                        warnings.append(msg)
+                        address = properties.pop(self.geo_fields['address'])
+                    ob_id = add_object(location_obj, _send_notifications=False,
+                                       **properties)
+                    ob = location_obj._getOb(ob_id)
+                    if address:
+                        setattr(ob, self.geo_fields['address'].split('.')[0],
+                                Geo(address=address))
+                        #user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+                        #notify(NyContentObjectEditEvent(ob, user))
+                    if extra_properties:
+                        adapter = ICSVImportExtraColumns(ob, None)
+                        if adapter is not None:
+                            extra_props_messages = adapter.handle_columns(
+                                extra_properties)
+                            if extra_props_messages:
+                                errors.append(extra_props_messages)
+                    obj_ids.append(ob.getId())
+                    ob.submitThis()
+                    ob.approveThis(_send_notifications=False)
+                except UnicodeDecodeError, e:
+                    raise
+                except Exception, e:
+                    self.log_current_error()
+                    msg = ('Error while importing from file, row ${record_number}: ${error}',
+                           {'record_number': record_number + 1,     # account for header
+                            'error': str(e)})
+                    if REQUEST is None:
+                        raise ValueError(msg)
+                    else:
+                        errors.append(msg)
 
-            job = Job(c, context=location_obj, meta_type=meta_type, import_tool=self.aq_inner.aq_self)
-            #transaction.savepoint() # this bind the queue to the Connection
-            #job.addcallbacks(c.on_success, c.on_failure)
-            queue.jobs.append(job)
-            queue.put(job)
-            break
-
-        return self.async_import_html(REQUEST, queue_id=queue_id)
-
-        # try:
-        #     for row in rows:
-        #         try:
-        #             record_number += 1
+        except UnicodeDecodeError, e:
+            if REQUEST is None:
+                raise
+            else:
+                errors.append('CSV file is not utf-8 encoded')
 
         if not errors:
             notify(CSVImportEvent(location_obj, obj_ids))
@@ -336,13 +237,10 @@ class CSVImportTool(Implicit, Item):
                     self.setSessionErrorsTrans(warnings)
                 self.setSessionInfoTrans('${records} object(s) of type "${title}" successfully imported.',
                 records=record_number, title=schema.title_or_id())
-
             return self.index_html(REQUEST, meta_type=meta_type)
-
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
     index_html = PageTemplateFile('../zpt/bulk_import', globals())
-    async_import_html = PageTemplateFile('../zpt/async_bulk_import', globals())
     csv_specifications = PageTemplateFile('../zpt/csv_specifications', globals())
 
 InitializeClass(CSVImportTool)
@@ -431,6 +329,7 @@ class ExportTool(Implicit, Item):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
         def validate_column_size(header, rows_generator):
+            from itertools import tee
             rows, rows_backup = tee(rows_generator)
             try:
                 for item in rows:
@@ -482,7 +381,6 @@ class ExportTool(Implicit, Item):
             filesize = len(ret)
             set_response_attachment(REQUEST.RESPONSE, filename,
                 content_type, filesize)
-
         return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_json')
@@ -637,102 +535,3 @@ def generate_excel(header, rows):
 
     wb.save(output)
     return output.getvalue()
-
-
-def get_queue(context, queue_id):
-    queues = context._p_jar.root()[ZCASYNC_KEY]
-    return queues[queue_id]
-
-
-def get_queue_info(context, queue_id):
-    queue = get_queue(context, queue_id)
-
-    done = []
-    error = []
-    unfinished = []
-
-    for job in queue.get_jobs():
-        if job.status == 'done':
-            done.append(job)
-        elif job.status == 'error':
-            error.append(job)
-        elif job.status == 'unfinished':
-            unfinished.append(job)
-
-    info = {
-        'stats':{'total':len(done + error + unfinished),
-                 'unfinished':len(unfinished),
-                 'done':len(done),
-                 'error':len(error),
-                 },
-        'log_done':[j.status_text for j in done],
-        'log_errors':[j.status_text for j in error]
-    }
-
-    return info
-
-def make_queue(context):
-    root = context.getSite()._p_jar.root()
-
-    configuration = getConfiguration()
-    for name in configuration.dbtab.listDatabaseNames():
-        db = configuration.dbtab.getDatabase(name=name)
-        provideUtility(db, IDatabase, name=name)
-
-    db = configuration.dbtab.getDatabase(name='main')
-    evt = DatabaseOpened(db)
-    #notify(evt)
-
-    if not ZCASYNC_KEY in root:
-        installer = QueueInstaller()
-        installer(evt)
-
-    queues = root[ZCASYNC_KEY]
-    queue = Queue()
-    id = str(randint(0, 999999))
-    queues[id] = queue
-    transaction.savepoint() # this bind the queue to the Connection
-
-    if not dispatcher.get():
-        threaded_dispatcher_installer(evt)
-
-    queue.jobs = PersistentList()
-    queue._p_changed = True
-
-    return (queue, id)
-
-
-class QueueInfo(BrowserView):
-    """ A debug view to show results about queues
-    """
-
-    def __call__(self):
-        queue_id = self.request.form.get('queue_id')
-        queue = get_queue(self.context, queue_id)
-
-        return get_queue_broken_rows(queue)
-
-
-class RemoveAllActiveJobs(BrowserView):
-
-    def __call__(self):
-        queues = self.context.getSite()._p_jar.root()[ZCASYNC_KEY]
-        ids = [i for i in queues.keys() if i != '']     # avoid the default queue
-        for k in ids:
-            del queues[k]
-
-        return "Deleted all"
-
-
-def get_queue_broken_rows(queue):
-    header = None
-    rows = []
-
-    for job in queue.jobs:
-        if job.status == 'completed-status':
-            rows.append(job.payload)
-            if not header:
-                header = job.header
-
-    #return ChangeToExcel(rows, header)
-
