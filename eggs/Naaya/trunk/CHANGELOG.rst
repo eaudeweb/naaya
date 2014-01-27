@@ -1,4 +1,8 @@
-3.3.34 (2014-01-20)
+3.3.35 (unreleased)
+-------------------
+* Empty script channels don't crash anymore [dumitval]
+
+3.3.34 (2014-01-22)
 -------------------
 * Bug fix: improve performance of security inspector
   [tiberich #18127]
