@@ -1,0 +1,84 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<tal:block define="global current_form_id request/name|nothing;
+                   global templates here/get_all_templates;
+                   global bundle_templates here/bundle_templates" />
+
+<style>
+h2 {
+    font-size: 120%;
+}
+ul.template_listing a {
+    font-family: monospace;
+}
+a.template {
+    color: #448;
+}
+li.customized a.template, li.local a.template {
+    color: #00f;
+    font-weight: bold;
+}
+
+a.button-for-custom {
+    color: #00f;
+    padding: 0 .2em;
+    margin: 0 .2em;
+    background-color: #ccc;
+}
+</style>
+<script src="misc_/Naaya/jquery.min.js"></script>
+<script tal:attributes="src string:${here/absolute_url}/tool_js"></script>
+
+<tal:block content="structure here/messages_box"/>
+
+<form tal:condition="here/can_write_to_bundle"
+      tal:attributes="action string:${here/absolute_url}/move_to_bundle"
+      method="post">
+
+<input type="submit" value="Move" />
+customized templates to filesystem bundle
+
+</form>
+
+
+<tal:block define="extra_templates python:[name for name in dict(templates)
+                                           if name not in bundle_templates]"
+           condition="extra_templates">
+
+<h2>Extra templates in this Folder</h2>
+<ul class="template_listing">
+    <tal:block repeat="template_id extra_templates">
+        <li class="local">
+            <a class="template"
+               tal:content="template_id"
+               tal:attributes="href python:'%s/%s/manage_workspace' % (
+                                    here.absolute_url(), template_id)"></a>
+        </li>
+    </tal:block>
+</ul>
+</tal:block>
+
+<h2>Registered templates</h2>
+<ul class="template_listing">
+    <tal:block define="customized_templates here/customized_templates;
+                       here_url here/absolute_url"
+               repeat="tpl templates">
+
+               <li tal:define="
+               name python:tpl[0];
+               customized python:name in customized_templates;
+               form_url python:test(customized, '%s/%s/manage_workspace' % (here_url, name), 'manage_customize?name=%s' % name);"
+               tal:condition="python:name in bundle_templates"
+               tal:attributes="class python:test(customized, 'customized', None)">
+            <a class="template"
+                tal:attributes="href form_url"
+                tal:content="name"></a>
+            <a class="button-for-custom"
+               tal:condition="customized"
+               tal:attributes="href string:${here/absolute_url}/show_diff?name=${name}">diff</a>
+        </li>
+    </tal:block>
+</ul>
+
+<tal:block content="structure here/manage_page_footer"/>

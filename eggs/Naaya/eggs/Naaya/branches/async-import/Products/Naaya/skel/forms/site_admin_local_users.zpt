@@ -1,0 +1,359 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Local users</metal:block>
+
+<metal:block fill-slot="description-text">
+	<div class="description-text">
+		<p i18n:translate="">
+			This page lists the local users defined in this portal along with their credentials.
+		</p>
+	</div>
+</metal:block>
+
+<metal:block fill-slot="section-title">
+</metal:block>
+
+<metal:block fill-slot="search-box"><metal:block define-macro="search-box">
+<div class="cleaner"></div>
+<div class="search-box">
+	<form method="get" id="search-users-form" action="">
+		<div id="name_filter">
+			<label for="search" i18n:translate="">Search users:</label>
+			<input type="text" title="You can search by name, email, username (full or part of it)."
+				i18n:attributes="title" name="query" id="autocomplete-query"
+				class="autocomplete"
+				tal:attributes="value python: request.get('query', '')"
+				size="27" />
+			<br />
+		</div>
+
+		<div class="filters">
+			<label for="filter-roles" i18n:translate="">with roles:</label>
+			<select name="role" id="filter-roles">
+				<option value="" i18n:translate="">All</option>
+				<option value="noroles" i18n:translate="" tal:attributes="selected python: test(filter_role == 'noroles', 'selected', '')">Users with no roles</option>
+				<tal:block repeat="role user_tool/list_valid_roles">
+				<option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
+				<option tal:condition="python:role!='Manager'" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
+				</tal:block>
+			</select>
+		</div>
+
+		<div class="filters">
+			<label for="filter-locations" i18n:translate="">in location:</label>
+			<select name="location" id="filter-locations">
+				<option value="_all_" i18n:translate="">All</option>
+				<tal:block define="containers_by_site user_tool/get_all_containers_with_roles">
+
+				<tal:block condition="python: len(containers_by_site) == 1">
+				<tal:block repeat="location python: containers_by_site[0]">
+				<option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
+						tal:attributes="value path;
+										title path;
+										selected python: filter_location == path"
+						tal:content="location/title_or_id"/>
+				</tal:block>
+				</tal:block>
+
+				<tal:block condition="python: len(containers_by_site) > 1">
+				<tal:block repeat="containers containers_by_site">
+				<optgroup tal:attributes="label python: containers[0].title_or_id()">
+				<tal:block repeat="location containers">
+				<option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
+						tal:attributes="value path;
+										title path;
+										selected python: filter_location == path"
+						tal:content="location/title_or_id"/>
+				</tal:block>
+				</optgroup>
+				</tal:block>
+				</tal:block>
+
+				</tal:block>
+			</select>
+		</div>
+
+		<div class="filters">
+			<input type="submit" i18n:attributes="value" value="Search" />
+			<a tal:attributes="href string:${site_url}/admin_local_users_html">Clear search</a>
+		</div>
+
+		<input type="hidden" name="skey" tal:attributes="value skey" />
+		<input type="hidden" name="rkey" tal:attributes="value rkey" />
+		<div class="loader">
+			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt; title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
+		</div>
+	</form>
+
+	<div class="cleaner"></div>
+
+	<p i18n:translate="" id="search-filters">
+		<tal:block condition="python: not request.get('query', '') and not filter_role and filter_location == '_all_'">
+			Showing <strong i18n:name="all-users">all users</strong>.
+		</tal:block>
+
+		<tal:block condition="python: request.get('query', '')">
+			Showing only users containing
+			<strong i18n:name="query" tal:content="python: '\'' + query + '\''"/>
+			in their username, name or email.
+		</tal:block>
+
+		<tal:block condition="python: filter_role == 'noroles'">
+			Showing only users with <strong i18n:name="no-roles">no roles</strong>.
+		</tal:block>
+		<tal:block condition="python: filter_role and filter_role != 'noroles'">
+			Showing only <strong i18n:name="role" tal:content="filter_role"/> role.
+		</tal:block>
+
+		<tal:block condition="python: filter_location != '_all_' and filter_role != 'noroles'">
+		Showing only roles in
+		<strong i18n:name="location"
+			tal:define="location python: here.utGetObject(filter_location)">
+			<a tal:attributes="href location/absolute_url"
+				tal:content="location/title_or_id"></a>
+		</strong>
+		</tal:block>
+	</p>
+</div>
+<div class="cleaner">&nbsp;</div>
+</metal:block></metal:block>
+
+<metal:block fill-slot="buttons"><metal:block define-macro="buttons">
+<div class="floated-buttons">
+	<span class="buttons">
+		<a tal:condition="python:user_tool.showBulkDownloadButton()"
+		   tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
+			<span i18n:translate="">Bulk download</span>
+		</a>
+	</span>
+</div>
+</metal:block></metal:block>
+
+<metal:block fill-slot="second-tabs"><metal:block define-macro="second-tabs">
+	<div class="second_tab_set">
+		<ul>
+			<li tal:define="url string:${site_url}/admin_local_users_html">
+				<a tal:attributes="href url; class python: test('admin_local_users_html' in request.PATH_INFO or 'admin_users_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">List users</a>
+			</li>
+			<li tal:define="url string:${site_url}/admin_assignroles_html">
+				<a tal:attributes="href url; class python: test('admin_assignroles_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Assign roles to users</a>
+			</li>
+			<li tal:define="url string:${site_url}/admin_adduser_html">
+				<a tal:attributes="href url; class python: test('admin_adduser_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Add new user</a>
+			</li>
+			<li tal:define="url string:${site_url}/admin_importusers_html">
+				<a tal:attributes="href url; class python: test('admin_importusers_html' in request.PATH_INFO, 'current_sub', '')"
+				   i18n:translate="">Import users</a>
+			</li>
+		</ul>
+	</div>
+	<div class="clear">&nbsp;</div>
+</metal:block></metal:block>
+
+<metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
+	all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location);
+	users python: all_users_objects[(page * per_page):((page + 1) * per_page)];">
+
+<form method="post" action="" class="datatable-form">
+<div class="form-buttons cleaner">
+	<span class="buttons">
+		<input tal:condition="users" type="submit"
+			value="Delete selected user(s)" i18n:attributes="value"
+			class="deluser" name="../admin_deleteusers:method" />
+		<input tal:condition="python: users and filter_role != 'noroles'"
+			type="submit"
+			value="Revoke searched role(s)" i18n:attributes="value"
+			class="revoke_roles" name="../admin_revoke_searched_roles:method" />
+	</span>
+</div>
+
+<input type="hidden" id="template" value="site_admin_local_users" />
+<input type="hidden" name="role" tal:attributes="value filter_role" />
+<input type="hidden" name="location" tal:attributes="value filter_location" />
+
+<metal:block define-macro="datatable">
+<div class="user-results">
+<tal:block condition="users">
+	<div class="paginator-details">
+		<label for="per-page" i18n:translate="">Users per page</label>
+		<select name="per-page" id="per-page">
+			<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
+			<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
+			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
+		</select>
+	</div>
+</tal:block>
+
+<div class="cleaner">&nbsp;</div>
+
+<table cellspacing="0" cellpadding="4" width="95%"
+		tal:attributes="class python:len(users) and 'datatable sortable' or 'empty'">
+	<thead>
+	<tr  tal:condition="python:len(users) != 0">
+		<th width="5%" align="left" class="checkbox">
+			<input type="checkbox" class="select-all" onclick="selectAll();" />
+		</th>
+		<tal:block define="sortdata python: ({'key': 'username', 'label': 'Username', 'width': '15%'},
+											 {'key': 'name', 'label': 'Name/Email', 'width': '30%'},
+											 {'key': '', 'label': 'Roles in Locations'},
+											 {'key': '', 'label': 'Revoke roles'});
+							querystring python: 'query=%s&amp;role=%s&amp;location=%s' % (query, filter_role, filter_location);">
+		<th align="left" tal:repeat="item sortdata" tal:attributes="width item/width|nothing">
+			<tal:block condition="item/key">
+			<a class="sort-key"
+				tal:condition="python: (skey == item['key'] and rkey) or skey != item['key']"
+				tal:attributes="href string:${here/absolute_url}/admin_local_users_html?${querystring}&skey=${item/key}"
+				i18n:translate="" tal:content="item/label"></a>
+			<a class="sort-key"
+				tal:condition="python: skey == item['key'] and not rkey"
+				tal:attributes="href string:${here/absolute_url}/admin_local_users_html?${querystring}&skey=${item/key}&rkey=1"
+				i18n:translate="" tal:content="item/label"></a>
+			<img tal:condition="python: skey == item['key'] and not rkey" src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == item['key'] and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</tal:block>
+			<tal:block condition="not: item/key"
+				i18n:translate="" tal:content="item/label">
+			</tal:block>
+		</th>
+		</tal:block>
+	</tr>
+	</thead>
+	<tbody>
+	<tal:block repeat="user users">
+	<tal:block define="user_roles user/roles;
+						row_class python:test(path('repeat/user/odd'), 'row-odd', 'row-even');
+						user_nrows python: max(1, len(user_roles));
+						user_id user/user_id">
+	<tal:block repeat="index python: range(user_nrows)">
+	<tr tal:attributes="class python: test(index == 0, row_class, row_class+'-sub')">
+		<!-- checkbox -->
+		<td nowrap="nowrap" class="center checkbox"
+			tal:condition="python: index == 0"
+			tal:attributes="rowspan user_nrows">
+			<input type="checkbox" name="names"
+				tal:attributes="value user/user_id" />
+		</td>
+		<!-- end of checkbox -->
+
+		<!-- Username -->
+		<td tal:condition="python: index == 0"
+			tal:attributes="rowspan user_nrows">
+			<strong><a tal:define="user_quoted python:here.utUrlEncode(user_id)"
+						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=local" tal:content="user_id">username</a></strong>
+			<span tal:condition="user/is_new_user">
+				<img src="misc_/Naaya/star.png" alt="New account"
+					 tal:define="global any_new_account python:True" />
+			</span>
+			<span tal:define="source_title user/source_title"
+				tal:condition="python: user_id in user_tool.user_names() and source_title != 'Local'">
+				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"
+					 i18n:attributes="alt" tal:define="global any_username_conflict python:True" />
+			</span>
+		</td>
+		<!-- end of Username -->
+
+		<!-- Name/Email -->
+		<td tal:condition="python: index == 0" tal:attributes="rowspan user_nrows">
+			<div class="datatable-username">
+				<tal:block content="user/full_name"></tal:block>
+			</div>
+			<div class="datatable-email" tal:define="email user/email">
+				<a tal:attributes="href string:mailto:${email}; title string:Click to open email client" i18n:attributes="title" tal:content="email"></a>
+			</div>
+		</td>
+		<!-- end of Name/Email -->
+
+		<!-- Roles in Locations -->
+		<tal:block condition="python: index < len(user_roles)">
+		<td tal:define="role python: user_roles[index]; obj python: role[1]" class="user-role">
+			<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+			<a class="roles-location"
+				tal:attributes="href obj/absolute_url"
+				tal:content="obj/title_or_id"></a>
+			<img tal:condition="python: here.getSite()!=obj.getSite()"
+				tal:attributes="alt python:('In %s subsite' % obj.getSite().title_or_id());
+								title python:('In %s subsite' % obj.getSite().title_or_id());"
+				src="misc_/Naaya/info.png" />
+		</td>
+		</tal:block>
+		<tal:block condition="not: user_roles">
+			<td class="user-role">-</td>
+		</tal:block>
+		<!-- end of Roles in Locations -->
+
+		<!-- Revoke roles -->
+		<tal:block condition="python: index < len(user_roles)">
+		<td tal:define="role python: user_roles[index]" class="user-role-revoke">
+			<a class="revoke-role" i18n:attributes="title" title="Revoke role"
+				tal:define="location python: here.rstk['relative_object_path'](role[1], here.getSite())"
+				tal:attributes="href string:${site_url}/admin_revokerole?user=${user_id}&location=${location}">
+				<img src="/misc_/Naaya/revoke_permission.png"
+					alt="Revoke role"
+					i18n:attributes="alt" />
+			</a>
+		</td>
+		</tal:block>
+		<tal:block condition="not: user_roles">
+			<td class="user-role"></td>
+		</tal:block>
+		<!-- end of Revoke roles -->
+	</tr>
+	</tal:block>
+	</tal:block>
+	</tal:block>
+
+	<tr tal:condition="not: users" class="tr-messages">
+		<tal:block define="has_filters python: query or filter_role or filter_location != '_all_'">
+			<tal:block condition="not: has_filters">
+				<td colspan="6">
+					<tal:block condition="user_sources">
+					<p class="table-message" tal:define="source_id python: user_sources[0].id" i18n:translate="">
+						No local users defined yet.
+						You can <a  i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
+					</p>
+					</tal:block>
+				</td>
+			</tal:block>
+			<tal:block condition="has_filters">
+				<td colspan="6">
+					<p class="table-message" i18n:translate="">
+						No users matched this search criteria.
+					</p>
+				</td>
+			</tal:block>
+		</tal:block>
+	</tr>
+	</tbody>
+</table>
+<metal:block define-macro="pagination">
+	<tal:block define="objects all_users_objects; num_per_page per_page;">
+		<metal:block use-macro="here/macro_utils/macros/paginator" />
+	</tal:block>
+</metal:block>
+
+<div class="tip"
+	 tal:define="any_new_account any_new_account|nothing;
+				 any_username_conflict any_username_conflict|nothing"
+	 tal:condition="python:any_new_account or any_username_conflict">
+	<p>
+		<span i18n:translate="" tal:condition="any_new_account">
+			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt; title" i18n:name="image" /> local users added in the past 5 days
+		</span>
+
+		<tal:block condition="user_sources">
+		<br class="cleaner" />
+		<span i18n:translate="" tal:condition="any_username_conflict">
+			<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="image" /> local and LDAP accounts for the same username.
+		</span>
+		</tal:block>
+	</p>
+</div>
+
+<div class="cleaner">&nbsp;</div>
+</div>
+</metal:block>
+</form>
+</metal:block></metal:block>
+</metal:block>

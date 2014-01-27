@@ -1,0 +1,48 @@
+<tal:block define="global current_tab_url string:admin_properties_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+<metal:block fill-slot="tab_contents">
+
+<p i18n:translate="" class="cleaner">
+	Choose which content types can be geo-tagged and/or can be rated.
+</p>
+
+<form tal:attributes="action string:${here/absolute_url}/admin_set_contenttypes">
+<table class="datatable">
+	<tr>
+		<th i18n:translate="">Content type</th>
+		<th i18n:translate="">Is geo-tagged</th>
+		<th i18n:translate="">Is ratable</th>
+	</tr>
+
+	<tal:block repeat="content_type here/list_content_types">
+	<tr>
+		<td>
+			<label tal:content="content_type/title"
+				tal:attributes="for content_type/id" />
+		</td>
+		<td>
+			<input type="checkbox" name="geotag:list"
+				tal:attributes="checked content_type/geo_enabled;
+					disabled not:content_type/geo_taggable;
+					value content_type/id;
+					id string:geotag_${content_type/id}" />
+		</td>
+		<td>
+			<input type="checkbox" name="ratable:list"
+				tal:attributes="checked content_type/ratable;
+					value content_type/id;
+					id string:ratable_${content_type/id}" />
+		</td>
+	</tr>
+	</tal:block>
+
+	<tr>
+		<td>
+			<input type="submit" value="save" i18n:attributes="value" />
+		</td>
+	</tr>
+</table>
+</form>
+
+</metal:block>
+</metal:block>

@@ -1,0 +1,5 @@
+<ul tal:condition="options/errors">
+    <li tal:repeat="error options/errors">
+        <p class="form-errors" tal:content="error" />
+    </li>
+</ul>

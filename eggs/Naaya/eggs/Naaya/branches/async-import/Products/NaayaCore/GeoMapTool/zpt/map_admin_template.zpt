@@ -1,0 +1,33 @@
+<tal:block metal:define-macro="page">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Map management</h1>
+
+<tal:block metal:fill-slot="section" 
+		tal:define="map_url here/getGeoMapToolPath;
+					portal_map here/getGeoMapTool;">
+
+<p i18n:translate="">
+	These settings apply to the
+	<a tal:attributes="href string:${map_url}" i18n:name="portal-map" i18n:translate="">portal_map</a> and to all the
+	<a tal:attributes="href string:${here/absolute_url}/portal_schemas/admin_html" i18n:name="geo-taggable-content-types" i18n:translate=""
+	>geo-taggable content types</a>.
+</p>
+
+<div class="tabbedmenu">
+	<ul>
+		<li tal:repeat="tab here/admin_tabs"
+			tal:attributes="class python:test(tab['url'] == current_tab_url, 'currenttab', None)">
+			<a tal:attributes="href string:${map_url}/${tab/url}"
+				i18n:translate="" tal:content="tab/title"></a>
+		</li>
+	</ul>
+</div>
+
+<div class="cleaner">&nbsp;</div>
+
+<metal:block define-slot="tab_contents" />
+
+</tal:block>
+</tal:block>
+</tal:block>

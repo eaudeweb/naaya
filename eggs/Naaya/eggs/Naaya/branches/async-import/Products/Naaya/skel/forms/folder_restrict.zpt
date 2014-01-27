@@ -1,0 +1,155 @@
+<metal:block use-macro="here/standard_template_macro">
+		<metal:block fill-slot="head">
+				<link type="text/css" rel="stylesheet"
+				   href="/++resource++Products.NaayaCore.AuthenticationTool/restrict_folder.css" />
+		</metal:block>
+<metal:block fill-slot="body">
+
+<h1>
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
+	<tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">Restrictions</span>
+</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">
+	This page allows you to restrict/grant access to this folder for certain groups of
+	users. You are asked to provide the roles users must have in order to have access.
+	All users having the roles of <em i18n:name="administrator" i18n:translate="">Administrator</em> or <em i18n:name="manager" i18n:translate="">Manager</em> will still have
+	access to the restricted areas.
+</p>
+
+<form method="post" tal:attributes="action string:${here/absolute_url}/setRestrictions">
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_all" value="all" tal:attributes="checked python:not here.has_restrictions()" />
+	<label for="access_all" i18n:translate="">Inherit settings (allow access to all users that can access parent)</label>
+</div>
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_to" value="other" tal:attributes="checked python:here.has_restrictions()" /> <label for="access_to" i18n:translate="">Allow access only to</label>
+	<select name="roles" size="5" multiple="multiple"
+		tal:define="roles here/get_roles_with_access">
+		<option tal:repeat="role here/get_valid_roles"
+			tal:attributes="value role;selected python:role in roles"
+			tal:content="role" />
+	</select>
+</div>
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_public" value="public" tal:attributes="checked python:here.is_public()" />
+	<label for="access_public" i18n:translate="">Allow public access (including anonymous visitors)</label>
+</div>
+<div>
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</div>
+</form>
+
+<div class="overview_current_settings">
+
+	<h1><img src="/++resource++Products.NaayaCore.AuthenticationTool/information.png" alt="information icon" />
+		<tal:block tal:replace="here/title_or_id" /> -
+		<span i18n:translate="">Access overview</span></h1>
+	<p i18n:translate="">Here you can see the actual result of all security settings for this folder,
+	taking into consideration: IG permission settings for Roles, pseudo-roles permissions (Anonymous, Authenticated),
+	inheritance from parent folders and Restrict folder settings.</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th class="roles" i18n:translate="">Roles allowed to access this folder</th>
+				<th i18n:translate="">Reason for having access</th>
+				<th i18n:translate="">Go to settings for</th>
+                <th i18n:translate="">Obs</th>
+				<!--<th class="list_users" i18n:translate="">List all users with this role</th>-->
+			</tr>
+		</thead>
+		<tbody>
+				<tal:block define="settings here/access_overview;
+								   site here/getSite;
+								   site_url site/absolute_url">
+						<tal:block repeat="role settings">
+								<tr>
+								<td class="allowed_role" tal:content="role" />
+								<tal:block condition="python:settings[role][0]=='assigned'">
+										<td i18n:translate="">
+										<span class="assigned_here">assigned here</span>
+										</td>
+										<td></td>
+								</tal:block>
+								<tal:block condition="python:settings[role][0]=='inherited'">
+										<tal:block define="source python:settings[role][1]['source']">
+										<tal:block condition="python:source == site">
+												<td>
+												<span class="ig_role_settings" i18n:translate="">IG Role Settings</span>
+												</td>
+												<td>
+												<a class="change_permissions"
+												   tal:attributes="href string:${site_url}/admin_editrole_html?role=${role}"
+												   i18n:translate="">
+														<span tal:replace="role" /> permissions
+												</a> (<span i18n:translate="" class="in_ig">in IG</span>)
+												</td>
+										</tal:block>
+										<tal:block condition="python:source != site">
+												<td>
+												<span class="inherited" i18n:translate="">inherited from</span>
+												<a class="object_inherited" tal:attributes="href source/absolute_url"
+												   tal:content="source/title_or_id" />
+												</td>
+												<td>
+												<a class="change_permissions"
+												tal:attributes="href string:${source/absolute_url}/restrict_html"
+												i18n:translate="">
+														<span tal:replace="source/title_or_id" />
+												</a>
+												</td>
+										</tal:block>
+										</tal:block>
+								</tal:block>
+								<tal:block condition="python:settings[role][0]=='pseudorole'">
+										<tal:block define="source python:settings[role][1]['source']">
+										<td>
+										<span class="inherited" i18n:translate="">inherited from</span>
+										<span class="role_inherited" tal:content="source" />
+										</td>
+										<td>
+												<a class="change_permissions"
+												tal:attributes="href string:${site_url}/admin_editrole_html?role=${source}"
+												i18n:translate="">
+														<span tal:replace="source" /> permissions
+												</a> (<span i18n:translate="" class="in_ig">in IG</span>)
+										</td>
+										</tal:block>
+								</tal:block>
+								<!--<td><input type="button" value="List users" />
+								</td>-->
+								<td class="restrict_obs" tal:define="blocker python:settings[role][2]">
+										<span tal:condition="python:blocker is not None" i18n:translate="">
+												The "<span tal:content="role" i18n:name="role" />" Role is not allowed to access
+												parent location
+												<a i18n:name="location" class="tipsy-title"
+												tal:attributes="title here/pretty_path;
+												                href string:${blocker/absolute_url}/restrict_html"
+												tal:content="blocker/title_or_id" />.
+										</span>
+								</td>
+								</tr>
+						</tal:block>
+				</tal:block>
+
+		</tbody>
+	</table>
+
+</div>
+
+<fieldset><legend i18n:translate="">Tip</legend>
+<p i18n:translate="">
+	If you need a new group of people to grant access to for this area, the following steps should be followed:
+</p>
+<ol>
+	<li i18n:translate=""><a i18n:name="admin_roles" i18n:translate="" href="admin_roles_html">define a new role</a> without any permissions</li>
+	<li i18n:translate="">assign the desired users to this role using the <a i18n:name="admin_roles" i18n:translate="" href="admin_roles_html">Users and roles</a> form from the <a i18n:name="admin_users" i18n:translate="" href="admin_users_html">User management</a> area</li>
+	<li i18n:translate="">return to this form and restrict the access for that role</li>
+<ol>
+</fieldset>
+
+</metal:block>
+</metal:block>

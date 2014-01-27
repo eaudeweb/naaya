@@ -1,0 +1,21 @@
+<metal:block use-macro="python:here.standard_template_macro('light')">
+
+<metal:block metal:fill-slot="header-title">
+	<title><tal:block i18n:translate="">Logout Form</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="body">
+
+<tal:block define="global user python:here.is_logged(request)" />
+
+<span tal:condition="python:user==0">
+	<h1 i18n:translate="">You have been successfully logged out.</h1>
+</span>
+
+<span tal:condition="python:user==1">
+	<span i18n:translate="" tal:omit-tag="">You are logged in using HTTP authentication. You may need to</span>
+	<a href="/manage_zmi_logout" i18n:translate="">log out of the Zope management interface</a>.
+</span>
+
+</metal:block>
+</metal:block>

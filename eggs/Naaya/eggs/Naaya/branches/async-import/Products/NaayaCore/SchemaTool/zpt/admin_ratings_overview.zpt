@@ -1,0 +1,58 @@
+<tal:block define="global current_tab_url string:admin_ratings_overview_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+	<metal:block fill-slot="tab_contents">
+	<p i18n:translate="">Overview of rated objects</p>
+        <tal:block define="objects options/objects">
+            <tal:block define="site_url here/getSitePath" condition="objects">
+                <form method="get" action="">
+                    <input type="submit" i18n:translate="" name="show_highest_rated"
+                        value="Highest rated objects" i18n:attributes="value"
+                        tal:attributes="disabled python:request.has_key('show_highest_rated')"/>
+                    <input type="submit" i18n:translate="" name="show_lowest_rated"
+                        value="Lowest rated objects" i18n:attributes="value"
+                        tal:attributes="disabled python:request.has_key('show_lowest_rated')"/>
+                    <input type="submit" i18n:translate="" name="show_most_rated"
+                        value="Most rated objects" i18n:attributes="value"
+                        tal:attributes="disabled python:request.has_key('show_most_rated')"/>
+                    <span i18n:translate>Maximum number of objects shown:</span>
+                    <input type="text" size="5" name="number_of_objects"
+                        tal:attributes="value python:request.get('number_of_objects', 10)"/>
+                </form>
+                <br/>
+                <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+                    <tr>
+                        <th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+                        <th class="title-column" i18n:translate="">Title</th>
+                        <th class="checkin" i18n:translate="">Rating</th>
+                        <th class="checkin" i18n:translate="">Number of ratings</th>
+                    </tr>
+                    <tr tal:repeat="object_tuples objects">
+                    <tal:block define="object python:object_tuples[0];
+                                        average_rating python:object_tuples[1];
+                                        number_of_ratings python:object_tuples[2]">
+                        <td class="type" style="width: 4%;">
+                            <img tal:attributes="
+                                src python:test(object.approved, object.icon, object.icon_marked);
+                                alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
+                                title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+                        </td>
+                        <td style="width: 60%;">
+                            <a tal:attributes="href object/absolute_url"
+                                tal:content="object/title_or_id" />
+                        </td>
+                        <td class="type" style="width: 21%;">
+                            <tal:block replace="structure object/user_rating_stars"/>
+                        </td>
+                        <td class="type" style="width: 15%;">
+                            <tal:block replace="python:number_of_ratings"/>
+                        </td>
+                    </tal:block>
+                    </tr>
+                </table>
+            </tal:block>
+            <tal:block condition="not: objects">
+                <div i18n:translate="">No rated objects were found in the database.</div>
+            </tal:block>
+        </tal:block>
+	</metal:block>
+</metal:block>
