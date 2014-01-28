@@ -674,30 +674,30 @@ def get_queue_info(context, queue_id):
 def make_queue(context):
     root = context.getSite()._p_jar.root()
 
-    configuration = getConfiguration()
-    for name in configuration.dbtab.listDatabaseNames():
-        db = configuration.dbtab.getDatabase(name=name)
-        provideUtility(db, IDatabase, name=name)
+    # configuration = getConfiguration()
+    # for name in configuration.dbtab.listDatabaseNames():
+    #     db = configuration.dbtab.getDatabase(name=name)
+    #     provideUtility(db, IDatabase, name=name)
 
-    db = configuration.dbtab.getDatabase(name='main')
-    evt = DatabaseOpened(db)
-    #notify(evt)
+    # db = configuration.dbtab.getDatabase(name='main')
+    # evt = DatabaseOpened(db)
+    # #notify(evt)
 
-    if not ZCASYNC_KEY in root:
-        installer = QueueInstaller()
-        installer(evt)
+    # if not ZCASYNC_KEY in root:
+    #     installer = QueueInstaller()
+    #     installer(evt)
 
     queues = root[ZCASYNC_KEY]
     queue = Queue()
     id = str(randint(0, 999999))
     queues[id] = queue
-    transaction.savepoint() # this bind the queue to the Connection
 
-    if not dispatcher.get():
-        threaded_dispatcher_installer(evt)
+    # if not dispatcher.get():
+    #     threaded_dispatcher_installer(evt)
 
     queue.jobs = PersistentList()
     queue._p_changed = True
+    transaction.savepoint() # this bind the queue to the Connection
 
     return (queue, id)
 
@@ -736,3 +736,14 @@ def get_queue_broken_rows(queue):
 
     #return ChangeToExcel(rows, header)
 
+
+class MakeAJob(BrowserView):
+    """ A simple page to make a simple job
+    """
+
+    def __call__(self):
+        import Zope2
+
+        app = Zope2.app()
+        root = app._p_jar.root()
+        print ZCASYNC_KEY in root
