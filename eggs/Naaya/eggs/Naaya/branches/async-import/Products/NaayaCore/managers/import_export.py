@@ -94,6 +94,8 @@ class CSVImporterTask(BaseImportConverterTask):
     def run(self, *args, **kwargs):
 
         location_obj = kwargs['context']
+        site = location_obj.getSite()
+        location_obj.REQUEST.AUTHENTICATED_USER = site.acl_users.getUserById(kwargs['userid'])
         import_tool = kwargs['import_tool']
         meta_type = kwargs['meta_type']
 
@@ -107,14 +109,20 @@ class CSVImporterTask(BaseImportConverterTask):
         properties = {}
         extra_properties = {}
         address = None
+
         for column, value in zip(header, row):
+
             if value == '':
                 continue
+
             if column not in self.prop_map:
                 extra_properties[column] = value
                 continue
+
             key = self.prop_map[column]['column']
-            convert = self.prop_map[column]['convert']
+            widget = self.prop_map[column]['widget']
+            widget = widget.__of__(location_obj)
+            convert = widget.convert_from_user_string
             properties[key] = convert(value)
 
         try:
@@ -246,7 +254,7 @@ class CSVImportTool(Implicit, Item):
         # TODO: extract this loop into a separate function
         prop_map = {}
         for widget in schema.listWidgets():
-            widget = widget.__of__(location_obj)
+            # widget = widget.__of__(location_obj)
             prop_name = widget.prop_name()
 
             if widget.multiple_form_values:
@@ -254,7 +262,8 @@ class CSVImportTool(Implicit, Item):
                     prop_subname = prop_name + '.' + subname
                     prop_map[widget.title + ' - ' + subname] = {
                         'column': prop_subname,
-                        'convert': widget.convert_from_user_string,
+                        #'convert': widget.convert_from_user_string,
+                        'widget':widget,
                     }
                 if isinstance(widget, GeoWidget):
                     for subname in widget.multiple_form_values:
@@ -262,7 +271,8 @@ class CSVImportTool(Implicit, Item):
             else:
                 prop_map[widget.title] = {
                     'column': prop_name,
-                    'convert': widget.convert_from_user_string,
+                    #'convert': widget.convert_from_user_string,
+                    'widget':widget,
                 }
 
         if file_type == 'Excel':
@@ -319,11 +329,7 @@ class CSVImportTool(Implicit, Item):
 
         return self.async_import_html(REQUEST, queue_id=queue_id)
 
-        # try:
-        #     for row in rows:
-        #         try:
-        #             record_number += 1
-
+        # TODO: put back this
         if not errors:
             notify(CSVImportEvent(location_obj, obj_ids))
 

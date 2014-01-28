@@ -136,7 +136,12 @@ def addNyContact(self, id='', REQUEST=None, contributor=None, **kwargs):
                           removelist=[]),
                   lambda x: self._getOb(x, None) is not None)
 
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        # try:
+        #     contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        # except AttributeError:  # this happens during bulk import
+        #     pass
 
     ob = _create_NyContact_object(self, id, contributor)
 

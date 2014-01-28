@@ -482,6 +482,11 @@ class NotificationTool(Folder):
         address. The values should be dictionaries suitable to be passed
         as kwargs (options) to the template.
         """
+
+        if not hasattr(self.REQUEST, 'URL'):
+            # this is bulk import
+            return
+
         portal = self.getSite()
         email_tool = portal.getEmailTool()
         addr_from = email_tool.get_addr_from()
