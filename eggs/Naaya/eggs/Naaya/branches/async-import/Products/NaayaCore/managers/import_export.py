@@ -1,10 +1,7 @@
 """ Bulk upload contacts, urls, experts """
 
-#from naaya.content.base.events import NyContentObjectEditEvent
-
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import Implicit
-from App.config import getConfiguration
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.SimpleItem import Item
@@ -18,19 +15,13 @@ from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from StringIO import StringIO
-from ZODB.interfaces import IDatabase
 from itertools import tee
 from naaya.core.ggeocoding import GeocoderServiceError
 from persistent.list import PersistentList
 from random import randint
-from zc.async import dispatcher
 from zc.async.interfaces import KEY as ZCASYNC_KEY
 from zc.async.job import Job
 from zc.async.queue import Queue
-from zc.async.subscribers import QueueInstaller
-from zc.async.subscribers import threaded_dispatcher_installer
-from zope.app.appsetup.interfaces import DatabaseOpened
-from zope.component import provideUtility
 from zope.event import notify
 import csv, codecs
 import logging
@@ -95,7 +86,13 @@ class CSVImporterTask(BaseImportConverterTask):
 
         location_obj = kwargs['context']
         site = location_obj.getSite()
-        location_obj.REQUEST.AUTHENTICATED_USER = site.acl_users.getUserById(kwargs['userid'])
+
+        user_id = kwargs['user_id']
+        user = site.acl_users.getUserById(user_id)
+        if user is None:
+            user = site.getOwner()
+        location_obj.REQUEST.AUTHENTICATED_USER = user
+
         import_tool = kwargs['import_tool']
         meta_type = kwargs['meta_type']
 
@@ -179,8 +176,10 @@ def do_geocoding(import_tool, properties):
     lon = properties.get(import_tool.geo_fields['lon'], '')
     address = properties.get(import_tool.geo_fields['address'], '')
 
+    print import_tool
+
     if lat.strip() == '' and lon.strip() == '' and address:
-        coordinates = geocoding.geocode(import_tool.portal_map, address)
+        coordinates = geocoding.geocode(None, address)
         print "Got coordinated", coordinates, address
         if coordinates != None:
             lat, lon = coordinates
@@ -188,7 +187,6 @@ def do_geocoding(import_tool, properties):
             properties[import_tool.geo_fields['lon']] = lon
 
     return properties
-
 
 
 class CSVImportTool(Implicit, Item):
@@ -320,7 +318,9 @@ class CSVImportTool(Implicit, Item):
                                 rec_id=record_number, prop_map=prop_map,
                                 )
 
-            job = Job(c, context=location_obj, meta_type=meta_type, import_tool=self.aq_inner.aq_self)
+            job = Job(c, context=location_obj, meta_type=meta_type,
+                      user_id=location_obj.REQUEST.AUTHENTICATED_USER.id,
+                      import_tool=self.aq_inner.aq_self)
             #transaction.savepoint() # this bind the queue to the Connection
             #job.addcallbacks(c.on_success, c.on_failure)
             queue.jobs.append(job)
