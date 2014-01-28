@@ -110,7 +110,12 @@ def addNyPointer(self, id='', REQUEST=None, contributor=None, **kwargs):
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'pointer',
                           removelist=[]),
                   lambda x: self._getOb(x, None) is not None)
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        # try:
+        #     contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        # except AttributeError:
+        #     pass    # TODO: figure out the best response here
 
     ob = _create_NyPointer_object(self, id, contributor)
 

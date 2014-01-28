@@ -74,6 +74,10 @@ class NyBase(NyDublinCore):
 
         if approved_by is None:
             approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            # try:
+            #     approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            # except AttributeError:
+            #     pass    # TODO: figure out best response here
 
         self.approved = approved
         self.approved_by = approved_by
