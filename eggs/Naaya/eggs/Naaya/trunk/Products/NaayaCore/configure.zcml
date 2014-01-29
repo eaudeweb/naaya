@@ -55,5 +55,10 @@
              component=".updates.add_email_validation.AddValidateEmails"
              permission="zope2.ViewManagementScreens" />
 
+	<utility name="update_upcoming_events_portlet.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.update_upcoming_events.UpdateUpcomingEvents"
+             permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
