@@ -1,5 +1,6 @@
 3.3.35 (unreleased)
 -------------------
+* change upcoming_events portlet to display event type [dumitval]
 * Empty script channels don't crash anymore [dumitval]
 
 3.3.34 (2014-01-22)
