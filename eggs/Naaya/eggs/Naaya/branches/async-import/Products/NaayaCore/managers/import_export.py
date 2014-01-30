@@ -16,6 +16,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from persistent import Persistent
 from StringIO import StringIO
 from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.Response import Response
@@ -27,6 +28,7 @@ from persistent.list import PersistentList
 from random import randint
 from zc.async.interfaces import KEY as ZCASYNC_KEY
 from zc.async.queue import Queue
+from zc.async.job import Job as ZCAsyncJob
 from zope.event import notify
 import csv, codecs
 import logging
@@ -41,52 +43,7 @@ import xlwt
 logger = logging.getLogger(__name__)
 
 
-class CompletedImportTask(object):
-    """ Analyse the jobs in the queue
-    """
-
-    def __call__(self, queue):
-        errors = []
-        warnings = []
-        count = len(queue.jobs)
-
-        #import pdb; pdb.set_trace()
-        for job in queue.jobs:
-            errors.append(None)
-
-        queue.stats = {
-            'count':count,
-            'errors':errors,
-            'warnings':warnings,
-        }
-        queue._p_changed = True
-
-        print "=" * 100
-        print "this is analyse"
-        print "=" * 100
-
-
-# class BaseImportConverterTask(object):
-#     """ Base class for converter tasks.
-#
-#     This is an object that is used to store info
-#     about the import task and do the actual import
-#     """
-#
-#
-#     def __init__(self, *args, **kwargs):
-#         self.warnings = PersistentList()
-#         self.errors = PersistentList()
-#
-#     def __call__(self, *args, **kwargs):
-#         self.run(*args, **kwargs)
-#
-#     def on_success(self, *args, **kwargs):
-#         self.status = 'finished'
-#
-
-
-class CSVImporterTask(object):
+class CSVImporterTask(Persistent):
     """ An import task for rows from Excel/CSV files
     """
 
@@ -108,29 +65,16 @@ class CSVImporterTask(object):
 
     def run(self, *args, **kwargs):
 
-        #import pdb; pdb.set_trace()
         self.payload = kwargs['payload']
         self.template = kwargs['template']
         self.rec_id = kwargs['rec_id']
 
         site = getSite()
-        #import_location = site.unrestrictedTraverse(kwargs['import_path'])
-
-        #context = kwargs['context']
-        #root = context._p_jar.root()['Application']
-        #import_location.REQUEST = kwargs['request']
-        #site = root.restrictedTraverse(kwargs['site_path'])
-
-        # user_id = kwargs['user_id']
-        # user = site.acl_users.getUserById(user_id)
-        # if user is None:
-        #     user = site.getOwner()
 
         user = getSecurityManager().getUser()
         acl_users = site.acl_users
         user = user.__of__(acl_users)
         user_id = kwargs['user_id']
-        print "User", user, user.aq_parent
 
         request = BaseRequest()
         request.response = Response()
@@ -380,7 +324,6 @@ class CSVImportTool(Implicit, Item):
         user_id = location_obj.REQUEST.AUTHENTICATED_USER.id
 
         queue, queue_id = make_queue(self)
-        #import pdb; pdb.set_trace()
         for row in rows[:20]:
             record_number += 1
             task = CSVImporterTask()
@@ -398,14 +341,11 @@ class CSVImportTool(Implicit, Item):
                        'url':location_obj.REQUEST.URL,
                        }
 
+            queue.tasks.append(task)
+            transaction.savepoint()
             job = Job(task.run, **options)
             job.addCallbacks(task.on_success, task.on_failure)
-            queue.jobs.append(job)
             queue.put(job)
-
-        # task = CompletedImportTask()
-        # job = Job(task, queue=queue)
-        # queue.put(job)
 
         return self.async_import_html(REQUEST, queue_id=queue_id)
 
@@ -760,30 +700,15 @@ def get_queue_info(context, queue_id):
 def make_queue(context):
     root = context.getSite()._p_jar.root()
 
-    # configuration = getConfiguration()
-    # for name in configuration.dbtab.listDatabaseNames():
-    #     db = configuration.dbtab.getDatabase(name=name)
-    #     provideUtility(db, IDatabase, name=name)
-
-    # db = configuration.dbtab.getDatabase(name='main')
-    # evt = DatabaseOpened(db)
-    # #notify(evt)
-
-    # if not ZCASYNC_KEY in root:
-    #     installer = QueueInstaller()
-    #     installer(evt)
-
     queues = root[ZCASYNC_KEY]
     queue = Queue()
     id = str(randint(0, 999999))
     queues[id] = queue
 
-    # if not dispatcher.get():
-    #     threaded_dispatcher_installer(evt)
-
-    queue.jobs = PersistentList()
+    queue.tasks = PersistentList()
     queue._p_changed = True
     transaction.savepoint() # this bind the queue to the Connection
+    #queue.imspecial = True
 
     return (queue, id)
 

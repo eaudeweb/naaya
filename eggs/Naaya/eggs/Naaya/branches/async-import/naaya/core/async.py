@@ -54,7 +54,7 @@ class InitSingleDBInstance(object):
 
         ev = DatabaseOpened(db)
         subscribers.queue_installer(ev)
-        subscribers.threaded_dispatcher_installer.poll_interval = 2
+        subscribers.threaded_dispatcher_installer.poll_interval = 5
         subscribers.threaded_dispatcher_installer(ev)
 
         config = configuration.product_config.get('zc.z3monitor')
@@ -139,9 +139,6 @@ class Job(zc.async.job.Job):
             self.user_id = user.getId()
 
     def setUp(self):
-        print "="* 100
-        print "doing setup", self
-        print "="* 100
         db_name = Zope2.bobo_application._stuff[0].database_name
         tldata.app = app = Zope2.app(self._p_jar.get_connection(db_name))
 
@@ -153,7 +150,6 @@ class Job(zc.async.job.Job):
             acl_users = app.unrestrictedTraverse(self.uf_path, None)
             user = acl_users.getUserById(self.user_id)
             user = user.__of__(acl_users)
-            print "User", user, user.aq_parent
             newSecurityManager(None, user)
 
         return old_site
