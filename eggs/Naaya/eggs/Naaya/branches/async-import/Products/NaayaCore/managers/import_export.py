@@ -129,6 +129,7 @@ class CSVImporterTask(object):
         user = getSecurityManager().getUser()
         acl_users = site.acl_users
         user = user.__of__(acl_users)
+        user_id = kwargs['user_id']
         print "User", user, user.aq_parent
 
         request = BaseRequest()
@@ -189,10 +190,9 @@ class CSVImporterTask(object):
                                 **properties)
         ob = import_location._getOb(ob_id)
         if address:
-            setattr(ob, self.geo_fields['address'].split('.')[0],
+            setattr(ob, geo_fields['address'].split('.')[0],
                     Geo(address=address))
-            user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            notify(NyContentObjectEditEvent(ob, user))
+            notify(NyContentObjectEditEvent(ob, user_id))
         if extra_properties:
             adapter = ICSVImportExtraColumns(ob, None)
             if adapter is not None:
@@ -203,6 +203,9 @@ class CSVImporterTask(object):
         #obj_ids.append(ob.getId())
         ob.submitThis()
         ob.approveThis(_send_notifications=False)
+
+        del import_location.REQUEST
+        del site.REQUEST
 
     # except UnicodeDecodeError, e:
     #     raise
@@ -378,7 +381,7 @@ class CSVImportTool(Implicit, Item):
 
         queue, queue_id = make_queue(self)
         #import pdb; pdb.set_trace()
-        for row in rows[:2]:
+        for row in rows[:20]:
             record_number += 1
             task = CSVImporterTask()
 
@@ -399,7 +402,6 @@ class CSVImportTool(Implicit, Item):
             job.addCallbacks(task.on_success, task.on_failure)
             queue.jobs.append(job)
             queue.put(job)
-            break
 
         # task = CompletedImportTask()
         # job = Job(task, queue=queue)
