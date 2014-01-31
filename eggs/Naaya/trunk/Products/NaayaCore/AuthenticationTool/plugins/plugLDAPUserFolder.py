@@ -145,9 +145,13 @@ class plugLDAPUserFolder(PlugBase):
         acl = self.getUserFolder()
         buf = []
         for user, value in self.getUsersRoles(acl).items():
+            valid_values = [role_detail for role_detail in value if
+                            role_detail[0][0] in self.list_valid_roles()]
+            if not valid_values:
+                continue
             user_info = self.get_source_user_info(user)
             buf.append((user, user_info.full_name,
-                        self.getUserLocation(user), value))
+                        self.getUserLocation(user), valid_values))
         if skey == 'user':
             return self.sort_list(buf, 0, rkey)
         elif skey == 'cn':
