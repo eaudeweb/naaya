@@ -14,6 +14,7 @@ PERMISSION_ADD_FOLDER = 'Naaya - Add Naaya Folder objects'
 
 METATYPE_NYSITE = 'Naaya Site'
 METATYPE_FOLDER = 'Naaya Folder'
+METATYPE_MEETING = 'Naaya Meeting'
 
 LABEL_NYFOLDER = 'Folder'
 

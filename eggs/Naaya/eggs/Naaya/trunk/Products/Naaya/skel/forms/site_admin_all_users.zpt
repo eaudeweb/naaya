@@ -64,7 +64,8 @@
 
 			<tbody>
 			<tal:block repeat="user users">
-			<tal:block define="user_roles user/roles;
+			<tal:block define="all_user_roles user/roles;
+                                user_roles python:[user_role for user_role in all_user_roles if user_role[0][0] in user_tool.list_valid_roles()];
 								row_class python:test(path('repeat/user/odd'), 'row-odd', 'row-even');
 								user_nrows python: max(1, len(user_roles));
 								user_id user/user_id;

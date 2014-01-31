@@ -28,6 +28,7 @@ from Products.Naaya.constants import ID_IMAGESFOLDER
 from Products.Naaya.constants import JS_MESSAGES
 from Products.Naaya.constants import LABEL_NYFOLDER
 from Products.Naaya.constants import METATYPE_FOLDER
+from Products.Naaya.constants import METATYPE_MEETING
 from Products.Naaya.constants import METATYPE_NYSITE
 from Products.Naaya.constants import NAAYA_PRODUCT_PATH
 from Products.Naaya.constants import NYEXP_SCHEMA_LOCATION
@@ -164,10 +165,10 @@ MAINTOPICS_SETTINGS = {
 
 # Other modules can alter these 2 lists. E.g.: CHMSite appends METATYPE_CHMSITE
 CONTAINERS_METATYPES = \
-    [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery',
-     'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
-     'Naaya Consultation', 'Naaya Simple Consultation',
-     'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+    [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder',
+     'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation',
+     'Naaya Simple Consultation', 'Naaya TalkBack Consultation',
+     'Naaya Survey Questionnaire', 'Naaya Meeting']
 
 NAAYA_CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Naaya Photo Gallery',
@@ -1573,7 +1574,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if only_folders:
                 # leave subportals out of this filtering, if selected
                 if not (subportals and INySite.providedBy(sub_ob)):
-                    if sub_ob.meta_type != METATYPE_FOLDER:
+                    if sub_ob.meta_type not in [METATYPE_FOLDER, METATYPE_MEETING]:
                         continue
             # if portal and only_folders=False, filter out non-containers
             elif INySite.providedBy(ob):

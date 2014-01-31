@@ -1,5 +1,6 @@
 3.3.35 (unreleased)
 -------------------
+* Show Meeting objects in roles-in-location listing [dumitval]
 * change upcoming_events portlet to display event type [dumitval]
 * Empty script channels don't crash anymore [dumitval]
 
