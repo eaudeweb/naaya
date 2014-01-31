@@ -1,5 +1,6 @@
 1.4.9 (unreleased)
 -------------------
+* Show the 'Limited access' information in a separate column [dumitval]
 
 1.4.8 (2014-01-14)
 -------------------
