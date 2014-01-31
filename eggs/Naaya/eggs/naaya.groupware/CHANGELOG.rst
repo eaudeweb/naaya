@@ -1,4 +1,7 @@
-1.4.10 (unreleased)
+1.4.11 (unreleased)
+-------------------
+
+1.4.10 (2014-01-31)
 -------------------
 * fix the folder listing (colspan =2) [dumitval]
 
