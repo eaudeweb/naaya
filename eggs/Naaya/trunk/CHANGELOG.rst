@@ -1,4 +1,7 @@
-3.3.35 (unreleased)
+3.3.36 (unreleased)
+-------------------
+
+3.3.35 (2014-01-31)
 -------------------
 * Show Meeting objects in roles-in-location listing [dumitval]
 * change upcoming_events portlet to display event type [dumitval]
