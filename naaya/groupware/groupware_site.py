@@ -3,6 +3,7 @@ from copy import copy
 import logging
 from datetime import datetime
 import json
+from urlparse import urlparse
 
 import Globals
 from DateTime import DateTime
@@ -27,7 +28,7 @@ from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email, get_bulk_ema
 from naaya.content.meeting.meeting import addNyMeeting
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
-from naaya.core.zope2util import get_zope_env
+from naaya.core.zope2util import get_zope_env, path_in_site
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -527,9 +528,6 @@ class GroupwareSite(NySite):
         """ Called when `request_ig_access_html` submits.
             Sends a mail to the portal administrator informing
             that the current user has requested elevated access.
-
-        XXX: Works only with a single source (no local users)
-
         """
 
         if self.portal_is_archived:
@@ -537,20 +535,29 @@ class GroupwareSite(NySite):
 
         role = REQUEST.form.get('role', '')
         location = REQUEST.form.get('location', '')
+        location_url = REQUEST.form.get('location_url', '')
         explanatory_text = cleanup_message(
             REQUEST.form.get('explanatory_text', '').strip())
         if not explanatory_text:
             explanatory_text = '-'
-        sources = self.getAuthenticationTool().getSources()
 
-        if not role or not sources:
+        if not role:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-        source_obj = sources[0] #should not be more than one
         if location == "/":
             location = ''
+        if not location and location_url:
+            o = urlparse(location_url.replace('/index_html', ''))
+            location = o.path
         if location:
             location_obj = self.unrestrictedTraverse(location, None)
+            while True:
+                if location_obj.meta_type in ['Naaya Meeting', 'Groupware site']:
+                    break
+                else:
+                    location_obj = location_obj.aq_parent
+            import pdb; pdb.set_trace()
+            location = '/nfp-eionet/' + path_in_site(location_obj)
             location_title = location_obj.title_or_id()
             location_url = location_obj.absolute_url()
         else:
