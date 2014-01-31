@@ -396,7 +396,7 @@ function submit_form_action(action){
 						                     alt icon/title;
 						                     title icon/title" />
 					</td>
-					<td class="title-column">
+					<td class="title-column" colspan="2">
 						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
                         <a tal:define="download_url object_info/view/get_download_url"
                            tal:condition="download_url"
