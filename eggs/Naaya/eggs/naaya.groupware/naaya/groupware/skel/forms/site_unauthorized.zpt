@@ -9,7 +9,7 @@
             <p i18n:translate="">
                 You may request access to this section by contacting
                 your group leader or by filling out the
-                <a href="./request_ig_access_html" title="Request IG access" i18n:attributes="title" i18n:name="access_request">access request</a> form.
+                <a tal:attributes="href string:request_ig_access_html?came_from=${came_from}" title="Request IG access" i18n:attributes="title" i18n:name="access_request">access request</a> form.
             </p>
             </tal:block>
 
