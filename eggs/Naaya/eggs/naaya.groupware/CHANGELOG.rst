@@ -1,4 +1,7 @@
-1.4.9 (unreleased)
+1.4.10 (unreleased)
+-------------------
+
+1.4.9 (2014-01-31)
 -------------------
 * Add option to request "Meeting Observer" role [dumitval]
 * Show the 'Limited access' information in a separate column [dumitval]
