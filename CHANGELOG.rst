@@ -1,5 +1,6 @@
 1.4.10 (unreleased)
 -------------------
+* fix the folder listing (colspan =2) [dumitval]
 
 1.4.9 (2014-01-31)
 -------------------
