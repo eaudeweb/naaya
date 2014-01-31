@@ -235,6 +235,8 @@ function submit_form_action(action){
                          src="misc_/Naaya/sort_desc.gif" />
                 </th>
 
+				<th i18n:translate="">Restrictions</th>
+
                 <th class="title-column" colspan="2">
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=contributor"
                         tal:condition="python: skey != 'contributor' or rkey"
@@ -308,6 +310,15 @@ function submit_form_action(action){
 									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 							</span>
 						</span>
+						<tal:block condition="folder/discussion|nothing">
+						<tal:block define="count_comments folder/count_comments" condition="count_comments" on-error="string:">
+							[<span tal:replace="count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+						</tal:block>
+					</td>
+
+                    <td class="title-column">
 						<tal:block tal:condition="folder/can_be_seen">
 							<tal:block tal:condition="folder/has_restrictions" i18n:translate="">
 							[Limited access]
@@ -316,13 +327,7 @@ function submit_form_action(action){
 						<tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
 							[Restricted access]
 						</tal:block>
-						<tal:block condition="folder/discussion|nothing">
-						<tal:block define="count_comments folder/count_comments" condition="count_comments" on-error="string:">
-							[<span tal:replace="count_comments" />
-							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
-						</tal:block>
-						</tal:block>
-					</td>
+                    </td>
 
 					<tal:block define="contributor folder/contributor;
 									user_quoted python:here.utUrlEncode(contributor);
