@@ -11,6 +11,7 @@
          tal:define="mail_sent python:request.get('mail_sent', '');
                      location python:request.get('location', '');
                      came_from python:request.get('came_from', '');
+                     inside_meeting python:here.check_inside_meeting(came_from);
                      can_view here/checkPermissionView;
                      can_review here/checkPermissionReview;
                      can_add here/checkPermissionAddObjects;
@@ -25,13 +26,20 @@
         </tal:block>
         <tal:block condition="not: here/portal_is_archived">
             <p i18n:translate=""
-               tal:condition="python:logged_in and needs_permission">
+               tal:condition="python:logged_in and needs_permission and not inside_meeting">
                 Select the access level you want to request. The request will
                 be reviewed by an administrator of the interest group.
             </p>
+            <p i18n:translate=""
+               tal:condition="python:logged_in and needs_permission and inside_meeting">
+                The object you are trying to access is inside a restricted
+                meeting folder. You need the "Meeting observer" access level
+                to open any documents inside this folder.
+            </p>
             <form action="request_ig_access" method="post"
                   tal:condition="python:logged_in and not mail_sent">
-                <div class="field-inline" tal:condition="not:can_view">
+                <div class="field-inline"
+                    tal:condition="python:not can_view and not inside_meeting">
                     <input type="radio" name="role" id="view_role" value="Viewer" />
                     <label for="view_role" i18n:translate="">Viewer access</label>
                     <span i18n:translate="" class="access-definition">
@@ -42,7 +50,8 @@
                       specific roles only.
                     </span>
                 </div>
-                <div class="field-inline" tal:condition="not:can_review">
+                <div class="field-inline"
+                    tal:condition="python: not can_review and not inside_meeting">
                     <input type="radio" name="role" id="review_role" value="Reviewer" />
                     <label for="review_role" i18n:translate="">Reviewer access</label>
                     <span i18n:translate="" class="access-definition">
@@ -53,7 +62,7 @@
                 </div>
                 <div class="field-inline">
                     <input type="radio" name="role" id="observer_role"
-                      value="Meeting Observer" />
+                      value="Meeting Observer" tal:attributes="checked inside_meeting" />
                     <label for="observer_role" i18n:translate="">Meeting Observer</label>
                     <span i18n:translate="" class="access-definition">
                         is a specific access level used by the Meeting object;
@@ -61,7 +70,8 @@
                         in an otherwise restricted meeting.
                     </span>
                 </div>
-                <div class="field-inline" tal:condition="not:can_add">
+                <div class="field-inline"
+                    tal:condition="python: not can_add and not inside_meeting">
                     <input type="radio" name="role" id="contributor_role" value="Contributor" />
                     <label for="contributor_role" i18n:translate="">Contributor access</label>
                     <span i18n:translate="" class="access-definition">
