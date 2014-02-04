@@ -556,8 +556,8 @@ class GroupwareSite(NySite):
                     break
                 else:
                     location_obj = location_obj.aq_parent
-            import pdb; pdb.set_trace()
-            location = '/nfp-eionet/' + path_in_site(location_obj)
+            site_id = self.getSite().getId()
+            location = '/' + site_id + '/' + path_in_site(location_obj)
             location_title = location_obj.title_or_id()
             location_url = location_obj.absolute_url()
         else:
@@ -661,6 +661,15 @@ class GroupwareSite(NySite):
         """ """
         return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/logout')
 
+    security.declarePublic('inside_meeting')
+    def check_inside_meeting(self, came_from=None):
+        """ """
+        if came_from:
+            o = urlparse(came_from.replace('/index_html', ''))
+            if o.path:
+                location_obj = self.unrestrictedTraverse(o.path, None)
+                return _inside_meeting(location_obj)
+
     request_ig_access_emailpt = EmailPageTemplateFile(
         'zpt/emailpt/request_ig_access.zpt', globals())
     request_rejected_emailpt = EmailPageTemplateFile(
@@ -685,3 +694,11 @@ def groupware_bundle_registration():
     from Products.NaayaCore.FormsTool import bundlesupport
     templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
     bundlesupport.register_templates_in_directory(templates_path, 'Groupware')
+
+def _inside_meeting(location_obj):
+    if location_obj.meta_type == 'Naaya Meeting':
+        return True
+    elif location_obj.meta_type == 'Groupware site':
+        return False
+    else:
+        return _inside_meeting(location_obj.aq_parent)

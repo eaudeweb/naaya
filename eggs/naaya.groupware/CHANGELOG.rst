@@ -1,5 +1,7 @@
 1.4.11 (unreleased)
 -------------------
+* Show only "Meeting observer" in role request page if request came from
+  a meeting object [dumitval]
 
 1.4.10 (2014-01-31)
 -------------------
