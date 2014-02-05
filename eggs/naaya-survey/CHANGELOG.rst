@@ -1,5 +1,6 @@
 1.2.45 (unreleased)
 ===================
+* bugfix (old answers were not overwritten) [dumitval]
 
 1.2.44 (2013-01-22)
 ===================

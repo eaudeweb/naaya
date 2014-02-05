@@ -283,7 +283,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # look for all old answers and remove them
             # (there can be more than one because of a previous bug)
             while True:
-                old_answer = self.getAnswerForRespondent(respondent=respondent, draft=True)
+                old_answer = self.getAnswerForRespondent(respondent=respondent,
+                                                        all=True)
                 if old_answer is None:
                     break
                 else:
@@ -497,7 +498,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return self.getAnswerForRespondent(multiple, draft)
 
     security.declarePublic('getAnswerForRespondent')
-    def getAnswerForRespondent(self, multiple=False, draft=False, respondent=None):
+    def getAnswerForRespondent(self, multiple=False, draft=False, all=False,
+            respondent=None):
         """Return the answer of the respondent (or current user if None)
            Returns None if the answer doesn't exist.
            If multiple answers exist, only the first one is returned.
@@ -518,7 +520,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # all answers, so we must do the filtering ourselves.
             if obj.respondent != respondent:
                 continue
-            if obj.is_draft() != bool(draft):
+            if not all and obj.is_draft() != bool(draft):
                 continue
             if not multiple:
                 return obj
