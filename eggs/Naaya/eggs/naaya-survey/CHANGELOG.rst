@@ -1,4 +1,7 @@
-1.2.45 (unreleased)
+1.2.46 (unreleased)
+===================
+
+1.2.45 (2014-02-05)
 ===================
 * bugfix (old answers were not overwritten) [dumitval]
 
