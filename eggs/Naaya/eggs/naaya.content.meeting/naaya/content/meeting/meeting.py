@@ -19,6 +19,8 @@ from naaya.content.base.events import NyContentObjectEditEvent
 from zope.interface import implements
 from AccessControl.Permission import Permission
 from DateTime import DateTime
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from Products.PythonScripts.PythonScript import manage_addPythonScript
 
 #Naaya imports
 from Products.Naaya.NyFolder import NyFolder
@@ -438,8 +440,6 @@ class NyMeeting(NyContentData, NyFolder):
         """
         this shoule be used for the meeting instead of process_submitted_form
         """
-        meeting_path = self.getPhysicalPath()
-        old_agenda_pointer = getattr(self, 'agenda_pointer', '')
         form_errors = super(NyMeeting, self).process_submitted_form(REQUEST_form,
                 _lang, _all_values, _override_releasedate)
         self._check_meeting_dates(form_errors) # can modify form_errors
@@ -760,26 +760,31 @@ config.update({
 def get_config():
     return config
 
+from eionet_survey.eionet_survey import (EIONET_SURVEY_ID, EIONET_SURVEY_TITLE,
+                           EIONET_SURVEY_QUESTIONS)
 def _create_eionet_survey(container):
     manage_addMegaSurvey(container, EIONET_SURVEY_ID, EIONET_SURVEY_TITLE)
     eionet_survey = container._getOb(EIONET_SURVEY_ID)
     eionet_survey.meeting_eionet_survey = True
+    eionet_survey.allow_anonymous = 1
     eionet_survey._p_changed = True
     for question in EIONET_SURVEY_QUESTIONS:
         eionet_survey.addWidget(**question)
     for widget in eionet_survey.objectValues():
         widget.locked = True
         widget._p_changed = True
+    #Create validation_html and validation_onsubmit for custom validation
+    validation_onsubmit = os.path.join(os.path.dirname(__file__), 'eionet_survey',
+                         'validation_onsubmit.txt')
+    manage_addPythonScript(eionet_survey, 'validation_onsubmit')
+    script_content = open(validation_onsubmit, 'rb').read()
+    params = 'datamodel, errors'
+    script_title = 'Custom validation logic'
+    eionet_survey._getOb('validation_onsubmit').ZPythonScript_edit(params, script_content)
+    eionet_survey._getOb('validation_onsubmit').ZPythonScript_setTitle(script_title)
+    validation_html = os.path.join(os.path.dirname(__file__), 'eionet_survey',
+                         'validation_html.txt')
+    validation_title = "Custom questionnaire HTML"
+    manage_addPageTemplate(eionet_survey, 'validation_html', validation_title,
+                           open(validation_html).read())
 
-EIONET_SURVEY_ID = 'eionet-survey'
-EIONET_SURVEY_TITLE = 'Eionet evaluation survey'
-EIONET_SURVEY_QUESTIONS = [
-    {'meta_type': 'Naaya Radio Widget', 'title': 'The first question',
-     'choices': ['Yes', 'No'], 'sortorder': 1},
-    {'meta_type': 'Naaya Radio Widget', 'title': 'The second question',
-     'choices': ['Da', 'Nu'], 'sortorder': 2},
-    {'meta_type': 'Naaya Radio Widget', 'title': 'The third question',
-     'choices': ['Des', 'Rar'], 'sortorder': 3},
-    {'meta_type': 'Naaya String Widget', 'title': 'The fourth question',
-     'sortorder': 4},
-]
