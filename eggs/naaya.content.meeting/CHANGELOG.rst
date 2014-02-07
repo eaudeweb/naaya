@@ -1,5 +1,6 @@
 1.2.53 (unreleased)
 -------------------
+* Default eionet survey, with questions, custom validation, default status, sort order [dumitval]
 
 1.2.52 (2014-01-20)
 -------------------
