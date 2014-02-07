@@ -24,6 +24,7 @@ from urllib import urlencode
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from AccessControl.Permissions import view
 from DocumentTemplate.sequence import sort
 from Globals import InitializeClass
@@ -227,7 +228,8 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         return manage_addWidget(widget_cls,
                                 self,
                                 title=title,
-                                REQUEST=REQUEST)
+                                REQUEST=REQUEST,
+                                **kwargs)
 
     security.declarePrivate('deleteItems')
     def deleteItems(self, ids=[], REQUEST=None):
@@ -237,12 +239,22 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         else:
             try:
                 if isinstance(self._getOb(ids[0]), AVAILABLE_WIDGETS):
+                    for widget_id in ids:
+                        if (getattr(self._getOb(widget_id), 'locked') and
+                                not self.checkPermission('View Management Screens')):
+                            raise Unauthorized
+
                     # if we're deleting questions, delete the
                     # corresponding statistics too
                     for report in self.getReports():
                         statistic_ids = [stat.id for stat in report.getStatistics() if stat.question.id in ids]
                         report.manage_delObjects(statistic_ids)
                 self.manage_delObjects(ids)
+            except Unauthorized:
+                err = sys.exc_info()
+                zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
+                         'Could not delete items', error=err)
+                self.setSessionErrorsTrans('You are not authorized to delete selected items.')
             except:
                 err = sys.exc_info()
                 zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,

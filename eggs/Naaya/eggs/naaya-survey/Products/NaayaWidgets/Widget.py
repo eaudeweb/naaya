@@ -19,6 +19,7 @@
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
+from AccessControl import Unauthorized
 from AccessControl.Permissions import view
 from OFS.Folder import Folder
 from Globals import InitializeClass
@@ -182,6 +183,8 @@ class Widget(Folder, LocalPropertyManager):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self):
         """ """
+        if getattr(self, 'locked') and not self.checkPermission('View Management Screens'):
+            raise Unauthorized
         local_properties = self.getLocalProperties()
         local_properties = filter(None,
                                   [x.get('id', None) for x in local_properties]

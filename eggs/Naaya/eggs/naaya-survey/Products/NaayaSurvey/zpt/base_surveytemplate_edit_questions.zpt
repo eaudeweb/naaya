@@ -3,10 +3,10 @@
 <!--
 // TODO: move the jscript to a library included in the header
 function toggleSelect(caller){
-  var frm = document.objectItems;
-  for(var i=0; i<frm.elements.length; i++){
-    frm.elements[i].checked = caller.checked;
-  }
+	var frm = document.objectItems;
+	for(var i=0; i<frm.elements.length; i++){
+		frm.elements[i].checked = caller.checked;
+	}
 }
 //-->
 </script>
@@ -32,8 +32,8 @@ function toggleSelect(caller){
 			<td tal:repeat="widget_type row">
 				<tal:block define="input_id string:add_action_${repeat/row/index}_${repeat/widget_type/index};">
 					<input type="radio" name="meta_type" tal:attributes="
-					    checked python:here.getSession('meta_type', '') == widget_type['meta_type'];
-					    value widget_type/meta_type;
+							checked python:here.getSession('meta_type', '') == widget_type['meta_type'];
+							value widget_type/meta_type;
 						id input_id;" />
 					<label tal:attributes="for input_id">
 						<strong tal:content="widget_type/meta_label" i18n:translate="" />
@@ -60,7 +60,7 @@ function toggleSelect(caller){
 				onclick="javascript:return window.confirm('Are you sure?')"
 				i18n:attributes="value" />
 			<input type="submit" value="Set sort order" i18n:attributes="value"
-				   name="setSortOrder:method" />
+					 name="setSortOrder:method" />
 		</div>
 		<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 		<tr>
@@ -73,31 +73,37 @@ function toggleSelect(caller){
 			<th class="edit" i18n:translate="">Edit</th>
 		</tr>
 		<tr tal:repeat="object objects">
-			<td class="checkbox" style="width: 4%; vertical-align: top;">
-				<input type="checkbox" name="ids:list" 
-					tal:attributes="value object/getId" />
-			</td>
-			<td class="type" style="width: 4%;">
-				<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
-				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
-			</td>
-			<td class="title-column"
-                tal:define="nonEmptyTitle python:test(object.title, object.title, object.getNonEmptyAttribute('title'))">
-			<a tal:attributes="
-				href string:${object/absolute_url}/preview_html;
-				title nonEmptyTitle"
-				tal:content="nonEmptyTitle" />
-			</td>
-			<td class="edit">
-				<input type="text" size="3" tal:attributes="
-					name string:${object/getId}:int;
-					value object/sortorder" />
-			</td>
-			<td class="edit">
-			<a tal:attributes="href string:${object/absolute_url}/edit_html">
-				<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
-			</a>
-			</td>
+			<tal:block define="locked object/locked|nothing">
+				<td class="checkbox" style="width: 4%; vertical-align: top;">
+					<input type="checkbox" name="ids:list" 
+						tal:attributes="value object/getId;
+														disabled python:test(locked and not here.checkPermission('View Management Screens'), 'disabled', None)" />
+				</td>
+				<td class="type" style="width: 4%;">
+					<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
+							 tal:attributes="src icon/url; title icon/title; alt icon/title" />
+				</td>
+				<td class="title-column"
+						tal:define="nonEmptyTitle python:test(object.title, object.title, object.getNonEmptyAttribute('title'))">
+						<a tal:attributes="
+							href string:${object/absolute_url}/preview_html;
+							title nonEmptyTitle"
+							tal:content="nonEmptyTitle" />
+				</td>
+				<td class="edit">
+					<input type="text" size="3" tal:attributes="
+						name string:${object/getId}:int;
+						value object/sortorder" />
+				</td>
+				<td class="edit">
+				<a tal:attributes="href string:${object/absolute_url}/edit_html"
+					tal:condition="python:here.checkPermission('View Management Screens') or not locked">
+					<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+				</a>
+				<tal:block i18n:translate=""
+					tal:condition="python: locked and not here.checkPermission('View Management Screens')">restricted</tal:block>
+				</td>
+			</tal:block>
 		</tr>
 		</table>
 	</form>
