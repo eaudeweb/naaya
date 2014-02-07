@@ -12,7 +12,7 @@ setup(name='naaya.content.meeting',
           'Naaya >= 3.3.26',
           'BeautifulSoup >= 3.0.7a',
           'scrubber >= 1.4.2',
-          'naaya-survey >= 1.2.21',
+          'naaya-survey >= 1.2.36',
           'html2text',
       ],
 )

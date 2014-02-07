@@ -35,6 +35,7 @@ from naaya.core.zope2util import relative_object_path
 from naaya.core.zope2util import get_zope_env
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
+from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
 #Meeting imports
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
@@ -99,7 +100,6 @@ DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['geo_type'].update(visible=True, label="Meeting type")
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=True)
-
 
 # this dictionary is updated at the end of the module
 config = {
@@ -514,6 +514,11 @@ class NyMeeting(NyContentData, NyFolder):
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date
+            if schema_raw_data.get('is_eionet_meeting'):
+                survey_ids = [survey.getId() for survey in
+                                        self.objectValues('Naaya Mega Survey')]
+                if EIONET_SURVEY_ID not in survey_ids:
+                    _create_eionet_survey(self)
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
@@ -755,3 +760,26 @@ config.update({
 def get_config():
     return config
 
+def _create_eionet_survey(container):
+    manage_addMegaSurvey(container, EIONET_SURVEY_ID, EIONET_SURVEY_TITLE)
+    eionet_survey = container._getOb(EIONET_SURVEY_ID)
+    eionet_survey.meeting_eionet_survey = True
+    eionet_survey._p_changed = True
+    for question in EIONET_SURVEY_QUESTIONS:
+        eionet_survey.addWidget(**question)
+    for widget in eionet_survey.objectValues():
+        widget.locked = True
+        widget._p_changed = True
+
+EIONET_SURVEY_ID = 'eionet-survey'
+EIONET_SURVEY_TITLE = 'Eionet evaluation survey'
+EIONET_SURVEY_QUESTIONS = [
+    {'meta_type': 'Naaya Radio Widget', 'title': 'The first question',
+     'choices': ['Yes', 'No'], 'sortorder': 1},
+    {'meta_type': 'Naaya Radio Widget', 'title': 'The second question',
+     'choices': ['Da', 'Nu'], 'sortorder': 2},
+    {'meta_type': 'Naaya Radio Widget', 'title': 'The third question',
+     'choices': ['Des', 'Rar'], 'sortorder': 3},
+    {'meta_type': 'Naaya String Widget', 'title': 'The fourth question',
+     'sortorder': 4},
+]
