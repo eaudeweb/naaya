@@ -1,5 +1,6 @@
 1.2.46 (unreleased)
 ===================
+* allow instantiating of the Matrix widget with rows and columns [dumitval]
 
 1.2.45 (2014-02-05)
 ===================

@@ -250,25 +250,29 @@
 				<metal:block use-macro="tmpl/macros/validate" />
 			</tal:block>
 
-			<div class="widgetEditMode"
-				tal:condition="python:here.checkPermissionPublishObjects() and
-						meeting_eionet_survey">
-				<label class="widget-title" for="respondent" i18n:translate="">
-					<span>Select respondent</span>
-					<span class="required">*</span>
-				</label>
-				<select id="respondent" name="respondent"
-          tal:define="participants_container here/aq_parent/participants;
-                      uids participants_container/get_participants;
-                      participants python:[participants_container.getAttendeeInfo(uid) for uid in uids];
-                      dummy python: participants.sort(key=lambda x: x.get('name'))">
-					<option value="" i18n:translate=""></option>
-					<tal:block repeat="participant participants">
-						<option tal:attributes="value participant/uid" tal:content="participant/name"
-                    tal:condition="python:not here.getAnswerForRespondent(respondent=participant['uid'])"/>
-					</tal:block>
-				</select>
-			</div>
+			<tal:block condition="python:here.checkPermissionPublishObjects() and
+						meeting_eionet_survey"
+                define="participants_container here/aq_parent/participants;
+                        uids participants_container/get_participants;
+                        participants python:[participants_container.getAttendeeInfo(uid)
+                                            for uid in uids];
+                        dummy python: participants.sort(key=lambda x: x.get('name'));
+                        participants python:[participant for participant in
+                            participants if not here.getAnswerForRespondent(
+                                respondent=participant['uid'])]">
+                <div tal:condition="participants" class="widgetEditMode">
+                    <label class="widget-title" for="respondent" i18n:translate="">
+                        <span>Select respondent</span>
+                        <span class="required">*</span>
+                    </label>
+                    <select id="respondent" name="respondent">
+                        <option value="" i18n:translate=""></option>
+                        <tal:block repeat="participant participants">
+                            <option tal:attributes="value participant/uid" tal:content="participant/name" />
+                        </tal:block>
+                    </select>
+                </div>
+			</tal:block>
 			<div class="widgetEditMode"
 				tal:condition="python:here.allow_anonymous and not here.isAnonymousUser()">
 				<label class="widget-title" for="anonymous_answer:int" i18n:translate="">

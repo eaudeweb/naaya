@@ -93,7 +93,8 @@ function toggleSelect(caller){
 				<td class="edit">
 					<input type="text" size="3" tal:attributes="
 						name string:${object/getId}:int;
-						value object/sortorder" />
+						value object/sortorder;
+                        disabled locked"/>
 				</td>
 				<td class="edit">
 				<a tal:attributes="href string:${object/absolute_url}/edit_html"
