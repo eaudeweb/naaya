@@ -1,4 +1,7 @@
-1.2.53 (unreleased)
+1.2.54 (unreleased)
+-------------------
+
+1.2.53 (2014-02-07)
 -------------------
 * Default eionet survey, with questions, custom validation, default status, sort order [dumitval]
 
