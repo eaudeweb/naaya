@@ -1,7 +1,7 @@
 
 from zope.interface import implements
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -87,8 +87,12 @@ class LocalChannel(SimpleItem, utils):
             l_howmany = -1
             if self.numberofitems != 0:
                 l_howmany = self.numberofitems
-            l_items = self.query_translated_objects(meta_type=self.objmetatype, lang=self.language, approved=1, howmany=l_howmany)
-        return l_items
+            l_items = self.query_translated_objects(meta_type=self.objmetatype,
+                                                    lang=self.language,
+                                                    approved=1,
+                                                    howmany=l_howmany)
+        return [item for item in l_items
+                    if getSecurityManager().checkPermission(view, item)]
 
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
