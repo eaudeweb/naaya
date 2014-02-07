@@ -1,4 +1,7 @@
-3.3.36 (unreleased)
+3.3.37 (unreleased)
+-------------------
+
+3.3.36 (2014-02-07)
 -------------------
 * get_objects_for_rdf returns objects where the user has view [dumitval]
 
