@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='naaya-survey',
-    version="1.2.46",
+    version="1.2.47",
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro/',
