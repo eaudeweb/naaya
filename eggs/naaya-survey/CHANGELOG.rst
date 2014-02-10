@@ -1,4 +1,7 @@
-1.2.47 (unreleased)
+1.2.48 (unreleased)
+===================
+
+1.2.47 (2014-02-10)
 ===================
 * bugfix in survey index related to the possible inclusion in an eionet meeting [dumitval]
 
