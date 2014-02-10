@@ -251,16 +251,16 @@
 			</tal:block>
 
 			<tal:block condition="python:here.checkPermissionPublishObjects() and
-						meeting_eionet_survey"
-                define="participants_container here/aq_parent/participants;
-                        uids participants_container/get_participants;
-                        participants python:[participants_container.getAttendeeInfo(uid)
+						meeting_eionet_survey">
+                <div tal:define="participants_container here/aq_parent/participants;
+                                 uids participants_container/get_participants;
+                                 participants python:[participants_container.getAttendeeInfo(uid)
                                             for uid in uids];
-                        dummy python: participants.sort(key=lambda x: x.get('name'));
-                        participants python:[participant for participant in
-                            participants if not here.getAnswerForRespondent(
-                                respondent=participant['uid'])]">
-                <div tal:condition="participants" class="widgetEditMode">
+                                 dummy python: participants.sort(key=lambda x: x.get('name'));
+                                 participants python:[participant for participant in
+                                     participants if not here.getAnswerForRespondent(
+                                        respondent=participant['uid'])]"
+                    tal:condition="participants" class="widgetEditMode">
                     <label class="widget-title" for="respondent" i18n:translate="">
                         <span>Select respondent</span>
                         <span class="required">*</span>
