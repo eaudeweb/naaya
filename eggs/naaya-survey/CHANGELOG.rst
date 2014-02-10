@@ -1,5 +1,6 @@
 1.2.47 (unreleased)
 ===================
+* bugfix in survey index related to the possible inclusion in an eionet meeting [dumitval]
 
 1.2.46 (2014-02-07)
 ===================
