@@ -1,13 +1,4 @@
 (function(){
-var igs = {
-        init: function(){
-            jQuery("div.see_more a").click(function(){
-                var ctxt = jQuery("#"+jQuery(this).attr("data-access"));
-                jQuery(".see_more, .see_more_dots", ctxt).hide();
-                jQuery(".more", ctxt).show('blind', {}, 800);
-            });
-        }
-    };
 
 var ldap_roles = {
         init: function(){
@@ -48,30 +39,37 @@ $(document).ready(function(){
             async: false,
             data:{user: user, ajax: 'igs'},
             success: function(data){
-                if (data.length > 0){
+                var igs_count = data.length;
+                if (igs_count > 0){
+                    $('#igs_access_left').text(igs_count + ' Interest Groups left to check.');
                     $.each(data, function(index, value){
+                        var igs_left = igs_count - index - 1;
                         $.ajax({
                             url: '/profile_overview',
                             async: false,
                             data: {user: user, ajax: 'memberships', ig_id: value},
                             success: function(data){
                                 $('#ig_access').append(data);
-                                igs.init();
                             },
                         });
+                        $('#igs_access_left').text(igs_left + ' Interest Groups left to check.');
                     });
+                    $('#igs_access_left').hide();
                     $('#ig_access_loader').hide();
+                    $('#igs_subscriptions_left').text(igs_count + ' Interest Groups left to check.');
                     $.each(data, function(index, value){
+                        var igs_left = igs_count - index - 1;
                         $.ajax({
                             url: '/profile_overview',
                             async: false,
                             data: {user: user, ajax: 'subscriptions', ig_id: value},
                             success: function(data){
                                 $('#ig_subscriptions').append(data);
-                                igs.init();
                             },
                         });
+                        $('#igs_subscriptions_left').text(igs_left + ' Interest Groups left to check.');
                     });
+                    $('#igs_subscriptions_left').hide();
                     $('#ig_subscriptions_loader').hide();
                     if ($('#ig_subscriptions').html().replace(/\s+/g, '').length == 0){
                         $('#ig_subscriptions').html("User " + user +
@@ -82,22 +80,6 @@ $(document).ready(function(){
                 }
             },
         });
-    var ajax_calls = function(){
-        jQuery.ajax({url: '/profile_overview',
-                     data: {user: user, ajax: 'memberships'},
-                     success: function(data){
-                                jQuery('#ig_access').html(data);
-                                igs.init();
-                        },
-                     complete: function(jqXHR, textStatus){
-                           jQuery.get('/profile_overview', {user: user, ajax: 'subscriptions'},
-                                function(data){
-                                 jQuery('#ig_subscriptions').html(data);
-                                });
-                        }
-        });
-    };
-    //window.setTimeout(ajax_calls, 1000);
     });
 
 })();
