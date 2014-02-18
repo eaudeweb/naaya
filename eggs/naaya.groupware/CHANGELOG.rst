@@ -1,5 +1,6 @@
 1.4.12 (unreleased)
 -------------------
+* style improvement for the administrative notification (black on yellow) [dumitval]
 * Check access and subscriptions one ig at a time [dumitval]
 
 1.4.11 (2014-02-04)
