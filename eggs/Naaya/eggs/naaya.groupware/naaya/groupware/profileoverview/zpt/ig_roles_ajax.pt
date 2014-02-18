@@ -1,20 +1,17 @@
     <tal:block condition="python:len(options['user_roles'])"
             define="ig python:options['ig']">
-    <tal:block repeat="access options/user_roles">
-        <div tal:attributes="id access">
-            <dl>
-                <dt>
-                    <span class="link-external">
-                        <a tal:attributes="href ig/absolute_url; target string:_blank"
-                           tal:content="ig/title_or_id">
-                        </a>
-                    </span>
-                </dt>
-                <dd>
-                    <ul tal:condition="python:access is 'admin'">
-                        <li><span i18n:translate="">Admin access</span></li>
-                    </ul>
-                <ul tal:condition="python:options['ig_details'][ig.id]">
+        <dt>
+            <span class="link-external">
+                <a tal:attributes="href ig/absolute_url; target string:_blank"
+                   tal:content="ig/title_or_id">
+                </a>
+            </span>
+        </dt>
+        <dd tal:repeat="access options/user_roles">
+            <ul tal:condition="python:access is 'admin'">
+                <li><span i18n:translate="">Admin access</span></li>
+            </ul>
+            <ul tal:condition="python:options['ig_details'][ig.id]">
                 <li tal:repeat="local_roles python:options['ig_details'][ig.id]">
                     <span tal:content="python:', '.join(local_roles['access'])" />
                     in <a tal:content="python: local_roles['location'].title_or_id()"
@@ -23,12 +20,6 @@
                             - as a member of <tt tal:content="python:options['role_names'][local_roles['group']]" class="ldap_group" /></tal:block>
                         <span tal:condition="not:python:local_roles['group']"> - local role</span>
                 </li>
-                </ul>
-                <div class="see_more" style="display:none">
-                    <a href="javascript:void(0);" tal:attributes="data-access access"
-                    tal:content="structure python:'see all %d interest groups &raquo;'%len(options.keys())"></a>
-                </div>
-                </dd>
-        </div>
-    </tal:block>
+            </ul>
+        </dd>
     </tal:block>
