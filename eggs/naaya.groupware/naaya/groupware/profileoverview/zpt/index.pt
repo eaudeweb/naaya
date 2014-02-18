@@ -20,8 +20,8 @@
         Local access roles are explicitly assigned by Administrators, while other
         access rights are inherited from a group.
     </p>
-    <div id="ig_access">
-    </div>
+    <dl id="ig_access" ></dl>
+    <p id="igs_access_left"></p>
     <div style='text-align: center;' id="ig_access_loader">
         <img src="++resource++naaya.groupware/ajax-loader.gif" />
     </div>
@@ -68,10 +68,10 @@
     <h2>Subscriptions to interest group notifications in <span tal:replace="meta_info/root_site_title" /></h2>
     <p>For performance, only a "three level deep" search is executed for
         getting subscriptions.<br />
-        E.g. for <tt>site/library/a/b/c</tt> the search will stop at <tt>"a"</tt>
-        (<tt>"a"</tt> included).</p>
-    <div id="ig_subscriptions">
-    </div>
+        E.g. for <tt>site/library/a/b/c</tt> the search will stop at <tt>"b"</tt>
+        (<tt>"b"</tt> included).</p>
+        <dl id="ig_subscriptions" ></dl>
+    <p id="igs_subscriptions_left"></p>
     <div style='text-align: center;' id="ig_subscriptions_loader">
         <img src="++resource++naaya.groupware/ajax-loader.gif" />
     </div>
