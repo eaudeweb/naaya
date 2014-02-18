@@ -21,9 +21,9 @@
         access rights are inherited from a group.
     </p>
     <div id="ig_access">
-        <div style='text-align: center;'>
-            <img src="++resource++naaya.groupware/ajax-loader.gif" />
-        </div>
+    </div>
+    <div style='text-align: center;' id="ig_access_loader">
+        <img src="++resource++naaya.groupware/ajax-loader.gif" />
     </div>
 
     <h2>Member of Groups (Eionet Directory Roles)</h2>
@@ -66,10 +66,14 @@
     </tal:block>
 
     <h2>Subscriptions to interest group notifications in <span tal:replace="meta_info/root_site_title" /></h2>
+    <p>For performance, only a "three level deep" search is executed for
+        getting subscriptions.<br />
+        E.g. for <tt>site/library/a/b/c</tt> the search will stop at <tt>"a"</tt>
+        (<tt>"a"</tt> included).</p>
     <div id="ig_subscriptions">
-        <div style='text-align: center;'>
-            <img src="++resource++naaya.groupware/ajax-loader.gif" />
-        </div>
+    </div>
+    <div style='text-align: center;' id="ig_subscriptions_loader">
+        <img src="++resource++naaya.groupware/ajax-loader.gif" />
     </div>
     </tal:block>
 </div>
