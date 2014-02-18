@@ -118,7 +118,6 @@ div.notif_type_label{
     padding-right: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
-    background-color: yellow;
 }
 div.instant{
     background-color: #AA0000;
@@ -134,4 +133,9 @@ div.weekly{
 
 div.monthly{
     background-color: #000066;
+}
+
+div.administrative{
+    color: black;
+    background-color: yellow;
 }
