@@ -1,7 +1,3 @@
-<p>For performance,
-only a "three level deep" search was executed for getting subscriptions.<br />
-E.g. subscriptions in site/library/a/b/c will only be searched until "a" including.</p>
-
 <tal:block condition="python:len(options['subscriptions'])">
     <tal:block repeat="ig python:options['sorted_func'](options['subscriptions'].keys(), key=lambda x: x.title_or_id())">
         <tal:block define="sub_list python:options['subscriptions'][ig]">
@@ -20,11 +16,8 @@ E.g. subscriptions in site/library/a/b/c will only be searched until "a" includi
                         </li>
                     </ul>
                     </dd>
+                </dl>
             </div>
         </tal:block>
-    </tal:block>    
-</tal:block>
-
-<tal:block condition="python:not len(options['subscriptions'])">
-    <tt tal:content="options/user_id" /> has no subscriptions configured in Interest Groups.
+    </tal:block>
 </tal:block>
