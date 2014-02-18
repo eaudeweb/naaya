@@ -12,7 +12,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from eea.usersdb.factories import agent_from_uf
 
 # limit the depth of search for notification subscriptions
-CUTOFF_SUBS = 3
+CUTOFF_SUBS = 5
 
 index_pt = PageTemplateFile('zpt/index.pt', globals())
 ajax_roles_pt = PageTemplateFile('zpt/ig_roles_ajax.pt', globals())
@@ -56,6 +56,13 @@ class ProfileClient(object):
 
         return roles
 
+    def access_in_ig(self, ig):
+        """
+        Returns a list of access rights of the user in the ig
+
+        """
+        return ig.get_user_access(self.user)
+
     def local_access_in_ig(self, ig):
         """
         Returns local roles user may have in corresponding ig.
@@ -79,7 +86,6 @@ class ProfileClient(object):
         `leaf_roles_list` - terminal LDAP roles user belongs to
 
         """
-        igs = self.zope_app.objectValues([METATYPE_GROUPWARESITE])
         result = []
 
         plugldap = get_plugldap(ig)
@@ -216,36 +222,29 @@ def ProfileView(context, request):
         return json.dumps([ig.getId() for ig in all_igs])
 
     elif is_ajax == 'memberships':
-        ig_access = client.access_in_igs()
+        ig = client.zope_app[ig_id]
+        ig_access = client.access_in_ig(ig)
 
-        if 'restricted' in ig_access:
-            del ig_access['restricted']
         ig_details = {}
         roles = set()
-        ig = client.zope_app[ig_id]
         ig_details[ig.id] = client.local_access_in_ig(ig)
         by_groups = client.local_roles_by_groups(ig)
         roles.update(set(map(operator.itemgetter('group'), by_groups)))
         ig_details[ig.id].extend(by_groups)
 
-        if not ig_details[ig.id] and ig_access.has_key('viewer'):
-            ig_access['viewer'].remove(ig)
         role_names = {}
         for role in roles:
             role_names[role] = client.agent.role_info(role)['description']
 
         user_roles = []
-        for k,v in ig_access.items():
-            if ig in v:
-                user_roles.append(k)
+        if ig_access != 'restricted':
+            if ig_details[ig.id] or ig_access != 'viewer':
+                user_roles.append(ig_access)
         return ajax_roles_pt.__of__(context)(ig=ig,
                                              ig_details=ig_details,
                                              user_roles=user_roles,
                                              role_names=role_names)
     elif is_ajax == 'subscriptions':
-        ig_access = client.access_in_igs()
-        if 'restricted' in ig_access:
-            del ig_access['restricted']
         ig = client.zope_app[ig_id]
         notifications = client.notification_lists([ig], CUTOFF_SUBS)
         return subscriptions_pt.__of__(context)(ig=ig,
