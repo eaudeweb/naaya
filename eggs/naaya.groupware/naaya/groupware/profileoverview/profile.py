@@ -184,6 +184,7 @@ def ProfileView(context, request):
     """
     auth_user = request.get('AUTHENTICATED_USER', None)
     is_ajax = request.form.get('ajax', None)
+    ig_id = request.form.get('ig_id', None)
 
     if not auth_user.has_role('Authenticated'):
         if not is_ajax:
@@ -204,40 +205,51 @@ def ProfileView(context, request):
         leaf_roles_list = [ r for r in roles_list if not r['children'] ]
         return index_pt.__of__(context)(roles=leaf_roles_list,
                                         user_id=user.getId())
+    elif is_ajax == 'igs':
+        ig_access = client.access_in_igs()
+
+        if 'restricted' in ig_access:
+            del ig_access['restricted']
+        all_igs = []
+        for igs in ig_access.values():
+            all_igs.extend(igs)
+        return json.dumps([ig.getId() for ig in all_igs])
+
     elif is_ajax == 'memberships':
         ig_access = client.access_in_igs()
 
         if 'restricted' in ig_access:
             del ig_access['restricted']
         ig_details = {}
-        all_igs = []
         roles = set()
-        for igs in ig_access.values():
-            all_igs.extend(igs)
-        for ig in all_igs:
-            ig_details[ig.id] = client.local_access_in_ig(ig)
-            by_groups = client.local_roles_by_groups(ig)
-            roles.update(set(map(operator.itemgetter('group'), by_groups)))
-            ig_details[ig.id].extend(by_groups)
+        ig = client.zope_app[ig_id]
+        ig_details[ig.id] = client.local_access_in_ig(ig)
+        by_groups = client.local_roles_by_groups(ig)
+        roles.update(set(map(operator.itemgetter('group'), by_groups)))
+        ig_details[ig.id].extend(by_groups)
 
-            if not ig_details[ig.id] and ig_access.has_key('viewer'):
-                ig_access['viewer'].remove(ig)
+        if not ig_details[ig.id] and ig_access.has_key('viewer'):
+            ig_access['viewer'].remove(ig)
         role_names = {}
         for role in roles:
             role_names[role] = client.agent.role_info(role)['description']
 
-        return ajax_roles_pt.__of__(context)(ig_details=ig_details,
-                                             ig_access=ig_access,
+        user_roles = []
+        for k,v in ig_access.items():
+            if ig in v:
+                user_roles.append(k)
+        return ajax_roles_pt.__of__(context)(ig=ig,
+                                             ig_details=ig_details,
+                                             user_roles=user_roles,
                                              role_names=role_names)
     elif is_ajax == 'subscriptions':
         ig_access = client.access_in_igs()
         if 'restricted' in ig_access:
             del ig_access['restricted']
-        igs_with_access = []
-        for igs in ig_access.values():
-            igs_with_access.extend(igs)
-        notifications = client.notification_lists(igs_with_access, CUTOFF_SUBS)
-        return subscriptions_pt.__of__(context)(sorted_func=sorted,
+        ig = client.zope_app[ig_id]
+        notifications = client.notification_lists([ig], CUTOFF_SUBS)
+        return subscriptions_pt.__of__(context)(ig=ig,
+                                                sorted_func=sorted,
                                                 subscriptions=notifications,
                                                 user_id=user.getId())
 
@@ -251,7 +263,6 @@ def show_local_roles(context, request):
 
     if 'restricted' in ig_access:
         del ig_access['restricted']
-    ig_details = {}
     all_igs = []
     roles = set()
     for igs in ig_access.values():

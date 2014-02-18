@@ -39,9 +39,49 @@ var ldap_roles = {
     };
 
 
-jQuery(document).ready(function(){
+$(document).ready(function(){
     ldap_roles.init();
     var user = $("#user").val();
+    var all_igs = $.ajax({
+            url: '/profile_overview',
+            dataType: 'json',
+            async: false,
+            data:{user: user, ajax: 'igs'},
+            success: function(data){
+                if (data.length > 0){
+                    $.each(data, function(index, value){
+                        $.ajax({
+                            url: '/profile_overview',
+                            async: false,
+                            data: {user: user, ajax: 'memberships', ig_id: value},
+                            success: function(data){
+                                $('#ig_access').append(data);
+                                igs.init();
+                            },
+                        });
+                    });
+                    $('#ig_access_loader').hide();
+                    $.each(data, function(index, value){
+                        $.ajax({
+                            url: '/profile_overview',
+                            async: false,
+                            data: {user: user, ajax: 'subscriptions', ig_id: value},
+                            success: function(data){
+                                $('#ig_subscriptions').append(data);
+                                igs.init();
+                            },
+                        });
+                    });
+                    $('#ig_subscriptions_loader').hide();
+                    if ($('#ig_subscriptions').html().replace(/\s+/g, '').length == 0){
+                        $('#ig_subscriptions').html("User " + user +
+                            " has no subscriptions configured in Interest Groups.");
+                    }
+                } else {
+                    $('#ig_access').html('You are not a member of any Interest Group');
+                }
+            },
+        });
     var ajax_calls = function(){
         jQuery.ajax({url: '/profile_overview',
                      data: {user: user, ajax: 'memberships'},
@@ -57,7 +97,7 @@ jQuery(document).ready(function(){
                         }
         });
     };
-    window.setTimeout(ajax_calls, 1000);
-});
+    //window.setTimeout(ajax_calls, 1000);
+    });
 
 })();
