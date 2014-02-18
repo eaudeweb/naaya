@@ -1,4 +1,7 @@
-1.4.12 (unreleased)
+1.4.13 (unreleased)
+-------------------
+
+1.4.12 (2014-02-18)
 -------------------
 * style improvement for the administrative notification (black on yellow) [dumitval]
 * Check access and subscriptions one ig at a time [dumitval]
