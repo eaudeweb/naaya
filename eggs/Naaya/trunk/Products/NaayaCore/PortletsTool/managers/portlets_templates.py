@@ -145,10 +145,18 @@ LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.ge
 </tal:block>'''
 
 FOLDER_PORTLET_TEMPLATE = '''<tal:block tal:define="folder python:here.getFolderByPath('PORTLET_FOLDER_PATH')">
-<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" /></tal:block>
-<tal:block metal:fill-slot="portlet_content" tal:content="structure folder/description"></tal:block>
-</tal:block>
+  <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+    <tal:block metal:fill-slot="portlet_title"><a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" /></tal:block>
+    <tal:block metal:fill-slot="portlet_content">
+      <ul>
+        <li tal:repeat="subfolder folder/getPublishedFolders">
+          <a tal:attributes="href subfolder/absolute_url;
+                             title subfolder/title_or_id"
+             tal:content="subfolder/title_or_id" i18n:attributes="title"
+             i18n:translate="" /></li>
+      </ul>
+    </tal:block>
+  </tal:block>
 </tal:block>'''
 
 SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool()['PORTLET_SCRIPTCHANNEL_ID']">

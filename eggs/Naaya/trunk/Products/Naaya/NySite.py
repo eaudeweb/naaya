@@ -174,7 +174,8 @@ NAAYA_CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Naaya Photo Gallery',
      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
      'Naaya Consultation', 'Naaya Simple Consultation',
-     'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+     'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire',
+     'Naaya Meeting']
 
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())

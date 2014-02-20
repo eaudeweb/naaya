@@ -1,5 +1,7 @@
 3.3.37 (unreleased)
 -------------------
+* update script for portlets for folders (to display content) [dumitval]
+* added "Naaya Meeting" to folderish metatypes [dumitval]
 
 3.3.36 (2014-02-07)
 -------------------
