@@ -1,4 +1,7 @@
-1.4.13 (unreleased)
+1.4.14 (unreleased)
+-------------------
+
+1.4.13 (2014-02-21)
 -------------------
 * refactored profile_overview ajax code for Chrome compatibility [dumitval]
 
