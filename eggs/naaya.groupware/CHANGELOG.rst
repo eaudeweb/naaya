@@ -1,5 +1,6 @@
 1.4.13 (unreleased)
 -------------------
+* refactored profile_overview ajax code for Chrome compatibility [dumitval]
 
 1.4.12 (2014-02-18)
 -------------------
