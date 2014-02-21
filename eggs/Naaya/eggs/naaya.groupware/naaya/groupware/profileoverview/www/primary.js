@@ -1,6 +1,5 @@
-(function(){
-
-var ldap_roles = {
+$(document).ready(function(){
+    var ldap_roles = {
         init: function(){
             jQuery(".toggle_role").click(function(){
                 var elem = jQuery("a.toggle_role", this.parentNode);
@@ -14,7 +13,7 @@ var ldap_roles = {
                 hide = false;
             var tr = jQuery("tr#row_"+role_id);
             var children = jQuery("tr."+role_id, tr.parentNode);
-        
+
             if (tr.hasClass("expanded") || hide){
                 tr.removeClass("expanded");
                 if (hide)
@@ -29,52 +28,48 @@ var ldap_roles = {
         }
     };
 
+    function get_data(portals, igs_count, index, ajax, div_id, left_id, loader_id){
+        var igs_left = igs_count - index;
+        var value = portals[index];
+        $.ajax({
+            url: '/profile_overview',
+            data: {user: user, ajax: ajax, ig_id: value},
+            success: function(data){
+                $('#'+div_id).append(data);
+                index += 1;
+                if (index < igs_count){
+                    get_data(portals, igs_count, index, ajax, div_id,
+                                left_id, loader_id);
+                }
+                else{
+                    $('#'+left_id).hide();
+                    $('#'+loader_id).hide();
+                    if (ajax == 'subscriptions'){
+                        if ($('#ig_subscriptions').html().replace(/\s+/g, '').length == 0){
+                            $('#ig_subscriptions').html("User " + user +
+                                " has no subscriptions configured in Interest Groups.");
+                        }
+                    }
+                }
+            },
+        });
+        $('#'+left_id).text(igs_left + ' Interest Groups left to check.');
+    }
 
-$(document).ready(function(){
     ldap_roles.init();
     var user = $("#user").val();
     var all_igs = $.ajax({
             url: '/profile_overview',
             dataType: 'json',
-            async: false,
             data:{user: user, ajax: 'igs'},
             success: function(data){
                 var igs_count = data.length;
                 if (igs_count > 0){
                     $('#igs_access_left').text(igs_count + ' Interest Groups left to check.');
-                    $.each(data, function(index, value){
-                        var igs_left = igs_count - index - 1;
-                        $.ajax({
-                            url: '/profile_overview',
-                            async: false,
-                            data: {user: user, ajax: 'memberships', ig_id: value},
-                            success: function(data){
-                                $('#ig_access').append(data);
-                            },
-                        });
-                        $('#igs_access_left').text(igs_left + ' Interest Groups left to check.');
-                    });
-                    $('#igs_access_left').hide();
-                    $('#ig_access_loader').hide();
-                    $('#igs_subscriptions_left').text(igs_count + ' Interest Groups left to check.');
-                    $.each(data, function(index, value){
-                        var igs_left = igs_count - index - 1;
-                        $.ajax({
-                            url: '/profile_overview',
-                            async: false,
-                            data: {user: user, ajax: 'subscriptions', ig_id: value},
-                            success: function(data){
-                                $('#ig_subscriptions').append(data);
-                            },
-                        });
-                        $('#igs_subscriptions_left').text(igs_left + ' Interest Groups left to check.');
-                    });
-                    $('#igs_subscriptions_left').hide();
-                    $('#ig_subscriptions_loader').hide();
-                    if ($('#ig_subscriptions').html().replace(/\s+/g, '').length == 0){
-                        $('#ig_subscriptions').html("User " + user +
-                            " has no subscriptions configured in Interest Groups.");
-                    }
+                    get_data(data, igs_count, 0, 'memberships', 'ig_access',
+                                'igs_access_left', 'ig_access_loader');
+                    get_data(data, igs_count, 0, 'subscriptions', 'ig_subscriptions',
+                                'igs_subscriptions_left', 'ig_subscriptions_loader');
                 } else {
                     $('#ig_access').html('You are not a member of any Interest Group');
                 }
@@ -82,4 +77,3 @@ $(document).ready(function(){
         });
     });
 
-})();
