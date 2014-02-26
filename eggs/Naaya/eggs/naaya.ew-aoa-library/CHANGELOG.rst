@@ -1,4 +1,7 @@
-1.0.3 (unreleased)
+1.0.4 (unreleased)
+------------------
+
+1.0.3 (2014-02-26)
 ------------------
 * derive viewer from NyBase for correct catalogging [dumitval]
 
