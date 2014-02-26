@@ -65,5 +65,10 @@
              component=".updates.update_portlets_for_folders.UpdatePortletsForFolders"
              permission="zope2.ViewManagementScreens" />
 
+	<utility name="remove_googlemap_apikey"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.update_apikey_googlemap.UpdateApiKeyGoogleMap"
+             permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
