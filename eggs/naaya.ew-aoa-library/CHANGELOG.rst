@@ -1,4 +1,7 @@
-1.0.2 (unreleased)
+1.0.3 (unreleased)
+------------------
+
+1.0.2 (2014-02-26)
 ------------------
 * derive shadows from NyBase for correct catalogging [dumitval]
 * uncommited changes to validation_html (Review Template) [dumitval]
