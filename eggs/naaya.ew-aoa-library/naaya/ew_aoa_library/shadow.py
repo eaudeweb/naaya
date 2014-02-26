@@ -8,6 +8,7 @@ from AccessControl.Permissions import view, view_management_screens
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
+from Products.NaayaBase.NyBase import NyBase
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager
 from zope import interface
 from naaya.core.zope2util import path_in_site
@@ -390,7 +391,7 @@ def extract_survey_answer_data_general_template(answer):
 
     return attrs
 
-class AssessmentShadow(SimpleItem, LocalPropertyManager):
+class AssessmentShadow(SimpleItem, LocalPropertyManager, NyBase):
     """ Non-persistent shadow object that describes an AoA assessment """
 
     interface.implements(INyCatalogAware)
