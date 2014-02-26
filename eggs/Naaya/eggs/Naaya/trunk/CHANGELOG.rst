@@ -1,5 +1,7 @@
-3.3.38 (unreleased)
+3.3.38 (2014-02-26)
 -------------------
+* Bug fix: added an update script to remove the API key from portal geomap tool
+  [tiberich]
 
 3.3.37 (2014-02-20)
 -------------------
