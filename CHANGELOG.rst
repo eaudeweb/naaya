@@ -1,5 +1,6 @@
 1.0.3 (unreleased)
 ------------------
+* derive viewer from NyBase for correct catalogging [dumitval]
 
 1.0.2 (2014-02-26)
 ------------------
