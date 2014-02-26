@@ -8,6 +8,7 @@ except ImportError:
 from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaBase.NyBase import NyBase
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 from zope.app.container.interfaces import (IObjectAddedEvent,
@@ -51,7 +52,7 @@ topics_to_themes = {
                     'd':'w_resource-efficiency-topics'
                     }
 
-class AoALibraryViewer(SimpleItem):
+class AoALibraryViewer(SimpleItem, NyBase):
     interface.implements(INyCatalogAware, INyObjectContainer)
 
     meta_type = "Naaya EW_AOA Library Viewer"
