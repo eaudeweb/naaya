@@ -64,7 +64,7 @@
             <link id="member_search" title="Member search" description="" url="/member_search" relative="1" permission="" order="30"/>
             <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
             <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Naaya - Publish content" order="50"/>
-            <link id="webex" title="WebEx planning mail" description="" url="/admin_webex_mail_html" relative="1" permission="Naaya - Request Webex" order="55"/>
+            <link id="webex" title="WebEx planning mail" description="" url="/admin_webex_mail_html" relative="1" permission="Naaya - Skip approval" order="55"/>
 
             <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
             <link id="help" title="Help" description="" url="/help" relative="1" permission="" order="70"/>
