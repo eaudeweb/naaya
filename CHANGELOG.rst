@@ -1,5 +1,6 @@
 1.4.14 (unreleased)
 -------------------
+* `update script` for changing permission on the WebEx planing link [dumitval]
 
 1.4.13 (2014-02-21)
 -------------------
