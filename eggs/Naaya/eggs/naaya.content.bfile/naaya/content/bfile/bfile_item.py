@@ -1,5 +1,6 @@
 """Naaya Blob File"""
 from datetime import datetime
+from DateTime import DateTime
 import os
 import sys
 
@@ -372,6 +373,15 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars, 'bfile_edit')
+
+    security.declareProtected(view, 'version_at_date')
+    def version_at_date(self, date):
+        """ return the file version that was online at the given date """
+        for version in self._versions_for_tmpl():
+            if version['timestamp'] < date:
+                candidate = version
+            else:
+                return candidate
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bfile_download)
