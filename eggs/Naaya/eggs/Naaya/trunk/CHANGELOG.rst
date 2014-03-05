@@ -1,5 +1,6 @@
 3.3.39 (unreleased)
 -------------------
+* display comments paired with the document version (files) [dumitval]
 
 3.3.38 (2014-02-26)
 -------------------

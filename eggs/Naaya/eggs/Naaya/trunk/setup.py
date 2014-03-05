@@ -53,7 +53,7 @@ setup(name='Naaya',
           #Naaya specific
           'naaya.content-compat',
           'naaya.flowplayer',
-          'naaya.content.bfile',
+          'naaya.content.bfile > 1.3.12',
           'naaya.i18n > 1.1.5',
           'naaya.cache >= 1.1',
 
