@@ -216,7 +216,7 @@ class NyCommentable:
         container = self._get_comments_container()
         if container:
             comments = container.objectValues()
-            return sorted(comments, key=lambda c: c.releasedate)
+            return sorted(comments, key=lambda c: c.releasedate, reverse=True)
         else:
             return []
 
