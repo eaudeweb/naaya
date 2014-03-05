@@ -1,4 +1,7 @@
-1.3.13 (unreleased)
+1.3.14 (unreleased)
+--------------------
+
+1.3.13 (2014-03-05)
 --------------------
 * Allow pairing of comments with document versions [dumitval]
 
