@@ -1,4 +1,5 @@
 import zope.component
+from DateTime import DateTime
 import urllib
 from interfaces import IBFileContentViewer
 from naaya.core.utils import pretty_size, force_to_unicode, icon_for_content_type
@@ -35,8 +36,10 @@ def tmpl_version(context, version, ver_id):
                   urllib.quote(version.filename, safe=''))),
         'icon_url': (icon_for_content_type(version.content_type)['url']),
         'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
+        'timestamp': DateTime(version.timestamp),
         'id': ver_id,
         'is_current': False,
         'viewable': viewable,
+        'ob': context,
     }
 
