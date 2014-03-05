@@ -148,13 +148,23 @@ $('a', versions_slot).click(function() {
     versions_slot.empty();
     all_versions.show();
 });
+$(document).ready(function(){
+    if($('div.older').length > 0){
+        $('#showolder').show();
+    }
+    $('p#showolder a').click(function(){
+        $('#showolder').empty();
+        $('#older-header').show();
+        $('div.older').slideDown();
+    });
+})
 </script>
 </tal:block>
 
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />
 
-<tal:block content="structure here/comments_box" />
+<tal:block content="structure python:here.comments_box(**options)" />
 
 </metal:block>
 </metal:block>
