@@ -493,6 +493,9 @@ div.translate-top {
 	margin:1em;
 	padding:1em;
 	}
+.older {
+	color:grey;
+	}
 a.deletecomment, a.deletecomment:visited {
 	font-size: 90%;
 	float:right;
