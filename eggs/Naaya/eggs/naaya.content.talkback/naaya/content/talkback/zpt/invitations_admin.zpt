@@ -8,7 +8,7 @@
 <div class="floated-buttons">
     <span class="buttons">
         <a tal:attributes="href string: ${here/absolute_url}/invitations_export?headers=Name,Organization,Invited%20by,Invited%20by%20userid,Date,Notes,Email,Private%20URL&keys=name,organization,name_from_userid,inviter_userid,create_date,notes,email,private_url">
-            Export to xcel
+            Export to Excel
         </a>
     </span>
     <span class="buttons">
