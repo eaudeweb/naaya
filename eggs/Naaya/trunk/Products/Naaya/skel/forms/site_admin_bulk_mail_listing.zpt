@@ -30,7 +30,7 @@
 <div class="floated-buttons">
     <span class="buttons">
         <a tal:attributes="href string: ${site_url}/admin_bulk_mail_list_export?headers=Date,Subject,Recipients,CC%20Recipients,Content,Sender&keys=date,subject,recipients,cc_recipients,content,sender">
-            Export to xcel
+            Export to Excel
         </a>
     </span>
 </div>
