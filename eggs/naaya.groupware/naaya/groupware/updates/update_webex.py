@@ -1,4 +1,6 @@
 from Products.naayaUpdater.updates import UpdateScript
+from Products.NaayaBase.constants import PERMISSION_REQUEST_WEBEX
+from AccessControl.Permission import Permission
 
 class UpdateWebEx(UpdateScript):
     """ """
@@ -51,4 +53,26 @@ class UpdateWebExLink(UpdateScript):
                             'menunav_links, run UpdateWebEx update first')
         return True
 
+class UpdateWebExPermission(UpdateScript):
+    """ """
+    title = 'Add Contributors to the WebEx permission'
+    creation_date = 'Mar 10, 2014'
+    authors = ['Valentin Dumitru']
+    description = ('Add Contributors to the WebEx permission')
 
+    def _update(self, portal):
+        webex_perm = Permission(PERMISSION_REQUEST_WEBEX, (), portal)
+        roles_with_webex = webex_perm.getRoles()
+        if isinstance(roles_with_webex, list):
+            acquire = 1
+        else:
+            acquire = 0
+        if 'Contributor' not in roles_with_webex:
+            roles = set(roles_with_webex)
+            roles.update(['Administrator', 'Manager', 'Contributor'])
+            portal.manage_permission(PERMISSION_REQUEST_WEBEX,
+                    list(roles), acquire=acquire)
+            self.log.debug('Contributor added to the "Request WebEx permission"')
+        else:
+            self.log.debug('Contributor already has the permission')
+        return True
