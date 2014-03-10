@@ -1,4 +1,7 @@
-1.4.16 (unreleased)
+1.4.17 (unreleased)
+-------------------
+
+1.4.16 (2014-03-10)
 -------------------
 * `update` "Request WebEx permission" added to contributors [dumitval]
 
