@@ -47,6 +47,12 @@
       permission="zope2.ViewManagementScreens" />
 
     <utility
+      name="update_webex_permission.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_webex.UpdateWebExPermission"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
       name="update_standard_template.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_standard_template.LogoutDirectlyInStandardTemplate"
