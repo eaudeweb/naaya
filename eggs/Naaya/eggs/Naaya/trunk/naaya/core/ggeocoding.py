@@ -15,7 +15,14 @@ class GeocoderOverQuotaLimit(Exception):
 
 def _build_url(params):
     GOOGLE_GEOCODE_BASE_URL = 'http://maps.googleapis.com/maps/api/geocode/json'
-    return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.urlencode(params)
+    p = []
+    for k, v in params:
+        if isinstance(v, unicode):
+            p.append((k, v.encode('utf-8')))
+        else:
+            p.append((k, v))
+
+    return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.urlencode(p)
 
 
 def _get_url_data(url):
