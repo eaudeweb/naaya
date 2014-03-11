@@ -170,10 +170,10 @@ class NotificationsUnitTest(BaseNotificationsTest):
                 u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
             ('from.zope@example.com', 'user1@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user2@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_notification_type_checking(self):
@@ -201,7 +201,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
                 u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
             ('from.zope@example.com', 'user2@example.com',
                 u'Changed items - daily digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
         notif_tool._send_newsletter('weekly',
@@ -209,7 +209,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user3@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
         notif_tool._send_newsletter('monthly',
@@ -252,13 +252,13 @@ class NotificationsUnitTest(BaseNotificationsTest):
                 u'The item "h" has been created at http://nohost/portal/fol1/h by "".'),
             ('from.zope@example.com', 'user1@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user3@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n: doc_c (http://nohost/portal/fol1/doc_c)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/g/doc_a)\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n: doc_c (http://nohost/portal/fol1/doc_c)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user2@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/h/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
     def test_instant_notifications(self):
@@ -374,10 +374,10 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
                 u'Maintainer notification for object: fol2',
                 u'The item "fol2" has been created at http://nohost/portal/fol2 by "".'),
             ('from.zope@example.com', 'reviewer@example.com',
-                u'Changed items - weekly digest', u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
+                u'Changed items - weekly digest', u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_a (http://nohost/portal/fol1/doc_a)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html'),
             ('from.zope@example.com', 'user2@example.com',
                 u'Changed items - weekly digest',
-                u'Folowing items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
+                u'Following items were modified/added in the "Naaya Test Site" portal.\n\n: doc_b (http://nohost/portal/fol1/doc_b)\n\n\nIf you want to unsubscribe from these notifications follow the link below:\n\nhttp://nohost/portal/portal_notification/my_subscriptions_html')
         ]))
 
 class NotificationsUnapprovedUnitTest(BaseNotificationsTest):

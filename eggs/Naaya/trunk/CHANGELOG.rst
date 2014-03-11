@@ -1,5 +1,6 @@
 3.3.40 (unreleased)
 -------------------
+* Fixed email templates typo (folowing) [dumitval]
 * Fixed xcel typo [dumitval]
 
 3.3.39 (2014-03-05)
