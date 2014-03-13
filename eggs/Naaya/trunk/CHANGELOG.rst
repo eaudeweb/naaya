@@ -1,4 +1,7 @@
-3.3.41 (unreleased)
+3.3.42 (unreleased)
+-------------------
+
+3.3.41 (2014-03-13)
 -------------------
 * Enable all notification types on new IGs [dumitval]
 
