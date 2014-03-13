@@ -1,6 +1,9 @@
-3.3.40 (2014-03-11)
+3.3.41 (unreleased)
 -------------------
 * Enable all notification types on new IGs [dumitval]
+
+3.3.40 (2014-03-11)
+-------------------
 * Fixed email templates typo (folowing) [dumitval]
 * Fixed xcel typo [dumitval]
 * Fixed problem with Python Google geocoder when trying to retrieve unicode addresses
