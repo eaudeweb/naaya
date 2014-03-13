@@ -80,14 +80,14 @@ class NotificationTool(Folder):
     default_config = {
         'admin_on_error': True,
         'admin_on_edit': True,
-        'enable_instant': False,
-        'enable_daily': False,
+        'enable_instant': True,
+        'enable_daily': True,
         'enable_anonymous': False, #Enable anonymous notifications
         'daily_hour': 0,
-        'enable_weekly': False,
+        'enable_weekly': True,
         'weekly_day': 1, # 1 = monday, 7 = sunday
         'weekly_hour': 0,
-        'enable_monthly': False,
+        'enable_monthly': True,
         'monthly_day': 1, # 1 = first day of the month
         'monthly_hour': 0,
         'notif_content_types': [],
