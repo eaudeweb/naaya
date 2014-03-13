@@ -1,5 +1,6 @@
 3.3.42 (unreleased)
 -------------------
+* show external sources tab before local users (user admin) [dumitval]
 
 3.3.41 (2014-03-13)
 -------------------

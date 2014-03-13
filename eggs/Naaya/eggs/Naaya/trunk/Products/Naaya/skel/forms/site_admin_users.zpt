@@ -41,6 +41,10 @@
 							) and 'currenttab' or ''">
 			<a tal:attributes="href string:${site_url}/admin_all_users_html" i18n:translate="">All users</a>
 		</li>
+        <li tal:repeat="item user_sources"
+			tal:attributes="class python: ('admin_sources_html' in path_info and request.get('id', '') == item.id) and 'currenttab' or ''">
+            <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="string:${item/title_or_id} users">source</a>
+        </li>
 		<li tal:attributes="class python: (
 								('admin_local_users_html' in path_info) or
 								('admin_assignroles_html' in path_info) or
@@ -50,10 +54,6 @@
 							) and 'currenttab' or ''">
 			<a tal:attributes="href string:${site_url}/admin_local_users_html" i18n:translate="">Local users</a>
 		</li>
-        <li tal:repeat="item user_sources"
-			tal:attributes="class python: ('admin_sources_html' in path_info and request.get('id', '') == item.id) and 'currenttab' or ''">
-            <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="string:${item/title_or_id} users">source</a>
-        </li>
 		<li tal:condition="python: here.checkPermission('Change permissions')"
 		    tal:attributes="class python: (
 								('admin_roles_html' in path_info) or
