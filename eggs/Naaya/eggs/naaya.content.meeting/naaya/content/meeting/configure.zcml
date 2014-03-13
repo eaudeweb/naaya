@@ -82,5 +82,15 @@
       directory="www"
   />
 
+  <zope:adapter
+      for=".meeting.NyMeeting zope.interface.Interface" 
+      provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+      factory=".meeting.MeetingPublishTraverse" />
+
+  <zope:subscriber
+        for="naaya.content.base.interfaces.INyContentObjectAddEvent"
+        handler=".meeting.handle_meeting_add"
+        />
+
 </configure>
 
