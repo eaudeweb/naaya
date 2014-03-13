@@ -8,25 +8,32 @@ import logging
 from html2text import html2text
 
 #Zope imports
-from Globals import InitializeClass
-from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view, change_permissions
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
+from AccessControl import SpecialUsers
+from AccessControl import getSecurityManager
 from AccessControl.Permission import Permission
+from AccessControl.Permissions import view_management_screens, view, change_permissions
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
+from App.ImageFile import ImageFile
 from DateTime import DateTime
+from Globals import InitializeClass
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.PythonScripts.PythonScript import manage_addPythonScript
+from ZPublisher.BaseRequest import DefaultPublishTraverse
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
+from zope.event import notify
+from zope.interface import implements
 
 #Naaya imports
 from Products.Naaya.NyFolder import NyFolder
 from Products.NaayaBase.NyContentType import NyContentData, NY_CONTENT_BASE_SCHEMA
-from naaya.content.base.constants import *
-from Products.NaayaBase.constants import *
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import make_id, get_nsmap
@@ -414,21 +421,21 @@ class NyMeeting(NyContentData, NyFolder):
     def _check_meeting_pointers(self, form_errors):
         if getattr(self, 'agenda_pointer', ''):
             try:
-                agenda = self.unrestrictedTraverse(str(self.agenda_pointer))
+                self.unrestrictedTraverse(str(self.agenda_pointer))
             except KeyError:
                 form_errors.setdefault('agenda_pointer', [])
                 form_errors['agenda_pointer'].append(
                         'No object at the selected path')
         if getattr(self, 'survey_pointer', ''):
             try:
-                agenda = self.unrestrictedTraverse(str(self.survey_pointer))
+                self.unrestrictedTraverse(str(self.survey_pointer))
             except KeyError:
                 form_errors.setdefault('survey_pointer', [])
                 form_errors['survey_pointer'].append(
                         'No object at the selected path')
         if getattr(self, 'minutes_pointer', ''):
             try:
-                agenda = self.unrestrictedTraverse(str(self.minutes_pointer))
+                self.unrestrictedTraverse(str(self.minutes_pointer))
             except KeyError:
                 form_errors.setdefault('minutes_pointer', [])
                 form_errors['minutes_pointer'].append(
@@ -788,3 +795,46 @@ def _create_eionet_survey(container):
     manage_addPageTemplate(eionet_survey, 'validation_html', validation_title,
                            open(validation_html).read())
 
+
+
+class MeetingPublishTraverse(DefaultPublishTraverse):
+
+    def handle_approve(self, request):
+        owner = self.context.getObjectOwner() or self.context.contributor
+        self.context.inherit_view_permission()
+        self.context.approveThis(True, owner, _send_notifications=False)
+
+    def handle_unapprove(self, request):
+        owner = self.context.getObjectOwner() or self.context.contributor
+        self.context.approveThis(False, owner, _send_notifications=False)
+        sm = getSecurityManager()
+        newSecurityManager(request, SpecialUsers.system)
+        self.context.dont_inherit_view_permission()
+        setSecurityManager(sm)
+
+    def publishTraverse(self, request, name):
+        approved = getattr(self.context, 'approved', False)
+        releasedate = getattr(self.context, 'releasedate', None)
+
+        if releasedate:
+            now = DateTime()
+            # appropriate action if context is approved
+            if now > releasedate and approved:
+                pass
+            elif now > releasedate and not approved:
+                self.handle_approve(request)
+            elif now < releasedate and approved:
+                self.handle_unapprove(request)
+            elif now < releasedate and not approved:
+                pass
+
+        return super(MeetingPublishTraverse, self).publishTraverse(request, name)
+
+def handle_meeting_add(event):
+    obj = event.context
+    if not obj.meta_type == config['meta_type']:
+        return
+    now = DateTime()
+    if getattr(event.context, 'releasedate') and event.context.releasedate > now:
+        event.context.approveThis(False, _send_notifications=False)
+        obj.dont_inherit_view_permission()
