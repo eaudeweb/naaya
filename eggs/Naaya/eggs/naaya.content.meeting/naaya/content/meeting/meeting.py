@@ -830,6 +830,7 @@ class MeetingPublishTraverse(DefaultPublishTraverse):
 
         return super(MeetingPublishTraverse, self).publishTraverse(request, name)
 
+
 def handle_meeting_add(event):
     obj = event.context
     if not obj.meta_type == config['meta_type']:
