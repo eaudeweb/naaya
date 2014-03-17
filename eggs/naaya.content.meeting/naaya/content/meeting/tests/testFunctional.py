@@ -1,9 +1,10 @@
-from pyquery import PyQuery
+#from pyquery import PyQuery
 
 #Zope imports
 from Testing import ZopeTestCase
 
 #Naaya imports
+from DateTime import DateTime
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
@@ -979,6 +980,51 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
         assert_admin_access()
 
+
+class NyMeetingReleaseDateAccess(NaayaFunctionalTestCase):
+    """ Access based on releaseddate TestCase for NyMeeting object """
+
+    def setUp(self):
+        super(NyMeetingReleaseDateAccess, self).setUp()
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, restrict_items=True, **extra_args)
+
+        self.meeting = self.portal['info']['mymeeting']
+        self.meeting_url = self.meeting.absolute_url()
+        import transaction; transaction.commit()
+
+    def test_approve(self):
+        """ Automatically approve when release date is in the past
+        """
+        meeting = self.portal.info.mymeeting
+        # release date is in the past
+        assert meeting.releasedate < DateTime()
+        assert bool(meeting.approved) == False
+        self.browser.go(self.meeting.absolute_url())
+        assert bool(meeting.approved) == True
+
+    def test_unapprove(self):
+        """ Automatically unapprove when release date is in the future
+        """
+        # release date is in the future
+        self.browser.go(self.meeting.absolute_url())
+
+        self.meeting.releasedate = DateTime() + 10
+        self.meeting.approveThis(True)
+        import transaction; transaction.commit()
+
+        self.browser.go(self.meeting.absolute_url())
+        assert 'login_html' in self.browser.get_url()
+
+
 class NyMeetingAccess(NaayaFunctionalTestCase):
     """ Access TestCase for NyMeeting object """
 
@@ -1237,7 +1283,7 @@ class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
             allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
-        meeting = self.portal.info.mymeeting
+        #meeting = self.portal.info.mymeeting
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
@@ -1270,7 +1316,7 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
             allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
-        meeting = self.portal.info.mymeeting
+        #meeting = self.portal.info.mymeeting
         import transaction; transaction.commit()
         from naaya.content.document.document_item import addNyDocument
         addNyDocument(self.portal.info.mymeeting, id='mydoc', title='My document', submitted=1, contributor='contributor')
@@ -1328,7 +1374,7 @@ class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
             allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
-        meeting = self.portal.info.mymeeting
+        #meeting = self.portal.info.mymeeting
         import transaction; transaction.commit()
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal.info.mymeeting, id='myfolder', title='Folder', submitted=1, contributor='contributor')
