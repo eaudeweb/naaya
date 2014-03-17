@@ -3,6 +3,7 @@
 * fixed xcel typo [dumitval]
 * Feature WIP: make meetings private when the release date is in the future; 
   Automatically approve them when the release date has passed
+  [tiberich #18783]
 
 1.2.53 (2014-02-07)
 -------------------
