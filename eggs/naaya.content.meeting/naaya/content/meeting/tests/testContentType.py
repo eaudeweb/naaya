@@ -62,3 +62,44 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=[self.doc_meta_type,])
 
         self.assertEqual(meta, [])
+
+    def test_releasedate(self):
+        from naaya.content.meeting.meeting import addNyMeeting
+        from naaya.content.meeting.meeting import handle_meeting_add
+        from DateTime import DateTime
+
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
+
+        class DummyEvent:
+            def __init__(self, context):
+                self.context = context
+
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, restrict_items=True, **extra_args)
+
+        meeting = self.portal['info']['mymeeting']
+
+        # Automatically unapprove on add when release date is in the future
+        meeting.approved = True
+        meeting.releasedate = DateTime() + 10
+        handle_meeting_add(DummyEvent(meeting))
+        assert bool(meeting.approved) == False
+
+        # Automatically approve on add when release date is in the past
+        meeting.approved = False
+        meeting.releasedate = DateTime() - 10
+        handle_meeting_add(DummyEvent(meeting))
+        assert bool(meeting.approved) == True
+
+        # Automatically approve on attribute access when release date is in past
+        meeting.approved = False
+        assert bool(meeting.restrictedTraverse('approved')) == True
+
+        # Automatically unapprove on attribute access when release date is in future
+        meeting.releasedate = DateTime() + 10
+        assert bool(meeting.restrictedTraverse('approved')) == False
