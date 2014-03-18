@@ -1,4 +1,4 @@
-1.2.54 (unreleased)
+1.2.54 (2014-03-18)
 -------------------
 * fixed xcel typo [dumitval]
 * Feature: make meetings private when the release date is in the future;
