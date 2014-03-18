@@ -311,6 +311,8 @@ def on_added_meeting_item(ob, event):
         if getattr(parent, 'restrict_items', True):
             _restrict_meeting_item_view(ob)
 
+_marker = object()
+
 class NyMeeting(NyContentData, NyFolder):
     """ """
 
@@ -740,6 +742,11 @@ class NyMeeting(NyContentData, NyFolder):
         d = self.interval.end_date
         return DateTime(d.year, d.month, d.day)
 
+    security.declarePublic('restrictedTraverse')
+    def restrictedTraverse(self, path, default=_marker):
+        handle_traverse_meeting(self, self.REQUEST)
+        return self.unrestrictedTraverse(path, default, restricted=True)
+
 InitializeClass(NyMeeting)
 
 manage_addNyMeeting_html = PageTemplateFile('zpt/meeting_manage_add', globals())
@@ -796,46 +803,62 @@ def _create_eionet_survey(container):
                            open(validation_html).read())
 
 
+def _approve(context, request):
+    owner = context.getObjectOwner() or context.contributor
+    context.inherit_view_permission()
+    context.approveThis(True, owner, _send_notifications=False)
+
+
+def _unapprove(context, request):
+    owner = context.getObjectOwner() or context.contributor
+    context.approveThis(False, owner, _send_notifications=False)
+    sm = getSecurityManager()
+    if request == None:
+        request = context.REQUEST
+    newSecurityManager(request, SpecialUsers.system)
+    context.dont_inherit_view_permission()
+    setSecurityManager(sm)
+
+
+def handle_traverse_meeting(context, request):
+    approved = getattr(context, 'approved', False)
+    releasedate = getattr(context, 'releasedate', None)
+
+    if releasedate:
+        now = DateTime()
+        # appropriate action if context is approved
+        if now > releasedate and approved:
+            pass
+        elif now > releasedate and not approved:
+            _approve(context, request)
+        elif now < releasedate and approved:
+            _unapprove(context, request)
+        elif now < releasedate and not approved:
+            pass
+
 
 class MeetingPublishTraverse(DefaultPublishTraverse):
-
-    def handle_approve(self, request):
-        owner = self.context.getObjectOwner() or self.context.contributor
-        self.context.inherit_view_permission()
-        self.context.approveThis(True, owner, _send_notifications=False)
-
-    def handle_unapprove(self, request):
-        owner = self.context.getObjectOwner() or self.context.contributor
-        self.context.approveThis(False, owner, _send_notifications=False)
-        sm = getSecurityManager()
-        newSecurityManager(request, SpecialUsers.system)
-        self.context.dont_inherit_view_permission()
-        setSecurityManager(sm)
-
+    """ Override default publisher to change state of meeting based on release date
+    """
     def publishTraverse(self, request, name):
-        approved = getattr(self.context, 'approved', False)
-        releasedate = getattr(self.context, 'releasedate', None)
-
-        if releasedate:
-            now = DateTime()
-            # appropriate action if context is approved
-            if now > releasedate and approved:
-                pass
-            elif now > releasedate and not approved:
-                self.handle_approve(request)
-            elif now < releasedate and approved:
-                self.handle_unapprove(request)
-            elif now < releasedate and not approved:
-                pass
+        handle_traverse_meeting(self.context, request)
 
         return super(MeetingPublishTraverse, self).publishTraverse(request, name)
 
 
 def handle_meeting_add(event):
-    obj = event.context
-    if not obj.meta_type == config['meta_type']:
+    """ Automatically approve/unapprove meetings on add event, based on release date
+    """
+
+    if not event.context.meta_type == config['meta_type']:
         return
+
     now = DateTime()
+
     if getattr(event.context, 'releasedate') and event.context.releasedate > now:
         event.context.approveThis(False, _send_notifications=False)
-        obj.dont_inherit_view_permission()
+        event.context.dont_inherit_view_permission()
+
+    if getattr(event.context, 'releasedate') and event.context.releasedate < now:
+        event.context.approveThis(True, _send_notifications=False)
+        event.context.inherit_view_permission()
