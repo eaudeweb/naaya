@@ -1,4 +1,7 @@
-1.2.19 (unreleased)
+1.2.20 (unreleased)
+-------------------
+
+1.2.19 (2014-03-20)
 -------------------
 * Categories sorting (manual or alphabetic) [dumitval]
 
