@@ -12,6 +12,7 @@
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data" tal:define="
   title here/title|nothing;
   description here/description|nothing;
+  alphabetic_categories here/alphabetic_categories|python:False;
   categories here/categories|python:[];
   categories python:'\n'.join(categories);
   file_max_size here/file_max_size|nothing;
@@ -31,6 +32,10 @@
 <div class="field">
     <label for="categories" i18n:translate="">Categories (one per line)</label>
     <textarea name="categories:utf8:ustring" rows="10" cols="50" tal:content="python:here.getSession('categories', categories)" />
+</div>
+<div class="field-inline">
+    <label for="alphabetic_categories" i18n:translate="">Display categories alphabetically</label>
+    <input type="checkbox" name="alphabetic_categories" tal:attributes="checked python:test(here.getSession('alphabetic_categories', alphabetic_categories), 'checked', None)" />
 </div>
 <div class="field">
     <label for="title" i18n:translate="">Max allowed uploaded files size</label>
