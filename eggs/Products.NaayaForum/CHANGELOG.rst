@@ -1,5 +1,6 @@
 1.2.19 (unreleased)
 -------------------
+* Categories sorting (manual or alphabetic) [dumitval]
 
 1.2.18 (2013-06-13)
 -------------------

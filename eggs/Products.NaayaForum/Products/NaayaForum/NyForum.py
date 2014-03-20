@@ -319,7 +319,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     security.declareProtected(PERMISSION_ADD_FORUM, 'saveProperties')
     def saveProperties(self, title='', description='', categories='',
         file_max_size='', topics_listing='', topics_ordering='',
-        message_top='', message_outdated='', REQUEST=None):
+        message_top='', message_outdated='', alphabetic_categories=None,
+        REQUEST=None):
         """ """
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.contributor = contributor
@@ -332,6 +333,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('message_top', lang, message_top)
         self._setLocalPropValue('message_outdated', lang, message_outdated)
+        self.alphabetic_categories = alphabetic_categories
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
@@ -427,6 +429,14 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     def export_this(self, folderish=0):
         """ """
         return ''
+
+    security.declareProtected(view, 'get_categories')
+    def get_categories(self):
+        """ return categories, sorted if the option is set on the forum
+        """
+        if getattr(self, 'alphabetic_categories', None):
+            return sorted(self.categories)
+        return self.categories
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
