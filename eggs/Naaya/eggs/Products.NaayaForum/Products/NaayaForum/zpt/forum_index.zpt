@@ -51,7 +51,7 @@
 </div>
 
 <tal:block condition="python:len(topics)>0">
-<form method="post" tal:define="categories here/categories;
+<form method="post" tal:define="categories here/get_categories;
 	invalid_categories python: 'Other' in topics.keys() and 'Other' not in categories;
 	all_categories python:test(invalid_categories, categories + ['Other'], categories)"
 	tal:attributes="action string:${here/absolute_url}/deleteTopics">
