@@ -1,5 +1,7 @@
 3.3.42 (unreleased)
 -------------------
+* refactor role assignment notifications  to use the notification tool [dumitval]
+* send notification to user when his Administrator role has been revoked [dumitval]
 * show external sources tab before local users (user admin) [dumitval]
 
 3.3.41 (2014-03-13)

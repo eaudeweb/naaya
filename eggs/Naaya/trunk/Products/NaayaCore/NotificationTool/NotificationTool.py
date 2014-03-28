@@ -36,8 +36,7 @@ from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
-from containers import (SubscriptionContainer, AccountSubscription,
-                        AnonymousSubscription)
+from containers import AccountSubscription, AnonymousSubscription
 from Products.NaayaCore.NotificationTool import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')
@@ -51,6 +50,7 @@ email_templates = {
     'daily': EmailPageTemplateFile('emailpt/daily.zpt', globals()),
     'weekly': EmailPageTemplateFile('emailpt/weekly.zpt', globals()),
     'monthly': EmailPageTemplateFile('emailpt/monthly.zpt', globals()),
+    'account_modified': EmailPageTemplateFile('emailpt/account_modified.zpt', globals()),
 }
 
 def manage_addNotificationTool(self, REQUEST=None):
@@ -456,6 +456,26 @@ class NotificationTool(Folder):
             notif_logger.info('Comment instant notifications on %r', ofs_path(parent))
             template = self._get_template('instant')
             self._send_notifications(subscribers_data, template)
+
+    security.declarePrivate('notify_account_modification')
+    def notify_account_modification(self, email, obj, username=None,
+                new_roles=[], removed_roles=[]):
+        """
+        Send notification that the user received or lost one or more roles
+        in the specified location
+        """
+        email_data = {email:
+                        {'new_roles': new_roles,
+                         'removed_roles': removed_roles,
+                         'username': username,
+                         'obj': obj,
+                         }
+                     }
+
+        notif_logger.info('Account modification notification on %s' %
+                self.getSite().getId())
+        template = self._get_template('account_modified')
+        self._send_notifications(email_data, template)
 
     def _get_template(self, name):
 

@@ -71,6 +71,7 @@ from Products.NaayaCore import METATYPE_REMOTECHANNEL
 from Products.NaayaCore import METATYPE_REMOTECHANNELFACADE
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
+from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
 from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
@@ -2507,20 +2508,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 err = error
             else:
                 success = True
-            if not err and send_mail:
-                auth_tool = self.getAuthenticationTool()
-                for name in names:
-                    try:
-                        email = auth_tool.getUsersEmails([name])[0]
-                        #fullname = auth_tool.getUsersFullNames([name])[0]
-                        if location == "/" or location == '':
-                            loc, location_ob = 'all', self.getSite()
-                        else:
-                            loc, location_ob = 'other', self.unrestrictedTraverse(location, None)
-                        self.sendAccountModifiedEmail(email, roles,
-                                                      loc, location_ob, username=name)
-                    except:
-                        err = 'Could not send confirmation mail.'
 
         if REQUEST is not None:
             if redirect != '':
@@ -2533,13 +2520,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 REQUEST.RESPONSE.redirect(
                     REQUEST.environ.get('HTTP_REFERER', redirect_url))
             elif success:
-                from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
                 context = ((location in ("/", "")) and self.getSite() or
                             self.unrestrictedTraverse(location, None))
                 manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
                 for name in names:
                     notify(RoleAssignmentEvent(context, manager_id, name, roles,
-                                               history[name]))
+                                           history[name], send_mail=send_mail))
                 self.setSessionInfoTrans("Role(s) successfully assigned")
                 REQUEST.RESPONSE.redirect(redirect_url)
 
@@ -2557,7 +2543,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.getAuthenticationTool().manage_revokeUserRole(user, l)
 
         if REQUEST is not None:
-            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
             for loc in location:
                 context = ((loc in ("/", "")) and self.getSite() or
@@ -3510,41 +3495,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         email_tool = self.getEmailTool()
         mail_from = email_tool.get_addr_from()
         email_tool.sendEmail(l_content, p_email, mail_from, l_subject)
-
-    def sendAccountModifiedEmail(self, email, roles, loc, location, username=None):
-        #sends an email informing the user about the modifications to its account
-        emailtool_ob = self.getEmailTool()
-        email_template = emailtool_ob._getOb('email_modifyaccount', None)
-        #if the needed email template doesn't exist, create it from the filesystem
-        if not email_template:
-            try:
-                content = self.futRead(join(NAAYA_PRODUCT_PATH, 'skel', 'emails', 'email_modifyaccount.txt'), 'r')
-                emailtool_ob.manage_addEmailTemplate('email_modifyaccount', 'Account modified notification', content)
-            except: return
-        email_template = emailtool_ob._getOb('email_modifyaccount', None)
-
-        #make sure roles is a list
-        if type(roles) != type([]): roles = [roles]
-        roles = ', '.join(roles)
-        #append roles location
-        if loc == "other" and location:
-            roles = "%s locally in %s." % (roles, location.absolute_url(1))
-        else:
-            roles = "%s for the entire portal." % roles
-
-        #construct mail
-        subject = email_template.title
-        content = email_template.body
-        content = content.replace('@@PORTAL_TITLE@@', self.site_title)
-        content = content.replace('@@PORTAL_URL@@', self.portal_url)
-        content = content.replace('@@ROLES@@', roles)
-        if username:
-            content = content.replace('@@USERNAME@@', username)
-
-        #send mail
-        email_tool = self.getEmailTool()
-        mail_from = email_tool.get_addr_from()
-        email_tool.getEmailTool().sendEmail(content, email, mail_from, subject)
 
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
         #sends a feedback email

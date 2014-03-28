@@ -20,6 +20,7 @@ except:
 
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import UserInfo
+from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.NaayaCore.AuthenticationTool.interfaces import IAuthenticationToolPlugin
 
 from Products.Naaya.NySite import NySite
@@ -326,28 +327,19 @@ class plugLDAPUserFolder(PlugBase):
         if roles == []:
             return on_error('No roles selected')
 
-        if location == '/' or location == '':
-            loc, location = 'all', ''
-        else:
-            loc = 'other'
+        if location == '/':
+            location == ''
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:
             return on_error('Invalid location path')
         ob.acl_satellite.add_group_roles(group, roles)
-        if send_mail:
-            site = self.getSite()
-            auth_tool = site.getAuthenticationTool()
-            for user_id in self.group_member_ids(group):
-                email = auth_tool.getUsersEmails([user_id])[0]
-                site.sendAccountModifiedEmail(user_email, roles,
-                                              loc, ob, username=user_id)
 
         if REQUEST is not None:
-            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
-            notify(RoleAssignmentEvent(ob, manager_id, "group: %s" % group,
-                                       roles, []))
+            notify(RoleAssignmentEvent(ob, manager_id, group,
+                                       roles, [], is_group=True,
+                                       send_mail=send_mail))
             self.setSessionInfoTrans("Role(s) succesfully assigned")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=assign_to_groups'
@@ -362,10 +354,10 @@ class plugLDAPUserFolder(PlugBase):
         ob.acl_satellite.remove_group_roles(group_id, [role])
 
         if REQUEST is not None:
-            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
-            notify(RoleAssignmentEvent(ob, manager_id, "group: %s" % group_id,
-                                       [], [role]))
+            notify(RoleAssignmentEvent(ob, manager_id, group_id,
+                                       [], [role], is_group=True,
+                                       send_mail='Administrator'==role))
             self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
