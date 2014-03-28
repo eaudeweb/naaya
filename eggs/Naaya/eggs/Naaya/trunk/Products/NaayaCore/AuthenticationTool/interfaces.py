@@ -12,6 +12,7 @@ class IRoleAssignmentEvent(interface.Interface):
     user_id = interface.Attribute("user_id of user whose roles where changed")
     assigned = interface.Attribute("list containing assigned roles")
     unassigned = interface.Attribute("list containing unassigned roles")
+    send_mail = interface.Attribute("bool to specify if emails to the user should be sent")
 
 class IAuthenticationToolPlugin(interface.Interface):
     """ An authentication tool plugin is a provider of user authentication

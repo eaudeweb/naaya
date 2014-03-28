@@ -3,6 +3,7 @@ from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 
 from Products.NaayaCore.constants import *
+from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 
 class PlugBase(SimpleItem):
     """ """
@@ -66,10 +67,10 @@ class PlugBase(SimpleItem):
         location_ob.manage_delLocalRoles([user])
 
         if REQUEST is not None:
-            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
             notify(RoleAssignmentEvent(location_ob, manager_id, user, [],
-                                       history))
+                                       history,
+                                       send_mail='Administrator' in history))
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def addUserRoles(self, name=[], roles=[], location='', user_location='',
@@ -109,24 +110,15 @@ class PlugBase(SimpleItem):
         for n in name:
             history[n] = auth_tool.getLocationUserRoles(n, location)
             location_ob.manage_setLocalRoles(n, roles)
-            if send_mail:
-                try:
-                    email = auth_tool.getUsersEmails([n])[0]
-                    fullname = auth_tool.getUsersFullNames([n])[0]
-                    site.sendAccountModifiedEmail(email, roles, loc,
-                                                  location_ob, username=n)
-                except:
-                    pass
             try:
                 self.setUserLocation(n, user_location)
             except:
                 pass
         if REQUEST is not None:
-            from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
             for n in name:
                 notify(RoleAssignmentEvent(location_ob, manager_id, n, roles,
-                                           history[n]))
+                                           history[n], send_mail=send_mail))
             self.setSessionInfoTrans("Role(s) successfully assigned")
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 

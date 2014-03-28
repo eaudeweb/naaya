@@ -648,7 +648,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     location.manage_delLocalRoles([user_id])
                 if manager_id:
                     notify(RoleAssignmentEvent(location, manager_id,
-                                               user_id, [], actually_revoked))
+                               user_id, [], actually_revoked,
+                               send_mail='Administrator' in actually_revoked))
 
         # remove local roles for the site
         if filter_location in ['_all_', '']: # remove site roles
@@ -666,7 +667,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     local_user.roles = []
                 if manager_id:
                     notify(RoleAssignmentEvent(self.getSite(), manager_id,
-                                               user_id, [], actually_revoked))
+                               user_id, [], actually_revoked,
+                               send_mail='Administrator' in actually_revoked))
 
 
     security.declareProtected(manage_users, 'searchUsers')
