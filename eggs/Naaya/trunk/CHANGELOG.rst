@@ -1,4 +1,4 @@
-3.3.42 (unreleased)
+3.3.42 (2014-03-28)
 -------------------
 * refactor role assignment notifications  to use the notification tool [dumitval]
 * send notification to user when his Administrator role has been revoked [dumitval]
