@@ -1,4 +1,7 @@
-3.3.43 (unreleased)
+3.3.44 (unreleased)
+-------------------
+
+3.3.43 (2014-04-03)
 -------------------
 * update google_analytics snippet to use analytics.js [dumitval]
 
