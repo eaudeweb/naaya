@@ -1,3 +1,7 @@
+3.3.43 (unreleased)
+-------------------
+* update google_analytics snippet to use analytics.js [dumitval]
+
 3.3.42 (2014-03-28)
 -------------------
 * refactor role assignment notifications  to use the notification tool [dumitval]

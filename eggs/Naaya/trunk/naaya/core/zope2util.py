@@ -205,29 +205,19 @@ def google_analytics(context, ga_id=''):
         # no google analytics for managers
         return ''
 
-    gaq = []
+    gaq = {}
     ga_keys = []
     if master_ga_id:
         ga_keys.append(master_ga_id)
-
     if ga_id:
         ga_keys.append(ga_id)
-
-    for ga_index, ga_key in enumerate(ga_keys):
-        if ga_index == 1:
-            gaq.append(['b._setAccount', ga_key])
-            gaq.append(['b._trackPageview'])
-        else:
-            gaq.append(['_setAccount', ga_key])
-            gaq.append(['_trackPageview'])
-
-    if ga_domain_name:
-        gaq.append(['_setDomainName', ga_domain_name])
+    gaq['ga_ids'] = ga_keys
+    gaq['ga_domain_name'] = ga_domain_name
 
     site = context.getSite()
     forms_tool = site.getFormsTool()
     ga_form = forms_tool.getForm("site_googleanalytics")
-    return ga_form.__of__(site)(gaq_json=json.dumps(gaq))
+    return ga_form.__of__(site)(gaq=gaq)
 
 def provides(context, ob, interface_name):
     """ proxy for zope interface.providedBy """
