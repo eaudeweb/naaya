@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
     <link rel="stylesheet" type="text/css" href="/++resource++naaya.groupware/eionet/css/style.css" media="screen" />
+    <script src="++resource++Products.Naaya/js/jquery-1.7.1.min.js"></script>
 
 <!--[if IE 7]>
     <link rel="stylesheet" type="text/css" media="screen" href="/++resource++naaya.groupware/eionet/css/ie7.css" />
@@ -60,24 +61,32 @@
             background-color: #F9F9ED; /*#a5ced1*/
         }
     </style>
-    <script type="text/javascript">
-        var _gaq=[['_setAccount', 'UA-17090641-1'],['_trackPageview']];
-        (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-        s.parentNode.insertBefore(g,s)}(document,'script'));
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-17090641-1', 'europa.eu');
+      ga('send', 'pageview');
+
     </script>
   <meta name="google-site-verification" content="oV-xE-LH3NMr2_h0HqMJ6M_La5oiZnusXH2OWcTO4bM" />
   </head>
-    <body tal:define="gw_root_url string:${here/get_gw_root}/index_html" metal:define-slot="body">
+    <body tal:define="gw_root_url string:${here/get_gw_root}/index_html;
+                      user python:request.AUTHENTICATED_USER;"
+          metal:define-slot="body">
         <div id="container" metal:define-slot="div-container">
             <div id="toolribbon" metal:define-slot="div-toolribbon">
                 <div id="lefttools">
                   <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
                   <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
                 </div>
-                <div id="righttools" metal:define-slot="div-righttools" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
-                    <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:username == 'Anonymous User'">Login</a>
-                    <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:username != 'Anonymous User'">Logout (<span tal:replace="username"/>)</a>
+                <div id="righttools" metal:define-slot="div-righttools"
+                  tal:define="uid user/getUserName;
+                              user_full_name user/cn|uid">
+                    <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:uid == 'Anonymous User'">Login</a>
+                    <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:uid != 'Anonymous User'">Logout</a><a target="_blank" tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${uid}">(<span tal:replace="user_full_name"/>)</a>
 	        <form action="http://google.com/search" method="get">			<div id="freesrchform"><label for="freesrchfld">Search</label>
 			<input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10"/>
 			<input type="hidden" name="sitesearch" value="forum.eionet.europa.eu"/>
@@ -110,7 +119,8 @@
                     <li><a href="/">Front page</a></li>
                     <li><a href="/help">General help</a></li>
                 </ul>
-               <div tal:define="user python:request.AUTHENTICATED_USER" tal:condition="python:user.getUserName() != 'Anonymous User'" tal:omit-tag="">
+               <div tal:omit-tag=""
+                  tal:condition="python:user.getUserName() != 'Anonymous User'" >
                 <h2>IG applications</h2>
                 <ul>
                     <li><a href="/applications">Request new IG</a></li>
@@ -130,7 +140,7 @@
 <div class="localnav">
  <h2>Account services</h2>
 <ul>
- <div tal:define="user python:request.AUTHENTICATED_USER" tal:condition="python:user.getUserName() == 'Anonymous User'" tal:omit-tag="">
+ <div tal:condition="python:user.getUserName() == 'Anonymous User'" tal:omit-tag="">
    <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
  </div>
  <li>Edit my <a href="/profile">user profile</a></li>
