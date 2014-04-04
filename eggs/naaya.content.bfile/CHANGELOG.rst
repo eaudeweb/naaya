@@ -1,5 +1,7 @@
 1.3.14 (unreleased)
 --------------------
+* bugfix related to comments to removed versions [dumitval]
+* bugfix related to incorrect timezone conversion [dumitval]
 
 1.3.13 (2014-03-05)
 --------------------

@@ -7,7 +7,7 @@
     <label i18n:translate="">Existing versions - check to remove</label>
     <ul class="ny-bfile-editversions">
     <tal:block repeat="version options/versions">
-        <li>
+        <li tal:condition="not: version/removed">
             <input type="checkbox" name="versions_to_remove:list"
                    tal:attributes="value version/id" />
             <a tal:attributes="href version/url" tal:content="version/filename"></a>
