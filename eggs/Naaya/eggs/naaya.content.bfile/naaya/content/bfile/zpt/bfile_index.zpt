@@ -111,25 +111,27 @@
     </tr>
 </thead>
 <tbody>
-<tr tal:repeat="version options/versions">
-    <td tal:content="string: v${version/id}" />
-    <td>
-        <a tal:attributes="href version/url"
-           tal:content="version/filename"></a>
-        <em tal:condition="version/is_current"
-            i18n:translate="">(current)</em>
-    </td>
-    <td>
-      <metal:block use-macro="site_object_index/macros/version_contributor" />
-    </td>
-    <td tal:content="version/pretty_timestamp" />
-    <td tal:content="version/pretty_size" />
-    <td>
-        <img tal:attributes="src version/icon_url;
-                             title version/content_type" />
-        <tal:block content="version/content_type" />
-    </td>
-</tr>
+<tal:block repeat="version options/versions">
+    <tr tal:condition="not:version/removed">
+        <td tal:content="string: v${version/id}" />
+        <td>
+            <a tal:attributes="href version/url"
+               tal:content="version/filename"></a>
+            <em tal:condition="version/is_current"
+                i18n:translate="">(current)</em>
+        </td>
+        <td>
+          <metal:block use-macro="site_object_index/macros/version_contributor" />
+        </td>
+        <td tal:content="version/pretty_timestamp" />
+        <td tal:content="version/pretty_size" />
+        <td>
+            <img tal:attributes="src version/icon_url;
+                                 title version/content_type" />
+            <tal:block content="version/content_type" />
+        </td>
+    </tr>
+</tal:block>
 </tbody>
 </table>
 
