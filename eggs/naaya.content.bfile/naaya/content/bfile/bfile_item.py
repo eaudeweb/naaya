@@ -346,8 +346,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         """
 
         versions = [tmpl_version(self, ver, str(n+1))
-                    for n, ver in enumerate(self._versions)
-                    if not ver.removed]
+                    for n, ver in enumerate(self._versions)]
 
         if versions:
             versions[-1]['is_current'] = True
@@ -380,8 +379,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         for version in self._versions_for_tmpl():
             if version['timestamp'] < date:
                 candidate = version
-            else:
-                return candidate
+        return candidate
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bfile_download)
