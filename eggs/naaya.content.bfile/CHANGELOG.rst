@@ -1,4 +1,7 @@
-1.3.14 (unreleased)
+1.3.15 (unreleased)
+--------------------
+
+1.3.14 (2014-04-04)
 --------------------
 * bugfix related to comments to removed versions [dumitval]
 * bugfix related to incorrect timezone conversion [dumitval]
