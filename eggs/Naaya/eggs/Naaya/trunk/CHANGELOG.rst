@@ -1,4 +1,7 @@
-3.3.44 (unreleased)
+3.3.45 (unreleased)
+-------------------
+
+3.3.44 (2014-04-04)
 -------------------
 * improvement for comments on removed versions [dumitval]
 
