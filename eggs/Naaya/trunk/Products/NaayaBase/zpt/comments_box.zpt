@@ -91,7 +91,10 @@
                 <em i18n:translate="">given for the version from</em>
                 <em tal:content="version/pretty_timestamp"></em>
                 (<a tal:content="version/filename"
-                    tal:attributes="href version/url" />)
+                    tal:attributes="href version/url" />
+                    <tal:block condition="not:version/url" i18n:translate="">
+                        - this version was removed
+                    </tal:block>)
                 <br /><br />
                 <span style="font-size:95%;">
                     <span tal:replace="structure item/body" />

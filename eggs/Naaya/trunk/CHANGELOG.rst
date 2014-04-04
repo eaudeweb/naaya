@@ -1,5 +1,6 @@
 3.3.44 (unreleased)
 -------------------
+* improvement for comments on removed versions [dumitval]
 
 3.3.43 (2014-04-03)
 -------------------
