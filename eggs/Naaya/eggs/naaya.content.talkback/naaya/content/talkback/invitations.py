@@ -445,8 +445,9 @@ class InvitationsContainer(SimpleItem):
         (just like saved_emails does to populate the web page)"""
         if not REQUEST:
             RESPONSE.badRequestError("MALFORMED_URL")
-        headers = REQUEST.get('headers')
-        keys = REQUEST.get('keys')
+        headers = REQUEST.form.get('headers')
+        keys = REQUEST.form.get('keys')
+        ids = REQUEST.form.get('id')
         if not headers or not keys:
             RESPONSE.badRequestError("MALFORMED_URL")
         headers = headers.split(',')
@@ -458,7 +459,7 @@ class InvitationsContainer(SimpleItem):
         RESPONSE.setHeader('Content-Disposition',
                             'attachment; filename=consultation_invitation_emails.xls')
         cols = zip(headers, keys)
-        return export_email_list_xcel(self.getSite(), cols,
+        return export_email_list_xcel(self.getSite(), cols, ids,
                     where_to_read=path_in_site(self.get_consultation()))
 
     NaayaPageTemplateFile('zpt/email_view', globals(),

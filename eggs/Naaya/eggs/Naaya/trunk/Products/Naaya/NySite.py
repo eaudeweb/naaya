@@ -3915,8 +3915,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         (just like get_bulk_emails does to populate the web page)"""
         if not REQUEST:
             RESPONSE.badRequestError("MALFORMED_URL")
-        headers = REQUEST.get('headers')
-        keys = REQUEST.get('keys')
+        headers = REQUEST.form.get('headers')
+        keys = REQUEST.form.get('keys')
+        ids = REQUEST.form.get('id')
         if not headers or not keys:
             RESPONSE.badRequestError("MALFORMED_URL")
         headers = headers.split(',')
@@ -3928,7 +3929,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         RESPONSE.setHeader('Content-Disposition',
                             'attachment; filename=admin_bulk_email_list.xls')
         cols = zip(headers, keys)
-        return export_email_list_xcel(self, cols)
+        return export_email_list_xcel(self, cols, ids)
 
     def standard_template_macro(self, macro='page'):
         """

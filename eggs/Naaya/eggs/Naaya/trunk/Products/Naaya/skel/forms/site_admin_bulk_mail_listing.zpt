@@ -15,6 +15,7 @@
         }
     });
 </script>
+<script type="text/javascript" src="/++resource++Products.Naaya/js/export_emails.js"></script>
 <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
 <link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
 
@@ -27,22 +28,25 @@
 <div id="tabbedmenuend"></div>
 
 <p>&nbsp;</p>
-<div class="floated-buttons">
-    <span class="buttons">
-        <a tal:attributes="href string: ${site_url}/admin_bulk_mail_list_export?headers=Date,Subject,Recipients,CC%20Recipients,Content,Sender&keys=date,subject,recipients,cc_recipients,content,sender">
-            Export to Excel
-        </a>
-    </span>
-</div>
 <p i18n:translate="">This page lists all sent bulk emails.</p>
 
 <!--<input type="button" title="Send new bulk email" i18n:attributes="title; value"
        value="Send bulk email"
        onclick="javascript:redirect('admin_bulk_mail_html');" />-->
 
+<form method="post" tal:attributes="action string: ${site_url}/admin_bulk_mail_list_export">
+<div id="toolbar">
+    <input type="hidden" name="headers" value="Date,Subject,Recipients,CC Recipients,Content,Sender">
+    <input type="hidden" name="keys" value="date,subject,recipients,cc_recipients,content,sender">
+    <input type="submit" class="action-button" value="Export to Excel">
+    <p id="selection-text"></p>
+</div>
 <table cellpadding="0" cellspacing="0" class="datatable display listing" id="emails-list">
     <thead>
         <tr class="list-header">
+            <th class="checkbox" style="width: 4%; vertical-align: top;">
+                <input type="checkbox" class="select-all" />
+            </th>
             <th i18n:translate="" width="10%">
                 Date
             </th>
@@ -67,6 +71,9 @@
     <tbody>
 <tal:block repeat="email emails">
         <tr>
+            <td class="checkbox" style="width: 4%; vertical-align: top;">
+                <input type="checkbox" name="id" tal:attributes="value email/filename" />
+            </td>
             <td tal:content="python:here.utShowFullDateTime(email['date'])" />
 
             <td><a tal:content="email/subject" tal:attributes="href string:${site_url}/admin_view_bulk_email?filename=${email/filename}" /></td>
@@ -96,6 +103,9 @@
     </tbody>
     <tfoot>
         <tr class="list-header">
+            <th class="checkbox" style="width: 4%; vertical-align: top;">
+                <input type="checkbox" class="select-all" />
+            </th>
             <th i18n:translate="" width="10%">
                 Date
             </th>
@@ -118,6 +128,7 @@
         </tr>
     </tfoot>
 </table>
+</form>
 
 </tal:block>
 </tal:block>
