@@ -13,6 +13,7 @@
                 }
             });
         </script>
+        <script type="text/javascript" src="/++resource++Products.Naaya/js/export_emails.js"></script>
         <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
     </metal:block>
     <metal:block fill-slot="body">
@@ -27,19 +28,21 @@
 
         <h1 i18n:translate="">Archive of sent invitation mails</h1>
 
-        <div class="floated-buttons">
-            <span class="buttons">
-                <a tal:attributes="href string: ${here/absolute_url}/saved_emails_export?headers=Date,Subject,Recipients,Content,Sender,Send%20Status&keys=date,subject,recipients,content,sender,status">
-                    Export to Excel
-                </a>
-            </span>
+    <form method="post" tal:attributes="action string: ${here/absolute_url}/saved_emails_export">
+        <div id="toolbar">
+            <input type="hidden" name="headers" value="Date,Subject,Recipients,Content,Sender,Send Status">
+            <input type="hidden" name="keys" value="date,subject,recipients,content,sender,status">
+            <input type="submit" class="action-button" value="Export to Excel">
+            <p id="selection-text"></p>
         </div>
-
 
         <table tal:condition="emails" cellpadding="0" cellspacing="0"
             class="datatable display listing" id="emails-list">
             <thead>
                 <tr class="list-header">
+                    <th class="checkbox" style="width: 4%; vertical-align: top;">
+                        <input type="checkbox" class="select-all" />
+                    </th>
                     <th i18n:translate="" width="10%">
                         Date
                     </th>
@@ -68,6 +71,9 @@
             <tbody>
             <tal:block repeat="email emails">
                 <tr>
+                    <td class="checkbox" style="width: 4%; vertical-align: top;">
+                        <input type="checkbox" name="id" tal:attributes="value email/filename" />
+                    </td>
                     <td tal:content="python:here.utShowFullDateTime(email['date'])" />
 
                     <td><a tal:content="email/subject" tal:attributes="href string:${here/absolute_url}/view_email?filename=${email/filename}" /></td>
@@ -105,6 +111,9 @@
             </tbody>
             <tfoot>
                 <tr class="list-header">
+                    <th class="checkbox" style="width: 4%; vertical-align: top;">
+                        <input type="checkbox" class="select-all" />
+                    </th>
                     <th i18n:translate="" width="10%">
                         Date
                     </th>
@@ -131,6 +140,7 @@
                 </tr>
             </tfoot>
         </table>
+    </form>
 
         <div class="message-error" tal:condition="not:emails">
           <p i18n:translate="">No emails found in archive.</p>
