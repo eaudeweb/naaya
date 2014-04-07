@@ -1,5 +1,9 @@
-1.4.32 (unreleased)
+1.4.33 (unreleased)
 -------------------
+
+1.4.32 (2014-04-07)
+-------------------
+* Task #17799 - choose emails to export to xcel [baragdan]
 * fixed xcel typo [dumitval]
 
 1.4.31 (2014-01-17)
