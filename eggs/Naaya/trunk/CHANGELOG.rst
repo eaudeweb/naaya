@@ -1,4 +1,7 @@
-3.3.46 (unreleased)
+3.3.47 (unreleased)
+-------------------
+
+3.3.46 (2014-04-08)
 -------------------
 * Changed wording in restrict_html [dumitval]
 
