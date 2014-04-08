@@ -1,5 +1,6 @@
 3.3.46 (unreleased)
 -------------------
+* Changed wording in restrict_html [dumitval]
 
 3.3.45 (2014-04-07)
 -------------------

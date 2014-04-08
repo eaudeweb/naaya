@@ -57,7 +57,7 @@
 				<th class="roles" i18n:translate="">Roles allowed to access this folder</th>
 				<th i18n:translate="">Reason for having access</th>
 				<th i18n:translate="">Go to settings for</th>
-                <th i18n:translate="">Obs</th>
+                <th i18n:translate="">Remarks</th>
 				<!--<th class="list_users" i18n:translate="">List all users with this role</th>-->
 			</tr>
 		</thead>
@@ -128,7 +128,7 @@
 												<a i18n:name="location" class="tipsy-title"
 												tal:attributes="title here/pretty_path;
 												                href string:${blocker/absolute_url}/restrict_html"
-												tal:content="blocker/title_or_id" />.
+												tal:content="blocker/title_or_id" />, so it will NOT have access here.
 										</span>
 								</td>
 								</tr>
