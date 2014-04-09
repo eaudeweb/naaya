@@ -1,5 +1,6 @@
 1.4.17 (unreleased)
 -------------------
+* added a "Show all administrators" button on the member search [dumitval]
 
 1.4.16 (2014-03-10)
 -------------------
