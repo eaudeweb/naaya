@@ -52,9 +52,10 @@ class MemberSearch(Implicit, Item):
         """ """
         reverse_sort = reverse_sort != 'False'
         user_list = self._search_users(search_string, sort_by, reverse_sort)
+        import pdb; pdb.set_trace()
         if only_admins:
             user_list = [user for user in list(user_list)
-                            if user['access_level'] == 'Administrator']
+                            if 'Administrator' in user['access_level'].split(', ')]
         return self.user_list_html(search_string=search_string,
                                    sorted_by=sort_by,
                                    reverse_sorted=reverse_sort,
