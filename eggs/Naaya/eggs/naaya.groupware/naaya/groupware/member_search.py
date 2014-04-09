@@ -48,10 +48,13 @@ class MemberSearch(Implicit, Item):
 
     security.declareProtected(view, 'search_users_html')
     def search_users_html(self, search_string=u'', sort_by='',
-            reverse_sort='False'):
+            reverse_sort='False', only_admins=False):
         """ """
         reverse_sort = reverse_sort != 'False'
         user_list = self._search_users(search_string, sort_by, reverse_sort)
+        if only_admins:
+            user_list = [user for user in list(user_list)
+                            if user['access_level'] == 'Administrator']
         return self.user_list_html(search_string=search_string,
                                    sorted_by=sort_by,
                                    reverse_sorted=reverse_sort,

@@ -17,9 +17,12 @@
             Name contains</label>
         <input type="text" name="search_string:utf8:ustring" id="search_string"
             tal:attributes="value search_string"/>
-	<input type='hidden' id='skip_validation' name='skip_validation' value='' />
+        <input type='hidden' id='skip_validation' name='skip_validation' value='' />
+        <input type='hidden' id='only_admins' name='only_admins' value='' />
         <input type="submit" value="Search"/>
-	<input id="show_all" type="submit" value="Show all" />
+        <input id="show_all" type="submit" value="Show all" />
+        <input id="show_administrators" type="submit"
+            value="Show all administrators" />
     </form>
 
     <div id="search_results">
@@ -48,21 +51,30 @@
                 success: processResponse,
                 error: searchError
             });
-	    // Show all
-	    jQuery("#show_all").click(function(){
-		$('#skip_validation').val('1');
-		$('#search_form').submit();
-		return false;
-	    })
+            // Show all
+            jQuery("#show_all").click(function(){
+                $('#skip_validation').val('1');
+                $('#search_string').val('');
+                $('#search_form').submit();
+                return false;
+            })
+            jQuery("#show_administrators").click(function(){
+                $('#skip_validation').val('1');
+                $('#search_string').val('');
+                $('#only_admins').val('True');
+                $('#search_form').submit();
+                $('#only_admins').val('');
+                return false;
+            })
         });
         function beforeSubmit() {
             search_string = $('#search_string').val();
-	    skip_validation = $('#skip_validation').val();
-			if (!search_string && !skip_validation) {
-				alert ('Please type at least one letter to narrow search results.');
-				return false;
-			}
-	    $('#skip_validation').val('');
+            skip_validation = $('#skip_validation').val();
+            if (!search_string && !skip_validation) {
+                alert ('Please type at least one letter to narrow search results.');
+                return false;
+            }
+            $('#skip_validation').val('');
             showWatingForResponse();
         }
         function processResponse(data) {
@@ -104,6 +116,12 @@
                 if (reverse) {
                     reverse_param = 'reverse_sort=True';
                     url_params = url_params+'&'+reverse_param;
+                }
+                only_admins = $('#only_admins').val();
+                $('#only_admins').val('');
+                if (only_admins) {
+                    only_admins_param = 'only_admins=True';
+                    url_params = url_params+'&'+only_admins_param;
                 }
                 $.ajax({
                     url: 'search_users_html' + url_params,
