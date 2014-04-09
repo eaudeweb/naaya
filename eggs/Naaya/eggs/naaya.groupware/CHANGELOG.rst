@@ -1,4 +1,7 @@
-1.4.17 (unreleased)
+1.4.18 (unreleased)
+-------------------
+
+1.4.17 (2014-04-09)
 -------------------
 * added a "Show all administrators" button on the member search [dumitval]
 
