@@ -1,4 +1,7 @@
-1.4.18 (unreleased)
+1.4.19 (unreleased)
+-------------------
+
+1.4.18 (2014-04-09)
 -------------------
 * fix to show also users with several roles in member search [dumitval]
 
