@@ -1,5 +1,6 @@
 1.4.20 (unreleased)
 -------------------
+* bugfix in the update script [dumitval]
 
 1.4.19 (2014-04-10)
 -------------------
