@@ -74,6 +74,24 @@
 <tal:block condition="here/keywords"
            content="structure python: here.prop_display_tr('keywords')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
+<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['target-groups-property'].get_selection_list()">
+    <th i18n:translate="">Target groups</th>
+    <td>
+        <tal:block repeat="target_group here/target-groups">
+        <tal:block i18n:translate="" tal:content="python:[x.title for x in sel_list if x.id == target_group][0]" />
+        <tal:block condition="not:repeat/target_group/end" >, </tal:block>
+        </tal:block>
+    </td>
+</tr>
+<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['topics-property'].get_selection_list()">
+    <th i18n:translate="">Topics</th>
+    <td>
+        <tal:block repeat="topic here/topics">
+        <tal:block i18n:translate="" tal:content="python:[x.title for x in sel_list if x.id == topic][0]" />
+        <tal:block condition="not:repeat/topic/end" >, </tal:block>
+        </tal:block>
+    </td>
+</tr>
 
 <tal:block condition="here/is_geo_enabled">
 	<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
