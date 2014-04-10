@@ -1,4 +1,7 @@
-0.0.3 (unreleased)
+0.0.4 (unreleased)
+------------------
+
+0.0.3 (2014-04-10)
 ------------------
 * Added Target groups and Topics to the index page [dumitval]
 
