@@ -1,4 +1,7 @@
-1.4.19 (unreleased)
+1.4.20 (unreleased)
+-------------------
+
+1.4.19 (2014-04-10)
 -------------------
 * Changed update script for login/logout to redirect to member search [dumitval]
 
