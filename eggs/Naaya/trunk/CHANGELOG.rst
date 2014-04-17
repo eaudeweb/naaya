@@ -1,5 +1,6 @@
 3.3.47 (unreleased)
 -------------------
+* re-added an import (SubscriptionContainer) for backwards-compatibility [dumitval]
 
 3.3.46 (2014-04-08)
 -------------------
