@@ -229,7 +229,7 @@ class ZipExportTool(Implicit, Item):
 
         my_container = self.getParentNode()
         temp_file = tempfile.TemporaryFile()
-        zip_file = ZipFile(temp_file, 'w')
+        zip_file = ZipFile(temp_file, mode='w', allowZip64=True)
 
         sm = get_site_manager(my_container)
         builder = RecursiveZipBuilder(zip_file, errors, sm)
@@ -359,5 +359,5 @@ class FileIterator(object):
 def stream_response(RESPONSE, data_file):
     assert hasattr(RESPONSE, '_streaming')
     fi = FileIterator(data_file)
-    RESPONSE.setHeader('Content-Length', str(len(fi)))
+    RESPONSE.setHeader('Content-Length', fi.__len__())
     return fi
