@@ -1,5 +1,6 @@
 3.3.48 (unreleased)
 -------------------
+* enabled ZIP64 extension [dumitval]
 
 3.3.47 (2014-04-17)
 -------------------
