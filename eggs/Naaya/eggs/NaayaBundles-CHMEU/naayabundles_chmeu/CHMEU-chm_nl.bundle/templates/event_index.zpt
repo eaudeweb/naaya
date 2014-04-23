@@ -103,35 +103,45 @@
         <tal:block condition="here/checkPermissionPublishObjects" content="structure python: here.prop_display_tr('releasedate')" />
         <tal:block condition="here/checkPermissionPublishObjects" content="structure python: here.prop_display_tr('contributor')" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
-		<tr tal:define="sel_list python:here.portal_schemas.NyEvent['theme-property'].get_selection_list()">
-			<th i18n:translate="">Theme(s)</th>
-			<td>
-				<tal:block repeat="the_theme here/theme">
-					<span i18n:translate="" tal:replace="python: [x.title for x in sel_list if x.id == the_theme][0]" />
-					<span tal:condition="not:repeat/the_theme/end">,</span>
-				</tal:block>
-			</td>
-		</tr>
-		<tr tal:define="sel_list2 python:here.portal_schemas.NyEvent['target_group-property'].get_selection_list()">
-			<th i18n:translate="">Target group(s)</th>
-			<td>
-				<tal:block repeat="the_group here/target_group">
-					<span i18n:translate="" tal:replace="python: [x.title for x in sel_list2 if x.id == the_group][0]" />
-					<span tal:condition="not:repeat/the_group/end">,</span>
-				</tal:block>
-			</td>
-		</tr>
-		<tal:block condition="here/is_geo_enabled">
-			<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
-			picture python:portal_map.getSymbolPicture(here.geo_type)"
-				tal:condition="python: title != '' and here.geo_location">
-					<th i18n:translate="Type (translate as a noun)">Type</th>
-					<td>
-				<img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
-				<span tal:replace="title" i18n:translate="" />
-					</td>
-			</tr>
-		</tal:block>
+        <tr tal:define="sel_list python:here.portal_schemas.NyEvent['theme-property'].get_selection_list()">
+            <th i18n:translate="">Theme(s)</th>
+          <td>
+            <tal:block repeat="theme_id here/theme">
+              <tal:block define="theme_title python:[x.title for x in sel_list if x.id == theme_id]">
+                <span tal:condition="theme_title" i18n:translate=""
+                      tal:replace="python:theme_title[0]" />
+                <span tal:condition="not:theme_title" i18n:translate=""
+                      tal:replace="theme_id" />
+                <span tal:condition="not:repeat/theme_id/end">,</span>
+              </tal:block>
+            </tal:block>
+          </td>
+        </tr>
+        <tr tal:define="sel_list2 python:here.portal_schemas.NyEvent['target_group-property'].get_selection_list()">
+            <th i18n:translate="">Target group(s)</th>
+          <td>
+            <tal:block repeat="group_id here/target_group">
+              <tal:block define="group_title python: [x.title for x in sel_list2 if x.id == group_id]">
+                <span tal:condition="group_title" i18n:translate=""
+                  tal:replace="python:group_title[0]" />
+                <span tal:condition="not:group_title" i18n:translate=""
+                  tal:replace="group_id" />
+                <span tal:condition="not:repeat/group_id/end">,</span>
+              </tal:block>
+            </tal:block>
+          </td>
+        </tr>
+        <tal:block condition="here/is_geo_enabled">
+            <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+            picture python:portal_map.getSymbolPicture(here.geo_type)"
+                tal:condition="python: title != '' and here.geo_location">
+                    <th i18n:translate="Type (translate as a noun)">Type</th>
+                    <td>
+                <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
+                <span tal:replace="title" i18n:translate="" />
+                    </td>
+            </tr>
+        </tal:block>
 
         <tal:block content="structure python: here.prop_display_tr('keywords')" />
 
