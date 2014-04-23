@@ -112,7 +112,7 @@ class MemberSearch(Implicit, Item):
                         'first_name': user['givenName'],
                         'last_name': user['sn'],
                         'full_name': user['cn'],
-                        'email': user['mail'],
+                        'email': user.get('mail', ''),
                         'organisation': user.get('o', 'N/A'),
                         'postal_address': user.get('postalAddress', 'N/A'),
                         })
