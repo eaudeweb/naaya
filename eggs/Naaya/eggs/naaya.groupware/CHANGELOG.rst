@@ -1,4 +1,7 @@
-1.4.21 (unreleased)
+1.4.22 (unreleased)
+-------------------
+
+1.4.21 (2014-04-23)
 -------------------
 * handle users without email addresses [dumitval]
 
