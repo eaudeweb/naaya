@@ -44,6 +44,11 @@ def process_create_account(context, request):
     schema = site.getSchemaTool()['NyContact']
     register_schema = context.getSite().getSchemaTool()['registration']
     form_data, form_errors = validate_widgets(schema, register_schema, request.form)
+
+    # if filling up the lower part, then the upper part is required as well
+    if form_data['landscape_type'] and not form_data['topics']:
+        form_errors['topics'] = ['Value is required for Topics']
+
     if form_errors:
         prepare_error_response(context, schema, register_schema, form_errors, request.form)
         # we need to put ourselves the user specific values in form
