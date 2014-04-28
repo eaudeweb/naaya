@@ -1,3 +1,8 @@
+1.2.20 - (2014-01-28)
+=======================
+* Bug fix: make the Topic required only when the landscape type is filled in
+  [tiberich]
+
 1.2.19 - (2014-01-15)
 =======================
 * Bug fix: fixed setting the geotype when the edit action happens
