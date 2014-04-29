@@ -1,34 +1,41 @@
-from copy import deepcopy
-import re
-from cStringIO import StringIO
-import os
-import sys
-
-from Globals import InitializeClass
-from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
-from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
-
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
-from naaya.content.base.constants import *
-from Products.NaayaBase.constants import *
-from Products.NaayaBase.NyItem import NyItem
+from App.ImageFile import ImageFile
+from Globals import InitializeClass
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaBase.constants import EXCEPTION_NOVERSION
+from Products.NaayaBase.constants import EXCEPTION_NOVERSION_MSG
+from Products.NaayaBase.constants import EXCEPTION_STARTEDVERSION
+from Products.NaayaBase.constants import EXCEPTION_STARTEDVERSION_MSG
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from cStringIO import StringIO
+from interfaces import INyContact
+from naaya.content.base.constants import MUST_BE_DATETIME
+from naaya.content.base.constants import MUST_BE_NONEMPTY
+from naaya.content.base.constants import MUST_BE_POSITIV_INT
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
-
-from interfaces import INyContact
 from permissions import PERMISSION_ADD_CONTACT
+from zope.event import notify
+from zope.interface import implements
+import os
+import re
+import sys
+
+#from copy import deepcopy
 
 #module constants
 PROPERTIES_OBJECT = {
