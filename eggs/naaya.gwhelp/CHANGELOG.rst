@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+1.0.2 (unreleased)
+-------------------
+
+1.0.1 (2014-04-30)
 -------------------
 * added help info for authentication and profile overview [dumitval]
 
