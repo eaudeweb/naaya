@@ -10,6 +10,33 @@
 
 		<p>All Open Source, including the components created for customers other than EEA.</p>
 
+		<h3>Authentication<a id="authentication"></a></h3>
+		<p>While some IGs allow unauthenticated (anonymous) users to view content, others require authentication. For content uploading/creation, authentication is required on all IGs.</p>
+
+		<p>If you don't have an Eionet account and believe that you are entitled to one, please contact the Eionet helpdesk (<a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>).</p>
+
+		<p>In order to log in, click on the <strong>"Login"</strong> link in the upper middle part of the page:</p>
+
+		<p><img src="/++resource++naaya.gwhelp/login.png" alt="Login link" /></p>
+
+		<p>Enter the username and password from your Eionet account and click <strong>"Login"</strong>.</p>
+
+		<p><img src="/++resource++naaya.gwhelp/forgot-user-password.png" alt="Login link" /></p>
+
+		<p>If you forgot your user id or your password, click on the link <strong>"I forgot my username or password"</strong>, enter the email address used when you registered the account, click on "Reset password" and you will receive an email with a private link that will allow you to reset your password.</p>
+
+		<p><img src="/++resource++naaya.gwhelp/reset-password.png" alt="Login link" /></p>
+
+		<p>After a successfull login, your name will appear on top of the page, next to the link that now will say <strong>"Logout"</strong>.</p>
+
+		<p><img src="/++resource++naaya.gwhelp/user-name.png" alt="Login link" /></p>
+
+		<p>On the homepage <a href="http://forum.eionet.europa.eu/">http://forum.eionet.europa.eu</a>, a click on your name will direct you to your user profile on the main <strong>Eionet</strong> portal. Here you can view your account details. If you spot an error, you can click on the link <strong>"Edit my user profile"</strong> and correct it.</p>
+
+		<p><img src="/++resource++naaya.gwhelp/user-profile.png" alt="Login link" /></p>
+
+		<p>If you are inside an IG, a click on your username will lead to an overview page of your permissions in that IG.</p>
+
 		<h3>Content types<a id="anchor002"></a></h3>
 
 		<p>The Naaya content consists of Folders, which can contain the following Naaya specific sub-objects:</p>

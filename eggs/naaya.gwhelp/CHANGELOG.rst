@@ -1,5 +1,6 @@
 1.0.1 (unreleased)
 -------------------
+* added help info for authentication and profile overview [dumitval]
 
 1.0.0 (2013-07-24)
 -------------------
