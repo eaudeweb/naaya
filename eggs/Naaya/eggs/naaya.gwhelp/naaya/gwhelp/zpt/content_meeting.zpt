@@ -6,6 +6,7 @@
 					<li><a href="#edit">Meeting properties</a></li>
 					<li><a href="#applicants">Applicants management</a></li>
 					<li><a href="#participants">Participants management</a></li>
+					<li><a href="#nfp">National Focal Points</a></li>
 					<li><a href="#emails">Send emails</a></li>
 				</ul>
 			</li>
@@ -13,7 +14,8 @@
 	</metal:block>
 	<metal:block fill-slot="main_content">
 		<a id="top"></a><h1>Content types in an Interest Group</h1>
-		<h2>Meeting</h2>
+
+        <h2>Meeting</h2>
 		<p>Meeting objects are interactive tools supporting physical or virtual meetings, allowing registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
 
 		<p>The meeting is based on the <em>Folder</em>, so it has many similar properties and functions:</p>
@@ -86,7 +88,7 @@
 		<a id="applicants"></a><h2>Applicants management</h2>
 		<p><img src="/++resource++naaya.gwhelp/meeting-buttons-applicants.png"
 			alt="Applicants management" title="Applicants management" /></p>
-		<p>Administrators can administer the applicants in the management interface:</p>
+		<p>Administrators can manage the applicants in the management interface:</p>
 		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-applicants.png"
 			alt="Applicants management" title="Applicants management" /></p>
 		<h3>Signups</h3>
@@ -109,7 +111,20 @@
 			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
-		<a id="emails"></a><h2>Send emails</h2>
+
+        <a id="nfp"></a><h2>National Focal Points</h2>
+        <p>National focal points (NFP) have in Eionet meetings extended permissions, similar to the administrators. They can manage both the applicants (signups and account subscriptions) and participants.</p>
+		<p><img class="screenshot" src="/++resource++naaya.gwhelp/applicants-participants.png"
+			alt="Applicants and participants management" title="Applicants and participants management" /></p>
+            <p>Aside from accepting or rejecting applications, NFPs have the possibility to set certain applicants as official representative <em>for the country of the NFP</em> and/or set certain applicants as being reimbursed for the participation, options <strong><em>not available to administrators</em></strong>.</p>
+		<p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-applicants.png"
+        alt="Manage applicants" title="Manage applicants" width="940px" /></p>
+        <p>The same options are available also in the participants management:</p>
+		<p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-participants.png"
+        alt="Manage participants" title="Manage participants" width="940px" /></p>
+        <p class="note">Please note that applicants not yet approved <em>will not appear in the participants listing.</em></p>
+ 
+        <a id="emails"></a><h2>Send emails</h2>
 		<p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all or part of the registered participants. The <em>From:</em> address will be pre-filled with the email address of the contact person, recipients can be selected from the overview and <em>Subject</em> and <em>Body</em> can be entered manually.</p>
 
 	</metal:block>
