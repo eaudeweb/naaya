@@ -1,4 +1,7 @@
-3.3.49 (unreleased)
+3.3.50 (unreleased)
+-------------------
+
+3.3.49 (2014-05-06)
 -------------------
 * jquery datatables on notification admin page [dumitval]
 * Changed wording in the password reset form (Recover --> Reset) [dumitval]
