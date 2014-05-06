@@ -1,5 +1,6 @@
 1.0.2 (unreleased)
 -------------------
+* added help info about the administrative permissions of NFPs [dumitval]
 
 1.0.1 (2014-04-30)
 -------------------
