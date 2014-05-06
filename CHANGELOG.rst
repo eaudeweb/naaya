@@ -1,4 +1,7 @@
-1.2.56 (unreleased)
+1.2.57 (unreleased)
+-------------------
+
+1.2.56 (2014-05-06)
 -------------------
 * bugfix in assiging 'representative' status for signups before approval [dumitval]
 
