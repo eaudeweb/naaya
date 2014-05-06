@@ -1,25 +1,26 @@
-#Python imports
+# Python imports
 
-#Zope imports
+# Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
-from AccessControl.Permissions import change_permissions, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from AccessControl.Permissions import view
 from Globals import InitializeClass
 from AccessControl.requestmethod import postonly
 
-#Naaya imports
+# Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import generate_excel
 
-#Meeting imports
+# Meeting imports
 from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
                                    ADMINISTRATOR_ROLE, OWNER_ROLE)
 from permissions import PERMISSION_ADMIN_MEETING
-from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
+from utils import (getUserFullName, getUserEmail, getUserOrganization,
+                   getUserPhoneNumber)
 from utils import findUsers, listUsersInGroup
 from subscriptions import Subscriptions
+
 
 class Participants(SimpleItem):
     security = ClassSecurityInfo()
@@ -35,6 +36,7 @@ class Participants(SimpleItem):
         return self.aq_parent
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSubscriptions')
+
     def getSubscriptions(self):
         return self.subscriptions
 
@@ -55,6 +57,7 @@ class Participants(SimpleItem):
         return listUsersInGroup(self.getSite(), search_role)
 
     security.declareProtected(view, 'isParticipant')
+
     def isParticipant(self, userid=None):
         """ """
         if userid is None:
@@ -164,6 +167,7 @@ class Participants(SimpleItem):
             subscriptions._reject_account_subscription(uid)
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'delAttendees')
+
     @postonly
     def delAttendees(self, REQUEST):
         """ """
@@ -211,7 +215,8 @@ class Participants(SimpleItem):
                 attendee = subscriptions.getSignup(uid)
             else:
                 attendee = subscriptions.getAccountSubscription(uid)
-            attendees[uid]['country'] = getattr(attendee, 'country', '-') or '-'
+            attendees[uid]['country'] = getattr(
+                attendee, 'country', '-') or '-'
             if getattr(attendee, 'reimbursed', False):
                 attendees[uid]['reimbursed'] = 'Yes'
             else:
@@ -223,7 +228,6 @@ class Participants(SimpleItem):
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
         attendees = self._get_attendees()
-        site = self.getSite()
 
         if sort_on == 'o':
             key = lambda x: self.getAttendeeInfo(x)['organization'].lower()
@@ -279,8 +283,8 @@ class Participants(SimpleItem):
         country = attendees[uid]['country']
         reimbursed = attendees[uid]['reimbursed']
         ret = {'uid': uid, 'name': name, 'email': email,
-                 'organization': organization, 'phone': phone, 'role': role,
-                 'country': country, 'reimbursed': reimbursed}
+               'organization': organization, 'phone': phone, 'role': role,
+               'country': country, 'reimbursed': reimbursed}
         for k, v in ret.items():
             if not isinstance(v, basestring):
                 ret[k] = u''
@@ -292,9 +296,8 @@ class Participants(SimpleItem):
             raise Unauthorized
         subscriptions = self.getSubscriptions()
         for attendee_id in ids:
-            if subscriptions._is_signup(attendee_id):
-                user = subscriptions.getSignup(attendee_id)
-            else:
+            user = subscriptions.getSignup(attendee_id)
+            if user is None:
                 user = subscriptions.getAccountSubscription(attendee_id)
             setattr(user, prop, val)
 
@@ -308,47 +311,55 @@ class Participants(SimpleItem):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        return self.getFormsTool().getContent({'here': self},
-                        'naaya.content.meeting.participants_index')
+        return self.getFormsTool().getContent(
+            {'here': self},
+            'naaya.content.meeting.participants_index')
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'pickrole_html')
+
     def pickrole_html(self, REQUEST):
         """ """
         sources = self.getAuthenticationTool().getSources()
-        return self.getFormsTool().getContent({'here': self, 'sources': sources},
-                        'naaya.content.meeting.participants_pickrole')
+        return self.getFormsTool().getContent(
+            {'here': self, 'sources': sources},
+            'naaya.content.meeting.participants_pickrole')
 
     def participants_table(self, form_name, input_name):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        return self.getFormsTool().getContent({'here': self,
-                                                'form_name': form_name,
-                                                'input_name': input_name},
-                         'naaya.content.meeting.participants_table')
+        return self.getFormsTool().getContent(
+            {'here': self,
+             'form_name': form_name,
+             'input_name': input_name},
+            'naaya.content.meeting.participants_table')
 
     security.declareProtected(view, 'download')
+
     def download(self, REQUEST=None, RESPONSE=None):
         """exports the participants listing in an excel file"""
         assert self.rstk.we_provide('Excel export')
 
-        header = ['Name', 'User ID', 'Email', 'Organisation', 'Phone', 'Status']
+        header = ['Name', 'User ID', 'Email', 'Organisation', 'Phone',
+                  'Status']
         rows = []
         participants = self.getAttendees()
         for participant in participants:
             part_info = self.getAttendeeInfo(participant)
-            rows.append([part_info['name'], part_info['uid'], part_info['email'], part_info['organization'], part_info['phone'], part_info['role']])
+            rows.append([part_info['name'], part_info['uid'],
+                         part_info['email'], part_info['organization'],
+                         part_info['phone'], part_info['role']])
 
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls'
+                           % self.id)
         return generate_excel(header, rows)
 
 InitializeClass(Participants)
 
 NaayaPageTemplateFile('zpt/participants_index', globals(),
-        'naaya.content.meeting.participants_index')
+                      'naaya.content.meeting.participants_index')
 NaayaPageTemplateFile('zpt/participants_pickrole', globals(),
-        'naaya.content.meeting.participants_pickrole')
+                      'naaya.content.meeting.participants_pickrole')
 NaayaPageTemplateFile('zpt/participants_table', globals(),
-        'naaya.content.meeting.participants_table')
-
+                      'naaya.content.meeting.participants_table')
