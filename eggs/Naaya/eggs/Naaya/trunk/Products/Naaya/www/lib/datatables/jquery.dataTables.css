@@ -64,8 +64,9 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
  * Filter
  */
 .dataTables_filter {
-	float: right;
+	float: left;
 	text-align: right;
+	padding-left: 100px;
 }
 
 
