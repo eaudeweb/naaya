@@ -501,7 +501,7 @@ def _prepare_xcel_data(email, site, check_status):
             email[k] = email[k][:_max_cell]
     return email
 
-def export_email_list_xcel(site, cols, filenames, where_to_read='sent-bulk'):
+def export_email_list_xcel(site, cols, filenames=None, where_to_read='sent-bulk'):
     """Generate excel file with columns named after first value of
     tuples in cols, and the contets of the cells set by the key in
     the second value of the tuple in cols
