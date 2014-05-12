@@ -1,5 +1,6 @@
 3.3.50 (unreleased)
 -------------------
+* fixed some tests after the change of default enable notifications [dumitval]
 
 3.3.49 (2014-05-06)
 -------------------
