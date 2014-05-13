@@ -92,7 +92,5 @@
         handler=".meeting.handle_meeting_add"
         />
 
-    for=".meeting.INyMeeting"
-
 </configure>
 

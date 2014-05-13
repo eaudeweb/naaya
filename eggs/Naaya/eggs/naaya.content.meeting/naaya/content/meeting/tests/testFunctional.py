@@ -1,4 +1,4 @@
-#from pyquery import PyQuery
+import random
 
 #Zope imports
 from Testing import ZopeTestCase
@@ -621,6 +621,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
 
 ZopeTestCase.installProduct('NaayaWidgets')
 ZopeTestCase.installProduct('NaayaSurvey')
+ZopeTestCase.installProduct('naaya.content.meeting')
 
 class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
     """ SurveyTestCase for NyMeeting object """
@@ -983,45 +984,58 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
 
 class NyMeetingReleaseDateAccess(NaayaFunctionalTestCase):
     """ Access based on releaseddate TestCase for NyMeeting object """
-
-    def setUp(self):
-        super(NyMeetingReleaseDateAccess, self).setUp()
-        self.portal.manage_install_pluggableitem('Naaya Meeting')
+    def _make_one(self):
         from naaya.content.meeting.meeting import addNyMeeting
+        id = "".join(random.sample("abcdefghijkl", 5))
         extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
                       'interval.start_date': '20/06/2010',
                       'interval.end_date': '25/06/2010',
                       'interval.all_day': True}
-        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+
+        addNyMeeting(self.portal.info, id, contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='2', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
             allow_register=True, restrict_items=True, **extra_args)
 
-        self.meeting = self.portal['info']['mymeeting']
-        self.meeting_url = self.meeting.absolute_url()
         import transaction; transaction.commit()
+        return self.portal['info'][id]
+
+    def setUp(self):
+        super(NyMeetingReleaseDateAccess, self).setUp()
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+
+        from zope.configuration.xmlconfig import string, _getContext
+        string(""" <configure
+                        xmlns:zope="http://namespaces.zope.org/zope"
+                        i18n_domain="naaya.content">
+                        <include package="zope.component" file="meta.zcml" />
+                        <zope:adapter
+                            for="naaya.content.meeting.meeting.NyMeeting zope.interface.Interface"
+                            provides="zope.publisher.interfaces.browser.IBrowserPublisher"
+                            factory="naaya.content.meeting.meeting.MeetingPublishTraverse" />
+                    </configure> """, context=_getContext())
 
     def test_approve(self):
         """ Automatically approve when release date is in the past
         """
-        meeting = self.portal.info.mymeeting
-        # release date is in the past
+        meeting = self._make_one()
+        # release date is in the past; it is automatically approved on add
         assert meeting.releasedate < DateTime()
-        assert bool(meeting.approved) == False
-        self.browser.go(self.meeting.absolute_url())
         assert bool(meeting.approved) == True
+        self.browser.go(meeting.absolute_url())
+        assert 'login_html' not in self.browser.get_url()
 
     def test_unapprove(self):
         """ Automatically unapprove when release date is in the future
         """
         # release date is in the future
-        self.browser.go(self.meeting.absolute_url())
-
-        self.meeting.releasedate = DateTime() + 10
-        self.meeting.approveThis(True)
+        meeting = self._make_one()
+        meeting.releasedate = DateTime() + 10000
+        meeting.approveThis(True)
         import transaction; transaction.commit()
 
-        self.browser.go(self.meeting.absolute_url())
+        self.browser_do_logout()
+        self.browser.go(meeting.absolute_url())
         assert 'login_html' in self.browser.get_url()
 
 
