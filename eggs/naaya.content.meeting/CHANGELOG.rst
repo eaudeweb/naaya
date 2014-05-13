@@ -1,5 +1,7 @@
 1.2.57 (unreleased)
 -------------------
+* Bug fix: fix tests for access to meetings based on release date 
+  [tiberich #18783]
 
 1.2.56 (2014-05-06)
 -------------------
