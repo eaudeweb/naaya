@@ -39,6 +39,9 @@ class Export(object):
             self.logger.debug("\t Object %s has %r languages: %r",
                              self.data.get('id', 'ERROR'), len(languages),
                              languages)
+        if not languages:
+            languages = [x['id'] for x in self.data['_objects']]
+
         for language in languages:
             nyfile = self.data.pop(language, None)
             if not nyfile:
@@ -141,7 +144,7 @@ class Import(object):
         """
         for version in value:
             self.context._save_file(version,
-                                    contribut='')
+                                    contributor='')
     versions = property(None, versions)
 
     def properties(self, value):
@@ -185,9 +188,9 @@ class Import(object):
 
         """
         # XXX These should stay in annotations
-        self.context.approved = value.pop('approved')
-        self.context.approved_by = value.pop('approved_by')
-        self.context.submitted = value.pop('submitted')
+        self.context.approved = value.pop('approved', 1)
+        self.context.approved_by = value.pop('approved_by', None)
+        self.context.submitted = value.pop('submitted', 0)
         self.context.discussion = value.pop('discussion', 0)
 
         # XXX Comments
@@ -385,6 +388,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             if not doc:
                 continue
 
+            self.log.info("Replacing object %s", doc.absolute_url())
             folder_meta_types = FolderMetaTypes(doc)
             meta_types = folder_meta_types.get_values()
             changed = False
@@ -424,6 +428,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             doc = brain.getObject()
             self.log.debug('Updating extended file: %s' % doc.absolute_url(1))
             self.exchange(doc)
+            break
 
         self.update_control_panel(portal)
         self.update_subobjects(portal)
