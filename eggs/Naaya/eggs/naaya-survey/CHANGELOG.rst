@@ -1,4 +1,7 @@
-1.2.48 (unreleased)
+1.2.49 (unreleased)
+===================
+
+1.2.48 (2014-05-23)
 ===================
 * bugfix related to deletion of questions [dumitval]
 
