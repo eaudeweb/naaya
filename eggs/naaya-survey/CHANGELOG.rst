@@ -1,5 +1,6 @@
 1.2.48 (unreleased)
 ===================
+* bugfix related to deletion of questions [dumitval]
 
 1.2.47 (2014-02-10)
 ===================

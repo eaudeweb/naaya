@@ -240,7 +240,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             try:
                 if isinstance(self._getOb(ids[0]), AVAILABLE_WIDGETS):
                     for widget_id in ids:
-                        if (getattr(self._getOb(widget_id), 'locked') and
+                        if (getattr(self._getOb(widget_id), 'locked', '') and
                                 not self.checkPermission('View Management Screens')):
                             raise Unauthorized
 
