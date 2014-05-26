@@ -48,9 +48,6 @@ except ImportError, e:
     import email.Header as email_header
     import email.Generator as email_generator
 
-#import cStringIO
-#import smtplib
-
 email_validator = EmailValidator("checked_emails", maxWorkers=10)
 g_utils = utils.utils()
 
@@ -74,6 +71,7 @@ else:
         message.set_payload(body_bytes)
         return message
 
+
 def manage_addEmailTool(self, REQUEST=None):
     """ """
     ob = EmailTool(ID_EMAILTOOL, TITLE_EMAILTOOL)
@@ -81,6 +79,7 @@ def manage_addEmailTool(self, REQUEST=None):
     self._getOb(ID_EMAILTOOL).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
 
 class EmailTool(Folder):
     """ """
@@ -99,7 +98,9 @@ class EmailTool(Folder):
     )
 
     meta_types = (
-        {'name': METATYPE_EMAILTEMPLATE, 'action': 'manage_addEmailTemplateForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL},
+        {'name': METATYPE_EMAILTEMPLATE,
+         'action': 'manage_addEmailTemplateForm',
+         'permission': PERMISSION_ADD_NAAYACORE_TOOL},
     )
     all_meta_types = meta_types
 
@@ -114,13 +115,15 @@ class EmailTool(Folder):
         self.title = title
 
     security.declarePrivate('loadDefaultData')
+
     def loadDefaultData(self):
-        #load default stuff
+        # load default stuff
         pass
 
     def _guess_from_address(self):
         if self.portal_url != '':
-            return 'notifications@%s' % urlparse(self.getSite().get_portal_domain())[1]
+            return 'notifications@%s' % urlparse(
+                self.getSite().get_portal_domain())[1]
         else:
             return 'notifications@%s' % urlparse(self.REQUEST.SERVER_URL)[1]
 
@@ -129,6 +132,7 @@ class EmailTool(Folder):
         return self.get_addr_from()
 
     security.declarePrivate('get_addr_from')
+
     def get_addr_from(self):
         """
         Get "From:" address, to use in mails originating from this portal. If
@@ -137,8 +141,10 @@ class EmailTool(Folder):
         addr_from = self.getSite().mail_address_from
         return addr_from or self._guess_from_address()
 
-    _errors_report = PageTemplateFile('zpt/configuration_errors_report', globals())
+    _errors_report = PageTemplateFile('zpt/configuration_errors_report',
+                                      globals())
     security.declareProtected(naaya_admin, 'configuration_errors_report')
+
     def configuration_errors_report(self):
         errors = []
         delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
@@ -149,9 +155,11 @@ class EmailTool(Folder):
             errors.append('"From" address not configured')
         return self._errors_report(errors=errors)
 
-    #api
+    # api
     security.declarePrivate('sendEmail')
-    def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False, p_cc=[]):
+
+    def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False,
+                  p_cc=[]):
         """
         Send email message on transaction commit. If the transaction fails,
         the message is discarded.
@@ -159,12 +167,12 @@ class EmailTool(Folder):
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',')]
 
-        p_to = filter(None, p_to) # filter out blank recipients
+        p_to = filter(None, p_to)  # filter out blank recipients
 
         if not isinstance(p_cc, list):
             p_cc = [e.strip() for e in p_cc.split(',')]
 
-        p_cc = filter(None, p_cc) # filter out blank recipients
+        p_cc = filter(None, p_cc)  # filter out blank recipients
 
         try:
             site = self.getSite()
@@ -174,8 +182,9 @@ class EmailTool(Folder):
             site_path = '[no site]'
 
         try:
-            if diverted_mail is not None: # we're inside a unit test
-                diverted_mail.append([p_content, p_to, p_cc, p_from, p_subject])
+            if diverted_mail is not None:  # we're inside a unit test
+                diverted_mail.append([p_content, p_to, p_cc, p_from,
+                                      p_subject])
                 return 1
 
             delivery = delivery_for_site(site)
@@ -201,8 +210,10 @@ class EmailTool(Folder):
             mail_logger.info('Sending email from site: %r '
                              'to: %r, cc: %r, subject: %r',
                              site_path, p_to, p_cc, p_subject)
-            l_message = create_message(p_content, p_to, p_from, p_subject, addr_cc=p_cc)
-            send_by_delivery(delivery, p_from, p_to, l_message)
+            l_message = create_message(p_content, p_to, p_from, p_subject,
+                                       addr_cc=p_cc)
+            # Add CC recp. to the TO recp., this is the only way to send them
+            send_by_delivery(delivery, p_from, p_to+p_cc, l_message)
             return 1
 
         except:
@@ -214,6 +225,7 @@ class EmailTool(Folder):
             return 0
 
     security.declarePrivate('sendEmailImmediately')
+
     def sendEmailImmediately(self, *args, **kwargs):
         """
         Send email message straight away, without waiting for transaction
@@ -224,12 +236,16 @@ class EmailTool(Folder):
         self.sendEmail(*args, **kwargs)
 
     security.declareProtected(view_management_screens, 'manageSettings')
-    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='',
-                       mail_address_from='', notify_on_errors_email='', REQUEST=None):
+
+    def manageSettings(self, mail_server_name='', mail_server_port='',
+                       administrator_email='', mail_address_from='',
+                       notify_on_errors_email='', REQUEST=None):
         """ """
         site = self.getSite()
-        try: mail_server_port = int(mail_server_port)
-        except: mail_server_port = site.mail_server_port
+        try:
+            mail_server_port = int(mail_server_port)
+        except:
+            mail_server_port = site.mail_server_port
         site.mail_server_name = mail_server_name
         site.mail_server_port = mail_server_port
         site.mail_address_from = mail_address_from
@@ -239,13 +255,15 @@ class EmailTool(Folder):
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
 
-    #zmi pages
+    # zmi pages
     security.declareProtected(view_management_screens, 'manage_settings_html')
     manage_settings_html = PageTemplateFile('zpt/email_settings', globals())
 
 InitializeClass(EmailTool)
 
 diverted_mail = None
+
+
 def divert_mail(enabled=True):
     global diverted_mail
     if enabled:
@@ -254,12 +272,14 @@ def divert_mail(enabled=True):
     else:
         diverted_mail = None
 
+
 def safe_header(value):
     """ prevent header injection attacks (the email library doesn't) """
     if '\n' in value:
         return email_header.Header(value.encode('utf-8'), 'utf-8')
     else:
         return value
+
 
 def hack_to_use_quopri(message):
     """
@@ -274,21 +294,28 @@ def hack_to_use_quopri(message):
     del message['Content-Transfer-Encoding']
     message.set_charset(charset)
 
+
 def send_by_delivery(delivery, p_from, p_to, message):
     """
-    Send `message` email, where `message` is a MIMEText/Message instance created
-    by create_message.
+    Send `message` email, where `message` is a MIMEText/Message instance
+    created by create_message.
     Knows how to handle repoze.sendmail 2.3 differences in `message` arg type.
 
     """
     try:
         delivery.send(p_from, p_to, message.as_string())
     except AssertionError, e:
-        if (e.args and
-            e.args[0] == 'Message must be instance of email.message.Message'):
+        if (e.args and e.args[0] ==
+                'Message must be instance of email.message.Message'):
             delivery.send(p_from, p_to, message)
         else:
             raise
+    except ValueError, e:
+        if (e.args and e.args[0] == 'Message must be email.message.Message'):
+            delivery.send(p_from, p_to, message)
+        else:
+            raise
+
 
 def create_message(text, addr_to, addr_from, subject, addr_cc=[]):
     if isinstance(addr_to, basestring):
@@ -310,6 +337,7 @@ def create_message(text, addr_to, addr_from, subject, addr_cc=[]):
     message['Date'] = email_utils.formatdate()
 
     return message
+
 
 def save_bulk_email(site, addr_to, addr_from, subject, content,
                     where_to_save='sent-bulk', addr_cc=[]):
@@ -336,7 +364,7 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
                                   random.randrange(randmax))
         filename = join(save_path, unique)
         message_file = os.open(filename,
-                               os.O_CREAT|os.O_EXCL|os.O_WRONLY,
+                               os.O_CREAT | os.O_EXCL | os.O_WRONLY,
                                0600)
         generator = email_generator.Generator(os.fdopen(message_file, 'w'))
 
@@ -359,8 +387,9 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
                             " Missing configuration for SITES_LOG_PATH?")
     return filename
 
+
 def save_webex_email(site, addr_to, addr_from, subject, content,
-                    where_to_save='sent-webex', others=None):
+                     where_to_save='sent-webex', others=None):
     """
     Save webex email on disk.
     `addr_to` is a list; if there is more than one recipient,
@@ -384,7 +413,7 @@ def save_webex_email(site, addr_to, addr_from, subject, content,
                                   random.randrange(randmax))
         filename = join(save_path, unique)
         message_file = os.open(filename,
-                               os.O_CREAT|os.O_EXCL|os.O_WRONLY,
+                               os.O_CREAT | os.O_EXCL | os.O_WRONLY,
                                0600)
         generator = email_generator.Generator(os.fdopen(message_file, 'w'))
 
@@ -409,6 +438,7 @@ def save_webex_email(site, addr_to, addr_from, subject, content,
                             "Please contact the platform maintainers.")
     return filename
 
+
 def _get_message_path(site, where_to_read):
     save_path = get_log_dir(site)
     if not save_path:
@@ -417,6 +447,7 @@ def _get_message_path(site, where_to_read):
     if not os.path.isdir(save_path):
         return None
     return save_path
+
 
 def get_bulk_emails(site, where_to_read='sent-bulk'):
     """
@@ -433,7 +464,7 @@ def get_bulk_emails(site, where_to_read='sent-bulk'):
 
     # Sort them descending by the last modification time
     sorted_messages = [(message, os.path.getmtime(message))
-                        for message in messages]
+                       for message in messages]
     sorted_messages.sort(key=lambda x: x[1], reverse=True)
     messages = [message[0] for message in sorted_messages]
 
@@ -446,7 +477,9 @@ def get_bulk_emails(site, where_to_read='sent-bulk'):
             emails.append(email)
     return emails
 
-def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=None):
+
+def get_bulk_email(site, filename, where_to_read='sent-bulk',
+                   message_file_path=None):
     """ Show a specific bulk email saved on the disk """
     try:
         if not message_file_path:
@@ -476,12 +509,14 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk', message_file_path=
     }
     return r
 
+
 # alter mutable email to fit xcel row
 def _prepare_xcel_data(email, site, check_status):
     _separator = ', '
     _max_cell = 32767
     if check_status:
-        # no dict comprehension in python 2.6 :((  beautify this when we get to 2.7
+        # no dict comprehension in python 2.6 :((
+        # beautify this when we get to 2.7
         check_values = {}
         for k in ['sender', 'recipients', 'subject', 'content', 'date']:
             check_values[k] = email.get(k, '')
@@ -501,7 +536,9 @@ def _prepare_xcel_data(email, site, check_status):
             email[k] = email[k][:_max_cell]
     return email
 
-def export_email_list_xcel(site, cols, filenames=None, where_to_read='sent-bulk'):
+
+def export_email_list_xcel(site, cols, filenames=None,
+                           where_to_read='sent-bulk'):
     """Generate excel file with columns named after first value of
     tuples in cols, and the contets of the cells set by the key in
     the second value of the tuple in cols
@@ -510,9 +547,9 @@ def export_email_list_xcel(site, cols, filenames=None, where_to_read='sent-bulk'
     and include it in the resulting excel.
     """
     emails = get_bulk_emails(site, where_to_read=where_to_read)
-    header = [ v[0] for v in cols ]
+    header = [v[0] for v in cols]
     rows = []
-    check_status = True if 'status' in [ v[1] for v in cols ] else False
+    check_status = True if 'status' in [v[1] for v in cols] else False
     for email in emails:
         if not filenames or email['filename'] in filenames:
             _prepare_xcel_data(email, site, check_status)
@@ -525,7 +562,8 @@ def export_email_list_xcel(site, cols, filenames=None, where_to_read='sent-bulk'
 
 
 def check_cached_valid_emails(obj, emails):
-    """Instance calling this (obj) must have a dict like member checked_emails on it.
+    """Instance calling this (obj) must have a dict like member checked_emails
+    on it.
     This breaks encapsulation and should be done better, probably in NySite"""
     invalid_emails = []
     not_resolved_emails = []
@@ -542,11 +580,13 @@ def check_cached_valid_emails(obj, emails):
         _defer_check_valid_emails(obj, not_resolved_emails)
     return invalid_emails, not_resolved_emails
 
+
 def _defer_check_valid_emails(obj, emails):
     emails = set(emails)
     email_validator.bind(obj)
     for email in emails:
         email_validator.enqueue(email)
+
 
 def get_mail_queue(site):
     """ Get a list of files that are still in the NEW mail_queue folder """
@@ -584,6 +624,7 @@ def get_mail_queue(site):
 
     return mail_queue
 
+
 def get_webex_email(site, filename, where_to_read='sent-webex'):
     """ Show a specific webex email saved on the disk """
     save_path = get_log_dir(site)
@@ -616,6 +657,7 @@ def get_webex_email(site, filename, where_to_read='sent-webex'):
                 'webex': mail.get('X-Accept-Webex-Data', '')
             }
 
+
 class BestEffortSMTPMailer(SMTPMailer):
     """
     Try to send the message; if we fail, just log the error, and don't abort
@@ -627,6 +669,7 @@ class BestEffortSMTPMailer(SMTPMailer):
         except:
             mail_logger.exception("Failed to send email message.")
             # TODO write message to the portal's `error_log`
+
 
 def delivery_for_site(site=None):
     delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
@@ -641,6 +684,7 @@ def delivery_for_site(site=None):
 
     else:
         return None
+
 
 class _ImmediateDelivery(object):
     """
@@ -668,6 +712,7 @@ class _ImmediateDelivery(object):
                                                      message_bytes)
         data_manager.tpc_finish(None)
 
+
 def configure_mail_queue():
     """
     Check if a mail queue path is configured; register a QueuedMailDelivery.
@@ -687,6 +732,7 @@ def configure_mail_queue():
 
     mail_logger.info("Mail queue: %r", queue_path)
 
+
 def _mail_in_queue(site, filename, check_values):
     """ Check if a specific message is still in queue """
     mail_queue = get_mail_queue(site)
@@ -695,25 +741,28 @@ def _mail_in_queue(site, filename, check_values):
         sending = False
         if queued_email['filename'].startswith('.sending-'):
             sending = True
-            queued_email['filename'] = queued_email['filename'].replace('.sending-', '')
+            queued_email['filename'] = queued_email['filename'].replace(
+                '.sending-', '')
         email_split = queued_email['filename'].split('.')
         if (filename_split[0] == email_split[0] and
-            filename_split[1] == email_split[1]):
-                for k, v in check_values.items():
-                    if k in [ 'recipients', 'cc_recipients' ]:
-                        queued_recipients = set(
-                            re.split(", |,\n\t|,\n", queued_email[k][0]))
-                        if queued_recipients != set(v):
-                            break
-                    elif isinstance(v, basestring):
-                        if _strip_code(queued_email.get(k)) != _strip_code(v):
-                            break
-                else:
-                    if sending:
-                        if datetime.now() > queued_email['date'] + timedelta(minutes=5):
-                            return 'Send error'
-                    return 'In sending queue'
+                filename_split[1] == email_split[1]):
+            for k, v in check_values.items():
+                if k in ['recipients', 'cc_recipients']:
+                    queued_recipients = set(
+                        re.split(", |,\n\t|,\n", queued_email[k][0]))
+                    if queued_recipients != set(v):
+                        break
+                elif isinstance(v, basestring):
+                    if _strip_code(queued_email.get(k)) != _strip_code(v):
+                        break
+            else:
+                if sending:
+                    if datetime.now() > queued_email['date'] + timedelta(
+                            minutes=5):
+                        return 'Send error'
+                return 'In sending queue'
     return 'Sent'
+
 
 def _strip_code(text_str):
     return text_str.replace('\n', '').replace('</p><p>', '')
