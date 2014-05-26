@@ -1,4 +1,7 @@
-3.3.50 (unreleased)
+3.3.51 (unreleased)
+-------------------
+
+3.3.50 (2014-05-26)
 -------------------
 * fix for the CC recipients issue [dumitval]
 * fixed some tests after the change of default enable notifications [dumitval]
