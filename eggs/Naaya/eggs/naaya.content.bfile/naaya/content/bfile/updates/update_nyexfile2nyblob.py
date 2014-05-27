@@ -82,6 +82,7 @@ class Export(object):
             self.logger.debug('\t FILENAME: %s', filename)
             sfile.filename = extfile.filename[-1]
             sfile.headers = {'content-type': extfile.content_type}
+            sfile.releasedate = self.data['releasedate']
             yield sfile
 
     @property
@@ -145,6 +146,7 @@ class Import(object):
         for version in value:
             self.context._save_file(version,
                                     contributor='')
+            self.context._versions[-1].timestamp = version.releasedate.asdatetime()
     versions = property(None, versions)
 
     def properties(self, value):
@@ -263,6 +265,14 @@ class Import(object):
             self.logger.debug('\t DEPRECATED %30s \t %r', 'version', filename)
 
         self.context.recatalogNyObject(self.context)
+
+        # update modified properties
+        last_modification = value.pop('last_modification', None)
+        if last_modification:
+            self.context.last_modification = last_modification
+        for k in ['keywords', 'coverage']:
+            if k in value:
+                setattr(self.context, k, value.pop(k))
 
     finish = property(None, finish)
 #
@@ -388,7 +398,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             if not doc:
                 continue
 
-            self.log.info("Replacing object %s", doc.absolute_url())
+            self.log.debug("Replacing object %s", doc.absolute_url())
             folder_meta_types = FolderMetaTypes(doc)
             meta_types = folder_meta_types.get_values()
             changed = False
@@ -426,9 +436,8 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
 
         for brain in brains:
             doc = brain.getObject()
-            self.log.debug('Updating extended file: %s' % doc.absolute_url(1))
+            self.log.info('Updating extended file: %s' % doc.absolute_url(1))
             self.exchange(doc)
-            break
 
         self.update_control_panel(portal)
         self.update_subobjects(portal)
