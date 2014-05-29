@@ -4,9 +4,11 @@ folder type of object. All types of objects that are file system containers
 must extend this class.
 """
 
-import zLOG
 from Globals import InitializeClass
 from Products.NaayaBase.NyContainer import NyContainer
+from StringIO import StringIO
+from naaya.content.bfile.NyBlobFile import make_blobfile
+import zLOG
 
 EXTFILE_INSTALLED = True
 try:
@@ -26,8 +28,23 @@ class NyFSContainer(NyContainer):
         NyContainer.__init__(self)
 
     def manage_addFile(self, id, file="", **kwargs):
-        if self.is_ext:
-            return manage_addExtFile(self, id=id, file=file)
+        # if self.is_ext:
+        #     return manage_addExtFile(self, id=id, file=file)
+        if isinstance(file, basestring):
+            if not getattr(file, 'filename'):
+                f = StringIO()
+                f.write(file)
+                f.seek(0)
+                f.filename = id
+                file = f
+            elif not bool(id):
+                raise ValueError, "Please specify id of file passed as string"
+
+        if not bool(id):
+            id = file.filename
+        blobfile = make_blobfile(file)
+        self._setObject(id, blobfile, set_owner=0)
+        return blobfile
         return NyContainer.manage_addFile(self, id, file)
 
     def update_data(self, data, content_type=None, size=None, filename=''):
