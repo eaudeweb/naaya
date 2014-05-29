@@ -1,0 +1,34 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Geotagging</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<p i18n:translate="" class="cleaner">
+    Choose which content types can be geotagged.
+    Configure the list of available location types.
+</p>
+
+<form>
+<fieldset>
+    <legend i18n:translate="">Geotagged content types</legend>
+    <tal:block
+      define="portal_schemas python:here.getSite().portal_schemas"
+      repeat="schema python:portal_schemas.listSchemas(installed=True).values()">
+        <tal:block define="checkbox_name string:geotag-${schema/id};
+          geo_location_widget python:schema.getWidget('geo_location');
+          geo_type_widget python:schema.getWidget('geo_type');
+           is_enabled python:geo_location_widget.visible and geo_type_widget.visible">
+        <input type="checkbox"
+           tal:attributes="checked is_enabled; name checkbox_name; id checkbox_name" />
+        <label tal:content="schema/title" tal:attributes="for checkbox_name" />
+        <br />
+        </tal:block>
+    </tal:block>
+<input type="submit" value="save" />
+</fieldset>
+</form>
+
+</tal:block>
+
+</tal:block>

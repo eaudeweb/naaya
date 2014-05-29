@@ -1,0 +1,91 @@
+<tal:block content="structure here/manage_page_header" />
+<tal:block content="structure here/manage_tabs" />
+
+<script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
+
+<p>
+    <strong tal:content="python:len(here)"></strong> objects in catalog.
+</p>
+
+<form tal:attributes="action string:${here/absolute_url}/manage_maintenance"
+      method="get">
+<p>
+    Generate a report of cataloged objects:
+    <input type="hidden" name="report" value="on" />
+    <input type="submit" value="report" />
+</p>
+</form>
+
+<form tal:attributes="action string:${here/absolute_url}/manage_do_rebuild"
+      method="post">
+<p>
+    Clear catalog and re-populate it by traversing the site:
+    <input type="submit" value="rebuild catalog" />
+</p>
+</form>
+
+<div tal:define="broken options/report/broken|nothing"
+     tal:condition="broken"
+     class="catalog-report-listing">
+<h3>Broken (<tal:block content="python:len(broken)" />)</h3>
+<ul>
+    <li tal:repeat="ob_path broken" tal:content="ob_path" />
+</ul>
+</div>
+
+<div tal:define="extra options/report/extra|nothing"
+     tal:condition="extra"
+     class="catalog-report-listing">
+<h3>Extra (<tal:block content="python:len(extra)" />)</h3>
+<ul>
+    <li tal:repeat="ob extra">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</div>
+
+<div tal:define="missing options/report/missing|nothing"
+     tal:condition="missing"
+     class="catalog-report-listing">
+<h3>Missing (<tal:block content="python:len(missing)" />)</h3>
+<ul>
+    <li tal:repeat="ob missing">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</div>
+
+<div tal:define="ok_list options/report/ok|nothing"
+     tal:condition="ok_list"
+     class="catalog-report-listing">
+<h3>OK (<tal:block content="python:len(ok_list)" />)</h3>
+<ul>
+    <li tal:repeat="ob ok_list">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('div.catalog-report-listing').each(function() {
+        var object_list = $('> ul', this).hide();
+        var heading = $('> h3', this);
+        var button_hide = $('<'+'a>').text('[hide]').click(function() {
+            object_list.hide();
+            buttons.toggle();
+        }).hide();
+        var button_show = $('<'+'a>').text('[show]').click(function() {
+            object_list.show();
+            buttons.toggle();
+        });
+        var buttons = $([button_hide, button_show]).attr('href', 'javascript:;');
+        heading.append(' ', button_hide, ' ', button_show);
+    });
+});
+</script>
+
+<tal:block content="structure here/manage_page_footer" />

@@ -1,0 +1,53 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Selection lists</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+<script type="text/javascript" src="jstree/jquery.tree.min.js"></script>
+<script type="text/javascript" src="jstree/plugins/jquery.tree.contextmenu.js"></script>
+<script type="text/javascript" src="portal_portlets/jstree_admin_js"></script>
+
+<p i18n:translate="">
+	This page allows you to define, customise and delete
+	lists (groups) of items that are used to fill selection boxes accross the portal.
+	Right-click on a list element to access available functionality.
+	You can also drag and drop items between lists and other items.
+	Please note that all actions are applied immediately. You will be asked
+	for confirmation before deleting lists or items.
+</p>
+
+<div id="jstree_container" class="tree tree-default"></div>
+
+<noscript tal:define="trees python:here.getPortletsTool().getRefTrees()">
+<p class="error" i18n:translate="">
+	You need to have JavaScript enabled in order to modify this list.
+</p>
+<ul>
+	<li tal:repeat="tree trees">
+		<tal:block define="node tree/get_nodes_as_tree">
+			<metal:block use-macro="template/macros/ref_tree_node" />
+		</tal:block>
+	</li>
+</ul>
+</noscript>
+
+
+</tal:block>
+
+</tal:block>
+
+
+
+<tal:block condition="nothing">
+<!-- this bit of code should only render if called as a macro -->
+<metal:block define-macro="ref_tree_node">
+    <tal:block content="node/ob/title_or_id" />
+    <ul tal:condition="node/children">
+        <li tal:repeat="child node/children">
+            <tal:block define="node child">
+                <metal:block use-macro="template/macros/ref_tree_node" />
+            </tal:block>
+        </li>
+    </ul>
+</metal:block>
+</tal:block>

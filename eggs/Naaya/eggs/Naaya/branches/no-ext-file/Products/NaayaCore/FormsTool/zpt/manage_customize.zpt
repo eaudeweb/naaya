@@ -1,0 +1,20 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<tal:block define="global name request/name|nothing" />
+
+<tal:block define="global template_content python:here.template_content(name)" />
+<h2>Customize <code tal:content="name" /></h2>
+
+<textarea rows="20" readonly="readonly" tal:content="template_content"
+  style="width: 95%; background-color: #ddd; border: 1px solid #737373;" />
+
+<br /><br />
+
+<form method="post" tal:attributes="action
+  string:${here/absolute_url}/manage_customizeForm">
+    <input type="hidden" name="name" tal:attributes="value name" />
+    <input type="submit" value="Customize" />
+</form>
+
+<tal:block content="structure here/manage_page_footer"/>

@@ -1,0 +1,35 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<fieldset>
+	<legend>Portal UID</legend>
+	<p class="form-help">
+		Every portal has an automatically generated UID, used for diffrent jobs.
+		(e.g. for rdf channels automatic update)
+	</p>
+	<p class="form-help">
+		UID: <strong tal:content="here/get_site_uid">uid</strong>
+	</p>
+</fieldset>
+
+<fieldset>
+	<legend>Nyexp schema location</legend>
+	<p class="form-help">
+		This schema is used by nyexp files - Naaya XML export. 
+Such files are used to transport data from one Naaya website to another or from a remote source (Web aplication or database) to a Naaya website
+	</p>
+	<p class="form-help">
+		URL: <strong tal:content="here/nyexp_schema" />
+	</p>
+	<form name="frmNyexpSchema" action="manageNyexpSchema" method="POST">
+		<label for="nyexp_schema">New schema location</label>
+		<input type="text" name="nyexp_schema" size="50" value=""/>
+		<input type="submit" value="Add" />
+	</form>
+</fieldset>
+
+<span tal:replace="structure here/manage_page_footer" />
