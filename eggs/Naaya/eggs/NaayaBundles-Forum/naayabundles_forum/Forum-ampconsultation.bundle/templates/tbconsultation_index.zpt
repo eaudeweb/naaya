@@ -49,8 +49,15 @@
       tal:condition="perm_invite"
       rel="nofollow" i18n:translate="">View sent invitation emails</a>
     <a tal:attributes="href string:${here/absolute_url}/admin_comments"
-      tal:condition="python:perm_manage"
-      rel="nofollow" i18n:translate="">Manage comments</a>
+      tal:condition="perm_comments" rel="nofollow">
+        <tal:block condition="perm_manage" i18n:translate="">
+            Manage comments
+        </tal:block>
+        <tal:block condition="python:not perm_manage and perm_comments"
+          i18n:translate="">
+            My comments
+        </tal:block>
+    </a> 
     <a tal:attributes="href string:${here/absolute_url}/edit_access"
       tal:condition="python:perm_manage"
       rel="nofollow" i18n:translate="">Edit Permissions</a>
