@@ -57,7 +57,7 @@
           i18n:translate="">
             My comments
         </tal:block>
-    </a> 
+    </a>
     <a tal:attributes="href string:${here/absolute_url}/edit_access"
       tal:condition="python:perm_manage"
       rel="nofollow" i18n:translate="">Edit Permissions</a>
