@@ -30,8 +30,9 @@
 <div id="admin_this_folder"
   tal:define="
     perm_manage python:here.checkPermissionManageTalkBackConsultation();
-    perm_invite python:here.checkPermissionInviteToTalkBackConsultation()"
-  tal:condition="python: perm_manage or perm_invite">
+    perm_invite python:here.checkPermissionInviteToTalkBackConsultation();
+    perm_comments python: perm_manage or here.own_comments()"
+  tal:condition="python: perm_manage or perm_invite or perm_comments">
     <a tal:attributes="href string:${here/absolute_url}/edit_html"
       tal:condition="perm_manage"
       rel="nofollow" i18n:translate="">Edit TalkBack Consultation</a>
