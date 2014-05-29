@@ -1,0 +1,26 @@
+/* CHANGE GRAY BODY BACKGROUND FOR SMALL RESOLUTIONS */
+@media all and (max-width: 1024px) {
+
+  body {
+    background: #fff;
+  }
+
+  #header {
+    margin-top: 0px;
+    border-radius: 0px;
+  }
+
+  #footer {
+    margin-bottom: 0px;
+    border-radius: 0px;
+  }
+
+  #header, 
+  #content-holder, 
+  #footer {
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+}

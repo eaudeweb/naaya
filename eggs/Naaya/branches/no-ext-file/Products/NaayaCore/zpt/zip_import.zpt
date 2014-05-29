@@ -1,0 +1,37 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<h1 tal:content="here/title_or_id" i18n:translate="" />
+
+<div class="floated-buttons"><span class="buttons">
+	<a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">Back to index</a></span>
+</div>
+
+
+<tal:block condition="python:here.aq_parent.checkAllowedToZipImport()">
+	<p i18n:translate="">
+		Upload a Zip file. Its contents will be imported as File and Folder objects at
+		<em tal:content="python:here.aq_parent.absolute_url(1)"
+		    i18n:name="folder_path"/>.
+	</p>
+
+	<form name="csv_import" action="" method="post" enctype="multipart/form-data">
+		<div class="field">
+			<label for="data" i18n:translate="">Zip file</label>
+			<input type="file" id="data" name="data"/><br />
+		</div>
+		<div class="field">
+			<input type="submit" name="do_import:method" value="Upload data"/>
+		</div>
+	</form>
+</tal:block>
+<tal:block condition="python:not here.aq_parent.checkAllowedToZipImport()">
+	<p i18n:translate="">
+		You need to have permission to create folders and
+		upload files in order to use Zip Import.
+	</p>
+</tal:block>
+
+
+</metal:block>
+</metal:block>

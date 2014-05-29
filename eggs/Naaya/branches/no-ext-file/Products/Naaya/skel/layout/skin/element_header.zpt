@@ -1,0 +1,62 @@
+<metal:block define-macro="content">
+
+  <tal:block replace="structure here/languages_box"/>
+
+  <div id="topnav">
+
+    <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
+    <tal:block tal:repeat="item l_list">
+
+      <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
+        <a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);
+                           title item/description"
+           tal:content="item/title"
+           i18n:attributes="title" i18n:translate=""></a>
+      </li>
+
+    </tal:block>
+    </ul>
+
+  </div>
+
+  <div class="identity bla">
+
+    <a tal:attributes="href site_url" style="float: left;">
+      <tal:block define="logo_url here/leftLogoUrl">
+        <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
+      </tal:block>
+    </a>
+
+    <tal:block define="logo_url here/rightLogoUrl">
+      <img style="float: right; clear: right;"
+           tal:attributes="src logo_url; alt here/site_title"
+           i18n:attributes="alt" tal:condition="logo_url"/>
+    </tal:block>
+
+    <div id="toptitle">
+      <span class="page_title" tal:content="here/site_title" /><br />
+      <span class="page_subtitle" tal:content="here/site_subtitle" />
+    </div>
+
+  <div id="search">
+    <form method="get" tal:attributes="action string:${site_url}/search_html">
+      <label accesskey="4" for="query">Site search:</label>
+      <input type="text" name="query" id="query" />
+    </form>
+  </div>
+  </div>
+
+  <div id="menunav">
+    <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+    <tal:block tal:repeat="item l_list">
+      <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
+        <a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);
+                           title item/description"
+           tal:content="item/title"
+           i18n:attributes="title" i18n:translate=""></a>
+      </li>
+    </tal:block>
+    </ul>
+  </div>
+
+</metal:block>

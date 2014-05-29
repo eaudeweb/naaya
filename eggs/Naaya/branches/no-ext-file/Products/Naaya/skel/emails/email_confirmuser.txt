@@ -1,0 +1,11 @@
+Hello %(NAME)s,
+
+Thank you for registering with %(PORTAL_TITLE)s (%(PORTAL_URL)s).
+
+You will need to use the activation link below to confirm your address 
+and complete the registration process:
+
+%(LINK)s
+
+Thank you,
+%(SENDER_NAME)s

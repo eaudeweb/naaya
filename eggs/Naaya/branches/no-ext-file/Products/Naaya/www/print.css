@@ -1,0 +1,63 @@
+a img {
+border: none;
+}
+
+#language, #topnav, #menunav {
+display: none;
+}
+#header {
+margin: 0 0 1em 0;
+}
+#header div a {
+float: none;
+}
+#toptitle {
+float: left;
+padding: 1.5em;
+}
+.cleaner {
+clear: both;
+}
+#left_port {
+display: none;
+}
+#right_port {
+display: none;
+}
+#breadcrumbtrail {
+display: none;
+}
+.center_portlet_title {
+font-size: 130%;
+}
+.center_portlet {
+margin: 1em 0;
+}
+
+#footer {
+display: none;
+}
+.folder-feeds {
+display: none;
+}
+.edit {
+display: none;
+}
+.checkin {
+display: none;
+}
+#admin_this_folder {
+display: none;
+}
+#toolbar {
+display: none;
+}
+input {
+display: none;
+}
+h1 {
+font-size: 150%;
+}
+.commentbox_add, .hr_addcomment {
+display: none;
+}

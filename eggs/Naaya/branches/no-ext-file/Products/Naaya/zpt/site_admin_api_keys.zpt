@@ -1,0 +1,110 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+    <h1 metal:fill-slot="title" i18n:translate="">API keys status</h1>
+
+    <tal:block metal:fill-slot="section">
+        <p>
+            List of all API keys used by this portal.
+        </p>
+        <small>
+            <strong>API (Application programming interface)</strong> is a source code-based specification intended to be used as an interface by software components to communicate to each other.
+        </small>
+
+        <table width="100%" class="datatable api-keys-list">
+            <thead>
+                <tr>
+                    <th i18n:translate="" width="30%" align="left">
+                        Title
+                    </th>
+
+                    <th i18n:translate="" width="30%" align="left">
+                        Description
+                    </th>
+
+                    <th i18n:translate="">
+                        API key
+                    </th>
+
+                    <th i18n:translate="">
+                        API status
+                    </th>
+
+                    <th i18n:translate="">
+                        Change link
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+        <tal:block repeat="api_key python: options['api_keys'].items()">
+            <tal:block define="api_key_title python: api_key[1]['title'];
+                               api_key_description python: api_key[1]['description'];
+                               api_key_provider python: api_key[0];
+                               api_key_status python: api_key[1]['valid'];
+                               api_key_value python: api_key[1]['key'];
+                               api_key_change_link python: api_key[1]['change_link']">
+            <tr align="center" tal:attributes="class python: test(api_key_status, 'valid', 'invalid')">
+                <td tal:content="api_key_title" align="left" />
+
+                <td tal:content="api_key_description" align="left" />
+
+                <td tal:content="api_key_value" />
+
+                <td>
+                    <strong tal:content="string: Invalid" tal:condition="python: not api_key_status" i18n:translate="" />
+                    <strong tal:content="string: Valid" tal:condition="python: api_key_status" i18n:translate="" />
+                </td>
+
+                <td>
+                    <tal:block condition="api_key_change_link">
+                        <a tal:attributes="href string:${here/absolute_url}${api_key_change_link}" title="Change value" i18n:translate="" i18n:attributes="title">Modify</a>
+                    </tal:block>
+
+                    <tal:block condition="python: not api_key_change_link">
+                        <strong i18n:translate="">From buildout</strong>
+                    </tal:block>
+                </td>
+            </tr>
+            </tal:block>
+        </tal:block>
+            </tbody>
+        </table>
+
+        <dl>
+            <dt i18n:translate="">
+                Google Analytics domain name
+            </dt>
+            <dd>
+                <span i18n:translate="">
+                    Use this when you want to treat top- and sub-domains as one entity and track in the same profile. Also use this when you want to track across multiple top-level domains AND their sub-domains. In this case, you will need to using linking between the top-level domains, but not between the top-level domains and their sub-domains.
+                </span>
+                <br />
+                <strong>
+                    <small>
+                    If you are tracking a single domain, you do not need to explicitly set the domain name.
+                    </small>
+                </strong>
+                <br />
+                <small>
+                    <strong i18n:translate="">e.g. </strong>
+                    If mysite.example.com has the domain name set as below data will be sent to the example.com GA profile.
+                    <br />
+<pre>
+_gaq.push(
+    ['_setAccount', 'UA-XXXXX-1'],
+    ['_setDomainName', 'example.com']
+);</pre>
+                    <br />
+                </small>
+            </dd>
+
+            <dt>
+                Google Analytics primary tracking code (or master profile tracking code)
+            </dt>
+            <dd>
+                Allows Google to track content and visitor data to a different profile.
+                <br />
+                If both <strong>Google Analytics tracking code</strong> and <strong>Google Analytics primary tracking code</strong>
+                are specified, the statistics are sent to both GA profiles.
+            </dd>
+        </dl>
+    </tal:block>
+</tal:block>

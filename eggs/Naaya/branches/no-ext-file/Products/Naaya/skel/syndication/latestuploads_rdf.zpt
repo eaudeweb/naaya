@@ -1,0 +1,28 @@
+<tal:block tal:define="channel python:here.getSyndicationTool().latestuploads_rdf;
+                        items python:channel.get_objects_for_rdf(attr='last_modification', reversed=True)"
+        condition="items">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title">
+	<span i18n:translate="" tal:content="channel/title_or_id" />
+	<a tal:attributes="href channel/absolute_url">
+		<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
+	</a>
+	<a tal:attributes="href string:${channel/absolute_url}/?feed=atom">
+		<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
+	</a>
+</tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<li tal:repeat="item items">
+			<a tal:attributes="href item/absolute_url">
+				<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
+				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+				<tal:block content="item/title_or_id" />
+			</a>
+			<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span>
+			<tal:block define="last_modification item/last_modification|item/bobobase_modification_time" tal:content="python:here.utShowDateTime(last_modification)"/>]</span>
+		</li>
+	</ul>
+</tal:block>
+</tal:block>
+</tal:block>

@@ -1,0 +1,129 @@
+<tal:block define="selection_list here/get_selection_list">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="scripts">
+    <script>
+        function init_select_widget(config) {
+            $(function(){
+                if (!config['list_is_tree']) return;
+                var prop_id = config['prop_id'];
+                $('#'+ prop_id).hide();
+                $('label[for='+ prop_id+']').css({'display': 'none'});
+                var url = 'portal_portlets/'+config['list_id']+'/get_tree_json_data';
+
+                var tree_data_json = undefined;
+                $.ajax({
+                   type: 'GET',
+                   async: false,
+                   url: url,
+                   dataType: 'json',
+                   success : function(data) {
+                    tree_data_json = data;
+                   }
+                 });
+
+                var selected_nodes = [];
+                $(tree_data_json).each(function(){
+                    if (this['attributes']['id'] == $('#' + prop_id).attr('value')) {
+                        selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                    }
+                    $(this['children']).each(function(){
+                            if (this['attributes'] != null && this['attributes']['id'] == $('#' + prop_id).attr('value')) {
+                                selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                            }
+                        })
+                    })
+                tree_data_json = {'data':config['translated_title'], 'children': tree_data_json, 'attributes': {'rel':'root'}};
+
+                $('#'+prop_id+'_tree').tree({
+                    selected : selected_nodes,
+                    data : {
+                        type : 'json',
+                        opts : {
+                            static : tree_data_json
+                        }
+                    },
+                    ui : {
+                         theme_name : "classic",
+                         selected_parent_close : false
+                    },
+                    types : {
+                        'default' :{
+                            clickable : true,
+                            renameable : false,
+                            deletable : false,
+                            creatable : false,
+                            draggable : false
+                        },
+                        'root' : {
+                            valid_children : ['node'],
+                            clickable : false,
+                            renameable : false,
+                            deletable : false,
+                            creatable : false,
+                            draggable : false,
+                            icon : {
+                                image : '/misc_/NaayaCore/RefTree.gif'
+                            }
+                        },
+                        'node' : {
+                            valid_children : ['node'],
+                            renameable : true,
+                            max_depth : 2,
+                            icon : {
+                                image : '/misc_/NaayaCore/RefTreeNode.gif'
+                            }
+                        }
+                    },
+                    callback : {
+                        onload : function(TREE_OBJ){
+                            TREE_OBJ.open_all();
+                        },
+                        onselect : function(NODE, TREE_OBJ){
+                            var node_id = TREE_OBJ.get_node(NODE).attr('id');
+                            $('#' + prop_id).attr('value', node_id);
+                        },
+                        ondblclk : function(NODE, TREE_OBJ){
+                            TREE_OBJ.deselect_branch(NODE);
+                            $('#' + prop_id).attr('value', '');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+
+    <script tal:define="translation_id here/translation_id|here/title;
+                        js_data python:{'list_is_tree': here.list_is_tree(),
+                            'list_id': here.list_id,
+                            'translated_title': here.getSite().getPortalI18n().get_translation(translation_id, here.title),
+                            'prop_id': prop_id,
+                            };
+                        js_data_json python:here.rstk['json_dumps'](js_data)"
+            tal:content="string:init_select_widget(${js_data_json})"></script>
+
+    </metal:block>
+    <metal:block fill-slot="input">
+    <select tal:condition="python:selection_list is not None"
+            tal:attributes="name string:${prop_id}:utf8:ustring;
+                            id prop_id">
+        <option value=""></option>
+        <option tal:repeat="selection_item selection_list"
+            tal:attributes="value selection_item/id; selected python: selection_item.id == value"
+            tal:content="selection_item/title" i18n:translate="" />
+    </select>
+
+
+    <div tal:condition="here/list_is_tree" tal:attributes="id string:${prop_id}_tree" ></div>
+    <input type="text"
+           tal:condition="python:selection_list is None"
+           tal:attributes="value value;
+                           name string:${prop_id}:utf8:ustring;
+                           id prop_id" />
+
+    </metal:block>
+    <metal:block fill-slot="after">
+        <div class="cleaner">&nbsp;</div>
+    </metal:block>
+</metal:block>
+</tal:block>
+

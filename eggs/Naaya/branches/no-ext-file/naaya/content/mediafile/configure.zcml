@@ -1,0 +1,10 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:naaya="http://namespaces.zope.org/naaya"
+  i18n_domain="naaya.content">
+
+  <include package="naaya.flowplayer" />
+  <naaya:content factory=".mediafile_item.get_config" />
+  <naaya:call factory=".permissions.register_permissions" />
+
+</configure>

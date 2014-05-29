@@ -1,0 +1,38 @@
+/* IE 8 HACKS */
+
+#header {
+  border-top: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+}
+
+#content-holder {
+  border-right: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+}
+
+#footer {
+  border-bottom: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  border-left: 1px solid #dddddd;
+}
+
+body fieldset,
+body .admin-content .form-fieldset {
+  background: #fff;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#eeeeee)";
+}
+
+body .image-details {
+  height: 20px;
+}
+
+body .image-details label {
+  background: #fff;
+  display: inline-block;
+}
+
+body .thumbnail-layout {
+  margin-top: 1em;
+}
