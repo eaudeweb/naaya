@@ -1,0 +1,26 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="naaya">
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility
+      name="nyfile2nyblob.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_nyfile2nyblob.UpdateNyFile2NyBlobFile"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
+      name="nyexfile2nyblob.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_nyexfile2nyblob.UpdateNyExFile2NyBlobFile"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
+      name="content_type.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_content_type.UpdateContentType"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
+
+</configure>
