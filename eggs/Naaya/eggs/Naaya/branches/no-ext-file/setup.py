@@ -57,6 +57,8 @@ setup(name='Naaya',
           'naaya.i18n > 1.1.5',
           'naaya.cache >= 1.1',
 
+          "plone.i18n",
+
           #Testing
           # 'twill',
           # 'WebOb',
