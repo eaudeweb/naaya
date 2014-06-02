@@ -36,5 +36,6 @@
     />
 
   <include package=".updates" />
+  <include package="plone.i18n" />
 
 </configure>
