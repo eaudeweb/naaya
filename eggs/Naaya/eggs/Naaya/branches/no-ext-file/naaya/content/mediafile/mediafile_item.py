@@ -455,9 +455,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """ Apply media converters to self subobject with given id (mid) which
         is stored outside Data.fs, with original content-type ctype.
         """
-        pass
         from OFS.ObjectManager import ObjectManager
-        import pdb; pdb.set_trace()
         media = ObjectManager._getOb(self, mid)
         launch_job(media2flv, self.aq_parent, ofs_path(media))
 
