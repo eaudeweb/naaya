@@ -1,6 +1,7 @@
 """Storage and provider of blob files"""
 
 #from zope.interface import implements
+from ZODB.POSException import POSKeyError
 from plone.i18n.normalizer.interfaces import IUserPreferredFileNameNormalizer
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
@@ -19,6 +20,7 @@ from webdav.common import rfc1123_date
 from zope.interface import implements
 from zope.interface.interfaces import IInterface
 import mimetypes
+import os
 import urllib
 
 COPY_BLOCK_SIZE = 65536 # 64KB
@@ -191,6 +193,7 @@ class BlobStreamIterator(object):
     def tell(self):
         return self.blob.tell()
 
+
 class NyBlobFile(Item, Persistent, Cacheable, Implicit):
     """Naaya persistence of file using ZODB blobs"""
 
@@ -206,8 +209,15 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
             setattr(self, key, value)
         self._blob = Blob()
 
-    def is_broken(self):    # TODO: implement this
-        return False
+    def is_broken(self):
+        filename = self.get_filename()
+        if not filename:
+            return True
+        try:
+            os.stat(filename)
+            return False
+        except (OSError, POSKeyError):
+            return True
 
     def open(self):
         return self._blob.open('r')
@@ -255,8 +265,12 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         """ Convenience function that returns blob's filename """
         try:
             return self._blob.committed()
+        except POSKeyError:
+            return None
         except BlobError:
             return self._blob._p_blob_uncommitted
+
+    get_filename = _current_filename
 
     def __repr__(self):
         return '<%(cls)s %(fname)r (%(mime)s, %(size)r bytes)>' % {
