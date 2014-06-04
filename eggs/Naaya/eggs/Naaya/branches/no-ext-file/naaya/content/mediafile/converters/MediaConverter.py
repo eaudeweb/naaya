@@ -1,16 +1,17 @@
 """ Collection of classes and function used to convert media to flash video.
 """
 
-# Python imports
-import re
-import os
-import logging
-import subprocess
 from threading import Timer
+import logging
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+
 logger = logging.getLogger('mediafile.converters')
-#
-# Media converter
-#
+
+
 class MediaConverterError(Exception):
     """Media Convertor Error"""
     pass
@@ -21,11 +22,15 @@ def media2flv(ex_file):
     if not can_convert():
         return "Can not convert (are tools available?)"
 
+    tempdir = tempfile.mkdtemp(prefix="convert-")
+
     finput = ex_file.get_filename()
-    tcv_path = finput + ".tcv" # to convert
-    cvd_path = finput + ".cvd" # converted
-    log = open(finput + '.log', 'w')
-    os.rename(finput, tcv_path)
+    fpath, fname = os.path.split(finput)
+    tcv_path = finput
+    #tcv_path = os.path.join(tempdir, fname + ".tcv") # to convert
+    cvd_path = os.path.join(tempdir, fname + ".cvd") # converted
+    log = open(os.path.join(tempdir, fname + '.log'), 'w')
+    #os.rename(finput, tcv_path)
 
     resolution = get_resolution(tcv_path)
     aspect_ratio = resolution[0]/resolution[1]
@@ -46,14 +51,20 @@ def media2flv(ex_file):
     timer.cancel()
 
     if exit_code != 0:
-        error = 'MediaConverterError: Exit code %s' % exit_code
-        return finish(ex_file, tcv_path, cvd_path, finput, log, error)
+        logger.exception('MediaConverterError: Exit code %s' % exit_code)
+        try:
+            shutil.rmtree(tempdir)
+        except Exception, err:
+            logger.exception(err)
+        return
+
     process = None
 
     """ Update video index using flvtool2 or finish """
     if not can_index():
         logger.debug("Can not index video (is flvtool2/flvmeta installed?)")
-        return finish(ex_file, tcv_path, cvd_path, finput, log)
+        return _finish(ex_file, tempdir, cvd_path, log)
+
     cmd = [META_TOOL, "-U", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
@@ -66,36 +77,32 @@ def media2flv(ex_file):
     if exit_code != 0:
         logger.exception('An error occured while indexing video file.')
 
-    return finish(ex_file, tcv_path, cvd_path, finput, log)
+    return _finish(ex_file, tempdir, cvd_path, log)
 
-def finish(ex_file, tcv_path, cvd_path, finput, log, error=None):
+
+def _finish(ex_file, tempdir, cvd_path, log):
     """ Rename output to done and cleanup """
-    if error:
-        logger.exception(error)
-        log.write(error)
-        try:
-            os.unlink(cvd_path)
-        except Exception, err:
-            logger.exception(err)
-    else:
-        # Cleanup input file
-        try:
-            os.unlink(tcv_path)
-        except Exception, err:
-            logger.exception(err)
 
-        # Rename output file to done file
-        try:
-            os.rename(cvd_path, finput)
-        except Exception, err:
-            logger.exception(err)
-            log.write(
-                'MediaConverterError: Could not finish conversion %s' % err)
+    # Update the blob contents
+    try:
+        ex_file._blob.consumeFile(cvd_path)
+        ex_file.size = os.stat(cvd_path).st_size  # update the file size based on converted result
+    except Exception, err:
+        logger.exception(err)
+        log.write(
+            'MediaConverterError: Could not finish conversion %s' % err)
 
-    # Close log
+    log.seek(0)
+    ex_file._conversion_log = log.read()
+    ex_file._p_changed = True
+
+    # Cleanup the temp directory
     log.close()
+    try:
+        shutil.rmtree(tempdir)
+    except Exception, err:
+        logger.exception(err)
 
-    ex_file.size = os.stat(finput).st_size
 
 #
 # Private interface
