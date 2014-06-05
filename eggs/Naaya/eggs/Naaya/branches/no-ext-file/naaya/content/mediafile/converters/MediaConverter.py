@@ -29,7 +29,7 @@ def media2flv(ex_file):
     tcv_path = finput
     #tcv_path = os.path.join(tempdir, fname + ".tcv") # to convert
     cvd_path = os.path.join(tempdir, fname + ".cvd") # converted
-    log = open(os.path.join(tempdir, fname + '.log'), 'w')
+    log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
     #os.rename(finput, tcv_path)
 
     resolution = get_resolution(tcv_path)
@@ -85,8 +85,8 @@ def _finish(ex_file, tempdir, cvd_path, log):
 
     # Update the blob contents
     try:
-        ex_file._blob.consumeFile(cvd_path)
         ex_file.size = os.stat(cvd_path).st_size  # update the file size based on converted result
+        ex_file._blob.consumeFile(cvd_path)
     except Exception, err:
         logger.exception(err)
         log.write(
