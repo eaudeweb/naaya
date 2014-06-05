@@ -1,5 +1,6 @@
 3.3.51 (unreleased)
 -------------------
+* handle news and stories with missing properties (source, topitem) [dumitval]
 
 3.3.50 (2014-05-26)
 -------------------
