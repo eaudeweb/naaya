@@ -1,6 +1,7 @@
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 from naaya.core.site_logging import log_user_management_action
 
+
 def auto_catalog_object(event):
     obj = event.context
     if INyCatalogAware.providedBy(obj):
@@ -9,6 +10,7 @@ def auto_catalog_object(event):
             catalog.recatalogNyObject(obj)
         except:
             obj.getSite().log_current_error()
+
 
 def post_user_management_action(event):
     """ handler called after role change in user manangement """
@@ -35,8 +37,14 @@ def post_user_management_action(event):
                     new_roles=event.assigned, removed_roles=event.unassigned,
                     username=full_name)
         else:
-           email = auth_tool.getUsersEmails([event.user_id])[0]
-           full_name = auth_tool.getUsersFullNames([event.user_id])[0]
-           notif_tool.notify_account_modification(email, event.context,
+            email = auth_tool.getUsersEmails([event.user_id])[0]
+            full_name = auth_tool.getUsersFullNames([event.user_id])[0]
+            if not isinstance(full_name, unicode):
+                try:
+                    full_name = full_name.decode('utf8')
+                except UnicodeDecodeError:
+                    full_name = full_name.decode('latin1')
+
+            notif_tool.notify_account_modification(email, event.context,
                     new_roles=event.assigned, removed_roles=event.unassigned,
                     username=full_name)

@@ -1,5 +1,6 @@
 3.3.52 (unreleased)
 -------------------
+* bugfix for the Notification system (UnicodeDecodeError) [dumitval]
 
 3.3.51 (2014-06-05)
 -------------------
