@@ -315,6 +315,9 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
             RESPONSE.setHeader("Content-disposition", header_value)
 
         request_range = handleRequestRange(self, length, REQUEST, RESPONSE)
+        for fr in self._blob.readers:
+            self._blob.readers.remove(fr)
+
         return self.getIterator(**request_range)
 
     security.declarePrivate('getIterator')
@@ -327,6 +330,14 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
 
     def getFilename(self):
         return self.filename
+
+    def raw_data(self):
+        f = self.open()
+        s = f.read()
+        f.close()
+        for fr in self._blob.readers:
+            self._blob.readers.remove(fr)
+        return s
 
 
 def make_blobfile(the_file, **kwargs):
