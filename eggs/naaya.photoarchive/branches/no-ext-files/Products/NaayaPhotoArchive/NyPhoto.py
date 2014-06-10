@@ -295,9 +295,13 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     def __resize(self, display):
         #resize and resample photo
+        self.REQUEST.environ['HTTP_IF_MODIFIED_SINCE'] = ""     # needed to ensure index_html() of blob returns content
         original_id = self._getDisplayId()
-        #import pdb; pdb.set_trace()
-        string_image = StringIO(str(self.get_data(original_id).read()))
+        data = self.get_data(original_id)
+        if not isinstance(data, basestring):
+            data = data.read()
+
+        string_image = StringIO(str(data))
         if display == 'Original':
             return string_image
 
@@ -403,9 +407,12 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def _transpose(self, method):
         original_id = self._getDisplayId()
         newimg = StringIO()
-        string_img = StringIO(str(self.get_data(original_id)))
+        data = self.get_data(original_id)
+        if not isinstance(data, basestring):
+            data = data.read()
+        string_img = StringIO(str(data))
         img = Image.open(string_img)
-        quality = self._photo_quality(string_img)
+        quality = int(self._photo_quality(string_img))
         fmt = img.format
         img = img.transpose(method)
         img.save(newimg, fmt, quality=quality)
@@ -617,7 +624,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             self.log_current_error()
             return ImageFile('www/broken_image.gif', globals()).index_html(REQUEST, REQUEST.RESPONSE)
         result = photo.index_html(REQUEST=REQUEST)
-        #TODO: fix this
+        #TODO: fix this; the next two lines are used to avoid a "blob file is opened" error
+        # at the end of the transaction
         for fr in photo._blob.readers:
             photo._blob.readers.remove(fr)
         return result
