@@ -32,14 +32,14 @@ class NyFSContainer(NyContainer):
         #     return manage_addExtFile(self, id=id, file=file)
         if self.is_blobfile:
             if isinstance(file, basestring):
-                if not getattr(file, 'filename'):
-                    f = StringIO()
-                    f.write(file)
-                    f.seek(0)
-                    f.filename = id
-                    file = f
-                elif not bool(id):
+                if not bool(id):
                     raise ValueError, "Please specify id of file passed as string"
+
+                f = StringIO()
+                f.write(file)
+                f.seek(0)
+                f.filename = id
+                file = f
 
             if not bool(id):    # TODO: make sure of proper id
                 id = file.filename
@@ -100,7 +100,8 @@ class NyFSContainer(NyContainer):
         if as_string:
             if not attached_file:
                 return ''
-            return attached_file.index_html()
+            result = attached_file.index_html()
+            return result
         return attached_file
 
     def _get_data_name(self, sid=None):
@@ -118,7 +119,8 @@ class NyFSContainer(NyContainer):
     def getContentType(self, sid=None):
         # Child content-type
         attached_file = self._get_attached_file(sid)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
+        print "Attached file", type(attached_file)
         if not attached_file:
             return ''
         return attached_file.getContentType()
