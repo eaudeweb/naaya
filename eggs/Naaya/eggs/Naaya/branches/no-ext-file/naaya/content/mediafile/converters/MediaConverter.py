@@ -27,10 +27,8 @@ def media2flv(ex_file):
     finput = ex_file.get_filename()
     fpath, fname = os.path.split(finput)
     tcv_path = finput
-    #tcv_path = os.path.join(tempdir, fname + ".tcv") # to convert
     cvd_path = os.path.join(tempdir, fname + ".cvd") # converted
     log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
-    #os.rename(finput, tcv_path)
 
     resolution = get_resolution(tcv_path)
     aspect_ratio = resolution[0]/resolution[1]
