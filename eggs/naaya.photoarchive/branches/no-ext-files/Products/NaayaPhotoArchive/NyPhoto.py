@@ -19,44 +19,45 @@
 # Alex Morega, Eau de Web
 
 #Python imports
-import re
-import sys
-import os
-from cStringIO import StringIO
-from random import choice
-from App.ImageFile import ImageFile
 try:
     from PIL import Image, ImageDraw, ImageFont
 except ImportError:
     # PIL installed as an egg
     import Image, ImageDraw, ImageFont
 
-#calculations needed by apply_watermark
-from math import atan, degrees
-import simplejson as json
+from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permissions import view as view_permission
+from AccessControl.Permissions import view_management_screens   #, ftp_access
+from App.ImageFile import ImageFile
+from Globals import InitializeClass
+from OFS.Image import getImageInfo, Pdata
+from Products.Naaya.constants import DEFAULT_SORTORDER
+from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyFSContainer import NyFSContainer
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaPhotoArchive.constants import DEFAULT_QUALITY
+from Products.NaayaPhotoArchive.constants import LISTING_DISPLAYS
+from Products.NaayaPhotoArchive.constants import METATYPE_NYPHOTO
+from Products.NaayaPhotoArchive.constants import PREFIX_NYPHOTO
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from cStringIO import StringIO
 from decimal import Decimal
-
-#Zope imports
+from interfaces import INyPhoto
+from math import atan, degrees
+from photo_archive import photo_archive_base
+from webdav.Lockable import ResourceLockedError
 from zope.deprecation import deprecate
 from zope.interface import implements
-from OFS.Image import getImageInfo, Pdata
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view_management_screens, ftp_access
-from AccessControl.Permissions import view as view_permission
-
-#Product imports
-from constants import *
-from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
-from Products.NaayaBase.constants import *
-from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyFSContainer import NyFSContainer
-from Products.Naaya.constants import *
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from interfaces import INyPhoto
-from photo_archive import photo_archive_base
-from Products.NaayaCore.managers.utils import make_id
+import os
+import re
+import simplejson as json
+import sys
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
@@ -154,6 +155,7 @@ def addNyPhoto(self, id='', REQUEST=None, contributor=None,
 
     return ob.getId()
 
+
 class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, NyContentType):
     """ """
 
@@ -205,11 +207,11 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def width(self, sid='Original'):
         ob = self._getDisplay(sid)
         return getattr(ob, 'width', 0)
-    
+
     def height(self, sid="Original"):
         ob = self._getDisplay(sid)
         return getattr(ob, 'height', 0)
-        
+
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self.getLocalProperty('title', lang),
@@ -231,7 +233,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         RESPONSE.setStatus(204)
         return RESPONSE
 
-    def update_data(self, data, content_type=None, size=None, filename='Original', purge=True, watermark=False):
+    def update_data(self, data, content_type=None, size=None,
+                    filename='Original', purge=True, watermark=False):
         if purge:
             self.manage_delObjects(self.objectIds())
         filename = clean_display_id(filename)
@@ -245,12 +248,18 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             data = str(data)
         elif getattr(data, 'index_html', None):
             data = data.index_html()
-        
+
         if not isinstance(data, str):
             data = data.read()
         child.content_type, child.width, child.height = getImageInfo(data)
-        
-        child.manage_upload(data, child.content_type)
+
+        #ZZZ: migration
+        #child.manage_upload(data, child.content_type)
+        blob = child.open_write()
+        blob.write(data)
+        blob.seek(0)
+        blob.close()
+        child.size = len(data)
         return child.getId()
 
     #core
@@ -258,7 +267,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         img_width, img_height = self.width(), self.height()
         if img_width == img_height:
             return size, size
-        
+
         width = height = size
         sw = float(width) / img_width
         sh = float(height) / img_height
@@ -267,14 +276,14 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         else:
             height = int(sw * img_height + 0.5)
         return width, height
-    
+
     def __get_crop_box(self, width, height):
         if width == height:
             return 0, 0, width, height
         elif width > height:
             return width/2 - height/2, 0, width/2 + height/2, height
         return 0, height/2 - width/2, width, height/2 + width/2
-        
+
     def __get_aspect_ratio_size(self, width, height):
         #return proportional dimensions within desired size
         img_width, img_height = self.width(), self.height()
@@ -287,7 +296,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def __resize(self, display):
         #resize and resample photo
         original_id = self._getDisplayId()
-        string_image = StringIO(str(self.get_data(original_id)))
+        #import pdb; pdb.set_trace()
+        string_image = StringIO(str(self.get_data(original_id).read()))
         if display == 'Original':
             return string_image
 
@@ -300,21 +310,21 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             crop = True
         else:
             width, height = self.__get_aspect_ratio_size(width, height)
-        
+
         # Resize image
         newimg = StringIO()
         img = Image.open(string_image)
         fmt = img.format
         try: img = img.resize((width, height), Image.ANTIALIAS)
         except AttributeError: img = img.resize((width, height))
-        
+
         # Crop if needed
         if crop:
             box = self.__get_crop_box(width, height)
             img = img.crop(box)
             #img.load()
         quality = self._photo_quality(string_image)
-        img.save(newimg, fmt, quality=quality)
+        img.save(newimg, fmt, quality=int(quality))
         newimg.seek(0)
         return newimg
 
@@ -350,16 +360,16 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             datafile = self._apply_watermark(datafile)
         self.update_data(datafile, self.getContentType(original_id),
                         filename=display, purge=False, watermark=watermark)
-        import transaction
-        if sys.platform == 'win32': 
-            # commit the transaction here, so ExtFile has a chance to rename 
-            # the file; otherwise an iterator will stream the image to the 
-            # client while holding an open filehandle, which will make 
-            # the ExtFile rename operation fail with an OSError. 
-            transaction.commit()
+        #import transaction
+        # if sys.platform == 'win32':
+        #     # commit the transaction here, so ExtFile has a chance to rename
+        #     # the file; otherwise an iterator will stream the image to the
+        #     # client while holding an open filehandle, which will make
+        #     # the ExtFile rename operation fail with an OSError.
+        #     transaction.commit()
 
     # Image edit
-    
+
     def _apply_watermark(self, datafile):
         text = self.aq_parent.watermark_text
         FONT = os.path.join(os.path.dirname(__file__), 'fonts', 'VeraSeBd.ttf')
@@ -423,7 +433,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(self.absolute_url())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'flip_horizontally')
     def flip_horizontally(self, REQUEST=None):
         """ Flip image left-right.
@@ -434,7 +444,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(self.absolute_url())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'flip_vertically')
     def flip_vertically(self, REQUEST=None):
         """ Flip image top-botton.
@@ -503,7 +513,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         """ """
         self.managePurgeDisplays()
         map(lambda x: self.__generate_display(x), self.displays.keys())
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
@@ -606,8 +616,12 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         except:
             self.log_current_error()
             return ImageFile('www/broken_image.gif', globals()).index_html(REQUEST, REQUEST.RESPONSE)
-        return photo.index_html(REQUEST=REQUEST)
-    
+        result = photo.index_html(REQUEST=REQUEST)
+        #TODO: fix this
+        for fr in photo._blob.readers:
+            photo._blob.readers.remove(fr)
+        return result
+
     def check_view_photo_permission(self, display):
         if display == 'Original':
             restrict_original = getattr(self, 'restrict_original', False)
@@ -627,7 +641,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             return '/'.join((album.absolute_url(), photos[index]))
         except (ValueError, IndexError):
             return ''
-    
+
     security.declareProtected(view_permission, 'next')
     def next(self):
         """ Returns next photo in parent """
@@ -638,18 +652,18 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             return '/'.join((album.absolute_url(), photos[index]))
         except (ValueError, IndexError):
             return ''
-    
+
     security.declareProtected(view_permission, 'getAlbumTitle')
     def getAlbumTitle(self):
         return self.getParentNode().title_or_id()
-    
+
     def _fix_after_cut_copy(self, item):
         item_id = item.getId()
         if item_id.startswith('copy') and item_id not in item.objectIds():
             original_id = re.sub(r'^copy\d*_of_', '', item.getId())
             item.update_data(item.get_data(original_id))
         return item
-    
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_displays_html')
     manage_displays_html = PageTemplateFile('zpt/photo_manage_displays', globals())
@@ -657,7 +671,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     #site pages
     security.declareProtected(view_permission, 'index_html')
     index_html = PageTemplateFile('zpt/photo_index', globals())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photo_edit', globals())
 
