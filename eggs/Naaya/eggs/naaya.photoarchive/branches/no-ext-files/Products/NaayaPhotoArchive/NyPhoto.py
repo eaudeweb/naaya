@@ -57,7 +57,7 @@ from zope.interface import implements
 import os
 import re
 import simplejson as json
-import sys
+#import sys
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
@@ -249,8 +249,9 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         elif getattr(data, 'index_html', None):
             data = data.index_html()
 
-        if not isinstance(data, str):
+        if not isinstance(data, str):   #dealing with a blobstreamiterator or StringIO
             data = data.read()
+
         child.content_type, child.width, child.height = getImageInfo(data)
 
         #ZZZ: migration
@@ -466,7 +467,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     #api
     def getZipData(self):
         display = self._getDisplayId()
-        return str(self.get_data(display))
+        return str(self.get_data(display).read())
 
     def get_displays(self):
         #returns a list with all dispays minus 'Thumbnail'
