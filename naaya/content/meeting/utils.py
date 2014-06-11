@@ -71,6 +71,8 @@ def getUserPhoneNumber(site, uid):
 
 def findUsers(site, search_param, search_term):
     def userMatched(uid, cn):
+        if not search_term:
+            return False
         if search_param == 'uid':
             return search_term in uid
         elif search_param == 'cn':
