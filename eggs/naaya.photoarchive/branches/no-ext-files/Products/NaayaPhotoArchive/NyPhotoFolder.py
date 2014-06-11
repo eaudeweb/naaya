@@ -25,31 +25,41 @@ try:
 except ImportError:
     # PIL installed as an egg
     import Image
-from cStringIO import StringIO
-import simplejson as json
 
-#Zope imports
-from zope.deprecation import deprecate
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-
-#Product imports
-from constants import *
-from permissions import PERMISSION_ADD_PHOTO
-from Products.NaayaBase.constants import *
+from Globals import InitializeClass
+from NyPhoto import json_encode
+from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
-from Products.Naaya.constants import *
-from Products.NaayaCore.managers.utils import batch_utils, ZZipFile, make_id
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from photo_archive import photo_archive_base
-import NyPhoto
-from NyPhoto import json_encode
-import zLOG
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_ZIP_EXPORT
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.managers.utils import batch_utils, ZZipFile, make_id
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from cStringIO import StringIO
+from constants import DEFAULT_DISPLAYS
+from constants import DEFAULT_QUALITY
+from constants import METALABEL_NYPHOTOFOLDER
+from constants import METATYPE_NYPHOTO
+from constants import METATYPE_NYPHOTOFOLDER
+from constants import METATYPE_NYPHOTOGALLERY
+from constants import NUMBER_OF_RESULTS_PER_LINE
+from constants import NUMBER_OF_RESULTS_PER_PAGE
+from constants import PREFIX_NYPHOTOFOLDER
+from permissions import PERMISSION_ADD_PHOTO
+from photo_archive import photo_archive_base
+from zope.deprecation import deprecate
+import NyPhoto
+import simplejson as json
+import zLOG
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
