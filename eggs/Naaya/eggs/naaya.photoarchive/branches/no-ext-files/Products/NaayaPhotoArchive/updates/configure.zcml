@@ -1,0 +1,15 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="naaya">
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility
+      name="nyphoto2nyblob.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".migrate_to_bfiles.MigrateExtPhotosToBfiles"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
+
+</configure>
+

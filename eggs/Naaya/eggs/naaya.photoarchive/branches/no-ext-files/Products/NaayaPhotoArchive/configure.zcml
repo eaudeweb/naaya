@@ -25,4 +25,6 @@
     permission="zope.Public"
     />
 
+    <include package=".updates" />
+
 </configure>
