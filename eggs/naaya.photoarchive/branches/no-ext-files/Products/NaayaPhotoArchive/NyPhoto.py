@@ -235,15 +235,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     def update_data(self, data, content_type=None, size=None,
                     filename='Original', purge=True, watermark=False):
-        if purge:
-            self.manage_delObjects(self.objectIds())
-        filename = clean_display_id(filename)
-        filename = self._getDisplayId(filename, watermark)
-        if filename in self.objectIds():
-            self.manage_delObjects([filename])
 
-        child_id = self.manage_addFile(filename)
-        child = self._getOb(child_id)
         if hasattr(data, '__class__') and data.__class__ is Pdata:
             data = str(data)
         elif getattr(data, 'index_html', None):
@@ -252,6 +244,17 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         if not isinstance(data, str):   #dealing with a blobstreamiterator or StringIO
             data = data.read()
 
+        if purge:
+            self.manage_delObjects(self.objectIds())
+
+        filename = clean_display_id(filename)
+        filename = self._getDisplayId(filename, watermark)
+
+        if filename in self.objectIds():
+            self.manage_delObjects([filename])
+
+        child_id = self.manage_addFile(filename)
+        child = self._getOb(child_id)
         child.content_type, child.width, child.height = getImageInfo(data)
 
         #ZZZ: migration
