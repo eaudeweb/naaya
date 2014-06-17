@@ -11,7 +11,7 @@
       ga('create', '${ga_id}', '${gaq/ga_domain_name}');
     "></script>
 </tal:block>
-    <script>:
+    <script>
       ga('send', 'pageview');
     </script>
 
