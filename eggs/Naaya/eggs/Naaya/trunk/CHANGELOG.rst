@@ -1,4 +1,7 @@
-3.3.53 (unreleased)
+3.3.54 (unreleased)
+-------------------
+
+3.3.53 (2014-06-17)
 -------------------
 * bugfix in site_googleanalytics [dumitval]
 
