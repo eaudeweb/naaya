@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='3.3.54',
+      version='3.3.55',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -61,4 +61,4 @@ setup(name='Naaya',
           # 'twill',
           # 'WebOb',
       ]
-)
+      )
