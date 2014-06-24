@@ -1,5 +1,6 @@
 3.3.54 (unreleased)
 -------------------
+* hide rdf objects if they expired and don't have 'topitem' set [dumitval]
 
 3.3.53 (2014-06-17)
 -------------------
