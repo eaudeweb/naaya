@@ -1,5 +1,7 @@
 3.3.55 (unreleased)
 -------------------
+* hide LocalChannel objects if they expired and don't have 'topitem' set
+  [dumitval]
 
 3.3.54 (2014-06-24)
 -------------------
