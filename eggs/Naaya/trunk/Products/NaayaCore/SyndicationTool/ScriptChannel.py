@@ -117,8 +117,10 @@ class ScriptChannel(PythonScript, utils):
             objects = []
         now = DateTime()
         objects = [ob for ob in objects if
-                   getattr(ob, 'expirationdate', now) + 1 > DateTime() or
-                   getattr(ob, 'topitem', None)]
+                   getattr(ob, 'topitem', None) or
+                   getattr(ob, 'expirationdate', now) is None or
+                   getattr(ob, 'expirationdate', now) + 1 > now
+                   ]
         if attr is not None:
             return utils.utSortObjsListByAttr(self, objects, attr, reversed)
         return objects
