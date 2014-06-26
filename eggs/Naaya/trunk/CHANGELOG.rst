@@ -1,4 +1,7 @@
-3.3.56 (unreleased)
+3.3.57 (unreleased)
+-------------------
+
+3.3.56 (2014-06-26)
 -------------------
 * handling for expirationdate set to None in some objects [dumitval]
 
