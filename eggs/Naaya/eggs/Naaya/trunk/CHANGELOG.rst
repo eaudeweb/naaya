@@ -1,5 +1,6 @@
 3.3.56 (unreleased)
 -------------------
+* handling for expirationdate set to None in some objects [dumitval]
 
 3.3.55 (2014-06-25)
 -------------------

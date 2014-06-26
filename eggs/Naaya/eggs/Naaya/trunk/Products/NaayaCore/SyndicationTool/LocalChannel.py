@@ -116,8 +116,10 @@ class LocalChannel(SimpleItem, utils):
         now = DateTime()
         return [item for item in l_items
                 if getSecurityManager().checkPermission(view, item) and
-                (getattr(item, 'expirationdate', now) +1 > DateTime() or
-                 getattr(item, 'topitem', None))]
+                (getattr(item, 'topitem', None) or
+                 getattr(item, 'expirationdate', now) is None or
+                 getattr(item, 'expirationdate', now) + 1 > DateTime())
+                ]
 
     security.declareProtected(view, 'index_html')
 
