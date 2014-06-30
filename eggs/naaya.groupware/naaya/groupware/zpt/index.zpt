@@ -57,7 +57,7 @@
             </tal:block>
             <tal:block condition="options/is_authenticated">
                 <h2 i18n:translate="" tal:content="string:Restricted interest groups your ${options/network_name} account does not have permission to access" />
-                <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
+                <p i18n:translate="">You can request access to these interest groups by contacting your group administrator or by clicking the <em>Request access</em> link below</p>
             </tal:block>
 
             <ul class="ig_listing">
