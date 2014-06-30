@@ -1,4 +1,7 @@
-3.3.57 (unreleased)
+3.3.58 (unreleased)
+-------------------
+
+3.3.57 (2014-06-30)
 -------------------
 * ignore disabled@eionet.europa.eu as recipient for notifications [dumitval]
 
