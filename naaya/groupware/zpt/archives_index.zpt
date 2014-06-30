@@ -58,7 +58,7 @@ supplied for each interest group and then follow the subscription instructions.
             </tal:block>
             <tal:block condition="options/is_authenticated">
                 <h2 i18n:translate="">Restricted interest groups your Eionet account does not have permission to access</h2>
-                <p i18n:translate="">You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
+                <p i18n:translate="">You can request access to these interest groups by contacting your group administrator or by clicking the <em>Request access</em> link below</p>
             </tal:block>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">

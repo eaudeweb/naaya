@@ -1,5 +1,9 @@
 1.4.22 (unreleased)
 -------------------
+* update script to correct possible duplicated links to the WebEx mail
+  feature [dumitval]
+* Replaced "Group leader" by "Group administrator" wherever this
+  appeared [dumitval]
 
 1.4.21 (2014-04-23)
 -------------------
