@@ -51,6 +51,7 @@ except ImportError, e:
 email_validator = EmailValidator("checked_emails", maxWorkers=10)
 g_utils = utils.utils()
 
+DISABLED_EMAILS = ['disabled@eionet.europa.eu']
 
 mail_logger = logging.getLogger('naaya.core.email')
 
@@ -302,19 +303,21 @@ def send_by_delivery(delivery, p_from, p_to, message):
     Knows how to handle repoze.sendmail 2.3 differences in `message` arg type.
 
     """
-    try:
-        delivery.send(p_from, p_to, message.as_string())
-    except AssertionError, e:
-        if (e.args and e.args[0] ==
-                'Message must be instance of email.message.Message'):
-            delivery.send(p_from, p_to, message)
-        else:
-            raise
-    except ValueError, e:
-        if (e.args and e.args[0] == 'Message must be email.message.Message'):
-            delivery.send(p_from, p_to, message)
-        else:
-            raise
+    if p_to not in DISABLED_EMAILS:
+        try:
+            delivery.send(p_from, p_to, message.as_string())
+        except AssertionError, e:
+            if (e.args and e.args[0] ==
+                    'Message must be instance of email.message.Message'):
+                delivery.send(p_from, p_to, message)
+            else:
+                raise
+        except ValueError, e:
+            if (e.args and e.args[0] ==
+                    'Message must be email.message.Message'):
+                delivery.send(p_from, p_to, message)
+            else:
+                raise
 
 
 def create_message(text, addr_to, addr_from, subject, addr_cc=[]):
@@ -550,12 +553,12 @@ def export_email_list_xcel(site, cols, filenames=None,
     header = [v[0] for v in cols]
     rows = []
     check_status = True if 'status' in [v[1] for v in cols] else False
-    for email in emails:
-        if not filenames or email['filename'] in filenames:
-            _prepare_xcel_data(email, site, check_status)
+    for eml in emails:
+        if not filenames or eml['filename'] in filenames:
+            _prepare_xcel_data(eml, site, check_status)
             r = []
             for _, key in cols:
-                r.append(email.get(key, ''))
+                r.append(eml.get(key, ''))
             rows.append(r)
     r = import_export.generate_excel(header, rows)
     return r
@@ -570,12 +573,12 @@ def check_cached_valid_emails(obj, emails):
     if type(emails) == str:
         emails = [emails]
     email_validator.bind(obj)
-    for email in emails:
-        check_value = email_validator.validate_from_cache(email)
+    for eml in emails:
+        check_value = email_validator.validate_from_cache(eml)
         if check_value is False:
-            invalid_emails.append(email)
+            invalid_emails.append(eml)
         elif check_value is None:
-            not_resolved_emails.append(email)
+            not_resolved_emails.append(eml)
     if not_resolved_emails:
         _defer_check_valid_emails(obj, not_resolved_emails)
     return invalid_emails, not_resolved_emails
@@ -584,8 +587,8 @@ def check_cached_valid_emails(obj, emails):
 def _defer_check_valid_emails(obj, emails):
     emails = set(emails)
     email_validator.bind(obj)
-    for email in emails:
-        email_validator.enqueue(email)
+    for eml in emails:
+        email_validator.enqueue(eml)
 
 
 def get_mail_queue(site):
