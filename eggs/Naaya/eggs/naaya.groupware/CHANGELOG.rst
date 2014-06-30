@@ -1,4 +1,7 @@
-1.4.22 (unreleased)
+1.4.23 (unreleased)
+-------------------
+
+1.4.22 (2014-06-30)
 -------------------
 * update script to correct possible duplicated links to the WebEx mail
   feature [dumitval]
