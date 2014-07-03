@@ -4,6 +4,7 @@
     <tal:block tal:define="site_url here/getSitePath;
                             site here/getSite;
                             nfp_admin_link site/nfp_admin_link_html;
+                            howto_link site/howto_link_html;
                             organisations_link site/organisations_link_html">
         <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
             <tal:block tal:repeat="item link_list">
@@ -14,7 +15,12 @@
             </tal:block>
 
             <li tal:condition="nfp_admin_link">
-                <a tal:attributes="href nfp_admin_link" title="View your NFP" i18n:translate="" i18n:attributes="title">Edit NRC members</a>
+                <a tal:attributes="href nfp_admin_link" title="Edit NFP members"
+                  i18n:translate="" i18n:attributes="title">Edit NRC members</a>
+            </li>
+            <li tal:condition="howto_link">
+                <a tal:attributes="href howto_link" title="Help for assigning NRC members"
+                  i18n:translate="" i18n:attributes="title">Help for assigning NRC members</a>
             </li>
             <li tal:condition="organisations_link">
                 <a tal:attributes="href organisations_link"
