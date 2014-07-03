@@ -1,4 +1,7 @@
-1.0.2 (unreleased)
+1.0.3 (unreleased)
+------------------
+
+1.0.2 (2014-07-03)
 ------------------
 * avoid related videos at the end of playback [dumitval]
 
