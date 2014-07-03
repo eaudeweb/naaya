@@ -1,5 +1,6 @@
 1.0.2 (unreleased)
 ------------------
+* avoid related videos at the end of playback [dumitval]
 
 1.0.1 (2013-04-25)
 ------------------
