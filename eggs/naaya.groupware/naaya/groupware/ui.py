@@ -15,8 +15,10 @@ archives_index_html_zpt = PageTemplateFile('zpt/archives_index.zpt', globals())
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
+
 def get_user_id(request):
     return request.AUTHENTICATED_USER.getId()
+
 
 def grouped_igs(context):
     """
@@ -40,12 +42,13 @@ def grouped_igs(context):
 
 class LocalUsersPage(BrowserPage):
     def __call__(self):
-        ctx = self.context.aq_inner # because self subclasses from Explicit
-        local_users = {} #All local users per groupware site
+        ctx = self.context.aq_inner  # because self subclasses from Explicit
+        local_users = {}  # All local users per groupware site
         for site in ctx.objectValues('Groupware site'):
             local_users[site] = site.getAuthenticationTool().getUsers()
         return local_users_zpt.__of__(ctx)(local_users=local_users,
                                            grouped_igs=grouped_igs(context))
+
 
 def nfp_admin_link(context, request):
     """
@@ -60,7 +63,7 @@ def nfp_admin_link(context, request):
         zope_app = context.unrestrictedTraverse('/')
         client = ProfileClient(zope_app, user)
         roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        leaf_roles_list = [r for r in roles_list if not r['children']]
 
         country = ''
         for leaf in leaf_roles_list:
@@ -73,9 +76,11 @@ def nfp_admin_link(context, request):
 
     return nfp_url
 
+
 def organisations_link(context, request):
     """
-    Check if LDAP user is NFP and return the URL to 'Edit organisations' section
+    Check if LDAP user is NFP and return the URL
+    to 'Edit organisations' section
     """
     organisations_url = ''
 
@@ -86,7 +91,7 @@ def organisations_link(context, request):
         zope_app = context.unrestrictedTraverse('/')
         client = ProfileClient(zope_app, user)
         roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        leaf_roles_list = [r for r in roles_list if not r['children']]
 
         country = ''
         for leaf in leaf_roles_list:
@@ -95,9 +100,37 @@ def organisations_link(context, request):
 
         if country:
             organisations_url = ("%s/organisations" %
-                                context.getSite().absolute_url())
+                                 context.getSite().absolute_url())
 
     return organisations_url
+
+
+def howto_link(context, request):
+    """
+    Check if LDAP user is NFP and return the URL to the how to video
+    """
+    howto_url = ''
+
+    user = context.REQUEST.AUTHENTICATED_USER
+    site_id = context.getSite().getId()
+
+    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
+        zope_app = context.unrestrictedTraverse('/')
+        client = ProfileClient(zope_app, user)
+        roles_list = client.roles_list_in_ldap()
+        leaf_roles_list = [r for r in roles_list if not r['children']]
+
+        country = ''
+        for leaf in leaf_roles_list:
+            if 'eionet-nfp-' in leaf['id']:
+                country = leaf['id'].rsplit('-', 1)[-1]
+
+        if country:
+            howto_url = ("%s/library/how-to/add-to-nrc" %
+                         context.getSite().absolute_url())
+
+    return howto_url
+
 
 def index_html(context, request):
     """
@@ -108,6 +141,7 @@ def index_html(context, request):
                'is_authenticated': (get_user_id(request) is not None)}
     return index_html_zpt.__of__(context)(**options)
 
+
 def archives_index_html(context, request):
     """
     Render Archives Forum's first page
@@ -116,6 +150,7 @@ def archives_index_html(context, request):
                'grouped_igs': grouped_igs(context),
                'is_authenticated': (get_user_id(request) is not None)}
     return archives_index_html_zpt.__of__(context)(**options)
+
 
 def gw_meta_info(context, request=None):
     """
@@ -131,6 +166,7 @@ def gw_meta_info(context, request=None):
     meta_info['welcome_text'] = forum_meta.get('welcome_text', '')
     return meta_info
 
+
 def eionet_forum_index_html(context, request):
     """
     Render Forum's first page
@@ -138,6 +174,7 @@ def eionet_forum_index_html(context, request):
     options = {'is_authenticated': (get_user_id(request) is not None),
                'grouped_igs': grouped_igs(context)}
     return eionet_forum_index_html_zpt.__of__(context)(**options)
+
 
 def archived_portals_json(context, request):
     """
