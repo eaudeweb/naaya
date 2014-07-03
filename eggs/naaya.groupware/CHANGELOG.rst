@@ -1,4 +1,7 @@
-1.4.23 (unreleased)
+1.4.24 (unreleased)
+-------------------
+
+1.4.23 (2014-07-03)
 -------------------
 * added a link to the how to video on nfp-eionet [dumitval]
 
