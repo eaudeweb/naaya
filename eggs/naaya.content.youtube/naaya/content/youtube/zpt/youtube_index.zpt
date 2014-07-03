@@ -55,7 +55,7 @@
 					<iframe frameborder="0" allowfullscreen
 					tal:attributes="width iframe_width;
 					height iframe_height;
-					src string:http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=${here/captions}"></iframe>
+					src string:http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=${here/captions}&rel=0"></iframe>
 					<br/>
 					<input id="videoEmbed" name="videoEmbed" type="text"
 						style="width: 500px;" readonly="true"
@@ -64,7 +64,7 @@
 						value string:<!-- Embed video - copy & paste -->
 						<iframe frameborder="0" allowfullscreen
 						width="${iframe_width}" height="${iframe_height}"
-						src ="http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=1"></iframe>'/>
+						src ="http://www.youtube.com/embed/${here/youtube_id}?hl=${lang}&cc_lang_pref=${lang}&cc_load_policy=1&rel=0"></iframe>'/>
 				</tal:block>
 				<tal:block content="structure here/set_content_rating" />
 
