@@ -42,6 +42,13 @@
     />
 
   <naaya:simpleView
+    for=".interfaces.IGWSite"
+    name="howto_link_html"
+    handler=".ui.howto_link"
+    permission="zope2.View"
+    />
+
+  <naaya:simpleView
     for="naaya.groupware.interfaces.IArchivesForumApplication"
     name="archived_portals_json"
     handler=".ui.archived_portals_json"
