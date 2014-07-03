@@ -1,5 +1,6 @@
 1.4.23 (unreleased)
 -------------------
+* added a link to the how to video on nfp-eionet [dumitval]
 
 1.4.22 (2014-06-30)
 -------------------
