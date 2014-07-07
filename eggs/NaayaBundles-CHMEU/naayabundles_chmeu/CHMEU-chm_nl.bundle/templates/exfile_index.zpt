@@ -54,7 +54,7 @@
             <td tal:define="download_url here/getDownloadUrl">
                 <a tal:define="size python:here.utShowSizeKb(here.size());
 					content_type here/content_type;
-					icon python:here.rstk.icon_for_content_type(content_type);
+					icon python:here.rstk['icon_for_content_type'](content_type);
 					title python:icon['title'];
 					url python:icon['url'];"
                     tal:attributes="href download_url">
@@ -83,7 +83,7 @@
         <metal:block use-macro="site_object_index/macros/contributor_tr" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
 
-		<tal:block condition="here/is_geo_enabled">
+        <tal:block condition="here/is_geo_enabled">
           <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
                           picture python:portal_map.getSymbolPicture(here.geo_type)"
                           tal:condition="python: title != '' and here.geo_location">
