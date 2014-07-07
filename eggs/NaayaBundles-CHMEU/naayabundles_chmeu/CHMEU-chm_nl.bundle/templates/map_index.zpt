@@ -14,6 +14,8 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 	<meta i18n:attributes="content" content="Interactive map for the Geo-tagged information" name="description" />
 </metal:block>
 
+<metal:block fill-slot="breadcrumb"></metal:block>
+
 <metal:block metal:fill-slot="body">
 <tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds());
                        geo_query python:request.get('geo_query', '');
@@ -23,7 +25,7 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 <script src="++resource++naaya.chm_nl.www/chm_nl-map.js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
-<script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(here.absolute_url())"></script>
+<script tal:content="structure python:'var portal_map_url=%s;' % here.rstk['json_dumps'](here.absolute_url())"></script>
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
@@ -45,39 +47,38 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 </style>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-	<div id="center_content" style="width: 78%; overflow-x: auto;">
+	<div id="center_content" class="portalmap-map-box">
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<noscript>
+			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
 			<p i18n:translate="">
 			You can <span i18n:name="view-link"><a tal:attributes="href python: 'list_locations?geo_types='+','.join(geo_types)"
 							       i18n:translate="">view locations as a list</a></span>
 			or <span i18n:name="geo-rss-link"><a tal:attributes="href python: 'export_geo_rss?geo_types='+','.join(geo_types)"
 							     i18n:translate="">download them in GeoRSS format</a></span>.
 			</p>
-			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
 		</noscript>
 
-                <div id="portalmap_center">
-                    <div id="portalmap_top">
-                            <div class="portalmap_portlet">
-                                    <div class="portalmap_location_filters">
+		<div id="portalmap_center">
+			<div id="portalmap_top">
+				<div class="portalmap_portlet">
+					<div class="portalmap_location_filters">
 						<input type="text" class="text_input" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" />
 						<input type="button" name="address_button" id="address_button" value="Zoom in" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
-				    </div>
-                                    <div class="portalmap_location_filters">
-						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" style="width: 60%" />
+					</div>
+					<div class="portalmap_location_filters">
+						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" />
 						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
 						<noscript>
 							<p><small i18n:translate="">eg: "water supply"</small></p>
 						</noscript>
-				    </div>
+					</div>
 
-                            </div>
-                            <br clear="all" style="clear:both"/>
-                    </div>
-
-                    <div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
-                </div>
+				</div>
+			</div>
+			<br clear="all" style="clear:both"/>
+			<div id="map" tal:attributes="style string:height: ${height}px;;"></div>
+		</div>
 		<br clear="all" style="clear:both"/>
 		<div style="display:none" id="map_markers"></div>
 		<p i18n:translate="" id="map_links_js" class="hidden">
@@ -90,10 +91,10 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 		<div class="portalmap_portlet">
 
 			<div class="map_filters">
-                            <p id="js_links" style="display: none;">
-                                    <strong id="record_counter"></strong>
-                                     <span i18n:translate="">location(s)</span>
-                            </p>
+						<p id="js_links" style="display: none;">
+							<strong id="record_counter"></strong>
+							 <span i18n:translate="">location(s)</span>
+						</p>
                             <span id="map_show_filters">
                                 <a href="javascript:void(0);" onclick="jQuery('#map_collapsable_filters').show('blind', {}, 800, function(){jQuery('#map_hide_filters').show(); jQuery('#map_show_filters').hide();});">
                                     <tal:block i18n:translate="">Show advanced search</tal:block>
@@ -138,15 +139,16 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 							<tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
 							<li>
 								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox"
-									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
+									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types"
+									onclick="javascript:toggleChildren(this)" />
 								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title; class string:pin" />
 								<label tal:attributes="for item/id; class string:pin_text" i18n:translate="" tal:content="item/title" />
 								<ul tal:condition="children" class="category_child">
 									<li tal:repeat="child children">
 										<input type="checkbox" name="geo_types:list"
-											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
-										<img
-											tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
+											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types"
+											onclick="javascript: startMapRefresh()" />
+										<img tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
 										<label tal:attributes="for child/id; class string:pin_text" i18n:translate="" tal:content="child/title" />
 									</li>
 								</ul>
@@ -154,11 +156,11 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 							</tal:block>
 						</tal:block>
 					</ul>
+					<p class="map_right_control">
+						<img src="../++resource++geomaptool.icons/progress.gif" class="hidden" id="toggle-progress" />
+						<a href="javascript:toggleSelect();" style="display: none;" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall">Hide All</a></p>
 					<div>
 						<input type="hidden" id="path" name="path" tal:attributes="value path" />
-                                        <p class="map_right_control">
-						<img src="../++resource++geomaptool.icons/progress.gif" class="hidden" id="toggle-progress" />
-						<a href="javascript:toggleSelect();" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall" style="display: none;">Hide All</a></p>
 						<noscript>
 							<input type="submit" value="List locations" class="map-button" name="list_locations:method" i18n:attributes="value" />
 						</noscript>
@@ -187,7 +189,7 @@ function update_chm_nl_map_filter_values(filter) {
 
     $.each(filter, function(i, pair) {
         if(pair.name == 'target-group') {
-            var inputs = $('input[name=target-group:list]', form);
+            var inputs = $("input[name='target-group:list']", form);
             if(! target_group_cleared) {
                 target_group_cleared = true;
                 inputs.attr('checked', null);
