@@ -1,18 +1,5 @@
 <fieldset><legend i18n:translate="">Google map settings</legend>
 
-<div class="field">
-    <label for="form-google_api_keys"
-           i18n:translate="">API key</label>
-    <p i18n:translate="">
-        Go to <a href="https://code.google.com/apis/console/" i18n:name="google-link">Google Apis</a>,
-        make sure Google Maps v2 is enabled in Services, and then get your API Key from API Access.
-        Make sure your domain is allowed for your API Key (Referers section, default Any).
-    </p>
-    <textarea rows="4" cols="80"
-              name="google_api_keys" id="form-google_api_keys"
-              tal:content="here/api_keys"></textarea>
-</div>
-
 <div class="field-inline">
     <label for="form-google_allow_mouse_scroll"
            i18n:translate="">Allow mouse scroll</label>
