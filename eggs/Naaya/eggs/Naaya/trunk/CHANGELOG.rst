@@ -1,5 +1,7 @@
 3.3.59 (unreleased)
 -------------------
+* Change: remove code related to API key for google map engine
+  [tiberich #15626]
 
 3.3.58 (2014-07-08)
 -------------------

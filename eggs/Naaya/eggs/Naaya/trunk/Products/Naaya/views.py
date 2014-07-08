@@ -1,10 +1,11 @@
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
-from naaya.component import bundles
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase import akismet
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from naaya.component import bundles
 
 tmpl = NaayaPageTemplateFile('zpt/site_admin_api_keys', globals(), 'admin_api_keys')
+
 
 class SetBundleView(BrowserView):
     """ Change a site's bundle from ZMI """
@@ -25,6 +26,7 @@ class SetBundleView(BrowserView):
 
     def get_bundle(self):
         return self.context.getSite().get_bundle().__name__
+
 
 def AdminAPIKeysStatus(context, request):
     """
