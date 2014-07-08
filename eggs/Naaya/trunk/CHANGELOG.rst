@@ -1,4 +1,4 @@
-3.3.58 (unreleased)
+3.3.58 (2014-07-08)
 -------------------
 * Bug fix: cleanup the source code of google map engine js. 
 * Bug fix: fix go_to_address_with_zoom function of google map engine
