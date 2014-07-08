@@ -1,3 +1,6 @@
+3.3.59 (unreleased)
+-------------------
+
 3.3.58 (2014-07-08)
 -------------------
 * Bug fix: cleanup the source code of google map engine js. 
