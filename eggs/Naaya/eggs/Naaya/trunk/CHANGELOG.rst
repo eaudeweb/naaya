@@ -1,5 +1,8 @@
 3.3.58 (unreleased)
 -------------------
+* Bug fix: cleanup the source code of google map engine js. 
+* Bug fix: fix go_to_address_with_zoom function of google map engine
+  [tiberich #15626]
 
 3.3.57 (2014-06-30)
 -------------------

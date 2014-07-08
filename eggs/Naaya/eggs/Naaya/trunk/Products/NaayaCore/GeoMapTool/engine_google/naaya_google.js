@@ -1,4 +1,4 @@
-(function() {
+(function () {
     var config = naaya_google_map_api_config;       // a mapping of conf options
     var the_map;                                    // the google.maps.Map instance
     var the_map_div;                                // the map container DOM element
@@ -7,7 +7,7 @@
     var current_places = [];                        // cache of curent places
     var markers = [];                               // currently placed markers on the map
 
-    $.each(config.icons, function() {
+    $.each(config.icons, function () {
         // define new Icons
         var icon = {};
         icon.url = this.url;
@@ -26,9 +26,10 @@
     function get_map_layer() {
         // get the naaya id of current map layer type
         // see base_layer_names for a definition of them
+        var prop;
         var current_type = the_map.getMapTypeId();  // ex getCurrentMapType();
-        for (var prop in base_layer_names){
-            if (current_type == base_layer_names[prop]) {
+        for (prop in base_layer_names){
+            if (current_type === base_layer_names[prop]) {
                 return prop;
             }
         }
@@ -76,7 +77,8 @@
 
     function clearMarkers(){
         // removes all markers from display
-        for (var i=0;i<markers.length;i++){
+        var i;
+        for (i=0;i<markers.length;i++){
             markers[i].setMap(null);
         }
     }
@@ -106,8 +108,7 @@
                 markers.push(marker);
             });
             current_places = places;
-            if (typeof callback !== "undefined")
-                callback(places);
+            if (typeof callback !== "undefined") {callback(places);}
         });
     }
 
@@ -148,7 +149,7 @@
             'lat_max': ne.lat(),
             'lon_min': sw.lng(),
             'lon_max': ne.lng()
-        }
+        };
 
         var center_lat = the_map.getCenter().lat();
 
@@ -184,7 +185,7 @@
     function geocode_address(address, callback) {
         // Converts a query address to coordinates, using google geocoding services
         the_geocoder.geocode({'address':address}, function(result, status) {
-            if (status != google.maps.GeocoderStatus.OK) return;
+            if (status !== google.maps.GeocoderStatus.OK) {return;}
 
             var place = result[0];
             var point = place.geometry.location;
@@ -198,11 +199,11 @@
 
     function go_to_address_with_zoom(address, zoom) {
         // given a query address, it finds the coordinates and zooms to it
-        if(! zoom) {
+        if(!zoom) {
             return go_to_address(address);
         }
-        console.log("Geocoding", address);
-        geocode_address(address, function(point, bounds, zoom) {
+        if(console) { console.log("Geocoding", address);}
+        geocode_address(address, function(point, bounds, _zoom) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
                 return;
@@ -214,13 +215,13 @@
 
     function go_to_address(address) {
         // given a query address, it finds the coordinates and zooms to it
-        console.log("Geocoding", address);
+        if (console) {console.log("Geocoding", address);}
         geocode_address(address, function(point, bounds, zoom) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
                 return;
             }
-            console.log("Finish geocoding", point, bounds, zoom);
+            if(console){console.log("Finish geocoding", point, bounds, zoom);}
             //the_map.fitBounds(bounds);
             the_map.setCenter(point);
             the_map.setZoom(zoom);
@@ -246,7 +247,11 @@
         clearMarkers();
         addMarker(point);
         the_map.setCenter(point);
-        (zoom !== null) ? the_map.setZoom(10) : the_map.setZoom(zoom);
+        if (zoom !== null) {
+            the_map.setZoom(zoom);
+        } else { 
+            the_map.setZoom(10);
+        }
     }
 
     function editor_marker_at_address(address, callback) {
@@ -258,8 +263,9 @@
 
     function setup_editor(coord, click_callback) {
         // set up current value
+        var point;
         if(coord) {
-            var point = new google.maps.LatLng(coord.lat, coord.lon);
+            point = new google.maps.LatLng(coord.lat, coord.lon);
             editor_show_point(point);
         } else {
             go_to_address(config.initial_address);
@@ -267,9 +273,9 @@
 
         google.maps.event.addListener(the_map, 'click', function(e) {
             clearMarkers();
-            var point = e.latLng;
+            var point_click = e.latLng;
             addMarker(point);
-            click_callback(point_to_coord(point));
+            click_callback(point_to_coord(point_click));
         });
     }
 
@@ -300,24 +306,24 @@
         map_with_points: function(map_div_id, points) {
             setup_map(map_div_id);
             draw_points_on_map(points);
-
             return {
                 the_map: the_map
-            }
+            };
         },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
-
             google.maps.event.addListener(the_map, 'bounds_changed', refresh_points);
+            var map_zoom;
 
-            if ('map_zoom' in config) {
+            if (config.hasOwnProperty('map_zoom')) {
                 map_zoom = parseInt(config.map_zoom);
             } else {
                 map_zoom = config.portal_map_zoom;
             }
-            if ('lat_center' in config && 'lon_center' in config) {
+
+            if (config.hasOwnProperty('lat_center') && config.hasOwnProperty('lon_center')) {
                 var point = new google.maps.LatLng(config.lat_center, config.lon_center);
-                the_map.setCenter(point);    //, map_zoom);
+                the_map.setCenter(point);    //, map_zoom)
                 the_map.setZoom(map_zoom);
             } else {
                 go_to_address_with_zoom(config.initial_address, map_zoom);
@@ -325,15 +331,18 @@
 
             return {
                 go_to_address: go_to_address,
+                go_to_address_with_zoom: go_to_address_with_zoom,
+                _google_map: the_map,
                 refresh_points: refresh_points,
                 page_position: page_position,
                 map_coords: map_coords,
                 set_center_and_zoom_in: set_center_and_zoom_in,
                 get_current_places: get_current_places,
                 get_center_and_zoom: get_center_and_zoom,
-                get_map_layer: get_map_layer
+                get_map_layer: get_map_layer,
             };
         },
+
         object_index_map: function(map_div_id, coord) {
             setup_map(map_div_id);
             var point = new google.maps.LatLng(coord.lat, coord.lon);
@@ -341,6 +350,7 @@
             the_map.setZoom(config.objmap_zoom);
             addMarker(point);
         },
+
         object_edit_map: function(map_div_id, coord, click_callback) {
             setup_map(map_div_id);
             setup_editor(coord, click_callback);
@@ -349,4 +359,4 @@
             };
         }
     };
-})();
+}());
