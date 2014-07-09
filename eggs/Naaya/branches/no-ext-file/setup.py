@@ -62,5 +62,11 @@ setup(name='Naaya',
           #Testing
           # 'twill',
           # 'WebOb',
-      ]
+      ],
+      extras_require={
+          'test': [
+              'twill',
+              'WebOb',
+          ]
+      }
 )
