@@ -63,6 +63,7 @@ div.widgetViewMode {
 .widgetEditMode .widget-title {
 	display: block;
 	font-weight: bold;
+	font-size: 100%;
 	padding-top: 1em;
 	color: #468966;
 }
@@ -72,6 +73,10 @@ div.widgetViewMode {
 	font-size:90%;
 	margin:0pt 0pt 0.2em;
 	padding-bottom: 0.5em;
+}
+
+.widgetEditMode .tooltips .widgetEditMode .widget-title{
+	font-size:13.6px;
 }
 
 .required {
