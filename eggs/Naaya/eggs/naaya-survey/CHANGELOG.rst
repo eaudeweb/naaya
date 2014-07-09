@@ -1,4 +1,7 @@
-1.2.49 (unreleased)
+1.2.50 (unreleased)
+===================
+
+1.2.49 (2014-07-09)
 ===================
 * CSS exception for headings within the tooltips [dumitval]
 
