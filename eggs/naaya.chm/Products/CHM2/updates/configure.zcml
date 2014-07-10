@@ -30,6 +30,11 @@
       component=".update_add_disclaimer_message.AddDisclaimerMessage"
       permission="zope2.ViewManagementScreens" />
     <utility
+      name="update_disclaimer_message"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_add_disclaimer_message.Addi18nToDisclaimerMessage"
+      permission="zope2.ViewManagementScreens" />
+    <utility
       name="update_element_splash_content"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_element_splash_content.UpdateElementSplashContent"
@@ -40,5 +45,4 @@
       component=".update_element_mainsection_image.UpdateElementMainsectionImage"
       permission="zope2.ViewManagementScreens" />
   </configure>
-
 </configure>

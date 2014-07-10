@@ -1,5 +1,3 @@
-import re
-
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.naayaUpdater.updates.utils import get_standard_template
 
@@ -47,14 +45,14 @@ COOKIE_POLICY_DOCUMENT = '''
 
 ELEMENT_DISCLAIMER_info = '''<metal:block define-macro="content">
     <div id="disclaimer">
-        <p><img src="misc_/Naaya/info.png" />This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/info/cookie_policy">cookie policy</a>.<br/>
-        <a href="javascript:void(0);" id="acknowledge">Agree and close</a></p>
+        <p><img src="misc_/Naaya/info.png" /><tal:block i18n:translate="">This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/info/cookie_policy" i18n:name="cookie_policy_link" i18n:translate="">cookie policy</a>.</tal:block><br/>
+        <a href="javascript:void(0);" id="acknowledge" i18n:translate="">Agree and close</a></p>
     </div>
 </metal:block>'''
 ELEMENT_DISCLAIMER_About = '''<metal:block define-macro="content">
     <div id="disclaimer">
-        <p><img src="misc_/Naaya/info.png" />This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/About/cookie_policy">cookie policy</a>.<br/>
-        <a href="javascript:void(0);" id="acknowledge">Agree and close</a></p>
+        <p><img src="misc_/Naaya/info.png" /><tal:block i18n:translate="">This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/About/cookie_policy" i18n:name="cookie_policy_link" i18n:translate="">cookie policy</a>.</tal:block><br/>
+        <a href="javascript:void(0);" id="acknowledge" i18n:translate="">Agree and close</a></p>
     </div>
 </metal:block>'''
 COOKIE_POLICY_info = '''        <a tal:attributes="href string:${site_url}/info/cookie_policy"
@@ -220,3 +218,33 @@ class AddDisclaimerMessage(UpdateScript):
                 scheme.style_common.write(common_css)
                 self.log.debug('   style_common updated')
         return True
+
+class Addi18nToDisclaimerMessage(UpdateScript):
+    """ """
+    title = 'Add i18n tags to the cookie disclaimer message'
+    creation_date = 'Jul 10, 2014'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ('Add i18n tags to the cookie disclaimer message')
+
+    def _update(self, portal):
+
+        policy_in_info = True
+        standard_template = get_standard_template(portal)
+        skin = portal.portal_layout.getCurrentSkin()
+        scheme = portal.portal_layout.getCurrentSkinScheme()
+        if hasattr(skin, 'common.css'):
+            chm3 = True
+        else:
+            chm3 = False
+
+        if not hasattr(skin, 'element_disclaimer'):
+            self.log.debug('   element_disclaimer not in skin')
+        else:
+            if policy_in_info:
+                skin.element_disclaimer.write(ELEMENT_DISCLAIMER_info)
+            else:
+                skin.element_disclaimer.write(ELEMENT_DISCLAIMER_About)
+            self.log.debug('   element_disclaimer successfully updated')
+
+        return True    
