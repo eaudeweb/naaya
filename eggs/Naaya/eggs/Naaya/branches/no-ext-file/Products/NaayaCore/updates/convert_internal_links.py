@@ -44,7 +44,9 @@ class UpdateConvertInternalScripts(UpdateScript):
                                 if not old_value:
                                     continue
                                 split = filter(None, old_value.split('/'))
-                                if split[0] in ['http:', 'https:', 'mailto:']:
+                                if split[0] in ['http:', 'https:']:
+                                    continue
+                                if split[0].startswith('mailto:'):
                                     continue
                                 if not portal_name == split[0]:
                                     new_value = "/".join(['', portal_name] + split)
