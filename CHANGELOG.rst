@@ -1,5 +1,6 @@
 3.0.26 (unreleased)
 ------------------
+* `update` add i18n tags to the cookie disclaimer message [dumitval]
 
 3.0.25 (2013-11-05)
 ------------------
