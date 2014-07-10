@@ -1,6 +1,6 @@
 <metal:block define-macro="content">
   <div id="disclaimer">
-    <p><img src="misc_/Naaya/info.png" />This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/info/cookie_policy">cookie policy</a>.<br/>
-    <a href="javascript:void(0);" id="acknowledge">Agree and close</a></p>
+    <p><img src="misc_/Naaya/info.png" /><tal:block i18n:translate="">This site uses cookies in order to function as expected. By continuing, you are agreeing to our <a tal:attributes="href string:${site_url}/info/cookie_policy" i18n:name="cookie_policy_link" i18n:translate="">cookie policy</a>.</tal:block><br/>
+    <a href="javascript:void(0);" id="acknowledge" i18n:translate="">Agree and close</a></p>
   </div>
 </metal:block>
