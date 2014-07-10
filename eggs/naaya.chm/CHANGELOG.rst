@@ -1,4 +1,7 @@
-3.0.26 (unreleased)
+3.0.27 (unreleased)
+------------------
+
+3.0.26 (2014-07-10)
 ------------------
 * `update` add i18n tags to the cookie disclaimer message [dumitval]
 
