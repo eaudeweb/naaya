@@ -1,5 +1,6 @@
 3.3.59 (unreleased)
 -------------------
+* added i18n tags to the cookie disclaimer message [dumitval]
 * Change: remove code related to API key for google map engine
   [tiberich #15626]
 
