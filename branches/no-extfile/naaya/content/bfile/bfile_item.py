@@ -166,15 +166,18 @@ def bfile_download(context, path, REQUEST):
     default value is "download" (optional)
 
     """
-    try:
-        ver_number = int(path[0]) - 1
-        if ver_number < 0:
-            raise IndexError
-        ver = context._versions[ver_number]
-        if ver.removed:
-            raise IndexError
-    except (IndexError, ValueError):
-        raise NotFound
+    if (not path) or (path and path[0] == 'index_html'):
+        ver = context.current_version
+    else:
+        try:
+            ver_number = int(path[0]) - 1
+            if ver_number < 0:
+                raise IndexError
+            ver = context._versions[ver_number]
+            if ver.removed:
+                raise IndexError
+        except (IndexError, ValueError):
+            raise NotFound
 
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
@@ -186,7 +189,10 @@ def bfile_download(context, path, REQUEST):
         return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
     elif action == 'download':
         context.notify_access_event(REQUEST, 'download')
-        return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
+        if not path:
+            return ver.send_data(RESPONSE, set_filename=True, REQUEST=REQUEST)
+        else:
+            return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
     else:
         raise NotFound
 
