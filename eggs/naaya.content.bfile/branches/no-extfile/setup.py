@@ -12,5 +12,6 @@ setup(name='naaya.content.bfile',
           'Naaya >= 3.3.0',
           'ZODB3 >= 3.8',
           'zope.proxy >= 3.4',
+          'plone.i18n',
       ]
 )
