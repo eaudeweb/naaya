@@ -1,0 +1,14 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+           xmlns:browser="http://namespaces.zope.org/browser">
+           xmlns:naaya="http://namespaces.zope.org/naaya">
+
+  <naaya:call factory=".load_bundles" />
+
+  <browser:page 
+      name="export_updates" 
+      for="Products.NaayaBase.NySite.NySite" 
+      permission="zope2.ViewManagementScreens"
+      class=".views.ExportUpdatedObjects"
+      />
+
+</configure>
