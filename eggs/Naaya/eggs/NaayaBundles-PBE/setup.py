@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='NaayaBundles-PBE',
+    name='naayabundles_pbe',
     description = "Server-specific bundles, PBE at EEA",
     packages=find_packages(),
     include_package_data=True,
