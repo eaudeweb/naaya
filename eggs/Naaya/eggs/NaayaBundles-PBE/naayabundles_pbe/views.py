@@ -1,7 +1,8 @@
 from DateTime import DateTime
 from Products.Five.browser import BrowserView
-#from ZODB.POSException import POSKeyError
+from base64 import b64encode
 from cPickle import dumps
+from lxml.etree import Element
 from zope.interface import implements, Interface
 import codecs
 import lxml.etree
@@ -12,131 +13,88 @@ class IObjectExporter(Interface):
     """ Exporter for one object
     """
 
-    def etree():
-        """ Return the etree representation of this element
+    def export(root):
+        """ Modifies the root node
         """
+
 
 def name_to_id(s):
     return ''.join([x.capitalize() for x in s.split(' ')])
 
 
-class GenericObjectExporter(object):
+def build_node(obj):
+    name = obj.__class__.__module__ + '.' + obj.__class__.__name__
+    return Element(name)
+
+
+class Exporter(object):
+    def __init__(self, context):
+        self.context = context
+
+
+class PersistentObjectExporter(object):
     implements(IObjectExporter)
 
     def __init__(self, context):
         self.context = context
 
-    def export(self, root=None, name=None):
+    def export(self, root=None):
         if root is None:
-            if name is None:
-                name = name_to_id(self.context.meta_type)
-            root = lxml.etree.Element(name)
-            root.set('type', self.context.__class__.__name__)
-
-        if self.context is None:
-            NoneTypeExporter(self.context).export(root, name)   # Can't adapt again to None
-            return
+            root = build_node(self.context)
+            root.set('id', self.context.id)
 
         if not hasattr(self.context, '__dict__'):
-            BasicObjectExporter(self.context).export(root, name)
+            root.text = str(self.context)
             return
 
         for k, v in vars(self.context).items():
-            if hasattr(v, 'objectIds'):
-                continue            # don't export folderish objects
-            if k.startswith('_'):   # don't export private attributes
+            if hasattr(v, 'objectIds'):     # avoid exporting folderish objects, use export folders for structure
                 continue
 
-            if k.startswith('.'):
-                print "skipping",k, v, self.context
-                continue
-
-            el = lxml.etree.Element(k)
-            el.set('type', v.__class__.__name__)
+            el = build_node(v)
+            el.set('id', k)
             exporter = IObjectExporter(v)
-            exporter.export(root=el, name=k)
+            exporter.export(root=el)
             root.append(el)
 
         return root
 
 
-class BasicObjectExporter(object):
-    def __init__(self, value):
-        self.value = value
+class FallbackObjectExporter(Exporter):
 
-    def export(self, root, name):
-        el = lxml.etree.Element(name)
-        el.set('type', self.value.__class__.__name__)
+    def export(self, root):
         try:
-            el.text = str(self.value)
-        except Exception, e:
-            print "exception for", name, e
-            el.text = lxml.etree.CDATA(dumps(self.value))
-
-        root.append(el)
+            root.text = str(self.context)
+        except Exception:
+            root.text = b64encode(lxml.etree.CDATA(dumps(self.context)))
+            root.set('marshal', 'b64encoded_pickle')
 
 
-class StringExporter(object):
-    def __init__(self, value):
-        self.value = value
-
-    def export(self, root, name):
-        # el = lxml.etree.Element(name)
-        # el.set('type', self.value.__class__.__name__)
-        # el.text = self.value
-        root.text = self.value
-
-        #root.append(el)
+class StringExporter(Exporter):
+    def export(self, root):
+        try:
+            root.text = self.context
+        except Exception:
+            root.text = b64encode(self.context)
+            root.set('marshal', 'b64encoded')
 
 
-class ListExporter(object):
-    def __init__(self, value):
-        self.value = value
-
-    def export(self, root, name):
-        el = lxml.etree.Element(name)
-        el.set('type', self.value.__class__.__name__)
-        for val in self.value:
-            IObjectExporter(val).export(el, name='entry')
-        root.append(el)
+class ListExporter(Exporter):
+    def export(self, root):
+        for i, val in enumerate(self.context):
+            node = build_node(val)
+            node.set('id', str(i))
+            IObjectExporter(val).export(node)
+            root.append(node)
 
 
-class TupleExporter(ListExporter):
-    pass
-
-
-class IntExporter(object):
-    def __init__(self, value):
-        self.value = value
-
-    def export(self, root, name):
-        el = lxml.etree.Element(name)
-        el.set('type', self.value.__class__.__name__)
-        el.text = str(self.value)
-        root.append(el)
-
-
-class NoneTypeExporter(object):
-    def __init__(self, value):
-        self.value = value
-
-    def export(self, root, name):
-        el = lxml.etree.Element(name)
-        el.set('type', self.value.__class__.__name__)
-        el.text = str(self.value)
-        root.append(el)
-
-
-class DictExporter(object):
-    def __init__(self, value):
-        self.value = value
-
-    def export(self, root, name):
-        el = lxml.etree.Element(name)
-        el.set('type', self.value.__class__.__name__)
-        for k, v in self.value.items():
-            IObjectExporter(v).export(el, name=k)
-        root.append(el)
+class DictExporter(Exporter):
+    def export(self, root):
+        for k, val in self.context.items():
+            node = build_node(val)
+            node.set('id', str(k))
+            IObjectExporter(val).export(node)
+            root.append(node)
 
 
 class ExportUpdatedObjects(BrowserView):
@@ -169,10 +127,10 @@ class ExportUpdatedObjects(BrowserView):
             if not os.path.exists(base):
                 os.makedirs(base)
 
-            if ob.id == "library":
-                import pdb; pdb.set_trace()
+            # if ob.id == "library":
+            #     import pdb; pdb.set_trace()
             adapter = IObjectExporter(ob)
-            root = adapter.export()
+            root = adapter.export(None)
             f = codecs.open(fpath, 'w', 'utf-8')
             f.write(lxml.etree.tounicode(root, pretty_print=True))
             f.close()
