@@ -11,26 +11,15 @@
       class=".views.ExportUpdatedObjects"
       />
 
-  <browser:page 
-      name="import_updates" 
-      for="Products.Naaya.NySite.NySite"
-      permission="zope2.ViewManagementScreens"
-      class=".views.ImportUpdatedObjects"
-      />
-
   <adapter for="*" factory=".views.FallbackObjectExporter" provides=".views.IObjectExporter"/>
 
-  <adapter for="Persistence.Persistent" factory=".views.PersistentObjectExporter" provides=".views.IObjectExporter"/>
-  <adapter for="persistent.Persistent" factory=".views.PersistentObjectExporter" provides=".views.IObjectExporter"/>
-
   <adapter for="basestring" factory=".views.StringExporter" provides=".views.IObjectExporter"/>
-
   <adapter for="dict" factory=".views.DictExporter" provides=".views.IObjectExporter"/>
-  <adapter for="BTrees.OOBTree.OOBTree" factory=".views.DictExporter" provides=".views.IObjectExporter"/>
   <adapter for="list" factory=".views.ListExporter" provides=".views.IObjectExporter"/>
   <adapter for="tuple" factory=".views.ListExporter" provides=".views.IObjectExporter"/>
 
-  <!-- <adapter for="int" factory=".views.IntExporter" provides=".views.IObjectExporter"/> -->
-  <!-- <adapter for="None" factory=".views.NoneTypeExporter" provides=".views.IObjectExporter"/> -->
+  <adapter for="BTrees.OOBTree.OOBTree" factory=".views.DictExporter" provides=".views.IObjectExporter"/>
+  <adapter for="persistent.Persistent" factory=".views.PersistentObjectExporter" provides=".views.IObjectExporter"/>
+  <adapter for="Persistence.Persistent" factory=".views.PersistentObjectExporter" provides=".views.IObjectExporter"/>
 
 </configure>

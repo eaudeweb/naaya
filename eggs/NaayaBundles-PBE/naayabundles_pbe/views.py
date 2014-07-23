@@ -23,7 +23,9 @@ def name_to_id(s):
 
 
 def build_node(obj):
-    name = obj.__class__.__module__ + '.' + obj.__class__.__name__
+    name = obj.__class__.__name__
+    if obj.__class__.__module__ != '__builtin__':
+        name = obj.__class__.__module__ + '.' + name
     return Element(name)
 
 
@@ -98,21 +100,19 @@ class DictExporter(Exporter):
 
 
 class ExportUpdatedObjects(BrowserView):
-    before = 20     # look behind 600 days
     base = "/tmp/export-obj"
 
     def __call__(self):
         site = self.context.getSite()
         catalog = site.portal_catalog
+        before = int(self.request.form.get("before", 20))
 
         if not os.path.exists(self.base):
             os.makedirs(self.base)
 
-        start = DateTime() - self.before
+        start = DateTime() - before
         brains = catalog.searchResults(
             bobobase_modification_time={'query':start, 'range':'min'})
-        brains = catalog.searchResults(xx=True)
-        print len(brains)
 
         for brain in brains:
             try:
@@ -120,15 +120,12 @@ class ExportUpdatedObjects(BrowserView):
             except KeyError:    # objects not found
                 continue
 
-
             fpath = os.path.join(self.base, '/'.join(ob.getPhysicalPath()[1:])) + '.xml'
             base = os.path.dirname(fpath)
 
             if not os.path.exists(base):
                 os.makedirs(base)
 
-            # if ob.id == "library":
-            #     import pdb; pdb.set_trace()
             adapter = IObjectExporter(ob)
             root = adapter.export(None)
             f = codecs.open(fpath, 'w', 'utf-8')
@@ -137,34 +134,3 @@ class ExportUpdatedObjects(BrowserView):
 
         return "Done"
 
-
-class ImportUpdatedObjects(BrowserView):
-    before = 20     # look behind 600 days
-    base = "/tmp/export-obj"
-
-    def __call__(self):
-        site = self.context.getSite()
-        #catalog = site.portal_catalog
-
-
-        connection = site._p_jar
-        obj = site
-
-        while connection is None:
-            obj=obj.aq_parent
-            connection=obj._p_jar
-
-        for path, dirs, files in os.walk(self.base):
-            for file in files:
-                if not file.endswith('zexp'):
-                    continue
-                fpath = os.path.join(path, file)
-
-                try:
-                    ob=connection.importFile(fpath, customImporters=customImporters)
-                except:
-                    print "Error for", fpath
-                else:
-                    print "Success for ", fpath
-
-        return "Done"
