@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.talkback',
-      version='1.4.33',
+      version='1.4.34',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -14,4 +14,4 @@ setup(name='naaya.content.talkback',
           'scrubber >= 1.4.2',
           'xlrd'
       ],
-)
+      )
