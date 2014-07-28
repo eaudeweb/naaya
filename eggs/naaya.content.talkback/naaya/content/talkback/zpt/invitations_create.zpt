@@ -11,6 +11,23 @@
 
 <h1 tal:content="here/title_or_id" />
 
+<div id="tabbedmenu">
+  <ul>
+      <li><a tal:attributes="href string:${here/absolute_url}/admin_html"
+          i18n:translate="">
+              Administer invitations</a></li>
+      <li id="currenttab"><a i18n:translate="">
+          Send new invitation</a></li>
+      <li><a tal:attributes="href string:${here/absolute_url}/send_email"
+          i18n:translate="">
+              Send new email</a></li>
+      <li><a i18n:translate=""
+             tal:attributes="href string:${here/absolute_url}/saved_emails">
+              View sent emails</a></li>
+  </ul>
+</div>
+<div class="clearer"></div>
+
 <p i18n:translate="">
     Invite other people to participate in this consultation. They will
     receive an invitation e-mail with a personalized link and be able to
@@ -18,21 +35,21 @@
     edit or remove those comments.
 </p>
 
-    <tal:block repeat="preview options/previews">
-        <h2 tal:condition="repeat/preview/start">Your Preview</h2>
-        <dl tal:condition="preview/preview_mail|nothing">
-            <dt i18n:translate="">Preview e-mail message:</dt>
-            <dd>
-                <p tal:content="string:Subject: ${preview/preview_mail/subject}" />
-                <pre class="tb-invitation-preview"
-                  tal:content="preview/preview_mail/body_text" />
-            <dd>
-            <dt i18n:translate="">Comments will be attributed with the text:</dt>
-            <dd>
-                <pre tal:content="preview/preview_attribution" />
-            </dd>
-        </dl>
-    </tal:block>
+<tal:block repeat="preview options/previews">
+    <h2 tal:condition="repeat/preview/start">Your Preview</h2>
+    <dl tal:condition="preview/preview_mail|nothing">
+        <dt i18n:translate="">Preview e-mail message:</dt>
+        <dd>
+            <p tal:content="string:Subject: ${preview/preview_mail/subject}" />
+            <pre class="tb-invitation-preview"
+              tal:content="preview/preview_mail/body_text" />
+        <dd>
+        <dt i18n:translate="">Comments will be attributed with the text:</dt>
+        <dd>
+            <pre tal:content="preview/preview_attribution" />
+        </dd>
+    </dl>
+</tal:block>
 
 <form name="invite" method="post"
   tal:define="data options/formdata; errors options/formerrors">
