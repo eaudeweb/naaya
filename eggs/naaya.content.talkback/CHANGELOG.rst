@@ -1,4 +1,7 @@
-1.4.33 (unreleased)
+1.4.34 (unreleased)
+-------------------
+
+1.4.33 (2014-07-28)
 -------------------
 * Send emails from within the consultation, save them in archive [dumitval]
 
