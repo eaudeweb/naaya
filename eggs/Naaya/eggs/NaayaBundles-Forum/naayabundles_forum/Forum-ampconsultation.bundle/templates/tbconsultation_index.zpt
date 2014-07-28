@@ -42,12 +42,12 @@
     <a tal:attributes="href string:${here/absolute_url}/invitations/admin_html"
       tal:condition="perm_invite"
       rel="nofollow" i18n:translate="">Manage invitations</a>
-    <a tal:attributes="href string:${here/absolute_url}/invitations/create"
+    <a tal:attributes="href string:${here/absolute_url}/invitations/send_email"
       tal:condition="perm_invite"
-      rel="nofollow" i18n:translate="">Send review invitation</a>
+      rel="nofollow" i18n:translate="">Send email</a>
     <a tal:attributes="href string:${here/absolute_url}/invitations/saved_emails"
       tal:condition="perm_invite"
-      rel="nofollow" i18n:translate="">View sent invitation emails</a>
+      rel="nofollow" i18n:translate="">Email archive</a>
     <a tal:attributes="href string:${here/absolute_url}/admin_comments"
       tal:condition="perm_comments" rel="nofollow">
         <tal:block condition="perm_manage" i18n:translate="">
