@@ -30,7 +30,8 @@ from AccessControl.User import BasicUserFolder, SimpleUser
 from OFS.SimpleItem import SimpleItem
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import \
+    EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     get_bulk_emails,
                                                     get_bulk_email,
@@ -39,6 +40,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
+from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 import xlwt
 import xlrd
 
@@ -52,6 +54,7 @@ class FormError(Exception):
     def __init__(self, errors):
         self.errors = errors
 
+
 class InvitationsContainer(SimpleItem):
     security = ClassSecurityInfo()
 
@@ -64,7 +67,9 @@ class InvitationsContainer(SimpleItem):
 
     _create_html = NaayaPageTemplateFile('zpt/invitations_create', globals(),
                                          'tbconsultation_invitations_create')
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'create')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'create')
+
     def create(self, REQUEST):
         """ Create an invitation, send e-mail """
         keys = ('name', 'email', 'organization', 'notes', 'message')
@@ -76,7 +81,7 @@ class InvitationsContainer(SimpleItem):
 
             inviter_userid, inviter_name = self._get_inviter_info()
 
-            formdata = dict( (key, REQUEST.form.get(key, '')) for key in keys )
+            formdata = dict((key, REQUEST.form.get(key, '')) for key in keys)
             kwargs = dict(formdata, web_form=True,
                           inviter_userid=inviter_userid,
                           inviter_name=inviter_name)
@@ -92,17 +97,74 @@ class InvitationsContainer(SimpleItem):
                     self.setSessionInfoTrans('Invitation for ${name} '
                                              'has been sent.',
                                              name=formdata['name'])
-                    return REQUEST.RESPONSE.redirect(self.absolute_url() + '/create')
+                    return REQUEST.RESPONSE.redirect(self.absolute_url() +
+                                                     '/create')
             except FormError, e:
                 self.setSessionErrorsTrans('The form contains errors. Please '
                                            'correct them and try again.')
                 formerrors = dict(e.errors)
 
         else:
-            formdata = dict( (key, '') for key in keys )
+            formdata = dict((key, '') for key in keys)
 
         return self._create_html(formdata=formdata, formerrors=formerrors,
                                  previews=previews)
+
+    _create_email_html = NaayaPageTemplateFile(
+        'zpt/invitations_create_email', globals(),
+        'tbconsultation_invitations_create_email')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'create')
+
+    def send_email(self, REQUEST):
+        """ Send e-mail """
+        keys = ('to', 'subject', 'message')
+        formerrors = {}
+
+        if REQUEST.REQUEST_METHOD == 'POST':
+            formdata = dict((key, REQUEST.form.get(key, '')) for key in keys)
+
+            email_tool = self.getEmailTool()
+            acl_tool = self.getAuthenticationTool()
+            emails = []
+            try:
+                to = formdata['to'].strip()
+                if not to:
+                    raise FormError([('to', ValueError(
+                        'At least one recipinet is needed'))])
+                for item in to.split(','):
+                    if '@' in item:
+                        emails.append(item.strip())
+                    else:
+                        user_info = acl_tool.get_user_info(item.strip())
+                        emails.append(user_info.email)
+                email_tool.sendEmail(formdata['message'],
+                                     emails,
+                                     email_tool.get_addr_from(),
+                                     formdata['subject'])
+                save_bulk_email(self.getSite(), emails,
+                                email_tool.get_addr_from(),
+                                formdata['subject'], formdata['message'],
+                                where_to_save=path_in_site(
+                                    self.get_consultation()))
+                self.setSessionInfoTrans('Email sent to ${emails}.',
+                                         emails=','.join(emails))
+                return REQUEST.RESPONSE.redirect(self.absolute_url() +
+                                                 '/send_email')
+            except FormError, e:
+                self.setSessionErrorsTrans('The form contains errors. Please '
+                                           'correct them and try again.')
+                formerrors = dict(e.errors)
+
+            except KeyError, e:
+                self.setSessionErrorsTrans('The form contains errors. Please '
+                                           'correct them and try again.')
+                formerrors = dict([('to', e)])
+
+        else:
+            formdata = dict((key, '') for key in keys)
+
+        return self._create_email_html(formdata=formdata,
+                                       formerrors=formerrors)
 
     def bulk_create(self, REQUEST):
         """ Same as `create`, but input is an xls file """
@@ -123,7 +185,7 @@ class InvitationsContainer(SimpleItem):
                 assert sheet.ncols == 5, "Expected sheet with 5 columns"
                 header = sheet.row(0)
                 assert ([x.value.strip() for x in header] ==
-                    ['Name', 'Email', 'Organization', 'Notes', 'Message']),\
+                        ['Name', 'Email', 'Organization', 'Notes', 'Message']),\
                     "Unexpected table header in spreadsheet"
 
                 # on behalf situation
@@ -133,25 +195,30 @@ class InvitationsContainer(SimpleItem):
                     on_behalf_name = auth_tool.name_from_userid(on_behalf_uid)
                     if on_behalf_name:
                         # valid UID, overwriting the inviter
-                        inviter_userid, inviter_name = on_behalf_uid, on_behalf_name
+                        inviter_userid = on_behalf_uid
+                        inviter_name = on_behalf_name
                     else:
                         # UID is '', therefore it does not exist
                         self.setSessionErrorsTrans('UID not found')
-                        return self._create_html(formdata=dict( (key, '') for key in keys ),
-                                                 formerrors={}, previews=previews)
+                        return self._create_html(formdata=dict((key, '') for
+                                                 key in keys),
+                                                 formerrors={},
+                                                 previews=previews)
 
                 errors = []
                 for i in range(1, sheet.nrows):
                     cells = sheet.row(i)
                     clean_it = lambda x: x.value.strip()
-                    formdata = dict( (key, clean_it(cells[i])) for (i, key) in enumerate(keys))
+                    formdata = dict((key, clean_it(cells[i])) for (i, key) in
+                                    enumerate(keys))
 
                     kwargs = dict(formdata, web_form=True,
-                          inviter_userid=inviter_userid,
-                          inviter_name=inviter_name)
+                                  inviter_userid=inviter_userid,
+                                  inviter_name=inviter_name)
                     try:
                         if do_preview:
-                            preview = self._send_invitation(preview=True, **kwargs)
+                            preview = self._send_invitation(preview=True,
+                                                            **kwargs)
                             preview['preview_attribution'] = '%s (invited by %s)' % \
                                 (formdata['name'], inviter_name)
                             previews.append(preview)
@@ -162,18 +229,22 @@ class InvitationsContainer(SimpleItem):
                             self.setSessionInfoTrans('Invitation for ${name} '
                                                      'has been sent.',
                                                      name=formdata['name'])
-                            self.setSessionInfo([existing[0] + '\n' + self.getSessionInfo()[0]])
+                            self.setSessionInfo([existing[0] + '\n' +
+                                                self.getSessionInfo()[0]])
                     except FormError, e:
-                        errors.append('Error creating invitation for line #%d in spreadsheet: %r'
-                                                   % ((i+1), [ (x[0], x[1].args) for x in e.errors]))
+                        errors.append(('Error creating invitation for line '
+                                       '#%d in spreadsheet: %r') %
+                                      ((i+1), [(x[0], x[1].args) for x in
+                                       e.errors]))
                     except Exception, e:
-                        errors.append('Error creating invitation for line #%d in spreadsheet: %r'
-                                                   % ((i+1), e.args))
+                        errors.append(('Error creating invitation for line '
+                                       '#%d in spreadsheet: %r')
+                                      % ((i+1), e.args))
 
                     if errors:
                         self.setSessionErrorsTrans('; '.join(errors))
 
-        return self._create_html(formdata=dict( (key, '') for key in keys ),
+        return self._create_html(formdata=dict((key, '') for key in keys),
                                  formerrors={}, previews=previews)
 
     def _get_inviter_info(self):
@@ -188,7 +259,9 @@ class InvitationsContainer(SimpleItem):
         self._invites.insert(key, invitation)
         return key
 
-    _invite_email = EmailPageTemplateFile('zpt/invitations_email.zpt', globals())
+    _invite_email = EmailPageTemplateFile('zpt/invitations_email.zpt',
+                                          globals())
+
     def _send_invitation(self, name, email, organization, notes, message,
                          inviter_userid, inviter_name,
                          web_form=False, preview=False):
@@ -236,12 +309,16 @@ class InvitationsContainer(SimpleItem):
                         mail_data['subject'], mail_data['body_text'],
                         where_to_save=path_in_site(self.get_consultation()))
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'index_html')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'index_html')
+
     def index_html(self, REQUEST):
         """ redirect to admin_html """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'check_emails')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'check_emails')
+
     def check_emails(self, REQUEST=None, RESPONSE=None):
         """Return already resolved email addresses
         and a list with those to be resolved by a different call"""
@@ -274,9 +351,11 @@ class InvitationsContainer(SimpleItem):
             'name_from_userid': name_from_userid,
         }
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'admin_html')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'admin_html')
     _admin_html = NaayaPageTemplateFile('zpt/invitations_admin', globals(),
                                         'tbconsultation_invitations_admin')
+
     def admin_html(self, REQUEST):
         """ the admin view """
         options = self._get_invitations()
@@ -339,7 +418,9 @@ class InvitationsContainer(SimpleItem):
         wb.save(output)
         return output.getvalue()
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'invitations_export')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'invitations_export')
+
     def invitations_export(self, REQUEST, RESPONSE):
         """Aggregate an xcel file from invitations on this object
         (just like admin_html does to populate the web page)"""
@@ -356,12 +437,13 @@ class InvitationsContainer(SimpleItem):
 
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition',
-                            'attachment; filename=consultation_invitations.xls')
+                           'attachment; filename=consultation_invitations.xls')
         options = self._get_invitations()
         return self._xcel_export_invitations(headers, keys, options)
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                               'admin_invitation_enabled')
+
     def admin_invitation_enabled(self, key, value=False, REQUEST=None):
         """ disable, or re-enable, an invitation """
 
@@ -388,6 +470,7 @@ class InvitationsContainer(SimpleItem):
     _welcome_html = NaayaPageTemplateFile('zpt/invitations_welcome', globals(),
                                           'tbconsultation_invitations_welcome')
     security.declarePublic('welcome')
+
     def welcome(self, REQUEST):
         """ welcome page for invitees """
 
@@ -395,7 +478,7 @@ class InvitationsContainer(SimpleItem):
             try:
                 del REQUEST.SESSION['nytb-current-key']
             except KeyError:
-                pass # session key already removed
+                pass  # session key already removed
             cons_url = self.get_consultation().absolute_url()
             return REQUEST.RESPONSE.redirect(cons_url)
 
@@ -404,7 +487,8 @@ class InvitationsContainer(SimpleItem):
 
         if invitation is not None and invitation.enabled:
             auth_tool = self.getAuthenticationTool()
-            inviter_name = auth_tool.name_from_userid(invitation.inviter_userid)
+            inviter_name = auth_tool.name_from_userid(
+                invitation.inviter_userid)
             REQUEST.SESSION['nytb-current-key'] = key
         else:
             invitation = None
@@ -419,27 +503,35 @@ class InvitationsContainer(SimpleItem):
         return self._welcome_html(REQUEST, **options)
 
     security.declarePrivate('get_current_invitation')
+
     def get_current_invitation(self, REQUEST):
-        return self.get_invitation(REQUEST.SESSION.get('nytb-current-key', None))
+        return self.get_invitation(REQUEST.SESSION.get('nytb-current-key',
+                                                       None))
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                               'get_invitation')
+
     def get_invitation(self, key):
         return self._invites.get(key, None)
 
     NaayaPageTemplateFile('zpt/email_archive', globals(),
-        'tbconsultation-email_archive')
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'saved_mails')
+                          'tbconsultation-email_archive')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'saved_mails')
+
     def saved_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved invitation emails """
         emails = get_bulk_emails(self.getSite(),
-                                where_to_read=path_in_site(self.get_consultation()))
-        return self.getFormsTool().getContent({'here': self,
-                                               'emails': emails,
-                                               'consultation': self.get_consultation()},
-                                               'tbconsultation-email_archive')
+                                 where_to_read=path_in_site(
+                                     self.get_consultation()))
+        return self.getFormsTool().getContent(
+            {'here': self, 'emails': emails,
+             'consultation': self.get_consultation()},
+            'tbconsultation-email_archive')
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'saved_emails_export')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'saved_emails_export')
+
     def saved_emails_export(self, REQUEST=None, RESPONSE=None):
         """ Aggregate an xcel file from emails on disk
         (just like saved_emails does to populate the web page)"""
@@ -457,35 +549,44 @@ class InvitationsContainer(SimpleItem):
 
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition',
-                            'attachment; filename=consultation_invitation_emails.xls')
+                           ('attachment; filename='
+                            'consultation_invitation_emails.xls'))
         cols = zip(headers, keys)
         return export_email_list_xcel(self.getSite(), cols, ids,
-                    where_to_read=path_in_site(self.get_consultation()))
+                                      where_to_read=path_in_site(
+                                          self.get_consultation()))
 
     NaayaPageTemplateFile('zpt/email_view', globals(),
-        'tb_consultation-view_email')
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'view_email')
+                          'tb_consultation-view_email')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'view_email')
+
     def view_email(self, filename, REQUEST=None, RESPONSE=None):
         """ Display a specfic saved email """
         email = get_bulk_email(self.getSite(), filename,
-                                where_to_read=path_in_site(self.get_consultation()))
-        return self.getFormsTool().getContent({'here': self,
-                                                'email': email,
-                                                'consultation': self.get_consultation()},
+                               where_to_read=path_in_site(
+                                   self.get_consultation()))
+        return self.getFormsTool().getContent(
+            {'here': self, 'email': email,
+             'consultation': self.get_consultation()},
             'tb_consultation-view_email')
 
-    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'mail_in_queue')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'mail_in_queue')
+
     def mail_in_queue(self, filename):
         """ Check if a specific message is still in queue """
         COMMON_KEYS = ['sender', 'recipients', 'subject', 'content', 'date']
         check_values = {}
         archived_email = get_bulk_email(self.getSite(), filename,
-                                where_to_read=path_in_site(self.get_consultation()))
+                                        where_to_read=path_in_site(
+                                            self.get_consultation()))
         for key in COMMON_KEYS:
             check_values[key] = archived_email[key]
         return _mail_in_queue(self.getSite(), filename, check_values)
 
 InitializeClass(InvitationsContainer)
+
 
 class Invitation(Persistent):
     def __init__(self, inviter_userid, key, name, email, organization, notes):
@@ -502,6 +603,7 @@ class Invitation(Persistent):
     def pretty_date(self):
         return self.create_date.strftime('%Y/%m/%d')
 
+
 class InvitationUsersTool(BasicUserFolder):
     def authenticate(self, name, password, request):
         invitation = self.invitations.get_current_invitation(request)
@@ -512,6 +614,7 @@ class InvitationUsersTool(BasicUserFolder):
             return None
 
 InitializeClass(InvitationUsersTool)
+
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
