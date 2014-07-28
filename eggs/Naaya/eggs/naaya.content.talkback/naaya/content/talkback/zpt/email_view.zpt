@@ -29,6 +29,24 @@
         </div>
 
         <h1 i18n:translate="">Archive of sent invitation mails - view email</h1>
+        <div id="tabbedmenu">
+          <ul>
+              <li><a tal:attributes="href string:${here/absolute_url}/admin_html"
+                i18n:translate="">
+                  Administer invitations</a></li>
+              <li><a tal:attributes="href string:${here/absolute_url}/create"
+                i18n:translate="">
+                  Send new invitation</a></li>
+              <li><a tal:attributes="href string:${here/absolute_url}/send_email"
+                i18n:translate="">
+                  Send new email</a></li>
+              <li><a i18n:translate=""
+                tal:attributes="href string:${here/absolute_url}/saved_emails">
+                  View sent emails</a></li>
+          </ul>
+        </div>
+        <div class="clearer"></div>
+
         <p i18n:translate="">
         Email addresses listed below are now one by one automatically checked for validity
         (i.e. the email server is online and the address exists at there).

@@ -28,11 +28,32 @@
 
         <h1 i18n:translate="">Archive of sent invitation mails</h1>
 
-    <form method="post" tal:attributes="action string: ${here/absolute_url}/saved_emails_export">
+        <div id="tabbedmenu">
+          <ul>
+              <li><a tal:attributes="href string:${here/absolute_url}/admin_html"
+                i18n:translate="">
+                  Administer invitations</a></li>
+              <li><a tal:attributes="href string:${here/absolute_url}/create"
+                i18n:translate="">
+                  Send new invitation</a></li>
+              <li><a tal:attributes="href string:${here/absolute_url}/send_email"
+                i18n:translate="">
+                  Send new email</a></li>
+              <li id="currenttab"><a i18n:translate="">
+                  View sent emails</a></li>
+          </ul>
+        </div>
+        <div class="clearer"></div>
+
+    <form method="post"
+      tal:attributes="action string: ${here/absolute_url}/saved_emails_export">
         <div id="toolbar">
-            <input type="hidden" name="headers" value="Date,Subject,Recipients,Content,Sender,Send Status">
-            <input type="hidden" name="keys" value="date,subject,recipients,content,sender,status">
-            <input type="submit" class="action-button" value="Export to Excel">
+            <input type="hidden" name="headers"
+              value="Date,Subject,Recipients,Content,Sender,Send Status">
+            <input type="hidden" name="keys"
+              value="date,subject,recipients,content,sender,status">
+            <input tal:condition="emails" type="submit" class="action-button"
+              i18n:attributes="value" value="Export to Excel">
             <p id="selection-text"></p>
         </div>
 
