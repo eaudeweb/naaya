@@ -1,5 +1,6 @@
 1.4.33 (unreleased)
 -------------------
+* Send emails from within the consultation, save them in archive [dumitval]
 
 1.4.32 (2014-04-07)
 -------------------
