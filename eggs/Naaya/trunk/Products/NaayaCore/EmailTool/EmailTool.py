@@ -375,8 +375,7 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
         if len(addr_to) > 1:
             email_message = create_message(content, addr_to[0], addr_from,
                                            subject)
-            addr_to.remove(addr_to[0])
-            for mail in addr_to:
+            for mail in addr_to[1:]:
                 email_message['To'] = mail
         else:
             email_message = create_message(content, addr_to, addr_from,
