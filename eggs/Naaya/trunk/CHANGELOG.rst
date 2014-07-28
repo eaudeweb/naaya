@@ -1,4 +1,7 @@
-3.3.59 (unreleased)
+3.3.60 (unreleased)
+-------------------
+
+3.3.59 (2014-07-28)
 -------------------
 * bugfix in save_bulk_email [dumitval]
 * added i18n tags to the cookie disclaimer message [dumitval]
