@@ -25,7 +25,8 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.EmailTool.EmailPageTemplate import (
     manage_addEmailPageTemplate, EmailPageTemplateFile)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
+from Products.NaayaCore.managers.import_export import generate_csv
+from Products.NaayaCore.managers.import_export import generate_excel
 from naaya.core.utils import is_valid_email
 
 from naaya.core.zope2util import path_in_site
@@ -36,23 +37,25 @@ from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
-from containers import (SubscriptionContainer, AccountSubscription,
-                        AnonymousSubscription) #Keep SubscriptionContainer for backwards compatibility
+from containers import SubscriptionContainer  # Keep for backward compatibility
+from containers import AnonymousSubscription, AccountSubscription
+
 from Products.NaayaCore.NotificationTool import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
 email_templates = {
-    'maintainer': EmailPageTemplateFile('emailpt/maintainer.zpt',
-                                            globals()),
+    'maintainer': EmailPageTemplateFile('emailpt/maintainer.zpt', globals()),
     'administrative': EmailPageTemplateFile('emailpt/administrative.zpt',
                                             globals()),
     'instant': EmailPageTemplateFile('emailpt/instant.zpt', globals()),
     'daily': EmailPageTemplateFile('emailpt/daily.zpt', globals()),
     'weekly': EmailPageTemplateFile('emailpt/weekly.zpt', globals()),
     'monthly': EmailPageTemplateFile('emailpt/monthly.zpt', globals()),
-    'account_modified': EmailPageTemplateFile('emailpt/account_modified.zpt', globals()),
+    'account_modified': EmailPageTemplateFile('emailpt/account_modified.zpt',
+                                              globals()),
 }
+
 
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
@@ -66,6 +69,7 @@ def manage_addNotificationTool(self, REQUEST=None):
 # TODO: remove `Subscription` after all sites have been updated
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
+
 class NotificationTool(Folder):
     """ """
 
@@ -77,19 +81,19 @@ class NotificationTool(Folder):
 
     security = ClassSecurityInfo()
 
-    #default configuration settings
+    # default configuration settings
     default_config = {
         'admin_on_error': True,
         'admin_on_edit': True,
         'enable_instant': True,
         'enable_daily': True,
-        'enable_anonymous': False, #Enable anonymous notifications
+        'enable_anonymous': False,  # Enable anonymous notifications
         'daily_hour': 0,
         'enable_weekly': True,
-        'weekly_day': 1, # 1 = monday, 7 = sunday
+        'weekly_day': 1,  # 1 = monday, 7 = sunday
         'weekly_hour': 0,
         'enable_monthly': True,
-        'monthly_day': 1, # 1 = first day of the month
+        'monthly_day': 1,  # 1 = first day of the month
         'monthly_hour': 0,
         'notif_content_types': [],
     }
@@ -100,7 +104,7 @@ class NotificationTool(Folder):
         self.title = title
         self.config = PersistentDict(self.default_config)
         self.timestamps = PersistentDict()
-        #Confirmations list
+        # Confirmations list
         self.pending_anonymous_subscriptions = PersistentList()
 
     def get_config(self, key):
@@ -117,12 +121,15 @@ class NotificationTool(Folder):
         """ Validate add/edit subscription for authorized and anonymous users
 
         """
-        if (kw['notif_type'] not in self.available_notif_types(kw['location']) and
-                    not (kw['notif_type'] == 'administrative' and
-                    self.checkPermissionPublishObjects())):
-            raise i18n_exception(ValueError, 'Subscribing to ${notif_type} '
-                        'notifications in "${location}" not allowed',
-                        location=kw['location'] or self.getSite().title, notif_type=kw['notif_type'])
+        if (kw['notif_type'] not in self.available_notif_types(kw['location'])
+            and not (kw['notif_type'] == 'administrative' and
+                     self.checkPermissionPublishObjects())):
+            raise i18n_exception(ValueError,
+                                 'Subscribing to ${notif_type} '
+                                 'notifications in "${location}" not allowed',
+                                 location=kw['location'] or
+                                 self.getSite().title,
+                                 notif_type=kw['notif_type'])
         try:
             obj = self.getSite().restrictedTraverse(kw['location'])
         except:
@@ -134,18 +141,19 @@ class NotificationTool(Folder):
             raise i18n_exception(ValueError, 'Cannot subscribe to this folder')
 
         if kw.get('anonymous', False):
-            #Check if subscription exists for this anonymous subscriber
+            # Check if subscription exists for this anonymous subscriber
             if not is_valid_email(kw.get('email', '')):
                 raise i18n_exception(ValueError,
-                            'Your e-mail address does not appear to be valid.')
+                                     'Your e-mail address does not appear '
+                                     'to be valid.')
             for id, subscription in subscription_container.list_with_keys():
-                #Normal subscriptions don't have e-mail
+                # Normal subscriptions don't have e-mail
                 if isinstance(subscription, AnonymousSubscription):
                     if (subscription.email == kw['email'] and
                         subscription.notif_type == kw['notif_type'] and
-                        subscription.lang == kw['lang']):
+                            subscription.lang == kw['lang']):
                         raise i18n_exception(ValueError,
-                                                 'Subscription already exists')
+                                             'Subscription already exists')
 
     def _sitemap_dict(self, form):
         """ Compose a sitemap dict """
@@ -166,13 +174,13 @@ class NotificationTool(Folder):
                 if ISubscriptionTarget.providedBy(ob) is False:
                     continue
                 children_objects = []
-                if level != stop_level: #Stop if the level is reached
-                    #Create a list of object's children
+                if level != stop_level:  # Stop if the level is reached
+                    # Create a list of object's children
                     if hasattr(ob, 'objectValues'):
-                        #Get only naaya container objects
+                        # Get only naaya container objects
                         for child in ob.objectValues(
-                            self.get_naaya_containers_metatypes()):
-                            #Skip unsubmited/unapproved
+                                self.get_naaya_containers_metatypes()):
+                            # Skip unsubmited/unapproved
                             if not getattr(child, 'approved', False):
                                 continue
                             elif not getattr(child, 'submitted', False):
@@ -187,7 +195,7 @@ class NotificationTool(Folder):
 
                 children = traverse(children_objects, level+1, stop_level)
 
-                if exclude_root: #Return only the children if this is set
+                if exclude_root:  # Return only the children if this is set
                     return children
 
                 res.append({
@@ -207,10 +215,11 @@ class NotificationTool(Folder):
             tree_dict = traverse([self.getSite()])
         else:
             tree_dict = traverse([self.restrictedTraverse(node)],
-                exclude_root=True)
+                                 exclude_root=True)
         return tree_dict
 
     security.declarePublic('sitemap')
+
     def sitemap(self, REQUEST=None, **kw):
         """ Return a json (for Ajax tree) representation of published objects
         marked with `ISubscriptionTarget` including the portal organized in a
@@ -227,8 +236,9 @@ class NotificationTool(Folder):
         return json.dumps(self._sitemap_dict(form))
 
     security.declarePrivate('add_account_subscription')
+
     def add_account_subscription(self, user_id, location, notif_type,
-                                lang, content_types=[]):
+                                 lang, content_types=[]):
         """ Subscribe the user `user_id` """
         self._validate_subscription(user_id=user_id, location=location,
                                     notif_type=notif_type, lang=lang,
@@ -236,25 +246,26 @@ class NotificationTool(Folder):
 
         try:
             self.remove_account_subscription(user_id, location, notif_type,
-                                            lang)
+                                             lang)
         except ValueError:
             pass
 
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         subscription = AccountSubscription(user_id, notif_type, lang,
-                                            content_types)
+                                           content_types)
         subscription_container.add(subscription)
 
     security.declarePrivate('add_anonymous_subscription')
+
     def add_anonymous_subscription(self, **kw):
         """ Handle anonymous users """
         self._validate_subscription(anonymous=True, **kw)
         subscription = AnonymousSubscription(**kw)
-        #Add to temporary container
+        # Add to temporary container
         self.pending_anonymous_subscriptions.append(subscription)
 
-        #Send email
+        # Send email
         email_tool = self.getSite().getEmailTool()
         email_from = email_tool.get_addr_from()
         email_template = EmailPageTemplateFile(
@@ -266,12 +277,14 @@ class NotificationTool(Folder):
                              email_data['subject'])
 
     security.declarePrivate('remove_account_subscription')
+
     def remove_account_subscription(self, user_id, location, notif_type, lang,
                                     content_types=None):
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         n = utils.match_account_subscription(subscription_container,
-                                       user_id, notif_type, lang, content_types)
+                                             user_id, notif_type, lang,
+                                             content_types)
         if n is None:
             raise ValueError('Subscription not found')
         subscription_container.remove(n)
@@ -280,6 +293,7 @@ class NotificationTool(Folder):
     unsubscribe_links_html = PageTemplateFile("emailpt/unsubscribe_links.zpt",
                                               globals())
     security.declarePrivate('remove_anonymous_subscription')
+
     def remove_anonymous_subscription(self, email, location, notif_type, lang):
         try:
             obj = self.getSite().restrictedTraverse(location)
@@ -296,13 +310,14 @@ class NotificationTool(Folder):
         subscriptions = filter(lambda s: (s[1].email == email and
                                           s[1].location == location and
                                           s[1].notif_type == notif_type),
-                                          anonymous_subscriptions)
+                               anonymous_subscriptions)
         if len(subscriptions) == 1:
             subscription_container.remove(subscriptions[0][0])
         else:
             raise i18n_exception(ValueError, 'Subscription not found')
 
     security.declareProtected(view, 'available_notif_types')
+
     def available_notif_types(self, location=''):
         if self.config['enable_instant']:
             yield 'instant'
@@ -314,6 +329,7 @@ class NotificationTool(Folder):
             yield 'monthly'
 
     security.declarePrivate('notify_maintainer')
+
     def notify_maintainer(self, ob, folder, **kwargs):
         """
         Process and notify by email that B{p_object} has been
@@ -332,13 +348,15 @@ class NotificationTool(Folder):
                     'person': auth_tool.name_from_userid(person),
                     'ob_edited': kwargs.get('ob_edited'),
                     'approved': ob.approved,
-                    'container_basket': '%s/basketofapprovals_html' % folder.absolute_url(),
-                        }
+                    'container_basket': '%s/basketofapprovals_html' %
+                    folder.absolute_url(),
+                }
             notif_logger.info('Maintainer notifications on %r', ofs_path(ob))
             template = self._get_template('maintainer')
             self._send_notifications(maintainers_data, template)
 
     security.declarePrivate('notify_comment_maintainer')
+
     def notify_comment_maintainer(self, comment, parent, **kwargs):
         """
         Process and notify by email that a comment B{comemnt} has been added
@@ -355,14 +373,16 @@ class NotificationTool(Folder):
                     'here': self,
                     'comment': comment,
                     'person': auth_tool.name_from_userid(comment.author),
-                    'container_basket': '%s/basketofapprovals_html' % parent.absolute_url(),
-                        }
-            notif_logger.info('Maintainer comment notifications on %r', ofs_path(parent
-            ))
+                    'container_basket': '%s/basketofapprovals_html' %
+                    parent.absolute_url(),
+                }
+            notif_logger.info('Maintainer comment notifications on %r',
+                              ofs_path(parent))
             template = self._get_template('maintainer')
             self._send_notifications(maintainers_data, template)
 
     security.declarePrivate('notify_administrative')
+
     def notify_administrative(self, ob, user_id, ob_edited=False):
         """
         send administrative notifications because object `ob` was added or
@@ -370,21 +390,23 @@ class NotificationTool(Folder):
         """
 
         auth_tool = self.getSite().getAuthenticationTool()
-        subscribers_data = utils.get_subscribers_data(self, ob,
-                notif_type='administrative',
-                **{
-                    'person': auth_tool.name_from_userid(user_id),
-                    'ob_edited': ob_edited,
-                    'approved': ob.approved,
-                    'container_basket': '%s/basketofapprovals_html' % ob.aq_parent.absolute_url(),
-                })
+        subscribers_data = utils.get_subscribers_data(
+            self, ob, notif_type='administrative',
+            **{'person': auth_tool.name_from_userid(user_id),
+               'ob_edited': ob_edited,
+               'approved': ob.approved,
+               'container_basket': '%s/basketofapprovals_html' %
+               ob.aq_parent.absolute_url(),
+               })
 
         if len(subscribers_data.keys()) > 0:
-            notif_logger.info('Administrative notifications on %r', ofs_path(ob))
+            notif_logger.info('Administrative notifications on %r',
+                              ofs_path(ob))
             template = self._get_template('administrative')
             self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_comment_administrative')
+
     def notify_comment_administrative(self, comment, parent, user_id):
         """
         send administrative notifications because a comment was added to
@@ -392,22 +414,22 @@ class NotificationTool(Folder):
         """
 
         auth_tool = self.getSite().getAuthenticationTool()
-        subscribers_data = utils.get_subscribers_data(self, parent,
-            notif_type='administrative',
-            **{
-            'comment': comment,
-            'parent': parent,
-            'here': self,
-            'person': auth_tool.name_from_userid(user_id),
-        })
+        subscribers_data = utils.get_subscribers_data(
+            self, parent, notif_type='administrative',
+            **{'comment': comment,
+               'parent': parent,
+               'here': self,
+               'person': auth_tool.name_from_userid(user_id),
+               })
 
         if len(subscribers_data.keys()) > 0:
             notif_logger.info('Administrative comment notifications on %r',
-                ofs_path(parent))
+                              ofs_path(parent))
             template = self._get_template('administrative')
             self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_instant')
+
     def notify_instant(self, ob, user_id, ob_edited=False):
         """
         send instant notifications because object `ob` was changed by
@@ -416,8 +438,8 @@ class NotificationTool(Folder):
         if not self.config['enable_instant']:
             return
 
-        #Don't send notifications if the object is unapproved, but store them
-        #into a queue to send them later when it becomes approved
+        # Don't send notifications if the object is unapproved, but store them
+        # into a queue to send them later when it becomes approved
         if not ob.approved:
             return
 
@@ -433,6 +455,7 @@ class NotificationTool(Folder):
             self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_comment_instant')
+
     def notify_comment_instant(self, comment, parent, user_id):
         """
         send instant notifications because a comment was added to
@@ -441,8 +464,8 @@ class NotificationTool(Folder):
         if not self.config['enable_instant']:
             return
 
-        #Don't send notifications if the object is unapproved, but store them
-        #into a queue to send them later when it becomes approved
+        # Don't send notifications if the object is unapproved, but store them
+        # into a queue to send them later when it becomes approved
         if not parent.approved:
             return
 
@@ -454,27 +477,29 @@ class NotificationTool(Folder):
         })
 
         if len(subscribers_data.keys()) > 0:
-            notif_logger.info('Comment instant notifications on %r', ofs_path(parent))
+            notif_logger.info('Comment instant notifications on %r',
+                              ofs_path(parent))
             template = self._get_template('instant')
             self._send_notifications(subscribers_data, template)
 
     security.declarePrivate('notify_account_modification')
+
     def notify_account_modification(self, email, obj, username=None,
-                new_roles=[], removed_roles=[]):
+                                    new_roles=[], removed_roles=[]):
         """
         Send notification that the user received or lost one or more roles
         in the specified location
         """
-        email_data = {email:
-                        {'new_roles': new_roles,
-                         'removed_roles': removed_roles,
-                         'username': username,
-                         'obj': obj,
-                         }
-                     }
+        email_data = {
+            email: {'new_roles': new_roles,
+                    'removed_roles': removed_roles,
+                    'username': username,
+                    'obj': obj,
+                    }
+            }
 
         notif_logger.info('Account modification notification on %s' %
-                self.getSite().getId())
+                          self.getSite().getId())
         template = self._get_template('account_modified')
         self._send_notifications(email_data, template)
 
@@ -512,7 +537,8 @@ class NotificationTool(Folder):
             mail_data = template(**kwargs)
             notif_logger.info('.. sending notification to %r', addr_to)
             utils.send_notification(email_tool, addr_from, addr_to,
-                mail_data['subject'], mail_data['body_text'])
+                                    mail_data['subject'],
+                                    mail_data['body_text'])
 
     def _send_newsletter(self, notif_type, when_start, when_end):
         """
@@ -531,7 +557,7 @@ class NotificationTool(Folder):
         subscriptions_by_email = {}
         anonymous_users = {}
         for log_type, ob in utils.get_modified_objects(self.getSite(),
-                                                    when_start, when_end):
+                                                       when_start, when_end):
             notif_logger.info('.. modified object: %r', ofs_path(ob))
             for subscription in utils.fetch_subscriptions(ob, inherit=True):
                 if subscription.notif_type != notif_type:
@@ -546,9 +572,9 @@ class NotificationTool(Folder):
                     continue
                 notif_logger.info('.. .. sending newsletter to %r', email)
                 objects_by_email.setdefault(email, []).append({
-                                                'ob': ob,
-                                                'type': log_type,
-                                                })
+                    'ob': ob,
+                    'type': log_type,
+                })
                 langs_by_email[email] = subscription.lang
 
                 subscriptions_by_email[email] = subscription
@@ -569,10 +595,10 @@ class NotificationTool(Folder):
         self._send_notifications(messages_by_email, template)
 
     def _cron_heartbeat(self, when):
-        transaction.commit() # commit earlier stuff; fresh transaction
+        transaction.commit()  # commit earlier stuff; fresh transaction
         transaction.get().note('notifications cron at %s' % ofs_path(self))
 
-        #Clean temporary subscriptions after a week:
+        # Clean temporary subscriptions after a week:
         if self.config.get('enable_anonymous', False):
             a_week_ago = when - timedelta(weeks=1)
             for tmp_subscription in self.pending_anonymous_subscriptions[:]:
@@ -580,7 +606,7 @@ class NotificationTool(Folder):
                     self.pending_anonymous_subscriptions.remove(
                         tmp_subscription)
 
-        ### daily newsletter ###
+        #  daily newsletter ###
         if self.config['enable_daily']:
             # calculate the most recent daily newsletter time
             daily_time = time(hour=self.config['daily_hour'])
@@ -594,7 +620,7 @@ class NotificationTool(Folder):
                 self._send_newsletter('daily', prev_daily, when)
                 self.timestamps['daily'] = when
 
-        ### weekly newsletter ###
+        #  weekly newsletter ###
         if self.config['enable_weekly']:
             # calculate the most recent weekly newsletter time
             weekly_time = time(hour=self.config['daily_hour'])
@@ -611,7 +637,7 @@ class NotificationTool(Folder):
                 self._send_newsletter('weekly', prev_weekly, when)
                 self.timestamps['weekly'] = when
 
-        ### monthly newsletter ###
+        #  monthly newsletter ###
         if self.config['enable_monthly']:
             # calculate the most recent monthly newsletter time
             monthly_time = time(hour=self.config['monthly_hour'])
@@ -628,18 +654,18 @@ class NotificationTool(Folder):
                 self._send_newsletter('monthly', prev_monthly, when)
                 self.timestamps['monthly'] = when
 
-        transaction.commit() # make sure our timestamp updates are saved
-
+        transaction.commit()  # make sure our timestamp updates are saved
 
     def index_html(self, RESPONSE):
         """ redirect to admin page """
         RESPONSE.redirect(self.absolute_url() + '/my_subscriptions_html')
 
     security.declareProtected(view, 'my_subscriptions_html')
-    my_subscriptions_html = NaayaPageTemplateFile('zpt/index', globals(),
-                                'naaya.core.notifications.my_subscriptions')
+    my_subscriptions_html = NaayaPageTemplateFile(
+        'zpt/index', globals(), 'naaya.core.notifications.my_subscriptions')
 
     security.declarePrivate('list_user_subscriptions')
+
     def user_subscriptions(self, user, cutoff_level=None):
         """
         Returns all user subscriptions in the portal.
@@ -649,7 +675,8 @@ class NotificationTool(Folder):
         """
         out = []
         user_id = user.getId()
-        for obj, n, subscription in utils.walk_subscriptions(self.getSite(), cutoff_level):
+        for obj, n, subscription in utils.walk_subscriptions(self.getSite(),
+                                                             cutoff_level):
             if not isinstance(subscription, AccountSubscription):
                 continue
             if subscription.user_id != user_id:
@@ -663,7 +690,21 @@ class NotificationTool(Folder):
 
         return out
 
+    security.declareProtected(view, 'user_not_found')
+
+    def user_not_found(self, REQUEST):
+        """
+        Returns True if the user is not Anonymous, but is still not found by
+        the AuthenticationTool (i.e. is maybe defined in the Zope root)
+
+        """
+        user = REQUEST.AUTHENTICATED_USER
+        acl_tool = self.getAuthenticationTool()
+        if acl_tool.get_user_with_userid(user) is None:
+            return True
+
     security.declareProtected(view, 'list_my_subscriptions')
+
     def list_my_subscriptions(self, REQUEST):
         """
         Returns a list of mappings (location, notif_type, lang)
@@ -671,8 +712,9 @@ class NotificationTool(Folder):
 
         """
         user = REQUEST.AUTHENTICATED_USER
-        if user.getId() is None and not self.config.get('enable_anonymous', False):
-            raise Unauthorized # to force login
+        if user.getId() is None and not self.config.get('enable_anonymous',
+                                                        False):
+            raise Unauthorized  # to force login
 
         subscriptions = self.user_subscriptions(user)
         for subscription in subscriptions:
@@ -682,6 +724,7 @@ class NotificationTool(Folder):
         return subscriptions
 
     security.declareProtected(view, 'my_first_subscription')
+
     def get_location_subscription(self, location, notif_type=None):
         """
         Returns the first of the authenticated user's subscriptions in location
@@ -696,11 +739,12 @@ class NotificationTool(Folder):
                         return subscription
 
     security.declareProtected(view, 'subscribe_me')
+
     def subscribe_me(self, REQUEST, location, notif_type,
-        lang=None, content_types=[]):
+                     lang=None, content_types=[]):
         """ add subscription for currently-logged-in user """
-        #Even if some content types were selected (by turning off javascript)
-        #they should be ignored, no filtering in administrative notifications
+        # Even if some content types were selected (by turning off javascript)
+        # they should be ignored, no filtering in administrative notifications
         if notif_type == 'administrative':
             content_types = []
         if isinstance(content_types, basestring):
@@ -712,7 +756,7 @@ class NotificationTool(Folder):
         if location == '/':
             location = ''
         if user_id is None and not self.config.get('enable_anonymous', False):
-            raise Unauthorized # to force login
+            raise Unauthorized  # to force login
         try:
             if user_id:
                 self.add_account_subscription(user_id, location, notif_type,
@@ -720,8 +764,8 @@ class NotificationTool(Folder):
                 if content_types:
                     self.setSessionInfoTrans(
                         'You will receive ${notif_type} notifications'
-                        ' for any changes in "${location}" for objects of types'
-                        ' ${content_types}.',
+                        ' for any changes in "${location}" for objects of '
+                        'types ${content_types}.',
                         notif_type=notif_type,
                         location=location or self.getSite().title,
                         content_types=', '.join(content_types))
@@ -733,30 +777,32 @@ class NotificationTool(Folder):
             else:
                 self.add_anonymous_subscription(**dict(REQUEST.form))
                 self.setSessionInfoTrans(
-                'An activation e-mail has been sent to ${email}. '
-                'Follow the instructions to subscribe to ${notif_type} '
-                'notifications for any changes in "${location}".',
-                notif_type=notif_type, location=location,
-                content_types=content_types, email=REQUEST.form.get('email'))
+                    'An activation e-mail has been sent to ${email}. '
+                    'Follow the instructions to subscribe to ${notif_type} '
+                    'notifications for any changes in "${location}".',
+                    notif_type=notif_type, location=location,
+                    content_types=content_types,
+                    email=REQUEST.form.get('email'))
         except ValueError, msg:
             self.setSessionErrors([unicode(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/my_subscriptions_html')
 
     security.declareProtected(view, 'unsubscribe_me')
+
     def unsubscribe_me(self, REQUEST, location='', notif_type='', lang='',
                        email=''):
         """ remove subscription of currently-logged-in user """
         user_id = REQUEST.AUTHENTICATED_USER.getId()
         if user_id is None and not self.config.get('enable_anonymous', False):
-            raise Unauthorized # to force login
+            raise Unauthorized  # to force login
         try:
             if user_id is not None:
                 self.remove_account_subscription(user_id, location, notif_type,
                                                  lang)
             else:
                 self.remove_anonymous_subscription(email, location, notif_type,
-                                                 lang)
+                                                   lang)
             self.setSessionInfoTrans(
                 'You will not receive any more ${notif_type} '
                 'notifications for changes in "${location}".',
@@ -768,6 +814,7 @@ class NotificationTool(Folder):
                                          '/my_subscriptions_html')
 
     security.declarePublic('confirm')
+
     def confirm(self, REQUEST=None, key=''):
         """ Verify confirmation key and redirect to success page
         """
@@ -776,15 +823,15 @@ class NotificationTool(Folder):
             # Check if the key is in the temporary list
             for subscription in self.pending_anonymous_subscriptions:
                 if str(key) == subscription.key:
-                    #Verify if the email is not already subscribed
+                    # Verify if the email is not already subscribed
                     for existing_subscription in subscriptions:
                         if subscription.email == existing_subscription.email:
                             return REQUEST.RESPONSE.redirect(
                                 self.absolute_url() + '/my_subscriptions_html')
                     container = ISubscriptionContainer(
-                            self.getSite().restrictedTraverse(
-                                subscription.location))
-                    container.add(subscription) # Add to subscribed list
+                        self.getSite().restrictedTraverse(
+                            subscription.location))
+                    container.add(subscription)  # Add to subscribed list
                     # Remove from temporary list
                     self.pending_anonymous_subscriptions.remove(subscription)
                     if REQUEST is not None:
@@ -793,7 +840,7 @@ class NotificationTool(Folder):
                             'notifications for any changes in "${location}".',
                             notif_type=subscription.notif_type,
                             location=subscription.location or
-                                    self.getSite().title)
+                            self.getSite().title)
                     break
             else:
                 if REQUEST is not None:
@@ -808,19 +855,20 @@ class NotificationTool(Folder):
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
-                                         '/my_subscriptions_html')
+                                             '/my_subscriptions_html')
 
-    #Administration
+    # Administration
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     admin_html = PageTemplateFile('zpt/admin', globals())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_get_subscriptions')
+
     def admin_get_subscriptions(self, user_query=''):
         user_query = user_query.strip()
         for obj, sub_id, subscription in utils.walk_subscriptions(
-                                            self.getSite()):
+                self.getSite()):
             user = subscription.to_string(obj)
             if not user_query or re.match('.*%s.*' % user_query, user,
                                           re.IGNORECASE):
@@ -830,19 +878,23 @@ class NotificationTool(Folder):
                     'sub_id': sub_id,
                     'lang': subscription.lang,
                     'notif_type': subscription.notif_type,
-                    'content_types': getattr(subscription, 'content_types', []),
+                    'content_types': getattr(subscription, 'content_types',
+                                             []),
                 }
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_add_account_subscription')
+
     def admin_add_account_subscription(self, REQUEST, user_id,
-                                   location, notif_type, lang, content_types=[]):
+                                       location, notif_type, lang,
+                                       content_types=[]):
         """ """
-        #Even if some content types were selected (by turning off javascript)
-        #they should be ignored, no filtering in administrative notifications
+        # Even if some content types were selected (by turning off javascript)
+        # they should be ignored, no filtering in administrative notifications
         if notif_type == 'administrative':
             content_types = []
-        if location == '/': location = ''
+        if location == '/':
+            location = ''
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
         try:
@@ -852,9 +904,9 @@ class NotificationTool(Folder):
             self.setSessionErrorsTrans(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_remove_account_subscription')
+
     def admin_remove_account_subscription(self, REQUEST, location, sub_id):
         """ """
         obj = self.getSite().restrictedTraverse(location)
@@ -863,6 +915,7 @@ class NotificationTool(Folder):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_search_user')
+
     def admin_search_user(self, REQUEST):
         """ search for user by name (ajax function) """
         query = REQUEST.form['query']
@@ -871,20 +924,21 @@ class NotificationTool(Folder):
         member_search = getattr(self.getSite(), 'member_search', False)
         if member_search:
             users = member_search._search_users(query)
-            return json.dumps([ {
+            return json.dumps([{
                 'user_id': user['userid'],
                 'full_name': "%s %s" % (user['firstname'], user['lastname']),
-                'email': user['email']} for user in users ])
+                'email': user['email']} for user in users])
         else:
             users = acl_users.search_users(query, all_users=True)
-            return json.dumps([ {
+            return json.dumps([{
                 'user_id': getattr(user, 'name', getattr(user, 'user_id')),
-                'full_name': getattr(user, 'firstname', getattr(user, 'first_name'))
-                    + " " +
-                    getattr(user, 'lastname', getattr(user, 'last_name')),
-                'email': user.email} for user in users ])
+                'full_name': getattr(
+                    user, 'firstname', getattr(user, 'first_name')) + " " +
+                getattr(user, 'lastname', getattr(user, 'last_name')),
+                'email': user.email} for user in users])
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
+
     def admin_settings(self, REQUEST):
         """ save settings from the admin page """
 
@@ -895,6 +949,7 @@ class NotificationTool(Folder):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'skip_notifications')
+
     def skip_notifications(self, REQUEST):
         """ If session key `skip_notifications` is set to `True`
         there be will no notifications sent for all operations in the current
@@ -909,6 +964,7 @@ class NotificationTool(Folder):
 
     security.declareProtected(view_management_screens,
                               'manage_customizeTemplate')
+
     def manage_customizeTemplate(self, name, REQUEST=None):
         """ customize the email template called `name` """
         ob_id = 'emailpt_%s' % name
@@ -928,6 +984,7 @@ class NotificationTool(Folder):
     ny_after_listing.email_templates = email_templates
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'download')
+
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the subscriptions in a csv file"""
 
@@ -955,7 +1012,8 @@ class NotificationTool(Folder):
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=subscriptions.xls')
             return generate_excel(header, rows)
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
 InitializeClass(NotificationTool)
 utils.divert_notifications(False)
