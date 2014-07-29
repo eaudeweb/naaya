@@ -1,5 +1,7 @@
 3.3.60 (unreleased)
 -------------------
+* Message in my_notifications page for users defined at a higher
+  hierarchical level [dumitval]
 
 3.3.59 (2014-07-28)
 -------------------
