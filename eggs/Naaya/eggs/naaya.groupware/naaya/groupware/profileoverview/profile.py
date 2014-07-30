@@ -234,7 +234,7 @@ def ProfileView(context, request):
 
         role_names = {}
         for role in roles:
-            role_names[role] = client.agent.role_info(role)['description']
+            role_names[role] = client.agent.role_info(role)
 
         user_roles = []
         if ig_access != 'restricted':
