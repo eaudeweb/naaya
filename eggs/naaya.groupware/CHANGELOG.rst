@@ -1,5 +1,7 @@
-1.4.24 (unreleased)
+1.4.24 (2014-07-30)
 -------------------
+* Bug fix: show role id in profile overview page
+  [tiberich #20522]
 
 1.4.23 (2014-07-03)
 -------------------
