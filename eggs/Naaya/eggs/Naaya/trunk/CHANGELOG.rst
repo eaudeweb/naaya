@@ -1,5 +1,6 @@
 3.3.61 (unreleased)
 -------------------
+* bugfix related to my_notifications for LDAP portals [dumitval]
 
 3.3.60 (2014-07-29)
 -------------------

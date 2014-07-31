@@ -699,6 +699,9 @@ class NotificationTool(Folder):
 
         """
         user = REQUEST.AUTHENTICATED_USER
+        if not isinstance(user, basestring):
+            # with LDAP authentication, user is LDAP user instance
+            user = user.id
         acl_tool = self.getAuthenticationTool()
         if acl_tool.get_user_with_userid(user) is None:
             return True
