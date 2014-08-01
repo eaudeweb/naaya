@@ -26,12 +26,12 @@
         </tal:block>
         <tal:block condition="not: here/portal_is_archived">
             <p i18n:translate=""
-               tal:condition="python:logged_in and needs_permission and not inside_meeting">
+               tal:condition="python:logged_in and needs_permission and not inside_meeting and not mail_sent">
                 Select the access level you want to request. The request will
                 be reviewed by an administrator of the interest group.
             </p>
             <p i18n:translate=""
-               tal:condition="python:logged_in and needs_permission and inside_meeting">
+               tal:condition="python:logged_in and needs_permission and inside_meeting and not mail_sent">
                 The object you are trying to access is inside a restricted
                 meeting folder. You need the "Meeting observer" access level
                 to open any documents inside this folder.
