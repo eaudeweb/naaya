@@ -19,12 +19,16 @@ from zope.event import notify
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS, \
-                        PERMISSION_REQUEST_WEBEX, MESSAGE_SAVEDCHANGES
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
-from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email, get_bulk_emails, \
-                                            get_bulk_email, save_webex_email, get_webex_email
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_REQUEST_WEBEX
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile \
+    as nptf
+from Products.NaayaCore.EmailTool.EmailPageTemplate import \
+    EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailTool import get_bulk_emails
+from Products.NaayaCore.EmailTool.EmailTool import get_bulk_email
+from Products.NaayaCore.EmailTool.EmailTool import save_webex_email
 from naaya.content.meeting.meeting import addNyMeeting
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
@@ -43,12 +47,16 @@ from naaya.groupware.profileoverview.profile import ProfileClient
 
 log = logging.getLogger(__name__)
 
-manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add', globals())
+manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add',
+                                                globals())
+
+
 def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     """ """
     ut = utils()
     id = ut.utCleanupId(id)
-    if not id: id = 'gw' + ut.utGenRandomId(6)
+    if not id:
+        id = 'gw' + ut.utGenRandomId(6)
     self._setObject(id, GroupwareSite(id, title=title, lang=lang))
     ob = self._getOb(id)
     ob.loadDefaultData()
@@ -60,16 +68,17 @@ groupware_bundle = bundles.get("Groupware")
 groupware_bundle.set_parent(bundles.get("Naaya"))
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
-ACTION_LOG_TYPES={
+ACTION_LOG_TYPES = {
     'role_request': 'IG role request',
     'role_request_review': 'IG role request review'
 }
+
 
 class GroupwareSite(NySite):
     """ """
     implements(IGWSite)
     meta_type = METATYPE_GROUPWARESITE
-    #icon = 'misc_/GroupwareSite/site.gif'
+    # icon = 'misc_/GroupwareSite/site.gif'
 
     manage_options = (
         NySite.manage_options
@@ -86,49 +95,57 @@ class GroupwareSite(NySite):
         NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
         self.set_bundle(groupware_bundle)
-        self.portal_is_archived = False # The semantics of this flag is that you can't request membership of the IG any longer.
+        self.portal_is_archived = False  # The semantics of this flag is
+        # that you can't request membership of the IG any longer.
 
     security.declarePrivate('loadDefaultData')
+
     def loadDefaultData(self):
         """ """
-        #set default 'Naaya' configuration
+        # set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
 
-        #remove Naaya default content
+        # remove Naaya default content
         layout_tool = self.getLayoutTool()
         naaya_skins = [skin.getId() for skin in
-            layout_tool.objectValues('Naaya Skin')]
+                       layout_tool.objectValues('Naaya Skin')]
         logos = [image.getId() for image in
-            layout_tool.objectValues('Image')]
+                 layout_tool.objectValues('Image')]
         layout_tool.manage_delObjects(naaya_skins + logos)
-        self.getPortletsTool().manage_delObjects(['menunav_links', 'topnav_links'])
+        self.getPortletsTool().manage_delObjects(['menunav_links',
+                                                  'topnav_links'])
         self.manage_delObjects('info')
 
-        #load groupware skel
+        # load groupware skel
         self.loadSkeleton(Globals.package_home(globals()))
 
         if rdf_calendar_available:
-            manage_addRDFCalendar(self, id="portal_rdfcalendar", title="Events calendar")
+            manage_addRDFCalendar(self, id="portal_rdfcalendar",
+                                  title="Events calendar")
             rdfcalendar_ob = self._getOb('portal_rdfcalendar')
 
-            #adding range index to catalog
+            # adding range index to catalog
             class Empty(object):
                 pass
-            extra = Empty() #Extra has to be an object.. see DateRangeIndex
+            extra = Empty()  # Extra has to be an object.. see DateRangeIndex
             extra.since_field = 'start_date'
             extra.until_field = 'end_date'
-            self.getCatalogTool().addIndex('resource_interval', 'DateRangeIndex', extra=extra)
+            self.getCatalogTool().addIndex('resource_interval',
+                                           'DateRangeIndex', extra=extra)
 
-            #adding local_events Script (Python)
+            # adding local_events Script (Python)
             manage_addPythonScript(rdfcalendar_ob, 'local_events')
             local_events_ob = rdfcalendar_ob._getOb('local_events')
             local_events_ob._params = 'year=None, month=None, day=None'
-            local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
+            local_events_ob.write(open(os.path.dirname(__file__) +
+                                  '/skel/others/local_events.py', 'r').read())
 
-        self.getPortletsTool().assign_portlet('library', 'right', 'portlet_latestuploads_rdf', True)
+        self.getPortletsTool().assign_portlet('library', 'right',
+                                              'portlet_latestuploads_rdf',
+                                              True)
 
-        #set default main topics
+        # set default main topics
         self.getPropertiesTool().manageMainTopics(['about', 'library'])
 
         # add meta on brains for group local roles
@@ -163,6 +180,7 @@ class GroupwareSite(NySite):
         return isinstance(view_perm, tuple) and ('Anonymous' not in view_perm)
 
     security.declarePrivate('toggle_portal_restricted')
+
     def toggle_portal_restricted(self, status):
         permission = getattr(self, '_View_Permission', [])
 
@@ -177,6 +195,7 @@ class GroupwareSite(NySite):
             self._View_Permission = new_permission
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+
     def admin_properties(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST is not None:
@@ -186,25 +205,33 @@ class GroupwareSite(NySite):
         super(GroupwareSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
+
     def admin_email(self, mail_server_name='', mail_server_port='',
                     administrator_email='', mail_address_from='',
                     notify_on_errors_email='', REQUEST=None):
         """ """
         self.getEmailTool().manageSettings(mail_server_name, mail_server_port,
-                                           administrator_email, mail_address_from,
+                                           administrator_email,
+                                           mail_address_from,
                                            notify_on_errors_email)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_email_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_email_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_REQUEST_WEBEX, 'admin_saved_webex_emails')
+    security.declareProtected(PERMISSION_REQUEST_WEBEX,
+                              'admin_saved_webex_emails')
+
     def admin_saved_webex_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved saved emails """
         emails = get_bulk_emails(self, where_to_read='sent-webex')
         return self.getFormsTool().getContent({'here': self, 'emails': emails},
-            'site_admin_webex_mail_listing')
+                                              'site_admin_webex_mail_listing')
 
-    security.declareProtected(PERMISSION_REQUEST_WEBEX, 'admin_view_webex_email')
+    security.declareProtected(PERMISSION_REQUEST_WEBEX,
+                              'admin_view_webex_email')
+
     def admin_view_webex_email(self, filename, REQUEST=None, RESPONSE=None):
         """ Display a specfic saved webex request email """
 
@@ -214,17 +241,19 @@ class GroupwareSite(NySite):
             requester_auth_user = str(meeting_info['auth_user'])
             del meeting_info['auth_user']
 
-            # automatically add meeting using info from email and some default data
+            # automatically add meeting using info from email
+            # and some default data
             extra_args = {
-                    'geo_location.address': 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark',
-                    'geo_location.lat': u'55.681365',
-                    'geo_location.lon': u'12.586484',
-                    'geo_type': u'symbol326',
-                    'sortorder': u'100',
-                    'releasedate': datetime.utcnow().strftime("%d/%m/%Y"),
-                    'max_participants': '25',
-                    'restrict_items': True,
-                    'submitted': 1
+                'geo_location.address':
+                    'Kongens Nytorv 6, 1050 Copenhagen K, Denmark',
+                'geo_location.lat': u'55.681365',
+                'geo_location.lon': u'12.586484',
+                'geo_type': u'symbol326',
+                'sortorder': u'100',
+                'releasedate': datetime.utcnow().strftime("%d/%m/%Y"),
+                'max_participants': '25',
+                'restrict_items': True,
+                'submitted': 1
             }
 
             args = dict(meeting_info, **extra_args)
@@ -239,12 +268,13 @@ class GroupwareSite(NySite):
             else:
                 self.setSessionInfoTrans('Successfully added meeting')
 
-            REQUEST.RESPONSE.redirect('%s/library/%s' % (self.absolute_url(), ob_id))
+            REQUEST.RESPONSE.redirect('%s/library/%s' % (self.absolute_url(),
+                                                         ob_id))
             return
 
         email = get_bulk_email(self, filename, where_to_read='sent-webex')
         return self.getFormsTool().getContent({'here': self, 'email': email},
-            'site_admin_webex_mail_view')
+                                              'site_admin_webex_mail_view')
 
     def _validate_form_date(self, value, all_day):
         if all_day is True:
@@ -261,20 +291,23 @@ class GroupwareSite(NySite):
         return date
 
     def _get_webex_mail_body(self, meeting_info):
-        mail_body = ("%(requester)s is asking for a new meeting to be added.\n"
-                     "The new meeting is defined by the following properties:\n\n"
-                     "Meeting title: %(title)s\n"
-                     "Meeting organizer: %(contact_person)s (%(contact_email)s)\n"
-                     "Meeting start date: %(interval.start_date)s\n"
-                     "Meeting end date: %(interval.end_date)s\n"
-                     % meeting_info)
+        mail_body = (
+            "%(requester)s is asking for a new meeting to be added.\n"
+            "The new meeting is defined by the following properties:\n\n"
+            "Meeting title: %(title)s\n"
+            "Meeting organizer: %(contact_person)s (%(contact_email)s)\n"
+            "Meeting start date: %(interval.start_date)s\n"
+            "Meeting end date: %(interval.end_date)s\n"
+            % meeting_info)
         if 'interval.all_day' not in meeting_info:
             mail_body += ("Meeting start time: %(interval.start_time)s\n"
                           "Meeting end time: %(interval.end_time)s\n"
                           % meeting_info)
         return mail_body
 
-    security.declareProtected(PERMISSION_REQUEST_WEBEX, 'admin_webex_mail_html')
+    security.declareProtected(PERMISSION_REQUEST_WEBEX,
+                              'admin_webex_mail_html')
+
     def admin_webex_mail_html(self, REQUEST=None):
         """
         Send email to request a new WebEx meeting booking - all_fields are
@@ -320,19 +353,21 @@ class GroupwareSite(NySite):
             if not organizer_email.strip():
                 errors.append('organizer_email')
 
-            validated_start_date = self._validate_form_date(start_date, all_day)
+            validated_start_date = self._validate_form_date(start_date,
+                                                            all_day)
             validated_end_date = self._validate_form_date(end_date, all_day)
             if not validated_start_date:
                 errors.append('start_date_id')
             if not validated_end_date:
-               errors.append('end_date_id')
+                errors.append('end_date_id')
             if validated_start_date and validated_end_date:
                 if validated_start_date > validated_end_date:
                     errors.append('twisted_dates')
 
             if errors:
-                self.setSessionErrorsTrans("The form contains errors. "
-                                           "Please correct them and try again.")
+                self.setSessionErrorsTrans(
+                    "The form contains errors. "
+                    "Please correct them and try again.")
             else:
 
                 # extract list of email contacts
@@ -344,13 +379,17 @@ class GroupwareSite(NySite):
                     'title': meeting_title,
                     'contact_person': organizer_name,
                     'contact_email': organizer_email,
-                    'interval.start_date': validated_start_date.strftime("%d/%m/%Y"),
-                    'interval.end_date': validated_end_date.strftime("%d/%m/%Y"),
+                    'interval.start_date':
+                        validated_start_date.strftime("%d/%m/%Y"),
+                    'interval.end_date':
+                        validated_end_date.strftime("%d/%m/%Y"),
                 }
 
                 if not all_day:
-                    meeting_info['interval.start_time'] = validated_start_date.strftime("%H:%M")
-                    meeting_info['interval.end_time'] = validated_end_date.strftime("%H:%M")
+                    meeting_info['interval.start_time'] = (
+                        validated_start_date.strftime("%H:%M"))
+                    meeting_info['interval.end_time'] = (
+                        validated_end_date.strftime("%H:%M"))
                 else:
                     meeting_info['interval.all_day'] = True
 
@@ -363,22 +402,25 @@ class GroupwareSite(NySite):
                                              "{0}\n".format(other_comments))
 
                 for mail in mails:
-                    email_tool.sendEmail(mail_body, mail, addr_from, mail_subject)
+                    email_tool.sendEmail(mail_body, mail, addr_from,
+                                         mail_subject)
 
                 try:
-                    save_webex_email(self, mails, meeting_requester, mail_subject,
-                                    mail_body, where_to_save='sent-webex',
-                                    others=meeting_info)
+                    save_webex_email(self, mails, meeting_requester,
+                                     mail_subject, mail_body,
+                                     where_to_save='sent-webex',
+                                     others=meeting_info)
                 except Exception, e:
                     log.exception("Failed saving webex email on disk")
 
-                self.setSessionInfoTrans('WebEx meeting request mail sent. (${date})',
-                                         date=self.utGetTodayDate())
+                self.setSessionInfoTrans(
+                    'WebEx meeting request mail sent. (${date})',
+                    date=self.utGetTodayDate())
 
                 options = {'errors': errors}
                 REQUEST.form.clear()
 
-                #keep initial form data
+                # keep initial form data
                 REQUEST['organizer_name'] = meeting_requester
                 REQUEST['organizer_email'] = auth_user.mail
 
@@ -390,19 +432,21 @@ class GroupwareSite(NySite):
         return self._admin_webex_mail(**options)
 
     security.declarePrivate('_user_admin_link')
+
     def _user_admin_link(self, log_entry):
         """ Used by review request access (email and view) """
-        return \
-             ("%(ig_url)s/admin_sources_html?"
-              "id=%(source_id)s&s=assign_to_users&params=uid&term=%(userid)s&search_user=Search&"
-              "req_role=%(role)s&req_location=%(location)s#ldap_user_roles") % \
-                  {'role': log_entry.role,
-                   'userid': log_entry.user,
-                   'ig_url': self.absolute_url(),
-                   'source_id': self.getAuthenticationTool().getSources()[0].getId(),
-                   'location': log_entry.location}
+        return ("%(ig_url)s/admin_sources_html?id=%(source_id)s&s="
+                "assign_to_users&params=uid&term=%(userid)s&search_user="
+                "Search&req_role=%(role)s&req_location=%(location)s"
+                "#ldap_user_roles") % \
+            {'role': log_entry.role,
+             'userid': log_entry.user,
+             'ig_url': self.absolute_url(),
+             'source_id': self.getAuthenticationTool().getSources()[0].getId(),
+             'location': log_entry.location}
 
     security.declarePrivate('_review_access_request_first_page')
+
     def _review_access_request_first_page(self, log_entry):
         """
         Called by review_ig_request to access first (actual) page of
@@ -414,14 +458,14 @@ class GroupwareSite(NySite):
         user = app.acl_users.getUser(log_entry.user)
         client = ProfileClient(app, user)
         roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        leaf_roles_list = [r for r in roles_list if not r['children']]
         # get all user info from LDAP
         agent = agent_from_site(self)
         user_info = agent.user_info(log_entry.user)
 
-        return self.review_ig_request_html(log_entry=log_entry, user=user_info,
-                                           ldap_roles=leaf_roles_list,
-                               user_admin_link=self._user_admin_link(log_entry))
+        return self.review_ig_request_html(
+            log_entry=log_entry, user=user_info, ldap_roles=leaf_roles_list,
+            user_admin_link=self._user_admin_link(log_entry))
 
     def review_ig_request(self, REQUEST=None, **kw):
         """ Administrator reviews user access request and decides to grant or
@@ -447,16 +491,16 @@ class GroupwareSite(NySite):
         else:
             count = 0
             action_logs = [(i, l) for i, l in action_logger.items()
-                                if l.type in ACTION_LOG_TYPES.values()]
+                           if l.type in ACTION_LOG_TYPES.values()]
             for log_id, log in action_logs:
                 if getattr(log, 'key', None) == key:
                     count += 1
                     log_entry = log
                     log_entry_id = log_id
-                if count == 2: #Raise info message because this key is old
+                if count == 2:  # Raise info message because this key is old
                     return self.review_ig_request_html(log_entry=log_entry,
-                                        multiple_access=True)
-            if log_entry == None:
+                                                       multiple_access=True)
+            if log_entry is None:
                 self.setSessionErrorsTrans("Key ${key} not found", key=key)
                 return REQUEST.RESPONSE.redirect(self.getSite().absolute_url())
 
@@ -468,8 +512,8 @@ class GroupwareSite(NySite):
         else:
             result = {}
             send_mail = bool(kw.get('send_mail', False))
-            #Create a new action log with the result of the review request
-            #based on the current action log
+            # Create a new action log with the result of the review request
+            # based on the current action log
             new_log_entry = copy(log_entry)
             new_log_entry.type = ACTION_LOG_TYPES['role_request_review']
             new_log_entry.created_datetime = DateTime()
@@ -486,11 +530,10 @@ class GroupwareSite(NySite):
 
                 # Add to site logger this grant of access
                 context = self.unrestrictedTraverse(log_entry.location, None)
-                notify(RoleAssignmentEvent(context,
-                                           REQUEST.AUTHENTICATED_USER.getUserName(),
-                                           log_entry.user,
-                                           [log_entry.role],
-                                           []))
+                notify(
+                    RoleAssignmentEvent(
+                        context, REQUEST.AUTHENTICATED_USER.getUserName(),
+                        log_entry.user, [log_entry.role], []))
 
             elif 'reject' in kw:
                 result['granted'] = False
@@ -552,7 +595,8 @@ class GroupwareSite(NySite):
         if location:
             location_obj = self.unrestrictedTraverse(location, None)
             while True:
-                if location_obj.meta_type in ['Naaya Meeting', 'Groupware site']:
+                if location_obj.meta_type in ['Naaya Meeting',
+                                              'Groupware site']:
                     break
                 else:
                     location_obj = location_obj.aq_parent
@@ -573,8 +617,9 @@ class GroupwareSite(NySite):
             }
         )
 
-        #Create an action  for the current request and include a link in the
-        #e-mail so that the log can be viewed or passed to another administrator
+        # Create an action  for the current request and include a link in the
+        # e-mail so that the log can be viewed or passed to another
+        # administrator
         key = self.utGenerateUID()
         log_entry_id = self.getActionLogger().create(
             type=ACTION_LOG_TYPES['role_request'], key=key,
@@ -599,8 +644,8 @@ class GroupwareSite(NySite):
             'here': self,
             'role': role,
             'user': user,
-            'firstname': getattr(user, 'firstname', '').decode('latin-1'),
-            'lastname': getattr(user, 'lastname', '').decode('latin-1'),
+            'firstname': getattr(user, 'firstname', '').decode('utf-8'),
+            'lastname': getattr(user, 'lastname', '').decode('utf-8'),
             'email': getattr(user, 'mail', ''),
             'location_title': location_title,
             'user_admin_link': user_admin_link,
@@ -622,11 +667,13 @@ class GroupwareSite(NySite):
         Deletes all local user accounts, including LDAP mappings.
         """
         if REQUEST['REQUEST_METHOD'] != 'POST':
-            return REQUEST.RESPONSE.redirect(self.getSite().aq_parent.absolute_url() + '/index_html')
+            return REQUEST.RESPONSE.redirect(
+                self.getSite().aq_parent.absolute_url() + '/index_html')
 
         user = REQUEST.AUTHENTICATED_USER
         if user.name == 'Anonymous User':
-            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login_html')
+            return REQUEST.RESPONSE.redirect(
+                self.getSite().absolute_url() + '/login_html')
 
         acl = self.getAuthenticationTool()
         relinquished = False
@@ -641,27 +688,38 @@ class GroupwareSite(NySite):
             pass
 
         if relinquished:
-            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/relinquish_membership_html?done=success')
+            return REQUEST.RESPONSE.redirect(
+                self.getSite().absolute_url() +
+                '/relinquish_membership_html?done=success')
         else:
-            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/relinquish_membership_html?done=failed')
+            return REQUEST.RESPONSE.redirect(
+                self.getSite().absolute_url() +
+                '/relinquish_membership_html?done=failed')
 
     security.declarePublic('requestrole_html')
+
     def requestrole_html(self, REQUEST):
         """ redirect to request_ig_access_html """
         url = '%s/request_ig_access_html' % self.absolute_url()
         REQUEST.RESPONSE.redirect(url)
 
     security.declarePublic('login_html')
+
     def login_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/login_form?%s' % REQUEST.environ.get('QUERY_STRING'))
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() +
+                                         '/login/login_form?%s' %
+                                         REQUEST.environ.get('QUERY_STRING'))
 
     security.declarePublic('logout_html')
+
     def logout_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/logout')
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() +
+                                         '/login/logout')
 
     security.declarePublic('inside_meeting')
+
     def check_inside_meeting(self, came_from=None):
         """ """
         if came_from:
@@ -683,17 +741,19 @@ class GroupwareSite(NySite):
                                       'naaya.groupware.relinquish_membership')
 
     _admin_webex_mail = nptf('skel/forms/site_admin_webex_mail', globals(),
-                                  'naaya.groupware.site_admin_webex_mail')
+                             'naaya.groupware.site_admin_webex_mail')
 
     member_search = MemberSearch(id='member_search')
 
 InitializeClass(GroupwareSite)
+
 
 def groupware_bundle_registration():
     """ Register things from skel into the GROUPWARE bundle """
     from Products.NaayaCore.FormsTool import bundlesupport
     templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
     bundlesupport.register_templates_in_directory(templates_path, 'Groupware')
+
 
 def _inside_meeting(location_obj):
     if location_obj.meta_type == 'Naaya Meeting':

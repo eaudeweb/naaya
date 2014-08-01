@@ -1,3 +1,7 @@
+1.4.25 (unreleased)
+-------------------
+* fix username encoding in request_access emails [dumitval]
+
 1.4.24 (2014-07-30)
 -------------------
 * Bug fix: show role id in profile overview page
