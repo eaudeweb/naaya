@@ -1,4 +1,7 @@
-1.4.25 (unreleased)
+1.4.26 (unreleased)
+-------------------
+
+1.4.25 (2014-08-01)
 -------------------
 * fix username encoding in request_access emails [dumitval]
 
