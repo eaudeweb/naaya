@@ -13,7 +13,7 @@ from zope.interface import implements
 
 try:
     import ldap
-    from Products.LDAPUserFolder.utils import GROUP_MEMBER_MAP
+    #from Products.LDAPUserFolder.utils import GROUP_MEMBER_MAP
     from Products.LDAPUserFolder.LDAPDelegate import filter_format
 except:
     pass
@@ -70,7 +70,7 @@ class plugLDAPUserFolder(PlugBase):
     def default_encoding(self):
         try:
             from Products.LDAPUserFolder.utils import encoding
-        except Exception, e:
+        except Exception:
             return 'utf-8'
         else:
             return encoding
@@ -286,7 +286,7 @@ class plugLDAPUserFolder(PlugBase):
         for b in site.getCatalogTool()(path='/'):
             try:
                 add_roles_from_ob(b, is_brain=True)
-            except Unauthorized, e:
+            except Unauthorized:
                 pass # suppress restricted obs from breaking publishing
 
         return groups_roles_map
@@ -380,7 +380,7 @@ class plugLDAPUserFolder(PlugBase):
                     continue # we found a placeholder member for empty groups
                 try:
                     uid = member.split(',')[0].split('=')[1]
-                except IndexError, e:
+                except IndexError:
                     log.exception("Can't parse the uid %r, skipping", member)
                 else:
                     group_users.append(uid)
@@ -393,10 +393,10 @@ class plugLDAPUserFolder(PlugBase):
 
     def getUsersByRole(self, acl_folder, groups=None):
         """ Return all those users that are in a group """
-        all_dns = {}
+        #all_dns = {}
         res = []
         res_append = res.append
-        member_attrs = GROUP_MEMBER_MAP.values()
+        #member_attrs = GROUP_MEMBER_MAP.values()
 
         if groups is None:  return ()
 
@@ -414,17 +414,21 @@ class plugLDAPUserFolder(PlugBase):
 
     def findLDAPUsers(self, acl_folder, params='', term='', role='', dn=''):
         """ search for users in LDAP """
+        attrs=['employeeType'] + acl_folder.getSchemaConfig().keys()
+
         if self.REQUEST.has_key('search_user'):
             if params and term:
                 try:
                     self.buffer = {}
                     users = acl_folder.findUser(search_param=params,
-                        search_term=term,
-                        attrs=['employeeType'] + acl_folder.getSchemaConfig().keys())
-                    [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn']))
+                                                search_term=term,
+                                                attrs=attrs)
+
+                    [ self.buffer.setdefault(u['uid'],
+                                             self.decode_cn(u['cn']))
                         for u in users if not u.get('employeeType') == 'disabled']
-                    return [self.get_source_user_info(u['uid']) for u in users
-                            if not u.get('employeeType') == 'disabled']
+                    return [self.get_source_user_info(u['uid']) for u in users]
+                            #if not u.get('employeeType') == 'disabled']
                 except: return ()
             else:   return ()
         elif self.REQUEST.has_key('search_role'):
@@ -469,7 +473,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_group_members(self, group_id):
         member_ids = self.group_member_ids(group_id)
-        ldap_user_folder = self.getUserFolder()
+        #ldap_user_folder = self.getUserFolder()
 
         def user_data(user_id):
             try:
@@ -668,7 +672,7 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
                                        "not found via LDAPUserFolder")
         return zope_user
 
-    encoding = ldap_plugin.default_encoding
+    #encoding = ldap_plugin.default_encoding
     def extract(name):
         # encode values back to strings, because the rest of our ancient code
         # expects that.
@@ -679,6 +683,11 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         else:
             assert isinstance(value, unicode), '%r not unicode' % value
         return value
+
+    try:
+        get_zope_user()
+    except AssertionError:
+        return None
 
     fields = {
         'user_id': user_id,
