@@ -1,0 +1,29 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+<!-- XXX Debug
+<subscriber for="..interfaces.INyFSFile zope.component.interfaces.IObjectEvent"
+        handler=".events.printEvent"/>
+Debug -->
+
+<subscriber for="Products.NaayaBase.interfaces.INyContainer zope.app.container.interfaces.IObjectMovedEvent"
+      handler=".events.modifiedNyContainer" />
+
+<subscriber for="Products.NaayaBase.interfaces.INyContainer OFS.interfaces.IObjectWillBeMovedEvent"
+      handler=".events.beforeMoveNyContainer" />
+
+<subscriber for="Products.NaayaBase.interfaces.INyItem zope.app.container.interfaces.IObjectMovedEvent"
+      handler=".events.modifiedNyItem" />
+
+<subscriber for="Products.NaayaBase.interfaces.INyItem OFS.interfaces.IObjectWillBeMovedEvent"
+      handler=".events.beforeMoveNyItem" />
+
+<subscriber for="Products.NaayaBase.interfaces.INyFSFile zope.app.container.interfaces.IObjectMovedEvent"
+      handler=".events.afterAddNyFSFile"/>
+
+<subscriber for="Products.NaayaBase.interfaces.INyFSFile OFS.interfaces.IObjectClonedEvent"
+      handler=".events.afterCloneNyFSFile"/>
+
+<subscriber for="Products.NaayaBase.interfaces.INyFSFile OFS.interfaces.IObjectWillBeRemovedEvent"
+      handler=".events.beforeDeleteNyFSFile"/>
+
+</configure>

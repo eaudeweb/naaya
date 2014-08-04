@@ -1,0 +1,172 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<h2>Users</h2>
+
+<p class="page-description">
+    This page lists the users defined in this portal, 20 per page.
+    You can search for some specific users by using the search form.
+    You can sort the columns by
+    <em>Username</em>, <em>Name</em>, <em>Email</em>.
+</p>
+
+<form method="get">
+    <label for="search-query">Search user(s) containing</label>
+    <input type="text" name="query" id="search-query"
+        tal:attributes="value python:request.get('query', '');"/>
+
+    <input type="submit" name="submit" value="Search"/>
+</form>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<tal:block tal:define="
+                auth_tool here/absolute_url;
+                query python:request.get('query', '');
+                start python:request.get('start', 0);
+                skey python:request.get('skey', 'name');
+                rkey python:request.get('rkey', 0);
+                all_users python:here.search_users(query=query,
+                                                   skey=skey, rkey=rkey);
+                result python:here.page_something(all_users,
+                                                  start, p_perpage=20);
+                paging python:result[0];
+                paging_start python:paging[0]+1;
+                paging_upper python:paging[1];
+                paging_total python:paging[2];
+                paging_prev python:paging[3];
+                paging_next python:paging[4];
+                paging_current_page python:paging[5];
+                paging_records_page python:paging[6];
+                paging_pages python:paging[7];
+                users python:result[1];">
+
+<form method="post" name="frmUsers">
+
+<table width="80%" tal:condition="here/isSessionErrors">
+    <tr tal:repeat="error_value here/getSessionErrors" >
+        <td tal:content="error_value">&nbsp;</td>
+    </tr>
+</table>
+
+<div>
+    <div>
+        <span tal:omit-tag="">Results</span>
+        <strong tal:content="paging_start" />
+         -
+        <strong tal:content="paging_upper" />
+        <span tal:omit-tag="">of</span>
+        <strong tal:content="paging_total" />.
+    </div>
+    <div>
+        <span tal:omit-tag="">Pages</span>
+        <span tal:condition="python:paging_prev!=-1">
+            <a tal:define="start python:(paging_current_page-1)*paging_records_page"
+                tal:attributes="href string:${auth_tool}/manage_users_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}"
+                >Previous</a>
+        </span>
+        <span tal:repeat="page paging_pages">
+            <span tal:condition="python:page==paging_current_page"
+                tal:content="python:page+1" />
+            <a tal:define="start python:paging_records_page*page"
+                tal:attributes="href string:${auth_tool}/manage_users_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}"
+                tal:condition="python:page!=paging_current_page"
+                tal:content="python:page+1"></a>
+        </span>
+        <span tal:condition="python:paging_next!=-1">
+            <a tal:define="start python:(paging_current_page+1)*paging_records_page"
+                tal:attributes="href string:${auth_tool}/manage_users_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}"
+                >Next</a>
+        </span>
+    </div>
+</div>
+<br />
+<table border="1" cellspacing="0" cellpadding="2">
+    <tr tal:define="new_rkey python:test(rkey=='1', 0, 1);">
+        <th width="5%">Delete</th>
+        <tal:block tal:condition="python:skey=='username'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=username&amp;rkey=${new_rkey}&amp;query=${query}"
+                    >Username</a>
+            </th>
+        </tal:block>
+        <tal:block tal:condition="python:skey!='username'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=username&amp;query=${query}"
+                    >Username</a>
+            </th>
+        </tal:block>
+
+        <tal:block tal:condition="python:skey=='name'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name&amp;rkey=${new_rkey}&amp;query=${query}"
+                    >Name</a>
+            </th>
+        </tal:block>
+        <tal:block tal:condition="python:skey!='name'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name&amp;query=${query}"
+                    >Name</a>
+            </th>
+        </tal:block>
+
+        <tal:block tal:condition="python:skey=='email'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=email&amp;rkey=${new_rkey}&amp;query=${query}"
+                    >Email</a>
+            </th>
+        </tal:block>
+        <tal:block tal:condition="python:skey!='email'">
+            <th>
+                <a tal:attributes="href string:${auth_tool}/manage_users_html?skey=email&amp;query=${query}"
+                    >Email</a>
+            </th>
+        </tal:block>
+    </tr>
+    <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+        <tal:block define="
+            name user/user_id;
+            user_quoted python:here.utUrlEncode(name);
+            firstname user/first_name;
+            lastname user/last_name;
+            email user/email;
+            ">
+        <td width="3%" nowrap="nowrap">
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" name="names"
+                            tal:attributes="value name" />
+                    </td>
+                    <td><img src="misc_/NaayaCore/User.gif" alt="user" /></td>
+                </tr>
+            </table>
+        </td>
+        <td><strong>
+            <a tal:attributes="href string:manage_editUser_html?name=${user_quoted}"
+                tal:content="name"></a>
+        </strong></td>
+        <td tal:content="string:${firstname} ${lastname}"/>
+        <td style="text-align: left" tal:content="email"/>
+        </tal:block>
+    </tr>
+    <tr tal:condition="python:len(users) == 0">
+        <td colspan="4"> Users list empty </td>
+    </tr>
+</table>
+<br />
+<input type="button" name="add" value="Add user"
+    onclick="document.location.href='manage_addUser_html';">&nbsp;
+<input type="hidden" name="destination" value="manage_users_html">
+<input type="submit" name="delete" value="Delete user"
+    onclick="document.frmUsers.action='manage_delUsers';">&nbsp;
+<input type="button" name="view_roles" value="Users & Roles"
+    onclick="document.location.href='manage_userRoles_html';">
+</form>
+</tal:block>
+
+<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
+<span tal:replace="structure here/manage_page_footer"/>

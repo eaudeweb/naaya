@@ -1,0 +1,205 @@
+<tal:block define="global current_tab_url string:admin_maptypes_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+
+<metal:block fill-slot="tab_contents"
+    tal:define="map_url here/getGeoMapToolPath;
+          record_id python:request.get('id', None); 
+          record_data python:here.getSymbolData(record_id);
+          skey python:request.get('skey', 'title');
+          rkey python:request.get('rkey', '');">
+
+<p i18n:translate="" class="cleaner">
+  This page allows the definition of categories that will be used to classify
+  any <a href="./admin_map_contenttypes_html" i18n:name="geo-taggable-content" i18n:translate="">geo-taggable content</a> within the portal.
+  (e.g. hotels, resorts, monuments, tourist attractions).
+</p>
+
+<br clear="all" />
+
+<form method="post" enctype="multipart/form-data" id="add-or-update-form"
+  tal:attributes="action python:test(record_data['action']=='add', 'adminAddSymbol', 'adminUpdateSymbol')">
+<fieldset>
+  <legend i18n:translate=""
+    tal:content="python:test(record_data['action']=='add', 'Add category', 'Edit category')">
+  </legend>
+  <div class="field">
+    <label for="title" i18n:translate="">Title</label>
+    <input type="text" name="title" class="title" size="60" tal:attributes="value record_data/title" />
+    <span class="mandatory_field">*</span>
+  </div>
+  <div class="field">
+    <label for="description" i18n:translate="">Description</label>
+    <textarea name="description" id="description" rows="5" cols="40" tal:content="record_data/description"></textarea>
+  </div>
+  <div class="field">
+    <label for="parent" i18n:translate="">Parent category</label>
+    <select name="parent" id="parent-selection">
+      <option value="" i18n:translate=""></option>
+      <tal:block repeat="item here/getParentsList">
+        <option i18n:translate="" tal:content="item/title"
+          tal:attributes="value item/id; selected python:record_data['parent'] == item.id" />
+      </tal:block>
+    </select>
+  </div>
+  <div class="field">
+    <label for="numberofitems" i18n:translate="">HTML color code</label>
+    <input name="color" size="10" tal:attributes="value record_data/color" />
+    <span class="mandatory_field">*</span><br />
+    <em i18n:translate="">(use <a rel="external" i18n:name="colorpickerdotcom" href="http://www.colorpicker.com">www.colorpicker.com</a> to easily pick the desired color)</em>
+  </div>
+  <div class="field">
+    <label for="picture" i18n:translate="">Or upload an icon</label>
+
+    <p><em i18n:translate="">The picture you upload should not be larger than 24x24 pixels. Picture types allowed on the map: <strong i18n:name="png">.PNG</strong>, <strong i18n:name="gif">.GIF</strong>.</em></p>
+    <p><em i18n:translate="">Example pins (download the image on your computer and upload it below):</em></p>
+    <p>
+    <tal:block repeat="i python:range(1,20)">
+        <img tal:attributes="src string:misc_/NaayaCore/pin${i}.png; alt string:pin${i}.png" />
+    </tal:block><br />
+    <tal:block repeat="i python:range(1,14)">
+        <img tal:attributes="src string:misc_/NaayaCore/pin_22_${i}.png; alt string:pin_22_${i}.png" />
+    </tal:block>
+    </p>
+    <input type="file" name="picture" value="" size="35" accept="image/*" />
+    <span class="mandatory_field">*</span><br />
+    <em i18n:translate="">(please use images of max. 24x24 pixels)</em>
+  </div>
+  <div class="field" tal:condition="record_data/picture">
+    <img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" />
+  </div>
+  <div class="field">
+    <label for="sortorder" i18n:translate="">Sort order</label>
+    <input id="sortorder" type="text" name="sortorder" size="2"
+      tal:attributes="value python:test(record_data['action']=='add', '100', record_data['sortorder'])" />
+  </div>
+  <p>
+    <input type="hidden" name="id" tal:attributes="value record_data/id" />
+    <input type="submit" i18n:attributes="value" tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" />
+  </p>
+</fieldset>
+</form>
+<form method="post" action="adminDeleteSymbols">
+<table class="datatable" width="99%">
+  <tr>
+    <th width="1%">&nbsp;</th>
+    <tal:block tal:condition="python:skey=='title'">
+      <tal:block tal:condition="python:rkey==''">
+        <th>
+          <a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title&amp;rkey=1#title">
+            <span i18n:translate="">Title</span>
+          </a>
+        </th>
+      </tal:block>
+      <tal:block tal:condition="python:rkey=='1'">
+        <th>
+          <a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title">
+            <span i18n:translate="">Title</span>
+          </a>
+        </th>
+      </tal:block>
+    </tal:block>
+    <tal:block tal:condition="python:skey!='title'">
+      <th>
+        <a class="title" i18n:translate=""
+          tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title">
+          Title
+        </a>
+      </th>
+    </tal:block>
+    <tal:block tal:condition="python:skey=='parent'">
+      <tal:block tal:condition="python:rkey==''">
+        <th>
+          <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent&amp;rkey=1#parent">
+            <span i18n:translate="">Parent</span>
+          </a>
+        </th>
+      </tal:block>
+      <tal:block tal:condition="python:rkey=='1'">
+        <th>
+          <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent">
+            <span i18n:translate="">Parent</span>
+          </a>
+        </th>
+      </tal:block>
+    </tal:block>
+    <tal:block tal:condition="python:skey!='parent'">
+      <th>
+        <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent" i18n:translate="">Parent</a>
+      </th>
+    </tal:block>
+    <tal:block tal:condition="python:skey=='sortorder'">
+      <tal:block tal:condition="python:rkey==''">
+        <th>
+          <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder&amp;rkey=1#sortorder">
+            <span i18n:translate="">Sort order</span>
+          </a>
+        </th>
+      </tal:block>
+      <tal:block tal:condition="python:rkey=='1'">
+        <th>
+          <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#parent">
+            <span i18n:translate="">Sort order</span>
+          </a>
+        </th>
+      </tal:block>
+    </tal:block>
+    <tal:block tal:condition="python:skey!='sortorder'">
+      <th>
+        <a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#sortorder" i18n:translate="">Sort order</a>
+      </th>
+    </tal:block>
+  </tr>
+  <tr tal:repeat="record python:here.getSymbolsListOrdered(skey, rkey)">
+    <td><input type="checkbox" name="id" tal:attributes="value record/id" /></td>
+    <td>
+      <img tal:condition="python:record.color is not None or record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" />
+      <a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title"></a>
+    </td>
+    <td tal:content="python:here.getSymbolTitle(record.parent)" />
+    <td tal:content="record/sortorder" />
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan="3"><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
+  </tr>
+</table>
+</form>
+
+<tal:block condition="python: record_data['action'] == 'update'
+                and here.getSymbolChildren(record_id)">
+<div id="dialog-parent-category" title="Changing parent category"
+  i18n:attributes="title" i18n:translate="" class="hidden">
+  This category has children categories. Selecting a parent category for it
+  will also make all children top level categories (only 2 levels of
+  categories are allowed).
+</div>
+
+<script>
+$(document).ready(function () {
+  $("#dialog-parent-category").dialog({
+    autoOpen: false,
+    modal: true,
+    resizable: false,
+    buttons: {
+      "Ok": function () {
+          document.getElementById("add-or-update-form").submit();
+        },
+      "Cancel": function () {
+          $(this).dialog("close");
+        }
+    }
+  });
+
+  $("#add-or-update-form").submit(function (e) {
+    if ( $("#parent-selection").val() ) {
+      e.preventDefault();
+      $("#dialog-parent-category").dialog('open');
+    }
+  });
+});
+</script>
+</tal:block>
+
+</metal:block>
+
+</metal:block>
