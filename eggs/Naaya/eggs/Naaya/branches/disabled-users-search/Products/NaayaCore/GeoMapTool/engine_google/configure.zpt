@@ -1,0 +1,32 @@
+<fieldset><legend i18n:translate="">Google map settings</legend>
+
+<div class="field-inline">
+    <label for="form-google_allow_mouse_scroll"
+           i18n:translate="">Allow mouse scroll</label>
+    <input type="checkbox" name="google_allow_mouse_scroll:boolean"
+           id="form-google_allow_mouse_scroll"
+           tal:attributes="checked python:test(here.allow_mouse_scroll,
+                                               'checked', None)" />
+</div>
+
+<div class="field-inline">
+    <label for="form-google_base_layer"
+           i18n:translate="">Default layer</label>
+    <select name="google_base_layer" id="form-google_base_layer">
+        <option tal:define="current_value here/base_layer"
+                tal:repeat="layer options/all_layers"
+                tal:attributes="value layer/name;
+                                selected python:layer['name'] == current_value"
+                tal:content="layer/label"
+                i18n:translate="" />
+    </select>
+</div>
+
+<div class="field-inline">
+    <label for="form-google_portal_map_zoom"
+           i18n:translate="">Zoom level (leave blank for auto)</label>
+    <input name="google_portal_map_zoom" id="form-google_portal_map_zoom"
+           tal:attributes="value here/portal_map_zoom|string:" />
+</div>
+
+</fieldset>

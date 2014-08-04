@@ -1,0 +1,32 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Version control</h1>
+
+<tal:block metal:fill-slot="section">
+<div tal:condition="python:here.checkPermissionValidateObjects() or here.checkPermissionPublishObjects()">
+<p i18n:translate="">This page lists the active versions opened by users on various types of content in this portal.</p>
+<tal:block tal:define="site_url here/absolute_url; objects here/getCheckedOutObjects">
+<ul>
+	<li tal:repeat="object objects">
+		<tal:block tal:condition="python:object.checkout_user==request.AUTHENTICATED_USER.getUserName()">
+			<a tal:attributes="href string:${object/absolute_url}/edit_html"><span tal:replace="object/title_or_id"/></a>
+			(<span i18n:translate="" tal:omit-tag="">opened by yourself</span>)
+		</tal:block>
+		<tal:block tal:condition="python:object.checkout_user!=request.AUTHENTICATED_USER.getUserName()">
+			<a tal:attributes="href string:${object/absolute_url}/index_html"><span tal:replace="object/title_or_id"/></a>
+			(<span i18n:translate="" tal:omit-tag="">opened by</span> <strong tal:content="object/checkout_user" />)
+			[<a tal:define="object_url python:object.absolute_url(1)" tal:attributes="href string:${site_url}/admin_discardversion?url=${object_url}" i18n:translate="">Discard</a>]
+		</tal:block>
+	</li>
+</ul>
+<span tal:condition="python:len(objects) == 0"><strong><em i18n:translate="">No active versions opened in this portal.</em></strong></span>
+</tal:block>
+</div>
+<div tal:condition="python:not here.checkPermissionValidateObjects() and not here.checkPermissionPublishObjects()">
+<p i18n:translate="">
+	Your rights on this portal do not allow you to execute such operation.
+</p>
+</div>
+</tal:block>
+
+</tal:block>
