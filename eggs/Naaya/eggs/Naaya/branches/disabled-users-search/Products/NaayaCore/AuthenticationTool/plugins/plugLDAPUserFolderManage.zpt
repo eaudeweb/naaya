@@ -8,6 +8,14 @@
     section_url string:${source_url}&s=manage_all;
     source_title python:here.getAuthenticationTool().getSourceObj(id).title_or_id();
     ">
+    <style>
+        .user_disabled {
+            color:#999;
+        }
+        .user_disabled a {
+            text-decoration:line-through;
+        }
+    </style>
 
     <div class="cleaner">&nbsp;</div>
 	
@@ -157,8 +165,9 @@
 		<tal:block define="user_id python:user[0];
 							user_name python:user[1];
 							user_group python:user[2];
-							user_roles python:user[3];">
-			<td>
+                            user_roles python:user[3];
+                            is_disabled python:user[4];">
+			<td tal:attributes="class python:is_disabled and 'user_disabled' or ''">
 				<tal:block condition="python: source_title.lower()=='eionet'"
 					define="user_quoted python:here.utUrlEncode(user_id)">
 					<a rel="external" tal:content="string:${user_name} (${user_id})"
@@ -171,6 +180,7 @@
 						tal:attributes="href user_photo_url"
 						class="preview">[view photo]</a>
 				</tal:block>
+                <span style="text-decoration:none" tal:condition="is_disabled">(disabled)</span>
 			</td>
 			<td tal:content="user_group"></td>
 
