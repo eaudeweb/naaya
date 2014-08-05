@@ -151,8 +151,12 @@ class plugLDAPUserFolder(PlugBase):
             if not valid_values:
                 continue
             user_info = self.get_source_user_info(user)
+            if not user_info:
+                log.warning("For getSortedUserRoles, Could not find user info for %s", user)
+                continue
+            is_disabled = user_info.status == 'disabled'
             buf.append((user, user_info.full_name,
-                        self.getUserLocation(user), valid_values))
+                        self.getUserLocation(user), valid_values, is_disabled))
         if skey == 'user':
             return self.sort_list(buf, 0, rkey)
         elif skey == 'cn':
@@ -423,21 +427,23 @@ class plugLDAPUserFolder(PlugBase):
                     users = acl_folder.findUser(search_param=params,
                                                 search_term=term,
                                                 attrs=attrs)
-
-                    [ self.buffer.setdefault(u['uid'],
-                                             self.decode_cn(u['cn']))
+                    [self.buffer.setdefault(u['uid'],
+                                            self.decode_cn(u['cn']))
                         for u in users if not u.get('employeeType') == 'disabled']
-                    return [self.get_source_user_info(u['uid']) for u in users]
-                            #if not u.get('employeeType') == 'disabled']
-                except: return ()
-            else:   return ()
+                    return [self.get_source_user_info(u['uid']) for u in users
+                                if not u.get('employeeType') == 'disabled']
+                except:
+                    return ()
+            else:
+                return ()
         elif self.REQUEST.has_key('search_role'):
             try:
                 self.buffer = {}
                 users = self.getUsersByRole(acl_folder, [(role, dn)])
                 [ self.buffer.setdefault(u.user_id, u.full_name) for u in users ]
                 return users
-            except: return ()
+            except:
+                return ()
         else:
             return ()
 

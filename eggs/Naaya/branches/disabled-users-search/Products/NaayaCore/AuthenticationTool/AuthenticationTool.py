@@ -617,6 +617,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             except AttributeError: # should work for local users only
                 user_info.is_new_user = False
 
+        disabled_type = form_data.get('disabled', 'no_disabled')
+        # sort according to disabled_type
+        response = []
+        for usr in users_info:
+            mail = getattr(usr, 'email', '')
+            status_disabled = getattr(usr, 'status', 'active') == 'disabled'
+            is_disabled = ('disabled@eionet.europa.eu' in mail) or status_disabled
+            if ((disabled_type == 'no_disabled') and (not is_disabled)
+                or
+                (disabled_type == 'include_disabled')
+                or
+                ((disabled_type == 'only_disabled') and is_disabled)
+                ):
+                response.append(usr)
         return users_info
 
     def revoke_searched_roles(self, usernames, role_to_revoke, filter_location,
