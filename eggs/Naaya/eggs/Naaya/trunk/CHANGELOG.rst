@@ -1,5 +1,9 @@
-3.3.62 (unreleased)
+3.3.62 (2014-08-06)
 -------------------
+* Feature: show disabled status of users in the "Eionet users" management tab;
+  allow filters by disabled status, in the "All users" tab of the "Users management"
+  page
+  [tiberich #20390]
 
 3.3.61 (2014-07-31)
 -------------------
