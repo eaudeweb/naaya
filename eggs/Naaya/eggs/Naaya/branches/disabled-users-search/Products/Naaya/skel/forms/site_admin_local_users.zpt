@@ -26,12 +26,17 @@
                         <br />
                     </div>
 
-                    <div class="filters">
-                        <!-- <label for="disabled" i18n:translate=""></label> -->
-                        <select name="disabled">
-                            <option value="no_disabled" selected="selected">Only active users</option>
-                            <option value="include_disabled" >All users, including those that have been disabled</option>
-                            <option value="only_disabled" >Show only users that have been disabled</option>
+                    <div class="filters" tal:define="disabled_type python:request.form.get('disabled', 'no_disabled');">
+                        <select name="disabled" >
+                            <option value="no_disabled" tal:attributes="selected python:disabled_type=='no_disabled'">
+                                Only active users
+                            </option>
+                            <option value="include_disabled" tal:attributes="selected python:disabled_type=='include_disabled'">
+                                All users, including those that have been disabled
+                            </option>
+                            <option value="only_disabled" tal:attributes="selected python:disabled_type=='only_disabled'">
+                                Show only users that have been disabled
+                            </option>
                         </select>
                     </div>
 

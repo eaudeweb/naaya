@@ -617,7 +617,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             except AttributeError: # should work for local users only
                 user_info.is_new_user = False
 
-        disabled_type = form_data.get('disabled', 'no_disabled')
+        disabled_type = form_data.get('disabled_type', 'no_disabled')
         # sort according to disabled_type
         response = []
         for usr in users_info:
@@ -631,7 +631,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 ((disabled_type == 'only_disabled') and is_disabled)
                 ):
                 response.append(usr)
-        return users_info
+        return response
 
     def revoke_searched_roles(self, usernames, role_to_revoke, filter_location,
                               REQUEST=None):
