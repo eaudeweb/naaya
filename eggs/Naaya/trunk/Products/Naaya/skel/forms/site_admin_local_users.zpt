@@ -26,8 +26,8 @@
                         <br />
                     </div>
 
-                    <div class="filters" tal:define="disabled_type python:request.form.get('disabled', 'no_disabled');">
-                        <select name="disabled" >
+                    <div class="filters">
+                        <select name="disabled" tal:define="disabled_type python:request.form.get('disabled', 'no_disabled');">
                             <option value="no_disabled" tal:attributes="selected python:disabled_type=='no_disabled'">
                                 Only active users
                             </option>
