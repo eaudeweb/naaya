@@ -174,16 +174,7 @@
     <metal:block fill-slot="content">
         <metal:block define-macro="content" tal:define="
             disabled_type python:request.form.get('disabled', 'no_disabled');
-            all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location);
-            all_users_objects python:
-            [usr for usr in all_users_objects if (
-                ((disabled_type == 'no_disabled') and (not (('disabled@eionet.europa.eu' in mail) or (getattr(rec, 'employeeType', 'active') == 'disabled'))))
-                or
-                (disabled_type == 'include_disabled')
-                or
-                ((disabled_type == 'only_disabled') and (('disabled@eionet.europa.eu' in mail) or (getattr(rec, 'employeeType', 'active') == 'disabled')))
-               )
-            ];
+            all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location, disabled_type=disabled_type);
             users python: all_users_objects[(page * per_page):((page + 1) * per_page)];
             ">
 
