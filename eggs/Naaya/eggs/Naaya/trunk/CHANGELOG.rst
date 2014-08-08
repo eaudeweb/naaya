@@ -1,5 +1,7 @@
 3.3.63 (unreleased)
 -------------------
+* UnicodeDecodeError fix notifications for roles with non-ASCII chars
+  [dumitval]
 
 3.3.62 (2014-08-06)
 -------------------

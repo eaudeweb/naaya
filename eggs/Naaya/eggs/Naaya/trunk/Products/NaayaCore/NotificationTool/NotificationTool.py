@@ -490,6 +490,9 @@ class NotificationTool(Folder):
         Send notification that the user received or lost one or more roles
         in the specified location
         """
+        # Try to fix encoding for roles entered in other languages
+        new_roles = [role.decode('utf8') for role in new_roles]
+        removed_roles = [role.decode('utf8') for role in removed_roles]
         email_data = {
             email: {'new_roles': new_roles,
                     'removed_roles': removed_roles,
