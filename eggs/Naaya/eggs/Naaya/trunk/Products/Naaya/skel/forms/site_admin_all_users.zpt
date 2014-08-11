@@ -111,7 +111,7 @@
                                             tal:attributes="rowspan python: user_nrows">
                                             <div class="datatable-username">
                                                 <tal:block replace="user/full_name"></tal:block>
-                                                <span tal:content="user/status" />
+                                                <span tal:content="user/status|nothing" />
                                             </div>
 
                                             <div class="datatable-email" tal:define="email python:user_tool.getUserEmail(user)">
