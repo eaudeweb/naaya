@@ -1,4 +1,7 @@
-3.3.64 (unreleased)
+3.3.65 (unreleased)
+-------------------
+
+3.3.64 (2014-08-11)
 -------------------
 * error handling when a user doesn't have a status (admin_users_html)
   [dumitval]
