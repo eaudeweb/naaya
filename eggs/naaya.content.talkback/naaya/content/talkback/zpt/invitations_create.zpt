@@ -91,6 +91,9 @@
         <textarea name="message:utf8:ustring" id="message" rows="5" cols="50"
           tal:content="data/message"></textarea>
     </div>
+    <div tal:condition="options/previews" style="color:red">
+        You are now previewing a file. Please reupload the file if you want to send the invitations!
+    </div>
     <input type="submit" name="do" value="Preview" />
     <input type="submit" name="do" value="Send invitation" />
 </form>
@@ -120,6 +123,9 @@
             <input type="text" name="on_behalf" id="on_behalf" size="50"
               tal:attributes="value data/on_behalf|nothing" />
         </div>
+    </div>
+    <div tal:condition="options/previews" style="color:red">
+        You are now previewing a file. Please reupload the file if you want to send the invitations!
     </div>
 
     <input type="submit" name="do" value="Preview" />

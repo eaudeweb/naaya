@@ -1,5 +1,7 @@
 1.4.34 (unreleased)
 -------------------
+* Bug fix: make a red message when previewing a file about needing to reupload file
+  [tiberich #20725]
 
 1.4.33 (2014-07-28)
 -------------------
