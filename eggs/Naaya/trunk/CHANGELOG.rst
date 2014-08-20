@@ -1,5 +1,8 @@
 3.3.65 (unreleased)
 -------------------
+* Avoid throwing error when getting full username for user when retrieving
+  user info from old ldap cache
+  [tiberich #20725]
 
 3.3.64 (2014-08-11)
 -------------------

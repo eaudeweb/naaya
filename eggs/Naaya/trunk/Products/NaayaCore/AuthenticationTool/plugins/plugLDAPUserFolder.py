@@ -463,7 +463,12 @@ class plugLDAPUserFolder(PlugBase):
         except LDAPUserNotFound:
             return ''
         else:
-            return user_info.full_name.encode(self.default_encoding)
+            if user_info is not None:
+                return user_info.full_name.encode(self.default_encoding)
+            else:
+                import pdb; pdb.set_trace()
+                log.warning("Could not retrieve user info  for %s", p_username)
+                return p_username
 
     def decode_cn(self, value):
         if isinstance(value, str):
