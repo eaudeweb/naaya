@@ -1,3 +1,6 @@
+1.4.27 (unreleased)
+-------------------
+
 1.4.26 (2014-08-25)
 -------------------
 * In the navigation portlet, added create user link for NFPs
