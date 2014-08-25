@@ -1,5 +1,7 @@
-1.4.26 (unreleased)
+1.4.26 (2014-08-25)
 -------------------
+* In the navigation portlet, added create user link for NFPs
+  [tiberich #20187]
 
 1.4.25 (2014-08-01)
 -------------------
