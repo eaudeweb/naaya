@@ -137,7 +137,9 @@ class ProfileClient(object):
                 role['level'] = 0
                 role['parent'] = 'top'
             else:
-                parent = direct_address[role_id.rsplit('-', 1)[0]]
+                parent = direct_address.get(role_id.rsplit('-', 1)[0])
+                if not parent:
+                    continue
                 parent['children'].append(role)
                 parent['children'].sort(key=lambda x: x['name'])
                 role['level'] = parent['level'] + 1
