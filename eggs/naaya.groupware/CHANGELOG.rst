@@ -1,4 +1,4 @@
-1.4.27 (unreleased)
+1.4.27 (2014-08-27)
 -------------------
 * Change: renamed create new member option in navigation portlet menu
   [tiberich #20187]
