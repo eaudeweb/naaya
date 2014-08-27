@@ -20,7 +20,7 @@
             </li>
             <li tal:condition="nfp_admin_link">
                 <a tal:attributes="href string:${site_url}/nfp_nrc/create_user" title="Create a new user"
-                  i18n:translate="" i18n:attributes="title">Create a new member</a>
+                  i18n:translate="" i18n:attributes="title">Create new account</a>
             </li>
             <li tal:condition="howto_link">
                 <a tal:attributes="href howto_link" title="Help for assigning NRC members"
