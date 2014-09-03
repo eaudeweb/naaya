@@ -33,7 +33,7 @@ curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
                 </tr>
                 <tr>
                   <td colspan="5">
-                    (<em style="font-size:xx-small" i18n:translate="">add picture of the destination here &amfp; delete this text</em>)
+                    (<em style="font-size:xx-small" i18n:translate="">add picture of the destination here &amp; delete this text</em>)
                   </td>
                 </tr>
                 <tr>
