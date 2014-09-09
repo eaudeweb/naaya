@@ -146,3 +146,28 @@ class ExportUpdatedObjects(BrowserView):
 
         return "Done"
 
+
+class UpdateModificationDates(BrowserView):
+    base = "/tmp/export-obj"
+
+    def __call__(self):
+        site = self.context.getSite()
+        catalog = site.portal_catalog
+
+        brains = catalog.searchResults(invalid=True)
+        print "Got ", len(brains)
+        for brain in brains:
+            obj = brain.getObject()
+            if hasattr(obj.aq_inner.aq_self, 'last_modification'):
+                continue
+            path = os.path.join(self.base, brain.getPath()[1:]) + '.xml'
+            e = lxml.etree.parse(path)
+            try:
+                date = e.getroot().get('bobobase_modification_time')
+            except:
+                print "Couldn't get a date for", obj
+                continue
+            obj.last_modification = DateTime(date)
+            print "Fixed", brain.getPath()
+
+        return "Done"

@@ -11,6 +11,13 @@
       class=".views.ExportUpdatedObjects"
       />
 
+  <browser:page 
+      name="update_modification_date" 
+      for="Products.Naaya.NySite.NySite"
+      permission="zope2.ViewManagementScreens"
+      class=".views.UpdateModificationDates"
+      />
+
   <adapter for="*" factory=".views.FallbackObjectExporter" provides=".views.IObjectExporter"/>
 
   <adapter for="basestring" factory=".views.StringExporter" provides=".views.IObjectExporter"/>
