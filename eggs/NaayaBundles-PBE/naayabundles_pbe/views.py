@@ -23,9 +23,11 @@ def name_to_id(s):
 
 
 def build_node(obj):
-    name = obj.__class__.__name__
-    if obj.__class__.__module__ != '__builtin__':
-        name = obj.__class__.__module__ + '.' + name
+    #obj may be a class in itself
+    klass = getattr(obj, '__class__', obj)
+    name = klass.__name__
+    if klass.__module__ != '__builtin__':
+        name = klass.__module__ + '.' + name
     return Element(name)
 
 
@@ -43,7 +45,10 @@ class PersistentObjectExporter(object):
     def export(self, root=None):
         if root is None:
             root = build_node(self.context)
-            root.set('id', self.context.id)
+            cid = self.context.id
+            if callable(cid):
+                cid = cid()
+            root.set('id', cid)
 
         if not hasattr(self.context, '__dict__'):
             root.text = str(self.context)
@@ -74,11 +79,12 @@ class FallbackObjectExporter(Exporter):
 
 class StringExporter(Exporter):
     def export(self, root):
+        if isinstance(self.context, unicode):
+            self.context = self.context.encode('utf-8-sig')
         try:
             root.text = self.context
         except Exception:
             root.text = b64encode(self.context)
-            root.set('marshal', 'b64encoded')
 
 
 class ListExporter(Exporter):
