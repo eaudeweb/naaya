@@ -54,6 +54,12 @@ class PersistentObjectExporter(object):
             root.text = str(self.context)
             return
 
+        if hasattr(self.context, 'bobobase_modification_time'):
+            bbmt = self.context.bobobase_modification_time
+            if callable(bbmt):
+                bbmt = bbmt()
+            root.set('bobobase_modification_time', str(bbmt))
+
         for k, v in vars(self.context).items():
             if hasattr(v, 'objectIds'):     # avoid exporting folderish objects, use export folders for structure
                 continue
