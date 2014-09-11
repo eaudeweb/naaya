@@ -1,4 +1,7 @@
-3.3.65 (unreleased)
+3.3.66 (unreleased)
+-------------------
+
+3.3.65 (2014-09-11)
 -------------------
 * mediafile keeps video size when encoding [dumitval]
 * Avoid throwing error when getting full username for user when retrieving
