@@ -11,9 +11,12 @@ logger = logging.getLogger('mediafile.converters')
 #
 # Media converter
 #
+
+
 class MediaConverterError(Exception):
     """Media Convertor Error"""
     pass
+
 
 def media2flv(ex_file):
     """ Convert media to flv and add metadata
@@ -22,23 +25,22 @@ def media2flv(ex_file):
         return "Can not convert (are tools available?)"
 
     finput = ex_file.get_filename()
-    tcv_path = finput + ".tcv" # to convert
-    cvd_path = finput + ".cvd" # converted
+    tcv_path = finput + ".tcv"  # to convert
+    cvd_path = finput + ".cvd"  # converted
     log = open(finput + '.log', 'w')
     os.rename(finput, tcv_path)
 
     resolution = get_resolution(tcv_path)
-    aspect_ratio = resolution[0]/resolution[1]
-    height = int(320/aspect_ratio)/8*8
-
-    #ex_file.aspect_ratio = aspect_ratio
-    #ex_file._p_changed = True
+    width = int(resolution[0])/8*8
+    height = int(resolution[1])/8*8
+    bitrate = width/320 * height/180 * 22050
 
     cmd = ["ffmpeg", "-y", "-v", "0", "-benchmark", "-i", tcv_path, "-ar",
-           "22050", "-s", "320x%s" % height, "-b", "500k", "-f", "flv", cvd_path]
+           bitrate, "-s", "%sx%s" % (width, height), "-b", "1024k",
+           "-f", "flv", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
-    TIMEOUT = 3600 #seconds
+    TIMEOUT = 3 * 3600  # seconds
     timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
     timer.start()
 
@@ -67,6 +69,7 @@ def media2flv(ex_file):
         logger.exception('An error occured while indexing video file.')
 
     return finish(tcv_path, cvd_path, finput, log)
+
 
 def finish(tcv_path, cvd_path, finput, log, error=None):
     """ Rename output to done and cleanup """
@@ -98,14 +101,17 @@ def finish(tcv_path, cvd_path, finput, log, error=None):
 #
 # Private interface
 #
+
+
 def _check_ffmpeg():
     """Checks if ffmpeg is available.
 
         If ffmpeg is not installed with the proper options (libmp3lame)
         a MediaConverterError exception will be raised.
     """
-    process = subprocess.Popen(["ffmpeg", "-h"],
-                shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(["ffmpeg", "-h"], shell=True,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT)
     stdout = process.stdout.read()
     process.wait()
 
@@ -118,13 +124,15 @@ def _check_ffmpeg():
         raise MediaConverterError(
             'ffmpeg was not compiled with --enable-libmp3lame')
 
+
 def _check_flvtool2():
     """Checks if flvtool2 is available.
-
-        If flvtool2 is not installed a MediaConverterError exception will be raised.
+       If flvtool2 is not installed a MediaConverterError exception
+       will be raised.
     """
-    process = subprocess.Popen(["flvtool2", "-H"],
-                shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(["flvtool2", "-H"], shell=True,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT)
 
     process.wait()
 
@@ -139,7 +147,7 @@ _is_ffmepg_available = False
 try:
     _check_ffmpeg()
 except MediaConverterError, media_err:
-    #logger.exception(media_err)
+    # logger.exception(media_err)
     logger.warn("ffmpeg2 is not available")
 else:
     _is_ffmepg_available = True
@@ -148,7 +156,7 @@ _is_flvtool2_available = False
 try:
     _check_flvtool2()
 except MediaConverterError, media_err:
-    #logger.exception(media_err)
+    # logger.exception(media_err)
     logger.warn("flvtool2 is not available")
 else:
     _is_flvtool2_available = True
@@ -156,15 +164,19 @@ else:
 #
 # Public interface
 #
+
+
 def can_convert():
     """ Is ffmpeg installed?
     """
     return _is_ffmepg_available
 
+
 def can_index():
     """ Is flvtool2 installed?
     """
     return _is_flvtool2_available
+
 
 def get_conversion_errors(fpath, suffix=".log"):
     """ Open error file and parse it for errors
@@ -188,8 +200,10 @@ def get_conversion_errors(fpath, suffix=".log"):
     error_file.close()
     return ""
 
+
 def get_resolution(video_path):
-    txt = subprocess.Popen(['ffmpeg', '-i', video_path], stderr=subprocess.PIPE).communicate()[1]
+    txt = subprocess.Popen(['ffmpeg', '-i', video_path],
+                           stderr=subprocess.PIPE).communicate()[1]
 
     for line in txt.splitlines():
         if 'Video: ' in line:
