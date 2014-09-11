@@ -1,5 +1,6 @@
 3.3.65 (unreleased)
 -------------------
+* mediafile keeps video size when encoding [dumitval]
 * Avoid throwing error when getting full username for user when retrieving
   user info from old ldap cache
   [tiberich #20725]
