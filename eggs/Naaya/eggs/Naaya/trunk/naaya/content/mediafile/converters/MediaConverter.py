@@ -33,10 +33,10 @@ def media2flv(ex_file):
     resolution = get_resolution(tcv_path)
     width = int(resolution[0])/8*8
     height = int(resolution[1])/8*8
-    bitrate = width/320 * height/180 * 22050
+    bitrate = width/320 * height/180 * 128
 
     cmd = ["ffmpeg", "-y", "-v", "0", "-benchmark", "-i", tcv_path, "-ar",
-           bitrate, "-s", "%sx%s" % (width, height), "-b", "1024k",
+           "44100", "-s", "%sx%s" % (width, height), "-b", "%sk" % bitrate,
            "-f", "flv", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
