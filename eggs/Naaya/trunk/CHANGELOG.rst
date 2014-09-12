@@ -1,4 +1,7 @@
-3.3.66 (unreleased)
+3.3.67 (unreleased)
+-------------------
+
+3.3.66 (2014-09-12)
 -------------------
 * bugfix in mediafile commandline encoding [dumitval]
 
