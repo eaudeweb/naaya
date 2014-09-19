@@ -1,10 +1,10 @@
 1.2.58 (unreleased)
 -------------------
+* administrators can set country representation and reimbursement [dumitval]
 
 1.2.57 (2014-06-11)
 -------------------
 * Bug fix: fix signup to workshop
-  [tiberich #20012]
 * Bug fix: fix tests for access to meetings based on release date 
   [tiberich #18783]
 

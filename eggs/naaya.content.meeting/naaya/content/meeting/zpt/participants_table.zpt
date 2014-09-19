@@ -1,24 +1,131 @@
 <script type="text/javascript">
-function toggleSelect(checkbox, form_name, name) {
-    var form_array = document.getElementsByName(form_name);
-    if (form_array.length != 1) {
-        alert('Assertion failed: one form with name ' + form_name);
-        return;
-    }
-    var form = form_array[0];
-    for (var i = 0; i < form.elements.length; i++) {
-        var element = form.elements[i];
-        if (element.type == 'checkbox' && element.name == name) {
-            element.checked = checkbox.checked;
+  $(function(){
+      $('select[name="reimbursed"]').each(function(){
+          var userid = this.id.split('___')[0];
+          var country_id = $('#'+userid+'___represents').val();
+          if ($('#'+userid+'___represents').val() != ''){
+            $(this).removeAttr('disabled');
+          };
+        });
+      show_hide();
+      change_all_checked_items();
+
+      $('#save_changes').click(function(e){
+        var justifications = $('textarea[name="justification"]:enabled');
+        var warning_message = gettext('Please fill in the mandatory "Justification" field');
+        for (i=0; i<justifications.length; i++){
+          if ($(justifications[i]).val() == ''){
+            e.preventDefault();
+            alert(warning_message);
+            break;
+          }
         }
+      });
+
+      $('select[name="represents"]').change(function(){
+          var userid = this.id.split('___')[0];
+          var country_id = $(this).val();
+          if (country_id != ''){
+            $('#'+userid+'___reimbursed').removeAttr('disabled');
+          }
+          else {
+            $('#'+userid+'___reimbursed').val('no')
+              .attr('disabled', 'disabled');
+          };
+        });
+
+      $('input[name="uids:list"]').change(function(){
+          var userid = $(this).val();
+          if($(this).is(':checked')){
+            change_one_item(userid);
+          }
+          else{
+            undo_change_one_item(userid);
+          };
+          show_hide();
+      });
+
+  })
+
+  function show_hide(){
+    if ($('input[name="uids:list"]:checked').length == 0){
+      if($('#is_meeting_admin').val() == 1){
+        $('input[name="save_changes"]').hide();
+        $('.explanation').hide();
+        $('.hide_on_edit').show();
+      };
     }
-}
+    else{
+      if($('#is_meeting_admin').val() == 1){
+        $('input[name="save_changes"]').show();
+        $('.hide_on_edit').hide();
+        $('.explanation').show();
+      };
+    };
+  };
+
+  function change_one_item(userid){
+      $('#'+userid+'___represents_text').hide();
+      $('#'+userid+'___represents').show()
+        .removeAttr('disabled');
+      $('#'+userid+'___reimbursed_text').hide();
+      $('#'+userid+'___reimbursed').show();
+      $('#'+userid+'___explanation').show()
+        .removeAttr('disabled');
+  }
+
+  function undo_change_one_item(userid){
+      $('#'+userid+'___represents').hide()
+        .attr('disabled', 'disabled');
+      $('#'+userid+'___represents_text').show();
+      $('#'+userid+'___reimbursed').hide();
+      $('#'+userid+'___reimbursed_text').show();
+      $('#'+userid+'___explanation').hide()
+        .attr('disabled', 'disabled');
+  }
+
+  function change_all_checked_items(){
+      $('input[name="uids:list"]:checked').each(function(){
+          var userid = $(this).val();
+          change_one_item(userid);
+      });
+  }
+
+  function change_all_unchecked_items(){
+      $('input[name="uids:list"]:not(:checked)').each(function(){
+          var userid = $(this).val();
+          undo_change_one_item(userid);
+      });
+  }
+
+  function toggleSelect(checkbox, form_name, name) {
+      var form_array = document.getElementsByName(form_name);
+      if (form_array.length != 1) {
+          alert('Assertion failed: one form with name ' + form_name);
+          return;
+      }
+      var form = form_array[0];
+      for (var i = 0; i < form.elements.length; i++) {
+          var element = form.elements[i];
+          if (element.type == 'checkbox' && element.name == name) {
+              element.checked = checkbox.checked;
+          }
+      }
+      show_hide();
+      change_all_checked_items();
+      change_all_unchecked_items();
+  }
+
 </script>
 
+<input type="hidden" tal:attributes="value here/checkPermissionAdminMeeting"
+    id="is_meeting_admin" />
 <table class="datatable" width="95%" tal:define="
         meeting here/getMeeting;
+        meeting_admin here/checkPermissionAdminMeeting;
         sort_on python:request.get('sort_on', '');
-        users python:here.getAttendees(sort_on)">
+        users python:here.getAttendees(sort_on);
+        nfp_country_code meeting/nfp_for_country">
     <tr>
         <th width="30px" tal:condition="meeting/checkPermissionChangePermissions">
             <span i18n:translate="">Select</span>
@@ -45,13 +152,17 @@ function toggleSelect(checkbox, form_name, name) {
               <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=reimbursed"
                    i18n:translate="">Reimbursed participation</a>
           </th>
+          <th class="explanation" style="display:none" i18n:translate=""
+            tal:condition="meeting_admin">
+            Justify changes *
+          </th>
         </tal:block>
-        <th><span i18n:translate="">Phone number</span></th>
-        <th>
+        <th class="hide_on_edit"><span i18n:translate="">Phone number</span></th>
+        <th class="hide_on_edit">
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=uid"
                  i18n:translate="">User ID</a>
         </th>
-        <th>
+        <th class="hide_on_edit">
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
                 i18n:translate="">Status</a>
         </th>
@@ -75,17 +186,89 @@ function toggleSelect(checkbox, form_name, name) {
         <td tal:define="organization user_info/organization">
             <span tal:condition="organization" tal:replace="organization"/>
         </td>
-        <tal:block condition="here/is_eionet_meeting">
-          <td tal:define="country_code user_info/country|nothing;
-                          country_name python:here.get_country(country_code)"
-                          tal:content="country_name"/>
-          <td tal:content="user_info/reimbursed" i18n:translate=""/>
+        <tal:block condition="here/is_eionet_meeting"
+          define="country_code user_info/country|nothing;
+                  country_name python:here.get_country(country_code)">
+          <td tal:condition="not:meeting_admin">
+            <tal:block content="country_name" />
+            <tal:block condition="user_info/saved_by">
+              <img src="misc_/Naaya/info.png"
+                tal:define="justification python:test(user_info['justification'],
+                'Justification for the change: '+user_info['justification'], '')"
+                tal:attributes="title string:Last saved by: ${user_info/saved_by}
+
+                ${justification}" />
+            </tal:block>
+          </td>
+          <td tal:condition="meeting_admin">
+              <span tal:attributes="id
+                python:user_info['uid']+'___represents_text'">
+                <tal:block content="country_name" />
+                <tal:block condition="user_info/saved_by">
+                  <img src="misc_/Naaya/info.png"
+                    tal:define="justification python:test(user_info['justification'],
+                    'Justification for the change: '+user_info['justification'], '')"
+                    tal:attributes="title string:Last saved by: ${user_info/saved_by}
+
+                    ${justification}" />
+                </tal:block>
+              </span>
+              <select name="represents" style="display:none" disabled="disabled"
+                tal:attributes="id python:user_info['uid']+'___represents'" >
+                <option tal:attributes="selected python:country_code == '-'"
+                  value="">-</option>
+                <option tal:repeat="country here/get_countries"
+                  tal:content="python:country[1]"
+                  tal:attributes="selected python:country_code == country[0];
+                                  value python:country[0]" />
+              </select>
+          </td>
+          <td tal:condition="not:meeting_admin">
+            <tal:block content="user_info/reimbursed" i18n:translate="" />
+            <tal:block condition="user_info/saved_by">
+              <img src="misc_/Naaya/info.png"
+                tal:define="justification python:test(user_info['justification'],
+                'Justification for the change: '+user_info['justification'], '')"
+                tal:attributes="title string:Last saved by: ${user_info/saved_by}
+
+                ${justification}" />
+            </tal:block>
+          </td>
+          <td tal:condition="meeting_admin">
+              <span tal:attributes="id python:user_info['uid']+'___reimbursed_text'">
+                <tal:block tal:content="user_info/reimbursed" i18n:translate="" />
+                <tal:block condition="user_info/saved_by">
+                  <img src="misc_/Naaya/info.png"
+                    tal:define="justification python:test(user_info['justification'],
+                    'Justification for the change: '+user_info['justification'], '')"
+                    tal:attributes="title string:Last saved by: ${user_info/saved_by}
+
+                    ${justification}" />
+                </tal:block>
+              </span>
+              <select name="reimbursed" disabled="disabled"
+                tal:attributes="id python:user_info['uid']+'___reimbursed'"
+                style="display:none" >
+                <option
+                  tal:attributes="selected python:user_info['reimbursed'] == 'No'"
+                  value="no">No</option>
+                <option
+                  tal:attributes="selected python:user_info['reimbursed'] == 'Yes';
+                                  value user_info/uid" >Yes</option>
+              </select>
+          </td>
+          <td class="explanation" tal:condition="meeting_admin"
+            style="display:none">
+            <textarea style="display:none" disabled="disabled" rows=5 cols="30"
+              tal:attributes="id python:user_info['uid']+'___explanation'"
+              name="justification"></textarea>
+          </td>
         </tal:block>
-        <td tal:define="phone user_info/phone">
+        <td class="hide_on_edit" tal:define="phone user_info/phone">
             <span tal:condition="phone" tal:replace="phone"/>
         </td>
-        <td><span tal:replace="user"/></td>
-        <td><span tal:replace="user_info/role"/></td>
+        <td class="hide_on_edit"><span tal:replace="user"/></td>
+        <td class="hide_on_edit"><span tal:replace="user_info/role"/></td>
         <tal:block define="uid user_info/uid"
             repeat="question here/get_survey_questions">
             <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"

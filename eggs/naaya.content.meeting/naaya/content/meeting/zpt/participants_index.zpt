@@ -5,6 +5,11 @@
 
     <metal:block fill-slot="body">
     <script type="text/javascript">
+
+    $(function(){
+        $(document).tooltip();
+    });
+
     function toggleSelect(checkbox, form_name, name) {
         var form_array = document.getElementsByName(form_name);
         if (form_array.length != 1) {
@@ -204,7 +209,7 @@
             </span>
         </div>
         <p tal:condition="meeting/checkPermissionChangePermissions"
-             i18n:translate="">Use this form to view and remove participants. You can also nominate participants to be administrators or not.</p>
+             i18n:translate="">Use this form to view and remove participants. You can also nominate participants to be administrators or not, set the country representation and reimbursement status.</p>
         <p i18n:translate="">Currently <em i18n:name="participantsCount" tal:content="here/participantsCount"/> participants out of <em i18n:name="maxParticipants" tal:content="here/max_participants"/> maximum participants.</p>
         <tal:block define="sort_on python:request.get('sort_on', '');
                     users python:here.getAttendees(sort_on);">
@@ -241,6 +246,10 @@
               <input tal:condition="nfp_country_code" type="submit"
                 name="unset_reimbursement" i18n:attributes="value"
                 tal:attributes="value string:Un-Set reimbursed"/>
+              <input tal:condition="meeting/checkPermissionAdminMeeting"
+                type="submit" name="save_changes" id="save_changes"
+                i18n:attributes="value" value="Save changes"
+                style="display:none" />
             </tal:block>
         </form>
         </tal:block>
