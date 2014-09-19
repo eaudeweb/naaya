@@ -38,5 +38,4 @@ country_from_country_code = {
     'rs': 'Serbia',
     'ba': 'Bosnia and Herzegovina',
     'xk': 'Kosovo under the UNSCR 1244/99',
-    'testrole': 'Tara de test',
 }
