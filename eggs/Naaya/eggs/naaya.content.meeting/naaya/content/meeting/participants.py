@@ -1,5 +1,3 @@
-# Python imports
-
 # Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
@@ -142,6 +140,9 @@ class Participants(SimpleItem):
         else:
             nfp_country_code = self.nfp_for_country()
         self.setAttendeeInfo(ids, 'country', nfp_country_code)
+        self.setAttendeeInfo(ids, 'justification', '')
+        self.setAttendeeInfo(ids, 'saved_by',
+                             REQUEST.AUTHENTICATED_USER.getUserName())
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     @postonly
@@ -155,6 +156,9 @@ class Participants(SimpleItem):
         assert isinstance(keys, list)
         ids = uids + keys
         self.setAttendeeInfo(ids, 'reimbursed', not remove)
+        self.setAttendeeInfo(ids, 'justification', '')
+        self.setAttendeeInfo(ids, 'saved_by',
+                             REQUEST.AUTHENTICATED_USER.getUserName())
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
@@ -178,6 +182,43 @@ class Participants(SimpleItem):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     @postonly
+    def save_changes(self, REQUEST):
+        """ """
+        uids = REQUEST.form.get('uids', []) + REQUEST.form.get('keys', [])
+        representers = {}
+        form_representers = REQUEST.form.get('represents', [])
+        if not isinstance(form_representers, list):
+            form_representers = [form_representers]
+        reimbursed = REQUEST.form.get('reimbursed', [])
+        if not isinstance(reimbursed, list):
+            reimbursed = [reimbursed]
+        justifications = {}
+        form_justifications = REQUEST.form.get('justification', [])
+        if not isinstance(form_justifications, list):
+            form_justifications = [form_justifications]
+        for uid in uids:
+            idx = uids.index(uid)
+            representers[uid] = form_representers[idx] or None
+            justifications[uid] = form_justifications[idx]
+        errors = []
+        for uid in uids:
+            if not justifications[uid]:
+                user_name = self.getAuthenticationTool().name_from_userid(uid)
+                errors.append('Changes to %s not saved: mandatory field '
+                              '"Justification" field missing' % user_name)
+                pass
+            else:
+                self.setAttendeeInfo([uid], 'country', representers[uid])
+                self.setAttendeeInfo([uid], 'reimbursed', uid in reimbursed)
+                self.setAttendeeInfo([uid], 'justification',
+                                     justifications[uid])
+                self.setAttendeeInfo([uid], 'saved_by',
+                                     REQUEST.AUTHENTICATED_USER.getUserName())
+        if errors:
+            self.setSessionErrorsTrans(errors)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    @postonly
     def onAttendees(self, REQUEST):
         """ """
         if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
@@ -196,6 +237,8 @@ class Participants(SimpleItem):
             return self.setRepresentatives(REQUEST, remove=True)
         elif 'unset_reimbursement' in REQUEST.form:
             return self.setReimbursement(REQUEST, remove=True)
+        elif 'save_changes' in REQUEST.form:
+            return self.save_changes(REQUEST)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -221,6 +264,15 @@ class Participants(SimpleItem):
                 attendees[uid]['reimbursed'] = 'Yes'
             else:
                 attendees[uid]['reimbursed'] = 'No'
+            try:
+                attendees[uid]['saved_by'] = self.getAuthenticationTool()\
+                    .name_from_userid(attendee.saved_by)
+            except AttributeError:
+                attendees[uid]['saved_by'] = ''
+            try:
+                attendees[uid]['justification'] = attendee.justification
+            except AttributeError:
+                attendees[uid]['justification'] = ''
         return attendees
 
     def getAttendees(self, sort_on=''):
@@ -278,13 +330,16 @@ class Participants(SimpleItem):
             phone = self.get_survey_answer(uid, 'w_telephone')
         if not phone:
             phone = self.get_survey_answer(uid, 'w_phone')
-        attendees = self._get_attendees()
-        role = attendees[uid]['role']
-        country = attendees[uid]['country']
-        reimbursed = attendees[uid]['reimbursed']
+        attendee = self._get_attendees()[uid]
+        role = attendee['role']
+        country = attendee['country']
+        reimbursed = attendee['reimbursed']
+        saved_by = attendee['saved_by']
+        justification = attendee['justification']
         ret = {'uid': uid, 'name': name, 'email': email,
                'organization': organization, 'phone': phone, 'role': role,
-               'country': country, 'reimbursed': reimbursed}
+               'country': country, 'reimbursed': reimbursed,
+               'saved_by': saved_by, 'justification': justification}
         for k, v in ret.items():
             if not isinstance(v, basestring):
                 ret[k] = u''
