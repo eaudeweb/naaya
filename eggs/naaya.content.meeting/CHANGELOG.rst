@@ -1,4 +1,7 @@
-1.2.58 (unreleased)
+1.2.59 (unreleased)
+-------------------
+
+1.2.58 (2014-09-19)
 -------------------
 * administrators can set country representation and reimbursement [dumitval]
 
