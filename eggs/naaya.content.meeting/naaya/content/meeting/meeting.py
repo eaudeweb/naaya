@@ -721,6 +721,12 @@ class NyMeeting(NyContentData, NyFolder):
             return '-'
         return country_from_country_code.get(country_code, country_code)
 
+    def get_countries(self):
+        """ """
+        countries = sorted(country_from_country_code.items(),
+                           key=lambda x:x[1])
+        return countries
+
     security.declareProtected(view, 'is_signup')
     def is_signup(self):
         """ """
