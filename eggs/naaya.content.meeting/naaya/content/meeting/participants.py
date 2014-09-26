@@ -18,6 +18,7 @@ from utils import (getUserFullName, getUserEmail, getUserOrganization,
                    getUserPhoneNumber)
 from utils import findUsers, listUsersInGroup
 from subscriptions import Subscriptions
+from countries import country_from_country_code
 
 
 class Participants(SimpleItem):
@@ -395,15 +396,21 @@ class Participants(SimpleItem):
         """exports the participants listing in an excel file"""
         assert self.rstk.we_provide('Excel export')
 
-        header = ['Name', 'User ID', 'Email', 'Organisation', 'Phone',
-                  'Status']
+        header = ['Name', 'User ID', 'Email', 'Organisation',
+                  'Represented country', 'Reimbursed participation', 'Phone',
+                  'Status', 'Last modified by',
+                  'Reason for modification (when saved by an administrator)']
         rows = []
         participants = self.getAttendees()
         for participant in participants:
             part_info = self.getAttendeeInfo(participant)
             rows.append([part_info['name'], part_info['uid'],
                          part_info['email'], part_info['organization'],
-                         part_info['phone'], part_info['role']])
+                         country_from_country_code.get(part_info['country'],
+                                                       ''),
+                         part_info['reimbursed'], part_info['phone'],
+                         part_info['role'], part_info['saved_by'],
+                         part_info['justification']])
 
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls'
