@@ -1,5 +1,6 @@
 1.2.59 (unreleased)
 -------------------
+* added new columns to the participants Excel export [dumitval]
 * corrected country code for Iceland, added country code for Ireland [dumitval]
 
 1.2.58 (2014-09-19)
