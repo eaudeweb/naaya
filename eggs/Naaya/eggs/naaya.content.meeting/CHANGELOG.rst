@@ -1,4 +1,7 @@
-1.2.60 (unreleased)
+1.2.61 (unreleased)
+-------------------
+
+1.2.60 (2014-09-26)
 -------------------
 * change Excel export filname to include meeting id and download date [dumitval]
 
