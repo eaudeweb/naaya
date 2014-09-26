@@ -1,4 +1,7 @@
-1.2.59 (unreleased)
+1.2.60 (unreleased)
+-------------------
+
+1.2.59 (2014-09-26)
 -------------------
 * added new columns to the participants Excel export [dumitval]
 * corrected country code for Iceland, added country code for Ireland [dumitval]
