@@ -5,6 +5,7 @@ from AccessControl.unauthorized import Unauthorized
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from AccessControl.requestmethod import postonly
+from datetime import datetime
 
 # Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -412,9 +413,12 @@ class Participants(SimpleItem):
                          part_info['role'], part_info['saved_by'],
                          part_info['justification']])
 
+        filename = '%s_%s_%s.xls' % (self.getMeeting().getId(), self.id,
+                                     datetime.now().strftime(
+                                     "%Y-%m-%d_%H-%M-%S"))
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls'
-                           % self.id)
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s'
+                           % filename)
         return generate_excel(header, rows)
 
 InitializeClass(Participants)
