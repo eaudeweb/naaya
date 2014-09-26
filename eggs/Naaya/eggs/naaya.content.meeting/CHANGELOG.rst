@@ -1,5 +1,6 @@
 1.2.59 (unreleased)
 -------------------
+* corrected country code for Iceland, added country code for Ireland [dumitval]
 
 1.2.58 (2014-09-19)
 -------------------
