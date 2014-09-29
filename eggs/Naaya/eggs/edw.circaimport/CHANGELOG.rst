@@ -1,4 +1,7 @@
-1.3.1 (unreleased)
+1.3.2 (unreleased)
+------------------
+
+1.3.1 (2014-09-29)
 ------------------
 * bugfix when notifications are disabled (import_all_from_circa) [dumitval]
 
