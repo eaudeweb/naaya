@@ -1,5 +1,6 @@
 3.0.27 (unreleased)
 ------------------
+* re-encode mainsection images to jpeg if uploaded BMP or TIFF [dumitval]
 
 3.0.26 (2014-07-10)
 ------------------
