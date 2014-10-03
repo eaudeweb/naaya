@@ -65,7 +65,7 @@
 					The access and navigation in this virtual space is done via any Internet
 					browser and as in any working group, committee or project team, one member
 					plays the role of chairman or moderator; in the Forum it is called an
-					<em>IG Leader</em>.</p>
+					<em>IG Administrator</em>.</p>
 
 					<p>If you have problems please contact
 					<a href="mailto:helpdesk@eionet.europa.eu">Eionet Helpdesk</a></p>
@@ -91,14 +91,14 @@
 						for creating access profiles tuned to your particular needs, thus
 						customizing users access rights to specific data elements, functionalities
 						and operations in the IG.</li>
-						<li><em>the IG Leader</em>: A specific access profile, the Leader, is
+						<li><em>the IG Administrator</em>: A specific access profile, the Administrator, is
 						granted extra privileges to administrate, manage and customize the IG.</li>
 						<li><em>"What you See Is What You Have Access To":</em> The User Interface
 						is automatically mapped onto users access profile so that only those
 						functionalities and information users are granted access to, are visible.
 						Thus, some of the functionalities described in this User Manual might not
 						be accessible to you because the actual access profile, granted by the
-						Interest group Leader, does not allow it.</li>
+						Interest group Administrator, does not allow it.</li>
 					</ul>
 					<p>Please observe this tutorial on accessing restricted Interest Groups of the Eionet Forum or Eionet Projects platforms:</p>
 					<p><iframe width="720" height="540"
@@ -175,6 +175,16 @@
 						placed within the <strong>"Search for documents containing":</strong>
 						text field part of the page.</li>
 					</ul>
+
+          <h3>Member search</h3>
+          <p>Via the member search you can search for users who have a certain
+            role in this IG (either <strong>Contributor</strong>, 
+            <strong>Reviewer</strong>, <strong>Administrator</strong>, etc.).</p>
+          <img src="/++resource++naaya.gwhelp/member-search.png" alt="" title="" />
+          <p>Clicking on the <strong>Show all administrators</strong> button
+            will produce a list with the IG administrators, in case you need
+            to contact them.</p>
+
 				</metal:block>
 			</metal:block>
 		</div>

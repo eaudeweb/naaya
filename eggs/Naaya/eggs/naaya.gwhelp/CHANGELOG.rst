@@ -1,5 +1,6 @@
 1.0.3 (unreleased)
 -------------------
+* added info about the Member search and Show administrators [dumitval]
 
 1.0.2 (2014-05-06)
 -------------------
