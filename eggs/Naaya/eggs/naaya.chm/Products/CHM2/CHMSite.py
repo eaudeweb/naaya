@@ -915,6 +915,8 @@ def process_picture(picture, crop_coordinates, F_WIDTH, F_HEIGHT):
     image_string = picture2stringIO(picture)
     img = Image.open(image_string)
     fmt = img.format
+    if fmt.lower() in ['bmp', 'tiff']:
+        fmt = 'JPEG'
     crop_size = F_WIDTH
     if crop_coordinates[2] - crop_coordinates[0] == 0:
         x = img.size[0]
