@@ -2,6 +2,7 @@ from mock import Mock, patch
 import transaction
 from naaya.groupware.tests import GWFunctionalTestCase
 
+
 class MockedSource(Mock):
     """ Mocked ldap source """
     def get_user_info(self, user):
@@ -9,16 +10,17 @@ class MockedSource(Mock):
         info.email = 'x@example.com'
         return info
 
+
 class IGRequestTestCase(GWFunctionalTestCase):
 
     def afterSetUp(self):
-        #Create a no role user so that we can request a role
+        # Create a no role user so that we can request a role
         self.portal.aq_parent.acl_users._doAddUser('norole', 'norole', [], '')
         transaction.commit()
 
-        #Make this portal restricted so the request form can be displayed
+        # Make this portal restricted so the request form can be displayed
         self.portal.toggle_portal_restricted(True)
-        #Mock the sources so we don't connect to a ldap server
+        # Mock the sources so we don't connect to a ldap server
         self.p = patch(
             'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
             'AuthenticationTool.getSources',
@@ -53,33 +55,34 @@ class IGRequestTestCase(GWFunctionalTestCase):
         field = self.browser.get_form_field(form, 'role')
         self.browser.clicked(form, field)
         self.browser.submit()
-        self.assertTrue('The Group Leader has been notified of your access'
-                        ' request' in self.browser.get_html())
+        self.assertTrue('The Interest Group administrators have been notified '
+                        'of your access request' in self.browser.get_html())
         mail_outbox = dict(self.mail_log)['sendmail']
         self.assertEqual(mail_outbox['to'][0], 'site.admin@example.com')
-        #There should be something about this user in the e-mail
+        # There should be something about this user in the e-mail
         self.assertTrue('Username: norole' in mail_outbox['message'])
 
         action_logger = self.portal.getActionLogger()
         self.assertEqual(action_logger[1].user, 'norole')
 
+
 class IGReviewTestCase(GWFunctionalTestCase):
     """ Review process """
 
     def afterSetUp(self):
-        #Create a no role user so that we can request a role
+        # Create a no role user so that we can request a role
         self.action_logger = self.portal.getActionLogger()
-        #Create a log so that we can match a key
+        # Create a log so that we can match a key
         self.action_logger.create(user='norole',
-                             location_title='gw_portal',
-                             location='',
-                             key='4db91157307c2c817b6a8695974987d2',
-                             role='Contributor',
-                             type='IG role request',
-                             location_url=self.portal.absolute_url())
+                                  location_title='gw_portal',
+                                  location='',
+                                  key='4db91157307c2c817b6a8695974987d2',
+                                  role='Contributor',
+                                  type='IG role request',
+                                  location_url=self.portal.absolute_url())
         transaction.commit()
 
-        #Mock the sources so we don't connect to a ldap server
+        # Mock the sources so we don't connect to a ldap server
         self.p = patch(
             'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
             'AuthenticationTool.getSources',
@@ -95,8 +98,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
         key = 'somekey'
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
-        self.assertTrue('Key %s not found' % key
-                in self.browser.get_html())
+        self.assertTrue('Key %s not found' % key in self.browser.get_html())
 
     def test_review_request(self):
         """ Generate a request then get the review form"""
@@ -166,7 +168,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
         form['send_mail'] = ['1']
         self.browser.submit()
 
-        #Should contain the reason
+        # Should contain the reason
         self.assertTrue('Some reason' in
                         dict(self.mail_log)['sendmail']['message'])
 
@@ -181,4 +183,4 @@ class IGReviewTestCase(GWFunctionalTestCase):
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
         self.assertTrue('Key %s has already been used' % key in
-                    self.browser.get_html())
+                        self.browser.get_html())
