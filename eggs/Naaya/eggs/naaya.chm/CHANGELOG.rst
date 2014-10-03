@@ -1,4 +1,7 @@
-3.0.27 (unreleased)
+3.0.28 (unreleased)
+------------------
+
+3.0.27 (2014-10-03)
 ------------------
 * re-encode mainsection images to jpeg if uploaded BMP or TIFF [dumitval]
 
