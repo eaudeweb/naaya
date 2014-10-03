@@ -1,4 +1,7 @@
-1.0.3 (unreleased)
+1.0.4 (unreleased)
+-------------------
+
+1.0.3 (2014-10-03)
 -------------------
 * added info about the Member search and Show administrators [dumitval]
 
