@@ -1,3 +1,7 @@
+1.4.28 (unreleased)
+-------------------
+* modified some tests where the old "Leader" term was used [dumitval]
+
 1.4.27 (2014-08-27)
 -------------------
 * Change: renamed create new member option in navigation portlet menu
@@ -6,7 +10,6 @@
 1.4.26 (2014-08-25)
 -------------------
 * In the navigation portlet, added create user link for NFPs
-  [tiberich #20187]
 
 1.4.25 (2014-08-01)
 -------------------
