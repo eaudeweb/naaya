@@ -1,7 +1,6 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Roles</metal:block>
 
-<metal:block fill-slot="search-box"></metal:block>
 <metal:block fill-slot="buttons"></metal:block>
 <metal:block fill-slot="second-tabs"></metal:block>
 
