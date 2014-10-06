@@ -1,4 +1,7 @@
-3.3.67 (unreleased)
+3.3.68 (unreleased)
+-------------------
+
+3.3.67 (2014-10-06)
 -------------------
 * removed users bulk download from the interface [dumitval]
 * all tables in user administration are now dataTables [dumitval]
