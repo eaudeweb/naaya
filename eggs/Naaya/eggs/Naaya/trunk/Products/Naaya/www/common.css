@@ -1945,17 +1945,6 @@ label:hover {
 		cursor: pointer;
 }
 
-.search-box {
-	background-color: #F0F5FB;
-    padding: 0.5em 1em 0.5em 1em;
-	border: 1px dotted #999999;
-	margin-top: 1.5em;
-}
-
-.search-box:hover {
-	background-color: #FFFFDD;
-}
-
 /**
  * Paginator
 */
