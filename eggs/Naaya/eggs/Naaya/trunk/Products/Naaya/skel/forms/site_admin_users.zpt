@@ -86,7 +86,6 @@
 
 <metal:block define-slot="section-title">
 <tal:block condition="user_sources">
-	<div class="cleaner">&nbsp;</div>
 	<h3 i18n:translate="">
 		Users list
 	</h3>

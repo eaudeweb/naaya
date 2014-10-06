@@ -12,128 +12,6 @@
     <metal:block fill-slot="section-title">
     </metal:block>
 
-    <metal:block fill-slot="search-box"><metal:block define-macro="search-box">
-            <div class="cleaner"></div>
-            <div class="search-box">
-                <form method="get" id="search-users-form" action="">
-                    <div id="name_filter">
-                        <label for="search" i18n:translate="">Search users:</label>
-                        <input type="text" title="You can search by name, email, username (full or part of it)."
-                            i18n:attributes="title" name="query" id="autocomplete-query"
-                            class="autocomplete"
-                            tal:attributes="value python: request.get('query', '')"
-                            size="27" />
-                        <br />
-                    </div>
-
-                    <div class="filters">
-                        <select name="disabled" tal:define="disabled_type python:request.form.get('disabled', 'no_disabled');">
-                            <option value="no_disabled" tal:attributes="selected python:disabled_type=='no_disabled'">
-                                Only active users
-                            </option>
-                            <option value="include_disabled" tal:attributes="selected python:disabled_type=='include_disabled'">
-                                All users, including those that have been disabled
-                            </option>
-                            <option value="only_disabled" tal:attributes="selected python:disabled_type=='only_disabled'">
-                                Show only users that have been disabled
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="filters">
-                        <label for="filter-roles" i18n:translate="">with roles:</label>
-                        <select name="role" id="filter-roles">
-                            <option value="" i18n:translate="">All</option>
-                            <option value="noroles" i18n:translate="" tal:attributes="selected python: test(filter_role == 'noroles', 'selected', '')">Users with no roles</option>
-                            <tal:block repeat="role user_tool/list_valid_roles">
-                                <option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
-                                <option tal:condition="python:role!='Manager'" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
-                            </tal:block>
-                        </select>
-                    </div>
-
-                    <div class="filters">
-                        <label for="filter-locations" i18n:translate="">in location:</label>
-                        <select name="location" id="filter-locations">
-                            <option value="_all_" i18n:translate="">All</option>
-                            <tal:block define="containers_by_site user_tool/get_all_containers_with_roles">
-
-                                <tal:block condition="python: len(containers_by_site) == 1">
-                                    <tal:block repeat="location python: containers_by_site[0]">
-                                        <option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
-                                            tal:attributes="value path;
-                                            title path;
-                                            selected python: filter_location == path"
-                                            tal:content="location/title_or_id"/>
-                                    </tal:block>
-                                </tal:block>
-
-                                <tal:block condition="python: len(containers_by_site) > 1">
-                                    <tal:block repeat="containers containers_by_site">
-                                        <optgroup tal:attributes="label python: containers[0].title_or_id()">
-                                            <tal:block repeat="location containers">
-                                                <option tal:define="path python: here.rstk['relative_object_path'](location, here.getSite())"
-                                                    tal:attributes="value path;
-                                                    title path;
-                                                    selected python: filter_location == path"
-                                                    tal:content="location/title_or_id"/>
-                                            </tal:block>
-                                        </optgroup>
-                                    </tal:block>
-                                </tal:block>
-
-                            </tal:block>
-                        </select>
-
-                    </div>
-
-
-                    <div class="filters">
-                        <input type="submit" i18n:attributes="value" value="Search" />
-                        <a tal:attributes="href string:${site_url}/admin_local_users_html">Clear search</a>
-                    </div>
-
-                    <input type="hidden" name="skey" tal:attributes="value skey" />
-                    <input type="hidden" name="rkey" tal:attributes="value rkey" />
-                    <div class="loader">
-                        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt; title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
-                    </div>
-                </form>
-
-                <div class="cleaner"></div>
-
-                <p i18n:translate="" id="search-filters">
-                    <tal:block condition="python: not request.get('query', '') and not filter_role and filter_location == '_all_'">
-                        Showing <strong i18n:name="all-users">all users</strong>.
-                    </tal:block>
-
-                    <tal:block condition="python: request.get('query', '')">
-                        Showing only users containing
-                        <strong i18n:name="query" tal:content="python: '\'' + query + '\''"/>
-                        in their username, name or email.
-                    </tal:block>
-
-                    <tal:block condition="python: filter_role == 'noroles'">
-                        Showing only users with <strong i18n:name="no-roles">no roles</strong>.
-                    </tal:block>
-                    <tal:block condition="python: filter_role and filter_role != 'noroles'">
-                        Showing only <strong i18n:name="role" tal:content="filter_role"/> role.
-                    </tal:block>
-
-                    <tal:block condition="python: filter_location != '_all_' and filter_role != 'noroles'">
-                        Showing only roles in
-                        <strong i18n:name="location"
-                            tal:define="location python: here.utGetObject(filter_location)">
-                            <a tal:attributes="href location/absolute_url"
-                                tal:content="location/title_or_id"></a>
-                        </strong>
-                    </tal:block>
-                </p>
-            </div>
-            <div class="cleaner">&nbsp;</div>
-        </metal:block>
-    </metal:block>
-
     <metal:block fill-slot="buttons"><metal:block define-macro="buttons">
             <div class="floated-buttons">
                 <span class="buttons">
@@ -167,7 +45,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="clear">&nbsp;</div>
+            <div class="cleaner"></div>
         </metal:block>
     </metal:block>
 
@@ -178,8 +56,27 @@
             users python: all_users_objects[(page * per_page):((page + 1) * per_page)];
             ">
 
+            <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+            <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $('.users_listing').each(function(){
+                      $(this).dataTable({
+                        'aaSorting': [[0, "desc"]],
+                        'aoColumnDefs': [
+                          { 'bSortable': false, 'aTargets': [ 3 ] }
+                         ],
+                        'sPaginationType': 'full_numbers',
+                        "aLengthMenu": [[10, 25, 50, -1],
+                                        [10, 25, 50, "All"]],
+                        'iDisplayLength': 10
+                      });
+                    });
+                });
+            </script>
             <form method="post" action="" class="datatable-form">
-                <div class="form-buttons cleaner">
+                <div class="cleaner">&nbsp;</div>
+                <div class="form-buttons">
                     <span class="buttons">
                         <input tal:condition="users" type="submit"
                             value="Delete selected user(s)" i18n:attributes="value"
@@ -190,6 +87,7 @@
                             class="revoke_roles" name="../admin_revoke_searched_roles:method" />
                     </span>
                 </div>
+                <div class="cleaner">&nbsp;</div>
 
                 <input type="hidden" id="template" value="site_admin_local_users" />
                 <input type="hidden" name="role" tal:attributes="value filter_role" />
@@ -197,21 +95,11 @@
 
                 <metal:block define-macro="datatable">
                     <div class="user-results">
-                        <tal:block condition="users">
-                            <div class="paginator-details">
-                                <label for="per-page" i18n:translate="">Users per page</label>
-                                <select name="per-page" id="per-page">
-                                    <option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
-                                    <option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
-                                    <option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
-                                </select>
-                            </div>
-                        </tal:block>
 
-                        <div class="cleaner">&nbsp;</div>
+                        <div class="cleaner"></div>
 
                         <table cellspacing="0" cellpadding="4" width="95%"
-                            tal:attributes="class python:len(users) and 'datatable sortable' or 'empty'">
+                            tal:attributes="class python:len(users) and 'datatable users_listing' or 'empty'">
                             <thead>
                                 <tr  tal:condition="python:len(users) != 0">
                                     <th width="5%" align="left" class="checkbox">

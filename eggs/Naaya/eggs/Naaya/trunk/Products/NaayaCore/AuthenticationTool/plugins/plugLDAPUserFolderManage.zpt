@@ -1,3 +1,28 @@
+<script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#groups_listing').dataTable({
+            'aaSorting': [[0, "desc"]],
+            'aoColumnDefs': [
+              { 'bSortable': false, 'aTargets': [ 2 ] }
+             ],
+            'sPaginationType': 'full_numbers',
+            'aLengthMenu': [[10, 25, 50, -1],
+                            [10, 25, 50, "All"]]
+        });
+        $('#users_listing').dataTable({
+            'aaSorting': [[0, "desc"]],
+            'aoColumnDefs': [
+              { 'bSortable': false, 'aTargets': [ 3 ] }
+             ],
+            'sPaginationType': 'full_numbers',
+            'aLengthMenu': [[10, 25, 50, -1],
+                            [10, 25, 50, "All"]],
+            'iDisplayLength': 10
+        });
+    });
+</script>
 <div id="section_parent" tal:define="
     skey python:request.get('skey', '');
     rkey python:request.get('rkey', '');
@@ -53,7 +78,7 @@
     </div>
 
     <tal:block tal:condition="groups_roles_map">
-        <table class="ldap_groups datatable sortable" cellpadding="2" cellspacing="0">
+        <table id="groups_listing" class="ldap_groups datatable" cellpadding="2" cellspacing="0">
             <thead>
                 <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
                 <th i18n:translate="">Roles/Location</th>
@@ -134,80 +159,67 @@
         </p>
     </div>
     
-	<table cellspacing="0" cellpadding="4" class="datatable sortable">
-		<tr tal:condition="users_roles">
-			<th align="left">
-				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
-					<span i18n:translate="">Username</span>
-				</a>
-				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user&rkey=1" tal:condition="python: (skey == 'user' and not rkey) or not skey">
-					<span i18n:translate="">Username</span>
-				</a>
-				<img tal:condition="python: (skey == 'user' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-				<img tal:condition="python: skey == 'user' and rkey" src="misc_/Naaya/sort_desc.gif" />
-			</th>
-			<th align="left">
-				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group" tal:condition="python: (skey == 'group' and rkey) or skey != 'group'" >
-					<span i18n:translate="">Group</span>
-				</a>
-				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group&rkey=1" tal:condition="python: skey == 'group' and not rkey" >
-					<span i18n:translate="">Group</span>
-				</a>
-				<img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-				<img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
-			</th>
-			<th align="left"><span i18n:translate="">Roles/Location</span></th>
-			<th width="1" i18n:translate="">Revoke roles</th>
-		</tr>
-		<tr tal:repeat="user users_roles"
-			tal:attributes="class python:test(path('repeat/user/odd'),
-											 'row-odd', 'row-even')">
-		<tal:block define="user_id python:user[0];
-							user_name python:user[1];
-							user_group python:user[2];
-                            user_roles python:user[3];
-                            is_disabled python:user[4];">
-			<td tal:attributes="class python:is_disabled and 'user_disabled' or ''">
-				<tal:block condition="python: source_title.lower()=='eionet'"
-					define="user_quoted python:here.utUrlEncode(user_id)">
-					<a rel="external" tal:content="string:${user_name} (${user_id})"
-					tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
-				</tal:block>
-				<tal:block condition="python: source_title.lower()!='eionet'"
-									content="string:${user_name} (${user_id})" />
-				<tal:block define="user_photo_url python: here.get_user_photo_url(user_id)">
-					<a tal:condition="user_photo_url"
-						tal:attributes="href user_photo_url"
-						class="preview">[view photo]</a>
-				</tal:block>
-                <span style="text-decoration:none" tal:condition="is_disabled">(disabled)</span>
-			</td>
-			<td tal:content="user_group"></td>
+  <table id="users_listing" cellspacing="0" cellpadding="4" class="datatable"
+      tal:condition="users_roles">
+    <thead>
+      <tr>
+        <th align="left" i18n:translate="">Username</th>
+        <th align="left" i18n:translate="">Group</th>
+        <th align="left" i18n:translate="">Roles/Location</th>
+        <th width="1" i18n:translate="">Revoke roles</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="user users_roles"
+        tal:attributes="class python:test(path('repeat/user/odd'),
+                         'row-odd', 'row-even')">
+        <tal:block define="user_id python:user[0];
+                  user_name python:user[1];
+                  user_group python:user[2];
+                                user_roles python:user[3];
+                                is_disabled python:user[4];">
+          <td tal:attributes="class python:is_disabled and 'user_disabled' or ''">
+            <tal:block condition="python: source_title.lower()=='eionet'"
+              define="user_quoted python:here.utUrlEncode(user_id)">
+              <a rel="external" tal:content="string:${user_name} (${user_id})"
+              tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
+            </tal:block>
+            <tal:block condition="python: source_title.lower()!='eionet'"
+                      content="string:${user_name} (${user_id})" />
+            <tal:block define="user_photo_url python: here.get_user_photo_url(user_id)">
+              <a tal:condition="user_photo_url"
+                tal:attributes="href user_photo_url"
+                class="preview">[view photo]</a>
+            </tal:block>
+                    <span style="text-decoration:none" tal:condition="is_disabled">(disabled)</span>
+          </td>
+          <td tal:content="user_group"></td>
 
-			<td>
-				<div class="user-role" tal:repeat="role user_roles">
-					<tal:block condition="python: role[0]">
-					<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-					<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
-					</tal:block>
-				</div>
-				<tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
-			</td>
+          <td>
+            <div class="user-role" tal:repeat="role user_roles">
+              <tal:block condition="python: role[0]">
+              <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+              <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+              </tal:block>
+            </div>
+            <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
+          </td>
 
-			<td>
-				<div class="user-role-revoke" tal:repeat="role user_roles">
-					<tal:block condition="python: role[0]">
-					<a class="revoke-role" i18n:attributes="title" title="Revoke role"
-						tal:define="location python: role[1]"
-						tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${user_id}&location=${location}">
-						<img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
-					</a>
-					</tal:block>
-				</div>
-			</td>
-		</tal:block>
-		</tr>
-	</table>
+          <td>
+            <div class="user-role-revoke" tal:repeat="role user_roles">
+              <tal:block condition="python: role[0]">
+              <a class="revoke-role" i18n:attributes="title" title="Revoke role"
+                tal:define="location python: role[1]"
+                tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${user_id}&location=${location}">
+                <img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+              </a>
+              </tal:block>
+            </div>
+          </td>
+        </tal:block>
+      </tr>
+    </tbody>
+  </table>
 
     </tal:block>
 </div>
