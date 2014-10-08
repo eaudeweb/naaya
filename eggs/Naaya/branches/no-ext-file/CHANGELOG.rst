@@ -1,5 +1,8 @@
-3.3.68 (unreleased)
+3.4.0 (2014-10-08)
 -------------------
+* Feature: merge with the no-ext-files branch that implements
+  blob files for storage of files
+  [tiberich #3929]
 
 3.3.67 (2014-10-06)
 -------------------
