@@ -11,9 +11,12 @@ from fixes import fix_exceptions
 def sanitize_folder_path(folder_zope_path):
     folder_zope_path = folder_zope_path.replace('/_', '/~')
     folder_zope_path = folder_zope_path.replace('/aq_', '/aq~')
-    folder_zope_path = folder_zope_path.replace('/description/', '/description-folder/')
-    folder_zope_path = re.sub(r'/description$', '/description-folder', folder_zope_path)
+    folder_zope_path = folder_zope_path.replace('/description/',
+                                                '/description-folder/')
+    folder_zope_path = re.sub(r'/description$', '/description-folder',
+                              folder_zope_path)
     return folder_zope_path
+
 
 def sanitize_id(doc_id):
     if doc_id.startswith('_'):
@@ -23,9 +26,11 @@ def sanitize_id(doc_id):
     if doc_id.endswith('__'):
         doc_id = doc_id + 'file'
     if (doc_id.startswith('coverage_') or doc_id.startswith('istranslated_')
-        or doc_id.startswith('tags_') or doc_id.startswith('objectkeywords_')):
+            or doc_id.startswith('tags_') or doc_id.startswith(
+                'objectkeywords_')):
         doc_id = 'file_' + doc_id
     return doc_id
+
 
 def convert_index(i, o):
     reader = csv.reader(i, dialect='excel-tab')
@@ -33,17 +38,18 @@ def convert_index(i, o):
     for line in reader:
         writer.writerow([c.decode('latin-1').encode('utf-8') for c in line])
 
+
 def read_index(f, warn):
-    #reader = csv.DictReader(f, dialect='excel-tab')
+    # reader = csv.DictReader(f, dialect='excel-tab')
     reader = csv.reader(f, dialect='excel-tab')
     names = reader.next()
     n = 0
     for line in reader:
         n += 1
-        #print n
         fix_exceptions(names, line, warn)
-        yield dict( (names[i], line[i].decode('latin-1'))
-                    for i in range(len(names)) )
+        yield dict((names[i], line[i].decode('latin-1'))
+                   for i in range(len(names)))
+
 
 def parse_date(s):
     if not s:
@@ -54,11 +60,13 @@ def parse_date(s):
         elif '-' in s:
             return datetime.date(*map(int, s.split('-')))
 
+
 def parse_userid(s):
     if s.endswith('@circa'):
         return str(s[:-len('@circa')]).strip()
     else:
         return str(s).strip()
+
 
 def walk_backup(index_file, open_backup_file, get_date, actor):
     folders_info = {'root_path': '',
@@ -77,10 +85,22 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         return result
 
     def handle_folder(line):
-        title = line['TITLE']
-        description = line['ABSTRACT']
-        userid = parse_userid(line['OWNER'])
-        folder_zip_path =  line['FILENAME'][:-1].encode('utf-8')
+        try:
+            title = line['TITLE']
+        except KeyError:
+            title = line['Title']
+        try:
+            description = line['ABSTRACT']
+        except KeyError:
+            description = line['Abstract']
+        try:
+            userid = parse_userid(line['OWNER'])
+        except KeyError:
+            userid = parse_userid(line['Owner'])
+        try:
+            folder_zip_path = line['FILENAME'][:-1].encode('utf-8')
+        except KeyError:
+            folder_zip_path = line['Filename'][:-1].encode('utf-8')
 
         # for zope replace starting underscores
         folder_zope_path = sanitize_folder_path(folder_zip_path)
@@ -88,6 +108,8 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         # use get_date as a backup
         try:
             date = parse_date(line['CREATED'])
+        except KeyError:
+            date = parse_date(line['Created'])
         except ValueError:
             date = get_date(folder_zip_path)
 
@@ -119,13 +141,22 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                            title, description, date, userid)
 
     def handle_file(line):
-        title = line['TITLE']
-        description = line['ABSTRACT']
-        userid = parse_userid(line['OWNER'])
-        keywords = line['KEYWORDS']
-        reference = line.get('REFERENCE', '')
-        status = line['STATUS']
-        doc_zip_path = line['FILENAME']
+        try:
+            title = line['TITLE']
+            description = line['ABSTRACT']
+            userid = parse_userid(line['OWNER'])
+            keywords = line['KEYWORDS']
+            reference = line.get('REFERENCE', '')
+            status = line['STATUS']
+            doc_zip_path = line['FILENAME']
+        except KeyError:
+            title = line['Title']
+            description = line['Abstract']
+            userid = parse_userid(line['Owner'])
+            keywords = line['Keywords']
+            reference = line.get('Reference', '')
+            status = line['Status']
+            doc_zip_path = line['Filename']
 
         # for zope replace starting underscores
         doc_zope_path = sanitize_folder_path(doc_zip_path)
@@ -133,6 +164,8 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         # use get_date as a backup
         try:
             date = parse_date(line['UPLOADDATE'])
+        except KeyError:
+            date = parse_date(line['Uploaddate'])
         except ValueError:
             date = get_date(doc_zip_path)
 
@@ -153,9 +186,13 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             actor.warn('non-english content: %r at %r' %
                        (doc_langver, full_path))
 
-        if line['RANKING'] != 'Public':
+        try:
+            ranking = line['RANKING']
+        except KeyError:
+            ranking = line['Ranking']
+        if ranking != 'Public':
             actor.warn('ranking is %r for %r' %
-                       (str(line['RANKING']), full_path))
+                       (str(ranking), full_path))
 
         if description.lower() == 'n/a':
             description = ''
@@ -165,12 +202,12 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             reference = ''
 
         if status not in ('Draft', ''):
-            description = ( ("<p>Status: %s</p>\n" % status)
-                            + description)
+            description = (("<p>Status: %s</p>\n" % status)
+                           + description)
 
         if reference:
-            description = ( ("<p>Reference: %s</p>\n" % reference)
-                            + description)
+            description = (("<p>Reference: %s</p>\n" % reference)
+                           + description)
 
         doc_data_file = open_backup_file(doc_zip_path.encode('latin-1'))
 
@@ -190,7 +227,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                                  title, description, keywords, date, userid)
 
     for line in read_index(index_file, actor.warn):
-        filename = line['FILENAME']
+        try:
+            filename = line['FILENAME']
+        except KeyError:
+            filename = line['Filename']
         if filename.endswith('/'):
             handle_folder(line)
         else:
