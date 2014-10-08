@@ -1,6 +1,6 @@
 from Products.NaayaCore.GeoMapTool import engine_google
-
 from Products.naayaUpdater.updates import UpdateScript
+
 
 class AddObjMapZoom(UpdateScript):
     title = 'Add objmap_zoom'
@@ -14,6 +14,7 @@ class AddObjMapZoom(UpdateScript):
             self.log.debug('Added objmap_zoom attribute to geomap tool.')
         return True
 
+
 class UpdateGoogleMapsAPIKey(UpdateScript):
     """ Updates google maps api key with the one present in sources """
     title = 'Update Google Maps API Key'
@@ -22,6 +23,10 @@ class UpdateGoogleMapsAPIKey(UpdateScript):
     description = 'Updates Google Maps API Key with the one present in sources'
 
     def _update(self, portal):
+        # no longer support API keys
+
+        raise NotImplementedError
+
         geomap = portal.getGeoMapTool()
         latest_key = engine_google.DEFAULT_API_KEY
         for engine in geomap.objectValues():

@@ -7,6 +7,7 @@
 	tal:define="req_location request/form/location|string:;
 							req_notif_type request/form/notif_type|nothing;
 							my_subscriptions python:here.list_my_subscriptions(request);
+							user_not_found python:here.user_not_found(request);
 							location_subscription python:here.get_location_subscription(req_location, req_notif_type);
 							first_location location_subscription/location|nothing;
 							first_notif_type location_subscription/notif_type|nothing;
@@ -165,7 +166,7 @@
 
 <tal:block condition="my_subscriptions">
 
-<h2 i18n:translate="">Your subscriptions</h2>
+<h2 i18n:translate="">My subscriptions</h2>
 
 <table class="datatable">
 <thead>
@@ -192,13 +193,13 @@
         <td tal:define="lang subscription/lang"
             tal:content="python:here.gl_get_language_name(lang)"/>
         <td tal:condition="python:subscription['notif_type']!='administrative'">
-					<tal:block content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"/>
-					(<a i18n:translate=""
-						tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}">click to edit</a>)
-				</td>
+          <tal:block content="python:', '.join(subscription['content_types']).replace('Naaya ', '') or 'ALL'"/>
+          (<a i18n:translate=""
+            tal:attributes="href string:${site_url}/portal_notification/my_subscriptions_html?location=${subscription/location}&notif_type=${subscription/notif_type}">click to edit</a>)
+        </td>
         <td tal:condition="python:subscription['notif_type']=='administrative'"
-					i18n:translate="">ALL
-				</td>
+          i18n:translate="">ALL
+        </td>
         <td>
             <form method="post"
                   tal:define="url here/absolute_url"
@@ -216,6 +217,23 @@
     </tr>
 </tbody>
 </table>
+
+</tal:block>
+
+<tal:block condition="python:user_not_found and not my_subscriptions">
+
+<h2 i18n:translate="">My subscriptions</h2>
+
+<div class="message-error">
+  <fieldset>
+    <legend i18n:translate="">User not found</legend>
+    <div class="fieldset_div">
+      <p i18n:translate="">Your user was not found in the current user container. This may happen if your user is defined at a higher level in the server tree.</p>
+
+      <p i18n:translate="">The subscription administration is only available for users defined within this site.</p>
+    </div>
+    </fieldset>
+</div>
 
 </tal:block>
 

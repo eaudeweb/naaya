@@ -11,7 +11,7 @@ from Products.NaayaCore.GeoMapTool.GeoMapTool import register_map_engine
 
 # restricted to eea.europa.eu and eionet.europa.eu, for other domains
 # configure your own from Administration, Map Management.
-DEFAULT_API_KEY = 'AIzaSyCV-BfmY6xxmO0V3JAvRbvB30fwKHjaa9s'
+#DEFAULT_API_KEY = 'AIzaSyCV-BfmY6xxmO0V3JAvRbvB30fwKHjaa9s'
 
 
 class GoogleMapEngine(SimpleItem):
@@ -27,7 +27,7 @@ class GoogleMapEngine(SimpleItem):
     def __init__(self, id):
         super(GoogleMapEngine, self).__init__()
         self._setId(id)
-        self.api_keys = DEFAULT_API_KEY
+        #self.api_keys = DEFAULT_API_KEY
         self.base_layer = 'map'
         self.allow_mouse_scroll = True
         self.portal_map_zoom = None
@@ -42,7 +42,7 @@ class GoogleMapEngine(SimpleItem):
         }
         js_config.update(global_config)
         options = {
-            'apikey': pick_api_key(self.api_keys, request),
+            #'apikey': pick_api_key(self.api_keys, request),
             'js_config': json.dumps(js_config),
         }
         return self._html_setup(**options)
@@ -58,7 +58,7 @@ class GoogleMapEngine(SimpleItem):
 
     security.declarePrivate('save_config')
     def save_config(self, form_data):
-        self.api_keys = form_data['google_api_keys']
+        #self.api_keys = form_data['google_api_keys']
         self.allow_mouse_scroll = form_data.get(
                     'google_allow_mouse_scroll', False)
         self.base_layer = form_data['google_base_layer']

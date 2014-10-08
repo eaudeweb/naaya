@@ -99,7 +99,9 @@
 										title object/meta_type" />
 					<a tal:attributes="href object/absolute_url;
 										title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
-					<tal:block define="source python: object.utTruncateString(object.source, 40)" condition="source">
+					<tal:block
+            define="source object/source|string:;
+                    source python: object.utTruncateString(source, 40)" condition="source">
 						<br/>
 						<tal:block i18n:translate="">Source:</tal:block> <tal:block content="source" />
 					</tal:block>
@@ -109,11 +111,11 @@
 					</tal:block>
 				</td>
 				<td class="onfront" tal:condition="edit_permission">
-					<a tal:condition="object/topitem"
+					<a tal:condition="object/topitem|nothing"
 						tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to hide story from the front page">
 						<img src="misc_/Naaya/yes.gif" alt="Click to hide story from the front page" i18n:attributes="alt" />
 					</a>
-					<a tal:condition="not: object/topitem"
+					<a tal:condition="not: object/topitem|nothing"
 						tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to show story on the front page">
 						<img src="misc_/Naaya/no.gif" alt="Click to show story on the front page" i18n:attributes="alt" />
 					</a>
