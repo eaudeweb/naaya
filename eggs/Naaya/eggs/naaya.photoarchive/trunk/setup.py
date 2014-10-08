@@ -7,5 +7,5 @@ setup(name='naaya.photoarchive',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires='Naaya >= 3.0.7'
-)
+      install_requires='Naaya >= 3.4.0'
+      )
