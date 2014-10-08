@@ -1,4 +1,7 @@
-1.3.2 (unreleased)
+1.3.3 (unreleased)
+------------------
+
+1.3.2 (2014-10-08)
 ------------------
 * handle dictionary keys in different casing [dumitval]
 
