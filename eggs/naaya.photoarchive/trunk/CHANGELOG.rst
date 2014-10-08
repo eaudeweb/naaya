@@ -1,5 +1,11 @@
-1.4.1 (unreleased)
+1.5.0 (2014-10-08)
 -------------------
+* Feature: now using Naaya Blob files instead of Naaya ExtFiles to store
+  images
+  [tiberich #3929]
+* Migration: execute the 'PhotoArchive: Migrate ExtFiles to Blobs' migration
+  to properly migrate the photoarchive files to blob storage
+  [tiberich #3929]
 
 1.4.0 (2013-02-25)
 -------------------
