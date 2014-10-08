@@ -1,5 +1,6 @@
 1.3.2 (unreleased)
 ------------------
+* handle dictionary keys in different casing [dumitval]
 
 1.3.1 (2014-09-29)
 ------------------
