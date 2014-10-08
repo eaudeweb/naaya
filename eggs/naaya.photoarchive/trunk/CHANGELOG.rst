@@ -6,7 +6,7 @@
 * Feature: now using Naaya Blob files instead of Naaya ExtFiles to store
   images
   [tiberich #3929]
-* Migration: execute the 'PhotoArchive: Migrate ExtFiles to Blobs' migration
+* `update` execute the 'PhotoArchive: Migrate ExtFiles to Blobs' migration
   to properly migrate the photoarchive files to blob storage
   [tiberich #3929]
 
