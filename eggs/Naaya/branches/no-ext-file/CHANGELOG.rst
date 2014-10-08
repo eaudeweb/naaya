@@ -1,5 +1,89 @@
-3.3.51 (unreleased)
+3.3.68 (unreleased)
 -------------------
+
+3.3.67 (2014-10-06)
+-------------------
+* removed users bulk download from the interface [dumitval]
+* all tables in user administration are now dataTables [dumitval]
+
+3.3.66 (2014-09-12)
+-------------------
+* bugfix in mediafile commandline encoding [dumitval]
+
+3.3.65 (2014-09-11)
+-------------------
+* mediafile keeps video size when encoding [dumitval]
+* Avoid throwing error when getting full username for user when retrieving
+  user info from old ldap cache
+  [tiberich #20725]
+
+3.3.64 (2014-08-11)
+-------------------
+* error handling when a user doesn't have a status (admin_users_html)
+  [dumitval]
+
+3.3.63 (2014-08-08)
+-------------------
+* UnicodeDecodeError fix notifications for roles with non-ASCII chars
+  [dumitval]
+
+3.3.62 (2014-08-06)
+-------------------
+* Feature: show disabled status of users in the "Eionet users" management tab;
+  allow filters by disabled status, in the "All users" tab of the "Users management"
+  page
+  [tiberich #20390]
+
+3.3.61 (2014-07-31)
+-------------------
+* bugfix related to my_notifications for LDAP portals [dumitval]
+
+3.3.60 (2014-07-29)
+-------------------
+* Message in my_notifications page for users defined at a higher
+  hierarchical level [dumitval]
+
+3.3.59 (2014-07-28)
+-------------------
+* bugfix in save_bulk_email [dumitval]
+* added i18n tags to the cookie disclaimer message [dumitval]
+* Change: remove code related to API key for google map engine
+  [tiberich #15626]
+
+3.3.58 (2014-07-08)
+-------------------
+* Bug fix: cleanup the source code of google map engine js. 
+* Bug fix: fix go_to_address_with_zoom function of google map engine
+  [tiberich #15626]
+
+3.3.57 (2014-06-30)
+-------------------
+* ignore disabled@eionet.europa.eu as recipient for notifications [dumitval]
+
+3.3.56 (2014-06-26)
+-------------------
+* handling for expirationdate set to None in some objects [dumitval]
+
+3.3.55 (2014-06-25)
+-------------------
+* hide LocalChannel objects if they expired and don't have 'topitem' set
+  [dumitval]
+
+3.3.54 (2014-06-24)
+-------------------
+* hide rdf objects if they expired and don't have 'topitem' set [dumitval]
+
+3.3.53 (2014-06-17)
+-------------------
+* bugfix in site_googleanalytics [dumitval]
+
+3.3.52 (2014-06-06)
+-------------------
+* bugfix for the Notification system (UnicodeDecodeError) [dumitval]
+
+3.3.51 (2014-06-05)
+-------------------
+* handle news and stories with missing properties (source, topitem) [dumitval]
 
 3.3.50 (2014-05-26)
 -------------------

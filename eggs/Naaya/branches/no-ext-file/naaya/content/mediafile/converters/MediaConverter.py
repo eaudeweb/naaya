@@ -12,9 +12,12 @@ import tempfile
 logger = logging.getLogger('mediafile.converters')
 
 
+
+
 class MediaConverterError(Exception):
     """Media Convertor Error"""
     pass
+
 
 def media2flv(ex_file):
     """ Convert media to flv and add metadata
@@ -31,17 +34,16 @@ def media2flv(ex_file):
     log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
 
     resolution = get_resolution(tcv_path)
-    aspect_ratio = resolution[0]/resolution[1]
-    height = int(320/aspect_ratio)/8*8
-
-    #ex_file.aspect_ratio = aspect_ratio
-    #ex_file._p_changed = True
+    width = int(resolution[0])/8*8
+    height = int(resolution[1])/8*8
+    bitrate = width/320 * height/180 * 128
 
     cmd = [CONVERSION_TOOL, "-y", "-v", "0", "-benchmark", "-i", tcv_path, "-ar",
-           "22050", "-s", "320x%s" % height, "-b", "500k", "-f", "flv", cvd_path]
+           "44100", "-s", "%sx%s" % (width, height), "-b", "%sk" % bitrate,
+           "-f", "flv", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
-    TIMEOUT = 3600 #seconds
+    TIMEOUT = 3 * 3600  # seconds
     timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
     timer.start()
 

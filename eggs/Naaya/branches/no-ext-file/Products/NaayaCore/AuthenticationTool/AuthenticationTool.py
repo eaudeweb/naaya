@@ -5,46 +5,46 @@ user roles, role permissions and searching.
 
 """
 
-import re
-import time
-import logging
-from copy import copy
-from StringIO import StringIO
-import csv
-from warnings import warn
-
-from App.ImageFile import ImageFile
-from DateTime import DateTime
-from OFS.PropertyManager import PropertyManager
-from OFS.ObjectManager import ObjectManager
 from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permissions import view, manage_users
 from AccessControl.User import BasicUserFolder
 from AccessControl.User import SimpleUser
-from AccessControl.Permissions import view, manage_users
+from App.ImageFile import ImageFile
+from DateTime import DateTime
 from Globals import InitializeClass, PersistentMapping
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent.list import PersistentList
-from zope.event import notify
-
-from naaya.core.utils import is_ajax, render_macro, force_to_unicode
-from naaya.core.zope2util import relative_object_path, get_zope_env
-from naaya.core.exceptions import ValidationError, i18n_exception
-from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import \
-     string2object, object2string, InvalidStringError, file_utils, utils
-from Products.NaayaCore.managers.session_manager import session_manager
-from plugins_tool import plugins_tool
-from User import User
-from Role import Role
+from OFS.ObjectManager import ObjectManager
+from OFS.PropertyManager import PropertyManager
+from Products.Naaya.interfaces import INySite
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.interfaces import IRoleLogger
-from naaya.core.utils import is_valid_email
-from Products.NaayaCore.managers.import_export import (set_response_attachment,
-                                                       UnicodeReader)
-from Products.Naaya.interfaces import INySite
-
-from Products.NaayaCore.AuthenticationTool.recover_password import RecoverPassword
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
+from Products.NaayaCore.AuthenticationTool.recover_password import RecoverPassword
+from Products.NaayaCore.constants import ID_AUTHENTICATIONTOOL
+from Products.NaayaCore.constants import METATYPE_AUTHENTICATIONTOOL
+from Products.NaayaCore.constants import METATYPE_FOLDER
+from Products.NaayaCore.constants import TITLE_AUTHENTICATIONTOOL
+from Products.NaayaCore.managers.import_export import UnicodeReader
+from Products.NaayaCore.managers.import_export import set_response_attachment
+from Products.NaayaCore.managers.session_manager import session_manager
+from Products.NaayaCore.managers.utils import InvalidStringError, file_utils, utils
+from Products.NaayaCore.managers.utils import string2object, object2string
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Role import Role
+from StringIO import StringIO
+from User import User
+from copy import copy
+from naaya.core.exceptions import ValidationError, i18n_exception
+from naaya.core.utils import force_to_unicode
+from naaya.core.utils import is_valid_email
+from naaya.core.zope2util import relative_object_path, get_zope_env
+from persistent.list import PersistentList
+from plugins_tool import plugins_tool
+from warnings import warn
+from zope.event import notify
+import csv
+import logging
+import re
+import time
 
 log = logging.getLogger(__name__)
 
@@ -313,7 +313,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             raise ValidationError, 'Invalid activation key !'
         try:
             res = string2object(key)
-        except InvalidStringError, err:
+        except InvalidStringError:
             raise ValidationError, 'Invalid activation key !'
         else:
             self._temp_users.remove(key)
@@ -552,6 +552,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         # filter users by query
         def match_user(user_info):
+            if not user_info:
+                return None
             return (user_info.user_id.lower().find(query) !=-1 or
                     user_info.full_name.lower().find(query) !=-1 or
                     user_info.email.lower().find(query) !=-1)
@@ -615,7 +617,21 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             except AttributeError: # should work for local users only
                 user_info.is_new_user = False
 
-        return users_info
+        disabled_type = form_data.get('disabled_type', 'no_disabled')
+        # sort according to disabled_type
+        response = []
+        for usr in users_info:
+            mail = getattr(usr, 'email', '')
+            status_disabled = getattr(usr, 'status', 'active') == 'disabled'
+            is_disabled = ('disabled@eionet.europa.eu' in mail) or status_disabled
+            if ((disabled_type == 'no_disabled') and (not is_disabled)
+                or
+                (disabled_type == 'include_disabled')
+                or
+                ((disabled_type == 'only_disabled') and is_disabled)
+                ):
+                response.append(usr)
+        return response
 
     def revoke_searched_roles(self, usernames, role_to_revoke, filter_location,
                               REQUEST=None):
@@ -893,7 +909,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         #dictionary that will hold external users
         external_users = {}
         for source in self.getSources():
-            acl_folder = source.getUserFolder()
+            #acl_folder = source.getUserFolder()
             source_obj = self.getSourceObj(source.getId())
             users = source_obj.getSortedUserRoles(skey='user')
             for user in users:
@@ -1642,7 +1658,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manage_importUsers(self, data=None, REQUEST=None):
         """ """
 
-        import_errors = {}
+        #import_errors = {}
         if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
             raise Unauthorized
 
@@ -1763,7 +1779,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         try:
             from eea.usersdb.factories import agent_from_site
-        except ImportError, e:
+        except ImportError:
             return []
         agent = agent_from_site(self)
         ldap_roles = sorted(agent.member_roles_info('user',
