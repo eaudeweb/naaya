@@ -1,46 +1,46 @@
-import os
-import sys
-
-import zLOG
-from Globals import InitializeClass
-from App.ImageFile import ImageFile
+#from naaya.content.base.constants import *
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import Products
 from Acquisition import Implicit
-from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
-
-from naaya.content.bfile.NyBlobFile import make_blobfile
-
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
-from naaya.content.base.constants import *
-from Products.NaayaBase.constants import *
-from Products.NaayaBase.NyFSContainer import NyFSContainer
+from App.ImageFile import ImageFile
+from Globals import InitializeClass
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.NyCheckControl import NyCheckControl
-from naaya.i18n.LocalPropertyManager import LocalProperty
-from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
+from Products.NaayaBase.NyCheckControl import NyCheckControl
+from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyFSContainer import NyFSContainer
+from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.constants import EXCEPTION_NOTACCESIBLE
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaBase.constants import EXCEPTION_NOVERSION
+from Products.NaayaBase.constants import EXCEPTION_NOVERSION_MSG
+from Products.NaayaBase.constants import EXCEPTION_STARTEDVERSION
+from Products.NaayaBase.constants import EXCEPTION_STARTEDVERSION_MSG
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
-from naaya.core import submitter
-from naaya.core.zope2util import abort_transaction_keep_session
-from naaya.core.zope2util import ofs_path, launch_job
-from naaya.core.utils import force_to_unicode
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from converters.MediaConverter import media2flv, can_convert, get_conversion_errors
 from lxml import etree
 from lxml.builder import ElementMaker
-
-from converters.MediaConverter import \
-     media2flv, \
-     can_convert, \
-     get_conversion_errors
-
-from permissions import PERMISSION_ADD_MEDIA_FILE
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.bfile.NyBlobFile import make_blobfile
+from naaya.core import submitter
+from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.core.zope2util import ofs_path, launch_job
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from parsers import DEFAULT_PARSER as SubtitleParser
+from permissions import PERMISSION_ADD_MEDIA_FILE
+from webdav.Lockable import ResourceLockedError
+from zope.event import notify
+import Products
+import os
+import sys
+import zLOG
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -50,7 +50,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
 # If converters installed file must be video, otherwise must be flash video (flv)
 
-ffmpeg_available = can_convert() and NyFSContainer.is_ext
+ffmpeg_available = can_convert() and NyFSContainer.is_blobfile
 if not ffmpeg_available:
     zLOG.LOG("NyMediaFile", zLOG.WARNING,
              "Video conversion will not be supported.")
@@ -313,7 +313,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """
         Returns the B{SINGLE} media file if exists.
         """
-        l = self.objectValues(['ExtFile', 'File'])
+        l = self.objectValues(['ExtFile', 'File', "NyBlobFile"])
         if len(l)>0:
             return l[0]
         else:
@@ -343,10 +343,12 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if not media:
             return "File broken."
 
-        if not self.is_ext:
+        if not self.is_blobfile:
             #TODO: Handle ZODB files
             return ""
 
+        # TODO: implement this
+        return "File broken"
         mpath = media.get_filename()
         return get_conversion_errors(mpath)
 
@@ -435,7 +437,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """ Apply media converters to self subobject with given id (mid) with
         original content-type ctype.
         """
-        if self.is_ext:
+        if self.is_blobfile:
             self._processExtFile(mid, ctype)
         else:
             self._processZODBFile(mid, ctype)
@@ -453,7 +455,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """ Apply media converters to self subobject with given id (mid) which
         is stored outside Data.fs, with original content-type ctype.
         """
-        media = self._getOb(mid)
+        from OFS.ObjectManager import ObjectManager
+        media = ObjectManager._getOb(self, mid)
         launch_job(media2flv, self.aq_parent, ofs_path(media))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
@@ -565,7 +568,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
     security.declarePrivate('switch_content_to_language')
     def switch_content_to_language(self, old_lang, new_lang):
-        super(NyMediaFile, self).switch_content_to_language(old_lang, new_lang)
+        super(NyMediaFile_extfile, self).switch_content_to_language(old_lang, new_lang)
         subtitle = self.getLocalProperty('subtitle', old_lang)
         self._setLocalPropValue('subtitle', new_lang, subtitle)
         self._setLocalPropValue('subtitle', old_lang, '')
@@ -602,7 +605,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
     security.declareProtected(view, 'getSize')
     def getSize(self):
         video = self.getSingleMediaObject()
-        if not (video and self.is_ext):
+        if not (video and self.is_blobfile):
             return 0
         return video.get_size()
 
