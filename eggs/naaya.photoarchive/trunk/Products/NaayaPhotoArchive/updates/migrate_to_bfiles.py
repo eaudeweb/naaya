@@ -33,3 +33,4 @@ class MigrateExtPhotosToBfiles(UpdateScript):
 
         self.log.info('Migration done')
 
+        return True

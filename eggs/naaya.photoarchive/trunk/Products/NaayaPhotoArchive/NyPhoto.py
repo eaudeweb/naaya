@@ -628,10 +628,11 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             self.log_current_error()
             return ImageFile('www/broken_image.gif', globals()).index_html(REQUEST, REQUEST.RESPONSE)
         result = photo.index_html(REQUEST=REQUEST)
-        #TODO: fix this; the next two lines are used to avoid a "blob file is opened" error
-        # at the end of the transaction
-        for fr in photo._blob.readers:
-            photo._blob.readers.remove(fr)
+        if hasattr(photo, '_blob'): # compatibility with non-migrated extfile storage
+            # The next two lines are used to avoid a "blob file is opened" error
+            # at the end of the transaction
+            for fr in photo._blob.readers:
+                photo._blob.readers.remove(fr)
         return result
 
     def check_view_photo_permission(self, display):
