@@ -21,6 +21,12 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_content_type.UpdateContentType"
       permission="zope2.ViewManagementScreens" />
+
+    <utility
+      name="set_title.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_set_title.UpdateSetTitle"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
