@@ -1,4 +1,7 @@
-1.3.4 (unreleased)
+1.3.5 (unreleased)
+------------------
+
+1.3.4 (2014-10-09)
 ------------------
 * ingnore an AttributeError [dumitval]
 
