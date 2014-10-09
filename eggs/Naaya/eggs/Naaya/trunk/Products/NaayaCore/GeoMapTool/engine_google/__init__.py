@@ -63,7 +63,7 @@ class GoogleMapEngine(SimpleItem):
                     'google_allow_mouse_scroll', False)
         self.base_layer = form_data['google_base_layer']
         try:
-            zoom = int(form_data.get('google_portal_map_zoom', None))
+            zoom = int(form_data.get('initial_zoom', None))
         except:
             zoom = None
         self.portal_map_zoom = zoom
