@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.bfile',
-      version='1.3.15',
+      version='1.4.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -12,5 +12,6 @@ setup(name='naaya.content.bfile',
           'Naaya >= 3.3.0',
           'ZODB3 >= 3.8',
           'zope.proxy >= 3.4',
+          'plone.i18n',
       ]
 )

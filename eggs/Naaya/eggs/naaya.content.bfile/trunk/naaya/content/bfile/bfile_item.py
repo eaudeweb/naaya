@@ -1,39 +1,38 @@
 """Naaya Blob File"""
-from datetime import datetime
-from DateTime import DateTime
-import os
-import sys
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
 from Globals import InitializeClass
+from NyBlobFile import make_blobfile, trim_filename
+from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyCheckControl import NyCheckControl
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NyContentData, NyContentType
+from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
+from Products.NaayaCore.managers.utils import make_id, toAscii
+from datetime import datetime
+from interfaces import INyBFile
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
+from naaya.core.zope2util import CaptureTraverse
+from naaya.core.zope2util import abort_transaction_keep_session
+from permissions import PERMISSION_ADD_BFILE
 from persistent.list import PersistentList
+from utils import file_has_content, tmpl_version, get_view_adapter
+from webdav.Lockable import ResourceLockedError
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implements
-
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.core.zope2util import CaptureTraverse
-from interfaces import INyBFile
-
-from Products.NaayaBase.NyContentType import (
-    NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA)
-from naaya.content.base.constants import *
-from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyItem import NyItem
-from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.constants import *
-from Products.NaayaCore.managers.utils import make_id, toAscii
-from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
-from naaya.core import submitter
-from naaya.core.zope2util import abort_transaction_keep_session
-
-from NyBlobFile import make_blobfile, trim_filename
-from utils import file_has_content, tmpl_version, get_view_adapter
-from permissions import PERMISSION_ADD_BFILE
+import os
+import sys
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -167,15 +166,18 @@ def bfile_download(context, path, REQUEST):
     default value is "download" (optional)
 
     """
-    try:
-        ver_number = int(path[0]) - 1
-        if ver_number < 0:
-            raise IndexError
-        ver = context._versions[ver_number]
-        if ver.removed:
-            raise IndexError
-    except (IndexError, ValueError), e:
-        raise NotFound
+    if (not path) or (path and path[0] == 'index_html'):
+        ver = context.current_version
+    else:
+        try:
+            ver_number = int(path[0]) - 1
+            if ver_number < 0:
+                raise IndexError
+            ver = context._versions[ver_number]
+            if ver.removed:
+                raise IndexError
+        except (IndexError, ValueError):
+            raise NotFound
 
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
@@ -187,7 +189,10 @@ def bfile_download(context, path, REQUEST):
         return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
     elif action == 'download':
         context.notify_access_event(REQUEST, 'download')
-        return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
+        if not path:
+            return ver.send_data(RESPONSE, set_filename=True, REQUEST=REQUEST)
+        else:
+            return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
     else:
         raise NotFound
 
@@ -323,7 +328,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
-        _uploaded_file = schema_raw_data.pop('uploaded_file', None)
+        schema_raw_data.pop('uploaded_file', None)
         versions_to_remove = schema_raw_data.pop('versions_to_remove', [])
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
