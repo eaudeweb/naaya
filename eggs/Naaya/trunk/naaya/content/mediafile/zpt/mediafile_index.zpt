@@ -115,6 +115,7 @@
 
           <!-- Embed -->
           <!-- The value of videoEmbed should remain on multiple lines otherwhise IE8 will not display it properly in editor tool -->
+          <include package="plone.i18n" />
           <input tal:condition="python:not is_audio or has_startup_image"
             id="videoEmbed" name="videoEmbed" type="text" style="width: 500px;"
             readonly="true" onclick="javascript:this.select();"

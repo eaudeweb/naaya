@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='3.3.68',
+      version='3.4.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -53,12 +53,18 @@ setup(name='Naaya',
           # Naaya specific
           'naaya.content-compat',
           'naaya.flowplayer',
-          'naaya.content.bfile > 1.3.12',
+          'naaya.content.bfile >= 1.4.0',
           'naaya.i18n > 1.1.5',
           'naaya.cache >= 1.1',
 
           # Testing
           # 'twill',
           # 'WebOb',
-      ]
+      ],
+      extras_require={
+          'test': [
+              'twill',
+              'WebOb',
+          ]
+      }
       )

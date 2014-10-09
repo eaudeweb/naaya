@@ -4,31 +4,52 @@ folder type of object. All types of objects that are file system containers
 must extend this class.
 """
 
-import zLOG
 from Globals import InitializeClass
 from Products.NaayaBase.NyContainer import NyContainer
+from StringIO import StringIO
+import zLOG
 
-EXTFILE_INSTALLED = True
+BLOBFILE_INSTALLED = True
 try:
-    from Products.ExtFile.ExtFile import manage_addExtFile
+    from naaya.content.bfile.NyBlobFile import make_blobfile
 except ImportError:
     zLOG.LOG("NyFSContainer", zLOG.WARNING,
-             "ExtFile is not installed => all files will be stored in ZODB")
-    EXTFILE_INSTALLED = False
+             "naaya.content.bfile is not installed => all files will be stored in ZODB")
+    BLOBFILE_INSTALLED = False
 
 class NyFSContainer(NyContainer):
     """
     Class that implements the Naaya file system folder type of object.
     """
 
-    is_ext = EXTFILE_INSTALLED
+    is_blobfile = BLOBFILE_INSTALLED
+
     def __init__(self):
         NyContainer.__init__(self)
 
     def manage_addFile(self, id, file="", **kwargs):
-        if self.is_ext:
-            return manage_addExtFile(self, id=id, file=file)
-        return NyContainer.manage_addFile(self, id, file)
+        # if self.is_ext:
+        #     return manage_addExtFile(self, id=id, file=file)
+        if self.is_blobfile:
+            if isinstance(file, basestring):
+                if not bool(id):
+                    raise ValueError, "Please specify id of file passed as string"
+
+                f = StringIO()
+                f.write(file)
+                f.seek(0)
+                f.filename = id
+                file = f
+
+            if not bool(id):    # TODO: make sure of proper id
+                id = file.filename
+
+            blobfile = make_blobfile(file)
+            self._setObject(id, blobfile, set_owner=0)
+            blobfile.id = id
+            return blobfile.getId()
+        else:
+            return NyContainer.manage_addFile(self, id, file)
 
     def update_data(self, data, content_type=None, size=None, filename=''):
         self.manage_delObjects(self.objectIds())
@@ -43,8 +64,10 @@ class NyFSContainer(NyContainer):
     def isReady(self, fid):
         """ Check if file exists """
 
+        if not fid:
+            return False
         doc = self._getOb(fid)
-        if not self.is_ext:
+        if not self.is_blobfile:
             return doc and True or False
         return not doc.is_broken()
 
@@ -52,7 +75,7 @@ class NyFSContainer(NyContainer):
         # Returns object in container by sid.
         # If sid not provided return first subobject
         if not sid:
-            attached_files = self.objectValues(["ExtFile", "File"])
+            attached_files = self.objectValues(["ExtFile", "File", "NyBlobFile"])
             if not attached_files:
                 return None
             return attached_files[0]
@@ -77,7 +100,8 @@ class NyFSContainer(NyContainer):
         if as_string:
             if not attached_file:
                 return ''
-            return attached_file.index_html()
+            result = attached_file.index_html()
+            return result
         return attached_file
 
     def _get_data_name(self, sid=None):

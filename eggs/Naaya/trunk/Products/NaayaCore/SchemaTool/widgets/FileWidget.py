@@ -1,13 +1,14 @@
 from Globals import InitializeClass
-from zExceptions import NotFound
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
-from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
 from Widget import Widget, manage_addWidget
+from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
+from zExceptions import NotFound
+
 
 def addFileWidget(container, id="", title="File Widget", REQUEST=None, **kwargs):
     """ Contructor for File Widget"""
     return manage_addWidget(FileWidget, container, id, title, REQUEST, **kwargs)
+
 
 class FileWidget(Widget):
     """ File Widget """
@@ -42,7 +43,7 @@ def download_file(context, request):
 
     schema = context._get_schema()
     try:
-        widget = schema.getWidget(prop_name)
+        schema.getWidget(prop_name)
     except KeyError:
         raise NotFound
 

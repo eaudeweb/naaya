@@ -70,5 +70,10 @@
              component=".updates.update_apikey_googlemap.UpdateApiKeyGoogleMap"
              permission="zope2.ViewManagementScreens" />
 
+    <utility name="convert_internal_links.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.convert_internal_links.UpdateConvertInternalScripts"
+             permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>
