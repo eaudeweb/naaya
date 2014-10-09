@@ -1,4 +1,7 @@
-1.5.0 (unreleased)
+1.5.1 (unreleased)
+-------------------
+
+1.5.0 (2014-10-09)
 -------------------
 * Feature: now using Naaya Blob files instead of Naaya ExtFiles to store
   images
