@@ -68,6 +68,7 @@ class Export(object):
                 self.logger.debug('\t VERSION FILENAME: %s', filename)
                 sfile.filename = version.filename[-1]
                 sfile.headers = {'content-type': version.content_type}
+                sfile.releasedate = self.data['releasedate']
                 yield sfile
 
             filename = '/'.join(extfile.filename)
@@ -146,7 +147,8 @@ class Import(object):
         for version in value:
             self.context._save_file(version,
                                     contributor='')
-            self.context._versions[-1].timestamp = version.releasedate.asdatetime()
+            self.context._versions[-1].timestamp = \
+                version.releasedate.asdatetime()
     versions = property(None, versions)
 
     def properties(self, value):

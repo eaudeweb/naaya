@@ -1,9 +1,9 @@
-from unittest import TestSuite, makeSuite
-from datetime import datetime
-from StringIO import StringIO
-
+#from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from StringIO import StringIO
+from datetime import datetime
 from naaya.content.bfile.bfile_item import addNyBFile
+
 
 class NyBFileTestCase(NaayaTestCase):
     """ TestCase for Naaya BFile object """
@@ -42,7 +42,8 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(mybfile.id, 'mybfile')
         self.assertTrue(mybfile.title, 'My bfile')
         self.assertEqual(len(mybfile._versions), 1)
-        self.assertTrue(mybfile.current_version is mybfile._versions[0])
+        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
+                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
 
         ver = mybfile.current_version
         self.assertTrue(now_pre <= ver.timestamp <= now_post)
@@ -95,16 +96,19 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertEqual(rm_ver.open().read(), '')
         self.assertEqual(rm_ver.size, None)
         self.assertEqual(rm_ver.removed, True)
-        self.assertTrue(mybfile.current_version is mybfile._versions[0])
+        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
+                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
 
         myfile3 = StringIO('even newer data')
         myfile3.filename = 'other.txt'
         mybfile._save_file(myfile3,
                            contributor='contributor')
-        self.assertTrue(mybfile.current_version is mybfile._versions[2])
+        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
+                        mybfile._versions[2].__of__(mybfile).getPhysicalPath())
 
         mybfile.remove_version(2)
-        self.assertTrue(mybfile.current_version is mybfile._versions[0])
+        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
+                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
 
         mybfile.remove_version(0)
         self.assertTrue(mybfile.current_version is None)
