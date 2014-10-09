@@ -1,5 +1,6 @@
 1.3.3 (unreleased)
 ------------------
+* further keys handling [dumitval]
 
 1.3.2 (2014-10-08)
 ------------------
