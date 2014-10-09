@@ -85,31 +85,18 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         return result
 
     def handle_folder(line):
-        try:
-            title = line['TITLE']
-        except KeyError:
-            title = line['Title']
-        try:
-            description = line['ABSTRACT']
-        except KeyError:
-            description = line['Abstract']
-        try:
-            userid = parse_userid(line['OWNER'])
-        except KeyError:
-            userid = parse_userid(line['Owner'])
-        try:
-            folder_zip_path = line['FILENAME'][:-1].encode('utf-8')
-        except KeyError:
-            folder_zip_path = line['Filename'][:-1].encode('utf-8')
+        title = line.get('TITLE', line['Title'])
+        description = line.get('ABSTRACT', line['Abstract'])
+        userid = parse_userid(line.get('OWNER', line['Owner']))
+        filename = line.get('FILENAME', line['Filename'])
+        folder_zip_path = filename[:-1].encode('utf-8')
 
         # for zope replace starting underscores
         folder_zope_path = sanitize_folder_path(folder_zip_path)
 
         # use get_date as a backup
         try:
-            date = parse_date(line['CREATED'])
-        except KeyError:
-            date = parse_date(line['Created'])
+            date = parse_date(line.get('CREATED', line['Created']))
         except ValueError:
             date = get_date(folder_zip_path)
 
@@ -132,8 +119,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         assert parent_path in folders_info['known_folders']
 
         if folder_zope_path in folders_info['known_folders']:
-            assert line['CREATED'] == folders_info['known_folders'][folder_zope_path]['CREATED']
-            assert line['OWNER'] == folders_info['known_folders'][folder_zope_path]['OWNER']
+            created = line.get('CREATED', line['Created'])
+            owner = line.get('OWNER', line['Owner'])
+            assert created == folders_info['known_folders'][folder_zope_path]['CREATED']
+            assert owner == folders_info['known_folders'][folder_zope_path]['OWNER']
             return
         folders_info['known_folders'][folder_zope_path] = line
 
@@ -141,31 +130,20 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                            title, description, date, userid)
 
     def handle_file(line):
-        try:
-            title = line['TITLE']
-            description = line['ABSTRACT']
-            userid = parse_userid(line['OWNER'])
-            keywords = line['KEYWORDS']
-            reference = line.get('REFERENCE', '')
-            status = line['STATUS']
-            doc_zip_path = line['FILENAME']
-        except KeyError:
-            title = line['Title']
-            description = line['Abstract']
-            userid = parse_userid(line['Owner'])
-            keywords = line['Keywords']
-            reference = line.get('Reference', '')
-            status = line['Status']
-            doc_zip_path = line['Filename']
+        title = line.get('TITLE', line['Title'])
+        description = line.get('ABSTRACT', line['Abstract'])
+        userid = parse_userid(line.get('OWNER', line['Owner']))
+        keywords = line.get('KEYWORDS', line['Keywords'])
+        reference = line.get('REFERENCE', line.get('Reference', ''))
+        status = line.get('STATUS', line['Status'])
+        doc_zip_path = line.get('FILENAME', line['Filename'])
 
         # for zope replace starting underscores
         doc_zope_path = sanitize_folder_path(doc_zip_path)
 
         # use get_date as a backup
         try:
-            date = parse_date(line['UPLOADDATE'])
-        except KeyError:
-            date = parse_date(line['Uploaddate'])
+            date = parse_date(line.get('UPLOADDATE', line['Uploaddate']))
         except ValueError:
             date = get_date(doc_zip_path)
 
@@ -186,10 +164,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             actor.warn('non-english content: %r at %r' %
                        (doc_langver, full_path))
 
-        try:
-            ranking = line['RANKING']
-        except KeyError:
-            ranking = line['Ranking']
+        ranking = line.get('RANKING', line['Ranking'])
         if ranking != 'Public':
             actor.warn('ranking is %r for %r' %
                        (str(ranking), full_path))
@@ -227,10 +202,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                                  title, description, keywords, date, userid)
 
     for line in read_index(index_file, actor.warn):
-        try:
-            filename = line['FILENAME']
-        except KeyError:
-            filename = line['Filename']
+        filename = line.get('FILENAME', line['Filename'])
         if filename.endswith('/'):
             handle_folder(line)
         else:
