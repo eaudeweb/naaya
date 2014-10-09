@@ -121,8 +121,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         if folder_zope_path in folders_info['known_folders']:
             created = line.get('CREATED', line['Created'])
             owner = line.get('OWNER', line['Owner'])
-            assert created == folders_info['known_folders'][folder_zope_path]['CREATED']
-            assert owner == folders_info['known_folders'][folder_zope_path]['OWNER']
+            folder_info = folders_info['known_folders'][folder_zope_path]
+            assert created == folder_info.get('CREATED',
+                                              folder_info['Created'])
+            assert owner == folder_info.get('OWNER', folder_info['Owner'])
             return
         folders_info['known_folders'][folder_zope_path] = line
 
@@ -192,7 +194,8 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                 matched = re.search(r'URL=(.*)', url)
                 if matched:
                     url = matched.groups()[0].strip()
-            assert url.startswith('http://') or url.startswith('https://') or url.startswith('ftp://'), "bad url: %r" % url
+            assert (url.startswith('http://') or url.startswith('https://') or
+                    url.startswith('ftp://'), "bad url: %r" % url)
             actor.url_entry(parent_path, doc_id,
                             doc_filename, url,
                             title, description, keywords, date, userid)
