@@ -1,5 +1,6 @@
 1.3.4 (unreleased)
 ------------------
+* ingnore an AttributeError [dumitval]
 
 1.3.3 (2014-10-09)
 ------------------
