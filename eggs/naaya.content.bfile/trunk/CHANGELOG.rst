@@ -1,3 +1,6 @@
+1.4.1 (unreleased)
+--------------------
+
 1.4.0 (2014-10-09)
 --------------------
 * Merge with the no-extfile branch
