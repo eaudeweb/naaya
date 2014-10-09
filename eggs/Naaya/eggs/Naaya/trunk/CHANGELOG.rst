@@ -1,3 +1,6 @@
+3.4.1 (unreleased)
+-------------------
+
 3.4.0 (2014-10-09)
 -------------------
 * Feature: merge with the no-ext-files branch that implements
