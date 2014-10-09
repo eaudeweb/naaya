@@ -1,5 +1,10 @@
 1.4.1 (unreleased)
 -------------------
+* Bug fix: don't fail on view of non-migrated Photos
+  [tiberich #3929]
+* Migration: use the "PhotoArchive: Migrate ExtFiles to Blobs" migration 
+  to migrate storage of NyPhotos from extfiles to blobs
+  [tiberich #3929]
 
 1.4.0 (2013-02-25)
 -------------------
