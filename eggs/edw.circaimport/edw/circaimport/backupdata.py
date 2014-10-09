@@ -122,12 +122,9 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             created = line.get('CREATED', line['Created'])
             owner = line.get('OWNER', line['Owner'])
             folder_info = folders_info['known_folders'][folder_zope_path]
-            try:
-                assert created == folder_info.get('CREATED',
-                                                  folder_info['Created'])
-                assert owner == folder_info.get('OWNER', folder_info['Owner'])
-            except:
-                pass
+            assert created == folder_info.get('CREATED',
+                                              folder_info['Created'])
+            assert owner == folder_info.get('OWNER', folder_info['Owner'])
             return
         folders_info['known_folders'][folder_zope_path] = line
 
