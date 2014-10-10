@@ -1,4 +1,7 @@
-1.4.4 (unreleased)
+1.4.5 (unreleased)
+--------------------
+
+1.4.4 (2014-10-10)
 --------------------
 * added an error handling on update script NyFile2NyBlob [dumitval]
 
