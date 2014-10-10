@@ -1,19 +1,20 @@
 """ Naaya updater script """
 
-#Python imports
+# Python imports
 import logging
 from StringIO import StringIO
 
-#Zope imports
+# Zope imports
 from zope.annotation import IAnnotations
 
-#Naaya imports
+# Naaya imports
 from naaya.content.bfile import bfile_item
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.Naaya.adapters import FolderMetaTypes
 #
 # Export / Import
-#
+
+
 class Export(object):
     """
     Naaya Extended File data extractor
@@ -35,10 +36,10 @@ class Export(object):
         """ Exports NyExFile versions
         """
         languages = self.data.get('_languages', ())
-        if len(languages)>1:
+        if len(languages) > 1:
             self.logger.debug("\t Object %s has %r languages: %r",
-                             self.data.get('id', 'ERROR'), len(languages),
-                             languages)
+                              self.data.get('id', 'ERROR'), len(languages),
+                              languages)
         if not languages:
             languages = [x['id'] for x in self.data['_objects']]
 
@@ -61,7 +62,8 @@ class Export(object):
                     continue
 
                 if version.is_broken():
-                    self.logger.warn('\t BROKEN VERSION: %s (%s)', version.getId(), filename)
+                    self.logger.warn('\t BROKEN VERSION: %s (%s)',
+                                     version.getId(), filename)
                     continue
 
                 sfile = StringIO(version.data)
@@ -76,7 +78,8 @@ class Export(object):
                 continue
 
             if extfile.is_broken():
-                self.logger.warn('\t BROKEN EXTFILE: %s (%s)', language, filename)
+                self.logger.warn('\t BROKEN EXTFILE: %s (%s)', language,
+                                 filename)
                 continue
 
             sfile = StringIO(extfile.data)
@@ -114,6 +117,7 @@ class Export(object):
         """ Exports annotations
         """
         return self.data.pop('__annotations__', {})
+
 
 class Import(object):
     """
@@ -211,10 +215,10 @@ class Import(object):
         properties = value.pop('_NyProperties__dynamic_properties', {})
         if properties:
             self.logger.warn('\t DEPRECATED: '
-                'Dynamic properties are deprecated. '
-                'Please update portal_schemas for NyBFile '
-                'with the following widgets: %s',
-                properties.keys())
+                             'Dynamic properties are deprecated. '
+                             'Please update portal_schemas for NyBFile '
+                             'with the following widgets: %s',
+                             properties.keys())
 
         # XXX Validation
         validation_by = value.pop('validation_by', '')
@@ -232,9 +236,11 @@ class Import(object):
 
         # XXX Permissions
         permissions = value.pop('_Naaya___Edit_content_Permission', [])
-        context_permissions = getattr(self.context, '_Naaya___Edit_content_Permission', [])
+        context_permissions = getattr(self.context,
+                                      '_Naaya___Edit_content_Permission', [])
         if permissions != context_permissions:
-            setattr(self.context, '_Naaya___Edit_content_Permission', permissions)
+            setattr(self.context, '_Naaya___Edit_content_Permission',
+                    permissions)
 
         # Languages
         languages = value.pop('_languages', ())
@@ -255,10 +261,12 @@ class Import(object):
         # XXX Deprecated attributes
         checkout = value.pop('checkout', 0)
         if checkout:
-            self.logger.debug('\t DEPRECATED %30s: \t %r', 'checkout', checkout)
+            self.logger.debug('\t DEPRECATED %30s: \t %r', 'checkout',
+                              checkout)
         checkout_user = value.pop('checkout_user', '')
         if checkout_user:
-            self.logger.debug('\t DEPRECATED %30s \t %r', 'checkout_user', checkout_user)
+            self.logger.debug('\t DEPRECATED %30s \t %r', 'checkout_user',
+                              checkout_user)
         version = value.pop('version', None)
         if version:
             get_data = getattr(version, 'get_data', None)
@@ -279,7 +287,8 @@ class Import(object):
     finish = property(None, finish)
 #
 # Update script
-#
+
+
 class UpdateNyExFile2NyBlobFile(UpdateScript):
     """ Update example script  """
     title = 'Update Naaya Extended Files to Naaya Blob Files'
@@ -320,6 +329,12 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
         doc = parent._getOb(name)
         doc.after_setObject()
         Import(doc, export)
+        for lang in value.getSite().gl_get_languages():
+            extfile = value.get(lang)
+            if extfile:
+                extfile._ext_file._delete('/'.join(extfile._ext_file.filename))
+                for ob in extfile._ext_file.versions.objectValues():
+                    ob._delete('/'.join(ob.filename))
 
         self.check_integrity(export.data, doc.__dict__)
 
@@ -359,7 +374,8 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
                               'Naaya Extended File in Control Panel')
                 self.log.error(err)
             else:
-                self.log.debug('Uninstalled Naaya Extended File in Control Panel')
+                self.log.debug(
+                    'Uninstalled Naaya Extended File in Control Panel')
 
         # Install Naaya Blob File
         if not portal.is_pluggable_item_installed('Naaya Blob File'):
