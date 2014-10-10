@@ -1,4 +1,7 @@
-1.4.2 (unreleased)
+1.4.3 (unreleased)
+--------------------
+
+1.4.2 (2014-10-10)
 --------------------
 * `update` execute the 'PhotoArchive and MediaFiles: Migrate ExtFiles to Blobs'
   migration to properly migrate the photoarchive  and media files to blob
