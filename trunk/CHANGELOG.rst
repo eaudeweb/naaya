@@ -1,4 +1,7 @@
-1.4.1 (unreleased)
+1.4.2 (unreleased)
+--------------------
+
+1.4.1 (2014-10-10)
 --------------------
 * improve extfile to bfile update scripts to delete original files [dumitval]
 
