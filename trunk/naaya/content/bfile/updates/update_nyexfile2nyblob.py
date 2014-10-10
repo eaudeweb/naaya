@@ -96,6 +96,12 @@ class Export(object):
         return self.data.pop('_local_properties')
 
     @property
+    def local_properties_metadata(self):
+        """ Exports localized properties
+        """
+        return self.data.pop('_local_properties_metadata')
+
+    @property
     def properties(self):
         """ Exports not localized properties
         """
@@ -138,6 +144,7 @@ class Import(object):
         self.versions = data.versions
         self.properties = data.properties
         self.local_properties = data.local_properties
+        self.local_properties_metadata = data.local_properties_metadata
         self.annotations = data.annotations
         self.finish = data.data
 
@@ -175,6 +182,16 @@ class Import(object):
         """
         setattr(self.context, '_local_properties', value)
     local_properties = property(None, local_properties)
+
+    def local_properties_metadata(self, value):
+        """ Import localized properties metadata
+
+        Required arguments:
+        value -- _local_properties_metadata dict from NyExFile instance
+
+        """
+        setattr(self.context, '_local_properties_metadata', value)
+    local_properties_metadata = property(None, local_properties_metadata)
 
     def annotations(self, value):
         """ Import annotations
