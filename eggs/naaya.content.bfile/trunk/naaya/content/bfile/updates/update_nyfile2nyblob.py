@@ -242,6 +242,9 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         doc = parent._getOb(name)
         doc.after_setObject()
         Import(doc, export)
+        value._ext_file._delete('/'.join(value._ext_file.filename))
+        for ob in value.versions.objectValues():
+            ob._delete('/'.join(ob.filename))
 
         self.check_integrity(export.data, doc.__dict__)
 

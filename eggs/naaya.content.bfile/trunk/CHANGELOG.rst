@@ -1,5 +1,6 @@
 1.4.1 (unreleased)
 --------------------
+* improve extfile to bfile update scripts to delete original files [dumitval]
 
 1.4.0 (2014-10-09)
 --------------------
