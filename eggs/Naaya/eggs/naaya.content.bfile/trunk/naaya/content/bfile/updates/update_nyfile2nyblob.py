@@ -1,21 +1,22 @@
 """ Naaya updater script """
 __author__ = """Alin Voinea"""
 
-#Python imports
+# Python imports
 import logging
 from StringIO import StringIO
 
-#Zope imports
+# Zope imports
 from zope.annotation import IAnnotations
 
-#Naaya imports
+# Naaya imports
 from naaya.content.bfile import bfile_item
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.Naaya.adapters import FolderMetaTypes
 
 #
 # Export / Import
-#
+
+
 class Export(object):
     """ Export
     """
@@ -43,7 +44,8 @@ class Export(object):
                 continue
 
             sfile = StringIO(version.data)
-            self.logger.debug('\t VERSION FILENAME: %s', '/'.join(version.filename))
+            self.logger.debug('\t VERSION FILENAME: %s',
+                              '/'.join(version.filename))
             sfile.filename = version.filename[-1]
             sfile.headers = {'content-type': version.content_type}
             yield sfile
@@ -89,6 +91,7 @@ class Export(object):
         """ Annotations
         """
         return self.data.pop('__annotations__', {})
+
 
 class Import(object):
     """ Importer
@@ -170,10 +173,10 @@ class Import(object):
         properties = value.pop('_NyProperties__dynamic_properties', {})
         if properties:
             self.logger.warn('\t DEPRECATED: '
-                'Dynamic properties are deprecated. '
-                'Please update portal_schemas for NyBFile '
-                'with the following widgets: %s',
-                properties.keys())
+                             'Dynamic properties are deprecated. '
+                             'Please update portal_schemas for NyBFile '
+                             'with the following widgets: %s',
+                             properties.keys())
 
         # XXX Validation
         validation_by = value.pop('validation_by', '')
@@ -191,9 +194,11 @@ class Import(object):
 
         # XXX Permissions
         permissions = value.pop('_Naaya___Edit_content_Permission', [])
-        context_permissions = getattr(self.context, '_Naaya___Edit_content_Permission', [])
+        context_permissions = getattr(self.context,
+                                      '_Naaya___Edit_content_Permission', [])
         if permissions != context_permissions:
-            setattr(self.context, '_Naaya___Edit_content_Permission', permissions)
+            setattr(self.context, '_Naaya___Edit_content_Permission',
+                    permissions)
 
         # Languages
         languages = value.pop('_languages', ())
@@ -204,10 +209,12 @@ class Import(object):
         # XXX Deprecated attributes
         checkout = value.pop('checkout', 0)
         if checkout:
-            self.logger.debug('\t DEPRECATED %30s: \t %r', 'checkout', checkout)
+            self.logger.debug('\t DEPRECATED %30s: \t %r', 'checkout',
+                              checkout)
         checkout_user = value.pop('checkout_user', '')
         if checkout_user:
-            self.logger.debug('\t DEPRECATED %30s \t %r', 'checkout_user', checkout_user)
+            self.logger.debug('\t DEPRECATED %30s \t %r', 'checkout_user',
+                              checkout_user)
         version = value.pop('version', None)
         if version:
             get_data = getattr(version, 'get_data', None)
@@ -219,7 +226,8 @@ class Import(object):
 
 #
 # Update script
-#
+
+
 class UpdateNyFile2NyBlobFile(UpdateScript):
     """ Update example script  """
     title = 'Update NyFiles to NyBlobFiles'
@@ -256,8 +264,13 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         doc.after_setObject()
         Import(doc, export)
         value._ext_file._delete('/'.join(value._ext_file.filename))
-        for ob in value.versions.objectValues():
-            ob._delete('/'.join(ob.filename))
+        try:
+            for ob in value.versions.objectValues():
+                ob._delete('/'.join(ob.filename))
+        except AttributeError:
+            # The script should not fail in case some old file objects
+            # dont have the versions folder
+            pass
 
         self.check_integrity(export.data, doc.__dict__)
 
@@ -286,7 +299,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya File')
             except Exception, err:
-                self.log.warn('You need to manually uninstall Naaya File in Control Panel')
+                self.log.warn('You need to manually uninstall Naaya File '
+                              'in Control Panel')
                 self.log.error(err)
             else:
                 self.log.debug('Uninstalled Naaya File in Control Panel')
@@ -296,7 +310,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_install_pluggableitem('Naaya Blob File')
             except Exception, err:
-                self.log.warn('You need to manually install Naaya Blob File in Control Panel')
+                self.log.warn('You need to manually install Naaya Blob File '
+                              'in Control Panel')
                 self.log.error(err)
             else:
                 self.log.debug('Installed Naaya Blob File in Control Panel')
@@ -307,7 +322,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         if 'Naaya File' in meta_types:
             meta_types.remove('Naaya File')
             meta_types.append('Naaya Blob File')
-            self.log.debug('Updating portal %s subobjects = %s', portal.absolute_url(1), meta_types)
+            self.log.debug('Updating portal %s subobjects = %s',
+                           portal.absolute_url(1), meta_types)
             portal.portal_properties.manageSubobjects(subobjects=meta_types)
 
         brains = portal.portal_catalog(meta_type='Naaya Folder')
@@ -321,7 +337,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             if 'Naaya File' in meta_types:
                 meta_types.remove('Naaya File')
                 meta_types.append('Naaya Blob File')
-                self.log.debug('Updating folder %s subobjects = %s', doc.absolute_url(1), meta_types)
+                self.log.debug('Updating folder %s subobjects = %s',
+                               doc.absolute_url(1), meta_types)
                 doc.manageSubobjects(subobjects=meta_types)
 
     def _update(self, portal):
