@@ -1,5 +1,10 @@
-1.4.3 (unreleased)
+1.4.4 (unreleased)
 --------------------
+
+1.4.3 (2014-10-10)
+--------------------
+* improve update scripts for migration from NyFile and NyExtFile to Blob
+  [tiberich
 
 1.4.2 (2014-10-10)
 --------------------
