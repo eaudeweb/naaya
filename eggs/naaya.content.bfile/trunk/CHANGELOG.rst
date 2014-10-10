@@ -1,5 +1,8 @@
 1.4.2 (unreleased)
 --------------------
+* `update` execute the 'PhotoArchive and MediaFiles: Migrate ExtFiles to Blobs'
+  migration to properly migrate the photoarchive  and media files to blob
+  storage [tiberich #3929]
 
 1.4.1 (2014-10-10)
 --------------------
