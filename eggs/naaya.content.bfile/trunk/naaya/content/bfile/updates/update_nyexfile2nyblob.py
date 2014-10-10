@@ -350,8 +350,13 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             extfile = value.get(lang)
             if extfile:
                 extfile._ext_file._delete('/'.join(extfile._ext_file.filename))
-                for ob in extfile._ext_file.versions.objectValues():
-                    ob._delete('/'.join(ob.filename))
+                try:
+                    for ob in extfile._ext_file.versions.objectValues():
+                        ob._delete('/'.join(ob.filename))
+                except AttributeError:
+                    # The script should not fail in case some old file objects
+                    # dont have the versions folder
+                    pass
 
         self.check_integrity(export.data, doc.__dict__)
 
