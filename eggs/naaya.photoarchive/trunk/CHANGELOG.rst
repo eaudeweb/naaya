@@ -1,4 +1,7 @@
-1.5.1 (unreleased)
+1.5.2 (unreleased)
+-------------------
+
+1.5.1 (2014-10-10)
 -------------------
 * moved update script to another package [dumitval]
 
