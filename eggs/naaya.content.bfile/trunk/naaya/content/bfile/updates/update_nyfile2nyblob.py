@@ -138,7 +138,7 @@ class Import(object):
     def local_properties_metadata(self, value):
         """ Import localized properties metadata
         """
-        setattr(self.context, '_local_properties', value)
+        setattr(self.context, '_local_properties_metadata', value)
     local_properties_metadata = property(None, local_properties_metadata)
 
     def annotations(self, value):
