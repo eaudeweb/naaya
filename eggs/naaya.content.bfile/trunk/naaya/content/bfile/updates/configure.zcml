@@ -4,6 +4,13 @@
   i18n_domain="naaya">
 
   <configure zcml:condition="installed Products.naayaUpdater">
+
+    <utility
+      name="nyblobfix.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_fix_nyblobs.UpdateFixNyBlobFile"
+      permission="zope2.ViewManagementScreens" />
+
     <utility
       name="nyfile2nyblob.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
