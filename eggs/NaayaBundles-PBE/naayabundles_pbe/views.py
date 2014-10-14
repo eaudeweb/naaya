@@ -114,17 +114,20 @@ class DictExporter(Exporter):
 class ExportUpdatedObjects(BrowserView):
     base = "/tmp/export-obj"
 
-    def __call__(self):
-        site = self.context.getSite()
+    def export(self, site):
         catalog = site.portal_catalog
-        before = int(self.request.form.get("before", 20))
 
         if not os.path.exists(self.base):
             os.makedirs(self.base)
 
-        start = DateTime() - before
-        brains = catalog.searchResults(
-            bobobase_modification_time={'query':start, 'range':'min'})
+        before = int(self.request.form.get("before"))
+        if before:
+            start = DateTime() - before
+            brains = catalog.searchResults(
+                bobobase_modification_time={'query':start, 'range':'min'})
+        else:
+            # makes catalog return all objects
+            brains = catalog.searchResults(xxx="something")
 
         for brain in brains:
             try:
@@ -144,7 +147,11 @@ class ExportUpdatedObjects(BrowserView):
             f.write(lxml.etree.tounicode(root, pretty_print=True))
             f.close()
 
-        return "Done"
+    def __call__(self):
+        for obj in self.context.objectValues():
+            if not hasattr(obj, 'portal_catalog'):
+                continue
+            self.export(obj)
 
 
 class UpdateModificationDates(BrowserView):
