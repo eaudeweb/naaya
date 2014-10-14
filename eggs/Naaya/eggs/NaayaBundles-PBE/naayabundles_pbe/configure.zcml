@@ -6,7 +6,7 @@
 
   <browser:page 
       name="export_updates" 
-      for="Products.Naaya.NySite.NySite"
+      for="*"
       permission="zope2.ViewManagementScreens"
       class=".views.ExportUpdatedObjects"
       />
