@@ -191,6 +191,15 @@ class UpdateModificationDates(BrowserView):
 def import_string(node):
     return node.text
 
+def import_unicode(node):
+    return unicode(node.text)
+
+def import_float(node):
+    return float(node.text)
+
+def import_int(node):
+    return int(node.text)
+
 def import_dict(node):
     d = {}
     for child in node.iterchildren():
@@ -209,6 +218,9 @@ def import_list(node):
         r += (importer(child),)
     return r
 
+def import_bool(node);
+    return bool(eval(node.text))
+
 def importer(node):
     return importers[node.tag](node)
 
@@ -218,6 +230,10 @@ importers = {
     'tuple': import_tuple,
     'dict':  import_dict,
     'list':  import_list,
+    'unicode': import_unicode,
+    'int':   import_int,
+    'float': import_float,
+    'bool': import_bool,
 }
 
 
