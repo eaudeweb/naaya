@@ -5,8 +5,12 @@ from cPickle import dumps
 from lxml.etree import Element
 from zope.interface import implements, Interface
 import codecs
+import logging
 import lxml.etree
 import os
+
+
+log = logging.getLogger("SiteExporter")
 
 
 class IObjectExporter(Interface):
@@ -115,19 +119,21 @@ class ExportUpdatedObjects(BrowserView):
     base = "/tmp/export-obj"
 
     def export(self, site):
+        log.info("Export site: %s", site.absolute_url())
         catalog = site.portal_catalog
 
         if not os.path.exists(self.base):
             os.makedirs(self.base)
 
-        before = int(self.request.form.get("before"))
+        before = self.request.form.get("before")
         if before:
+            before = int(before)
             start = DateTime() - before
             brains = catalog.searchResults(
                 bobobase_modification_time={'query':start, 'range':'min'})
         else:
             # makes catalog return all objects
-            brains = catalog.searchResults(xxx="something")
+            brains = catalog.searchResults(invalid=True)
 
         for brain in brains:
             try:
@@ -152,6 +158,8 @@ class ExportUpdatedObjects(BrowserView):
             if not hasattr(obj, 'portal_catalog'):
                 continue
             self.export(obj)
+            log.info("Export done")
+            return "Done"
 
 
 class UpdateModificationDates(BrowserView):
@@ -176,5 +184,61 @@ class UpdateModificationDates(BrowserView):
                 continue
             obj.last_modification = DateTime(date)
             print "Fixed", brain.getPath()
+
+        return "Done"
+
+
+def import_string(node):
+    return node.text
+
+def import_dict(node):
+    d = {}
+    for child in node.iterchildren():
+        d[child.get('id')] = importer(child)
+    return d
+
+def import_tuple(node):
+    r = ()
+    for child in node.iterchildren():
+        r += (importer(child),)
+    return r
+
+def import_list(node):
+    r = []
+    for child in node.iterchildren():
+        r += (importer(child),)
+    return r
+
+def importer(node):
+    return importers[node.tag](node)
+
+
+importers = {
+    'str':   import_string,
+    'tuple': import_tuple,
+    'dict':  import_dict,
+    'list':  import_list,
+}
+
+
+class UpdateLocalPropertiesMetadata(BrowserView):
+    base = "/tmp/export-obj"
+
+    def __call__(self):
+        site = self.context.getSite()
+        catalog = site.portal_catalog
+
+        brains = catalog.searchResults(invalid=True)
+        for brain in brains:
+            obj = brain.getObject()
+            if hasattr(obj.aq_inner.aq_self, '_local_properties_metadata'):
+                continue
+            path = os.path.join(self.base, brain.getPath()[1:]) + '.xml'
+            e = lxml.etree.parse(path)
+            root = e.getroot()
+            meta = root.xpath("//*[@id='_local_properties_metadata']")[0]
+            value = importer(meta)
+            log.info("Fixing %s to %r", brain.getPath(), value)
+            obj._local_properties_metadata = value
 
         return "Done"

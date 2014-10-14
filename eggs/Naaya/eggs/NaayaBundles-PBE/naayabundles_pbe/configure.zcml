@@ -18,6 +18,13 @@
       class=".views.UpdateModificationDates"
       />
 
+  <browser:page 
+      name="update_local_properties_metadata" 
+      for="Products.Naaya.NySite.NySite"
+      permission="zope2.ViewManagementScreens"
+      class=".views.UpdateLocalPropertiesMetadata"
+      />
+
   <adapter for="*" factory=".views.FallbackObjectExporter" provides=".views.IObjectExporter"/>
 
   <adapter for="basestring" factory=".views.StringExporter" provides=".views.IObjectExporter"/>
