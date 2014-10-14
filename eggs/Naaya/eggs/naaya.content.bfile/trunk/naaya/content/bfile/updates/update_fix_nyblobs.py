@@ -4,6 +4,7 @@ __author__ = """Tiberiu Ichim"""
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from StringIO import StringIO
 import logging
+import mimetypes
 import os
 
 
@@ -15,17 +16,23 @@ class UpdateFixNyBlobFile(UpdateScript):
     priority = PRIORITY['HIGH']
     description = ('Fix Blobs for NyBlobFiles')
 
+    log = logging.getLogger('naaya.updater.fix_nyblobs')
+
     def get_content(self, folder, filename):
         path = os.path.join(folder, filename)
         with open(path) as f:
             content = f.read()
         sfile = StringIO(content)
         sfile.filename = filename
-        raise ValueError ("Content type extraction not yet implemented")
-        sfile.headers = {'content-type': ''}
+        try:
+            ct = mimetypes.guess_type(filename)[0]
+            if ct:
+                sfile.headers = {'content-type': ct}
+        except:
+            self.log.info("Could not guess content type for %r", filename)
 
-    def get_extfiles(self, obj):
-        base = "/var/local/chmfiles/var/files"
+    def fix(self, obj):
+        base = "/var/local/chmfiles/var/local/chm/var/files"
         relpath = obj.getPhysicalPath()[1:]
         abspath = os.path.join(base, '/'.join(relpath))
         if not os.path.exists(abspath):
@@ -40,9 +47,7 @@ class UpdateFixNyBlobFile(UpdateScript):
         for fname in versions:
             content = self.get_content(abspath, fname)
             obj._save_file(content, contributor='')
-
-    def fix(self, obj):
-        pass
+            self.log.info("Added a file for %r", obj.absolute_url())
 
     def _update(self, portal):
         """ Run updater
