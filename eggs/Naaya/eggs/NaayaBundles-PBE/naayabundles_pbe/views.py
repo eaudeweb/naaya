@@ -1,8 +1,9 @@
 from DateTime import DateTime
 from Products.Five.browser import BrowserView
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from cPickle import dumps
 from lxml.etree import Element
+from zExceptions import NotFound
 from zope.interface import implements, Interface
 import codecs
 import logging
@@ -140,7 +141,10 @@ class ExportUpdatedObjects(BrowserView):
                 ob = brain.getObject()
             except KeyError:    # objects not found
                 continue
+            except NotFound:
+                continue
 
+            print "Exporting", ob.getPhysicalPath()
             fpath = os.path.join(self.base, '/'.join(ob.getPhysicalPath()[1:])) + '.xml'
             base = os.path.dirname(fpath)
 
@@ -159,7 +163,8 @@ class ExportUpdatedObjects(BrowserView):
                 continue
             self.export(obj)
             log.info("Export done")
-            return "Done"
+
+        return "Done"
 
 
 class UpdateModificationDates(BrowserView):
@@ -187,12 +192,16 @@ class UpdateModificationDates(BrowserView):
 
         return "Done"
 
+def _decode(text):
+    if text and text.startswith('77u/'):
+        return b64decode(text)
+    return text
 
 def import_string(node):
-    return node.text
+    return _decode(node.text)
 
 def import_unicode(node):
-    return unicode(node.text)
+    return _decode(node.text).decode('utf-8')
 
 def import_float(node):
     return float(node.text)
@@ -218,7 +227,7 @@ def import_list(node):
         r += (importer(child),)
     return r
 
-def import_bool(node);
+def import_bool(node):
     return bool(eval(node.text))
 
 def importer(node):
@@ -241,20 +250,54 @@ class UpdateLocalPropertiesMetadata(BrowserView):
     base = "/tmp/export-obj"
 
     def __call__(self):
-        site = self.context.getSite()
+        for obj in self.context.objectValues():
+            if not hasattr(obj, 'portal_catalog'):
+                continue
+            self.fix(obj)
+            log.info("Import done for %r", obj.absolute_url())
+
+        log.info("Finished properties update")
+        return "Done"
+
+    def fix(self, site):
         catalog = site.portal_catalog
 
         brains = catalog.searchResults(invalid=True)
         for brain in brains:
-            obj = brain.getObject()
-            if hasattr(obj.aq_inner.aq_self, '_local_properties_metadata'):
+            try:
+                obj = brain.getObject()
+            except:
+                print "Couldn't get", brain.getPath()
+                continue    #broken catalog brains
+
+            iobj = obj.aq_inner.aq_self
+
+            has_props = '_local_properties_metadata' in vars(iobj)
+            has_values = '_local_properties' in vars(iobj)
+
+            if has_values and has_props:
                 continue
+
             path = os.path.join(self.base, brain.getPath()[1:]) + '.xml'
-            e = lxml.etree.parse(path)
+            try:
+                e = lxml.etree.parse(path)
+            except:
+                print "Couldn't parse", path
+                continue
             root = e.getroot()
-            meta = root.xpath("//*[@id='_local_properties_metadata']")[0]
-            value = importer(meta)
-            log.info("Fixing %s to %r", brain.getPath(), value)
-            obj._local_properties_metadata = value
+
+            meta = root.xpath("//*[@id='_local_properties_metadata']")
+            if meta:
+                meta = meta[0]
+                value = importer(meta)
+                log.info("Fixing meta %s to %r", brain.getPath(), value)
+                obj._local_properties_metadata = value
+
+            values = root.xpath("//*[@id='_local_properties']")
+            if values:
+                values = values[0]
+                value = importer(values)
+                log.info("Fixing values %s to %r", brain.getPath(), value)
+                obj._local_properties = value
 
         return "Done"

@@ -20,7 +20,7 @@
 
   <browser:page 
       name="update_local_properties_metadata" 
-      for="Products.Naaya.NySite.NySite"
+      for="*"
       permission="zope2.ViewManagementScreens"
       class=".views.UpdateLocalPropertiesMetadata"
       />
