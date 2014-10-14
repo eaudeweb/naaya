@@ -192,10 +192,11 @@ class UpdateModificationDates(BrowserView):
 
         return "Done"
 
+
 def _decode(text):
     if text and text.startswith('77u/'):
-        return b64decode(text)
-    return text
+        return b64decode(text).strip()
+    return text and text.strip() or text
 
 def import_string(node):
     return _decode(node.text)
@@ -235,14 +236,14 @@ def importer(node):
 
 
 importers = {
-    'str':   import_string,
-    'tuple': import_tuple,
-    'dict':  import_dict,
-    'list':  import_list,
+    'str':     import_string,
+    'tuple':   import_tuple,
+    'dict':    import_dict,
+    'list':    import_list,
     'unicode': import_unicode,
-    'int':   import_int,
-    'float': import_float,
-    'bool': import_bool,
+    'int':     import_int,
+    'float':   import_float,
+    'bool':    import_bool,
 }
 
 
