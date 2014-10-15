@@ -6,6 +6,7 @@ from StringIO import StringIO
 import hashlib
 import logging
 import mimetypes
+from os.path import join, isfile, isdir, exists
 import os
 
 
@@ -30,7 +31,7 @@ class UpdateFixNyBlobFile(UpdateScript):
     log = logging.getLogger('naaya.updater.fix_nyblobs')
 
     def get_content(self, folder, filename):
-        path = os.path.join(folder, filename)
+        path = join(folder, filename)
         with open(path) as f:
             content = f.read()
         sfile = StringIO(content)
@@ -48,13 +49,13 @@ class UpdateFixNyBlobFile(UpdateScript):
     def fix(self, obj):
         base = "/var/local/chmfiles/var/local/chm/var/files"
         relpath = obj.getPhysicalPath()[1:]
-        abspath = os.path.join(base, '/'.join(relpath))
-        if not os.path.exists(abspath):
+        abspath = join(base, '/'.join(relpath))
+        if not exists(abspath):
             # try to see if the lowercase version exists
             cp = list(relpath)
             cp[-1] = cp[-1].lower()
-            abspath = os.path.join(base, '/'.join(cp))
-            if not os.path.exists(abspath):
+            abspath = join(base, '/'.join(cp))
+            if not exists(abspath):
                 self.log.warning("Could not find path %r for %r", abspath, obj.absolute_url())
                 return
 
@@ -62,24 +63,42 @@ class UpdateFixNyBlobFile(UpdateScript):
         #versions = [f for f in os.listdir(abspath) if not f.endswith('.undo')]
         # We treat .undo files the same way extfile does, which is to take it into consideration
         # if not other file is found there
+        site_lang = obj.getSite().gl_get_default_language()
+
         versions = [(abspath, f) for f in os.listdir(abspath) 
-                            if os.path.isfile(os.path.join(abspath, f))]
+                            if isfile(join(abspath, f))]
 
         for lang in obj.getSite().gl_get_languages():
-            lpath = os.path.join(abspath, lang)
-            if os.path.exists(lpath) and os.path.isdir(lpath):
+            lpath = join(abspath, lang)
+            if exists(lpath) and isdir(lpath):
                 versions.extend([(lpath, f) for f in os.listdir(lpath) 
-                                if os.path.isfile(os.path.join(lpath, f))])
+                                if isfile(join(lpath, f))])
 
         if len(versions) > 1:
             # see if the files have the same content, in which 
             # case we can upload one version of that file
-            hashes = set([hashfile(os.path.join(fpath, filename))
+            hashes = set([hashfile(join(fpath, filename))
                                 for (fpath, filename) in versions])
-            if len(hashes) > 1:    
-                self.log.warning("Skipping %s, too many files", obj.absolute_url())
-                return
-            versions = versions[:1]
+            if len(hashes) == 1:    
+                versions = versions[:1]
+            else:
+                # we try take the file for the main language
+                lang_path = join(abspath, site_lang)
+                if os.path.exists(lang_path):
+                    versions = [(lang_path, f) for f in os.listdir(lang_path) 
+                                    if isfile(join(lang_path, f))]
+                    if len(versions) > 1:
+                        hashes = set([hashfile(join(fpath, filename))
+                                            for (fpath, filename) in versions])
+                        if len(hashes) == 1:    
+                            versions = versions[:1]
+                        else:
+                            self.log.warning("Skipping %s, too many files", obj.absolute_url())
+                            return
+                    self.log.info("Using the files from the default language path %s", site_lang)
+                else:
+                    self.log.warning("Skipping %s, too many files", obj.absolute_url())
+                    return
 
         for fpath, filename in versions:
             content = self.get_content(fpath, filename)
