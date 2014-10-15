@@ -23,25 +23,37 @@ class UpdateFixNyBlobFile(UpdateScript):
         with open(path) as f:
             content = f.read()
         sfile = StringIO(content)
+        if filename.endswith('.undo'):
+            filename = filename[:-5]
         sfile.filename = filename
         try:
             ct = mimetypes.guess_type(filename)[0]
             if ct:
                 sfile.headers = {'content-type': ct}
         except:
-            self.log.info("Could not guess content type for %r", filename)
+            self.log.warning("Could not guess content type for %r", filename)
+        return sfile
 
     def fix(self, obj):
         base = "/var/local/chmfiles/var/local/chm/var/files"
         relpath = obj.getPhysicalPath()[1:]
         abspath = os.path.join(base, '/'.join(relpath))
         if not os.path.exists(abspath):
-            return
+            # try to see if the lowercase version exists
+            cp = list(relpath)
+            cp[-1] = cp[-1].lower()
+            abspath = os.path.join(base, '/'.join(cp))
+            if not os.path.exists(abspath):
+                self.log.warning("Could not find path %r for %r", abspath, obj.absolute_url())
+                return
 
-        versions = [f for f in os.listdir(abspath) if not f.endswith('.undo')]
+        #versions = [f for f in os.listdir(abspath) if not f.endswith('.undo')]
+        # We treat .undo files the same way extfile does, which is to take it into consideration
+        # if not other file is found there
+        versions = [f for f in os.listdir(abspath) if os.path.isfile(os.path.join(abspath, f))]
 
         if len(versions) > 1:
-            self.log.info("Skipping %s, too many files", obj.absolute_url())
+            self.log.warning("Skipping %s, too many files", obj.absolute_url())
             return
 
         for fname in versions:
