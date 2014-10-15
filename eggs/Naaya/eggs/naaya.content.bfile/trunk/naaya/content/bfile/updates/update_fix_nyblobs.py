@@ -3,9 +3,20 @@ __author__ = """Tiberiu Ichim"""
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from StringIO import StringIO
+import hashlib
 import logging
 import mimetypes
 import os
+
+
+def hashfile(fpath, blocksize=65536):
+    hasher = hashlib.md5()
+    with open(fpath) as afile:
+        buf = afile.read(blocksize)
+        while len(buf) > 0:
+            hasher.update(buf)
+            buf = afile.read(blocksize)
+    return hasher.digest()
 
 
 class UpdateFixNyBlobFile(UpdateScript):
@@ -47,17 +58,31 @@ class UpdateFixNyBlobFile(UpdateScript):
                 self.log.warning("Could not find path %r for %r", abspath, obj.absolute_url())
                 return
 
+        #import pdb; pdb.set_trace()
         #versions = [f for f in os.listdir(abspath) if not f.endswith('.undo')]
         # We treat .undo files the same way extfile does, which is to take it into consideration
         # if not other file is found there
-        versions = [f for f in os.listdir(abspath) if os.path.isfile(os.path.join(abspath, f))]
+        versions = [(abspath, f) for f in os.listdir(abspath) 
+                            if os.path.isfile(os.path.join(abspath, f))]
+
+        for lang in obj.getSite().gl_get_languages():
+            lpath = os.path.join(abspath, lang)
+            if os.path.exists(lpath) and os.path.isdir(lpath):
+                versions.extend([(lpath, f) for f in os.listdir(lpath) 
+                                if os.path.isfile(os.path.join(lpath, f))])
 
         if len(versions) > 1:
-            self.log.warning("Skipping %s, too many files", obj.absolute_url())
-            return
+            # see if the files have the same content, in which 
+            # case we can upload one version of that file
+            hashes = set([hashfile(os.path.join(fpath, filename))
+                                for (fpath, filename) in versions])
+            if len(hashes) > 1:    
+                self.log.warning("Skipping %s, too many files", obj.absolute_url())
+                return
+            versions = versions[:1]
 
-        for fname in versions:
-            content = self.get_content(abspath, fname)
+        for fpath, filename in versions:
+            content = self.get_content(fpath, filename)
             obj._save_file(content, contributor='')
             self.log.info("Added a file for %r", obj.absolute_url())
 
