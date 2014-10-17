@@ -1,3 +1,9 @@
+1.4.29 (2014-10-17)
+-------------------
+* Bug fix: allow admins_only query parameter to make the member search linkable
+  when just the admins should be shown on the initial page
+  [tiberich #4505]
+
 1.4.28 (unreleased)
 -------------------
 * modified some tests where the old "Leader" term was used [dumitval]
