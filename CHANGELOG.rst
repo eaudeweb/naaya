@@ -1,3 +1,6 @@
+1.4.30 (unreleased)
+-------------------
+
 1.4.29 (2014-10-17)
 -------------------
 * Bug fix: allow admins_only query parameter to make the member search linkable
