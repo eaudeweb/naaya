@@ -18,7 +18,8 @@
         <input type="text" name="search_string:utf8:ustring" id="search_string"
             tal:attributes="value search_string"/>
         <input type='hidden' id='skip_validation' name='skip_validation' value='' />
-        <input type='hidden' id='only_admins' name='only_admins' value='' />
+        <input type='hidden' id='only_admins' name='only_admins' 
+            value='' tal:attributes="value request/form/only_admins | nothing"/>
         <input type="submit" value="Search"/>
         <input id="show_all" type="submit" value="Show all" />
         <input id="show_administrators" type="submit"
@@ -51,6 +52,12 @@
                 success: processResponse,
                 error: searchError
             });
+            if($("#only_admins").val() == 'True') {
+                $('#skip_validation').val('1');
+                $('#search_string').val('');
+                $("#search_form").submit();
+                $('#only_admins').val('');
+            }
             // Show all
             jQuery("#show_all").click(function(){
                 $('#skip_validation').val('1');
