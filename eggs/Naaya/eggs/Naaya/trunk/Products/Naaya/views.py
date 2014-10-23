@@ -155,3 +155,9 @@ def AdminAPIKeysStatus(context, request):
     }
 
     return tmpl.__of__(context)(**options)
+
+
+class PDBView(BrowserView):
+    def __call__(self):
+        import pdb; pdb.set_trace()
+        return "Done"

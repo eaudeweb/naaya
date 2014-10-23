@@ -15,6 +15,13 @@
     permission="zope2.ViewManagementScreens"
     />
 
+  <browser:page
+    name="go_pdb"
+    for="*"
+    class=".views.PDBView"
+    permission="zope2.ViewManagementScreens"
+    />
+
   <naaya:simpleView
         for="Products.Naaya.interfaces.INySite"
         name="admin_api_keys_status_html"
