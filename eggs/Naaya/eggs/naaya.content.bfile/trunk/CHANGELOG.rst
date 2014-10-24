@@ -1,9 +1,10 @@
 1.4.6 (unreleased)
 --------------------
+* strip leading underscores from new filenames [dumitval]
 
 1.4.5 (2014-10-24)
 --------------------
-* strip leading underscores from the download url filename [dumitval]
+* strip leading underscores from the filename in download url [dumitval]
 
 1.4.4 (2014-10-10)
 --------------------
