@@ -1,5 +1,6 @@
 1.4.5 (unreleased)
 --------------------
+* strip leading underscores from the download url filename [dumitval]
 
 1.4.4 (2014-10-10)
 --------------------
