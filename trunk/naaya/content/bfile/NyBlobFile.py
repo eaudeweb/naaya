@@ -1,6 +1,6 @@
 """Storage and provider of blob files"""
 
-#from zope.interface import implements
+# from zope.interface import implements
 from ZODB.POSException import POSKeyError
 from plone.i18n.normalizer.interfaces import IUserPreferredFileNameNormalizer
 from AccessControl import ClassSecurityInfo
@@ -23,14 +23,17 @@ import mimetypes
 import os
 import urllib
 
-COPY_BLOCK_SIZE = 65536 # 64KB
+from utils import strip_leading_underscores
+
+COPY_BLOCK_SIZE = 65536  # 64KB
 
 
-def contentDispositionHeader(disposition, charset='utf-8', language=None, **kw):
+def contentDispositionHeader(disposition, charset='utf-8', language=None,
+                             **kw):
     """Return a properly quoted disposition header
 
-    Originally from CMFManagedFile/content.py.
-    charset default changed to utf-8 for consistency with the rest of Archetypes.
+    Originally from CMFManagedFile/content.py. charset default changed to
+    utf-8 for consistency with the rest of Archetypes.
     """
 
     from email.Message import Message as emailMessage
@@ -54,6 +57,7 @@ def contentDispositionHeader(disposition, charset='utf-8', language=None, **kw):
     m = emailMessage()
     m.add_header('content-disposition', disposition, **kw)
     return m['content-disposition']
+
 
 def handleIfModifiedSince(instance, REQUEST, RESPONSE):
     # HTTP If-Modified-Since header handling: return True if
@@ -130,7 +134,7 @@ def handleRequestRange(instance, length, REQUEST, RESPONSE):
             RESPONSE.setHeader(
                 'Content-Range',
                 'bytes %d-%d/%d' % (start, end - 1, length))
-            RESPONSE.setStatus(206) # Partial content
+            RESPONSE.setStatus(206)  # Partial content
             return dict(start=start, end=end)
     return {}
 
@@ -154,7 +158,7 @@ class BlobStreamIterator(object):
     else:
         __implements__ = (IStreamIterator,)
 
-    def __init__(self, blob, mode='r', streamsize=1<<16, start=0, end=None):
+    def __init__(self, blob, mode='r', streamsize=1 << 16, start=0, end=None):
         self.blob = openBlob(blob, mode)
         self.streamsize = streamsize
         self.start = start
@@ -252,7 +256,7 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         # Test for enabling of X-SendFile
         if REQUEST is not None:
             ny_xsendfile = REQUEST.get_header("X-NaayaEnableSendfile")
-            if ny_xsendfile is not None and ny_xsendfile=="on":
+            if ny_xsendfile is not None and ny_xsendfile == "on":
                 RESPONSE.setHeader("X-Sendfile", self._current_filename())
                 return "[body should be replaced by front-end server]"
 
@@ -284,7 +288,9 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         return self.size
 
     security.declareProtected("View", 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None, charset='utf-8', disposition='inline'):
+
+    def index_html(self, REQUEST=None, RESPONSE=None, charset='utf-8',
+                   disposition='inline'):
         """ make it directly viewable when entering the objects URL """
 
         if REQUEST is None:
@@ -321,6 +327,7 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         return self.getIterator(**request_range)
 
     security.declarePrivate('getIterator')
+
     def getIterator(self, **kw):
         """ return a filestream iterator object from the blob """
         return BlobStreamIterator(self._blob, **kw)
@@ -341,12 +348,12 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
 
 
 def make_blobfile(the_file, **kwargs):
-    filename = trim_filename(the_file.filename)
+    filename = strip_leading_underscores(trim_filename(the_file.filename))
 
     content_type = mimetypes.guess_type(the_file.filename)[0]
     if content_type is None:
-        content_type = getattr(the_file, 'headers', {}).get('content-type',
-                'application/octet-stream')
+        content_type = getattr(the_file, 'headers', {}).get(
+            'content-type', 'application/octet-stream')
 
     meta = {
         'filename': filename,
@@ -369,6 +376,7 @@ def make_blobfile(the_file, **kwargs):
     blobfile.size = size
 
     return blobfile
+
 
 def trim_filename(filename):
     """
