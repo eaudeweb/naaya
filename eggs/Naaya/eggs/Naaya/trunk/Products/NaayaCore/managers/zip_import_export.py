@@ -14,8 +14,7 @@ import transaction
 from zope import interface
 
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaBase.constants import (PERMISSION_PUBLISH_OBJECTS,
-                                          PERMISSION_ZIP_EXPORT)
+from Products.NaayaBase.constants import (PERMISSION_ZIP_EXPORT)
 from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import relative_object_path, get_site_manager
 from naaya.content.file.file_item import addNyFile
@@ -24,6 +23,7 @@ from interfaces import IZipExportObject
 
 try:
     from naaya.content.bfile.bfile_item import addNyBFile
+
     def add_blob_file(location_obj, name, data):
         f = StringIO(data)
         f.filename = name
@@ -47,6 +47,7 @@ def add_file(location_obj, name, data):
     else:
         raise NotImplementedError
 
+
 def read_zipfile_contents(data):
     """
     Read the contents of a zip file, and return a tuple
@@ -65,6 +66,7 @@ def read_zipfile_contents(data):
 
     file_paths = set()
     folder_tree = []
+
     def add_to_folder_tree(folder_path):
         try:
             folder_path = folder_path.decode('utf-8')
@@ -78,7 +80,7 @@ def read_zipfile_contents(data):
                     break
             else:
                 new_node = []
-                node.append( (path_element, new_node) )
+                node.append((path_element, new_node))
                 node = new_node
 
     for p in zf.namelist():
@@ -129,6 +131,7 @@ def create_folders(container, folder_tree, report_path):
 
     return folder_map
 
+
 class ZipImportTool(Implicit, Item):
     title = "Zip import"
 
@@ -147,38 +150,41 @@ class ZipImportTool(Implicit, Item):
 
         # test if file uploaded is Zip archive
         if data.filename.split('.')[-1] != 'zip':
-            self.setSessionErrorsTrans("Error while uploading."
-                                       "You are not importing "
-                                       "a Zip archive file.")
-            raise ValueError("Bad zip file")
-
-        try:
-            folder_tree, zip_files = read_zipfile_contents(data)
-        except ValueError, e:
-            errors.append(e)
+            errors.append("Error while uploading."
+                          "You are not importing a Zip archive file.")
         else:
-            created_file_paths = set()
-            folder_map = create_folders(container, folder_tree,
-                                        created_file_paths.add)
-            folder_map[''] = container
-            for file_path, file_data in zip_files:
-                if '/' in file_path:
-                    file_container_path, file_name = file_path.rsplit('/', 1)
-                else:
-                    file_container_path, file_name = '', file_path
+            try:
+                folder_tree, zip_files = read_zipfile_contents(data)
+            except ValueError, e:
+                errors.append(e)
+            else:
+                created_file_paths = set()
+                folder_map = create_folders(container, folder_tree,
+                                            created_file_paths.add)
+                folder_map[''] = container
+                for file_path, file_data in zip_files:
+                    if '/' in file_path:
+                        file_container_path, file_name = file_path.rsplit('/',
+                                                                          1)
+                    else:
+                        file_container_path, file_name = '', file_path
 
-                file_name = file_name.encode('utf-8')
-                assert file_container_path in folder_map
-                try:
-                    file_container = folder_map[file_container_path]
-                    file_ob_id = add_file(file_container, file_name, file_data)
-                    file_ob = file_container[file_ob_id]
-                except Exception, e:
-                    errors.append((u"Error while creating file ${file_path}: ${error}",
-                    {'file_path': file_path, 'error': force_to_unicode(str(e))}))
-                else:
-                    p = relative_object_path(file_ob, container)
-                    created_file_paths.add(p)
+                    file_name = file_name.encode('utf-8')
+                    assert file_container_path in folder_map
+                    try:
+                        file_container = folder_map[file_container_path]
+                        file_ob_id = add_file(file_container, file_name,
+                                              file_data)
+                        file_ob = file_container[file_ob_id]
+                    except Exception, e:
+                        errors.append((
+                            (u"Error while creating file ${file_path}: "
+                             "${error}"),
+                            {'file_path': file_path,
+                             'error': force_to_unicode(str(e))}))
+                    else:
+                        p = relative_object_path(file_ob, container)
+                        created_file_paths.add(p)
 
         if errors:
             if REQUEST is not None:
@@ -193,8 +199,9 @@ class ZipImportTool(Implicit, Item):
             notify(ZipImportEvent(container, sorted(created_file_paths)))
 
             if REQUEST is not None:
-                self.setSessionInfoTrans([('imported ${path}', {'path': pth}, ) for pth in
-                                     sorted(created_file_paths)])
+                self.setSessionInfoTrans([('imported ${path}',
+                                           {'path': pth}, ) for pth in
+                                          sorted(created_file_paths)])
                 return REQUEST.RESPONSE.redirect(container.absolute_url())
 
             else:
@@ -214,6 +221,7 @@ class ZipExportTool(Implicit, Item):
         self.id = id
 
     security.declareProtected(PERMISSION_ZIP_EXPORT, 'do_export')
+
     def do_export(self, REQUEST=None):
         """
         Export the contents of the current folder as a Zip file. Returns an
@@ -246,7 +254,7 @@ class ZipExportTool(Implicit, Item):
             return temp_file
 
         if errors:
-            transaction.abort() # TODO use ZODB savepoints
+            transaction.abort()  # TODO use ZODB savepoints
             self.setSessionErrorsTrans(errors)
             return REQUEST.RESPONSE.redirect(my_container.absolute_url())
 
@@ -355,6 +363,7 @@ class FileIterator(object):
         size = data_file.tell()
         data_file.seek(cur_pos, 0)
         return size
+
 
 def stream_response(RESPONSE, data_file):
     assert hasattr(RESPONSE, '_streaming')
