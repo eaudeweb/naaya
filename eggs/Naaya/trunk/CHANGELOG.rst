@@ -1,5 +1,6 @@
 3.4.1 (unreleased)
 -------------------
+* import from zip: handle non-zip upload wihout site error [dumitval]
 
 3.4.0 (2014-10-09)
 -------------------
