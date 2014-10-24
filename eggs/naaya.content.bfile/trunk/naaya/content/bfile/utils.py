@@ -2,10 +2,14 @@ import zope.component
 from DateTime import DateTime
 import urllib
 from interfaces import IBFileContentViewer
-from naaya.core.utils import pretty_size, force_to_unicode, icon_for_content_type
+from naaya.core.utils import (pretty_size,
+                              force_to_unicode,
+                              icon_for_content_type)
+
 
 def file_has_content(file_ob):
     return (file_ob is not None) and (file_ob.filename != '')
+
 
 def get_view_adapter(version):
     """Find an file content viewer adapter based on content type"""
@@ -17,9 +21,10 @@ def get_view_adapter(version):
         name = name.split('/')[0] + '/*'
         return zope.component.queryAdapter(version, IBFileContentViewer, name)
 
+
 def tmpl_version(context, version, ver_id):
     """ """
-    #Try to get the adapter for this version and set viewable
+    # Try to get the adapter for this version and set viewable
     viewable = False
     if get_view_adapter(version) is not None:
         viewable = True
@@ -29,9 +34,10 @@ def tmpl_version(context, version, ver_id):
     if not version.removed:
         pretty_version_size = pretty_size(version.size)
         url = ('%s/download/%s/%s' %
-                            (context.absolute_url(),
-                             ver_id,
-                             urllib.quote(version.filename, safe='')))
+               (context.absolute_url(),
+                ver_id,
+                urllib.quote(strip_leading_underscores(version.filename),
+                             safe='')))
         icon_url = (icon_for_content_type(version.content_type)['url'])
 
     return {
@@ -50,3 +56,8 @@ def tmpl_version(context, version, ver_id):
         'ob': context,
     }
 
+
+def strip_leading_underscores(filename):
+    if filename[0] == '_':
+        filename = strip_leading_underscores(filename[1:])
+    return filename
