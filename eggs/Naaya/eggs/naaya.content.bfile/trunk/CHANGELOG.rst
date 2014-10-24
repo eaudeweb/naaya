@@ -1,4 +1,7 @@
-1.4.5 (unreleased)
+1.4.6 (unreleased)
+--------------------
+
+1.4.5 (2014-10-24)
 --------------------
 * strip leading underscores from the download url filename [dumitval]
 
