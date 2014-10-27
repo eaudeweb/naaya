@@ -1,5 +1,6 @@
 1.4.30 (unreleased)
 -------------------
+* filter IGs on forum, projects and archives homepage [dumitval]
 
 1.4.29 (2014-10-17)
 -------------------
