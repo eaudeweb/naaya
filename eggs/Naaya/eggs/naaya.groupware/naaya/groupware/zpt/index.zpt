@@ -8,66 +8,99 @@
               type="text/javascript" language="javascript"></script>
         <script src="++resource++naaya.groupware/main.js"
               type="text/javascript" language="javascript"></script>
+        <script type="text/javascript"
+              src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if ($('.datatable').length){
+                    $('.datatable').dataTable({
+                        'bSort': false,
+                        'bPaginate': false
+                    });
+                }
+            });
+        </script>
+        <link rel="stylesheet" type="text/css"
+              href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
         <h1 tal:content="meta_info/root_site_title"></h1>
         <p class="documentDescription" tal:content="structure meta_info/welcome_text">
             Welcome to the Forum. The purpose of this site is to cooperate on
             items of shared interest.
-            In order to become a member (i.e. obtain a username and a password) you should read the information
-            supplied for each interest group and then follow the subscription instructions.
+            In order to become a member (i.e. obtain a username and a password)
+            you should read the information supplied for each interest group
+            and then follow the subscription instructions.
         </p>
-        <tal:block define="igs python:portals.get('admin', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups you administrate</h2>
-            <ul class="ig_listing">
-                <li tal:repeat="ig igs">
-                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
-                </li>
-            </ul>
-        </tal:block>
-        <tal:block define="igs python:portals.get('member', [])" condition="igs">
-            <h2 i18n:translate="">Interest groups that you are a member of</h2>
-            <p>You have been assigned the Contributor role for these IGs, which means you are able to upload content.</p>
-            <ul class="ig_listing">
-                <li tal:repeat="ig igs">
-                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
-                </li>
-            </ul>
-        </tal:block>
-        <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
-            <tal:block condition="not: options/is_authenticated">
-                <h2 i18n:translate="">Public interest groups</h2>
-                <p>Interest groups you can access (view/download content) without authentication.</p>
+        <table class="datatable">
+          <thead>
+            <th i18n:translate=""></th>
+          </thead>
+          <tbody>
+            <tal:block define="igs python:portals.get('admin', [])" condition="igs">
+              <tr>
+                <th class="h2" i18n:translate="">Interest groups you administrate</th>
+              </tr>
+              <tr tal:repeat="ig igs">
+                <td>
+                  <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                  <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
+                </td>
+              </tr>
             </tal:block>
-            <tal:block condition="options/is_authenticated">
-                <h2 i18n:translate="">Interest groups you can access</h2>
-                <p>Interest groups that are open for public access and those where your account has been granted Viewer role.</p>
+            <tal:block define="igs python:portals.get('member', [])" condition="igs">
+              <tr>
+                <th><strong class="h2">Interest groups that you are a member of</strong><br/>
+                  You have been assigned the Contributor role for these IGs, which means you are able to upload content.
+                </th>
+              </tr>
+              <tr tal:repeat="ig igs">
+                <td>
+                  <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                  <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
+                </td>
+              </tr>
             </tal:block>
-            <ul class="ig_listing">
-                <li tal:repeat="ig igs">
-                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
-                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
-                </li>
-            </ul>
-        </tal:block>
-        <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-            <tal:block condition="not:options/is_authenticated">
-                <h2 i18n:translate="" tal:content="string:Interest groups you need to be logged in with ${options/network_name} account" />
+            <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
+              <tr>
+                <tal:block condition="not: options/is_authenticated">
+                  <th><strong class="h2">Public interest groups</strong><br/>
+                    Interest groups you can access (view/download content) without authentication.</th>
+                </tal:block>
+                <tal:block condition="options/is_authenticated">
+                  <th><strong class="h2">Interest groups you can access</strong><br/>
+                    Interest groups that are open for public access and those where your account has been granted Viewer role.</th>
+                </tal:block>
+              </tr>
+              <tr tal:repeat="ig igs">
+                <td>
+                  <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                  [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
+                  <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
+                </td>
+              </tr>
             </tal:block>
-            <tal:block condition="options/is_authenticated">
-                <h2 i18n:translate="" tal:content="string:Restricted interest groups your ${options/network_name} account does not have permission to access" />
-                <p i18n:translate="">You can request access to these interest groups by contacting your group administrator or by clicking the <em>Request access</em> link below</p>
-            </tal:block>
+            <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
+              <tr>
+                <tal:block condition="not:options/is_authenticated">
+                    <th class="h2" i18n:translate=""
+                      tal:content="string:Interest groups you need to be logged in with ${options/network_name} account" />
+                </tal:block>
+                <tal:block condition="options/is_authenticated">
+                  <th><strong class="h2" i18n:translate=""
+                  tal:content="string:Restricted interest groups your ${options/network_name} account does not have permission to access" /><br/>
+                  <span i18n:translate="">You can request access to these interest groups by contacting your group administrator or by clicking the <em>Request access</em> link below</span></th>
+                </tal:block>
 
-            <ul class="ig_listing">
-                <li tal:repeat="ig igs">
+                <tr tal:repeat="ig igs">
+                  <td>
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
                     [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
                     <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
-                </li>
-            </ul>
-        </tal:block>
+                  </td>
+                </tr>
+            </tal:block>
+          </tbody>
+        </table>
+
         <tal:block define="igs python:portals.get('archived', [])" condition="igs">
             <h2 i18n:translate="">Archived Interest groups</h2>
             <p i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk.</p>

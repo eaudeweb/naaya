@@ -10,11 +10,27 @@
               type="text/javascript" language="javascript"></script>
         <script src="++resource++naaya.groupware/eionet_forum_archived_portals.js"
               type="text/javascript" language="javascript"></script>
+        <script type="text/javascript"
+              src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if ($('.datatable').length){
+                    $('.datatable').dataTable({
+                        'bSort': false,
+                        'bPaginate': false
+                    });
+                }
+            });
+        </script>
+        <link rel="stylesheet" type="text/css"
+              href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
         <h1 tal:content="meta_info/root_site_title">Eionet Forum</h1>
-        <p class="documentDescription" tal:content="structure meta_info/welcome_text">Welcome to the Forum. The purpose of this site is to cooperate on
-items of shared interest.
-In order to become a member (i.e. obtain a username and a password) you should read the information
-supplied for each interest group and then follow the subscription instructions.
+        <p class="documentDescription"
+          tal:content="structure meta_info/welcome_text">Welcome to the Forum.
+          The purpose of this site is to cooperate on items of shared interest.
+          In order to become a member (i.e. obtain a username and a password)
+          you should read the information supplied for each interest group and
+          then follow the subscription instructions.
         </p>
         <tal:block define="igs python:portals.get('admin', [])" condition="igs">
             <h2 i18n:translate="">Interest groups you administrate</h2>
@@ -69,16 +85,25 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
 
-        <h2 i18n:translate="">Archived Interest groups</h2>
-        <p i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk or by contacting former Interest Group administrator; his or her contact details will be dislayed when you try to access the Interest Group.</p>
-        <tal:block define="igs python:portals.get('archived', [])" condition="igs">
-            <ul class="ig_listing">
-                <li tal:repeat="ig igs">
-                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
-                </li>
-            </ul>
-        </tal:block>
+        <table class="datatable">
+          <thead>
+            <th i18n:translate=""></th>
+          </thead>
+          <tbody>
+            <tr>
+              <th><strong class="h2" i18n:translate="">Archived Interest groups</strong><br/>
+                <span i18n:translate="">Not accessible. Kept for documentation. You can request access to content via HelpDesk or by contacting former Interest Group administrator; his or her contact details will be dislayed when you try to access the Interest Group.</span></th>
+            </tr>
+            <tal:block define="igs python:portals.get('archived', [])" condition="igs">
+              <tr tal:repeat="ig igs">
+                <td>
+                  <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                  <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
+                </td>
+              </tr>
+            </tal:block>
+          </tbody>
+        </table>
 
     </div>
 </metal:block>
