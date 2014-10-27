@@ -30,6 +30,12 @@
       permission="zope2.ViewManagementScreens" />
 
     <utility
+      name="nytalkbackcomment2nyblob.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_nytalkbackcomment2nyblob.UpdateNyTalkbackComment2NyBlobFile"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
       name="content_type.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_content_type.UpdateContentType"
