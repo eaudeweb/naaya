@@ -1,4 +1,7 @@
-1.4.30 (unreleased)
+1.4.31 (unreleased)
+-------------------
+
+1.4.30 (2014-10-27)
 -------------------
 * filter IGs on forum, projects and archives homepage [dumitval]
 
