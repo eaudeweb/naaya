@@ -1,6 +1,8 @@
 3.4.1 (unreleased)
 -------------------
 * import from zip: handle non-zip upload wihout site error [dumitval]
+* Bug fix: make NyFSFile use blobfiles instead of extfiles
+  [tiberich #3929]
 
 3.4.0 (2014-10-09)
 -------------------
