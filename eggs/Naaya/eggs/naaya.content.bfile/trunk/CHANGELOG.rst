@@ -2,6 +2,8 @@
 --------------------
 * PEP8 code formatting in some files [dumitval]
 * strip leading underscores from new filenames [dumitval]
+* Bug fix: added migration for naaya.content.talkback comment attachments
+  [tiberich #3929]
 
 1.4.5 (2014-10-24)
 --------------------
