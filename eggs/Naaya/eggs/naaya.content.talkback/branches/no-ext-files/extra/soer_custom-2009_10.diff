@@ -1,0 +1,144 @@
+diff -ru default/comment_form.zpt custom/comment_form.zpt
+--- default/comment_form.zpt	2009-10-05 16:42:31.000000000 +0300
++++ custom/comment_form.zpt	2009-10-15 15:44:49.000000000 +0300
+@@ -35,10 +35,12 @@
+             <em tal:condition="not:anonymous_user" tal:content="user_name"></em>
+         </div>
+ 
++        <metal:block use-macro="here/portal_forms/tbconsultation_comment_soer2010_position/macros/comment-input" />
++
+         <div class="field">
+             <label for="message" i18n:translate="">Comment</label>
+             <textarea id="message" cols="70" rows="5" name="message:utf8:ustring"
+-              tal:content="message"></textarea>
++              tal:content="string:${tb_message_prepend_html}${message}"></textarea>
+             <tal:block content="structure python:here.custom_editor(
+                                     editor, curr_lang, 'message')" />
+         </div>
+diff -ru default/invitations_welcome.zpt custom/invitations_welcome.zpt
+--- default/invitations_welcome.zpt	2009-10-05 12:18:17.000000000 +0300
++++ custom/invitations_welcome.zpt	2009-10-15 15:45:51.000000000 +0300
+@@ -11,4 +11,6 @@
+     by <tal:block content="options/inviter_name" i18n:name="inviter_name" />.
+ </p>
+ 
++<metal:block use-macro="here/portal_forms/tbconsultation_comment_soer2010_position/macros/welcome-form" />
++
+ <span tal:replace="structure here/standard_html_footer" />
+diff -ru default/paragraph_comments.zpt custom/paragraph_comments.zpt
+--- default/paragraph_comments.zpt	2009-10-08 17:09:09.000000000 +0300
++++ custom/paragraph_comments.zpt	2009-10-15 15:46:11.000000000 +0300
+@@ -20,11 +20,6 @@
+                 <tal:block content="python:here.utShowFullDateTime(comment.comment_date)"/>
+             </div>
+             <div class="buttons">
+-                <a tal:define="url python:(here.absolute_url() +
+-                                           test(embedded, '/embedded_html', '') +
+-                                           '?reply_to=' + comment_id + '#comment-form')"
+-                   tal:attributes="href url"
+-                   i18n:translate="">reply</a>
+                 <a tal:define="url python:(comment.absolute_url() + '/edit_html' +
+                                            test(embedded, '?embedded=on', ''))"
+                    tal:condition="can_edit"
+@@ -71,3 +66,4 @@
+     <metal:block use-macro="template/macros/display_child" />
+ </tal:block>
+ </ul>
+diff -ru default/talkbackconsultation_index.zpt custom/talkbackconsultation_index.zpt
+--- default/talkbackconsultation_index.zpt	2009-10-05 12:18:17.000000000 +0300
++++ custom/talkbackconsultation_index.zpt	2009-10-15 15:45:32.000000000 +0300
+@@ -1,3 +1,9 @@
++<tal:block condition="python:request['REQUEST_METHOD'] == 'POST'">
++    <metal:block use-macro="here/portal_forms/tbconsultation_comment_soer2010_position/macros/welcome-form" />
++    <tal:block define="dummy python:request.RESPONSE.redirect(here.absolute_url());" />
++</tal:block>
++
++<tal:block condition="python:request['REQUEST_METHOD'] != 'POST'">
+ <span tal:replace="structure here/standard_html_header" />
+ 
+ <tal:block tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language())">
+@@ -60,7 +66,9 @@
+ 	No sections have yet been added to this consultation. Please try again at a later time.
+ </p>
+ 
++<metal:block use-macro="here/portal_forms/tbconsultation_comment_soer2010_position/macros/welcome-form" />
+ 
+ </tal:block>
+ 
+ <span tal:replace="structure here/standard_html_footer" />
++</tal:block>
+--- -	2009-10-15 15:49:36.000000000 +0300
++++ custom/comment_soer2010_position.zpt	2009-10-15 15:44:47.000000000 +0300
+@@ -0,0 +1,73 @@
++<div tal:define="position_value python:request.SESSION.get('tb_position_default', 'personal');
++                 country_position_text string:The following represents a country/region position:;
++                 country_position_html string:<p><em>${country_position_text}</em></p><p></p>;
++                 global tb_message_prepend_html python:test(position_value == 'country', country_position_html, '');"
++     class="field-inline" id="tb-position-input" style="display:none"
++     metal:define-macro="comment-input">
++
++    <input type="radio" name="comment-position" value="personal" id="comment-position-personal"
++           tal:attributes="checked python:test(position_value=='personal', 'checked', None)" />
++    <label for="comment-position-personal">Personal opinion</label>
++    <br />
++    <input type="radio" name="comment-position" value="country" id="comment-position-country"
++           tal:attributes="checked python:test(position_value=='country', 'checked', None)" />
++    <label for="comment-position-country">Country/region position</label>
++
++<script type="text/javascript" tal:content="string:var current_position = '${position_value}';" />
++<script type="text/javascript" tal:content="string:var country_position_text = '${country_position_text}';" />
++<script type="text/javascript">
++$(function() {
++
++var input_div = $('div#tb-position-input');
++$('input[type="radio"]', input_div).click(radio_selected);
++input_div.show();
++
++function radio_selected(evt) {
++    var new_position = $(evt.target).val();
++    if(new_position == current_position) return;
++    current_position = new_position;
++    insert_position_text(new_position);
++}
++
++function insert_position_text(position_value) {
++    var previous_position_regexp = RegExp('^\\s*[<]p>\\s[<]em>' +
++                                              country_position_text +
++                                          '[<]/em>\\s*[<]/p>\\s*' +
++                                          '([<]p>(\\s*&nbsp;)?\\s*[<]/p>)?\\s*');
++    var e = tinyMCE.instances.mce_editor_0;
++    var clean_html = e.getHTML().replace(previous_position_regexp, '');
++    var html = ''
++    if(position_value == 'country') {
++        html += '<' + 'p><' + 'em>' + country_position_text + '<' + '/em><' + '/p>';
++        if(clean_html.length < 1)
++            html += '<' + 'p><' + '/p>';
++    }
++    html += clean_html;
++    e.setHTML(html);
++}
++
++});
++</script>
++</div>
++
++
++<form tal:define="position_session_value python:request.SESSION.get('tb_position_default', 'personal');
++                 position_form_value python:request.get('comment-position', None);
++                 position_value python:test(position_form_value, position_form_value, position_session_value);
++                 dummy python:request.SESSION.set('tb_position_default', position_value);"
++     method="POST" style="margin: 2em;"
++     metal:define-macro="welcome-form">
++
++    <input type="hidden" name="key" tal:attributes="value request/key|nothing" />
++    By default, your comments will be submitted as:<br />
++    <input type="radio" name="comment-position" value="personal" id="comment-position-personal"
++           tal:attributes="checked python:test(position_value=='personal', 'checked', None)" />
++    <label for="comment-position-personal">Personal opinion</label>
++    <br />
++    <input type="radio" name="comment-position" value="country" id="comment-position-country"
++           tal:attributes="checked python:test(position_value=='country', 'checked', None)" />
++    <label for="comment-position-country">Country/region position</label>
++    <br />
++    <input type="submit" value="Save" />
++</form>

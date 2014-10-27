@@ -1,0 +1,24 @@
+<subject i18n:translate="">Invite notification - <tal:block
+    content="options/consultation/title_or_id"
+    i18n:name="consultation_title" /></subject>
+<body_text>
+<tal:block i18n:translate="">
+    Hello <tal:block content="options/name" i18n:name="name" />,
+</tal:block>
+
+<tal:block i18n:translate="">
+    <tal:block content="options/inviter_name" i18n:name="inviter_name" />
+    has invited you to participate in the consultation
+    "<tal:block content="options/consultation/title_or_id"
+        i18n:name="consultation_title" />".
+    Please do not reply to this e-mail, and save it for future reference.
+</tal:block>
+
+<tal:block i18n:translate="">
+    You can access the consultation and submit your comments using the following address:
+    <tal:block content="options/keyed_url" i18n:name="keyed_url" />
+</tal:block>
+
+<tal:block content="options/inviter_message" />
+
+</body_text>
