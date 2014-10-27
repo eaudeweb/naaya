@@ -346,6 +346,30 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
             self._blob.readers.remove(fr)
         return s
 
+    def write_data(self, data, content_type=None):
+        if content_type:
+            self.content_type = content_type
+
+        if isinstance(data, basestring):
+            blob = self.open_write()
+            blob.write(data)
+            blob.seek(0)
+            blob.close()
+            self.size = len(data)
+            return self
+
+        bf_stream = self.open_write()
+        size = 0
+        while True:
+            _data = data.read(COPY_BLOCK_SIZE)
+            if not _data:
+                break
+            bf_stream.write(_data)
+            size += len(_data)
+        bf_stream.close()
+        self.size = size
+        return self
+
 
 def make_blobfile(the_file, **kwargs):
     filename = strip_leading_underscores(trim_filename(the_file.filename))
