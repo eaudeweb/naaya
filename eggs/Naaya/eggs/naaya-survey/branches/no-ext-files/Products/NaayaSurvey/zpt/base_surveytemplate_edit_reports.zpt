@@ -1,0 +1,71 @@
+<tal:block metal:define-macro="main">
+<script language="javascript" type="text/javascript">
+<!--
+// TODO: move the jscript to a library included in the header
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
+<form action="." method="post" class="surveyAddWidgetsForm" name="frmAdd">
+<!-- Title -->
+<div>
+	<label for="title">
+		<span i18n:translate="">Report title: </span>
+		<span class="required"> *</span>
+	</label>
+	<input type="text" id="title" name="title" size="40" tal:attributes="value python:here.getSession('title', '')" />
+	<input class="surveySubmitButton" type="submit" name="addReport:method" value="Add report" i18n:attributes="value" />
+	<input class="surveySubmitButton" type="submit" name="generateFullReport:method" value="Generate full report" i18n:attributes="value" />
+</div>
+<span tal:define="delManager python:here.delSessionKeys(['title'])"/>
+</form>
+
+<tal:block tal:define="objects here/getSortedReports|python:[]">
+	<form name="objectItems" method="post" action="." tal:condition="objects">
+		<div id="toolbar">
+			<input type="submit" value="Delete" name="deleteItems:method"
+				onclick="javascript:return window.confirm('Are you sure?')"
+				i18n:attributes="value" />
+		</div>
+		<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+		<tr>
+			<th class="checkbox" style="width: 4%;">
+				<input type="checkbox" onclick="toggleSelect(this)" />
+			</th>
+			<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+			<th class="title-column" i18n:translate="">Title</th>
+			<th class="edit" i18n:translate="">Edit</th>
+		</tr>
+		<tr tal:repeat="object objects">
+			<td class="checkbox" style="width: 4%; vertical-align: top;">
+				<input type="checkbox" name="ids:list" 
+					tal:attributes="value object/getId" />
+			</td>
+			<td class="type" style="width: 4%;">
+				<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
+				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+			</td>
+			<td class="title-column">
+			<a tal:attributes="
+				href string:${object/absolute_url};
+				title object/title"
+				tal:content="object/title" />
+			</td>
+			<td class="edit">
+				<a tal:attributes="href string:${object/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+				</a>
+			</td>
+		</tr>
+		</table>
+	</form>
+
+	<p tal:condition="not: objects" i18n:translate="">No reports defined.</p>
+</tal:block>
+
+</tal:block>

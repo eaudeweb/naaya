@@ -1,0 +1,112 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_edit').macros['page']">
+	<metal:block fill-slot="custom_scripts">
+		<link rel="stylesheet" type="text/css" media="all"
+		      tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+	</metal:block>
+
+	<div class="floated-buttons">
+		<span class="buttons">
+			<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
+		</span>
+	</div>
+
+	<h1 metal:fill-slot="title" i18n:translate="">Edit Survey</h1>
+
+	<div class="field" metal:fill-slot="doc_discussion" ></div>
+
+	<metal:block fill-slot="custom_boxes">
+	</metal:block>
+
+	<div class="field" metal:fill-slot="doc_releasedate">
+		<label for="releasedate"><span i18n:translate="" tal:omit-tag="">First day</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+		<input type="text" name="releasedate" class="vDateField" id="releasedate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate')))" />
+		<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
+	</div>
+
+	<metal:block fill-slot="custom_properties">
+		<!-- Document expiration date -->
+		<div class="field">
+			<label for="expirationdate"><span i18n:translate="">Last day</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+			<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
+			<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
+		</div>
+		<!-- Notify owner -->
+		<div class="field">
+			<label for="notify_owner" i18n:translate="">Notify owner when someone takes the survey</label>
+			<select id="notify_owner" name="notify_owner:boolean" tal:define="notify_owner here/notify_owner">
+				<option value="True" tal:attributes="selected notify_owner" i18n:translate="">Yes</option>
+				<option value="False" tal:attributes="selected not:notify_owner" i18n:translate="">No</option>
+			</select>
+		</div>
+		<!-- Notify respondents -->
+		<div class="field">
+			<label for="notify_respondents" i18n:translate="">Email answer to respondents</label>
+			<select id="notify_respondents" name="notify_respondents:string" tal:define="notify_respondents here/notify_respondents">
+				<option value="ALWAYS" tal:attributes="selected python:notify_respondents == 'ALWAYS'" i18n:translate="">Always</option>
+				<option value="NEVER" tal:attributes="selected python:notify_respondents == 'NEVER'" i18n:translate="">Never</option>
+				<option value="LET_THEM_CHOOSE_YES" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_YES'" i18n:translate="">Let them choose (default is yes)</option>
+				<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
+			</select>
+		</div>
+		<!-- Allow overtime -->
+		<div class="field">
+			<label for="allow_overtime" i18n:translate="">
+				Allow posting answers after the survey expiration date
+			</label>
+			<select id="allow_overtime" name="allow_overtime">
+				<option value="1" i18n:translate=""
+					tal:attributes="selected here/allow_overtime">
+					Yes
+				</option>
+				<option value="0" i18n:translate=""
+					tal:attributes="selected not:here/allow_overtime">
+					No
+				</option>
+			</select>
+		</div>
+		<!-- Allow multiple answers -->
+		<div class="field">
+			<label for="allow_multiple_answers" i18n:translate="">
+				Authenticated users can respond more than one time
+			</label>
+			<select id="allow_multiple_answers" name="allow_multiple_answers">
+				<option value="0" i18n:translate=""
+					tal:attributes="selected not:here/allow_multiple_answers">
+					No
+				</option>
+				<option value="1" i18n:translate=""
+					tal:attributes="selected here/allow_multiple_answers">
+					Yes
+				</option>
+			</select>
+		</div>
+		<!-- Allow drafts -->
+		<div class="field">
+			<label for="allow_drafts" i18n:translate="">
+				Allow users to save drafts of their answers?
+			</label>
+			<select id="allow_drafts" name="allow_drafts">
+				<option value="1" i18n:translate=""
+					tal:attributes="selected here/allow_drafts">
+					Yes
+				</option>
+				<option value="0" i18n:translate=""
+					tal:attributes="selected not:here/allow_drafts">
+					No
+				</option>
+			</select>
+		</div>
+		<!-- Allow Anonymous answers -->
+		<div class="field">
+			<label for="allow_anonymous" i18n:translate="">
+				Allow registered users to submit anonymous answers?
+			</label>
+			<select id="allow_anonymous" name="allow_anonymous">
+				<option value="1" i18n:translate=""
+					tal:attributes="selected here/allow_anonymous">Yes</option>
+				<option value="0" i18n:translate=""
+					tal:attributes="selected not:here/allow_anonymous">No</option>
+			</select>
+		</div>
+	</metal:block>
+</tal:block>

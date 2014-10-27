@@ -1,0 +1,77 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+    widget_id here/getWidgetId;
+    required python:here.getSession('required', here.getProperty('required', None));
+    size_max python:here.getSession('size_max', here.getProperty('size_max', 0));
+    width python:here.getSession('width', here.getProperty('width', 50));
+	parent options/parent|nothing;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode fileWidget">
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
+	<br />
+	<tal:block condition="datamodel">
+		<a tal:condition="not:parent" tal:attributes="href string:${datamodel/absolute_url}/index_html?as_attachment:int=1"
+		   tal:content="datamodel/title">
+		</a>
+		<a tal:condition="parent" tal:attributes="href string:${parent/absolute_url}/${datamodel/id}/index_html?as_attachment:int=1"
+		   tal:content="datamodel/title">
+		</a>
+		<!-- <a tal:attributes="href python:here.rstk.path_in_site(datamodel)"
+		   tal:content="datamodel/title">
+		</a> -->
+	</tal:block>
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
+		-
+	</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode">
+	<label tal:attributes="for widget_id" class="widget-title">
+		<span tal:content="nonEmptyTitle" />
+		<span tal:condition="required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
+	<input type="file" tal:attributes="
+		size width;
+		name widget_id;
+		id widget_id" />
+	<div class="tooltips">
+		<span i18n:translate="">Maximum allowed size - </span>
+		<tal:block replace="python:here.utShowSize(here.size_max)" />
+	</div>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode">
+<metal:block use-macro="here/common_render_meth/macros/manage">
+
+<!-- Custom fields -->
+<metal:block fill-slot="custom_fields">
+<!-- Width -->
+	<div class="field">
+		<label for="width" i18n:translate="">Width</label>
+		<input type="text" size="40" name="width:int" id="width" tal:attributes="value width"/>
+	</div>
+<!-- Maximum input width -->
+	<div class="field">
+		<label for="size_max" i18n:translate="">Max allowed uploaded files size</label>
+		<input type="text" size="40" name="size_max:int" id="size_max" tal:attributes="value size_max"/>
+		<span i18n:translate="">[bytes]</span>
+	</div>
+</metal:block>
+</metal:block>
+</div>
+
+</tal:block>
