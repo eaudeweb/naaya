@@ -1,0 +1,54 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block fill-slot="body">
+<h1><span tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+</div>
+</tal:block>
+
+<table border="0" cellspacing="2" cellpadding="2">
+<tr tal:condition="python:here.size()>0">
+	<th i18n:translate="">Download</th>
+	<td tal:define="download_url here/getDownloadUrl">
+		<a tal:define="size python:here.utShowSizeKb(here.size());
+					content_type here/content_type;
+					icon python:here.rstk.icon_for_content_type(content_type);
+					title python:icon['title'];
+					url python:icon['url']"
+			tal:attributes="href download_url">
+			<img tal:attributes="src url;
+								alt title;
+								title title" />
+			<span tal:replace="string:${here/downloadfilename} (${title}, ${size} Kb)"/></a>
+	</td>
+</tr>
+</table>
+
+<div tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+</metal:block>
+</metal:block>

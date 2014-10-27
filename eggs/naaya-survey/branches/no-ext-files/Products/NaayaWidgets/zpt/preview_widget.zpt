@@ -1,0 +1,40 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<tal:block i18n:translate="">Preview of:</tal:block> <tal:block replace="here/title" />
+</h1>
+
+<div class="floated-buttons">
+	<span class="buttons">
+	<a tal:attributes="href string:${here/aq_parent/absolute_url}/edit_questions_html"
+		i18n:translate="">Back to questions</a>
+	</span>
+</div>
+
+<!-- Submission bar -->
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html">
+		<span i18n:translate="">Edit</span>
+	</a>
+</div>
+
+<div>
+	<span>
+		<strong i18n:translate="">Note: </strong>
+		<span i18n:translate="">this is the preview of</span> <em tal:content="here/meta_type">widget</em> (<tal:block replace="here/meta_description"/>).
+		<span i18n:translate="">Click on the "Edit" button to change its properties.</span>
+	</span>
+</div>
+
+<tal:block replace="structure python:here.render(mode='edit')" />
+
+</metal:block>
+</metal:block>

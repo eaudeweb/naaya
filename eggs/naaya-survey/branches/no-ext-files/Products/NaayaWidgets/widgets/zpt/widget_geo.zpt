@@ -1,0 +1,205 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+    widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode geoWidget">
+    <strong tal:content="nonEmptyTitle" class="widget-title"></strong>
+
+    <tal:block define="geomap_tool here/getGeoMapTool;
+                       setup_map python:geomap_tool.setup_map_engine_html;
+                       lat datamodel/lat|nothing;
+                       lon datamodel/lon|nothing;
+                       address datamodel/address|nothing;
+                       coord_json python:here.rstk.json_dumps({
+                                    'lat': lat, 'lon': lon});">
+    <p i18n:translate="" tal:condition="lat">
+        Latitude: <tal:block i18n:name="" content="lat" />
+    </p>
+    <p i18n:translate="" tal:condition="lon">
+        Longitude: <tal:block i18n:name="" content="lon" />
+    </p>
+    <p i18n:translate="" tal:condition="address">
+        Address: <tal:block i18n:name="" content="address" />
+    </p>
+
+    <tal:block condition="python: datamodel and lat and lon">
+    <div id="map"
+         tal:attributes="style string:overflow: hidden;;
+                                      width: ${geomap_tool/objmap_width_px}px;;
+                                      height: ${geomap_tool/objmap_height_px}px"
+         ></div>
+    <tal:block content="structure python:setup_map(request)" />
+    <script tal:content="structure string:var naaya_js_map_coords =
+                            ${coord_json};"></script>
+    <script>
+    $(function() {
+        var map_engine = naaya_map_engine.object_index_map('map',
+                            naaya_js_map_coords);
+    });
+    </script>
+    </tal:block>
+    </tal:block>
+
+    <span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
+        -
+    </span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);
+                 json_opt_value python:here.coord_as_json(datamodel);
+                 lat_id string:${widget_id}.lat;
+                 lon_id string:${widget_id}.lon;
+                 address_id string:${widget_id}.address;
+                 portal_map here/getGeoMapTool">
+
+<label tal:attributes="for widget_id" class="widget-title">
+    <span tal:content="nonEmptyTitle" />
+    <span tal:condition="here/required" class="required">*</span>
+</label>
+
+<div style="background-color: #ecf5fa; border: 1px solid #b6cde1;
+            margin-top: 0.5em; padding: 0.5em; width: 430px;">
+
+    <tal:block define="site here/getSite; portal_map here/getGeoMapTool"
+       content="structure python:portal_map.setup_map_engine_html(request)" />
+
+    <div class="tooltips" tal:content="structure nonEmptyTooltips" />
+
+    <div style="padding:0.5em;">
+        <a id="map-toggle" href="javascript:">[<tal:block
+            i18n:translate="">Show map</tal:block> &#x25bc;]</a>
+    </div>
+    <label style="display:inline" tal:attributes="for lat_id"
+           class="widget-title" i18n:translate="">Latitude</label>
+    <input type="text" size="20" maxlength="20"
+           tal:attributes="value datamodel/lat|nothing;
+                           name string:${lat_id}:utf8:ustring;
+                           id string:${lat_id}" />
+    <br />
+    <label style="display:inline" tal:attributes="for lon_id"
+           class="widget-title" i18n:translate="">Longitude</label>
+    <input type="text" size="20" maxlength="20"
+           tal:attributes="value datamodel/lon|nothing;
+                           name string:${lon_id}:utf8:ustring;
+                           id string:${lon_id}" />
+
+    <noscript><p class="message-error" i18n:translate="">
+        You must have Javascript turned on to be able to
+        pick locations from the map.
+    </p></noscript>
+
+    <div style="margin: 0.5em;">
+        <!-- Map widget -->
+        <div id="map-container" style="display:none">
+            <div style="float:right; width: 400px; overflow: hidden">
+                <div id="map" style="width: 400px; height:400px"></div>
+            </div>
+        </div>
+
+        <p i18n:translate="">
+            Use the address to retrieve the location coordinates (e.g.
+            <em i18n:name="example_address">Kongens Nytorv 6,
+            1050 Copenhagen K, Denmark</em>)
+        </p>
+
+        <label tal:attributes="for address_id" class="widget-title"
+               i18n:translate="">Address</label>
+        <input type="text" size="50"
+               tal:attributes="value datamodel/address|nothing;
+                               name string:${address_id}:utf8:ustring;
+                               id string:${address_id}" />
+
+        <input type="button" name="address_button" value="Center map"
+               tal:attributes="id string:${widget_id}-centermap"
+               style="display: none;" />
+    </div>
+
+    <script tal:define="val python:here.rstk.json_dumps(widget_id)"
+            tal:content="structure string:
+                    var prop_name = ${val};
+                    var coord_value = ${json_opt_value};
+            "></script>
+    <script type="text/javascript">
+    (function() {
+        var map_visible = false;
+        var map_container = $('#map-container');
+        var map_toggle_button = $('#map-toggle');
+        var search_button = $('#' + prop_name + '-centermap');
+        var map_engine = null;
+        map_toggle_button.click(function(evt) {
+            if(map_visible) {
+                map_toggle_button.html("[Show map &#x25bc;]");
+                map_container.hide();
+                search_button.hide();
+                map_visible = false;
+            }
+            else {
+                map_toggle_button.html("[Hide map &#x25b2;]");
+                map_container.show();
+                search_button.show();
+                if(! map_engine) {
+                    map_engine = naaya_map_engine.object_edit_map(
+                            'map', coord_value, setLatLonValues);
+                }
+                map_visible = true;
+            }
+            return false;
+        });
+        var geo_form = {
+            'lat': document.getElementById(prop_name + '.lat'),
+            'lon': document.getElementById(prop_name + '.lon'),
+            'address': document.getElementById(prop_name + '.address')
+        };
+
+        $(geo_form['lat']).keypress(findLocOnEnter);
+        $(geo_form['lon']).keypress(findLocOnEnter);
+        $(geo_form['address']).keypress(findLocOnEnter);
+
+        search_button.click(findLocation);
+
+        function findLocation() {
+            var address = geo_form['address'].value;
+            var lat = geo_form['lat'].value;
+            var lon = geo_form['lon'].value;
+            if(address) {
+                map_engine.marker_at_address(address, setLatLonValues);
+            }
+        }
+
+        function setLatLonValues(coord) {
+            geo_form['lat'].value = coord.lat;
+            geo_form['lon'].value = coord.lon;
+        }
+
+        function findLocOnEnter(e) {
+            if(e.keyCode == 13) {
+                e.preventDefault();
+                findLocation();
+            }
+        }
+    })();
+    </script>
+</div>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
+     tal:define="required python:here.getSession('required', here.getProperty('required', None));">
+<metal:block use-macro="here/common_render_meth/macros/manage">
+</metal:block>
+</div>
+
+</tal:block>

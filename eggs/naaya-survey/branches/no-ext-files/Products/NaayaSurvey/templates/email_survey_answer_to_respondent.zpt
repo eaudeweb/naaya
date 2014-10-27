@@ -1,0 +1,14 @@
+<subject i18n:translate="">Survey answered</subject>
+
+<body_text>
+<tal:block i18n:translate="">Hello</tal:block> <tal:block content="options/NAME" />,
+
+<tal:block i18n:translate="">You have taken the survey "<tal:block content="options/SURVEY_TITLE" i18n:name="survey_title" />":</tal:block>
+
+<tal:block content="options/SURVEY_URL" />
+
+<tal:block i18n:translate="" condition="options/anonymous_answer|nothing">Your answer was recorded anonymously.</tal:block>
+
+<tal:block i18n:translate="">You can see your answers at:</tal:block>
+<tal:block content="options/LINK" />
+</body_text>
