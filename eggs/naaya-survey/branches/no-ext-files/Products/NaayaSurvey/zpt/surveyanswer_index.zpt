@@ -1,0 +1,159 @@
+<metal:block use-macro="here/standard_template_macro">
+
+<metal:block fill-slot="head">
+<link rel="stylesheet" type="text/css" media="all"
+    tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+</metal:block>
+
+<metal:block fill-slot="body">
+<h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
+    <metal:block use-macro="site_object_index/macros/icon"/>
+    <tal:block tal:replace="here/title_or_id" />
+</h1>
+
+<p tal:condition="here/description" tal:content="structure here/description" />
+
+
+<tal:block define="try_to_edit python: request.form.get('edit', 0);
+                   has_edit_permission here/checkPermissionEditAnswers;
+                   can_edit here/can_edit;
+                   editing python: try_to_edit and can_edit;
+                   editing_draft python: editing and here.is_draft();
+                   editing_answer python: editing and not here.is_draft();
+                   datamodel options/datamodel|here/getDatamodel;
+                   anonymous_answer here/anonymous_answer;
+                   ">
+
+    <tal:block condition="try_to_edit">
+        <tal:block define="tmpl nocall:here/aq_parent/validation_html|nothing"
+                condition="tmpl">
+            <metal:block use-macro="tmpl/macros/validate" />
+        </tal:block>
+        <form name="frmAdd" method="post" action="." enctype="multipart/form-data"
+                tal:condition="here/checkPermissionAddAnswer">
+        <div class="survey-box">
+            <div class="survey-box-content">
+                <div class="survey-top-options">
+                    <div class="survey-misc-details">
+                        <div class="survey-detail survey-tips">
+                            <h3 class="survey-tips-title">Tips:</h3>
+
+                            <div class="survey-tips-content">
+                                <p tal:condition="python: editing_draft">
+                                    <strong i18n:translate="">You are working on a draft version of the answer</strong>
+                                </p>
+
+                                <p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
+                                    Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end.
+                                </p>
+                                <p tal:condition="python: editing_draft and here.allow_drafts" i18n:translate="">
+                                    Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft">Save as draft</strong> button.
+                                    When you have completed the answer, click the <strong i18n:name="submit">Submit</strong> button and your answer finalised.
+                                </p>
+                                <p tal:condition="python: editing_answer and here.allow_drafts" i18n:translate="">
+                                    Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft">Overwrite as draft</strong> button if you wish to save an interim version.
+                                    Upon saving an interim version, your answer will not be considered a final answer anymore.
+                                </p>
+                                <p tal:condition="editing" i18n:translate="">
+                                    If you want to remove the questionnaire, click the <strong i18n:name="delete_answer">Delete answer</strong> button at the end. (Note: you will not be able to recover the responses afterwards).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="survey-bottom-options">
+                    <div class="surveySubmit">
+                        <input type="submit"
+                            tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
+                            i18n:attributes="value" name="addSurveyAnswer:method"/>
+                        <input type="submit" tal:condition="here/canAddAnswerDraft"
+                            tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
+                            i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+                        <input type="submit" value="Delete answer"
+                            i18n:attributes="value" name="deleteSurveyAnswer:method"/>
+                    </div>
+                </div>
+            </div>
+            <div class="clear">
+                &nbsp;
+            </div>
+        </div>
+
+            <tal:block tal:condition="can_edit">
+            <input type="hidden" name="answer_id" tal:attributes="value here/id" />
+
+            <div class="widgetEditMode"
+              tal:condition="python:here.allow_anonymous and not here.isAnonymousUser()">
+                <label class="widget-title" for="w_wewe" i18n:translate="">
+                    <span>Do you want your answer to be anonymous?</span>
+                    <span class="required">*</span>
+                </label>
+                <select id="anonymous_answer" name="anonymous_answer:int">
+                    <option value="7" i18n:translate=""></option>
+                    <option value="1" i18n:translate=""
+                        tal:attributes="selected python:test(anonymous_answer==1,
+                            'selected', None)">Yes</option>
+                    <option value="0" i18n:translate=""
+                        tal:attributes="selected python:test(anonymous_answer==0,
+                            'selected', None)">No</option>
+                </select>
+            </div>
+
+            <tal:block content="structure python:here.render(mode='edit', datamodel=datamodel)" />
+
+            <div class="widgetEditMode" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
+                <label class="widget-title" for="anonymous_responder_email" i18n:translate="">Optional: edit your answer later</label>
+                <div class="tooltips" i18n:translate="">
+                    Optionally, you can provide an email address where you will receive a password and instructions to edit your answers after submission. The email address is not part of the answer and visible only for administrators. In case you'd like to provide a real anonymous answer - please do not use this feature.
+                </div>
+                <input id="anonymous_responder_email" type="text" size="100" tal:attributes="value request/anonymous_responder_email|here/anonymous_responder_email" name="anonymous_responder_email:utf8:ustring">
+            </div>
+
+            <tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+                    content="structure python:here.show_recaptcha(here)" />
+
+            <div class="surveySubmit">
+                <input type="submit"
+                    tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
+                    i18n:attributes="value" name="addSurveyAnswer:method"/>
+                <input type="submit" tal:condition="here/canAddAnswerDraft"
+                    tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
+                    i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+                <input type="submit" value="Delete answer"
+                    i18n:attributes="value" name="deleteSurveyAnswer:method"/>
+            </div>
+            </tal:block>
+            <tal:block condition="not:can_edit">
+                <p class="message-error" i18n:translate="">
+                    You don't have enough permissions to edit this survey answer!
+                </p>
+                <p class="message-error" tal:condition="here/expired" i18n:translate="">
+                    The survey has expired!
+                </p>
+            </tal:block>
+        </form>
+    </tal:block>
+    <tal:block condition="python: not try_to_edit or not can_edit">
+        <tal:block content="structure python:here.render(mode='view', datamodel=datamodel)">
+        </tal:block>
+        <div class="widgetViewMode stringWidget"
+            tal:condition="python:here.respondent == 'Anonymous User'">
+            <strong class="widget-title">Responder email</strong>
+            <br>
+            <span tal:define="anonymous_responder_email here/anonymous_responder_email|nothing"
+            tal:attributes="class python:test(anonymous_responder_email, None, 'no-response');
+            id string:anonymous_responder_email" tal:content="python:test(anonymous_responder_email, anonymous_responder_email, '-')"/>
+        </div>
+    </tal:block>
+
+
+</tal:block>
+
+</metal:block>
+</metal:block>
+
