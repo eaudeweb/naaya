@@ -4,6 +4,8 @@
 * strip leading underscores from new filenames [dumitval]
 * Bug fix: added migration for naaya.content.talkback comment attachments
   [tiberich #3929]
+* Bug fix: added migration for naaya survey attachment files
+  [tiberich #3929]
 
 1.4.5 (2014-10-24)
 --------------------
