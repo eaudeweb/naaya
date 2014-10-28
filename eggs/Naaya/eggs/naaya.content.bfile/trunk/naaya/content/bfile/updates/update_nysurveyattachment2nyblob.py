@@ -40,6 +40,9 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
                         self.log.info("Migrated %s bytes to bfile: %s" %
                                           (len(data), fobj.absolute_url()))
 
+
+                        fobj._ext_file._delete('/'.join(fobj._ext_file.filename))
+
                         del fobj._ext_file
                         self.log.info("Removed _ext_file for %s" %
                                       fobj.absolute_url())

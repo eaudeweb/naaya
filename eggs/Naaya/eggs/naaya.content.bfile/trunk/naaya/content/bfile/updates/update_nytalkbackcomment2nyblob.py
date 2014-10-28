@@ -36,6 +36,9 @@ class UpdateNyTalkbackComment2NyBlobFile(UpdateScript):
                             self.log.info("Migrated %s bytes to bfile: %s" %
                                           (len(data), comment.absolute_url()))
 
+                        comment._ext_file._delete(
+                            '/'.join(comment._ext_file.filename))
+
                         del comment._ext_file
                         self.log.info("Removed _ext_file for %s" %
                                       comment.absolute_url())
