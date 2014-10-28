@@ -21,7 +21,7 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
                 self.log.info("Migrating survey attachment %s",
                               attach.absolute_url())
                 for fobj in attach.objectValues():
-                    if not getattr(fobj, '_ext_file'):
+                    if not hasattr(fobj, '_ext_file'):
                         continue
 
                     if fobj._ext_file.get_size():
