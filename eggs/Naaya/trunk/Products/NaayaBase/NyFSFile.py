@@ -78,7 +78,8 @@ class NyFSFile(File):
 
         if hasattr(self, '_ext_file'):  #not migrated yet?
             if self._bfile.size == 0:
-                return self._ext_file.index_html()
+                return self._ext_file
+
         return self._bfile
 
     #
