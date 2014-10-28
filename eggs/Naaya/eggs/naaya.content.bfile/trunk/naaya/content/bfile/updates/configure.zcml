@@ -36,6 +36,12 @@
       permission="zope2.ViewManagementScreens" />
 
     <utility
+      name="nysurveyattachment2nyblob.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_nysurveyattachment2nyblob.UpdateSurveyAttachment2NyBlobFile"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
       name="content_type.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_content_type.UpdateContentType"
