@@ -1,4 +1,7 @@
-3.4.1 (unreleased)
+3.4.2 (unreleased)
+-------------------
+
+3.4.1 (2014-10-28)
 -------------------
 * import from zip: handle non-zip upload wihout site error [dumitval]
 * Bug fix: make NyFSFile use blobfiles instead of extfiles
