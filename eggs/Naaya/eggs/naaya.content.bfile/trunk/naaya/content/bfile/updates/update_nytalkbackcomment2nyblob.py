@@ -27,10 +27,10 @@ class UpdateNyTalkbackComment2NyBlobFile(UpdateScript):
                         if comment._ext_file.is_broken():
                             self.log.warning(
                                 "\t BROKEN EXTFILE: Couldn't migrate extfile "
-                                "for %s because of broken file",
+                                "for %s because of broken or missing file",
                                 comment.absolute_url()
                             )
-                            continue
+                            #continue
 
                         if comment._ext_file.get_size():
                             data = comment._ext_file.index_html()
