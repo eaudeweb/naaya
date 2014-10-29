@@ -26,6 +26,7 @@ class UpdateNyPhotoNyMedia2NyBlobFile(UpdateScript):
                         "\t BROKEN EXTFILE: Couldn't migrate extfile for %s "
                         "because of broken file", extfile.absolute_url()
                     )
+                    continue
 
                 self.log.info("Migrating extfile %s", extfile.absolute_url())
                 data = extfile.index_html()

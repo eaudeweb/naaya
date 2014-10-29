@@ -30,6 +30,7 @@ class UpdateNyTalkbackComment2NyBlobFile(UpdateScript):
                                 "for %s because of broken file",
                                 comment.absolute_url()
                             )
+                            continue
 
                         if comment._ext_file.get_size():
                             data = comment._ext_file.index_html()
