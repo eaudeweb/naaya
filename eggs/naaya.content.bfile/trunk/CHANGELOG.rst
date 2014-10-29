@@ -1,5 +1,7 @@
 1.4.9 (unreleased)
 --------------------
+* Bug fix: don't skip migration of talkback comments because of missing extfile
+  [tiberich #3929]
 
 1.4.8 (2014-10-29)
 --------------------
