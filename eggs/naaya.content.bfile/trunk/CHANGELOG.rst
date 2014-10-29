@@ -1,10 +1,12 @@
-1.4.8 (unreleased)
+1.4.8 (2014-10-29)
 --------------------
+* Bug fix: skip files from being migrated if their extfile is broken
+  [tiberich #3929]
 
 1.4.7 (2014-10-29)
 --------------------
 * Bug fix: issue warnings when extfile is broken
-  [tiberich #3929
+  [tiberich #3929]
 
 1.4.6 (2014-10-29)
 --------------------
