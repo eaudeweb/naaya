@@ -1,4 +1,7 @@
-1.4.6 (unreleased)
+1.4.7 (unreleased)
+--------------------
+
+1.4.6 (2014-10-29)
 --------------------
 * PEP8 code formatting in some files [dumitval]
 * strip leading underscores from new filenames [dumitval]
