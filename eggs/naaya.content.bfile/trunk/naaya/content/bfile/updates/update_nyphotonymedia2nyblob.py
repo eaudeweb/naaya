@@ -20,6 +20,13 @@ class UpdateNyPhotoNyMedia2NyBlobFile(UpdateScript):
             obj = brain.getObject()
             self.log.info("Migrating object %s", obj.absolute_url())
             for extfile in obj.objectValues('ExtFile'):
+
+                if extfile.is_broken():
+                    self.log.warning(
+                        "\t BROKEN EXTFILE: Couldn't migrate extfile for %s "
+                        "because of broken file", extfile.absolute_url()
+                    )
+
                 self.log.info("Migrating extfile %s", extfile.absolute_url())
                 data = extfile.index_html()
                 filename = extfile.id

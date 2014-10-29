@@ -24,6 +24,12 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
                     if not hasattr(fobj, '_ext_file'):
                         continue
 
+                    if fobj._ext_file.is_broken():
+                        self.log.warning(
+                            "\t BROKEN EXTFILE: Couldn't migrate extfile for "
+                            "%s because of broken file", fobj.absolute_url()
+                        )
+
                     if fobj._ext_file.get_size():
                         data = fobj._ext_file.index_html()
 
