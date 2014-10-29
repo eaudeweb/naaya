@@ -1,3 +1,6 @@
+1.4.9 (unreleased)
+--------------------
+
 1.4.8 (2014-10-29)
 --------------------
 * Bug fix: skip files from being migrated if their extfile is broken
