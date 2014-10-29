@@ -24,6 +24,13 @@ class UpdateNyTalkbackComment2NyBlobFile(UpdateScript):
                         if not hasattr(comment, '_ext_file'):
                             continue
 
+                        if comment._ext_file.is_broken():
+                            self.log.warning(
+                                "\t BROKEN EXTFILE: Couldn't migrate extfile "
+                                "for %s because of broken file",
+                                comment.absolute_url()
+                            )
+
                         if comment._ext_file.get_size():
                             data = comment._ext_file.index_html()
                             blob = comment._bfile.open_write()

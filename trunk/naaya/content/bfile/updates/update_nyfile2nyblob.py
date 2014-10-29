@@ -41,6 +41,8 @@ class Export(object):
 
         for version in versions:
             if version.is_broken():
+                self.logger.warning("\t BROKEN EXTFILE: %s",
+                                    version.absolute_url())
                 continue
 
             sfile = StringIO(version.data)
@@ -56,6 +58,9 @@ class Export(object):
             sfile.filename = extfile.filename[-1]
             sfile.headers = {'content-type': extfile.content_type}
             yield sfile
+        else:
+            self.logger.warning("\t BROKEN EXTFILE: %s",
+                                extfile.absolute_url())
 
     @property
     def local_properties(self):
