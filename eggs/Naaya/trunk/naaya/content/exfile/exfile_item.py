@@ -744,6 +744,8 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         filename = lang_doc._get_data_name()
         if not filename:
             return context.title_or_id()
+        if isinstance(filename, basestring):
+            return filename
         return filename[-1]
 
     security.declareProtected(view, 'download')
