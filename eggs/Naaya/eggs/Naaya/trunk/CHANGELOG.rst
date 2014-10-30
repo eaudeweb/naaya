@@ -1,5 +1,10 @@
-3.4.2 (unreleased)
+3.4.2 (2014-10-30)
 -------------------
+* Bug fix: backward compatibility with extfiles not migrated:
+  if filename is string, return it, instead of last item
+  [tiberich #3929]
+* Bug fix: avoid error in datatables when user has multiple roles
+  [tiberich #21517]
 
 3.4.1 (2014-10-28)
 -------------------
