@@ -1,3 +1,6 @@
+3.4.3 (unreleased)
+-------------------
+
 3.4.2 (2014-10-30)
 -------------------
 * Bug fix: backward compatibility with extfiles not migrated:
