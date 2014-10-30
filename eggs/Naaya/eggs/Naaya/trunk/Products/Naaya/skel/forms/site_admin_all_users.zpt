@@ -62,11 +62,9 @@
                                     user_nrows python: max(1, len(user_roles));
                                     user_id user/user_id;
                                     user_source_title user/source_title;">
-                                    <tr tal:attributes="class row_class"
-                                        tal:repeat="index python: range(user_nrows)">
+                                    <tr tal:attributes="class row_class">
                                         <!-- Username -->
-                                        <td tal:condition="python: index == 0"
-                                            tal:attributes="rowspan python: user_nrows">
+                                        <td>
                                             <strong>
                                                 <tal:block condition="python:user_source_title.lower() == 'local'">
                                                     <a tal:define="user_quoted python:here.utUrlEncode(user_id)"
@@ -97,8 +95,7 @@
                                         <!-- end of Username -->
 
                                         <!-- Name/Email -->
-                                        <td tal:condition="python: index == 0"
-                                            tal:attributes="rowspan python: user_nrows">
+                                        <td>
                                             <div class="datatable-username">
                                                 <tal:block replace="user/full_name"></tal:block>
                                                 <span tal:content="user/status|nothing" />
@@ -111,21 +108,17 @@
                                         <!-- end of Name/Email -->
 
                                         <!-- Roles in Locations -->
-                                        <tal:block condition="python: index < len(user_roles)">
-                                            <td tal:define="role python: user_roles[index]" class="user-role">
+                                        <td class="user-role" tal:condition="user_roles">
+                                            <div tal:repeat="role user_roles">
                                                 <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
                                                 <a class="roles-location" tal:define="obj python: role[1]" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
-                                            </td>
-                                        </tal:block>
-                                        <tal:block condition="not: user_roles">
-                                            <td class="user-role">-</td>
-                                        </tal:block>
+                                            </div>
+                                        </td>
+                                        <td tal:condition="not: user_roles" class="user-role">-</td>
                                         <!-- end of Roles in Locations -->
 
                                         <!-- Source -->
-                                        <td tal:condition="python: index == 0"
-                                            tal:attributes="rowspan python: user_nrows"
-                                            tal:content="string:${user_source_title} users"></td>
+                                        <td tal:content="string:${user_source_title} users"></td>
                                         <!-- end of Source -->
                                     </tr>
                                 </tal:block>
