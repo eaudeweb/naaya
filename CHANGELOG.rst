@@ -1,3 +1,6 @@
+1.4.32 (unreleased)
+-------------------
+
 1.4.31 (2014-10-31)
 -------------------
 * Bug fix: fix label for member search access level column
