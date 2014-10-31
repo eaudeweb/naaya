@@ -71,7 +71,7 @@
             <th>
                 <tal:block condition="python:sorted_by!='access_level' or reverse_sorted">
                 <a tal:attributes="href string:${base_url}&sort_by=access_level"
-                   id="sort_by_access_level" i18n:translate="">Access level</a>
+                   id="sort_by_access_level" i18n:translate="">IG root access level</a>
                 </tal:block>
                 <tal:block condition="python:sorted_by=='access_level' and not reverse_sorted">
                 <a tal:attributes="href string:${base_url}&sort_by=access_level&reverse_sort=True"
