@@ -31,7 +31,8 @@ class SelectMultipleWidget(Widget):
         list_values = {}
         for node in self.get_list_nodes(self.list_id):
             list_values[node.title] = node.id
-        return [list_values[val.strip()] for val in value.split(';')]
+        values = filter(None, [x.strip() for x in value.split(';')])
+        return [list_values[val.strip()] for val in values]
 
     def convert_to_user_string(self, values):
         """ Convert the list value to a user-readable string """
