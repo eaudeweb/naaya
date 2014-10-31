@@ -1,5 +1,7 @@
-1.4.31 (unreleased)
+1.4.31 (2014-10-31)
 -------------------
+* Bug fix: fix label for member search access level column
+  [tiberich 21517]
 
 1.4.30 (2014-10-27)
 -------------------
