@@ -1,6 +1,9 @@
-1.4.9 (unreleased)
+1.4.9 (2014-11-03)
 --------------------
 * Bug fix: don't skip migration of talkback comments because of missing extfile
+  [tiberich #3929]
+* Bug fix: raise NotFound when the download page is retrieved for a BFile without 
+  any uploaded content
   [tiberich #3929]
 
 1.4.8 (2014-10-29)

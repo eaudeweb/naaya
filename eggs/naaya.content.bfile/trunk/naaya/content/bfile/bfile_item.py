@@ -188,8 +188,12 @@ def bfile_download(context, path, REQUEST):
         except (IndexError, ValueError):
             raise NotFound
 
+    if ver is None:
+        raise NotFound
+
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
+
     if action == 'view':
         view_adapter = get_view_adapter(ver)
         context.notify_access_event(REQUEST)
@@ -241,17 +245,13 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         return False
 
     security.declarePrivate('current_version')
-
     @property
     def current_version(self):
         for ver in reversed(self._versions):
             if not ver.removed:
                 return ver
-        else:
-            return None
 
     security.declareProtected(view, 'current_version_download_url')
-
     def current_version_download_url(self):
         versions = self._versions_for_tmpl()
         if versions:
@@ -267,7 +267,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         self._versions.append(bf)
 
     security.declarePrivate('remove_version')
-
     def remove_version(self, number, removed_by=None):
         ver = self._versions[number]
         if ver.removed:
@@ -281,7 +280,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         f.close()
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
 
