@@ -3,9 +3,9 @@
 <div class="left_portlet_content">
     <tal:block tal:define="site_url here/getSitePath;
                             site here/getSite;
-                            nfp_admin_link site/nfp_admin_link_html;
-                            howto_link site/howto_link_html;
-                            organisations_link site/organisations_link_html">
+                            nfp_admin_link site/nfp_admin_link_html | nothing;
+                            howto_link site/howto_link_html | nothing;
+                            organisations_link site/organisations_link_html | nothing">
         <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
             <tal:block tal:repeat="item link_list">
                 <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
