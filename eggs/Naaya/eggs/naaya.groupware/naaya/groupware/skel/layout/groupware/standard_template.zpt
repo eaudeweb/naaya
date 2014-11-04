@@ -13,15 +13,15 @@
     <metal:block fill-slot="head">
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
                 <tal:block on-error="python:here.log_page_error(error)">
-                <link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
-                <link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
+                    <link rel="alternate" type="application/atom+xml" tal:attributes="title python: u'%s in Atom format' % path('channel/title_or_id | nothing'); href string:${channel/absolute_url}?feed=atom" />
+                    <link rel="alternate" type="application/rss+xml" tal:attributes="title python: u'%s in Atom format' % path('channel/title_or_id | nothing'); href channel/absolute_url" />
                 </tal:block>
             </tal:block>
 
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_local_channels()">
                 <tal:block on-error="python:here.log_page_error(error)">
-                <link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
-                <link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
+                    <link rel="alternate" type="application/atom+xml" tal:attributes="title python: u'%s in Atom format' % path('channel/title_or_id | nothing'); href string:${channel/absolute_url}?feed=atom" />
+                    <link rel="alternate" type="application/rss+xml" tal:attributes="title python: u'%s in Atom format' % path('channel/title_or_id | nothing'); href channel/absolute_url" />
                 </tal:block>
             </tal:block>
             <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.cookie.js"></script>
