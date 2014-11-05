@@ -333,10 +333,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declarePrivate('current_version')
     @property
     def current_version(self):
-        try:
-            return self.all_versions().next()
-        except StopIteration:
-            return None
+        versions = list(self.all_versions())
+        ver = None
+        for ver in versions:    # we want last item of this iter
+            continue
+        return ver
 
     security.declareProtected(view, 'current_version_download_url')
     def current_version_download_url(self):

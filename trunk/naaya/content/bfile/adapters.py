@@ -1,12 +1,13 @@
 """Adapters for content view and zip import/export"""
 
-import os.path
 from Products.Naaya.adapters import NyContentTypeViewAdapter
 from Products.NaayaCore.managers.zip_export_adapters import DefaultZipAdapter
-from naaya.core.zope2util import DT2dt, ensure_tzinfo
 from naaya.core.utils import pretty_size, icon_for_content_type
+from naaya.core.zope2util import DT2dt, ensure_tzinfo
+import os.path
 
-from interfaces import INyBFile
+#from interfaces import INyBFile
+
 
 class BFileZipAdapter(DefaultZipAdapter):
 
@@ -78,5 +79,4 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
 
     def get_download_url(self):
         return self.ob.current_version_download_url()
-
 
