@@ -174,55 +174,6 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
-# def bfile_download(context, path, REQUEST):
-#     """
-#     Perform a download of `context` (must be instance of NyBFile).
-#
-#     This function should be used as the callback for CaptureTraverse;
-#     `path` will be the captured path for download. We only care about
-#     the first component, which should be the version requeseted for
-#     download.
-#
-#     * `action` in GET == "view" indicates opening file in browser
-#     default value is "download" (optional)
-#
-#     """
-#     if (not path) or (path and path[0] == 'index_html'):
-#         ver = context.current_version
-#     else:
-#         #TODO: fix this
-#         try:
-#             ver_number = int(path[0]) - 1
-#             if ver_number < 0:
-#                 raise IndexError
-#             ver = context._versions[ver_number]
-#             if ver.removed:
-#                 raise IndexError
-#         except (IndexError, ValueError):
-#             raise NotFound
-#
-#     if ver is None:
-#         raise NotFound
-#
-#     RESPONSE = REQUEST.RESPONSE
-#     action = REQUEST.form.get('action', 'download')
-#
-#     if action == 'view':
-#         view_adapter = get_view_adapter(ver)
-#         context.notify_access_event(REQUEST)
-#         if view_adapter is not None:
-#             return view_adapter(context)
-#         return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
-#     elif action == 'download':
-#         context.notify_access_event(REQUEST, 'download')
-#         if not path:
-#             return ver.send_data(RESPONSE, set_filename=True, REQUEST=REQUEST)
-#         else:
-#             return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
-#     else:
-#         raise NotFound
-
-
 def localizedbfile_download(context, path, REQUEST):
     """
     Perform a download of `context` (must be instance of NyLocalizedBFile).
