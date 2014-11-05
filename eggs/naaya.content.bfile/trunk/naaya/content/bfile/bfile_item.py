@@ -259,6 +259,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         It only returns them for current language, and also all
         the non-i18n versions
         """
+
+        for ver in self._versions:    #BBB
+            if not ver.removed:
+                yield ver
+
         if language is None:
             language = self.get_selected_language()
 
@@ -267,10 +272,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             for ver in _versions:
                 if not ver.removed:
                     yield ver
-
-        for ver in self._versions:    #BBB
-            if not ver.removed:
-                yield ver
 
     def isVersionable(self):
         """ BFile objects are not versionable
