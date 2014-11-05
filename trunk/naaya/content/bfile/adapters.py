@@ -19,6 +19,7 @@ class BFileZipAdapter(DefaultZipAdapter):
     def extension(self):
         return os.path.splitext(self.context.current_version.filename)[1]
 
+
 class GenericViewer(object):
     """Generic view for all mime types"""
 
@@ -27,8 +28,9 @@ class GenericViewer(object):
 
     def __call__(self, context):
         request = context.REQUEST
-        return self.bfile.send_data(request.RESPONSE,as_attachment=False,
-                                    REQUEST=request)
+        return self.bfile.send_data(
+            request.RESPONSE, as_attachment=False, REQUEST=request)
+
 
 class ZipViewer(object):
     """Display a zip file contents into a html page"""
@@ -41,6 +43,7 @@ class ZipViewer(object):
         zfile = ZipFile(self.bfile.open())
         return context.getFormsTool()['bfile_quickview_zipfile'](
             namelist=zfile.namelist())
+
 
 class BFileViewAdapter(NyContentTypeViewAdapter):
     def get_modification_date(self):
