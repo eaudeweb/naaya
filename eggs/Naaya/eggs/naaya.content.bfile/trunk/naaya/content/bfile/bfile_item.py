@@ -1,5 +1,15 @@
 """Naaya Blob File"""
 
+#TODO: avem de-a face cu doua feluri de foldere _versions:
+#o lista (varianta veche de bfile) si un mapping (varianta noua)
+# cum trebuie rezolvata problema?
+# propun ca varianta noua de bfile sa foloseasca un folder _lang_ in
+# _versions
+# fisierele vechi sunt readonly si sunt tratate ca fiind out of lang (in
+# toate languageurile)
+#fisierele noi sunt stocate doar in versions
+
+
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
@@ -21,13 +31,15 @@ from datetime import datetime
 from interfaces import INyBFile
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.bfile.utils import get_view_adapter
+from naaya.content.bfile.utils import file_has_content, tmpl_version
+from naaya.content.bfile.utils import strip_leading_underscores
 from naaya.core import submitter
 from naaya.core.zope2util import CaptureTraverse
 from naaya.core.zope2util import abort_transaction_keep_session
 from permissions import PERMISSION_ADD_BFILE
+from persistent.dict import PersistentDict
 from persistent.list import PersistentList
-from utils import (file_has_content, tmpl_version, get_view_adapter,
-                   strip_leading_underscores)
 from webdav.Lockable import ResourceLockedError
 from zExceptions import NotFound
 from zope.event import notify
@@ -178,6 +190,7 @@ def bfile_download(context, path, REQUEST):
     if (not path) or (path and path[0] == 'index_html'):
         ver = context.current_version
     else:
+        #TODO: fix this
         try:
             ver_number = int(path[0]) - 1
             if ver_number < 0:
@@ -210,6 +223,51 @@ def bfile_download(context, path, REQUEST):
         raise NotFound
 
 
+def localizedbfile_download(context, path, REQUEST):
+    """
+    Perform a download of `context` (must be instance of NyLocalizedBFile).
+
+    This function should be used as the callback for CaptureTraverse;
+    `path` will be the captured path for download. We only care about
+    the first component, which should be the version requeseted for
+    download.
+
+    * `action` in GET == "view" indicates opening file in browser
+    default value is "download" (optional)
+
+    """
+    if not hasattr(context._versions, 'has_key'):
+        return bfile_download(context, path, REQUEST)
+    try:
+        # TODO: fix this
+        ver_number = int(path[0]) - 1
+        if ver_number < 0:
+            raise IndexError
+        language = context.get_selected_language()
+        if language is None:
+            language = context.get_default_lang_code()
+
+        if (not context._versions) or (not context._versions[language]):
+            raise NotFound
+        ver = context._versions[language][ver_number]
+        if ver.removed:
+            raise IndexError
+    except (IndexError, ValueError, KeyError), e:
+        raise NotFound, e
+    RESPONSE = REQUEST.RESPONSE
+    action = REQUEST.form.get('action', 'download')
+    if action == 'view':
+        view_adapter = get_view_adapter(ver)
+        if view_adapter is not None:
+            return view_adapter(context)
+        return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
+    elif action == 'download':
+        return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
+    else:
+        raise NotFound
+
+
+
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
               NyValidation, NyContentType):
     """ """
@@ -237,44 +295,89 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self._versions = PersistentList()
+        self._versions_i18n = PersistentDict()
 
-    # XXX Should remove NyCheckControl inheritance and refactor code to not use
-    # NyCheckControl methods.
+    @property
+    def versions_store(self):
+        if not hasattr(self, '_versions_i18n'):
+            self._versions_i18n = PersistentDict()
+        return self._versions_i18n
+
+    def all_versions(self, language=None):
+        """ Returns all versions of objects.
+
+        It only returns them for current language, and also all
+        the non-i18n versions
+        """
+        if language is None:
+            language = self.get_selected_language()
+
+        if self.versions_store.has_key(language) == True:
+            _versions = self.versions_store[language]
+            for ver in reversed(_versions):
+                if not ver.removed:
+                    yield ver
+
+        for ver in reversed(self._versions):    #BBB
+            if not ver.removed:
+                yield ver
+
     def isVersionable(self):
-        """ BFile objects are not versionable """
+        """ BFile objects are not versionable
+
+        # TODO: Should remove NyCheckControl inheritance and refactor code to not use
+        # NyCheckControl methods.
+        """
         return False
 
     security.declarePrivate('current_version')
     @property
     def current_version(self):
-        for ver in reversed(self._versions):
-            if not ver.removed:
-                return ver
+        try:
+            return self.all_versions().next()
+        except StopIteration:
+            return None
 
     security.declareProtected(view, 'current_version_download_url')
     def current_version_download_url(self):
-        versions = self._versions_for_tmpl()
+        language = self.get_selected_language()
+        versions = self._versions_for_tmpl(language)
         if versions:
             return versions[-1]['url']
         else:
             return None
 
-    def _save_file(self, the_file, contributor):
+    def _save_file(self, the_file, language, contributor):
+        """ """
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.now(self.getSite().get_tzinfo()),
+                           timestamp=datetime.utcnow(),
                            contributor=contributor)
-        self._versions.append(bf)
+        _versions = self.versions_store.pop(language, None)
+
+        if _versions == None:
+            toAdd = [bf]
+            newD = {language:toAdd}
+            self._versions_i18n.update(newD)
+        else:
+            _versions.append(bf)
+            newD = {language:_versions}
+            self._versions_i18n.update(newD)
 
     security.declarePrivate('remove_version')
-    def remove_version(self, number, removed_by=None):
-        ver = self._versions[number]
+    def remove_version(self, number, language, removed_by=None):
+        _versions = list(self.all_versions(language))
+
+        ver = _versions[number] # this can raise errors. Very good
+
         if ver.removed:
-            return  # TODO complain loudly, this is unacceptable
+            return
+
         ver.removed = True
-        ver.removed_at = datetime.utcnow()
         ver.removed_by = removed_by
+        ver.removed_at = datetime.utcnow()
         ver.size = None
+
         f = ver.open_write()
         f.write('')
         f.close()
@@ -282,7 +385,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
@@ -291,37 +393,33 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop(
-            'releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _uploaded_file = schema_raw_data.pop('uploaded_file', None)
         versions_to_remove = schema_raw_data.pop('versions_to_remove', [])
 
-        form_errors = self.process_submitted_form(
-            schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if form_errors:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors,
-                                             schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
-                                          (self.absolute_url(), _lang))
+                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
                 return
             else:
-                raise ValueError(form_errors.popitem()[1])  # pick an error
+                raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-        for ver_id in versions_to_remove:
-            self.remove_version(int(ver_id) - 1, contributor)
+        for ver_id in reversed(versions_to_remove):
+            self.remove_version(int(ver_id) - 1, _lang, contributor)
 
         self._p_changed = 1
         self.recatalogNyObject(self)
-        # log date
+        #log date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
 
         if file_has_content(_uploaded_file):
-            self._save_file(_uploaded_file, contributor)
+            self._save_file(_uploaded_file, _lang, contributor)
 
         notify(NyContentObjectEditEvent(self, contributor))
 
@@ -331,8 +429,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
                                       (self.absolute_url(), _lang))
 
-    security.declareProtected(view_management_screens, 'manageProperties')
 
+    security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -357,6 +455,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
+        # TODO: check this
         for ver_id in versions_to_remove:
             self.remove_version(int(ver_id) - 1, user)
 
@@ -365,52 +464,63 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
-    def _versions_for_tmpl(self):
+    def _versions_for_tmpl(self, language=None):
         """
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
+        # TODO: test this
 
-        versions = [tmpl_version(self, ver, str(n+1))
-                    for n, ver in enumerate(self._versions)]
-
+        versions = [
+            tmpl_version(self, ver, str(n+1))
+                    for n, ver in enumerate(self.all_versions(language))
+        ]
         if versions:
             versions[-1]['is_current'] = True
 
         return versions
 
     security.declareProtected(view, 'index_html')
-
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        versions = self._versions_for_tmpl()
+        language = self.get_selected_language()
+        versions = self._versions_for_tmpl(language)
         options = {'versions': versions}
         if versions:
             options['current_version'] = versions[-1]
-        versions.reverse()
 
         template_vars = {'here': self, 'options': options}
-        return self.getFormsTool().getContent(template_vars, 'bfile_index')
+        to_return = self.getFormsTool().getContent(template_vars, 'bfile_index')
+        return to_return
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        options = {'versions': self._versions_for_tmpl()}
+        hasKey = REQUEST.form.has_key('lang')
+        if hasKey == False:
+            language = self.get_selected_language()
+        else:
+            language = REQUEST.form['lang']
+
+        options = {'versions': self._versions_for_tmpl(language)}
         template_vars = {'here': self, 'options': options}
-        return self.getFormsTool().getContent(template_vars, 'bfile_edit')
+        to_return = self.getFormsTool().getContent(template_vars, 'bfile_edit')
 
+        return to_return
+
+    #TODO: fix this
     security.declareProtected(view, 'version_at_date')
-
     def version_at_date(self, date):
         """ return the file version that was online at the given date """
+
         for version in self._versions_for_tmpl():
             if version['timestamp'] < date:
                 candidate = version
+
         return candidate
 
     security.declareProtected(view, 'download')
-    download = CaptureTraverse(bfile_download)
+    download = CaptureTraverse(localizedbfile_download)
 
 InitializeClass(NyBFile)
 
