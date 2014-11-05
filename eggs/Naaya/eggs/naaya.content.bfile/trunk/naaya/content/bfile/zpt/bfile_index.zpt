@@ -92,10 +92,10 @@
 </table>
 
 <noscript><style type="text/css">
-    table.ny-localizedbfile-all-versions { display: table; }
+    table.ny-all-versions { display: table; }
 </style></noscript>
 
-<table class="datatable ny-localizedbfile-all-versions">
+<table class="datatable ny-bfile-all-versions">
 <caption i18n:translate="">All versions</caption>
 <thead>
     <tr>
@@ -130,14 +130,14 @@
 </tbody>
 </table>
 
-<div id="naaya_localizedbfile_versions_slot" style="display: none;">
+<div id="naaya_bfile_versions_slot" style="display: none;">
     <p>[<a href="javascript:;" i18n:translate="">Show all versions</a>]</p>
 </div>
 
 <tal:block condition="options/versions">
 <script type="text/javascript">
-var all_versions = $('table.ny-localizedbfile-all-versions');
-var versions_slot = $('div#naaya_localizedbfile_versions_slot');
+var all_versions = $('table.ny-bfile-all-versions');
+var versions_slot = $('div#naaya_bfile_versions_slot');
 
 versions_slot.show();
 
