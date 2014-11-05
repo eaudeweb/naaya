@@ -314,11 +314,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         if self.versions_store.has_key(language) == True:
             _versions = self.versions_store[language]
-            for ver in reversed(_versions):
+            for ver in _versions:
                 if not ver.removed:
                     yield ver
 
-        for ver in reversed(self._versions):    #BBB
+        for ver in self._versions:    #BBB
             if not ver.removed:
                 yield ver
 
