@@ -1,5 +1,7 @@
 1.4.10 (unreleased)
 --------------------
+* WIP: Feature: merge code from naaya.content.localizedbfile. Now all bfiles are localized
+  [tiberich #3929]
 
 1.4.9 (2014-11-03)
 --------------------
