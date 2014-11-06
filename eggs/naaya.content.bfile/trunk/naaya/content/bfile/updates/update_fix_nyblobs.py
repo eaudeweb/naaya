@@ -3,11 +3,16 @@ __author__ = """Tiberiu Ichim"""
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from StringIO import StringIO
+from os.path import join, isfile, isdir, exists
 import hashlib
 import logging
 import mimetypes
-from os.path import join, isfile, isdir, exists
 import os
+import re
+
+finder = re.compile('.*\.(\d+)\.*.*$')
+inter  = lambda x:int((finder.findall(x) or ['0'])[0])
+sorter = lambda x, y:cmp(inter(x), inter(y))
 
 
 def hashfile(fpath, blocksize=65536):
@@ -59,44 +64,57 @@ class UpdateFixNyBlobFile(UpdateScript):
                 self.log.warning("Could not find path %r for %r", abspath, obj.absolute_url())
                 return
 
-        #import pdb; pdb.set_trace()
         #versions = [f for f in os.listdir(abspath) if not f.endswith('.undo')]
         # We treat .undo files the same way extfile does, which is to take it into consideration
         # if not other file is found there
         site_lang = obj.getSite().gl_get_default_language()
 
-        versions = [(abspath, f) for f in os.listdir(abspath) 
+        versions = [(abspath, f) for f in os.listdir(abspath)
                             if isfile(join(abspath, f))]
 
+        lang_counter = 0
         for lang in obj.getSite().gl_get_languages():
             lpath = join(abspath, lang)
             if exists(lpath) and isdir(lpath):
-                versions.extend([(lpath, f) for f in os.listdir(lpath) 
+                lang_counter += 1
+                versions.extend([(lpath, f) for f in os.listdir(lpath)
                                 if isfile(join(lpath, f))])
 
         if len(versions) > 1:
-            # see if the files have the same content, in which 
+            # see if the files have the same content, in which
             # case we can upload one version of that file
             hashes = set([hashfile(join(fpath, filename))
                                 for (fpath, filename) in versions])
-            if len(hashes) == 1:    
+            if len(hashes) == 1:
                 versions = versions[:1]
             else:
                 # we try take the file for the main language
                 lang_path = join(abspath, site_lang)
                 if os.path.exists(lang_path):
-                    versions = [(lang_path, f) for f in os.listdir(lang_path) 
+                    versions = [(lang_path, f) for f in os.listdir(lang_path)
                                     if isfile(join(lang_path, f))]
                     if len(versions) > 1:
                         hashes = set([hashfile(join(fpath, filename))
                                             for (fpath, filename) in versions])
-                        if len(hashes) == 1:    
+                        if len(hashes) == 1:
                             versions = versions[:1]
                         else:
+                            # TODO: take files from here
+                            if len(lang_counter) == 1:
+                                _versions = sorted(versions, sorter)
+                                for fpath, filename in _versions:
+                                    content = self.get_content(fpath, filename)
+                                    obj._save_file(content, contributor='')
+                                    self.log.info("Added a file for %r", obj.absolute_url())
+                                return
                             self.log.warning("Skipping %s, too many files", obj.absolute_url())
                             return
                     self.log.info("Using the files from the default language path %s", site_lang)
                 else:
+                    # TODO: take files from here
+                    # add the versions for each file
+                    # order the files by version
+
                     self.log.warning("Skipping %s, too many files", obj.absolute_url())
                     return
 
