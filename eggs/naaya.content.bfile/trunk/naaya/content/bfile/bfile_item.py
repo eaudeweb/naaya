@@ -299,22 +299,22 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         else:
             return None
 
-    def _save_file(self, the_file, language, contributor):
+    def _save_file(self, the_file, language=None, contributor=""):
         """ """
         bf = make_blobfile(the_file,
                            removed=False,
                            timestamp=datetime.utcnow(),
                            contributor=contributor)
+
+        if language is None:
+            language = self.get_selected_language()
         _versions = self.versions_store.pop(language, None)
 
         if _versions == None:
-            toAdd = [bf]
-            newD = {language:toAdd}
-            self._versions_i18n.update(newD)
+            self._versions_i18n.update({language: [bf]})
         else:
             _versions.append(bf)
-            newD = {language:_versions}
-            self._versions_i18n.update(newD)
+            self._versions_i18n.update({language: _versions})
 
     security.declarePrivate('remove_version')
     def remove_version(self, number, language, removed_by=None):
