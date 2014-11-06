@@ -15,34 +15,36 @@ import os
 import time
 import datetime
 import urllib
+import requests
 
 from zope.i18n.locales import locales
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.constants import *
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaCore.managers.utils import utils
 from naaya.core.zope2util import json_response
-from naaya.core.backport import requests
 
 GOOGLE_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
 GOOGLE_AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
 GOOGLE_TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_ANALYTICS_API = 'https://www.googleapis.com/analytics/v3/'
 INTERVALS = [
-                {'period': 30, 'value': 'Last month'},
-                {'period': 90, 'value': 'Last 3 months'},
-                {'period': 180, 'value': 'Last 6 months'},
-                {'period': 356, 'value': 'Last year'}
-            ]
+    {'period': 30, 'value': 'Last month'},
+    {'period': 90, 'value': 'Last 3 months'},
+    {'period': 180, 'value': 'Last 6 months'},
+    {'period': 356, 'value': 'Last year'}
+    ]
 
 en = locales.getLocale('en')
 formatter = en.numbers.getFormatter('decimal')
 formatter.setPattern('#,##0;-#,##0')
+
 
 def manage_addAnalyticsTool(self, REQUEST=None):
     """ """
@@ -50,6 +52,7 @@ def manage_addAnalyticsTool(self, REQUEST=None):
     self._setObject(ID_ANALYTICSTOOL, ob)
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
+
 
 class AnalyticsTool(SimpleItem, utils):
     """ """
@@ -74,20 +77,21 @@ class AnalyticsTool(SimpleItem, utils):
         self.account = None
         self.date_interval = 30
         self.start_date = ''
-        self.ga_id = '' # Google Analytics web property ID (UA-number)
-        self.gw_verify = '' # Google Webmaster verification meta tag
+        self.ga_id = ''  # Google Analytics web property ID (UA-number)
+        self.gw_verify = ''  # Google Webmaster verification meta tag
         self._google_access_token = None
         self._google_refresh_token = None
         self.profile_code = None
         self.profile = None
         self.clear_cache()
 
-    #cache
+    # cache
     def _set_cache(self, data, view_name):
         self._cache[view_name] = data
         self._cache_timestamp = datetime.datetime.now()
 
     security.declarePrivate('get_cache')
+
     def get_cache(self, view_name):
         interval = datetime.datetime.now() - self._cache_timestamp
         if interval.days > 0:
@@ -95,23 +99,28 @@ class AnalyticsTool(SimpleItem, utils):
         return self._cache.get(view_name, None)
 
     security.declarePrivate('get_cache')
+
     def clear_cache(self):
         self._cache = {}
         self._cache_timestamp = datetime.datetime.now()
 
-    #administration
+    # administration
     def index_html(self, REQUEST):
         """ redirect to admin_account """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
 
-    _admin_account_zpt = NaayaPageTemplateFile('zpt/account', globals(), 'site_admin_account')
-    _admin_verify = NaayaPageTemplateFile('zpt/verify', globals(), 'site_admin_verify')
-    _stats_info = NaayaPageTemplateFile('zpt/stats_info', globals(), 'site_admin_stats_info')
+    _admin_account_zpt = NaayaPageTemplateFile('zpt/account', globals(),
+                                               'site_admin_account')
+    _admin_verify = NaayaPageTemplateFile('zpt/verify', globals(),
+                                          'site_admin_verify')
+    _stats_info = NaayaPageTemplateFile('zpt/stats_info', globals(),
+                                        'site_admin_stats_info')
 
     _admin_stats = NaayaPageTemplateFile('zpt/stats', globals(),
                                          'site_admin_stats')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_stats')
+
     def admin_stats(self, REQUEST):
         """ """
         if self._google_access_token is None:
@@ -124,6 +133,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     _authorize = NaayaPageTemplateFile('zpt/authorize', globals(),
                                        'site_admin_stats_authorize')
+
     def authorize(self):
         """ """
         is_configured = bool('GOOGLE_AUTH_CLIENT_ID' in os.environ and
@@ -131,6 +141,7 @@ class AnalyticsTool(SimpleItem, utils):
         return self._authorize(is_configured=is_configured)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'stats_info')
+
     def stats_info(self):
         """ """
         view_name = 'stats'
@@ -144,15 +155,18 @@ class AnalyticsTool(SimpleItem, utils):
         return cached_data
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_verify')
+
     def admin_verify(self, REQUEST):
         """ Administration page for Google verification codes """
-        if REQUEST.has_key('save'):
+        if 'save' in REQUEST:
             self.ga_id = REQUEST.get('ga_id', '')
             self.gw_verify = REQUEST.get('gw_verify', '')
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
         return self._admin_verify(REQUEST)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account')
+
     def admin_account(self, REQUEST):
         """ Administration page for Google accounts """
         if self._google_access_token is None:
@@ -196,16 +210,18 @@ class AnalyticsTool(SimpleItem, utils):
         headers = {'Authorization': 'Bearer ' + access_token}
         resp = requests.get(url, params=params, headers=headers)
         if resp.status_code != 200:
-            raise RuntimeError("API call error: %r (%r)" % (resp, resp.json))
-        return resp.json
+            raise RuntimeError("API call error: %r (%r)" % (resp, resp.json()))
+        return resp.json()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getAccounts')
+
     def getAccounts(self):
         """ get accounts list """
         resp_json = self._api_get('management/accounts')
         return [(i['id'], i['name']) for i in resp_json['items']]
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getProfiles')
+
     def getProfiles(self, account, REQUEST=None):
         """ """
         resp_json = self._api_get('management/accounts/%s/webproperties'
@@ -228,6 +244,7 @@ class AnalyticsTool(SimpleItem, utils):
             return resp_json['items'][0]
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account_save')
+
     def admin_account_save(self, account=None, profile_code=None,
                            date_interval='30', start_date='', REQUEST=None):
         """ """
@@ -252,14 +269,16 @@ class AnalyticsTool(SimpleItem, utils):
             self.date_interval = int(date_interval or '30')
             self.start_date = ''
         if self.account or self.start_date or self.date_interval:
-            self.clear_cache()  #clear cached data
+            self.clear_cache()  # clear cached data
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account_revoke')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_account_revoke')
+
     def admin_account_revoke(self, REQUEST=None):
         """ """
         self._reset()
@@ -267,6 +286,7 @@ class AnalyticsTool(SimpleItem, utils):
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'generateAuthUrl')
+
     def generateAuthUrl(self):
         """ generate authentication URL """
         query = {
@@ -280,19 +300,21 @@ class AnalyticsTool(SimpleItem, utils):
                 urllib.urlencode(query))
 
     def _save_access_token(self, resp):
-        if 'error' in resp.json:
+        if 'error' in resp.json():
             raise RuntimeError("Error fetching new token: %r"
-                               % resp.json['error'])
-        assert resp.json['token_type'] == 'Bearer'
-        expiry = time.time() + resp.json['expires_in']
-        self._google_access_token = (resp.json['access_token'], expiry)
-        if 'refresh_token' in resp.json:
-            self._google_refresh_token = resp.json['refresh_token']
+                               % resp.json()['error'])
+        assert resp.json()['token_type'] == 'Bearer'
+        expiry = time.time() + resp.json()['expires_in']
+        self._google_access_token = (resp.json()['access_token'], expiry)
+        if 'refresh_token' in resp.json():
+            self._google_refresh_token = resp.json()['refresh_token']
 
         import transaction
         transaction.get().note('(Saving new Google oauth2 token)')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveAuthorizationCode')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'saveAuthorizationCode')
+
     def saveAuthorizationCode(self, code, REQUEST=None):
         """ """
         data = {
@@ -317,6 +339,7 @@ class AnalyticsTool(SimpleItem, utils):
         return self._api_get('data/ga', params=params)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getVisitsGraph')
+
     def getVisitsGraph(self):
         """ Get the visitors graph """
         sd, ed = self.get_date_interval()
@@ -334,13 +357,17 @@ class AnalyticsTool(SimpleItem, utils):
                 if visit_value > maximum:
                     maximum = visit_value
                 if visit_value and not valid:
-                    valid = True    #check for 0 values
+                    valid = True    # check for 0 values
                 res.append(row[1])
             if valid:
-                #chart values, y-axis maxi value, y-axis intermediate values, x-axis labels
-                return ','.join(res), maximum*1.1, '||%s|%s|%s|%s|' % (maximum/3, maximum/2, 2*maximum/3, maximum), '|%s|%s|' % (sd.strftime('%d %b'), ed.strftime('%d %b'))
+                # chart values, y-axis maxi value,
+                # y-axis intermediate values, x-axis labels
+                return ','.join(res), maximum*1.1, '||%s|%s|%s|%s|' % (
+                    maximum/3, maximum/2, 2*maximum/3, maximum), '|%s|%s|' % (
+                    sd.strftime('%d %b'), ed.strftime('%d %b'))
 
     security.declareProtected(view, 'getSiteSummary')
+
     def getSiteSummary(self):
         """ Get esential date about site usage """
         view_name = 'summary'
@@ -355,7 +382,7 @@ class AnalyticsTool(SimpleItem, utils):
             'metrics': 'ga:visits,ga:visitors,ga:pageviews,ga:timeOnSite',
         })
         if 'rows' in data:
-            #take the first entry
+            # take the first entry
             [stats] = self._data_rows(data)
             res = {
                 'visits': formatter.format(float(stats['ga:visits'])),
@@ -369,6 +396,7 @@ class AnalyticsTool(SimpleItem, utils):
             return res
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSiteUsage')
+
     def getSiteUsage(self):
         """ Get the site usage """
         data = self._api_get_ga_data({
@@ -376,7 +404,7 @@ class AnalyticsTool(SimpleItem, utils):
                         'ga:timeOnSite,ga:newVisits,ga:entrances'),
         })
         if 'rows' in data:
-            #take the first entry
+            # take the first entry
             [stats] = self._data_rows(data)
             bounce_rate = (float(stats['ga:bounces']) /
                            float(stats['ga:entrances'])*100)
@@ -400,6 +428,7 @@ class AnalyticsTool(SimpleItem, utils):
             yield dict(zip(columns, row))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getTopPages')
+
     def getTopPages(self):
         """ Get the top pages """
         data = self._api_get_ga_data({
@@ -419,6 +448,7 @@ class AnalyticsTool(SimpleItem, utils):
             return res, ''
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getTopReferers')
+
     def getTopReferers(self):
         """ Get the top referers """
         data = self._api_get_ga_data({
@@ -438,6 +468,7 @@ class AnalyticsTool(SimpleItem, utils):
             return res
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getTopSearches')
+
     def getTopSearches(self):
         """ Get the top searches """
         data = self._api_get_ga_data({
@@ -457,22 +488,25 @@ class AnalyticsTool(SimpleItem, utils):
             return res
 
     security.declarePublic('get_date_interval')
+
     def get_date_interval(self):
         """ """
         end_date = datetime.datetime.today()
         if self.start_date:
-            sd = time.strptime(self.start_date,'%d/%m/%Y')
+            sd = time.strptime(self.start_date, '%d/%m/%Y')
             start_date = datetime.datetime(*sd[0:6])
         else:
             start_date = end_date - datetime.timedelta(days=self.date_interval)
         return start_date, end_date
 
     security.declarePublic('get_intervals')
+
     def get_intervals(self):
         """ """
         return INTERVALS
 
 InitializeClass(AnalyticsTool)
+
 
 def humanize_time(secs):
     mins, secs = divmod(secs, 60)
