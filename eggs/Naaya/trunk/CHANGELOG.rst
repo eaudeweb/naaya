@@ -1,4 +1,7 @@
-3.4.3 (unreleased)
+3.4.4 (unreleased)
+-------------------
+
+3.4.3 (2014-11-06)
 -------------------
 * removed requests from backport, properly imported now [dumitval]
 * log adding of roles [dumitval]
