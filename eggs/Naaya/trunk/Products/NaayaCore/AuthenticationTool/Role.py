@@ -1,13 +1,11 @@
-from copy import deepcopy
-
 from AccessControl.Role import RoleManager
-from Globals import MessageDialog, InitializeClass
+from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
 
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils
 from naaya.core.exceptions import ValidationError
+
 
 class Role(RoleManager, utils):
     """ """
@@ -32,7 +30,7 @@ class Role(RoleManager, utils):
 
     def addRole(self, role='', REQUEST=None):
         """add role"""
-        if REQUEST is not None and REQUEST.has_key('CancelButton'):
+        if REQUEST is not None and 'CancelButton' in REQUEST:
             return REQUEST.RESPONSE.redirect('manage_roles_html')
 
         if not role:
@@ -60,7 +58,9 @@ class Role(RoleManager, utils):
         """
         return list(self.getSite().valid_roles())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'display_defined_roles')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'display_defined_roles')
+
     def display_defined_roles(self, skey='', rkey=''):
         """
         Returns a list with user defined roles to be displayed
@@ -70,7 +70,8 @@ class Role(RoleManager, utils):
         filter(roles.remove, ['Anonymous', 'Manager', 'Owner'])
         if skey == 'name':
             roles.sort()
-            if rkey: roles.reverse()
+            if rkey:
+                roles.reverse()
         return roles
 
     def list_valid_roles(self):

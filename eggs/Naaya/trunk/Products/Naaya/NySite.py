@@ -3,11 +3,6 @@ try:
 except ImportError:
     import json
 
-#from OFS.Image import manage_addImage
-#from Products.NaayaBase.constants import *
-#from constants import *
-#from urllib import quote
-
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import change_permissions
@@ -2407,6 +2402,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
             if success:
+                user = REQUEST.AUTHENTICATED_USER.getId()
+                site = self.getSite().getId()
+                log.info('User "%s" added role "%s" to site "%s".' %
+                        (user, role, site))
                 self.setSessionInfoTrans("Role added")
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
