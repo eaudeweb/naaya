@@ -1,11 +1,9 @@
-from unittest import TestSuite, makeSuite
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from StringIO import StringIO
-
 from Testing import ZopeTestCase
+from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
 import transaction
 
-from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
 
 class MockResponse(object):
     def __init__(self, stream=False):
@@ -16,6 +14,7 @@ class MockResponse(object):
     def setHeader(self, key, value):
         self.headers[key] = value
 
+
 class MockRequest(object):
     def __init__(self):
         self.headers={}
@@ -25,6 +24,7 @@ class MockRequest(object):
 
     def set_header(self, name, value):
         self.headers[name] = value
+
 
 class NyBlobFileTestCase(ZopeTestCase.TestCase):
     """ CRUD test for NyBlobFile """
@@ -118,8 +118,8 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
                          bf._current_filename())
 
 
-
 class NyBlobFileTransactionsTestCase(NaayaTestCase):
+
     def afterSetUp(self):
         self.portal.info.contact._theblob = NyBlobFile(filename='a.txt')
         f = self.portal.info.contact._theblob.open_write()
