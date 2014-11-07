@@ -144,7 +144,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     if file_has_content(_uploaded_file):
-        ob._save_file(_uploaded_file, contributor)
+        ob._save_file(_uploaded_file, language=_lang, contributor=contributor)
 
     # process parameters
     if self.checkPermissionSkipApproval():
@@ -317,7 +317,9 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             self._versions_i18n.update({language: _versions})
 
     security.declarePrivate('remove_version')
-    def remove_version(self, number, language, removed_by=None):
+    def remove_version(self, number, language=None, removed_by=None):
+        """ Number is 0-based index of version
+        """
         _versions = list(self.all_versions(language))
 
         ver = _versions[number] # this can raise errors. Very good
