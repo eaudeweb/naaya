@@ -1,8 +1,9 @@
-#from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from StringIO import StringIO
 from datetime import datetime
 from naaya.content.bfile.bfile_item import addNyBFile
+import pytz
+#from unittest import TestSuite, makeSuite
 
 
 class NyBFileTestCase(NaayaTestCase):
@@ -11,6 +12,11 @@ class NyBFileTestCase(NaayaTestCase):
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
+
+        from naaya.content.bfile.bfile_item import NyBFile
+        def get_selected_language(self):
+            return 'en'
+        NyBFile.get_selected_language = get_selected_language
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
@@ -25,7 +31,7 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile = self.portal.myfolder.mybfile
         self.assertTrue(mybfile.id, 'mybfile')
         self.assertTrue(mybfile.title, 'My bfile')
-        self.assertEqual(len(mybfile._versions), 0)
+        self.assertEqual(len(mybfile._versions_i18n[mybfile.get_selected_language()]), 0)
         self.assertEqual(mybfile.current_version, None)
 
     def test_add_with_file(self):
@@ -41,12 +47,12 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile = self.portal.myfolder.mybfile
         self.assertTrue(mybfile.id, 'mybfile')
         self.assertTrue(mybfile.title, 'My bfile')
-        self.assertEqual(len(mybfile._versions), 1)
+        self.assertEqual(len(mybfile._versions_i18n[mybfile.get_selected_language()]), 1)
         self.assertTrue(mybfile.current_version.getPhysicalPath() ==
-                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
+                        mybfile._versions_i18n[mybfile.get_selected_language()][0].__of__(mybfile).getPhysicalPath())
 
         ver = mybfile.current_version
-        self.assertTrue(now_pre <= ver.timestamp <= now_post)
+        self.assertTrue(now_pre <= pytz.utc.localize(ver.timestamp) <= now_post)
         self.assertEqual(ver.open().read(), 'hello data!')
         self.assertEqual(ver.filename, 'my.jpg')
         self.assertEqual(ver.size, 11)
@@ -74,7 +80,7 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile._save_file(myfile2,
                            contributor='contributor')
 
-        self.assertEqual(len(mybfile._versions), 2)
+        self.assertEqual(len(mybfile._versions_i18n[mybfile.get_selected_language()]), 2)
         cv = mybfile.current_version
         self.assertEqual(cv.filename, 'other.txt')
         self.assertEqual(cv.size, 8)
@@ -88,27 +94,27 @@ class NyBFileTestCase(NaayaTestCase):
 
         myfile2 = StringIO('new data')
         myfile2.filename = 'other.txt'
-        mybfile._save_file(myfile2,
-                           contributor='contributor')
+        mybfile._save_file(myfile2, contributor='contributor')
 
+        lang = mybfile.get_selected_language()
         mybfile.remove_version(1)
-        rm_ver = mybfile._versions[1]
+        rm_ver = mybfile._versions_i18n[lang][1]
         self.assertEqual(rm_ver.open().read(), '')
         self.assertEqual(rm_ver.size, None)
         self.assertEqual(rm_ver.removed, True)
-        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
-                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
+        self.assertTrue(
+            mybfile.current_version.getPhysicalPath() == mybfile._versions_i18n[lang][0].__of__(mybfile).getPhysicalPath())
 
         myfile3 = StringIO('even newer data')
         myfile3.filename = 'other.txt'
         mybfile._save_file(myfile3,
                            contributor='contributor')
-        self.assertTrue(mybfile.current_version.getPhysicalPath() ==
-                        mybfile._versions[2].__of__(mybfile).getPhysicalPath())
+        self.assertTrue(
+            mybfile.current_version.getPhysicalPath() == mybfile._versions_i18n[lang][2].__of__(mybfile).getPhysicalPath())
 
         mybfile.remove_version(2)
         self.assertTrue(mybfile.current_version.getPhysicalPath() ==
-                        mybfile._versions[0].__of__(mybfile).getPhysicalPath())
+                        mybfile._versions_i18n[lang][0].__of__(mybfile).getPhysicalPath())
 
         mybfile.remove_version(0)
         self.assertTrue(mybfile.current_version is None)
