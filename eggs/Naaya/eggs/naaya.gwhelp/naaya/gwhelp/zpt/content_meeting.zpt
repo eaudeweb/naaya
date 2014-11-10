@@ -1,131 +1,143 @@
 <metal:block use-macro="here/help_index_html/macros/help_index">
-	<metal:block fill-slot="content_extension">
-		<ul>
-			<li>Meeting
-				<ul>
-					<li><a href="#edit">Meeting properties</a></li>
-					<li><a href="#applicants">Applicants management</a></li>
-					<li><a href="#participants">Participants management</a></li>
-					<li><a href="#nfp">National Focal Points</a></li>
-					<li><a href="#emails">Send emails</a></li>
-				</ul>
-			</li>
-		</ul>
-	</metal:block>
-	<metal:block fill-slot="main_content">
-		<a id="top"></a><h1>Content types in an Interest Group</h1>
+  <metal:block fill-slot="content_extension">
+    <ul>
+      <li>Meeting
+        <ul>
+          <li><a href="#edit">Meeting properties</a></li>
+          <li><a href="#applicants">Applicants management</a></li>
+          <li><a href="#participants">Participants management</a></li>
+          <li><a href="#eionet">Special features for Eionet meetings</a></li>
+          <li><a href="#emails">Send emails</a></li>
+        </ul>
+      </li>
+    </ul>
+  </metal:block>
+  <metal:block fill-slot="main_content">
+    <a id="top"></a><h1>Content types in an Interest Group</h1>
 
-        <h2>Meeting</h2>
-		<p>Meeting objects are interactive tools supporting physical or virtual meetings, allowing registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
+    <h2>Meeting</h2>
+    <p>Meeting objects are interactive tools supporting physical or virtual meetings, allowing registration of participants, users to publish meeting documents, and participants to respond on surveys prior to the meeting or after it.</p>
 
-		<p>The meeting is based on the <em>Folder</em>, so it has many similar properties and functions:</p>
-		<ul>
-			<li>Objects can be added to it similarily to folders</li>
-			<li>Each meeting can have its own sub-object types</li>
-			<li>Contained objects also have an approval status</li>
-		</ul>
-		<p>Additionally to properties common to the folder, there are several extensions that help meeting organisers:</p>
-		<ul>
-			<li>(exact) localisation of the meeting, and a time interval</li>
-			<li>meeting agenda</li>
-			<li>survey
-				<ul>
-					<li>the possibility to make the survey mandatory</li>
-				</ul></li>
-			<li>minutes</li>
-			<li>the posibility to (self) register participants
-				<ul>
-					<li>a maximum number of participants can be set</li>
-					<li>the possibility to restrict the meeting content only to registered participants</li>
-				</ul></li>
-		</ul>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-index.png"
-			alt="Meeting view" title="Meeting view" /></p>
+    <p>The meeting is based on the <em>Folder</em>, so it has many similar properties and functions:</p>
+    <ul>
+      <li>Objects can be added to it similarily to folders</li>
+      <li>Each meeting can have its own sub-object types</li>
+      <li>Contained objects also have an approval status</li>
+    </ul>
+    <p>Additionally to properties common to the folder, there are several extensions that help meeting organisers:</p>
+    <ul>
+      <li>(exact) localisation of the meeting, and a time interval</li>
+      <li>meeting agenda</li>
+      <li>survey
+        <ul>
+          <li>the possibility to make the survey mandatory</li>
+        </ul></li>
+      <li>minutes</li>
+      <li>the posibility to (self) register participants
+        <ul>
+          <li>a maximum number of participants can be set</li>
+          <li>the possibility to restrict the meeting content only to registered participants</li>
+        </ul></li>
+    </ul>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-index.png"
+      alt="Meeting view" title="Meeting view" /></p>
 
-		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
-			<a href="#top">Back to top</a>
+    <div class="right">
+      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top">Back to top</a>
 
-		</div>
-		<a id="edit"></a><h3>Meeting properties</h3>
-		<dl>
-			<dt>Geographical location</dt>
-				<dd>A map widget is assisting in determining the exact location of the meeting</dd>
-			<dt>Meeting interval</dt>
-				<dd>Start and end date and time</dd>
-			<dt>Allow people to register to participate</dt>
-				<dd>If this option is not selected, the the meeting administrator will manually set all participants. No self-registration is offered.</dd>
-			<dt>Automatically approve participants when they register</dt>
-				<dd>Applications can be approved without the administrator's intervention</dd>
-			<dt>Restrict user access to the contents in the meeting</dt>
-				<dd>If the meeting is not generally restricted in the portal, this adds a level of restriction to the files: all files inside the meeting object are accessible only to approved participants. Non-participants only see <em>Title</em>, <em>Description</em>, <em>Location</em>, <em>Period</em>, <em>Organizer</em>, <em>Agenda</em> and can download the <em>calendar file</em>:</dd>
-		</dl>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-visitor.png"
-			alt="Meeting restricted view" title="Meeting restricted view" /></p>
-		<dl>
-			<dt>Maximum number of participants</dt>
-				<dd>If participants are automatically approved, the registration process stops when the number set here is reached, and all new applicants will be entered on a waiting list.<br/><em>0</em> means un-restricted.</dd>
-			<dt>Contact person + email</dt>
-				<dd>The information entered here will be displayed on the meeting index</dd>
-		</dl>
-		<img class="right screenshot" src="/++resource++naaya.gwhelp/meeting-link-to-survey.png"
-			alt="Link to survey" title="Link to survey" />
-		<dl>
-			<dt>Link to the Meeting Survey</dt>
-				<dd>Use the "tree browser" to select an <strong>existing survey</strong> from within the meeting. If the <em>Survey required</em> checkbox is selected, then all users will be redirected to the survey before being able to view the meeting content. Users who already answered the survey will not be required to answer again.<br/>
-				<strong>Note.</strong> The selection of a single question instead of the whole survey is also possible, by this administrators being able to make only one question mandatory and maybe ask participants to fill out the whole survey at the end</dd>
-			<dt>Link to the Meeting Agenda and Meeting Minutes</dt>
-				<dd>Use the "tree browser" to select <strong>existing documents</strong> from within the meeting.</dd>
-		</dl>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting.jpg"
-			alt="Meeting view" title="Meeting view" /></p>
+    </div>
+    <a id="edit"></a><h3>Meeting properties</h3>
+    <dl>
+      <dt>Geographical location</dt>
+        <dd>A map widget is assisting in determining the exact location of the meeting</dd>
+      <dt>Meeting interval</dt>
+        <dd>Start and end date and time</dd>
+      <dt>Allow people to register to participate</dt>
+        <dd>If this option is not selected, the the meeting administrator will manually set all participants. No self-registration is offered.</dd>
+      <dt>Automatically approve participants when they register</dt>
+        <dd>Applications can be approved without the administrator's intervention</dd>
+      <dt>Restrict user access to the contents in the meeting</dt>
+        <dd>If the meeting is not generally restricted in the portal, this adds a level of restriction to the files: all files inside the meeting object are accessible only to approved participants. Non-participants only see <em>Title</em>, <em>Description</em>, <em>Location</em>, <em>Period</em>, <em>Organizer</em>, <em>Agenda</em> and can download the <em>calendar file</em>:</dd>
+    </dl>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-visitor.png"
+      alt="Meeting restricted view" title="Meeting restricted view" /></p>
+    <dl>
+      <dt>Maximum number of participants</dt>
+        <dd>If participants are automatically approved, the registration process stops when the number set here is reached, and all new applicants will be entered on a waiting list.<br/><em>0</em> means un-restricted.</dd>
+      <dt>Contact person + email</dt>
+        <dd>The information entered here will be displayed on the meeting index</dd>
+    </dl>
+    <img class="right screenshot" src="/++resource++naaya.gwhelp/meeting-link-to-survey.png"
+      alt="Link to survey" title="Link to survey" />
+    <dl>
+      <dt>Link to the Meeting Survey</dt>
+        <dd>Use the "tree browser" to select an <strong>existing survey</strong> from within the meeting. If the <em>Survey required</em> checkbox is selected, then all users will be redirected to the survey before being able to view the meeting content. Users who already answered the survey will not be required to answer again.<br/>
+        <strong>Note.</strong> The selection of a single question instead of the whole survey is also possible, by this administrators being able to make only one question mandatory and maybe ask participants to fill out the whole survey at the end</dd>
+      <dt>Link to the Meeting Agenda and Meeting Minutes</dt>
+        <dd>Use the "tree browser" to select <strong>existing documents</strong> from within the meeting.</dd>
+    </dl>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting.jpg"
+      alt="Meeting view" title="Meeting view" /></p>
 
-		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
-			<a href="#top">Back to top</a>
-		</div>
+    <div class="right">
+      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top">Back to top</a>
+    </div>
 
-		<a id="applicants"></a><h2>Applicants management</h2>
-		<p><img src="/++resource++naaya.gwhelp/meeting-buttons-applicants.png"
-			alt="Applicants management" title="Applicants management" /></p>
-		<p>Administrators can manage the applicants in the management interface:</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-applicants.png"
-			alt="Applicants management" title="Applicants management" /></p>
-		<h3>Signups</h3>
-		<p>Signups are people who signed up to participate and don't have an Eionet or Interest Group account (or chose not to log in). Administrators can select applicants and click on either <em>Accept as participant(s)</em> or <em>Reject signup(s)</em> or <em>Reject and delete signup(s)</em>.</p>
-		<h3>Account subscriptions</h3>
-		<p>Account subscriptions are people who signed up to participate while being logged on with their Eionet or local account. Administrators can select applicants and click on either <em>Accept as participant(s)</em> or <em>Reject signup(s)</em> or <em>Reject and delete signup(s)</em>.</p>
-		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
-			<a href="#top">Back to top</a>
-		</div>
-		<a id="participants"></a><h2>Participants management</h2>
-		<p>From the <em>Applicants management</em> page, administrators can reach the <em>Participants management</em> page. Participants are signup persons (regardless whether authenticated or not) whose participation was approved (automatically or manually).</p>
-		<p>New participants can be added from the <em>Search and Add Users</em> interface:</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-search-users.png"
-			alt="Search users" title="Search users" /></p>
-		<p>From the overview table, administrators can remove selected participants, make them administrators, or export the whole table to an Excel worksheet.</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-participants.png"
-			alt="Meeting participants" title="Meeting participants" /></p>
-		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
-			<a href="#top">Back to top</a>
-		</div>
+    <a id="applicants"></a><h2>Applicants management</h2>
+    <p><img src="/++resource++naaya.gwhelp/meeting-buttons-applicants.png"
+      alt="Applicants management" title="Applicants management" /></p>
+    <p>Administrators can manage the applicants in the management interface:</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-applicants.png"
+      alt="Applicants management" title="Applicants management" /></p>
+    <h3>Signups</h3>
+    <p>Signups are people who signed up to participate and don't have an Eionet or Interest Group account (or chose not to log in). Administrators can select applicants and click on either <em>Accept as participant(s)</em> or <em>Reject signup(s)</em> or <em>Reject and delete signup(s)</em>.</p>
+    <h3>Account subscriptions</h3>
+    <p>Account subscriptions are people who signed up to participate while being logged on with their Eionet or local account. Administrators can select applicants and click on either <em>Accept as participant(s)</em> or <em>Reject signup(s)</em> or <em>Reject and delete signup(s)</em>.</p>
+    <div class="right">
+      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top">Back to top</a>
+    </div>
+    <a id="participants"></a><h2>Participants management</h2>
+    <p>From the <em>Applicants management</em> page, administrators can reach the <em>Participants management</em> page. Participants are signup persons (regardless whether authenticated or not) whose participation was approved (automatically or manually).</p>
+    <p>New participants can be added from the <em>Search and Add Users</em> interface:</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-search-users.png"
+      alt="Search users" title="Search users" /></p>
+    <p>From the overview table, administrators can remove selected participants, make them administrators, or export the whole table to an Excel worksheet.</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-participants.png"
+      alt="Meeting participants" title="Meeting participants" /></p>
+    <div class="right">
+      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top">Back to top</a>
+    </div>
 
-        <a id="nfp"></a><h2>National Focal Points</h2>
-        <p>National focal points (NFP) have in Eionet meetings extended permissions, similar to the administrators. They can manage both the applicants (signups and account subscriptions) and participants.</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/applicants-participants.png"
-			alt="Applicants and participants management" title="Applicants and participants management" /></p>
-            <p>Aside from accepting or rejecting applications, NFPs have the possibility to set certain applicants as official representative <em>for the country of the NFP</em> and/or set certain applicants as being reimbursed for the participation, options <strong><em>not available to administrators</em></strong>.</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-applicants.png"
-        alt="Manage applicants" title="Manage applicants" width="940px" /></p>
-        <p>The same options are available also in the participants management:</p>
-		<p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-participants.png"
+    <a id="emails"></a><h2>Send emails</h2>
+    <p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all or part of the registered participants. The <em>From:</em> address will be pre-filled with the email address of the contact person, recipients can be selected from the overview and <em>Subject</em> and <em>Body</em> can be entered manually.</p>
+    <div class="right">
+      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top">Back to top</a>
+    </div>
+
+    <a id="eionet"></a><h2>Special features for Eionet meetings</h2>
+    <p>If a meeting is marked as being an "Eionet meeting" (option found in the meeting's edit page), certain functions will and extended behaviour will be added to the object:</p>
+
+    <a id="survey"></a><h3>Eionet evaluation survey</h3>
+    <p>A default evaluation survey will be automatically created. Its questions are predefined and cannot be changed, but further questions can be added. This survey is intended to be used at the end of the meeting.</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-survey.png"
+      alt="Eionet evaluation survey" title="Eionet evaluation survey" /></p>
+
+    <a id="nfp"></a><h3>National Focal Points</h3>
+    <p>National focal points (NFP) have in Eionet meetings extended permissions, similar to the administrators. They can manage both the applicants (signups and account subscriptions) and participants.</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/applicants-participants.png"
+      alt="Applicants and participants management" title="Applicants and participants management" /></p>
+    <p>Aside from accepting or rejecting applications, NFPs have the possibility to set certain applicants as official representative <em>for the country of the NFP</em> and/or set certain applicants as being reimbursed for the participation, options <strong><em>not available to administrators</em></strong>.</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-applicants.png"
+    alt="Manage applicants" title="Manage applicants" width="940px" /></p>
+    <p>The same options are available also in the participants management:</p>
+    <p><img class="screenshot" src="/++resource++naaya.gwhelp/manage-participants.png"
         alt="Manage participants" title="Manage participants" width="940px" /></p>
-        <p class="note">Please note that applicants not yet approved <em>will not appear in the participants listing.</em></p>
- 
-        <a id="emails"></a><h2>Send emails</h2>
-		<p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all or part of the registered participants. The <em>From:</em> address will be pre-filled with the email address of the contact person, recipients can be selected from the overview and <em>Subject</em> and <em>Body</em> can be entered manually.</p>
+    <p class="note">Please note that applicants not yet approved <em>will not appear in the participants listing.</em></p>
 
-	</metal:block>
+  </metal:block>
 </metal:block>
