@@ -1,7 +1,7 @@
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view, view_management_screens
+from AccessControl.Permissions import view
 
 manage_addGWHelp_html = PageTemplateFile('zpt/manage_add', globals())
 
