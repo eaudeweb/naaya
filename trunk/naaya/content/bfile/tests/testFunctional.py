@@ -97,7 +97,6 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/bfile_add_html')
 
-        import pdb; pdb.set_trace()
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         # enter no values in the fields
