@@ -1,13 +1,12 @@
+from Products.Naaya.NyFolder import addNyFolder
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from StringIO import StringIO
+from naaya.content.bfile.bfile_item import addNyBFile
 import os
 import re
-from StringIO import StringIO
+import transaction
 import urllib
 
-import transaction
-
-from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.NyFolder import addNyFolder
-from naaya.content.bfile.bfile_item import addNyBFile
 
 class BrowserFileTestingMixin(object):
     def make_file(self, filename, content_type, data):
@@ -24,10 +23,17 @@ class BrowserFileTestingMixin(object):
         self.assertEqual(self.browser_get_header('content-type'), content_type)
         self.assertEqual(self.browser.get_html(), data)
 
+
 class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
+
+        from naaya.content.bfile.bfile_item import NyBFile
+        def get_selected_language(self):
+            return 'en'
+        NyBFile.get_selected_language = get_selected_language
+
         self.portal.manage_install_pluggableitem('Naaya Blob File')
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyBFile(self.portal.myfolder, id='mybfile', title='My file', submitted=1, contributor='contributor')
@@ -91,6 +97,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/bfile_add_html')
 
+        import pdb; pdb.set_trace()
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         # enter no values in the fields
