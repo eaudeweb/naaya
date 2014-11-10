@@ -1,5 +1,9 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
 -------------------
+
+1.0.4 (2014-11-10)
+-------------------
+* separate section for Eionet meetings - special features [dumitval]
 
 1.0.3 (2014-10-03)
 -------------------
