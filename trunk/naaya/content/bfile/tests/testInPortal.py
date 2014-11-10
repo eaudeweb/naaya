@@ -9,6 +9,9 @@ import pytz
 class NyBFileTestCase(NaayaTestCase):
     """ TestCase for Naaya BFile object """
 
+    def get_storage(self, bfile):
+        return bfile.versions_store.get(bfile.get_selected_language(), {})
+
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -31,7 +34,7 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile = self.portal.myfolder.mybfile
         self.assertTrue(mybfile.id, 'mybfile')
         self.assertTrue(mybfile.title, 'My bfile')
-        self.assertEqual(len(mybfile._versions_i18n[mybfile.get_selected_language()]), 0)
+        self.assertEqual(len(self.get_storage(mybfile)), 0)
         self.assertEqual(mybfile.current_version, None)
 
     def test_add_with_file(self):
@@ -112,7 +115,8 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(
             mybfile.current_version.getPhysicalPath() == mybfile._versions_i18n[lang][2].__of__(mybfile).getPhysicalPath())
 
-        mybfile.remove_version(2)
+        self.assertTrue(len(list(mybfile.all_versions())) == 2)
+        mybfile.remove_version(1)
         self.assertTrue(mybfile.current_version.getPhysicalPath() ==
                         mybfile._versions_i18n[lang][0].__of__(mybfile).getPhysicalPath())
 
