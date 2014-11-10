@@ -1,5 +1,7 @@
 1.2.61 (unreleased)
 -------------------
+* bugfix related to eionet_meeting default survey creation [dumitval]
+* pep8 code formatting [dumitval]
 
 1.2.60 (2014-09-26)
 -------------------
