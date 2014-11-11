@@ -31,7 +31,8 @@ def tmpl_version(context, version, ver_id):
     pretty_version_size = None
     url = None
     icon_url = None
-    language = context.get_selected_language() or 'en'
+    language = context.REQUEST.form.get('lang',
+                                        context.get_selected_language() or 'en')
     if not version.removed:
         pretty_version_size = pretty_size(version.size)
         url = ('%s/download/%s/%s/%s' %

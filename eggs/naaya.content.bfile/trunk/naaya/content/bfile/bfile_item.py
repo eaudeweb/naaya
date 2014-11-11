@@ -163,7 +163,6 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
-
 class LocalizedFileDownload(object):
     """
     Perform a download of `context` (must be instance of NyLocalizedBFile).
@@ -444,7 +443,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         use in a page template
         """
         versions = [tmpl_version(self, ver, str(n+1)) for n, ver in
-                    enumerate(self.all_versions(language)) if not ver.removed ]
+                    enumerate(self.all_versions(language))]
+        versions = filter(lambda x: not x['removed'], versions)
         if versions:
             versions[-1]['is_current'] = True
 
