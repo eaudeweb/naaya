@@ -115,8 +115,8 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(
             mybfile.current_version.getPhysicalPath() == mybfile._versions_i18n[lang][2].__of__(mybfile).getPhysicalPath())
 
-        self.assertTrue(len(list(mybfile.all_versions())) == 2)
-        mybfile.remove_version(1)
+        self.assertTrue(len(list(mybfile.all_versions())) == 3)
+        mybfile.remove_version(2)
         self.assertTrue(mybfile.current_version.getPhysicalPath() ==
                         mybfile._versions_i18n[lang][0].__of__(mybfile).getPhysicalPath())
 
