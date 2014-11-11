@@ -1,15 +1,5 @@
 """Naaya Blob File"""
 
-#TODO: avem de-a face cu doua feluri de foldere _versions:
-#o lista (varianta veche de bfile) si un mapping (varianta noua)
-# cum trebuie rezolvata problema?
-# propun ca varianta noua de bfile sa foloseasca un folder _lang_ in
-# _versions
-# fisierele vechi sunt readonly si sunt tratate ca fiind out of lang (in
-# toate languageurile)
-#fisierele noi sunt stocate doar in versions
-
-
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
@@ -31,8 +21,8 @@ from datetime import datetime
 from interfaces import INyBFile
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.content.bfile.utils import get_view_adapter
 from naaya.content.bfile.utils import file_has_content, tmpl_version
+from naaya.content.bfile.utils import get_view_adapter
 from naaya.content.bfile.utils import strip_leading_underscores
 from naaya.core import submitter
 from naaya.core.zope2util import CaptureTraverse
@@ -174,7 +164,8 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
-def localizedbfile_download(context, path, REQUEST):
+
+class LocalizedFileDownload(object):
     """
     Perform a download of `context` (must be instance of NyLocalizedBFile).
 
@@ -186,36 +177,60 @@ def localizedbfile_download(context, path, REQUEST):
     * `action` in GET == "view" indicates opening file in browser
     default value is "download" (optional)
 
+    Path by default should be in form of:
+        test-file/download/en/3/font-awesome-4.1.0.zip
+    But it can also be (for BBB):
+        test-file/download/font-awesome-4.1.0.zip
     """
-    try:
-        ver_number = int(path[0])
-        if ver_number <= 0:
-            raise IndexError
 
-        versions = context.all_versions()
+    def __call__(self, context, path, REQUEST):
+        if len(path) == 1:
+            version = context.current_version
+            if version is None:
+                raise NotFound
+        elif len(path) != 3:
+            raise NotFound("Path too big, does not match a scenario")
+
+        language, ver_number, name = path
+
+        if not ver_number.isdigit():
+            raise NotFound("Version number is not a digit, %s" % ver_number)
+        ver_number = int(ver_number)
+        if ver_number <= 0:
+            raise NotFound("Version number too small")
+
+        versions = context.all_versions(language=language)
+
         ver = None
         for i in range(ver_number):
-            ver = versions.next()
+            try:
+                ver = versions.next()
+            except StopIteration:
+                raise NotFound("Version not found, number too big")
             if i == ver_number - 1:
                 break
+
         if ver is None:
             raise NotFound
         if ver.removed:
-            raise IndexError
-    except (IndexError, ValueError, KeyError), e:
-        raise NotFound, e
+            raise NotFound("Version is removed")
 
-    RESPONSE = REQUEST.RESPONSE
-    action = REQUEST.form.get('action', 'download')
-    if action == 'view':
-        view_adapter = get_view_adapter(ver)
-        if view_adapter is not None:
-            return view_adapter(context)
-        return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
-    elif action == 'download':
-        return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
-    else:
-        raise NotFound
+        return self.download(ver, context, REQUEST)
+
+    def download(self, ver, context, REQUEST):
+        RESPONSE = REQUEST.RESPONSE
+        action = REQUEST.form.get('action', 'download')
+        if action == 'view':
+            view_adapter = get_view_adapter(ver)
+            if view_adapter is not None:
+                return view_adapter(context)
+            return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
+        elif action == 'download':
+            return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
+        else:
+            raise NotFound
+
+localizedbfile_download = LocalizedFileDownload()
 
 
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
@@ -261,8 +276,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         """
 
         for ver in self._versions:    #BBB
-            if not ver.removed:
-                yield ver
+            #if not ver.removed:
+            yield ver
 
         if language is None:
             language = self.get_selected_language()
@@ -270,8 +285,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         if self.versions_store.has_key(language) == True:
             _versions = self.versions_store[language]
             for ver in _versions:
-                if not ver.removed:
-                    yield ver
+                # if not ver.removed:
+                yield ver
 
     def isVersionable(self):
         """ BFile objects are not versionable
@@ -283,12 +298,14 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
     security.declarePrivate('current_version')
     @property
-    def current_version(self):
-        versions = list(self.all_versions())
-        ver = None
+    def current_version(self, language=None):
+        versions = list(self.all_versions(language))
+        cur = None
         for ver in versions:    # we want last item of this iter
+            if not ver.removed:
+                cur = ver
             continue
-        return ver
+        return cur
 
     security.declareProtected(view, 'current_version_download_url')
     def current_version_download_url(self):
@@ -347,16 +364,20 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
         _uploaded_file = schema_raw_data.pop('uploaded_file', None)
         versions_to_remove = schema_raw_data.pop('versions_to_remove', [])
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if form_errors:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self._prepare_error_response(
+                    REQUEST, form_errors, schema_raw_data)
+                REQUEST.RESPONSE.redirect(
+                    '%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
                 return
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -423,12 +444,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
-        # TODO: test this
-
-        versions = [
-            tmpl_version(self, ver, str(n+1))
-                    for n, ver in enumerate(self.all_versions(language))
-        ]
+        versions = [tmpl_version(self, ver, str(n+1)) for n, ver in
+                    enumerate(self.all_versions(language)) if not ver.removed ]
         if versions:
             versions[-1]['is_current'] = True
 
