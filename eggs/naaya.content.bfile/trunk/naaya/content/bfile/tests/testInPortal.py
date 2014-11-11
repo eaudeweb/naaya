@@ -1,9 +1,33 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from StringIO import StringIO
 from datetime import datetime
+from naaya.content.bfile.NyBlobFile import NyBlobFile
+from naaya.content.bfile.bfile_item import LocalizedFileDownload
 from naaya.content.bfile.bfile_item import NyBFile
 from naaya.content.bfile.bfile_item import addNyBFile
+from persistent.list import PersistentList
 import pytz
+
+
+class MockRequest(object):
+    def __init__(self):
+        self.headers={}
+
+    def get_header(self, name):
+        return self.headers.get(name)
+
+    def set_header(self, name, value):
+        self.headers[name] = value
+
+
+class MockResponse(object):
+    def __init__(self, stream=False):
+        self.headers = {}
+        if stream:
+            self._streaming = 'whatever value'
+
+    def setHeader(self, key, value):
+        self.headers[key] = value
 
 
 class NyBFileTestCase(NaayaTestCase):
@@ -154,4 +178,64 @@ class NyBFileTestCase(NaayaTestCase):
         file_id = addNyBFile(myfolder, uploaded_file=myfile,
                              submitted=1, contributor='contributor')
         self.assertEqual(file_id, 'assapa-c-r-_aaaa1') # as returned by unidecode
+
+    def make_blobfile(self,
+                      filename='bf.txt',
+                      content='hello world',
+                      content_type='text/plain'):
+        bf = NyBlobFile(
+            filename=filename, content_type=content_type,
+            timestamp=datetime.utcnow(), contributor='tester')
+        bf.removed = False
+        bf.size = len(content)
+        f = bf.open_write()
+        f.write(content)
+        f.close()
+        return bf
+
+    def test_unmigrated_version(self):
+        self.add_bfile(id='mybfile', title='My bfile')
+        mybfile = self.portal.myfolder.mybfile
+        bf = self.make_blobfile()
+        mybfile._versions = PersistentList()
+        mybfile._versions.append(bf)
+        assert mybfile.current_version == bf
+        assert mybfile.current_version_download_url() == \
+            'http://nohost/portal/myfolder/mybfile/download/en/1/bf.txt'
+
+    def test_unmigrated_version_with_new_version(self):
+        self.add_bfile(id='mybfile', title='My bfile')
+        mybfile = self.portal.myfolder.mybfile
+        bf = self.make_blobfile()
+        mybfile._versions = PersistentList()
+        mybfile._versions.append(bf)
+
+        myfile2 = StringIO('new data')
+        myfile2.filename = 'other.txt'
+        mybfile._save_file(myfile2, contributor='contributor')
+
+        assert len(list(mybfile.all_versions())) == 2
+        assert mybfile.current_version.raw_data() == 'new data'
+
+        assert mybfile.current_version_download_url() == \
+            'http://nohost/portal/myfolder/mybfile/download/en/2/other.txt'
+
+    def test_download_unmigrated_version(self):
+        self.add_bfile(id='mybfile', title='My bfile')
+        mybfile = self.portal.myfolder.mybfile
+        bf = self.make_blobfile()
+        mybfile._versions = PersistentList()
+        mybfile._versions.append(bf)
+
+        downloader = LocalizedFileDownload()
+        request = MockRequest()
+        request.form = {'action': 'download'}
+        request.RESPONSE = MockResponse()
+
+        assert downloader(mybfile, ['bf.txt'], request) == "hello world"
+        assert downloader(mybfile, ['1', 'bf.txt'], request) ==  "hello world"
+        assert downloader(mybfile, ['en', '1', 'bf.txt'], request) ==\
+            'hello world'
+        assert downloader(mybfile, ['fr', '1', 'bf.txt'], request) ==\
+            'hello world'
 
