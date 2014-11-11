@@ -29,7 +29,6 @@ from naaya.core.zope2util import CaptureTraverse
 from naaya.core.zope2util import abort_transaction_keep_session
 from permissions import PERMISSION_ADD_BFILE
 from persistent.dict import PersistentDict
-from persistent.list import PersistentList
 from webdav.Lockable import ResourceLockedError
 from zExceptions import NotFound
 from zope.event import notify
@@ -263,7 +262,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self._versions = PersistentList()
         self._versions_i18n = PersistentDict()
 
     @property
@@ -279,17 +277,14 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         the non-i18n versions
         """
 
-        for ver in self._versions:    #BBB
-            #if not ver.removed:
+        for ver in getattr(self, '_versions', []):    #BBB
             yield ver
 
         if language is None:
             language = self.get_selected_language()
 
         if self.versions_store.has_key(language) == True:
-            _versions = self.versions_store[language]
-            for ver in _versions:
-                # if not ver.removed:
+            for ver in self.versions_store[language]:
                 yield ver
 
     def isVersionable(self):
