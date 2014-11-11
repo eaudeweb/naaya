@@ -184,14 +184,18 @@ class LocalizedFileDownload(object):
     """
 
     def __call__(self, context, path, REQUEST):
-        if len(path) == 1:
-            version = context.current_version
-            if version is None:
+        if len(path) == 1:      # /download/filename.pdf
+            ver = context.current_version
+            if ver is None:
                 raise NotFound
+            return self.download(ver, context, REQUEST)
+        elif len(path) == 2:    # /download/1/filename.pdf
+            ver_number, name = path
+            language = context.get_selected_language()
         elif len(path) != 3:
             raise NotFound("Path too big, does not match a scenario")
-
-        language, ver_number, name = path
+        else:                   # /download/en/1/filename.pdf
+            language, ver_number, name = path
 
         if not ver_number.isdigit():
             raise NotFound("Version number is not a digit, %s" % ver_number)
