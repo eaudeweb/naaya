@@ -55,9 +55,9 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
 
     def get_info_text(self):
         trans = self.ob.getPortalI18n().get_translation
-        container = self.ob._versions
         # OBS: for localizedbfile count langs, v is str (the key of the lang)
-        versions = [v for v in container if not getattr(v, 'removed', True)]
+        versions = [v for v in self.ob.all_versions()
+                    if not getattr(v, 'removed', True)]
         version_count = len(versions)
         if version_count > 1:
             msg = trans("${number} versions", number=str(version_count))
