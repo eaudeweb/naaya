@@ -1,5 +1,6 @@
 3.4.4 (unreleased)
 -------------------
+* skip notifications for disabled users [dumitval]
 
 3.4.3 (2014-11-06)
 -------------------

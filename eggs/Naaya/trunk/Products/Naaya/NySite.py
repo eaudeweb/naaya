@@ -84,6 +84,7 @@ from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
 from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
+from Products.NaayaCore.NotificationTool.constants import DISABLED_EMAIL
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
@@ -916,16 +917,20 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #objects getters
     security.declarePublic('getSite')
-    def getSite(self): return self
+    def getSite(self):
+        return self
 
     security.declarePublic('getPropertiesTool')
-    def getPropertiesTool(self): return self._getOb(ID_PROPERTIESTOOL)
+    def getPropertiesTool(self):
+        return self._getOb(ID_PROPERTIESTOOL)
 
     security.declarePublic('getPortletsTool')
-    def getPortletsTool(self): return self._getOb(ID_PORTLETSTOOL)
+    def getPortletsTool(self):
+        return self._getOb(ID_PORTLETSTOOL)
 
     security.declarePublic('getAuthenticationTool')
-    def getAuthenticationTool(self): return self._getOb(ID_AUTHENTICATIONTOOL)
+    def getAuthenticationTool(self):
+        return self._getOb(ID_AUTHENTICATIONTOOL)
 
     security.declarePublic('getDynamicPropertiesTool')
     @deprecate('DynamicPropertiesTool is deprecated. Use SchemaTool instead.')
@@ -933,22 +938,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self._getOb(ID_DYNAMICPROPERTIESTOOL)
 
     security.declarePublic('getCatalogTool')
-    def getCatalogTool(self): return self._getOb(ID_CATALOGTOOL)
+    def getCatalogTool(self):
+        return self._getOb(ID_CATALOGTOOL)
 
     security.declarePublic('getLayoutTool')
-    def getLayoutTool(self): return self._getOb(ID_LAYOUTTOOL)
+    def getLayoutTool(self):
+        return self._getOb(ID_LAYOUTTOOL)
 
     security.declarePublic('getSyndicationTool')
-    def getSyndicationTool(self): return self._getOb(ID_SYNDICATIONTOOL)
+    def getSyndicationTool(self):
+        return self._getOb(ID_SYNDICATIONTOOL)
 
     security.declarePublic('getEmailTool')
-    def getEmailTool(self): return self._getOb(ID_EMAILTOOL)
+    def getEmailTool(self):
+        return self._getOb(ID_EMAILTOOL)
 
     security.declarePublic('getFormsTool')
-    def getFormsTool(self): return self._getOb(ID_FORMSTOOL)
+    def getFormsTool(self):
+        return self._getOb(ID_FORMSTOOL)
 
     security.declarePublic('getSchemaTool')
-    def getSchemaTool(self): return self._getOb(ID_SCHEMATOOL)
+    def getSchemaTool(self):
+        return self._getOb(ID_SCHEMATOOL)
 
     security.declarePublic('getPortalTranslations')
     def getPortalTranslations(self):
@@ -956,22 +967,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return TranslationsToolWrapper(portal_i18n).__of__(portal_i18n)
 
     security.declarePublic('getImagesFolder')
-    def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
+    def getImagesFolder(self):
+        return self._getOb(ID_IMAGESFOLDER)
 
     security.declarePublic('getNotificationTool')
-    def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
+    def getNotificationTool(self):
+        return self._getOb(ID_NOTIFICATIONTOOL)
 
     security.declarePublic('getEditorTool')
-    def getEditorTool(self): return self._getOb(ID_EDITORTOOL)
+    def getEditorTool(self):
+        return self._getOb(ID_EDITORTOOL)
 
     security.declarePublic('getAnalyticsTool')
-    def getAnalyticsTool(self): return self._getOb(ID_ANALYTICSTOOL)
+    def getAnalyticsTool(self):
+        return self._getOb(ID_ANALYTICSTOOL)
 
     security.declarePublic('getGeoMapTool')
-    def getGeoMapTool(self): return self._getOb(ID_GEOMAPTOOL, None)
+    def getGeoMapTool(self):
+        return self._getOb(ID_GEOMAPTOOL, None)
 
     security.declarePublic('getPortalI18n')
-    def getPortalI18n(self): return self._getOb(ID_NAAYAI18N, None)
+    def getPortalI18n(self):
+        return self._getOb(ID_NAAYAI18N, None)
 
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
@@ -1257,16 +1274,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getMaintainersEmails(self, node):
         #returns a list of emails for given folder until the site object
         l_emails = []
-        self.getAuthenticationTool()    # TODO: is this needed?
-        if node is self: return l_emails
+        if node is self:
+            return l_emails
         else:
             while 1:
                 if node == self:
-                    l_emails.extend(node.administrator_email.split(','))
+                    for email in node.administrator_email.split(','):
+                        if (email not in ['', DISABLED_EMAIL] and
+                                email not in l_emails):
+                            l_emails.extend(email)
                     break
                 if hasattr(node, 'maintainer_email'):
-                    if node.maintainer_email != '' and node.maintainer_email not in l_emails:
-                        l_emails.extend(node.maintainer_email.split(','))
+                    for email in node.maintainer_email.split(','):
+                        if (email not in ['', DISABLED_EMAIL]
+                                and email not in l_emails):
+                            l_emails.extend(email)
                 node = node.getParentNode()
         return l_emails
 

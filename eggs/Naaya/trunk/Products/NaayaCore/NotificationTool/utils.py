@@ -1,9 +1,9 @@
 from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailSender import build_email
 from containers import AccountSubscription, AnonymousSubscription
+from constants import DISABLED_EMAIL
 from datetime import timedelta
 from interfaces import ISubscriptionContainer
-#from naaya.core.zope2util import DT2dt
 import constants
 import logging
 import warnings
@@ -11,11 +11,13 @@ import warnings
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
+
 def DateTime_from_datetime(dt):
     DT = DateTime(dt.isoformat())
     zone = DT.localZone(dt.timetuple())
     local_DT = DT.toZone(zone)
     return local_DT
+
 
 def set_day_of_month(the_date, day):
     while True:
@@ -26,9 +28,11 @@ def set_day_of_month(the_date, day):
         if not 26 < day < 31:
             raise ValueError(day)
 
+
 def minus_one_month(the_date):
     return set_day_of_month(the_date.replace(day=1) - timedelta(days=1),
                             the_date.day)
+
 
 def fetch_subscriptions(obj, inherit):
     """
@@ -48,6 +52,7 @@ def fetch_subscriptions(obj, inherit):
             for subscription in fetch_subscriptions(obj.aq_parent,
                                                     inherit=True):
                 yield subscription
+
 
 def walk_subscriptions(obj, cutoff_level=None):
     """
@@ -75,6 +80,7 @@ def walk_subscriptions(obj, cutoff_level=None):
         for item in walk_subscriptions(child_obj, cutoff_level):
             yield item
 
+
 def list_modified_objects(site, when_start, when_end):
     warnings.warn("Use `get_modified_objects` instead", DeprecationWarning)
     DT_when_start = DateTime_from_datetime(when_start)
@@ -87,6 +93,7 @@ def list_modified_objects(site, when_start, when_end):
             yield brain.getObject()
         except:
             notif_logger.error('Found broken brain: %r', brain.getPath())
+
 
 def get_modified_objects(site, when_start, when_end, log_type=None):
     """ Search through action log entries given ``when_start``, ``when_end``
@@ -107,26 +114,30 @@ def get_modified_objects(site, when_start, when_end, log_type=None):
     visited_paths = []
     for entry_id, log_entry in action_logger.items():
         if (log_entry.type in log_types):
-            if log_entry.path in visited_paths: #Return objects just once
+            if log_entry.path in visited_paths:  # Return objects just once
                 continue
             visited_paths.append(log_entry.path)
 
             if (DT_when_start.lessThanEqualTo(log_entry.created_datetime) and
-                DT_when_end.greaterThanEqualTo(log_entry.created_datetime)):
-                    try:
-                        yield (log_entry.type,
-                               site.unrestrictedTraverse(log_entry.path))
-                    except KeyError:
-                        notif_logger.error('Found nonexistent path: %r',
-                                           log_entry.path)
+                    DT_when_end.greaterThanEqualTo(
+                    log_entry.created_datetime)):
+                try:
+                    yield (log_entry.type,
+                           site.unrestrictedTraverse(log_entry.path))
+                except KeyError:
+                    notif_logger.error('Found nonexistent path: %r',
+                                       log_entry.path)
+
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
     build_email(addr_from, addr_to, subject, body)
-    #TODO: send using the EmailSender
+    # TODO: send using the EmailSender
     email_tool.sendEmail(body, addr_to, addr_from, subject)
 
+
 def _mock_send_notification(email_tool, addr_from, addr_to, subject, body):
-    mock_saved.append( (addr_from, addr_to, subject, body) )
+    mock_saved.append((addr_from, addr_to, subject, body))
+
 
 def divert_notifications(testing, save_to=[]):
     """
@@ -143,17 +154,19 @@ def divert_notifications(testing, save_to=[]):
     else:
         send_notification = _send_notification
 
-def match_account_subscription(subs, user_id, notif_type, lang, content_types=None):
+
+def match_account_subscription(subs, user_id, notif_type, lang,
+                               content_types=None):
     for n, subscription in subs.list_with_keys():
         if not isinstance(subscription, AccountSubscription):
             continue
         if (subscription.user_id == user_id and
             subscription.notif_type == notif_type and
             subscription.lang == lang and
-                (content_types is None or
-                    getattr(subscription, 'content_types', None) == content_types)
-            ):
+            (content_types is None or
+             getattr(subscription, 'content_types', None) == content_types)):
             return n
+
 
 def get_subscribers_data(self, ob, notif_type='instant', **kw):
     """ Return a dict that contains the data of the messages that can be passed
@@ -166,7 +179,7 @@ def get_subscribers_data(self, ob, notif_type='instant', **kw):
         if subscription.notif_type != notif_type:
             continue
         email = subscription.get_email(ob)
-        if email is None:
+        if email in [None, DISABLED_EMAIL]:
             continue
         content_types = getattr(subscription, 'content_types', [])
         if content_types and ob.meta_type not in content_types:

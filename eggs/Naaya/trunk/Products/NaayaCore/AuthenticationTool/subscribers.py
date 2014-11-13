@@ -1,5 +1,6 @@
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 from naaya.core.site_logging import log_user_management_action
+from Products.NaayaCore.NotificationTool.constants import DISABLED_EMAIL
 
 
 def auto_catalog_object(event):
@@ -32,19 +33,22 @@ def post_user_management_action(event):
                     break
             for user_id in user_ids:
                 email = auth_tool.getUsersEmails([user_id])[0]
+                if email == DISABLED_EMAIL:
+                    continue
                 full_name = auth_tool.getUsersFullNames([user_id])[0]
-                notif_tool.notify_account_modification(email, event.context,
-                    new_roles=event.assigned, removed_roles=event.unassigned,
-                    username=full_name)
+                notif_tool.notify_account_modification(
+                    email, event.context, new_roles=event.assigned,
+                    removed_roles=event.unassigned, username=full_name)
         else:
             email = auth_tool.getUsersEmails([event.user_id])[0]
-            full_name = auth_tool.getUsersFullNames([event.user_id])[0]
-            if not isinstance(full_name, unicode):
-                try:
-                    full_name = full_name.decode('utf8')
-                except UnicodeDecodeError:
-                    full_name = full_name.decode('latin1')
+            if email != DISABLED_EMAIL:
+                full_name = auth_tool.getUsersFullNames([event.user_id])[0]
+                if not isinstance(full_name, unicode):
+                    try:
+                        full_name = full_name.decode('utf8')
+                    except UnicodeDecodeError:
+                        full_name = full_name.decode('latin1')
 
-            notif_tool.notify_account_modification(email, event.context,
-                    new_roles=event.assigned, removed_roles=event.unassigned,
-                    username=full_name)
+                notif_tool.notify_account_modification(
+                    email, event.context, new_roles=event.assigned,
+                    removed_roles=event.unassigned, username=full_name)
