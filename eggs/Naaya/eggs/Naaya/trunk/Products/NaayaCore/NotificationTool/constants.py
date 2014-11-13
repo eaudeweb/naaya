@@ -5,3 +5,4 @@ LOG_TYPES = {
     'commented': 'Comment added on object',
     'bulk_import': 'Notification: bulk import (zip/csv)',
 }
+DISABLED_EMAIL = 'disabled@eionet.europa.eu'
