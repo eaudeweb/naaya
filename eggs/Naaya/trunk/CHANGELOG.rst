@@ -1,4 +1,7 @@
-3.4.4 (unreleased)
+3.4.5 (unreleased)
+-------------------
+
+3.4.4 (2014-11-14)
 -------------------
 * don't delete ga_id on access revoke [dumitval]
 * skip notifications for disabled users [dumitval]
