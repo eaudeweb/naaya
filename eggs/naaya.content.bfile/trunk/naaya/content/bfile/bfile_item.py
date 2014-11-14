@@ -322,7 +322,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
                            contributor=contributor)
 
         if language is None:
-            language = self.get_selected_language()
+            try:
+                language = self.get_selected_language()
+            except TypeError:   # this may happens in migrations
+                language = self.getSite().gl_get_default_language()
+
         _versions = self.versions_store.pop(language, None)
 
         if _versions == None:
