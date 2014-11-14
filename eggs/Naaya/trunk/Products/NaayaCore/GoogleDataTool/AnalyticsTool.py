@@ -73,17 +73,20 @@ class AnalyticsTool(SimpleItem, utils):
         self.title = title
         self._reset()
 
-    def _reset(self):
+    def _reset(self, revoke=False):
         self.account = None
         self.date_interval = 30
         self.start_date = ''
-        self.ga_id = ''  # Google Analytics web property ID (UA-number)
-        self.gw_verify = ''  # Google Webmaster verification meta tag
         self._google_access_token = None
         self._google_refresh_token = None
         self.profile_code = None
         self.profile = None
         self.clear_cache()
+        if not revoke:
+            # if we just want to revoke the access to the analytics
+            # account, don't delete the ga_id and verify
+            self.ga_id = ''  # Google Analytics web property ID (UA-number)
+            self.gw_verify = ''  # Google Webmaster verification meta tag
 
     # cache
     def _set_cache(self, data, view_name):
@@ -281,7 +284,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def admin_account_revoke(self, REQUEST=None):
         """ """
-        self._reset()
+        self._reset(revoke=True)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
 
