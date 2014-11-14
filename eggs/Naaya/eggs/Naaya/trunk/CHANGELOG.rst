@@ -1,5 +1,6 @@
 3.4.4 (unreleased)
 -------------------
+* don't delete ga_id on access revoke [dumitval]
 * skip notifications for disabled users [dumitval]
 
 3.4.3 (2014-11-06)
