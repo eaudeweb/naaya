@@ -12,7 +12,7 @@ import re
 
 finder = re.compile('.*\.(\d+)\.*.*$')
 inter  = lambda x:int((finder.findall(x) or ['0'])[-1])
-sorter = lambda x, y:cmp(inter(x), inter(y))
+sorter = lambda x, y:cmp(inter(x[1]), inter(y[1]))
 
 
 def hashfile(fpath, blocksize=65536):
