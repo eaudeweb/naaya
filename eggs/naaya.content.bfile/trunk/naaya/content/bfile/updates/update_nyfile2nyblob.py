@@ -8,7 +8,7 @@ from naaya.content.bfile import bfile_item
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from persistent.list import PersistentList
 from zope.annotation import IAnnotations
-import datetime
+from datetime import datetime
 import logging
 
 
