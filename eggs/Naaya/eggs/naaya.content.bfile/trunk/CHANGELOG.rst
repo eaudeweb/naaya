@@ -1,5 +1,8 @@
-1.4.11 (unreleased)
+1.4.11 (2014-11-18)
 --------------------
+* Bug fix: upload blobs in old _versions storage on migration, to avoid assigning them
+  a language
+  [tiberich #3929]
 
 1.4.10 (2014-11-14)
 --------------------
