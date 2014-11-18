@@ -1,3 +1,6 @@
+1.4.11 (unreleased)
+--------------------
+
 1.4.10 (2014-11-14)
 --------------------
 * Feature: merge code from naaya.content.localizedbfile. Now all bfiles are localized
