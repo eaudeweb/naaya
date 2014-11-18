@@ -1,20 +1,15 @@
 """ Naaya updater script """
 __author__ = """Alin Voinea"""
 
-# Python imports
-import logging
-from StringIO import StringIO
-
-# Zope imports
-from zope.annotation import IAnnotations
-
-# Naaya imports
-from naaya.content.bfile import bfile_item
-from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.Naaya.adapters import FolderMetaTypes
-
-#
-# Export / Import
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from StringIO import StringIO
+from naaya.content.bfile import bfile_item
+from naaya.content.bfile.NyBlobFile import make_blobfile
+from persistent.list import PersistentList
+from zope.annotation import IAnnotations
+import datetime
+import logging
 
 
 class Export(object):
@@ -123,8 +118,18 @@ class Import(object):
         """ Import versions
         """
         for version in value:
-            self.context._save_file(version,
-                                    contributor='')
+            bf = make_blobfile(version,
+                               removed=False,
+                               timestamp=datetime.utcnow(),
+                               contributor='')
+
+            vstorage = getattr(self.context, '_versions', None)
+            if vstorage is None:
+                self.context._versions = PersistentList()
+            self.context._versions.append(bf)
+
+            #self.context._save_file(version, contributor='')
+
     versions = property(None, versions)
 
     def properties(self, value):
