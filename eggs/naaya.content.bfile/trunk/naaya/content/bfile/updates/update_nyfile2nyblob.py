@@ -54,8 +54,7 @@ class Export(object):
             sfile.headers = {'content-type': extfile.content_type}
             yield sfile
         else:
-            self.logger.warning("\t BROKEN EXTFILE: %s",
-                                extfile.absolute_url())
+            self.logger.warning("\t BROKEN EXTFILE: %s", extfile.absolute_url())
 
     @property
     def local_properties(self):
@@ -128,7 +127,11 @@ class Import(object):
                 self.context._versions = PersistentList()
             self.context._versions.append(bf)
 
-            #self.context._save_file(version, contributor='')
+            fname = bf.get_filename()
+            with open(fname) as f:
+                version.seek(0)
+                if not len(f.read()) == len(version.read()):
+                    raise ValueError("Different size of files")
 
     versions = property(None, versions)
 
