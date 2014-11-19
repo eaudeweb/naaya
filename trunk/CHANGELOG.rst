@@ -1,3 +1,7 @@
+1.4.12 (unreleased)
+--------------------
+* improvements to the migrations [tiberich]
+
 1.4.11 (2014-11-18)
 --------------------
 * Bug fix: upload blobs in old _versions storage on migration, to avoid assigning them
