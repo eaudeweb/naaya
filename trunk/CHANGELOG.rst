@@ -1,4 +1,7 @@
-1.4.12 (unreleased)
+1.4.13 (unreleased)
+--------------------
+
+1.4.12 (2014-11-19)
 --------------------
 * improvements to the migrations [tiberich]
 
