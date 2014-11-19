@@ -288,7 +288,6 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         return self.size
 
     security.declareProtected("View", 'index_html')
-
     def index_html(self, REQUEST=None, RESPONSE=None, charset='utf-8',
                    disposition='inline'):
         """ make it directly viewable when entering the objects URL """
