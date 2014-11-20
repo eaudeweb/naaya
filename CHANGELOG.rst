@@ -1,5 +1,6 @@
 0.0.4 (unreleased)
 ------------------
+* update to work with the localized bfile version [dumitval]
 
 0.0.3 (2014-04-10)
 ------------------
