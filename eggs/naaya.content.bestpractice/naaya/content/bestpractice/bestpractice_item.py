@@ -27,7 +27,7 @@ from naaya.core.zope2util import abort_transaction_keep_session
 
 from naaya.content.bfile.NyBlobFile import trim_filename
 from naaya.content.bfile.utils import file_has_content
-from naaya.content.bfile.bfile_item import bfile_download as bestpractice_download
+from naaya.content.bfile.bfile_item import localizedbfile_download as bestpractice_download
 from naaya.content.bfile.bfile_item import NyBFile
 
 from permissions import PERMISSION_ADD_BESTPRACTICE
