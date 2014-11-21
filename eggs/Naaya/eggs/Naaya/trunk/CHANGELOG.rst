@@ -1,5 +1,7 @@
-3.4.5 (unreleased)
+3.4.5 (2014-11-21)
 -------------------
+* Bug fix: avoid problem with un-migrated Publications
+  [tiberich #3929]
 
 3.4.4 (2014-11-14)
 -------------------
