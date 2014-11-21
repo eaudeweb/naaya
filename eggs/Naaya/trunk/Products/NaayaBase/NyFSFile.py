@@ -71,20 +71,22 @@ class NyFSFile(File):
 
     def get_data(self, as_string=True):
         if as_string:
+            if not hasattr(self, '_bfile'):
+                return self._ext_file.index_html()
             if hasattr(self, '_ext_file'):  #not migrated yet?
                 if self._bfile.size == 0:
                     return self._ext_file.index_html()
             return self._bfile.index_html()
 
         if hasattr(self, '_ext_file'):  #not migrated yet?
+            if not hasattr(self, '_bfile'):
+                return self._ext_file
             if self._bfile.size == 0:
                 return self._ext_file
 
         return self._bfile
 
-    #
-    # Adapt File methods to ExtFile.
-    #
+    # Implement File methods
     def manage_beforeUpdate(self, item=None, container=None):
         self_id = getattr(self, '__name__', 'data.fs')
         self._bfile = NyBlobFile(id=self_id, title=self.title_or_id())
