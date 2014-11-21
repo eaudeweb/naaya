@@ -355,13 +355,14 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
         for lang in value.getSite().gl_get_languages():
             extfile = value.get(lang)
             if extfile:
-                extfile._ext_file._delete('/'.join(extfile._ext_file.filename))
                 try:
+                    extfile._ext_file._delete(
+                        '/'.join(extfile._ext_file.filename))
                     for ob in extfile._ext_file.versions.objectValues():
                         ob._delete('/'.join(ob.filename))
                 except AttributeError:
                     # The script should not fail in case some old file objects
-                    # dont have the versions folder
+                    # dont have the versions folder or migrated _ext_files
                     pass
 
         self.check_integrity(export.data, doc.__dict__)
