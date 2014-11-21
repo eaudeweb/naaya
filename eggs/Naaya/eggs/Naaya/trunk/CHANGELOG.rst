@@ -1,3 +1,6 @@
+3.4.6 (unreleased)
+-------------------
+
 3.4.5 (2014-11-21)
 -------------------
 * Bug fix: avoid problem with un-migrated Publications
