@@ -1,5 +1,7 @@
-1.4.13 (unreleased)
+1.4.13 (2014-11-21)
 --------------------
+* Bug fix: don't fail on migration of already migrated ext files/ ny files
+  [tiberich #3929]
 
 1.4.12 (2014-11-19)
 --------------------
