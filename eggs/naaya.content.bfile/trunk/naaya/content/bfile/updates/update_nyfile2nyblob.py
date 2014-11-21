@@ -29,7 +29,7 @@ class Export(object):
     def versions(self):
         """ NyFile versions
         """
-        extfile = self.data.pop('_ext_file')
+        extfile = self.data.pop('_ext_file', None)
         versions = self.data.pop('versions', [])
         if versions:
             versions = versions.objectValues()
@@ -37,7 +37,7 @@ class Export(object):
         for version in versions:
             if version.is_broken():
                 self.logger.warning("\t BROKEN EXTFILE: %s",
-                                    version.absolute_url())
+                                    self.context.absolute_url())
                 continue
 
             sfile = StringIO(version.data)
@@ -47,14 +47,19 @@ class Export(object):
             sfile.headers = {'content-type': version.content_type}
             yield sfile
 
-        if not extfile.is_broken():
-            sfile = StringIO(extfile.data)
-            self.logger.debug('\t FILENAME: %s', '/'.join(extfile.filename))
-            sfile.filename = extfile.filename[-1]
-            sfile.headers = {'content-type': extfile.content_type}
-            yield sfile
+        if extfile is not None:
+            if not extfile.is_broken():
+                sfile = StringIO(extfile.data)
+                self.logger.debug('\t FILENAME: %s', '/'.join(extfile.filename))
+                sfile.filename = extfile.filename[-1]
+                sfile.headers = {'content-type': extfile.content_type}
+                yield sfile
+            else:
+                self.logger.warning("\t BROKEN EXTFILE: %s",
+                                    self.context.absolute_url())
         else:
-            self.logger.warning("\t BROKEN EXTFILE: %s", extfile.absolute_url())
+            self.logger.warning("\t Already migrate?: %s",
+                                self.context.absolute_url())
 
     @property
     def local_properties(self):
@@ -276,8 +281,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         doc = parent._getOb(name)
         doc.after_setObject()
         Import(doc, export)
-        value._ext_file._delete('/'.join(value._ext_file.filename))
         try:
+            value._ext_file._delete('/'.join(value._ext_file.filename))
             for ob in value.versions.objectValues():
                 ob._delete('/'.join(ob.filename))
         except AttributeError:
