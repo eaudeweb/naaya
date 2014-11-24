@@ -1,6 +1,8 @@
-1.1.7 (unreleased)
+1.1.7 (2014-11-24)
 ------------------
 * check_item_title is now item_has_title [simiamih]
+* Bug fix: compatibility with NyFSFile with blobs
+  [tiberich #3929]
 
 1.1.6 (2012-01-13)
 ------------------
