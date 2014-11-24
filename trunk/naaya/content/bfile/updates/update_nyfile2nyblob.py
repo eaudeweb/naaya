@@ -29,7 +29,6 @@ class Export(object):
     def versions(self):
         """ NyFile versions
         """
-        extfile = self.data.pop('_ext_file', None)
         versions = self.data.pop('versions', [])
         if versions:
             versions = versions.objectValues()
@@ -47,6 +46,7 @@ class Export(object):
             sfile.headers = {'content-type': version.content_type}
             yield sfile
 
+        extfile = self.data.pop('_ext_file', None)
         if extfile is not None:
             if not extfile.is_broken():
                 sfile = StringIO(extfile.data)
@@ -57,9 +57,14 @@ class Export(object):
             else:
                 self.logger.warning("\t BROKEN EXTFILE: %s",
                                     self.context.absolute_url())
-        else:
-            self.logger.warning("\t Already migrate?: %s",
-                                self.context.absolute_url())
+
+        bfile = self.data.pop('_bfile', None)
+        if bfile is not None:
+            sfile = StringIO(bfile.raw_data())
+            self.logger.debug('\t FILENAME: %s', '/'.join(bfile.filename))
+            sfile.filename = extfile.filename[-1]
+            sfile.headers = {'content-type': bfile.content_type}
+            yield sfile
 
     @property
     def local_properties(self):
