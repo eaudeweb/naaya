@@ -12,11 +12,7 @@
 <tal:block metal:fill-slot="portlet_content">
 <tal:block tal:repeat="item python:here.utSortObjsListByAttr(channel.get_objects_for_rdf(), 'start_date', 0)">
 	<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>
-	<tal:block define="schema python:here.getSite().portal_schemas.NyEvent;
-										selection_list python:schema['event_type-property'].get_selection_list();
-										our_items python:[list_item.title for list_item in selection_list if list_item.id == item.event_type]">
-		<div tal:repeat="event our_items" tal:content="event" />
-	</tal:block>
+	<div tal:define="event python:getattr(item, 'event_type', 'Meeting')" tal:content="event" />
 	<div tal:content="structure item/description" />
 	<span tal:replace="python:item.utShowDateTime(item.start_date)" /><br />
 </tal:block>
