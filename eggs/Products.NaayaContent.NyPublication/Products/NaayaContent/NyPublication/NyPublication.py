@@ -406,9 +406,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
         """
         context = self
         filename = context._get_data_name()
-        if not filename:
-            return context.title_or_id()
-        return filename[-1]
+        return filename or context.title_or_id()
 
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
