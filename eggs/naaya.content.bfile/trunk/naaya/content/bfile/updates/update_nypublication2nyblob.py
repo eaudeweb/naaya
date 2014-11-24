@@ -32,6 +32,7 @@ class UpdateNyPublication2NyBlobFile(UpdateScript):
                 data = fobj._ext_file.index_html()
 
                 out = StringIO()
+                out.filename = fobj._ext_file.id
                 out.write(data)
                 out.seek(0)
                 fobj._bfile = make_blobfile(
