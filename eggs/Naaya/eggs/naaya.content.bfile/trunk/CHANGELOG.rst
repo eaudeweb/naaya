@@ -1,5 +1,7 @@
-1.4.14 (unreleased)
+1.4.14 (2014-11-24)
 --------------------
+* Feature: added migration of extfiles storage for NyPublication
+  [tiberich #3929]
 
 1.4.13 (2014-11-21)
 --------------------
