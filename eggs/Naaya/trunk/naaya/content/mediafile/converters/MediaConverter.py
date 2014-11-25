@@ -126,7 +126,7 @@ def _get_convertor_tool():
         stdout = process.stdout.read()
         process.wait()
 
-        if process.returncode != 1:
+        if process.returncode != 0:
             continue
 
         if (tool == 'ffmpeg') and ("--enable-libmp3lame" not in stdout):
@@ -152,7 +152,7 @@ def _get_flv_meta_tool():
 
         process.wait()
 
-        if process.returncode != 1:
+        if process.returncode != 0:
             continue
 
         return tool
