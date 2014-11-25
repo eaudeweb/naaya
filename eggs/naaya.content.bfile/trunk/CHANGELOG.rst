@@ -1,5 +1,7 @@
-1.4.17 (unreleased)
+1.4.17 (2014-11-25)
 --------------------
+* Bug fix: always seek to 0 the streams that when constructing a bfile
+  [tiberich #3929]
 
 1.4.16 (2014-11-25)
 --------------------
