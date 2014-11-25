@@ -61,11 +61,14 @@ class Export(object):
         bfile = self.data.pop('_bfile', None)
         if bfile is not None:
             filename = bfile.filename or bfile.id
-            sfile = StringIO(bfile.raw_data())
-            self.logger.debug('\t FILENAME: %s', filename)
-            sfile.filename = filename
-            sfile.headers = {'content-type': bfile.content_type}
-            yield sfile
+            content = bfile.raw_data()
+            if len(content) > 0:
+                sfile = StringIO()
+                sfile.write(content)
+                self.logger.debug('\t FILENAME: %s', filename)
+                sfile.filename = filename
+                sfile.headers = {'content-type': bfile.content_type}
+                yield sfile
 
     @property
     def local_properties(self):
