@@ -1,3 +1,6 @@
+3.4.7 (unreleased)
+-------------------
+
 3.4.6 (2014-11-25)
 -------------------
 * upcoming_events portlet fix for meeting objects [dumitval]
