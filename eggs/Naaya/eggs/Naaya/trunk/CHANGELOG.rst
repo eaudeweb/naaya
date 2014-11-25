@@ -1,6 +1,8 @@
-3.4.6 (unreleased)
+3.4.6 (2014-11-25)
 -------------------
 * upcoming_events portlet fix for meeting objects [dumitval]
+* Bug fix: fix media convertor availability check
+  [tiberich]
 
 3.4.5 (2014-11-21)
 -------------------
