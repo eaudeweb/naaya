@@ -221,7 +221,7 @@ def get_resolution(video_path):
 
     for line in txt.splitlines():
         if 'Video: ' in line:
-            m = re.search(r'(\d+)x(\d+)', line)
+            m = re.search(r'Video: .*\ (\d+)x(\d+)', line)
             if m is not None:
                 return float(m.group(1)), float(m.group(2))
     raise ValueError('Cannot parse ffmpeg output')
