@@ -389,6 +389,7 @@ def make_blobfile(the_file, **kwargs):
     # copy file data
     bf_stream = blobfile.open_write()
     size = 0
+    the_file.seek(0)
     while True:
         data = the_file.read(COPY_BLOCK_SIZE)
         if not data:
