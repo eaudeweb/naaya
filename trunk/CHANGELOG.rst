@@ -1,5 +1,7 @@
-1.4.15 (unreleased)
+1.4.15 (2014-11-25)
 --------------------
+* Bug fix: fixes migration of Naaya File with bfile storage to Naaya Blob File
+  [tiberich #3929]
 
 1.4.14 (2014-11-24)
 --------------------
