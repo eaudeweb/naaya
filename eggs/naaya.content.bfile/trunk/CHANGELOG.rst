@@ -1,3 +1,6 @@
+1.4.18 (unreleased)
+--------------------
+
 1.4.17 (2014-11-25)
 --------------------
 * Bug fix: always seek to 0 the streams that when constructing a bfile
