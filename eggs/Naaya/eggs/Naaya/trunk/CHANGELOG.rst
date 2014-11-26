@@ -2,6 +2,8 @@
 -------------------
 * Bug fix: fix resolution detection on MPG streams
   [tiberich]
+* Bug fix: fix sending notification emails
+  [tiberich]
 
 3.4.6 (2014-11-25)
 -------------------
