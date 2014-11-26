@@ -1282,13 +1282,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     for email in node.administrator_email.split(','):
                         if (email not in ['', DISABLED_EMAIL] and
                                 email not in l_emails):
-                            l_emails.extend(email)
+                            l_emails.append(email)
                     break
                 if hasattr(node, 'maintainer_email'):
                     for email in node.maintainer_email.split(','):
                         if (email not in ['', DISABLED_EMAIL]
                                 and email not in l_emails):
-                            l_emails.extend(email)
+                            l_emails.append(email)
                 node = node.getParentNode()
         return l_emails
 
