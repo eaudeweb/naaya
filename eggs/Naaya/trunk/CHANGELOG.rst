@@ -1,4 +1,7 @@
-3.4.7 (unreleased)
+3.4.8 (unreleased)
+-------------------
+
+3.4.7 (2014-11-26)
 -------------------
 * Bug fix: fix resolution detection on MPG streams
   [tiberich]
