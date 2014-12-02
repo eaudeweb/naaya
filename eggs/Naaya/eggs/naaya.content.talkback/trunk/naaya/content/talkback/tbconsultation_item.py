@@ -18,13 +18,13 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
-#Python imports
+# Python imports
 import os
 import sys
 import operator
 from copy import deepcopy
 
-#Zope imports
+# Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -34,7 +34,8 @@ from App.ImageFile import ImageFile
 from DateTime import DateTime
 from zope.event import notify
 
-#Product imports
+# Product imports
+from Products.Naaya.NyFolderBase import NyFolderBase
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import utils, slugify, uniqueId
 from naaya.content.base.constants import *
@@ -56,7 +57,7 @@ from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
-#local imports
+# local imports
 from Section import addSection
 from Section import addSection_html
 from invitations import InvitationsContainer, InvitationUsersTool
@@ -67,7 +68,7 @@ from permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION,
                          PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
-#module constants
+# module constants
 
 METATYPE_OBJECT = METATYPE_TALKBACKCONSULTATION
 LABEL_OBJECT = 'TalkBack Consultation'
@@ -127,49 +128,55 @@ DEFAULT_SCHEMA.update({
 DEFAULT_SCHEMA['coverage']['visible'] = False
 DEFAULT_SCHEMA['keywords']['visible'] = False
 DEFAULT_SCHEMA['sortorder']['visible'] = False
-DEFAULT_SCHEMA['sortorder']['sortorder'] = 115 #Show sortorder in edit form
+DEFAULT_SCHEMA['sortorder']['sortorder'] = 115  # Show sortorder in edit form
 DEFAULT_SCHEMA['releasedate']['visible'] = False
 DEFAULT_SCHEMA['discussion']['visible'] = False
 
 # this dictionary is updated at the end of the module
 config = {
-        'product': 'NaayaContent',
-        'module': 'tbconsultation_item',
-        'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': METATYPE_TALKBACKCONSULTATION,
-        'label': 'TalkBack Consultation',
-        'permission': PERMISSION_ADD_TALKBACK_CONSULTATION,
-        'forms': [],
-        'add_form': 'talkbackconsultation_add_html',
-        'description': 'This is Naaya TalkBack Consultation type.',
-        'default_schema': DEFAULT_SCHEMA,
-        'schema_name': METATYPE_TALKBACKCONSULTATION,
-        'import_string': '',
-        '_module': sys.modules[__name__],
-        'additional_style': AdditionalStyle('www/talkbackconsultation_style.css', globals()),
-        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyTalkBackConsultation.gif'),
-        '_misc': {
-                'NyTalkBackConsultation.gif': ImageFile('www/NyTalkBackConsultation.gif', globals()),
-                'NyTalkBackConsultation_marked.gif': ImageFile('www/NyTalkBackConsultation_marked.gif', globals()),
-                'tb-editor.css': ImageFile('www/tb-editor.css', globals()),
-            },
+    'product': 'NaayaContent',
+    'module': 'tbconsultation_item',
+    'package_path': os.path.abspath(os.path.dirname(__file__)),
+    'meta_type': METATYPE_TALKBACKCONSULTATION,
+    'label': 'TalkBack Consultation',
+    'permission': PERMISSION_ADD_TALKBACK_CONSULTATION,
+    'forms': [],
+    'add_form': 'talkbackconsultation_add_html',
+    'description': 'This is Naaya TalkBack Consultation type.',
+    'default_schema': DEFAULT_SCHEMA,
+    'schema_name': METATYPE_TALKBACKCONSULTATION,
+    'import_string': '',
+    '_module': sys.modules[__name__],
+    'additional_style': AdditionalStyle('www/talkbackconsultation_style.css',
+                                        globals()),
+    'icon': os.path.join(os.path.dirname(__file__), 'www',
+                         'NyTalkBackConsultation.gif'),
+    '_misc': {
+        'NyTalkBackConsultation.gif': ImageFile(
+            'www/NyTalkBackConsultation.gif', globals()),
+        'NyTalkBackConsultation_marked.gif': ImageFile(
+            'www/NyTalkBackConsultation_marked.gif', globals()),
+        'tb-editor.css': ImageFile('www/tb-editor.css', globals()),
+    },
     }
 
 talkbackconsultation_add = NaayaPageTemplateFile(
     'zpt/talkbackconsultation_add', globals(), 'tbconsultation_add')
+
 
 def talkbackconsultation_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
-            'here': self,
-            'kind': config['meta_type'],
-            'action': 'addNyTalkBackConsultation',
-            'form_helper': form_helper,
-            'submitter_info_html': submitter.info_html(self, REQUEST),
+        'here': self,
+        'kind': config['meta_type'],
+        'action': 'addNyTalkBackConsultation',
+        'form_helper': form_helper,
+        'submitter_info_html': submitter.info_html(self, REQUEST),
         },
         'tbconsultation_add')
+
 
 def _create_NyTalkBackConsultation_object(parent, id, contributor):
     """ Creates a consultation object and returns it """
@@ -179,6 +186,7 @@ def _create_NyTalkBackConsultation_object(parent, id, contributor):
     ob = parent._getOb(id)
     ob.after_setObject()
     return ob
+
 
 def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
                               **kwargs):
@@ -193,7 +201,7 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(
-                                    schema_raw_data.pop('releasedate', ''))
+        schema_raw_data.pop('releasedate', ''))
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', ''),
                           removelist=[]),
@@ -203,23 +211,24 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
 
     ob = _create_NyTalkBackConsultation_object(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang,
-                    _override_releasedate=_releasedate)
+                                            _override_releasedate=_releasedate)
     if REQUEST is not None:
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
     if form_errors:
         if REQUEST is None:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
         else:
             abort_transaction_keep_session(REQUEST)
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect(l_referer)
 
     self.setSessionInfoTrans("TalkBack Consultation object created")
-    #process parameters
+    # process parameters
     if self.checkPermissionSkipApproval():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (1,
+                                 self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
 
@@ -231,13 +240,13 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
 
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
 
-    #log post date
+    # log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    #redirect if case
+    # redirect if case
     if REQUEST is not None:
         if (l_referer == 'talkbackconsultation_add' or
-            l_referer.find('talkbackconsultation_manage_add') != -1):
+                l_referer.find('talkbackconsultation_manage_add') != -1):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'talkbackconsultation_add_html':
             self.setSession('referer', self.absolute_url())
@@ -246,9 +255,11 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
 
     return ob.getId()
 
+
 class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
                              NyAttributes, NyProperties, NyRoleManager,
-                             NyContainer, NyNonCheckControl, utils):
+                             NyContainer, NyNonCheckControl, utils,
+                             NyFolderBase):
     """ """
 
     meta_type = METATYPE_TALKBACKCONSULTATION
@@ -258,7 +269,6 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         {'name': METATYPE_TALKBACKCONSULTATION_SECTION, 'action': 'addSection',
             'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
     ]
-
 
     icon = 'misc_/NaayaContent/NyTalkBackConsultation.gif'
     icon_marked = 'misc_/NaayaContent/NyTalkBackConsultation_marked.gif'
@@ -307,10 +317,11 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -318,34 +329,40 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(
-                    schema_raw_data.pop('releasedate', ''), self.releasedate)
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang,
-                                            _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
             self._p_changed = True
             self.recatalogNyObject(self)
-            #log date
+            # log date
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                          (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self._prepare_error_response(REQUEST, form_errors,
+                                             schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                          (self.absolute_url(), _lang))
             else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
+                raise ValueError(form_errors.popitem()[1])  # pick an error
 
     security.declareProtected(view, 'get_consultation')
+
     def get_consultation(self):
         return self
 
     security.declareProtected(view, 'list_sections')
+
     def list_sections(self):
         """ """
         metatypes = [METATYPE_TALKBACKCONSULTATION_SECTION]
@@ -363,6 +380,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'save_sort_order')
+
     def save_sort_order(self, sort_section_id, REQUEST=None):
         """ save the sort order of sections """
         self.section_sort_order = tuple(sort_section_id)
@@ -372,6 +390,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     _comments_atom = NaayaPageTemplateFile('zpt/comments_atom', globals(),
                                            'tbconsultation_comments_atom')
     security.declareProtected(view, 'comments_atom')
+
     def comments_atom(self, REQUEST=None, days=2):
         """ ATOM feed with consultation comments """
 
@@ -409,20 +428,24 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
                                    feed_updated=feed_updated)
 
     security.declareProtected(view, 'get_start_date')
+
     def get_start_date(self):
         """ Returns the start date in dd/mm/yyyy string format. """
 
         return self.utConvertDateTimeObjToString(self.start_date)
 
     security.declareProtected(view, 'get_end_date')
+
     def get_end_date(self):
         """ Returns the end date in dd/mm/yyyy string format. """
 
         return self.utConvertDateTimeObjToString(self.end_date)
 
     security.declareProtected(view, 'get_days_left')
+
     def get_days_left(self):
-        """ Returns the remaining days for the consultation or the number of days before it starts """
+        """ Returns the remaining days for the consultation
+        or the number of days before it starts """
         today = self.utGetTodayDate().earliestTime()
         if not self.start_date or not self.end_date:
             return (1, 0)
@@ -434,16 +457,18 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
             return (0, int(str(self.start_date - today).split('.')[0]))
 
     security.declareProtected(view_management_screens, 'manage_options')
+
     def manage_options(self):
         """ """
 
         l_options = (NyContainer.manage_options[0],)
         l_options += ({'label': 'View', 'action': 'index_html'},) + \
-                  NyContainer.manage_options[3:8]
+            NyContainer.manage_options[3:8]
         return l_options
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'delete_sections')
+
     def delete_sections(self, del_section_id, REQUEST=None):
         """ remove the specified sections """
         self.manage_delObjects(list(del_section_id))
@@ -462,7 +487,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         auth_tool = self.getAuthenticationTool()
         userid = auth_tool.get_current_userid()
 
-        if userid is None: # anonymous user
+        if userid is None:  # anonymous user
             return None
 
         name = auth_tool.name_from_userid(userid)
@@ -490,11 +515,15 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         """
         review_check = self.checkPermissionReviewTalkBackConsultation()
 
-        if self.isAnonymousUser(): return 0
-        elif review_check: return 1
-        elif not review_check: return 2
+        if self.isAnonymousUser():
+            return 0
+        elif review_check:
+            return 1
+        elif not review_check:
+            return 2
 
     security.declareProtected(view, 'check_cannot_comment')
+
     def check_cannot_comment(self):
         """ """
 
@@ -511,12 +540,13 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
 
     security.declareProtected(
         PERMISSION_COMMENTS_ADD, 'log_in_authenticated')
+
     def log_in_authenticated(self, REQUEST=None):
         """ Log in user and redirect to TalkBack Consultation index """
         if REQUEST is not None:
             self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
-    #permissions
+    # permissions
     def checkPermissionReviewTalkBackConsultation(self):
         """
         Check for reviewing the TalkBack Consultation.
@@ -526,6 +556,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(
         PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE,
         'review_after_deadline')
+
     def review_after_deadline(self):
         """
         Dummy function to register the permission.
@@ -537,7 +568,8 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         Check for reviewing the TalkBack Consultation
         after the deadline has passed.
         """
-        return self.checkPermission(PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE)
+        return self.checkPermission(
+            PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE)
 
     def checkPermissionManageTalkBackConsultation(self):
         """
@@ -556,17 +588,18 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         Check if the current user has any comments on the consultation
         """
         return [comment for comment in self.admin_comments._all_comments()
-                    if comment['comment'].contributor ==
-                        self.REQUEST.AUTHENTICATED_USER.getUserName()]
+                if comment['comment'].contributor ==
+                self.REQUEST.AUTHENTICATED_USER.getUserName()]
 
     security.declareProtected(view, 'custom_editor')
+
     def custom_editor(self, editor_tool, lang, dom_id):
         extra_options = {
-            'content_css': self.absolute_url() +
-                            '/misc_/NaayaContent/tb-editor.css',
+            'content_css':
+                self.absolute_url() + '/misc_/NaayaContent/tb-editor.css',
             'theme_advanced_buttons1':
                 'bold,italic,underline,strikethrough,sub,sup,forecolor,'
-                    'backcolor,removeformat,separator,'
+                'backcolor,removeformat,separator,'
                 'bullist,numlist,separator,'
                 'justifyleft,justifycenter,justifyright,justifyfull,separator,'
                 'link,unlink,hr,image,separator,'
@@ -576,16 +609,23 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         return editor_tool.render(dom_id, lang, image_support=True,
                                   extra_options=extra_options)
 
+    security.declareProtected(view, 'get_files')
+
+    def get_files(self):
+        """ Get a list of all files attached to the consultation"""
+        return [ob for ob in self.objectValues('Naaya Blob File')]
+
     addSection = addSection
 
-    #zmi pages
+    # zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/talkbackconsultation_manage_edit', globals())
+    manage_edit_html = PageTemplateFile('zpt/talkbackconsultation_manage_edit',
+                                        globals())
 
-    #site pages
+    # site pages
     security.declareProtected(view, 'index_html')
-    index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
-                                       'tbconsultation_index')
+    index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index',
+                                       globals(), 'tbconsultation_index')
 
     # standard_template_macro, header and footer templates are proxied
     # since invited reviewers have "View" permission only in this folder;
@@ -600,11 +640,13 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     def standard_template_macro(self, *args, **kwargs):
         return self.aq_parent.standard_template_macro(*args, **kwargs)
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
-    edit_html = NaayaPageTemplateFile('zpt/talkbackconsultation_edit', globals(),
-                                      'tbconsultation_edit')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'edit_html')
+    edit_html = NaayaPageTemplateFile('zpt/talkbackconsultation_edit',
+                                      globals(), 'tbconsultation_edit')
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'section_add_html')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'section_add_html')
     section_add_html = addSection_html
 
     __allow_groups__ = InvitationUsersTool()
@@ -621,17 +663,19 @@ manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
 manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
 
 config.update({
-    'constructors': (manage_addNyTalkBackConsultation_html, addNyTalkBackConsultation),
+    'constructors': (manage_addNyTalkBackConsultation_html,
+                     addNyTalkBackConsultation),
     'folder_constructors': [
-            # NyFolder.manage_addNyTalkBackConsultation_html = manage_addNyTalkBackConsultation_html
-            ('manage_addNyTalkBackConsultation_html', manage_addNyTalkBackConsultation_html),
-            ('talkbackconsultation_add_html', talkbackconsultation_add_html),
-            ('addNyTalkBackConsultation', addNyTalkBackConsultation),
-        ],
+        ('manage_addNyTalkBackConsultation_html',
+         manage_addNyTalkBackConsultation_html),
+        ('talkbackconsultation_add_html', talkbackconsultation_add_html),
+        ('addNyTalkBackConsultation', addNyTalkBackConsultation),
+    ],
     'add_method': addNyTalkBackConsultation,
     'validation': issubclass(NyTalkBackConsultation, NyValidation),
     '_class': NyTalkBackConsultation,
 })
+
 
 def get_config():
     return config
