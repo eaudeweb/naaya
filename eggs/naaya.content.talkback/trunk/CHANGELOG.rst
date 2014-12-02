@@ -1,5 +1,6 @@
 1.4.35 (unreleased)
 -------------------
+* Add files to consultation [dumitval]
 
 1.4.34 (2014-08-21)
 -------------------
