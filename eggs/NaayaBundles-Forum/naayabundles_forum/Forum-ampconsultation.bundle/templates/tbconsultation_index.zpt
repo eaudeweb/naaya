@@ -23,7 +23,8 @@
 </metal:block>
 
 <metal:block fill-slot="body">
-<tal:block tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language())">
+<tal:block tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language());
+                       manage_perm here/checkPermissionManageTalkBackConsultation">
 
 <h1 tal:content="here/title_or_id" />
 
@@ -39,6 +40,9 @@
     <a tal:attributes="href string:${here/absolute_url}/section_add_html"
       tal:condition="perm_manage"
       rel="nofollow" i18n:translate="">Add Section</a>
+    <a tal:attributes="href string:${here/absolute_url}/bfile_add_html"
+      tal:condition="perm_manage"
+      rel="nofollow" i18n:translate="">Add File</a>
     <a tal:attributes="href string:${here/absolute_url}/invitations/admin_html"
       tal:condition="perm_invite"
       rel="nofollow" i18n:translate="">Manage invitations</a>
@@ -111,8 +115,22 @@
 
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
 
-<form tal:define="manage_perm here/checkPermissionManageTalkBackConsultation"
-      tal:attributes="action here/absolute_url"
+<tal:block define="files here/get_files" condition="files">
+  <strong i18n:translate="">Files attached to this consultation</strong>
+  <ul>
+    <li tal:repeat="file files">
+      <a tal:attributes="href file/current_version_download_url"
+        tal:content="file/title" />
+      <tal:block condition="manage_perm">
+        (<a tal:attributes="href string:${file/absolute_url}/edit_html">Edit</a>,
+        <a tal:attributes="href string:${file/absolute_url}/deleteThis"
+          onclick="return confirm(gettext('Are you sure?'))">Delete</a>)
+      </tal:block>
+    </li>
+  </ul>
+</tal:block>
+
+<form tal:attributes="action here/absolute_url"
       tal:omit-tag="not: manage_perm"
       name="section_list" method="POST">
 <table class="datatable talkback-section_list"
