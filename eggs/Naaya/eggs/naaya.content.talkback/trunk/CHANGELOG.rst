@@ -1,4 +1,7 @@
-1.4.35 (unreleased)
+1.4.36 (unreleased)
+-------------------
+
+1.4.35 (2014-12-02)
 -------------------
 * Add files to consultation [dumitval]
 
