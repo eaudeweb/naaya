@@ -103,6 +103,9 @@ def read_zipfile_contents(data):
                 file_path = file_path.decode('utf-8')
             except UnicodeDecodeError:
                 file_path = file_path.decode('CP437')
+            except:
+                # try to go forward with the file_path as it is
+                pass
             yield file_path, file_data
 
     return folder_tree, iterate_zipfile_files()
