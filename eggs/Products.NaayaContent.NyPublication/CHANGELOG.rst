@@ -1,4 +1,7 @@
-1.1.8 (unreleased)
+1.1.9 (unreleased)
+------------------
+
+1.1.8 (2014-12-08)
 ------------------
 * python 2.6 compatibility (raising errors) [dumitval]
 
