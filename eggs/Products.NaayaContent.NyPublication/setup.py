@@ -2,11 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='Products.NaayaContent.NyPublication',
-    version='1.1.8',
+    version='1.1.9',
     description="NyPublication",
     long_description=open("README.txt").read() + "\n" +
-                     open("CHANGELOG.rst").read(),
-    # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    open("CHANGELOG.rst").read(),
+    # Get more strings from
+    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Programming Language :: Python",
     ],
