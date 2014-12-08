@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* python 2.6 compatibility (raising errors) [dumitval]
 
 1.1.7 (2014-11-24)
 ------------------
