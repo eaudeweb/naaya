@@ -276,7 +276,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -304,18 +304,18 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
         """ """
-        raise EXCEPTION_NOTIMPLEMENTED, 'commitVersion'
+        raise EXCEPTION_NOTIMPLEMENTED('commitVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
-        raise EXCEPTION_NOTIMPLEMENTED, 'startVersion'
+        raise EXCEPTION_NOTIMPLEMENTED('startVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         obj = self
 
@@ -365,9 +365,9 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
             username = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
 
         if lang is None:
             lang = self.gl_get_selected_language()
