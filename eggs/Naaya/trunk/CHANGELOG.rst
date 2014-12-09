@@ -1,6 +1,9 @@
-3.4.8 (unreleased)
+3.4.8 (2014-12-09)
 -------------------
 * fix for import from zip with improperly encoded zip file [dumitval]
+* Bug fix: fix "RESTRICTED ACCESS" string rendering in map baloon
+  when access is restricted
+  [tiberich]
 
 3.4.7 (2014-11-26)
 -------------------
