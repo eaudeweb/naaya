@@ -1,3 +1,6 @@
+3.4.9 (unreleased)
+-------------------
+
 3.4.8 (2014-12-09)
 -------------------
 * fix for import from zip with improperly encoded zip file [dumitval]
