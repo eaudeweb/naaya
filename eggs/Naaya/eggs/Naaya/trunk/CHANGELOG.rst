@@ -1,4 +1,7 @@
-3.4.10 (unreleased)
+3.4.11 (unreleased)
+-------------------
+
+3.4.10 (2014-12-10)
 -------------------
 * increase size of eionet group imput [dumitval]
 
