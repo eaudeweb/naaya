@@ -15,6 +15,7 @@ from zope import interface
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import (PERMISSION_ZIP_EXPORT)
+from Products.NaayaCore.managers.utils import slugify
 from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import relative_object_path, get_site_manager
 from naaya.content.file.file_item import addNyFile
@@ -111,7 +112,7 @@ def read_zipfile_contents(data):
     return folder_tree, iterate_zipfile_files()
 
 
-def create_folders(container, folder_tree, report_path):
+def create_folders(container, folder_tree, report_path, skip_existing=False):
     """
     `container` - reference to a NyFolder object
 
@@ -121,14 +122,18 @@ def create_folders(container, folder_tree, report_path):
 
     folder_map = {}
     for kid_name, kid_tree in folder_tree:
-        kid_id = addNyFolder(container, title=kid_name,
-                             _send_notifications=False)
+        if not (skip_existing and container._getOb(slugify(kid_name), None)):
+            kid_id = addNyFolder(container, title=kid_name,
+                                 _send_notifications=False)
+        else:
+            kid_id = slugify(kid_name)
         kid_folder = container[kid_id]
         folder_map[kid_name] = kid_folder
         report_path(kid_id + '/')
 
         kid_report_path = lambda p: report_path('%s/%s' % (kid_id, p))
-        kid_folder_map = create_folders(kid_folder, kid_tree, kid_report_path)
+        kid_folder_map = create_folders(kid_folder, kid_tree, kid_report_path,
+                                        skip_existing)
         for sub_kid_name, folder in kid_folder_map.iteritems():
             folder_map['%s/%s' % (kid_name, sub_kid_name)] = folder
 
@@ -150,6 +155,7 @@ class ZipImportTool(Implicit, Item):
 
         errors = []
         container = self.getParentNode()
+        overwrite = REQUEST.get('overwrite')
 
         # test if file uploaded is Zip archive
         if data.filename.split('.')[-1] != 'zip':
@@ -163,7 +169,7 @@ class ZipImportTool(Implicit, Item):
             else:
                 created_file_paths = set()
                 folder_map = create_folders(container, folder_tree,
-                                            created_file_paths.add)
+                                            created_file_paths.add, overwrite)
                 folder_map[''] = container
                 for file_path, file_data in zip_files:
                     if '/' in file_path:
@@ -176,6 +182,10 @@ class ZipImportTool(Implicit, Item):
                     assert file_container_path in folder_map
                     try:
                         file_container = folder_map[file_container_path]
+                        if overwrite:
+                            filename = slugify(file_name).rsplit('.', 1)[0]
+                            if file_container._getOb(filename, None):
+                                file_container.manage_delObjects([filename])
                         file_ob_id = add_file(file_container, file_name,
                                               file_data)
                         file_ob = file_container[file_ob_id]
