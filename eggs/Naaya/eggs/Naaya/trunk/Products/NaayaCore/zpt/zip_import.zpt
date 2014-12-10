@@ -20,6 +20,10 @@
 			<label for="data" i18n:translate="">Zip file</label>
 			<input type="file" id="data" name="data"/><br />
 		</div>
+		<div class="field-inline">
+			<label for="overwrite" i18n:translate="">Overwrite existing files</label>
+			<input type="checkbox" id="overwrite" name="overwrite" /><br />
+		</div>
 		<div class="field">
 			<input type="submit" name="do_import:method" value="Upload data"/>
 		</div>

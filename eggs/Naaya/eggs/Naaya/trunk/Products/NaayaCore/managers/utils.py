@@ -83,13 +83,19 @@ def slugify(s, maxlen=80, removelist=None):
     '''
     if maxlen <= 0:
         raise ValueError("Illegal value for @param maxlen")
-    if removelist is None:
-        removelist = default_remove_words
     if type(s) is str:
         s = force_to_unicode(s) # raises UnicodeDecodeError if non-ascii
         # coder should take notice `s` must be unicode / ascii str
 
     s = str(unidecode(s))
+
+    if removelist is None:
+        if s.lower() in default_remove_words:
+            # if the id as a whole is already in default_remove_words
+            # it should be kept
+            removelist = []
+        else:
+            removelist = default_remove_words
 
     ignore_words = '|'.join([r for r in removelist])
     ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
