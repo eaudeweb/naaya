@@ -1,4 +1,7 @@
-3.4.9 (unreleased)
+3.4.10 (unreleased)
+-------------------
+
+3.4.9 (2014-12-10)
 -------------------
 * bugfix in adding short name objects ('and', 'for', 'at', etc.) [dumitval]
 * option to replace existing files when uploading from zip [dumitval]
