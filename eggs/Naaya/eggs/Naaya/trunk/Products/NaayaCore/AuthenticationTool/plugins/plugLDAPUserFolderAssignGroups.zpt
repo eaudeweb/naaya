@@ -21,7 +21,7 @@
 			<tal:block replace="source_title" />
 			group
 		</label>
-        <input type="text" id="ldap_group" name="group"/>
+        <input type="text" id="ldap_group" name="group" size="50" />
         <input type="button" name="pickroles2" value="Pick"
 				i18n:attributes="value"
                tal:define="
