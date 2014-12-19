@@ -54,11 +54,7 @@
 			i18n:name="CSV" i18n:translate="">download contacts in CSV format</a></tal:block>.
 			Currently displaying <strong id="record_counter" i18n:name="counter"></strong>
 			location(s).
-			<br i18n:name="br"/><br i18n:name="br"/>
-			<strong i18n:name="GoogleSearch" i18n:translate="">
-				NB The Google Search in the green bar can also be used for free text search
-				of all DestiNet content.
-			</strong>
+			<br i18n:name="br"/>
 		</p>
 		<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
 		<br clear="all" style="clear:both"/>
