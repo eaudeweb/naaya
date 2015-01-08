@@ -1,5 +1,7 @@
 1.2.50 (unreleased)
 ===================
+* modify excel export of answers to show matrix lines as separate
+  columns [dumitval]
 
 1.2.49 (2014-07-09)
 ===================
