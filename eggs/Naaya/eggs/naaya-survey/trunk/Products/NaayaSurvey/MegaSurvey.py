@@ -11,7 +11,8 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
+from Products.NaayaCore.managers.import_export import generate_csv
+from Products.NaayaCore.managers.import_export import generate_excel
 
 from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 from BaseSurveyTemplate import BaseSurveyTemplate
@@ -27,7 +28,9 @@ log = logging.getLogger(__name__)
 megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add', globals(),
                                             'NaayaSurvey.megasurvey_add')
 
-def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
+
+def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None,
+                         **kwargs):
     """ """
     title = title or 'Survey'
     id = make_id(context, id=id, title=title)
@@ -38,10 +41,12 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
 
     if REQUEST:
         kwargs.update(REQUEST.form)
-    kwargs['releasedate'] = context.process_releasedate(kwargs.get('releasedate', DateTime()))
-    kwargs['expirationdate'] = context.process_releasedate(kwargs.get('expirationdate', DateTime()))
+    kwargs['releasedate'] = context.process_releasedate(
+        kwargs.get('releasedate', DateTime()))
+    kwargs['expirationdate'] = context.process_releasedate(
+        kwargs.get('expirationdate', DateTime()))
     contributor = context.REQUEST.AUTHENTICATED_USER.getUserName()
-    #log post date
+    # log post date
     auth_tool = context.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
 
@@ -62,14 +67,17 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
     # Return
     if not REQUEST:
         return id
-    #redirect if case
-    if REQUEST.has_key('submitted'): ob.submitThis()
+    # redirect if case
+    if 'submitted' in REQUEST:
+        ob.submitThis()
     l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if l_referer == 'megasurvey_manage_add' or l_referer.find('megasurvey_manage_add') != -1:
+    if (l_referer == 'megasurvey_manage_add' or
+            l_referer.find('megasurvey_manage_add') != -1):
         return context.manage_main(context, REQUEST, update_menu=1)
     elif l_referer == 'megasurvey_add_html':
         context.setSession('referer', context.absolute_url())
         REQUEST.RESPONSE.redirect(context.absolute_url())
+
 
 class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     """ """
@@ -92,7 +100,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     def __init__(self, id, **kwargs):
         """ """
-        #BaseSurveyTemplate.__init__(self, id, **kwargs)
+        # BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
         self.contributor = kwargs.get('contributor')
         self.approved = 1
@@ -113,6 +121,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         return self
 
     security.declareProtected(view, 'download')
+
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
         def stringify(value):
@@ -121,55 +130,67 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
             if isinstance(value, str):
                 return unicode(value, 'utf-8')
             return value
+
         def all_stringify(row):
             return [stringify(value) for value in row]
 
         answers = self.getAnswers()
         widgets = self.getSortedWidgets()
         header = ['Respondent']
-        header += [widget.title_or_id() for widget in widgets]
+        for widget in widgets:
+            header += [widget.title_or_id()]
+            if widget.meta_type == 'Naaya Radio Matrix Widget':
+                header += widget.rows
         rows = [answer.answer_values() for answer in answers]
         rows = [all_stringify(item) for item in rows]
 
         file_type = REQUEST.get('file_type', 'CSV')
         if file_type == 'CSV':
             RESPONSE.setHeader('Content-Type', 'text/csv')
-            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=%s.csv' % self.id)
             return generate_csv(header, rows)
         if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=%s.xls' % self.id)
             return generate_excel(header, rows)
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
     #
     # Site pages
     #
     security.declareProtected(view, 'index_html')
+
     def index_html(self):
         """ """
-        if not self.checkPermissionSkipCaptcha() and not self.recaptcha_is_present():
+        if (not self.checkPermissionSkipCaptcha() and
+                not self.recaptcha_is_present()):
             raise ValueError("Invalid recaptcha keys")
         return self._index_html()
 
-    _index_html = NaayaPageTemplateFile('zpt/megasurvey_index',
-                     globals(), 'NaayaSurvey.megasurvey_index')
+    _index_html = NaayaPageTemplateFile('zpt/megasurvey_index', globals(),
+                                        'NaayaSurvey.megasurvey_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    edit_html = NaayaPageTemplateFile('zpt/megasurvey_edit',
-                    globals(), 'NaayaSurvey.megasurvey_edit')
+    edit_html = NaayaPageTemplateFile('zpt/megasurvey_edit', globals(),
+                                      'NaayaSurvey.megasurvey_edit')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_attachments_html')
-    edit_attachments_html = NaayaPageTemplateFile('zpt/megasurvey_edit_attachments',
-                        globals(), 'NaayaSurvey.megasurvey_edit_attachments')
+    edit_attachments_html = NaayaPageTemplateFile(
+        'zpt/megasurvey_edit_attachments', globals(),
+        'NaayaSurvey.megasurvey_edit_attachments')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_questions_html')
-    edit_questions_html = NaayaPageTemplateFile('zpt/megasurvey_edit_questions',
-                        globals(), 'NaayaSurvey.megasurvey_edit_questions')
+    edit_questions_html = NaayaPageTemplateFile(
+        'zpt/megasurvey_edit_questions', globals(),
+        'NaayaSurvey.megasurvey_edit_questions')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
-    edit_reports_html = NaayaPageTemplateFile('zpt/megasurvey_edit_reports',
-                        globals(), 'NaayaSurvey.megasurvey_edit_reports')
+    edit_reports_html = NaayaPageTemplateFile(
+        'zpt/megasurvey_edit_reports', globals(),
+        'NaayaSurvey.megasurvey_edit_reports')
 
     #
     # change the security of the inherited methods
@@ -188,6 +209,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     survey_js = ImageFile('www/survey.js', globals())
 
     security.declareProtected(PERMISSION_EDIT_ANSWERS, 'bogus')
+
     def bogus(self):
         """ Needed in Naaya Access. It is mandatory that a permission must be
         declared so it can be used in Naaya Access.
@@ -197,23 +219,28 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         pass
 
     security.declarePublic('display_admin_warning')
+
     def display_admin_warning(self):
         return self.checkPermissionPublishObjects()\
-                and self.anonymous_has_access()\
-                and not self.recaptcha_is_present()\
-                and not self.anonymous_skips_captcha()
+            and self.anonymous_has_access()\
+            and not self.recaptcha_is_present()\
+            and not self.anonymous_skips_captcha()
 
     security.declarePublic('anonymous_has_access')
+
     def anonymous_has_access(self):
-        return 'Anonymous' in self.edit_access.getPermissionMapping()['Naaya - Add Naaya Survey Answer']
+        return 'Anonymous' in self.edit_access.getPermissionMapping()[
+            'Naaya - Add Naaya Survey Answer']
 
     security.declarePublic('anonymous_skips_captcha')
+
     def anonymous_skips_captcha(self):
         permission = 'Naaya - Skip Captcha'
         permission_object = Permission(permission, (), self)
         return 'Anonymous' in permission_object.getRoles()
 
     security.declarePrivate('dont_inherit_view_permission')
+
     def dont_inherit_view_permission(self):
         permission = Permission(view, (), self)
         roles = permission.getRoles()
@@ -221,6 +248,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         permission.setRoles(roles)
 
     security.declarePrivate('inherit_view_permission')
+
     def inherit_view_permission(self):
         permission = Permission(view, (), self)
         roles = permission.getRoles()
@@ -228,6 +256,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         permission.setRoles(roles)
 
 InitializeClass(MegaSurvey)
+
 
 def get_content_type_config():
     return {
@@ -241,6 +270,7 @@ def get_content_type_config():
         'add_form': 'megasurvey_add_html',
     }
 
+
 def install_permissions(site):
     """
     Configure security for surveys:
@@ -250,14 +280,30 @@ def install_permissions(site):
     """
     log.info('Configuring security for surveys on site %r', site)
 
-    site.manage_permission(PERMISSION_ADD_ATTACHMENT, ('Manager', 'Administrator'), acquire=0)
-    site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
-    site.manage_permission(PERMISSION_ADD_REPORT, ('Manager', 'Administrator'), acquire=0)
-    site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
+    site.manage_permission(PERMISSION_ADD_ATTACHMENT,
+                           ('Manager', 'Administrator'),
+                           acquire=0)
+    site.manage_permission(PERMISSION_ADD_WIDGETS,
+                           ('Manager', 'Administrator'),
+                           acquire=0)
+    site.manage_permission(PERMISSION_ADD_REPORT,
+                           ('Manager', 'Administrator'),
+                           acquire=0)
+    site.manage_permission(PERMISSION_ADD_MEGASURVEY,
+                           ('Manager', 'Administrator', 'Contributor', ),
+                           acquire=0)
     site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', ), acquire=0)
-    site.manage_permission(PERMISSION_VIEW_REPORTS, ('Manager', 'Administrator', 'Owner'), acquire=0)
-    site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor', 'Owner'), acquire=0)
-    site.manage_permission(PERMISSION_EDIT_ANSWERS, ('Manager', 'Administrator', ), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_REPORTS,
+                           ('Manager', 'Administrator', 'Owner'),
+                           acquire=0)
+    site.manage_permission(
+        PERMISSION_VIEW_ANSWERS,
+        ('Manager', 'Administrator', 'Contributor', 'Owner'),
+        acquire=0)
+    site.manage_permission(PERMISSION_EDIT_ANSWERS,
+                           ('Manager', 'Administrator', ),
+                           acquire=0)
+
 
 def install_catalog_index(site):
     """Configure catalog tool:
@@ -268,8 +314,9 @@ def install_catalog_index(site):
     if 'respondent' not in catalog_tool.indexes():
         catalog_tool.addIndex('respondent', 'FieldIndex')
 
+
 def pluggable_item_installed_in_site(evt):
     if evt.meta_type != MegaSurvey.meta_type:
-        return # some other content type that we don't care about
+        return  # some other content type that we don't care about
     site = evt.context
     install_permissions(site)

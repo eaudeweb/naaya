@@ -20,7 +20,6 @@
 
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
@@ -28,16 +27,21 @@ from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MatrixWidget import MatrixWidget
 
-def addRadioMatrixWidget(container, id="", title="RadioMatrix Widget", REQUEST=None, **kwargs):
+
+def addRadioMatrixWidget(container, id="", title="RadioMatrix Widget",
+                         REQUEST=None, **kwargs):
     """ Contructor for RadioMatrix widget"""
-    return manage_addWidget(RadioMatrixWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(RadioMatrixWidget, container, id, title, REQUEST,
+                            **kwargs)
+
 
 class RadioMatrixWidget(MatrixWidget):
     """ RadioMatrix Widget """
 
     meta_type = "Naaya Radio Matrix Widget"
     meta_label = "Radio matrix"
-    meta_description = "Group of multiple choice questions with only one answer per row"
+    meta_description = ("Group of multiple choice questions with only "
+                        "one answer per row")
     meta_sortorder = 500
     icon_filename = 'widgets/www/widget_radiomatrix.gif'
 
@@ -48,7 +52,8 @@ class RadioMatrixWidget(MatrixWidget):
     render_meth = PageTemplateFile('zpt/widget_radiomatrix.zpt', globals())
 
     def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
-        return super(RadioMatrixWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
+        return super(RadioMatrixWidget, self).getChoices(
+            anyLangNonEmpty=anyLangNonEmpty)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
@@ -76,13 +81,14 @@ class RadioMatrixWidget(MatrixWidget):
         res = []
         for index, answer in enumerate(datamodel):
             if answer is None:
-                data = '%s: -' % self.rows[index]
+                data = '-'
             else:
-                data = '%s: %s' % (self.rows[index], self.choices[answer])
+                data = self.choices[answer]
             res.append(data)
-        return '\n'.join(res)
+        return res
 
 InitializeClass(RadioMatrixWidget)
+
 
 def register():
     return RadioMatrixWidget
