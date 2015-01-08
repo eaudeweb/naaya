@@ -18,6 +18,7 @@ from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
 gUtil = utils()
 
+
 def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
                            REQUEST=None, id=None, creation_date=None,
                            anonymous_answer=None):
@@ -68,15 +69,15 @@ class SurveyAnswer(Folder, NyProperties):
     anonymous_answer = False
 
     _constructors = (manage_addSurveyAnswer,)
-    _properties=()
+    _properties = ()
     all_meta_types = ()
-    manage_options=(
-        {'label':'Properties', 'action':'manage_propertiesForm',
-         'help':('OFSP','Properties.stx')},
-        {'label':'View', 'action':'index_html'},
-        {'label':'Contents', 'action':'manage_main',
-         'help':('OFSP','ObjectManager_Contents.stx')},
-     )
+    manage_options = (
+        {'label': 'Properties', 'action': 'manage_propertiesForm',
+         'help': ('OFSP', 'Properties.stx')},
+        {'label': 'View', 'action': 'index_html'},
+        {'label': 'Contents', 'action': 'manage_main',
+         'help': ('OFSP', 'ObjectManager_Contents.stx')},
+        )
 
     security = ClassSecurityInfo()
 
@@ -86,16 +87,17 @@ class SurveyAnswer(Folder, NyProperties):
         self.respondent = respondent
         self.draft = bool(draft)
         self.modification_time = DateTime()
-        self.creation_date=creation_date
+        self.creation_date = creation_date
 
     security.declarePrivate('set_datamodel')
+
     def set_datamodel(self, datamodel):
         for key, value in datamodel.items():
             self.set_property(key, value)
 
     def set_property(self, key, value):
         if isinstance(value, FileUpload):
-            return # Handle somewhere else
+            return  # Handle somewhere else
 
         widget = self.getWidget(key)
         if widget.localized:
@@ -109,13 +111,15 @@ class SurveyAnswer(Folder, NyProperties):
             setattr(self, key, value)
 
     security.declarePrivate('handle_upload')
+
     def handle_upload(self, id, attached_file):
         if id in self.objectIds():
-            self.manage_delObjects([id,])
+            self.manage_delObjects([id, ])
         manage_addExtFile(self, id, title=attached_file.filename,
                           file=attached_file)
 
     security.declareProtected(view, 'getDatamodel')
+
     def getDatamodel(self):
         """ """
         # can_view checks permission view answers or if the user is
@@ -148,14 +152,15 @@ class SurveyAnswer(Folder, NyProperties):
         else:
             return getattr(self.aq_base, key, default)
 
-
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
     # (including anonymous ones) can see all answers. Also setting the view
     # permission for each SurveyAnswer wouldn't be practical.
 
     _index_html = NaayaPageTemplateFile('zpt/surveyanswer_index',
-                    globals(), 'NaayaSurvey.surveyanswer_index')
+                                        globals(),
+                                        'NaayaSurvey.surveyanswer_index')
+
     def index_html(self):
         """
         Return the answer index if the current user
@@ -171,18 +176,26 @@ class SurveyAnswer(Folder, NyProperties):
     def answer_values(self, REQUEST=None, **kwargs):
         """ Return values as list.
         """
-        datamodel=self.getDatamodel()
+        datamodel = self.getDatamodel()
         widgets = self.getSortedWidgets()
         res = [self.get_respondent_name()]
         for widget in widgets:
-            res.append(widget.get_value(
-                datamodel=datamodel.get(widget.id, None), **kwargs))
+            value = widget.get_value(datamodel=datamodel.get(widget.id, None),
+                                     **kwargs)
+            if isinstance(value, basestring):
+                res.append(value)
+            else:
+                # This is a Matrix widget
+                # add an empty string as value for the widget title
+                # which is now in a separate column
+                res.extend([''] + value)
         return res
 
     def is_draft(self):
         return getattr(self, 'draft', False)
 
     security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteSurveyAnswer')
+
     def deleteSurveyAnswer(self, REQUEST=None):
         """ """
         survey = self.aq_inner.aq_parent
@@ -192,9 +205,11 @@ class SurveyAnswer(Folder, NyProperties):
             REQUEST.RESPONSE.redirect(survey.absolute_url())
 
     security.declarePublic('can_edit')
+
     def can_edit(self):
         """ """
-        if self.aq_parent.expired() and not self.checkPermissionPublishObjects():
+        if (self.aq_parent.expired() and
+                not self.checkPermissionPublishObjects()):
             return False
         authenticated_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         user_is_anonymous = bool(authenticated_user == 'Anonymous User')
@@ -206,9 +221,10 @@ class SurveyAnswer(Folder, NyProperties):
             user_is_respondent = bool(authenticated_user == self.respondent)
             answer_is_approved = self.get('approved_date')
             return has_edit_permission or (user_is_respondent
-                    and not answer_is_approved)
+                                           and not answer_is_approved)
 
     security.declarePublic('can_view')
+
     def can_view(self):
         """
         Allowed to view::
@@ -227,6 +243,7 @@ class SurveyAnswer(Folder, NyProperties):
                     key and key == REQUEST.get('key'))
 
     security.declareProtected(view, 'get_respondent_name')
+
     def get_respondent_name(self):
         """
         Try to return the person's name, based on authenticated user,
@@ -246,10 +263,12 @@ class SurveyAnswer(Folder, NyProperties):
             if signup is not None:
                 return on_behalf_prefix + signup.name
         auth_tool = self.getSite().getAuthenticationTool()
-        respondent = auth_tool.name_from_userid(self.respondent) or self.respondent
+        respondent = (auth_tool.name_from_userid(self.respondent) or
+                      self.respondent)
         return on_behalf_prefix + respondent
 
     security.declareProtected(view, 'respondent_is_owner')
+
     def respondent_is_owner(self):
         """
         Return true if the respondent is the actual owner of the answer.
@@ -259,9 +278,11 @@ class SurveyAnswer(Folder, NyProperties):
         try:
             return 'Owner' in self.__ac_local_roles__.get(self.respondent, [])
         except AttributeError:
-            #this happens when the answer comes from anonymous - no __ac_local_roles__
-            #and in this case the ower is still anonymous, so return True
+            # this happens when the answer comes from anonymous -
+            # no __ac_local_roles__
+            # and in this case the ower is still anonymous, so return True
             return True
+
 
 class NySurveyAnswerAddEvent(object):
     """ """
