@@ -1,4 +1,7 @@
-1.2.50 (unreleased)
+1.2.51 (unreleased)
+===================
+
+1.2.50 (2015-01-08)
 ===================
 * modify excel export of answers to show matrix lines as separate
   columns [dumitval]
