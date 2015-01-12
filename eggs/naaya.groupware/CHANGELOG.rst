@@ -1,5 +1,7 @@
-1.4.32 (unreleased)
+1.4.32 (2015-01-12)
 -------------------
+* Bug fix: avoid navigation portlet spilling errors when user is anonymous
+  [tiberich]
 
 1.4.31 (2014-10-31)
 -------------------
