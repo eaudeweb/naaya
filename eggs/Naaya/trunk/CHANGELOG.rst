@@ -1,5 +1,7 @@
 3.4.11 (unreleased)
 -------------------
+* Change: keep the Owner roles when restricting access to a folder
+  [tiberich #19452]
 
 3.4.10 (2014-12-10)
 -------------------
