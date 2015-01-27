@@ -46,8 +46,8 @@ class LocalUsersPage(BrowserPage):
         local_users = {}  # All local users per groupware site
         for site in ctx.objectValues('Groupware site'):
             local_users[site] = site.getAuthenticationTool().getUsers()
-        return local_users_zpt.__of__(ctx)(local_users=local_users,
-                                           grouped_igs=grouped_igs(context))
+        return local_users_zpt.__of__(ctx)(
+            local_users=local_users, grouped_igs=grouped_igs(self.context))
 
 
 def nfp_admin_link(context, request):
