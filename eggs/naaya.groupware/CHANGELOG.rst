@@ -1,3 +1,6 @@
+1.4.34 (unreleased)
+-------------------
+
 1.4.33 (2015-01-27)
 -------------------
 * Bug fix: avoid error on HEAD request on <application>/@@index.html
