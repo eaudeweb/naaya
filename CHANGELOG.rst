@@ -1,3 +1,8 @@
+1.4.33 (2015-01-27)
+-------------------
+* Bug fix: avoid error on HEAD request on <application>/@@index.html
+  [tiberich #10124]
+
 1.4.32 (2015-01-12)
 -------------------
 * Bug fix: avoid navigation portlet spilling errors when user is anonymous
