@@ -1,6 +1,6 @@
-<metal:block use-macro="here/gw_macro/macros/main">
+<metal:block use-macro="context/gw_macro/macros/main">
     <div id="workarea" tal:define="portals options/grouped_igs;
-                                   meta_info here/gw_meta_info"
+                                   meta_info context/@@gw_meta_info"
                        metal:fill-slot="div-workarea">
         <script src="++resource++naaya.groupware/jquery-1.4.4.min.js"
               type="text/javascript" language="javascript"></script>
