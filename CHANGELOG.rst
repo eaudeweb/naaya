@@ -1,5 +1,6 @@
 1.2.62 (unreleased)
 -------------------
+* bugfix related to anonymous subscriptions [dumitval]
 
 1.2.61 (2014-11-10)
 -------------------
