@@ -1,4 +1,7 @@
-1.2.63 (unreleased)
+1.2.64 (unreleased)
+-------------------
+
+1.2.63 (2015-01-30)
 -------------------
 * Use uid when getting user full name fails [dumitval]
 
