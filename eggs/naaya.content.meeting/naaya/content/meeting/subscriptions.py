@@ -253,6 +253,9 @@ class Subscriptions(SimpleItem):
         site = self.getSite()
         meeting = self.getMeeting()
         name = getUserFullName(site, uid)
+        # If for any reason we still don't have a name, at least use UID
+        if not name:
+            name = uid
         email = getUserEmail(site, uid)
         organization = getUserOrganization(site, uid)
         if not organization:
