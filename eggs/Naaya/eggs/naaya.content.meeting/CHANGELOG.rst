@@ -1,5 +1,6 @@
 1.2.63 (unreleased)
 -------------------
+* Use uid when getting user full name fails [dumitval]
 
 1.2.62 (2015-01-29)
 -------------------
