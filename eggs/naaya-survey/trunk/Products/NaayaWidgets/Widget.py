@@ -26,6 +26,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
+from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, genRandomId
@@ -164,6 +165,11 @@ class Widget(Folder, LocalPropertyManager):
     security.declareProtected(view, 'render')
     def render(self, mode, datamodel=None, **kwargs):
         """Render widget according with given mode"""
+        
+        if isinstance(datamodel, NyBlobFile):
+            datamodel.aq_parent = datamodel.aq_parent.__of__(self.aq_parent)
+            kwargs['parent'] = datamodel.aq_parent
+
         assert(mode in ('view', 'edit', 'manage'))
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
