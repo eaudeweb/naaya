@@ -1,5 +1,7 @@
 1.2.51 (unreleased)
 ===================
+* Bug fix: compatibility with naaya.content.bfiles
+  [tiberich]
 
 1.2.50 (2015-01-08)
 ===================
