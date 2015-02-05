@@ -1237,3 +1237,10 @@ text-decoration: underline;
 a.goog-logo-link{
 	background-image: none !important;
 }
+
+.admin-content #center_content {
+	width: 78% !important;
+}
+.admin-content #right_port {
+	float: right;
+}

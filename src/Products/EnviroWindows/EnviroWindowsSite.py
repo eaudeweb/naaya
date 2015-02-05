@@ -4,7 +4,7 @@ from Products.Naaya.NySite import NySite
 
 class EnviroWindowsSite(NySite):
     """ """
-    meta_type = "Naaya Site"
+    meta_type = "Groupware site"
 
     ew_common_css = ImageFile('www/ew_common.css', globals())
     ew_print_css = ImageFile('www/ew_print.css', globals())
