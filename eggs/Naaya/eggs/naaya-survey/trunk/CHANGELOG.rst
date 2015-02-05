@@ -1,3 +1,6 @@
+1.2.52 (unreleased)
+===================
+
 1.2.51 (2015-02-05)
 ===================
 * Bug fix: compatibility with naaya.content.bfiles
