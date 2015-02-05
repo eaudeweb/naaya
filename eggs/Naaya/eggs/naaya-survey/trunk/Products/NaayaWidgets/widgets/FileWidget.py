@@ -48,7 +48,7 @@ class FileWidget(Widget):
 
     size_max = 1048576
     width = 50
-
+   
     def getDatamodel(self, form):
         """Get datamodel from form"""
         attached_file = form.get(self.getWidgetId(), None)
