@@ -1,41 +1,50 @@
-<configure xmlns='http://namespaces.zope.org/zope'
-  xmlns:naaya="http://namespaces.zope.org/naaya"
-  i18n_domain="naaya.content">
+<configure 
+    xmlns='http://namespaces.zope.org/zope'
+    xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="naaya.content">
 
-  <naaya:content factory=".bfile_item.get_config" />
-  <naaya:call factory=".permissions.register_permissions" />
+    <naaya:content factory=".bfile_item.get_config" />
+    <naaya:call factory=".permissions.register_permissions" />
 
-  <adapter factory=".adapters.BFileZipAdapter"
-		   for=".interfaces.INyBFile"
-		   provides="Products.NaayaCore.managers.zip_import_export.IZipExportObject" />
+    <adapter factory=".adapters.BFileZipAdapter"
+        for=".interfaces.INyBFile"
+        provides="Products.NaayaCore.managers.zip_import_export.IZipExportObject" />
 
-  <adapter factory=".adapters.ZipViewer"
-		   for=".interfaces.INyBlobFile"
-		   provides=".interfaces.IBFileContentViewer"
-		   name="application/zip"/>
+    <adapter factory=".adapters.ZipViewer"
+        for=".interfaces.INyBlobFile"
+        provides=".interfaces.IBFileContentViewer"
+        name="application/zip"/>
 
-  <adapter factory=".adapters.GenericViewer"
-		   for=".interfaces.INyBlobFile"
-		   provides=".interfaces.IBFileContentViewer"
-		   name="image/*"/>
+    <adapter factory=".adapters.GenericViewer"
+        for=".interfaces.INyBlobFile"
+        provides=".interfaces.IBFileContentViewer"
+        name="image/*"/>
 
-  <adapter factory=".adapters.GenericViewer"
-		   for=".interfaces.INyBlobFile"
-		   provides=".interfaces.IBFileContentViewer"
-		   name="text/*"/>
+    <adapter factory=".adapters.GenericViewer"
+        for=".interfaces.INyBlobFile"
+        provides=".interfaces.IBFileContentViewer"
+        name="text/*"/>
 
-  <adapter factory=".adapters.GenericViewer"
-		   for=".interfaces.INyBlobFile"
-		   provides=".interfaces.IBFileContentViewer"
-		   name="application/pdf"/>
+    <adapter factory=".adapters.GenericViewer"
+        for=".interfaces.INyBlobFile"
+        provides=".interfaces.IBFileContentViewer"
+        name="application/pdf"/>
 
-  <adapter
-    for=".interfaces.INyBFile"
-    provides="Products.Naaya.interfaces.IObjectView"
-    factory=".adapters.BFileViewAdapter"
-    />
+    <adapter
+        for=".interfaces.INyBFile"
+        provides="Products.Naaya.interfaces.IObjectView"
+        factory=".adapters.BFileViewAdapter"
+        />
 
-  <include package=".updates" />
-  <include package="plone.i18n" />
+    <include package=".updates" />
+    <include package="plone.i18n" />
+
+    <browser:page 
+        permission="five.ManageSite"
+        name="report_unused_files"
+        class=".report_unused_files.ReportUnusedFiles"
+        for="*"
+        />
 
 </configure>
