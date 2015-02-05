@@ -1,5 +1,7 @@
-1.4.18 (unreleased)
+1.4.18 (2015-01-5)
 --------------------
+* Bug fix: also migrate Naaya Survey Answer as they can have attachments
+  [tiberich #3929]
 
 1.4.17 (2014-11-25)
 --------------------

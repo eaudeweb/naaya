@@ -3,6 +3,9 @@ naaya.content.bfiles
 """
 
 from Products.naayaUpdater.updates import UpdateScript
+from naaya.content.bfile.NyBlobFile import make_blobfile
+from datetime import datetime
+from StringIO import StringIO
 
 
 class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
@@ -11,6 +14,52 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
     creation_date = 'Oct 28, 2014'
 
     def _update(self, portal):
+
+        brains = portal.portal_catalog(meta_type=['Naaya Survey Answer'])
+
+        for brain in brains:
+            try:
+                obj = brain.getObject()
+            except:
+                self.log.warning("Couldn't get obj based on catalog information %s", brain.getURL())
+                continue
+            if not hasattr(obj, 'w_assessment-upload'):
+                continue
+
+            upload = getattr(obj, 'w_assessment-upload', None)
+            if upload is None:
+                continue
+
+            if upload.is_broken():
+                self.log.warning(
+                    "\t BROKEN EXTFILE: Couldn't migrate extfile for "
+                    "%s because of broken file", obj.absolute_url()
+                )
+                continue
+
+            if upload.get_size():
+                data = upload.index_html()
+                sfile = StringIO(data)
+                self.log.debug('\t VERSION FILENAME: %s',
+                                  '/'.join(upload.filename))
+                sfile.filename = upload.filename[-1]
+                sfile.headers = {'content-type': upload.content_type}
+
+                bf = make_blobfile(sfile,
+                                   removed=False,
+                                   timestamp=datetime.utcnow(),
+                                   contributor='')
+
+                bf.filename = upload.id
+                bf.content_type = upload.content_type
+                bf.size = len(data)
+                upload._delete('/'.join(upload.filename))
+
+                setattr(obj, 'w_assessment-upload', bf)
+
+                self.log.info("Migrated %s bytes to bfile: %s" %
+                                  (len(data), obj.absolute_url()))
+                obj._p_changed = True
 
         brains = portal.portal_catalog(meta_type=['Naaya Mega Survey'])
 
@@ -60,3 +109,5 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
         self.log.info('Migration done')
 
         return True
+
+# vim: set ts=4 sw=4 ai et:
