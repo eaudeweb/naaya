@@ -22,10 +22,10 @@
 	<br />
 	<tal:block condition="datamodel">
 		<a tal:condition="not:parent" tal:attributes="href string:${datamodel/absolute_url}/index_html?as_attachment:int=1"
-		   tal:content="python: datamodel.title or 'download1'">
+		   tal:content="python: datamodel.title or 'download'">
 		</a>
 		<a tal:condition="parent" tal:attributes="href string:${parent/absolute_url}/${datamodel/filename}/index_html?as_attachment:int=1"
-		   tal:content="python:datamodel.title or 'download2'">
+		   tal:content="python:datamodel.title or 'download'">
 		</a>
 		<!-- <a tal:attributes="href python:here.rstk.path_in_site(datamodel)"
 		   tal:content="datamodel/title">
