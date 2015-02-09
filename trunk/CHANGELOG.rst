@@ -1,5 +1,8 @@
-1.4.19 (unreleased)
+1.4.19 (2015-02-09)
 --------------------
+* Feature: added a view to report on all objects in the database with a reference
+  to an ExtFile
+  [tiberich #3929]
 
 1.4.18 (2015-01-5)
 --------------------
