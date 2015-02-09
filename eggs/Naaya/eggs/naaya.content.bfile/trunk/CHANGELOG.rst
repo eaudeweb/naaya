@@ -1,3 +1,6 @@
+1.4.20 (unreleased)
+--------------------
+
 1.4.19 (2015-02-09)
 --------------------
 * Feature: added a view to report on all objects in the database with a reference
