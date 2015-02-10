@@ -1,8 +1,9 @@
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
-from Products.Naaya.NySite import NySite
+#from Products.Naaya.NySite import NySite
+from naaya.groupware.groupware_site import GroupwareSite
 
-class EnviroWindowsSite(NySite):
+class EnviroWindowsSite(GroupwareSite):	# NySite):
     """ """
     meta_type = "Groupware site"
 
@@ -11,7 +12,7 @@ class EnviroWindowsSite(NySite):
     ew_style_css = ImageFile('www/ew_style.css', globals())
 
     manage_options = (
-        NySite.manage_options
+        GroupwareSite.manage_options
     )
 
 InitializeClass(EnviroWindowsSite)
