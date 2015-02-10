@@ -1,0 +1,91 @@
+<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block metal:fill-slot="header-title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head"></metal:block>
+
+<metal:block metal:fill-slot="body">
+
+<tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
+<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+	<h1 tal:define="path python:here.absolute_url(1);site_object_index python:here.getFormsTool()['site_object_index']">
+		<a class="b_download" tal:condition="here/showBulkDownloadButton"
+				tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
+			<span i18n:translate="">Bulk download</span>
+		</a>
+		<metal:block use-macro="site_object_index/macros/icon"/>
+		<tal:block tal:replace="here/title_or_id" />
+		<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+			[Limited access]
+		</tal:block>
+		<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+			[Restricted access]
+		</tal:block>
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']"
+					tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+	</h1>
+
+	<tal:block define="logo here/getFolderLogo">
+		<img tal:condition="logo" tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
+	</tal:block>
+
+	<metal:block define-slot="page-middle">
+
+	<p tal:condition="python:here.description!=''"
+		tal:content="structure here/description" />
+
+	<span tal:replace="structure here/menusubmissions" />
+
+	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']" />
+
+	<p>
+		<a href="index_rdf" target="_blank">
+			<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" />
+		</a>
+	</p>
+
+	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.getLocalProperty('show_contributor_request_role')">
+		<a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
+	</p>
+
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" on-error="python:here.log_page_error(error)" />
+	</tal:block>
+
+	<span tal:replace="structure here/comments_box" />
+
+	</metal:block>
+</div>
+
+<div id="right_port">
+	<tal:block tal:repeat="item right_portlets">
+		<tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" on-error="python:here.log_page_error(error)" />
+	</tal:block>
+</div>
+
+</tal:block>
+</metal:block>
+
+</metal:block>

@@ -1,0 +1,294 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block fill-slot="head">
+    <link rel="stylesheet" type="text/css" media="all"
+    tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+    <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+    <script tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+	    type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+</metal:block>
+
+<metal:block fill-slot="body">
+
+<h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
+	<metal:block use-macro="site_object_index/macros/icon"/>
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])"></a>
+			</span>
+		</span>
+</h1>
+
+<tal:block condition="here/checkPermissionEditObjects">
+	<div class="buttons">
+		<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html" i18n:translate="">Edit Attachments</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_questions_html" i18n:translate="">Edit Questions</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_reports_html" i18n:translate="">Edit Reports</a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_access" i18n:translate="">Edit Permissions</a>
+	</div>
+</tal:block>
+<tal:block condition="here/display_admin_warning">
+	<div class="message-error">
+		<fieldset style="width:70%">
+		<legend i18n:translate="">Warning</legend>
+		<span i18n:translate="">The site's keys for Recaptcha are not set or are invalid. Since this survey is accessible to anonymous users, and anonymous users don't have the permission to skip Recaptcha, the survey will not work for them. To solve this, you can either set a correct pair of Recaptcha keys in the <a tal:attributes="href python:here.getSite().absolute_url()+'/admin_properties_html'" i18n:name="portal_properties" i18n:translate="">portal properties</a> or give anonymous user the skip Recaptcha permission.</span>
+		</fieldset>
+	</div>
+</tal:block>
+
+<tal:block define="
+    my_answer here/getMyAnswer;
+    my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
+    my_answerdatamodel my_answer/getDatamodel|python:{};
+    editing python: my_answer and not here.allow_multiple_answers;
+    editing_draft python: editing and my_answer.is_draft();
+    editing_answer python: editing and not my_answer.is_draft();
+    user_anonymous python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
+">
+
+<noscript>
+	<p i18n:translate="" class="message-error">
+		You must have Javascript turned on to access these features.
+	</p>
+</noscript>
+
+<form name="frmAdd" method="post" action="." enctype="multipart/form-data">
+
+<div class="survey-box" tal:define="days_left python:here.get_days_left()">
+	<h3 class="survey-box-title" i18n:translate="">
+		Survey details
+	</h3>
+	
+	<div class="survey-box-content">
+		<div class="survey-top-options">
+			<div class="top-buttons">
+				<a tal:condition="python:here.checkPermissionViewAnswers() and not user_anonymous" href="view_answers_html" i18n:translate="" class="survey-button">View answers</a>
+				<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
+				
+				<div class="clear">
+					&nbsp;
+				</div>
+			</div>
+			
+			<div class="survey-misc-details">	
+				<div class="survey-detail"
+					tal:condition="python:'bibliography-details-each-assessment' not in here.absolute_url() and 'general-template' not in here.absolute_url()">
+					<span tal:condition="python:(days_left[0] == 1 and days_left[1] > 0) or here.allow_overtime">
+						<tal:block condition="python: days_left[1] == 1" i18n:translate="">
+							<span class="survey-important-detail" i18n:name="today"
+								  i18n:translate="">Today</span>
+							is the last day for this survey.
+						</tal:block>
+						<tal:block condition="python: days_left[1] == 2" i18n:translate="">
+							<span class="survey-important-detail" i18n:name="tomorrow"
+								  i18n:translate="">Tomorrow</span>
+							is the last day for this survey.
+						</tal:block>
+						<tal:block condition="python: days_left[1] not in (1, 2)"
+								   i18n:translate="">
+							<span class="survey-important-detail" i18n:name="days"
+								  tal:content="python:days_left[1]" />
+							days left for this survey.
+						</tal:block>
+					</span>
+					<span tal:condition="python:days_left[0] == 0 and days_left[1] > 0">
+						<tal:block condition="python: days_left[1] > 1" i18n:translate="">
+							<span class="survey-important-detail" i18n:name="days"
+								  tal:content="python:days_left[1]" />
+							days until this survey starts.
+						</tal:block>
+						<tal:block condition="python: days_left[1] <= 1" i18n:translate="">
+							This survey starts
+							<span class="survey-important-detail" i18n:name="tomorrow"
+								  i18n:translate="">tomorrow</span>.
+						</tal:block>
+					</span>
+					<span tal:condition="here/expired" i18n:translate="" class="survey-important-detail">Survey's deadline has been reached.</span>
+				</div>
+				
+				<tal:block tal:define="my_answers python: here.getMyAnswer(True)" condition="python: my_answers and here.allow_multiple_answers">
+					<div class="survey-detail" id="show_answers">
+						<a href="javascript:void(0);" i18n:translate=""
+							class="hide_show_answers">Show my answers</a>
+					</div>
+					<div class="survey-detail" id="my_answers_box">
+						<a href="javascript:void(0);" i18n:translate="" id="hide_answers"
+							class="hide_show_answers">Hide my answers</a>
+						<h4>
+							Your answers so far:
+						</h4>
+						<ul id="my-answers-list">
+							<li  tal:repeat="answer my_answers">
+								<a tal:attributes="href string:${answer/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(answer.modification_time)"></a>
+							</li>
+						</ul>
+					</div>
+				</tal:block>
+				
+				<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts and here.allow_multiple_answers">
+					<div class="survey-detail" id="show_drafts">
+						<a href="javascript:void(0);" i18n:translate=""
+							class="hide_show_drafts">Show my drafts</a>
+					</div>
+					<div class="survey-detail" id="my_drafts_box">
+						<a href="javascript:void(0);" i18n:translate="" id="hide_drafts"
+							class="hide_show_drafts">Hide my drafts</a>
+						<h4>Your drafts:</h4>
+						<ul id="my-answers-list">
+							<li  tal:repeat="draft my_drafts">
+								<a tal:attributes="href string:${draft/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(draft.modification_time)"></a>
+							</li>
+						</ul>
+					</div>
+				</tal:block>
+				
+				<div class="survey-detail survey-tips" tal:condition="python: not here.expired() or here.checkPermissionPublishObjects()">
+					<h3 class="survey-tips-title" i18n:translate="">Tips:</h3>
+					
+					<div class="survey-tips-content">
+						<p tal:condition="python: editing_draft">
+							<strong i18n:translate="">You are working on a draft version of the answer</strong>
+						</p>
+
+						<p class="survey-important-detail" i18n:translate="">
+							The fields marked with * are mandatory.
+						</p>
+
+						<p tal:condition="python: not editing and not here.allow_drafts" i18n:translate="">
+							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end.
+						</p>
+						<p tal:condition="python: not editing and here.allow_drafts and user_anonymous" i18n:translate="">
+							Fill the questionnaire and click the <strong i18n:name="submit">Submit</strong> button at the end.
+							<a tal:attributes="href string:${here/getSitePath}/login_html?came_from=${request/ACTUAL_URL}&amp;disable_cookie_login__=1" i18n:name="login" i18n:translate="">Login</a> with your account if you wish to save an interim version.
+						</p>
+						<p tal:condition="python: not editing and here.allow_drafts and not user_anonymous" i18n:translate="">
+							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end or use the <strong i18n:name="save_as_draft" i18n:translate="">Save as draft</strong> button if you wish to save an interim version.
+						</p>
+
+						<p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
+							Change the questionnaire and click the <strong i18n:name="change_answer" i18n:translate="">Change answer</strong> button at the end.
+						</p>
+						<p tal:condition="python: editing_draft and here.allow_drafts" i18n:translate="">
+							Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft" i18n:translate="">Save as draft</strong> button.
+							When you have completed the answer, click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button and your answer finalised.
+						</p>
+						<p tal:condition="python: editing_answer and here.allow_drafts" i18n:translate="">
+							Change the questionnaire and click the <strong i18n:name="change_answer" i18n:translate="">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft" i18n:translate="">Overwrite as draft</strong> button if you wish to save an interim version.
+							Upon saving an interim version, your answer will not be considered a final answer anymore.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="survey-bottom-options" tal:condition="python: not here.expired() or here.checkPermissionPublishObjects()">
+			<div class="surveySubmit">
+				<input type="submit"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Change answer', 'Submit')"
+					i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="submit" tal:condition="here/canAddAnswerDraft"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Overwrite as draft', 'Save as draft')"
+					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+			</div>
+		</div>
+	</div>
+
+	<div class="clear">
+		&nbsp;
+	</div>
+</div>
+
+<div class="survey-content" tal:condition="here/description" tal:content="structure here/description" />
+
+<tal:block condition="python: not here.expired() or here.checkPermissionPublishObjects()">
+
+		<p class="message-information" style="font-size:100%" tal:condition="not: here/checkPermissionAddAnswer"><strong>&ndash; <tal:block i18n:translate="">For preview only</tal:block> &ndash;</strong></p>
+		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">(To participate as a reviewer in the process you need to be a registered user)</p>
+		<p class="message-information" i18n:translate="" tal:condition="python: my_answer and not here.allow_multiple_answers">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
+
+			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
+				<h2 i18n:translate="">Attachments</h2>
+				<ol>
+					<li tal:repeat="attachment attachments">
+						<tal:block tal:replace="structure attachment/description">description</tal:block>
+						<br/>
+						<tal:block tal:define="download_url attachment/getDownloadUrl">
+							<a tal:define="size python:attachment.utShowSizeKb(attachment.size());
+							content_type attachment/content_type;
+							icon python:here.rstk.icon_for_content_type(content_type);
+							title python:icon['title'];
+							url python:icon['url']"
+							tal:attributes="href download_url">
+								<img tal:attributes="src url;
+													alt title;
+													title title" />
+								<span tal:replace="string:${attachment/downloadfilename} (${title}, ${size} Kb)"/>
+							</a>
+						</tal:block>
+					</li>
+				</ol>
+			</tal:block>
+
+			<tal:block define="tmpl nocall:here/validation_html|nothing"
+			           condition="tmpl">
+				<metal:block use-macro="tmpl/macros/validate" />
+			</tal:block>
+
+			<tal:block tal:content="structure python:here.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {}))" />
+
+			<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+			           content="structure python:here.show_recaptcha(here)" />
+
+			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
+				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">
+					<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
+						tal:attributes="checked python:here.getSession('notify_respondent', here.notify_respondents=='LET_THEM_CHOOSE_YES')" />
+					<label for="notify_respondent" i18n:translate="">Email me my answers</label>
+					<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
+				</tal:block>
+			</tal:block>
+
+			<div class="widgetEditMode" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
+				<label class="widget-title" for="anonymous_responder_email" i18n:translate="">Responder email</label>
+				<div class="tooltips" i18n:translate="">
+					Instructions and a password allowing you to edit this answer at a later time will be sent to this address.
+				</div>
+				<input id="anonymous_responder_email" type="text" size="100" value="" name="anonymous_responder_email:utf8:ustring">
+			</div>
+
+			<div class="surveySubmit">
+				<input type="submit"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Change answer', 'Submit')"
+					i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="submit" tal:condition="here/canAddAnswerDraft"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Overwrite as draft', 'Save as draft')"
+					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+			</div>
+</tal:block>
+
+</form>
+
+</tal:block>
+</metal:block>
+</metal:block>

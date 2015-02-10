@@ -1,0 +1,280 @@
+<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block metal:fill-slot="header-title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head"></metal:block>
+
+<metal:block tal:define="site_object_index python:here.getFormsTool()[
+                                              'site_object_index']"
+             fill-slot="body">
+<tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
+<div id="center_content" tal:attributes="style python:test(request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here) or len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+<tal:block define="objects_info here/checkPermissionManageObjects;
+    folders_list python:objects_info[6];
+    objects_list python:objects_info[7];
+    btn_select python:objects_info[0];
+    btn_delete python:objects_info[1];
+    btn_copy python:objects_info[2];
+    btn_cut python:objects_info[3];
+    btn_paste python:objects_info[4];
+    can_operate python:objects_info[5];
+    logo here/getFolderLogo;
+    path python:here.absolute_url(1); ">
+
+<script type="text/javascript" tal:condition="btn_select">
+<!--
+var isSelected = false;
+function toggleSelect()
+{   var frm = document.objectItems;
+    var i;
+    if (isSelected == false)
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
+        isSelected = true;}
+    else
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
+        isSelected = false;}}
+
+function fCheckSelection()
+{   var frm = document.objectItems;
+    var i;
+    check = false;
+    for(i=0; i<frm.elements.length; i++)
+        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+        {   check = true; break;}
+    return check;}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_copy">
+<!--
+function fCopyObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="copyObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to copy.');}
+//-->
+</script>
+
+
+<script type="text/javascript" tal:condition="btn_cut">
+<!--
+function fCutObjects()
+{   if (fCheckSelection())
+    {
+        document.objectItems.action="cutObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to cut.');}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_paste">
+<!--
+function fPasteObjects()
+{   document.objectItems.action="pasteObjects";
+    document.objectItems.submit();}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fDeleteObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="deleteObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to delete.');}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fRenameObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="renameobject_html";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to rename.');}
+//-->
+</script>
+
+<div>
+<h1>
+<a class="b_download" tal:condition="here/showBulkDownloadButton"
+  tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
+  <span i18n:translate="">Bulk download</span>
+</a>
+    <metal:block use-macro="site_object_index/macros/icon" />
+    <tal:block tal:replace="here/title_or_id" />
+    <tal:block tal:condition="here/can_be_seen">
+        <tal:block tal:condition="here/has_restrictions" i18n:translate="">
+            [Limited access]
+        </tal:block>
+    </tal:block>
+    <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+        [Restricted access]
+    </tal:block>
+	<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+		<span i18n:translate="">Item only translated in </span>
+		<span tal:repeat="lang here/gl_get_languages_map">
+			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+		</span>
+	</span>
+</h1>
+<img tal:condition="logo" tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+<span tal:replace="structure here/menusubmissions" />
+
+<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
+    <div id="toolbar">
+        <tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span i18n:translate="">Select all</span></a></tal:block>
+        <tal:block tal:condition="btn_copy"><a href="javascript:fCopyObjects();"><span i18n:translate="">Copy</span></a></tal:block>
+        <tal:block tal:condition="btn_cut"><a href="javascript:fCutObjects();"><span i18n:translate="">Cut</span></a></tal:block>
+        <tal:block tal:condition="btn_paste"><a href="javascript:fPasteObjects();"><span i18n:translate="">Paste</span></a></tal:block>
+        <tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
+        <tal:block tal:condition="python: here.rename_id and btn_delete"><a href="javascript:fRenameObjects();"><span i18n:translate="">Rename</span></a></tal:block>
+    </div>
+</div>
+
+<form name="objectItems" method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" width="95%">
+<tr tal:condition="can_operate">
+    <th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+    <th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+    <th class="title-column" i18n:translate="">Title</th>
+    <th class="checkin" i18n:translate="">Version</th>
+    <th class="edit" i18n:translate="">Edit</th>
+</tr>
+<tr tal:repeat="folders folders_list">
+    <tal:block define="del_permission python:folders[0];
+        edit_permission python:folders[1];
+        version_status python:folders[2];
+        copy_permission python:folders[3];
+        folder python:folders[4]">
+    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
+    <td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" /></td>
+    <td class="title-column">
+        <a tal:attributes="href folder/absolute_url; title python:here.stripHTMLTags(folder.description)" tal:content="folder/title_or_id" />
+                <tal:block condition="folder/can_be_seen">
+                    <em tal:condition="here/display_subobject_count" tal:define="lenfol python:len(folder.checkPermissionManageObjects()[6]); lenobj python:len(folder.checkPermissionManageObjects()[7]); lenall python:lenfol + lenobj">
+                        <tal:block condition="python: lenall == 0">
+                            (<span i18n:translate="">folder is empty</span>)
+                        </tal:block>
+                        <tal:block condition="python:lenall > 0">
+                            (<tal:block condition="lenfol"><span tal:content="python:lenfol">10</span> <span tal:condition="python:lenfol > 1" i18n:translate="">folders</span><span tal:condition="python:lenfol <= 1" i18n:translate="">folder</span></tal:block><tal:block condition="lenobj"><tal:block condition="python:lenfol and lenobj">, </tal:block><span tal:content="python:lenobj">17</span> <span tal:condition="python:lenobj > 1" i18n:translate="">items</span><span tal:condition="python:lenobj <= 1" i18n:translate="">item</span></tal:block>)
+                        </tal:block>
+                    </em>
+                </tal:block>
+
+		<span class="available_langs" tal:condition="python:here.item_has_title(folder, folder.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+        <tal:block tal:condition="folder/can_be_seen">
+            <tal:block tal:condition="folder/has_restrictions" i18n:translate="">
+                [Limited access]
+            </tal:block>
+        </tal:block>
+        <tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
+            [Restricted access]
+        </tal:block>
+        <tal:block tal:condition="python:folder.is_open_for_comments() and folder.count_comments()>0">
+            [<span tal:replace="folder/count_comments" />
+            <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+        </tal:block>
+    </td>
+    <td class="checkin" tal:condition="can_operate" i18n:translate="">n/a</td>
+    <td class="edit" tal:condition="can_operate">
+        <a tal:condition="edit_permission" tal:attributes="href string:${folder/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
+        <tal:block tal:condition="python:not edit_permission" i18n:translate="">n/a</tal:block>
+    </td>
+    </tal:block>
+</tr>
+<tr tal:repeat="objects objects_list">
+    <tal:block define="del_permission python:objects[0];
+            edit_permission python:objects[1];
+            version_status python:objects[2];
+            copy_permission python:objects[3];
+            object python:objects[4]">
+    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
+    <td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" /></td>
+    <td class="title-column">
+        <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+        <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+            [<span tal:replace="object/count_comments" />
+            <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+        </tal:block>
+    </td>
+    <td class="checkin" tal:condition="can_operate">
+        <tal:block tal:condition="python:version_status == 0" i18n:translate="">n/a</tal:block>
+        <a tal:condition="python:version_status == 2" tal:attributes="href string:${object/absolute_url}/startVersion"><img src="misc_/Naaya/checkout" alt="Checkout - start new version" i18n:attributes="alt" /></a>
+        <a tal:condition="python:version_status == 1" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" /></a>
+    </td>
+    <td class="edit" tal:condition="can_operate">
+        <a tal:condition="python:edit_permission and not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
+        <tal:block tal:condition="python:edit_permission and object.hasVersion() or not edit_permission" i18n:translate="">n/a</tal:block>
+    </td>
+    </tal:block>
+</tr>
+</table>
+</form>
+
+</div>
+
+</tal:block>
+
+<p>
+    <a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+</p>
+
+<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.getLocalProperty('show_contributor_request_role')">
+    <a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
+</p>
+
+        <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+                <tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" on-error="python:here.log_page_error(error)" />
+        </tal:block>
+
+<span tal:replace="structure here/comments_box" />
+</div>
+
+<div id="right_port">
+	<tal:block tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
+		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+	<tal:block tal:repeat="item right_portlets">
+		<tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" on-error="python:here.log_page_error(error)" />
+	</tal:block>
+</div>
+
+</tal:block>
+</metal:block>
+
+</metal:block>

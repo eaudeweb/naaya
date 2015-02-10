@@ -1,0 +1,74 @@
+<div tal:define="position_value python:request.SESSION.get('tb_position_default', 'personal');
+                 country_position_text string:The following represents a country/region position:;
+                 country_position_html string:<p><em>${country_position_text}</em></p><p></p>;
+                 global tb_message_prepend_html python:test(position_value == 'country', country_position_html, '');"
+     class="field-inline" id="tb-position-input" style="display:none"
+     metal:define-macro="comment-input" tal:condition="nothing">
+
+    <input type="radio" name="comment-position" value="personal" id="comment-position-personal"
+           tal:attributes="checked python:test(position_value=='personal', 'checked', None)" />
+    <label for="comment-position-personal">Personal opinion</label>
+    <br />
+    <input type="radio" name="comment-position" value="country" id="comment-position-country"
+           tal:attributes="checked python:test(position_value=='country', 'checked', None)" />
+    <label for="comment-position-country">Country/region position</label>
+
+<script type="text/javascript" tal:content="string:var current_position = '${position_value}';" />
+<script type="text/javascript" tal:content="string:var country_position_text = '${country_position_text}';" />
+<script type="text/javascript">
+$(function() {
+
+var input_div = $('div#tb-position-input');
+$('input[type="radio"]', input_div).click(radio_selected);
+input_div.show();
+
+function radio_selected(evt) {
+    var new_position = $(evt.target).val();
+    if(new_position == current_position) return;
+    current_position = new_position;
+    insert_position_text(new_position);
+}
+
+function insert_position_text(position_value) {
+    var previous_position_regexp = RegExp('^\\s*[<]p>\\s*[<]em>' +
+                                              country_position_text +
+                                          '[<]/em>\\s*[<]/p>\\s*' +
+                                          '([<]p>(\\s*&nbsp;)?\\s*[<]/p>)?\\s*');
+    var e = tinyMCE.getInstanceById('message');
+    var doc = $(e.contentDocument.body);
+    var clean_html = doc.html().replace(previous_position_regexp, '');
+    //var clean_html = e.getHTML().replace(previous_position_regexp, '');
+    var new_html = '';
+    if(position_value == 'country') {
+        new_html += '<' + 'p><' + 'em>' + country_position_text + '<' + '/em><' + '/p>';
+        if(clean_html.length < 1)
+            new_html += '<' + 'p><' + '/p>';
+    }
+    new_html += clean_html;
+    doc.html(new_html);
+}
+
+});
+</script>
+</div>
+
+
+<form tal:define="position_session_value python:request.SESSION.get('tb_position_default', 'personal');
+                 position_form_value python:request.get('comment-position', None);
+                 position_value python:test(position_form_value, position_form_value, position_session_value);
+                 dummy python:request.SESSION.set('tb_position_default', position_value);"
+     method="POST" style="margin: 2em;"
+     metal:define-macro="welcome-form" tal:condition="nothing">
+
+    <input type="hidden" name="key" tal:attributes="value request/key|nothing" />
+    By default, your comments will be submitted as:<br />
+    <input type="radio" name="comment-position" value="personal" id="comment-position-personal"
+           tal:attributes="checked python:test(position_value=='personal', 'checked', None)" />
+    <label for="comment-position-personal">Personal opinion</label>
+    <br />
+    <input type="radio" name="comment-position" value="country" id="comment-position-country"
+           tal:attributes="checked python:test(position_value=='country', 'checked', None)" />
+    <label for="comment-position-country">Country/region position</label>
+    <br />
+    <input type="submit" value="Save" />
+</form>

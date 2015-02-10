@@ -1,0 +1,78 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block metal:fill-slot="header-title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head"></metal:block>
+
+<metal:block metal:fill-slot="body">
+<div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
+	<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
+		<metal:block use-macro="site_object_index/macros/icon"/>
+		<tal:block tal:replace="here/title_or_id" />
+		<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+			[Limited access]
+		</tal:block>
+		<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+			[Restricted access]
+		</tal:block>
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']"
+					tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+	</h1>
+
+	<p tal:condition="python:here.description!=''"
+		tal:content="structure here/description" />
+
+	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+		<metal:block fill-slot="menu_extension">
+			<span tal:replace="structure here/menusubmissions" />
+		</metal:block>
+	</metal:block>
+
+	<div class="folder-feeds">
+		<a tal:attributes="href string:${here/absolute_url}/index_rdf" style="text-decoration: none">
+			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/index_atom">
+			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
+		</a>
+	</div>
+
+<tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+    <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})"
+        on-error="python:here.log_page_error(error)" />
+</tal:block>
+</div>
+
+<div id="right_port">
+    <tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
+        <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})"
+            on-error="python:here.log_page_error(error)" />
+    </tal:block>
+</div>
+
+<span tal:replace="structure here/comments_box" />
+</metal:block>
+
+</metal:block>

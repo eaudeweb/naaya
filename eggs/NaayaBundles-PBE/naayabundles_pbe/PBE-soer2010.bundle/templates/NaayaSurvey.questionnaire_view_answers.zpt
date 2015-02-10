@@ -1,0 +1,62 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked);
+		title here/meta_label;
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<p tal:condition="python:here.description!=''"
+	tal:content="structure here/description" />
+
+<div class="buttons" tal:condition="here/checkPermissionViewAnswers">
+	<a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Download as CSV</a>
+</div>
+
+
+<tal:block define="answers python:here.getAnswers()">
+	<tal:block condition="answers">
+		<p><span i18n:translate="">List of answers</span> (<tal:block replace="python:len(answers)"/> <span i18n:translate="">answers</span>)</p>
+		<ol tal:define="auth_tool python:here.getSite().getAuthenticationTool()">
+			<tal:block repeat="answer answers">
+				<li>
+					<a tal:attributes="href answer/absolute_url">
+						Answered by
+						<tal:block define="user_id answer/respondent; invited python: user_id.startswith('invite:')">
+							<tal:block condition="invited">
+								<tal:block define="invitation python: here.get_consultation().invitations.get_invitation(user_id[7:]);
+									inviter_id invitation/inviter_userid;
+									inviter_name python:auth_tool.getUserFullNameByID(inviter_id)"
+									content="string:${invitation/name} (invited by ${inviter_name})" />
+							</tal:block>
+							<tal:block condition="not: invited" content="python:auth_tool.getUserFullNameByID(user_id)" />
+						</tal:block>
+						on
+						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)">date</tal:block>
+					</a>
+				</li>
+			</tal:block>
+		</ol>
+	</tal:block>
+	<tal:block condition="not: answers">
+		<p i18n:translate="">There are no answers.</p>
+	</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

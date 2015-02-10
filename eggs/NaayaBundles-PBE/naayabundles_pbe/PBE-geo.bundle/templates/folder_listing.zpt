@@ -1,0 +1,525 @@
+<metal:block define-macro="listing">
+
+<tal:block define="site_url python:here.getSite().absolute_url();
+    skey python:request.get('skey', 'sortorder');
+    rkey python:request.get('rkey', 0);
+	listing_info folder_listing_info|python:here.folder_listing_info(skey, rkey);
+	folders_list python:listing_info['folders'];
+	objects_list object_list_custom|python:listing_info['objects'];
+	btn_select python:listing_info['btn_select'];
+	btn_delete python:listing_info['btn_delete'];
+	btn_copy python:listing_info['btn_copy'];
+	btn_cut python:listing_info['btn_cut'];
+	btn_paste python:listing_info['btn_paste'];
+	can_operate python:listing_info['can_operate'];
+	ratings here/folder_listing_ratings;
+    iframe python: bool(request.get('iframe', 0));
+    auth_tool here/getAuthenticationTool">
+
+<metal:block define-slot="folder-listing">
+<tal:block condition="iframe" on-error="here/rstk/catch_unauthorized">
+	<!DOCTYPE html>
+	<tal:block replace="structure python:'<' +'html>'"></tal:block>
+	<tal:block tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
+    layout_path python:here.getSite().getLayoutTool().absolute_url();">
+		<metal:block use-macro="python: here.standard_template_macro('standard-head-links')"></metal:block>
+	</tal:block>
+	<tal:block replace="structure python:'<' +'body>'"></tal:block>
+</tal:block>
+<link href="++resource++naaya.photoarchive/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox.pack.js"></script>
+<link href="++resource++naaya.photoarchive/jquery.fancybox-thumbs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox-thumbs.js"></script>
+<script type="text/javascript" src="++resource++naaya.photoarchive/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+    $('.thumbnail-layout').each(function(){
+        var photo_url = $(this).find('a.fancybox-thumb').attr('href');
+        $(this).find('a.fancybox-thumb').attr('href', photo_url);
+    });
+		$(".fancybox-thumb").fancybox({
+      beforeLoad: function() {
+          var el, id = $(this.element).data('title-id');
+
+          if (id) {
+              el = $('#' + id);
+          
+              if (el.length) {
+                  this.title = el.html();
+              }
+          }
+      },
+      type: 'image',
+      prevEffect: 'none',
+      nextEffect: 'none',
+      helpers: {
+        title: {
+          type: 'outside'
+        },
+        thumbs: {
+          width: 50,
+          height: 50
+        }
+      }
+    });
+	});
+</script>
+<script type="text/javascript" tal:content="structure string:var folder_url = '${here/absolute_url}';"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('#delete-folder').click(function() {
+        var no_selected_items = $('input[name=id]:checked').length;
+        if (no_selected_items > 0) {
+            $( "#dialog-unable-delete-folder" ).dialog({
+                open: function() {
+                    $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+                },
+                resizable: false,
+                height: 270,
+                width: 650,
+                modal: true,
+                draggable: false,
+                buttons: {
+                    "Go back": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+
+        }
+        else {
+            $( "#dialog-delete-folder-confirm" ).dialog({
+                open: function() {
+                    $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+                },
+                resizable: false,
+                height: 240,
+                width: 600,
+                modal: true,
+                draggable: false,
+                buttons: {
+                    "Delete Folder": function() {
+                                        window.location = folder_url + '/deleteThis';
+                    },
+                    "Cancel": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+        }
+	});
+
+	var deleteObjects = function(action) {
+		$( "#dialog-delete-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 200,
+			width: 500,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete checked items": function() {
+                                    submit_form_action(action);
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	};
+
+	// Multiple items operations
+	$('.select-all').click(function(e){
+		//Select toggle for all items
+		var input_button = $(this).attr('id') == 'btn_select';
+		var checked = input_button ? $(this).hasClass('clicked') : !$(this).attr('checked');
+		if (input_button){//not an input[type=checkbox]
+			$(this).toggleClass('clicked');
+		}
+		$('#folderfile_list td.checkbox input[type=checkbox]').attr('checked', !checked);
+	});
+
+	$('.action-button').click(function(e){
+		//Copy, cut, paste... buttons
+		e.preventDefault()
+
+		// The form.action and the alert messages, set message to false to allow no selection
+		var multiple_action_messages = {
+			'copyObjects': gettext('Please select one or more items to copy.'),
+			'cutObjects': gettext('Please select one or more items to cut.'),
+			'pasteObjects': false,
+			'deleteObjects': gettext('Please select one or more items to delete.'),
+			'renameobject_html': gettext('Please select one or more items to rename.')
+		};
+
+		var action = $(this).attr('name').split(':')[0];
+
+		if (!$("#folderfile_list td.checkbox input[type=checkbox]:checked").length > 0 && multiple_action_messages[action] !== false){
+			alert(multiple_action_messages[action]);
+			return false;
+		}
+
+                if(action == "deleteObjects") {
+                    deleteObjects(action);
+		}else {
+                    submit_form_action(action);
+                }
+	});
+})
+
+
+function submit_form_action(action){
+    var form = $('#folder_listing');
+    form.attr('action', action);
+    return form.submit();
+}
+</script>
+
+<metal:block define-slot="menu_extension">
+</metal:block>
+
+<form id="folder_listing" name="objectItems" method="post" action=".">
+	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete">
+		<metal:block define-slot="toolbar_default">
+			<input id="btn_select" type="button" value="Select all"
+				class="select-all"
+				i18n:attributes="value"
+				tal:condition="btn_select" />
+			<input type="submit" value="Copy" class="action-button" name="copyObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_copy" />
+			<input type="submit" value="Cut" class="action-button" name="cutObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_cut" />
+			<input type="submit" value="Paste" class="action-button" name="pasteObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_paste" />
+			<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_delete" />
+			<input type="submit" value="Change item ID" class="action-button" name="renameobject_html:method"
+				i18n:attributes="value"
+				tal:condition="python: here.rename_id and btn_delete" />
+		</metal:block>
+		<metal:block define-slot="toolbar_extend">
+			<tal:comment condition="nothing">
+				Fill this slot to add custom buttons.
+			</tal:comment>
+		</metal:block>
+	</div>
+    <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
+        class="datatable sortable"
+        tal:condition="python: len(objects_list)+len(folders_list)>0">
+        <thead>
+		<tr>
+			<metal:block define-slot="table_head_default">
+				<th class="checkbox" style="width: 4%;"
+					tal:condition="btn_select">
+					<input type="checkbox" class="select-all" />
+				</th>
+				<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+                <th class="title-column">
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=title"
+                        tal:condition="python: skey != 'title' or rkey"
+                        i18n:translate="">Title</a>
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=title&rkey=1"
+                        tal:condition="python: skey == 'title' and not rkey"
+                        i18n:translate="">Title</a>
+
+                    <img tal:condition="python: skey == 'title' and not rkey"
+                         src="misc_/Naaya/sort_asc.gif" />
+                    <img tal:condition="python: skey == 'title' and rkey"
+                         src="misc_/Naaya/sort_desc.gif" />
+                </th>
+
+				<th i18n:translate="">Restrictions</th>
+
+                <th class="title-column" colspan="2">
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=contributor"
+                        tal:condition="python: skey != 'contributor' or rkey"
+                        i18n:translate="">Owner</a>
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=contributor&rkey=1"
+                        tal:condition="python: skey == 'contributor' and not rkey"
+                        i18n:translate="">Owner</a>
+
+                    <img tal:condition="python: skey == 'contributor' and not rkey"
+                         src="misc_/Naaya/sort_asc.gif" />
+                    <img tal:condition="python: skey == 'contributor' and rkey"
+                         src="misc_/Naaya/sort_desc.gif" />
+                </th>
+                <th class="title-column">
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=modif_date"
+                        tal:condition="python: skey != 'modif_date' or rkey"
+                        i18n:translate="">Modification date and time</a>
+                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=modif_date&rkey=1"
+                        tal:condition="python: skey == 'modif_date' and not rkey"
+                        i18n:translate="">Modification date and time</a>
+
+                    <img tal:condition="python: skey == 'modif_date' and not rkey"
+                         src="misc_/Naaya/sort_asc.gif" />
+                    <img tal:condition="python: skey == 'modif_date' and rkey"
+                         src="misc_/Naaya/sort_desc.gif" />
+                </th>
+				<th i18n:translate="">File size</th>
+				<th class="edit" i18n:translate="">Edit</th>
+
+			</metal:block>
+			<metal:block define-slot="table_head_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (heading for columns goes here).
+				</tal:comment>
+				<th tal:condition="ratings"
+					class="edit" i18n:translate="">Rating</th>
+			</metal:block>
+        </tr>
+        </thead>
+        <tbody>
+		<tr tal:repeat="folder_info folders_list">
+			<metal:block define-slot="table_folders_default">
+				<tal:block define="
+					del_permission python:folder_info['del_permission'];
+					copy_permission python:folder_info['copy_permission'];
+					edit_permission python:folder_info['edit_permission'];
+					versionable python:folder_info['versionable'];
+					editable python:folder_info['editable'];
+					folder python:folder_info['self'];
+					" on-error="here/rstk/catch_unauthorized">
+					<td class="checkbox" tal:condition="btn_select"
+						style="width: 4%; vertical-align: top;">
+						<input tal:condition="python:del_permission or copy_permission"
+							type="checkbox" name="id" tal:attributes="value folder/id" />
+					</td>
+					<td class="type" style="width: 4%;">
+						<img tal:attributes="
+							src python:test(folder.approved, folder.icon, folder.icon_marked);
+							alt python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type);
+							title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" />
+					</td>
+					<td class="title-column">
+						<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
+						<em tal:condition="folder/can_be_seen"
+						    tal:content="folder_info/view/get_info_text" />
+						<span class="available_langs" tal:condition="python:here.item_has_title(folder, folder.title)">
+							<span i18n:translate="">Item only translated in </span>
+							<span tal:repeat="lang here/gl_get_languages_map">
+								<a tal:content="python:' %s' % lang['title']"
+									tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])"
+									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+							</span>
+						</span>
+						<tal:block condition="folder/discussion|nothing">
+						<tal:block define="count_comments folder/count_comments" condition="count_comments" on-error="string:">
+							[<span tal:replace="count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+						</tal:block>
+					</td>
+
+                    <td class="title-column">
+						<tal:block tal:condition="folder/can_be_seen">
+							<tal:block tal:condition="folder/has_restrictions" i18n:translate="">
+							[Limited access]
+							</tal:block>
+						</tal:block>
+						<tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
+							[Restricted access]
+						</tal:block>
+                    </td>
+
+					<tal:block define="contributor folder/contributor;
+									user_quoted python:here.utUrlEncode(contributor);
+									username python: auth_tool.name_from_userid(contributor) or contributor;
+									user_photo_url python:auth_tool.get_user_photo_url(contributor);
+									source_title python: auth_tool.source_name_from_userid(contributor);">
+					<td>
+						<a class="fancybox-thumb" tal:condition="user_photo_url" tal:attributes="href user_photo_url">
+							<img style="max-width:20px; max-height:20px"
+								tal:attributes="src user_photo_url" />
+						</a>
+					</td>
+					<td>
+						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
+							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+							tal:content="username" />
+						<a tal:condition="python:source_title.lower() == 'local' and
+																		here.checkPermissionPublishObjects()"
+							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
+							tal:content="username" />
+						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+							content="username" />
+					</td>
+					</tal:block>
+					<td tal:define="modif folder_info/view/get_modification_date"
+						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
+					</td>
+					<td></td>
+					<td class="edit" tal:condition="edit_permission">
+						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+						</a>
+						<tal:block condition="not:editable">n/a</tal:block>
+					</td>
+					<td witdh="10%" tal:condition="ratings" class="type">
+						<tal:block condition="folder/user_rating_view|nothing"
+							replace="structure folder/user_rating_stars"/>
+					</td>
+				</tal:block>
+			</metal:block>
+			<metal:block define-slot="table_folders_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (content for folders goes here).
+				</tal:comment>
+			</metal:block>
+		</tr>
+		<tr tal:repeat="object_info objects_list">
+			<metal:block define-slot="table_objects_default">
+				<tal:block define="
+					del_permission python:object_info['del_permission'];
+					copy_permission python:object_info['copy_permission'];
+					edit_permission python:object_info['edit_permission'];
+					versionable python:object_info['versionable'];
+					editable python:object_info['editable'];
+					object python:object_info['self'];
+					" on-error="here/rstk/catch_unauthorized">
+					<td class="checkbox" tal:condition="btn_select"
+						style="width: 4%; vertical-align: top;">
+						<input tal:condition="python:del_permission or copy_permission"
+							type="checkbox" name="id" tal:attributes="value object/id" />
+					</td>
+					<td class="type" style="width: 4%;">
+						<img tal:define="icon object_info/view/get_icon"
+						     tal:condition="icon"
+						     tal:attributes="src icon/url;
+						                     alt icon/title;
+						                     title icon/title" />
+					</td>
+					<td class="title-column" colspan="2">
+						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+                        <a tal:define="download_url object_info/view/get_download_url"
+                           tal:condition="download_url"
+                           tal:attributes="href download_url;"
+                           title="Download"
+                           i18n:attributes="title">
+                           <img tal:attributes="src string:${site_url}/misc_/Naaya/download-file.png"
+                                alt="Download"
+                                i18n:attributes="alt" />
+                        </a>
+						<em tal:condition="object/can_be_seen"
+						    tal:content="object_info/view/get_info_text" />
+						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
+							<span i18n:translate="">Item only translated in </span>
+							<span tal:repeat="lang here/gl_get_languages_map">
+								<a tal:content="python:' %s' % lang['title']"
+									tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])"
+									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+							</span>
+						</span>
+						<tal:block condition="object/discussion|nothing">
+						<tal:block define="count_comments object/count_comments" condition="count_comments" on-error="string:">
+							[<span tal:replace="count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+						</tal:block>
+					</td>
+
+					<tal:block define="contributor object/contributor;
+									user_quoted python:here.utUrlEncode(contributor);
+									username python: auth_tool.name_from_userid(contributor) or contributor;
+									user_photo_url python:auth_tool.get_user_photo_url(contributor);
+									source_title python: auth_tool.source_name_from_userid(contributor);">
+					<td>
+						<a class="fancybox-thumb" tal:condition="user_photo_url" tal:attributes="href user_photo_url">
+							<img style="max-width:20px; max-height:20px"
+								tal:attributes="src user_photo_url" />
+						</a>
+					</td>
+					<td>
+						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
+							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+							tal:content="username" />
+						<a tal:condition="python:source_title.lower() == 'local' and
+																		here.checkPermissionPublishObjects()"
+							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
+							tal:content="username" />
+						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+							content="username" />
+					</td>
+					</tal:block>
+					<td tal:define="modif object_info/view/get_modification_date"
+						tal:content="python: here.utShowDateTime(modif) + ', ' + here.utShowTime(modif)">
+					</td>
+					<td tal:content="object_info/view/get_size"/>
+					<td class="edit" tal:condition="edit_permission">
+						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+						</a>
+						<tal:block condition="not:editable">n/a</tal:block>
+					</td>
+					<td tal:condition="ratings" class="type" style="width: 12%;">
+						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"
+							condition="object/is_ratable" replace="structure user_rating"/>
+					</td>
+
+				</tal:block>
+			</metal:block>
+			<metal:block define-slot="table_objects_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (content for objects goes here).
+				</tal:comment>
+			</metal:block>
+		</tr>
+        </tbody>
+	</table>
+</form>
+
+<div id="dialog-unable-delete-folder" i18n:attributes="title" title="Unable to delete folder" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="" tal:define="folder_title here/title_or_id">
+                You are using the <strong i18n:name="delete_folder">Delete Folder</strong>
+                button while you have checked items inside it.
+                <br i18n:name="br" /> <br i18n:name="br" />
+                For security reasons, we ask you to uncheck all items, and then use this button
+                if you want to delete the entire <strong><span i18n:name="folder_title" tal:replace="folder_title"/></strong> folder.
+                <br i18n:name="br" /><br i18n:name="br" />
+                If you instead want to delete the checked items, then use the <strong i18n:name="delete">Delete</strong> button next to Cut/Copy.
+            </span>
+       </p>
+</div>
+
+
+<div id="dialog-delete-folder-confirm" i18n:attributes="title" title="Delete entire folder" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="" tal:define="folder_title here/title_or_id">
+                The <strong>entire <span style="color:red;"><span i18n:name="folder_title"
+                tal:replace="folder_title"/></span> folder</strong> and all its contents will be deleted.
+                <br i18n:name="br" />
+                <br i18n:name="br" />
+                If you want to delete specific checked items, use the <strong i18n:name="delete" i18n:translate="">Delete</strong> button next to Cut, Copy.
+                <br i18n:name="br" /><br i18n:name="br" />
+                Are you sure you want to delete <span i18n:name="folder_title" tal:replace="folder_title" /> and all its contents?
+            </span>
+       </p>
+</div>
+
+<div id="dialog-delete-confirm" i18n:attributes="title" title="Delete items" style="display: none">
+       <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            <span i18n:translate="dialog-delete-confirm">
+                The checked items will be permanently deleted and may not be recovered. Are you sure?
+            </span>
+       </p>
+</div>
+
+</metal:block>
+<tal:block condition="iframe"><br />
+<tal:block replace="structure python:'</' +'body>'"></tal:block>
+<tal:block replace="structure python:'</' +'html>'"></tal:block>
+</tal:block>
+</tal:block>
+</metal:block>
