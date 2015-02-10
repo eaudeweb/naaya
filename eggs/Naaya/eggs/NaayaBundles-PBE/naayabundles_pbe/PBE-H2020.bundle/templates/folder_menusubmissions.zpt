@@ -1,0 +1,30 @@
+<tal:block tal:define="this_absolute_url python:here.absolute_url(0);
+    submissions here/process_submissions;
+    perm_add_something python:len(submissions)>0;
+    perm_edit_object here/checkPermissionEditObject;
+    perm_publish_objects here/checkPermissionPublishObjects;
+    perm_validate_objects here/checkPermissionValidateObjects">
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects">
+    <span id="submission" tal:condition="perm_add_something">
+        <span i18n:translate="" tal:omit-tag="">Submit</span>:
+        <select name="typetoadd"
+            tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+            <option value="#" i18n:translate="Type to add (translate ''type'' as a noun)">Type to add</option>
+            <option tal:repeat="item submissions"
+                tal:attributes="value python:item[0]"
+                tal:content="python:item[1]" i18n:translate="" />
+        </select>
+    </span>
+    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects"
+               tal:define="path python:here.absolute_url(1)">
+        <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
+        <a tal:condition="python:perm_publish_objects and here.id != 'contacts'" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span i18n:translate="">Restrict</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/csv_export"><span i18n:translate="">Export</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/csv_import"><span i18n:translate="">CSV import</span></a>
+        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/zip_import"><span i18n:translate=""><nobr>Zip import</nobr></span></a>
+    </tal:block>
+</div>
+</tal:block>

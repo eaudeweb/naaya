@@ -1,0 +1,146 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block metal:fill-slot="header-title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block fill-slot="body">
+
+<h1 i18n:translate="">Notifications subscription</h1>
+
+
+<tal:block define="can_subscribe_to python:list(here.available_notif_types())">
+<p tal:condition="not:can_subscribe_to">
+    Notifications are disabled.
+</p>
+
+<form tal:condition="can_subscribe_to"
+      tal:attributes="action string:${here/absolute_url}/subscribe_me"
+      name="subscribe_me" action="subscribe_me" method="post">
+<fieldset>
+<legend i18n:translate="">New subscription</legend>
+<div class="field">
+    <label for="subscribe_me-location" i18n:translate="">Location</label>
+    <div id="subscribe_me-sitemap_tree" class="sitemap_tree"></div>
+    <div style="clear: both"></div>
+    <input type="text" id="subscribe_me-location" name="location"
+           tal:attributes="value request/form/location|string:"
+           class="subscribe_me-sitemap_tree_target" />
+</div>
+<div class="field-inline">
+    <label for="subscribe_me-notif_type">Subscribe to</label>
+    <select name="notif_type" id="subscribe_me-notif_type">
+        <option value="instant"
+                tal:condition="python:'instant' in can_subscribe_to"
+                i18n:translate="">Instant notifications</option>
+        <option value="daily"
+                tal:condition="python:'daily' in can_subscribe_to"
+                i18n:translate="">Daily digest</option>
+        <option value="weekly"
+                tal:condition="python:'weekly' in can_subscribe_to"
+                i18n:translate="">Weekly digest</option>
+        <option value="monthly"
+                tal:condition="python:'monthly' in can_subscribe_to"
+                i18n:translate="">Monthly digest</option>
+    </select>
+</div>
+<div class="field-inline">
+    <label for="subscribe_me-lang" i18n:translate="">Language</label>
+    <select name="lang" id="subscribe_me-lang"
+            tal:define="gettext python:here.getPortalTranslations().gettext">
+        <option tal:repeat="item here/gl_get_languages_map"
+                tal:attributes="value python:item['id'];
+                                selected python:item['selected']"
+                tal:content="python:gettext(item['title'], item['id'])" />
+    </select>
+</div>
+<tal:block condition="context/config/enable_anonymous|nothing">
+    <tal:block condition="not: python: request.AUTHENTICATED_USER.getId()">
+        <div class="field-inline">
+            <label for="subscribe_me-email" i18n:translate="">E-mail</label>
+            <input type="text" id="subscribe_me-email" name="email"
+                   tal:attributes="value request/form/email|string:"/>
+        </div>
+	    <div class="field text">
+                <label for="organisation" i18n:translate="">Organization</label>
+                <input type="text" name="organisation" id="organisation" tal:attributes="value request/organisation|nothing" />
+        </div>
+        <div class="field select">
+                <label for="sector" i18n:translate="">Sector</label>
+                <select name="sector" id="sector"
+						tal:define="items python: context.getPortletsTool().sdo_sectors.get_tree_nodes()">
+                        <tal:block tal:repeat="item items">
+                        <option tal:attributes="value item/id">
+                                <span tal:replace="item/title" />
+                        </option>
+                        </tal:block>
+                </select>
+        </div>
+        <div class="field select">
+                <label for="country" i18n:translate="">Country</label>
+                <select name="country" id="country" tal:define="items python: context.getPortletsTool().sdo_countries.get_list()">
+                        <tal:block tal:repeat="item items">
+                        <option tal:attributes="value item/id">
+                                <span tal:replace="item/title" />
+                        </option>
+                        </tal:block>
+                </select>
+        </div>
+	</tal:block>
+</tal:block>
+<br/>
+<input type="submit" value="Subscribe" i18n:attributes="value"/>
+</fieldset>
+</form>
+<tal:block define="tree_get_url string:${here/absolute_url}/sitemap">
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+</tal:block>
+</tal:block>
+
+
+<tal:block define="my_subscriptions python:here.list_my_subscriptions(request)"
+           condition="my_subscriptions">
+
+<h2 i18n:translate="">Your subscriptions</h2>
+
+<table class="datatable">
+<thead>
+    <th>Location</th>
+    <th>Notification type</th>
+    <th>Language</th>
+    <th></th>
+</thead>
+<tbody>
+    <tr tal:repeat="subscription my_subscriptions">
+        <td tal:define="location subscription/location">
+            <a tal:condition="location"
+               tal:attributes="href python:here.get_location_link(location)"
+               tal:content="location"></a>
+            <a tal:condition="not:location"
+               tal:attributes="href python:here.get_location_link(location)"
+               >entire portal</a>
+        </td>
+        <td tal:content="subscription/notif_type"/>
+        <td tal:define="lang subscription/lang"
+            tal:content="python:here.gl_get_language_name(lang)"/>
+        <td>
+            <form method="post"
+                  tal:define="url here/absolute_url"
+                  tal:attributes="action string:${url}/unsubscribe_me">
+                <input type="hidden" name="location"
+                       tal:attributes="value subscription/location"/>
+                <input type="hidden" name="notif_type"
+                       tal:attributes="value subscription/notif_type"/>
+                <input type="hidden" name="lang"
+                       tal:attributes="value subscription/lang"/>
+                <input type="submit" value="unsubscribe"
+                       i18n:attributes="value"/>
+            </form>
+        </td>
+    </tr>
+</tbody>
+</table>
+
+</tal:block>
+
+</metal:block>
+</metal:block>

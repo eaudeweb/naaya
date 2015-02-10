@@ -1,0 +1,276 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content here/title"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block metal:fill-slot="head"></metal:block>
+
+<metal:block metal:fill-slot="body">
+<style type="text/css">
+ul.SubFold {
+	position: absolute;
+	top: auto;
+	left:auto;
+	z-index: 200;
+	display: none;
+	list-style-type: none;
+	padding-left: 0em !important;
+	background-color: white;
+	padding-bottom: 0em;
+	margin-left: 100%;
+	margin-top: -1.3em;
+}
+.SubFoldLi {
+	width: 10em !important;
+	height: 17px;
+	background-image: url(./images/element.jpg);
+	background-position: 0 50%;
+	background-repeat: repeat-x;
+}
+ul.FoldList {
+	list-style-type: none;
+	background-color: white;
+	padding-left: 0em;
+	padding-right: 0em;
+	margin-left:auto;
+	z-index: 100;
+	padding-bottom: 0em;
+	width: auto;
+}
+ul.FoldList li {
+	background-image: url(./images/element.jpg);
+	background-position: 0 50%;
+	background-repeat: repeat-x;
+	width: 20em;
+	height: 17px;
+}
+.SubFoldLi a{
+	position: absolute;
+	width: auto;
+	text-decoration: none;
+	color: white !important;
+	padding-top: 0.1em !important;
+	left: 0.5em !important;
+}
+.FoldListA {
+	width: auto;
+	text-decoration: none;
+	color: white !important;
+	margin-left: 1.5em;
+	display: block;
+}
+.SubFoldLi a:hover{
+	width: auto;
+	text-decoration: underline;
+	color: white !important;
+}
+ul.SubFold div {
+	padding: 1px;
+	border: 1px solid #447385;
+	margin-left: -1em;
+	background-color: white;
+}
+ul.FoldList li a:hover{
+	width: auto;
+	text-decoration: underline;
+	color: white !important;
+}
+.dropdown_container ul{
+	list-style-type: none;
+}
+.dropdown_container {
+	position: absolute;
+	display: none;
+	top: auto;
+	left:auto;
+	margin-left:auto;
+	margin-top: -203px;
+}
+.tdLink {
+	width: 203px;
+	height: 203px;
+	cursor: hand;
+}
+
+span.FoldTitle {
+	background: url(images/menu_arrow.gif) right 50% no-repeat;
+	display: block;
+}
+
+</style>
+<tal:block define="right_portlets python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
+
+<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+
+<script type="text/javascript">
+
+	function show(item_id) {
+		var get_item = document.getElementById(item_id)
+
+		get_item.style.display="inline"
+
+	}
+
+	function hide(item_id) {
+		var get_item = document.getElementById(item_id)
+
+		get_item.style.display="none"
+	
+	}
+
+</script>
+
+	<span tal:replace="structure here/description" />
+
+<table align="center" style="text-align: middle; clear: left;">
+	<tr>
+	<tal:block tal:define="main_folder python:here.getSite().learn_more">
+	<td tal:attributes="onmouseover python:'''javascript:show('%s')''' % main_folder.absolute_url(); 
+						onmouseout python:'''javascript:hide('%s')''' % main_folder.absolute_url()" 
+						style="background-image: url(./images/learn_more.jpg); background-position:bottom right; background-repeat:no-repeat; height:185px; width:185px;">
+		<a tal:attributes="href python:main_folder.absolute_url()"><div class="tdLink" ></div></a>
+		<span class="dropdown_container" tal:define="main_groups python:main_folder.objectValues('Naaya Folder')" 
+										tal:attributes="id python:main_folder.absolute_url()">
+			<ul class="FoldList">
+				<div style="padding: 1px;border: 1px solid #447385;" tal:repeat="folder main_groups">
+				<li tal:attributes="onmouseover python:'''javascript:show('%s')''' % folder.absolute_url(1);
+									onmouseout python:'''javascript:hide('%s')''' % folder.absolute_url(1)">
+					<a class="FoldListA" title="" tal:attributes="href python:folder.absolute_url()">
+							<span tal:content="python:folder.title_or_id()" tal:attributes="class python:test(folder.objectValues('Naaya Folder'), 'FoldTitle', '')">
+							</span>
+					</a>
+					<span tal:condition="python:folder.objectValues('Naaya Folder') == []" 
+							tal:attributes="id python:folder.absolute_url(1)" style=""></span>
+					<tal:block tal:condition="python:folder.objectValues('Naaya Folder')">
+					<ul class="SubFold" tal:attributes="id python:folder.absolute_url(1)">
+						<div tal:repeat="subfolder python:folder.objectValues('Naaya Folder')">
+						<li class="SubFoldLi"><a title="" tal:attributes="href python:subfolder.absolute_url()"><span tal:replace="python:subfolder.title_or_id()"></span></a></li>
+						</div>
+					</ul>
+					</tal:block>
+				</li>
+				</div>
+			</ul>
+		</span>
+	</td>
+	</tal:block>
+	<tal:block tal:define="main_folder python:here.getSite().search">
+	<td tal:attributes="onmouseover python:'''javascript:show('%s')''' % main_folder.absolute_url(); 
+						onmouseout python:'''javascript:hide('%s')''' % main_folder.absolute_url()" 
+						style="background-image: url(./images/search.jpg); background-position:bottom left; background-repeat:no-repeat; height:203px; width:203px;">
+		<a tal:attributes="href python:main_folder.absolute_url()"><div class="tdLink" ></div></a>
+		<span class="dropdown_container" tal:define="main_groups python:main_folder.objectValues('Naaya Folder')" 
+										tal:attributes="id python:main_folder.absolute_url()">
+			<ul class="FoldList">
+				<div style="padding: 1px;border: 1px solid #447385;" tal:repeat="folder main_groups">
+				<li tal:attributes="onmouseover python:'''javascript:show('%s')''' % folder.absolute_url(1);
+									onmouseout python:'''javascript:hide('%s')''' % folder.absolute_url(1)">
+					<a class="FoldListA" title="" tal:attributes="href python:folder.absolute_url()">
+							<span tal:content="python:folder.title_or_id()" tal:attributes="class python:test(folder.objectValues('Naaya Folder'), 'FoldTitle', '')">
+							</span>
+					</a>
+					<span tal:condition="python:folder.objectValues('Naaya Folder') == []" 
+							tal:attributes="id python:folder.absolute_url(1)" style=""></span>
+					<tal:block tal:condition="python:folder.objectValues('Naaya Folder')">
+					<ul class="SubFold" tal:attributes="id python:folder.absolute_url(1)">
+						<div tal:repeat="subfolder python:folder.objectValues('Naaya Folder')">
+						<li class="SubFoldLi"><a title="" tal:attributes="href python:subfolder.absolute_url()"><span tal:replace="python:subfolder.title_or_id()"></span></a></li>
+						</div>
+					</ul>
+					</tal:block>
+				</li>
+				</div>
+			</ul>
+		</span>
+	</td>
+	</tal:block>
+	</tr>
+
+	<tr>
+	<tal:block tal:define="main_folder python:here.getSite().EEAprojects">
+	<td tal:attributes="onmouseover python:'''javascript:show('%s')''' % main_folder.absolute_url(); 
+						onmouseout python:'''javascript:hide('%s')''' % main_folder.absolute_url()" 
+						style="background-image: url(./images/projects.jpg); background-position:top left; background-repeat:no-repeat; height:203px; width:203px;">
+		<a tal:attributes="href python:main_folder.absolute_url()"><div class="tdLink" ></div></a>
+		<span class="dropdown_container" tal:define="main_groups python:main_folder.objectValues('Naaya Folder')" 
+										tal:attributes="id python:main_folder.absolute_url()">
+			<ul class="FoldList">
+				<div style="padding: 1px;border: 1px solid #447385;" tal:repeat="folder main_groups">
+				<li tal:attributes="onmouseover python:'''javascript:show('%s')''' % folder.absolute_url(1);
+									onmouseout python:'''javascript:hide('%s')''' % folder.absolute_url(1)">
+					<tal:block define="project_url python:folder.absolute_url()">
+					<tal:block condition="python:folder.id!='SOER2010'">
+					<a class="FoldListA" title="" tal:attributes="href string:${project_url}/showcase">
+							<span class="" tal:content="python:folder.title_or_id()">
+							</span>
+					</a>
+					</tal:block>
+					<tal:block condition="python:folder.id=='SOER2010'">
+					<a class="FoldListA" title="" href="http://soer2010.ew.eea.europa.eu/">
+							<span class="" tal:content="python:folder.title_or_id()">
+							</span>
+					</a>
+					</tal:block>
+					<span tal:condition="python:folder.objectValues('Naaya Folder') != []" 
+							tal:attributes="id python:folder.absolute_url(1)" style=""></span>
+					</tal:block>
+				</li>
+				</div>
+			</ul>
+		</span>
+	</td>
+	</tal:block>
+	<tal:block tal:define="main_folder python:here.getSite().share">
+	<td tal:attributes="onmouseover python:'''javascript:show('%s')''' % main_folder.absolute_url(); 
+						onmouseout python:'''javascript:hide('%s')''' % main_folder.absolute_url()" 
+						style="background-image: url(./images/share.jpg); background-position:top left; background-repeat:no-repeat; height:185px; width:185px;">
+		<a tal:attributes="href python:main_folder.absolute_url()"><div class="tdLink" ></div></a>
+		<span class="dropdown_container" tal:define="main_groups python:main_folder.objectValues('Naaya Folder')" 
+										tal:attributes="id python:main_folder.absolute_url()">
+			<ul class="FoldList">
+				<div style="padding: 1px;border: 1px solid #447385;" tal:repeat="folder main_groups">
+				<li tal:attributes="onmouseover python:'''javascript:show('%s')''' % folder.absolute_url(1);
+									onmouseout python:'''javascript:hide('%s')''' % folder.absolute_url(1)">
+					<a class="FoldListA" title="" tal:attributes="href python:folder.absolute_url()">
+							<span tal:content="python:folder.title_or_id()" tal:attributes="class python:test(folder.objectValues('Naaya Folder'), 'FoldTitle', '')">
+							</span>
+					</a>
+					<span tal:condition="python:folder.objectValues('Naaya Folder') == []" 
+							tal:attributes="id python:folder.absolute_url(1)" style=""></span>
+					<tal:block tal:condition="python:folder.objectValues('Naaya Folder')">
+					<ul class="SubFold" tal:attributes="id python:folder.absolute_url(1)">
+						<div tal:repeat="subfolder python:folder.objectValues('Naaya Folder')">
+						<li class="SubFoldLi"><a title="" tal:attributes="href python:subfolder.absolute_url()"><span tal:replace="python:subfolder.title_or_id()"></span></a></li>
+						</div>
+					</ul>
+					</tal:block>
+				</li>
+				</div>
+			</ul>
+		</span>
+	</td>
+	</tal:block>
+	</tr>
+</table>
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" on-error="python:here.log_page_error(error)" />
+	</tal:block>
+</div>
+
+<div id="right_port" tal:define="items right_portlets"
+	tal:condition="python:len(items)>0">
+	<tal:block tal:repeat="item items">
+		<tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" on-error="python:here.log_page_error(error)" />
+	</tal:block>
+</div>
+</tal:block>
+</metal:block>
+</metal:block>
