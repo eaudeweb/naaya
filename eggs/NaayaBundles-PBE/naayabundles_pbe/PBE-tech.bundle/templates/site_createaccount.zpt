@@ -1,0 +1,67 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1 i18n:translate="">Application for contributor privileges</h1>
+
+<p i18n:translate="">
+	Fill your data in the form below and press the <strong>Submit request</strong> button.
+	The Webmaster will be informed of your application for contribution privileges.
+	You will be notified about the result of your request.
+</p>
+
+<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
+<table border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td valign="top" i18n:translate="">Username</td>
+		<td><input type="text" name="username:utf8:ustring" size="40" tal:attributes="value here/getSessionUserName" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">First name</td>
+		<td><input type="text" name="firstname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Last name</td>
+		<td><input type="text" name="lastname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Email address</td>
+		<td><input type="text" name="email:utf8:ustring" size="40" tal:attributes="value here/getSessionUserEmail" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Password:</td>
+		<td><input type="password" name="password:utf8:ustring" size="30" value="" maxlength="255">*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Password verification:</td>
+		<td><input type="password" name="confirm:utf8:ustring" value="" size="30" maxlength="255">*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Organisation</td>
+		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
+	</tr>
+	<tr>
+		<td valign="top" i18n:translate="">Location<br />the privileges should apply</td>
+		<td><input type="radio" name="location" 
+			tal:attributes="value python:here.absolute_url(1); checked python:here.getSessionUserLocation()== here.absolute_url(1)" /> <span i18n:translate="" tal:omit-tag="">This section</span> -- <em tal:content="here/title_or_id" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/> <span i18n:translate="" tal:omit-tag="">Entire portal</span></td>
+	</tr>
+	<tr>
+		<td valign="top" i18n:translate="">Comments<br />(if any)</td>
+		<td><textarea name="comments:utf8:ustring" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea></td>
+	</tr>
+	<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
+		<td></td>
+		<td tal:content="structure python: here.show_recaptcha(here)" />
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Submit request" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</form>
+<span tal:replace="python:here.delSessionErrors()" />
+<span tal:replace="python:here.delRequestRoleSession()" />
+
+<span tal:replace="structure here/standard_html_footer"/>
