@@ -16,7 +16,7 @@
 
 <tal:block define="right_portlets python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
 
-<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 61%;; overflow-x: auto;;', '')">
 	<span tal:replace="structure here/description" />
 
 	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
