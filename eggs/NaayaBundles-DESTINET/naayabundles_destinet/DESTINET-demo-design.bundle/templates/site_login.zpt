@@ -1,6 +1,6 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
-
+<div id="loginlogout-page">
 <tal:block define="came_from python:request.get('came_from', '');
                 auth_tool python:here.getAuthenticationTool();
                 action_url string:logged_in">
@@ -122,6 +122,6 @@ This profile gives you access to everything you upload into the portal. It will 
 
 
 </tal:block>
-
+</div>
 </metal:block>
 </metal:block>

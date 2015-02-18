@@ -4,6 +4,7 @@
     </metal:block>
 
     <metal:block fill-slot="head">
+>
         <tal:block define="description here/description; content python:here.html2text(description)">
             <meta tal:condition="content" tal:attributes="content content" name="description" />
         </tal:block>
@@ -13,6 +14,7 @@
     </metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
+        <div class="content-index-page" id="center_content">
         <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" border="0" /> <span tal:replace="here/title_or_id" />
                 <tal:block condition="is_ratable" replace="structure here/user_rating_view|nothing"/>
                 <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
@@ -97,10 +99,12 @@
             <th i18n:translate="">Released</th>
             <td tal:content="python:here.utShowDateTime(here.releasedate)"/>
         </tr>
+        <tal:cond tal:condition="python:here.checkPermissionEditObject()" >
         <tr tal:condition="here/display_contributor | nothing">
             <th i18n:translate="">Contributor</th>
             <td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
         </tr>
+        </tal:cond>
         <tr tal:condition="here/coverage | nothing">
             <th i18n:translate="">Country</th>
             <td tal:content="here/coverage" />
@@ -162,7 +166,7 @@
 
     </tal:block>
 
-        <tal:block content="structure python: here.prop_display_tr('keywords')" />
+        <tal:block tal:condition="python:here.checkPermissionEditObject()" content="structure python: here.prop_display_tr('keywords')" />
 
         <tr tal:condition="python:here.prop_exists('topics') and here.topics" tal:define="sel_list2 python:here.portal_schemas.NyContact['topics-property'].get_selection_list()">
             <th i18n:translate="">Topics</th>
@@ -179,13 +183,14 @@
             <td tal:content="here/administrative_level | nothing" />
         </tr>
 
-        <tr>
+        <tr tal:condition="python:here.checkPermissionEditObject()">
             <th i18n:translate="">Export for Outlook</th>
             <td><a tal:attributes="href string:${here/absolute_url}/export_vcard" i18n:translate="">vCard Format</a></td>
         </tr>
         </table>
 
         <tal:block content="structure here/set_content_rating" />
-        <tal:block content="structure here/comments_box" />
+        <tal:block content="structure here/comments_box" tal:condition="python:here.checkPermissionEditObject()" />
+    </div>
     </metal:block>
 </metal:block>
