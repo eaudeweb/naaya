@@ -2,6 +2,9 @@
 -------------------
 * Change: keep the Owner roles when restricting access to a folder
   [tiberich #19452]
+* Bug fix: remove version from google map externally loaded JS, it was causing
+  issues with the portal map
+  [tiberich]
 
 3.4.10 (2014-12-10)
 -------------------
