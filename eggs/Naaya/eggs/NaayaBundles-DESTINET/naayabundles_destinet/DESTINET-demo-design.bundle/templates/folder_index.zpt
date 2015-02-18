@@ -62,24 +62,6 @@
 
 <script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
 
-<div class="folder_social">
-	<tal:block content="structure here/set_content_rating" />
-	<div class="folder_social_icons">
-	<div id="fb-root"></div>
-	<a class="feed_link" rel="external"
-		tal:attributes="href string:${here/absolute_url}/index_atom">
-		&nbsp;</a>
-	<a class="facebook_link" rel="external"
-		tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
-		&nbsp;</a>
-	<a class="twitter_link" rel="external"
-		tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
-		&nbsp;</a>
-	<a class="linkedin_link" rel="external"
-		tal:attributes="href string:http://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
-		&nbsp;</a>
-	</div>
-</div>
 
 <div>
 <h1>
@@ -101,8 +83,28 @@
 	</span>
 </h1>
 <img tal:condition="logo" tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
+
+<div class="folder_social">
+	<tal:block content="structure here/set_content_rating" />
+	<div class="folder_social_icons">
+	<div id="fb-root"></div>
+	<a class="feed_link" rel="external"
+		tal:attributes="href string:${here/absolute_url}/index_atom">
+		&nbsp;</a>
+	<a class="facebook_link" rel="external"
+		tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+		&nbsp;</a>
+	<a class="twitter_link" rel="external"
+		tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+		&nbsp;</a>
+	<a class="linkedin_link" rel="external"
+		tal:attributes="href string:http://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
+		&nbsp;</a>
+	</div>
+</div>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
+<!--div tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)"-->
 <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 	<metal:block fill-slot="menu_extension">
 		<span tal:replace="structure here/menusubmissions" />
@@ -114,6 +116,7 @@
 		</tal:block>
 	</metal:block>
 </metal:block>
+<!--/div-->
 
 </div>
 
