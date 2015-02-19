@@ -1,5 +1,6 @@
 1.2.64 (unreleased)
 -------------------
+* redirect successful signup authentication to the meeting index [dumitval]
 
 1.2.63 (2015-01-30)
 -------------------
