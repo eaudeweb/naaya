@@ -235,6 +235,7 @@ class Subscriptions(SimpleItem):
         signup = self.getSignup(key)
         if self._is_signup(key):
             REQUEST.SESSION['nymt-current-key'] = key
+            return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
 
         return self.getFormsTool().getContent(
             {'here': self,
