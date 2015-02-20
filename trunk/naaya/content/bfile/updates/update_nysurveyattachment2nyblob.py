@@ -30,6 +30,9 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
             if upload is None:
                 continue
 
+            if 'blob' in getattr(upload, 'meta_type', "").lower():
+                continue
+
             if upload.is_broken():
                 self.log.warning(
                     "\t BROKEN EXTFILE: Couldn't migrate extfile for "
@@ -46,6 +49,7 @@ class UpdateSurveyAttachment2NyBlobFile(UpdateScript):
                 sfile.headers = {'content-type': upload.content_type}
 
                 bf = make_blobfile(sfile,
+                                   title=upload.title,
                                    removed=False,
                                    timestamp=datetime.utcnow(),
                                    contributor='')
