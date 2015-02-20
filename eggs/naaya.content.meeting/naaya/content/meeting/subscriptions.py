@@ -77,6 +77,7 @@ class Subscriptions(SimpleItem):
 
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_signup_email(signup)
+        self.REQUEST.SESSION['nymt-current-key'] = key
 
     security.declareProtected(view, 'signup')
 
@@ -111,8 +112,12 @@ class Subscriptions(SimpleItem):
                     'naaya.content.meeting.subscription_signup')
             else:
                 self._add_signup(formdata)
-                REQUEST.RESPONSE.redirect(self.absolute_url() +
-                                          '/signup_successful')
+                if self.getMeeting().survey_required:
+                    REQUEST.RESPONSE.redirect(
+                        self.getMeeting().absolute_url())
+                else:
+                    REQUEST.RESPONSE.redirect(self.absolute_url() +
+                                              '/signup_successful')
 
     security.declareProtected(view, 'signup_successful')
 
@@ -194,6 +199,11 @@ class Subscriptions(SimpleItem):
         """ """
         return key in self._signups and \
             self._signups[key].accepted == 'accepted'
+
+    def _is_pending_signup(self, key):
+        """ """
+        return key in self._signups and \
+            self._signups[key].accepted == 'new'
 
     def manageSignups(self, REQUEST):
         """ """
@@ -478,7 +488,8 @@ class SignupUsersTool(BasicUserFolder):
         subscriptions = participants.getSubscriptions()
 
         key = REQUEST.SESSION.get('nymt-current-key', None)
-        if subscriptions._is_signup(key):
+        if (subscriptions._is_signup(key) or
+                subscriptions._is_pending_signup(key)):
             role = participants._get_attendees()[key]['role']
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
