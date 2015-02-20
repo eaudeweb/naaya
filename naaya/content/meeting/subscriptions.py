@@ -488,9 +488,11 @@ class SignupUsersTool(BasicUserFolder):
         subscriptions = participants.getSubscriptions()
 
         key = REQUEST.SESSION.get('nymt-current-key', None)
-        if (subscriptions._is_signup(key) or
-                subscriptions._is_pending_signup(key)):
+        if subscriptions._is_signup(key):
             role = participants._get_attendees()[key]['role']
+            return SimpleUser('signup:' + key, '', (role,), [])
+        if subscriptions._is_pending_signup(key):
+            role = 'Meeting Waiting List'
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
             return None

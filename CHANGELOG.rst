@@ -1,6 +1,3 @@
-1.2.65 (unreleased)
--------------------
-
 1.2.65 (2015-02-20)
 -------------------
 * authenticate as signup right after registration [dumitval]
