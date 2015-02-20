@@ -676,7 +676,8 @@ class NyMeeting(NyContentData, NyFolder):
     def index_html(self, REQUEST):
         """ """
         if self.survey_required and (self.registration_status() or
-                                     self.isParticipant()):
+                                     self.isParticipant() or
+                                     self.is_pending_signup()):
             survey_ob = self.get_survey()
             if (survey_ob is not None and
                     survey_ob.meta_type == 'Naaya Mega Survey'):
@@ -804,6 +805,14 @@ class NyMeeting(NyContentData, NyFolder):
         username = self.REQUEST.AUTHENTICATED_USER.getUserName()
         key = username.replace('signup:', '')
         return self.participants.getSubscriptions()._is_signup(key)
+
+    security.declareProtected(view, 'is_pending_signup')
+
+    def is_pending_signup(self):
+        """ """
+        username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        key = username.replace('signup:', '')
+        return self.participants.getSubscriptions()._is_pending_signup(key)
 
     # Compatibility code
 
