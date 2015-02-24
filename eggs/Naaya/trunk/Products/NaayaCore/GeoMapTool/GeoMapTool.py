@@ -1,7 +1,8 @@
 """This tool is used to manage map engines (google, yahoo, bing, etc.)
-in a Naaya Site. This tool is related to naaya.content.geopoint and SchemaTool's
-GeoWidget that can be used to display points on a map for different content
-types. Other features include map clustering, kml exports, and searching.
+in a Naaya Site. This tool is related to naaya.content.geopoint and
+SchemaTool's GeoWidget that can be used to display points on a map for
+different content types. Other features include map clustering, kml exports,
+and searching.
 
 """
 
@@ -41,27 +42,34 @@ from managers.kml_gen import kml_generator
 
 all_engines = {}
 
+
 def register_map_engine(cls):
     all_engines[cls.name] = cls
+
 
 class GeoMapToolUploadError(Exception):
     """GeoMapTool Upload Error"""
     pass
 
+
 def manage_addGeoMapTool(self, languages=None, REQUEST=None):
     """
     ZMI method that creates an object of this type.
     """
-    if languages is None: languages = []
+    if languages is None:
+        languages = []
     ob = GeoMapTool(ID_GEOMAPTOOL, TITLE_GEOMAPTOOL)
     self._setObject(ID_GEOMAPTOOL, ob)
     ob = self._getOb(ID_GEOMAPTOOL)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+
 def err_info():
-    import sys, traceback
+    import sys
+    import traceback
     return traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
+
 
 class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     """
@@ -70,56 +78,55 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     implements(IGeoMapTool)
 
-    #center map in Europe
+    # center map in Europe
     _cluster_pngs = [ImageFile('images/cluster_about_10.png', globals()),
-                        ImageFile('images/cluster_about_20.png', globals()),
-                        ImageFile('images/cluster_about_50.png', globals()),
-                        ImageFile('images/cluster_about_100.png', globals()),
-                        ImageFile('images/cluster_about_200.png', globals()),
-                        ImageFile('images/cluster_about_500.png', globals()),
-                        ImageFile('images/cluster_about_1000.png', globals()),
-                        ImageFile('images/cluster_2000_more.png', globals())]
+                     ImageFile('images/cluster_about_20.png', globals()),
+                     ImageFile('images/cluster_about_50.png', globals()),
+                     ImageFile('images/cluster_about_100.png', globals()),
+                     ImageFile('images/cluster_about_200.png', globals()),
+                     ImageFile('images/cluster_about_500.png', globals()),
+                     ImageFile('images/cluster_about_1000.png', globals()),
+                     ImageFile('images/cluster_2000_more.png', globals())]
 
     def _pick_cluster(self, len_group):
         if len_group < 15:
-            return 0 # about 10
+            return 0  # about 10
         elif len_group < 30:
-            return 1 # about 20
+            return 1  # about 20
         elif len_group < 75:
-            return 2 # about 50
+            return 2  # about 50
         elif len_group < 150:
-            return 3 # about 100
+            return 3  # about 100
         elif len_group < 300:
-            return 4 # about 200
+            return 4  # about 200
         elif len_group <= 750:
-            return 5 # about 500
+            return 5  # about 500
         elif len_group <= 2000:
-            return 6 # about 1000
+            return 6  # about 1000
         else:
             return 7
 
     _marker_template = NaayaPageTemplateFile('zpt/map_marker_popup', globals(),
-                                          'map_marker_popup')
-    _small_marker_template = NaayaPageTemplateFile('zpt/map_small_marker_popup', globals(),
-                                          'map_small_marker_popup')
+                                             'map_marker_popup')
+    _small_marker_template = NaayaPageTemplateFile(
+        'zpt/map_small_marker_popup', globals(), 'map_small_marker_popup')
 
     def get_small_marker(self, object):
-        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
-                                                                        object=object))
+        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(
+            permission=view, object=object))
         access_str = ''
         if not has_access:
             access_str = '(RESTRICTED ACCESS)'
-        return self._small_marker_template(object=object, access_str=access_str)
+        return self._small_marker_template(
+            object=object, access_str=access_str)
 
     def get_marker(self, object):
-        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
-                                                                        object=object))
+        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(
+            permission=view, object=object))
         access_str = ''
         if not has_access:
             access_str = '<div>RESTRICTED ACCESS</div>'
-        translate = self.getSite().getPortalTranslations()
         return self._marker_template(object=object, access_str=access_str)
-
 
     meta_type = METATYPE_GEOMAPTOOL
     icon = 'misc_/NaayaCore/GeoMapTool.gif'
@@ -154,11 +161,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             self._setObject(obj_id, all_engines[name](id=obj_id))
 
     security.declarePrivate('set_map_engine')
+
     def set_map_engine(self, name):
         self.current_engine = name
         self._create_map_engine_if_needed()
 
     security.declarePrivate('get_map_engine')
+
     def get_map_engine(self, engine_name=None):
         if engine_name is None:
             engine_name = self.current_engine
@@ -166,15 +175,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def can_filter_by_first_letter(self):
         catalog_tool = self.getCatalogTool()
-        return catalog_tool._catalog.indexes.has_key('full_title')
+        return 'full_title' in catalog_tool._catalog.indexes
 
     security.declarePrivate('build_geo_filters')
+
     def build_geo_filters(self, path='', meta_types=None, geo_types=[],
-            approved=True,
-            landscape_type=[], administrative_level=[], topics=[],
-            lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            query='', country='', first_letter=None,
-            **kwargs):
+                          approved=True, landscape_type=[],
+                          administrative_level=[], topics=[], lat_min=-90.,
+                          lat_max=90., lon_min=-180., lon_max=180., query='',
+                          country='', first_letter=None, **kwargs):
         base_filter = {}
 
         base_filter['path'] = path
@@ -202,10 +211,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if country:
             base_filter['coverage'] = country
 
-        base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)), Decimal(str(lat_max))),
-                                        'range':'min:max'}
-        base_filter['geo_longitude'] = {'query': (Decimal(str(lon_min)), Decimal(str(lon_max))),
-                                        'range':'min:max'}
+        base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)),
+                                                 Decimal(str(lat_max))),
+                                       'range': 'min:max'}
+        base_filter['geo_longitude'] = {'query': (Decimal(str(lon_min)),
+                                                  Decimal(str(lon_max))),
+                                        'range': 'min:max'}
 
         filters = []
         filters.append(base_filter)
@@ -227,22 +238,26 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             letter_filters = []
             for f in filters:
                 f_lower = f.copy()
-                f_lower['full_title'] = {'query': (first_letter.upper(), chr(ord(first_letter.upper())+1)),
-                                            'range':'min:max'}
+                f_lower['full_title'] = {
+                    'query': (first_letter.upper(),
+                              chr(ord(first_letter.upper())+1)),
+                    'range': 'min:max'}
                 letter_filters.append(f_lower)
 
                 f_upper = f.copy()
-                f_upper['full_title'] = {'query': (first_letter.lower(), chr(ord(first_letter.lower())+1)),
-                                            'range':'min:max'}
+                f_upper['full_title'] = {
+                    'query': (first_letter.lower(),
+                              chr(ord(first_letter.lower())+1)),
+                    'range': 'min:max'}
                 letter_filters.append(f_upper)
             filters = letter_filters
 
         return filters
 
     security.declarePrivate('get_geo_objects')
+
     def get_geo_objects(self, lat, lon, path='', geo_types=None, query=''):
         """ """
-
         eps = Decimal('0.000001')
         lat, lon = Decimal(lat), Decimal(lon)
         kwargs = {
@@ -261,6 +276,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return results
 
     security.declarePrivate('_search_geo_objects')
+
     def _search_geo_objects(self, filters):
         """
         Returns all the objects that match the specified criteria.
@@ -302,6 +318,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             objects.sort(key=key_func, reverse=reverse)
 
     security.declareProtected(view, 'search_geo_objects')
+
     def search_geo_objects(self, sort_on='', sort_order='',
                            REQUEST=None, **kwargs):
         """ Returns all the objects that match the specified criteria.
@@ -311,13 +328,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 lon_min -- string/float: minimum longitude for results
                 lon_max -- string/float: maximum longitude for results
                 path -- string: where to search
-                qeo_types -- list: types to search (if None all geo types are searched)
+                qeo_types -- list: types to search
+                             (if None all geo types are searched)
                 query -- string: text searched in the full text search
-                approved -- bool: if True return only approved items, otherwise return all items
+                approved -- bool: if True return only approved items,
+                                  otherwise return all items
                 languages -- list:
                 first_letter -- char: The first letter in the title
                 sort_on -- string: what index to sort on
-                sort_order -- string: if empty then normal order; if 'reverse' then reversed order
+                sort_order -- string: if empty then normal order;
+                                      if 'reverse' then reversed order
         """
 
         criteria = self._parse_search_terms(REQUEST, kwargs)
@@ -339,6 +359,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return results
 
     security.declarePrivate('_search_geo_clusters')
+
     def _search_geo_clusters(self, filters):
         """
         Returns all the clusters that match the specified criteria.
@@ -351,10 +372,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
             lon_min = float(filters[0]['geo_longitude']['query'][0])
             lon_max = float(filters[0]['geo_longitude']['query'][1])
-        else: # this should not happen
+        else:  # this should not happen
             return [], []
 
-        #preparing for the call to the catalog
+        # preparing for the call to the catalog
         catalog_tool = self.getCatalogTool()
 
         # call the improved cluster_catalog function for getting the clusters
@@ -365,20 +386,28 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         cluster_obs, single_obs = [], []
         for i in range(len(centers)):
-            if len(groups[i]) < 10: # from this const on we actually return clusters
+            if len(groups[i]) < 10:
+                # from this const on we actually return clusters
                 for so in groups[i]:
-                    sobject = clusters_catalog.getObjectFromCatalog(catalog_tool, so)
+                    sobject = clusters_catalog.getObjectFromCatalog(
+                        catalog_tool, so)
 
                     # do not display it if it is not in the actual map
-                    if Decimal(str(lat_min)) < sobject.geo_location.lat < Decimal(str(lat_max)):
-                        if Decimal(str(lon_min)) < sobject.geo_location.lon < Decimal(str(lon_max)):
+                    if (Decimal(str(lat_min)) < sobject.geo_location.lat <
+                            Decimal(str(lat_max))):
+                        if (Decimal(str(lon_min)) < sobject.geo_location.lon <
+                                Decimal(str(lon_max))):
                             single_obs.append(sobject)
             else:
-                if Decimal(str(lat_min)) < centers[i].lat < Decimal(str(lat_max)):
-                        if Decimal(str(lon_min)) < centers[i].lon < Decimal(str(lon_max)):
-                            group_paths = [clusters_catalog.getObjectPathFromCatalog(catalog_tool, rid)
-                                           for rid in groups[i]]
-                            cluster_obs.append((centers[i], group_paths))
+                if (Decimal(str(lat_min)) < centers[i].lat <
+                        Decimal(str(lat_max))):
+                    if (Decimal(str(lon_min)) < centers[i].lon <
+                            Decimal(str(lon_max))):
+                        group_paths = [
+                            clusters_catalog.getObjectPathFromCatalog(
+                                catalog_tool, rid)
+                            for rid in groups[i]]
+                        cluster_obs.append((centers[i], group_paths))
 
         return cluster_obs, single_obs
 
@@ -434,6 +463,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return criteria
 
     security.declareProtected(view, 'search_geo_clusters')
+
     def search_geo_clusters(self, REQUEST=None, **kwargs):
         """ Returns all the clusters that match the specified criteria. """
 
@@ -456,9 +486,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return cluster_obs, single_obs
 
     map_kml = NaayaPageTemplateFile('zpt/map_kml', globals(),
-                                          'Products.NaayaCore.GeomapTool.map_kml')
-    
+                                    'Products.NaayaCore.GeomapTool.map_kml')
+
     security.declareProtected(view, 'downloadLocationsKml')
+
     def downloadLocationsKml(self, REQUEST):
         """Returns the selected locations as a KML file"""
 
@@ -466,11 +497,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         for loc in self.search_geo_objects(REQUEST=REQUEST):
             if loc.geo_location is not None:
                 points.append(loc)
-        REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
-        REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
+        REQUEST.RESPONSE.setHeader('Content-Type',
+                                   'application/vnd.google-earth.kml+xml')
+        REQUEST.RESPONSE.setHeader('Content-Disposition',
+                                   'attachment;filename=locations.kml')
         return self.map_kml(points=points)
 
     security.declareProtected(view, 'xrjs_getGeoPoints')
+
     def xrjs_getGeoPoints(self, REQUEST):
         """ """
         try:
@@ -498,6 +532,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return json_response
 
     security.declareProtected(view, 'xrjs_getGeoClusters')
+
     def xrjs_getGeoClusters(self, REQUEST):
         """ """
         try:
@@ -521,7 +556,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 if res.geo_location is None:
                     continue
                 if not res.geo_type:
-                    #TODO: add logging?
+                    # TODO: add logging?
                     continue
                 points.append({
                     'lat': res.geo_location.lat,
@@ -543,8 +578,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return json_response
 
-
     security.declareProtected(view, 'xrjs_getPointBalloon')
+
     def xrjs_getPointBalloon(self, point_id):
         """ get the map balloon for point  """
         # we do unrestricted traverse because `get_marker` will check perms
@@ -563,7 +598,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             return self.get_marker(ob)
 
     security.declareProtected(view, 'xrjs_getTooltip')
-    def xrjs_getTooltip(self, lat, lon, path='', geo_types=None, geo_query=None):
+
+    def xrjs_getTooltip(self, lat, lon, path='', geo_types=None,
+                        geo_query=None):
         """ """
         warn("`xrjs_getTooltip` is deprecated. Use `xrjs_getPointBalloon` "
              "instead.")
@@ -601,20 +638,24 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def get_location_marker(self, location):
         symbol = self.getSymbol(location.geo_type)
         if symbol:
-            icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
+            icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(),
+                                                      symbol.id)
             if icon_url is not None:
                 return icon_url
             return ''
         return ''
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicateLocations')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'getDuplicateLocations')
+
     def getDuplicateLocations(self, criteria, sort_on="", sort_order=""):
         """Returns a list of duplicate locations.
 
             It accepts the same parameters as :meth:`getLocations`.
         """
         all_items = {}
-        objects = self.search_geo_objects(sort_on=sort_on, sort_order=sort_order)
+        objects = self.search_geo_objects(sort_on=sort_on,
+                                          sort_order=sort_order)
 
         for i in range(len(objects)):
             item = objects[i]
@@ -641,7 +682,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ret = [x[0] for x in ret]
         return ret
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getNoCoordinatesObjects')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'getNoCoordinatesObjects')
+
     def getNoCoordinatesObjects(self, *args, **kw):
         """Returns a list of objects with no coordinates
 
@@ -660,14 +703,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 pass
 
         for item in objects:
-            if isinstance(item, Products.NaayaBase.NyContentType.NyContentType):
+            if isinstance(item,
+                          Products.NaayaBase.NyContentType.NyContentType):
                 schema = schema_tool.getSchemaForMetatype(item.meta_type)
                 if schema is None:
                     continue
 
-                if not 'geo_location-property' in schema.objectIds():
+                if 'geo_location-property' not in schema.objectIds():
                     continue
-                if not 'geo_location' in (schema.getDefaultDefinition() or {}):
+                if 'geo_location' not in (schema.getDefaultDefinition() or {}):
                     continue
 
                 if item.meta_type not in meta_types:
@@ -682,11 +726,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     ret.append(item)
                 elif (item.geo_location is None):
                     ret.append(item)
-                elif (item.geo_location.lat is None) or (item.geo_location.lon is None):
+                elif (item.geo_location.lat is None) or (
+                        item.geo_location.lon is None):
                     ret.append(item)
         return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteLocations')
+
     def deleteLocations(self, locations, REQUEST=None):
         """ delete locations """
         for location in locations:
@@ -694,11 +740,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if loc_obj:
                 loc_obj.getParentNode().manage_delObjects([loc_obj.getId()])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
-    def adminAddSymbol(self, title='', description='', parent='',
+
+    def adminAddSymbol(self, id='', title='', description='', parent='',
                        color='', picture='', sortorder='', REQUEST=None):
         """ """
         if color:
@@ -706,8 +754,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             color = None
 
-        try:
+        if not id:
             id = 'symbol%s' % self.utGenRandomId(3)
+        try:
             self.addSymbol(id, title, description, parent,
                            color, picture, sortorder)
         except ValueError, e:
@@ -715,15 +764,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 raise
             self.setSessionErrorsTrans(e)
             return REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
-                                              % self.absolute_url())
+                                             % self.absolute_url())
 
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
-                                       % self.absolute_url())
+                                      % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
+
     def adminUpdateSymbol(self, id='', title='', description='', parent='',
                           color='', picture='', sortorder='', REQUEST=None):
         """ """
@@ -740,23 +790,27 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 raise
             self.setSessionErrorsTrans(e)
             return REQUEST.RESPONSE.redirect('%s/admin_maptypes_html?id=%s'
-                                              % (self.absolute_url(), id))
+                                             % (self.absolute_url(), id))
 
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
-                                       % self.absolute_url())
+                                      % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminDeleteSymbols')
+
     def adminDeleteSymbols(self, id=[], REQUEST=None):
         """ """
         self.deleteSymbol(self.utConvertToList(id))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' %
+                                      self.absolute_url())
 
     security.declareProtected(view, 'getSymbolsListOrdered')
+
     def getSymbolsListOrdered(self, skey='sortorder', rkey=0):
         """ return an ordered lsit of symbols """
         r = []
@@ -765,23 +819,28 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             r.extend(self.getSymbolChildrenOrdered(p.id))
         return r
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_contenttypes')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_set_contenttypes')
+
     def admin_set_contenttypes(self, geotag=[], REQUEST=None):
         """ """
         schema_tool = self.getSite().getSchemaTool()
-        return schema_tool.admin_set_contenttypes(geotag=geotag, REQUEST=REQUEST)
+        return schema_tool.admin_set_contenttypes(geotag=geotag,
+                                                  REQUEST=REQUEST)
 
     def list_geotaggable_types(self):
         schema_tool = self.getSite().getSchemaTool()
         return schema_tool.list_geotaggable_types()
 
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None):
         """ """
         return self._index_template()({'here': self})
 
     security.declareProtected(view_management_screens,
                               'manage_customize_index')
+
     def manage_customize_index(self, REQUEST):
         """ create a custom map_index """
         if 'map_index' in self.objectIds():
@@ -805,6 +864,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'embed_map_html')
     _embed_map_html = NaayaPageTemplateFile('zpt/map_embed', globals(),
                                             'map_embed')
+
     def embed_map_html(self, REQUEST):
         """ embeddable map, for iframe """
         if 'map_embed' in self.objectIds():
@@ -815,15 +875,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     _list_locations = NaayaPageTemplateFile('zpt/list_locations', globals(),
                                             'map_list_locations')
     security.declareProtected(view, 'list_locations')
+
     def list_locations(self, REQUEST=None, **kw):
         """" """
         if REQUEST is not None:
             kw.update(REQUEST.form)
         lat_min, lat_max, lon_min, lon_max = \
-               kw.get('lat_min', ''),\
-               kw.get('lat_max', ''),\
-               kw.get('lon_min', ''),\
-               kw.get('lon_max', '')
+            kw.get('lat_min', ''),\
+            kw.get('lat_max', ''),\
+            kw.get('lon_min', ''),\
+            kw.get('lon_max', '')
         geo_types = kw.get('geo_types', [])
         if geo_types == '':
             geo_types = []
@@ -887,22 +948,27 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['prev_start'] = options['start'] - step
         options['prev_end'] = options['start']
         options['records'] = results[options['start']:options['end']]
-        options['ratable_records'] = self._ratable_results(results[options['start']:options['end']])
+        options['ratable_records'] = self._ratable_results(
+            results[options['start']:options['end']])
         return self._list_locations(**options)
 
     def _ratable_results(self, results):
         for ob in results:
             try:
                 ratable = ob.is_ratable()
-                if ratable: return True
-            except: pass
+                if ratable:
+                    return True
+            except:
+                pass
         return False
 
     security.declareProtected(view, 'export_csv')
+
     def export_csv(self, meta_type, REQUEST=None, RESPONSE=None, **kw):
         """
         Should be used to export the map viewable objects of a given meta_type
-        The exported properties are taken from schema (similar to the global csv_export)
+        The exported properties are taken from schema (similar to the global
+        csv_export)
         """
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
@@ -923,23 +989,27 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         RESPONSE.setHeader('Content-Length', len(ret))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="map_contacts.csv"')
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment; filename="map_contacts.csv"')
 
         return ret
 
     security.declareProtected(view, 'export_geo_rss')
+
     def export_geo_rss(self, sort_on='', sort_order='',
                        REQUEST=None, **kwargs):
         """ """
         timestamp = datetime.fromtimestamp(time.time())
         timestamp = str(timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
-        rss = ["""<feed xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss">
+        rss = ["""<feed xmlns="http://www.w3.org/2005/Atom"
+              xmlns:georss="http://www.georss.org/georss">
               <title>%s</title>
               <id>%s</id>
               <link rel="self" href="%s" />
               <author><name>European Environment Agency</name></author>
               <updated>%s</updated>
-              """ % (self.title, self.absolute_url(), self.absolute_url(), timestamp) ]
+              """ % (self.title, self.absolute_url(), self.absolute_url(),
+                     timestamp)]
         items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
                                         sort_order=sort_order, **kwargs)
 
@@ -948,7 +1018,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             entry = doc.createElement("entry")
 
             id_node = doc.createElement("id")
-            id_node.appendChild(doc.createTextNode("%s" % (item.absolute_url(1))))
+            id_node.appendChild(doc.createTextNode("%s" %
+                                                   (item.absolute_url(1))))
             entry.appendChild(id_node)
 
             link_node = doc.createElement("link")
@@ -957,7 +1028,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
             title_node = doc.createElement("title")
             if item.title:
-                title = doc.createTextNode(item.title.encode('utf-8').decode('utf-8'))
+                title = doc.createTextNode(
+                    item.title.encode('utf-8').decode('utf-8'))
             else:
                 title = doc.createTextNode(str(item.getId()))
             title_node.appendChild(title)
@@ -965,14 +1037,23 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             summary_node = doc.createElement("summary")
             summary_node.setAttribute("type", "html")
             description = [item.description.encode('utf-8').decode('utf-8')]
-            description.append("<b>Address</b>: %s" % item.geo_location.address.encode('utf-8').decode('utf-8'))
+            description.append(
+                "<b>Address</b>: %s" %
+                item.geo_location.address.encode('utf-8').decode('utf-8'))
             if hasattr(item.aq_self, 'webpage'):
-                description.append("<b>Webpage:</b>: %s" % item.webpage.encode('utf-8').decode('utf-8'))
+                description.append(
+                    "<b>Webpage:</b>: %s" %
+                    item.webpage.encode('utf-8').decode('utf-8'))
             if hasattr(item.aq_self, 'contact'):
-                description.append("<b>Contact:</b>: %s" % item.contact.encode('utf-8').decode('utf-8'))
+                description.append(
+                    "<b>Contact:</b>: %s" %
+                    item.contact.encode('utf-8').decode('utf-8'))
             if hasattr(item.aq_self, 'source') and item.source:
-                description.append("<b>Source:</b>: %s" % item.source.encode('utf-8').decode('utf-8'))
-            summary_node.appendChild(doc.createTextNode("%s" % ("<br />".join(description))))
+                description.append(
+                    "<b>Source:</b>: %s" %
+                    item.source.encode('utf-8').decode('utf-8'))
+            summary_node.appendChild(doc.createTextNode(
+                "%s" % ("<br />".join(description))))
             entry.appendChild(summary_node)
 
             type_node = doc.createElement("georss:featuretypetag")
@@ -981,7 +1062,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             entry.appendChild(type_node)
 
             geo_node = doc.createElement("georss:point")
-            coords = doc.createTextNode("%s %s" % (item.geo_location.lat, item.geo_location.lon))
+            coords = doc.createTextNode("%s %s" % (item.geo_location.lat,
+                                                   item.geo_location.lon))
             geo_node.appendChild(coords)
             entry.appendChild(geo_node)
 
@@ -991,11 +1073,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 print entry
         if REQUEST:
             REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
-            REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.xml')
+            REQUEST.RESPONSE.setHeader('Content-Disposition',
+                                       'attachment;filename=locations.xml')
         rss.append("</feed>")
         return '\n'.join(rss)
 
     security.declareProtected(view, 'get_geotaggable_meta_types')
+
     def get_geotaggable_meta_types(self):
         """Returns a list of geotaggable meta types"""
         installed_content_metatypes = self.get_pluggable_installed_meta_types()
@@ -1005,8 +1089,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             schema = schemas.getSchemaForMetatype(meta_type)
             if schema:
                 try:
-                    geo_location = schema.getWidget('geo_location');
-                    geo_type = schema.getWidget('geo_type');
+                    geo_location = schema.getWidget('geo_location')
+                    geo_type = schema.getWidget('geo_type')
                 except KeyError:
                     # one or both widgets are missing; skip it
                     continue
@@ -1014,7 +1098,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     res.append(meta_type)
         return res
 
-    _object_index_map = PageTemplateFile('zpt/object_index_map', globals())
+    _object_index_map = NaayaPageTemplateFile('zpt/object_index_map',
+                                              globals(),
+                                              'map_object_index_map')
+
     def render_object_map(self, geo_location):
         """
         Returns all the script and html required to display a map
@@ -1024,8 +1111,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         `geo_location` -- a ``Geo`` object
 
         Example usage::
-                <tal:block condition="python:here.prop_details('geo_location')['show']"
-                    content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+            <tal:block
+                condition="python:here.prop_details('geo_location')['show']"
+                content="structure
+                    python:here.portal_map.render_object_map(
+                        here.geo_location)"/>
         """
 
         if not geo_location or geo_location.missing_lat_lon:
@@ -1034,10 +1124,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return self._object_index_map(coord_json=geo_as_json(geo_location))
 
     security.declareProtected(view, 'suggest_location_redirect')
-    def suggest_location_redirect(self, REQUEST, content_type, folder, url=None):
+
+    def suggest_location_redirect(self, REQUEST, content_type, folder,
+                                  url=None):
         """ """
         if not folder and not url:
-            raise ValueError, 'No value given for folder'
+            raise ValueError('No value given for folder')
 
         # set url from folder or url
         start_url = '/%s' % folder
@@ -1048,8 +1140,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         for item in pc.values():
             if item['schema_name'] == content_type:
                 return REQUEST.RESPONSE.redirect('%s/%s' %
-                    (start_url, item['add_form']))
-        raise ValueError, 'Could not add this content type to the folder'
+                                                 (start_url, item['add_form']))
+        raise ValueError('Could not add this content type to the folder')
 
     security.declareProtected(view, 'suggest_location')
     suggest_location = PageTemplateFile('zpt/suggest_location', globals())
@@ -1058,16 +1150,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         {'url': 'admin_map_html', 'title': 'General settings'},
         {'url': 'admin_maptypes_html', 'title': 'Location categories'},
         {'url': 'admin_maplocations_html', 'title': 'Manage locations'},
-        {'url': 'admin_mapduplicatelocations_html', 'title': 'Duplicate locations'},
-        {'url': 'admin_map_no_coordinates_html', 'title': 'Objects with no coordinates'}
+        {'url': 'admin_mapduplicatelocations_html',
+         'title': 'Duplicate locations'},
+        {'url': 'admin_map_no_coordinates_html',
+         'title': 'Objects with no coordinates'}
     ]
     admin_pt = PageTemplateFile('zpt/map_admin_template', globals())
 
-    admin_map_embed_help = NaayaPageTemplateFile('zpt/map_embed_help',
-                    globals(), 'site_admin_map_embed_help')
+    admin_map_embed_help = NaayaPageTemplateFile(
+        'zpt/map_embed_help', globals(), 'site_admin_map_embed_help')
 
     _admin_map_html = PageTemplateFile('zpt/map_edit', globals())
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_html')
+
     def admin_map_html(self, REQUEST):
         """ configure the map """
         self._create_map_engine_if_needed()
@@ -1075,12 +1170,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'all_engines': sorted([
                 {'name': name, 'label': engine.title}
                 for name, engine in all_engines.iteritems()],
-                    key=operator.itemgetter('name')),
+                key=operator.itemgetter('name')),
             'engine_config_html': self.get_map_engine().config_html(),
         }
         return self._admin_map_html(REQUEST, **options)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
+
     def manageProperties(self, REQUEST):
         """ """
         form = dict(REQUEST.form)
@@ -1105,6 +1201,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                       self.absolute_url())
 
     security.declarePublic('setup_map_engine_html')
+
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the current map engine """
         kwargs.update(request.form)
@@ -1129,29 +1226,38 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             return None
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_contenttypes_html')
-    admin_map_contenttypes_html = PageTemplateFile('zpt/map_contenttypes', globals())
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_map_contenttypes_html')
+    admin_map_contenttypes_html = PageTemplateFile('zpt/map_contenttypes',
+                                                   globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_maptypes_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_maptypes_html')
     admin_maptypes_html = PageTemplateFile('zpt/map_symbols', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_maplocations_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_maplocations_html')
     admin_maplocations_html = PageTemplateFile('zpt/map_locations', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_mapduplicatelocations_html')
-    admin_mapduplicatelocations_html = PageTemplateFile('zpt/map_duplicate_locations', globals())
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_mapduplicatelocations_html')
+    admin_mapduplicatelocations_html = PageTemplateFile(
+        'zpt/map_duplicate_locations', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_no_coordinates_html')
-    admin_map_no_coordinates_html = PageTemplateFile('zpt/map_no_coordinates', globals())
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_map_no_coordinates_html')
+    admin_map_no_coordinates_html = PageTemplateFile('zpt/map_no_coordinates',
+                                                     globals())
 
     # macros
     security.declareProtected(view, 'locations_table_html')
     locations_table_html = PageTemplateFile('zpt/locations_table', globals())
 
     security.declareProtected(view, 'map_i18n_js')
+
     def map_i18n_js(self, REQUEST):
         """ translations for javascript map messages """
-        #TODO: deprecated; replace with `i18n_js` from NySite.
+        # TODO: deprecated; replace with `i18n_js` from NySite.
         lang = self.gl_get_selected_language()
         translations_js = self.getSite().i18n_js(lang=lang)
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/javascript')
@@ -1161,6 +1267,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     manage_test_html = PageTemplateFile('zpt/manage_test', globals())
 
     security.declareProtected(view, 'get_default_style')
+
     def get_default_style(self):
         """ Return the style from the beginning of the file as string
         so we can get ZMI to let us customize the kml template """
@@ -1168,6 +1275,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return kml.get_default_style()
 
     security.declareProtected(view, 'open_style')
+
     def open_style(self, id):
         """ Return the <style> tag as string
         so we can get ZMI to let us customize the kml template """
@@ -1175,6 +1283,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return kml.open_style(id)
 
     security.declareProtected(view, 'close_style')
+
     def close_style(self):
         """ Return the </style> tag as string
         so we can get ZMI to let us customize the kml template """
