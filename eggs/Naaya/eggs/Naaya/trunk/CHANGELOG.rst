@@ -1,4 +1,7 @@
-3.4.12 (unreleased)
+3.4.13 (unreleased)
+-------------------
+
+3.4.12 (2015-02-24)
 -------------------
 * move object_index_map to NaayaPageTemplate [dumitval]
 
