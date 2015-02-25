@@ -3,7 +3,6 @@ import urllib
 import tempfile
 import shutil
 import os.path
-from cStringIO import StringIO
 
 import xlwt
 
@@ -25,10 +24,9 @@ from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.NaayaBase.constants import \
-     MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS, \
-     PERMISSION_SKIP_CAPTCHA
-from Products.NaayaCore.managers import recaptcha_utils
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_SKIP_CAPTCHA
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import (
     manage_addEmailPageTemplate, EmailPageTemplateFile)
@@ -42,9 +40,11 @@ from questionnaire_item import questionnaire_item
 
 from migrations import available_migrations, perform_migration
 
+
 class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
     pass
+
 
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Content-Type', content_type)
@@ -53,15 +53,20 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Pragma', 'public')
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
     RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
-        % urllib.quote(filename))
+                       % urllib.quote(filename))
 
 email_templates = {
-    'email_to_owner': EmailPageTemplateFile('templates/email_survey_answer_to_owner.zpt', globals()),
-    'email_to_respondent': EmailPageTemplateFile('templates/email_survey_answer_to_respondent.zpt', globals()),
-    'email_to_unauthenticated': EmailPageTemplateFile('templates/email_survey_answer_to_unauthenticated.zpt', globals()),
+    'email_to_owner': EmailPageTemplateFile(
+        'templates/email_survey_answer_to_owner.zpt', globals()),
+    'email_to_respondent': EmailPageTemplateFile(
+        'templates/email_survey_answer_to_respondent.zpt', globals()),
+    'email_to_unauthenticated': EmailPageTemplateFile(
+        'templates/email_survey_answer_to_unauthenticated.zpt', globals()),
 }
 
-class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyContainer):
+
+class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
+                          NyContainer):
     """ """
     meta_type = "Naaya Survey Questionnaire"
     meta_label = "Survey Instance"
@@ -72,17 +77,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     all_meta_types = ()
 
-    manage_options=(
-        {'label':'Contents', 'action':'manage_main',
-          'help':('OFSP','ObjectManager_Contents.stx')},
-        {'label':'Properties', 'action':'manage_propertiesForm',
-         'help':('OFSP','Properties.stx')},
-        {'label':'View', 'action':'index_html'},
-        {'label':'Migrations', 'action':'manage_migrate_html'},
-        {'label': 'Updates', 'action':'manage_update_combo_answers_html'},
-        {'label':'Security', 'action':'manage_access',
-         'help':('OFSP', 'Security.stx')},
-      )
+    manage_options = (
+        {'label': 'Contents', 'action': 'manage_main',
+         'help': ('OFSP', 'ObjectManager_Contents.stx')},
+        {'label': 'Properties', 'action': 'manage_propertiesForm',
+         'help': ('OFSP', 'Properties.stx')},
+        {'label': 'View', 'action': 'index_html'},
+        {'label': 'Migrations', 'action': 'manage_migrate_html'},
+        {'label': 'Updates', 'action': 'manage_update_combo_answers_html'},
+        {'label': 'Security', 'action': 'manage_access',
+         'help': ('OFSP', 'Security.stx')},
+        )
 
     security = ClassSecurityInfo()
 
@@ -109,11 +114,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # Self edit methods
     #
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
             kwargs.update(REQUEST.form)
-            kwargs.setdefault('contributor', REQUEST.AUTHENTICATED_USER.getUserName())
+            kwargs.setdefault('contributor',
+                              REQUEST.AUTHENTICATED_USER.getUserName())
 
         lang = kwargs.get('lang', self.get_selected_language())
 
@@ -141,23 +148,28 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             # Redirect
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                      (self.absolute_url(), lang))
 
     #
     # Methods required by the Naaya framework
     #
     security.declareProtected(view, 'hasVersion')
+
     def hasVersion(self):
         """ """
         return False
 
     security.declareProtected(view, 'getVersionLocalProperty')
+
     def getVersionLocalProperty(self, id, lang):
         """ """
         return self.getLocalProperty(id, lang)
 
     security.declareProtected(view, 'getVersionProperty')
+
     def getVersionProperty(self, id):
         """ """
         return getattr(self, id, '')
@@ -167,30 +179,33 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     #
 
     security.declareProtected(view, 'canAddAnswerDraft')
+
     def canAddAnswerDraft(self):
         """ Check if current user can add an answer draft """
         auth_tool = self.getAuthenticationTool()
         return self.allow_drafts and not auth_tool.isAnonymousUser()
 
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswerDraft')
+
     def addSurveyAnswerDraft(self, REQUEST=None, notify_respondent=False,
-            **kwargs):
+                             **kwargs):
         """This is just to be able to specify submit method in zpt"""
         return self.addSurveyAnswer(REQUEST, notify_respondent, draft=True,
                                     **kwargs)
 
     messages_html = NaayaPageTemplateFile('zpt/survey_messages', globals(),
-                                            'NaayaSurvey.survey_messages')
+                                          'NaayaSurvey.survey_messages')
 
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
+
     def addSurveyAnswer(self, REQUEST=None, notify_respondent=False,
-            draft=False, **kwargs):
+                        draft=False, **kwargs):
         """Add someone's answer"""
         translate = self.getPortalI18n().get_translation
         if REQUEST:
             kwargs.update(REQUEST.form)
 
-        #check survey expiration
+        # check survey expiration
         if self.expired() and not self.checkPermissionPublishObjects():
             error_msg = translate("The survey has expired")
             if not REQUEST:
@@ -199,14 +214,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             REQUEST.RESPONSE.redirect(self.absolute_url())
             return
 
-        #check datamodel
+        # check datamodel
         datamodel = {}
         errors = []
         if self.allow_anonymous and not self.isAnonymousUser():
             anonymous_answer = kwargs.get('anonymous_answer')
             if anonymous_answer not in [0, 1]:
-                errors.append(translate('Please specify if you want your answer '
-                              'to be anonymous'))
+                errors.append(translate(
+                    'Please specify if you want your answer to be anonymous'))
 
         for widget in self.getWidgets():
             try:
@@ -237,7 +252,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if not REQUEST and errors:
             raise WidgetError(errors[0])
 
-        #check Captcha/reCaptcha
+        # check Captcha/reCaptcha
         if REQUEST and not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
             captcha_errors = self.getSite().validateCaptcha('', REQUEST)
             if captcha_errors:
@@ -270,7 +285,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             cf_approval_list = getattr(old_answer, 'cf_approval_list', [])
             suggestions = getattr(old_answer, 'suggestions', [])
             anonymous_editing_key = getattr(old_answer,
-                'anonymous_editing_key', None)
+                                            'anonymous_editing_key', None)
             if not getattr(old_answer, 'draft', False):
                 creation_date = old_answer.get('creation_date')
             # an answer ID was provided explicitly for us to edit, so we
@@ -284,15 +299,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # (there can be more than one because of a previous bug)
             while True:
                 old_answer = self.getAnswerForRespondent(respondent=respondent,
-                                                        all=True)
+                                                         all=True)
                 if old_answer is None:
                     break
                 else:
                     self._delObject(old_answer.id)
                     LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                        'Deleted previous answer %s' % old_answer.absolute_url())
+                        'Deleted previous answer %s' %
+                        old_answer.absolute_url())
 
-        #If we are in edit mode, keep the answer_id from the "old answer"
+        # If we are in edit mode, keep the answer_id from the "old answer"
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
                                            draft=draft, respondent=respondent,
                                            id=answer_id,
@@ -310,7 +326,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if self.isAnonymousUser():
             if anonymous_editing_key:
                 answer.anonymous_editing_key = anonymous_editing_key
-            anonymous_responder_email = kwargs.pop('anonymous_responder_email', None)
+            anonymous_responder_email = kwargs.pop('anonymous_responder_email',
+                                                   None)
             if anonymous_responder_email:
                 answer.anonymous_responder_email = anonymous_responder_email
                 if not answer.get('anonymous_editing_key'):
@@ -333,19 +350,22 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 else:
                     self.setSession('title', 'Thank you for taking the survey')
                     if answer.anonymous_answer:
-                        self.setSession('body', 'You answer was recorded anonymously')
+                        self.setSession('body',
+                                        'You answer was recorded anonymously')
                     self.setSession('referer', self.absolute_url())
-                    REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+                    REQUEST.RESPONSE.redirect('%s/messages_html' %
+                                              self.absolute_url())
             else:
                 REQUEST.RESPONSE.redirect('%s?edit=1' % answer.absolute_url())
         return answer_id
 
     security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteAnswer')
+
     def deleteAnswer(self, answer_id, REQUEST=None):
         """ """
         self._delObject(answer_id)
         LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                'Deleting answer %s' % answer_id)
+            'Deleting answer %s' % answer_id)
 
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
@@ -355,8 +375,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     #
 
     security.declarePrivate('sendNotificationToOwner')
+
     def sendNotificationToOwner(self, answer):
-        """Send an email notifications about the newly added answer to the owner of the survey.
+        """Send an email notifications about the newly added answer
+        to the owner of the survey.
 
             @param answer: the answer object that was added
             @type answer: SurveyAnswer
@@ -367,14 +389,18 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         respondent_name = auth_tool.getUserFullName(respondent)
 
         d = {}
+        if respondent.getUserName().startswith('signup:'):
+            signup_uid = respondent.getUserName().replace('signup:', '')
+            subscriptions = self.aq_parent.getParticipants().getSubscriptions()
+            signup = subscriptions.getSignup(signup_uid)
+            respondent_name = signup.name
         d['NAME'] = auth_tool.getUserFullName(owner)
         if respondent_name == 'Anonymous User':
             d['RESPONDENT'] = ("%s, email: %s" % (
                 respondent_name,
                 answer.get('anonymous_responder_email', 'Not available')))
         else:
-            d['RESPONDENT'] = ("User %s" %
-                answer.get_respondent_name())
+            d['RESPONDENT'] = ("User %s" % answer.get_respondent_name())
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()
@@ -382,21 +408,32 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         self._sendEmailNotification('email_to_owner', d, owner)
 
     security.declarePrivate('sendNotificationToRespondent')
-    def sendNotificationToRespondent(self, answer):
-        """Send an email notification about the newly added answer to the respondent.
-            If the respondent is an anonymous user no notification will be sent.
 
-            @param answer: the answer object that was added (unsed for the moment)
-            @type answer: SurveyAnswer
+    def sendNotificationToRespondent(self, answer):
+        """Send an email notification about the newly added answer to the
+           respondent. If the respondent is an anonymous user no notification
+           will be sent.
+
+           @param answer: the answer object that was added
+           (unsed for the moment)
+           @type answer: SurveyAnswer
         """
         if self.isAnonymousUser():
             return
 
+        recp_email = None
         respondent = self.REQUEST.AUTHENTICATED_USER
         auth_tool = self.getSite().getAuthenticationTool()
 
         d = {}
-        d['NAME'] = auth_tool.getUserFullName(respondent)
+        if respondent.getUserName().startswith('signup:'):
+            signup_uid = respondent.getUserName().replace('signup:', '')
+            subscriptions = self.aq_parent.getParticipants().getSubscriptions()
+            signup = subscriptions.getSignup(signup_uid)
+            d['NAME'] = signup.name
+            recp_email = signup.email
+        else:
+            d['NAME'] = auth_tool.getUserFullName(respondent)
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = "%s" % answer.absolute_url()
@@ -404,14 +441,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             d['anonymous_answer'] = True
 
         self._sendEmailNotification('email_to_respondent', d,
-                respondent)
+                                    respondent, recp_email=recp_email)
 
     security.declarePrivate('sendNotificationToUnauthenticatedRespondent')
+
     def sendNotificationToUnauthenticatedRespondent(self, answer):
         """Send an email notification about the newly added answer to the email
             address provided by an anonymous respondent.
 
-            @param answer: the answer object that was added (unsed for the moment)
+            @param answer: the answer object that was added
+            (unsed for the moment)
             @type answer: SurveyAnswer
         """
         recp_email = answer.get('anonymous_responder_email')
@@ -424,11 +463,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['EDIT_LINK'] = "%s?edit=1&key=%s" % (answer.absolute_url(), key)
 
         self._sendEmailNotification('email_to_unauthenticated', d,
-                    recp_email=recp_email)
+                                    recp_email=recp_email)
 
     security.declarePrivate('_sendEmailNotification')
+
     def _sendEmailNotification(self, template_name, d, recipient=None,
-            recp_email=None):
+                               recp_email=None):
         """Send an email notification.
 
             @param template_name: name of the email template
@@ -439,8 +479,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             @type recipient: Zope User
         """
         if recipient is None and recp_email is None:
-            #this only happens when self.isAnonymousUser() is True and the user
-            #has not filled in an email address. So just return
+            # this only happens when self.isAnonymousUser() is True and
+            # the user has not filled in an email address. So just return
             return
 
         auth_tool = self.getSite().getAuthenticationTool()
@@ -458,7 +498,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                                  recp_email,
                                  sender_email,
                                  mail_data['subject'])
-            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
+            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
+                'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
             # possible causes - the recipient doesn't have email
             #                   (e.g. regular Zope user)
@@ -473,23 +514,28 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # Answer read methods
     #
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswers')
+
     def getAnswers(self, draft=False):
         """Return a list of answers.
            Filters out the draft ones.
         """
         return [answer for answer in self.objectValues(SurveyAnswer.meta_type)
-                            if answer.is_draft()==bool(draft)]
+                if answer.is_draft() == bool(draft)]
 
     # this is method is used by the widget manage forms
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'getAnswerCountForQuestion')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS,
+                              'getAnswerCountForQuestion')
+
     def getAnswerCountForQuestion(self, question_id, exclude_None=False):
-        """Return the count of answers for question_id, excluding None ones if exclude_None if True."""
+        """Return the count of answers for question_id, excluding None ones
+        if exclude_None if True."""
         L = [answer.get(question_id) for answer in self.getAnswers()]
         if exclude_None:
             L = [x for x in L if x is not None]
         return len(L)
 
     security.declarePublic('getMyAnswer')
+
     def getMyAnswer(self, multiple=False, draft=False):
         """Return the answer of the current user or None if it doesn't exist.
            If multiple answers exist, only the first one is returned.
@@ -498,8 +544,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return self.getAnswerForRespondent(multiple, draft)
 
     security.declarePublic('getAnswerForRespondent')
+
     def getAnswerForRespondent(self, multiple=False, draft=False, all=False,
-            respondent=None):
+                               respondent=None):
         """Return the answer of the respondent (or current user if None)
            Returns None if the answer doesn't exist.
            If multiple answers exist, only the first one is returned.
@@ -532,6 +579,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             return None
 
     security.declarePublic('getMyAnswerDatamodel')
+
     def getMyAnswerDatamodel(self):
         """ """
         answer = self.getMyAnswer()
@@ -540,6 +588,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return answer.getDatamodel()
 
     security.declarePrivate('setSessionAnswer')
+
     def setSessionAnswer(self, datamodel):
         """Sets the session with the specified answer"""
         for widget_id, value in datamodel.items():
@@ -549,7 +598,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 continue
             self.setSession(widget_id, value)
 
-    security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_view_report_html')
+    security.declareProtected(PERMISSION_VIEW_REPORTS,
+                              'questionnaire_view_report_html')
+
     def questionnaire_view_report_html(self, report_id, REQUEST):
         """View the report report_id"""
         report = self.getReport(report_id)
@@ -558,6 +609,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return report.view_report_html(answers=self.getAnswers())
 
     security.declarePrivate('generate_excel')
+
     def generate_excel(self, report, answers):
         state = {}
         wb = xlwt.Workbook(encoding='utf-8')
@@ -566,30 +618,34 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         state['answers'] = answers
         separator_style = xlwt.easyxf('borders: top thin')
         # alternatives for formatting
-        #filled_cell_style = xlwt.easyxf(pattern: pattern solid, fore_colour 0x16')
-        #ws.col(1).width = len('Text in cell') * 256
+        # filled_cell_style = xlwt.easyxf(
+        # pattern: pattern solid, fore_colour 0x16')
+        # ws.col(1).width = len('Text in cell') * 256
         current_row = 1
         question = ''
         for statistic in report.getSortedStatistics():
-            if question != statistic.question.title and\
-                report.getSortedStatistics().index(statistic) != 0:
+            if (question != statistic.question.title and
+                    report.getSortedStatistics().index(statistic) != 0):
                 question = statistic.question.title
-                state['ws'].write_merge(current_row, current_row, 0, 20, '', separator_style)
+                state['ws'].write_merge(current_row, current_row, 0, 20, '',
+                                        separator_style)
                 current_row += 1
             elif question == statistic.question.title:
-                state['ws'].write_merge(current_row, current_row, 1, 5, '', separator_style)
+                state['ws'].write_merge(current_row, current_row, 1, 5, '',
+                                        separator_style)
                 current_row += 1
             state['current_row'] = current_row
             statistic.add_to_excel(state)
             current_row = state['current_row'] + 1
         shutil.rmtree(state['temp_folder'])
-        #output = StringIO()
+        # output = StringIO()
         output = tempfile.NamedTemporaryFile()
         wb.save(output)
         output.seek(0)
         return output.read()
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
+
     def questionnaire_export(self, report_id, REQUEST, answers=None):
         """ Exports the report in excel format """
         report = self.getReport(report_id)
@@ -604,13 +660,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if REQUEST is not None:
             filesize = len(ret)
             set_response_attachment(REQUEST.RESPONSE, filename,
-                content_type, filesize)
+                                    content_type, filesize)
         return ret
 
     #
     # utils
     #
     security.declareProtected(view, 'expired')
+
     def expired(self):
         """
         expired():
@@ -619,7 +676,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if the survey allows posting after the expiration date.
         """
 
-
         if self.allow_overtime:
             return False
         now = DateTime()
@@ -627,30 +683,38 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return now.greaterThan(expire_date)
 
     security.declareProtected(view, 'get_days_left')
+
     def get_days_left(self):
-        """ Returns the remaining days for the survey or the number of days before it starts """
+        """ Returns the remaining days for the survey or the number of days
+            before it starts """
         today = self.utGetTodayDate().earliestTime()
         if self.releasedate.lessThanEqualTo(today):
-            return (1, int(str((self.expirationdate + 1) - today).split('.')[0]))
+            return (1,
+                    int(str((self.expirationdate + 1) - today).split('.')[0]))
         else:
             return (0, int(str(self.releasedate - today).split('.')[0]))
 
     security.declarePublic('checkPermissionViewAnswers')
+
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
-        return self.checkPermission(PERMISSION_VIEW_ANSWERS) or self.checkPermissionPublishObjects()
+        return (self.checkPermission(PERMISSION_VIEW_ANSWERS) or
+                self.checkPermissionPublishObjects())
 
     security.declarePublic('checkPermissionViewReports')
+
     def checkPermissionViewReports(self):
         """Check if the user has the VIEW_REPORTS permission"""
         return self.checkPermission(PERMISSION_VIEW_REPORTS)
 
     security.declarePublic('checkPermissionEditObjects')
+
     def checkPermissionEditObjects(self):
         """Check if the user has the EDIT_OBJECTS permission"""
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
     security.declarePublic('checkPermissionAddAnswer')
+
     def checkPermissionAddAnswer(self):
         """Check if the user has the ADD_ANSWER permission"""
         return self.checkPermission(PERMISSION_ADD_ANSWER)
@@ -663,12 +727,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # Site pages
     #
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'view_reports_html')
-    view_reports_html = NaayaPageTemplateFile('zpt/questionnaire_view_reports',
-                        globals(), 'NaayaSurvey.questionnaire_view_reports')
+    view_reports_html = NaayaPageTemplateFile(
+        'zpt/questionnaire_view_reports', globals(),
+        'NaayaSurvey.questionnaire_view_reports')
 
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'view_answers_html')
-    view_answers_html = NaayaPageTemplateFile('zpt/questionnaire_view_answers',
-                        globals(), 'NaayaSurvey.questionnaire_view_answers')
+    view_answers_html = NaayaPageTemplateFile(
+        'zpt/questionnaire_view_answers', globals(),
+        'NaayaSurvey.questionnaire_view_answers')
 
     manage_main = folder_manage_main_plus
     ny_before_listing = PageTemplateFile('zpt/questionnaire_manage_header',
@@ -676,10 +742,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     security.declareProtected(view_management_screens,
                               'manage_create_validation_html')
+
     def manage_create_validation_html(self, REQUEST=None):
         """ create a blank validation_html template in this survey """
         datafile = os.path.join(os.path.dirname(__file__), 'www',
-                             'initial_validation_html.txt')
+                                'initial_validation_html.txt')
         id = 'validation_html'
         title = "Custom questionnaire HTML"
         manage_addPageTemplate(self, id, title, open(datafile).read())
@@ -689,10 +756,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     security.declareProtected(view_management_screens,
                               'manage_create_validation_onsubmit')
+
     def manage_create_validation_onsubmit(self, REQUEST=None):
         """ create a blank validation_onsubmit template in this survey """
         datafile = os.path.join(os.path.dirname(__file__), 'www',
-                             'initial_validation_onsubmit.txt')
+                                'initial_validation_onsubmit.txt')
         id = 'validation_onsubmit'
         manage_addPythonScript(self, id)
         self._getOb(id).write(open(datafile, 'rb').read())
@@ -701,14 +769,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             REQUEST.RESPONSE.redirect(url)
 
     security.declarePublic('view_my_answer_html')
+
     def view_my_answer_html(self, REQUEST):
         """Display a page with the answer of the current user"""
         answer = self.getMyAnswer()
         if answer is None:
-            raise NotFound("You haven't taken this survey") # TODO: replace with a proper exception/error message
+            raise NotFound("You haven't taken this survey")
+            # TODO: replace with a proper exception/error message
         return answer.index_html(REQUEST=REQUEST)
 
     security.declareProtected(view_management_screens, 'manage_migrate')
+
     def manage_migrate(self, REQUEST, widget_id, convert_to):
         """ convert widget type """
         perform_migration(self, widget_id, convert_to)
@@ -720,17 +791,22 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                                            globals())
     manage_migrate_html.available_migrations = available_migrations
 
-    security.declareProtected('View management screens', 'manage_update_combo_answers_html')
+    security.declareProtected('View management screens',
+                              'manage_update_combo_answers_html')
+
     def manage_update_combo_answers_html(self, REQUEST=None):
         """ Update answer to questions based on combos
             for the case when the first option was not initially entered as
             'Please select'"""
 
-        if not REQUEST.form.has_key('question_id'):
+        if 'question_id' not in REQUEST.form:
             return self._manage_update_combo_answers_html()
         question_id = REQUEST.get('question_id')
         errors = []
-        question_ids = [question.id for question in self.objectValues('Naaya Combobox Widget')] + [question.id for question in self.objectValues('Naaya Combobox Matrix Widget')]
+        question_ids = [question.id for question in
+                        self.objectValues('Naaya Combobox Widget')] + \
+                       [question.id for question in
+                        self.objectValues('Naaya Combobox Matrix Widget')]
 
         if not question_id:
             errors.append('No question ID provided')
@@ -758,7 +834,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         return self._manage_update_combo_answers_html(success=True)
 
-    _manage_update_combo_answers_html = PageTemplateFile('zpt/questionnaire_manage_update', globals())
+    _manage_update_combo_answers_html = PageTemplateFile(
+        'zpt/questionnaire_manage_update', globals())
 
     def _get_template(self, name):
         template = self._getOb(name, None)
@@ -773,10 +850,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     security.declareProtected(view_management_screens,
                               'manage_customizeTemplate')
+
     def manage_customizeTemplate(self, name, REQUEST=None):
         """ customize the email template called `name` """
-        manage_addEmailPageTemplate(self, name,
-            email_templates[name]._text)
+        manage_addEmailPageTemplate(self, name, email_templates[name]._text)
         ob = self._getOb(name)
 
         if REQUEST is not None:
@@ -784,7 +861,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         else:
             return name
 
-    customize_email_templates = PageTemplateFile('zpt/customize_emailpt', globals())
+    customize_email_templates = PageTemplateFile('zpt/customize_emailpt',
+                                                 globals())
     customize_email_templates.email_templates = email_templates
 
 InitializeClass(SurveyQuestionnaire)

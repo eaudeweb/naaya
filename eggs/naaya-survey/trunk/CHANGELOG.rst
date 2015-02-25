@@ -1,5 +1,6 @@
 1.2.52 (unreleased)
 ===================
+* send email with answers to signups (survey in meeting) [dumitval]
 
 1.2.51 (2015-02-05)
 ===================
