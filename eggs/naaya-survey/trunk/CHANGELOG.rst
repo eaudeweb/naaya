@@ -1,4 +1,7 @@
-1.2.52 (unreleased)
+1.2.53 (unreleased)
+===================
+
+1.2.52 (2015-02-25)
 ===================
 * send email with answers to signups (survey in meeting) [dumitval]
 
