@@ -426,8 +426,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         auth_tool = self.getSite().getAuthenticationTool()
 
         d = {}
+        link_prefix = ''
         if respondent.getUserName().startswith('signup:'):
             signup_uid = respondent.getUserName().replace('signup:', '')
+            link_prefix = '%s/participants/subscriptions/welcome?key=%s' % (
+                self.aq_parent.absolute_url(), signup_uid)
             subscriptions = self.aq_parent.getParticipants().getSubscriptions()
             signup = subscriptions.getSignup(signup_uid)
             d['NAME'] = signup.name
@@ -436,7 +439,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             d['NAME'] = auth_tool.getUserFullName(respondent)
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
-        d['LINK'] = "%s" % answer.absolute_url()
+        d['LINK'] = '%s&came_from=%s' % (link_prefix, answer.absolute_url())
         if answer.anonymous_answer:
             d['anonymous_answer'] = True
 
