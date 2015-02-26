@@ -1,5 +1,6 @@
 1.2.66 (unreleased)
 -------------------
+* support redirect from welcome page (signup authentication) [dumitval]
 * get authenticated signup details [dumitval]
 * authenticate signups even before approval [dumitval]
 

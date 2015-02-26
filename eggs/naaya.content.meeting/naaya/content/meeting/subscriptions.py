@@ -235,7 +235,7 @@ class Subscriptions(SimpleItem):
 
     security.declarePublic('welcome')
 
-    def welcome(self, REQUEST):
+    def welcome(self, REQUEST, came_from=None):
         """ """
         if 'logout' in REQUEST.form:
             REQUEST.SESSION['nymt-current-key'] = None
@@ -245,7 +245,11 @@ class Subscriptions(SimpleItem):
         signup = self.getSignup(key)
         if self._is_signup(key) or self._is_pending_signup(key):
             REQUEST.SESSION['nymt-current-key'] = key
-            return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+            if came_from:
+                return REQUEST.RESPONSE.redirect(came_from)
+            else:
+                return REQUEST.RESPONSE.redirect(
+                    self.getMeeting().absolute_url())
 
         return self.getFormsTool().getContent(
             {'here': self,
