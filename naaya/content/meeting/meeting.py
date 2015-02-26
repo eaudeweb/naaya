@@ -6,6 +6,10 @@ import datetime
 import vobject
 import logging
 from html2text import html2text
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -835,6 +839,23 @@ class NyMeeting(NyContentData, NyFolder):
     def restrictedTraverse(self, path, default=_marker):
         handle_traverse_meeting(self, self.REQUEST)
         return self.unrestrictedTraverse(path, default, restricted=True)
+
+    security.declarePublic('get_signup_details')
+
+    def get_signup_details(self):
+        """ Return a json with the signup details"""
+        user_id = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if user_id.startswith('signup:'):
+            key = user_id.replace('signup:', '')
+            signup = self.getParticipants().getSubscriptions().getSignup(key)
+            if signup:
+                signup_details = {
+                    'name': signup.name,
+                    'email': signup.email,
+                    'organization': signup.organization,
+                    'phone': signup.phone
+                    }
+                return json.dumps(signup_details)
 
 InitializeClass(NyMeeting)
 
