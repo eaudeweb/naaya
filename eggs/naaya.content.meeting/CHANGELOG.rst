@@ -1,4 +1,7 @@
-1.2.66 (unreleased)
+1.2.67 (unreleased)
+-------------------
+
+1.2.66 (2015-02-26)
 -------------------
 * support redirect from welcome page (signup authentication) [dumitval]
 * get authenticated signup details [dumitval]
