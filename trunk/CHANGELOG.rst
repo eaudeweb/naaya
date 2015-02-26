@@ -1,4 +1,7 @@
-1.4.20 (unreleased)
+1.4.21 (unreleased)
+--------------------
+
+1.4.20 (2015-02-26)
 --------------------
 * get last upload date for site_search [dumitval]
 
