@@ -1,4 +1,7 @@
-1.2.53 (unreleased)
+1.2.54 (unreleased)
+===================
+
+1.2.53 (2015-02-26)
 ===================
 * allow authentication in parent meeting object before viewing own
   answer [dumitval]
