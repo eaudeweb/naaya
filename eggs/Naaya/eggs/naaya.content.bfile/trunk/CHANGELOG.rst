@@ -1,5 +1,6 @@
 1.4.20 (unreleased)
 --------------------
+* get last upload date for site_search [dumitval]
 
 1.4.19 (2015-02-09)
 --------------------

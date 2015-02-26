@@ -137,7 +137,8 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     # process parameters
     if self.checkPermissionSkipApproval():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (1,
+                                 self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
 
@@ -226,7 +227,8 @@ class LocalizedFileDownload(object):
             view_adapter = get_view_adapter(ver)
             if view_adapter is not None:
                 return view_adapter(context)
-            return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
+            return ver.send_data(RESPONSE, as_attachment=False,
+                                 REQUEST=REQUEST)
         elif action == 'download':
             return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
         else:
@@ -276,25 +278,32 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         the non-i18n versions
         """
 
-        for ver in getattr(self, '_versions', []):    #BBB
+        for ver in getattr(self, '_versions', []):
             yield ver
 
         if language is None:
             language = self.get_selected_language()
 
-        if self.versions_store.has_key(language) == True:
+        if language in self.versions_store:
             for ver in self.versions_store[language]:
                 yield ver
 
     def isVersionable(self):
         """ BFile objects are not versionable
 
-        # TODO: Should remove NyCheckControl inheritance and refactor code to not use
-        # NyCheckControl methods.
+        # TODO: Should remove NyCheckControl inheritance and refactor code
+        to not use NyCheckControl methods.
         """
         return False
 
+    security.declareProtected(view, 'upload_date')
+
+    @property
+    def upload_date(self):
+        return self.current_version.timestamp.strftime('%d %b %Y')
+
     security.declarePrivate('current_version')
+
     @property
     def current_version(self, language=None):
         versions = list(self.all_versions(language))
@@ -306,6 +315,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         return cur
 
     security.declareProtected(view, 'current_version_download_url')
+
     def current_version_download_url(self):
         language = self.get_selected_language()
         versions = self._versions_for_tmpl(language)
@@ -329,19 +339,20 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         _versions = self.versions_store.pop(language, None)
 
-        if _versions == None:
+        if _versions is None:
             self._versions_i18n.update({language: [bf]})
         else:
             _versions.append(bf)
             self._versions_i18n.update({language: _versions})
 
     security.declarePrivate('remove_version')
+
     def remove_version(self, number, language=None, removed_by=None):
         """ Number is 0-based index of version
         """
         _versions = list(self.all_versions(language))
 
-        ver = _versions[number] # this can raise errors. Very good
+        ver = _versions[number]  # this can raise errors. Very good
 
         if ver.removed:
             return
@@ -356,10 +367,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         f.close()
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -382,7 +394,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
                     '%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
                 return
             else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
+                raise ValueError(form_errors.popitem()[1])
 
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
@@ -391,7 +403,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         self._p_changed = 1
         self.recatalogNyObject(self)
-        #log date
+        # log date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
 
@@ -406,14 +418,14 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
                                       (self.absolute_url(), _lang))
 
-
     security.declareProtected(view_management_screens, 'manageProperties')
+
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -455,6 +467,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         return versions
 
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         language = self.get_selected_language()
@@ -464,14 +477,16 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             options['current_version'] = versions[-1]
 
         template_vars = {'here': self, 'options': options}
-        to_return = self.getFormsTool().getContent(template_vars, 'bfile_index')
+        to_return = self.getFormsTool().getContent(template_vars,
+                                                   'bfile_index')
         return to_return
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        hasKey = REQUEST.form.has_key('lang')
-        if hasKey == False:
+        hasKey = 'lang' in REQUEST.form
+        if hasKey is False:
             language = self.get_selected_language()
         else:
             language = REQUEST.form['lang']
@@ -482,8 +497,9 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         return to_return
 
-    #TODO: fix this
+    # TODO: fix this
     security.declareProtected(view, 'version_at_date')
+
     def version_at_date(self, date):
         """ return the file version that was online at the given date """
 
