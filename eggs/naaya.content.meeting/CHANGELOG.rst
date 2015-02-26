@@ -1,5 +1,6 @@
 1.2.66 (unreleased)
 -------------------
+* get authenticated signup details [dumitval]
 * authenticate signups even before approval [dumitval]
 
 1.2.65 (2015-02-20)
