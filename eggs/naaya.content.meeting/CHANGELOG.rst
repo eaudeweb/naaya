@@ -1,5 +1,6 @@
 1.2.66 (unreleased)
 -------------------
+* authenticate signups even before approval [dumitval]
 
 1.2.65 (2015-02-20)
 -------------------
