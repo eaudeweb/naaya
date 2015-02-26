@@ -243,7 +243,7 @@ class Subscriptions(SimpleItem):
 
         key = REQUEST.get('key', None)
         signup = self.getSignup(key)
-        if self._is_signup(key):
+        if self._is_signup(key) or self._is_pending_signup(key):
             REQUEST.SESSION['nymt-current-key'] = key
             return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
 
