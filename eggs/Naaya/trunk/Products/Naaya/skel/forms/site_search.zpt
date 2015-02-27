@@ -9,11 +9,29 @@
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/moment.min.js"></script>
+    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/datetime-moment.js"></script>
+    <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.fn.dataTable.moment('DD MMM YYYY');
+            $('.sortable').each(function(){
+              $(this).dataTable({
+                'aaSorting': [[3, "desc"]],
+                'sPaginationType': 'full_numbers',
+                'aLengthMenu': [[10, 25, 50, -1],
+                                [10, 25, 50, "All"]],
+                'iDisplayLength': 10
+              });
+            });
+        });
+
+    </script>
 </metal:block>
 
 <metal:block metal:fill-slot="body">
 <h1 i18n:translate="">Free text search in this portal</h1>
-
 <tal:block tal:define="
     query python:request.get('query', '');
     langs here/gl_get_languages;
@@ -21,52 +39,23 @@
     releasedate python:request.get('releasedate', None);
     releasedate_range python:request.get('releasedate_range', 'min');
     meta_types_list python:[meta for meta in here.searchable_content if meta.replace(' ','_') in request.form.keys()];
-    meta_types python:test(len(meta_types_list), meta_types_list, here.searchable_content);
-    meta_types_str python:'&amp;'.join(['%s=on' % meta.replace(' ', '_') for meta in meta_types]);
-    skey python:request.get('skey', 'title');
-    rkey python:request.get('rkey', '');
-    querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), releasedate_range, meta_types_str);
-    page python:int(request.get('page', 1));">
+    meta_types python:test(len(meta_types_list), meta_types_list, here.searchable_content);">
 <div class="searchQuery">
-<tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types, skey, rkey);
+<tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types);
                    object_list results/object_list;
                    error results/error;
-                   age here/getItemsAge;
-                   sortdata python:test(len(langs)>1, ({'sortable': 1, 'key': 'meta_type', 'label': 'Type'},
-                                                       {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'},
-                                                       {'sortable': 0, 'key': '', 'label': 'Translations in'},
-                                                       {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},),
-                                                      ({'sortable': 1, 'key': 'meta_type', 'label': 'Type'},
-                                                       {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'},
-                                                       {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},));">
+                   age here/getItemsAge;">
 <tal:block condition="not:error">
 <tal:block condition="object_list">
-    <tal:block define="paginator python:here.make_paginator(object_list, int(here.numberresultsperpage), body=5, padding=2, orphans=5);
-                       page_obj python:paginator.page(page);
-                       nopage_url string:${here/absolute_url}/search_html?skey=${skey}&amp;rkey=${rkey}&amp;${querystring};
-                       make_url python:lambda page: '%s&amp;page=%s' % (nopage_url, page);
-                       records page_obj/object_list;">
+    <tal:block define="records object_list;">
     <h2 style="padding-left: 0.5em; margin-bottom: 1em;"><strong i18n:translate="">Search Results:</strong></h2>
     <table class="sortable" border="0" width="100%">
         <thead>
             <tr>
-                <tal:block tal:repeat="item sortdata">
-                    <th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
-                    <tal:block tal:condition="item/sortable">
-                        <tal:block tal:condition="python:skey==item['key']">
-                            <th tal:condition="python:rkey==''" class="sorted" scope="col">
-                                <a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;rkey=1&amp;${querystring}&amp;page=${page}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/Naaya/sort_asc.gif" width="12" height="12" alt="" /></a>
-                            </th>
-                            <th tal:condition="python:rkey!=''" class="sorted" scope="col">
-                                <a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;${querystring}&amp;page=${page}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/Naaya/sort_desc.gif" width="12" height="12" alt="" /></a>
-                            </th>
-                        </tal:block>
-                        <th tal:condition="python:skey!=item['key']" scope="col">
-                            <a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;${querystring}&amp;page=${page}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/Naaya/sort_not.gif" width="12" height="12" alt="" /></a>
-                        </th>
-                    </tal:block>
-                </tal:block>
-                <th>Upload date (for files)</th>
+                <th i18n:translate="">Type</th>
+                <th i18n:translate="">Title/Abstract</th>
+                <th i18n:translate="">Last updated</th>
+                <th i18n:translate="">Upload date (for files)</th>
             </tr>
         </thead>
         <tbody>
@@ -89,18 +78,16 @@
                         <span tal:condition="python:record.istranslated(lang)" tal:content="python:here.gl_get_language_name(lang)" />
                     </tal:block>
                 </td>
-                <td>
-                    <span tal:replace="python:record.utShowDateTime(record.bobobase_modification_time())" />
-                    <span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
-                      <strong style="color: #FF9966;" i18n:translate="">> 12 months</strong>
-                    </span>
-                </td>
-                <td tal:content="record/upload_date|string:-" />
+                <td tal:attributes="class python:test(
+                        here.internal_get_item_age(record.bobobase_modification_time(), age)==1,
+                        'old_item',
+                        None)"
+                      tal:content="python:record.bobobase_modification_time().strftime('%d %b %Y')" />
+                <td style="text-align: center" tal:content="record/upload_date|string:-" />
             </tal:block>
             </tr>
         </tbody>
     </table>
-    <tal:block replace="structure python:page_obj.pagination(make_url=make_url)" />
     </tal:block>
 
 </tal:block>

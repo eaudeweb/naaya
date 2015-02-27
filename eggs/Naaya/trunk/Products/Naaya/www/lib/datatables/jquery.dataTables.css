@@ -49,6 +49,7 @@ table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
 	position: relative;
 	clear: both;
 	*zoom: 1;
+    margin-bottom: 30px;
 }
 
 
