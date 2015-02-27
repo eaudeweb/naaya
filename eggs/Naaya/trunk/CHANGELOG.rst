@@ -1,4 +1,7 @@
-3.4.13 (unreleased)
+3.4.14 (unreleased)
+-------------------
+
+3.4.13 (2015-02-27)
 -------------------
 * search results table is now powered by dataTables [dumitval]
 * Added upload date column to the site search results (files only)
