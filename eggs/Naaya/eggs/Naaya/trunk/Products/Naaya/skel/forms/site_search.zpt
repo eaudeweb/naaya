@@ -28,6 +28,23 @@
         });
 
     </script>
+    <style>
+      .old_item {
+          white-space: nowrap;
+      }
+      .old_item:after {
+          content: "";
+          display: inline-block;
+          *display: inline;
+          *zoom: 1;
+          width: 16px;
+          height: 16px;
+          vertical-align: middle;
+          margin-top: -2px;
+          margin-left: 3px;
+          background: url('misc_/Naaya/info.png') no-repeat;
+      }
+    </style>
 </metal:block>
 
 <metal:block metal:fill-slot="body">
@@ -82,8 +99,11 @@
                         here.internal_get_item_age(record.bobobase_modification_time(), age)==1,
                         'old_item',
                         None)"
+                      style="text-align:right"
+                      title="Older than 12 months" i18n:attributes="title"
                       tal:content="python:record.bobobase_modification_time().strftime('%d %b %Y')" />
-                <td style="text-align: center" tal:content="record/upload_date|string:-" />
+                <td style="text-align: center" style="text-align:right"
+                  tal:content="record/upload_date|string:-" />
             </tal:block>
             </tr>
         </tbody>
