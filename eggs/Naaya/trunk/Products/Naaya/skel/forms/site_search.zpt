@@ -66,6 +66,7 @@
                         </th>
                     </tal:block>
                 </tal:block>
+                <th>Upload date (for files)</th>
             </tr>
         </thead>
         <tbody>
@@ -91,9 +92,10 @@
                 <td>
                     <span tal:replace="python:record.utShowDateTime(record.bobobase_modification_time())" />
                     <span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
-                        <strong style="color: #FF9966;" i18n:translate="">Old</strong>
+                      <strong style="color: #FF9966;" i18n:translate="">> 12 months</strong>
                     </span>
                 </td>
+                <td tal:content="record/upload_date|string:-" />
             </tal:block>
             </tr>
         </tbody>
