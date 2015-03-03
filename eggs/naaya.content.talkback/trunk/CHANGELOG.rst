@@ -1,4 +1,7 @@
-1.4.36 (unreleased)
+1.4.37 (unreleased)
+-------------------
+
+1.4.36 (2015-03-03)
 -------------------
 * allow 1024 characters is a excel cell (export) [dumitval]
 
