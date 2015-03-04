@@ -296,7 +296,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         """
         return False
 
-    security.declareProtected(view, 'upload_date')
+    security.declarePublic('upload_date')
 
     @property
     def upload_date(self):
