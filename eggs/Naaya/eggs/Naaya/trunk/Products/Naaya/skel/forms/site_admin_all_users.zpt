@@ -62,7 +62,7 @@
                                     user_nrows python: max(1, len(user_roles));
                                     user_id user/user_id;
                                     user_source_title user/source_title;">
-                                    <tr tal:attributes="class row_class">
+                                    <tr tal:attributes="class row_class" tal:condition="python:user_roles or user_source_title == 'Local'">
                                         <!-- Username -->
                                         <td>
                                             <strong>
