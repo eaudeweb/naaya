@@ -1,5 +1,6 @@
 3.4.14 (unreleased)
 -------------------
+* hide external users with no valid roles from all users listing [dumitval]
 
 3.4.13 (2015-02-27)
 -------------------
