@@ -1,4 +1,7 @@
-1.2.67 (unreleased)
+1.2.68 (unreleased)
+-------------------
+
+1.2.67 (2015-03-10)
 -------------------
 * bugfix related to authenticated users adding signups [dumitval]
 
