@@ -14,5 +14,9 @@ setup(
     namespace_packages=['Products'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=['setuptools', 'Naaya', 'naaya.sql'],
-)
+    install_requires=[
+        'setuptools',
+        'Naaya >= 3.4.15',
+        'naaya.sql'
+        ],
+    )
