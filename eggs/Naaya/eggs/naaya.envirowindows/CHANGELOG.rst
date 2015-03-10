@@ -1,5 +1,6 @@
 1.1.14 (unreleased)
 -------------------
+* recaptcha 2.0 compatibility [dumitval]
 
 1.1.13(2013-07-26)
 -------------------
