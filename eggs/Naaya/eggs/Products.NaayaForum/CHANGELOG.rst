@@ -1,5 +1,6 @@
 1.2.20 (unreleased)
 -------------------
+* reCaptcha 2.0 compatibility [dumitval]
 
 1.2.19 (2014-03-20)
 -------------------
