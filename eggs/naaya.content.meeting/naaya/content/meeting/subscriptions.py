@@ -77,7 +77,8 @@ class Subscriptions(SimpleItem):
 
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_signup_email(signup)
-        self.REQUEST.SESSION['nymt-current-key'] = key
+        if self.REQUEST.AUTHENTICATED_USER.getUserName() == 'Anonymous User':
+            self.REQUEST.SESSION['nymt-current-key'] = key
 
     security.declareProtected(view, 'signup')
 
