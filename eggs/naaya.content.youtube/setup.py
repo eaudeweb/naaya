@@ -9,6 +9,6 @@ setup(name='naaya.content.youtube',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 3.4.15',
       ]
       )
