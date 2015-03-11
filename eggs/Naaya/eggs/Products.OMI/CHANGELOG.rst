@@ -1,4 +1,7 @@
-1.2 (unreleased)
+1.2.1 (unreleased)
+----------------
+
+1.2 (2015-03-11)
 ----------------
 * reCaptcha 2.0 compatibility [dumitval]
 
