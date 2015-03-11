@@ -1,5 +1,6 @@
 1.2.7 (unreleased)
 ------------------
+* reCaptcha 2.0 compatibility [dumitval]
 * check_item_title is now item_has_title [simiamih]
 
 1.2.6 (2012-01-13)

@@ -13,7 +13,8 @@ from zope.event import notify
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NyContentType
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyItem import NyItem
@@ -29,27 +30,27 @@ import skel
 
 DEFAULT_SCHEMA = {
     'product_type': dict(sortorder=100, widget_type='SelectMultiple',
-                label='Product type', list_id='product_type'),
+                         label='Product type', list_id='product_type'),
     'target_group': dict(sortorder=110, widget_type='SelectMultiple',
-                label='Target group', list_id='target-group'),
+                         label='Target group', list_id='target-group'),
     'theme': dict(sortorder=120, widget_type='SelectMultiple',
-                label='Theme', list_id='product_theme'),
+                  label='Theme', list_id='product_theme'),
     'details': dict(sortorder=130, widget_type='TextArea',
-                label='Details', localized=True, tinymce=True),
+                    label='Details', localized=True, tinymce=True),
     'available_from': dict(sortorder=140, widget_type='Date',
-                label='Available from', data_type='date'),
+                           label='Available from', data_type='date'),
     'available_until': dict(sortorder=150, widget_type='Date',
-                label='Available until', data_type='date'),
+                            label='Available until', data_type='date'),
     'supplier': dict(sortorder=160, widget_type='String',
-                label='Supplier'),
+                     label='Supplier'),
     'supplier_url': dict(sortorder=170, widget_type='URL',
-                label='Supplier URL'),
+                         label='Supplier URL'),
     'contact_person': dict(sortorder=180, widget_type='String',
-                label='Contact person'),
+                           label='Contact person'),
     'contact_email': dict(sortorder=190, widget_type='String',
-                label='Contact email'),
+                          label='Contact email'),
     'contact_phone': dict(sortorder=200, widget_type='String',
-                label='Contact phone'),
+                          label='Contact phone'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
@@ -57,31 +58,37 @@ DEFAULT_SCHEMA['geo_type'].update(visible=True)
 
 # this dictionary is updated at the end of the module
 config = {
-        'product': 'NaayaEduProduct',
-        'module': 'eduproduct_item',
-        'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': 'Naaya Educational Product',
-        'label': 'EduProduct',
-        'permission': PERMISSION_ADD_EDU_PRODUCT,
-        'forms': ['eduproduct_add', 'eduproduct_edit', 'eduproduct_index'],
-        'add_form': 'eduproduct_add_html',
-        'description': 'This is Naaya Educational Product type.',
-        'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyEduProduct',
-        '_module': sys.modules[__name__],
-        'additional_style': None,
-        'icon': os.path.join(os.path.dirname(__file__), 'www', 'eduproduct.gif'),
-        '_misc': {
-                'NyEduProduct.gif': ImageFile('www/eduproduct.gif', globals()),
-                'NyEduProduct_marked.gif': ImageFile('www/eduproduct_marked.gif', globals()),
-            },
+    'product': 'NaayaEduProduct',
+    'module': 'eduproduct_item',
+    'package_path': os.path.abspath(os.path.dirname(__file__)),
+    'meta_type': 'Naaya Educational Product',
+    'label': 'EduProduct',
+    'permission': PERMISSION_ADD_EDU_PRODUCT,
+    'forms': ['eduproduct_add', 'eduproduct_edit', 'eduproduct_index'],
+    'add_form': 'eduproduct_add_html',
+    'description': 'This is Naaya Educational Product type.',
+    'default_schema': DEFAULT_SCHEMA,
+    'schema_name': 'NyEduProduct',
+    '_module': sys.modules[__name__],
+    'additional_style': None,
+    'icon': os.path.join(os.path.dirname(__file__), 'www', 'eduproduct.gif'),
+    '_misc': {
+        'NyEduProduct.gif': ImageFile('www/eduproduct.gif', globals()),
+        'NyEduProduct_marked.gif': ImageFile('www/eduproduct_marked.gif',
+                                             globals()),
+        },
     }
+
 
 def eduproduct_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
-    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyEduProduct', 'form_helper': form_helper}, 'eduproduct_add')
+    return self.getFormsTool().getContent(
+        {'here': self, 'kind': config['meta_type'],
+         'action': 'addNyEduProduct', 'form_helper': form_helper},
+        'eduproduct_add')
+
 
 def _create_NyEduProduct_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix='eduproduct')
@@ -92,6 +99,7 @@ def _create_NyEduProduct_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
+
 def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create an Educational Product type of object.
@@ -101,49 +109,59 @@ def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    _contact_word = schema_raw_data.get('contact_word', '')
+    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate',
+                                                                ''))
+    recaptcha_response = schema_raw_data.get('g-recaptcha-response', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='ep')
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''),
+                 prefix='ep')
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyEduProduct_object(self, id, contributor)
 
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang,
+                                            _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
+    # check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+        captcha_validator = self.validateCaptcha(recaptcha_response, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
 
     if form_errors:
         if REQUEST is None:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
         else:
-            import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+            import transaction
+            transaction.abort()
+            # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/eduproduct_add_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/eduproduct_add_html' %
+                                      self.absolute_url())
             return
 
-    #process parameters
+    # process parameters
     if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (
+            1, self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion: ob.open_for_comments()
+    if ob.discussion:
+        ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    #log post date
+    # log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    #redirect if case
+    # redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'eduproduct_manage_add' or l_referer.find('eduproduct_manage_add') != -1:
+        if l_referer == 'eduproduct_manage_add' or l_referer.find(
+                'eduproduct_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'eduproduct_add_html':
             self.setSession('referer', self.absolute_url())
@@ -152,7 +170,9 @@ def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
-class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyValidation, NyContentType):
+
+class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem,
+                   NyNonCheckControl, NyValidation, NyContentType):
     """ """
 
     implements(INyEduProduct)
@@ -185,86 +205,109 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckCont
     def end_date(self):
         return getattr(self, 'available_until', None)
 
-    #zmi actions
+    # zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
+
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
 
         if _approved != self.approved:
-            if _approved == 0: _approved_by = None
-            else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if _approved == 0:
+                _approved_by = None
+            else:
+                _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
+        if self.discussion:
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(schema_raw_data.pop(
+            'releasedate', ''), self.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
+            if self.discussion:
+                self.open_for_comments()
+            else:
+                self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
-            #log date
+            # log date
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                          (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self._prepare_error_response(REQUEST, form_errors,
+                                             schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                          (self.absolute_url(), _lang))
             else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
+                raise ValueError(form_errors.popitem()[1])  # pick an error
 
-    #zmi pages
+    # zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/eduproduct_manage_edit', globals())
+    manage_edit_html = PageTemplateFile('zpt/eduproduct_manage_edit',
+                                        globals())
 
-    #site pages
+    # site pages
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'eduproduct_index')
+        return self.getFormsTool().getContent({'here': self},
+                                              'eduproduct_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'eduproduct_edit')
+        return self.getFormsTool().getContent({'here': self},
+                                              'eduproduct_edit')
 
 InitializeClass(NyEduProduct)
+
 
 def on_install_eduproduct(site):
     portal_portlets = site.getPortletsTool()
@@ -281,21 +324,23 @@ def on_install_eduproduct(site):
         for tree_item in tree_data['items']:
             tree_ob.manage_addRefTreeNode(tree_item['id'], tree_item['title'])
 
-manage_addNyEduProduct_html = PageTemplateFile('zpt/eduproduct_manage_add', globals())
+manage_addNyEduProduct_html = PageTemplateFile('zpt/eduproduct_manage_add',
+                                               globals())
 manage_addNyEduProduct_html.kind = config['meta_type']
 manage_addNyEduProduct_html.action = 'addNyEduProduct'
 config.update({
     'constructors': (manage_addNyEduProduct_html, addNyEduProduct),
     'folder_constructors': [
-            ('manage_addNyEduProduct_html', manage_addNyEduProduct_html),
-            ('eduproduct_add_html', eduproduct_add_html),
-            ('addNyEduProduct', addNyEduProduct),
+        ('manage_addNyEduProduct_html', manage_addNyEduProduct_html),
+        ('eduproduct_add_html', eduproduct_add_html),
+        ('addNyEduProduct', addNyEduProduct),
         ],
     'add_method': addNyEduProduct,
     'validation': issubclass(NyEduProduct, NyValidation),
     '_class': NyEduProduct,
-    'on_install' : on_install_eduproduct,
+    'on_install': on_install_eduproduct,
 })
+
 
 def get_config():
     return config
