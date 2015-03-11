@@ -10,16 +10,6 @@
 	tal:condition="captcha_err" tal:content="captcha_err" />
 <tal:block condition="not:here/checkPermissionSkipCaptcha">
     <span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
-    <tal:block condition="not:here/recaptcha_is_present">
-        <div class="field">
-            <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
-        </div>
-        <div class="field">
-            <label for="contact_word"><span i18n:translate="">Word verification</span></label>
-            <input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
-            <em i18n:translate="">please type the word you see in the above picture.</em>
-        </div>
-    </tal:block>
 </tal:block>
 
 <metal:block use-macro="python:here.getFormsTool()['gisc_event_helper'].macros['block']" />
