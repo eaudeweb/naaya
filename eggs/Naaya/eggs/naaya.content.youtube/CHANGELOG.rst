@@ -1,5 +1,6 @@
 1.0.3 (unreleased)
 ------------------
+* reCaptacha compatibility [dumitval]
 
 1.0.2 (2014-07-03)
 ------------------
