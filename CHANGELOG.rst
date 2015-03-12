@@ -1,4 +1,7 @@
-1.2.8 (unreleased)
+1.2.9 (unreleased)
+==================
+
+1.2.8 (2015-03-12)
 ==================
 * reCaptcha 2.0 compatibility [dumitval]
 * check_item_title is now item_has_title [simiamih]
