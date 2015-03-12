@@ -6,8 +6,6 @@ setup(
     description="NyPublication",
     long_description=open("README.txt").read() + "\n" +
     open("CHANGELOG.rst").read(),
-    # Get more strings from
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Programming Language :: Python",
     ],
@@ -19,6 +17,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya'
+        'Naaya >= 3.4.15'
     ],
 )
