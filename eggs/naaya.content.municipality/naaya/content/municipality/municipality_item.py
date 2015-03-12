@@ -283,8 +283,8 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     # redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == ('municipality_manage_add' or
-                         l_referer.find('municipality_manage_add') != -1):
+        if (l_referer == 'municipality_manage_add' or
+                l_referer.find('municipality_manage_add') != -1):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'municipality_add_html':
             self.setSession('referer', self.absolute_url())
