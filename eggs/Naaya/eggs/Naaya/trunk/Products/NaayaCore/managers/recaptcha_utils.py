@@ -1,17 +1,20 @@
-#A plugin for reCAPTCHA. Provides a CAPTCHA for Python using the reCAPTCHA service.
-#Does not require any imaging libraries because the CAPTCHA is served directly from reCAPTCHA.
-#This library requires one API key from http://recaptcha.net/api/getkey.
-"""Small wrappers for Naaya around the captcha Python module which provides
+"""A plugin for reCAPTCHA. Provides a CAPTCHA for Python using the reCAPTCHA
+service. Does not require any imaging libraries because the CAPTCHA is served
+directly from reCAPTCHA. This library requires one API key from
+http://google.com/recaptcha.
+Small wrappers for Naaya around the captcha Python module which provides
 access to reCAPTCHA.
 """
 
 # Python imports
 from xml.sax.saxutils import escape
-import urllib2, urllib
+import urllib
+import urllib2
+import simplejson as json
 
-API_SSL_SERVER="https://api-secure.recaptcha.net"
-API_SERVER="http://api.recaptcha.net"
-VERIFY_SERVER="api-verify.recaptcha.net"
+API_JS = "https://www.google.com/recaptcha/api.js"
+VERIFY_SERVER = "https://www.google.com/recaptcha/api/siteverify"
+
 
 def render_captcha(context):
     """Return HTML code for CAPTCHA."""
@@ -22,25 +25,28 @@ def render_captcha(context):
                     '</span>',
                     displayhtml(context.getSite().get_recaptcha_public_key())))
 
+
 def is_valid_captcha(context, REQUEST):
     """Test if captcha was passed."""
-    is_valid = submit(REQUEST.get('recaptcha_challenge_field', ''),
-                      REQUEST.get('recaptcha_response_field', ''),
+    is_valid = submit(REQUEST.get('g-recaptcha-response', ''),
                       context.getSite().get_recaptcha_private_key(),
                       REQUEST.get('REMOTE_ADDR', '')).is_valid
     if not is_valid:
-        context.setSession('err_recaptcha',
+        context.setSession(
+            'err_recaptcha',
             'Your previous attempt was incorrect. Please try again')
     return is_valid
+
 
 class RecaptchaResponse(object):
     def __init__(self, is_valid, error_code=None):
         self.is_valid = is_valid
         self.error_code = error_code
 
-def displayhtml (public_key,
-                 use_ssl = False,
-                 error = None):
+
+def displayhtml(public_key,
+                use_ssl=False,
+                error=None):
     """Gets the HTML to display for reCAPTCHA
 
     public_key -- The public api key
@@ -51,77 +57,63 @@ def displayhtml (public_key,
     if error:
         error_param = '&error=%s' % error
 
-    if use_ssl:
-        server = API_SSL_SERVER
-    else:
-        server = API_SERVER
+    return """<script type="text/javascript" src="%(ApiJS)s"></script>
 
-    return """<script type="text/javascript" src="%(ApiServer)s/challenge?k=%(PublicKey)s%(ErrorParam)s"></script>
-
-<noscript>
-           <iframe src="%(ApiServer)s/noscript?k=%(PublicKey)s%(ErrorParam)s" height="300" width="500" frameborder="0"></iframe><br />
-           <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-           <input type='hidden' name='recaptcha_response_field' value='manual_challenge' />
-</noscript>
-""" % {
-    'ApiServer' : server,
-    'PublicKey' : public_key,
-    'ErrorParam' : error_param,
-}
+            <div class="g-recaptcha" data-sitekey="%(PublicKey)s"></div>
+        """ % {'ApiJS': API_JS,
+               'PublicKey': public_key,
+               }
 
 
-def submit (recaptcha_challenge_field,
-            recaptcha_response_field,
-            private_key,
-            remoteip):
+def submit(recaptcha_response_field,
+           private_key,
+           remoteip):
     """
     Submits a reCAPTCHA request for verification. Returns RecaptchaResponse
     for the request
 
-    recaptcha_challenge_field -- The value of recaptcha_challenge_field from the form
-    recaptcha_response_field -- The value of recaptcha_response_field from the form
+    recaptcha_challenge_field -- The value of recaptcha_challenge_field from
+                                 the form
+    recaptcha_response_field -- The value of recaptcha_response_field from
+                                the form
     private_key -- your reCAPTCHA private key
     remoteip -- the user's ip address
     """
 
-    if not (recaptcha_response_field and recaptcha_challenge_field and
-            len (recaptcha_response_field) and len (recaptcha_challenge_field)):
-        return RecaptchaResponse (is_valid = False, error_code = 'incorrect-captcha-sol')
+    if not (recaptcha_response_field and len(recaptcha_response_field)):
+        return RecaptchaResponse(is_valid=False,
+                                 error_code='incorrect-captcha-sol')
 
-
-
-    params = urllib.urlencode ({
-        'privatekey': private_key,
-        'remoteip' : remoteip,
-        'challenge': recaptcha_challenge_field,
-        'response' : recaptcha_response_field,
+    params = urllib.urlencode({
+        'secret': private_key,
+        'remoteip': remoteip,
+        'response': recaptcha_response_field,
     })
 
-    request = urllib2.Request (
-        url = "http://%s/verify" % VERIFY_SERVER,
-        data = params,
-        headers = {
+    request = urllib2.Request(
+        url=VERIFY_SERVER,
+        data=params,
+        headers={
             "Content-type": "application/x-www-form-urlencoded",
             "User-agent": "reCAPTCHA Python"
         }
     )
 
-    httpresp = urllib2.urlopen (request)
+    httpresp = json.load(urllib2.urlopen(request))
 
-    return_values = httpresp.read ().splitlines ();
-    httpresp.close();
+    return_code = httpresp['success']
 
-    return_code = return_values [0]
-
-    if (return_code == "true"):
-        return RecaptchaResponse (is_valid=True)
+    if return_code is True:
+        return RecaptchaResponse(is_valid=True)
     else:
-        return RecaptchaResponse (is_valid=False, error_code = return_values [1])
+        return RecaptchaResponse(is_valid=False,
+                                 error_code=httpresp.get('error_codes'))
 
 from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.interfaces import ICaptcha
 from zope.interface import implements
 from zope.component import adapts
+
 
 class CaptchaProvider(object):
     implements(ICaptcha)

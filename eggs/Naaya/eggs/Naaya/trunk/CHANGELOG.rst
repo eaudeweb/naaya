@@ -1,5 +1,6 @@
 3.4.15 (unreleased)
 -------------------
+* reCaptcha 2.0 compatibility [dumitval]
 
 3.4.14 (2015-03-05)
 -------------------

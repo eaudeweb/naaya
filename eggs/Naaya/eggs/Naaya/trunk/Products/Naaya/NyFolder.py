@@ -684,7 +684,9 @@ class NyFolder(
 
     security.declareProtected(view, 'admin_folder_feedback_form')
 
-    def admin_folder_feedback_form(self, who=0, username='', email='', comments='', contact_word='', REQUEST=None):
+    def admin_folder_feedback_form(self, who=0, username='', email='',
+                                   comments='', recaptcha_response='',
+                                   REQUEST=None):
         """ """
         err = []
 
@@ -693,7 +695,7 @@ class NyFolder(
         except:
             who = 0
         if not self.checkPermissionPublishDirect():
-            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            captcha_errors = self.validateCaptcha(recaptcha_response, REQUEST)
             if captcha_errors:
                 err.extend(captcha_errors)
         if username.strip() == '':
