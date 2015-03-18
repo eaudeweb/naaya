@@ -170,14 +170,11 @@
             </tal:block>
             </p>
 
-            <!-- Make sure the folder listing is displayed after the map -->
-            <div style="clear: both"></div>
-
             <p tal:define="site here/getSite" tal:condition="not: here/is_signup">
                 <span class="buttons">
-                    <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
+                    <a class="thebutton" tal:attributes="href string:${here/absolute_url}/participants/subscriptions/signup"
                       i18n:translate="" tal:condition="python: here.allow_register and not here.registration_status()">
-                        Register to attend (self or another user)</a>
+                        Register to attend</a>
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe"
                       i18n:translate="" tal:condition="python: here.allow_register and here.registration_status()">
                         Register another user</a>
@@ -187,7 +184,12 @@
                 </span>
             </p>
 
-            <tal:block condition="python:(not here.restrict_items) or here.checkPermissionParticipateInMeeting()">
+            <!-- Make sure the folder listing is displayed after the map -->
+            <div style="clear: both"></div>
+
+              <tal:block define="username here/REQUEST/AUTHENTICATED_USER/getUserName;
+                                is_authenticated python:username!='Anonymous User'"
+              condition="is_authenticated"><!--python:(not here.restrict_items) or here.checkPermissionParticipateInMeeting()">-->
 
                 <span tal:replace="structure here/menusubmissions" />
 
