@@ -27,21 +27,25 @@ class NyCommonView(object):
     security = ClassSecurityInfo()
 
     security.declareProtected(view, 'recaptcha_is_present')
+
     def recaptcha_is_present(self):
         return ICaptcha(self.getSite()).is_available
 
     security.declareProtected(view, 'show_recaptcha')
+
     def show_recaptcha(self, context):
         """ Returns HTML code for reCAPTCHA """
         return ICaptcha(self.getSite()).render_captcha()
 
     security.declareProtected(view, 'is_valid_recaptcha')
+
     def is_valid_recaptcha(self, context, REQUEST):
         """ Test if reCaptcha is valid. """
         return ICaptcha(self.getSite()).is_valid_captcha(REQUEST)
 
     security.declareProtected(view, 'validateCaptcha')
-    def validateCaptcha(self, contact_word, REQUEST):
+
+    def validateCaptcha(self, recaptcha_response, REQUEST):
         """
         Deprecated in favour of the `naaya.core.submitter` package.
 

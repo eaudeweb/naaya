@@ -43,8 +43,8 @@ def info_check(parent, request, ob):
 
     # check Captcha/reCaptcha
     if required['captcha']:
-        contact_word = request.form.get('contact_word', '')
-        captcha_errors = parent.validateCaptcha(contact_word, request)
+        recaptcha_response = request.form.get('g-recaptcha-response', '')
+        captcha_errors = parent.validateCaptcha(recaptcha_response, request)
         if captcha_errors:
             errors['captcha'] = captcha_errors
 

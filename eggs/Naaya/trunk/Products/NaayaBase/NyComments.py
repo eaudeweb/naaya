@@ -368,14 +368,15 @@ class NyCommentable:
             container.manage_delObjects([id])
 
     security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add')
+
     def comment_add(self, REQUEST):
         """
         Add a comment for this object.
         """
         err = []
         if not self.checkPermissionSkipCaptcha():
-            contact_word = REQUEST.get('contact_word')
-            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            recaptcha_response = REQUEST.get('g-recaptcha-response')
+            captcha_errors = self.validateCaptcha(recaptcha_response, REQUEST)
             if captcha_errors:
                 err.extend(captcha_errors)
         if err:

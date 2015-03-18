@@ -1675,11 +1675,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #site actions
     security.declareProtected(view, 'processFeedbackForm')
-    def processFeedbackForm(self, username='', email='', comments='', contact_word='', REQUEST=None):
+    def processFeedbackForm(self, username='', email='', comments='',
+            recaptcha_response='', REQUEST=None):
         """ """
         err = []
         if not self.checkPermissionPublishDirect():
-            captcha_errors = self.validateCaptcha(contact_word, REQUEST)
+            captcha_errors = self.validateCaptcha(recaptcha_response, REQUEST)
             if captcha_errors:
                 err.extend(captcha_errors)
         if username.strip() == '':
