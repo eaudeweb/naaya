@@ -1,5 +1,6 @@
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view, manage_users
+from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import manage_users
 from AccessControl.unauthorized import Unauthorized
 from App.FactoryDispatcher import FactoryDispatcher
 from Globals import InitializeClass
@@ -153,7 +154,8 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
         ob_meta_types.set_values(self.utConvertToList(_folder_meta_types))
 
     if parent.checkPermissionSkipApproval():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (1,
+                                 self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
 
@@ -222,14 +224,16 @@ def importNyFolder(
                         folder_meta_types=meta_types,
                         contributor=self.utEmptyToNone(
                             attrs['contributor'].encode('utf-8')),
-                        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+                        discussion=abs(int(
+                            attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
             for property, langs in properties.items():
                 for lang in langs:
                     ob._setLocalPropValue(property, lang, langs[lang])
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                           approved_by=self.utEmptyToNone(
-                attrs['approved_by'].encode('utf-8')))
+            ob.approveThis(approved=abs(int(
+                attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(
+                    attrs['approved_by'].encode('utf-8')))
             if attrs['releasedate'].encode('utf-8') != '':
                 ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
             if publicinterface:
@@ -384,16 +388,17 @@ class NyFolder(
         # import an object
         if object.meta_type == METATYPE_FOLDER:
             importNyFolder(self, object.param, object.id, object.attrs,
-                           object.content, object.properties, object.discussion,
-                           object.objects)
+                           object.content, object.properties,
+                           object.discussion, object.objects)
         elif object.meta_type in self.get_pluggable_installed_meta_types():
             item = self.get_pluggable_item(object.meta_type)
-            if not item.has_key('import_string'):
+            if 'import_string' not in item:
                 import_method = getattr(self, 'import_%s' % item['module'])
             else:
                 import_method = getattr(self, item['import_string'])
-            import_method(object.param, object.id, object.attrs, object.content,
-                          object.properties, object.discussion, object.objects)
+            import_method(object.param, object.id, object.attrs,
+                          object.content, object.properties, object.discussion,
+                          object.objects)
         else:
             self.import_data_custom(self, object)
 
@@ -406,11 +411,14 @@ class NyFolder(
 
         results_folders = []
         results_objects = []
-        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
-        # btn_select - if there is at least one permisson to delete or copy an object
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = (
+            0, 0, 0, 0, 0, 0)
+        # btn_select - if there is at least one permisson to delete or
+        #              copy an object
         # btn_delete - if there is at least one permisson to delete an object
         # btn_copy - if there is at least one permisson to copy an object
-        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy an
+        #           object
         # btn_paste - if there is the add permission and there's some copyed
         # data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
@@ -432,9 +440,11 @@ class NyFolder(
             if edit_permission:
                 can_operate = 1
             version_status = 0
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+            if (((del_permission or edit_permission) and not x.approved) or
+                    x.approved):
                 results_folders.append(
-                    (del_permission, edit_permission, version_status, copy_permission, x))
+                    (del_permission, edit_permission, version_status,
+                     copy_permission, x))
         # Naaya objects
         sorted_objects = self.utSortObjsListByAttr(
             self.getObjects(), sort_on, sort_order)
@@ -452,7 +462,8 @@ class NyFolder(
                 btn_copy = 1
             if edit_permission:
                 can_operate = 1
-            # TODO: remove version_status -- moved to NaayaBase.NyContentType.version_status
+            # TODO: remove version_status -- moved to
+            #                  NaayaBase.NyContentType.version_status
             # version_status:  0 - cannot check out for some reason
             #                  1 - can check in
             #                  2 - can check out
@@ -465,24 +476,31 @@ class NyFolder(
                     version_status = 0
             else:
                 version_status = 2
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+            if (((del_permission or edit_permission) and not x.approved)
+                    or x.approved):
                 results_objects.append(
-                    (del_permission, edit_permission, version_status, copy_permission, x))
+                    (del_permission, edit_permission, version_status,
+                     copy_permission, x))
         can_operate = can_operate or btn_select
-        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_folders, results_objects)
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste,
+                can_operate, results_folders, results_objects)
 
     security.declareProtected(view, 'checkPermissionManageObjectsMixed')
 
     def checkPermissionManageObjectsMixed(self):
-        """ This function is called on the folder index, returns a mixed list of folders and objects and it checkes whether or not
+        """ This function is called on the folder index, returns a mixed list
+            of folders and objects and it checkes whether or not
             to display the various buttons on that form
         """
         result_mixed_objects = []
-        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
-        # btn_select - if there is at least one permisson to delete or copy an object
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = (
+            0, 0, 0, 0, 0, 0)
+        # btn_select - if there is at least one permisson to delete or copy
+        #              an object
         # btn_delete - if there is at least one permisson to delete an object
         # btn_copy - if there is at least one permisson to copy an object
-        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy
+        #           an object
         # btn_paste - if there is the add permission and there's some copyed
         # data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
@@ -513,28 +531,40 @@ class NyFolder(
                         version_status = 0
                 else:
                     version_status = 2
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+            if (((del_permission or edit_permission) and not x.approved)
+                    or x.approved):
                 result_mixed_objects.append(
-                    (del_permission, edit_permission, version_status, copy_permission, x))
+                    (del_permission, edit_permission, version_status,
+                     copy_permission, x))
         can_operate = can_operate or btn_select
-        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, result_mixed_objects)
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste,
+                can_operate, result_mixed_objects)
 
     def getObjects(self):
-        """ Deprecated: This function was moved in NyFolderBase as contained_objects """
-        return [x for x in self.objectValues(self.get_meta_types()) if x.submitted == 1]
+        """ Deprecated: This function was moved in NyFolderBase as
+            contained_objects
+        """
+        return [x for x in self.objectValues(self.get_meta_types())
+                if x.submitted == 1]
 
     def getFolders(self):
-        """ Deprecated: This function was moved in NyFolderBase as contained_folders """
-        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted == 1]
+        """ Deprecated: This function was moved in NyFolderBase
+            as contained_folders
+        """
+        return [x for x in self.objectValues(METATYPE_FOLDER)
+                if x.submitted == 1]
 
     def hasContent(self):
-        return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
+        return (len(self.getObjects()) > 0) or (
+            len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getTranslatableFolders(self, lang):
-        return [x for x in self.objectValues(METATYPE_FOLDER) if not x.getLocalProperty('title', lang)]
+        return [x for x in self.objectValues(METATYPE_FOLDER)
+                if not x.getLocalProperty('title', lang)]
 
     def getTranslatableObjects(self, lang):
-        return [x for x in self.getObjects() if not x.getLocalProperty('title', lang)]
+        return [x for x in self.getObjects()
+                if not x.getLocalProperty('title', lang)]
 
     def getTranslatableContent(self, lang):
         r = self.getTranslatableFolders(lang)
@@ -550,7 +580,10 @@ class NyFolder(
     def getSubfoldersWithPendingItems(self):
         # returns a list with all subfolders that contains pending(draft)
         # objects
-        return filter(lambda x: x.hasPendingContent(), self.getCatalogedObjects([METATYPE_FOLDER], 0, path='/'.join(self.getPhysicalPath())))
+        return filter(lambda x: x.hasPendingContent(),
+                      self.getCatalogedObjects(
+                          [METATYPE_FOLDER], 0,
+                          path='/'.join(self.getPhysicalPath())))
 
     security.declareProtected(manage_users, 'admin_getusers')
 
@@ -563,16 +596,20 @@ class NyFolder(
         Returns information about the user's roles inside this folder
         and its subfolders.
         """
-        return self.getAuthenticationTool().getUsersRolesRestricted('/'.join(self.getPhysicalPath()))
+        return self.getAuthenticationTool().getUsersRolesRestricted(
+            '/'.join(self.getPhysicalPath()))
 
     def getObjectsForValidation(self):
-        return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted == 1]
+        return [x for x in self.objectValues(
+            self.get_pluggable_metatypes_validation()) if x.submitted == 1]
 
     def count_notok_objects(self):
-        return len([x for x in self.getObjectsForValidation() if x.validation_status == -1 and x.submitted == 1])
+        return len([x for x in self.getObjectsForValidation()
+                    if x.validation_status == -1 and x.submitted == 1])
 
     def count_notchecked_objects(self):
-        return len([x for x in self.getObjectsForValidation() if x.validation_status == 0 and x.submitted == 1])
+        return len([x for x in self.getObjectsForValidation()
+                    if x.validation_status == 0 and x.submitted == 1])
 
     def getSortedFolders(self):
         return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
@@ -587,7 +624,8 @@ class NyFolder(
         """
         Test if the feedback form for the current folder is customized.
         """
-        return self.getSite().folder_customized_feedback.has_key('/'.join(self.getPhysicalPath()))
+        return ('/'.join(self.getPhysicalPath()) in
+                self.getSite().folder_customized_feedback)
 
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'getAdministratorsEmails')
@@ -682,13 +720,17 @@ class NyFolder(
         if REQUEST:
             self.setSession('title', 'Thank you for your feedback')
             self.setSession(
-                'body', 'The administrator will process your comments and get back to you.')
-            return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+                'body',
+                'The administrator will process your comments '
+                'and get back to you.')
+            return REQUEST.RESPONSE.redirect('%s/messages_html'
+                                             % self.absolute_url())
 
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'admin_folder_feedback')
 
-    def admin_folder_feedback(self, status='0', emails='', postal='', REQUEST=None):
+    def admin_folder_feedback(self, status='0', emails='', postal='',
+                              REQUEST=None):
         """ """
         # process data
         try:
@@ -699,9 +741,10 @@ class NyFolder(
         if status == 1:
             # customized
             site.folder_customized_feedback[
-                '/'.join(self.getPhysicalPath())] = (self.utConvertLinesToList(emails), postal)
+                '/'.join(self.getPhysicalPath())] = (
+                    self.utConvertLinesToList(emails), postal)
         elif status == 0:
-            #not customized
+            # not customized
             try:
                 del site.folder_customized_feedback[
                     '/'.join(self.getPhysicalPath())]
@@ -718,7 +761,8 @@ class NyFolder(
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'admin_folder_revokeroles')
 
-    @deprecate('admin_folder_revokeroles is deprecated and will be removed. manage_revokeUsersRoles has been deleted.')
+    @deprecate('admin_folder_revokeroles is deprecated and will be removed. '
+               'manage_revokeUsersRoles has been deleted.')
     def admin_folder_revokeroles(self, roles=[], REQUEST=None):
         """ """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)
@@ -729,19 +773,21 @@ class NyFolder(
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
 
-    def admin_adduser(self, firstname='', lastname='', email='', name='', password='', confirm='', REQUEST=None, RESPONSE=None):
+    def admin_adduser(self, firstname='', lastname='', email='', name='',
+                      password='', confirm='', REQUEST=None, RESPONSE=None):
         """ """
         self.setUserSession(name, '', '', firstname, lastname, email, '')
-        #_err = []
         try:
-            self.getAuthenticationTool().manage_addUser(name, password, confirm, [], [],
-                                                        firstname, lastname, email)
+            self.getAuthenticationTool().manage_addUser(
+                name, password, confirm, [], [], firstname, lastname, email)
         except Exception, error:
             self.setSessionErrorsTrans(error)
-            return RESPONSE.redirect("%s/administration_users_html?mode=add" % self.absolute_url())
+            return RESPONSE.redirect("%s/administration_users_html?mode=add"
+                                     % self.absolute_url())
         self.delUserSession()
         self.setSessionInfoTrans(MESSAGE_USERADDED)
-        return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
+        return RESPONSE.redirect("%s/administration_users_html"
+                                 % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_getuser')
 
@@ -763,8 +809,10 @@ class NyFolder(
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'admin_saveuser_credentials')
 
-    def admin_saveuser_credentials(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
-                                   lastname='', email='', lastupdated='', REQUEST=None, RESPONSE=None):
+    def admin_saveuser_credentials(
+            self, name='', password='', confirm='', roles=[], domains=[],
+            firstname='', lastname='', email='', lastupdated='', REQUEST=None,
+            RESPONSE=None):
         """ """
         self.setUserSession(name, '', '', firstname, lastname, email, '')
         try:
@@ -779,12 +827,14 @@ class NyFolder(
 
         self.delUserSession()
         self.setSessionInfoTrans(MESSAGE_USERMODIFIED)
-        return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
+        return RESPONSE.redirect("%s/administration_users_html"
+                                 % self.absolute_url())
 
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'admin_folder_portlets')
 
-    def admin_folder_portlets(self, portlets=[], folder='', mode='', REQUEST=None):
+    def admin_folder_portlets(self, portlets=[], folder='', mode='',
+                              REQUEST=None):
         """ """
         # right portlets
         if mode == 'delete':
@@ -806,7 +856,8 @@ class NyFolder(
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'admin_folder_addroles')
 
-    def admin_folder_addroles(self, name='', roles=[], location='', REQUEST=None):
+    def admin_folder_addroles(self, name='', roles=[], location='',
+                              REQUEST=None):
         """ """
         if location == '':
                 # this is the current folder actually
@@ -834,7 +885,8 @@ class NyFolder(
                     auth_tool = self.getAuthenticationTool()
                     user_ob = auth_tool.getUser(name)
                     self.sendAccountCreatedEmail('%s %s' % (
-                        user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                        user_ob.firstname, user_ob.lastname), user_ob.email,
+                        user_ob.name, REQUEST)
                 except:
                     pass
             REQUEST.RESPONSE.redirect(
@@ -861,7 +913,8 @@ class NyFolder(
                     if file.filename != '':
                         data, size = logo._read_data(file)
                         content_type = logo._get_content_type(
-                            file, data, logo.__name__, 'application/octet-stream')
+                            file, data, logo.__name__,
+                            'application/octet-stream')
                         logo.update_data(data, content_type, size)
                 else:
                     logo.update_data(file)
@@ -885,11 +938,12 @@ class NyFolder(
     security.declareProtected(
         view_management_screens, 'manage_edit_properties')
 
-    def manage_edit_properties(self, title='', description='', coverage='', keywords='', sortorder=''):
+    def manage_edit_properties(self, title='', description='', coverage='',
+                               keywords='', sortorder=''):
         """ Changes just the properties provided as parameters """
         lang = self.gl_get_selected_language()
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if title:
             self._setLocalPropValue('title', lang, title)
         if description:
@@ -909,12 +963,13 @@ class NyFolder(
     # zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
 
-    def manageProperties(self, title='', description='', coverage='',
-                         keywords='', sortorder='', custom_index='', maintainer_email='',
-                         approved='', releasedate='', discussion='', REQUEST=None, **kwargs):
+    def manageProperties(
+            self, title='', description='', coverage='', keywords='',
+            sortorder='', custom_index='', maintainer_email='', approved='',
+            releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         try:
             sortorder = abs(int(sortorder))
         except:
@@ -999,7 +1054,7 @@ class NyFolder(
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -1037,10 +1092,11 @@ class NyFolder(
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveLogo')
 
-    def saveLogo(self, source='file', file='', url='', del_logo='', REQUEST=None, **kwargs):
+    def saveLogo(self, source='file', file='', url='', del_logo='',
+                 REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if del_logo != '':
             self.delLogo()
         else:
@@ -1090,11 +1146,14 @@ class NyFolder(
         try:
             status = int(status)
             if status == -1 and len(comment) <= 0:
-                raise Exception, self.getPortalTranslations().translate(
-                    '', 'You must insert a comment explaining why the items is not ok')
+                raise Exception(self.getPortalTranslations().translate(
+                    '',
+                    'You must insert a comment explaining why the items '
+                    'is not ok'))
             ob = self._getOb(id)
             ob.checkThis(
-                int(status), comment, self.REQUEST.AUTHENTICATED_USER.getUserName())
+                int(status), comment,
+                self.REQUEST.AUTHENTICATED_USER.getUserName())
             self.recatalogNyObject(ob)
         except Exception, error:
             err = error
@@ -1155,7 +1214,8 @@ class NyFolder(
             raise Unauthorized
 
         for ids in zip(old_ids, new_ids):
-            if self._getOb(ids[0]).meta_type in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:
+            if self._getOb(ids[0]).meta_type in ['Naaya File', 'Naaya ExFile',
+                                                 'Naaya MediaFile']:
                 self.setSessionInfoTrans("File(s) can not be renamed.")
             else:
                 try:
@@ -1174,7 +1234,8 @@ class NyFolder(
         """
         adds or substracts a subobject metatype in a folder
         """
-        if subobject in self.getProductsMetaTypes() or subobject in self.get_meta_types(1):
+        if (subobject in self.getProductsMetaTypes()
+                or subobject in self.get_meta_types(1)):
             if operation in ['a', 'add']:
                 self.folder_meta_types.append(subobject)
                 self._p_changed = 1
@@ -1190,17 +1251,21 @@ class NyFolder(
             to display the various buttons on that form
         """
         results_objects = []
-        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
-        # btn_select - if there is at least one permisson to delete or copy an object
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = (
+            0, 0, 0, 0, 0, 0)
+        # btn_select - if there is at least one permisson to delete or copy
+        #              an object
         # btn_delete - if there is at least one permisson to delete an object
         # btn_copy - if there is at least one permisson to copy an object
-        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy
+        #           an object
         # btn_paste - if there is the add permission and there's some copyed
         # data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
         # Naaya objects
-        objects = self.getCatalogedObjects(meta_type=[
-                                           'Naaya Blog Entry'], contributor=author, howmany=howmany, tags_en=tag, path='/%s' % self.absolute_url(1))
+        objects = self.getCatalogedObjects(
+            meta_type=['Naaya Blog Entry'], contributor=author,
+            howmany=howmany, tags_en=tag, path='/%s' % self.absolute_url(1))
         sorted_objects = self.utSortObjsListByAttr(objects, 'releasedate', 1)
         for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
@@ -1228,11 +1293,14 @@ class NyFolder(
                     version_status = 0
             else:
                 version_status = 2
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+            if (((del_permission or edit_permission) and not x.approved)
+                    or x.approved):
                 results_objects.append(
-                    (del_permission, edit_permission, version_status, copy_permission, x))
+                    (del_permission, edit_permission, version_status,
+                     copy_permission, x))
         can_operate = can_operate or btn_select
-        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_objects)
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste,
+                can_operate, results_objects)
 
     security.declareProtected(view, 'getTagCloud')
 
@@ -1243,16 +1311,20 @@ class NyFolder(
         chars = list(string.ascii_lowercase)
         catalog_tool = self.getCatalogTool()
         tag_index = [
-            index for index in catalog_tool.getIndexObjects() if index.id == 'tags_en']
+            index for index in catalog_tool.getIndexObjects()
+            if index.id == 'tags_en']
         if tag_index:
             index_obj = tag_index[0]
             lexicon = index_obj.getLexicon()
             words_score = []
             for c in chars:
                 words = [word.encode(
-                    'utf-8') for word in lexicon.getWordsForRightTruncation(unicode(c, 'utf-8'))]
-                words_score.extend([(len(index_obj.getDocumentsForWord(w)), w)for w in words if len(
-                    index_obj.getDocumentsForWord(w)) >= tagCount])
+                    'utf-8') for word in lexicon.getWordsForRightTruncation(
+                        unicode(c, 'utf-8'))]
+                words_score.extend(
+                    [(len(index_obj.getDocumentsForWord(w)), w)
+                     for w in words
+                     if len(index_obj.getDocumentsForWord(w)) >= tagCount])
             buf = copy.copy(words_score)
             buf.sort()
             # Find the difference between max and min, and the distribution
@@ -1279,7 +1351,6 @@ class NyFolder(
     def _page_result(self, p_result, p_start):
         # Returns results with paging information
         NUMBER_OF_RESULTS_PER_PAGE = 5
-        #l_paging_information = (0, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
         try:
             p_start = abs(int(p_start))
         except:
@@ -1291,7 +1362,8 @@ class NyFolder(
         else:
             paging_informations = (-1, 0, 0, -1, -1, 0,
                                    NUMBER_OF_RESULTS_PER_PAGE, [0])
-        return (paging_informations, p_result[:6], p_result[6][paging_informations[0]:paging_informations[1]])
+        return (paging_informations, p_result[:6],
+                p_result[6][paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'getEntries')
 
@@ -1302,7 +1374,8 @@ class NyFolder(
 
     def getWeekObjects(self):
         return [x for x in self.objectValues(self.get_meta_types())
-                if x.submitted == 1 and x.releasedate > (self.utGetTodayDate() - 7)]
+                if x.submitted == 1
+                and x.releasedate > (self.utGetTodayDate() - 7)]
 
     security.declareProtected(view, 'entries_rdf')
 
@@ -1314,7 +1387,9 @@ class NyFolder(
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://purl.org/rss/1.0/">')
+        ra('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" '
+           'xmlns:dc="http://purl.org/dc/elements/1.1/" '
+           'xmlns="http://purl.org/rss/1.0/">')
         ra('<channel rdf:about="%s">' % self.utXmlEncode(s.absolute_url()))
         ra('<title>%s</title>' % s.utXmlEncode(s.title))
         ra('<link>%s</link>' % self.utXmlEncode(s.portal_url))
@@ -1422,7 +1497,7 @@ class NyFolder(
         if pt is None:
             return self.getParentNode().standard_html_header(REQUEST, RESPONSE)
         else:
-            if not args.has_key('show_edit'):
+            if 'show_edit' not in args:
                 args['show_edit'] = 0
             args['here'] = context
             args['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
@@ -1666,7 +1741,8 @@ class NyFolder(
 
     def editlogo_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'folder_editlogo')
+        return self.getFormsTool().getContent({'here': self},
+                                              'folder_editlogo')
 
     security.declareProtected(
         PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
@@ -1688,13 +1764,15 @@ class NyFolder(
 
     def sortorder_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'folder_sortorder')
+        return self.getFormsTool().getContent({'here': self},
+                                              'folder_sortorder')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
 
     def restrict_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'folder_restrict')
+        return self.getFormsTool().getContent({'here': self},
+                                              'folder_restrict')
 
     security.declareProtected(view, 'menusubmissions')
 

@@ -2,7 +2,6 @@
 
 import logging
 import traceback
-from cStringIO import StringIO
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -14,6 +13,7 @@ from Products.NaayaCore.interfaces import ICaptcha
 from Products.NaayaBase.constants import PRETTY_EXCEPTION_MSG
 
 log = logging.getLogger(__name__)
+
 
 class NyCommonView(object):
     """
@@ -49,26 +49,31 @@ class NyCommonView(object):
         """
         if self.recaptcha_is_present():
             if not self.is_valid_recaptcha(self, REQUEST):
-                return ['Verification words do not match the ones in the picture.']
+                return [
+                    'Verification words do not match the ones in the picture.']
 
     security.declareProtected(view, 'feedback_html')
+
     def feedback_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     security.declareProtected(view, 'requestrole_html')
+
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self},
-                                               'site_requestrole')
+                                              'site_requestrole')
 
     security.declareProtected(view, 'channel_details_html')
+
     def channel_details_html(self, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'channel_details')
 
     security.declarePublic('standard_error_message')
+
     def standard_error_message(self, client=None, **kwargs):
         """ """
         try:
@@ -111,6 +116,7 @@ class NyCommonView(object):
             return "Error displaying the error page"
 
     security.declarePublic('log_page_error')
+
     def log_page_error(self, error):
         log.warning('Page error: error type %r, error value %r,'
                     ' lineno %r, offset %r, ACTUAL_URL: %s\n%s',
@@ -118,6 +124,7 @@ class NyCommonView(object):
                     self.REQUEST['ACTUAL_URL'], traceback.format_exc())
 
     security.declareProtected(view, 'make_paginator')
+
     def make_paginator(self, *args, **kwargs):
         """ """
         return NaayaPaginator(*args, **kwargs).__of__(self)

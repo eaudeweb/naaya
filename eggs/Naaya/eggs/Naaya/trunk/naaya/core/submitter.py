@@ -11,8 +11,9 @@ the content.
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool \
-        import is_anonymous
+    import is_anonymous
 from naaya.core.utils import is_valid_email
+
 
 def info_required(parent, request):
     """ What information do we require from this submitter?  """
@@ -23,10 +24,13 @@ def info_required(parent, request):
 
 _info_html = NaayaPageTemplateFile('zpt/submitter_info', globals(),
                                    'naaya.core.submitter.info_html')
+
+
 def info_html(parent, request):
     """ Render the HTML to request captcha and/or name + email. """
     required = info_required(parent, request)
     return _info_html.__of__(parent)(required=required)
+
 
 def info_check(parent, request, ob):
     """
@@ -56,13 +60,13 @@ def info_check(parent, request, ob):
         name_and_email_errors = {}
         if not info['name']:
             name_and_email_errors['submitter-name'] = (
-                    ["Submitter name is mandatory"])
+                ["Submitter name is mandatory"])
         if not info['email']:
             name_and_email_errors['submitter-email'] = (
-                    ["Submitter email is mandatory"])
+                ["Submitter email is mandatory"])
         elif not is_valid_email(info['email']):
             name_and_email_errors['submitter-email'] = (
-                    ["Invalid email address"])
+                ["Invalid email address"])
 
         if name_and_email_errors:
             errors.update(name_and_email_errors)

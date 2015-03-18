@@ -32,17 +32,17 @@ import akismet
 from akismet import AkismetError
 from unidecode import unidecode
 from naaya.core.utils import cleanup_message, is_ajax, str2bool
-from naaya.core.backport import json
 from naaya.core.zope2util import json_response, ofs_path
 
 akismet.USERAGENT = "MyApplication/MyVersion"
 
 configuration = getConfiguration()
 environment = getattr(configuration, 'environment', {})
-has_api_key = environment.has_key('AKISMET_API_KEY')
+has_api_key = 'AKISMET_API_KEY' in environment
 
 if has_api_key:
     akismet_api_key = environment.get('AKISMET_API_KEY', '')
+
 
 @adapter(interfaces.INyCommentable, IObjectEvent)
 def handleComentedObject(ob, event):
@@ -55,6 +55,7 @@ def handleComentedObject(ob, event):
         if event.oldParent is not None:
             uncatalog_comments(ob)
 
+
 def catalog_comments(obj):
     catalog = obj.getSite().getCatalogTool()
     container = obj._get_comments_container()
@@ -65,6 +66,7 @@ def catalog_comments(obj):
             except:
                 obj.getSite().log_current_error()
 
+
 def uncatalog_comments(obj):
     catalog = obj.getSite().getCatalogTool()
     container = obj._get_comments_container()
@@ -74,6 +76,7 @@ def uncatalog_comments(obj):
                 catalog.uncatalog_object(ofs_path(comment))
             except:
                 obj.getSite().log_current_error()
+
 
 class NyComment(SimpleItem):
 
@@ -111,7 +114,7 @@ class NyComment(SimpleItem):
     def syndicateThis(self, lang=None):
         """ Render this comment as a fragment of an RSS 1.0 feed """
         out = StringIO()
-        if lang is None: 
+        if lang is None:
             lang = self.gl_get_selected_language()
 
         title = "Comment by %s: %s" % (self.author, self.title)
@@ -119,23 +122,23 @@ class NyComment(SimpleItem):
         out.write('<link>%s</link>' % self.absolute_url())
         out.write('<title>%s</title>' % self.utXmlEncode(title))
         out.write('<description><![CDATA[%s]]></description>' %
-                     self.utToUtf8(self.body))
+                  self.utToUtf8(self.body))
         out.write('<dc:title>%s</dc:title>' % self.utXmlEncode(title))
         out.write('<dc:date>%s</dc:date>'
-                     % self.utShowFullDateTimeHTML(self.releasedate))
+                  % self.utShowFullDateTimeHTML(self.releasedate))
         out.write('<dc:description><![CDATA[%s]]></dc:description>' %
-                     self.utToUtf8(self.body))
+                  self.utToUtf8(self.body))
         out.write('<dc:contributor>%s</dc:contributor>' %
-                     self.utXmlEncode(self.author))
+                  self.utXmlEncode(self.author))
         out.write('<dc:language>%s</dc:language>' %
-                     self.utXmlEncode(lang))
+                  self.utXmlEncode(lang))
         out.write('</item>')
         return out.getvalue()
 
 InitializeClass(NyComment)
 
 
-#@obsolete class
+# @obsolete class
 class comment_item(utils):
     """
     Class that implements a comment.
@@ -167,6 +170,7 @@ class comment_item(utils):
     security.setDefaultAccess("allow")
 
     security.declarePublic('export_this')
+
     def export_this(self):
         """
         Exports object into Naaya XML format.
@@ -191,6 +195,7 @@ class comment_item(utils):
 
 InitializeClass(comment_item)
 
+
 class NyCommentable:
     """
     Class that handles the validation operation for a single object.
@@ -210,6 +215,7 @@ class NyCommentable:
         return self._get_comments_container()
 
     security.declareProtected(view, 'get_comments_list')
+
     def get_comments_list(self):
         """ Return the list of comments sorted by releasedate. """
 
@@ -221,6 +227,7 @@ class NyCommentable:
             return []
 
     security.declareProtected(view, 'count_comments')
+
     def count_comments(self):
         """ Returns the number of comments. """
 
@@ -232,11 +239,12 @@ class NyCommentable:
 
     def is_open_for_comments(self):
         return self.discussion
-        warn('Function `is_open_for_comments` is deprecated. NyCommentable reads '
-             'the `discussion` property directly',
+        warn('Function `is_open_for_comments` is deprecated. NyCommentable '
+             'reads the `discussion` property directly',
              DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('open_for_comments')
+
     def open_for_comments(self):
         """
         Enable(open) comments.
@@ -247,16 +255,18 @@ class NyCommentable:
              DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('close_for_comments')
+
     def close_for_comments(self):
         """
         Disable(close) comments.
         """
 
-        warn('Function `close_for_comments` is deprecated. NyCommentable reads '
-             'the `discussion` property directly',
+        warn('Function `close_for_comments` is deprecated. NyCommentable '
+             'reads the `discussion` property directly',
              DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('export_comments')
+
     def export_comments(self):
         """
         Export all the comments in XML format.
@@ -271,6 +281,7 @@ class NyCommentable:
         return ''.join(r)
 
     security.declarePrivate('import_comments')
+
     def import_comments(self, discussion):
         """
         Import comments.
@@ -279,10 +290,10 @@ class NyCommentable:
         if discussion is not None:
             for c in discussion.comments:
                 self._comment_add(c.id,
-                            c.title.encode('utf-8'),
-                            c.body.encode('utf-8'),
-                            c.author.encode('utf-8'),
-                            c.releasedate.encode('utf-8'))
+                                  c.title.encode('utf-8'),
+                                  c.body.encode('utf-8'),
+                                  c.author.encode('utf-8'),
+                                  c.releasedate.encode('utf-8'))
 
     def _is_spam(self, text):
         """
@@ -298,9 +309,9 @@ class NyCommentable:
             try:
                 akismet_key = akismet.verify_key(akismet_api_key, site)
                 if akismet_key:
-                    is_spam = akismet.comment_check(akismet_api_key, site, user_ip,
-                                                    user_agent,
-                                                    comment_content=text)
+                    is_spam = akismet.comment_check(
+                        akismet_api_key, site, user_ip, user_agent,
+                        comment_content=text)
             except akismet.AkismetError:
                 pass
 
@@ -318,13 +329,15 @@ class NyCommentable:
         if has_api_key and akismet_api_key:
             if akismet.verify_key(akismet_api_key, site):
                 if status:
-                    akismet.submit_spam(akismet_api_key, site, user_ip, user_agent,
-                                        comment_content=text)
+                    akismet.submit_spam(
+                        akismet_api_key, site, user_ip, user_agent,
+                        comment_content=text)
                 else:
-                    akismet.submit_ham(akismet_api_key, site, user_ip, user_agent,
-                                        comment_content=text)
+                    akismet.submit_ham(
+                        akismet_api_key, site, user_ip, user_agent,
+                        comment_content=text)
 
-    #permissions
+    # permissions
     def checkPermissionAddComments(self):
         """ Check for adding comments. """
 
@@ -377,18 +390,21 @@ class NyCommentable:
         if not spamstatus:
             spamstatus = self._is_spam(comment_body)
 
-        ob = self._comment_add(title = comment_title,
-                               body = comment_body,
-                               author = author,
-                               releasedate = self.utGetTodayDate())
+        ob = self._comment_add(title=comment_title,
+                               body=comment_body,
+                               author=author,
+                               releasedate=self.utGetTodayDate())
 
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
 
-        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-        return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                 date=self.utGetTodayDate())
+        return REQUEST.RESPONSE.redirect('%s/index_html'
+                                         % self.absolute_url())
 
     security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_del')
+
     def comment_del(self, REQUEST):
         """
         Delete a comment.
@@ -405,8 +421,10 @@ class NyCommentable:
         if is_ajax(REQUEST):
             return json_response({'status': 'success'}, REQUEST.RESPONSE)
         else:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect(
+                '%s/index_html' % self.absolute_url())
 
     def _set_comment_spam_status(self, id, status):
         """
@@ -429,7 +447,9 @@ class NyCommentable:
 
         return False
 
-    security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_spam_status')
+    security.declareProtected(PERMISSION_COMMENTS_MANAGE,
+                              'comment_spam_status')
+
     def comment_spam_status(self, REQUEST):
         """
         Set comment spam status
@@ -440,7 +460,6 @@ class NyCommentable:
 
         id_comment = REQUEST.form.get('id', '')
         status = str2bool(REQUEST.form.get('status', False))
-        user = REQUEST.AUTHENTICATED_USER.getUserName()
         status_set = False
         translate = self.getPortalI18n().get_translation
 
@@ -451,21 +470,26 @@ class NyCommentable:
             if status_set:
                 return json_response({'status': 'success'}, REQUEST.RESPONSE)
             else:
-                return json_response({'status': 'error',
-                                      'message': translate(MESSAGE_ERROROCCURRED)},
-                                    REQUEST.RESPONSE)
+                return json_response(
+                    {'status': 'error',
+                     'message': translate(MESSAGE_ERROROCCURRED)},
+                    REQUEST.RESPONSE)
         else:
             if status_set:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
             else:
                 self.setSessionErrorsTrans(MESSAGE_ERROROCCURRED)
-            return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect(
+                '%s/index_html' % self.absolute_url())
 
         return False
 
-    comments_box = NaayaPageTemplateFile('zpt/comments_box', globals(), 'naaya.base.comments.box')
+    comments_box = NaayaPageTemplateFile('zpt/comments_box', globals(),
+                                         'naaya.base.comments.box')
 
     security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add_html')
-    comment_add_html = NaayaPageTemplateFile('zpt/comment_add', globals(), 'naaya.base.comments.add')
+    comment_add_html = NaayaPageTemplateFile('zpt/comment_add', globals(),
+                                             'naaya.base.comments.add')
 
 InitializeClass(NyCommentable)
