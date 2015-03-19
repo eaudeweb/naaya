@@ -1,5 +1,6 @@
 3.4.16 (unreleased)
 -------------------
+* corrected the class on the recaptcha error message [dumitval]
 
 3.4.15 (2015-03-12)
 -------------------

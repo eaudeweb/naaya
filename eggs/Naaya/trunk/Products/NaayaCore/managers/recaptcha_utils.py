@@ -20,9 +20,9 @@ def render_captcha(context):
     """Return HTML code for CAPTCHA."""
     err = context.getSession('err_recaptcha', '')
     context.delSession('err_recaptcha')
-    return "".join(('<span class="errormsg">',
+    return "".join(('<p class="message-error">',
                     escape(err),
-                    '</span>',
+                    '</p>',
                     displayhtml(context.getSite().get_recaptcha_public_key())))
 
 
@@ -47,15 +47,7 @@ class RecaptchaResponse(object):
 def displayhtml(public_key,
                 use_ssl=False,
                 error=None):
-    """Gets the HTML to display for reCAPTCHA
-
-    public_key -- The public api key
-    use_ssl -- Should the request be sent over ssl?
-    error -- An error message to display (from RecaptchaResponse.error_code)"""
-
-    error_param = ''
-    if error:
-        error_param = '&error=%s' % error
+    """Gets the HTML to display for reCAPTCHA"""
 
     return """<script type="text/javascript" src="%(ApiJS)s"></script>
 
