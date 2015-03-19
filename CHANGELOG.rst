@@ -1,4 +1,7 @@
-1.2.68 (unreleased)
+1.2.69 (unreleased)
+-------------------
+
+1.2.68 (2015-03-19)
 -------------------
 * once validated, reCaptcha will not reappear in the session (meeting
   only) [dumitval]
