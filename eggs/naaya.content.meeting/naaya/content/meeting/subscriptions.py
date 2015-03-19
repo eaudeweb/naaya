@@ -89,21 +89,25 @@ class Subscriptions(SimpleItem):
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                              '/subscription_not_allowed')
 
-        if REQUEST.REQUEST_METHOD == 'GET':
-            return self.getFormsTool().getContent(
-                {'here': self}, 'naaya.content.meeting.subscription_signup')
+        if REQUEST.get('add_users'):
+            return self.subscribe_accounts(REQUEST)
 
-        if REQUEST.REQUEST_METHOD == 'POST':
+        if REQUEST.get('add_signup'):
             formdata, formerrors = self._validate_signup(REQUEST.form)
 
             # check Captcha/reCaptcha
-            if not self.checkPermissionSkipCaptcha():
-                contact_word = REQUEST.form.get('contact_word', '')
-                captcha_validator = self.validateCaptcha(contact_word, REQUEST)
+            if not (self.checkPermissionSkipCaptcha() or
+                    REQUEST.SESSION.get('captcha_passed')):
+                recaptcha_response = REQUEST.form.get('g-recaptcha-response',
+                                                      '')
+                captcha_validator = self.validateCaptcha(recaptcha_response,
+                                                         REQUEST)
                 if captcha_validator:
                     if formerrors is None:
                         formerrors = {}
                     formerrors['captcha'] = captcha_validator
+                else:
+                    REQUEST.SESSION['captcha_passed'] = True
 
             if formerrors is not None:
                 return self.getFormsTool().getContent(
@@ -119,6 +123,23 @@ class Subscriptions(SimpleItem):
                 else:
                     REQUEST.RESPONSE.redirect(self.absolute_url() +
                                               '/signup_successful')
+
+        # check Captcha/reCaptcha also for searching users
+        captcha_validator = None
+        if (REQUEST.get('search_user') or
+                REQUEST.get('search_user_with_role')):
+            if not (self.checkPermissionSkipCaptcha() or
+                    REQUEST.SESSION.get('captcha_passed')):
+                recaptcha_response = REQUEST.form.get('g-recaptcha-response',
+                                                      '')
+                captcha_validator = self.validateCaptcha(recaptcha_response,
+                                                         REQUEST)
+                if not captcha_validator:
+                    REQUEST.SESSION['captcha_passed'] = True
+
+        return self.getFormsTool().getContent(
+            {'here': self, 'captcha_errors': captcha_validator},
+            'naaya.content.meeting.subscription_signup')
 
     security.declareProtected(view, 'signup_successful')
 
@@ -319,6 +340,19 @@ class Subscriptions(SimpleItem):
         if not meeting.allow_register:
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                              '/subscription_not_allowed')
+
+        # check Captcha/reCaptcha also for searching users
+        if not (self.checkPermissionSkipCaptcha() or
+                REQUEST.SESSION.get('captcha_passed')):
+            recaptcha_response = REQUEST.form.get('g-recaptcha-response', '')
+            captcha_validator = self.validateCaptcha(recaptcha_response,
+                                                     REQUEST)
+            if captcha_validator:
+                return self.getFormsTool().getContent(
+                    {'here': self, 'captcha_errors': captcha_validator},
+                    'naaya.content.meeting.subscription_signup')
+            else:
+                REQUEST.SESSION['captcha_passed'] = True
 
         uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)

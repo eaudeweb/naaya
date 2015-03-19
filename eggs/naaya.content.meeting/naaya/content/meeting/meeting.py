@@ -244,7 +244,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
                                                                 ''))
     schema_raw_data.setdefault('resourceurl', '')
     schema_raw_data.setdefault('source', '')
-    _contact_word = schema_raw_data.get('contact_word', '')
+    recaptcha_response = schema_raw_data.get('g-recaptcha-response', '')
 
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''),
                  prefix='meeting')
@@ -259,7 +259,8 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     # check Captcha/reCaptcha
     if REQUEST:
         if not self.checkPermissionSkipCaptcha():
-            captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+            captcha_validator = self.validateCaptcha(recaptcha_response,
+                                                     REQUEST)
             if captcha_validator:
                 form_errors['captcha'] = captcha_validator
 
