@@ -1,5 +1,8 @@
 1.2.68 (unreleased)
 -------------------
+* once validated, reCaptcha will not reappear in the session (meeting
+  only) [dumitval]
+* reCaptcha 2.0 compatibility [dumitval]
 
 1.2.67 (2015-03-10)
 -------------------
