@@ -40,18 +40,18 @@ class Participants(SimpleItem):
     def getSubscriptions(self):
         return self.subscriptions
 
+    security.declareProtected(view, 'findUsers')
+
     def findUsers(self, search_param, search_term):
         """ """
-        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
-            raise Unauthorized
         if len(search_term) == 0:
             return []
         return findUsers(self.getSite(), search_param, search_term)
 
+    security.declareProtected(view, 'listUsersInGroup')
+
     def listUsersInGroup(self, search_role):
         """ """
-        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
-            raise Unauthorized
         if len(search_role) == 0:
             return []
         return listUsersInGroup(self.getSite(), search_role)
@@ -307,10 +307,10 @@ class Participants(SimpleItem):
 
         return attendee_uids
 
+    security.declareProtected(view, 'getAttendeeInfo')
+
     def getAttendeeInfo(self, uid):
         """ """
-        if not self.checkPermissionParticipateInMeeting():
-            raise Unauthorized
         subscriptions = self.getSubscriptions()
         if subscriptions._is_signup(uid):
             user = subscriptions.getSignup(uid)
@@ -358,10 +358,10 @@ class Participants(SimpleItem):
                 user = subscriptions.getAccountSubscription(attendee_id)
             setattr(user, prop, val)
 
+    security.declareProtected(view, 'getParticipantRole')
+
     def getParticipantRole(self):
         """ """
-        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
-            raise Unauthorized
         return PARTICIPANT_ROLE
 
     def index_html(self, REQUEST):
@@ -372,7 +372,7 @@ class Participants(SimpleItem):
             {'here': self},
             'naaya.content.meeting.participants_index')
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'pickrole_html')
+    security.declareProtected(view, 'pickrole_html')
 
     def pickrole_html(self, REQUEST):
         """ """
