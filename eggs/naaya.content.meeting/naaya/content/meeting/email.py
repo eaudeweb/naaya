@@ -182,7 +182,7 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING,
                               'send_signup_accepted_email')
 
-    def send_signup_accepted_email(self, signup):
+    def send_signup_accepted_email(self, signup, resend=False):
         """ """
         meeting = self.getMeeting()
         subscriptions = meeting.getParticipants().getSubscriptions()
@@ -195,7 +195,9 @@ class EmailSender(SimpleItem):
                      'name': signup.name,
                      'login_url': login_url,
                      'on_waiting_list': account_info['role'] == WAITING_ROLE,
-                     '_translate': self.getPortalI18n().get_translation}
+                     '_translate': self.getPortalI18n().get_translation,
+                     'resend': resend
+                     }
 
         return self._send_email_with_template(
             'naaya.content.meeting.email_signup_accepted', from_email,
@@ -221,7 +223,8 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING,
                               'send_account_subscription_accepted_email')
 
-    def send_account_subscription_accepted_email(self, account_subscription):
+    def send_account_subscription_accepted_email(self, account_subscription,
+                                                 resend=False):
         """ """
         meeting = self.getMeeting()
         uid = account_subscription.uid
@@ -233,7 +236,9 @@ class EmailSender(SimpleItem):
                      'uid': uid,
                      'name': account_subscription.name,
                      'on_waiting_list': account_info['role'] == WAITING_ROLE,
-                     '_translate': self.getPortalI18n().get_translation}
+                     '_translate': self.getPortalI18n().get_translation,
+                     'resend': resend
+                     }
         return self._send_email_with_template(
             'naaya.content.meeting.email_account_subscription_accepted',
             from_email, to_email, mail_opts)
