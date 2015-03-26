@@ -48,18 +48,21 @@
   })
 
   function show_hide(){
-    if ($('input[name="uids:list"]:checked').length == 0){
-      if($('#is_meeting_admin').val() == 1){
-        $('input[name="save_changes"]').hide();
-        $('.explanation').hide();
-        $('.hide_on_edit').show();
-      };
-    }
-    else{
-      if($('#is_meeting_admin').val() == 1){
-        $('input[name="save_changes"]').show();
-        $('.hide_on_edit').hide();
-        $('.explanation').show();
+    var is_eionet_meeting = ($('#is_eionet_meeting').val() == 'True');
+    if (is_eionet_meeting){
+      if ($('input[name="uids:list"]:checked').length == 0){
+        if($('#is_meeting_admin').val() == 1){
+          $('input[name="save_changes"]').hide();
+          $('.explanation').hide();
+          $('.hide_on_edit').show();
+        };
+      }
+      else{
+        if($('#is_meeting_admin').val() == 1){
+          $('input[name="save_changes"]').show();
+          $('.hide_on_edit').hide();
+          $('.explanation').show();
+        };
       };
     };
   };
@@ -120,6 +123,8 @@
 
 <input type="hidden" tal:attributes="value here/checkPermissionAdminMeeting"
     id="is_meeting_admin" />
+<input type="hidden" tal:attributes="value here/is_eionet_meeting"
+    id="is_eionet_meeting" />
 <table class="datatable" width="95%" tal:define="
         meeting here/getMeeting;
         meeting_admin here/checkPermissionAdminMeeting;
@@ -135,7 +140,7 @@
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=name"
                  i18n:translate="">Name</a>
         </th>
-        <th>
+        <th class="hide_on_edit">
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=email"
                  i18n:translate="">Email</a>
         </th>
@@ -166,21 +171,25 @@
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
                 i18n:translate="">Status</a>
         </th>
-        <tal:block repeat="question here/get_survey_questions">
+        <!--<tal:block repeat="question here/get_survey_questions">
             <th tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
             tal:content="python:question[1]" />
-        </tal:block>
+        </tal:block>-->
+        <th tal:condition="here/survey_required">
+          <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=survey_answered"
+                 i18n:translate="">Survey answered</a>
+        </th>
     </tr>
     <tr tal:repeat="user users"
             tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
         <tal:block define="user_info python:here.getAttendeeInfo(user)">
-        <td tal:condition="meeting/checkPermissionChangePermissions">
+        <td tal:condition="meeting/checkPermissionChangePermissions" align="center">
             <input type="checkbox" tal:attributes="name input_name; value user_info/uid"/>
         </td>
         <td tal:define="name user_info/name">
             <span tal:condition="name" tal:replace="name"/>
         </td>
-        <td tal:define="email user_info/email">
+        <td class="force-wrap hide_on_edit" tal:define="email user_info/email">
             <a tal:condition="email" tal:attributes="href string:mailto:${email}" tal:content="email"></a>
         </td>
         <td tal:define="organization user_info/organization">
@@ -213,7 +222,7 @@
                     ${justification}" />
                 </tal:block>
               </span>
-              <select name="represents" style="display:none" disabled="disabled"
+              <select name="represents" style="width:10em; display:none" disabled="disabled"
                 tal:attributes="id python:user_info['uid']+'___represents'" >
                 <option tal:attributes="selected python:country_code == '-'"
                   value="">-</option>
@@ -267,14 +276,17 @@
         <td class="hide_on_edit" tal:define="phone user_info/phone">
             <span tal:condition="phone" tal:replace="phone"/>
         </td>
-        <td class="hide_on_edit"><span tal:replace="user"/></td>
+        <td class="hide_on_edit force-wrap" tal:content="user" />
         <td class="hide_on_edit"><span tal:replace="user_info/role"/></td>
-        <tal:block define="uid user_info/uid"
+        <td i18n:translate="" tal:condition="here/survey_required"
+          tal:define="has_answer python:here.check_survey_response(user_info['uid'])"
+          tal:content="python:test(has_answer, 'Yes', 'No')" />
+        <!--<tal:block define="uid user_info/uid"
             repeat="question here/get_survey_questions">
             <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
                 tal:content="python:here.get_survey_answer(
                     uid, question[0])"/>
-        </tal:block>
+        </tal:block>-->
         </tal:block>
     </tr>
 </table>

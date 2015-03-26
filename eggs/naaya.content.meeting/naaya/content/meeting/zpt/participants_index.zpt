@@ -225,14 +225,17 @@
             <tal:block replace="structure python:here.participants_table(form_name='formOnAttendees', input_name='uids:list')"/>
 
             <input tal:condition="python: meeting.checkPermissionChangePermissions()"
-              type="submit" name="del_attendees"
+              type="submit" name="del_attendees" i18n:attributes="value"
               value="Remove selected participants"/>
             <input tal:condition="meeting/checkPermissionAdminMeeting"
-              type="submit" name="set_participants"
+              type="submit" name="set_participants" i18n:attributes="value"
               value="Set participants"/>
             <input tal:condition="meeting/checkPermissionAdminMeeting"
-              type="submit" name="set_administrators"
+              type="submit" name="set_administrators" i18n:attributes="value"
               value="Make administrators"/>
+            <input tal:condition="meeting/checkPermissionAdminMeeting"
+              type="submit" name="resend_emails" i18n:attributes="value"
+              value="Resend acceptance email"/>
             <tal:block condition="here/is_eionet_meeting">
               <input tal:condition="nfp_country_code" type="submit"
                 name="set_representative" i18n:attributes="value"
