@@ -10,6 +10,9 @@ Dear <tal:block content="options/name" i18n:name="name" />,
 Your signup request for the meeting <tal:block content="options/meeting/title_or_id" i18n:name="meeting_name" /> was accepted.
 </tal:block>
 
+<tal:block condition="options/resend" i18n:translate="">
+You have not answered the meeting's mandatory survey yet. Please open the meeting's page to submit your answer.</tal:block>
+
 <tal:block condition="options/on_waiting_list" i18n:translate="">
 All the meeting places are full. You are added to the waiting list. If a place opens, the administrator can add you as a participant.
 </tal:block>

@@ -241,6 +241,31 @@ class Participants(SimpleItem):
             return self.setReimbursement(REQUEST, remove=True)
         elif 'save_changes' in REQUEST.form:
             return self.save_changes(REQUEST)
+        elif 'resend_emails' in REQUEST.form:
+            return self.resend_emails(REQUEST)
+
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'resend_emails')
+
+    @postonly
+    def resend_emails(self, REQUEST):
+        """ """
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        subscriptions = self.getSubscriptions()
+        email_sender = self.getMeeting().getEmailSender()
+        for uid in uids:
+            signup = subscriptions._signups.get(uid)
+            if signup:
+                email_sender.send_signup_accepted_email(
+                    signup, resend=self.check_survey_response(uid))
+            else:
+                subscription = subscriptions._account_subscriptions.get(uid)
+                email_sender.send_account_subscription_accepted_email(
+                    subscription, resend=self.check_survey_response(uid))
+            self.setSessionInfoTrans(
+                'Confirmation emails sent to %s participants' % len(uids))
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -297,6 +322,8 @@ class Participants(SimpleItem):
             key = lambda x: attendees[x]['country']
         elif sort_on == 'reimbursed':
             key = lambda x: attendees[x]['reimbursed']
+        elif sort_on == 'survey_answered':
+            key = lambda x: self.check_survey_response(x)
         else:
             key = None
 
@@ -306,6 +333,18 @@ class Participants(SimpleItem):
             attendee_uids.sort(key=key)
 
         return attendee_uids
+
+    security.declareProtected(view, 'check_survey_response')
+
+    def check_survey_response(self, uid):
+        """ """
+        if not self.getMeeting().survey_required:
+            return
+        survey = self.get_survey()
+        for answer in survey.objectValues('Naaya Survey Answer'):
+            if answer.respondent in [uid, 'signup:'+uid]:
+                return True
+        return False
 
     security.declareProtected(view, 'getAttendeeInfo')
 

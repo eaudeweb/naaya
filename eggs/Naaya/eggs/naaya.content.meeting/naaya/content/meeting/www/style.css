@@ -17,3 +17,7 @@ table.meeting-registration-methods {
 .sitemap_tree{
 	padding-top: 5px;
 }
+.force-wrap {
+    max-width: 80px;
+    word-wrap: break-word;
+}
