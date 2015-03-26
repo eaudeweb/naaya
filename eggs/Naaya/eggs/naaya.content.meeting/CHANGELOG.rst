@@ -1,4 +1,7 @@
-1.2.69 (unreleased)
+1.2.70 (unreleased)
+-------------------
+
+1.2.69 (2015-03-26)
 -------------------
 * removed the extra columns (survey) from participants listing [dumitval]
 * option to resent confirmation emails to participants [dumitval]
