@@ -1,4 +1,7 @@
-1.4.21 (unreleased)
+1.4.22 (unreleased)
+--------------------
+
+1.4.21 (2015-03-27)
 --------------------
 * display a meaningful error message when the file could not be created
   (title or id issues) [dumitval]
