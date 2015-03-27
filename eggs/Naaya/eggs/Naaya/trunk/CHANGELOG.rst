@@ -1,5 +1,7 @@
 3.4.17 (unreleased)
 -------------------
+* update make_id to strip unwanted leading and trailing characters from
+  the id [dumitval]
 
 3.4.16 (2015-03-19)
 -------------------

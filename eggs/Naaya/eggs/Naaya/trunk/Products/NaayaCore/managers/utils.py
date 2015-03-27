@@ -39,6 +39,10 @@ default_remove_words = [
     "than", "the", "this", "that", "to", "up", "via", "with",
 ]
 
+default_remove_lead = ['_', 'aq_']
+
+default_remove_trail = ['__']
+
 def genObjectId(s, num_chars=80, removelist=None):
     '''
     DEPRECATED! Use slugify(s)
@@ -163,6 +167,7 @@ def make_id(parent, temp_parent=None,
         gen_id = id
     else:
         gen_id = slugify(id or title or prefix, removelist=removelist)
+    gen_id = strip_lead_trail(gen_id)
 
     if temp_parent:
         exists_fct = lambda c: (temp_parent._getOb(c,None) or
@@ -170,6 +175,19 @@ def make_id(parent, temp_parent=None,
     else:
         exists_fct = lambda c: parent._getOb(c,None) is not None
     return uniqueId(gen_id, exists_fct)
+
+def strip_lead_trail(name, lead=default_remove_lead,
+                     trail=default_remove_trail):
+    """ Function to remove unwanted leading and trailing character
+        sequences from filenames (or strings in general)."""
+    for str_lead in lead:
+        if name[:len(str_lead)] == str_lead:
+            name = strip_lead_trail(name[len(str_lead):], lead, trail)
+    for str_trail in trail:
+        if name[-len(str_trail):] == str_trail:
+            name = strip_lead_trail(name[:-len(str_trail)], lead, trail)
+    return name
+
 
 def genRandomId(p_length=10, p_chars=string.digits):
     """Generate a random numeric id."""
