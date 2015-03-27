@@ -23,14 +23,13 @@ from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.content.bfile.utils import file_has_content, tmpl_version
 from naaya.content.bfile.utils import get_view_adapter
-from naaya.content.bfile.utils import strip_leading_underscores
 from naaya.core import submitter
 from naaya.core.zope2util import CaptureTraverse
 from naaya.core.zope2util import abort_transaction_keep_session
 from permissions import PERMISSION_ADD_BFILE
 from persistent.dict import PersistentDict
 from webdav.Lockable import ResourceLockedError
-from zExceptions import NotFound
+from zExceptions import NotFound, BadRequest
 from zope.event import notify
 from zope.interface import implements
 import os
@@ -106,14 +105,19 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         filename = trim_filename(getattr(_uploaded_file, 'filename', ''))
         base_filename = filename.rsplit('.', 1)[0]  # strip extension
         if base_filename:
-            schema_raw_data['title'] = title = strip_leading_underscores(
-                base_filename.decode('utf-8'))
+            schema_raw_data['title'] = title = base_filename.decode('utf-8')
     id = toAscii(id)
     id = make_id(self, id=id, title=title, prefix='file')
     if contributor is None:
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyBFile_object(self, id, contributor)
+    try:
+        ob = _create_NyBFile_object(self, id, contributor)
+    except BadRequest, err:
+        self.setSessionErrorsTrans([err])
+        REQUEST.RESPONSE.redirect('%s/bfile_add_html' %
+                                  self.absolute_url())
+        return
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang,
                                             _override_releasedate=_releasedate)
