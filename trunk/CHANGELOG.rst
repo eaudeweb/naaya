@@ -1,5 +1,7 @@
 1.4.21 (unreleased)
 --------------------
+* display a meaningful error message when the file could not be created
+  (title or id issues) [dumitval]
 
 1.4.20 (2015-02-26)
 --------------------
