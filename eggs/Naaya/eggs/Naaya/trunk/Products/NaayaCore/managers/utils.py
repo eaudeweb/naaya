@@ -31,7 +31,7 @@ from naaya.core.zope2util import DT2dt
 
 from lxml.builder import ElementMaker
 
-#constants
+# constants
 
 default_remove_words = [
     "a", "an", "as", "at", "before", "but", "by", "for", "from", "is",
@@ -42,6 +42,7 @@ default_remove_words = [
 default_remove_lead = ['_', 'aq_']
 
 default_remove_trail = ['__']
+
 
 def genObjectId(s, num_chars=80, removelist=None):
     '''
@@ -59,13 +60,15 @@ def genObjectId(s, num_chars=80, removelist=None):
     '''
     warn('genObjectId is deprecated. Use slugify(s) instead',
          DeprecationWarning, stacklevel=2)
-    return slugify(s,num_chars,removelist)
+    return slugify(s, num_chars, removelist)
+
 
 def toAscii(s):
     '''
     Functionality now in charge of unidecode
     '''
     return unidecode(s)
+
 
 def slugify(s, maxlen=80, removelist=None):
     '''
@@ -88,7 +91,7 @@ def slugify(s, maxlen=80, removelist=None):
     if maxlen <= 0:
         raise ValueError("Illegal value for @param maxlen")
     if type(s) is str:
-        s = force_to_unicode(s) # raises UnicodeDecodeError if non-ascii
+        s = force_to_unicode(s)  # raises UnicodeDecodeError if non-ascii
         # coder should take notice `s` must be unicode / ascii str
 
     s = str(unidecode(s))
@@ -108,21 +111,26 @@ def slugify(s, maxlen=80, removelist=None):
     inside_space_pat = re.compile(r'[-\s]+')
 
     s = ignore_words_pat.sub('', s)  # remove unimportant words
-    s = ignore_chars_pat.sub('-', s) # change unneeded chars to hyphens
-    s = outside_space_pat.sub('', s) # trim leading/trailing spaces/hyphens
-    s = inside_space_pat.sub('-', s) # convert spaces or group of spaces/hyphens to single hyphens
+    s = ignore_chars_pat.sub('-', s)  # change unneeded chars to hyphens
+    s = outside_space_pat.sub('', s)  # trim leading/trailing spaces/hyphens
+    # convert spaces or group of
+    s = inside_space_pat.sub('-', s)
 
     wordlist = s.split('-')
-    picked_words=[]
+    picked_words = []
     for w in wordlist:
-        if (sum([len(x) for x in picked_words])+len(picked_words)+len(w)) <= maxlen:
+        if (sum([len(x) for x in picked_words])
+                + len(picked_words) + len(w)) <= maxlen:
             picked_words.append(w)
         else:
             break
-    s = '-'.join(picked_words).lower() # join with hyphens, convert to lowercase
-    if not s: # empty string unnacceptable
-        return genRandomId(p_length=min(5,maxlen)) # for backwards compat., but also take in mind maxlen
+    # join with hyphens, convert to lowercase
+    s = '-'.join(picked_words).lower()
+    if not s:  # empty string unnacceptable
+        # for backwards compat., but also take in mind maxlen
+        return genRandomId(p_length=min(5, maxlen))
     return s
+
 
 def cleanupId(p_id=''):
     """
@@ -131,9 +139,10 @@ def cleanupId(p_id=''):
     """
     warn('cleanupId is deprecated. Use slugify(s) instead',
          DeprecationWarning, stacklevel=2)
-    return slugify(p_id,1000,[])
+    return slugify(p_id, 1000, [])
 
-def uniqueId(id,exists):
+
+def uniqueId(id, exists):
     """
     Returns an available id
      * `id`: a valid id - you can use slugify(s) to get one
@@ -147,6 +156,7 @@ def uniqueId(id,exists):
         search_id = '%s-%d' % (id, i)
         i += 1
     return search_id
+
 
 def make_id(parent, temp_parent=None,
             id='', title='',
@@ -170,11 +180,12 @@ def make_id(parent, temp_parent=None,
     gen_id = strip_lead_trail(gen_id)
 
     if temp_parent:
-        exists_fct = lambda c: (temp_parent._getOb(c,None) or
-                               parent._getOb(c,None)) is not None
+        exists_fct = lambda c: (temp_parent._getOb(c, None) or
+                                parent._getOb(c, None)) is not None
     else:
-        exists_fct = lambda c: parent._getOb(c,None) is not None
+        exists_fct = lambda c: parent._getOb(c, None) is not None
     return uniqueId(gen_id, exists_fct)
+
 
 def strip_lead_trail(name, lead=default_remove_lead,
                      trail=default_remove_trail):
@@ -193,25 +204,29 @@ def genRandomId(p_length=10, p_chars=string.digits):
     """Generate a random numeric id."""
     return ''.join([choice(p_chars) for i in range(p_length)])
 
+
 def findDuplicates(objects, attributes):
     """Returns an iterator with the duplicate objects.
 
         Items with equal attributes are considered duplicated.
         @param objects: objects to test
         @type objects: iterator or sequence
-        @param attributes: sequence of attributes that need to be equal to consider the objects duplicate
+        @param attributes: sequence of attributes that need to be equal
+                           to consider the objects duplicate
         @type attributes: sequence of strings
         @rtype: iterator
     """
     all_items = {}
     for item in objects:
-        marker = tuple([getattr(item, attr) for attr in attributes]) # TODO Python 2.4: generator comprehension
+        # TODO Python 2.4: generator comprehension
+        marker = tuple([getattr(item, attr) for attr in attributes])
         all_items.setdefault(marker, []).append(item)
     for items in all_items.values():
         if len(items) < 2:
             continue
         for item in items:
             yield item
+
 
 def convertToList(s):
     """Convert to list"""
@@ -220,6 +235,7 @@ def convertToList(s):
     elif not isinstance(s, list):
         s = [s]
     return s
+
 
 def html2text(html, trim_length=512, ellipsis=False):
     """
@@ -239,18 +255,21 @@ def html2text(html, trim_length=512, ellipsis=False):
             text = re.sub(r'(?<=\s)\S+$', ELLIPSIS, text)
     return text
 
+
 def normalize_template(src):
     src = (src.strip().replace('\r', '')+'\n')
     if isinstance(src, unicode):
         src = src.encode('utf-8')
     return src
 
+
 def html_diff(source, target):
     import difflib
     from cStringIO import StringIO
     lines = lambda s: StringIO(normalize_template(s)).readlines()
-    html_escape_table = {'&': '&amp;', '<': '&lt;', '>': '&gt;',
-            '"': '&quot;', "'": '&apos;', ' ': '&nbsp;', '\t': '&#09'}
+    html_escape_table = {
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
+        ' ': '&nbsp;', '\t': '&#09'}
     htmlquote = lambda s: "".join(html_escape_table.get(c, c) for c in s)
     output = StringIO()
     output.write('<div style="font-family: monospace;">')
@@ -267,8 +286,10 @@ def html_diff(source, target):
     output.write('</div>')
     return output.getvalue()
 
+
 class list_utils:
-    """Provides some interface to handle a list of ids: add/remove id from list"""
+    """ Provides some interface to handle a list of ids:
+        add/remove id from list"""
 
     def __init__(self):
         """Constructor"""
@@ -299,15 +320,19 @@ class list_utils:
     def addToList(self, l, v):
         """Return a new list, after adding value v"""
         res = deepcopy(l)
-        try: res.append(v)
-        except: pass
+        try:
+            res.append(v)
+        except:
+            pass
         return res
 
     def removeFromList(self, l, v):
         """Return a new list, after removing value v"""
         res = deepcopy(l)
-        try: res.remove(v)
-        except: pass
+        try:
+            res.remove(v)
+        except:
+            pass
         return res
 
     def isInList(self, l, v):
@@ -321,16 +346,16 @@ class list_utils:
 
     def convertToList(self, l):
         """ convert to list """
-        if type(l) != type([]):
+        if not isinstance(l, list):
             l = [l]
         return l
 
     def utRemoveDuplicates(self, seq):
-        #given a list of something it removes duplicates
-        #special case of an empty sequence
+        # given a list of something it removes duplicates
+        # special case of an empty sequence
         if len(seq) == 0:
             return []
-        #try using a dict first, because it's the fastest
+        # try using a dict first, because it's the fastest
         u = {}
         try:
             for x in seq:
@@ -339,7 +364,7 @@ class list_utils:
             del u
         else:
             return u.keys()
-        #brute force
+        # brute force
         u = []
         for x in s:
             if x not in u:
@@ -371,6 +396,7 @@ class list_utils:
             dict[l_brain.getPath()] = l_brain
         return dict.values()
 
+
 class file_utils:
     """ """
 
@@ -385,6 +411,7 @@ class file_utils:
     def futReadEnc(self, p_path, p_flag='r', p_encode='utf-8'):
         """ """
         return codecs.open(p_path, p_flag, p_encode).read()
+
 
 class batch_utils:
     """ """
@@ -403,7 +430,8 @@ class batch_utils:
 
     def __getCurrentPage(self):
         """ """
-        l_current_page, l_remainder = divmod(self.cur_position * self.__getNumberOfPages(), self.nbr_row)
+        l_current_page, l_remainder = divmod(
+            self.cur_position * self.__getNumberOfPages(), self.nbr_row)
         return l_current_page
 
     def __getPagesArray(self):
@@ -411,9 +439,11 @@ class batch_utils:
         l_pages = []
         l_current_page = self.__getCurrentPage()
         l_pages_number = self.__getNumberOfPages()
-        for i in range(max(0, l_current_page - self.num_result + 1), l_current_page):
+        for i in range(max(0, l_current_page - self.num_result + 1),
+                       l_current_page):
             l_pages.append(i)
-        for i in range(l_current_page, min(l_current_page + self.num_result, l_pages_number)):
+        for i in range(l_current_page,
+                       min(l_current_page + self.num_result, l_pages_number)):
             l_pages.append(i)
         return l_pages
 
@@ -434,7 +464,9 @@ class batch_utils:
         l_pages = self.__getPagesArray()
         l_current_page = self.__getCurrentPage()
         l_records_page = self.num_result
-        return (l_start, l_stop, l_total, l_prev, l_next, l_current_page, l_records_page, l_pages)
+        return (l_start, l_stop, l_total, l_prev, l_next, l_current_page,
+                l_records_page, l_pages)
+
 
 class utils:
     """
@@ -478,21 +510,21 @@ class utils:
     def html2text(self, *args, **kwargs):
         return html2text(*args, **kwargs)
 
-    #backwards compatibility
+    # backwards compatibility
     def utStripAllHtmlTags(self, html):
         return self.html2text(html, trim_length=None)
 
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
         if orphans == -1:
-            orphans = num_per_page * 20 / 100 # 20 %
+            orphans = num_per_page * 20 / 100  # 20 %
         return ObjectPaginator(objects_list, num_per_page, orphans)
 
     def utGenObjectId(self, s, num_chars=80, removelist=None):
         """ deprecated, use utSlugify instead """
         warn('utGenObjectId is deprecated. Use utSlugify(s) instead',
              DeprecationWarning, stacklevel=2)
-        return slugify(s,num_chars,removelist)
+        return slugify(s, num_chars, removelist)
 
     def toAscii(self, *args, **kw):
         """ toAscii job now done by unidecode module"""
@@ -500,7 +532,6 @@ class utils:
 
     def parse_tags(self, tag_names):
         """ parse comma separated text """
-        #find_tag_re = re.compile('[-\w]+')
         find_tag_re = re.compile('([^",]*)')
         return find_tag_re.findall(tag_names or '')
 
@@ -510,8 +541,10 @@ class utils:
 
     def utGetObject(self, path=None, default=None):
         """ get an object by path """
-        try: return self.unrestrictedTraverse(path, default)
-        except: return None
+        try:
+            return self.unrestrictedTraverse(path, default)
+        except:
+            return None
 
     def utGenRandomId(self, *args, **kw):
         """See the genRandomId function"""
@@ -519,7 +552,8 @@ class utils:
 
     def utGenerateUID(self, p_string=''):
         """ Generate an UID based on current time and a random string """
-        if p_string == '': p_string = '%s%s' % (time.time(), self.utGenRandomId())
+        if p_string == '':
+            p_string = '%s%s' % (time.time(), self.utGenRandomId())
         return md5.new(p_string).hexdigest()
 
     def utCleanupId(self, p_id=''):
@@ -527,7 +561,7 @@ class utils:
         See the cleanupId function"""
         warn('utCleanupId is deprecated. Use utSlugify(s) instead',
              DeprecationWarning, stacklevel=2)
-        return slugify(p_id,1000,[])
+        return slugify(p_id, 1000, [])
 
     def utSlugify(self, *args, **kw):
         """See slugify function"""
@@ -544,7 +578,8 @@ class utils:
 
     def utValidateId(self, p_id=''):
         """."""
-        try: checkValidId(self, p_id)
+        try:
+            checkValidId(self, p_id)
         except Exception, error:
             if str(error) != "('Empty or invalid id specified', '')":
                 return [str(error)]
@@ -559,8 +594,9 @@ class utils:
         return '\r\n'.join(values)
 
     def utConvertLinesToList(self, value):
-        """Takes a value from a textarea control and returns a list of values"""
-        if type(value) == type([]):
+        """ Takes a value from a textarea control and returns
+            a list of values"""
+        if isinstance(value, list):
             return value
         elif value == '':
             return []
@@ -574,7 +610,7 @@ class utils:
         return [seq[i:i+size] for i in range(0, len(seq), size)]
 
     def utNewlinetoBr(self, p_string):
-        #convert new lines to <br /> for html display
+        # convert new lines to <br /> for html display
         return p_string.replace('\r', '').replace('\n', '<br />')
 
     def utListDifference(self, p_l1, p_l2):
@@ -584,7 +620,8 @@ class utils:
         return list(set(p_l1) & set(p_l2))
 
     def utJoinToString(self, something, separator='/'):
-        """Get a list [value1, values...], and returns a string like value1<separator>value2..."""
+        """ Get a list [value1, values...], and returns a string like
+            value1<separator>value2..."""
         return separator.join(self.utConvertToList(something))
 
     def _ut_getattr(self, obj, attr):
@@ -605,7 +642,8 @@ class utils:
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
         """Sort a list of objects by an item values"""
         l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,)*l_len), xrange(l_len), p_list)
+        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,)*l_len),
+                     xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
@@ -614,7 +652,9 @@ class utils:
     def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
         """Sort a list of objects by an attribute values"""
         l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: getattr(x, y)(), p_list, (p_method,)*l_len), xrange(l_len), p_list)
+        l_temp = map(None, map(lambda x, y: getattr(x, y)(), p_list,
+                               (p_method,)*l_len),
+                     xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
@@ -623,8 +663,9 @@ class utils:
     def utFilterObjsListByAttr(self, p_list, p_attr, p_value):
         """Filter a list of objects by an attribute value"""
         l_len = len(p_list)
-        l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), (p_value,)*l_len, p_list)
-        l_temp = filter(lambda x: x[0]==x[1], l_temp)
+        l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len),
+                     (p_value,)*l_len, p_list)
+        l_temp = filter(lambda x: x[0] == x[1], l_temp)
         return map(operator.getitem, l_temp, (-1,)*len(l_temp))
 
     def utSortListOfDictionariesByKey(self, p_list, p_key, p_order):
@@ -647,7 +688,7 @@ class utils:
         return re.sub('[(\"{})\[\]]', '', p_string)
 
     def utStripHtmlTags(self, s, all_tags, single_tags):
-        #removes the html tags that are not allowe from a string
+        # removes the html tags that are not allowed from a string
         p = striping_tool(all_tags, single_tags)
         try:
             p.feed(s)
@@ -662,14 +703,16 @@ class utils:
     def utStrEscapeHTMLTags(self, p_string):
         """ escape HTML tags from string """
         strip_html_pattern = re.compile(r'<[^>]*>')
-        plaintext = strip_html_pattern.sub('',p_string)
+        plaintext = strip_html_pattern.sub('', p_string)
         return plaintext
 
     def utTruncateString(self, p_string, p_len=14):
-        #given a string if the length of the string is bigger
-        #than the given length then truncate the string
-        if len(p_string) > p_len: return '%s..' % p_string[0:p_len]
-        else: return p_string
+        """ given a string if the length of the string is bigger
+            than the given length then truncate the string"""
+        if len(p_string) > p_len:
+            return '%s..' % p_string[0:p_len]
+        else:
+            return p_string
 
     def utStripString(self, p_string):
         """ strip a given string """
@@ -677,13 +720,17 @@ class utils:
 
     def utNoneToEmpty(self, value):
         """ """
-        if value == None: return ''
-        else: return value
+        if value is None:
+            return ''
+        else:
+            return value
 
     def utEmptyToNone(self, value):
         """ """
-        if value == '': return None
-        else: return value
+        if value == '':
+            return None
+        else:
+            return value
 
     def utHtmlEncode(self, p_string):
         """Encode a string using html_quote"""
@@ -692,13 +739,11 @@ class utils:
     def utLinkifyURLs(self, string):
         def replace(match):
             txt = match.group('uri').replace('&amp;', '&')
-            #if txt.startswith('http://'):
             if match.group('uri_proto'):
                 uri = txt
             else:
                 uri = 'http://' + txt
             return '<a href="%s">%s</a>' % (uri, txt)
-
 
         initial_lookbehind = r'(?<![\d\w\-])'
         host_component = r'[\w\d\-]+'
@@ -707,11 +752,12 @@ class utils:
         get_params = r'\?[\w\d\=\%\&\;\-]*(?<!;)'
 
         regexp = r'(?P<uri>' \
-                + initial_lookbehind \
-                + r'((?P<uri_proto>\w+\://)|www\.)' \
-                + host_component + r'(\.' + host_component + r')*' + r'('+ host_port + r')?' \
-                + r'(' + path + r')?' \
-                + r'(' + get_params + r')?' \
+            + initial_lookbehind \
+            + r'((?P<uri_proto>\w+\://)|www\.)' \
+            + host_component + r'(\.' + host_component + r')*' \
+            + r'(' + host_port + r')?' \
+            + r'(' + path + r')?' \
+            + r'(' + get_params + r')?' \
             + r')'
 
         return re.sub(regexp, replace, string)
@@ -734,14 +780,18 @@ class utils:
         return [self.utUrlEncode(l) for l in list]
 
     def utToUtf8(self, p_string):
-        #convert to utf-8
-        if isinstance(p_string, unicode): return p_string.encode('utf-8')
-        else: return str(p_string)
+        # convert to utf-8
+        if isinstance(p_string, unicode):
+            return p_string.encode('utf-8')
+        else:
+            return str(p_string)
 
     def utToUnicode(self, p_string):
-        #convert to unicode
-        if not isinstance(p_string, unicode): return unicode(p_string, 'utf-8')
-        else: return p_string
+        # convert to unicode
+        if not isinstance(p_string, unicode):
+            return unicode(p_string, 'utf-8')
+        else:
+            return p_string
 
     def utLatinToUTF(self, p_string):
         """ accepts only strings """
@@ -760,8 +810,10 @@ class utils:
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
-        if isinstance(p_string, unicode): l_tmp = self.utToUtf8(p_string)
-        else: l_tmp = str(p_string)
+        if isinstance(p_string, unicode):
+            l_tmp = self.utToUtf8(p_string)
+        else:
+            l_tmp = str(p_string)
         l_tmp = l_tmp.replace('&', '&amp;')
         l_tmp = l_tmp.replace('<', '&lt;')
         l_tmp = l_tmp.replace('"', '&quot;')
@@ -785,7 +837,7 @@ class utils:
     def ut_content_disposition(self, filename=None):
         """Generate a properly escaped Content-Disposition header"""
         filename = self.utToUtf8(filename)
-        return 'attachment; filename*=%s'% encode_rfc2231(filename, 'utf-8')
+        return 'attachment; filename*=%s' % encode_rfc2231(filename, 'utf-8')
 
     def utBase64Encode(self, p_string):
         """ """
@@ -793,15 +845,17 @@ class utils:
 
     def utBase64Decode(self, p_string):
         """ """
-        try: return base64.decodestring(p_string)
-        except: return ''
+        try:
+            return base64.decodestring(p_string)
+        except:
+            return ''
 
     def utShowSizeKb(self, p_size):
         """ transform a file size in KB """
         return int(p_size/1024 + 1)
 
     def utShowSize(self, p_size):
-        #Transform a file size in KB, MB ..
+        # Transform a file size in KB, MB ..
         l_bytes = float(p_size)
         l_type = ''
         l_res = ''
@@ -818,7 +872,7 @@ class utils:
         return l_res
 
     def utUnquote(self, value):
-        #transform escapes in single characters
+        # transform escapes in single characters
         return urllib.unquote(value)
 
     def utGetTodayDate(self):
@@ -827,39 +881,57 @@ class utils:
 
     def utGetDate(self, p_string):
         """ """
-        try: return DateTime(p_string)
-        except: return None
+        try:
+            return DateTime(p_string)
+        except:
+            return None
 
     def utShowDateTime(self, p_date):
-        """date is a DateTime or datetime object. This function returns a string 'dd month_name yyyy'"""
-        try: return p_date.strftime('%d/%m/%Y')
-        except: return ''
+        """ date is a DateTime or datetime object.
+            This function returns a string 'dd month_name yyyy'"""
+        try:
+            return p_date.strftime('%d/%m/%Y')
+        except:
+            return ''
 
     # generic function, must be replaced for CHM and other sites !!!
     def utShowDateTime1(self, p_date):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
-        try: return p_date.strftime('%d %b %Y')
-        except: return ''
+        """ date is a DateTime object.
+            This function returns a string 'dd month_name yyyy'"""
+        try:
+            return p_date.strftime('%d %b %Y')
+        except:
+            return ''
 
     def utShowCustom(self, p_date):
         """ """
-        try: return p_date.strftime('%Y-%m-%d')
-        except: return ''
+        try:
+            return p_date.strftime('%Y-%m-%d')
+        except:
+            return ''
 
     def utStringDate(self, p_date):
         """ """
-        try: return p_date.strftime('%d%m%Y')
-        except: return ''
+        try:
+            return p_date.strftime('%d%m%Y')
+        except:
+            return ''
 
     def utShowFullDateTime(self, p_date):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy hh:mm:ss'"""
-        try: return p_date.strftime('%d %b %Y %H:%M:%S')
-        except: return ''
+        """ date is a DateTime object.
+            This function returns a string 'dd month_name yyyy hh:mm:ss'"""
+        try:
+            return p_date.strftime('%d %b %Y %H:%M:%S')
+        except:
+            return ''
 
     def utShowFullDateTimeHTML(self, p_date):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy hh:mm:ss'"""
-        try: return p_date.strftime('%Y-%m-%dT%H:%M:%SZ')
-        except: return ''
+        """ date is a DateTime object.
+            This function returns a string 'dd month_name yyyy hh:mm:ss'"""
+        try:
+            return p_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+        except:
+            return ''
 
     def utShowDateTimePeriod(self, p_start, p_end):
         """
@@ -879,14 +951,16 @@ class utils:
             if isinstance(p_end, DateTime):
                 p_end = DT2dt(p_end)
             sd, sm, sy = p_start.day, p_start.month, p_start.year
-            ed, em, ey = p_end.day, p_end.month, p_end.year
-            if sy == ey:    #same year
-                if sm == em:    #same month
+            em, ey = p_end.month, p_end.year
+            if sy == ey:    # same year
+                if sm == em:    # same month
                     return '%s - %s %s' % (sd, p_end.strftime('%e %b'), sy)
                 else:
-                    return '%s - %s %s' % (p_start.strftime('%e %b'), p_end.strftime('%e %b'), sy)
+                    return '%s - %s %s' % (p_start.strftime('%e %b'),
+                                           p_end.strftime('%e %b'), sy)
             else:
-                return '%s %s - %s %s' % (p_start.strftime('%e %b'), sy, p_end.strftime('%e %b'), ey)
+                return '%s %s - %s %s' % (p_start.strftime('%e %b'), sy,
+                                          p_end.strftime('%e %b'), ey)
 
     def utShowInterval(self, start_date, end_date, all_day):
         """Pretty print Products.NaayaCore.SchemaTool.widgets.interval.Interval
@@ -901,11 +975,11 @@ class utils:
             else:
                 return self.utShowDateTimePeriod(start_date, end_date)
         else:
-             return ('%s, %s - %s, %s' %
-                     (self.utShowDateTime(start_date),
-                      start_date.strftime('%H:%M'),
-                      self.utShowDateTime(end_date),
-                      end_date.strftime('%H:%M'))
+            return ('%s, %s - %s, %s' %
+                    (self.utShowDateTime(start_date),
+                     start_date.strftime('%H:%M'),
+                     self.utShowDateTime(end_date),
+                     end_date.strftime('%H:%M'))
                     )
 
     def utShowTime(self, date):
@@ -915,14 +989,17 @@ class utils:
             return ''
 
     def utConvertStringToDateTimeObj(self, p_datestring, p_separator='/'):
-        """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
+        """ Takes a string that represents a date like 'dd/mm/yyyy'
+            and returns a DateTime object"""
         try:
             l_dateparts = p_datestring.split(p_separator)
             l_intYear = int(l_dateparts[2], 10)
             l_intMonth = int(l_dateparts[1], 10)
             l_intDay = int(l_dateparts[0], 10)
-            if l_intMonth<1 or l_intMonth>12: return None
-            return DateTime(str(l_intYear) + '/' + str(l_intMonth) + '/' + str(l_intDay) + ' 00:00:00')
+            if l_intMonth < 1 or l_intMonth > 12:
+                return None
+            return DateTime(str(l_intYear) + '/' + str(l_intMonth) + '/' +
+                            str(l_intDay) + ' 00:00:00')
         except:
             return None
 
@@ -954,7 +1031,8 @@ class utils:
     def utIsValidDateTime(self, p_str):
         """Test if the string is a valid date"""
         if p_str:
-            return type(self.utConvertStringToDateTimeObj(p_str)) == type(DateTime())
+            return isinstance(self.utConvertStringToDateTimeObj(p_str),
+                              DateTime)
         else:
             return 1
 
@@ -997,11 +1075,13 @@ class utils:
         """
         path = CLIENT_HOME
         if not os.path.isdir(path):
-            try: os.mkdir(path)
-            except: raise OSError, 'Can\'t create directory %s' % path
+            try:
+                os.mkdir(path)
+            except:
+                raise OSError('Can\'t create directory %s' % path)
         tempfile.tempdir = path
         tmpfile = tempfile.mktemp(".temp")
-        zf = ZipFile(tmpfile,"w")
+        zf = ZipFile(tmpfile, "w")
         sz = 0
         for o in objects:
             sz = sz + float(o.get_size())
@@ -1012,125 +1092,135 @@ class utils:
             zfi = ZipInfo(filename)
             zfi.date_time = timetuple
             zfi.compress_type = ZIP_DEFLATED
-            try: zf.writestr(zfi, o.getZipData())
-            except: zf.writestr(zfi, '')
+            try:
+                zf.writestr(zfi, o.getZipData())
+            except:
+                zf.writestr(zfi, '')
         zf.close()
         stat = os.stat(tmpfile)
         content = open(tmpfile, 'rb').read()
         os.unlink(tmpfile)
         RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % name)
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment; filename=%s' % name)
         RESPONSE.setHeader('Content-Length', stat[6])
         return content
 
-#CUSTOM FUNCTIONS
+# CUSTOM FUNCTIONS
 # arnaud.reveillon@naturalsciences.be
 
-    def utSetBodyClass(self,url):
-        if url.count('/admin_')>0 or url.count('/PhotoArchive')>0 or url.count('/GraphicsArchive')>0:
-            bodyClass=('admin')
-        elif url.count('edit_html')>0:
-            bodyClass=('edit')
-        elif url.count('add_html')>0:
-            bodyClass=('add')
-        try:return bodyClass
-        except:return ''
+    def utSetBodyClass(self, url):
+        if url.count('/admin_') > 0 or url.count(
+                '/PhotoArchive') > 0 or url.count('/GraphicsArchive') > 0:
+            bodyClass = ('admin')
+        elif url.count('edit_html') > 0:
+            bodyClass = ('edit')
+        elif url.count('add_html') > 0:
+            bodyClass = ('add')
+        try:
+            return bodyClass
+        except:
+            return ''
 
     def utCustomShowDateTime(self, p_date):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
-        try: return p_date.strftime('%d.%m.%Y')
-        except: return ''
+        """ date is a DateTime object.
+            This function returns a string 'dd month_name yyyy'"""
+        try:
+            return p_date.strftime('%d.%m.%Y')
+        except:
+            return ''
 
     def utCustomShowWordedDate(self, p_date, p_language):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
-        nd=p_date.strftime('%d')
-        nm=p_date.strftime('%m')
-        ny=p_date.strftime('%Y')
+        """ date is a DateTime object.
+            This function returns a string 'dd month_name yyyy'"""
+        nd = p_date.strftime('%d')
+        nm = p_date.strftime('%m')
+        ny = p_date.strftime('%Y')
 
-        if nm=='01':
-            if p_language=='fr-BE':
-                return nd+' janvier '+ny
-            elif p_language=='nl-BE':
-                return nd+' januari '+ny
+        if nm == '01':
+            if p_language == 'fr-BE':
+                return nd + ' janvier ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' januari ' + ny
             else:
-                return nd+' January '+ny
-        elif nm=='02':
-            if p_language=='fr-BE':
-                return nd+' f&eacute;vrier '+ny
-            elif p_language=='nl-BE':
-                return nd+' februari '+ny
+                return nd + ' January ' + ny
+        elif nm == '02':
+            if p_language == 'fr-BE':
+                return nd + ' f&eacute;vrier ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' februari ' + ny
             else:
-                return nd+' February '+ny
-        elif nm=='03':
-            if p_language=='fr-BE':
-                return nd+' mars '+ny
-            elif p_language=='nl-BE':
-                return nd+' maart '+ny
+                return nd + ' February ' + ny
+        elif nm == '03':
+            if p_language == 'fr-BE':
+                return nd + ' mars ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' maart ' + ny
             else:
-                return nd+' March '+ny
-        elif nm=='04':
-            if p_language=='fr-BE':
-                return nd+' avril '+ny
-            elif p_language=='nl-BE':
-                return nd+' april '+ny
+                return nd + ' March ' + ny
+        elif nm == '04':
+            if p_language == 'fr-BE':
+                return nd + ' avril ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' april ' + ny
             else:
-                return nd+' April '+ny
-        elif nm=='05':
-            if p_language=='fr-BE':
-                return nd+' mai '+ny
-            elif p_language=='nl-BE':
-                return nd+' mei '+ny
+                return nd + ' April ' + ny
+        elif nm == '05':
+            if p_language == 'fr-BE':
+                return nd + ' mai ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' mei ' + ny
             else:
-                return nd+' May '+ny
-        elif nm=='06':
-            if p_language=='fr-BE':
-                return nd+' juin '+ny
-            elif p_language=='nl-BE':
-                return nd+' juni '+ny
+                return nd + ' May ' + ny
+        elif nm == '06':
+            if p_language == 'fr-BE':
+                return nd + ' juin ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' juni ' + ny
             else:
-                return nd+' June '+ny
-        elif nm=='07':
-            if p_language=='fr-BE':
-                return nd+' juillet '+ny
-            elif p_language=='nl-BE':
-                return nd+' juli '+ny
+                return nd + ' June ' + ny
+        elif nm == '07':
+            if p_language == 'fr-BE':
+                return nd + ' juillet ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' juli ' + ny
             else:
-                return nd+' July '+ny
-        elif nm=='08':
-            if p_language=='fr-BE':
-                return nd+' ao&ucirc;t '+ny
-            elif p_language=='nl-BE':
-                return nd+' augustus '+ny
+                return nd + ' July ' + ny
+        elif nm == '08':
+            if p_language == 'fr-BE':
+                return nd + ' ao&ucirc;t ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' augustus ' + ny
             else:
-                return nd+' August '+ny
-        elif nm=='09':
-            if p_language=='fr-BE':
-                return nd+' septembre '+ny
-            elif p_language=='nl-BE':
-                return nd+' september '+ny
+                return nd + ' August ' + ny
+        elif nm == '09':
+            if p_language == 'fr-BE':
+                return nd + ' septembre ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' september ' + ny
             else:
-                return nd+' September '+ny
-        elif nm=='10':
-            if p_language=='fr-BE':
-                return nd+' octobre '+ny
-            elif p_language=='nl-BE':
-                return nd+' oktober '+ny
+                return nd + ' September ' + ny
+        elif nm == '10':
+            if p_language == 'fr-BE':
+                return nd + ' octobre ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' oktober ' + ny
             else:
-                return nd+' October '+ny
-        elif nm=='11':
-            if p_language=='fr-BE':
-                return nd+' novembre '+ny
-            elif p_language=='nl-BE':
-                return nd+' november '+ny
+                return nd + ' October ' + ny
+        elif nm == '11':
+            if p_language == 'fr-BE':
+                return nd + ' novembre ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' november ' + ny
             else:
-                return nd+' November '+ny
-        elif nm=='12':
-            if p_language=='fr-BE':
-                return nd+' d&eacute;cembre '+ny
-            elif p_language=='nl-BE':
-                return nd+' december '+ny
+                return nd + ' November ' + ny
+        elif nm == '12':
+            if p_language == 'fr-BE':
+                return nd + ' d&eacute;cembre ' + ny
+            elif p_language == 'nl-BE':
+                return nd + ' december ' + ny
             else:
-                return nd+' December '+ny
+                return nd + ' December ' + ny
         else:
             return nm
 
@@ -1151,63 +1241,69 @@ class utils:
 
     def utStripMSWordUTF8(self, s):
         """ replace MSWord characters """
-        s = s.replace('\\xe2\\x80\\xa6', '...') #ellipsis
-        s = s.replace('\\xe2\\x80\\x93', '-')   #long dash
-        s = s.replace('\\xe2\\x80\\x94', '-')   #long dash
-        s = s.replace('\\xe2\\x80\\x98', '\'')  #single quote opening
-        s = s.replace('\\xe2\\x80\\x99', '\'')  #single quote closing
-        s = s.replace('\\xe2\\x80\\x9c', '"')  #single quote closing
-        s = s.replace('\\xe2\\x80\\x9d', '"')  #single quote closing
-        s = s.replace('\\xe2\\x80\\xa2', '*')  #dot used for bullet points
+        s = s.replace('\\xe2\\x80\\xa6', '...')  # ellipsis
+        s = s.replace('\\xe2\\x80\\x93', '-')   # long dash
+        s = s.replace('\\xe2\\x80\\x94', '-')   # long dash
+        s = s.replace('\\xe2\\x80\\x98', '\'')  # single quote opening
+        s = s.replace('\\xe2\\x80\\x99', '\'')  # single quote closing
+        s = s.replace('\\xe2\\x80\\x9c', '"')  # single quote closing
+        s = s.replace('\\xe2\\x80\\x9d', '"')  # single quote closing
+        s = s.replace('\\xe2\\x80\\xa2', '*')  # dot used for bullet points
         return s
 
     def utHexColors(self, lang):
-        """ returns a hex color code to be used as language color in edit forms """
+        """ returns a hex color code to be used
+            as language color in edit forms """
         colors = ['DEE6FF', 'F8FFDE', 'FFE6DE', 'DEFFE0', 'DEF2FF']
         langs = [x for x in self.gl_get_languages()]
         if lang in langs:
-            l_in = langs.index(lang)%len(colors)
+            l_in = langs.index(lang) % len(colors)
         else:
             l_in = -1
         return '#%s' % colors[l_in]
 
-#END OF CUSTOM FUNCTIONS
+# END OF CUSTOM FUNCTIONS
+
 
 class spreadsheet_file:
 
     def __init__(self, data, dialect='excel'):
         self.fname = tempfile.mktemp()
-        writer = csv.writer(open(self.fname,'wb'), dialect)
+        writer = csv.writer(open(self.fname, 'wb'), dialect)
         for row in data:
             writer.writerow(row)
 
-    def __str__(self): return self.fname
+    def __str__(self):
+        return self.fname
     __repr__ = __str__
 
     def __del__(self):
         os.unlink(self.fname)
+
 
 class tmpfile:
 
     def __init__(self, data):
         self.fname = tempfile.mktemp()
-        writer = csv.writer(open(self.fname,'wb'))
+        writer = csv.writer(open(self.fname, 'wb'))
         for row in data:
             writer.writerow(row)
 
-    def __str__(self): return self.fname
+    def __str__(self):
+        return self.fname
     __repr__ = __str__
 
     def __del__(self):
         os.unlink(self.fname)
 
+
 class ZZipFile(ZipFile):
 
-    def read(self,size=-1):
+    def read(self, size=-1):
         """ """
         if(self.hasbeenread == 0):
             self.hasbeenread = 1
-            return ZipFile.read(self,self.filename)
+            return ZipFile.read(self, self.filename)
         else:
             return ""
 
@@ -1220,10 +1316,11 @@ class ZZipFile(ZipFile):
         """ """
         return self.getinfo(filename).file_size
 
-    def setcurrentfile(self,filename):
+    def setcurrentfile(self, filename):
         """ """
         self.hasbeenread = 0
-        self.filename=filename
+        self.filename = filename
+
 
 class InvalidStringError(Exception):
     """ Invalid String Exception """
@@ -1234,12 +1331,14 @@ class InvalidStringError(Exception):
     def __str__(self):
         return 'Invalid string: %s' % self.msg
 
+
 def object2string(obj):
     """ Pickle obj and base64 encode. Use string2object to recover it.
     """
     buff = StringIO()
     pickle.dump(obj, buff)
     return base64.encodestring(buff.getvalue())
+
 
 def string2object(string):
     """ Revert object2string.
@@ -1277,6 +1376,7 @@ class vcard_file:
     def get_size(self):
         return len(self.data)
 
+
 def get_nsmap(namespaces):
     nsmap = {}
     for n in namespaces:
@@ -1286,8 +1386,8 @@ def get_nsmap(namespaces):
             nsmap[None] = n.value
     return nsmap
 
+
 def rss_item_for_channel(channel):
-    s = channel.getSite()
     namespaces = channel.getNamespaceItemsList()
     nsmap = get_nsmap(namespaces)
     rdf_namespace = nsmap['rdf']
@@ -1295,22 +1395,23 @@ def rss_item_for_channel(channel):
     Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
     E = ElementMaker(None, nsmap=nsmap)
     item = E.item(
-         {'{%s}about'%rdf_namespace : channel.absolute_url()},
-         E.link(channel.absolute_url()),
-         E.title(channel.title_or_id()),
-         E.description(channel.description),
-         Dc.title(channel.title_or_id()),
-         Dc.description(channel.description),
-         Dc.contributor(channel.contributor),
-         Dc.language(channel.language),
-         Dc.creator(channel.creator),
-         Dc.publisher(channel.publisher),
-         Dc.rights(channel.rights),
-         Dc.type(channel.get_channeltype_title(channel.type)),
-         Dc.format('text/xml'),
-         Dc.source(channel.publisher)
+        {'{%s}about' % rdf_namespace: channel.absolute_url()},
+        E.link(channel.absolute_url()),
+        E.title(channel.title_or_id()),
+        E.description(channel.description),
+        Dc.title(channel.title_or_id()),
+        Dc.description(channel.description),
+        Dc.contributor(channel.contributor),
+        Dc.language(channel.language),
+        Dc.creator(channel.creator),
+        Dc.publisher(channel.publisher),
+        Dc.rights(channel.rights),
+        Dc.type(channel.get_channeltype_title(channel.type)),
+        Dc.format('text/xml'),
+        Dc.source(channel.publisher)
         )
     return item
+
 
 def rss_channel_for_channel(channel, lang):
     s = channel.getSite()
@@ -1321,21 +1422,21 @@ def rss_channel_for_channel(channel, lang):
     Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
     E = ElementMaker(None, nsmap=nsmap)
     channel = E.channel(
-            E.title(channel.title),
-            E.link(s.absolute_url()),
-            E.description(channel.description),
-            Dc.description(channel.description),
-            Dc.identifier(s.absolute_url()),
-            Dc.date(channel.utShowFullDateTimeHTML(channel.utGetTodayDate())),
-            Dc.publisher(s.getLocalProperty('publisher', lang)),
-            Dc.creator(s.getLocalProperty('creator', lang)),
-            Dc.subject(s.getLocalProperty('site_title', lang)),
-            Dc.subject(s.getLocalProperty('site_subtitle', lang)),
-            Dc.language(lang),
-            Dc.rights(s.getLocalProperty('rights', lang)),
-            Dc.type(channel.type),
-            Dc.source(s.getLocalProperty('publisher', lang)),
-            E.items(),
-           {'{%s}about'%rdf_namespace : s.absolute_url()}
-          )
+        E.title(channel.title),
+        E.link(s.absolute_url()),
+        E.description(channel.description),
+        Dc.description(channel.description),
+        Dc.identifier(s.absolute_url()),
+        Dc.date(channel.utShowFullDateTimeHTML(channel.utGetTodayDate())),
+        Dc.publisher(s.getLocalProperty('publisher', lang)),
+        Dc.creator(s.getLocalProperty('creator', lang)),
+        Dc.subject(s.getLocalProperty('site_title', lang)),
+        Dc.subject(s.getLocalProperty('site_subtitle', lang)),
+        Dc.language(lang),
+        Dc.rights(s.getLocalProperty('rights', lang)),
+        Dc.type(channel.type),
+        Dc.source(s.getLocalProperty('publisher', lang)),
+        E.items(),
+        {'{%s}about' % rdf_namespace: s.absolute_url()}
+        )
     return channel
