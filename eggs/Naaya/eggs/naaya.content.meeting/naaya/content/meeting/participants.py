@@ -259,11 +259,11 @@ class Participants(SimpleItem):
             signup = subscriptions._signups.get(uid)
             if signup:
                 email_sender.send_signup_accepted_email(
-                    signup, resend=self.check_survey_response(uid))
+                    signup, resend=not self.check_survey_response(uid))
             else:
                 subscription = subscriptions._account_subscriptions.get(uid)
                 email_sender.send_account_subscription_accepted_email(
-                    subscription, resend=self.check_survey_response(uid))
+                    subscription, resend=not self.check_survey_response(uid))
             self.setSessionInfoTrans(
                 'Confirmation emails sent to %s participants' % len(uids))
 
