@@ -1,4 +1,7 @@
-1.2.70 (unreleased)
+1.2.71 (unreleased)
+-------------------
+
+1.2.70 (2015-03-30)
 -------------------
 * bugfix in resending emails to participants [dumitval]
 
