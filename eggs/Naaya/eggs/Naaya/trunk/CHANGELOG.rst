@@ -1,5 +1,7 @@
 3.4.18 (unreleased)
 -------------------
+* updated Naaya local users listing to work with datatables (no merged
+  cells) [dumitval]
 
 3.4.17 (2015-03-27)
 -------------------

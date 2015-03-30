@@ -134,22 +134,17 @@
                                 <tal:block repeat="user users">
                                     <tal:block define="user_roles user/roles;
                                         row_class python:test(path('repeat/user/odd'), 'row-odd', 'row-even');
-                                        user_nrows python: max(1, len(user_roles));
                                         user_id user/user_id">
-                                        <tal:block repeat="index python: range(user_nrows)">
-                                            <tr tal:attributes="class python: test(index == 0, row_class, row_class+'-sub')">
+                                            <tr>
                                                 <!-- checkbox -->
-                                                <td nowrap="nowrap" class="center checkbox"
-                                                    tal:condition="python: index == 0"
-                                                    tal:attributes="rowspan user_nrows">
+                                                <td nowrap="nowrap" class="center checkbox">
                                                     <input type="checkbox" name="names"
                                                         tal:attributes="value user/user_id" />
                                                 </td>
                                                 <!-- end of checkbox -->
 
                                                 <!-- Username -->
-                                                <td tal:condition="python: index == 0"
-                                                    tal:attributes="rowspan user_nrows">
+                                                <td>
                                                     <strong><a tal:define="user_quoted python:here.utUrlEncode(user_id)"
                                                             tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=local" tal:content="user_id">username</a></strong>
                                                     <span tal:condition="user/is_new_user">
@@ -165,7 +160,7 @@
                                                 <!-- end of Username -->
 
                                                 <!-- Name/Email -->
-                                                <td tal:condition="python: index == 0" tal:attributes="rowspan user_nrows">
+                                                <td>
                                                     <div class="datatable-username">
                                                         <tal:block content="user/full_name"></tal:block>
                                                     </div>
@@ -176,41 +171,43 @@
                                                 <!-- end of Name/Email -->
 
                                                 <!-- Roles in Locations -->
-                                                <tal:block condition="python: index < len(user_roles)">
-                                                    <td tal:define="role python: user_roles[index]; obj python: role[1]" class="user-role">
-                                                        <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-                                                        <a class="roles-location"
-                                                            tal:attributes="href obj/absolute_url"
-                                                            tal:content="obj/title_or_id"></a>
-                                                        <img tal:condition="python: here.getSite()!=obj.getSite()"
-                                                            tal:attributes="alt python:('In %s subsite' % obj.getSite().title_or_id());
-                                                            title python:('In %s subsite' % obj.getSite().title_or_id());"
-                                                            src="misc_/Naaya/info.png" />
-                                                    </td>
-                                                </tal:block>
-                                                <tal:block condition="not: user_roles">
-                                                    <td class="user-role">-</td>
-                                                </tal:block>
+                                                <td class="user-role">
+                                                    <ul tal:condition="user_roles">
+                                                        <tal:block repeat="role user_roles">
+                                                        <li tal:define="obj python:role[1]">
+                                                            <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+                                                            <a class="roles-location"
+                                                                    tal:attributes="href obj/absolute_url"
+                                                                    tal:content="obj/title_or_id"></a>
+                                                            <img tal:condition="python: here.getSite()!=obj.getSite()"
+                                                                tal:attributes="alt python:('In %s subsite' % obj.getSite().title_or_id());
+                                                                title python:('In %s subsite' % obj.getSite().title_or_id());"
+                                                                src="misc_/Naaya/info.png" />
+                                                        </li>
+                                                        </tal:block>
+                                                    </ul>
+                                                    <tal:block condition="not:user_roles">-</tal:block>
+                                                </td>
                                                 <!-- end of Roles in Locations -->
 
                                                 <!-- Revoke roles -->
-                                                <tal:block condition="python: index < len(user_roles)">
-                                                    <td tal:define="role python: user_roles[index]" class="user-role-revoke">
-                                                        <a class="revoke-role" i18n:attributes="title" title="Revoke role"
-                                                            tal:define="location python: here.rstk['relative_object_path'](role[1], here.getSite())"
-                                                            tal:attributes="href string:${site_url}/admin_revokerole?user=${user_id}&location=${location}">
-                                                            <img src="/misc_/Naaya/revoke_permission.png"
-                                                                alt="Revoke role"
-                                                                i18n:attributes="alt" />
-                                                        </a>
+                                                    <td class="user-role-revoke">
+                                                        <ul taL:condition="user_roles">
+                                                            <tal:block repeat="role user_roles">
+                                                                <li>
+                                                                    <a class="revoke-role" i18n:attributes="title" title="Revoke role"
+                                                                    tal:define="location python: here.rstk['relative_object_path'](role[1], here.getSite())"
+                                                                    tal:attributes="href string:${site_url}/admin_revokerole?user=${user_id}&location=${location}">
+                                                                        <img src="/misc_/Naaya/revoke_permission.png"
+                                                                        alt="Revoke role"
+                                                                        i18n:attributes="alt" />
+                                                                    </a>
+                                                                </li>
+                                                            </tal:block>
+                                                        </ul>
                                                     </td>
-                                                </tal:block>
-                                                <tal:block condition="not: user_roles">
-                                                    <td class="user-role"></td>
-                                                </tal:block>
                                                 <!-- end of Revoke roles -->
                                             </tr>
-                                        </tal:block>
                                     </tal:block>
                                 </tal:block>
 
@@ -237,11 +234,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <metal:block define-macro="pagination">
-                            <tal:block define="objects all_users_objects; num_per_page per_page;">
-                                <metal:block use-macro="here/macro_utils/macros/paginator" />
-                            </tal:block>
-                        </metal:block>
 
                         <div class="tip"
                             tal:define="any_new_account any_new_account|nothing;
