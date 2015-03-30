@@ -1,5 +1,6 @@
 1.2.70 (unreleased)
 -------------------
+* bugfix in resending emails to participants [dumitval]
 
 1.2.69 (2015-03-26)
 -------------------
