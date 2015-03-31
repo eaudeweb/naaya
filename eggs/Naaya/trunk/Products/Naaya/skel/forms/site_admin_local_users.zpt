@@ -52,9 +52,7 @@
   <metal:block fill-slot="content">
     <metal:block define-macro="content" tal:define="
       disabled_type python:request.form.get('disabled', 'no_disabled');
-      all_users_objects python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location, disabled_type=disabled_type);
-      users python: all_users_objects[(page * per_page):((page + 1) * per_page)];
-      ">
+      users python: user_tool.search_users(query, skey=skey, rkey=rkey, role=filter_role, location=filter_location, disabled_type=disabled_type)">
 
       <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
       <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
