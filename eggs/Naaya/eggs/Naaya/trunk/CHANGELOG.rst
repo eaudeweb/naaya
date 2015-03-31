@@ -1,4 +1,7 @@
-3.4.19 (unreleased)
+3.4.20 (unreleased)
+-------------------
+
+3.4.19 (2015-03-30)
 -------------------
 * fixes for the manage_folder_subobjects page [dumitval]
 
