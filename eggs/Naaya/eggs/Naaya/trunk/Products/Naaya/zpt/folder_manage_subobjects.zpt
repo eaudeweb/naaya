@@ -1,6 +1,17 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
+<script src="/misc_/Naaya/jquery.min.js"></script>
+<script>
+  $(function(){
+    $('input[name="default"]').change(function(){
+      $('select[name="subobjects"]').attr('disabled', this.checked);
+      $('select[name="ny_subobjects"]').attr('disabled', this.checked);
+    });
+  })
+
+</script>
+
 <p class="page-title">Naaya Folder subobjects</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
@@ -32,14 +43,18 @@
 	    </tr>
 	    <tr>
 		    <td width="50%" align="center">
-			    <select name="subobjects" size="10" multiple="true">
-				    <option tal:repeat="item here/getProductsMetaTypes"
-						    tal:attributes="value item; selected python:item in meta_types" 
-						    tal:content="item">Meta type</option>
+			    <select name="subobjects" size="10" multiple="true"
+            tal:attributes="disabled not:has_custom_value">
+            <tal:block repeat="item here/getProductsMetaTypes">
+              <option tal:attributes="value item; selected python:item in meta_types" 
+                tal:content="item" tal:condition="python:item not in here.get_meta_types(1)">
+                  Meta type</option>
+            </tal:block>
 			    </select>
 		    </td>
 		    <td width="50%" align="center">
-			    <select name="ny_subobjects" size="10" multiple="true">
+			    <select name="ny_subobjects" size="10" multiple="true"
+             tal:attributes="disabled not:has_custom_value">
 				    <option tal:repeat="item python:here.get_meta_types(1)"
 						    tal:attributes="value item; selected python:item in meta_types" 
 						    tal:content="item">Meta type</option>
