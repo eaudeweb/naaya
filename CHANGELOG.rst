@@ -1,5 +1,7 @@
 1.2.71 (unreleased)
 -------------------
+* add the answers from the mandatory survey to the participants export
+  to Excel [dumitval]
 
 1.2.70 (2015-03-30)
 -------------------
