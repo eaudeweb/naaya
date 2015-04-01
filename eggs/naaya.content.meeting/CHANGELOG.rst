@@ -1,4 +1,7 @@
-1.2.71 (unreleased)
+1.2.72 (unreleased)
+-------------------
+
+1.2.71 (2015-04-01)
 -------------------
 * add the answers from the mandatory survey to the participants export
   to Excel [dumitval]
