@@ -218,10 +218,10 @@
                       </tal:block>
                       <th class="signup_hide_on_edit" i18n:translate="">Phone number</th>
                       <th class="signup_hide_on_edit" i18n:translate="">Status</th>
-                      <tal:block repeat="question here/get_survey_questions">
+                      <!--<tal:block repeat="question here/get_survey_questions">
                           <th tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
                           tal:content="python:question[1]" />
-                      </tal:block>
+                      </tal:block>-->
                   </tr>
                   <tr tal:repeat="signup here/getSignups">
                       <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
@@ -521,12 +521,12 @@
 
                       <td class="hide_on_edit" tal:content="account_subscription/phone"/>
                       <td class="hide_on_edit" tal:content="account_subscription/accepted"/>
-                      <tal:block define="uid account_subscription/uid"
+                      <!--<tal:block define="uid account_subscription/uid"
                           repeat="question here/get_survey_questions">
                           <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
                               tal:content="python:here.get_survey_answer(
                                   uid, question[0])"/>
-                      </tal:block>
+                      </tal:block>-->
                   </tr>
               </table>
               <input type="submit" i18n:attributes="value" name="accept"
