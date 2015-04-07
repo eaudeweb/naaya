@@ -1,4 +1,7 @@
-3.4.21 (unreleased)
+3.4.22 (unreleased)
+-------------------
+
+3.4.21 (2015-04-07)
 -------------------
 * added utils method to import non-local libraries [dumitval]
 
