@@ -1,4 +1,7 @@
-1.2.72 (unreleased)
+1.2.73 (unreleased)
+-------------------
+
+1.2.72 (2015-04-07)
 -------------------
 * decode subject in archive listing for subjects longer than 75
   characters [dumitval]
