@@ -612,8 +612,9 @@ def get_mail_queue(site):
 
             # Prepare the date to be formatted with utShowFullDateTime
             date = email_utils.parsedate_tz(mail.get('Date', ''))
-            date = email_utils.mktime_tz(date)
-            date = datetime.fromtimestamp(date)
+            if date:
+                date = email_utils.mktime_tz(date)
+                date = datetime.fromtimestamp(date)
 
             mail_queue.append({
                 'subject': mail.get('Subject', '(no-subject)'),
