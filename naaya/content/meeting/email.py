@@ -1,5 +1,6 @@
 # Python imports
 import os.path
+import re
 
 # Zope imports
 from OFS.SimpleItem import SimpleItem
@@ -16,6 +17,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
 import json
+from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
@@ -265,6 +267,20 @@ class EmailSender(SimpleItem):
         """ Display all saved bulk emails """
         emails = get_bulk_emails(self.getSite(),
                                  where_to_read=path_in_site(self.getMeeting()))
+        import_non_local('email', 'std_email')
+        from std_email import email as standard_email
+        for email in emails:
+            subject, encoding = standard_email.Header.decode_header(
+                email['subject'])[0]
+            email['subject'] = subject.decode(encoding)
+            recipients = []
+            for recp in email['recipients']:
+                recipients.extend(re.split(',|;', recp.replace(' ', '')))
+            email['recipients'] = recipients
+            cc_recipients = []
+            for recp in email['cc_recipients']:
+                cc_recipients.extend(re.split(',|;', recp.replace(' ', '')))
+            email['cc_recipients'] = cc_recipients
         return self.getFormsTool().getContent(
             {'here': self,
              'emails': emails,
