@@ -16,17 +16,19 @@ from App.ImageFile import ImageFile
 from Globals import InitializeClass
 from OFS.Folder import Folder
 
-from Products.NaayaCore.constants import ID_EDITORTOOL, TITLE_EDITORTOOL, \
-METATYPE_EDITORTOOL
-from Products.NaayaCore.EditorTool.utilities import parse_css_margin, \
-parse_css_border_width, strip_unit
+from Products.NaayaCore.constants import ID_EDITORTOOL, TITLE_EDITORTOOL
+from Products.NaayaCore.constants import METATYPE_EDITORTOOL
+from Products.NaayaCore.EditorTool.utilities import parse_css_margin
+from Products.NaayaCore.EditorTool.utilities import parse_css_border_width
+from Products.NaayaCore.EditorTool.utilities import strip_unit
 from naaya.core.zope2util import url_quote
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from naaya.core.StaticServe import StaticServeFromZip
 
 
 def manage_addEditorTool(self, REQUEST=None):
-    """ ZMI method that creates an EditorTool object instance into the portal"""
+    """ ZMI method that creates an EditorTool object instance
+        into the portal"""
     ob = EditorTool(ID_EDITORTOOL, TITLE_EDITORTOOL)
     self._setObject(ID_EDITORTOOL, ob)
     if REQUEST:
@@ -40,14 +42,16 @@ def loadConfig(section='tinymce'):
     to create multiple templates for the editor and name them differently.
     Returns a dictionary with tinymce configuration options
     """
-    boolean_settings = ['button_tile_map',
-                'apply_source_formatting',
-                'remove_linebreaks',
-                'relative_urls',
-                'convert_urls',
-                'paste_use_dialog',
-                'verify_html',
-                'theme_advanced_resizing']
+    boolean_settings = [
+        'button_tile_map',
+        'apply_source_formatting',
+        'remove_linebreaks',
+        'relative_urls',
+        'convert_urls',
+        'paste_use_dialog',
+        'verify_html',
+        'theme_advanced_resizing'
+        ]
     ret = {}
     config = ConfigParser()
     config.read(join(dirname(__file__), 'config.ini'))
@@ -59,14 +63,15 @@ def loadConfig(section='tinymce'):
                 ret[option.strip()] = config.get(section, option).strip()
     return ret
 
-configuration = loadConfig() #Global configuration loaded from *config.ini*
+configuration = loadConfig()  # Global configuration loaded from *config.ini*
 
 
 class EditorTool(Folder):
     """ **EditorTool** installs itself into the portal and provides rich text
-    editing capabilities attachable via to HTML input elements such as textarea.
-    It uses *TinyMCE* (http://tinymce.moxiecode.com/) editor.
-    Please see README.txt located into this module for notes
+        editing capabilities attachable via to HTML input elements such as
+        textarea.
+        It uses *TinyMCE* (http://tinymce.moxiecode.com/) editor.
+        Please see README.txt located into this module for notes
     """
 
     meta_type = METATYPE_EDITORTOOL
@@ -74,17 +79,14 @@ class EditorTool(Folder):
     manage_options = (Folder.manage_options)
     security = ClassSecurityInfo()
 
-
     def __init__(self, id, title):
         """ Initialize variables"""
         self.id = id
         self.title = title
 
-
     def getConfiguration(self):
         """ Return current default configuration """
         return configuration
-
 
     def includeLibs(self, lang=None):
         """ Returns HTML code that includes required JavaScript libraries.
@@ -93,9 +95,13 @@ class EditorTool(Folder):
             `lang`
                 **Not used**
         """
-        return '<script type="text/javascript" language="javascript" src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>' % {'parent_url': self.absolute_url()}
+        return (
+            '<script type="text/javascript" language="javascript" '
+            'src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js">'
+            '</script>') % {'parent_url': self.absolute_url()}
 
     security.declarePublic('additional_styles')
+
     def additional_styles(self):
         """
         Returns the additional naaya styles to be displayed in tinymce
@@ -114,7 +120,7 @@ class EditorTool(Folder):
         if custom:
             ret += custom(self.REQUEST)
 
-        self.REQUEST.RESPONSE.setHeader( 'Content-Type', 'text/css' )
+        self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
         return ret
 
     def _get_styleselect_styles(self):
@@ -130,7 +136,9 @@ class EditorTool(Folder):
         style_objects = self.getLayoutTool().getCurrentStyleObjects()
         for so in style_objects:
             text = so()
-            match = re.search('/\\*BEGIN-TINYMCE-STYLESELECT\\*/(.*?)/\\*END-TINYMCE-STYLESELECT\\*/', text, re.S)
+            match = re.search(
+                '/\\*BEGIN-TINYMCE-STYLESELECT\\*/(.*?)'
+                '/\\*END-TINYMCE-STYLESELECT\\*/', text, re.S)
             if match is not None:
                 return match.group(1)
         return None
@@ -159,9 +167,11 @@ class EditorTool(Folder):
         selectors = [sel[1:] for sel in selectors]
 
         # add the button and selectors to it
-        cfg['theme_advanced_styles'] = ';'.join(['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
+        cfg['theme_advanced_styles'] = ';'.join(
+            ['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
 
-    def render(self, element, lang=None, image_support=False, extra_options={}):
+    def render(self, element, lang=None, image_support=False,
+               extra_options={}):
         """Return the HTML necessary to run the TinyMCE.
         Parameters:
 
@@ -183,22 +193,23 @@ class EditorTool(Folder):
         if not lang:
             lang = self.gl_get_selected_language()
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
-        if extra_options.has_key('config_template'):
+        if 'config_template' in extra_options:
             template = extra_options['config_template']
             cfg = loadConfig(template)
         else:
             cfg = copy.copy(configuration)
         cfg.update({
             'language': lang,
-            'select_image_url' : '%s/select_image?document=%s' \
-                    % (self.absolute_url(), doc_url),
-            'edit_image_url' : '%s/prepare_image?mode=edit&document=%s' % (self.absolute_url(), doc_url),
-            'link_popup_url' : '%s/select_link' % self.absolute_url(),
+            'select_image_url': '%s/select_image?document=%s' %
+            (self.absolute_url(), doc_url),
+            'edit_image_url': '%s/prepare_image?mode=edit&document=%s' %
+            (self.absolute_url(), doc_url),
+            'link_popup_url': '%s/select_link' % self.absolute_url(),
             'element_id': element,
-            'script_url' : '%s/tinymce/jscripts/tiny_mce/tiny_mce.js' \
-                % self.absolute_url(),
+            'script_url': '%s/tinymce/jscripts/tiny_mce/tiny_mce.js' %
+            self.absolute_url(),
             'site_url': self.getSite().absolute_url(),
-            'language' : self.gl_get_selected_language(),
+            'language': self.gl_get_selected_language(),
         })
         cfg.update(extra_options)
         # romancri 20100420:
@@ -219,19 +230,17 @@ class EditorTool(Folder):
 $().ready(function() {$('textarea#%s').tinymce(%s);})\
 </script>" % (element, json.dumps(cfg, indent=2))
 
-
     def get_preview_img(self, REQUEST=None):
         """ Compute src attribute for the preview image. Uploads image if
         requested.
         Returns the URL to the image.
         """
         url = ''
-        if REQUEST.form.has_key('url'):
+        if 'url' in REQUEST.form:
             url = REQUEST.form['url']
-        if REQUEST.form.has_key('mode'):
+        if 'mode' in REQUEST.form:
             mode = REQUEST.form['mode']
             if mode == 'upload':
-                #import pdb; pdb.set_trace()
                 url = self._upload_image(REQUEST)
 
         if not url.startswith('http') and not url.startswith('/'):
@@ -241,15 +250,14 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
 
         return url
 
-
     def _upload_image(self, REQUEST=None):
         """ Upload an image into the document container. """
         if REQUEST:
-            if REQUEST.form.has_key('file'):
+            if 'file' in REQUEST.form:
                 file = REQUEST.form['file']
                 document = self.getEnclosingDocument(REQUEST)
                 if document:
-                    imageContainer = document.imageContainer;
+                    imageContainer = document.imageContainer
                     uploaded = imageContainer.uploadImage(file, None)
                     return uploaded.absolute_url()
         else:
@@ -289,10 +297,11 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
                 ret = album.getObjects()
             else:
                 ctool = self.getCatalogTool()
-                filter_index = 'objectkeywords_' + self.gl_get_selected_language()
-                ret_brains = ctool.search({'path': album_url,
-                    'meta_type': 'Naaya Photo',
-                    filter_index: query})
+                filter_index = ('objectkeywords_' +
+                                self.gl_get_selected_language())
+                ret_brains = ctool.search(
+                    {'path': album_url, 'meta_type': 'Naaya Photo',
+                     filter_index: query})
                 ret = [x.getObject() for x in ret_brains]
 
         total_images = len(ret)
@@ -305,16 +314,14 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
 
         return json.dumps(options)
 
-
     def enumeratePhotoAlbums(self, REQUEST=None):
         """
         Lookup photo galleries from the site.
         Return a list with all photo galleries available within the site.
         """
         ctool = self.getCatalogTool()
-        return [x.getObject() \
-            for x in ctool.search({'meta_type' : 'Naaya Photo Folder'})]
-
+        return [x.getObject()
+                for x in ctool.search({'meta_type': 'Naaya Photo Folder'})]
 
     def getEnclosingDocument(self, REQUEST):
         """
@@ -326,11 +333,10 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
 
         Return enclosing document object
         """
-        if REQUEST.form.has_key('document'):
+        if 'document' in REQUEST.form:
             document_url = REQUEST.form['document']
             return self.restrictedTraverse(document_url)
         return None
-
 
     def prepare_image_styles(self, REQUEST=None):
         """ Parse `REQUEST` and retrieve image attributes to set them into
@@ -339,31 +345,31 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         Return a dictionary with found attributes such as border, margin etc.
         """
         ret = {
-               'title' : self.get_request_param(REQUEST, 'title'),
-               'alignment' : self.get_request_param(REQUEST, 'left'),
-               'css_alignment' : '', 'margin' : '', 'border_preview' : '',
-               'width_preview' : '', 'height_preview' : '', 'border' : '',
-               'width' : '', 'height' : '', 'h_margin' : '', 'v_margin' : '',
+            'title': self.get_request_param(REQUEST, 'title'),
+            'alignment': self.get_request_param(REQUEST, 'left'),
+            'css_alignment': '', 'margin': '', 'border_preview': '',
+            'width_preview': '', 'height_preview': '', 'border': '',
+            'width': '', 'height': '', 'h_margin': '', 'v_margin': '',
         }
-        if REQUEST.form.has_key('alignment'):
+        if 'alignment' in REQUEST.form:
             alignment = REQUEST.form['alignment']
             if alignment:
                 if alignment == 'left' or alignment == 'right':
                     ret['css_alignment'] = 'float: %s' % alignment
                 else:
                     ret['css_alignment'] = 'vertical-align: %s' % alignment
-        if REQUEST.form.has_key('margin'):
+        if 'margin' in REQUEST.form:
             ret['margin'] = 'margin: %s' % REQUEST.form['margin']
-        if REQUEST.form.has_key('border'):
+        if 'border' in REQUEST.form:
             ret['border_preview'] = 'border: %s' % REQUEST.form['border']
             ret['border'] = parse_css_border_width(REQUEST.form['border'])
-        if REQUEST.form.has_key('width'):
+        if 'width' in REQUEST.form:
             ret['width_preview'] = 'width: %s' % REQUEST.form['width']
             ret['width'] = strip_unit(REQUEST.form['width'])
-        if REQUEST.form.has_key('height'):
+        if 'height' in REQUEST.form:
             ret['height_preview'] = 'height: %s' % REQUEST.form['height']
             ret['height'] = strip_unit(REQUEST.form['height'])
-        if REQUEST and REQUEST.form.has_key('margin'):
+        if REQUEST and 'margin' in REQUEST.form:
             margins = parse_css_margin(REQUEST.form['margin'])
             ret['h_margin'] = margins[0]
             ret['v_margin'] = margins[1]
@@ -373,20 +379,19 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         """ Safely retrieve a parameter from request
         Parameters:
 
-            `REQUEST`
-                Http request
-            `name`
-                Name of the parameter
-            `default`
-                Default value to return if parameter not found. If not specified
-                is empty string.
+        `REQUEST`
+            Http request
+        `name`
+            Name of the parameter
+        `default`
+            Default value to return if parameter not found. If not specified
+            is empty string.
 
         Return the parameter or default if none found.
         """
-        if self.REQUEST.has_key(name):
+        if name in self.REQUEST:
             return self.REQUEST.form[name]
         return default
-
 
     def isImageContainer(self, document):
         """ Verifies document if is image container or inherits the
@@ -400,14 +405,13 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         """
         return self.getSite().imageContainer != document.imageContainer
 
-
     image_js = ImageFile('www/image.js', globals())
     link_js = ImageFile('www/link.js', globals())
     image_css = ImageFile('www/image.css', globals())
-    tinymce = \
-        StaticServeFromZip('tinymce', 'www/tinymce_3_4_7_jquery_naaya.zip', globals())
-    tinymce_naaya \
-        = StaticServeFromZip('Naaya', 'www/tinymce_naaya.zip', globals())
+    tinymce = StaticServeFromZip(
+        'tinymce', 'www/tinymce_3_4_7_jquery_naaya.zip', globals())
+    tinymce_naaya = StaticServeFromZip(
+        'Naaya', 'www/tinymce_naaya.zip', globals())
     select_image = PageTemplateFile('zpt/select_image', globals())
     select_image_size = PageTemplateFile('zpt/select_image_size', globals())
     prepare_image = PageTemplateFile('zpt/prepare_image', globals())
