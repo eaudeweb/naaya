@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='3.4.22',
+      version='3.4.23',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -18,7 +18,8 @@ setup(name='Naaya',
           'Programming Language :: Python',
           'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
           'Topic :: Software Development',
-          'Topic :: Software Development :: Libraries :: Application Frameworks',
+          'Topic :: Software Development :: Libraries :'
+              ': Application Frameworks',
       ],
 
       packages=find_packages(),
