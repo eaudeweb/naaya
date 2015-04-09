@@ -27,7 +27,7 @@ from OFS.ObjectManager import checkValidId
 
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
-from naaya.core.zope2util import DT2dt
+from naaya.core.zope2util import DT2dt, escape_html
 
 from lxml.builder import ElementMaker
 
@@ -267,10 +267,6 @@ def html_diff(source, target):
     import difflib
     from cStringIO import StringIO
     lines = lambda s: StringIO(normalize_template(s)).readlines()
-    html_escape_table = {
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
-        ' ': '&nbsp;', '\t': '&#09'}
-    htmlquote = lambda s: "".join(html_escape_table.get(c, c) for c in s)
     output = StringIO()
     output.write('<div style="font-family: monospace;">')
     for line in difflib.unified_diff(lines(source), lines(target)):
@@ -282,7 +278,7 @@ def html_diff(source, target):
             cls = 'line_heading'
         else:
             cls = 'line_normal'
-        output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
+        output.write('<div class="%s">%s</div>\n' % (cls, escape_html(line)))
     output.write('</div>')
     return output.getvalue()
 

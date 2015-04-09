@@ -95,6 +95,18 @@
         getattrPatch="yes" />
 
     <naaya:rstkMethod
+        handler=".zope2util.url_quote"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.url_unquote"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
+        handler=".zope2util.escape_html"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
         handler=".zope2util.unescape_html_entities"
         getattrPatch="yes" />
 
