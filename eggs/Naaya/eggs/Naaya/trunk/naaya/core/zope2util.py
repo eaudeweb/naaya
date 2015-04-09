@@ -3,11 +3,9 @@ Utilities to make Zope2 a friendlier place.
 
 """
 
-import os
 import threading
 import logging
 import transaction
-import time
 import datetime
 import sys
 import sha
@@ -15,24 +13,22 @@ import types
 import urllib
 import simplejson as json
 from decimal import Decimal
-from dateutil.parser import parse
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
 from Acquisition import Implicit, aq_base
 from App.config import getConfiguration
-from OFS.interfaces import IItem, IObjectManager, IApplication
+from OFS.interfaces import IItem, IObjectManager
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 from Globals import DTMLFile
 from ZPublisher.HTTPRequest import FileUpload
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from zope.configuration.name import resolve
-from Products.PageTemplates.PageTemplate import PageTemplate
 from DateTime import DateTime
 
 from Products.Naaya.interfaces import IObjectView
-from naaya.core.utils import force_to_unicode, is_valid_email
+from naaya.core.utils import force_to_unicode
 from naaya.core.utils import unescape_html_entities
 from backport import any
 from interfaces import IRstkMethod
@@ -81,10 +77,11 @@ def json_dumps(obj):
     return json.dumps(obj, default=json_default)
 
 
-json_loads = json.loads # needed for ZCML registration of RSTK method
+json_loads = json.loads  # needed for ZCML registration of RSTK method
 
 
 _button_form = PageTemplateFile('zpt/button_form.zpt', globals())
+
 
 def button_form(**kwargs):
     """
@@ -130,7 +127,7 @@ def we_provide(feature):
         except ImportError:
             pass
     if feature == 'Excel import':
-        #For excel import we also need xlwt, to generate the template
+        # For excel import we also need xlwt, to generate the template
         try:
             from xlwt import Workbook
             from xlrd import open_workbook
@@ -144,7 +141,7 @@ def catch_unauthorized():
     """
     useful in try..except handlers, like `tal:on-error`::
 
-        <p tal:content="here/read_value" on-error="here/rstk/catch_unauthorized"/>
+    <p tal:content="here/read_value" on-error="here/rstk/catch_unauthorized"/>
 
     """
     if sys.exc_info()[0] is Unauthorized:
@@ -171,16 +168,6 @@ def escape_html(text):
 def unescape_html_entities(text):
     """ unescape html entities from the given text """
     return unescape_html_entities(text)
-
-
-def simple_paginate(items, per_page=4):
-    """
-    A very simple paginator::
-
-        >>> self.rstk['simple_paginate']([1, 2, 3, 4, 5, 6], per_page=4)
-        [[1, 2, 3, 4], [5, 6]]
-    """
-    return simple_paginate(items, per_page)
 
 
 def get_object_view_info(ob):
@@ -239,10 +226,12 @@ def google_analytics(context, ga_id=''):
     ga_form = forms_tool.getForm("site_googleanalytics")
     return ga_form.__of__(site)(gaq=gaq)
 
+
 def provides(context, ob, interface_name):
     """ proxy for zope interface.providedBy """
     interface = resolve(interface_name)
     return interface.providedBy(ob)
+
 
 def latest_visible_uploads(context, howmany=-1):
     """
@@ -257,6 +246,7 @@ def latest_visible_uploads(context, howmany=-1):
             break
         items.append(ob)
     return items
+
 
 def users_in_role(context, role_name=''):
     """ """
@@ -334,8 +324,8 @@ class CaptureTraverse(Implicit):
 
 
 ##################################################################
-### `UnnamedTimeZone`, `dt2DT` and `DT2dt` come from Plone's
-### Products.ATContentTypes.utils
+# `UnnamedTimeZone`, `dt2DT` and `DT2dt` come from Plone's
+# Products.ATContentTypes.utils
 
 class UnnamedTimeZone(datetime.tzinfo):
     """Unnamed timezone info"""
@@ -361,9 +351,11 @@ class UnnamedTimeZone(datetime.tzinfo):
         minutesleft = self.minutes % 60
         return """%s%0.2d%0.2d""" % (sign, wholehours, minutesleft)
 
+
 def dt2DT(date):
     """ Convert Python's datetime to Zope's DateTime """
-    args = (date.year, date.month, date.day, date.hour, date.minute, date.second, date.microsecond, date.tzinfo)
+    args = (date.year, date.month, date.day, date.hour, date.minute,
+            date.second, date.microsecond, date.tzinfo)
     timezone = args[7].utcoffset(date)
     secs = timezone.seconds
     days = timezone.days
@@ -376,6 +368,7 @@ def dt2DT(date):
     args.append(timezone)
     return DateTime(*args)
 
+
 def DT2dt(date):
     """ Convert Zope's DateTime to Pythons's datetime """
     # seconds (parts[6]) is a float, so we map to int
@@ -383,6 +376,7 @@ def DT2dt(date):
     args.append(0)
     args.append(UnnamedTimeZone(int(date.tzoffset()/60)))
     return datetime.datetime(*args)
+
 
 def ensure_tzinfo(dt, default_tz=UnnamedTimeZone(0)):
     if dt.tzinfo is None:
@@ -396,6 +390,7 @@ The OFS.ObjectManager `manage_main` template, modified to render two
 extra pieces of content: ``ny_before_listing`` and ``ny_after_listing``.
 """
 
+
 def exorcize_local_properties(obj):
     """
     remove any data set by LocalPropertyManager, recover plain
@@ -406,7 +401,7 @@ def exorcize_local_properties(obj):
     LocalPropertyManager data structures).
     """
 
-    obj.getId() # make sure it's loaded from zodb
+    obj.getId()  # make sure it's loaded from zodb
     changed = False
 
     names = []
@@ -433,6 +428,7 @@ def exorcize_local_properties(obj):
     else:
         return None
 
+
 def abort_transaction_keep_session(request):
     """
     We need to abort the transaction (e.g. an object was created but the
@@ -443,12 +439,14 @@ def abort_transaction_keep_session(request):
     transaction.abort()
     request.SESSION.update(session)
 
+
 def permission_add_role(context, permission, role):
     """ Adds a role to a permission"""
     p = Permission(permission, (), context)
     crt_roles = p.getRoles()
     ty = type(crt_roles)
     p.setRoles(ty(set(crt_roles) | set([role])))
+
 
 def permission_del_role(context, permission, role):
     """ Removes permission from role """
@@ -457,9 +455,11 @@ def permission_del_role(context, permission, role):
     ty = type(crt_roles)
     p.setRoles(ty(set(crt_roles) - set([role])))
 
+
 def physical_path(ob):
     # TODO deprecate and replace with ofs_path
     return '/'.join(ob.getPhysicalPath())
+
 
 def relative_object_path(obj, ancestor):
     """
@@ -474,12 +474,14 @@ def relative_object_path(obj, ancestor):
         raise ValueError('My path is not in the site. Panicking.')
     return obj_path[len(ancestor_path)+1:]
 
+
 def ofs_path(obj):
     """
     Return a string representation of an object's path, e.g.
     ``/mysite/about/info``
     """
     return '/'.join(obj.getPhysicalPath())
+
 
 def is_descendant_of(obj, ancestor):
     """
@@ -490,12 +492,14 @@ def is_descendant_of(obj, ancestor):
     obj_path = ofs_path(obj) + '/'
     return obj_path.startswith(ancestor_path)
 
+
 def path_in_site(obj):
     """
     Compute the relative path of `obj` in reference to its
     containing site
     """
     return relative_object_path(obj, obj.getSite())
+
 
 def parents_in_site_path(obj):
     """
@@ -511,6 +515,7 @@ def parents_in_site_path(obj):
     parents.reverse()
     parents = map(lambda o: o.title_or_id(), parents)
     return parents
+
 
 def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
     """
@@ -536,11 +541,13 @@ def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
             for item in ofs_walk(ob, filter, containers):
                 yield item
 
+
 def simple_paginate(items, per_page=4):
     output = []
     for offset in xrange(0, len(items), per_page):
         output.append(items[offset:offset+per_page])
     return output
+
 
 def get_site_manager(context):
     """
@@ -588,17 +595,21 @@ def get_template_source(template):
     template._cook_check()
     return template._text
 
+
 def launch_job(callback, context, obj_path):
     """ Launch a job in a separate thread"""
 
     db = context._p_jar.db()
     trans = transaction.get()
-    trans.addAfterCommitHook(_start_thread, 
-        kws = {'db': db, 'context_path': obj_path, 'callback': callback})
+    trans.addAfterCommitHook(
+        _start_thread,
+        kws={'db': db, 'context_path': obj_path, 'callback': callback})
+
 
 def _start_thread(status, db, context_path, callback):
     t = threading.Thread(target=_run_job, args=(db, context_path, callback))
     t.start()
+
 
 def _run_job(db, context_path, callback):
     c = db.open()
@@ -611,9 +622,11 @@ def _run_job(db, context_path, callback):
         log.exception('Error in worker thread')
         transaction.abort()
 
+
 def json_response(data, response):
     response.setHeader('Content-Type', 'application/json')
     return json.dumps(data)
+
 
 def get_zope_env(var, default=''):
     """

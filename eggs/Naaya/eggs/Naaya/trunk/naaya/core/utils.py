@@ -20,7 +20,8 @@ content_type_to_icons = {
     "image/bmp": ["BMP", "bmp"],
     "text/css": ["CSS", "css"],
     "application/msword": ["DOC", "doc"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ["DOCX", "docx"],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        ["DOCX", "docx"],
     "image/gif": ["GIF", "gif"],
     "application/x-gzip": ["GZ", "gz"],
     "text/html": ["HTML", "html"],
@@ -41,7 +42,9 @@ content_type_to_icons = {
     "image/png": ["PNG", "png"],
     "image/x-png": ["PNG", "png"],
     "application/vnd.ms-powerpoint": ["PPT", "ppt"],
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation": ["PPTX", "pptx"],
+    "application/"
+    "vnd.openxmlformats-officedocument.presentationml.presentation":
+        ["PPTX", "pptx"],
     "application/postscript": ["PS", "ps"],
     "application/x-shockwave-flash": ["SWF", "swf"],
     "application/vnd.sun.xml.calc": ["SXC", "sxc"],
@@ -56,22 +59,26 @@ content_type_to_icons = {
     "audio/x-ms-wma": ["WMA", "wma"],
     "video/x-ms-wmv": ["WMV", "wmv"],
     "application/vnd.ms-excel": ["XLS", "xls"],
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ["XLSX", "xlsx"],
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        ["XLSX", "xlsx"],
     "text/xml": ["XML", "xml"],
     "application/x-xpinstall": ["XPI", "xpi"],
     "application/x-zip-compressed": ["ZIP", "zip"],
     "application/zip": ["ZIP", "zip"],
 }
 
+
 def icon_for_content_type(content_type, approved=True):
-    title, image_id = content_type_to_icons.get(content_type, ["BINARY", "file"])
+    title, image_id = content_type_to_icons.get(content_type, ["BINARY",
+                                                               "file"])
     if approved:
         image_filename = image_id+'.png'
     else:
         title = 'This %s file is not approved' % title
         image_filename = image_id+'_marked.png'
-    return {'title': title, 
+    return {'title': title,
             'url': '++resource++naaya.mime_icons/'+image_filename}
+
 
 def get_noaq_attr(obj, attr, default):
     """
@@ -79,6 +86,7 @@ def get_noaq_attr(obj, attr, default):
     checking the acquisition tree or `default`.
     """
     return getattr(obj.aq_base, attr, default)
+
 
 def call_method(obj, attr, default):
     """
@@ -89,6 +97,7 @@ def call_method(obj, attr, default):
         return getattr(obj, attr)()
     else:
         return default
+
 
 def force_to_unicode(s):
     if isinstance(s, unicode):
@@ -102,6 +111,8 @@ def force_to_unicode(s):
         raise ValueError('expected `str` or `unicode`')
 
 _cooldown_map = {}
+
+
 def cooldown(name, interval):
     """
     Return ``True`` if called sooner than ``interval`` with the same
@@ -122,6 +133,7 @@ def cooldown(name, interval):
         _cooldown_map[name] = now
         return False
 
+
 def unescape_html_entities(text):
     # from http://effbot.org/zone/re-sub.htm#unescape-html
     def fixup(m):
@@ -141,15 +153,16 @@ def unescape_html_entities(text):
                 text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
             except KeyError:
                 pass
-        return text # leave as is
+        return text  # leave as is
     return re.sub("&#?\w+;", fixup, text)
+
 
 def is_ajax(request):
     """Check if an REQUEST object has 'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'
 
     """
-    return request.environ.get('HTTP_X_REQUESTED_WITH', '') == \
-            'XMLHttpRequest'
+    return request.environ.get('HTTP_X_REQUESTED_WITH', '') == 'XMLHttpRequest'
+
 
 def render_macro(context, template_name, macro, **kw):
     """ Render just a part of the macro """
@@ -160,6 +173,7 @@ def render_macro(context, template_name, macro, **kw):
         />" % (template_name, macro))
     kw.update({'here': context, 'context': context})
     return template.pt_render(extra_context=kw)
+
 
 def pretty_size(n_bytes):
     if n_bytes < 1024:
@@ -174,6 +188,8 @@ def pretty_size(n_bytes):
 VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@"
                                  "(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",
                                  re.IGNORECASE)
+
+
 def is_valid_email(email):
     """
     Validate e-mail address against regular expression
@@ -193,6 +209,7 @@ def relative_object_path(obj, ancestor):
     import zope2util
     return zope2util.relative_object_path(obj, ancestor)
 
+
 def path_in_site(obj):
     warnings.warn("naaya.core.utils.path_in_site moved "
                   "to naaya.core.zope2util",
@@ -200,12 +217,14 @@ def path_in_site(obj):
     import zope2util
     return zope2util.path_in_site(obj)
 
+
 def ofs_path(obj):
     warnings.warn("naaya.core.utils.ofs_path moved "
                   "to naaya.core.zope2util",
                   DeprecationWarning, stacklevel=2)
     import zope2util
     return zope2util.ofs_path(obj)
+
 
 def download_to_temp_file(url):
     """
@@ -226,6 +245,7 @@ def download_to_temp_file(url):
     temp_file.seek(0)
     return temp_file
 
+
 def set_default_socket_timeout_to_1min():
     """
     Sets the default timeout for new socket objects to 1 minute.
@@ -234,7 +254,7 @@ def set_default_socket_timeout_to_1min():
     jobs that can keep threads blocked indefinitely waiting to open an URL.
     This should be called when starting zope.
     """
-    socket.setdefaulttimeout(60) # in seconds
+    socket.setdefaulttimeout(60)  # in seconds
 
 _illegal_unichrs = [
     (0x00, 0x08), (0x0B, 0x1F), (0x7F, 0x84), (0x86, 0x9F),
@@ -253,8 +273,10 @@ _illegal_ranges = ["%s-%s" % (unichr(low), unichr(high))
 
 _illegal_xml_re = re.compile(u'[%s]' % u''.join(_illegal_ranges))
 
+
 def replace_illegal_xml(text, replacement=''):
     return _illegal_xml_re.sub(replacement, text)
+
 
 def trim(message):
     """ Remove leading and trailing empty paragraphs """
@@ -262,11 +284,14 @@ def trim(message):
     message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
     return message
 
+
 def cleanup_message(message):
     return sanitize(trim(message)).strip()
 
+
 def str2bool(string):
     return string in [True, 'true', 'True']
+
 
 def file_length(file_name):
     file_content = open(file_name, 'r+')
@@ -274,6 +299,7 @@ def file_length(file_name):
     file_content.close()
 
     return length
+
 
 def get_or_create_attribute(ob, attr, default_value):
     if not hasattr(ob, attr):
