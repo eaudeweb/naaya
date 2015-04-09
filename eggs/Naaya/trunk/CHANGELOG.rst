@@ -1,4 +1,7 @@
-3.4.23 (unreleased)
+3.4.24 (unreleased)
+-------------------
+
+3.4.23 (2015-04-09)
 -------------------
 * Moved the extended filters before the search results (site_search)
   [dumitval]
