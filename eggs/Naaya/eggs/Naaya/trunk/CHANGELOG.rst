@@ -1,5 +1,10 @@
 3.4.23 (unreleased)
 -------------------
+* Moved the extended filters before the search results (site_search)
+  [dumitval]
+* added a configuration setting to datatables on site_search to keep
+  search settings when returning to the table with the browser's back
+  button [dumitval]
 
 3.4.22 (2015-04-08)
 -------------------
