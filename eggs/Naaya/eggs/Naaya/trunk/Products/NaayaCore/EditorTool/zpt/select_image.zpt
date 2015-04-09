@@ -176,12 +176,12 @@
                                     image_title = images[index].title;
                                     if (src != "album") {
                                         image = "<img src='" + image_url + "' class='thumbnail' />";
-                                        link = "<" + "a href='" + url + "/prepare_image?src=url&url=" + image_url + "'>" + image + "<" + "/a>";
+                                        link = "<" + "a href='" + url + "/prepare_image?url=" + image_url + "'>" + image + "<" + "/a>";
                                     }else {
                                         image_source = images[index].source;
                                         image_author = images[index].author;
                                         image = '<img src="' + image_url + '/view?display=XSmall" class="thumbnail" />';
-                                        link = "<" + "a href='" + url + "/select_image_size?src=url&title=" + image_title + " " + image_author + " " + image_source + "&image_url=" + image_url + "'>" + image + "<" + "/a>";
+                                        link = "<" + "a href='" + url + "/select_image_size?title=" + image_title + " " + image_author + " " + image_source + "&image_url=" + image_url + "'>" + image + "<" + "/a>";
                                     }
 
                                     $('#images_holder').append(link);

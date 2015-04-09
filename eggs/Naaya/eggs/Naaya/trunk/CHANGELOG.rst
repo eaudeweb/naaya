@@ -1,5 +1,6 @@
 3.4.22 (unreleased)
 -------------------
+* escape title portal editor/insert image [dumitval]
 
 3.4.21 (2015-04-07)
 -------------------

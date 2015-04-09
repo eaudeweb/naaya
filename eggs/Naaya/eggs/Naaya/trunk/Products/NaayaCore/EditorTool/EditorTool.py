@@ -20,6 +20,7 @@ from Products.NaayaCore.constants import ID_EDITORTOOL, TITLE_EDITORTOOL, \
 METATYPE_EDITORTOOL
 from Products.NaayaCore.EditorTool.utilities import parse_css_margin, \
 parse_css_border_width, strip_unit
+from naaya.core.zope2util import url_quote
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from naaya.core.StaticServe import StaticServeFromZip
 
@@ -262,14 +263,14 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         def get_image_info(source, image):
             image_object = {
                 'url': image.absolute_url(),
-                'title': image.title_or_id(),
+                'title': url_quote(image.title_or_id()),
                 'source': '',
                 'author': ''
             }
 
             if source == 'album':
-                image_object['source'] = image.source
-                image_object['author'] = image.author
+                image_object['source'] = url_quote(image.source)
+                image_object['author'] = url_quote(image.author)
 
             return image_object
 

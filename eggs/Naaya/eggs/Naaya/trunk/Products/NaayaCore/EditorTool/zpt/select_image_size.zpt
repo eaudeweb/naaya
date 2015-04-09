@@ -3,7 +3,7 @@
 	image_url python:request.get('image_url');
 	display python:request.get('display', 'Medium');
 	photo_link string:${image_url}/view?display=${display};
-	title python:request.get('title', '');
+	title python:here.rstk['url_quote'](request.get('title', ''));
 " >
 <html>
 	<head>
@@ -45,7 +45,7 @@
 				</div>
 			</div>
 
-			<input id="insert" type="button" i18n:attributes="value" value="Save size" tal:attributes="onclick string:location.href='${here/absolute_url}/prepare_image?src=url&title=${title}&url=${photo_link}'"/>
+			<input id="insert" type="button" i18n:attributes="value" value="Save size" tal:attributes="onclick string:location.href='${here/absolute_url}/prepare_image?title=${title}&url=${photo_link}'"/>
 		</div>
 
 		<div class="g-image-holder">

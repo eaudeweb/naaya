@@ -12,6 +12,7 @@ import datetime
 import sys
 import sha
 import types
+import urllib
 import simplejson as json
 from decimal import Decimal
 from dateutil.parser import parse
@@ -38,6 +39,10 @@ from interfaces import IRstkMethod
 
 
 log = logging.getLogger(__name__)
+
+html_escape_table = {
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
+    ' ': '&nbsp;', '\t': '&#09'}
 
 
 def redirect_to(tmpl):
@@ -148,6 +153,21 @@ def catch_unauthorized():
         raise
 
 
+def url_quote(text):
+    """URL encode text"""
+    return urllib.quote_plus(text)
+
+
+def url_unquote(text):
+    """URL decode text"""
+    return urllib.unquote_plus(text)
+
+
+def escape_html(text):
+    """Produce HTML entities within text"""
+    return "".join(html_escape_table.get(c, c) for c in text)
+
+
 def unescape_html_entities(text):
     """ unescape html entities from the given text """
     return unescape_html_entities(text)
@@ -246,6 +266,7 @@ def users_in_role(context, role_name=''):
                                    location='_all_')
     return users
 
+
 class RestrictedToolkit(SimpleItem):
     """
     RestrictedToolkit exposes some useful methods to RestrictedPython
@@ -265,6 +286,7 @@ class RestrictedToolkit(SimpleItem):
             raise KeyError('RestrictedToolkit: no method registered %r' % name)
         else:
             return types.MethodType(method, self)
+
 
 InitializeClass(RestrictedToolkit)
 
