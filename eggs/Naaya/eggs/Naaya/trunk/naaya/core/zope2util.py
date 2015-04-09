@@ -28,7 +28,7 @@ from zope.configuration.name import resolve
 from DateTime import DateTime
 
 from Products.Naaya.interfaces import IObjectView
-from naaya.core.utils import force_to_unicode
+from naaya.core.utils import force_to_unicode, is_valid_email  # keep!
 from naaya.core.utils import unescape_html_entities
 from backport import any
 from interfaces import IRstkMethod
