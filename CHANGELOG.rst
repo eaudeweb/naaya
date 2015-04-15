@@ -1,5 +1,6 @@
 1.2.73 (unreleased)
 -------------------
+* handle case when mandatory survey is missing (email archive) [dumitval]
 
 1.2.72 (2015-04-07)
 -------------------

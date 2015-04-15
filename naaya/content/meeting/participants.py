@@ -341,9 +341,10 @@ class Participants(SimpleItem):
         if not self.getMeeting().survey_required:
             return
         survey = self.get_survey()
-        for answer in survey.objectValues('Naaya Survey Answer'):
-            if answer.respondent in [uid, 'signup:'+uid]:
-                return True
+        if survey:
+            for answer in survey.objectValues('Naaya Survey Answer'):
+                if answer.respondent in [uid, 'signup:'+uid]:
+                    return True
         return False
 
     security.declareProtected(view, 'getAttendeeInfo')
