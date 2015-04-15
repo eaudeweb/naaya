@@ -1,4 +1,7 @@
-1.2.73 (unreleased)
+1.2.74 (unreleased)
+-------------------
+
+1.2.73 (2015-04-15)
 -------------------
 * handle case when mandatory survey is missing (email archive) [dumitval]
 
