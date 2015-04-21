@@ -91,7 +91,7 @@
         <tr tal:condition="here/webpage | nothing">
             <th i18n:translate="">Webpage</th>
             <td>
-                <a tal:attributes="href here/webpage" tal:content="here/webpage"/>
+                <a target="_new" tal:attributes="href here/webpage" tal:content="here/webpage"/>
                 <small><a tal:attributes="href here/webpage" rel="external" style="display: none" i18n:translate=""> - open in new window</a></small>
             </td>
         </tr>
