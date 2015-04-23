@@ -79,7 +79,8 @@ class EmailSender(SimpleItem):
              'meeting': self.getMeeting()},
             'naaya.content.meeting.email_index')
 
-    def _send_email(self, p_from, p_to, p_cc, p_subject, p_content):
+    def _send_email(self, p_from, p_to, p_cc, p_subject, p_content,
+                    only_to=False, only_cc=False):
         """ """
         try:
             email_tool = self.getEmailTool()
@@ -87,7 +88,9 @@ class EmailSender(SimpleItem):
                                         p_to=p_to,
                                         p_cc=p_cc,
                                         p_from=p_from,
-                                        p_subject=p_subject)
+                                        p_subject=p_subject,
+                                        only_to=only_to,
+                                        only_cc=only_cc)
         except Exception, e:
             zLOG.LOG('naaya.content.meeting.email', zLOG.WARNING,
                      'Email sending failed for template - %s' % str(e))
@@ -123,14 +126,33 @@ class EmailSender(SimpleItem):
         result = 0
         if to_uids is not None:
             assert isinstance(to_uids, list)
-            to_emails = [self.getParticipants().getAttendeeInfo(uid)['email']
-                         for uid in to_uids]
+            participants = self.getParticipants()
+            subscriptions = participants.getSubscriptions()
+            signup_emails = [participants.getAttendeeInfo(uid)['email']
+                             for uid in to_uids if
+                             subscriptions._is_signup(uid)]
+            account_emails = [participants.getAttendeeInfo(uid)['email']
+                              for uid in to_uids if not
+                              subscriptions._is_signup(uid)]
+            to_emails = signup_emails + account_emails
 
             if (self.is_eionet_meeting and
                     'eionet-nfp@roles.eea.eionet.europa.eu' not in cc_emails):
                 cc_emails.append('eionet-nfp@roles.eea.eionet.europa.eu')
-            # TODO validate cc_emails
-            result = self._send_email(from_email, to_emails, cc_emails,
+                # TODO validate cc_emails
+
+            # We need to send the emails to signups one by one since each email
+            # might be different (if they contain links to documents for
+            # which the authentication keys is inserted into the link)
+            for uid in to_uids:
+                if subscriptions._is_signup(uid):
+                    signup_email = participants.getAttendeeInfo(uid)['email']
+                    signup_body_text = self.insert_auth_link(body_text, uid)
+                    result = self._send_email(
+                        from_email, [signup_email], cc_emails, subject,
+                        signup_body_text, only_to=True)
+
+            result = self._send_email(from_email, account_emails, cc_emails,
                                       subject, body_text)
 
             save_bulk_email(self.getSite(), to_emails, from_email, subject,
@@ -143,6 +165,19 @@ class EmailSender(SimpleItem):
              'meeting': self.getMeeting(),
              'result': result},
             'naaya.content.meeting.email_sendstatus')
+
+    def insert_auth_link(self, body_text, key):
+        meeting_url = self.getMeeting().absolute_url()
+        urls = re.findall(
+            'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'
+            '(?:%[0-9a-fA-F][0-9a-fA-F]))+', body_text)
+        for url in urls:
+            if meeting_url in url:
+                body_text = body_text.replace(
+                    url,
+                    '%s/participants/subscriptions/welcome?key=%s&came_from=%s'
+                    % (meeting_url, key, url))
+        return body_text
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_signup_email')
 

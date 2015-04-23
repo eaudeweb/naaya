@@ -1,5 +1,6 @@
 1.2.74 (unreleased)
 -------------------
+* send auth key to signups when linking meeting documents [dumitval]
 * allow reimbursed status also without country (for admins) [dumitval]
 * delete the 'reimbursed' status when rejecting participants [dumitval]
 
