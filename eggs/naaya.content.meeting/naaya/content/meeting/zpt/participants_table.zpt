@@ -1,12 +1,13 @@
 <script type="text/javascript">
   $(function(){
-      $('select[name="reimbursed"]').each(function(){
+      //Removed (had a request to allow reimbursed status also without country)
+      /*$('select[name="reimbursed"]').each(function(){
           var userid = this.id.split('___')[0];
           var country_id = $('#'+userid+'___represents').val();
           if ($('#'+userid+'___represents').val() != ''){
             $(this).removeAttr('disabled');
           };
-        });
+        });*/
       show_hide();
       change_all_checked_items();
 
@@ -22,7 +23,8 @@
         }
       });
 
-      $('select[name="represents"]').change(function(){
+      //Removed (had a request to allow reimbursed status also without country)
+      /*$('select[name="represents"]').change(function(){
           var userid = this.id.split('___')[0];
           var country_id = $(this).val();
           if (country_id != ''){
@@ -32,7 +34,7 @@
             $('#'+userid+'___reimbursed').val('no')
               .attr('disabled', 'disabled');
           };
-        });
+        });*/
 
       $('input[name="uids:list"]').change(function(){
           var userid = $(this).val();
@@ -255,7 +257,7 @@
                     ${justification}" />
                 </tal:block>
               </span>
-              <select name="reimbursed" disabled="disabled"
+              <select name="reimbursed" 
                 tal:attributes="id python:user_info['uid']+'___reimbursed'"
                 style="display:none" >
                 <option

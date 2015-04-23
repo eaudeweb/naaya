@@ -1,5 +1,6 @@
 1.2.74 (unreleased)
 -------------------
+* allow reimbursed status also without country (for admins) [dumitval]
 * delete the 'reimbursed' status when rejecting participants [dumitval]
 
 1.2.73 (2015-04-15)
