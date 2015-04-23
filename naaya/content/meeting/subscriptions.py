@@ -197,6 +197,8 @@ class Subscriptions(SimpleItem):
         signup.accepted = 'rejected'
 
         participants = meeting.getParticipants()
+        # delete the 'reimbursed' status
+        participants.setAttendeeInfo([key], 'reimbursed', False)
         if key in participants._get_attendees():
             participants._del_attendee(key)
 
@@ -465,6 +467,8 @@ class Subscriptions(SimpleItem):
         account_subscription.accepted = 'rejected'
 
         participants = meeting.getParticipants()
+        # remove the 'reimbursed' status
+        participants.setAttendeeInfo([uid], 'reimbursed', False)
         if uid in participants._get_attendees():
             participants._del_attendee(uid)
 
