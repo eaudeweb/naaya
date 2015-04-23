@@ -160,7 +160,7 @@ class EmailTool(Folder):
     security.declarePrivate('sendEmail')
 
     def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False,
-                  p_cc=[]):
+                  p_cc=[], only_to=False, only_cc=False):
         """
         Send email message on transaction commit. If the transaction fails,
         the message is discarded.
@@ -200,11 +200,6 @@ class EmailTool(Folder):
                                  site_path)
                 return 0
 
-            if not p_to:
-                mail_logger.info('Not sending email from %r - no recipients',
-                                 site_path)
-                return 0
-
             if _immediately:
                 delivery = _ImmediateDelivery(delivery)
 
@@ -213,8 +208,33 @@ class EmailTool(Folder):
                              site_path, p_to, p_cc, p_subject)
             l_message = create_message(p_content, p_to, p_from, p_subject,
                                        addr_cc=p_cc)
-            # Add CC recp. to the TO recp., this is the only way to send them
-            send_by_delivery(delivery, p_from, p_to+p_cc, l_message)
+            # If only_to or only_cc are set to true, only send the email
+            # to those recipients (for the case when the email is personalised
+            # for TO recipients - i.e. contains an access key or similar
+            # and needs to be sent separately)
+            if only_to:
+                if not p_to:
+                    mail_logger.info(
+                        'Not sending email from %r - no recipients', site_path)
+                    return 0
+                else:
+                    send_by_delivery(delivery, p_from, p_to, l_message)
+            elif only_cc:
+                if not p_cc:
+                    mail_logger.info(
+                        'Not sending email from %r - no recipients', site_path)
+                    return 0
+                else:
+                    send_by_delivery(delivery, p_from, p_cc, l_message)
+            else:
+                # Add CC recp. to the TO recp., this is the only way to
+                # send to both (no CC field in the send_email method!!!)
+                if not p_to + p_cc:
+                    mail_logger.info(
+                        'Not sending email from %r - no recipients', site_path)
+                    return 0
+                else:
+                    send_by_delivery(delivery, p_from, p_to+p_cc, l_message)
             return 1
 
         except:
@@ -303,7 +323,8 @@ def send_by_delivery(delivery, p_from, p_to, message):
     Knows how to handle repoze.sendmail 2.3 differences in `message` arg type.
 
     """
-    if p_to not in DISABLED_EMAILS:
+    p_to = [to_addr for to_addr in p_to if to_addr not in DISABLED_EMAILS]
+    if p_to:
         try:
             delivery.send(p_from, p_to, message.as_string())
         except AssertionError, e:
