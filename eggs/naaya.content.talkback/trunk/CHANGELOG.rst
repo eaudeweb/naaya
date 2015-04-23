@@ -1,4 +1,7 @@
-1.4.37 (unreleased)
+1.4.38 (unreleased)
+-------------------
+
+1.4.37 (2015-04-23)
 -------------------
 * bugfix on talkback edit page (role assignment) [dumitval]
 
