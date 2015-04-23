@@ -1,5 +1,6 @@
 1.4.37 (unreleased)
 -------------------
+* bugfix on talkback edit page (role assignment) [dumitval]
 
 1.4.36 (2015-03-03)
 -------------------

@@ -297,12 +297,14 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         roles = getattr(self, perm, [])
 
         if allow and 'Reviewer' not in roles:
-            roles.append('Reviewer')
+            new_roles = roles + ('Reviewer',)
         elif not allow and 'Reviewer' in roles:
-            roles.remove('Reviewer')
+            new_roles = tuple(role for role in roles if role != 'Reviewer')
+        else:
+            new_roles = roles
 
-        if roles:
-            setattr(self, perm, roles)
+        if new_roles:
+            setattr(self, perm, new_roles)
         else:
             if hasattr(self, perm):
                 delattr(self, perm)
