@@ -16,10 +16,11 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     _mail_in_queue,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
-import json
+import simplejson as json
 from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
+from utils import getUserEmail, findUsers
 from naaya.content.meeting import WAITING_ROLE
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_ADMIN_MEETING
@@ -186,7 +187,11 @@ class EmailSender(SimpleItem):
         meeting = self.getMeeting()
         site = self.getSite()
         from_email = site.administrator_email
-        to_email = meeting.contact_email
+        to_email = [meeting.contact_email]
+        user_email = getUserEmail(site,
+                                  self.REQUEST.AUTHENTICATED_USER.getId())
+        if user_email and user_email not in to_email:
+            to_email.append(user_email)
 
         mail_opts = {'meeting': meeting,
                      'contact_person': meeting.contact_person,
@@ -382,6 +387,14 @@ class EmailSender(SimpleItem):
         for key in COMMON_KEYS:
             check_values[key] = archived_email[key]
         return _mail_in_queue(self.getSite(), filename, check_values)
+
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'searchUsers')
+
+    def findUsers(self, search_param, search_term):
+        """ """
+        if len(search_term) == 0:
+            return []
+        return json.dumps(findUsers(self.getSite(), search_param, search_term))
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
                       'naaya.content.meeting.email_index')
