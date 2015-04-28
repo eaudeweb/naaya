@@ -1,5 +1,10 @@
-1.4.34 (unreleased)
+1.4.35 (unreleased)
 -------------------
+
+1.4.34 (2015-04-28)
+-------------------
+* configured jstree in meeting to allow selecting inside of the meeting
+  itself [dumitval]
 
 1.4.33 (2015-01-27)
 -------------------

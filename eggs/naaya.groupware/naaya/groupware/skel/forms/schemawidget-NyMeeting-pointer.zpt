@@ -4,7 +4,7 @@
         <!-- Ajax tree scripts -->
         <tal:block define="ctx options/context;
                            tree_initial_node python:here.initial_jstree_node(ctx);
-                           tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?filter_meta_types:list=Naaya Folder&filter_meta_types:list=Naaya Blob File&filter_meta_types:list=Naaya Document;
+                           tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?filter_meta_types:list=Naaya Folder&filter_meta_types:list=Naaya Blob File&filter_meta_types:list=Naaya Document&filter_meta_types:list=Naaya Meeting;
                            tree_container string:#sitemap_tree_${prop_id}">
            <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
         </tal:block>
