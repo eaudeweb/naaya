@@ -7,6 +7,11 @@ table.meeting-registration-methods {
 	float: right;
 	display:none;
 }
+#search_users {
+	width: 40%;
+	float: right;
+	display:none;
+}
 .insert-button{
 	padding-top: 5px;
 }
