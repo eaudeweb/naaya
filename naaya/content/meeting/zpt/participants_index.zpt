@@ -111,26 +111,27 @@
                     <th width="50%" i18n:translate="">Other information</th>
                 </tr>
                 <tr tal:repeat="item users"
-                        tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
-                <tal:block
-                  define="existing python:here.registration_status(username=item['uid'])">
-                    <td><input type="checkbox" name="uids:list"
-                      tal:attributes="value item/uid;
-                                    disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
-                    <td><span tal:replace="item/cn"/></td>
-                    <td><span tal:replace="item/uid"/></td>
-                    <td><span tal:replace="item/organization"/></td>
-                    <td><a tal:attributes="href string:mailto:${item/mail}">
-                            <span tal:replace="item/mail"/>
-                        </a>
+                    tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
+                  <tal:block
+                    condition="python:item['mail'] != 'disabled@eionet.europa.eu'"
+                    define="existing python:here.registration_status(username=item['uid'])">
+                      <td><input type="checkbox" name="uids:list"
+                        tal:attributes="value item/uid;
+                                      disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
+                      <td><span tal:replace="item/cn"/></td>
+                      <td><span tal:replace="item/uid"/></td>
+                      <td><span tal:replace="item/organization"/></td>
+                      <td><a tal:attributes="href string:mailto:${item/mail}">
+                              <span tal:replace="item/mail"/>
+                          </a>
+                      </td>
+                      <td>
+                      <tal:block condition="existing" i18n:translate="">
+                        User already subscribed, subscription status is
+                          "<tal:block i18n:translate="" i18n:name="subscription_status" tal:content="existing" />"
+                      </tal:block>
                     </td>
-                  <td>
-                    <tal:block condition="existing" i18n:translate="">
-                      User already subscribed, subscription status is
-                        "<tal:block i18n:translate="" i18n:name="subscription_status" tal:content="existing" />"
-                    </tal:block>
-                  </td>
-                </tal:block>
+                  </tal:block>
                 </tr>
             </table>
             <input type="hidden" name="role" tal:attributes="value here/getParticipantRole"/>
@@ -174,8 +175,9 @@
                 </tr>
                 <tr tal:repeat="item users"
                         tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
-                <tal:block
-                  define="existing python:here.registration_status(username=item['uid'])">
+                  <tal:block
+                    condition="python:item['mail'] != 'disabled@eionet.europa.eu'"
+                    define="existing python:here.registration_status(username=item['uid'])">
                     <td><input type="checkbox" name="uids:list"
                       tal:attributes="value item/uid;
                                     disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>

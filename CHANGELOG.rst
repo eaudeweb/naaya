@@ -1,5 +1,10 @@
 1.2.74 (unreleased)
 -------------------
+* hide disabled users from the user search results (add signup, send
+  emails) [dumitval]
+* JQuery Eionet user search in email sending [dumitval]
+* send signup notification also to the user who created the signup (if
+  different than the singup person) [dumitval]
 * send auth key to signups when linking meeting documents [dumitval]
 * allow reimbursed status also without country (for admins) [dumitval]
 * delete the 'reimbursed' status when rejecting participants [dumitval]

@@ -19,6 +19,69 @@
         function insert_link(){
           $('#body_text').val($('#body_text').val()+' '+$('#url').val());
         };
+        $(function(){
+          $('#search_users').show();
+          $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+              event.preventDefault();
+              return false;
+            }
+          });
+        });
+        function findUsers(){
+          var search_param = $('#search_param').val();
+          var search_term = $('#search_term').val();
+          var results_tbody = $('#results_table tbody');
+          results_tbody.empty();
+          $.get('findUsers',
+                {'search_param': search_param,
+                 'search_term': search_term},
+                function(data){
+                  if (data.length == 0){
+                    $('#results_table').hide();
+                    $('#no_users').show();
+                  }
+                  else{
+                    var current_rows = $('#cc_emails').attr('rows');
+                    $('#cc_emails').attr('rows', data.length + +current_rows);
+                    $('#results_table').show();
+                    $.each(data, function(idx, user){
+                      if (user['mail'] != 'disabled@eionet.europa.eu'){
+                        results_tbody.append(
+                        $('<tr>').append(
+                          $('<td>').append(
+                            $('<input>').attr(
+                              {'type': 'checkbox',
+                               'name': 'emails:list',
+                               'value': user['mail']}))).append(
+                          $('<td>').text(user['cn'])).append(
+                          $('<td>').text(user['uid'])).append(
+                          $('<td>').text(user['mail'])));
+                      }
+                    })
+                  };
+                },
+                'json'
+          )
+        }
+
+        function toggleSelect2(checkbox, name) {
+            $('input[name="emails:list"]').each(function(idx){
+                  this.checked = checkbox.checked;
+            });
+        }
+
+        function addToCC() {
+            var selected_emails = $('input[name="emails:list"]:checked');
+            selected_emails.each(function(idx, email){
+              var cc_emails = $('#cc_emails').val();
+              var sep = '\n'
+              if (cc_emails.length == 0){
+                sep = ''
+              }
+              $('#cc_emails').val(cc_emails + sep + $(this).val());
+            });
+        }
         </script>
     </metal:block>
     <metal:block fill-slot="body">
@@ -61,12 +124,68 @@
             </div>
             <div class="field">
                 <label class="widget-title" for="cc_emails" i18n:translate="">CC:</label>
+                <div id="search_users" tal:define="
+                    search_param python:request.get('search_param', '');
+                    search_term python:request.get('search_term', '');
+                    ">
+                  <p i18n:translate="">Use this form to find EIONET LDAP or local users and add them to CC.</p>
+                  <label for="search_param" i18n:translate="">Search for</label>
+                  <select id="search_param" name="search_param">
+                      <option value="cn"
+                          tal:attributes="selected python:search_param=='cn'"
+                          i18n:translate="">Name
+                      </option>
+                      <option value="mail"
+                          tal:attributes="selected python:search_param=='mail'"
+                          i18n:translate="">Email
+                      </option>
+                      <option value="o"
+                          tal:attributes="selected python:search_param=='o'"
+                          i18n:translate="">Organization
+                      </option>
+                      <option value="uid"
+                          tal:attributes="selected python:search_param=='uid'"
+                          i18n:translate="">User ID
+                      </option>
+                  </select>
+
+                  <label for="search_term" i18n:translate="">containing</label>
+                  <input type="text" id="search_term" name="search_term:utf8:ustring"
+                         tal:attributes="value search_term"/>
+
+                  <span class="buttons"><a id="search_user" i18n:translate=""
+                      href="javascript:findUsers()">
+                      Search</a></span>
+
+                  <table id="results_table" name="results_table"
+                    class="datatable" width="95%" style="display:none">
+                    <thead>
+                      <tr>
+                        <th width="30px">
+                            <span i18n:translate="">Select</span>
+                            <input type="checkbox" onclick="javascript:toggleSelect2(this, 'results_table', 'emails:list')"/>
+                        </th>
+                        <th i18n:translate="">User name</th>
+                        <th i18n:translate="">User ID</th>
+                        <th i18n:translate="">Email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                  <span class="buttons"><a id="add_cc" i18n:translate=""
+                      href="javascript:addToCC()">
+                      Add to CC</a>
+                  <div style="display:none" id="no_users" i18n:translate="">
+                    No users matched selected criteria.</div>
+                </div>
                 <p class="tip" tal:condition="here/is_eionet_meeting|nothing"
                   i18n:translate="">
                   eionet-nfp@roles.eea.eionet.europa.eu is already part of the CC</p>
                 <p i18n:translate="">Add CC addresses one per line, no separator</p>
                 <textarea name="cc_emails:lines" id="cc_emails" cols="50" rows="3"></textarea>
             </div>
+            <div class="clearer" />
             <div class="field">
                 <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
                 <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
