@@ -285,6 +285,35 @@ class AddSchemaWidget(UpdateScript):
 
         return True
 
+class ChangeSchemaWidget(UpdateScript):
+    title = 'Set meeting schema "Path relative to object" to true'
+    authors = ('Valentin Dumitru', )
+    creation_date = 'Apr 29, 2019'
+    description = ('NyMeeting Schema: Set "Path relative to object" to true'
+                   'on pointer widgets (survey, minutes and agenda)')
+
+    def _update(self, portal):
+        meta_type = 'Naaya Meeting'
+        NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
+        if not portal.is_pluggable_item_installed(meta_type):
+            self.log.debug('Meeting not installed')
+            return True
+
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
+        crt_widgets = schema.objectIds()
+        for widget_name in ('survey_pointer', 'agenda_pointer', 'minutes_pointer'):
+            if widget_name + '-property' not in crt_widgets:
+                self.log.error('%s widget missing' % widget_name)
+            else:
+                widget = schema.getWidget(widget_name)
+                if not widget.relative:
+                    widget.relative = True
+                    self.log.debug('%s relative property set to True'
+                                   % widget_name)
+
+        return True
+
 class MakeParticipantsSubscribers(UpdateScript):
     title = 'Participants to subscribers'
     authors = ['Valentin Dumitru']

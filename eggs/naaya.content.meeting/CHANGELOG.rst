@@ -1,5 +1,6 @@
 1.2.74 (unreleased)
 -------------------
+* update script for meeting schema (pointer relative) [dumitval]
 * hide disabled users from the user search results (add signup, send
   emails) [dumitval]
 * JQuery Eionet user search in email sending [dumitval]
