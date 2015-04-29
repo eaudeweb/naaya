@@ -64,6 +64,13 @@
   </configure>
 
   <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="change_schema_widget.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.ChangeSchemaWidget"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
+  <configure zcml:condition="installed Products.naayaUpdater">
       <zope:utility name="make_participants_subscribers.update"
           provides="Products.naayaUpdater.interfaces.IUpdateScript"
           component=".updates.MakeParticipantsSubscribers"
