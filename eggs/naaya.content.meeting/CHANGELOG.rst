@@ -1,4 +1,7 @@
-1.2.74 (unreleased)
+1.2.75 (unreleased)
+-------------------
+
+1.2.74 (2015-04-29)
 -------------------
 * update script for meeting schema (pointer relative) [dumitval]
 * hide disabled users from the user search results (add signup, send
