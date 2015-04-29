@@ -15,8 +15,8 @@ except ImportError:
 
 from naaya.content.meeting.meeting import NyMeeting
 from permissions import PERMISSION_PARTICIPATE_IN_MEETING
-from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
-        ADMINISTRATOR_ROLE, MANAGER_ROLE)
+from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE,
+                                   PARTICIPANT_ROLE, ADMINISTRATOR_ROLE)
 from meeting import add_observer_role
 
 
@@ -94,16 +94,19 @@ class AddAutoRegister(UpdateScript):
         else:
             schema.manage_delObjects([widgetid_from_propname('auto_register')])
 
-        property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['auto_register']
+        property_schema = get_pluggable_content()[NyMeeting.meta_type][
+            'default_schema']['auto_register']
         schema.addWidget('auto_register', **property_schema)
 
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
-            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            self.log.debug('Found meeting object at %s' %
+                           meeting.absolute_url(1))
             if not hasattr(meeting, 'auto_register'):
                 meeting.auto_register = False
-                self.log.debug('Added auto_register attribute for meeting at %s' %
-                        meeting.absolute_url(1))
+                self.log.debug(
+                    'Added auto_register attribute for meeting at %s' %
+                    meeting.absolute_url(1))
         return True
 
 
@@ -115,12 +118,15 @@ class AddAllowRegister(UpdateScript):
     def _update(self, portal):
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
-            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            self.log.debug('Found meeting object at %s' %
+                           meeting.absolute_url(1))
             if not hasattr(meeting, 'allow_register'):
                 meeting.allow_register = True
-                self.log.debug('Added allow_register attribute for meeting at %s' %
-                        meeting.absolute_url(1))
+                self.log.debug(
+                    'Added allow_register attribute for meeting at %s' %
+                    meeting.absolute_url(1))
         return True
+
 
 class AddRestrictItems(UpdateScript):
     title = 'Add restrict_items attribute for the meetings'
@@ -137,19 +143,24 @@ class AddRestrictItems(UpdateScript):
         except KeyError:
             pass
         else:
-            schema.manage_delObjects([widgetid_from_propname('restrict_items')])
+            schema.manage_delObjects(
+                [widgetid_from_propname('restrict_items')])
 
-        property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['restrict_items']
+        property_schema = get_pluggable_content()[NyMeeting.meta_type][
+            'default_schema']['restrict_items']
         schema.addWidget('restrict_items', **property_schema)
 
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
-            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            self.log.debug('Found meeting object at %s' %
+                           meeting.absolute_url(1))
             if not hasattr(meeting, 'restrict_items'):
                 meeting.restrict_items = True
-                self.log.debug('Added restrict_items attribute for meeting at %s' %
-                        meeting.absolute_url(1))
+                self.log.debug(
+                    'Added restrict_items attribute for meeting at %s' %
+                    meeting.absolute_url(1))
         return True
+
 
 class RestrictObjectsInMeetings(UpdateScript):
     title = 'Restrict objects in current existing meetings'
@@ -159,12 +170,15 @@ class RestrictObjectsInMeetings(UpdateScript):
     def _update(self, portal):
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
-            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            self.log.debug('Found meeting object at %s' %
+                           meeting.absolute_url(1))
             meeting._set_items_view_permissions()
         return True
 
+
 class AddObserversInMeetings(UpdateScript):
-    title = 'Add observer role in existing meetings (also run restrict objects in meetings)'
+    title = ('Add observer role in existing meetings '
+             '(also run restrict objects in meetings)')
     authors = ['Andrei Laza']
     creation_date = 'Oct 30, 2010'
 
@@ -180,13 +194,18 @@ class AddObserversInMeetings(UpdateScript):
         self.log.debug('Patching meeting objects')
         meetings = portal.getCatalogedObjects(meta_type)
         for meeting in meetings:
-            self.log.debug('Patching meeting object at %s' % meeting.absolute_url(1))
-            permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (), meeting)
-            permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
+            self.log.debug('Patching meeting object at %s' %
+                           meeting.absolute_url(1))
+            permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (),
+                                    meeting)
+            permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
+                                 ADMINISTRATOR_ROLE])
         return True
 
+
 class ConvertMeetingDates(UpdateScript):
-    title = 'NyMeeting: Convert the start_date, end_date, "time" string to Interval'
+    title = ('NyMeeting: Convert the start_date, end_date, '
+             '"time" string to Interval')
     authors = ('Mihnea Simian', )
     creation_date = 'Mar 29, 2011'
 
@@ -204,12 +223,14 @@ class ConvertMeetingDates(UpdateScript):
             schema.manage_delObjects([widgetid_from_propname('start_date'),
                                       widgetid_from_propname('end_date'),
                                       widgetid_from_propname('time')])
-            property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['interval']
+            property_schema = get_pluggable_content()[NyMeeting.meta_type][
+                'default_schema']['interval']
             schema.addWidget('interval', **property_schema)
             self.log.debug(('Naaya Meeting schema changes: '
                             '-start_date -end_date -time +interval'))
         else:
-            self.log.debug('Meeting schema already contained interval-property')
+            self.log.debug(
+                'Meeting schema already contained interval-property')
 
         self.log.debug('Patching meeting objects')
         meetings = portal.getCatalogedObjects(meta_type)
@@ -220,7 +241,8 @@ class ConvertMeetingDates(UpdateScript):
                 time = getattr(meeting, 'time', '')
                 start_date = meeting.start_date
                 end_date = getattr(meeting, 'end_date', '')
-                # old NyMeeting accepted only start_date, interval obj reqs both
+                # old NyMeeting accepted only start_date, interval obj
+                # requires both
                 if not end_date:
                     end_date = start_date
                 (start_date, end_date) = (start_date.strftime('%d/%m/%Y'),
@@ -235,32 +257,36 @@ class ConvertMeetingDates(UpdateScript):
                     except Exception, e_inner:
                         today = datetime.now().strftime('%d/%m/%Y')
                         i = Interval(today, '', today, '', True)
-                        self.log.error('Using TODAY as start/end dates, reason: %s'
-                                       % str(e_inner))
-                    self.log.error('IMPORTANT: Please manually edit meeting, ' +
-                                   ('interval currently set as %s; ' % repr(i))
+                        self.log.error(
+                            'Using TODAY as start/end dates, reason: %s'
+                            % str(e_inner))
+                    self.log.error('IMPORTANT: Please manually edit meeting, '
+                                   + ('interval currently set as %s; ' %
+                                      repr(i))
                                    + ('Old Values: (%s, %s, \'%s\')'
-                                    % (start_date, end_date, time)))
+                                      % (start_date, end_date, time)))
                 else:
                     self.log.debug(('Successfully converted (%s, %s, \'%s\'), '
                                     % (start_date, end_date, time)) +
-                                    'setting meeting.interval: %s' % repr(i))
+                                   'setting meeting.interval: %s' % repr(i))
 
                 meeting.interval = i
                 delattr(meeting, 'start_date')
                 delattr(meeting, 'end_date')
                 delattr(meeting, 'time')
             else:
-                self.log.debug('Skipping new-version/patched meeting object at %s' %
-                               meeting.absolute_url(1))
+                self.log.debug(
+                    'Skipping new-version/patched meeting object at %s' %
+                    meeting.absolute_url(1))
         return True
+
 
 class AddSchemaWidget(UpdateScript):
     title = '"This is an Eionet Meeting" schema widget'
     authors = ('Valentin Dumitru', )
     creation_date = 'Sep 11, 2013'
     description = ('NyMeeting: Add the "This is an Eionet Meeting" '
-                    'schema widget, if missing')
+                   'schema widget, if missing')
 
     def _update(self, portal):
         meta_type = 'Naaya Meeting'
@@ -274,16 +300,19 @@ class AddSchemaWidget(UpdateScript):
         schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
         crt_widgets = schema.objectIds()
         if widgetid_from_propname('is_eionet_meeting') not in crt_widgets:
-            property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['is_eionet_meeting']
+            property_schema = get_pluggable_content()[NyMeeting.meta_type][
+                'default_schema']['is_eionet_meeting']
             if NETWORK_NAME.lower() != 'eionet':
                 property_schema['visible'] = False
             schema.addWidget('is_eionet_meeting', **property_schema)
             self.log.debug(('Naaya Meeting schema changes: '
                             'added the "Eionet Meeting" widget'))
         else:
-            self.log.debug('Meeting schema already contained is_eionet_meeting-property')
+            self.log.debug(
+                'Meeting schema already contained is_eionet_meeting-property')
 
         return True
+
 
 class ChangeSchemaWidget(UpdateScript):
     title = 'Set meeting schema "Path relative to object" to true'
@@ -294,7 +323,6 @@ class ChangeSchemaWidget(UpdateScript):
 
     def _update(self, portal):
         meta_type = 'Naaya Meeting'
-        NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
         if not portal.is_pluggable_item_installed(meta_type):
             self.log.debug('Meeting not installed')
             return True
@@ -302,7 +330,8 @@ class ChangeSchemaWidget(UpdateScript):
         schema_tool = portal.getSchemaTool()
         schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
         crt_widgets = schema.objectIds()
-        for widget_name in ('survey_pointer', 'agenda_pointer', 'minutes_pointer'):
+        for widget_name in ('survey_pointer', 'agenda_pointer',
+                            'minutes_pointer'):
             if widget_name + '-property' not in crt_widgets:
                 self.log.error('%s widget missing' % widget_name)
             else:
@@ -314,28 +343,32 @@ class ChangeSchemaWidget(UpdateScript):
 
         return True
 
+
 class MakeParticipantsSubscribers(UpdateScript):
     title = 'Participants to subscribers'
     authors = ['Valentin Dumitru']
     creation_date = 'Sep 23, 2013'
     priority = PRIORITY['HIGH']
     description = ('Make all meeting participants subscribers '
-            '(if they are not signups)')
+                   '(if they are not signups)')
 
     def _update(self, portal):
         diverted_mail = EmailTool.divert_mail()
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
             subscriptions = meeting.getParticipants().getSubscriptions()
-            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            self.log.debug('Found meeting object at %s' %
+                           meeting.absolute_url(1))
             for attendee in meeting.getParticipants().getAttendees():
                 if not (subscriptions._is_signup(attendee) or
                         subscriptions.getAccountSubscription(attendee)):
-                    subscriptions._add_account_subscription(attendee, accept=True)
+                    subscriptions._add_account_subscription(attendee,
+                                                            accept=True)
                     self.log.debug('Added account subscription for user %s'
-                                    % attendee)
+                                   % attendee)
         EmailTool.divert_mail(False)
         return True
+
 
 class UpdateViewPermission(UpdateScript):
     """ Setting view permission for observer and waiting role  """
@@ -344,8 +377,7 @@ class UpdateViewPermission(UpdateScript):
     authors = ['Valentin Dumitru']
     priority = PRIORITY['LOW']
     description = ('Sets view permission for observer and waiting roles. '
-                    'Useful in case of signups')
-
+                   'Useful in case of signups')
 
     def _update(self, portal):
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
@@ -357,5 +389,5 @@ class UpdateViewPermission(UpdateScript):
                     roles.append(role)
                     view_perm.setRoles(roles)
                     self.log.info("View Permission set for %s on %s" %
-                            (role, meeting.absolute_url()))
+                                  (role, meeting.absolute_url()))
         return True
