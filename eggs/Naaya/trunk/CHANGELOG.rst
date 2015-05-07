@@ -1,4 +1,7 @@
-3.4.24 (unreleased)
+3.4.25 (unreleased)
+-------------------
+
+3.4.24 (2015-05-07)
 -------------------
 * add only_to and only_cc parameters to send email [dumitval]
 
