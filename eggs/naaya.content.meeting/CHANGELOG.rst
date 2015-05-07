@@ -1,5 +1,6 @@
 1.2.75 (unreleased)
 -------------------
+* correct bulk download link [dumitval]
 
 1.2.74 (2015-04-29)
 -------------------
