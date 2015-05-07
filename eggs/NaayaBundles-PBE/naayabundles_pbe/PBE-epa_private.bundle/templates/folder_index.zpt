@@ -29,7 +29,7 @@
 	<metal:block define-macro="folder-title">
 	<h1 tal:define="path python:here.absolute_url(1);">
 		<a class="b_download" tal:condition="here/showBulkDownloadButton"
-				tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
+				tal:attributes="href string:${here/absolute_url}/zip_export/do_export">
 			<span i18n:translate="">Bulk download</span>
 		</a>
 		<metal:block use-macro="site_object_index/macros/icon" />
