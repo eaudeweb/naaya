@@ -1,4 +1,7 @@
-1.2.75 (unreleased)
+1.2.76 (unreleased)
+-------------------
+
+1.2.75 (2015-05-07)
 -------------------
 * correct bulk download link [dumitval]
 
