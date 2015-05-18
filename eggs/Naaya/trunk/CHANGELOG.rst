@@ -1,5 +1,6 @@
-3.4.25 (unreleased)
+4.0 (unreleased)
 -------------------
+* improved the logic in mail archive checking [dumitval]
 
 3.4.24 (2015-05-07)
 -------------------
