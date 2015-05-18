@@ -1,5 +1,10 @@
 1.2.76 (unreleased)
 -------------------
+* bugfix: allow new line in textarea [dumitval]
+* specific error messages in email seding form [dumitval]
+* changes in mail_in_queue logic to support separate emails to signups
+  [dumitval]
+* mail format verification for CC field [dumitval]
 
 1.2.75 (2015-05-07)
 -------------------

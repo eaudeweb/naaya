@@ -22,7 +22,7 @@
         $(function(){
           $('#search_users').show();
           $(window).keydown(function(event){
-            if(event.keyCode == 13) {
+            if(event.keyCode == 13 && event.target.nodeName != 'TEXTAREA') {
               event.preventDefault();
               return false;
             }
@@ -94,6 +94,7 @@
             <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title meeting/get_meta_label; alt meeting/get_meta_label" />
             <tal:block tal:replace="meeting/title_or_id" />
         </h1>
+        <tal:block content="structure here/messages_box" />
         <div id="tabbedmenu">
           <ul>
               <li id="currenttab"><a i18n:translate="">
@@ -185,7 +186,7 @@
                 <p i18n:translate="">Add CC addresses one per line, no separator</p>
                 <textarea name="cc_emails:lines" id="cc_emails" cols="50" rows="3"></textarea>
             </div>
-            <div class="clearer" />
+            <div class="clearer" ></div>
             <div class="field">
                 <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
                 <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
