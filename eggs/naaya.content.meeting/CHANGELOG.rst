@@ -1,3 +1,6 @@
+1.2.77 (unreleased)
+-------------------
+
 1.2.76 (2015-05-18)
 -------------------
 * bugfix: allow new line in textarea [dumitval]
