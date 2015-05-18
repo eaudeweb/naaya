@@ -777,7 +777,8 @@ def _mail_in_queue(site, filename, check_values):
                     if queued_recipients != set(v):
                         break
                 elif isinstance(v, basestring):
-                    if _strip_code(queued_email.get(k)) != _strip_code(v):
+                    if _strip_code(queued_email.get(k)).replace(
+                            '\n', '<br/>') != _strip_code(v):
                         break
             else:
                 if sending:
@@ -789,4 +790,5 @@ def _mail_in_queue(site, filename, check_values):
 
 
 def _strip_code(text_str):
-    return text_str.replace('\n', '').replace('</p><p>', '')
+    return text_str.replace('\n', '').replace('</p><p>', '').replace(
+        '<br/>', '')
