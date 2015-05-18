@@ -21,6 +21,7 @@ from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
 from utils import getUserEmail, findUsers
+from naaya.core.utils import is_valid_email
 from naaya.content.meeting import WAITING_ROLE
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_ADMIN_MEETING
@@ -124,42 +125,53 @@ class EmailSender(SimpleItem):
     def send_email(self, from_email, subject, body_text, cc_emails, REQUEST,
                    to_uids=None):
         """ """
-        result = 0
-        if to_uids is not None:
-            assert isinstance(to_uids, list)
-            participants = self.getParticipants()
-            subscriptions = participants.getSubscriptions()
-            signup_emails = [participants.getAttendeeInfo(uid)['email']
-                             for uid in to_uids if
-                             subscriptions._is_signup(uid)]
-            account_emails = [participants.getAttendeeInfo(uid)['email']
-                              for uid in to_uids if not
-                              subscriptions._is_signup(uid)]
-            to_emails = signup_emails + account_emails
+        errors = []
+        if not to_uids:
+            to_uids = []
+        if not (to_uids or cc_emails):
+            errors.append('Please select at least on recipient')
+        if not (subject or body_text):
+            errors.append('Subject and message body cannot both be empty')
+        for email in cc_emails:
+            if not is_valid_email(email):
+                errors.append('Invalid email "%s" in CC field' % email)
+        if errors:
+            self.setSessionErrorsTrans(errors)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        participants = self.getParticipants()
+        subscriptions = participants.getSubscriptions()
+        signup_emails = [participants.getAttendeeInfo(uid)['email']
+                         for uid in to_uids if
+                         subscriptions._is_signup(uid)]
+        account_emails = [participants.getAttendeeInfo(uid)['email']
+                          for uid in to_uids if not
+                          subscriptions._is_signup(uid)]
+        to_emails = signup_emails + account_emails
 
-            if (self.is_eionet_meeting and
-                    'eionet-nfp@roles.eea.eionet.europa.eu' not in cc_emails):
-                cc_emails.append('eionet-nfp@roles.eea.eionet.europa.eu')
-                # TODO validate cc_emails
+        if (self.is_eionet_meeting and
+                'eionet-nfp@roles.eea.eionet.europa.eu' not in cc_emails):
+            cc_emails.append('eionet-nfp@roles.eea.eionet.europa.eu')
+            # TODO validate cc_emails
 
-            # We need to send the emails to signups one by one since each email
-            # might be different (if they contain links to documents for
-            # which the authentication keys is inserted into the link)
-            for uid in to_uids:
-                if subscriptions._is_signup(uid):
-                    signup_email = participants.getAttendeeInfo(uid)['email']
-                    signup_body_text = self.insert_auth_link(body_text, uid)
-                    result = self._send_email(
-                        from_email, [signup_email], cc_emails, subject,
-                        signup_body_text, only_to=True)
+        # We need to send the emails to signups one by one since each email
+        # might be different (if they contain links to documents for
+        # which the authentication keys is inserted into the link)
+        for uid in to_uids:
+            if subscriptions._is_signup(uid):
+                signup_email = participants.getAttendeeInfo(uid)['email']
+                signup_body_text = self.insert_auth_link(body_text, uid)
+                result = self._send_email(
+                    from_email, [signup_email], cc_emails, subject,
+                    signup_body_text, only_to=True)
 
+        if account_emails:
             result = self._send_email(from_email, account_emails, cc_emails,
                                       subject, body_text)
 
-            save_bulk_email(self.getSite(), to_emails, from_email, subject,
-                            body_text,
-                            where_to_save=path_in_site(self.getMeeting()),
-                            addr_cc=cc_emails)
+        save_bulk_email(self.getSite(), to_emails, from_email, subject,
+                        body_text,
+                        where_to_save=path_in_site(self.getMeeting()),
+                        addr_cc=cc_emails)
 
         return self.getFormsTool().getContent(
             {'here': self,
@@ -312,12 +324,19 @@ class EmailSender(SimpleItem):
         for email in emails:
             subject, encoding = standard_email.Header.decode_header(
                 email['subject'])[0]
-            email['subject'] = subject.decode(encoding)
+            if encoding:
+                email['subject'] = subject.decode(encoding)
+            else:
+                email['subject'] = subject
             recipients = []
+            if email['recipients'] is None:
+                email['recipients'] = []
             for recp in email['recipients']:
                 recipients.extend(re.split(',|;', recp.replace(' ', '')))
             email['recipients'] = recipients
             cc_recipients = []
+            if email['cc_recipients'] is None:
+                email['cc_recipients'] = []
             for recp in email['cc_recipients']:
                 cc_recipients.extend(re.split(',|;', recp.replace(' ', '')))
             email['cc_recipients'] = cc_recipients
@@ -379,7 +398,9 @@ class EmailSender(SimpleItem):
 
     def mail_in_queue(self, filename):
         """ Check if a specific message is still in queue """
-        COMMON_KEYS = ['sender', 'recipients', 'subject', 'content', 'date']
+        # removed recipients from COMMON_KEYS because of signup
+        # recipients splitting
+        COMMON_KEYS = ['sender', 'subject', 'content', 'date']
         check_values = {}
         archived_email = get_bulk_email(
             self.getSite(), filename,
