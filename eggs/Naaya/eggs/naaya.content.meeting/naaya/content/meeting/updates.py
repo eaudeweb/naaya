@@ -317,7 +317,7 @@ class AddSchemaWidget(UpdateScript):
 class ChangeSchemaWidget(UpdateScript):
     title = 'Set meeting schema "Path relative to object" to true'
     authors = ('Valentin Dumitru', )
-    creation_date = 'Apr 29, 2019'
+    creation_date = 'May 07, 2015'
     description = ('NyMeeting Schema: Set "Path relative to object" to true'
                    'on pointer widgets (survey, minutes and agenda)')
 
