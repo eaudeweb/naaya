@@ -642,7 +642,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             statistic.add_to_excel(state)
             current_row = state['current_row'] + 1
         shutil.rmtree(state['temp_folder'])
-        # output = StringIO()
         output = tempfile.NamedTemporaryFile()
         wb.save(output)
         output.seek(0)
@@ -651,20 +650,19 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declarePrivate('generate_pdf')
 
     def generate_pdf(self, report_id):
-        output = tempfile.NamedTemporaryFile()
         url = '%s/questionnaire_view_report_html?report_id=%s' % (
             self.absolute_url(), report_id)
         http_cookies = self.REQUEST.environ['HTTP_COOKIE']
         for cookie in http_cookies.split('; '):
             if cookie.startswith('__ac'):
                 __ac = cookie.replace('__ac="', '')[:-1]
-                options = {'ignore-load-errors': None,
-                             'cookie': '__ac=%s' % __ac}
-                #options = {'ignore-load-errors': None,
-                #             'cookie': '__ac=ZHVtaXR2YWw6MVBhc2FyaWNhLg%3D%3D'}
+                options = {'print-media-type': False,
+                           'no-images': False,
+                           'cookie': '__ac=%s' % __ac}
                 return pdfkit.from_url(url, False, options=options)
         else:
-            return pdfkit.from_url(url, False)
+            options = {'print-media-type': False, 'no-images': False}
+            return pdfkit.from_url(url, False, options=options)
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
 
