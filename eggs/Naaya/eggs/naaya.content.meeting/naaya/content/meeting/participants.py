@@ -442,7 +442,7 @@ class Participants(SimpleItem):
                   'Status', 'Last modified by',
                   'Reason for modification (when saved by an administrator)']
         meeting = self.getMeeting()
-        if meeting.survey_required:
+        if meeting.survey_required and self.get_survey():
             header.extend(
                 [question[1] for question in self.get_survey_questions()])
         rows = []
@@ -455,7 +455,7 @@ class Participants(SimpleItem):
                 country_from_country_code.get(part_info['country'], ''),
                 part_info['reimbursed'], part_info['phone'], part_info['role'],
                 part_info['saved_by'], part_info['justification']]
-            if meeting.survey_required:
+            if meeting.survey_required and self.get_survey():
                 survey_answers = [
                     self.get_survey_answer(part_info['uid'], question[0]) or
                     '-' for question in self.get_survey_questions()]
