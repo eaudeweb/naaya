@@ -1,5 +1,6 @@
 1.2.54 (unreleased)
 ===================
+* added pdf export of reports [dumitval]
 
 1.2.53 (2015-02-26)
 ===================

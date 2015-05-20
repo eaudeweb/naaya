@@ -87,6 +87,10 @@ div.widgetViewMode {
 	margin: 1em 0 1em 0;
 }
 
+table {
+  page-break-inside: avoid;
+}
+
 table.widgetTypesTable td {
 	padding-right: 2em;
 }

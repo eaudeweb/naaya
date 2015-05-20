@@ -41,8 +41,12 @@
 	</td>
 	<td class="title-column">
 		<a i18n:translate="" rel="nofollow"
-		tal:attributes="href string:${here/absolute_url}/questionnaire_export?report_id=${object/id}" >
+		tal:attributes="href string:${here/absolute_url}/questionnaire_export?report_id=${object/id}&type=excel" >
 			Download as Excel
+    </a><br/>
+		<a i18n:translate="" rel="nofollow"
+		tal:attributes="href string:${here/absolute_url}/questionnaire_export?report_id=${object/id}&type=pdf" >
+			Download as PDF
 		</a>
 	</td>
 </tr>

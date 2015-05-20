@@ -3,6 +3,8 @@
 
 <link rel="stylesheet" type="text/css" media="all"
 	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+<link rel="stylesheet" type="text/css" media="print"
+	tal:attributes="href string:${here/absolute_url}/css_survey_print" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>

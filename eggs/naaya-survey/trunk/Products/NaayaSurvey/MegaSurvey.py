@@ -205,6 +205,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     # static files
     css_survey_common = DTMLFile('www/survey_common.css', globals())
+    css_survey_print = DTMLFile('www/survey_print.css', globals())
     fancy_checkmark = ImageFile('www/fancy_checkmark.gif', globals())
     survey_js = ImageFile('www/survey.js', globals())
 
