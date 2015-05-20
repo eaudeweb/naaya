@@ -5,6 +5,7 @@ import shutil
 import os.path
 
 import xlwt
+import pdfkit
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -647,18 +648,44 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         output.seek(0)
         return output.read()
 
+    security.declarePrivate('generate_pdf')
+
+    def generate_pdf(self, report_id):
+        output = tempfile.NamedTemporaryFile()
+        url = '%s/questionnaire_view_report_html?report_id=%s' % (
+            self.absolute_url(), report_id)
+        http_cookies = self.REQUEST.environ['HTTP_COOKIE']
+        for cookie in http_cookies.split('; '):
+            if cookie.startswith('__ac'):
+                __ac = cookie.replace('__ac="', '')[:-1]
+                options = {'ignore-load-errors': None,
+                             'cookie': '__ac=%s' % __ac}
+                #options = {'ignore-load-errors': None,
+                #             'cookie': '__ac=ZHVtaXR2YWw6MVBhc2FyaWNhLg%3D%3D'}
+                return pdfkit.from_url(url, False, options=options)
+        else:
+            return pdfkit.from_url(url, False)
+
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
 
-    def questionnaire_export(self, report_id, REQUEST, answers=None):
-        """ Exports the report in excel format """
+    def questionnaire_export(self, report_id, REQUEST, answers=None,
+                             type='excel'):
+        """ Exports the report in excel or pdf format """
         report = self.getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
         if answers is None:
             answers = self.getAnswers()
-        ret = self.generate_excel(report, answers=answers)
-        content_type = 'application/vnd.ms-excel'
-        filename = '%s Export.xls' % report.id
+        if type == 'excel':
+            ret = self.generate_excel(report, answers=answers)
+            content_type = 'application/vnd.ms-excel'
+            filename = '%s Export.xls' % report.id
+        elif type == 'pdf':
+            ret = self.generate_pdf(report_id)
+            content_type = 'application/pdf'
+            filename = '%s Export.pdf' % report.id
+        else:
+            raise NotImplemented
 
         if REQUEST is not None:
             filesize = len(ret)

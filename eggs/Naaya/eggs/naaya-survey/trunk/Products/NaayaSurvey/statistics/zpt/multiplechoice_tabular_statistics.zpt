@@ -19,11 +19,6 @@
 				<td class="number" tal:content="python: per_choice[repeat['choice'].index][0]">count</td>
 				<td class="number" tal:content="python: '%.2f%%' % (round(per_choice[repeat['choice'].index][1], 2), )">percent</td>
 			</tr>
-			<tr class="answered">
-				<th scope="row" class="scope-row" i18n:translate="">Answered</th>
-				<td class="number" tal:content="python: answered[0]">answered count</td>
-				<td class="number" tal:content="python: '%.2f%%' % (round(answered[1], 2), )">answered percent</td>
-			</tr>
 			<tr class="unanswered">
 				<th scope="row" class="scope-row" i18n:translate="">Not answered</th>
 				<td class="number" tal:content="python: unanswered[0]">unanswered count</td>
