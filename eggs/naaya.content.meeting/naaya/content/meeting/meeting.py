@@ -573,6 +573,10 @@ class NyMeeting(NyContentData, NyFolder):
 
         form_errors = self.meeting_submitted_form(
             schema_raw_data, _lang, _override_releasedate=_releasedate)
+        if schema_raw_data.get('survey_required') and not schema_raw_data.get(
+                'survey_pointer'):
+            form_errors['survey_required'] = [
+                'Cannot set survey required without a link to a survey']
 
         if not form_errors:
             self._p_changed = 1
@@ -645,7 +649,8 @@ class NyMeeting(NyContentData, NyFolder):
     def get_survey(self):
         site = self.getSite()
         path = str(self.survey_pointer)
-        return site.unrestrictedTraverse(path, None)
+        if path:
+            return site.unrestrictedTraverse(path, None)
 
     security.declareProtected(view, 'get_survey_questions')
 
