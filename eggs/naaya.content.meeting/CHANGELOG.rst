@@ -1,5 +1,6 @@
 1.2.77 (unreleased)
 -------------------
+* now survey required without pointer to survey [dumitval]
 
 1.2.76 (2015-05-18)
 -------------------
