@@ -1,4 +1,7 @@
-1.4.38 (unreleased)
+1.4.39 (unreleased)
+-------------------
+
+1.4.38 (2015-05-20)
 -------------------
 * bugfix related to allow reviewer to invite [dumitval]
 
