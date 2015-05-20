@@ -297,7 +297,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         roles = getattr(self, perm, [])
 
         if allow and 'Reviewer' not in roles:
-            new_roles = roles + ('Reviewer',)
+            new_roles = roles + ['Reviewer']
         elif not allow and 'Reviewer' in roles:
             new_roles = tuple(role for role in roles if role != 'Reviewer')
         else:
