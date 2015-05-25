@@ -17,17 +17,12 @@
             };
           });
 
-        show_hide(true);
-        show_hide(false);
+        show_hide();
 
         change_all_checked_items();
 
         $('#save_changes').click(function(e){
-          warning(e, '');
-        });
-
-        $('#signup_save_changes').click(function(e){
-          warning(e, 'signup_');
+          warning(e);
         });
 
         $('select[name="represents"]').change(function(){
@@ -50,24 +45,13 @@
             else{
               undo_change_one_item(user_id);
             };
-            show_hide(false);
-        });
-
-        $('input[name="keys:list"]').change(function(){
-            var user_id = $(this).val();
-            if($(this).is(':checked')){
-              change_one_item(user_id);
-            }
-            else{
-              undo_change_one_item(user_id);
-            };
-            show_hide(true);
+            show_hide();
         });
 
     })
 
-    function warning(e, signup){
-      var justifications = $('.'+signup+'justification:enabled');
+    function warning(e){
+      var justifications = $('.justification:enabled');
       var warning_message = gettext('Please fill in the mandatory "Justification" field');
       for (i=0; i<justifications.length; i++){
         if ($(justifications[i]).val() == ''){
@@ -78,39 +62,21 @@
       }
     }
 
-    function show_hide(signup){
-      if (signup){
-        if ($('input[name="keys:list"]:checked').length == 0){
-          if($('#is_meeting_admin').val() == 1){
-            $('#signup_save_changes').hide();
-            $('.signup_hide_on_edit').show();
-            $('.signup_explanation').hide();
-          };
-        }
-        else{
-          if($('#is_meeting_admin').val() == 1){
-            $('#signup_save_changes').show();
-            $('.signup_hide_on_edit').hide();
-            $('.signup_explanation').show();
-          };
+    function show_hide(){
+      if ($('input[name="uids:list"]:checked').length == 0){
+        if($('#is_meeting_admin').val() == 1){
+          $('#save_changes').hide();
+          $('.hide_on_edit').show();
+          $('.explanation').hide();
         };
       }
       else{
-        if ($('input[name="uids:list"]:checked').length == 0){
-          if($('#is_meeting_admin').val() == 1){
-            $('#save_changes').hide();
-            $('.hide_on_edit').show();
-            $('.explanation').hide();
-          };
-        }
-        else{
-          if($('#is_meeting_admin').val() == 1){
-            $('#save_changes').show();
-            $('.hide_on_edit').hide();
-            $('.explanation').show();
-          };
+        if($('#is_meeting_admin').val() == 1){
+          $('#save_changes').show();
+          $('.hide_on_edit').hide();
+          $('.explanation').show();
         };
-      }
+      };
     };
 
     function change_one_item(user_id){
@@ -160,12 +126,7 @@
                 element.checked = checkbox.checked;
             }
         }
-        if (form_name == 'formManageSignups'){
-          show_hide(true);
-        }
-        else{
-          show_hide(false);
-        }
+        show_hide();
         change_all_checked_items();
         change_all_unchecked_items();
     }
@@ -193,195 +154,11 @@
 
       <input type="hidden" tal:attributes="value here/checkPermissionAdminMeeting"
           id="is_meeting_admin" />
-      <fieldset>
-          <legend i18n:translate="">List of signups</legend>
-          <form method="post" action="manageSignups" name="formManageSignups"
-                    tal:define="nfp_country_code meeting/nfp_for_country;
-                        nfp_country python:meeting.get_country(nfp_country_code)">
-              <table class="datatable" width="95%">
-                  <tr>
-                      <th width="30px"
-                        tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
-                          <span i18n:translate="">Select</span>
-                          <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSignups', 'keys:list')"/>
-                      </th>
-                      <th i18n:translate="">Name</th>
-                      <th i18n:translate="">Email</th>
-                      <th i18n:translate="">Organization</th>
-                      <tal:block condition="here/is_eionet_meeting">
-                        <th i18n:translate="">Represented country</th>
-                        <th i18n:translate="">Reimbursed participation</th>
-                        <th class="signup_explanation" style="display:none" i18n:translate=""
-                          tal:condition="meeting_admin">
-                          Justify changes *
-                        </th>
-                      </tal:block>
-                      <th class="signup_hide_on_edit" i18n:translate="">Phone number</th>
-                      <th class="signup_hide_on_edit" i18n:translate="">Status</th>
-                      <!--<tal:block repeat="question here/get_survey_questions">
-                          <th tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
-                          tal:content="python:question[1]" />
-                      </tal:block>-->
-                  </tr>
-                  <tr tal:repeat="signup here/getSignups">
-                      <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
-                          <input type="checkbox" name="keys:list"
-                              tal:attributes="value signup/key"/>
-                      </td>
-                      <td tal:content="signup/name"/>
-                      <td tal:define="email signup/email">
-                          <a tal:condition="email"
-                              tal:attributes="href string:mailto:${email}"
-                              tal:content="email"></a>
-                      </td>
-                      <td tal:content="signup/organization"/>
-
-
-                      <tal:block condition="here/is_eionet_meeting"
-                        define="country_code signup/country|nothing;
-                                country_name python:here.get_country(country_code);
-                                saved_by signup/saved_by|nothing;
-                                justification signup/justification|nothing;
-                                uid signup/key;
-                                reimbursed signup/reimbursed|nothing">
-
-                        <td tal:condition="not:meeting_admin">
-                          <tal:block content="country_name" />
-                          <tal:block condition="saved_by">
-                            <img src="misc_/Naaya/info.png"
-                              tal:define="justification_text python:test(justification,
-                              'Justification for the change: '+justification, '');
-                              auth_tool here/getAuthenticationTool;
-                              saved_by_name python:auth_tool.name_from_userid(saved_by)"
-                              tal:attributes="title string:Last saved by: ${saved_by_name}
-
-                              ${justification_text}" />
-                          </tal:block>
-                        </td>
-
-                        <td tal:condition="meeting_admin">
-                            <span tal:attributes="id
-                              python:uid+'___represents_text'">
-                              <tal:block content="country_name" />
-                              <tal:block condition="saved_by">
-                                <img src="misc_/Naaya/info.png"
-                                  tal:define="justification_text python:test(justification,
-                                  'Justification for the change: '+justification, '');
-                                  auth_tool here/getAuthenticationTool;
-                                  saved_by_name python:auth_tool.name_from_userid(saved_by)"
-                                  tal:attributes="title string:Last saved by: ${saved_by_name}
-
-                                  ${justification_text}" />
-                              </tal:block>
-                            </span>
-                            <select name="represents" style="display:none" disabled="disabled"
-                              tal:attributes="id python:uid+'___represents'" >
-                              <option tal:attributes="selected python:country_code == '-'"
-                                value="">-</option>
-                              <option tal:repeat="country here/get_countries"
-                                tal:content="python:country[1]"
-                                tal:attributes="selected python:country_code == country[0];
-                                                value python:country[0]" />
-                            </select>
-                        </td>
-
-                        <td tal:condition="not:meeting_admin">
-                          <tal:block content="python:test(reimbursed, 'Yes', 'No')"
-                            i18n:translate="" />
-                          <tal:block condition="saved_by">
-                            <img src="misc_/Naaya/info.png"
-                              tal:define="justification_text python:test(justification,
-                              'Justification for the change: '+justification, '');
-                              auth_tool here/getAuthenticationTool;
-                              saved_by_name python:auth_tool.name_from_userid(saved_by)"
-                              tal:attributes="title string:Last saved by: ${saved_by_name}
-
-                              ${justification_text}" />
-                          </tal:block>
-                        </td>
-
-                        <td tal:condition="meeting_admin">
-                            <span tal:attributes="id python:uid+'___reimbursed_text'">
-                              <tal:block tal:content="python:test(reimbursed, 'Yes', 'No')"
-                                i18n:translate="" />
-                              <tal:block condition="saved_by">
-                                <img src="misc_/Naaya/info.png"
-                                  tal:define="justification_text python:test(justification,
-                                  'Justification for the change: '+justification, '');
-                                  auth_tool here/getAuthenticationTool;
-                                  saved_by_name python:auth_tool.name_from_userid(saved_by)"
-                                  tal:attributes="title string:Last saved by: ${saved_by_name}
-
-                                  ${justification_text}" />
-                              </tal:block>
-                            </span>
-                            <select name="reimbursed" disabled="disabled"
-                              tal:attributes="id python:uid+'___reimbursed'"
-                              style="display:none" >
-                              <option
-                                tal:attributes="selected not:reimbursed"
-                                value="no">No</option>
-                              <option
-                                tal:attributes="selected reimbursed; value uid" >
-                                Yes
-                              </option>
-                            </select>
-                        </td>
-
-                        <td class="signup_explanation" tal:condition="meeting_admin"
-                          style="display:none">
-                          <textarea style="display:none" disabled="disabled" rows=5 cols="30"
-                            tal:attributes="id python:uid+'___explanation'"
-                            name="justification" class="signup_justification"></textarea>
-                        </td>
-
-                      </tal:block>
-
-                      <td class="signup_hide_on_edit" tal:content="signup/phone"/>
-                      <td class="signup_hide_on_edit" tal:content="signup/accepted"/>
-                      <!--<tal:block define="uid signup/key"
-                          repeat="question here/get_survey_questions">
-                          <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
-                              tal:content="python:here.get_survey_answer(
-                                  uid, question[0])"/>
-                      </tal:block>-->
-                  </tr>
-              </table>
-              <input type="submit" i18n:attributes="value" name="accept"
-                value="Accept as participant(s)"
-                tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()" />
-              <input type="submit" i18n:attributes="value" name="reject"
-                value="Reject signup(s)"
-                tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()"/>
-              <input type="submit" i18n:attributes="value" name="delete"
-                tal:condition="here/checkPermissionAdminMeeting"
-                value="Reject and delete signup(s)"/>
-              <tal:block condition="here/is_eionet_meeting">
-                <input tal:condition="here/nfp_for_country" type="submit"
-                  name="set_representative" i18n:attributes="value"
-                  tal:attributes="value string:Set representative for ${nfp_country}"/>
-                <input tal:condition="here/nfp_for_country" type="submit"
-                  name="unset_representative" i18n:attributes="value"
-                  tal:attributes="value string:Un-set representative"/>
-                <input tal:condition="here/nfp_for_country" type="submit"
-                  name="set_reimbursement" i18n:attributes="value"
-                  tal:attributes="value string:Set reimbursed participation"/>
-                <input tal:condition="here/nfp_for_country" type="submit"
-                  name="unset_reimbursement" i18n:attributes="value"
-                  tal:attributes="value string:Un-set reimbursed"/>
-                <input tal:condition="meeting/checkPermissionAdminMeeting"
-                  type="submit" name="save_changes" id="signup_save_changes"
-                  i18n:attributes="value" value="Save changes"
-                  style="display:none" />
-              </tal:block>
-          </form>
-
-      </fieldset>
 
       <fieldset>
-          <legend i18n:translate="">List of account subscriptions</legend>
-          <form method="post" action="manageAccountSubscriptions"
-              name="formManageAccountSubscriptions"
+          <legend i18n:translate="">List of accepted subscriptions</legend>
+          <form method="post" action="manageSubscriptions"
+              name="formManageSubscriptions"
               tal:define="nfp_country_code meeting/nfp_for_country;
                           nfp_country python:meeting.get_country(nfp_country_code)">
               <table class="datatable" width="95%">
@@ -389,10 +166,10 @@
                       <th width="30px"
                         tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                           <span i18n:translate="">Select</span>
-                          <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageAccountSubscriptions', 'uids:list')"/>
+                          <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSubscriptions', 'uids:list')"/>
                       </th>
                       <th i18n:translate="">Name</th>
-                      <th i18n:translate="">Email</th>
+                      <th class="hide_on_edit" i18n:translate="">Email</th>
                       <th i18n:translate="">Organization</th>
                       <tal:block condition="here/is_eionet_meeting">
                         <th i18n:translate="">Represented country</th>
@@ -409,26 +186,33 @@
                           tal:content="python:question[1]" />
                       </tal:block>-->
                   </tr>
-                  <tr tal:repeat="account_subscription here/getAccountSubscriptions">
+                  <tal:block repeat="subscription here/getSubscriptions">
+                  <tr tal:define="accepted subscription/accepted"
+                    tal:attributes="class python:test(accepted == 'rejected', 'rejected', '')">
                       <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
                           <input type="checkbox" name="uids:list"
-                              tal:attributes="value account_subscription/uid"/>
+                              tal:attributes="value subscription/uid|subscription/key"/>
                       </td>
-                      <td tal:content="account_subscription/name"/>
-                      <td tal:define="email account_subscription/email">
+                      <td>
+                        <tal:block content="subscription/name" /><br/>
+                        <tal:block define="user subscription/uid|string:signup"
+                        content="string:(${user})" />
+                      </td>
+                      <td class="hide_on_edit" tal:define="email subscription/email">
                           <a tal:condition="email"
                               tal:attributes="href string:mailto:${email}"
                               tal:content="email"></a>
                       </td>
-                      <td tal:content="account_subscription/organization"/>
+                      <td tal:define="organization subscription/organization|string:"
+                        tal:content="python:(organization or '').replace('_', ' ')"/>
 
                       <tal:block condition="here/is_eionet_meeting"
-                        define="country_code account_subscription/country|nothing;
+                        define="country_code subscription/country|nothing;
                                 country_name python:here.get_country(country_code);
-                                saved_by account_subscription/saved_by|nothing;
-                                justification account_subscription/justification|nothing;
-                                uid account_subscription/uid;
-                                reimbursed account_subscription/reimbursed|nothing">
+                                saved_by subscription/saved_by|nothing;
+                                justification subscription/justification|nothing;
+                                uid subscription/uid|subscription/key;
+                                reimbursed subscription/reimbursed|nothing">
 
                         <td tal:condition="not:meeting_admin">
                           <tal:block content="country_name" />
@@ -519,15 +303,16 @@
 
                       </tal:block>
 
-                      <td class="hide_on_edit" tal:content="account_subscription/phone"/>
-                      <td class="hide_on_edit" tal:content="account_subscription/accepted"/>
-                      <!--<tal:block define="uid account_subscription/uid"
+                      <td class="hide_on_edit" tal:content="subscription/phone"/>
+                      <td class="hide_on_edit" tal:content="subscription/accepted"/>
+                      <!--<tal:block define="uid subscription/uid"
                           repeat="question here/get_survey_questions">
                           <td tal:condition="python:question[0] not in ['w_organisation', 'w_organization', 'w_phone', 'w_telephone'] and not question[0].startswith('hide_')"
                               tal:content="python:here.get_survey_answer(
                                   uid, question[0])"/>
                       </tal:block>-->
                   </tr>
+                </tal:block>
               </table>
               <input type="submit" i18n:attributes="value" name="accept"
                 value="Accept as participant(s)"
