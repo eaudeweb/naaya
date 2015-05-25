@@ -229,22 +229,31 @@ class Subscriptions(SimpleItem):
         return key in self._signups and \
             self._signups[key].accepted == 'new'
 
-    def manageSignups(self, REQUEST):
+    def manageSubscriptions(self, REQUEST):
         """ """
         if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
             raise Unauthorized
-        keys = REQUEST.form.get('keys', [])
-        assert isinstance(keys, list)
-        if 'accept' in REQUEST.form:
-            for key in keys:
-                self._accept_signup(key)
-        elif 'reject' in REQUEST.form:
-            for key in keys:
-                self._reject_signup(key)
-        elif 'delete' in REQUEST.form:
-            for key in keys:
-                self._delete_signup(key)
-        elif 'set_representative' in REQUEST.form:
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        for uid in uids:
+            if 'accept' in REQUEST.form:
+                if self._is_signup(uid):
+                    self._accept_signup(uid)
+                else:
+                    self._accept_account_subscription(uid)
+            elif 'reject' in REQUEST.form:
+                if self._is_signup(uid):
+                    self._reject_signup(uid)
+                else:
+                    self._reject_account_subscription(uid)
+            elif 'delete' in REQUEST.form:
+                if not self.checkPermissionAdminMeeting():
+                    raise Unauthorized
+                if self._is_signup(uid):
+                    self._delete_signup(uid)
+                else:
+                    self._delete_account_subscription(uid)
+        if 'set_representative' in REQUEST.form:
             self.setRepresentatives(REQUEST)
         elif 'unset_representative' in REQUEST.form:
             self.setRepresentatives(REQUEST, remove=True)
@@ -407,6 +416,18 @@ class Subscriptions(SimpleItem):
             raise Unauthorized
         return self._account_subscriptions.itervalues()
 
+    def getSubscriptions(self):
+        """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
+        subscriptions = (list(self._signups.itervalues()) +
+                         list(self._account_subscriptions.itervalues()))
+        statuses = {'new': 0,
+                    'accepted': 1,
+                    'rejected': 2
+                    }
+        return sorted(subscriptions, key=lambda x: statuses.get(x.accepted))
+
     security.declareProtected(PERMISSION_ADMIN_MEETING,
                               'getAccountSubscription')
 
@@ -418,36 +439,6 @@ class Subscriptions(SimpleItem):
         """ """
         return uid in self._account_subscriptions and \
             self._account_subscriptions[uid].accepted == 'accepted'
-
-    def manageAccountSubscriptions(self, REQUEST):
-        """ """
-        if not (self.checkPermissionAdminMeeting() or self.nfp_for_country()):
-            raise Unauthorized
-        uids = REQUEST.form.get('uids', [])
-        assert isinstance(uids, list)
-        if 'accept' in REQUEST.form:
-            for uid in uids:
-                self._accept_account_subscription(uid)
-        elif 'reject' in REQUEST.form:
-            for uid in uids:
-                self._reject_account_subscription(uid)
-        elif 'delete' in REQUEST.form:
-            if not self.checkPermissionAdminMeeting():
-                raise Unauthorized
-            for uid in uids:
-                self._delete_account_subscription(uid)
-        elif 'set_representative' in REQUEST.form:
-            self.setRepresentatives(REQUEST)
-        elif 'unset_representative' in REQUEST.form:
-            self.setRepresentatives(REQUEST, remove=True)
-        elif 'set_reimbursement' in REQUEST.form:
-            self.setReimbursement(REQUEST)
-        elif 'unset_reimbursement' in REQUEST.form:
-            self.setReimbursement(REQUEST, remove=True)
-        elif 'save_changes' in REQUEST.form:
-            self.save_changes(REQUEST)
-
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _accept_account_subscription(self, uid):
         """ """
