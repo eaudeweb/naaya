@@ -26,3 +26,6 @@ table.meeting-registration-methods {
     max-width: 80px;
     word-wrap: break-word;
 }
+.rejected {
+    text-decoration: line-through;
+}
