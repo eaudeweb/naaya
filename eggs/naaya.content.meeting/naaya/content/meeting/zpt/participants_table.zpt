@@ -194,7 +194,8 @@
         <td class="force-wrap hide_on_edit" tal:define="email user_info/email">
             <a tal:condition="email" tal:attributes="href string:mailto:${email}" tal:content="email"></a>
         </td>
-        <td tal:define="organization user_info/organization">
+        <td tal:define="organization user_info/organization;
+                        organization python:organization.replace('_', ' ')">
             <span tal:condition="organization" tal:replace="organization"/>
         </td>
         <tal:block condition="here/is_eionet_meeting"

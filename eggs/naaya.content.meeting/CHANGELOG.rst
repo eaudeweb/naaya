@@ -1,5 +1,6 @@
 1.2.78 (unreleased)
 -------------------
+* unify applications listing [dumitval]
 
 1.2.77 (2015-05-20)
 -------------------
