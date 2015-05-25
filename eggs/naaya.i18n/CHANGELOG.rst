@@ -1,5 +1,6 @@
 1.1.9 (unreleased)
 -------------------
+* removed country-specific language versions from languages.txt [dumitval]
 
 1.1.8 (2013-01-22)
 -------------------

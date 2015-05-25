@@ -28,21 +28,12 @@ cy Welsh
 
 da Danish
 de German
-de-AU German/Austria
-de-DE German/Germany
-de-CH German/Switzerland
 dz Bhutani
 
 el Greek
 en English
-en-GB English/United Kingdom
-en-US English/United States
 eo Esperanto
 es Spanish
-es-AR Spanish/Argentina
-es-CO Spanish/Colombia
-es-MX Spanish/Mexico
-es-ES Spanish/Spain
 et Estonian
 eu Basque
 
@@ -51,10 +42,6 @@ fi Finnish
 fj Fiji
 fo Faroese
 fr French
-fr-BE French/Belgium
-fr-CA French/Canada
-fr-FR French/France
-fr-CH French/Switzerland
 fy Frisian
 
 ga Irish
@@ -113,7 +100,6 @@ my Burmese
 na Nauru
 ne Nepali
 nl Dutch
-nl-BE Dutch/Belgium
 no Norwegian
 
 oc Occitan
@@ -124,7 +110,6 @@ pa Punjabi
 pl Polish
 ps Pashto
 pt Portuguese
-pt-BR Portuguese/Brazil
 
 qu Quechua
 
@@ -184,8 +169,6 @@ yo Yoruba
 
 za Zhuang
 zh Chinese
-zh-CN Chinese/China
-zh-TW Chinese/Taiwan
 zu Zulu
 
 
