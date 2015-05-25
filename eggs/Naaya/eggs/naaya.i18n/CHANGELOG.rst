@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+-------------------
+
+1.1.9 (2015-05-25)
 -------------------
 * removed country-specific language versions from languages.txt [dumitval]
 
