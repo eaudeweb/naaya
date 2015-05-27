@@ -654,11 +654,17 @@ class LDAPUserInfo(UserInfo):
             'postal_address', 'phone_number'])
 
 def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
+
     def extract(name):
+        if name == 'mail':
+            if getattr(zope_user, 'employeeType', None) == 'disabled':
+                return 'disabled@eionet.europa.eu'
+
         value = getattr(zope_user, name, '')
         if value is None:
             return ''
         return value.decode(ldap_encoding)
+
     fields = {
         'user_id': str(zope_user.id),
         'full_name': extract('cn'),
@@ -673,6 +679,7 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
         '_get_zope_user': lambda: zope_user,
         '_source': ldap_plugin,
     }
+
     return LDAPUserInfo(**fields)
 
 def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
@@ -686,6 +693,12 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
     def extract(name):
         # encode values back to strings, because the rest of our ancient code
         # expects that.
+
+        if name == 'mail':
+            is_disabled = cached_record.get('employeeType') == 'disabled'
+            if is_disabled:
+                return 'disabled@eionet.europa.eu'
+
         value = cached_record.get(name, u'')
         if isinstance(value, list):
             for i in value:
