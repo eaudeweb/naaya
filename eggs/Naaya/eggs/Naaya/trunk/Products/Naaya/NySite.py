@@ -84,7 +84,7 @@ from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
 from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
-from Products.NaayaCore.NotificationTool.constants import DISABLED_EMAIL
+from Products.NaayaCore.constants import DISABLED_EMAIL
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool

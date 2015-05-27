@@ -14,6 +14,7 @@ from Products.NaayaCore.constants import METATYPE_EMAILTEMPLATE
 from Products.NaayaCore.constants import METATYPE_EMAILTOOL
 from Products.NaayaCore.constants import PERMISSION_ADD_NAAYACORE_TOOL
 from Products.NaayaCore.constants import TITLE_EMAILTOOL
+from Products.NaayaCore.constants import DISABLED_EMAIL
 from Products.NaayaCore.managers import import_export
 from Products.NaayaCore.managers import utils
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -51,9 +52,8 @@ except ImportError, e:
 email_validator = EmailValidator("checked_emails", maxWorkers=10)
 g_utils = utils.utils()
 
-DISABLED_EMAILS = ['disabled@eionet.europa.eu']
-
 mail_logger = logging.getLogger('naaya.core.email')
+log = logging.getLogger('Products.NaayaCore.EmailTool')
 
 try:
     import email.message
@@ -156,6 +156,18 @@ class EmailTool(Folder):
             errors.append('"From" address not configured')
         return self._errors_report(errors=errors)
 
+    def _filter_disabled_users(self, emails, agent):
+        disabled = []
+        for e in emails:
+            if e == DISABLED_EMAIL:
+                disabled.append(e)
+            users = agent.search_user_by_email(e)
+            for user in users:
+                if user['status'] == 'disabled':
+                    disabled.append(e)
+
+        return list(set(emails) - set(disabled))
+
     # api
     security.declarePrivate('sendEmail')
 
@@ -165,6 +177,17 @@ class EmailTool(Folder):
         Send email message on transaction commit. If the transaction fails,
         the message is discarded.
         """
+        from eea.usersdb.factories import agent_from_uf
+
+        agent = None
+        try:
+            uf = self.restrictedTraverse('/acl_users')
+            agent = agent_from_uf(uf, bind=True)
+        except Exception, msg:
+            log.debug(
+                "Could not get LDAP agent to check email availability: %s", msg
+            )
+
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',')]
 
@@ -174,6 +197,11 @@ class EmailTool(Folder):
             p_cc = [e.strip() for e in p_cc.split(',')]
 
         p_cc = filter(None, p_cc)  # filter out blank recipients
+
+        # try to filter disabled users
+        if agent:
+            p_to = self._filter_disabled_users(p_to, agent)
+            p_cc = self._filter_disabled_users(p_cc, agent)
 
         try:
             site = self.getSite()
@@ -323,7 +351,6 @@ def send_by_delivery(delivery, p_from, p_to, message):
     Knows how to handle repoze.sendmail 2.3 differences in `message` arg type.
 
     """
-    p_to = [to_addr for to_addr in p_to if to_addr not in DISABLED_EMAILS]
     if p_to:
         try:
             delivery.send(p_from, p_to, message.as_string())

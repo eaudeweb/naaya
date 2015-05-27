@@ -39,7 +39,6 @@ from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
 from containers import SubscriptionContainer  # Keep for backward compatibility
 from containers import AnonymousSubscription, AccountSubscription
-from constants import DISABLED_EMAIL
 
 from Products.NaayaCore.NotificationTool import utils
 
@@ -569,7 +568,7 @@ class NotificationTool(Folder):
                 if not subscription.check_permission(ob):
                     continue
                 email = subscription.get_email(ob)
-                if email in [None, DISABLED_EMAIL]:
+                if email is None:
                     continue
                 content_types = getattr(subscription, 'content_types', [])
                 if content_types and ob.meta_type not in content_types:

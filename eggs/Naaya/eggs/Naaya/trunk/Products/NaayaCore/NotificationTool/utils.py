@@ -1,7 +1,7 @@
 from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailSender import build_email
 from containers import AccountSubscription, AnonymousSubscription
-from constants import DISABLED_EMAIL
+from Products.NaayaCore.constants import DISABLED_EMAIL
 from datetime import timedelta
 from interfaces import ISubscriptionContainer
 import constants
