@@ -14,7 +14,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 # naaya.content.meeting imports
 import meeting as meeting_module
-from utils import getUserFullName, getUserEmail, getUserOrganization
+from Products.NaayaCore.AuthenticationTool.utils import (
+    getUserFullName, getUserEmail, getUserOrganization)
 
 
 class MeetingReports(SimpleItem):

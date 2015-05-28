@@ -18,8 +18,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 # meeting imports
 from naaya.content.meeting import PARTICIPANT_ROLE
 from permissions import PERMISSION_ADMIN_MEETING
-from utils import getUserFullName, getUserEmail, getUserOrganization
-from utils import getUserPhoneNumber
+from Products.NaayaCore.AuthenticationTool.utils import (
+    getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber)
 
 
 class Subscriptions(SimpleItem):
