@@ -20,7 +20,7 @@ import simplejson as json
 from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
-from utils import getUserEmail, findUsers
+from Products.NaayaCore.AuthenticationTool.utils import getUserEmail, findUsers
 from naaya.core.utils import is_valid_email
 from naaya.content.meeting import WAITING_ROLE
 from naaya.core.zope2util import path_in_site

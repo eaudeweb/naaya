@@ -174,9 +174,10 @@
                     <tbody>
                     </tbody>
                   </table>
-                  <span class="buttons"><a id="add_cc" i18n:translate=""
-                      href="javascript:addToCC()">
+                  <span class="buttons">
+                    <a id="add_cc" i18n:translate="" href="javascript:addToCC()">
                       Add to CC</a>
+                  </span>
                   <div style="display:none" id="no_users" i18n:translate="">
                     No users matched selected criteria.</div>
                 </div>
