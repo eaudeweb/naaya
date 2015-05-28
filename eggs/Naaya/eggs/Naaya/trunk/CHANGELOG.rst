@@ -1,4 +1,7 @@
-4.0.1 (unreleased)
+4.0.2 (unreleased)
+-------------------
+
+4.0.1 (2015-05-28)
 -------------------
 * moved AuthenticationTool utils from meeting [dumitval]
 
