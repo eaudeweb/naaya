@@ -1,5 +1,3 @@
-# !!!! These should be moved to auth_tool
-
 def _decode(val, encoding_schema='utf-8'):
     if val is None:
         return ''
@@ -9,11 +7,13 @@ def _decode(val, encoding_schema='utf-8'):
 
     return val.decode(encoding_schema)
 
+
 def schemaHasParam(acl_folder, param):
     for item in acl_folder.getLDAPSchema():
         if item[0] == param:
             return True
     return False
+
 
 def getUserFullName(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -29,6 +29,7 @@ def getUserFullName(site, uid):
             if user is not None:
                 return _decode(user.getProperty('cn'), source.default_encoding)
 
+
 def getUserEmail(site, uid):
     auth_tool = site.getAuthenticationTool()
     local_user = auth_tool.getUser(uid)
@@ -40,7 +41,9 @@ def getUserEmail(site, uid):
         if schemaHasParam(acl_folder, 'mail'):
             user = acl_folder.getUserById(uid, None)
             if user is not None:
-                return _decode(user.getProperty('mail'), source.default_encoding)
+                return _decode(user.getProperty('mail'),
+                               source.default_encoding)
+
 
 def getUserOrganization(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -55,6 +58,7 @@ def getUserOrganization(site, uid):
             if user is not None:
                 return _decode(user.getProperty('o'), source.default_encoding)
 
+
 def getUserPhoneNumber(site, uid):
     auth_tool = site.getAuthenticationTool()
     local_user = auth_tool.getUser(uid)
@@ -68,6 +72,7 @@ def getUserPhoneNumber(site, uid):
             if user is not None:
                 return _decode(user.getProperty('telephoneNumber'),
                                source.default_encoding)
+
 
 def findUsers(site, search_param, search_term):
     def userMatched(uid, cn):
@@ -100,12 +105,14 @@ def findUsers(site, search_param, search_term):
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
         if schemaHasParam(acl_folder, search_param):
-            users = acl_folder.findUser(search_param=search_param, search_term=search_term)
+            users = acl_folder.findUser(search_param=search_param,
+                                        search_term=search_term)
             for user in users:
                 uid = user.get('uid', '')
                 cn = _decode(user.get('cn', ''), source.default_encoding)
                 mail = user.get('mail', '')
-                organization = _decode(user.get('o', ''), source.default_encoding)
+                organization = _decode(user.get('o', ''),
+                                       source.default_encoding)
                 info = user.get('dn', '')
                 ret.append({
                     'uid': uid,
@@ -116,6 +123,7 @@ def findUsers(site, search_param, search_term):
                 })
 
     return ret
+
 
 def listUsersInGroup(site, search_role):
     auth_tool = site.getAuthenticationTool()
@@ -128,10 +136,9 @@ def listUsersInGroup(site, search_role):
             ret.append({
                 'uid': user.user_id,
                 'cn': _decode(user.full_name, source.default_encoding),
-                'organization': _decode(user.organisation, source.default_encoding),
+                'organization': _decode(user.organisation,
+                                        source.default_encoding),
                 'info': user.dn,
             })
 
     return ret
-
-
