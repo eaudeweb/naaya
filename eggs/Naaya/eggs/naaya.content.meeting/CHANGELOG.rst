@@ -1,4 +1,7 @@
-1.2.79 (unreleased)
+1.2.80 (unreleased)
+-------------------
+
+1.2.79 (2015-05-28)
 -------------------
 * user-related utils moved to Naaya Authentication Tool [dumitval]
 
