@@ -15,9 +15,9 @@ from Products.NaayaCore.managers.import_export import generate_excel
 from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
                                    ADMINISTRATOR_ROLE, OWNER_ROLE)
 from permissions import PERMISSION_ADMIN_MEETING
-from utils import (getUserFullName, getUserEmail, getUserOrganization,
-                   getUserPhoneNumber)
-from utils import findUsers, listUsersInGroup
+from Products.NaayaCore.AuthenticationTool.utils import (
+    getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber,
+    findUsers, listUsersInGroup)
 from subscriptions import Subscriptions
 from countries import country_from_country_code
 

@@ -3,12 +3,12 @@ table.meeting-registration-methods {
     margin-left: 50px;
 }
 #link_prepare {
-	width: 40%;
+	width: 50%;
 	float: right;
 	display:none;
 }
 #search_users {
-	width: 40%;
+	width: 50%;
 	float: right;
 	display:none;
 }
