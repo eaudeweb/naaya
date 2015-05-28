@@ -23,6 +23,7 @@ import os
 import sys
 import operator
 from copy import deepcopy
+import simplejson as json
 
 # Zope imports
 from Globals import InitializeClass
@@ -51,6 +52,7 @@ from constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
+from Products.NaayaCore.AuthenticationTool.utils import findUsers
 from naaya.core import submitter
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -616,6 +618,14 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     def get_files(self):
         """ Get a list of all files attached to the consultation"""
         return [ob for ob in self.objectValues('Naaya Blob File')]
+
+    security.declareProtected(view, 'findUsers')
+
+    def findUsers(self, search_param, search_term):
+        """ """
+        if len(search_term) == 0:
+            return []
+        return json.dumps(findUsers(self.getSite(), search_param, search_term))
 
     addSection = addSection
 
