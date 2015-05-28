@@ -1,4 +1,7 @@
-1.4.39 (unreleased)
+1.4.40 (unreleased)
+-------------------
+
+1.4.39 (2015-05-28)
 -------------------
 * select Eionet users to insert in email recipients [dumitval]
 
