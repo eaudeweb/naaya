@@ -126,12 +126,14 @@ class InvitationsContainer(SimpleItem):
             email_tool = self.getEmailTool()
             acl_tool = self.getAuthenticationTool()
             emails = []
-            try:
-                to = formdata['to'].strip()
-                if not to:
-                    raise FormError([('to', ValueError(
-                        'At least one recipinet is needed'))])
-                for item in to.split(','):
+            to = formdata['to']
+            message = formdata['message']
+            if not to:
+                formerrors['to'] = 'At least one recipinet is needed'
+            if not message:
+                formerrors['message'] = 'Message body is mandatory'
+            if not formerrors:
+                for item in to:
                     if '@' in item:
                         emails.append(item.strip())
                     else:
@@ -150,16 +152,9 @@ class InvitationsContainer(SimpleItem):
                                          emails=','.join(emails))
                 return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                                  '/send_email')
-            except FormError, e:
+            else:
                 self.setSessionErrorsTrans('The form contains errors. Please '
                                            'correct them and try again.')
-                formerrors = dict(e.errors)
-
-            except KeyError, e:
-                self.setSessionErrorsTrans('The form contains errors. Please '
-                                           'correct them and try again.')
-                formerrors = dict([('to', e)])
-
         else:
             formdata = dict((key, '') for key in keys)
 
