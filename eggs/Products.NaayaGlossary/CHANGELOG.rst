@@ -1,4 +1,7 @@
-1.1.14 (unreleased)
+1.1.15 (unreleased)
+------------------
+
+1.1.14 (2015-06-16)
 ------------------
 * glossary improvements for FLIS [dumitval]
 
