@@ -13,6 +13,7 @@ from utils import utils, catalog_utils
 from Products.NaayaGlossary.parsers.import_parsers import glossary_export
 from interfaces import INyGlossaryFolder
 from events import ItemTranslationChanged
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 LABEL_OBJECT = 'Glossary folder'
 
@@ -127,7 +128,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     index_html =                PageTemplateFile('zpt/NaayaGlossaryFolder/index', globals())
 
     security.declareProtected(view_management_screens, 'properties_html')
-    properties_html =    PageTemplateFile('zpt/NaayaGlossaryFolder/properties', globals())
+    properties_html =    NaayaPageTemplateFile('zpt/NaayaGlossaryFolder/properties', globals(), 'glossary_folder_properties')
 
     security.declareProtected(view_management_screens, 'export_html')
     export_html =               PageTemplateFile("zpt/NaayaGlossaryFolder/export", globals())
