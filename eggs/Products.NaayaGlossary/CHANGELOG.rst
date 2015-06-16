@@ -1,3 +1,7 @@
+1.1.14 (unreleased)
+------------------
+* glossary improvements for FLIS [dumitval]
+
 1.1.13 (2014-01-21)
 ------------------
 * Bug fix: fix export of glossary terms

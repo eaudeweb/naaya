@@ -5,6 +5,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
 from zope import interface
 from zope import event
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 # product imports
 from constants import *
@@ -214,7 +215,7 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     properties_html =       PageTemplateFile("zpt/NaayaGlossaryElement/properties", globals())
 
     view_elements_html =    PageTemplateFile("zpt/NaayaGlossaryElement/view_elements", globals())
-    index_html =            PageTemplateFile("zpt/NaayaGlossaryElement/index", globals())
+    index_html =            NaayaPageTemplateFile("zpt/NaayaGlossaryElement/index", globals(), 'glossary_element_index')
 
     #################
     #   SITE MAP    #
