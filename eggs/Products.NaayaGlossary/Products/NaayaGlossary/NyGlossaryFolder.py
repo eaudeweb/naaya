@@ -136,7 +136,8 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     #########################
     #   MANAGEMENT TABS     #
     #########################
-    index_html = PageTemplateFile('zpt/NaayaGlossaryFolder/index', globals())
+    index_html = NaayaPageTemplateFile('zpt/NaayaGlossaryFolder/index',
+                                       globals(), 'glossary_folder_index')
 
     security.declareProtected(view_management_screens, 'properties_html')
     properties_html = NaayaPageTemplateFile(
