@@ -17,8 +17,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 LABEL_OBJECT = 'Glossary folder'
 
-manage_addGlossaryFolder_html = PageTemplateFile('zpt/NaayaGlossaryFolder/add',
-                                                 globals())
+manage_addGlossaryFolder_html = NaayaPageTemplateFile(
+    'zpt/NaayaGlossaryFolder/add', globals(), 'glossary_folder_add')
 
 
 def manage_addGlossaryFolder(self, id, title='', subjects=[], source='',

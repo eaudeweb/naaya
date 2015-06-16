@@ -528,6 +528,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         for k in self.get_languages_list():
             if k['lang'] == lang_code:
                 return k['english_name']
+        return ''
 
     def set_languages_list(self, lang, english_name):
         """ set the languages """
@@ -858,7 +859,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         body_info = chandler.getBody() #return a dictionary {id: (source, target)}
         obj = mapTiny()
 
-        #import pdb; pdb.set_trace()
         for ids, translation in body_info.items():
             print "Processing", ids
             # ids is (u'voluntary-sector', u'V')
