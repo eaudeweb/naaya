@@ -27,8 +27,8 @@ class ElementBasic:
         self.contributor = contributor
 
 
-manage_addGlossaryElement_html = PageTemplateFile(
-    'zpt/NaayaGlossaryElement/add', globals())
+manage_addGlossaryElement_html = NaayaPageTemplateFile(
+    'zpt/NaayaGlossaryElement/add', globals(), 'glossary_element_add')
 
 
 def manage_addGlossaryElement(self, id='', title='', source='', subjects=[],
@@ -185,7 +185,7 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         """ save translation for a language """
         self.set_translations_list(lang_code, translation)
         if REQUEST:
-            sreturn REQUEST.RESPONSE.redirect('translations_html?tab=0')
+            return REQUEST.RESPONSE.redirect('translations_html?tab=0')
 
     #######################################
     #  DEFINITION TRANSLATIONS FUNCTIONS  #
@@ -239,8 +239,9 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         "zpt/NaayaGlossaryElement/definition_trans", globals())
 
     security.declareProtected(view_management_screens, 'properties_html')
-    properties_html = PageTemplateFile("zpt/NaayaGlossaryElement/properties",
-                                       globals())
+    properties_html = NaayaPageTemplateFile(
+        'zpt/NaayaGlossaryElement/properties', globals(),
+        'glossary_element_properties')
 
     view_elements_html = PageTemplateFile(
         "zpt/NaayaGlossaryElement/view_elements", globals())
