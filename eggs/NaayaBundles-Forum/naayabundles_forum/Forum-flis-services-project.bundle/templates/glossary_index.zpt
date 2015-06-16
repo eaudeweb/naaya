@@ -20,7 +20,7 @@
 		document.frmGlossMap.submit();
 	}
 </script>
-
+<tal:block define="editor here/getEditorTool" content="structure editor/includeLibs" />
 <style type="text/css">
 	.management_div {
 		width: 50%;
@@ -175,7 +175,8 @@
 
             <div class="field">
                 <label for="item_source" i18n:translate="">Source</label>
-                <input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
+                <tal:block define="editor here/getEditorTool" replace="structure python: editor.render('item_source', here.gl_get_selected_language(), image_support=True)" />
+                <textarea id="item_source" name="item_source:utf8:ustring" rows="5" tal:content="selected_item/source" />
             </div>
             <div class="field">
                 <label for="item_contributor" i18n:translate="">Contributor</label>
@@ -187,7 +188,7 @@
             </div>
 
             <div class="field">
-                <label for="item_source" i18n:translate="">English term</label>
+                <!--<label for="item_source" i18n:translate="">English term</label>-->
                 <tal:block repeat="language selected_item/get_english_names">
                   <tal:block condition="python:language == 'English'"
                       define="translation python:selected_item.get_translation_by_language(language)">
@@ -232,7 +233,10 @@
                   <tal:block condition="python:language == 'English'"
                       define="def_lang python:selected_item.definition_lang(language);
                               translation python:selected_item.get_translation_by_language(def_lang)">
-                        <textarea cols="55" name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                        <tal:block define="editor here/getEditorTool" replace="structure python: editor.render('item_translation', here.gl_get_selected_language(), image_support=True)" />
+                        <textarea cols="55" 
+                          id="item_translation" 
+                          name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
                         <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
                   </tal:block>
                 </tal:block>

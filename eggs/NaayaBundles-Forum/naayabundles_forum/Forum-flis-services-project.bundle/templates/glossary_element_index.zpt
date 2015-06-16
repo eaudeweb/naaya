@@ -1,0 +1,67 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block fill-slot="body">
+  <tal:block define="  selected_lang request/lang|here/getSelectedLang;
+            language python:here.get_language_by_code(selected_lang);
+            langs here/get_languages_list;
+            translation python:here.get_translation_by_language(language);
+            deftranslation python:here.get_def_trans_by_language(language)">
+
+    <h1>
+      <img src="misc_/NaayaGlossary/folder.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title; alt" />&nbsp;
+      <a tal:attributes="href here/aq_parent/absolute_url" tal:content="python:here.aq_parent.get_translation_by_language('English')" />
+    </h1>
+
+    <div style="float:right">
+      <fieldset>
+        <legend>Translations</legend>
+        <tal:block repeat="lang langs">
+          <p tal:condition="python:here.get_translation_by_language(lang['english_name'])">
+            <strong i18n:translate="" tal:content="lang/english_name"/>:
+            <a tal:attributes="href string:${here/absolute_url}?lang=${lang/lang}"
+              tal:content="python:here.get_translation_by_language(lang['english_name'])" />
+          </p>
+        </tal:block>
+      </fieldset>
+    </div>
+
+    <strong>
+      <img src="misc_/NaayaGlossary/element.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title; alt" />&nbsp;
+      <span tal:content="translation" tal:condition="translation" />
+      <span tal:condition="python:not translation">
+        <em i18n:translate="">no translation available</em>
+      </span>
+      <span tal:condition="python:language and language!='English'">
+        (<em i18n:translate="" tal:content="language" />)
+      </span>
+      <span tal:condition="python:not language">
+        (<em i18n:translate="">undefined language</em>)
+      </span>
+    </strong>
+
+    <p i18n:translate="" tal:content="structure deftranslation" tal:condition="deftranslation"/>
+
+    <tal:block condition="here/source">
+      <h3 i18n:translate="">Source</h3>
+      <p tal:content="structure here/source" />
+    </tal:block>
+
+    <tal:block tal:condition="python:not (here.is_published() or here.checkPermissionManageGlossary())">
+      <strong i18n:translate="">Sorry, this term is not published.</strong>
+    </tal:block>
+
+  </tal:block>
+</metal:block>
+</metal:block>
