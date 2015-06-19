@@ -105,7 +105,7 @@
 	<form id="glossary_mapping" name="frmGlossMap" method="get" action="">
 		<table>
 			<tr tal:repeat="tree_node tree">
-				<td tal:define="lang python:here.get_language_by_code(here.getSelectedLang());
+				<td tal:define="lang python:here.get_language_by_code(selected_lang);
 								item python:tree_node[0];
 								translation python:item.get_translation_by_language(lang);
 								translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
@@ -142,7 +142,7 @@
 									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
 								<tal:block condition="can_edit">
-									<a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">edit</a>
+									<a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">eddit</a>
 									<tal:block condition="python:item.meta_type=='Naaya Glossary Folder'">
 										<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">add</a>
 									</tal:block>
