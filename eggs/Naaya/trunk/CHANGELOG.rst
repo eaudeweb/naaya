@@ -1,5 +1,6 @@
 4.0.2 (unreleased)
 -------------------
+* changed utils sort function to check lowercase [dumitval
 
 4.0.1 (2015-05-28)
 -------------------

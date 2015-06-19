@@ -624,13 +624,16 @@ class utils:
         """ Custom getattr used for utSortObjsListByAttr """
         return getattr(obj, attr, None)
 
-    def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
+    def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1, lower=False):
         """Sort a list of objects by an attribute values"""
 
         def sort_key(obj):
             attr = getattr(obj, p_attr, None)
             if isinstance(attr, basestring):
-                return force_to_unicode(attr)
+                if lower:
+                    return force_to_unicode(attr).lower()
+                else:
+                    return force_to_unicode(attr)
             else:
                 return attr
         return sorted(p_list, key=sort_key, reverse=bool(p_desc))
