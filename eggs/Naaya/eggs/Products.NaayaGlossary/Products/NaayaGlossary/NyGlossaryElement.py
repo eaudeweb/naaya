@@ -137,7 +137,10 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     #################################
     def get_translation_by_language(self, language):
         """ get translation by language """
-        return getattr(self.aq_base, language, '')
+        try:
+            return getattr(self.aq_base, language)
+        except:
+            return ''
 
     def get_translation_by_language_for_js(self, language):
         """ get translation by language for the javascript code"""
