@@ -13,15 +13,46 @@
 </metal:block>
 
 <metal:block fill-slot="body">
+
+<style type="text/css">
+    a.button {
+        text-decoration: none;
+        background-color: #fff;
+        color: #000;
+        line-height: 2em;
+        border-left:1px solid #bbb;
+        border-top:1px solid #bbb;
+        border-bottom:1px solid #666;
+        border-right:1px solid #666;
+        padding:2px 2px;
+        font-size: 75%;
+        }
+
+    a.button:hover {
+        background: #ccc;
+        border-left:1px solid #6791c3;
+        border-top:1px solid #6791c3;
+        border-bottom:1px solid #34649b;
+        border-right:1px solid #34649b;
+    }
+</style>
+
   <tal:block define="  selected_lang request/lang|here/getSelectedLang;
             language python:here.get_language_by_code(selected_lang);
             langs here/get_languages_list;
+            parent_translation python:here.aq_parent.get_translation_by_language(language);
             translation python:here.get_translation_by_language(language);
             deftranslation python:here.get_def_trans_by_language(language)">
 
     <h1>
       <img src="misc_/NaayaGlossary/folder.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title; alt" />&nbsp;
-      <a tal:attributes="href here/aq_parent/absolute_url" tal:content="python:here.aq_parent.get_translation_by_language('English')" />
+      <a tal:attributes="href string:${here/aq_parent/absolute_url}?lang=${selected_lang}">
+        <tal:block condition="parent_translation" content="parent_translation" />
+        <em tal:condition="not:parent_translation">
+          <tal:block content="here/aq_parent/English" />
+          (<tal:block i18n:translate="">no translation available for</tal:block> <tal:block content="language" />)
+        </em>
+      </a>
     </h1>
 
     <div style="float:right">
@@ -41,14 +72,16 @@
       <img src="misc_/NaayaGlossary/element.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title; alt" />&nbsp;
       <span tal:content="translation" tal:condition="translation" />
       <span tal:condition="python:not translation">
-        <em i18n:translate="">no translation available</em>
+        <em tal:content="here/English" />
+        (<em i18n:translate="">no translation available for</em> <em tal:content="language" />)
       </span>
-      <span tal:condition="python:language and language!='English'">
+      <span tal:condition="python:translation and language and language!='English'">
         (<em i18n:translate="" tal:content="language" />)
       </span>
       <span tal:condition="python:not language">
         (<em i18n:translate="">undefined language</em>)
       </span>
+      <a class="button edit-link" tal:attributes="href string:${here/aq_parent/aq_parent/absolute_url}?item=${here/aq_parent/getId}/${here/getId}#glossary_management_div">edit</a>
     </strong>
 
     <p i18n:translate="" tal:content="structure deftranslation" tal:condition="deftranslation"/>
@@ -58,9 +91,9 @@
       <p tal:content="structure here/source" />
     </tal:block>
 
-    <tal:block tal:condition="python:not (here.is_published() or here.checkPermissionManageGlossary())">
+<!--    <tal:block tal:condition="python:not (here.is_published() or here.checkPermissionManageGlossary())">
       <strong i18n:translate="">Sorry, this term is not published.</strong>
-    </tal:block>
+    </tal:block>-->
 
   </tal:block>
 </metal:block>
