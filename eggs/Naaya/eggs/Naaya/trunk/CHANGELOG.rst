@@ -1,4 +1,7 @@
-4.0.2 (unreleased)
+4.0.3 (unreleased)
+-------------------
+
+4.0.2 (2015-06-19)
 -------------------
 * changed utils sort function to check lowercase [dumitval
 
