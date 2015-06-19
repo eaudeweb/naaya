@@ -21,6 +21,7 @@ setup(name='Products.NaayaGlossary',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'Naaya >= 4.0.2',
           'setuptools',
           'lxml',
       ],
