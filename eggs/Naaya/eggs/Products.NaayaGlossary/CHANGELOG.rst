@@ -1,5 +1,6 @@
 1.1.15 (unreleased)
 ------------------
+* allow sorting of glossary elements by title [dumitval]
 
 1.1.14 (2015-06-16)
 ------------------
