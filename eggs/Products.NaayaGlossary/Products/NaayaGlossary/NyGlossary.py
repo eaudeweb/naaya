@@ -479,7 +479,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                            item_source='', item_contributor='',
                            item_approved='', item_translation=[],
                            item_def_translation=[], item_meta_type='',
-                           item_lang_code=[], item_url='', REQUEST=None):
+                           item_lang_code=[], item_url='',
+                           further_references='', REQUEST=None):
         """ """
 
         # do folder update
@@ -507,7 +508,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             if element:
                 element.manageBasicProperties(item_title, item_source,
                                               item_subjects, item_contributor,
-                                              item_approved)
+                                              item_approved,
+                                              further_references)
                 i = 0
                 for translation in item_translation:
                     lang_code = item_lang_code[i]
