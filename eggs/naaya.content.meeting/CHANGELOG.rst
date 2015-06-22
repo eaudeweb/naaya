@@ -3,7 +3,7 @@
 
 1.2.80-test (2015-06-10)
 -------------------
-* introduced several meeting types + their standard surveys [dumitval]
+* `update` introduced several meeting types + their standard surveys [dumitval]
 
 1.2.79 (2015-05-28)
 -------------------
