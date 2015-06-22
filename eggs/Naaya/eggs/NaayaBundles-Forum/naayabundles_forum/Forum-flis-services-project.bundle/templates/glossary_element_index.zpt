@@ -91,6 +91,11 @@
       <p tal:content="structure here/source" />
     </tal:block>
 
+    <tal:block condition="here/further_references|nothing">
+      <h3 i18n:translate="">Further references</h3>
+      <p tal:content="structure here/further_references" />
+    </tal:block>
+
 <!--    <tal:block tal:condition="python:not (here.is_published() or here.checkPermissionManageGlossary())">
       <strong i18n:translate="">Sorry, this term is not published.</strong>
     </tal:block>-->

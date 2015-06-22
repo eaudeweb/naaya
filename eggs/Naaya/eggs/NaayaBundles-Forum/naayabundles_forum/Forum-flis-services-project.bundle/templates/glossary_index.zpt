@@ -228,17 +228,15 @@
             </div>
 
             <div class="field">
-                <label for="item_source" i18n:translate="">English definition</label>
-                <tal:block repeat="language selected_item/get_english_names">
-                  <tal:block condition="python:language == 'English'"
-                      define="def_lang python:selected_item.definition_lang(language);
-                              translation python:selected_item.get_translation_by_language(def_lang)">
-                        <tal:block define="editor here/getEditorTool" replace="structure python: editor.render('item_translation', here.gl_get_selected_language(), image_support=True)" />
-                        <textarea cols="55" 
-                          id="item_translation" 
-                          name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
-                        <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
-                  </tal:block>
+                <label for="item_translation" i18n:translate="">English definition</label>
+                <tal:block
+                  define="def_lang python:selected_item.definition_lang('English');
+                          translation python:selected_item.get_translation_by_language(def_lang)">
+                  <tal:block define="editor here/getEditorTool" replace="structure python: editor.render('item_translation', here.gl_get_selected_language(), image_support=True)" />
+                  <textarea cols="55" 
+                    id="item_translation" 
+                    name="item_translation" tal:content="translation" ></textarea>
+                  <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
                 </tal:block>
             </div>
 
@@ -270,8 +268,19 @@
                 </tal:block>
             </table>
             </div>
+
+            <div class="field">
+              <label for="further_references" i18n:translate="">Further references</label>
+              <tal:block define="editor here/getEditorTool" replace="structure python: editor.render('further_references', here.gl_get_selected_language(), image_support=True)" />
+              <textarea cols="55" 
+                id="further_references" 
+                name="further_references" tal:content="selected_item/further_references|nothing" ></textarea>
+            </div>
+
             <input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
+
             <input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
+
             <div class="field">
                 <input type="submit" value="update" />
             </div>
