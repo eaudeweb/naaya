@@ -92,4 +92,4 @@ PREFIX_SUFIX_REFTREE = 'rt%s'
 PREFIX_SUFIX_LINKSLIST = 'll%s'
 PREFIX_SUFIX_CHANNELAGGREGATOR = 'ca%s_rdf'
 
-DISABLED_EMAIL = 'disabled@eionet.europa.eu'
+DISABLED_EMAIL = u'disabled@eionet.europa.eu'
