@@ -1,3 +1,6 @@
+4.0.4 (unreleased)
+-------------------
+
 4.0.3 (2015-06-22)
 -------------------
 * Bug fix: set as unicode disabled email address, needed by AuthenticationTool
