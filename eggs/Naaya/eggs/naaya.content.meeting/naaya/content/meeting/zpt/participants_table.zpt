@@ -50,8 +50,8 @@
   })
 
   function show_hide(){
-    var is_eionet_meeting = ($('#is_eionet_meeting').val() == 'True');
-    if (is_eionet_meeting){
+    var eionet_meeting = ($('#eionet_meeting').val() == 'True');
+    if (eionet_meeting){
       if ($('input[name="uids:list"]:checked').length == 0){
         if($('#is_meeting_admin').val() == 1){
           $('input[name="save_changes"]').hide();
@@ -125,8 +125,8 @@
 
 <input type="hidden" tal:attributes="value here/checkPermissionAdminMeeting"
     id="is_meeting_admin" />
-<input type="hidden" tal:attributes="value here/is_eionet_meeting"
-    id="is_eionet_meeting" />
+<input type="hidden" tal:attributes="value here/in_eionet"
+    id="eionet_meeting" />
 <table class="datatable" width="95%" tal:define="
         meeting here/getMeeting;
         meeting_admin here/checkPermissionAdminMeeting;
@@ -150,7 +150,7 @@
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=o"
                  i18n:translate="">Organization</a>
         </th>
-        <tal:block condition="here/is_eionet_meeting">
+        <tal:block condition="here/in_eionet">
           <th>
               <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=country"
                    i18n:translate="">Represented country</a>
@@ -198,7 +198,7 @@
                         organization python:organization.replace('_', ' ')">
             <span tal:condition="organization" tal:replace="organization"/>
         </td>
-        <tal:block condition="here/is_eionet_meeting"
+        <tal:block condition="here/in_eionet"
           define="country_code user_info/country|nothing;
                   country_name python:here.get_country(country_code)">
           <td tal:condition="not:meeting_admin">

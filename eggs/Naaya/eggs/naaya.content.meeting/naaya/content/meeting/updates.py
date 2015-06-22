@@ -1,4 +1,5 @@
 import re
+import os
 from datetime import datetime
 
 from AccessControl.Permission import Permission
@@ -390,4 +391,96 @@ class UpdateViewPermission(UpdateScript):
                     view_perm.setRoles(roles)
                     self.log.info("View Permission set for %s on %s" %
                                   (role, meeting.absolute_url()))
+        return True
+
+
+class UpdateMeetingTypes(UpdateScript):
+    """ Set the new meeting types (NFP and NRC meetings) """
+    title = 'Set the new meeting types (NFP and NRC meetings)'
+    creation_date = 'May 29, 2015'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['HIGH']
+    description = ('Set the new meeting types (NFP and NRC meetings)')
+
+    def _update(self, portal):
+        # Update meeting types in map symbols
+        if not portal.is_pluggable_item_installed('Naaya Meeting'):
+            self.log.debug('Meeting not installed')
+            return True
+
+        NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
+        eionet = NETWORK_NAME.lower() == 'eionet'
+        portal_map = portal.getGeoMapTool()
+        if portal_map is not None:
+            if eionet:
+                new_map_symbols = [('conference.png', 'Conference', 10),
+                                   ('nrc_meeting.png', 'NRC meeting', 20),
+                                   ('nrc_webinar.png', 'NRC webinar', 30),
+                                   ('nfp_meeting.png', 'NFP meeting', 40),
+                                   ('nfp_webinar.png', 'NFP webinar', 50),
+                                   ('workshop.png', 'Workshop', 60)]
+            else:
+                new_map_symbols = [('conference.png', 'Conference', 10),
+                                   ('workshop.png', 'Workshop', 60)]
+            for i in range(len(new_map_symbols)):
+                new_map_symbols[i] = (os.path.join(os.path.dirname(__file__),
+                                                   'www', 'map_symbols',
+                                                   new_map_symbols[i][0]),
+                                      new_map_symbols[i][1],
+                                      new_map_symbols[i][2])
+
+            map_symbols = portal_map.getSymbolsListOrdered()
+            new_map_symbols_titles = [s[1] for s in new_map_symbols]
+            new_map_symbols_titles.append('Meeting')
+            symbols_to_delete = [sym.id for sym in map_symbols if sym.title in
+                                 new_map_symbols_titles]
+            symbol_titles = [portal_map.getSymbolTitle(symbol) for symbol in
+                             symbols_to_delete]
+            portal_map.adminDeleteSymbols(symbols_to_delete)
+            self.log.debug('Deleted old symbols for %s' % symbol_titles)
+
+            for filename, symbol_name, sortorder in new_map_symbols:
+                file = open(filename, 'r')
+                symbol = file.read()
+                file.close()
+
+                portal_map.adminAddSymbol(title=symbol_name, picture=symbol,
+                                          sortorder=sortorder,
+                                          id=filename.replace('.png', ''))
+            symbol_titles = [new_symbol[1] for new_symbol in new_map_symbols]
+            self.log.debug('Added symbols for %s' % symbol_titles)
+
+        # set meeting type based on the former eionet_meeting flag
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            if not getattr(meeting, 'added_nrc_meeting_type', None):
+                is_eionet_meeting = getattr(meeting, 'is_eionet_meeting', None)
+                if is_eionet_meeting:
+                    meeting.geo_type = os.path.join(
+                        os.path.dirname(__file__), 'www', 'map_symbols',
+                        'nrc_meeting')
+                    self.log.debug('Meeting %s changed to NRC meeting' %
+                                   meeting.absolute_url())
+                else:
+                    meeting.geo_type = os.path.join(
+                        os.path.dirname(__file__), 'www', 'map_symbols',
+                        'conference')
+                    self.log.debug('Meeting %s changed to conference' %
+                                   meeting.absolute_url())
+                meeting.added_nrc_meeting_type = True
+                if is_eionet_meeting is not None:
+                    delattr(meeting, 'is_eionet_meeting')
+
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype('Naaya Meeting')
+        crt_widgets = schema.objectIds()
+        widget_id = widgetid_from_propname('is_eionet_meeting')
+        if widget_id in crt_widgets:
+            schema.manage_delObjects(widget_id)
+            self.log.debug(('Naaya Meeting schema changes: '
+                            'removed the "Eionet Meeting" widget'))
+        else:
+            self.log.debug(
+                'is_eionet_meeting-property not present in Meeting schema')
+
         return True
