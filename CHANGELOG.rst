@@ -1,4 +1,7 @@
-1.2.80-test (unreleased)
+1.2.80 (unreleased)
+-------------------
+
+1.2.80-test (2015-06-10)
 -------------------
 * introduced several meeting types + their standard surveys [dumitval]
 
