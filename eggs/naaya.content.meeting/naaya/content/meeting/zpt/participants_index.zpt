@@ -238,7 +238,7 @@
             <input tal:condition="meeting/checkPermissionAdminMeeting"
               type="submit" name="resend_emails" i18n:attributes="value"
               value="Resend acceptance email"/>
-            <tal:block condition="here/is_eionet_meeting">
+            <tal:block condition="here/in_eionet">
               <input tal:condition="nfp_country_code" type="submit"
                 name="set_representative" i18n:attributes="value"
                 tal:attributes="value string:Set as representative for ${nfp_country}"/>

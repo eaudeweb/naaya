@@ -104,17 +104,17 @@
             <tal:block content="structure python: here.prop_display_tr('releasedate')" />
             <metal:block use-macro="site_object_index/macros/contributor_tr" />
             <tal:block content="structure python: here.prop_display_tr('coverage')" />
-			<tal:block condition="here/is_geo_enabled">
-				<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
-				picture python:portal_map.getSymbolPicture(here.geo_type)"
-					tal:condition="python: title != '' and here.geo_location">
-						<th i18n:translate="Type (translate as a noun)">Type</th>
-						<td>
-					<img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
-					<span tal:replace="title" />
-						</td>
-				</tr>
-			</tal:block>
+            <tal:block condition="here/is_geo_enabled">
+              <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+              picture python:portal_map.getSymbolPicture(here.geo_type)"
+                tal:condition="python: title != '' and here.geo_location">
+                  <th i18n:translate="Type (translate as a noun)">Type</th>
+                  <td>
+                <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
+                <span tal:replace="title" />
+                  </td>
+              </tr>
+            </tal:block>
 
             <tal:block content="structure python: here.prop_display_tr('keywords')" />
 

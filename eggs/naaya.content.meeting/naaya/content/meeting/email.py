@@ -148,7 +148,7 @@ class EmailSender(SimpleItem):
                           subscriptions._is_signup(uid)]
         to_emails = signup_emails + account_emails
 
-        if (self.is_eionet_meeting and
+        if (self.eionet_meeting() and
                 'eionet-nfp@roles.eea.eionet.europa.eu' not in cc_emails):
             cc_emails.append('eionet-nfp@roles.eea.eionet.europa.eu')
             # TODO validate cc_emails
