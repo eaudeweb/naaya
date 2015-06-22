@@ -658,7 +658,7 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
     def extract(name):
         if name == 'mail':
             if getattr(zope_user, 'employeeType', None) == 'disabled':
-                return 'disabled@eionet.europa.eu'
+                return u'disabled@eionet.europa.eu'
 
         value = getattr(zope_user, name, '')
         if value is None:
@@ -697,7 +697,7 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         if name == 'mail':
             is_disabled = cached_record.get('employeeType') == 'disabled'
             if is_disabled:
-                return 'disabled@eionet.europa.eu'
+                return u'disabled@eionet.europa.eu'
 
         value = cached_record.get(name, u'')
         if isinstance(value, list):

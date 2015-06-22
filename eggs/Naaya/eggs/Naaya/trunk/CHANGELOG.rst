@@ -1,5 +1,7 @@
-4.0.3 (unreleased)
+4.0.3 (2015-06-22)
 -------------------
+* Bug fix: set as unicode disabled email address, needed by AuthenticationTool
+  [tiberich #26781]
 
 4.0.2 (2015-06-19)
 -------------------
