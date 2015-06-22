@@ -1,5 +1,6 @@
 1.1.16 (unreleased)
 ------------------
+* added further_references attribute [dumitval]
 
 1.1.15 (2015-06-19)
 ------------------

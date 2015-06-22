@@ -81,13 +81,15 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
                               'manageBasicProperties')
 
     def manageBasicProperties(self, title='', source='', subjects=[],
-                              contributor='', approved=0, REQUEST=None):
+                              contributor='', approved=0,
+                              further_references='', REQUEST=None):
         """ manage basic properties for NyGlossaryElement """
         self.title = title
         self.source = source
         self.subjects = self.get_subject_by_codes(subjects)
         self.contributor = contributor
         self.approved = approved
+        self.further_references = further_references
         self._p_changed = 1
         self.cu_recatalog_object(self)
         if REQUEST:
