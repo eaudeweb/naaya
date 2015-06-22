@@ -68,6 +68,7 @@ from lxml import etree
 from lxml.builder import ElementMaker
 
 from countries import country_from_country_code
+from eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
 
 # module constants
 NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
@@ -95,10 +96,6 @@ DEFAULT_SCHEMA = {
                                  label='Contact person'),
     'contact_email':        dict(sortorder=160, widget_type='String',
                                  label='Contact email', required=True),
-    'is_eionet_meeting':    dict(sortorder=220, widget_type='Checkbox',
-                                 label='This is an EIONET meeting',
-                                 data_type='bool',
-                                 visible=NETWORK_NAME.lower() == 'eionet'),
     'survey_pointer':       dict(sortorder=230, widget_type='Pointer',
                                  label='Link to the Meeting Survey',
                                  relative=True),
@@ -187,12 +184,16 @@ def meeting_on_install(site):
     # add new map symbols for the meeting
     portal_map = site.getGeoMapTool()
     if portal_map is not None:
-        new_map_symbols = [('conference.png', 'Conference', 10),
-                           ('nrc_meeting.png', 'NRC meeting', 20),
-                           ('nrc_webinar.png', 'NRC webinar', 30),
-                           ('nfp_meeting.png', 'NFP meeting', 40),
-                           ('nfp_webinar.png', 'NFP webinar', 50),
-                           ('workshop.png', 'Workshop', 60)]
+        if NETWORK_NAME.lower() == 'eionet':
+            new_map_symbols = [('conference.png', 'Conference', 10),
+                               ('nrc_meeting.png', 'NRC meeting', 20),
+                               ('nrc_webinar.png', 'NRC webinar', 30),
+                               ('nfp_meeting.png', 'NFP meeting', 40),
+                               ('nfp_webinar.png', 'NFP webinar', 50),
+                               ('workshop.png', 'Workshop', 60)]
+        else:
+            new_map_symbols = [('conference.png', 'Conference', 10),
+                               ('workshop.png', 'Workshop', 20)]
         for i in range(len(new_map_symbols)):
             new_map_symbols[i] = (os.path.join(os.path.dirname(__file__),
                                                'www', 'map_symbols',
@@ -211,7 +212,8 @@ def meeting_on_install(site):
             file.close()
 
             portal_map.adminAddSymbol(title=symbol_name, picture=symbol,
-                                      sortorder=sortorder)
+                                      sortorder=sortorder,
+                                      id=filename.replace('.png', ''))
 
     configureEmailNotifications(site)
 
@@ -280,10 +282,12 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
                                       self.absolute_url())
             return
 
-    if schema_raw_data.get('is_eionet_meeting'):
+    portal_map = self.getGeoMapTool()
+    meeting_type = portal_map.getSymbolTitle(schema_raw_data.get('geo_type'))
+    if ob.eionet_meeting(survey=True):
         survey_ids = [survey.getId() for survey in
                       ob.objectValues('Naaya Mega Survey')]
-        if EIONET_SURVEY_ID not in survey_ids:
+        if EIONET_SURVEYS[meeting_type]['id'] not in survey_ids:
             _create_eionet_survey(ob)
     if self.checkPermissionSkipApproval():
         approved, approved_by = (1,
@@ -371,7 +375,6 @@ class NyMeeting(NyContentData, NyFolder):
     survey_icon = 'misc_/NaayaContent/survey.gif'
 
     default_form_id = 'meeting_index'
-    is_eionet_meeting = False
 
     manage_options = NyFolder.manage_options
 
@@ -388,7 +391,6 @@ class NyMeeting(NyContentData, NyFolder):
         self.survey_required = False
         self.allow_register = True
         self.restrict_items = True
-        self.is_eionet_meeting = False
 
     security.declareProtected(view, 'getParticipants')
 
@@ -498,7 +500,7 @@ class NyMeeting(NyContentData, NyFolder):
     def meeting_submitted_form(self, REQUEST_form, _lang=None,
                                _all_values=True, _override_releasedate=None):
         """
-        this shoule be used for the meeting instead of process_submitted_form
+        this should be used for the meeting instead of process_submitted_form
         """
         form_errors = super(NyMeeting, self).process_submitted_form(
             REQUEST_form, _lang, _all_values, _override_releasedate)
@@ -587,10 +589,12 @@ class NyMeeting(NyContentData, NyFolder):
             self._p_changed = 1
             self.recatalogNyObject(self)
             # log date
-            if schema_raw_data.get('is_eionet_meeting'):
+            if self.eionet_meeting(survey=True):
+                portal_map = self.getGeoMapTool()
+                meeting_type = portal_map.getSymbolTitle(self.geo_type)
                 survey_ids = [survey.getId() for survey in
                               self.objectValues('Naaya Mega Survey')]
-                if EIONET_SURVEY_ID not in survey_ids:
+                if EIONET_SURVEYS[meeting_type]['id'] not in survey_ids:
                     _create_eionet_survey(self)
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
@@ -786,8 +790,8 @@ class NyMeeting(NyContentData, NyFolder):
 
     def nfp_for_country(self):
         """ """
-        # if we are not in an Eionet meeting, NFP don't get special treatment
-        if not self.is_eionet_meeting:
+        # if we are not in the Eionet network, NFPs don't get special treatment
+        if not self.in_eionet():
             return ''
         auth_tool = self.getAuthenticationTool()
         user_id = self.REQUEST.AUTHENTICATED_USER.getId()
@@ -868,6 +872,31 @@ class NyMeeting(NyContentData, NyFolder):
                     }
                 return json.dumps(signup_details)
 
+    security.declarePublic('in_eionet')
+
+    def in_eionet(self):
+        """ Return if the meeting is part of the Eionet network"""
+        return NETWORK_NAME.lower() == 'eionet'
+
+    security.declarePublic('eionet_meeting')
+
+    def eionet_meeting(self, survey=False):
+        """ Check if the meeting is part of the so calles 'Eionet meetings'
+        and if it should have an automatic survey"""
+        if not self.in_eionet():
+            return False
+        portal_map = self.getGeoMapTool()
+        meeting_type = portal_map.getSymbolTitle(self.geo_type)
+        # if survey parameter is true, we want to know if this meeting
+        # type requires an automatic survey
+        if survey:
+            if meeting_type in EIONET_SURVEYS:
+                return True
+        else:
+            if meeting_type in EIONET_MEETINGS:
+                return True
+        return False
+
 InitializeClass(NyMeeting)
 
 manage_addNyMeeting_html = PageTemplateFile('zpt/meeting_manage_add',
@@ -897,17 +926,18 @@ config.update({
 def get_config():
     return config
 
-from eionet_survey.eionet_survey import (EIONET_SURVEY_ID, EIONET_SURVEY_TITLE,
-                                         EIONET_SURVEY_QUESTIONS)
-
 
 def _create_eionet_survey(container):
-    manage_addMegaSurvey(container, EIONET_SURVEY_ID, EIONET_SURVEY_TITLE)
-    eionet_survey = container._getOb(EIONET_SURVEY_ID)
+    portal_map = container.getGeoMapTool()
+    meeting_type = portal_map.getSymbolTitle(container.geo_type)
+    survey_details = EIONET_SURVEYS[meeting_type]
+    manage_addMegaSurvey(container, survey_details['id'],
+                         survey_details['title'])
+    eionet_survey = container._getOb(survey_details['id'])
     eionet_survey.meeting_eionet_survey = True
     eionet_survey.allow_anonymous = 1
     eionet_survey._p_changed = True
-    for question in EIONET_SURVEY_QUESTIONS:
+    for question in survey_details['questions']:
         eionet_survey.addWidget(**question)
     for widget in eionet_survey.objectValues():
         widget.locked = True
