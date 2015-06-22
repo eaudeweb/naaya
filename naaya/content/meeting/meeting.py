@@ -187,13 +187,12 @@ def meeting_on_install(site):
     # add new map symbols for the meeting
     portal_map = site.getGeoMapTool()
     if portal_map is not None:
-        new_map_symbols = [('eionet_meeting.png', 'Eionet meeting', 10),
+        new_map_symbols = [('conference.png', 'Conference', 10),
                            ('nrc_meeting.png', 'NRC meeting', 20),
                            ('nrc_webinar.png', 'NRC webinar', 30),
                            ('nfp_meeting.png', 'NFP meeting', 40),
-                           ('meeting.png', 'Meeting', 100),
-                           ('conference.png', 'Conference', 110),
-                           ('workshop.png', 'Workshop', 120)]
+                           ('nfp_webinar.png', 'NFP webinar', 50),
+                           ('workshop.png', 'Workshop', 60)]
         for i in range(len(new_map_symbols)):
             new_map_symbols[i] = (os.path.join(os.path.dirname(__file__),
                                                'www', 'map_symbols',
