@@ -133,6 +133,7 @@
     </script>
 
     <tal:block tal:define="meeting here/getMeeting;
+                           eionet_meeting here/in_eionet;
                            meeting_admin here/checkPermissionAdminMeeting">
       <h1>
           <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
@@ -171,7 +172,7 @@
                       <th i18n:translate="">Name</th>
                       <th class="hide_on_edit" i18n:translate="">Email</th>
                       <th i18n:translate="">Organization</th>
-                      <tal:block condition="here/is_eionet_meeting">
+                      <tal:block condition="eionet_meeting">
                         <th i18n:translate="">Represented country</th>
                         <th i18n:translate="">Reimbursed participation</th>
                         <th class="explanation" style="display:none" i18n:translate=""
@@ -206,7 +207,7 @@
                       <td tal:define="organization subscription/organization|string:"
                         tal:content="python:(organization or '').replace('_', ' ')"/>
 
-                      <tal:block condition="here/is_eionet_meeting"
+                      <tal:block condition="eionet_meeting"
                         define="country_code subscription/country|nothing;
                                 country_name python:here.get_country(country_code);
                                 saved_by subscription/saved_by|nothing;
@@ -323,7 +324,7 @@
               <input type="submit" i18n:attributes="value" name="delete"
                 tal:condition="here/checkPermissionAdminMeeting"
                 value="Reject and delete subscription(s)"/>
-              <tal:block condition="here/is_eionet_meeting">
+              <tal:block condition="eionet_meeting">
                 <input tal:condition="nfp_country_code" type="submit"
                   name="set_representative" i18n:attributes="value"
                   tal:attributes="value string:Set representative for ${nfp_country}"/>
