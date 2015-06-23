@@ -1,5 +1,6 @@
 4.0.4 (unreleased)
 -------------------
+* bugfix in findUsers [dumitval]
 
 4.0.3 (2015-06-22)
 -------------------
