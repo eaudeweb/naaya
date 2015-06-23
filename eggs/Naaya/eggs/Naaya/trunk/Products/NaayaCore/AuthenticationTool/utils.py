@@ -105,8 +105,9 @@ def findUsers(site, search_param, search_term):
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
         if schemaHasParam(acl_folder, search_param):
-            users = acl_folder.findUser(search_param=search_param,
-                                        search_term=search_term)
+            users = acl_folder.findUser(
+                search_param=search_param,
+                search_term=search_term.encode('utf-8'))
             for user in users:
                 uid = user.get('uid', '')
                 cn = _decode(user.get('cn', ''), source.default_encoding)
