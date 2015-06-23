@@ -81,7 +81,7 @@ def findUsers(site, search_param, search_term):
         if search_param == 'uid':
             return search_term in uid
         elif search_param == 'cn':
-            return search_term.encode('utf-8') in cn
+            return search_term.encode('utf-8') in cn.encode('utf-8')
         else:
             return False
 
