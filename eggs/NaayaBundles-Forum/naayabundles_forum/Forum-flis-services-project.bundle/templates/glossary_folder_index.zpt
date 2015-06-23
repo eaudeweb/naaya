@@ -77,7 +77,7 @@
       tal:define="obj_list python:here.get_objects_sorted(selected_lang)">
     <!-- Elements display -->
     <tal:block repeat="item obj_list">
-    <tr tal:condition="python:item.get_translation_by_language(language) or here.checkPermissionManageGlossary()">
+    <tr>
       <td width="15" align="left" valign="top"><img src="misc_/NaayaGlossary/element.gif" alt="Glossary element" title="Glossary element" i18n:attributes="title alt"></td>
       <td width="707" tal:define="elem_trans python:item.get_translation_by_language(language);
                 def_trans python:item.get_def_trans_by_language(language)">
@@ -91,7 +91,7 @@
             tal:content="item/English"/></em>
           (<em i18n:translate="">no translation available for</em> <em tal:content="language" />)
         </tal:block>
-        <a class="button edit-link" tal:attributes="href string:${here/aq_parent/absolute_url}?item=${here/getId}/${item/getId}#glossary_management_div">edit</a>
+        <a tal:condition="here/checkPermissionManageGlossary" class="button edit-link" tal:attributes="href string:${here/aq_parent/absolute_url}?item=${here/getId}/${item/getId}#glossary_management_div">edit</a>
       </td>
     </tr>
     </tal:block>
