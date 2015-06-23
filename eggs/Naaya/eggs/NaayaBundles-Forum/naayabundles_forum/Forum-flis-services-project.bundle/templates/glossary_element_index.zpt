@@ -81,7 +81,7 @@
       <span tal:condition="python:not language">
         (<em i18n:translate="">undefined language</em>)
       </span>
-      <a class="button edit-link" tal:attributes="href string:${here/aq_parent/aq_parent/absolute_url}?item=${here/aq_parent/getId}/${here/getId}#glossary_management_div">edit</a>
+      <a tal:condition="here/checkPermissionManageGlossary" class="button edit-link" tal:attributes="href string:${here/aq_parent/aq_parent/absolute_url}?item=${here/aq_parent/getId}/${here/getId}#glossary_management_div">edit</a>
     </strong>
 
     <p i18n:translate="" tal:content="structure deftranslation" tal:condition="deftranslation"/>
