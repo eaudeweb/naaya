@@ -132,6 +132,8 @@ class InvitationsContainer(SimpleItem):
             message = formdata['message']
             if not to:
                 formerrors['to'] = 'At least one recipinet is needed'
+            if not formdata['subject']:
+                formerrors['subject'] = 'Email subject is mandatory'
             if not message:
                 formerrors['message'] = 'Message body is mandatory'
             if not formerrors:

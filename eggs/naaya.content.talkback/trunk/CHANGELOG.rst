@@ -1,5 +1,6 @@
 1.4.41 (unreleased)
 -------------------
+* make email subject mandatory (needed for email archive listing) [dumitval]
 
 1.4.40 (2015-06-25)
 -------------------
