@@ -1,4 +1,7 @@
-4.0.5 (unreleased)
+4.0.6 (unreleased)
+-------------------
+
+4.0.5 (2015-06-25)
 -------------------
 * bugfix in excel encoding processing [dumitval]
 
