@@ -1,4 +1,7 @@
-1.4.41 (unreleased)
+1.4.42 (unreleased)
+-------------------
+
+1.4.41 (2015-06-25)
 -------------------
 * make email subject mandatory (needed for email archive listing) [dumitval]
 
