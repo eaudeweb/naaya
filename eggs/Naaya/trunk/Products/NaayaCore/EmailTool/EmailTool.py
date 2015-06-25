@@ -580,7 +580,7 @@ def _prepare_xcel_data(email, site, check_status):
         elif isinstance(v, datetime):
             email[k] = g_utils.utShowFullDateTime(v)
         else:
-            email[k] = unicode(v)
+            email[k] = v.decode('utf-8')
         # xcel limit for cell content
         if len(email[k]) > _max_cell:
             email[k] = email[k][:_max_cell]
