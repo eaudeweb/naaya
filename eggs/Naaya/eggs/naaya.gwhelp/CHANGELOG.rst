@@ -1,4 +1,7 @@
-1.0.5 (unreleased)
+1.0.6 (unreleased)
+-------------------
+
+1.0.5 (2015-06-25)
 -------------------
 * corrected link to user management [dumitval]
 
