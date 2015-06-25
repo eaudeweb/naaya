@@ -3,7 +3,7 @@
 
 <script>
         $(function(){
-          $('#search_users').show();
+          $('.search_users').show();
           $(window).keydown(function(event){
             if(event.keyCode == 13 && event.target.nodeName != 'TEXTAREA') {
               event.preventDefault();
@@ -11,25 +11,32 @@
             }
           });
         });
-        function findUsers(){
-          $('#add_to_span').hide();
-          var search_param = $('#search_param').val();
-          var search_term = $('#search_term').val();
-          var results_tbody = $('#results_table tbody');
+        function findUsers(recp_type){
+          $('#span_add_'+recp_type).hide();
+          var search_param = $('#search_param_'+recp_type).val();
+          var search_term = $('#search_term_'+recp_type).val();
+          var results_tbody = $('#results_table_'+recp_type+' tbody');
+          if (recp_type == 'to'){
+            $('#results_table_cc').hide();
+          }
+          else {
+            $('#results_table_to').hide();
+          }
           results_tbody.empty();
+          $('#no_users_'+recp_type).hide();
           $.get('findUsers',
                 {'search_param': search_param,
                  'search_term': search_term},
                 function(data){
                   if (data.length == 0){
-                    $('#results_table').hide();
-                    $('#no_users').show();
+                    $('#results_table_'+recp_type).hide();
+                    $('#no_users_'+recp_type).show();
                   }
                   else{
-                    var current_rows = $('#to').attr('rows');
-                    $('#to').attr('rows', data.length + +current_rows);
-                    $('#results_table').show();
-                    $('#add_to_span').show();
+                    var current_rows = $('#'+recp_type).attr('rows');
+                    $('#'+recp_type).attr('rows', data.length + +current_rows);
+                    $('#results_table_'+recp_type).show();
+                    $('#span_add_'+recp_type).show();
                     $.each(data, function(idx, user){
                       if (user['mail'] != 'disabled@eionet.europa.eu'){
                         results_tbody.append(
@@ -37,7 +44,7 @@
                           $('<td>').append(
                             $('<input>').attr(
                               {'type': 'checkbox',
-                               'name': 'emails:list',
+                               'name': recp_type+'_emails:list',
                                'value': user['mail']}))).append(
                           $('<td>').text(user['cn'])).append(
                           $('<td>').text(user['uid'])).append(
@@ -50,21 +57,21 @@
           )
         }
 
-        function toggleSelect2(checkbox, name) {
-            $('input[name="emails:list"]').each(function(idx){
+        function toggleSelect2(checkbox, name, recp_type) {
+            $('input[name="'+recp_type+'_emails:list"]').each(function(idx){
                   this.checked = checkbox.checked;
             });
         }
 
-        function addToRecipients() {
-            var selected_emails = $('input[name="emails:list"]:checked');
+        function addToRecipients(recp_type) {
+            var selected_emails = $('input[name="'+recp_type+'_emails:list"]:checked');
             selected_emails.each(function(idx, email){
-              var to_emails = $('#to').val();
+              var emails = $('#'+recp_type).val();
               var sep = '\n'
-              if (to_emails.length == 0){
+              if (emails.length == 0){
                 sep = ''
               }
-              $('#to').val(to_emails + sep + $(this).val());
+              $('#'+recp_type).val(emails + sep + $(this).val());
             });
         }
 </script>
@@ -104,13 +111,13 @@
     <div class="field">
         <label for="to" i18n:translate="">
           To:</label>
-        <div id="search_users" tal:define="
-            search_param python:request.get('search_param', '');
-            search_term python:request.get('search_term', '');
+        <div class="search_users" tal:define="
+            search_param python:request.get('search_param_to', '');
+            search_term python:request.get('search_term_to', '');
             ">
           <span i18n:translate="">Use this form to find EIONET LDAP or local users and add them to the email's recipients.</span>
-          <label for="search_param" i18n:translate="">Search for</label>
-          <select id="search_param" name="search_param">
+          <label for="search_param_to" i18n:translate="">Search for</label>
+          <select id="search_param_to" name="search_param_to">
               <option value="cn"
                   tal:attributes="selected python:search_param=='cn'"
                   i18n:translate="">Name
@@ -129,21 +136,21 @@
               </option>
           </select>
 
-          <label for="search_term" i18n:translate="">containing</label>
-          <input type="text" id="search_term" name="search_term:utf8:ustring"
+          <label for="search_term_to" i18n:translate="">containing</label>
+          <input type="text" id="search_term_to" name="search_term_to:utf8:ustring"
                  tal:attributes="value search_term"/>
 
-          <span class="buttons"><a id="search_user" i18n:translate=""
-              href="javascript:findUsers()">
+          <span class="buttons"><a id="search_user_to" i18n:translate=""
+              href="javascript:findUsers('to')">
               Search</a></span>
 
-          <table id="results_table" name="results_table"
+          <table id="results_table_to" name="results_table_to"
             class="datatable" width="95%" style="display:none">
             <thead>
               <tr>
                 <th width="30px">
                     <span i18n:translate="">Select</span>
-                    <input type="checkbox" onclick="javascript:toggleSelect2(this, 'results_table', 'emails:list')"/>
+                    <input type="checkbox" onclick="javascript:toggleSelect2(this, 'results_table_to', 'to_emails:list')"/>
                 </th>
                 <th i18n:translate="">User name</th>
                 <th i18n:translate="">User ID</th>
@@ -153,11 +160,11 @@
             <tbody>
             </tbody>
           </table>
-          <span id="add_to_span" class="buttons" style="display:none">
-            <a id="add_to" i18n:translate="" href="javascript:addToRecipients()">
+          <span id="span_add_to" class="buttons" style="display:none">
+            <a id="add_to" i18n:translate="" href="javascript:addToRecipients('to')">
                   Add to recipients</a>
           </span>
-          <div style="display:none" id="no_users" i18n:translate="">
+          <div style="display:none" id="no_users_to" i18n:translate="">
               No users matched selected criteria.</div>
         </div>
         <em i18n:translate="">
@@ -166,6 +173,73 @@
         <p class="form-errors" tal:define="err errors/to|nothing"
           tal:condition="err" tal:content="err" />
         <textarea name="to:lines" id="to" rows="5" cols="50" ></textarea>
+    </div>
+    <div class="clearer"></div>
+    <div class="field">
+        <label for="cc" i18n:translate="">
+          Cc:</label>
+        <div class="search_users" tal:define="
+            search_param python:request.get('search_param_cc', '');
+            search_term python:request.get('search_term_cc', '');
+            ">
+          <span i18n:translate="">Use this form to find EIONET LDAP or local users and add them to the email's CC recipients.</span>
+          <label for="search_param_cc" i18n:translate="">Search for</label>
+          <select id="search_param_cc" name="search_param_cc">
+              <option value="cn"
+                  tal:attributes="selected python:search_param=='cn'"
+                  i18n:translate="">Name
+              </option>
+              <option value="mail"
+                  tal:attributes="selected python:search_param=='mail'"
+                  i18n:translate="">Email
+              </option>
+              <option value="o"
+                  tal:attributes="selected python:search_param=='o'"
+                  i18n:translate="">Organization
+              </option>
+              <option value="uid"
+                  tal:attributes="selected python:search_param=='uid'"
+                  i18n:translate="">User ID
+              </option>
+          </select>
+
+          <label for="search_term_cc" i18n:translate="">containing</label>
+          <input type="text" id="search_term_cc" name="search_term_cc:utf8:ustring"
+                 tal:attributes="value search_term"/>
+
+          <span class="buttons"><a id="search_user_cc" i18n:translate=""
+              href="javascript:findUsers('cc')">
+              Search</a></span>
+
+          <table id="results_table_cc" name="results_table_cc"
+            class="datatable" width="95%" style="display:none">
+            <thead>
+              <tr>
+                <th width="30px">
+                    <span i18n:translate="">Select</span>
+                    <input type="checkbox" onclick="javascript:toggleSelect2(this, 'results_table_cc', 'cc_emails:list')"/>
+                </th>
+                <th i18n:translate="">User name</th>
+                <th i18n:translate="">User ID</th>
+                <th i18n:translate="">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <span id="span_add_cc" class="buttons" style="display:none">
+            <a id="add_cc" i18n:translate="" href="javascript:addToRecipients('cc')">
+                  Add to CC</a>
+          </span>
+          <div style="display:none" id="no_users_cc" i18n:translate="">
+              No users matched selected criteria.</div>
+        </div>
+        <em i18n:translate="">
+          (you may use <strong i18n:name="ldap_uids">LDAP UIDs</strong> or email addresses,
+          <strong i18n:name="one_per_line" i18n:translate="">one per line</strong>)</em><br/>
+        <p class="form-errors" tal:define="err errors/cc|nothing"
+          tal:condition="err" tal:content="err" />
+        <textarea name="cc:lines" id="cc" rows="5" cols="50" ></textarea>
     </div>
     <div class="clearer"></div>
     <div class="field">

@@ -117,7 +117,7 @@ class InvitationsContainer(SimpleItem):
 
     def send_email(self, REQUEST):
         """ Send e-mail """
-        keys = ('to', 'subject', 'message')
+        keys = ('to', 'cc', 'subject', 'message')
         formerrors = {}
 
         if REQUEST.REQUEST_METHOD == 'POST':
@@ -125,8 +125,10 @@ class InvitationsContainer(SimpleItem):
 
             email_tool = self.getEmailTool()
             acl_tool = self.getAuthenticationTool()
-            emails = []
+            emails_to = []
+            emails_cc = []
             to = formdata['to']
+            cc = formdata['cc']
             message = formdata['message']
             if not to:
                 formerrors['to'] = 'At least one recipinet is needed'
@@ -135,21 +137,29 @@ class InvitationsContainer(SimpleItem):
             if not formerrors:
                 for item in to:
                     if '@' in item:
-                        emails.append(item.strip())
+                        emails_to.append(item.strip())
                     else:
                         user_info = acl_tool.get_user_info(item.strip())
-                        emails.append(user_info.email)
+                        emails_to.append(user_info.email)
+                for item in cc:
+                    if '@' in item:
+                        emails_cc.append(item.strip())
+                    else:
+                        user_info = acl_tool.get_user_info(item.strip())
+                        emails_cc.append(user_info.email)
                 email_tool.sendEmail(formdata['message'],
-                                     emails,
+                                     emails_to,
                                      email_tool.get_addr_from(),
-                                     formdata['subject'])
-                save_bulk_email(self.getSite(), emails,
+                                     formdata['subject'], p_cc=emails_cc)
+                save_bulk_email(self.getSite(), emails_to,
                                 email_tool.get_addr_from(),
                                 formdata['subject'], formdata['message'],
                                 where_to_save=path_in_site(
-                                    self.get_consultation()))
-                self.setSessionInfoTrans('Email sent to ${emails}.',
-                                         emails=','.join(emails))
+                                    self.get_consultation()),
+                                addr_cc=emails_cc)
+                self.setSessionInfoTrans('Email sent to %s and in CC to %s.' %
+                                         (','.join(emails_to),
+                                          ','.join(emails_cc)))
                 return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                                  '/send_email')
             else:
