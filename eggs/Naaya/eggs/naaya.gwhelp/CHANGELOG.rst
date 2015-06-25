@@ -1,5 +1,6 @@
 1.0.5 (unreleased)
 -------------------
+* corrected link to user management [dumitval]
 
 1.0.4 (2014-11-10)
 -------------------
