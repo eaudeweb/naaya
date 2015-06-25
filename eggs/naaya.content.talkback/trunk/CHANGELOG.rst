@@ -1,5 +1,6 @@
 1.4.40 (unreleased)
 -------------------
+* added CC to email sender [dumitval]
 
 1.4.39 (2015-05-28)
 -------------------
