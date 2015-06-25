@@ -264,3 +264,9 @@ dl.tb-invitations.revoked dt {
 table.tb-comments-overview {
     width: 100%;
 }
+.search_users {
+	width: 50%;
+	float: right;
+	display:none;
+}
+
