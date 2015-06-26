@@ -209,6 +209,10 @@
             <span class="buttons" tal:condition="python:here.rstk.we_provide('Excel export')">
                 <a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Export participants list to Excel</a>
             </span>
+            <span class="buttons">
+                <a tal:attributes="href string:${here/absolute_url}/download_webex" i18n:translate="">
+                  Export participants list for Webex</a>
+            </span>
         </div>
         <p tal:condition="meeting/checkPermissionChangePermissions"
              i18n:translate="">Use this form to view and remove participants. You can also nominate participants to be administrators or not, set the country representation and reimbursement status.</p>
