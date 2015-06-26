@@ -1,4 +1,7 @@
-1.2.81 (unreleased)
+1.2.82 (unreleased)
+-------------------
+
+1.2.81 (2015-06-26)
 -------------------
 * export participants for webex [dumitval]
 
