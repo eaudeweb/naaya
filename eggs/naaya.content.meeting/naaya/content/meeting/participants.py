@@ -9,7 +9,8 @@ from datetime import datetime
 
 # Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.import_export import generate_excel
+from Products.NaayaCore.managers.import_export import (generate_excel,
+                                                       generate_csv)
 
 # Meeting imports
 from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
@@ -469,6 +470,36 @@ class Participants(SimpleItem):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s'
                            % filename)
         return generate_excel(header, rows)
+
+    security.declareProtected(view, 'download_webex')
+
+    def download_webex(self, REQUEST=None, RESPONSE=None):
+        """exports the participants listing in a Webex-compatible CSV file"""
+
+        header = ['UUID', 'Name', 'Email', 'Company', 'JobTitle', 'URL',
+                  'OffCntry', 'OffLocal', 'CellCntry', 'CellLocal', 'FaxCntry',
+                  'FaxLocal', 'Address1', 'Address2', 'City', 'State/Province',
+                  'Zip/Postal', 'Country', 'Time Zone', 'Language', 'Locale',
+                  'UserName', 'Notes']
+        rows = []
+        participants = self.getAttendees()
+        for participant in participants:
+            part_info = self.getAttendeeInfo(participant)
+            participant_info = [
+                part_info['uid'], part_info['name'], part_info['email'],
+                part_info['organization'], part_info['role'],
+                '', part_info['phone'], '', '', '', '', '', '', '', '', '', '',
+                country_from_country_code.get(part_info['country'], ''),
+                '', '', '', part_info['uid'], '']
+            rows.append(participant_info)
+
+        filename = '%s_%s_%s.csv' % (self.getMeeting().getId(), self.id,
+                                     datetime.now().strftime(
+                                     "%Y-%m-%d_%H-%M-%S"))
+        RESPONSE.setHeader('Content-Type', 'text/csv')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s'
+                           % filename)
+        return generate_csv(header, rows)
 
 InitializeClass(Participants)
 
