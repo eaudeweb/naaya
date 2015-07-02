@@ -207,10 +207,12 @@
         <legend i18n:translate="">List of participants</legend>
         <div class="floated-buttons">
             <span class="buttons" tal:condition="python:here.rstk.we_provide('Excel export')">
-                <a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Export participants list to Excel</a>
+              <a tal:attributes="href string:${here/absolute_url}/download" i18n:translate=""
+                >Export participants list to Excel</a>
             </span>
+            <br/>
             <span class="buttons">
-                <a tal:attributes="href string:${here/absolute_url}/download_webex" i18n:translate="">
+             <a tal:attributes="href string:${here/absolute_url}/download_webex" i18n:translate="">
                   Export participants list for Webex</a>
             </span>
         </div>
