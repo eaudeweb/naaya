@@ -1,4 +1,7 @@
-1.2.82 (unreleased)
+1.2.83 (unreleased)
+-------------------
+
+1.2.82 (2015-07-03)
 -------------------
 * removed the export for webex, will be replaced by Skype [dumitval]
 
