@@ -476,6 +476,9 @@ class Participants(SimpleItem):
     def download_webex(self, REQUEST=None, RESPONSE=None):
         """exports the participants listing in a Webex-compatible CSV file"""
 
+        # This will be refactored to export to Skype, Webex will be shut
+        # down. Right now this method is not used.
+
         header = ['UUID', 'Name', 'Email', 'Company', 'JobTitle', 'URL',
                   'OffCntry', 'OffLocal', 'CellCntry', 'CellLocal', 'FaxCntry',
                   'FaxLocal', 'Address1', 'Address2', 'City', 'State/Province',
