@@ -1,5 +1,7 @@
-1.4.22 (unreleased)
+1.4.22 (2015-07-07)
 --------------------
+* Feature: show commited blob path in a NyBlobFile's __repr__
+  [tiberich]
 
 1.4.21 (2015-03-27)
 --------------------
