@@ -1,3 +1,6 @@
+1.4.23 (unreleased)
+--------------------
+
 1.4.22 (2015-07-07)
 --------------------
 * Feature: show commited blob path in a NyBlobFile's __repr__
