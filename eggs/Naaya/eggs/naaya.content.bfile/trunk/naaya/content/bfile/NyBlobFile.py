@@ -277,11 +277,12 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
     get_filename = _current_filename
 
     def __repr__(self):
-        return '<%(cls)s %(fname)r (%(mime)s, %(size)r bytes)>' % {
+        return '<%(cls)s %(fname)r (%(mime)s, %(size)r bytes) stored in %(blob)s>' % {
             'cls': self.__class__.__name__,
             'fname': self.filename,
             'mime': self.content_type,
             'size': self.size,
+            'blob': self._current_filename()
         }
 
     def get_size(self):
