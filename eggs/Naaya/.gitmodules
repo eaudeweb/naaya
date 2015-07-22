@@ -15,3 +15,5 @@
 [submodule "eggs/Products.NaayaContent.NyConsultation"]
 	path = eggs/Products.NaayaContent.NyConsultation
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyConsultation.git
+[submodule "Products.NaayaContent.NyPublication"]
+	branch = master
