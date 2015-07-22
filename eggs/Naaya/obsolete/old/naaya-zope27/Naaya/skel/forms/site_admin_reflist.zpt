@@ -1,0 +1,85 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit selection list</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				id python:request.get('id', '');
+				reflist python:here.getPortletsTool().getRefListById(id);
+				item python:request.get('item', '')">
+<tal:block tal:condition="python:reflist is not None">
+[<a tal:attributes="href string:${site_url}/admin_reflists_html" i18n:translate="">Back to selection lists</a>]
+<p i18n:translate="">
+</p>
+<fieldset><legend i18n:translate="">Change the list properties</legend>
+<form method="post" tal:attributes="action string:${site_url}/admin_editreflist">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr>
+		<td i18n:translate="">Title</td>
+		<td><input type="title" name="title" tal:attributes="value reflist/title" /></td>
+	</tr>
+	<tr>
+		<td i18n:translate="" valign="top">Description</td>
+		<td><textarea name="description" rows="5" cols="40" tal:content="reflist/description"></textarea></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Update" i18n:attributes="value" /></td>
+	</tr>
+</table>
+<input type="hidden" name="id" tal:attributes="value reflist/id" />
+</form>
+</fieldset>
+<h2 i18n:translate="">Available items</h2>
+<p i18n:translate="">Click on an item title to edit its attributes.</p>
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteitems">
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
+	<tr>
+		<th width="1%"></th>
+		<th width="100%" i18n:translate="">Title</th>
+	</tr>
+	<tr tal:repeat="record reflist/get_list">
+		<td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
+		<td tal:define="quoted_id python:here.utUrlEncode(record.id)"><a tal:attributes="href string:${site_url}/admin_reflist_html?id=${reflist/id}&item=${quoted_id}#edititem" tal:content="python:test(record.title.strip(), record.title, record.id)">title</a></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
+	</tr>
+</table>
+<input type="hidden" name="id" tal:attributes="value reflist/id" />
+</form>
+<tal:block tal:define="record_data python:reflist.get_item_data(item)">
+<a name="edititem"></a>
+<form method="post" tal:attributes="action python:test(record_data[0]=='add', '%s/admin_additem' % site_url, '%s/admin_edititem' % site_url)">
+<fieldset><legend tal:condition="python:item==''" i18n:translate="">Add new item</legend>
+<legend tal:condition="python:item!=''" i18n:translate="">Edit item</legend>
+<table border="0" cellspacing="2" cellpadding="2" width="95%" class="admin_table">
+	<tr>
+		<td class="form-label" i18n:translate="">Id</td>
+		<td>
+			<input tal:condition="python:record_data[0]=='add'" type="text" name="item" tal:attributes="value python:record_data[1]" />
+			<strong tal:condition="python:record_data[0]!='add'" tal:content="item" />
+			<input tal:condition="python:record_data[0]!='add'" type="hidden" name="item" tal:attributes="value item" />
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">Title</td>
+		<td><input type="text" name="title" size="50" tal:attributes="value python:record_data[2]"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" tal:attributes="value python:test(record_data[0]=='add', 'Add', 'Update')" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</fieldset>
+<input type="hidden" name="id" tal:attributes="value reflist/id" />
+</form>
+</tal:block>
+</tal:block>
+<tal:block tal:condition="python:reflist is None" i18n:translate="">
+	Invalid selection list.
+</tal:block>
+</tal:block>
+
+</tal:block>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Polish">
+    <body>
+      <trans-unit approved="1" id="Antigua_and_Barbuda">
+        <source>Antigua and Barbuda</source>
+        <target>Antigua i Barbuda</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Anguilla">
+        <source>Anguilla</source>
+        <target>Anguilla</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Netherlands_Antilles">
+        <source>Netherlands Antilles</source>
+        <target>Antyle Holenderskie</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Aruba">
+        <source>Aruba</source>
+        <target>Aruba</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Barbados">
+        <source>Barbados</source>
+        <target>Barbados</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Belize">
+        <source>Belize</source>
+        <target>Belize</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Costa_Rica">
+        <source>Costa Rica</source>
+        <target>Kostaryka</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cuba">
+        <source>Cuba</source>
+        <target>Kuba</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Dominica">
+        <source>Dominica</source>
+        <target>Dominika</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Dominican_Republic">
+        <source>Dominican Republic</source>
+        <target>Republika Dominikańska</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Grenada">
+        <source>Grenada</source>
+        <target>Grenada</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guadeloupe">
+        <source>Guadeloupe</source>
+        <target>Gwadelupa</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guatemala">
+        <source>Guatemala</source>
+        <target>Gwatemala</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Honduras">
+        <source>Honduras</source>
+        <target>Honduras</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Haiti">
+        <source>Haiti</source>
+        <target>Haiti</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Jamaica">
+        <source>Jamaica</source>
+        <target>Jamajka</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Kitts_and_Nevis">
+        <source>Saint Kitts and Nevis</source>
+        <target>Saint Kitts i Nevis</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cayman_Islands">
+        <source>Cayman Islands</source>
+        <target>Kajmany</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Lucia">
+        <source>Saint Lucia</source>
+        <target>Saint Lucia</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Martinique">
+        <source>Martinique</source>
+        <target>Martynika</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Montserrat">
+        <source>Montserrat</source>
+        <target>Montserrat</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Nicaragua">
+        <source>Nicaragua</source>
+        <target>Nikaragua</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Panama">
+        <source>Panama</source>
+        <target>Panama</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Puerto_Rico">
+        <source>Puerto Rico</source>
+        <target>Puerto Rico</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="El_Salvador">
+        <source>El Salvador</source>
+        <target>Salwador</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Turks_and_Caicos_Islands">
+        <source>Turks and Caicos Islands</source>
+        <target>Turks i Caicos</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Trinidad_and_Tobago">
+        <source>Trinidad and Tobago</source>
+        <target>Trinidad i Tobago</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Vincent_and_the_Grenadines">
+        <source>Saint Vincent and the Grenadines</source>
+        <target>Saint Vincent and the Grenadines</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="British_Virgin_Islands">
+        <source>British Virgin Islands</source>
+        <target>Brytyjskie Wyspy Dziewicze</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="U.S._Virgin_Islands">
+        <source>U.S. Virgin Islands</source>
+        <target>Wyspy Dziewicze, Stanów Zjednoczonych</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

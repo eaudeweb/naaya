@@ -1,0 +1,7 @@
+<div class="marker-body">
+	<h3 tal:content="python:here.utToUtf8(here.title_or_id())" />
+	<small tal:content="structure python:here.utTruncateString(here.utToUtf8(here.description), 130)" />
+	<div class="marker-more">
+		<a tal:attributes="href string:${here/absolute_url}/" i18n:translate="">see more</a>
+	</div>
+</div>

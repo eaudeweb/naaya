@@ -1,0 +1,4 @@
+<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
+    <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+    <tal:block condition="not:repeat/crumb/end"></tal:block>
+</tal:block>

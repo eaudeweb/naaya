@@ -1,5 +1,0 @@
-include *.txt *.rst
-recursive-include docs *
-recursive-include naaya *
-recursive-include Products *
-global-exclude *py[co]

@@ -1,0 +1,23 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_add"
+    for="naaya.content.base.interfaces.INyContentObjectAddEvent"
+    />
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_csv_import"
+    for="Products.NaayaCore.interfaces.ICSVImportEvent"
+    />
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_edit"
+    for="naaya.content.base.interfaces.INyContentObjectEditEvent"
+    />
+
+  <adapter
+    factory="..NotificationTool.NotificationsPortlet"
+    name="portlet_notifications"
+    />
+
+</configure>

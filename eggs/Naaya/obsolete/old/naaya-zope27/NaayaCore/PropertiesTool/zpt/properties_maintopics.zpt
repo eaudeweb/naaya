@@ -1,0 +1,36 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<p class="page-title">Main sections</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<p class="page-description">
+	The list below presents the top-level approved Naaya Folders from this site. The main sections
+	are a subset of those that will appear listed on all pages as tabs, in menus, etc.
+	depending of the layout.
+	Select the main sections relevant for your site and press <strong>Save changes</strong>.
+</p>
+
+<form method="post" action="manageMainTopics">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <td class="form-label" width="30%" style="vertical-align: top">Select main sections</td>
+        <td width="80%" tal:define="item_list here/getMainFolders">
+            <select name="maintopics" size="10" multiple="true">
+                <option tal:repeat="item item_list"
+                        tal:attributes="value item/id; selected python:item.absolute_url(1) in here.maintopics"
+                        tal:content="item/title_or_id">Main topic</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td> </td>
+        <td><input type="submit" name="submit" value="Save changes"></td>
+    </tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer"/>

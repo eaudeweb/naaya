@@ -1,0 +1,57 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_title">
+		Edit object
+	</tal:block>
+
+	<tal:block metal:fill-slot="doc_manager_content">
+
+		<h1>
+			Add new document
+		</h1>
+
+
+		<fieldset tal:condition="python:request.has_key('dm_save')">
+			<legend class="msg-info">
+				Information
+			</legend>
+			Saved changes!&nbsp;&nbsp;&nbsp;&nbsp;<small tal:content="python:here.utGetTodayDate()" />
+		</fieldset>
+
+		<p>
+			Fill the properties in the form below and click <strong>Add Document</strong>.
+		</p>
+
+
+			<form name="frmAdd" id="frmAdd" method="post" action="addDocFile" enctype="multipart/form-data">
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<th class="td_label"><label for="title" >Titolo</label></th>
+						<td class="td_input">
+							<input type="text" name="title" id="title" size="63" value="" />
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label"><label for="file" >Upload from</label></th>
+						<td class="td_input">
+							<input type="file" name="file" id="file" size="63" value="" />
+						</td>
+					</tr>
+					<tr>
+						<th><label for="downloadfilename">Download file name</label></th>
+						<td><input type="text" name="downloadfilename" id="downloadfilename" size="63" value="" /></td>
+					</tr>
+					<tr>
+						<th class="td_label">
+							<label for="submit" style="display:none">Submit button</label>&nbsp;
+						</th>
+						<td>
+							<input type="submit" id="submit" name="submit" value="Add Document" />
+						</td>
+					</tr>
+				</table>
+			</form>
+
+	</tal:block>
+</tal:block>

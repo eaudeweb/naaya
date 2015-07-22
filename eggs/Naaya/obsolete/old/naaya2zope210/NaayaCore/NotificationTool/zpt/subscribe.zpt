@@ -1,0 +1,83 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block condition="not:here/is_logged">
+    <h1 i18n:translate="">Notifications</h1>
+    <p i18n:translate="">
+        Make sure that you are logged in properly before subscribing to any notifications. 
+    </p>
+</tal:block>
+<tal:block condition="here/is_logged">
+<tal:block define="location python:here.get_location();
+					current_subscriptions python:list(here.list_subscriptions(request));
+                    my_subscriptions python:list(here.list_user_subscriptions(request));
+                    available_subscriptions python:here.get_enabled_subscriptions(request)">
+
+
+<h1 i18n:translate="">Notifications <!--for folder <span tal:content="location"/>--></h1>
+
+<form name="subscribe" method="post" 
+        tal:attributes="action string:${here/absolute_url}/subscribe"
+        tal:condition="available_subscriptions">
+    <label>
+        <tal:block i18n:translate="">Subscribe to</tal:block>
+        <select name="notif_type">
+            <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
+            <option value="daily" tal:condition="python:'daily' in available_subscriptions" i18n:translate="">Daily digest</option>
+            <option value="weekly" tal:condition="python:'weekly' in available_subscriptions" i18n:translate="">Weekly digest</option>
+            <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
+        </select>
+    </label>
+    <!--label for="lang" i18n:translate="">in</label>
+    <select name="lang" id="lang"
+            tal:define="translations python:here.getPortalTranslations().gettext">
+        <option tal:repeat="item here/gl_get_languages_map"
+                tal:attributes="value python:item['id'];
+                    selected python:item['selected']"
+                tal:content="python:translations(item['title'], item['id'])" />
+    </select-->
+    <input name="submit" type="submit" value="Subscribe" i18n:attributes="value"/>
+</form>
+<p tal:condition="python: not available_subscriptions and current_subscriptions">You are subscribed to all available notifications.</p>
+<p tal:condition="python: not available_subscriptions and not current_subscriptions">There are no subscriptions available.</p>
+<br />
+<h2 i18n:translate="">Your subscriptions</h2>
+
+<p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">You have not yet subscribed to receive any notifications.</p>
+
+<table class="datatable" tal:condition="python:len(my_subscriptions) > 0">
+	<thead>
+		<th>Location</th>
+		<th>Notification type</th>
+		<!--th>Language</th-->
+		<th></th>
+	</thead>
+	<tbody>
+		<tr tal:repeat="subscription my_subscriptions">
+			<td tal:define="location subscription/location">
+                <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
+                <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
+			</td>
+			<td>
+				<span tal:content="subscription/notif_type"/>
+			</td>
+			<!--td tal:define="lang subscription/lang">
+				<span tal:content="python:here.gl_get_language_name(lang)"/>
+			</td-->
+			<td>
+				<form method="post" tal:attributes="action string:${here/absolute_url}/delete_subscription">
+					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
+					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
+					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
+					<input type="submit" value="unsubscribe" i18n:attributes="value"/>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<br/>
+
+</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

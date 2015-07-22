@@ -1,0 +1,192 @@
+<span metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_title">
+		Search page
+	</tal:block>
+
+	<span metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+
+		<h1>Free text search in this site</h1>
+		<p style="margin-bottom:0.8em;"><span class="orangetop">Search Tips</span></p>
+					  <ul class="arrowed">
+						<li>You can search for objects that contain certain words (you must provide the entire word)</li>
+						<li>Use the valid Boolean operators like <strong>AND</strong>, <strong>OR</strong>, and <strong>AND NOT</strong></li>
+						<li>Search for "<em>word1</em> <strong>AND</strong> <em>word2</em>" : this will search for all objects that contain both "<em>word1</em>" and "<em>word2</em>"</li>
+					  </ul>
+		<br />
+
+<tal:block condition="python:1==0">
+		<form method="get" name="frmSearch" action="search_html" tal:condition="python: not advanced_search">
+			<strong>Query string</strong>
+			<input type="text" name="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+			<input type="submit" value="Search" />
+			<input type="hidden" name="sort_order" value="" />
+			<input type="hidden" name="sort_by" value="" />
+		</form>
+</tal:block>
+
+		<p><span class="orangetop">Search parameters</span></p>
+		
+		<!-- advanced seaerch -->
+		<form method="get" name="frmSearch" action="search_html" style="margin:1em">
+			<input type="hidden" name="sort_order" value="" />
+			<input type="hidden" name="sort_by" value="" />
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<th class="td_label">
+						<label for="query" >Words to search for</label>
+					</th>
+					<td class="td_input">
+						<input type="text" id="query" style="width:30em" name="query" />
+					</td>
+				</tr>
+				<tr>
+					<th class="td_label">
+						<label for="thematic_query">Thematic areas to search&nbsp;</label>
+					</th>
+					<td class="td_input">
+						<select multiple="multiple" size="10" id="thematic_query" name="thematic_query:list">
+							<option>Tutti</option>
+							<option>Documenti di Specifica</option>
+							<option>Documenti di Srogettazione</option>
+							<option>Documenti di Realizzazione</option>
+							<option>Documenti di Test</option>
+							<option>Documenti di Verifica ed Accettazione</option>
+							<option>Comunicazioni Interne</option>
+							<option>Comunicazioni Esterne</option>
+							<option>Documenti Contrattuali</option>
+							<option>Documenti di Formazione</option>
+							<option>Documenti di Gestione e Rapporti con i Clienti</option>
+							<option>Documenti Metodologici</option>
+							<option>Documenti di Coordinamento, Pianificazione e Controllo</option>
+							<option>Documenti di Conduzione Sistemi</option>
+							<option>Documenti di Conduzione tecnico-sistemistica </option>
+							<option>Documenti sulla Sicurezza Informatica</option>
+							<option>Altro</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th class="td_label">
+						Files option(s)
+					</th>
+					<td class="td_input">
+						<input type="checkbox" id="x2" name="file_query"><label for="x2"> (search also in the attachements)</label>
+					</td>
+				</tr>
+				<tr>
+					<th class="td_label">
+					</th>
+					<td class="td_input">
+						<input type="submit" value="Search" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+					</th>
+					<td>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<br clear="all" />
+
+		<!-- show results -->
+		<span tal:condition="python:(request.has_key('query') and request['query'] != '') or (request.has_key('thematic_query') and len(request['thematic_query']) > 0)">
+		<tal:block define=" query python:request.get('query', '');
+							sort_order python:request.get('sort_order', '');
+							sort_expr python:request.get('sort_by', '');
+							page_search_start python:request.get('start', 0);
+							thematic_query python:request.get('thematic_query', []);
+							file_query python:request.get('file_query', 0);
+
+							results python:here.internalSearch(query, sort_order, sort_expr, page_search_start, thematic_query, file_query);
+							number_of_results here/getNumberOfResults;
+							page_search_querystring string:query=${query}&sort_by=${sort_expr}&sort_order=${sort_order};
+							list_paging python:results[0];
+							paging_start python:list_paging[0]+1;
+							paging_upper python:list_paging[1];
+							paging_total python:list_paging[2];
+							paging_prev python:list_paging[3];
+							paging_next python:list_paging[4];
+							paging_current_page python:list_paging[5];
+							paging_records_page python:list_paging[6];
+							paging_pages python:list_paging[7];
+							list_result python:results[1]">
+
+			<span tal:condition="python:paging_total != 0">
+			<dl>
+				<dt style="font-weight:bold; font-size:130%; margin-bottom: 1em; color:#637785;">Search Results</dt>
+				<dd tal:repeat="record list_result">
+
+					<img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" alt="Meta type ico" title="Meta type ico" />
+					<a tal:attributes="href record/absolute_url">
+						<span tal:replace="record/title_or_id"/>
+					</a> - 
+					<em><span tal:replace="record/description"/></em>
+					<span style="color:#a9b3bb">[<span tal:replace="python:here.utShowDateTime(record.bobobase_modification_time())"/>]</span>
+					<tal:block  condition="python:here.isDocFile(record.meta_type)"
+								define="article python:record.aq_parent">
+						<br /><small>this file can be found on this article: <a tal:attributes="href python:article.absolute_url(0); 
+														title python:article.title_or_id"
+										tal:content="article/title_or_id" /></small>
+					</tal:block>
+				</dd>
+			</dl>
+
+<!--
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td><strong>Search Results</strong><br>
+					</td>
+				</tr>
+				<tr tal:repeat="record list_result">
+					<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" alt="Meta type ico" title="Meta type ico" /><a tal:attributes="href record/absolute_url">
+						<span tal:replace="record/title_or_id"/></a> - <span tal:replace="record/bobobase_modification_time"/>
+						<span tal:replace="record/description"/>
+					</td>
+				</tr>
+			</table>
+-->
+
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="1%">Results</td>
+					<td width="100%" nowrap><b tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;
+						<strong tal:content="paging_total"/></td>
+				</tr>
+				<tr>
+					<td>Page</td>
+					<td nowrap>
+						   <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+								<a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+									tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}">&lt;&lt;Previous</a>
+						   </span>
+						   <span tal:repeat="page paging_pages">
+								<a tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
+								<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+									tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}"
+									tal:content="python:page+1">
+								</a>
+						   </span>
+						   <span tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+								<a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+									tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}">Next&gt;&gt;</a>
+						   </span>
+					</td>
+				</tr>
+			</table>
+			<br />
+			</span>
+			<span tal:condition="python:paging_total == 0">
+				No results were found for this query.
+			</span>
+			<br /><br />
+
+		</tal:block>
+		</span>
+
+	</span>
+</span>
+

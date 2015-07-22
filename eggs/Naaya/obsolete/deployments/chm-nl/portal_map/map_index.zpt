@@ -1,0 +1,192 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<metal:block metal:fill-slot="title">
+	<title><tal:block i18n:translate="">Portal Geo Map</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+	<meta i18n:attributes="content" content="Interactive map for the Geo-tagged information" name="description" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
+<tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds());
+                       geo_query python:request.get('geo_query', '');
+                       center python:request.get('center', '');
+                       zoom python:request.get('zoom', '');
+                       path python:request.get('path', '');
+                       records python:here.search_geo_objects(path=path, geo_types=geo_types, query=geo_query);
+                       width python:request.get('width', here.map_width);
+                       height python:request.get('height', here.map_height)">
+<span tal:condition="python: here.map_engine == 'google'">
+	<script type="text/javascript" tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${here/get_googleApiKey}"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/googlemaps.js"></script>
+</span>
+<span tal:condition="python:here.map_engine == 'yahoo'">
+	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${here/get_mapsapikey}"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+</span>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
+
+<span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
+<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
+	<div id="center_content" style="width: 78%; overflow-x: auto;">
+		<h1 i18n:translate="" tal:content="here/title_or_id" />
+		<noscript>
+			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
+		</noscript>
+		<p i18n:translate="">
+			This map shows the geo-tagged content in this portal. You can zoom and
+			navigate the map to show different selections of items. In the
+			right-side menu it's possible to make further selections. Click
+			on "Go" to refresh the map.
+		</p>
+		<tal:block content="structure string:&lt;!--[if lte IE 6]&gt;" />
+		<p i18n:translate="">
+			If you use Internet explorer 6, you are advised to update your browser
+			or choose another one, since the map functions are not properly
+			supported by Internet explorer 6.
+		</p>
+		<tal:block content="structure string:&lt;![endif]--&gt;" />
+		<p id="js_links" style="display: none; height: 2em">
+			<span i18n:translate="">Displaying </span>
+			<strong id="record_counter"></strong>
+			<span i18n:translate="">location(s).</span>
+			<tal:block i18n:translate="">You can also</tal:block> <a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>, <a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>
+			or <a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a>.
+		</p>
+		<div id="map" tal:attributes="style string:width: 100%;; height: ${here/map_height}px;;"></div>
+		<br clear="all" style="clear:both"/>
+		<div style="display:none" id="map_markers"></div>
+	</div>
+	<div id="portalmap">
+		<div class="portalmap_portlet">
+			<div class="portalmap_portlet_title">
+				<p i18n:translate="">Find address</p>
+			</div>
+			<div>
+				<input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
+				<input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
+			</div>
+			<div class="portalmap_portlet_title">
+				<p i18n:translate="">Filter locations</p>
+			</div>
+			<div class="map_filters">
+				<div>
+					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" onkeypress="return handleKeyPress(this, event);" style="width: 60%" />
+					<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Go" onclick="startMapRefresh()" i18n:attributes="value"/>
+					<noscript>
+						<p><small i18n:translate="">eg: "water supply"</small></p>
+					</noscript>
+				</div>
+
+				<h4 i18n:translate="">Interval</h4>
+				<ul class="map_legend">
+					<li><label>
+						<tal:block i18n:translate="">From</tal:block>
+						<input type="text" size="10" name="interval_start_date" class="vDateField map_date_interval" />
+					</label></li>
+					<li><label>
+						<tal:block i18n:translate="">Until</tal:block>
+						<input type="text" size="10" name="interval_end_date" class="vDateField map_date_interval" />
+					</label></li>
+				</ul>
+
+				<tal:block define="selection_list here/portal_portlets/target-group">
+					<metal:block use-macro="template/macros/selection_list_filter" />
+				</tal:block>
+				<script>$(function() {
+					$('ul.map_legend.chm-map-pick-from-reftree input[type=checkbox]').click(function(evt) { startMapRefresh() });
+				});</script>
+
+
+				<h4 i18n:translate="">Location type</h4>
+				<small><a href="javascript:toggleSelect();" title="Check all" i18n:translate="" i18n:attributes="title" id="checkall" style="display:none">Uncheck All</a></small>
+					<ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsListOrdered" tal:condition="parentsList">
+						<tal:block repeat="item parentsList">
+							<tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
+							<li>
+								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox" style="display: none;"
+									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
+								<img tal:condition="python:item.picture is not None"
+									tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" width="16" height="16" />
+								<label tal:attributes="for item/id"><span i18n:translate="" tal:content="item/title" /></label>
+								<ul tal:condition="children" class="category_child">
+									<li tal:repeat="child children">
+										<input type="checkbox" name="geo_types:list"
+											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
+										<img tal:condition="python:child.picture is not None"
+											tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" width="16" height="16" />
+										<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
+									</li>
+								</ul>
+							</li>
+							</tal:block>
+						</tal:block>
+					</ul>
+
+					<div>
+						<input type="hidden" id="center" name="center" tal:attributes="value center" />
+						<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
+						<input type="hidden" id="path" name="path" tal:attributes="value path" />
+						<noscript>
+							<input type="submit" value="List locations" class="map-button" name="list_locations:method" i18n:attributes="value" />
+						</noscript>
+						<noscript>
+							<input type="submit" value="Download GeoRSS" class="map-button" name="export_geo_rss:method" i18n:attributes="value" />
+						</noscript>
+					</div>
+			</div>
+		</div>
+	</div>
+</form>
+<form id="list_locations_form" action="list_locations" method="get" style="display:none">
+	<input type="hidden" name="lat_min" />
+	<input type="hidden" name="lat_max" />
+	<input type="hidden" name="lon_min" />
+	<input type="hidden" name="lon_max" />
+	<input type="hidden" name="symbols" />
+	<input type="hidden" name="geo_query" />
+</form>
+
+<script type="text/javascript">
+	<!--
+	// show the elements that are used when JavaScript is available
+	showPageElements();
+	showMap();
+	mapTool.showMapLocations();
+	$('form[name=frmFilterMap]').submit(function(evt) {
+		evt.preventDefault();
+		startMapRefresh();
+	});
+//	$('input.map_date_interval').change(function(evt) {
+//	});
+	//-->
+</script>
+</tal:block>
+
+</metal:block>
+</metal:block>
+
+<tal:block condition="nothing">
+<metal:block define-macro="selection_list_filter">
+	<h4 i18n:translate="" tal:content="selection_list/title_or_id" />
+	<ul class="map_legend chm-map-pick-from-reftree">
+		<li tal:repeat="list_item selection_list/get_tree_data">
+			<label>
+				<input type="checkbox" checked="checked"
+				       tal:attributes="value list_item/attributes/id;
+				                       name string:${selection_list/id}:list" />
+				<tal:block i18n:translate="" content="list_item/data" />
+			</label>
+		</li>
+	</ul>
+</metal:block>
+</tal:block>

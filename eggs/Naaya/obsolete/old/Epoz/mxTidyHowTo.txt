@@ -1,0 +1,188 @@
+How do I install mxTidy with Zope / Plone?
+
+Here are the steps. Be sure to use the same python as your Zope / Plone uses
+for setting up mxTidy correctly!
+
+1) Download these packages:
+
+http://www.egenix.com/files/python/egenix-mx-base-2.0.5.tar.gz
+http://www.egenix.com/files/python/egenix-mx-experimental-0.8.0.tar.gz
+
+2) Untar the packages
+
+tar xfvz egenix-mx-base-2.0.5.tar.gz
+tar xfvz egenix-mx-experimental-0.8.0.tar.gz
+
+3) Change to egenix-mx-base-2.0.5
+
+python setup.py install
+
+4) Change to egenix-mx-experimental-0.8.0
+
+python setup.py install
+
+Maybe you'll get an error like "Can't compile etc.pp."...
+
+If so, copy the "patched" file below (it just skips
+the "buggy" number-module which isn't needed for tidy) to
+egenix-mx-experimental-0.8.0/mxEXPERIMENTAL.py and try again.
+
+5) Restart your Zope / Plone to take changes effect!
+
+-----------------------------------------------------
+patched mxEXPERIMENTAL.py for easier mxTidy-Setup
+-----------------------------------------------------
+
+#!/usr/local/bin/python2.0
+
+""" Configuration for the eGenix mx EXPERIMENTAL distribution.
+
+     Copyright (c) 1997-2000, Marc-Andre Lemburg; mailto:mal(ät)lemburg.com
+     Copyright (c) 2000-2003, eGenix.com Software GmbH;
+mailto:info(ät)egenix.com
+     See the documentation for further information on copyrights,
+     or contact the author. All Rights Reserved.
+"""
+from mxSetup import mx_Extension
+import sys, glob, os
+
+#
+# Package version
+#
+version = '0.8.0'
+
+#
+# Setup information
+#
+name = "egenix-mx-experimental"
+
+#
+# Meta-Data
+#
+description = "eGenix mx-Extensions - EXPERIMENTAL package"
+long_description = """\
+The eGenix mx Extension Series are a collection of
+Python extensions written in ANSI C and Python
+which provide a large spectrum of useful additions
+to everyday Python programming.
+
+This package includes experimental subpackages of the
+series. Please understand that the software in these
+packages is still in alpha state and does not meet the
+quality standards of production quality software.
+
+This software is brought to you by eGenix.com. The included
+subpackages are either covered by the eGenix.com Public
+License or the eGenix.com Commercial License and/or other
+licenses. Please check the  subpackage documentation for
+details or contact eGenix.com for more license information.
+"""
+license = (
+"Copyright (c) 2000-2003, eGenix.com Software GmbH, All Rights Reserved"
+)
+author = "Marc-Andre Lemburg"
+author_email = "mal(ät)egenix.com"
+url = "http://www.egenix.com/files/python/eGenix-mx-Extensions.html"
+
+#
+# Python packages
+#
+packages = [
+
+     'mx',
+
+     # mxTidy
+     'mx.Tidy',
+     'mx.Tidy.mxTidy',
+
+     # mxURL
+     'mx.URL',
+     'mx.URL.mxURL',
+
+     # mxUID
+     'mx.UID',
+     'mx.UID.mxUID',
+
+     ]
+
+#
+# C libraries
+#
+
+libraries = [
+
+     # libtidy.a needed by mxTidy
+     ('libtidy',
+      {'sources':
+       glob.glob(os.path.join('mx','Tidy','mxTidy','libtidy','*.c')),
+       'include_dirs':
+       [os.path.join('mx','Tidy','mxTidy','libtidy')],
+       'macros':
+       [('COMPILING_TIDY', 1)],
+       }),
+
+     ]
+
+#
+# C Extensions
+#
+ext_modules = [
+
+     # mxTidy
+     mx_Extension('mx.Tidy.mxTidy.mxTidy',
+                  ['mx/Tidy/mxTidy/mxTidy.c'],
+                  include_dirs=['mx/Tidy/mxTidy',
+                                'mx/Tidy/mxTidy/libtidy'],
+                  libraries=['libtidy'],
+                  library_dirs=['mx/Tidy/mxTidy/libtidy']),
+
+     # mxURL
+     mx_Extension('mx.URL.mxURL.mxURL',
+                  ['mx/URL/mxURL/mxURL.c'],
+                  include_dirs=['mx/URL/mxURL']),
+
+     # mxUID
+     mx_Extension('mx.UID.mxUID.mxUID',
+                  ['mx/UID/mxUID/mxUID.c'],
+                  include_dirs=['mx/UID/mxUID']),
+
+     ]
+
+#
+# Data files
+#
+data_files = [
+
+     # mxTidy
+     'mx/Tidy/Doc/mxTidy.html',
+     'mx/Tidy/Doc/mxLicense.html',
+     'mx/Tidy/Doc/Overview.html',
+     'mx/Tidy/Doc/pending.html',
+     'mx/Tidy/Doc/release-notes.html',
+     'mx/Tidy/Doc/tidy.gif',
+     'mx/Tidy/COPYRIGHT',
+     'mx/Tidy/LICENSE',
+     'mx/Tidy/README',
+     'mx/Tidy/mxTidy/mxTidy.h',
+     'mx/Tidy/mxTidy/mxh.h',
+     'mx/Tidy/mxTidy/input.html',
+
+     # mxURL
+     'mx/URL/Doc/mxURL.html',
+     'mx/URL/Doc/mxLicense.html',
+     'mx/URL/COPYRIGHT',
+     'mx/URL/LICENSE',
+     'mx/URL/README',
+     'mx/URL/mxURL/mxURL.h',
+     'mx/URL/mxURL/mxh.h',
+
+     # mxUID
+     'mx/UID/Doc/mxUID.html',
+     'mx/UID/Doc/mxLicense.html',
+     'mx/UID/COPYRIGHT',
+     'mx/UID/LICENSE',
+     'mx/UID/README',
+     'mx/UID/mxUID/mxUID.h',
+     'mx/UID/mxUID/mxh.h',
+
+     ]

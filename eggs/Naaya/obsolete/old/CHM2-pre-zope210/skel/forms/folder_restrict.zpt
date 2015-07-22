@@ -1,0 +1,42 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1>
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
+	<tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">restrictions</span>
+</h1>
+
+<fieldset style="float: right; width: 30%"><legend i18n:translate="">Tip</legend>
+<p i18n:translate="">
+	If a group of people need to collaborate in uploading/editing/translating data inside this folder, <a href="admin_addworkgroup_html">create the workgroup</a> and assign those users to it.
+</p>
+</fieldset>
+<div class="floated-buttons" style="clear: right"><br />
+<span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">
+	This page allows you to restrict/grant access to this folder for certain groups of
+	users. You are asked to provide the roles users must have in order to have access.
+	All users having the roles of <em>Administrator</em> or <em>Manager</em> will still have
+	access to the restricted areas.
+</p>
+
+<form method="post" tal:attributes="action string:${here/absolute_url}/setRestrictions">
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_all" value="all" tal:attributes="checked python:not here.has_restrictions()" />
+	<label for="access_all" i18n:translate="">Allow access to all users</label>
+</div>
+<div style="margin-bottom:2em;">
+	<input type="radio" name="access" id="access_to" value="other" tal:attributes="checked python:here.has_restrictions()" /> <label for="access_to" i18n:translate="">Allow access only to</label>
+	<select name="roles" size="5" multiple="multiple" style="vertical-align: top;"
+		tal:define="roles here/get_roles_with_access">
+		<option tal:repeat="role here/get_valid_roles"
+			tal:attributes="value role;selected python:role in roles"
+			tal:content="role" />
+	</select>
+</div>
+<div>
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</div>
+</form>
+
+<span tal:replace="structure here/standard_html_footer"/>

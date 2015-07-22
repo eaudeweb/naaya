@@ -1,0 +1,16 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit URL</h1>
+
+<tal:block metal:fill-slot="custom_properties">
+<div class="field-inline">
+	<label for="redirect"><span i18n:translate="">Automatically redirect to the given URL</span></label>
+	<input type="checkbox" name="redirect" id="redirect" tal:attributes="checked python:test(here.getSession('redirect', here.redirect), 'checked', '')" />
+</div>
+<div class="field">
+	<label for="locator"><span i18n:translate="" tal:omit-tag="">URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'locator')" class="mandatory_field"> *</span></label>
+	<input type="text" name="locator" id="locator" size="50" tal:attributes="value python:here.getSession('locator', here.getVersionLocalProperty('locator', curr_lang))" />
+</div>
+</tal:block>
+
+</tal:block>

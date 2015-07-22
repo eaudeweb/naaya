@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<export>
+	<ob meta_type="Naaya Folder" param="0" id="contacts" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL">
+		<title lang="en"><![CDATA[Contacts]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 style="position:relative" i18n:translate="">Contacts</h1>
+
+<tal:block	tal:define="this_absolute_url python:here.absolute_url(0);
+						perm_edit_object here/checkPermissionEditObject;
+						perm_publish_objects here/checkPermissionPublishObjects;
+						perm_validate_objects here/checkPermissionValidateObjects">
+	<div id="admin_this_folder" tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
+	</div>
+</tal:block>
+
+<tal:block tal:define="site here/getSite;
+					oracle_conn site/oracle;
+					lang here/gl_get_selected_language;
+					positions python:oracle_conn.get_positions(lang)" tal:on-error="string:No contacts available">
+
+	<tal:block repeat="pos positions" tal:condition="python:positions">
+		<tal:block define="results python:oracle_conn.get_contacts(here.get_country_object_title(), pos.empcode, lang)">
+			<h3 tal:content="pos/empli"></h3>
+			<tal:block condition="python:results">
+			<table border="0" cellspacing="1" cellpadding="1">
+				<tr>
+					<th width="1%">&nbsp;</th>
+					<th i18n:translate="">Name</th>
+					<th i18n:translate="" width="30%">Organisation</th>
+					<th i18n:translate="">Phone</th>
+					<th i18n:translate="">Fax</th>
+					<th i18n:translate="">Email</th>
+				</tr>
+				<tr tal:repeat="res results">
+					<td>&nbsp;</td>
+					<td>
+						<span tal:replace="python:site.utLatinToUTF(res.coname)" />&nbsp;
+						<span tal:replace="python:site.utLatinToUTF(res.cofirstname)" />
+					</td>
+					<td tal:content="python:site.utLatinToUTF(res.orname)"></td>
+					<td tal:content="res/cophoneoff"></td>
+					<td tal:content="res/cofaxoff"></td>
+					<td tal:content="res/coemailoff"></td>
+				</tr>
+			</table>
+			</tal:block>
+			<span tal:condition="not:results" i18n:translate="">No contacts available.</span>
+			<br />
+		</tal:block>
+	</tal:block>
+	<span tal:condition="python:positions is None" i18n:translate="">No data available.</span>
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer"/>
+	]]>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="national_program" sortorder="20"  contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya Semide Document,Naaya Extended File,Naaya URL">
+		<title lang="en"><![CDATA[EMWIS national program]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="legislation_water" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[Legislation on water]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
+	tal:condition="python:len(items)>0">
+	<tal:block tal:repeat="item items">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
+
+<tal:block tal:define=" isArabic here/isArabicLanguage;
+						noArabic not:isArabic">
+<div class="middle_port">
+<h1>
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
+	<tal:block tal:replace="here/title_or_id" />
+	<tal:block tal:condition="here/can_be_seen">
+		<tal:block tal:condition="here/has_restrictions" i18n:translate="">
+			[Limited access]
+		</tal:block>
+	</tal:block>
+	<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+		[Restricted access]
+	</tal:block>
+</h1>
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<div id="admin_this_folder" tal:condition="here/checkPermissionEditObject">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/update_legislation_feed"><span i18n:translate="">Update feed</span></a>
+</div>
+
+<tal:block tal:define="channel here/get_rc_legislation">
+<tal:block tal:condition="python:not channel.get_feed_bozo_exception()">
+<ul tal:condition="python:channel.count_feed_items()>0">
+	<li tal:repeat="item channel/getChannelItems">
+		<a tal:attributes="href python:item['link']"
+			tal:content="python:item['title']" />
+	</li>
+</ul>
+</tal:block>
+<strong tal:condition="python:channel.count_feed_items()<=0" i18n:translate="">
+	No data available.
+</strong>
+</tal:block>
+
+<span tal:replace="structure here/comments_box" />
+
+</div>
+</tal:block>
+<span tal:replace="structure here/standard_html_footer"/>
+	]]>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="project_water" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Semide Project">
+		<title lang="en"><![CDATA[Project water]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="objects_info here/checkPermissionManageObjects;
+  folders_list python:objects_info[6];
+  objects_list python:objects_info[7];
+  btn_select python:objects_info[0];
+  btn_delete python:objects_info[1];
+  btn_copy python:objects_info[2];
+  btn_cut python:objects_info[3];
+  btn_paste python:objects_info[4];
+  can_operate python:objects_info[5] ">
+
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
+<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
+  tal:condition="python:len(items)>0">
+  <tal:block tal:repeat="item items">
+  <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+  </tal:block>
+</div>
+
+<tal:block tal:define=" isArabic here/isArabicLanguage;
+      noArabic not:isArabic">
+<div class="middle_port">
+<h1>
+  <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
+  <tal:block tal:replace="here/title_or_id" />
+  <tal:block tal:condition="here/can_be_seen">
+  <tal:block tal:condition="here/has_restrictions" i18n:translate="">
+    [Limited access]
+  </tal:block>
+  </tal:block>
+  <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+  [Restricted access]
+  </tal:block>
+</h1>
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<tal:block tal:define="this_absolute_url python:here.absolute_url(0);
+  submissions here/process_submissions;
+  perm_add_something python:len(submissions)>0;
+  perm_edit_object here/checkPermissionEditObject;
+  perm_publish_objects here/checkPermissionPublishObjects;
+  perm_validate_objects here/checkPermissionValidateObjects">
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects">
+  <span id="submission" tal:condition="perm_add_something">
+  <span i18n:translate="" tal:omit-tag="">Submit</span>:
+  <select name="typetoadd"
+    tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+    <option value="#" i18n:translate="">Type to add</option>
+    <option tal:repeat="item submissions"
+    tal:attributes="value python:item[0]"
+    tal:content="python:item[1]" i18n:translate="" />
+  </select>
+  </span>
+  <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+  <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
+  <a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
+  <a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/update_project_feed"><span i18n:translate="">Update feed</span></a>
+  <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
+  <a tal:condition="perm_validate_objects" tal:attributes="href string:${this_absolute_url}/basketofvalidation_html"><span i18n:translate="">Validation</span></a>
+  <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
+  <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span i18n:translate="">Restrict</span></a>
+  </tal:block>
+</div>
+</tal:block>
+
+<tal:block tal:define="channel here/get_rc_project">
+<tal:block tal:condition="python:not channel.get_feed_bozo_exception()">
+<ul tal:condition="python:channel.count_feed_items()>0">
+  <li tal:repeat="item channel/getChannelItems">
+  <a tal:attributes="href python:item['link']"
+    tal:content="python:item['title']" />
+  </li>
+</ul>
+</tal:block>
+<strong tal:condition="python:channel.count_feed_items()<=0" i18n:translate="">
+  No data available.
+</strong>
+</tal:block>
+
+<tal:block  define="sq python:request.get('sq', '');
+      so python:request.get('so', '');
+      sel_lang python:here.gl_get_selected_language();
+      sl python:here.utConvertToList(request.get('sl', [sel_lang]));
+      gz python:request.get('gz', '');
+      th python:request.get('th', '');
+      pr python:request.get('pr', '');
+      ps_start python:request.get('start', 0);
+      archive python:here.getObjects();
+      skey python:request.get('skey', 'start_date');
+      rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
+      rkey_param python:test(rkey, '', '&amp;rkey=1');
+
+      langs_querystring python:'&sl:list='.join(sl);
+      page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&gz=${gz}&th=${th}&pr=${pr};
+      results python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr);
+
+      list_paging python:results[0];
+      paging_start python:list_paging[0]+1;
+      paging_upper python:list_paging[1];
+      paging_total python:list_paging[2];
+      paging_prev python:list_paging[3];
+      paging_next python:list_paging[4];
+      paging_current_page python:list_paging[5];
+      paging_records_page python:list_paging[6];
+      paging_pages python:list_paging[7];
+
+      list_result python:results[1];
+      objects_list python:list_result[2];
+      objects_delete_all python:list_result[1];
+      objects_select_all python:list_result[0]">
+
+  <fieldset class="search_field"><legend i18n:translate="">Search projects</legend>
+  <div class="fieldset_div">
+    <form method="get" action="">
+    <input type="hidden" name="skey" id="skey" tal:attributes="value skey" />
+    <input type="hidden" name="rkey" id="rkey" tal:attributes="value rkey" />
+    <div class="field">
+      <label for="sq" i18n:translate="">Query</label>
+      <input type="text" name="sq" id="sq" size="30" tal:attributes="value sq" />
+    </div>
+    <div class="field">
+      <label for="pr" i18n:translate="">Programme</label>
+      <input type="text" name="pr" id="pr" size="30" tal:attributes="value pr" />
+    </div>
+    <div class="field">
+      <label for="so" i18n:translate="">Organisation</label>
+      <input type="text" name="so" id="so" size="30" tal:attributes="value so" />
+    </div>
+    <div class="field">
+      <label for="th" i18n:translate="">Theme</label>
+      <select name="th" id="th">
+      <option value="" />
+      <tal:block repeat="item python:here.getPortalThesaurus().getThemesList(here.gl_get_selected_language())">
+        <option tal:condition="item/theme_name"
+          tal:attributes="value item/theme_id;
+              selected python:item.theme_id == th"
+          tal:content="item/theme_name" />
+        <option tal:condition="not:item/theme_name"
+          tal:attributes="value item/theme_id;
+              selected python:item.theme_id == th"
+          i18n:translate="">no translation available</option>
+      </tal:block>
+      </select>
+    </div>
+    <div class="field">
+      <label for="gz" i18n:translate="">Country</label>
+      <select name="gz" id="gz" tal:define="langs_list here/getCoverageGlossaryObjects">
+      <option value="" />
+      <tal:block repeat="item langs_list">
+        <tal:block  define="lang_name python:here.gl_get_language_name(here.gl_get_selected_language());
+            translation python:item.get_translation_by_language(lang_name)">
+        <option tal:condition="translation"
+          tal:attributes="value item/id; selected python:item.id == gz"
+          tal:content="translation" />
+        <tal:block  condition="not:translation"
+            define="lang_name python:here.gl_get_language_name(here.gl_get_default_language());
+              def_trans python:item.get_translation_by_language(lang_name)">
+          <option tal:condition="def_trans"
+            tal:attributes="value item/id; selected python:item.id == gz"
+            tal:content="def_trans" />
+          <option tal:condition="not:def_trans"
+            tal:attributes="value item/id; selected python:item.id == gz"
+            i18n:translate="">no translation available</option>
+        </tal:block>
+        </tal:block>
+      </tal:block>
+      </select>
+    </div>
+    <div class="field">
+      <br />
+      <input type="submit" value="Search" i18n:attributes="value" />
+    </div>
+    <div class="clear_float"></div>
+    <div class="field-inline" tal:define="selected_language here/gl_get_selected_language">
+      <strong i18n:translate="">Languages: </strong>
+      <tal:block repeat="item here/gl_get_languages_mapping">
+      <input  name="sl" type="checkbox"
+        tal:attributes="value python:item['code'];
+            checked python:item['code'] in sl;
+            id python:'sl_'+item['code']" />
+      <label class="search_language" tal:attributes="for python:'sl_'+item['code']" tal:content="python:item['name']" />
+      </tal:block>
+    </div>
+    </form>
+  </div>
+  </fieldset>
+
+  <h2>
+  <span tal:condition="python:sq=='' and so=='' and th=='' and gz=='' and pr==''" i18n:translate="">Projects</span>
+  <span tal:condition="python:not(sq=='' and so=='' and th=='' and gz=='' and pr=='')" i18n:translate="">Search results</span>
+  </h2>
+
+  <p i18n:translate="" tal:condition="python:len(objects_list) == 0">No projects available</p>
+  <form name="objectItems" method="post" action="." tal:condition="python:len(objects_list) > 0">
+  <metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
+  
+  <table  border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+    tal:define="sortup_gif string:${here/getSitePath}/images/sortup.gif;
+      sortnot_gif string:${here/getSitePath}/images/sortnot.gif;
+      sortdown_gif string:${here/getSitePath}/images/sortdown.gif;
+      req_params python:here.getRequestParams(request)">
+  <tr>
+    <th class="checkbox" style="width: 4%;" i18n:translate="">
+      <input type="checkbox" onclick="toggleSelect(this)" 
+        tal:condition="btn_select"/>
+    </th>
+    <th style="width: 10%;">
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=start_date${rkey_param};
+          title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Starting date
+    <img tal:attributes="src python:test(skey=='start_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+      width="12" height="12" alt=""/>
+    </a>
+    </th>
+    <th>
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
+          title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Title
+    <img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+      width="12" height="12" alt=""/>
+    </a>
+    </th>
+    <th style="width: 15%;">
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=coverage${rkey_param};
+          title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Countries
+    <img tal:attributes="src python:test(skey=='coverage', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+      width="12" height="12" alt=""/>
+    </a>
+    </th>
+    <th>
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=programme${rkey_param};
+          title python:test(skey=='programme', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Programme
+    <img tal:attributes="src python:test(skey=='programme', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+      width="12" height="12" alt=""/>
+    </a>
+    </th>
+    <th><span i18n:translate="" title="not sortable">Link</span></th>
+    <th class="edit" tal:condition="objects_select_all"><span i18n:translate="" title="not sortable" i18n:attributes="title">Edit</span></th>
+  </tr>
+  <tr tal:repeat="objects objects_list">
+    <tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
+    <td class="checkbox" tal:condition="del_permission" width="4%" valign="top">
+      <input tal:condition="python:object in archive" type="checkbox" name="id" tal:attributes="value object/id" />
+      <span tal:condition="python:not object in archive">-</span>
+    </td>
+    <td class="releasedate" tal:content="python:object.utShowDateTime(object.start_date)" />
+    <td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
+    <a tal:attributes="href object/absolute_url;title object/description" tal:content="object/title_or_id" />
+      <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+      [<span tal:replace="object/count_comments" />
+      <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+      </tal:block>
+    </td>
+    <td tal:content="python:test(object.coverage, object.coverage, '-')" />
+    <td tal:content="python:test(object.programme, object.programme, '-')" />
+    <td><a tal:condition="python:object.resourceurl not in ['', 'http://']" tal:attributes="href python:test(object.resourceurl, object.resourceurl, 'http://')" i18n:translate="">[link]</a><span tal:condition="python:object.resourceurl in ['', 'http://']">-</span></td>
+    <td class="edit" tal:condition="edit_permission">
+      <a tal:condition="python:not object.hasVersion() and object in archive" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+      <span tal:condition="python:not(not object.hasVersion() and object in archive)">-</span>
+    </td>
+    </tal:block>
+  </tr>
+  </table>
+  </form>
+
+  <p>
+  Results <strong tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;<strong tal:content="paging_total"/><br />
+  Page <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+  <a  tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+    tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">&lt;&lt; Previous</a></span>
+    <span   tal:repeat="page paging_pages">
+    <a  class="paging-link-off"
+      tal:condition="python:paging_current_page==page"
+      tal:content="python:page+1" />
+    <a  tal:condition="python:paging_current_page!=page"
+      tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+      tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}"
+      tal:content="python:page+1" />
+    </span>
+    <span   tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+    <a  tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+      tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">Next &gt;&gt;</a>
+    </span>
+  </p>
+</tal:block>
+
+<p tal:define="query request/form;
+  dummy python:query.get('sl', '') and query.pop('sl');
+  dummy python:query.setdefault('skey', 'start_date');
+  dummy python:query.setdefault('rkey', 1);
+  dummy python:query.setdefault('search_by', 'projects');
+  dummy python:query.setdefault('ps_start', request.get('start', 0));
+  dummy python:query.setdefault('p_context', here.absolute_url(1));
+  query_str python:here.utUrlLibEncode(query);
+  rdf_link python:'?'.join(('search_rdf', query_str));">
+
+  <a tal:attributes="href rdf_link" target="_blank">
+  <img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+  i18n:attributes="alt" />
+  </a>
+</p>
+<span tal:replace="structure here/comments_box" />
+
+</div>
+</tal:block>
+</tal:block>
+<span tal:replace="structure here/standard_html_footer"/>
+]]>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="data_statistics" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya Extended File,Naaya URL">
+		<title lang="en"><![CDATA[Data and Statistics]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="links" sortorder="60" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL">
+		<title lang="en"><![CDATA[Links]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+	</ob>
+</export>

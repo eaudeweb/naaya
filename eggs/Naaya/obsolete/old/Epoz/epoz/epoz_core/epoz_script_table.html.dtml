@@ -1,0 +1,67 @@
+<html>
+<head>
+
+<title>Epoz</title>
+
+<style type="text/css">
+<!--
+* {font-family: Arial, Helvetica, Sans-Serif; font-size: 12px;}
+//-->
+</style>
+
+<script type="text/javascript">
+
+function SubmitForm() {
+ rows = document.getElementById('rows').value;
+ cols = document.getElementById('cols').value;
+ border = document.getElementById('border').value;
+ head = document.getElementById('head').value;
+ window.opener.CreateTable(rows, cols, border, head);
+ window.close();
+};
+
+</script>
+</head>
+
+<body onload="this.focus();">
+
+<form>
+<table border="0" cellspacing="4" cellpadding="4">
+<tbody>
+
+ <tr>
+  <td><script type="text/javascript">document.writeln(opener.EpozLang["EnterTableRows"]);</script></td>
+  <td><input type="text" name="rows" id="rows" size="5" value="3" /></td>
+ </tr>
+
+ <tr>
+  <td><script type="text/javascript">document.writeln(opener.EpozLang["EnterTableColumns"]);</script></td>
+  <td><input type="text" name="cols" id="cols" size="5" value="3" /></td>
+ </tr>
+
+ <tr>
+  <td><script type="text/javascript">document.writeln(opener.EpozLang["EnterTableBorder"]);</script></td>
+  <td><input type="text" name="border" id="border" size="5" value="1" /></td>
+ </tr>
+
+ <tr>
+  <td colspan="2">
+        <select id="head" name="head">
+          <option value="0"><script type="text/javascript">document.writeln(opener.EpozLang["TableWithoutHead"]);</script></option>
+          <option value="1"><script type="text/javascript">document.writeln(opener.EpozLang["TableWithHead"]);</script></option>
+         </select>
+   </td>
+ </tr>
+
+ <tr>
+  <td colspan="2">
+   <button type="button" onclick="return SubmitForm();"><script type="text/javascript">document.writeln(opener.EpozLang["InsertTable"]);</script></button>
+  </td>
+ </tr>
+
+ </tbody>
+</table>
+
+</form>
+</body>
+</html>

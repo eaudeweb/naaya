@@ -1,0 +1,66 @@
+<tal:block metal:define-macro="doc_manager_page"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
+	<head>
+		<title>Finsiel Italia Intranet</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="DocManager_style" rel="stylesheet" type="text/css" media="all" />
+	</head>
+	<body>
+		<div id="topbar">
+			<a href="#" title="wwf.finsiel.it">www.finsiel.it</a>
+		</div>
+		<div id="header">
+			<img src="/misc_/Finshare/logo.gif" align="left" alt="Finisel_Intranet" />
+			<div id="toptitle" tal:content="python:here.getDocManager().title" />
+			<div id="topsubtitle" tal:content="python:here.getDocManager().description" />
+		</div>
+		
+		<div class="top_nav">&nbsp;</div>
+
+		<div id="breadcrumptrail">
+			<tal:block content="structure here/breadcrumbtrail_html" />
+		</div>
+		
+		<div id="thematic_navigator">
+			<tal:block metal:define-slot="doc_manager_thematic_navigator" />&nbsp;
+		</div>
+		<div id="left_middle">
+
+			<div id="left_port">
+				<a class="skiplink" href="#startcontent" accesskey="2">Skip navigation</a>
+				<div tal:replace="structure here/port_left_links_html" />
+				<tal:block metal:define-slot="doc_manager_port_left">
+				</tal:block>
+				<!--
+				<tal:block metal:use-macro="here/zportlets/left_search/macros/left_search">
+				</tal:block>
+				<tal:block metal:define-slot="doc_manager_left_optionals">
+				</tal:block>
+				-->
+			</div>
+
+			<div>
+						<div id="middle_port" style="position:relative;">
+				<!-- ****************************** -->
+							<a name="startcontent" id="startcontent"></a>
+
+							<tal:block metal:define-slot="doc_manager_content">
+								here comes the main content
+							</tal:block>
+
+
+						</div>
+			</div>
+
+
+		</div>
+		<div id="footer"> &copy;Copyright 2005 Finsiel Italia. </div>
+	</body>
+
+
+</html>
+</tal:block>
+
+
+<!--CHANGED-->
+

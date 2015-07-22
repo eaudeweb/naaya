@@ -1,0 +1,75 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Manage portlets - Static HTML</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				ob_id python:request.get('id', '');
+				ob python:here.getPortletsTool().getPortletById(ob_id);
+				languages here/get_languages_mapping;
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_remotechportlets_html" i18n:translate="">Remote channels</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_localchportlets_html" i18n:translate="">Local channels</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_folderportlets_html" i18n:translate="">For folders</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_linksportlets_html" i18n:translate="">List of links</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_htmlportlets_html" i18n:translate="">Static HTML</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
+</ul>
+</div>
+<p i18n:translate="">
+	This page displays the list of available portlets that contains static HTML. The content of
+	each of them can be modified using an WYSIWYG editor.
+</p>
+<form method="post" tal:attributes="action string:${site_url}/admin_deletehtmlportlet">
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="admin_table">
+	<tr>
+		<th width="1%"></th>
+		<th i18n:translate="">Title</th>
+	</tr>
+	<tr tal:repeat="portlet python:here.getPortletsTool().get_html_portlets()">
+		<td><input type="checkbox" name="ids" tal:attributes="value portlet/id" /></td>
+		<td><a tal:attributes="href string:${site_url}/admin_htmlportlets_html?id=${portlet/id}" tal:content="portlet/title_or_id" /></td>
+	</tr>
+	<tr><td></td><td><input type="submit" value="Delete" i18n:attributes="value" /></td></tr>
+</table>
+</form>
+<p>
+	<a tal:attributes="href string:${site_url}/admin_addhtmlportlet" i18n:translate="">Add new portlet</a>
+</p>
+<fieldset tal:condition="python:ob is not None">
+	<legend i18n:translate="">Edit portlet</legend>
+	<form method="post" tal:attributes="action string:${site_url}/admin_edithtmlportlet">
+	<input type="hidden" name="id" tal:attributes="value ob_id" />
+	<table border="0" cellspacing="2" cellpadding="2" width="90%">
+		<tr>
+			<td i18n:translate="">Title</td>
+			<td><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob.getLocalProperty('title', curr_lang)" /></td>
+		</tr>
+		<tr>
+			<td i18n:translate="" valign="top">Body</td>
+			<td><span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring', ob.getLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % ob.absolute_url(), size='medium')" /></td>
+		</tr>
+		<tr>
+			<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>
+			<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+		</tr>
+	</table>
+	</form>
+	<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+		<tal:block tal:repeat="language languages">
+			<div class="current" tal:condition="python:language['code'] == curr_lang">
+				<span tal:content="python:language['name']" />
+			</div>
+			<a tal:condition="python:language['code'] != curr_lang"
+				tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+				<span tal:content="python:language['name']" />
+			</a>
+		</tal:block>
+	</div>
+
+</fieldset>
+</tal:block>
+
+</tal:block>

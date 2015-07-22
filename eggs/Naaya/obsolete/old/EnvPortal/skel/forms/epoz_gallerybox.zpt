@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>Pick image</title>
+</head>
+<body onload="this.focus();">
+<a tal:attributes="href string:${here/absolute_url}/toolbox_html">Upload an image</a>
+<hr />
+<h1>Pick</h1>
+
+<tal:block tal:define="photos here/getPhotoArchive;
+						filter_q python:request.get('q', '');
+						filter_f python:request.get('f', '');
+						filter_start python:request.get('start', 0);
+						result python:photos.query_photos(filter_q, filter_f, filter_start);
+						paging python:result[0];
+						paging_start python:paging[0]+1;
+						paging_upper python:paging[1];
+						paging_total python:paging[2];
+						paging_prev python:paging[3];
+						paging_next python:paging[4];
+						paging_current_page python:paging[5];
+						paging_records_page python:paging[6];
+						paging_pages python:paging[7];
+						objects_info python:result[1];
+						objects_list python:objects_info[2];
+						objects_delete_all python:objects_info[1];
+						objects_select_all python:objects_info[0];
+						query_string python:here.process_querystring(request.QUERY_STRING)">
+
+<p i18n:translate="">
+	This document lists all the photos published in the Photos Archive of the portal.
+	Use the form below to filter them.
+</p>
+<form method="get" action="">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<td i18n:translate="">Query</td>
+	<td><input type="text" name="q" size="50" tal:attributes="value filter_q" /></td>
+	<td><input type="submit" value="Filter" i18n:attributes="value" /></td>
+</tr>
+</table>
+</form>
+
+<tal:block tal:condition="python:paging_total>0">
+<div>
+	<span i18n:translate="" tal:omit-tag="">Results</span>
+	<strong tal:content="paging_start">start</strong> - 
+	<strong tal:content="paging_upper">upper</strong> <span i18n:translate="" tal:omit-tag="">of</span> <strong tal:content="paging_total">total</strong>.<br />
+	<span i18n:translate="" tal:omit-tag="">Pages</span>
+	<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/gallerybox_html?start=${start}&amp;${query_string}">Previous</a></span>
+	<span tal:repeat="page paging_pages">
+		<span tal:condition="python:page==paging_current_page" tal:content="python:page+1">page number</span>
+		<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${here/absolute_url}/gallerybox_html?start=${start}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1">page number</a>
+	</span>
+	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/gallerybox_html?start=${start}&amp;${query_string}">Next</a></span>
+</div><br />
+<form>
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr>
+		<th i18n:translate="">Photo</th>
+		<th i18n:translate="">Released</th>
+	</tr>
+	<tr tal:repeat="obtuple objects_list">
+		<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; item python:obtuple[2]">
+		<td><img tal:attributes="src string:${item/absolute_url}/view?display=Thumbnail; alt item/title_or_id; onclick string:window.opener.CreateImage('${item/absolute_url}/view');; window.close();;" border="0" /></td>
+		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+		</tal:block>
+	</tr>
+</table>
+</form>
+</tal:block>
+<tal:block tal:condition="python:paging_total<=0" i18n:translate="">
+		No photos found.
+</tal:block>
+</tal:block>
+
+<form>
+<input type="button" value="Close window" onclick="javascript:window.close();" />
+</form>
+
+</body>
+</html>

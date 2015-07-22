@@ -1,0 +1,58 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Other properties</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<div id="tabbedmenu">
+<ul>
+  <li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+  <li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+  <li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+  <li id="currenttab"><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+<div class="cleaner"> </div>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_properties">
+<dl>
+	<dt><strong><label for="show_releasedate" i18n:translate="">Show release date</label></strong></dt>
+	<dd i18n:translate="">The front page usually displays portlets containing the latest news, events, etc. You can decide not to show their release date if, for instance, the items are too old and this would impact on the vitality of your portal.</dd>
+	<dd><input type="checkbox" name="show_releasedate" id="show_releasedate" tal:attributes="checked here/show_releasedate" /></dd>
+	<dt><strong><label for="rename_id" i18n:translate="">Rename objects' ids </label></strong></dt>
+	<dd i18n:translate="">All the items in the portal have pregenerated ids, as you can see them in the URLs. If you want to insert your own ids, you should check the "Rename ids on objects" checkbox. But, please remember that ids names must not contain any special characters or spaces.</dd>
+	<dd><input type="checkbox" name="rename_id" id="rename_id" tal:attributes="checked here/rename_id" /></dd>
+	<dt><strong><label for="repository_url" i18n:translate="">Network registry</label></strong></dt>
+	<dd i18n:translate="">If you are using a network registry to automatically find the network participants, specify its URL address in the field below.</dd>
+	<dd><input type="text" name="repository_url" id="repository_url" size="50" tal:attributes="value here/repository_url" /></dd>
+	<dt><strong><label for="submit_unapproved" i18n:translate="">Submit unapproved</label></strong></dt>
+	<dd i18n:translate="">By default, the users having higher roles such as <em i18n:name="administrators" i18n:translate="">administrators</em> or <em i18n:name="managers" i18n:translate="">managers</em> have their submitted content immediately published on the portal. However, if you check the property below, all content submissions will pass an administrator's review (basket of approvals) before being published.</dd>
+	<dd><input type="checkbox" name="submit_unapproved" id="submit_unapproved" tal:attributes="checked here/submit_unapproved" /></dd>
+	<dt><strong><label for="portal_url" i18n:translate="">Portal URL</label></strong></dt>
+	<dd i18n:translate="">The portal URL represents the address this portal can be found at. By setting this parameter the URL will not change, but site administrators can use this information.</dd>
+	<dd><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></dd>
+	<dt><strong><label for="http_proxy" i18n:translate="">HTTP Proxy</label></strong></dt>
+	<dd i18n:translate="">If your server is behind a proxy, specify its address followed by the port number. Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128</dd>
+	<dd><input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/http_proxy" /></dd>
+	<dt><strong><label for="recaptcha_public_key" i18n:translate=""><a href="http://recaptcha.net">reCAPTCHA</a> public key</label></strong></dt>
+	<dd><input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/recaptcha_public_key" /></dd>
+	<dt><strong><label for="recaptcha_private_key" i18n:translate=""><a href="http://recaptcha.net">reCAPTCHA</a> private key</label></strong></dt>
+	<dd><input type="text" name="recaptcha_private_key" id="recaptcha_private_key" size="53" tal:attributes="value here/recaptcha_private_key" /></dd>
+	<dt><strong><label for="rdf_max_items" i18n:translate="">RDF maximum number of items</label></strong></dt>
+	<dd i18n:translate="">Specify the maximum number of items a rdf channel should include. Use 0 for all.</dd>
+	<dd><input type="text" name="rdf_max_items:int" id="rdf_max_items" size="10" tal:attributes="value here/rdf_max_items|python:0" /></dd>
+	<dt><strong><label for="switch_language" i18n:translate="">Allow switching language for content?</label></strong></dt>
+	<dd i18n:translate="">The edit form for all content types will be enhanced to contain this extra-option for deleting the current language version of the object and create another one with the selected language.</dd>
+	<dd><input type="checkbox" name="switch_language" id="switch_language" tal:attributes="checked here/switch_language" /></dd>
+	<dt><strong><label for="display_contributor" i18n:translate="">Display contributor name in content indexes</label></strong></dt>
+	<dd i18n:translate="">If this option is enabled, the index of all content types will show the name of the contributor who uploaded it.
+	Otherwise, the name of the contributor will not be shown on the index of content types.</dd>
+	<dd><input type="checkbox" name="display_contributor" id="display_contributor" tal:attributes="checked here/display_contributor"/></dd>
+	<dt><strong><label for="display_subobject_count" i18n:translate="">Show how many objects are in a folder</label></strong></dt>
+	<dd i18n:translate="">If this option is enabled, the folder index will show how many objects (sub-folders, sub-objects) are in each listed folder.</dd>
+	<dd><input type="checkbox" name="display_subobject_count" id="display_subobject_count" tal:attributes="checked here/display_subobject_count"/></dd>
+</dl>
+<p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
+</form>
+</tal:block>
+</tal:block>

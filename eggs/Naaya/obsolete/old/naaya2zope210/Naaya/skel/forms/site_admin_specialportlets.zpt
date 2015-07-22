@@ -1,0 +1,38 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Manage portlets - Special</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_remotechportlets_html" i18n:translate="">Remote channels</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_localchportlets_html" i18n:translate="">Local channels</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_folderportlets_html" i18n:translate="">For folders</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_linksportlets_html" i18n:translate="">List of links</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_htmlportlets_html" i18n:translate="">Static HTML</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+	This page displays the list of available special portlets. These portlets cannot be erased or modified
+	using this page.
+</p>
+
+<table class="datatable" tal:define="portlets python:here.getPortletsTool().get_special_portlets()">
+	<col style="width: 35em;" />
+	<thead>
+		<tr>
+			<th class="scope-col" scope="col" i18n:translate="">Title</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="portlet portlets" tal:attributes="class python:test(path('repeat/portlet/odd'), 'zebraodd', 'zebraeven')">
+			<td tal:content="portlet/title_or_id" />
+		</tr>
+	</tbody>
+</table>
+
+</tal:block>
+
+</tal:block>

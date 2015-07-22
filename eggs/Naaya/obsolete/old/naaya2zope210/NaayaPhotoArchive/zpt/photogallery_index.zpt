@@ -1,0 +1,106 @@
+<metal:block define-macro="page">
+<span tal:replace="structure here/standard_html_header" />
+<tal:block tal:define="
+	objects_list here/getSortedObjects;
+	follow_link python:True;">
+
+<link rel="stylesheet" type="text/css"
+	tal:attributes="href string:${here/absolute_url}/style_css" />
+
+<h1>
+<img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" />
+<span tal:replace="here/title_or_id" />
+</h1>
+
+<form action="." name="objectItems">
+
+<!-- Admin section -->
+<div id="admin_this_folder" tal:condition="here/checkPermissionEditObject">
+	<div class="toolbar" metal:define-slot="admin_buttons">
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit gallery</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/photofolder_add_html"><span i18n:translate="">New album</span></a>
+	</div>
+	<div style="clear: both"></div>
+</div>
+
+<div class="thumbnail-layout" id="selection_buttons" tal:condition="python:here.checkPermissionEditObject()">
+
+	<tal:block condition="objects_list">
+	<input type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
+	<input style="display: none;" type="button" id="select_all_label"
+		name="select_all_label" value="Select all"
+		class="action_button" onclick="toggleSelect('select_all')" />
+	<input class="action_button" tal:condition="here/checkPermissionCopyObject" type="submit"
+		name="copyObjects:method" value="Copy" i18n:attributes="value" />
+	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
+		name="cutObjects:method" value="Cut" i18n:attributes="value" />
+	</tal:block>
+
+	<input class="action_button" tal:condition="here/checkPermissionPasteObjects" type="submit"
+		name="pasteObjects:method" value="Paste" i18n:attributes="value" />
+
+	<tal:block condition="objects_list">
+	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
+		name="deleteObjects:method" value="Delete" i18n:attributes="value" />
+	</tal:block>
+
+</div>
+<div style="clear: both"></div>
+
+<!-- Main content -->
+<div class="gallery-albums" id="album-content" metal:define-macro="images">
+	<div class="album-thumbnail" tal:repeat="album objects_list">
+		<div class="album-image-holder" metal:define-slot="image">
+			<a tal:omit-tag="not:follow_link"
+				tal:attributes="href album/absolute_url; title album/title" tal:define="album_cover album/get_cover;
+					img_src python:test(album_cover, '/'.join((album.absolute_url(), album_cover, 'view?display=Gallery')), 'misc_/NaayaPhotoArchive/empty_album.png')">
+			<span tal:omit-tag="follow_link">
+				<img tal:attributes="src img_src; alt album/title"/>
+			</span>
+			</a>
+		</div>
+		<div class="album-image-details" tal:define="album_id album/getId" metal:define-slot="details">
+			<input tal:condition="here/checkPermissionEditObject"
+				type="checkbox" name="ids:list" tal:attributes="value album_id; id album_id" />
+			<label tal:attributes="for album_id">
+				<strong tal:content="python:here.splitTextByWords(album.title_or_id())" />
+				<span tal:content="python:'(%s)' % len(album.getObjects())" />
+				<span tal:condition="not:album/has_restrictions" i18n:translate="" class="album-public">
+					- Public
+				</span>
+				<span tal:condition="album/has_restrictions" i18n:translate="" class="album-private">
+					- [Restricted]
+				</span>
+			</label>
+		</div>
+	</div>
+</div>
+</form>
+
+<div style="clear: both"></div>
+<span tal:replace="structure here/comments_box" />
+
+<!-- Javascripts -->
+
+<script  tal:condition="python:objects_list and here.checkPermissionEditObject()"
+	language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var caller = document.getElementById(caller);
+  var res = document.getElementById('album-content');
+  var res_inputs = res.getElementsByTagName('INPUT');
+  caller.checked = !caller.checked;
+  for(var i=0; i<res_inputs.length; i++){
+    res_inputs[i].checked = caller.checked;
+  }
+}
+
+// Enable select all button if javascript is enabled
+document.getElementById('select_all_label').style.display = 'inline';
+//-->
+</script>
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />
+</metal:block>

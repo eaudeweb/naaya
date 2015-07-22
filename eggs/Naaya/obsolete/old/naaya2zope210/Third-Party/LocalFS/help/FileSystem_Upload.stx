@@ -1,0 +1,13 @@
+Local File System - Upload: Upload local files.
+
+  Description
+
+    This page allows you to upload files from the web browser to the Zope 
+    server's file system.
+
+  Controls
+ 
+    'File' -- Path to the file to add.
+
+    'Add' -- Add the selected file.
+

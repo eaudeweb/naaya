@@ -1,0 +1,38 @@
+High Priority
+
+	- Fix manage_add methods.
+	
+	- Make the default object class configurable, for files with no extension
+
+Medium Priority
+
+	- Recognize a final '_foo' as the file type, in addition to '.foo'.
+	
+	- Create a tree tag howto.
+	
+	- Add a section on filtering to the faq.
+	
+	- Add a section on restricting upload access to the faq.
+	
+	- Add zclass factory examples + faq.
+
+Low Priority
+
+	- Add object caching.
+	
+	- Add http streaming capability.
+	
+	- Add ftp support.
+	
+	- Add webdav support.
+	
+	- Add cut/copy/paste between ZODB and local files
+	
+	- Fix XMLDocument sub-object editing.
+
+Dreamworks
+
+	- Store object properties.
+	
+	- Integrate objects with CVS.
+

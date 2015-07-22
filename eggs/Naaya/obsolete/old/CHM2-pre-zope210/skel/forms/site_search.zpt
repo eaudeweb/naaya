@@ -1,0 +1,182 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<fieldset style="width: 30%; float: right; background-color: #eeeeee;">
+<legend i18n:translate="">Search tips:</legend>
+<table cellpadding="2">
+<tr>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>and</strong> water</td>
+	<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
+</tr>
+<tr>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>or</strong> water</td>
+	<td valign="top" i18n:translate="">either of the words occur in the document</td>
+</tr>
+<tr>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong>not</strong> water</td>
+	<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+</tr>
+<tr>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">wate<strong>*</strong></td>
+	<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+</tr>
+</table>
+</fieldset>
+
+<h1 i18n:translate="">Free text search in this portal</h1>
+
+<p i18n:translate="">
+	You can search <a tal:attributes="href string:${here/getSitePath}/external_search_html"><strong>all 
+	CHM network</strong></a><br />
+</p>
+<p i18n:translate="">
+	The text is searched in local <strong>Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
+</p>
+
+<tal:block tal:define="query python:request.get('query', '');
+	languages python:here.utConvertToList(request.get('languages', [here.gl_get_selected_language()]));
+	releasedate python:request.get('releasedate', None);
+	releasedate_range python:request.get('releasedate_range', None);
+	meta_types python:here.utConvertToList(request.get('meta_types', here.searchable_content));
+	start python:request.get('start', 0);
+	skey python:request.get('skey', 'title');
+	rkey python:request.get('rkey', '');
+	querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;meta_types=%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), here.utNoneToEmpty(releasedate_range), '&meta_types='.join(meta_types));">
+
+<form method="get" name="frmSearch" action="search_html">
+	<strong i18n:translate="">Query</strong>
+	<input type="text" name="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+	<div style="margin-top:10px;">
+		<strong><label i18n:translate="">Search items translated in the following language(s)</label></strong><br />
+		<tal:block repeat="item here/gl_get_languages_mapping">
+		<input name="languages" type="checkbox" tal:attributes="value item/code; checked python:item['code'] in languages; id string:language_${item/code}" style="margin:0 3px;" />
+		<label tal:attributes="for string:language_${item/code}" tal:content="item/name" />
+		</tal:block>
+	</div>
+	<div style="margin-top:10px;">
+		<strong><label for="releasedate" i18n:translate="">Released</label></strong>
+		<select name="releasedate_range" id="releasedate_range" style="vertical-align:middle;">
+			<option value="max" tal:attributes="selected python:releasedate_range=='max'" i18n:translate="">before</option>
+			<option value="min" tal:attributes="selected python:releasedate_range=='min'" i18n:translate="">after</option>
+		</select>
+		<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value releasedate" style="margin:0;" />
+		<em i18n:translate="">(dd/mm/yyyy)</em>
+	</div>
+	<div style="margin-top:10px;">
+		<strong><label for="meta_types" i18n:translate="">Content type(s)</label></strong>
+		<select name="meta_types" multiple="multiple" size="5" style="vertical-align:top;">
+		<tal:block repeat="item here/searchable_content">
+			<option tal:attributes="value item; selected python:item in meta_types"
+				tal:content="python:here.get_label_for_meta_type(item)" />
+		</tal:block>
+		</select>
+	</div>
+	<br />
+	<input type="submit" value="Search" class="styled_button" i18n:attributes="value" />
+	<input type="hidden" name="sort_order" value="" />
+	<input type="hidden" name="sort_by" value="" />
+</form>
+
+<span tal:condition="query">
+<tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types, skey, rkey, start);
+	age here/getItemsAge; number_of_results here/getNumberOfResults;
+	list_paging python:results[0]; 
+	paging_start python:list_paging[0];
+	paging_upper python:list_paging[1]; 
+	paging_total python:list_paging[2]; 
+	paging_prev python:list_paging[3];
+	paging_next python:list_paging[4]; 
+	paging_current_page python:list_paging[5]; 
+	paging_records_page python:list_paging[6];
+	paging_pages python:list_paging[7]; 
+	records python:results[1];
+	sortdata python:({'sortable': 1, 'key': 'meta_type', 'label': 'Type'}, {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'}, {'sortable': 0, 'key': '', 'label': 'Translations in'}, {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},)">
+
+<h2 i18n:translate="">Search results</h2>
+
+<tal:block tal:condition="python:paging_total!=0">
+	<div>
+		<span i18n:translate="" tal:omit-tag="">Age:</span>
+		<span tal:replace="python:here.internal_get_items_age(records, age)"/>
+		<span i18n:translate="" tal:omit-tag="">% are more then</span>
+		<span tal:replace="age"/>
+		<span i18n:translate="" tal:omit-tag="">month(s) old</span>
+	</div>
+	<table class="sortable" border="0" width="100%">
+		<thead>
+			<tr>
+				<tal:block tal:repeat="item sortdata">
+					<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
+					<tal:block tal:condition="item/sortable">
+						<tal:block tal:condition="python:skey==item['key']">
+							<th tal:condition="python:rkey==''" class="sorted" scope="col">
+								<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;rkey=1&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" /></a>
+							</th>
+							<th tal:condition="python:rkey!=''" class="sorted" scope="col">
+								<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" /></a>
+							</th>
+						</tal:block>
+						<th tal:condition="python:skey!=item['key']" scope="col">
+							<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" /></a>
+						</th>
+					</tal:block>
+				</tal:block>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="record records">
+				<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" /></td>
+				<td>
+					<a tal:attributes="href record/absolute_url" tal:content="record/title_or_id" />
+					<span tal:condition="record/description">
+						<br />
+						<span tal:replace="python:here.utTruncateString(here.utStripAllHtmlTags(record.description), 200)" />
+					</span>
+				</td>
+				<td>
+					<tal:block tal:repeat="lang here/gl_get_languages">
+						<span tal:condition="python:record.istranslated(lang)" tal:content="python:here.gl_get_language_name(lang)" />
+					</tal:block>
+				</td>
+				<td>
+					<span tal:replace="python:record.utShowDateTime(record.bobobase_modification_time())" />
+					<span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
+						<strong style="color: #FF9966;" i18n:translate="">Old</strong>
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+		<strong i18n:translate="">Results:</strong>
+		<strong tal:content="python:paging_start+1" />
+		-
+		<strong tal:content="paging_upper" />
+		<span i18n:translate="" tal:omit-tag="">of</span>
+		<strong tal:content="paging_total" /><br />
+		<span i18n:translate="" tal:omit-tag="">Page:</span>
+		<span tal:condition="python:paging_prev!=-1">
+			<a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">&lt;&lt;Previous</a>
+		</span>
+		<span tal:repeat="page paging_pages">
+			<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
+			<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" tal:content="python:page+1">
+			</a>
+		</span>
+		<span tal:condition="python:paging_next!=-1">
+			<a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">Next&gt;&gt;</a>
+		</span>
+	</div>
+</tal:block>
+<tal:block tal:condition="python:paging_total==0" i18n:translate="">
+	No results were found for this query.
+</tal:block>
+
+</tal:block>
+</span>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

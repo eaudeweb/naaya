@@ -1,0 +1,104 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit Document</h1>
+
+<p metal:fill-slot="description" i18n:translate="">
+	Change the properties in the form below and click <strong>Save changes</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+</p>
+
+<tal:block metal:fill-slot="custom_properties">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript in specific js file -->
+</tal:comment>
+
+<script type="text/javascript">
+	<!--
+	var global_dest = '';
+	function setupWin(url, theWidth, theHeight, dest)
+	{
+		global_dest = dest;
+		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+		wwinn.focus();
+		return true;
+	}
+
+	function createKey(key)
+	{
+		var dest = document.getElementById(global_dest);
+		dest.value = key;
+	}
+	// -->
+</script>
+
+<div class="field">
+	<label for="document_type"><span i18n:translate="" tal:omit-tag="">Document type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'document_type')" class="mandatory_field"> *</span></label>
+	<select name="document_type" id="document_type">
+		<option value=""></option>
+		<option tal:repeat="item here/getDocumentTypesList"
+			tal:attributes="value item/id;selected python:item.id==here.getSession('document_type', here.getVersionProperty('document_type'))"
+			tal:content="python:here.getPortalTranslations().gettext(item.title, curr_lang)" />
+	</select>
+</div>
+<div class="field">
+	<label for="file_link"><span i18n:translate="" tal:omit-tag="">File link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file_link')" class="mandatory_field"> *</span></label>
+	<input type="text" name="file_link:utf8:ustring" id="file_link" size="50" tal:attributes="value python:here.getSession('file_link', here.getVersionLocalProperty('file_link', curr_lang))" />
+</div>
+<div class="field">
+	<label for="file_link_local"><span i18n:translate="" tal:omit-tag="">File link local</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file_link_local')" class="mandatory_field"> *</span></label>
+	<input type="text" name="file_link_local:utf8:ustring" id="file_link_local" size="50" tal:attributes="value python:here.getSession('file_link_local', here.getVersionLocalProperty('file_link_local', curr_lang))" />
+	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'file_link_local');;" />
+</div>
+<div class="field">
+	<label for="source"><span i18n:translate="" tal:omit-tag="">Source</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'source')" class="mandatory_field"> *</span></label>
+	<input type="text" name="source:utf8:ustring" id="source" size="50" tal:attributes="value python:here.getSession('source', here.getVersionLocalProperty('source', curr_lang))" />
+</div>
+<div class="field">
+	<label for="source_link"><span i18n:translate="" tal:omit-tag="">Source link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'source_link')" class="mandatory_field"> *</span></label>
+	<input type="text" name="source_link" id="source_link" size="50" tal:attributes="value python:here.getSession('source_link', here.getVersionProperty('source_link'))" />
+</div>
+<div class="field">
+	<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subject')" class="mandatory_field"> *</span></label>
+	<select name="subject" id="subject" multiple="multiple" size="6">
+		<tal:block repeat="item python:here.getPortalThesaurus().getThemesList(curr_lang)">
+			<option	tal:condition="item/theme_name"
+					tal:attributes="value item/theme_id;
+									selected python:item.theme_id in here.getSession('subject', here.getVersionProperty('subject'))"
+					tal:content="item/theme_name" />
+			<option	tal:condition="not:item/theme_name"
+					tal:attributes="value item/theme_id;
+									selected python:item.theme_id in here.getSession('subject', here.getVersionProperty('subject'))"
+					tal:content="python:here.getPortalTranslations().gettext('no translation available', curr_lang)"
+					i18n:translate="" />
+		</tal:block>
+	</select>
+</div>
+<div class="field">
+	<label for="relation"><span i18n:translate="" tal:omit-tag="">Relation</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'relation')" class="mandatory_field"> *</span></label>
+	<p i18n:translate=""><strong>Tip:</strong> you can and URL address in the field below or pick one from the sitemap</p>
+	<input type="text" name="relation" id="relation" size="50" tal:attributes="value python:here.getSession('relation', here.getVersionProperty('relation'))" />
+	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'relation');;" />
+</div>
+<div class="field">
+	<label for="creator_email"><span i18n:translate="" tal:omit-tag="">Creator email</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'creator_email')" class="mandatory_field"> *</span></label>
+	<input type="text" name="creator_email:utf8:ustring" id="creator_email" size="50" tal:attributes="value python:here.getSession('creator_email', here.getVersionProperty('creator_email'))" />
+</div>
+<div class="field">
+	<label for="publisher"><span i18n:translate="" tal:omit-tag="">Publisher</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'publisher')" class="mandatory_field"> *</span></label>
+	<input type="text" name="publisher:utf8:ustring" id="publisher" size="50" tal:attributes="value python:here.getSession('publisher', here.getVersionLocalProperty('publisher', curr_lang))" />
+</div>
+<div class="field">
+	<label for="creator"><span i18n:translate="" tal:omit-tag="">Creator</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'creator')" class="mandatory_field"> *</span></label>
+	<input type="text" name="creator:utf8:ustring" id="creator" size="50" tal:attributes="value python:here.getSession('creator', here.getVersionLocalProperty('creator', curr_lang))" />
+</div>
+<div class="field">
+	<label for="rights"><span i18n:translate="" tal:omit-tag="">Rights</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'rights')" class="mandatory_field"> *</span></label>
+	<select name="rights" id="rights">
+		<option value=""></option>
+		<option tal:repeat="item here/getRightsTypesList"
+			tal:attributes="value item/id;selected python:item.id==here.getSession('rights', here.getVersionProperty('rights'))"
+			tal:content="python:here.getPortalTranslations().gettext(item.title, curr_lang)" />
+	</select>
+</div>
+</tal:block>
+
+</tal:block>

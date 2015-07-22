@@ -1,0 +1,36 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<div>
+	<fieldset><legend>Database connection</legend>
+		<div>Change the database connection parameters using the form below and click the <strong>Update</strong> button.</div>
+
+		<form method="post" action="saveDbConnection" name="frmDb" id="frmDb">
+			<div>Host name</div>
+			<div>
+				<input class="bg" type="text" name="db_host" size="30" tal:attributes="value here/db_host" />
+			</div>
+			<div>Name</div>
+			<div>
+				<input class="bg" type="text" name="db_name" size="30" tal:attributes="value here/db_name" />
+			</div>
+			<div>User Login ID</div>
+				<div><input class="bg" type="text" name="db_user" size="30"  tal:attributes="value here/db_user" />
+			</div>
+			<div>Password</div>
+			<div>
+				<input class="bg" type="password" name="db_password" size="30"  tal:attributes="value here/db_password" />
+			</div>
+			<div>Port</div>
+			<div>
+				<input class="bg" type="text" name="db_port" size="5" tal:attributes="value here/db_port" />
+			</div>
+			<div></div>
+			<div>
+				<input class="sbm_bg" type="submit" value="Update" />
+			</div>
+		</form>
+	</fieldset>
+</div>
+
+<span tal:replace="structure here/manage_page_footer"/>

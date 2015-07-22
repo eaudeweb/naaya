@@ -1,0 +1,199 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<style type="text/css">
+/*table with information on rows*/
+.horizontal_table{
+}
+
+	.horizontal_table th {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		vertical-align:top;
+	}
+
+	.horizontal_table td {
+		border-bottom: 1px solid #f0f0f0;
+		border-right:  1px dotted #f0f0f0;
+		text-align:left;
+		vertical-align:top;
+		padding:2px 3px 2px 5px;
+	}
+
+	.horizontal_table caption {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		font-weight:bold;
+	}
+
+	.horizontal_table .short {
+		width: 10px;
+	}
+
+
+/*tabbed divs*/
+.sidimar_tabbed {
+	margin: 3px 0px;
+}
+	.sidimar_tabbed .header {
+	}
+
+		.sidimar_tabbed .header a {
+			color:black;
+			text-decoration:none;
+		}
+
+		.sidimar_tabbed .header a:visited {
+			color:black;
+		}
+
+
+		.sidimar_tabbed .active {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 1px 5px;
+			border-bottom:1px solid #f0f0f0;
+
+			font-weight: bold;
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+		}
+
+		.sidimar_tabbed .inactive {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 0px 5px;
+
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+
+		}
+
+	.sidimar_tabbed .content {
+		padding: 10px 5px;
+		border:1px solid #989898;
+	}
+
+	.sidimar_tabbed .ie_table_fixer {
+		width:100%;
+	}
+
+</style>
+
+<div class="sidimar_tabbed">
+	<span class="header">
+		<a href="#" class="active">
+			Overview
+		</a>
+		<a href="#" class="inactive">
+			Edit personal information
+		</a>
+		<a href="#" class="inactive">
+			Change Password
+		</a>
+	</span>
+	<div class="content">
+		<div class="ie_table_fixer">
+
+
+<tal:block define="user_obj python:here.getUser(request.get('name', '')); 
+					user_firstname python:here.getUserFirstName(user_obj); 
+					user_lastname python:here.getUserLastName(user_obj);
+					user_email python:here.getUserEmail(user_obj); 
+					user_account python:here.getUserAccount(user_obj);
+					user_password python:here.getUserPassword(user_obj); 
+					user_roles python:here.getUserRoles(user_obj); 
+					user_created python:here.getUserCreatedDate(user_obj);
+					user_job python:here.getUserJob(user_obj);
+					user_organisation python:here.getUserOrganisation(user_obj);
+					user_country python:here.getUserCountry(user_obj);
+					user_street python:here.getUserStreet(user_obj);
+					user_street_number python:here.getUserStreetNumber(user_obj);
+					user_zip python:here.getUserZip(user_obj);
+					user_city python:here.getUserCity(user_obj);
+					user_region python:here.getUserRegion(user_obj);
+					user_phone python:here.getUserPhone(user_obj);
+					user_note python:here.getUserNote(user_obj);
+					user_lastupdated python:here.getUserLastUpdated(user_obj);">
+
+
+
+
+<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0">
+	<caption>
+		Personal information
+	</caption>
+	<tr>
+		<th>Username</th>
+		<td><strong tal:content="user_account" /></td>
+	</tr>
+	<tr>
+		<th>First name</th>
+		<td tal:content="user_firstname" />
+	</tr>
+	<tr>
+		<th>Last name</th>
+		<td tal:content="user_lastname" />
+	</tr>
+	<tr>
+		<th>Job</th>
+		<td tal:content="user_job" />
+	</tr>
+	<tr>
+		<th>Organisation</th>
+		<td tal:content="user_organisation" />
+	</tr>
+	<tr>
+		<th>Country</th>
+		<td tal:content="user_country" />
+	</tr>
+	<tr>
+		<th>Street</th>
+		<td tal:content="user_street" />
+	</tr>
+	<tr>
+		<th>Street number</th>
+		<td tal:content="user_street_number" />
+	</tr>
+	<tr>
+		<th>Zip</th>
+		<td tal:content="user_zip" />
+	</tr>
+	<tr>
+		<th>City</th>
+		<td tal:content="user_city" />
+	</tr>
+	<tr>
+		<th>Region</th>
+		<td tal:content="user_region" />
+	</tr>
+	<tr>
+		<th>Phone</th>
+		<td tal:content="user_phone" />
+	</tr>
+	<tr>
+		<th>Email</th>
+		<td tal:content="user_email" />
+	</tr>
+	<tr>
+		<th>Note</th>
+		<td tal:content="user_note" />
+	</tr>
+	<tr>
+		<th>Creation date</th>
+		<td tal:content="user_lastupdated" />
+	</tr>
+</table>
+
+</tal:block>
+
+		</div>
+	</div>
+
+<span tal:replace="structure here/manage_page_footer"/>

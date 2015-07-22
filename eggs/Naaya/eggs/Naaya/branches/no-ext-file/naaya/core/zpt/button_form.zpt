@@ -1,8 +1,0 @@
-<form method="POST" tal:attributes="action options/action|nothing">
-    <input tal:repeat="kv options/formdata/items|python:[]"
-           tal:attributes="name python:kv[0]; value python:kv[1]"
-           type="hidden" />
-    <input type="submit"
-           tal:attributes="value options/label|string:submit;
-                           title options/button_title|nothing;" />
-</form>

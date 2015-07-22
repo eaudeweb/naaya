@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Irish">
+    <body>
+      <trans-unit approved="1" id="Argentina">
+        <source>Argentina</source>
+        <target>An Airgintín</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bolivia">
+        <source>Bolivia</source>
+        <target>An Bholaiv</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Brazil">
+        <source>Brazil</source>
+        <target>An Bhrasaíl</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bahamas">
+        <source>Bahamas</source>
+        <target>Na Bahámaí</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Chile">
+        <source>Chile</source>
+        <target>An tSile</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Colombia">
+        <source>Colombia</source>
+        <target>An Cholóim</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ecuador">
+        <source>Ecuador</source>
+        <target>Eacuadór</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Falkland_Islands">
+        <source>Falkland Islands</source>
+        <target>Oileáin Fháclainne</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="French_Guiana">
+        <source>French Guiana</source>
+        <target>An Ghuáin Fhrancach</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="South_Georgia_and_the_South_Sandwich_Islands">
+        <source>South Georgia and the South Sandwich Islands</source>
+        <target>An tSeoirsia Theas agus Oileáin Sandwich Theas</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guyana">
+        <source>Guyana</source>
+        <target>An Ghuáin</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Peru">
+        <source>Peru</source>
+        <target>Peiriú</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Paraguay">
+        <source>Paraguay</source>
+        <target>Paragua</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Suriname">
+        <source>Suriname</source>
+        <target>Suranam</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Uruguay">
+        <source>Uruguay</source>
+        <target>Urugua</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Venezuela">
+        <source>Venezuela</source>
+        <target>Veiniséala</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

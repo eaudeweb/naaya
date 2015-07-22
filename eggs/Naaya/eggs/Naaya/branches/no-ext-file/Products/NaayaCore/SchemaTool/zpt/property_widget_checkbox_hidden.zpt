@@ -1,5 +1,0 @@
-<tal:block define="value options/value|nothing; prop_id here/prop_name">
-    <input type="hidden" value="on"
-           tal:condition="value"
-           tal:attributes="name string:${prop_id}:boolean" />
-</tal:block>

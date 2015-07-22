@@ -1,9 +1,0 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_add').macros['page']">
-<h1 metal:fill-slot="title" i18n:translate="">Submit Story</h1>
-<tal:block metal:fill-slot="custom_properties">
-    <div class="field">
-        <label for="frontpicture"><span i18n:translate="" tal:omit-tag="">Front page picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'frontpicture')" class="mandatory_field"> *</span></label>
-        <input type="file" name="frontpicture" id="frontpicture" tal:attributes="value python:here.getSession('frontpicture', '')" />
-    </div>
-</tal:block>
-</tal:block>

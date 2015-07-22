@@ -1,0 +1,50 @@
+// Epoz-Language-File: fr (French)
+// Jean.Laroque@saint-gobain.com
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Paragraphe';
+EpozLang["Heading1"]='Titre 1';
+EpozLang["Heading2"]='Titre 2';
+EpozLang["Heading3"]='Titre 3';
+EpozLang["Heading4"]='Titre 4';
+EpozLang["Heading5"]='Titre 5';
+EpozLang["Heading6"]='Titre 6';
+EpozLang["Formatted"]='Format&eacute;';
+
+EpozLang["Bold"]='Gras';
+EpozLang["Italic"]='Italique';
+EpozLang["Underline"]='Soulign&eacute;';
+EpozLang["Strikethrough"]='Barr&eacute;';
+
+EpozLang["Subscript"]='Indice';
+EpozLang["Superscript"]='Exposant';
+
+EpozLang["TextColor"]='Couleur Texte';
+EpozLang["BackColor"]='Couleur Fond';
+
+EpozLang["AlignLeft"]='Aligner &agrave; Gauche';
+EpozLang["Center"]='Centrer';
+EpozLang["AlignRight"]='Aligner &agrave; Droite';
+
+EpozLang["OrderedList"]='Liste Ordonn&eacute;e';
+EpozLang["UnorderedList"]='Liste D&eacute;sordonn&eacute;e';
+EpozLang["Outdent"]='Diminuer le retrait';
+EpozLang["Indent"]='Augmenter le retrait';
+    
+EpozLang["InsertLink"]='Insertion Lien';
+EpozLang["InsertImage"]='Insertion Image';
+EpozLang["InsertRule"]='Insertion Trait';
+EpozLang["InsertTable"]='Insertion Tableau';
+EpozLang["Toolbox"]='Boite &agrave; Outil';
+
+EpozLang["Undo"]='Annuler';
+EpozLang["Redo"]='R&eacute;tablir';
+
+EpozLang["EnterLinkURL"]='Entrer Lien URL';
+EpozLang["EnterImageURL"]='Entrer Image URL';
+
+EpozLang["EnterTableRows"]='Nombre de Lignes';
+EpozLang["EnterTableColumns"]='Nombre de Colonnes';
+EpozLang["EnterTableBorder"]='Type de Bordure';
+EpozLang["TableWithHead"]='Tableau avec Ent&ecirc;te';
+EpozLang["TableWithoutHead"]='Tableau sans Ent&ecirc;te';

@@ -1,0 +1,68 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<h1>Add permission</h1>
+
+<form name="frmAddPermission" method="post" action="addPermission">
+
+<fieldset><legend>
+<table>
+	<tr>
+		<td style="vertical-align: top"><img src="misc_/NaayaCore/Permission.gif" style="vertical-align: top" alt="Permission icon" /></td>
+		<td><strong>Permission name</strong></td>
+	</tr>
+</table>
+</legend>
+
+<table border="0">
+<tr>
+	<td>Permission name</td>
+	<td><input type="text" name="name" size="45" maxLength="255" /></td>
+</tr>
+<tr>
+	<td>Permission description</td>
+	<td><textarea name="description" cols="45" rows="5"></textarea></td>
+</tr>
+</table>
+
+<br />
+
+<table width="100%">
+<tr class="row-header">
+	<td class="cell-header" width="2%">&nbsp;</td>
+	<td class="cell-header">Permission name</td>
+	<td class="cell-header" width="2%">&nbsp;</td>
+	<td class="cell-header">Permission name</td>
+	<td class="cell-header" width="2%">&nbsp;</td>
+	<td class="cell-header">Permission name</td>
+</tr>
+<tr tal:repeat="permission here/list_zope_permissions" 
+	tal:attributes="class python:test(path('repeat/permission/odd'), 'row-odd', 'row-even')">
+	<td width="2%">
+		<input type="checkbox" name="permissions" tal:attributes="value python:permission[0]">
+	</td>
+	<td tal:content="python:permission[0]">permission</td>
+	<td width="2%">
+		<input type="checkbox" name="permissions" tal:attributes="value python:permission[1]">
+	</td>
+	<td tal:content="python:permission[1]">permission</td>
+	<td width="2%">
+		<input type="checkbox" name="permissions" tal:attributes="value python:permission[2]">
+	</td>
+	<td tal:content="python:permission[2]">permission</td>
+</tr>
+</table>
+</fieldset>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>
+	<td><input type="submit" name="ActionButton" value=" Save " class="button" onclick="document.frmAddPermission.action='addPermission';" />
+		<input type="reset" name="ResetButton" value=" Reset " class="button" />
+		<input type="submit" name="CancelButton" value=" Cancel " class="button" onclick="document.frmAddPermission.action='addPermission';" />
+	</td>
+</tr>
+</table>
+
+</form>
+
+<span tal:replace="structure here/manage_page_footer"/>

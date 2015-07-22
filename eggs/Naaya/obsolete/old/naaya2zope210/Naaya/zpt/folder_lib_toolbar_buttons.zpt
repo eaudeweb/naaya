@@ -1,0 +1,50 @@
+<tal:comment condition="nothing">
+<!--
+Required variables:
+ - btn_copy;
+ - btn_cut;
+ - btn_paste;
+ - btn_delete;
+-->
+</tal:comment>
+
+<metal:block define-macro="content" tal:define="
+  btn_copy btn_copy|nothing;
+  btn_cut btn_cut|nothing;
+  btn_paste btn_paste|nothing;
+  btn_delete btn_delete|nothing;
+  show_toolbar btn_copy|btn_cut|btn_paste|btn_delete;">
+
+<div id="toolbar" tal:condition="python: not show_toolbar and btn_paste">
+  <input type="submit" value="Paste" name="pasteObjects:method"
+    i18n:attributes="value"
+    tal:condition="btn_paste" />
+</div>
+
+<div id="toolbar" tal:condition="show_toolbar">
+  <metal:block define-slot="default">
+  <input type="submit" value="Copy" name="copyObjects:method"
+    i18n:attributes="value"
+    tal:condition="btn_copy" />
+  <input type="submit" value="Cut" name="cutObjects:method"
+    i18n:attributes="value"
+    tal:condition="btn_cut" />
+  <input type="submit" value="Paste" name="pasteObjects:method"
+    i18n:attributes="value"
+    tal:condition="btn_paste" />
+  <input type="submit" value="Delete" name="deleteObjects:method"
+    onclick="javascript:return window.confirm('Are you sure?')"
+    i18n:attributes="value"
+    tal:condition="btn_delete" />
+  <input type="submit" value="Rename" name="renameobject_html:method"
+    i18n:attributes="value"
+    tal:condition="python: here.rename_id and btn_delete" />
+  </metal:block>
+  <metal:block define-slot="custom">
+    <tal:comment condition="nothing">
+      Fill this slot to add custom buttons.
+    </tal:comment>
+  </metal:block>
+</div>
+
+</metal:block>

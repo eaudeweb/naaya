@@ -1,0 +1,140 @@
+<tal:block metal:use-macro="here/DocBase_manage_edit/macros/page">
+
+    <tal:block metal:fill-slot="description">
+        Change the properties in the form below and click <b>Save changes</b>.
+    </tal:block>
+
+    <tal:block metal:fill-slot="custom_properties">
+	<tr>
+		<th class="add-header">Creation date:</th>
+		<td class="td_input" tal:content="here/creationdate"></td>
+	</tr>
+	<tr>
+		<th class="add-header">Owner of this article:</th>
+		<td class="td_input" tal:content="here/ownerinfo"></td>
+	</tr>
+	<tr>
+		<th class="add-header">
+			<label for="thematic_area">Thematic area:</label>
+		</th>
+		<td class="td_input">
+			<select name="thematic_area" id="thematic_area">
+				<option tal:repeat="thematic_area here/getThematicAreas" 
+						tal:content="thematic_area"
+						tal:attributes="value repeat/thematic_area/index;
+	selected python:test(int(path('here/thematic_area'))==path('repeat/thematic_area/index'))
+				" />
+			</select>
+		</td>
+	</tr>
+	<tr>
+	<th class="add-header">
+		<label for="source_type">
+			Source type
+		</label>
+	</th>
+	<td class="td_input">
+		<select name="source_type" id="source_type">
+			<option value="0" tal:attributes="selected python:test(path('here/source_type')=='0')">
+				Personale
+			</option>
+			<option value="1" tal:attributes="selected python:test(path('here/source_type')=='1')">
+				Internet
+			</option>
+			<option value="2" tal:attributes="selected python:test(path('here/source_type')=='2')">
+				Stampa
+			</option>
+			<option value="3" tal:attributes="selected python:test(path('here/source_type')=='3')">
+				Materiale altra azienda
+			</option>
+			<option value="4" tal:attributes="selected python:test(path('here/source_type')=='4')">
+				Materiale convegno
+			</option>
+		</select>
+	</td>
+	</tr>
+	<tr>
+		<th class="add-header">
+			<label for="source" >
+				Source name:
+			</label>
+		</th>
+		<td class="td_input">
+			<input type="text" name="source" id="source" size="63" value="" tal:attributes="value here/source" />
+		</td>
+	</tr>
+	<tr>
+		<th class="add-header">
+			<label for="author" >
+				Author of the documents:
+			</label>
+		</th>
+		<td class="td_input">
+			<input type="text" name="author" id="author" size="63" value="" tal:attributes="value here/author" />
+		</td>
+	</tr>
+	<tr>
+		<th class="add-header">
+			<label for="abstract" >
+				Abstract:
+			</label>
+		</th>
+		<td class="td_input">
+			<textarea name="abstract" id="abstract" rows="10" cols="62"
+				tal:content="here/abstract">
+				These documents certanly describe something
+			</textarea>
+		</td>
+	</tr>
+
+
+	<tal:block define="folders_info here/checkPermissionManageFolders;
+					   objects_info here/checkPermissionManageObjects;
+
+					   folders_list python:folders_info[2];
+					   objects_list python:objects_info[2];
+
+					   test_folders python:test(here.isEmptyList(folders_list), 0, len(folders_list));
+					   test_objects python:test(here.isEmptyList(objects_list), 0, len(objects_list));
+					   test_all python:test(test_folders+test_objects>0, 1, 0);
+					   folders_count python:test(test_folders%2, ['row-odd', 'row-even'], ['row-even', 'row-odd']);">
+	<tal:block tal:condition="test_all">
+
+	<tr>
+		<th class="add-header"><label for="nothing">Uploaded document(s):</label></th>
+		<td class="td_input">
+			<ul style="padding:0; margin:0;">
+			<tal:block tal:repeat="objects objects_list">
+
+				<li tal:define="del_permission python:objects[0]; 
+					   edit_permission python:objects[1];
+					   object python:objects[2];">
+					<a tal:attributes="href string:${object/absolute_url}/download" tal:content="object/title_or_id"/>
+					(<span tal:replace="structure python:here.getSizeForObj(object)">SIZE</span>)
+					<a  tal:attributes="href string:deleteObjects?id=${object/id}"> [Delete]</a>
+				</li>
+			</tal:block>
+			</ul>
+		</td>
+	</tr>
+	</tal:block>
+	</tal:block>
+
+	<!--					<tr>
+		<th class="add-header"><label for="x6">Upload document:</label></th>
+		<td class="td_input">
+			<input type="submit" name="submit" id="submit" value="Attach Document" />
+			<a class="helplink" href="#" title="The changes will be saved and you will be directed to a page where you can upload files, or you can remove uploaded files.">?</a>
+		</td>
+	</tr>
+	-->
+	<tr>
+		<th class="add-header">
+			<label for="x7" >Link to external documents:</label>
+			<a class="helplink" href="#" title="You can insert multiple links. One link on a row.">?</a>
+		</th>
+		<td class="td_input"><textarea name="links" rows="3" cols="62" id="x7" tal:content="here/links"></textarea></td>
+	</tr>
+    </tal:block>
+
+</tal:block>

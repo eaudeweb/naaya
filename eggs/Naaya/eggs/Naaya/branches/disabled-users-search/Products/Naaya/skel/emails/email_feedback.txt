@@ -1,5 +1,0 @@
-Feedback from @@USERNAME@@:
-
-@@COMMENTS@@
-
-Time of post - @@TIMEOFPOST@@

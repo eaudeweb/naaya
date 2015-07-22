@@ -1,0 +1,52 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<tal:block define="global current_form_id request/form_id|nothing" />
+
+<style>
+    h1 { font-size: 120%; }
+    li a.form { font-family: inherit; }
+    li.form em { color: red; }
+</style>
+
+<tal:block condition="not:current_form_id">
+    <h1>All portal forms</h1>
+
+    <ul tal:define="customized_form_ids here/objectIds; all_forms python:list(here.listDefaultForms())">
+        <tal:block repeat="form all_forms">
+            <li class="form" tal:define="
+              customized python:form['id'] in customized_form_ids;
+              form_url python:test(customized,
+                  '%s/%s/manage_workspace' % (here.absolute_url(), form['id']),
+                  '?form_id=%s' % form['id']);
+              ">
+                <a class="form" tal:attributes="href form_url" tal:content="form/id"></a>
+                <tal:block condition="customized">
+                    <em>(customized)</em>
+                    [<a tal:attributes="href string:${here/absolute_url}/show_diff?form_id=${form/id}"
+                        class="form">diff</a>]
+                </tal:block>
+                <tal:block condition="not:customized">
+                </tal:block>
+            </li>
+        </tal:block>
+    </ul>
+</tal:block>
+
+<tal:block condition="current_form_id">
+    <tal:block define="global default_form python:here.getDefaultForm(current_form_id)" />
+    <h2 tal:content="string:Customize current_form_id" />
+
+    <textarea rows="20" readonly="readonly" tal:content="default_form"
+      style="width: 95%; background-color: #ddd; border: 1px solid #737373;" />
+
+    <br /><br />
+
+    <form method="post" tal:attributes="action
+      string:${here/absolute_url}/manage_customizeForm">
+        <input type="hidden" name="form_id" tal:attributes="value current_form_id" />
+        <input type="submit" value="Customize" />
+    </form>
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer"/>

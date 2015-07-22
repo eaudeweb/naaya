@@ -1,0 +1,82 @@
+<tal:block tal:replace="structure here/standard_html_header"/>
+
+<tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<h1 i18n:translate="">Edit Report Chapter</h1>
+
+<tal:block define="languages here/get_languages_mapping;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<div class="version_box" tal:condition="here/hasVersion">
+	<span i18n:translate="" tal:omit-tag="">
+		<strong i18n:name="You_are_working_on_a_version" i18n:translate="">You are working on a version of this item.</strong> In order to save the work done in the version and make it accessible to all end users, click on the <strong i18n:name="Commit" i18n:translate="">Commit</strong> button. To permanently discard the work done in the version, click on the <strong i18n:name="Discard" i18n:translate="">Discard</strong> button.
+	</span>
+	<br /><br />
+	<form style="display: inline;" action="commitVersion"><input type="submit" value="Commit" i18n:attributes="value" /></form>
+	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
+</div>
+
+<p i18n:translate="">
+	Change the properties in the form below and click <strong i18n:name="Save_changes" i18n:translate="">Save changes</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
+</p>
+
+
+<form name="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
+<div class="field">
+	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
+</div>
+
+<div class="field">
+	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))"></textarea>
+</div>
+
+<div class="field">
+	<label for="sortorder"><span i18n:translate="" tal:omit-tag="">Sort order</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'sortorder')" class="mandatory_field"> *</span></label>
+	<input type="text" name="sortorder" id="sortorder" size="2" tal:attributes="value python:here.getSession('sortorder', here.getVersionProperty('sortorder'))" />
+</div>
+<div class="field">
+	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate')))" />
+	<em i18n:translate="">dd/mm/yyyy</em>
+</div>
+
+<div class="field">
+	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</div>
+
+<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<tal:block tal:repeat="language languages">
+<strong tal:condition="python:language['code'] == curr_lang">
+<a class="current" tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+	tal:content="python:language['name']" /></strong>
+<a tal:condition="python:language['code'] != curr_lang"
+	tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+	tal:content="python:language['name']" />
+</tal:block>
+</div>
+
+</form>
+
+</tal:block>
+
+</tal:block>
+
+<tal:block tal:condition="python:here.hasVersion() and (not here.isVersionAuthor())">
+	<p><strong>This object is checked out for editing by another user.</strong></p>
+</tal:block>
+
+<span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
+
+<tal:block tal:replace="structure here/standard_html_footer"/>
+

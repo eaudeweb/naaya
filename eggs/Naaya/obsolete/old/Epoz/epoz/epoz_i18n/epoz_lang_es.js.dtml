@@ -1,0 +1,47 @@
+// Epoz-Language-File: es (Spanish)
+// Thanks to Pedro J. Rey Sanchiz
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='P&aacute;rrafo';
+EpozLang["Heading1"]='Cabecera 1';
+EpozLang["Heading2"]='Cabecera 2';
+EpozLang["Heading3"]='Cabecera 3';
+EpozLang["Heading4"]='Cabecera 4';
+EpozLang["Heading5"]='Cabecera 5';
+EpozLang["Heading6"]='Cabecera 6';
+EpozLang["Formatted"]='Formateado';
+
+EpozLang["Bold"]='Negrita';
+EpozLang["Italic"]='Cursiva';
+EpozLang["Underline"]='Subrayado';
+
+EpozLang["Subscript"]='Sub&iacute;ndice';
+EpozLang["Superscript"]='Super&iacute;ndice';
+
+EpozLang["TextColor"]='Color';
+EpozLang["BackColor"]='Color de fondo'; 
+
+EpozLang["AlignLeft"]='Alineaci&oacute;n izquierda';
+EpozLang["Center"]='Centrado';
+EpozLang["AlignRight"]='Alineaci&oacute;n derecha';
+
+EpozLang["OrderedList"]='Lista numerada';
+EpozLang["UnorderedList"]='Vi&ntilde;etas';
+EpozLang["Outdent"]='Sangrar m&aacute;s';
+EpozLang["Indent"]='Sangrar menos';
+    
+EpozLang["InsertLink"]='Insertar hiperv&iacute;nculo';
+EpozLang["InsertImage"]='Insertar imagen';
+EpozLang["InsertRule"]='Insertar regla horizontal';
+EpozLang["InsertTable"]='Insertar tabla';
+EpozLang["Toolbox"]='Toolbox';
+
+EpozLang["Undo"]='Deshacer';
+EpozLang["Redo"]='Rehacer';
+
+EpozLang["EnterLinkURL"]='Introduzca la direcci&oacute;n del hiperv&iacute;nculo';
+EpozLang["EnterImageURL"]='Introduzca la situaci?n de la imagen';
+
+EpozLang["EnterTableRows"]='Introduzca el n&uacute;mero de l&iacute;neas';
+EpozLang["EnterTableColumns"]='Introduzca el n&uacute;mero de columnas';
+EpozLang["EnterTableBorder"]='Introduzca el ancho del borde';

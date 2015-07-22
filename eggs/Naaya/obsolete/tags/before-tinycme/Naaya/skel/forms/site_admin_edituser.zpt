@@ -1,0 +1,84 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getAuthenticationTool;
+				name python:request.get('name', '')">
+
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+	</li>
+</ul>
+</div>
+
+<tal:block define="user_obj python:user_tool.getUser(request.get('name', '')); 
+		user_firstname python:user_tool.getUserFirstName(user_obj); user_lastname python:user_tool.getUserLastName(user_obj);
+		user_email python:user_tool.getUserEmail(user_obj); user_account python:user_tool.getUserAccount(user_obj);
+		user_roles python:user_tool.getUserRoles(user_obj); 
+		user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
+		session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
+
+<p i18n:translate="">
+	Change the form below with user's credentials and account and click <em>Save changes</em>:
+</p>
+<form method="post" tal:attributes="action string:${site_url}/admin_edituser">
+<fieldset><legend i18n:translate="">Personal settings</legend>
+<table border="0" cellspacing="0" cellpadding="3" width="90%">
+	<tr>
+		<td nowrap="nowrap" i18n:translate="">First name:</td>
+		<td><input type="text" name="firstname" size="35" maxLength="255"
+				tal:attributes="value here/getSessionUserFirstname" />
+		</td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" i18n:translate="">Last name:</td>
+		<td><input type="text" name="lastname" size="35" tal:attributes="value here/getSessionUserLastname" />
+		</td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" i18n:translate="">Email address:</td>
+		<td><input type="text" name="email" size="35" tal:attributes="value here/getSessionUserEmail" />
+		</td>
+	</tr>
+</table>
+</fieldset>
+<br />
+<fieldset><legend i18n:translate="">User settings</legend>
+<table border="0" cellspacing="0" cellpadding="3">
+	<tr>
+		<td i18n:translate="">Username:</td>
+		<td tal:content="user_account">username</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Password:</td>
+		<td><input type="password" name="password" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td nowrap="nowrap" i18n:translate="">Password Verification:</td>
+		<td><input type="password" name="confirm" value="" />
+		</td>
+	</tr>
+</table>
+</fieldset>
+<br />
+<input type="hidden" name="name" tal:attributes="value user_account" />
+<input type="submit" value="Save changes" i18n:attributes="value" />
+<br /><br />
+<fieldset><legend i18n:translate="">Record information</legend>
+<p>
+	<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created)" /><br />
+	<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)" />
+</p>
+</fieldset>
+</form>
+<span tal:replace="here/delUserSession" />
+</tal:block>
+
+</tal:block>
+</tal:block>

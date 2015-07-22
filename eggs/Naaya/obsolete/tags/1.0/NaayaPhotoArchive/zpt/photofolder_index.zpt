@@ -1,0 +1,114 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block tal:define="filter_q python:request.get('q', '');
+						filter_f python:request.get('f', '');
+						filter_start python:request.get('start', 0);
+						result python:here.query_photos(filter_q, filter_f, filter_start);
+						paging python:result[0];
+						paging_start python:paging[0]+1;
+						paging_upper python:paging[1];
+						paging_total python:paging[2];
+						paging_prev python:paging[3];
+						paging_next python:paging[4];
+						paging_current_page python:paging[5];
+						paging_records_page python:paging[6];
+						paging_pages python:paging[7];
+						objects_list python:result[1];
+						query_string python:here.process_querystring(request.QUERY_STRING)">
+
+<script language="javascript" type="text/javascript">
+<!--
+function fCheckSelection()
+{	var frm = document.objectItems;
+	var i;
+	check = false;
+	for(i=0; i<frm.elements.length; i++)
+		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "ids" && frm.elements[i].checked)
+		{	check = true; break;}
+	return check;}
+//-->
+</script>
+<script language="javascript" type="text/javascript">
+<!--
+function fDownloadObjects()
+{	if (fCheckSelection())
+	{	document.objectItems.action="downloadObjects";
+			document.objectItems.submit();}
+	else
+		alert('Please select one or more items to download.');}
+//-->
+</script>
+
+<span style="float: right; width: 20%; word-wrap: break-word;">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</span>
+
+<h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" /> <span tal:replace="here/title_or_id" /></h1>
+
+<form method="get" action="">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<td i18n:translate="">Search</td>
+	<td><input type="text" name="q" id="q" size="50" tal:attributes="value filter_q" /></td>
+	<td i18n:translate="">photos</td>
+	<td><select name="f"><option value="" i18n:translate="">All</option><option value="1" tal:attributes="selected python:filter_f=='1'" i18n:translate="">Displayed on front</option></select></td>
+	<td><input type="submit" value="Filter" i18n:attributes="value" /></td>
+</tr>
+</table>
+</form>
+
+<tal:block tal:condition="python:paging_total>0">
+	<div id="admin_this_folder">
+		<a tal:condition="python:here.checkPermissionAddPhotos() or here.checkPermissionEditObject() or here.checkPermissionPublishObjects()" tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate=""><span class="buttons" i18n:translate="">Content management</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/downloadAllObjects"><span class="buttons" i18n:translate="">Download all photos as zip</span></a>
+		<a href="" onclick="fDownloadObjects();return false"><span class="buttons" i18n:translate="">Download selected photos as zip</span></a>
+	</div><br />
+	<div>
+		<span i18n:translate="" tal:omit-tag="">Results</span>
+		<strong tal:content="paging_start">start</strong> - 
+		<strong tal:content="paging_upper">upper</strong> <span i18n:translate="" tal:omit-tag="">of</span> <strong tal:content="paging_total">total</strong>.<br />
+		<span i18n:translate="" tal:omit-tag="">Pages</span>
+		<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Previous</a></span>
+		<span tal:repeat="page paging_pages">
+			<span tal:condition="python:page==paging_current_page" tal:content="python:page+1">page number</span>
+			<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1">page number</a>
+		</span>
+		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Next</a></span>
+	</div>
+	<form name="objectItems" method="post" action="">
+	<table border="0" cellpadding="0" cellspacing="0">
+	<tal:block tal:repeat="obtuple objects_list">
+	<tr>
+		<td tal:repeat="object obtuple" style="border-right: 10px solid white;border-top: 20px solid white;border-left: 10px solid white; background-color: #eeeeee;padding:15px 10px 0px 10px;text-align:center;border-bottom:0px solid #eaeaea!important;">
+			<a tal:attributes="href string:${object/absolute_url}/"><img style="border: 1px solid #999999;" tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" /></a>
+		</td>
+	</tr>
+	<tr>
+		<td tal:repeat="object obtuple" style="border-right: 10px solid white; border-left: 10px solid white; background-color: #eeeeee;padding:5px 10px 10px 10px;text-align:center;font-size:90%;border-bottom:0px solid #eaeaea!important;">
+			<input type="checkbox" name="ids" tal:attributes="value object/id" style="vertical-align:middle;" />
+			<a tal:attributes="href string:${object/absolute_url}/" tal:content="object/title_or_id" />
+			<tal:block tal:condition="object/author">
+				<br />
+				<span i18n:translate="" tal:omit-tag="">Author:</span>
+				<span tal:replace="object/author" />
+			</tal:block>
+		</td>
+	</tr>
+	</tal:block>
+	</table>
+	</form>
+</tal:block>
+<tal:block tal:condition="python:paging_total<=0">
+	<div id="admin_this_folder" tal:condition="python:here.checkPermissionAddPhotos() or here.checkPermissionEditObject() or here.checkPermissionPublishObjects()">
+		<a tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate=""><span class="buttons" i18n:translate="">Content management</span></a>
+	</div>
+	<p i18n:translate="">
+		No photos found.
+	</p>
+</tal:block>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

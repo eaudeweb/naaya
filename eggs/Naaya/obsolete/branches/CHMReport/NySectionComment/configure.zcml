@@ -1,0 +1,8 @@
+<configure
+  xmlns:naaya="http://namespaces.zope.org/naaya"
+  i18n_domain="naaya.content">
+
+  <naaya:content factory=".NySectionComment.get_config" />
+
+</configure>
+

@@ -1,0 +1,75 @@
+#calendar a {
+	color: #DF9496;
+}
+
+#calendar {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border-left: 1px solid #A2ADBC;
+	font-size: 0.8em;
+	font-weight: normal;
+	color: #616B76;
+	text-align: center;
+	background-color: #fff;
+}
+
+.nav, .nav a {
+	font-size: 1.4em;
+	font-weight: normal;
+	color: #fff;	
+	text-align: center;
+	text-decoration: none;
+}	
+
+
+#calendar caption {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background: #CDDCB1;
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: bold;
+	text-align: center;
+}
+
+#calendar th {
+	font-size: 0.9em;
+	font-weight: normal;
+	color: #616B76;
+	background: #CDDCFF;
+	border-right: 1px solid #A2ADBC;
+	border-bottom: 1px solid #A2ADBC;
+	border-top: 1px solid #A2ADBC;
+}
+
+#calendar .today, #calendar td.today a, #calendar td.today a:link, #calendar td.today a:visited {
+	color: #F6F4DA;
+	font-weight: bold;
+	background: #DF9496;
+}
+
+#calendar td {
+	border-right: 1px solid #A2ADBC;
+	border-bottom: 1px solid #A2ADBC;
+	/* width: 1.5em; */
+	height: 1.5em;
+	text-align: center;
+	background-color: white;
+	color: #4385B6;
+
+}
+
+#calendar td a {
+	font-weight: bold;
+	display: block;
+}
+
+#calendar td a:link, #calendar td a:visited {	
+	color: #608194;
+}
+
+#calendar td a:hover, #calendar td a:active {
+	color: #6aa3ae;
+}

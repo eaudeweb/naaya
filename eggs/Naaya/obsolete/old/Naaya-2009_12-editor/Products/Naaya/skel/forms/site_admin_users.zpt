@@ -1,0 +1,95 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getAuthenticationTool;
+				skey python: request.get('skey', 'name');
+				rkey python: request.get('rkey', 0);
+				users python:here.utSortObjsListByAttr(user_tool.getUsers(), skey, rkey)">
+
+<a style="float: right" tal:condition="user_tool/showBulkDownloadButton"
+		tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
+	<span i18n:translate="">Bulk download</span>
+</a>
+
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+	</li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+	This page lists the users defined in this portal along with their credentials.
+	Click on a username to modify the corresponding information.
+	In order to assign roles to users in various parts of the portal, click on the <strong>Users
+	&amp; Roles</strong> button.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
+<span>
+	<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
+	<input type="submit" value="Delete user"  i18n:attributes="value" class="deluser"/>
+	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
+	<input type="button" value="Users & Roles" onclick="document.location.href='admin_roles_html';"  i18n:attributes="value" />
+</span>
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="datatable">
+	<tr>
+		<th width="5%" align="left" i18n:translate="">Delete</th>
+		<th width="15%" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
+				<span i18n:translate="">Username</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
+				<span i18n:translate="">Username</span>
+			</a>
+			<img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
+		<th width="30%" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
+				<span i18n:translate="">Name</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
+				<span i18n:translate="">Name</span>
+			</a>
+			<img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
+		<th width="50%" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email" tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" >
+				<span i18n:translate="">Email address</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email&rkey=1" tal:condition="python: skey == 'email' and not rkey" >
+				<span i18n:translate="">Email address</span>
+			</a>
+			<img tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
+	</tr>
+	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+		<td nowrap="nowrap" class="center">
+			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user)" />
+		</td>
+		<td><strong><a tal:define="user_quoted python:here.utUrlEncode(user)"
+						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong>
+			<span tal:condition="python:user_tool.isNewUser(user)">
+				<img src="misc_/Naaya/star.png" alt="New account" />
+			</span>
+		</td>
+		<td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
+		<td tal:content="python:user_tool.getUserEmail(user)" />
+	</tr>
+	<tr tal:condition="python:len(users) == 0">
+		<td colspan="4" i18n:translate=""> Users' list empty </td>
+	</tr>
+</table>
+<strong>Note:</strong> The users marked with <img src="misc_/Naaya/star.png" alt="New account" /> are added in the last 5 days.
+</form>
+
+</tal:block>
+</tal:block>

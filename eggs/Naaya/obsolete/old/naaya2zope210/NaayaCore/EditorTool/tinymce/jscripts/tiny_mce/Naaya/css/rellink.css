@@ -1,0 +1,71 @@
+#filemanagerlist {
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+.filelist{ 
+	font-size:100%; 
+	width:100%;
+}
+
+.filelist th{ 
+	text-align:left; 
+	color: white;
+	padding:8px 8px 6px 8px;
+	background-color: #7a92c2;
+
+}
+
+.filelist th a, .filelist th a:visited{
+	color:#7a92c2; 
+	text-decoration:none;
+}
+
+.filelist td{
+	padding:1px 4px 1px 8px;
+}
+
+.filelist .check {
+	width: 22px;
+}
+
+#filemanagerlist {
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+/* icons */
+
+.filelist td.file a{
+	text-decoration:none; 
+}
+
+a.parent {
+	background-image: url(up.png);
+}
+
+.parent .name { 
+	font-weight:bold; 
+}
+
+.mceActionPanel {
+	margin-top: 7px;
+}
+
+.panel_wrapper div.current {
+	height: 320px;
+}
+
+#classlist, #title, #href {
+	width: 280px;
+}
+
+#popupurl, #popupname {
+	width: 200px;
+}
+
+#popupwidth, #popupheight, #popupleft, #popuptop {
+	width: 30px;
+	vertical-align: middle;
+	text-align: center;
+}

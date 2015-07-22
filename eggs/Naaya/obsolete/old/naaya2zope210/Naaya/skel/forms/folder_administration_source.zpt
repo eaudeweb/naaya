@@ -1,0 +1,36 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Local users' management</h1>
+
+<tal:block metal:fill-slot="section" tal:define="mode python:request.get('mode', '')">
+
+<tal:block tal:define="source_id python:request.get('id', '');
+						source_obj python:here.getAuthenticationTool().getSourceObj(source_id);">
+
+	<div id="tabbedmenu">
+	<ul>
+		<li><a href="administration_users_html">Local users</a></li>
+		<tal:block tal:repeat="item python:here.getAuthenticationTool().getSources()">
+		<li id="currenttab" tal:condition="python:source_id==item.id">
+			<a tal:attributes="href string:${here/absolute_url}/administration_source_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+		<li tal:condition="python:source_id!=item.id">
+			<a tal:attributes="href string:${here/absolute_url}/administration_source_html?id=${item/id}" tal:content="item/obj_path">source</a>
+		</li>
+		</tal:block>
+	</ul>
+	</div>
+	<div class="cleaner"> </div>
+
+	<tal:block tal:condition="python:source_obj is not None">
+		<span tal:replace="structure source_obj/interface_html" />
+	</tal:block>
+	<tal:block tal:condition="python:source_obj is None">
+		Invalid source id.
+	</tal:block>
+
+</tal:block>
+
+</tal:block>
+
+</tal:block>

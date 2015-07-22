@@ -1,0 +1,57 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Edit photo folder</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</p>
+
+<tal:block tal:define="languages here/get_languages_mapping;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<form method="post" tal:attributes="action string:${here/absolute_url}/saveProperties">
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
+<div class="field">
+	<label for="title" i18n:translate="">Title</label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
+</div>
+<div class="field-inline">
+	<label for="quality" i18n:translate="">Quality</label>
+	<input type="text" name="quality" id="quality" size="3" tal:attributes="value here/quality" />
+</div>
+<div class="field-inline">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked here/discussion" />
+</div>
+<div class="field">
+	<input type="submit" value="Save changes" id="submit-button" i18n:attributes="value" />
+</div>
+<input type="hidden" name="lang" id="lang" tal:attributes="value curr_lang" />
+</form>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

@@ -1,9 +1,0 @@
-<configure xmlns='http://namespaces.zope.org/zope'
-           xmlns:browser="http://namespaces.zope.org/browser">
-
-  <browser:resourceDirectory
-      name="naaya.chm_nl.www"
-      directory="www"
-      />
-
-</configure>

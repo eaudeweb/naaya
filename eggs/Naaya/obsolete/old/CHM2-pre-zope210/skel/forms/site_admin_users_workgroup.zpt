@@ -1,0 +1,115 @@
+
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getAuthenticationTool;
+				users python:user_tool.getUserNames();
+				current_w python:request.get('w', '')">
+
+<div class="tabs_firstlevel">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+	</ul>
+</div>
+
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
+
+<div class="tabs_admin">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Privileged users</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Registered users</a></li>
+	<tal:block tal:repeat="wg here/getWorkgroupsList">
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:str(wg_id)==str(current_w)" class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg_id != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+	</tal:block>
+</ul>
+</div>
+
+<div class="second_tabset_content">
+	<h2 i18n:translate=""></h2>
+
+<tal:block tal:condition="current_w">
+<p i18n:translate="">
+	This page shows all users that are part of this working group. 
+	<tal:block tal:define="wg python:here.getWorkgroupById(current_w)">
+	Being part of this workgroup provides a default role of <strong><span tal:replace="python:wg[3]" /></strong> in <span tal:define="obj python:here.utGetObject(wg[2])"> 
+	<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/></span>.
+	</tal:block>
+
+
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+	tal:define="skey python:request.get('skey', 'username');
+				rkey python:request.get('rkey', '0');
+				rkey_inv python:test(rkey=='0', '1', '0');
+				usernames python:here.getWorkgroupUsers(current_w, skey, rkey)">
+	<tr>
+		<th width="5%">&nbsp;</th>
+		<th width="15%" align="left">
+			<a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${current_w}&skey=username&rkey=${rkey_inv}">
+				<span i18n:translate="" tal:omit-tag="">Username</span>
+				<img tal:condition="python:rkey=='1'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortdown.gif" />
+				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
+			</a>
+		</th>
+		<th width="*" align="left" i18n:translate="">Role(s)</th>
+	</tr>
+	<tr tal:repeat="item usernames" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
+		<td nowrap="nowrap">
+			<input type="checkbox" name="names" tal:attributes="value python:item[0]" />
+		</td>
+		<td tal:define="username python:item[0]">
+			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
+		</td>
+		<td>
+			<ul>
+				<li tal:repeat="role python:item[1]">
+					<strong tal:content="role" />
+				</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="id" id="id" tal:attributes="value current_w" />
+<input type="submit" value="Revoke role(s)" i18n:attributes="value" class="submission_button" />
+</form>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_addusertoworkgroup"
+	tal:define="users python:here.getNonWorkgroupUsers(current_w)"
+	tal:condition="users">
+<span i18n:translate="" tal:omit-tag="">Assign user</span>
+<select name="name" id="name">
+	<option tal:repeat="user users"
+		tal:attributes="value user"
+		tal:content="user" />
+</select>
+<span i18n:translate="" tal:omit-tag="">to this workgroup</span>
+<input type="hidden" name="id" id="id" tal:attributes="value current_w" />
+<input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
+</form>
+
+</tal:block>
+
+<p i18n:translate="" tal:condition="python:not current_w">
+	No group selected.
+</p>
+
+</div>
+
+<form action="admin_delworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
+	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
+</form>
+<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 0.1em;">
+	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
+</form>
+
+</tal:block>
+</tal:block>

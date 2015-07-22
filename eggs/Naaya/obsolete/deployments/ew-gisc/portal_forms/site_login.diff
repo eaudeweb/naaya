@@ -1,0 +1,7 @@
+---
++++
+@@ -91,7 +91,7 @@
+<h2 i18n:translate="">New user</h2>
+-<p i18n:translate="">First <a href="createaccount_html">create an account</a> on this server and then return to this page to log in. The newly created user will have no role on this portal, <a href="feedback_html">contact the Webmaster</a> if you need one.</p>
++<p i18n:translate="">First <a href="http://eea.eionet.europa.eu/Public/irc/eionet-circle/Home/central_dir_admin?fn=register">create an account</a> and then return to this page to log in. The newly created user will have no role on this portal, <a href="feedback_html">contact the Webmaster</a> if you need one.</p>
+</tal:block> 

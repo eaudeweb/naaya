@@ -1,0 +1,125 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" border="0" /> <span tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	</tal:block>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"><span i18n:translate="">This item has been checked out by another user</span>(<span tal:replace="here/checkout_user" />)</strong>
+</div>
+</tal:block>
+
+<tal:block define="is_geotaggable python:here.meta_type in here.portal_map.get_geotaggable_meta_types();
+					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<!-- Map widget -->
+<tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)" condition="is_geotaggable"/>
+
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+<tr tal:condition="here/personaltitle">
+	<th i18n:translate="">Personal Title</th>
+	<td tal:content="here/personaltitle">personaltitle</td>
+</tr>
+<tr tal:condition="here/firstname">
+	<th i18n:translate="">Firstname</th>
+	<td tal:content="here/firstname">firstname</td>
+</tr>
+<tr tal:condition="here/lastname">
+	<th i18n:translate="">Lastname</th>
+	<td tal:content="here/lastname">lastname</td>
+</tr>
+<tr tal:condition="here/jobtitle">
+	<th i18n:translate="">Job Title</th>
+	<td tal:content="here/jobtitle">jobtitle</td>
+</tr>
+<tr tal:condition="here/department">
+	<th i18n:translate="">Department</th>
+	<td tal:content="here/department">department</td>
+</tr>
+<tr tal:condition="here/organisation">
+	<th i18n:translate="">Organisation</th>
+	<td tal:content="here/organisation">organisation</td>
+</tr>
+<tr tal:condition="here/postaladdress">
+	<th i18n:translate="">Postal Address</th>
+	<td tal:content="here/postaladdress">postaladdress</td>
+</tr>
+<tr tal:condition="here/phone">
+	<th i18n:translate="">Phone Number</th>
+	<td tal:content="here/phone">phone</td>
+</tr>
+<tr tal:condition="here/fax">
+	<th i18n:translate="">Fax Number</th>
+	<td tal:content="here/fax">fax</td>
+</tr>
+<tr tal:condition="here/cellphone">
+	<th i18n:translate="">Mobile</th>
+	<td tal:content="here/cellphone">cellphone</td>
+</tr>
+<tr tal:condition="here/email">
+	<th i18n:translate="">Email</th>
+	<td>
+		<a tal:attributes="href string:mailto:${here/email}"
+			tal:content="here/email" />
+	</td>
+</tr>
+<tr tal:condition="here/webpage">
+	<th i18n:translate="">Webpage</th>
+	<td>
+		<a tal:attributes="href here/webpage" tal:content="here/webpage"/>
+		<small><a tal:attributes="href here/webpage" rel="external" style="display: none" i18n:translate=""> - open in new window</a></small>
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Released</th>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+</tr>
+<tr tal:condition="here/display_contributor">
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
+<tr tal:condition="here/coverage">
+	<th i18n:translate="">Geographical coverage</th>
+	<td tal:content="here/coverage" />
+</tr>
+  <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+                  picture python:portal_map.getSymbolPicture(here.geo_type)"
+                  tal:condition="python: title != '' and here.geo_location and is_geotaggable">
+    <th i18n:translate="">Type</th>
+    <td>
+      <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
+      (<span tal:replace="title" />)
+    </td>
+  </tr>
+<tr>
+	<th i18n:translate="">Export for Outlook</th>
+	<td><a tal:attributes="href string:${here/absolute_url}/export_vcard" i18n:translate="">vCard Format</a>
+</tr>
+<tr>
+	<th i18n:translate="">Keywords</th>
+	<td tal:content="here/keywords" />
+</tr>
+<tal:block tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+	<tr tal:condition="python:getattr(here, record.id)">
+		<th tal:content="record/name" />
+		<td tal:content="python:getattr(here, record.id)" />
+	</tr>
+</tal:block>
+</table>
+</tal:block>
+
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />

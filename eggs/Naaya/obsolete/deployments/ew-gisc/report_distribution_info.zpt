@@ -1,0 +1,27 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block metal:fill-slot="title">
+	<title tal:content="string:${template/title} | ${here/site_title}" />
+</metal:block>
+<metal:block metal:fill-slot="body">
+	<h1 tal:content="template/title" />
+	<div id="report"></div>
+
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/jstree/jquery.tree.min.js"></script>
+<script type="text/javascript" language="javascript">
+$(document).ready(function () {
+	$("#report").tree({
+		data: {
+			type: "json",
+			opts: { url: "/geonetwork_reports/report_distribution_info.js" }
+		},
+		types: {
+			"default": {
+				draggable: false
+			}
+		}
+		});
+});
+</script>
+</metal:block>
+</metal:block>
+

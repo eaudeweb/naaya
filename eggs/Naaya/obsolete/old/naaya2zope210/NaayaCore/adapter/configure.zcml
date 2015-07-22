@@ -1,0 +1,24 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+<subscriber for="Products.NaayaCore.interfaces.ILinksList zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedLinksList" />
+
+<subscriber for="Products.NaayaCore.interfaces.ILocalChannel zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedLocalChannel" />
+
+<subscriber for="Products.NaayaCore.interfaces.IRemoteChannel zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedRemoteChannel" />
+
+<subscriber for="Products.NaayaCore.interfaces.IScriptChannel zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedScriptChannel" />
+
+<subscriber for="Products.NaayaCore.interfaces.IChannelAggregator zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedChannelAggregator" />
+
+<subscriber for="Products.NaayaCore.interfaces.IDynamicPropertiesItem zope.app.container.interfaces.IObjectRemovedEvent"
+      handler=".events.removedDynamicPropertiesItem" />
+
+<subscriber for="Products.NaayaCore.interfaces.IDynamicPropertiesItem zope.app.container.interfaces.IObjectMovedEvent"
+      handler=".events.modifiedDynamicPropertiesItem" />
+
+</configure>

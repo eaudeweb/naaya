@@ -1,0 +1,116 @@
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent()">
+    <!--
+    var isSelected = false;
+    function toggleSelect()
+    {   var frm = document.objectItems;
+        var i;
+        if (isSelected == false)
+        {   for(i=0; i<frm.elements.length; i++)
+                if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
+            isSelected = true;}
+        else
+        {   for(i=0; i<frm.elements.length; i++)
+                if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
+            isSelected = false;}}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent()">
+    <!--
+    function fCheckSelection()
+    {   var frm = document.objectItems;
+        var i;
+        check = false;
+        for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+            {   check = true; break;}
+        return check;}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent() and here.checkPermissionCopyObjects()">
+    <!--
+    function fCopyObjects()
+    {   if (fCheckSelection())
+        {   document.objectItems.action="copyObjects";
+            document.objectItems.submit();}
+        else
+            alert('Please select one or more items to copy.');}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent() and here.checkPermissionCutObjects()">
+    <!--
+    function fCutObjects()
+    {   if (fCheckSelection())
+        {
+            document.objectItems.action="cutObjects";
+            document.objectItems.submit();}
+        else
+            alert('Please select one or more items to cut.');}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasObjectsToPaste() and here.checkPermissionPasteObjects()">
+    <!--
+    function fPasteObjects()
+    {   document.objectItems.action="pasteObjects";
+        document.objectItems.submit();}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent() and here.checkPermissionEditObjects()">
+    <!--
+    function fDeleteObjects()
+    {   if (fCheckSelection())
+        {   document.objectItems.action="deleteObjects";
+            document.objectItems.submit();}
+        else
+            alert('Please select one or more items to delete.');}
+    //-->
+    </script>
+
+    <script language="javascript" type="text/javascript" tal:condition="python:here.hasDMContent()">
+    <!--
+    function fDownloadObjects()
+    {   if (fCheckSelection())
+        {   document.objectItems.action="downloadObjects";
+            document.objectItems.submit();}
+        else
+            alert('Please select one or more items to download.');}
+    //-->
+    </script>
+
+    <div id="doc_menuoperations">
+        <ul>
+            <li id="doc_select" tal:condition="python:here.hasDMContent()">
+                <a href="javascript:toggleSelect();">
+                    <img src="/misc_/Finshare/select_all.gif" alt="Select/Deselect all" title="Select/Deselect all" />
+                </a>
+            </li>
+            <li tal:condition="python:here.hasDMContent() and here.checkPermissionCopyObjects()">
+                <a href="javascript:fCopyObjects();">
+                <img src="/misc_/Finshare/copy.gif" alt="Copy Selected Items" title="Copy Selected Items" /><span>Copy</span></a>
+            </li>
+            <li tal:condition="python:here.hasDMContent() and here.checkPermissionCutObjects()">
+                <a href="javascript:fCutObjects();">
+                    <img src="/misc_/Finshare/cut.gif" alt="Cut Selected Items" title="Cut Selected Items" /><span>Cut</span>
+                </a>
+            </li>
+            <li tal:condition="python:here.hasObjectsToPaste() and here.checkPermissionPasteObjects()">
+                <a href="javascript:fPasteObjects();">
+                    <img src="/misc_/Finshare/paste.gif" alt="Paste" title="Paste" /><span>Paste</span>
+                </a>
+            </li>
+            <li tal:condition="python:here.hasDMContent() and here.checkPermissionEditObjects()">
+                <a href="javascript:fDeleteObjects();">
+                    <img src="/misc_/Finshare/delete.gif" alt="Delete Selected Items" title="Delete Selected Items" /><span>Delete</span>
+                </a>
+            </li>
+            <li tal:condition="python:here.hasDMContent()">
+                <a href="javascript:fDownloadObjects();">
+                    <img src="/misc_/Finshare/download.gif" alt="Download Selected Items" title="Download Selected Items" /><span>Download</span>
+                </a>
+            </li>
+        </ul>
+    </div>

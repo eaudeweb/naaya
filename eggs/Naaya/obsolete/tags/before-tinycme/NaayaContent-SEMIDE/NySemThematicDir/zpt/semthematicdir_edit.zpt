@@ -1,0 +1,138 @@
+<tal:block tal:replace="structure here/standard_html_header"/>
+<tal:block tal:define=" isArabic here/isArabicLanguage;
+						noArabic not:isArabic">
+<tal:block condition="isArabic" replace="structure string:<table width='100%'><tr><td>" />
+<h1 i18n:translate="">Edit Thematic Folder</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+
+
+<p i18n:translate="">Change the properties in the form below and click <strong>Save changes</strong>.</p>
+
+<tal:block define="languages here/get_languages_mapping;
+					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<script language="javascript" type="text/javascript">
+<!--
+function fPick(glossary_url)
+{
+	var wnd = window.open(glossary_url, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmEdit;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		if (items.value == '')
+			items.value = value;
+		else
+			items.value = items.value + ', ' + value;
+	}
+}
+// -->
+</script>
+<form name="frmEdit" method="post" action="saveProperties">
+<div class="field">
+	<label for="title" i18n:translate="">Title<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getLocalProperty('title', curr_lang))" />
+</div>
+<div class="field">
+	<label for="description" i18n:translate="">Description<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
+	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getSession('description', here.getLocalProperty('description', curr_lang)))" />
+</div>
+<div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
+	<label for="coverage" i18n:translate="">Coverage<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
+	<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:attributes="value python:here.getSession('coverage', here.getLocalProperty('coverage', curr_lang))" />
+	<tal:block tal:condition="python:coverage_glossary is not None">
+		<label for="pick-coverage" class="invisible">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage&amp;lang=${curr_lang}');" />
+	</tal:block>
+</div>
+<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
+	<label for="keywords" i18n:translate="">Keywords<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
+	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', here.getLocalProperty('keywords', curr_lang))" />
+	<tal:block tal:condition="python:keywords_glossary is not None">
+		<label for="pick-keywords" class="invisible">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
+	</tal:block>
+</div>
+<div class="field">
+	<label for="sortorder" i18n:translate="">Sort order<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'sortorder')" class="mandatory_field"> *</span></label>
+	<input type="text" name="sortorder" id="sortorder" size="2" tal:attributes="value python:here.getSession('sortorder', here.sortorder)" />
+</div>
+<div class="field">
+	<label for="releasedate" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.releasedate))" />
+</div>
+<div class="field-inline">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:here.getSession('discussion', here.is_open_for_comments())" />
+</div>
+<div class="field">
+	<label for="maintainer_email" i18n:translate="">Maintainer email<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'maintainer_email')" class="mandatory_field"> *</span></label>
+	<input type="text" name="maintainer_email:utf8:ustring" id="maintainer_email" size="50" tal:attributes="value python:here.getSession('maintainer_email', here.maintainer_email)" />
+</div>
+<div class="field">
+	<label for="themes" i18n:translate="">Themes<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'themes')" class="mandatory_field"> *</span></label>
+	<tal:block
+				define="themes_list python:here.getPortalThesaurus().getThemesList(curr_lang)">
+
+		<span tal:condition="python:len(themes_list)<=0" i18n:translate="">
+			There are no themes added in the thesaurus.
+		</span>
+
+		<select multiple="multiple" name="themes" id="themes" size="10">
+		<tal:block repeat="item themes_list">
+			<option tal:condition="item/theme_name" tal:content="item/theme_name" tal:attributes="value item/theme_id; selected python:item.theme_id in here.getSession('themes', here.themes)" />
+			<option tal:condition="not:item/theme_name" tal:attributes="value item/theme_id; selected python:item.theme_id in here.getSession('themes', here.themes)" i18n:translate="" style="font-style: italic;color:#666666">no translation available</option>
+		</tal:block>
+		</select>
+	</tal:block>
+</div>
+
+<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
+	<tal:block tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang))">dynamic html control</tal:block>
+</div>
+<div class="field">
+	<label for="criteria_date"><span i18n:translate="" tal:omit-tag="">Display objects released after (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'criteria_date')" class="mandatory_field"> *</span></label>
+	<input type="text" name="criteria_date" id="criteria_date" size="10" tal:attributes="value python:here.getSession('criteria_date', here.utConvertDateTimeObjToString(here.criteria_date))" />
+	<em i18n:translate="">dd/mm/yyyy</em>
+</div>
+
+<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
+	<label for="criteria_keywords"><span i18n:translate="" tal:omit-tag="">Additional keywords</span></label>
+	<tal:block tal:condition="python:keywords_glossary is not None">
+		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list</p>
+	</tal:block>
+	<input type="text" name="criteria_keywords:utf8:ustring" id="criteria_keywords" size="50" tal:attributes="value python:here.getSession('criteria_keywords', here.getSession('criteria_keywords', here.getLocalProperty('criteria_keywords', curr_lang)))" />
+	<tal:block tal:condition="python:keywords_glossary is not None">
+		<label for="pick-criteria_keywords" class="invisible" i18n:translate="">Pick additional keywords</label><input type="button" value="Pick" id="pick-criteria_keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=criteria_keywords&amp;lang=${curr_lang}');" />
+	</tal:block>
+</div>
+
+<div class="field">
+	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</div>
+</form>
+
+<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<tal:block tal:repeat="language languages">
+    <strong tal:condition="python:language['code'] == curr_lang">
+    <a class="current" tal:attributes="href string:?lang=${language/code}; 
+                        title python:language['name']"
+       tal:content="python:language['name']" /></strong>
+    <a tal:condition="python:language['code'] != curr_lang" 
+        tal:attributes="href string:?lang=${language/code}; 
+                        title python:language['name']"
+       tal:content="python:language['name']" />
+</tal:block>
+</div>
+</tal:block>
+<tal:block condition="isArabic" replace="structure string:</td></tr></table>" />
+</tal:block>
+<span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
+<tal:block tal:replace="structure here/standard_html_footer"/>

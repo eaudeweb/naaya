@@ -1,0 +1,102 @@
+<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=%s"></script>
+<script type="text/javascript">
+    var lat = %s;
+    var lon = %s;
+    var address = "%s";
+    var zoom = %s;
+    var all_map_types = %s;
+    var default_map_type = %s;
+    var dom_element = document.getElementById('%s');
+    var center_point = new GLatLng(lat, lon);
+
+    // convert map types from strings to objects
+    for (var i=0;i<all_map_types.length;i++) {
+        all_map_types[i] = eval(all_map_types[i]);
+    }
+    mapEl = new GMap2(dom_element, {mapTypes:all_map_types});
+    // add map controls
+    mapEl.addControl(new GSmallMapControl());
+    if( all_map_types.length > 1 ) {
+        // add layer control only if we have more than
+        // one layer selected in the GeoMap admin area
+        mapEl.addControl(new GMenuMapTypeControl());
+    }
+
+    if (lat !=0 && lon !=0) {
+        var optimal_zoom = find_optimal_zoom(lat, lon);
+        
+        mapEl.setCenter(center_point, optimal_zoom);
+        mapEl.addOverlay(new GMarker(center_point));
+    }
+    else {
+        centerMapToLocation(address);
+    }
+    mapEl.enableScrollWheelZoom();
+    mapEl.setMapType(default_map_type);
+
+
+    function find_optimal_zoom(lat, lon) {
+        // calculate optimal zoom based on number of decimals
+        var lat_zoom = lat.toString().split('.');
+        if (lat_zoom.length > 1) {lat_zoom = lat_zoom[1].length}
+        else {lat_zoom = 0}
+        
+        var lon_zoom = lon.toString().split('.');
+        if (lon_zoom.length > 1) {lon_zoom = lon_zoom[1].length}
+        else {lon_zoom = 0}
+
+        return Math.max(lat_zoom, lon_zoom);
+    }
+
+/////////////////////////////////////////
+// functions used for object edit pages//
+/////////////////////////////////////////
+
+    function centerMapToLocation(address, callback) {
+        var geocoder = new GClientGeocoder;
+        geocoder.getLocations(address, function(response){
+            if(response.Status.code != 200) return;
+            var place = response.Placemark[0];
+            var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
+            var zoom_level = [3, 6, 8, 10, 12, 14, 16, 17, 18, 19];
+            mapEl.setCenter(point, zoom_level[place.AddressDetails.Accuracy]);
+            mapEl.clearOverlays();
+            mapEl.addOverlay(new GMarker(point));
+            center_point = point; // for map fix below
+            if (callback) {
+                callback(point.lat().toFixed(mapEl.getZoom()), point.lng().toFixed(mapEl.getZoom()));
+            }
+        });
+    }
+
+    function centerMapToCoordinates(lat, lon) {
+        var point = new GLatLng(lat, lon);
+        var optimal_zoom = find_optimal_zoom(lat, lon);
+        mapEl.setCenter(point, optimal_zoom);
+        mapEl.clearOverlays();
+        mapEl.addOverlay(new GMarker(point));
+    }
+
+    function enableMouseMarkers(callback) {
+        var point;
+        GEvent.addListener(mapEl, 'mousemove', function(loc){
+            point = loc;
+        })
+        GEvent.addListener(mapEl, 'click', function(){
+            mapEl.clearOverlays();
+            mapEl.addOverlay(new GMarker(point));
+            callback(point.lat().toFixed(mapEl.getZoom()), point.lng().toFixed(mapEl.getZoom()));
+        })
+    }
+
+    function addAdditionalMapControls() {
+        return;
+    }
+
+    // needed for Google Maps because of display: none bug
+    function fixMapDisplay(){
+        mapEl.checkResize();
+        mapEl.setCenter(center_point, optimal_zoom);
+    }
+    document.onUnload = "GUnload()";
+</script>

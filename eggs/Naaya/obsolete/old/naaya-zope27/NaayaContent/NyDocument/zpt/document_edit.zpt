@@ -1,0 +1,13 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+<h1 metal:fill-slot="title" i18n:translate="">Edit HTML Document</h1>
+
+<tal:block metal:fill-slot="custom_properties">
+<div class="field" tal:define="editor here/getEditorTool">
+	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', curr_lang, image_support=True)" />
+	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('body', here.getVersionLocalProperty('body', curr_lang))" />
+</div>
+</tal:block>
+
+</tal:block>

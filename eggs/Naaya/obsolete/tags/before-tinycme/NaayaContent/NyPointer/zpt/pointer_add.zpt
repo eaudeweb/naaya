@@ -1,0 +1,33 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_add.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Submit Pointer</h1>
+
+<p metal:fill-slot="description" i18n:translate="">
+	Fill the properties in the form below and click <strong>Submit</strong>. Pick the location to which this item will point by clicking on the corresponding item from the sitemap. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+</p>
+
+<tal:block metal:fill-slot="custom_properties">
+<div class="field">
+	<script type="text/javascript">
+	<!--
+	function setupWin(url, theWidth, theHeight)
+	{
+		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+		wwinn.focus();
+		return true;
+	}
+
+	function createKey(key, title)
+	{
+		document.forms['frmAdd'].pointer.value = key;
+		document.forms['frmAdd'].title.value = title;
+	}
+	// -->
+	</script>
+	<label for="pointer"><span i18n:translate="" tal:omit-tag="">Pointer</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'pointer')" class="mandatory_field"> *</span></label>
+	<input type="text" name="pointer" id="pointer" size="50" readonly="readonly" tal:attributes="value python:here.getSession('pointer', '')" />
+	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500);;" />
+</div>
+</tal:block>
+
+</tal:block>

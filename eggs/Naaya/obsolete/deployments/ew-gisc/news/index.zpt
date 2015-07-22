@@ -1,0 +1,33 @@
+<metal:block use-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
+<metal:block fill-slot="page-middle">
+
+	<span tal:replace="structure here/menusubmissions" />
+
+	<metal:block use-macro="here/folder_listing/macros/content" />
+
+	<p>
+		<a href="index_rdf" target="_blank">
+			<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" />
+		</a>
+	</p>
+
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+	</tal:block>
+
+
+<tal:block define="remote_channel python:here.getSyndicationTool()['gmes_news_feed']">
+	<h2 tal:content="remote_channel/title_or_id" />
+	<ul class ="newsfeed">
+		<li tal:repeat="item remote_channel/getChannelItems" >
+			<a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" />
+			<tal:block condition="nothing" content="python:item['date']" />
+			<p tal:content="item/summary" />
+		</li>
+	</ul>
+	<p><a href="http://www.gmes.info/pages-secondaires/news/"
+	      i18n:translate="">More...</a></p>
+</tal:block>
+
+</metal:block>
+</metal:block>

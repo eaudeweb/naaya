@@ -1,0 +1,96 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_title">
+		<tal:block content="here/title_or_id" />
+	</tal:block>
+
+	<tal:block metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+		<link rel="stylesheet" type="text/css" href="new.css" />
+
+		<h1>
+			Options page
+		</h1>
+
+
+		<tal:block define="user_obj python:here.getUser(request.AUTHENTICATED_USER.getUserName()); ">
+		<div tal:condition="python:user_obj is None">This is a Zope user. 
+			You are not allowed to change his preferences. You must create a user for you in the acl_users folder</div>
+
+		<tal:block condition="python:user_obj is not None">
+		<ul class="tabbed">
+			<li>
+				<a href="personal_html">Personal</a>
+			</li>
+			<li class="active_tab">
+				<a href="changepwd_html">Change password</a>
+			</li>
+			<li>
+				<a href="newsletter_html">Newsletter</a>
+			</li>
+		</ul>
+
+		<p>
+			Please use the form below to change your password
+		</p>
+
+		<div class="msg-info" tal:condition="python:request.has_key('save')">
+			Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+		</div>
+
+		<div class="msg-err" tal:condition="here/isSessionErrors">
+			<p>
+				The following must be corrected before continuing:
+			</p>
+			<ul>
+				<li tal:repeat="error_value here/getSessionErrors" >
+					<span tal:replace="error_value" />
+				</li>
+			</ul>
+		</div>
+
+		<form name="frmChangePwd" id="frmChangePwd" action="changeUserPassword" method="post">
+			<table cellpadding="3" cellspacing="0" class="from-table"
+				tal:define="user_account python:here.getUserAccount(user_obj);">
+				<tr>
+					<th>
+						<label for="opass">Old password</label>
+					</th>
+					<td>
+						<input type="password" name="opass" id="opass" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="npass">New password</label>
+					</th>
+					<td>
+						<input type="password" name="npass" id="npass" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="cpass">Confirm new password</label>
+					</th>
+					<td>
+						<input type="password" name="cpass" id="cpass" />
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;
+					</th>
+					<td>
+						<input type="hidden" name="user" tal:attributes="value user_account">
+						<input type="submit" name="ChangeButton" id="ChangeButton" value="Change password" />
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		</tal:block>
+
+		<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+		<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
+		</tal:block>
+	</tal:block>
+</tal:block>

@@ -1,0 +1,172 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<style>
+/*table with information on rows*/
+.horizontal_table{
+}
+
+	.horizontal_table th {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		vertical-align:top;
+	}
+
+	.horizontal_table td {
+		border-bottom: 1px solid #f0f0f0;
+		border-right:  1px dotted #f0f0f0;
+		text-align:left;
+		vertical-align:top;
+		padding:2px 3px 2px 5px;
+	}
+
+	.horizontal_table caption {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		font-weight:bold;
+	}
+
+	.horizontal_table .short {
+		width: 10px;
+	}
+
+</style>
+
+<p class="page-title">User list</p>
+<p class="page-description">
+    This page lists the users defined in this portal.
+</p>
+
+
+<table>
+<tr tal:repeat="error_value here/getSessionErrors">
+	<td>&nbsp;</td>
+	<td tal:content="error_value">&nbsp;</td>
+</tr>
+</table>
+
+<tal:block define="user python:here.getFakeUser(request.get('mail', ''))[0]"> 
+
+<form name="frmActivUser" method="post" action="activateUser">
+<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0">
+	<caption>
+		User's personal information
+	</caption>
+	<tr>
+		<th>First name</th>
+		<td tal:content="user/firstname" />
+	</tr>
+	<tr>
+		<th>Last name</th>
+		<td tal:content="user/lastname" />
+	</tr>
+	<tr>
+		<th>Job</th>
+		<td tal:content="user/job" />
+	</tr>
+	<tr>
+		<th>Organisation</th>
+		<td tal:content="user/organisation" />
+	</tr>
+	<tr>
+		<th>Country</th>
+		<td tal:content="user/country" />
+	</tr>
+	<tr>
+		<th>Street</th>
+		<td tal:content="user/street" />
+	</tr>
+	<tr>
+		<th>Street number</th>
+		<td tal:content="user/street_number" />
+	</tr>
+	<tr>
+		<th>Zip</th>
+		<td tal:content="user/zip" />
+	</tr>
+	<tr>
+		<th>City</th>
+		<td tal:content="user/city" />
+	</tr>
+	<tr>
+		<th>Region</th>
+		<td tal:content="user/region" />
+	</tr>
+	<tr>
+		<th>Phone</th>
+		<td tal:content="user/phone" />
+	</tr>
+	<tr>
+		<th>Email</th>
+		<td>address@anywhere.com</td>
+	</tr>
+	<tr>
+		<th>Note</th>
+		<td tal:content="user/note" />
+	</tr>
+	<tr>
+		<th>Creation date</th>
+		<td tal:content="user/created" />
+	</tr>
+</table>
+<p>Paragraf here, leave paragraf, event if empty (for the layout)</p>
+
+<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0">
+	<caption>
+		User related information
+	</caption>
+	<tr>
+		<th>Username</th>
+		<td>
+			<input type="text" name="username" id="username" tal:attributes="value here/getSessionUserName" />
+		</td>
+	</tr>
+	<tr>
+		<th>Password</th>
+		<td>
+			<input type="text" name="passwd" id="passwd" tal:attributes="value here/getSessionUserPassword" />
+			<input type="submit" value="Generate" name="GenButton" id="GenButton" />
+		</td>
+	</tr>
+	<tr>
+		<th>Roles</th>
+		<td>
+			<tal:block define="roles here/list_valid_roles" repeat="role roles">
+				<input type="checkbox" name="roles" 
+					tal:attributes="value role" 
+					tal:condition="python:role in here.getSessionUserRoles()" checked />
+				<input type="checkbox" name="roles" 
+					tal:attributes="value role" 
+					tal:condition="python:role not in here.getSessionUserRoles()"/>
+				<span tal:replace="role" /><br />
+			</tal:block>
+		</td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<td>
+			<input type="hidden" name="email" tal:attributes="value user/mail" />
+			<input type="submit" value="Activate" name="ActivButton" id="ActivButton" />
+		</td>
+	</tr>
+</table>
+
+</form>
+</tal:block>
+
+<span tal:replace="python:here.delSessionErrors()" />
+<span tal:replace="python:here.delUserSession()"/>
+
+<span tal:replace="structure here/standard_html_footer"/>
+
+
+
+
+
