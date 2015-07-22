@@ -5,8 +5,16 @@ import csv, codecs
 from StringIO import StringIO
 import urllib
 import simplejson as json
-import xlwt
-import xlrd
+try:
+    import xlwt
+    excel_export_available = True
+except:
+    excel_export_available = False
+try:
+    import xlrd
+    excel_read_available = True
+except:
+    excel_read_available = False
 
 import transaction
 from Acquisition import Implicit
@@ -60,6 +68,7 @@ class CSVImportTool(Implicit, Item):
             filename = schema.title_or_id() + ' bulk upload.csv'
 
         elif file_type == 'Excel':
+            assert excel_export_available
             ret = generate_excel(columns, [[]])
             content_type = 'application/vnd.ms-excel'
             filename = schema.title_or_id() + ' bulk upload.xls'
@@ -125,6 +134,7 @@ class CSVImportTool(Implicit, Item):
                 }
 
         if file_type == 'Excel':
+            assert excel_export_available
             try:
                 wb = xlrd.open_workbook(file_contents=data.read())
                 ws = wb.sheets()[0]
@@ -349,6 +359,7 @@ class ExportTool(Implicit, Item):
             filename = '%s Export.csv' % meta_type
 
         elif file_type == 'Excel':
+            assert excel_export_available
             ret = self.generate_excel_output(meta_type, objects)
             content_type = 'application/vnd.ms-excel'
             filename = '%s Export.xls' % meta_type

@@ -107,13 +107,6 @@ class EditorTool(Folder):
         if styleselect is not None:
             ret += styleselect
 
-        # custom local syles. Add a DTML Document called "custom_css" inside
-        # portal_editor to benefit from this.
-        custom = self.get('custom_css')
-        if custom:
-            ret += custom(self.REQUEST)
-
-        self.REQUEST.RESPONSE.setHeader( 'Content-Type', 'text/css' )
         return ret
 
     def _get_styleselect_styles(self):
@@ -230,7 +223,6 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         if REQUEST.form.has_key('mode'):
             mode = REQUEST.form['mode']
             if mode == 'upload':
-                #import pdb; pdb.set_trace()
                 url = self._upload_image(REQUEST)
 
         if not url.startswith('http') and not url.startswith('/'):

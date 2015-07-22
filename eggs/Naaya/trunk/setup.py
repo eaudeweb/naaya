@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='3.3.29,
+      version='3.3.28-dev',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -39,8 +39,6 @@ setup(name='Naaya',
           'validate_email',
           'pydns',
           'pyquery',
-          'xlwt',
-          'xlrd',
 
           #Zope
           'contentratings',

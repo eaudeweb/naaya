@@ -1,15 +1,10 @@
 """Container for storing images used in HTML documents"""
 
-from AccessControl import ClassSecurityInfo
+from OFS.Image import manage_addImage , cookId
 from Globals import InitializeClass
-from OFS.Image import manage_addImage, cookId
-from OFS.ObjectManager import checkValidId
-from cgi import escape
-from naaya.core.zope2util import sha_hexdigest
-from Products.NaayaCore.managers.utils import make_id
-import urllib
+from AccessControl import ClassSecurityInfo
 import Acquisition
-
+from naaya.core.zope2util import sha_hexdigest
 
 class NyImageContainer(Acquisition.Implicit):
     """Container for storing images used in HTML documents"""
@@ -40,16 +35,12 @@ class NyImageContainer(Acquisition.Implicit):
                 image.sha1_hash = sha_hexdigest(image)
             if sha1_hash == image.sha1_hash:
                 return image
-
         id, title = cookId(None, None, file)
-        # first, determine if this is a utf-8 text and not ascii
-        try:
-            id.decode('ascii')
-        except UnicodeError:
-            id = id.decode('utf-8')
-
         orig_id = id
-        id = make_id(self.storage, title=title)
+        i = 0
+        while self.storage._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (orig_id, i)
         id = manage_addImage(self.storage, id, file, title)
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
