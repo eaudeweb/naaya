@@ -1,0 +1,11 @@
+---
++++
+@@ -29,7 +29,6 @@
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+<tal:block tal:condition="python: not here.hasVersion()">
+- <a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+</tal:block>
+<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+

@@ -1,0 +1,132 @@
+<tal:block define="global current_tab_url string:admin_maptypes_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+
+<metal:block fill-slot="tab_contents"
+		tal:define="map_url here/getGeoMapToolPath;
+					record_id python:request.get('id', None); 
+					record_data python:here.getSymbolData(record_id);
+					skey python:request.get('skey', 'title');
+					rkey python:request.get('rkey', '');">
+
+<p i18n:translate="" class="cleaner">
+	This page allows the definition of categories that will be used to classify
+	any <a href="./admin_map_contenttypes_html">geotaggable content</a> within the portal.
+	(e.g. hotels, resorts, monuments, tourist attractions).
+</p>
+
+<br clear="all" />
+
+<form method="post" tal:attributes="action python:test(record_data['action']=='add', 'adminAddSymbol', 'adminUpdateSymbol')" enctype="multipart/form-data">
+<fieldset>
+	<legend i18n:translate="" tal:content="python:test(record_data['action']=='add', 'Add category', 'Edit category')"></legend>
+	<dl>
+		<dt i18n:translate="">Title</dt>
+		<dd><input type="text" name="title" class="title" size="60" tal:attributes="value record_data/title" /></dd>
+		<dt i18n:translate="">Description</dt>
+		<dd><textarea name="description" id="description" rows="5" cols="40" tal:content="record_data/description"></textarea></dd>
+		<dt i18n:translate="">Parent category</dt>
+		<dd>
+			<select name="parent">
+				<option value="" i18n:translate=""></option>
+				<tal:block repeat="item here/getParentsList">
+				<option i18n:translate="" tal:attributes="value item/id; selected python:record_data['parent'] == item.id" tal:content="item/title" />
+				</tal:block>
+			</select>
+		</dd>
+		<dt i18n:translate="">Icon</dt>
+		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed on the map so it is recommended to create it with these dimensions from the start and make it	transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
+		<dd><input type="file" name="picture" value="" size="35" /></dd>
+		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
+		<dt i18n:translate="">Sort order</dt>
+		<dd><input id="sortorder" type="text" name="sortorder" size="2" tal:attributes="value python:test(record_data['action']=='add', '100', record_data['sortorder'])" /></dd>
+	</dl>
+<p><input type="hidden" name="id" tal:attributes="value record_data/id" /></p>
+<p><input type="submit" i18n:attributes="value" tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" /></p>
+</fieldset>
+</form>
+<form method="post" action="adminDeleteSymbols">
+<table class="datatable" width="99%">
+	<tr>
+		<th width="1%">&nbsp;</th>
+		<th i18n:translate="">Icon</th>
+		<tal:block tal:condition="python:skey=='title'">
+			<tal:block tal:condition="python:rkey==''">
+				<th>
+					<a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title&amp;rkey=1#title">
+						<span i18n:translate="">Title</span>
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th>
+					<a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title">
+						<span i18n:translate="">Title</span>
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='title'">
+			<th>
+				<a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title" i18n:translate="">Title</a>
+			</th>
+		</tal:block>
+		<tal:block tal:condition="python:skey=='parent'">
+			<tal:block tal:condition="python:rkey==''">
+				<th>
+					<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent&amp;rkey=1#parent">
+						<span i18n:translate="">Parent</span>
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th>
+					<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent">
+						<span i18n:translate="">Parent</span>
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='parent'">
+			<th>
+				<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent" i18n:translate="">Parent</a>
+			</th>
+		</tal:block>
+		<tal:block tal:condition="python:skey=='sortorder'">
+			<tal:block tal:condition="python:rkey==''">
+				<th>
+					<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder&amp;rkey=1#sortorder">
+						<span i18n:translate="">Sort order</span>
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th>
+					<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#parent">
+						<span i18n:translate="">Sort order</span>
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='sortorder'">
+			<th>
+				<a class="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#sortorder" i18n:translate="">Sort order</a>
+			</th>
+		</tal:block>
+	</tr>
+	<tr tal:repeat="record python:here.getSymbolsListOrdered(skey, rkey)">
+		<td><input type="checkbox" name="id" tal:attributes="value record/id" /></td>
+		<td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" /></td>
+		<td><a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title" /></td>
+		<td tal:content="python:here.getSymbolTitle(record.parent)" />
+		<td tal:content="record/sortorder" />
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="3"><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</form>
+
+</metal:block>
+
+</metal:block>

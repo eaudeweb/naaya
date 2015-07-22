@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Serbian">
+    <body>
+      <trans-unit approved="1" id="Andorra">
+        <source>Andorra</source>
+        <target>Андора</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Albania">
+        <source>Albania</source>
+        <target>Албанија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Armenia">
+        <source>Armenia</source>
+        <target>Арменија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Austria">
+        <source>Austria</source>
+        <target>Аустрија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Azerbaijan">
+        <source>Azerbaijan</source>
+        <target>Азербејџан</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bosnia_and_Herzegovina">
+        <source>Bosnia and Herzegovina</source>
+        <target>Босна и Херцеговина</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Belgium">
+        <source>Belgium</source>
+        <target>Белгија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bulgaria">
+        <source>Bulgaria</source>
+        <target>Бугарска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Belarus">
+        <source>Belarus</source>
+        <target>Белорусија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Switzerland">
+        <source>Switzerland</source>
+        <target>Швајцарска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cyprus">
+        <source>Cyprus</source>
+        <target>Кипар</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Czech_Republic">
+        <source>Czech Republic</source>
+        <target>Чешка</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Germany">
+        <source>Germany</source>
+        <target>Немачка</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Denmark">
+        <source>Denmark</source>
+        <target>Данска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Estonia">
+        <source>Estonia</source>
+        <target>Естонија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Spain">
+        <source>Spain</source>
+        <target>Шпанија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Finland">
+        <source>Finland</source>
+        <target>Финска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Faroe_Islands">
+        <source>Faroe Islands</source>
+        <target>Фарска Острва</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="France">
+        <source>France</source>
+        <target>Француска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="United_Kingdom">
+        <source>United Kingdom</source>
+        <target>Велика Британија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Georgia">
+        <source>Georgia</source>
+        <target>Грузија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Gibraltar">
+        <source>Gibraltar</source>
+        <target>Гибралтар</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Greenland">
+        <source>Greenland</source>
+        <target>Гренланд</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Greece">
+        <source>Greece</source>
+        <target>Грчка</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Croatia">
+        <source>Croatia</source>
+        <target>Хрватска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Hungary">
+        <source>Hungary</source>
+        <target>Мађарска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ireland">
+        <source>Ireland</source>
+        <target>Ирска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Israel">
+        <source>Israel</source>
+        <target>Израел</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Iceland">
+        <source>Iceland</source>
+        <target>Исланд</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Italy">
+        <source>Italy</source>
+        <target>Италија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Liechtenstein">
+        <source>Liechtenstein</source>
+        <target>Лихтенштајн</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Lithuania">
+        <source>Lithuania</source>
+        <target>Литванија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Luxembourg">
+        <source>Luxembourg</source>
+        <target>Луксембург</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Latvia">
+        <source>Latvia</source>
+        <target>Летонија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Monaco">
+        <source>Monaco</source>
+        <target>Монако</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Moldova">
+        <source>Moldova</source>
+        <target>Молдавија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Macedonia">
+        <source>Macedonia</source>
+        <target>Македонија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Malta">
+        <source>Malta</source>
+        <target>Малта</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Netherlands">
+        <source>Netherlands</source>
+        <target>Холандија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Norway">
+        <source>Norway</source>
+        <target>Норвешка</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Poland">
+        <source>Poland</source>
+        <target>Пољска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Portugal">
+        <source>Portugal</source>
+        <target>Португал</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Romania">
+        <source>Romania</source>
+        <target>Румунија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Russia">
+        <source>Russia</source>
+        <target>Русија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Sweden">
+        <source>Sweden</source>
+        <target>Шведска</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Slovenia">
+        <source>Slovenia</source>
+        <target>Словенија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Svalbard_and_Jan_Mayen">
+        <source>Svalbard and Jan Mayen</source>
+        <target>Свалбард и Јанмајен Острва</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Slovakia">
+        <source>Slovakia</source>
+        <target>Словачка</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="San_Marino">
+        <source>San Marino</source>
+        <target>Сан Марино</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ukraine">
+        <source>Ukraine</source>
+        <target>Украјина</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Vatican">
+        <source>Vatican</source>
+        <target>Ватикан</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Yugoslavia">
+        <source>Yugoslavia</source>
+        <target>Југославија</target>
+        <context-group name="Europa"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

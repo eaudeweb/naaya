@@ -1,0 +1,193 @@
+<metal:block define-macro="page">
+<span tal:replace="structure here/standard_html_header" />
+<tal:block tal:define="
+	filter_q python:request.get('q', '');
+	objects_list python:here.getSortedObjects(filter_q);
+	photos_per_page here/photos_per_page|python:50;
+	nb_photos python:len(here.getObjects());
+	paginator python:here.getObjectPaginator(objects_list, photos_per_page);
+	label string:Photos;
+">
+
+<link rel="stylesheet" type="text/css"
+	tal:attributes="href string:${here/absolute_url}/style_css" />
+<div class="g-header">
+	<form method="get" action="" class="g-header-form">
+		<label for="q" i18n:translate="">Search photos</label>
+		<input  type="text" name="q" id="q" title="Use * to search photos starting/ending with searching text"
+			tal:attributes="value filter_q|string:" i18n:attributes="title" />
+		<input  type="submit" value="Go" i18n:attributes="value" />
+	</form>
+	<h1>
+		<img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" />
+		<span tal:replace="here/title_or_id" />
+	</h1>
+</div>
+
+<form action="." name="objectItems" method="post" enctype="multipart/form-data">
+<!-- Admin section -->
+<div id="admin_this_folder">
+	<div class="floated-buttons">
+	<a tal:attributes="href python:here.getParentNode().absolute_url()"
+		tal:condition="here/parent_is_gallery">
+		<span i18n:translate="">View gallery</span>
+	</a>
+	<a id="slideshow_link" href="">
+		<span i18n:translate="">View slideshow</span>
+	</a>
+	</div>
+	<div class="toolbar" tal:condition="here/checkPermissionEditObject">
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit album</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/changecover_html"><span  i18n:translate="">Album cover</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/restrict_html"><span i18n:translate="">Restrict access</span></a>
+	</div>
+	<div style="clear: both"></div>
+</div>
+
+<!-- Right boxes -->
+<div class="g-boxes">
+	<!-- Details -->
+	<div class="photo-details g-box">
+		<div class="title">
+			<span tal:content="here/title_or_id" />
+		</div>
+		<div class="body">
+			<div class="album-cover">
+				<a tal:condition="here/get_cover" tal:attributes="
+					title here/title_or_id; href string:${here/absolute_url}/changecover_html"
+					tal:omit-tag="not:here/checkPermissionEditObject">
+				<img tal:attributes="
+					src string:${here/absolute_url}/${here/get_cover}/view?display=XSmall;
+					alt here/title_or_id" /><br/>
+				</a>
+				<label tal:content="python:here.utShowDateTime(here.releasedate)" />
+				<label tal:condition="not:here/has_restrictions" i18n:translate="" class="album-public">
+					- Public
+				</label>
+				<label tal:condition="here/has_restrictions" i18n:translate="" class="album-private">
+					- Limited access
+				</label>
+			</div>
+			<dl class="album-details">
+				<dt i18n:translate="">Photos in album</dt>
+				<dd tal:content="string:${nb_photos}" />
+				<dt tal:condition="here/author" i18n:translate="">Author</dt>
+				<dd tal:content="here/author" />
+				<dt tal:condition="here/source" i18n:translate="">Source</dt>
+				<dd tal:content="here/source" />
+				<dt tal:condition="here/coverage" i18n:translate="">Geographical coverage</dt>
+				<dd tal:content="here/coverage" />
+				<dt tal:condition="here/keywords" i18n:translate="">Keywords</dt>
+				<dd tal:content="here/keywords" />
+				<metal:block define-slot="details-extra" />
+			</dl>
+		</div>
+	</div>
+	<div class="photo-details g-box" tal:condition="here/minimap">
+		<div class="title">
+			<span i18n:translate="">Geographic location</span>
+		</div>
+		<div class="body">
+			<tal:block content="structure here/minimap" />
+		</div>
+	</div>
+
+	<!-- Downloads -->
+	<div class="g-box" tal:condition="objects_list">
+		<div class="title">
+			<span  i18n:translate="">Downloads</span>
+		</div>
+		<div class="body">
+		<dl>
+		<dd>
+			<input type="radio" name="download" value="all" id="download_all" checked="checked"/>
+			<label for="download_all" i18n:translate="">All photos</label>
+		</dd>
+		<dd>
+			<input type="radio" name="download" value="selected" id="download_selected" />
+			<label for="download_selected" i18n:translate="">Selected photos</label>
+		</dd>
+		<dd class="g-box-button">
+			<input type="submit" value="Download as zip"
+			       name="downloadObjects:method"
+			       i18n:attributes="value" />
+		</dd>
+		</dl>
+		</div>
+	</div>
+
+	<!-- Uploads -->
+	<div class="g-box" tal:condition="python:here.checkPermission('Naaya - Add Naaya Photo')"
+		metal:define-slot="upload_box">
+		<div class="title"><span  i18n:translate="">Add photos</span></div>
+		<div class="body" style="padding: .5em;">
+			<a tal:attributes="href string:${here/absolute_url}/upload_html"
+				style="background-color: #336399; border:1px solid #ccc; color:#fff;
+					padding:.3em 2em; text-decoration:none; display:block; text-align:center;"
+				i18n:translate="">upload photos</a>
+		</div>
+	</div>
+</div>
+
+<div class="thumbnail-layout" id="selection_buttons">
+
+	<tal:block condition="objects_list">
+	<input type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
+	<input type="button" style="display: none"
+		name="select_all_label" id="select_all_label" value="Select all"
+		class="action_button" onclick="toggleSelect('select_all')" />
+	<input class="action_button" tal:condition="here/checkPermissionCopyObject" type="submit"
+		name="copyObjects:method" value="Copy" i18n:attributes="value" />
+	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
+		name="cutObjects:method" value="Cut" i18n:attributes="value" />
+	</tal:block>
+
+	<input class="action_button" tal:condition="python:here.cb_dataValid() and here.checkPermissionPasteObjects()" type="submit"
+		name="pasteObjects:method" value="Paste" i18n:attributes="value" />
+
+	<tal:block condition="objects_list">
+	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
+		name="deleteObjects:method" value="Delete" i18n:attributes="value" />
+	</tal:block>
+
+</div>
+<div style="clear: left;"></div>
+
+<!-- Main content -->
+<metal:block use-macro="here/images_macro/macros/images" />
+</form>
+
+<!-- Javascripts -->
+<link tal:attributes="href string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.js"></script>
+<script tal:condition="objects_list" language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var caller = document.getElementById(caller);
+  var res = document.getElementById('album-content');
+  var res_inputs = res.getElementsByTagName('INPUT');
+  caller.checked = !caller.checked;
+  for(var i=0; i<res_inputs.length; i++){
+    res_inputs[i].checked = caller.checked;
+  }
+}
+
+function do_hover(div_id, class_name) {
+  var div_ob = document.getElementById(div_id);
+  div_ob.className += ' ' + class_name;
+}
+
+function do_out(div_id, class_name) {
+  var div_ob = document.getElementById(div_id);
+  div_ob.className = class_name;
+}
+
+// Enable select all button if javascript is enabled
+document.getElementById('select_all_label').style.display = 'inline';
+
+//-->
+</script>
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />
+</metal:block>

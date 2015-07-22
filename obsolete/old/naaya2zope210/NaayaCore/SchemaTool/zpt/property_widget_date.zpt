@@ -1,0 +1,15 @@
+<div class="field-inline" tal:define="
+    value options/value|nothing;
+    errors options/errors;
+    prop_id here/prop_name;">
+    <label tal:attributes="for prop_id" class="widget-title">
+        <span tal:content="here/title" />
+        <span tal:condition="here/required" class="mandatory_field">*</span>
+    </label>
+    <p class="form-errors" tal:condition="errors" tal:content="errors" />
+    <input type="text" class="vDateField" size="10" maxlength="10" tal:attributes="
+        value value;
+        name prop_id;
+        id prop_id" />
+    <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+</div>

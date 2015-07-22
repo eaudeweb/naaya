@@ -1,0 +1,58 @@
+// Epoz-Language-File: zh (Chinese)
+// panjy@plone.cn, 2003
+
+var EpozLang=[];
+
+EpozLang['Normal']='常规';
+EpozLang['Paragraph']='段落';
+EpozLang['Heading1']='标题 1';
+EpozLang['Heading2']='标题 2';
+EpozLang['Heading3']='标题 3';
+EpozLang['Heading4']='标题 4';
+EpozLang['Heading5']='标题 5';
+EpozLang['Heading6']='标题 6';
+EpozLang['Formatted']='保持格式';
+
+EpozLang['Bold']='加粗';
+EpozLang['Italic']='倾斜';
+EpozLang['Underline']='下划线';
+EpozLang["Strikethrough"]='中划线';
+
+EpozLang['Subscript']='下标';
+EpozLang['Superscript']='上标';
+
+EpozLang["RemoveFormat"]='去除格式';
+
+EpozLang['TextColor']='文字颜色'; 
+EpozLang['BackColor']='背景颜色';
+
+EpozLang['AlignLeft']='左对齐';
+EpozLang['Center']='居中';
+EpozLang['AlignRight']='右对齐';
+
+EpozLang['OrderedList']='有序清单';
+EpozLang['UnorderedList']='无序清单';
+EpozLang['Outdent']='减少缩进';
+EpozLang['Indent']='增加缩进';
+
+EpozLang['InsertLink']='添加链接';
+EpozLang["InsertAnchor"]='添加书签(Anchor)';
+EpozLang['InsertImage']='添加图片';
+EpozLang['InsertRule']='添加尺线';
+EpozLang['InsertTable']='添加表格';
+EpozLang['Toolbox']='工具箱';
+
+EpozLang['Undo']='撤销';
+EpozLang['Redo']='恢复';
+
+EpozLang['EnterLinkURL']='输入链接的URL地址';
+EpozLang["EnterAnchorName"]='输入书签(Anchor)名';
+EpozLang['EnterImageURL']='输入图片的UR地址';
+
+EpozLang['EnterTableRows']='输入行数';
+EpozLang['EnterTableColumns']='输入列数';
+EpozLang['EnterTableBorder']='输入边框';
+EpozLang["TableWithHead"]='带标题的表格';
+EpozLang["TableWithoutHead"]='不带标题的表格';
+
+

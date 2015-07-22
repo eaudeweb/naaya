@@ -1,0 +1,212 @@
+<metal:block define-macro="content">
+
+<tal:block define="listing_info here/folder_listing_info;
+	folders_list python:listing_info['folders'];
+	objects_list python:listing_info['objects'];
+	btn_select python:listing_info['btn_select'];
+	btn_delete python:listing_info['btn_delete'];
+	btn_copy python:listing_info['btn_copy'];
+	btn_cut python:listing_info['btn_cut'];
+	btn_paste python:listing_info['btn_paste'];
+	can_operate python:listing_info['can_operate'] ">
+
+
+<script language="javascript" type="text/javascript" tal:condition="btn_select">
+//<!--
+function toggleSelect() {
+	var select_button = $("#btn_select")[0];
+	var select_checkbox = $("#folderfile_list th.checkbox input")[0];
+
+	var check = select_button.value == 'Select all';
+
+	if (check) {
+		select_button.value = 'Deselect all';
+		select_checkbox.checked = check;
+	} else {
+		select_button.value = 'Select all';
+		select_checkbox.checked = check;
+	}
+
+	var checkboxes = $("#folderfile_list td.checkbox input");
+	for (var i in checkboxes) {
+		checkboxes[i].checked = check;
+	}
+}
+//-->
+</script>
+
+<form id="folder_listing" name="objectItems" method="post" action=".">
+	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
+		<metal:block define-slot="toolbar_default">
+			<input id="btn_select" type="button" value="Select all"
+				onclick="javascript:toggleSelect();"
+				i18n:attributes="value"
+				tal:condition="btn_select" />
+			<input type="submit" value="Copy" name="copyObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_copy" />
+			<input type="submit" value="Cut" name="cutObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_cut" />
+			<input type="submit" value="Paste" name="pasteObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_paste" />
+			<input type="submit" value="Delete" name="deleteObjects:method"
+				onclick="javascript:return window.confirm('Are you sure?')"
+				i18n:attributes="value"
+				tal:condition="btn_delete" />
+			<input type="submit" value="Rename" name="renameobject_html:method"
+				i18n:attributes="value"
+				tal:condition="python: here.rename_id and btn_delete" />
+		</metal:block>
+		<metal:block define-slot="toolbar_extend">
+			<tal:comment condition="nothing">
+				Fill this slot to add custom buttons.
+			</tal:comment>
+		</metal:block>
+	</div>
+	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+		<tr tal:condition="can_operate">
+			<metal:block define-slot="table_head_default">
+				<th class="checkbox" style="width: 4%;" i18n:translate=""
+					tal:condition="btn_select">
+					<input type="checkbox" onclick="javascript:toggleSelect()" />
+				</th>
+				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+				<th class="title-column" i18n:translate="">Title</th>
+
+				<th class="checkin" i18n:translate="">Version</th>
+				<th class="edit" i18n:translate="">Edit</th>
+
+			</metal:block>
+			<metal:block define-slot="table_head_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (heading for columns goes here).
+				</tal:comment>
+			</metal:block>
+		</tr>
+		<tr tal:repeat="folder_info folders_list">
+			<metal:block define-slot="table_folders_default">
+				<tal:block define="
+					del_permission python:folder_info['del_permission'];
+					copy_permission python:folder_info['copy_permission'];
+					folder python:folder_info['self'];
+					folder_view python:folder_info['object_view']">
+					<td class="checkbox" tal:condition="btn_select"
+						style="width: 4%; vertical-align: top;">
+						<input tal:condition="python:del_permission or copy_permission"
+							type="checkbox" name="id" tal:attributes="value folder/id" />
+					</td>
+					<td class="type" style="width: 4%;">
+						<img tal:attributes="
+							src python:test(folder.approved, folder.icon, folder.icon_marked);
+							alt python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type);
+							title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" />
+					</td>
+					<td class="title-column">
+						<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
+						<tal:block condition="folder/can_be_seen">
+							<em tal:condition="here/display_subobject_count" tal:define="
+									lenfol python:len(folder.listed_folders_info());
+									lenobj python:len(folder.listed_objects_info());
+									lenall python:lenfol + lenobj">
+								<tal:block condition="python: lenall == 0">
+									(<span i18n:translate="">folder is empty</span>)
+								</tal:block>
+								<tal:block condition="python:lenall > 0">
+									(<tal:block condition="lenfol">
+										<span tal:content="python:lenfol">10</span>
+										<span tal:condition="python:lenfol > 1" i18n:translate="">folders</span>
+										<span tal:condition="python:lenfol <= 1" i18n:translate="">folder</span>
+									</tal:block>
+									<tal:block condition="lenobj">
+										<tal:block condition="python:lenfol and lenobj">, </tal:block>
+										<span tal:content="python:lenobj">17</span>
+										<span tal:condition="python:lenobj > 1" i18n:translate="">items</span>
+										<span tal:condition="python:lenobj <= 1" i18n:translate="">item</span>
+									</tal:block>)
+								</tal:block>
+							</em>
+						</tal:block>
+						<span class="available_langs" tal:condition="python:here.item_has_title(folder, folder.title)">
+							<span i18n:translate="">Item only translated in </span>
+							<span tal:repeat="lang here/gl_get_languages_map">
+								<a tal:content="python:' %s' % lang['title']"
+									tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])"
+									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+							</span>
+						</span>
+						<tal:block tal:condition="folder/can_be_seen">
+							<tal:block tal:condition="folder/has_restrictions" i18n:translate="">
+							[Limited access]
+							</tal:block>
+						</tal:block>
+						<tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
+							[Restricted access]
+						</tal:block>
+						<tal:block tal:condition="python:here.item_has_comments(folder) and folder.count_comments()>0">
+							[<span tal:replace="folder/count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+					</td>
+
+					<tal:block replace="structure folder_view/version_status_html"/>
+
+				</tal:block>
+			</metal:block>
+			<metal:block define-slot="table_folders_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (content for folders goes here).
+				</tal:comment>
+			</metal:block>
+		</tr>
+		<tr tal:repeat="object_info objects_list">
+			<metal:block define-slot="table_objects_default">
+				<tal:block define="
+					del_permission python:object_info['del_permission'];
+					copy_permission python:object_info['copy_permission'];
+					object python:object_info['self'];
+					object_view python:object_info['object_view']">
+					<td class="checkbox" tal:condition="btn_select"
+						style="width: 4%; vertical-align: top;">
+						<input tal:condition="python:del_permission or copy_permission"
+							type="checkbox" name="id" tal:attributes="value object/id" />
+					</td>
+					<td class="type" style="width: 4%;">
+						<img tal:attributes="
+							src python:test(object.approved, object.icon, object.icon_marked);
+							alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
+							title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+					</td>
+					<td class="title-column">
+						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
+							<span i18n:translate="">Item only translated in </span>
+							<span tal:repeat="lang here/gl_get_languages_map">
+								<a tal:content="python:' %s' % lang['title']"
+									tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])"
+									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+							</span>
+						</span>
+						<tal:block tal:condition="python:here.item_has_comments(object) and object.count_comments()>0">
+							[<span tal:replace="object/count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+					</td>
+
+					<tal:block replace="structure object_view/version_status_html"/>
+
+				</tal:block>
+			</metal:block>
+			<metal:block define-slot="table_objects_extend">
+				<tal:comment condition="nothing">
+					Fill this slot to add custom columns (content for objects goes here).
+				</tal:comment>
+			</metal:block>
+		</tr>
+	</table>
+</form>
+
+</tal:block>
+
+</metal:block>

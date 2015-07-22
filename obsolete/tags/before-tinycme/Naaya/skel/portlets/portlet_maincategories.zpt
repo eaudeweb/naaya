@@ -1,0 +1,14 @@
+<tal:block tal:repeat="fold here/getMainTopics">
+	<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+		<tal:block metal:fill-slot="portlet_title">
+			<a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
+		</tal:block>
+		<tal:block metal:fill-slot="portlet_content">
+			<ul>
+				<li tal:repeat="sub_fold fold/getPublishedFolders">
+					<a tal:attributes="href sub_fold/absolute_url" tal:content="sub_fold/title_or_id" />
+				</li>
+			</ul>
+		</tal:block>
+	</tal:block>
+</tal:block>

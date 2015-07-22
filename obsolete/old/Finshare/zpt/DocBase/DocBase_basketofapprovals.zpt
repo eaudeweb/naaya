@@ -1,0 +1,47 @@
+<span metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+    <tal:block metal:fill-slot="doc_manager_title">
+        <tal:block content="here/title_or_id" />
+    </tal:block>
+
+    <span metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+        <h3><em tal:content="here/title_or_id" />'s basket of approvals </h3>
+
+        <div>This page lists all the pending (not yet approved) items from this folder that have been submitted by contributors.</div>
+        <div>After reviewing them, select <strong>Approve</strong> or <strong>Delete</strong> for any subset and click <strong>Save changes</strong>.</div>
+
+        <br />
+        <tal:block tal:define="pendings here/getPendingContent">
+            <form action="updateBasketOfApprovals" method="post" tal:condition="python:len(pendings) != 0">
+                <table border="1" cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Released</th>
+                        <th>Title</th>
+                        <th>Edit</th>
+                        <th>Approve</th>
+                        <th>Delete</th>
+                    </tr>
+                    <tr tal:repeat="item pendings"
+                        tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
+                        <td width="1%"><img tal:attributes="src item/icon" border="0" alt="Icon for item" title="Icon for item" /></td>
+                        <td tal:content="python:here.utShowDateTime(item.releasedate)"/>
+                        <td tal:content="item/title_or_id"/>
+                        <td><a tal:attributes="href string:${item/absolute_url}/edit_html">Edit</a></td>
+                        <td><input type="checkbox" name="app" tal:attributes="value item/id" /></td>
+                        <td><input type="checkbox" name="del" tal:attributes="value item/id" /></td>
+                    </tr>
+                    <tr tal:condition="python:len(pendings) > 0">
+                        <td>&nbsp;</td>
+                        <td colspan="5"><input type="submit" value="Save changes" /> <input type="reset" value="Reset" /></td>
+                    </tr>
+                </table>
+            </form>
+
+            <div tal:condition="python:len(pendings) == 0"><strong>No pending items to review</strong></div>
+        </tal:block>
+
+    </span>
+
+</span>

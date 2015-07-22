@@ -1,0 +1,4 @@
+[submodule "eggs/bundles"]
+	path = eggs/bundles
+	url = git@github.com:eaudeweb/naaya-bundles
+    branch = master

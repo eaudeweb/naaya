@@ -1,5 +1,0 @@
-<div class="marker-more"
-	tal:define="object options/object;">
-	<a i18n:translate="" tal:attributes="href string:${object/absolute_url}/"
-		tal:content="python:here.utToUtf8(object.title_or_id())"/> 	<span tal:replace="options/access_str"/>
-</div>

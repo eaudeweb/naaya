@@ -1,0 +1,51 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_content">
+
+		<h1>
+			Edit <em><tal:block content="here/title_or_id" /></em>
+		</h1>
+
+
+		<p>
+			Change the properties in the form below and click <strong>Save Changes</strong>.
+		</p>
+
+		<div class="msg-info" tal:condition="python:request.has_key('dm_save')">
+			Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+		</div>
+
+			<form name="frmEdit" id="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<th class="td_label"><label for="title" >Title</label></th>
+						<td class="td_input">
+							<input type="text" name="title" id="title" size="63" value="" tal:attributes="value here/title"/>
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label">Creation date</th>
+						<td class="td_input" tal:content="here/creationdate">
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label">Owner</th>
+						<td class="td_input" tal:content="here/ownerinfo">
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label"><label for="description" >Description</label></th>
+						<td class="td_input"><textarea name="description" id="description" rows="5" cols="63" tal:content="here/description"></textarea></td>
+					</tr>
+					<tr>
+						<th class="td_label">
+							<label for="submit" style="display:none">Submit button</label>&nbsp;
+						</th>
+						<td><input type="submit" name="submit" id="submit" value="Save Changes" /></td>
+					</tr>
+				</table>
+			</form>
+
+	</tal:block>
+</tal:block>

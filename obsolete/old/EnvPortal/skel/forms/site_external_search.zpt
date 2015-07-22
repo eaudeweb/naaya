@@ -1,0 +1,188 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1>Free text search across multiple sites</h1>
+
+<p i18n:translate="">
+	This search is performed on this and other collaborating websites: all titles and descriptive texts (folders, URLs, news, events, stories, etc.). Note: it does NOT search in uploaded files.
+</p>
+
+<p i18n:translate="">
+	You can use the <a href="http://www.google.com/custom?q=&amp;as=Google+Search&amp;domains=eea.eu.int%3Beionet.eu.int&amp;sitesearch=eea.eu.int&amp;cof=GIMP%3A%23FF9900%3BT%3A%23000000%3BALC%3A%23006666%3BL%3Ahttp%3A%2F%2Ftemplate.eea.eu.int%2Fimages%2Feeabanner%3BGFNT%3A%23808080%3BLC%3A%23003366%3BBGC%3A%23FFFFFF%3BAH%3Aleft%3BVLC%3A%23993300%3BGL%3A0%3BS%3Ahttp%3A%2F%2Fwww.eea.eu.int%3BGALT%3A%23FF9900%3BAWFID%3A109f704edff0cc7d%3B&amp;config=&amp;restrict=&amp;exclude=&amp;page=" title="EEA Google Search"><strong>the wider EEA Google search</strong></a> for more results.
+</p>
+
+<fieldset style="background-color: #eeeeee;"><legend i18n:translate="">Search tips:</legend>
+<table cellpadding="3" width="100%" >
+<tr>
+	<td valign="top"><strong>and</strong></td>
+	<td valign="top" style="border: 1px dashed black;">fish and water</td>
+	<td valign="top">The two words fish and water must occur somewhere in 
+		the document but not necessarily together or in any order.</td>
+</tr>
+<tr>
+	<td valign="top"><strong>or</strong></td>
+	<td valign="top" style="border: 1px dashed black;">fish water <br>fish or water</td>
+	<td valign="top">Either the word fish or the word water must occur somewhere in the document.</td>
+</tr>
+<tr>
+	<td valign="top"><strong>not</strong></td>
+	<td valign="top" style="border: 1px dashed black;">fish and not water</td>
+	<td valign="top">The word fish and not the word water must occur somewhere in the document.</td>
+</tr>
+<tr>
+	<td valign="top"><strong>&quot;&quot;</strong></td>
+	<td valign="top" style="border: 1px dashed black;">"water fish"</td>
+	<td valign="top">The exact expression <i>water fish</i> must occur somewhere in the document.</td>
+</tr>
+<tr>
+	<td valign="top"><strong>*</strong></td>
+	<td valign="top" style="border: 1px dashed black;">wate*</td>
+	<td valign="top">everything starting with <em>wate</em></td>
+</tr>
+</table>
+</fieldset>
+
+
+<form method="get" name="frmSearch" action="external_search_html">
+<strong i18n:translate="">Query string</strong>
+<input type="text" name="search_param" id="search_param" tal:attributes="value python:request.get('search_param', '')" size="40" maxLength="100" />
+<br />
+
+<div style="float:left; width: 40%; margin-right: 10px;">
+<fieldset><legend i18n:translate="">Portals</legend>
+	<dl tal:define="servers here/getRemoteServers;
+					servers_urls python:here.utConvertToList(request.get('servers', []));
+					portals here/getNetworkPortals">
+		<dt tal:repeat="url python:servers.keys()">
+			<tal:block tal:condition="python:request.has_key('servers')">
+			<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
+			</tal:block>
+			<tal:block tal:condition="python:not request.has_key('servers')">
+			<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
+			</tal:block>
+			<span tal:content="python:servers[url]" />
+		</dt>
+		<dt tal:repeat="url python:portals.keys()">
+			<tal:block tal:condition="python:request.has_key('servers')">
+				<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
+			</tal:block>
+			<tal:block tal:condition="python:not request.has_key('servers')">
+				<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
+			</tal:block>
+			<span tal:replace="python:portals[url]" />
+		</dt>
+	</dl>
+</fieldset>
+</div>
+<div style="float: left; width: 25%; margin-right: 10px;">
+<fieldset><legend i18n:translate="">Sort by</legend>
+	<dl>
+		<dt tal:condition="python:request.has_key('sort_by')">
+			<input type="radio" name="sort_by" value="title" 
+				tal:attributes="checked python:request['sort_by']=='title'" />title
+		</dt>
+		<dt tal:condition="python:not request.has_key('sort_by')">
+			<input type="radio" name="sort_by" value="title" checked="checked" />title
+		</dt>
+		<dt><input type="radio" name="sort_by" value="time"
+			tal:attributes="checked python:request.has_key('sort_by') and request['sort_by']=='time'" />last modification time
+		</dt>
+		<dt><input type="radio" name="sort_by" value="url"
+			tal:attributes="checked python:request.has_key('sort_by') and request['sort_by']=='url'" />URL
+		</dt>
+	</dl>
+</fieldset>
+</div>
+<div style="float: left; width: 25%; margin-right: 10px;">
+<fieldset><legend>Sort order</legend>
+	<dl>
+		<dt tal:condition="python:request.has_key('sort_order')">
+			<input type="radio" name="sort_order" value="ascending"
+				tal:attributes="checked python:request['sort_order']=='ascending'" />ascending
+		</dt>
+		<dt tal:condition="python:not request.has_key('sort_order')">
+			<input type="radio" name="sort_order" value="ascending" checked="checked" />ascending
+		</dt>
+		<dt><input type="radio" name="sort_order" value="descending"
+			tal:attributes="checked python:request.has_key('sort_order') and request['sort_order']=='descending'" />descending
+		</dt>
+	</dl>
+</fieldset>
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+<input type="submit" value="Search" />
+</form>
+
+<span tal:condition="python:request.has_key('search_param')">
+<tal:block define="servers python:here.utConvertToList(request.get('servers', [])); search_param python:request.get('search_param', '');
+                    sort_expr python:request.get('sort_by', ''); order python:request.get('sort_order', '');
+                    page_search_start python:request.get('start', 0); results python:here.externalSearch(servers, search_param, sort_expr, order, page_search_start);
+                    age here/getItemsAge; number_of_results here/getNumberOfResults;
+                    servers_query python:'servers=%s' % '&servers='.join(servers);
+                    page_search_querystring string:${servers_query}&search_param=${search_param}&sort_by=${sort_expr}&order=${order};
+                    list_paging python:results[0];
+                    paging_start python:list_paging[0]+1;
+                    paging_upper python:list_paging[1]; 
+                    paging_total python:list_paging[2]; 
+                    paging_prev python:list_paging[3];
+                    paging_next python:list_paging[4]; 
+                    paging_current_page python:list_paging[5]; 
+                    paging_records_page python:list_paging[6];
+                    paging_pages python:list_paging[7]; 
+                    list_result python:results[1]">
+
+    <span tal:condition="python:paging_total != 0">
+    <table cellspacing="4" cellpadding="4" border="0" width="99%">
+        <tr>
+            <td><strong>Search Results</strong><br>
+                Age: <span tal:replace="python:here.external_get_items_age(list_result, age)"/>% are more then <span tal:replace="age"/> month(s) old -
+                <a href="" onClick="document.frmSearch.sort_by[1].checked='true'; 
+                    document.frmSearch.sort_order[1].checked='true'; 
+                    document.frmSearch.submit(); return false;">show newer pages first</a>
+            </td>
+        </tr>
+        <tr tal:repeat="record python:list_result">
+            <td><img tal:attributes="src python:record['icon']; alt python:record['meta_type']" align="absmiddle" /><a tal:attributes="href python:record['url']">
+                <span tal:replace="python:record['title']"/></a> - <span tal:replace="python:record['time']"/>
+                <span tal:condition="python:here.external_get_item_age(record['time'], age)==1"><b style="color: #FF9966;">Old</b></span>
+                <span tal:condition="python:record.has_key('description') and record['description'] != 'No description available'">
+                    <br><span tal:replace="python:here.utStrEscapeHTMLTags(record['description'])"/>
+                </span><br>[<em tal:content="python:record['url']">url</em>]
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="2" width="99%">
+	<tr>
+		<td width="1%">Results</td>
+		<td width="100%" nowrap><b tal:content="paging_start"/>&nbsp;-&nbsp;<b tal:content="paging_upper"/>&nbsp;of&nbsp;
+			<b tal:content="paging_total"/></td>
+	</tr>
+	<tr>
+		<td>Page</td>
+		<td nowrap="nowrap">
+			   <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+				   <a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+					   tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">&lt;&lt;Previous</a>
+			   </span>
+			   <span tal:repeat="page paging_pages">
+					<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
+					<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+						tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}"
+						tal:content="python:page+1">
+					</a>
+			   </span>
+			   <span tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+				   <a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+						tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">Next&gt;&gt;</a>
+			   </span>
+		</td>
+	</tr>
+    </table>
+    </span>
+    <span tal:condition="python:paging_total == 0">
+        No results were found for this query.
+    </span>
+
+</tal:block>
+</span>
+
+<span tal:replace="structure here/standard_html_footer"/>

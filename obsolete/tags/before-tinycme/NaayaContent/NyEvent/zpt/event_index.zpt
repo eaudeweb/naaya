@@ -1,0 +1,95 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	</tal:block>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+</div>
+</tal:block>
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<table border="0" cellspacing="2" cellpadding="2">
+<tr tal:condition="here/start_date">
+	<th i18n:translate="">Period</th>
+	<td>
+	<tal:block condition="python:here.start_date != here.end_date">
+		[<span tal:replace="python:here.utShowDateTime(here.start_date)"/> - <span tal:replace="python:here.utShowDateTime(here.end_date)"/>]
+	</tal:block>
+	<tal:block condition="python:here.start_date == here.end_date">
+		<span tal:replace="python:here.utShowDateTime(here.start_date)"/>
+	</tal:block>
+	</td>
+</tr>
+<tr tal:condition="here/location">
+	<th i18n:translate="">Location</th>
+	<td>
+		<tal:block tal:condition="python:here.location_url and (here.location_url != 'http://')">
+		<a tal:attributes="href here/location_url" tal:content="here/location"/> <span tal:replace="here/location_address" />
+		</tal:block>
+		<tal:block tal:condition="python:(here.location_url == '') or (here.location_url == 'http://')">
+		<span tal:replace="here/location" /> <span tal:replace="here/location_address" />
+		</tal:block> 
+	</td>
+</tr>
+<tr tal:condition="here/host">
+	<th i18n:translate="">Host</th>
+	<td tal:content="here/host">host</td>
+</tr>
+<tr tal:condition="python:here.agenda_url and (here.agenda_url != 'http://')">
+	<th i18n:translate="">See the agenda</th>
+	<td>
+		<a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a>
+		<small><a tal:attributes="href here/agenda_url" style="display: none" rel="external" i18n:translate=""> - open in new window</a></small>
+	</td>
+</tr>
+<tr tal:condition="python:here.event_url and (here.event_url != 'http://')">
+	<th i18n:translate="">Event URL</th>
+	<td>
+		<a tal:attributes="href here/event_url" tal:content="here/event_url" />
+		<small><a tal:attributes="href here/event_url" style="display: none" rel="external" i18n:translate=""> - open in new window</a></small>
+	</td>
+</tr>
+<tr tal:condition="python:here.contact_person or here.contact_email or here.contact_phone or  here.contact_fax">
+	<th style="vertical-align: top" i18n:translate="">Contact</th>
+	<td><span tal:replace="here/contact_person"/>
+		<tal:block condition="here/contact_email">
+			<br /><span i18n:translate="Email address: " /> <span tal:replace="here/contact_email"/>
+		</tal:block>
+		<tal:block condition="here/contact_phone">
+			<br /><span i18n:translate="Phone: " /> <span tal:replace="here/contact_phone"/>
+		</tal:block>
+		<tal:block condition="here/contact_fax">
+			<br /><span i18n:translate="Fax: " /> <span tal:replace="here/contact_fax"/>
+		</tal:block>
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Released</th>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+</tr>
+<tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
+<tr tal:condition="here/coverage">
+	<th i18n:translate="">Geographical coverage</th>
+	<td tal:content="here/coverage" />
+</tr>
+</table>
+<p tal:condition="python:here.details!=''" tal:content="structure here/details" />
+
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />

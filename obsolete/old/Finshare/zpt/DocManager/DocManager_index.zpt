@@ -1,0 +1,94 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+<!--CHANGED-->
+<tal:block metal:fill-slot="doc_manager_title">
+	finShare
+</tal:block>
+
+	<span metal:fill-slot="doc_manager_content" tal:omit-tag="">
+		<tal:block define=" folders_info here/checkPermissionManageFolders;
+							folders_list python:folders_info[2];
+							this_absolute_url python:here.absolute_url(0);
+
+							test_folders python:test(here.isEmptyList(folders_list), 0, len(folders_list));">
+
+			<h1>
+				<img tal:attributes="src python:here.icon" alt="Document Manager" title="Document Manager" border="0" />
+				<span tal:replace="here/title_or_id"/>
+			</h1>
+
+			<span tal:replace="structure here/menusubmissions"/>
+
+			<div class="clear_all">&nbsp;</div>
+			<div class="clear_all">&nbsp;</div>
+			<div class="clear_all">&nbsp;</div>
+
+			<form name="objectItems" method="post" action="">
+
+            <p tal:condition="python:not test_folders">
+				<strong>There are no items in this Document Manager</strong><br />
+<!--                <a tal:attributes="href python:request.PARENTS[1].absolute_url()">Back</a> -->
+			</p>
+			<tal:block condition="python:test_folders">
+				<div class="table_footer_corector">
+					<div class="table_footer">
+						<table border="0" cellspacing="0" cellpadding="0" class="items_table" width="100%" tal:condition="test_folders">
+							<tr>
+								<th>Title</th>
+								<th>Items contained</th>
+								<th>Owner</th>
+								<th>Creation date</th>
+							</tr>
+							<tr tal:repeat="folders folders_list" 
+								tal:attributes="class python:test(path('repeat/folders/odd'), 'row-odd', 'row-even')">
+							<tal:block define="del_permission python:folders[0];
+											   edit_permission python:folders[1];
+											   folder python:folders[2];">
+								<td class="doc_table_title">
+									<input type="checkbox" name="id" tal:attributes="value folder/id"/>
+									<tal:block tal:condition="python:1==0">
+										<a tal:condition="python:edit_permission==1" tal:attributes="href string:${folder/absolute_url}/edit_html">
+											<img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked)"
+												 alt="Edit Folder" title="Edit Folder" />
+										</a>
+										<img tal:condition="python:edit_permission!=1" tal:attributes="src folder/icon"
+											 alt="Folder" title="Folder" />
+									</tal:block>
+									<img tal:attributes="src folder/icon"
+										 alt="Folder" title="Folder" />
+
+									<a tal:attributes="href folder/getDocFolderURL" tal:content="folder/title_or_id" />
+								</td>
+								<td><span tal:content="python:here.countObjectsDMFolder(folder)"></span></td>
+								<td>
+									<span tal:condition="python:not folder.testCurrentUserName()" tal:content="folder/ownerinfo"></span>
+									<span><strong tal:condition="folder/testCurrentUserName" tal:content="folder/ownerinfo"></strong></span>
+								</td>
+								<td><span tal:replace="python:here.utShowFullDateTime(folder.releasedate)"></span></td>
+							</tal:block>
+							</tr>
+						</table>
+						<div class="navigation">
+							<span tal:replace="structure here/menuoperations"/>
+							<div class="clear_all">
+								&nbsp;
+							</div>
+						</div>
+					</div>
+					<div class="clear_all">
+						&nbsp;
+					</div>
+				</div>
+			</tal:block>
+				<em tal:condition="here/isDMManagerContributor">
+					<small>* you can modify only the objects owned by <strong tal:content="here/getAuthenticatedUser" /></small>
+				</em>
+			</form>
+			<br />
+
+		</tal:block>
+
+		<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'"></p>
+
+	</span>
+
+</tal:block>

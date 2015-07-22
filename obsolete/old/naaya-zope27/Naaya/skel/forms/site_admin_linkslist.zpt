@@ -1,0 +1,115 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit list of links</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				id python:request.get('id', '');
+				linkslist python:here.getPortletsTool().getLinksListById(id);
+				item python:request.get('item', '')">
+<tal:block tal:condition="python:linkslist is not None">
+[<a tal:attributes="href string:${site_url}/admin_linkslists_html" i18n:translate="">Back to the list of links</a>]
+<p i18n:translate="">
+</p>
+<fieldset><legend i18n:translate="">Change the list title</legend>
+<form method="post" tal:attributes="action string:${site_url}/admin_editlinkslist">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
+	<tr>
+		<td i18n:translate="">Title</td>
+		<td><input type="title" name="title" tal:attributes="value linkslist/title" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Update" i18n:attributes="value" /></td>
+	</tr>
+</table>
+<input type="hidden" name="id" tal:attributes="value linkslist/id" />
+</form>
+</fieldset>
+<h2 i18n:translate="">Available links</h2>
+<p i18n:translate="">Click on a link title to edit its attributes.</p>
+<form method="post" tal:attributes="action string:${site_url}/admin_deletelinks">
+<table border="0" cellspacing="0" cellpadding="4" width="90%" class="admin_table">
+	<tr>
+		<th width="1%"></th>
+		<th width="10%" i18n:translate="">Title</th>
+		<th width="25%" i18n:translate="">Description</th>
+		<th width="40%" i18n:translate="">URL</th>
+		<th width="20%" i18n:translate="">Permission</th>
+		<th width="5%" i18n:translate="">Order</th>
+	</tr>
+	<tr tal:repeat="record linkslist/get_links_list">
+		<td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
+		<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${linkslist/id}&item=${record/id}#editlink" tal:content="record/title">title</a></td>
+		<td tal:content="record/description">description</td>
+		<td tal:content="python:here.utTruncateString(test(record.relative, '%s%s' % (site_url, record.url), record.url), 40)">url</td>
+		<td tal:content="record/permission">permission</td>
+		<td tal:content="record/order">Order</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="5"><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
+	</tr>
+</table>
+<input type="hidden" name="id" tal:attributes="value linkslist/id" />
+</form>
+<tal:block tal:define="record_data python:linkslist.get_link_item_data(item)">
+<a name="editlink"></a>
+<form method="post" tal:attributes="action python:test(record_data[0]=='add', '%s/admin_addlink' % site_url, '%s/admin_editlink' % site_url)">
+<fieldset><legend tal:condition="python:item==''" i18n:translate="">Add new link</legend>
+<legend tal:condition="python:item!=''" i18n:translate="">Edit link</legend>
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
+	<tr>
+		<td class="form-label" i18n:translate="">Title</td>
+		<td><input type="text" name="title" size="30" tal:attributes="value python:record_data[2]"></td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">Description</td>
+		<td><input type="text" name="description" size="50" tal:attributes="value python:record_data[3]"></td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">URL</td>
+		<td><input type="text" name="url" size="50" tal:attributes="value python:record_data[4]"></td>
+	</tr>
+	<tr>
+		<td class="form-label"></td>
+		<td><input type="checkbox" name="relative" tal:attributes="checked python:record_data[5]==1"> <span i18n:translate="" tal:omit-tag="">check if it is a local link (relative path will be provided)</span></td>
+	</tr>
+	<tr>
+		<td colspan="2" i18n:translate="">
+			Choose one of the permissions defined in the system if you want this link
+			to be displayed only for users with (at least) that permission.
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">Permission</td>
+		<td>
+			<select name="permission">
+				<option value="" i18n:translate="">[None]</option>
+				<option tal:repeat="item python:here.getAuthenticationTool().listPermissions().keys()"
+						tal:attributes="value item; selected python:record_data[6]==item"
+						tal:content="item" />
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">Order</td>
+		<td><input type="text" name="order" size="3" tal:attributes="value python:record_data[7]"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" tal:attributes="value python:test(record_data[0]=='add', 'Add', 'Update')" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</fieldset>
+<input type="hidden" name="id" tal:attributes="value linkslist/id" />
+<input type="hidden" name="item" tal:attributes="value item" />
+</form>
+</tal:block>
+</tal:block>
+<tal:block tal:condition="python:linkslist is None" i18n:translate="">
+	Invalid links list.
+</tal:block>
+</tal:block>
+
+</tal:block>

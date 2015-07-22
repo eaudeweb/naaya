@@ -1,0 +1,58 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				authentication_tool here/getAuthenticationTool">
+
+<div class="tabs_firstlevel">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+	</ul>
+</div>
+
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
+
+<div class="tabs_admin">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+	</ul>
+</div>
+
+<div class="second_tabset_content">
+	<h2 i18n:translate="">Add role</h2>
+
+	<p i18n:translate="">
+		Choose a name for the new role, assign the permissions you want to grant to it and click <em>Add role</em>.
+	</p>
+
+	<form method="post" tal:attributes="action string:${site_url}/admin_addrole">
+	<table border="0">
+	<tr>
+		<td colspan="2" nowrap="nowrap"><label for="role" i18n:translate="">Role name</label></td>
+		<td><input type="text" name="role" id="role" size="45" maxlength="20" /></td>
+	</tr>
+	<tr tal:repeat="permission python:authentication_tool.listPermissions().keys()">
+		<td valign="top"><input type="checkbox" name="permissions" tal:attributes="value permission" /></td>
+		<td valign="top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission" i18n:attributes="alt" /></td>
+		<td>
+			<strong tal:content="permission" /><br />
+			<span tal:replace="python:authentication_tool.getPermissionDescription(permission)" />
+		</td>
+	</tr>
+	</table>
+	<input type="submit" value="Add role" i18n:attributes="value" class="submission_button" />
+	</form>
+</div>
+
+</div>
+
+</tal:block>
+</tal:block>

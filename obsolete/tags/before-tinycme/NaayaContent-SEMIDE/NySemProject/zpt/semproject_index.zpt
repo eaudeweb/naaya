@@ -1,0 +1,340 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="permission_edit here/checkPermissionEditObject">
+	<script language="javascript" type="text/javascript" tal:condition="permission_edit">
+	<!--
+		function fCheckSelection()
+		{	var frm = document.objectItems;
+		var i;
+		check = false;
+		for(i=0; i<frm.elements.length; i++)
+			if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+			{	check = true; break;}
+			return check;}
+	//-->
+	</script>
+
+	<script language="javascript" type="text/javascript" tal:condition="permission_edit">
+	<!--
+		function fDeleteObjects()
+		{	if (fCheckSelection())
+		{	document.objectItems.action="deleteObjects";
+		document.objectItems.submit();}
+		else
+		alert('Please select one or more items to delete.');}
+	//-->
+	</script>
+
+	<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+	<tal:block tal:condition="permission_edit">
+	<div id="admin_this_folder">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+		</tal:block>
+		<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+		<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+		<a tal:attributes="href string:${here/absolute_url}/semorganisation_add_html"><span i18n:translate="">Add Partner</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/semfunding_add_html"><span i18n:translate="">Add Funding source</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/semfieldsite_add_html"><span i18n:translate="">Add Field site</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/semdocument_add_html"><span i18n:translate="">Add Publication</span></a>
+	</div>
+	</tal:block>
+	<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+	<table border="0" cellspacing="2" cellpadding="2">
+
+	<tr>
+		<th i18n:translate="">Project number</th>
+		<td colspan="3" tal:condition="here/pr_number" tal:content="here/pr_number"></td>
+		<td colspan="3" tal:condition="not:here/pr_number" i18n:translate="">n/a</td>
+	</tr>
+
+	<tal:block define="subjects here/subject">
+		<tr tal:condition="subjects">
+			<th i18n:translate="">Subject(s)</th>
+			<td tal:define="subjects python:here.convertToList(subjects)">
+				<tal:block tal:repeat="subject subjects">
+					<tal:block	condition="subject"
+								define="theme_ob python:here.getPortalThesaurus().getThemeByID(subject, here.gl_get_selected_language())">
+						<span	tal:omit-tag="" tal:condition="theme_ob/theme_name"
+								tal:content="theme_ob/theme_name" />
+						<span	tal:omit-tag="" tal:condition="not:theme_ob/theme_name" i18n:translate=''>no translation available</span>
+						<span	tal:condition="not:repeat/subject/end" tal:replace="string:," />
+					</tal:block>
+				</tal:block>
+			</td>
+		</tr>
+	</tal:block>
+
+	<tr tal:condition="here/acronym">
+		<th  i18n:translate="">Acronym</th>
+		<td colspan="3"><acronym tal:attributes="title here/title" tal:content="here/acronym"></acronym></td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Geographical coverage</th>
+		<td tal:condition="here/coverage" tal:content="here/coverage" />
+		<td tal:condition="not:here/coverage" i18n:translate="">n/a</td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Budget (in &euro;)</th>
+		<td colspan="3" tal:condition="here/budget" tal:content="here/budget"></td>
+		<td colspan="3" tal:condition="not:here/budget" i18n:translate="">n/a</td>
+	</tr>
+	<tr tal:condition="here/programme">
+		<th i18n:translate="">Programme</th>
+		<td colspan="3" tal:content="here/programme" />
+	</tr>
+	<tr tal:condition="here/resourceurl">
+		<th i18n:translate="">Web site</th>
+		<td colspan="3"><a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" /></td>
+	</tr>
+	<tr tal:condition="here/objectives">
+		<th i18n:translate="">Objectives</th>
+		<td colspan="3" tal:content="structure here/objectives" />
+	</tr>
+	<tr tal:condition="here/results">
+		<th i18n:translate="">Results</th>
+		<td colspan="3" tal:content="structure here/results" />
+	</tr>
+
+	<tr tal:condition="here/start_date">
+		<th i18n:translate="">Period</th>
+		<td colspan="3">
+		<tal:block condition="python:here.start_date != here.end_date and here.end_date">
+			[<span tal:replace="python:here.utShowDateTime(here.start_date)"/> - <span tal:replace="python:here.utShowDateTime(here.end_date)"/>]
+		</tal:block>
+		<tal:block condition="python:here.start_date == here.end_date or not(here.end_date)">
+			<span tal:replace="python:here.utShowDateTime(here.start_date)"/>
+		</tal:block>
+		</td>
+	</tr>
+	</table>
+
+	<br />
+	<tal:block	define="partners here/getOrganisations;
+						fundings here/getFundings;
+						field_sites here/getFieldSites;
+						documents here/getDocuments;
+						has_subobjects python:partners or fundings or field_sites or documents">
+		<div tal:condition="python:permission_edit and has_subobjects">
+			<div id="toolbar">
+				<tal:block tal:condition="permission_edit"><a href="javascript:fDeleteObjects();" title="Delete selected partners, funding sources, field sites and publications from this project" i18n:attributes="title"><span><span i18n:translate="" tal:omit-tag="">Delete subobjects</span></span></a></tal:block>
+			</div>
+		</div>
+
+		<form	name="objectItems" method="post" action="" tal:condition="has_subobjects">
+		<!-- Partners listing -->
+		<h2 i18n:translate="" tal:condition="partners">Partners</h2>
+		<ul style="margin-left: 0em;" tal:define="items partners" tal:condition="python:len(items) > 0">
+			<li tal:repeat="item items" style="list-style: none;">
+				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
+				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<a tal:condition="permission_edit"
+					tal:attributes="href string:${item/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
+				</a>
+				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
+				<table border="0" cellspacing="2" cellpadding="2">
+					<tr tal:condition="item/org_coord">
+						<th i18n:translate="">Coordinator</th>
+						<td i18n:translate="">acts as project coordinator</td>
+					</tr>
+					<tr tal:condition="item/org_type">
+						<th i18n:translate="">Type</th>
+						<td tal:content="python:here.getOrganismTypeTitle(item.org_type)" i18n:translate="" />
+					</tr>
+					<tr tal:condition="item/address">
+						<th i18n:translate="">Address</th>
+						<td tal:content="item/address" />
+					</tr>
+					<tr tal:condition="item/coverage">
+						<th i18n:translate="">Country</th>
+						<td tal:content="item/coverage" />
+					</tr>
+					<tr tal:condition="item/org_url">
+						<th i18n:translate="">Web site</th>
+						<td><a tal:attributes="href item/org_url" tal:content="item/org_url" /></td>
+					</tr>
+					<tr>
+						<th i18n:translate="">Contact</th>
+						<td>
+							<span tal:replace="item/contact_title" />
+							<span tal:replace="item/contact_firstname" />
+							<span tal:replace="item/contact_lastname" />,
+							<br />
+							<strong i18n:translate="">Position</strong>: <span tal:replace="item/contact_position" />
+							<br />
+							<strong i18n:translate="">Phone/fax</strong>: <span tal:replace="item/contact_phone" />, <span tal:replace="item/contact_fax" />
+							<br />
+							<strong i18n:translate="">Email</strong>: <span tal:replace="item/contact_email" />
+						</td>
+					</tr>
+				</table>
+			</li>
+		</ul>
+
+		<!-- Funding listing -->
+		<h2 i18n:translate="" tal:condition="fundings">Funding sources</h2>
+		<ul style="margin-left: 0em;" tal:define="items fundings" tal:condition="python:len(items) > 0">
+			<li tal:repeat="item items" style="list-style: none;">
+				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
+				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<a tal:condition="permission_edit"
+					tal:attributes="href string:${item/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
+				</a>
+				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
+				<table border="0" cellspacing="2" cellpadding="2">
+					<tr tal:condition="item/funding_source">
+						<th i18n:translate="">Source</th>
+						<td tal:content="item/funding_source" />
+					</tr>
+					<tr tal:condition="item/funding_programme">
+						<th i18n:translate="">Programme</th>
+						<td tal:content="item/funding_programme" />
+					</tr>
+					<tr tal:condition="item/funding_type">
+						<th i18n:translate="">Type</th>
+						<td tal:content="python:here.getFundingTypeTitle(item.funding_type)" i18n:translate="" />
+					</tr>
+					<tr tal:condition="item/funding_rate">
+						<th i18n:translate="">Funding rate</th>
+						<td tal:content="item/funding_rate" />
+					</tr>
+				</table>
+			</li>
+		</ul>
+
+		<!-- Field site listing -->
+		<h2 i18n:translate="" tal:condition="field_sites">Field sites</h2>
+		<ul style="margin-left: 0em;" tal:define="items field_sites" tal:condition="python:len(items) > 0">
+			<li tal:repeat="item items" style="list-style: none;">
+				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
+				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<a tal:condition="permission_edit"
+					tal:attributes="href string:${item/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
+				</a>
+				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
+				<table border="0" cellspacing="2" cellpadding="2">
+					<tr tal:condition="item/coverage">
+						<th i18n:translate="">Country</th>
+						<td tal:content="item/coverage" />
+					</tr>
+					<tr tal:condition="item/fieldsite_loc">
+						<th i18n:translate="">Location</th>
+						<td tal:content="item/fieldsite_loc" />
+					</tr>
+					<tr tal:condition="item/fieldsite_rb">
+						<th i18n:translate="">River basin</th>
+						<td tal:content="item/fieldsite_rb" />
+					</tr>
+				</table>
+			</li>
+		</ul>
+
+		<!-- Publications listing -->
+		<h2 i18n:translate="" tal:condition="documents">Publications</h2>
+		<ul style="margin-left: 0em;" tal:define="items documents" tal:condition="python:len(items) > 0">
+			<li tal:repeat="item items" style="list-style: none;">
+				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
+				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<a tal:condition="permission_edit"
+					tal:attributes="href string:${item/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
+				</a>
+				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
+				<table border="0" cellspacing="2" cellpadding="2">
+					<tr tal:condition="item/publisher">
+						<th i18n:translate="">Publisher</th>
+						<td tal:content="item/publisher" />
+					</tr>
+
+					<tr>
+						<th i18n:translate="">Type of document</th>
+						<td tal:condition="item/document_type" tal:content="item/document_type" i18n:translate="" />
+						<td tal:condition="not:item/document_type" i18n:translate="">n/a</td>
+					</tr>
+
+					<tr tal:condition="item/rights">
+						<th i18n:translate="">Rights</th>
+						<td tal:content="item/rights" i18n:translate="" />
+					</tr>
+
+					<tr tal:define="file_link python:item.convertToFullURL(item.file_link);
+									file_link_local python:item.convertToFullURL(item.file_link_local)">
+						<th i18n:translate="">File link</th>
+						<td>
+							<tal:block condition="file_link">
+							<a tal:attributes="href file_link" tal:content="file_link" /><br />
+							</tal:block>
+							<tal:block condition="file_link_local">
+							<a tal:attributes="href file_link_local" tal:content="file_link_local" /> (<span tal:omit-tag="" i18n:translate="">copy</span>)
+							</tal:block>
+							<span  tal:condition="python:not(file_link or file_link_local)" tal:omit-tag="">n/a</span>
+						</td>
+					</tr>
+
+					<tr tal:define="source_link python:item.convertToFullURL(item.source_link)"
+							tal:condition="python:item.source or source_link">
+						<th i18n:translate="">Source of information</th>
+						<td tal:condition="python:item.source and source_link">
+							<a tal:attributes="href source_link" tal:content="item/source" />
+						</td>
+						<td tal:condition="python:item.source and not(source_link)" tal:content="item/source" />
+						<td tal:condition="python:not(item.source) and source_link">
+							<a tal:attributes="href source_link" tal:content="source_link" />
+						</td>
+					</tr>
+
+					<tr tal:condition="item/keywords">
+						<th i18n:translate="">Keyword(s)</th>
+						<td tal:content="item/keywords" />
+					</tr>
+
+					<tal:block define="subjects item/subject">
+						<tr tal:condition="subjects">
+							<th i18n:translate="">Subject(s)</th>
+							<td tal:define="subjects python:item.convertToList(subjects)">
+								<tal:block tal:repeat="subject subjects">
+									<tal:block	condition="subject"
+												define="theme_ob python:item.getPortalThesaurus().getThemeByID(subject, item.gl_get_selected_language())">
+										<span	tal:omit-tag="" tal:condition="theme_ob/theme_name"
+												tal:content="theme_ob/theme_name" />
+										<span	tal:omit-tag="" tal:condition="not:theme_ob/theme_name" i18n:translate=''>no translation available</span>
+										<span	tal:condition="not:repeat/subject/end" tal:replace="string:," />
+									</tal:block>
+								</tal:block>
+							</td>
+						</tr>
+					</tal:block>
+
+					<tr tal:define="relation python:item.convertToFullURL(item.relation)" tal:condition="relation">
+						<th i18n:translate="">Relation</th>
+						<td>
+							<a tal:content="relation" tal:attributes="href relation" />
+						</td>
+					</tr>
+
+					<tr>
+						<th i18n:translate="">Geographical coverage</th>
+						<td tal:condition="item/coverage" tal:content="item/coverage" />
+						<td tal:condition="not:item/coverage" i18n:translate="">n/a</td>
+					</tr>
+				</table>
+			</li>
+		</ul>
+		</form>
+	</tal:block>
+
+</tal:block>
+
+<div style="margin-top:1em">
+	<tal:block define="ob_url python:here.utUrlEncode(here.absolute_url(1))">
+	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0" i18n:attributes="alt" /></a>
+	</tal:block>
+</div>
+
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />

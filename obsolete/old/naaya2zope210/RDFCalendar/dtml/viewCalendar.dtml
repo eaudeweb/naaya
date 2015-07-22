@@ -1,0 +1,13 @@
+<html>
+<head>
+<style type="text/css">
+<dtml-var default_css>
+</style>
+</head>
+<body>
+
+<dtml-var "show_calendar()">
+
+
+</body>
+</html>

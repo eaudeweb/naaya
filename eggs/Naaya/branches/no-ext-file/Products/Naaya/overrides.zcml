@@ -1,3 +1,0 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
-    <includeOverrides package="naaya.i18n" file="overrides.zcml" />
-</configure>

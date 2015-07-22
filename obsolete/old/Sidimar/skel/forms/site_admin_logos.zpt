@@ -1,0 +1,45 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Logos</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+
+<p i18n:translate="">
+	Change the logo(s) of your website with the one(s) of your organisation using the form below. They will appear in the top banner of each page.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data" style="">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
+<tr>
+	<td valign="top" i18n:translate="">Left-side logo</td>
+	<td valign="top"><input type="file" name="logo" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Portal logo" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td valign="top" i18n:translate="">Right-side logo</td>
+	<td valign="top"><input type="file" name="logobis" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logobis" alt="Portal secondary logo" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+</tr>
+</table>
+</form>
+</tal:block>
+
+</tal:block>

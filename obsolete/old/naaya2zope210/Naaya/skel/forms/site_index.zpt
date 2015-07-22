@@ -1,0 +1,19 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="right_portlets python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
+
+<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
+	<span tal:replace="structure here/description" />
+
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+	</tal:block>
+</div>
+
+<div id="right_port" tal:define="items right_portlets"
+	tal:condition="python:len(items)>0">
+	<tal:block tal:repeat="item items">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />

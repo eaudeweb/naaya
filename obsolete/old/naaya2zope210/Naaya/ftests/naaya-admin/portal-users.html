@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>portal-users</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">portal-users</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/david/admin_users_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add user']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstname:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastname:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>email:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>confirm:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Invalid email address.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstname:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastname:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>email:utf8:ustring</td>
+	<td>user1@localhost.lh</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>confirm:utf8:ustring</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>role</td>
+	<td>new_role</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>permissions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[2].permissions[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[2].permissions[5]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Users &amp; Roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>names</td>
+	<td>label=user1</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=new_role</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Administrator</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Assign role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>roles</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Revoke selected roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>names</td>
+	<td>label=user1</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Administrator</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Contributor</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Manager</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Reviewer</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>roles</td>
+	<td>label=Administrator</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>roles</td>
+	<td>label=Contributor</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>roles</td>
+	<td>label=Manager</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>roles</td>
+	<td>label=Reviewer</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=new_role</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Reviewer</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=Contributor</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Assign role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.frmUsersRoles.loc[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.frmUsersRoles.loc[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>document.frmUsersRoles.roles</td>
+	<td>label=new_role</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>document.frmUsersRoles.roles</td>
+	<td>label=Administrator</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>document.frmUsersRoles.roles</td>
+	<td>label=Manager</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>names</td>
+	<td>label=user1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Pick']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>wwinn</td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=wwinn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>title=david</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Assign role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Revoke selected roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>roles</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[2].roles[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Revoke selected roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>roles</td>
+	<td>label=new_role</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>names</td>
+	<td>label=user1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Assign role']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>acl_users/manage_roles_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.frmRoles.roles[6]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>admin_users_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Users &amp; Roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>new_role</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>roles</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Revoke selected roles']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Local users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>names</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Delete user']</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

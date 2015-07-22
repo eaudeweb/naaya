@@ -1,0 +1,72 @@
+.skiplink {
+	display: none;
+}
+
+#language {
+	display: none;
+}
+
+#header {
+	border: 1px solid #cccccc;
+	position: relative;
+	padding: 10px;
+}
+
+#header img {
+	margin-left: 1%;
+}
+
+#breadcrumptrail {
+	display: none;
+}
+
+#middle_port {
+	padding:4%;
+	margin: 1% 0%;
+	border: 1px solid black;
+}
+
+#left_port {
+	display: none;
+}
+
+#right_port {
+	display: none;
+}
+
+#footer {
+	display: none;
+}
+
+#toptitle {
+	margin-left: 20%;
+	margin-top: 0.5em;
+}
+	
+#last_modified {
+	margin: 1% 0% 1% 0%;
+}
+
+#topnav {
+	display: none;
+}
+
+#menunav {
+	display: none;
+}
+
+#tabbedmenu {
+	display: none;
+}
+
+.page_title {}
+.page_subtitle {}
+
+/*	EPOZ buttons	*/
+#epoz_button_strikethrough {display:none;}
+#epoz_button_subscript {display:none;}
+#epoz_button_superscript {display:none;}
+#epoz_button_unformat {display:none;}
+#epoz_button_anchor {display:none;}
+#epoz_button_undo {display:none;}
+#epoz_button_redo {display:none;}

@@ -1,0 +1,110 @@
+.skiplink {
+	display: none;
+}
+
+#language {
+	display: none;
+}
+
+#header {
+	border: 1px solid #cccccc;
+	position: relative;
+	padding: 10px;
+}
+
+#header img {
+	margin-left: 1%;
+}
+
+#breadcrumptrail {
+	display: none;
+}
+
+#middle_port {
+	padding:4%;
+	margin: 1% 0%;
+	border: 1px solid black;
+}
+
+#left_port {
+	display: none;
+}
+
+#right_port {
+	display: none;
+}
+
+#footer {
+	display: none;
+}
+
+#toptitle {
+	margin-left: 20%;
+	margin-top: 0.5em;
+}
+	
+#last_modified {
+	margin: 1% 0% 1% 0%;
+}
+
+#topnav {
+	display: none;
+}
+
+#menunav {
+	display: none;
+}
+
+#tabbedmenu {
+	display: none;
+}
+
+.page_title {}
+.page_subtitle {}
+
+/* Data tables*/
+.sortable, .datatable {
+	font-family: Verdana, Avenir, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	margin: 1em 0.5em;
+	border-collapse: collapse;
+	border-top:    1.5pt solid black;
+	border-bottom: 1.5pt solid black;
+	empty-cells: show;
+}
+
+.sortable td, .datatable td {
+	border-bottom: 1pt solid black;
+	padding: 0.3em;
+}
+
+.sortable th, .datatable th {
+	color: black;
+	font-weight: bold; 
+	text-align: center;
+	border-bottom: 2pt solid black;
+	padding: 0.3em;
+}
+
+.sortable th.scope-row, .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+
+.sortable th[scope="row"], .datatable th[scope="row"] {
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+
+table .number {
+	text-align: right;
+}
+
+table .center {
+	text-align: center;
+}
+
+table .sum {
+	font-weight: bold;
+}
+

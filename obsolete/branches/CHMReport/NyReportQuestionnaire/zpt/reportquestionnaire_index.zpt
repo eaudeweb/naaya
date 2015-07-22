@@ -1,0 +1,106 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="permission_edit here/checkPermissionEditObject">
+
+<h1><span tal:omit-tag="" i18n:translate="">Comments posted for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
+
+
+<tal:block	define="filter_qst python:request.get('question', '')">
+	<div class="comment_box">
+		<div class="commentbox_title">
+		<!--
+			<tal:block tal:condition="permission_edit">
+				<a tal:attributes="href string:${here/absolute_url}/${here/id}/delete_comment" style="float: right; margin-left: 5px"><small i18n:translate="">Delete</small></a>
+				<a tal:attributes="href string:${here/absolute_url}/${here/id}/edit_html" style="float: right">
+				<small i18n:translate="">Edit</small></a>
+			</tal:block>
+		-->
+
+		<span class="commentbox_content">
+		<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="here/releasedate" />
+		<span i18n:translate="">by:</span>
+			<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${here/contributor}', 350, 300);"><strong tal:content="here/contributor" /></a>
+			<strong tal:content="here/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
+		</span>
+
+	</div>
+	<hr class="hr_inside_comment" />
+
+	<div tal:condition="filter_qst">
+		<span tal:define="answer python:here.getAnswerByQuestion(filter_qst).answer" tal:condition="answer">
+			<tal:block condition="python:here.lang==here.gl_get_selected_language()">
+				<span tal:content="answer" />
+			</tal:block>
+
+			<tal:block condition="python:here.lang!=here.gl_get_selected_language()">
+			<div class="auto_transl" >
+				<div tal:content="answer" /><br />
+			</div>
+			</tal:block>
+		</span>
+	</div>
+
+	<div tal:condition="not:filter_qst">
+		<tal:block define="a_list here/getQuestionIds">
+			<tal:block repeat="a a_list">
+				<span tal:define="answer python:here.getAnswerByQuestion(a).answer" tal:condition="answer">
+					<div class="question_in_comm">
+					<span class="q_number">
+						<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />
+					</span>
+						<span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
+					</div>
+
+					<tal:block condition="python:here.lang==here.gl_get_selected_language()">
+						<span tal:content="answer" />
+					</tal:block>
+
+					<tal:block condition="python:here.lang!=here.gl_get_selected_language()">
+					<div class="auto_transl">
+						<div tal:content="answer" />
+					</div>
+					</tal:block>
+				</span>
+			</tal:block>
+		</tal:block>
+	</div>
+
+	<span class="comm_to_text" i18n:translate="" tal:condition="here/hasComments">Comment(s) to text</span>
+
+	<tal:block repeat="comment here/getAllComments">
+		<div>
+		<span class="comment_for" >
+			<span i18n:translate="">Comment for</span>
+			<span class="page_line">
+				<span class="pg_ln" i18n:translate="">page</span>: <span class="style_number" tal:content="comment/page" />, 
+				<span class="pg_ln" i18n:translate="">line</span>: <span class="style_number" tal:content="comment/line" />
+			</span>
+		</span>
+			<tal:block condition="python:here.lang==here.gl_get_selected_language()">
+				<div>
+				<span tal:content="comment/comment" />
+				</div>
+			</tal:block>
+			<tal:block condition="python:here.lang!=here.gl_get_selected_language()">
+				<div class="auto_transl" title="Text automatically translated" i18n:attributes="title">
+					<tal:block tal:replace="comment/comment" />
+				</div>
+			</tal:block>
+		</div>
+	</tal:block>
+
+	<tal:block define="attachments here/getFiles" condition="attachments">
+		<div>
+			<strong i18n:translate="">Download attachment: </strong>
+			<tal:block repeat="file attachments">
+				<a tal:content="file/title_or_id" tal:attributes="href string:${file/absolute_url}/download" />
+			</tal:block>
+		</div>
+	</tal:block>
+
+		</div>
+</tal:block>
+
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<forms>
+		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
+		<form id="site_search" title="Portal search"/>
+		<form id="site_external_search" title="External search"/>
+		<form id="folder_restrict" title="NyFolder restrictions"/>
+		<form id="site_sitemap" title="Portal site map"/>
+		<form id="site_urlmap" title="Portal url map"/>
+		<form id="site_admin_deletions" title="Portal administration - submissions"/>
+		<form id="site_admin_submissions" title="Portal administration - deletions"/>
+		<form id="site_admin_urls" title="Portal administration - urls"/>
+		<form id="site_admin_comments" title="Portal administration - comments for content"/>
+		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
+		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
+		<form id="site_admin_network" title="Portal administration - network of portals"/>
+		<form id="site_requestrole" title="Request account page"/>
+		<form id="site_admin_addrole" title="Add new role"/>
+		<form id="site_admin_adduser" title="Add new user"/>
+		<form id="site_admin_edituser" title="Edit user form"/>
+		<form id="site_admin_roles" title="Roles"/>
+		<form id="site_admin_role" title="Role details"/>
+		<form id="site_admin_users" title="All users view"/>
+		<form id="site_admin_sources" title="Portal administration - other users sources"/>
+		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
+		<form id="site_admin_workgroups" title="View workgroups"/>
+		<form id="site_admin_workgroup" title="View workgroup"/>
+		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
+		<form id="site_admin_users_assigned" title="View users with roles"/>
+		<form id="site_admin_userroles" title="View the roles of a user"/>
+		<form id="site_admin_template" title="Portal administration - macro"/>
+		<form id="site_links_group" title="Group of links"/>
+		<form id="site_index" title="Portal home page"/>
+	</forms>
+	<layout default_skin_id="chm" default_scheme_id="indigo">
+		<skin id="chm" title="CHM">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="script_dropdownmenus_js" title="Script for dropdown menu"/>
+			<template id="script_expandableportlets_js" title="Script for expandable portlets"/>
+			<scheme id="blue" title="Blue">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+			</scheme>
+			<scheme id="brown" title="Brown">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+			</scheme>
+			<scheme id="green" title="Green">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+			</scheme>
+			<scheme id="indigo" title="Indigo">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+			</scheme>
+		</skin>
+	</layout>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
+		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
+	</pluggablecontenttypes>
+	<syndication>
+		<channeltype id="Red lists" title="Red lists"/>
+		<channeltype id="Indicators" title="Indicators"/>
+		<channeltype id="Technology transfer" title="Technology transfer"/>
+		<channeltype id="Miscellaneous" title="Miscellaneous"/>
+		<scriptchannel id="meetingsevents_rdf" title="Meetings and events" description="Meetings and events" language="en" type="Events" numberofitems="5" portlet="1"/>
+		<scriptchannel id="whatsnew_rdf" title="What's new" description="What's new" language="en" type="News" numberofitems="5" portlet="1"/>
+		<scriptchannel id="latestrelevantuploads_rdf" title="Selected uploads" description="Selected uploads" language="en" type="Miscellaneous" numberofitems="5" portlet="1"/>
+	</syndication>
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
+		<portlet id="portlet_administration" title="Administration"/>
+		<portlet id="portlet_latestphotos" title="Photos"/>
+	        <portlet id="portlet_calendar" title="Calendar of Events"/>
+		<portlet id="portlet_maincategories" title="Main sections" />
+		<linkslist id="topnav_links" title="Top navigation links" portlet="">
+			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://cbd.int/chm" relative="0" permission="" order="10"/>
+			<link id="101" title="Europa" description="Gateway to the European Union" url="http://europa.eu/" relative="0" permission="" order="20"/>
+			<link id="102" title="DG Environment" description="Directorate General Environment" url="http://ec.europa.eu/environment/index_en.htm" relative="0" permission="" order="30"/>
+			<link id="103" title="DG Env-Nature" description="Directorate General Environment-Nature" url="http://ec.europa.eu/environment/nature/index_en.htm" relative="0" permission="" order="40"/>
+			<link id="104" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu/" relative="0" permission="" order="50"/>
+			<link id="105" title="GBIF" description="Global Biodiversity Information Facility" url="http://www.gbif.org/" relative="0" permission="" order="60"/>
+			<link id="106" title="EUNIS Database" description="European Nature Information System" url="http://eunis.eea.europa.eu" relative="0" permission="" order="70"/>
+			<link id="107" title="SEBI" description="European Biodiversity Indicators 2010" url="http://biodiversity-chm.eea.europa.eu/information/indicator/F1090245995" relative="0" permission="" order="80"/>
+			<link id="108" title="Biosafety BCH" description="Global Biosafety Clearing-House (CBD)" url="http://bch.cbd.int/" relative="0" permission="" order="90"/>
+			<link id="109" title="EC ABS" description="EC Access and Benefit Sharing portal" url="http://biodiversity-chm.eea.europa.eu/information/F1046684686/F1118645293" relative="0" permission="" order="100"/>
+		</linkslist>
+		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
+			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
+			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
+			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
+			<link id="105" title="Photos" description="Photo archive" url="/PhotoArchive/" relative="1" permission="" order="60"/>
+			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
+			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
+			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
+			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
+			<link id="112" title="Network search" description="" url="/external_search_html" relative="1" permission="" order="130"/>
+		</linkslist>
+		<linkslist id="menunav_services" title="Services" portlet="">
+			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
+			<link id="112" title="Network search" description="" url="/external_search_html" relative="1" permission="" order="130"/>
+			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
+			<link id="113" title="Portal map" description="" url="/portal_map" relative="1" permission="" order="150"/>
+			<link id="108" title="Fora" description="" url="/portal_forum" relative="1" permission="" order="140"/>
+		</linkslist>
+		<linkslist id="menunav_content" title="Content" portlet="">
+			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
+			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
+			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
+			<link id="105" title="Photos" description="Photo archive" url="/PhotoArchive/" relative="1" permission="" order="60"/>
+		</linkslist>
+		<linkslist id="menunav_about" title="About" portlet="">
+			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
+		</linkslist>
+		<linkslist id="menunav_sitemap" title="Sitemap" portlet="">
+			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
+		</linkslist>
+	</portlets>
+	<emails>
+		<emailtemplate id="email_createaccount" title="Create account"/>
+	</emails>
+	<security>
+		<role name="Authenticated" grouppermissions="Copy content,Add comments" permissions="Naaya - Add Naaya Story objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Event objects"/>
+		<role name="Validator" grouppermissions="Validate content" permissions=""/>
+	</security>
+	<others>
+		<favicon />
+		<robots />
+		<submit_unapproved />
+	</others>
+</skel>

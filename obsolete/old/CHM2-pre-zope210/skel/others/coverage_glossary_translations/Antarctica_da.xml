@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Danish">
+    <body>
+      <trans-unit approved="1" id="Antarctica">
+        <source>Antarctica</source>
+        <target>Antarktis</target>
+        <context-group name="Antarctica"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Heard_Island_and_McDonald_Islands">
+        <source>Heard Island and McDonald Islands</source>
+        <target>Heard- og McDonald-øerne</target>
+        <context-group name="Antarctica"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="French_Southern_Territories">
+        <source>French Southern Territories</source>
+        <target>Franske Besiddelser i Det Sydlige Indiske Ocean</target>
+        <context-group name="Antarctica"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

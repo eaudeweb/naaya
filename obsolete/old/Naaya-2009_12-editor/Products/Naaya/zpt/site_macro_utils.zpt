@@ -1,0 +1,99 @@
+<!-- Add here all common utils macros for Naaya Sites -->
+
+<tal:comment condition="nothing">
+<!--
+Paginator
+---------
+- Uses NaayaCore.managers.paginator.ObjectPaginator to render list of objects on pages.
+
+Required variables:
+- objects: List of objects to apply paginator;
+- num_per_page: number of objects per page;
+- orphans: Number of orphans to avoid small final pages (see ObjectPaginator).
+
+Optional:
+- paginator: define paginator in upper template;
+- label: Text to use before x - y of z, like: Results: 5 - 10 of 300
+-->
+</tal:comment>
+
+<metal:block define-macro="paginator" tal:define="
+	label label|string:;
+	objects objects|python:[];
+	num_per_page num_per_page|python:50;
+	orphans orphans|python:-1;
+	query python:dict(request.form);
+	page python:query.pop('page', 0);
+	query_string python:here.utUrlLibEncode(query);
+	query_string python:test(query_string, '?' + query_string + '&amp;page=', '?page=');
+	paginator paginator|python:here.getObjectPaginator(objects, num_per_page, orphans);
+	curr_page python:paginator.validate_page_number(page);
+	left python:paginator.left(curr_page);
+	right python:paginator.right(curr_page);
+">
+
+<div class="paginator" tal:condition="paginator/hits">
+	<div class="paginator-head">
+		<label i18n:translate="" tal:content="label" tal:condition="label" />
+		<span tal:replace="python:paginator.first_on_page(curr_page)" /> - <span tal:replace="python:paginator.last_on_page(curr_page)" />
+		<span i18n:translate="" tal:omit-tag="">of</span>
+		<span tal:replace="paginator/hits" />
+	</div>
+	
+	<div class="paginator-body">
+		<span class="paginator-previous" tal:condition="python:paginator.has_previous_page(curr_page)">
+			<a tal:define="page python:curr_page-1" tal:attributes="href string:${query_string}${page}" title="Previous" i18n:attributes="title" i18n:translate="">&laquo;</a>
+		</span>
+		<span class="paginator-pages" tal:repeat="page python:paginator.page_range[left:right]" tal:condition="python:paginator.pages>1">
+			<span tal:condition="python:page==curr_page" tal:content="python:page+1" />
+			<a tal:attributes="href string:${query_string}${page}; title python:page+1"
+				tal:condition="python:page!=curr_page" tal:content="python:page+1" />
+		</span>
+		<span class="paginator-next" tal:condition="python:paginator.has_next_page(curr_page)">
+			<a tal:define="page python:curr_page+1" tal:attributes="href string:${query_string}${page}" title="Next" i18n:attributes="title" i18n:translate="">&raquo;</a>
+		</span>
+	</div>
+</div>
+
+</metal:block>
+
+<tal:comment condition="nothing">
+<!--
+AJAX Tree
+---------
+- Uses Naaya.managers.extjs lib to render an objects tree.
+
+Optional variables:
+- method: site method that returns a JSON dictionary with elements on one level of the tree;
+          default is getNavigationSiteMap defined in Products.Naaya.NySite.NySite;
+- jsfile: Javascript file path to include. This file is supposed to initialize the tree.
+          default is /extjs/ext-navigation.js.dtml
+-->
+</tal:comment>
+
+<metal:block define-macro="ajaxtree">
+<!-- Styles -->
+<metal:block define-slot="styles">
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
+</metal:block>
+
+<!-- Scripts -->
+<metal:block define-slot="scripts">
+	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
+</metal:block>
+
+<!-- Initialize tree -->
+<metal:block define-slot="treeinit" tal:define="
+	jsfile jsfile|string:${here/absolute_url}/extjs/ext-navigation.js.dtml;
+	tree_method method|string:getNavigationSiteMap;">
+
+<script type="text/javascript" tal:content="string:
+	var tree_loader = '${tree_method}';
+"></script>
+<script type="text/javascript" tal:attributes="src jsfile"></script>
+
+</metal:block>
+
+</metal:block>

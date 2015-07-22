@@ -1,0 +1,42 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block metal:fill-slot="title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block fill-slot="body">
+<metal:block define-macro="deliverables-table">
+
+<table class="datatable" style="background-color: white;">
+
+<thead>
+    <tr>
+        <th>No.</th>
+        <th>Deliverable name</th>
+        <th>WP no.</th>
+        <th>Delivery date</th>
+        <th>Output</th>
+    </tr>
+</thead>
+
+<tbody tal:define="output_list python:here.build_output_list()['outputs']">
+    <tr tal:repeat="deliv here/base_data">
+        <td tal:content="deliv/number" />
+        <td tal:content="deliv/name" />
+        <td tal:content="deliv/wp_number" />
+        <td tal:content="deliv/delivery_date" />
+        <td tal:define="deliv_id python: (deliv['number']
+                                          .replace('.', '')
+                                          .lower());
+                        output python:output_list.get(deliv_id, [])">
+            <ul class="deliverables-download"><li tal:repeat="obj output">
+                <a tal:attributes="href obj/url" tal:content="obj/title"></a>
+            </li></ul>
+        </td>
+    </tr>
+</tbody>
+
+</table>
+
+</metal:block>
+</metal:block>
+</metal:block>

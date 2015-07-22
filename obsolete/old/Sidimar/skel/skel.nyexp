@@ -1,0 +1,1354 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<export>
+	<ob meta_type="Naaya Folder" param="0" id="monitor" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[Programma di Monitoraggio]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<p><strong>Programma di Monitoraggio dell'Ambiente Marino costiero 2001 - 2003</strong></p>
+
+
+<span tal:replace="structure here/standard_html_footer" />
+]]>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="download" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[Area download]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="mysql_tool here/getMySQLTool;
+					results here/processIndex;
+					regions python:results[0];
+					data python:results[1];
+					years python:results[2]">
+
+<h1 i18n:translate="">Area download</h1>
+
+<p> Please select the parameters below and click <strong>Chose stations</strong> </p>
+
+<fieldset tal:condition="here/isSessionErrors"><legend><strong>Errors</strong></legend>
+<table border="0" cellspacing="0" cellpadding="0" width="80%">
+	<tr tal:repeat="error_value here/getSessionErrors">
+		<td>&nbsp;</td>
+		<td tal:content="error_value">&nbsp;</td>
+	</tr>
+</table>
+</fieldset>
+
+<form method="post" action="campagna_html" name="frmDownload" id="frmDownload">
+	<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<th><label for="region" i18n:translate="">Region</label></th>
+			<td>
+				<select name="region">
+					<tal:block repeat="region regions">
+					<option tal:attributes="value python:mysql_tool.mp_codreg(region)"
+						tal:content="python:mysql_tool.mp_region(region)" />
+					</tal:block>
+				</select>
+			</td>
+		</tr>
+	<tr>
+		<th><label for="monitor" i18n:translate="">Data monitored</label></th>
+		<td>
+			<select name="monit">
+				<tal:block repeat="dt data">
+				<option tal:attributes="value python:mysql_tool.mp_codmonit(dt)"
+						tal:content="python:mysql_tool.mp_descrmonit(dt)" />
+				</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th><label for="year" i18n:translate="">Year</label></th>
+		<td>
+			<select name="year">
+			<tal:block repeat="year years">
+				<option tal:define="y python:mysql_tool.mp_year(year)"
+						tal:attributes="value y"
+						tal:content="y" />
+			</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><input type="submit" value="Choose campaign" i18n:attributes="value" /></td>
+		<td><input type="reset" value="Reset" i18n:attributes="value" /></td>
+	</tr>
+	</table>
+</form>
+</tal:block>
+
+<span tal:content="here/delSessionErrors" tal:omit-tag=""></span>
+<span tal:replace="structure here/standard_html_footer" />
+]]>
+		<template id="campagna_html" param="0" title="Select campagna">
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="region python:request.get('region', '');
+					monit python:request.get('monit', '');
+					year python:request.get('year', '');
+					mysql_tool here/getMySQLTool;
+					results python:here.processCampaign(region, monit, year);
+					region python:results[0];
+					campaigns python:results[1];">
+
+<h1 i18n:translate="">Choose campaign</h1>
+
+<p>Selected parameters:</p>
+<table class="horizontal_table" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:1em">
+<tr>
+<th i18n:translate="">Region:</th> <td tal:content="here/getSessionRegion" />
+</tr>
+<tr>
+<th i18n:translate="">Monitored data:</th> <td tal:content="here/getSessionDataMonit" />
+</tr>
+<tr>
+<th i18n:translate="">Year:</th> <td tal:content="here/getSessionYear" />
+</tr>
+</table>
+
+
+<form action="download_html" method="post" name="frmDownload" id="frmDownload">
+	<p tal:condition="not:campaigns">
+		No campaign was found matching your criteria.
+	</p>
+	<p tal:condition="python:len(campaigns)==1">
+		One campaign was found matching your criteria.<br />To download it please select it and click <strong>Download</strong>.
+	</p>
+	<p tal:condition="python:len(campaigns)>1">
+		More campaigns were found matching your criteria.<br /> Please select the one you want to download to continue.
+	</p>
+	<p>
+		<tal:block tal:repeat="campaign campaigns">
+			<tal:block define="camp python:mysql_tool.mp_campag(campaign); number repeat/campaign/number">
+			<input type="radio" name="campaign" tal:attributes="value camp;id string:camp_${number}">
+			<label tal:attributes="for string:camp_${number}" tal:content="camp" /><br />
+			</tal:block>
+		</tal:block>
+	</p>
+
+
+		<input type="button" name="chgReg" value="Change regions">
+	<tal:block tal:condition="campaigns">
+		<input type="hidden" name="monit" tal:attributes="value monit" />
+		<input type="hidden" name="region" tal:attributes="value region" />
+		<input type="submit" name="download" value="Download">
+		<input name="reset" type="reset" value="Reset">
+	</tal:block>
+</form>
+
+</tal:block>
+
+<span tal:content="here/delSessionErrors" tal:omit-tag=""></span>
+<span tal:replace="structure here/standard_html_footer" />
+]]>
+		</template>
+		<template id="download_html" param="0" title="Download zip">
+		<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="campaign python:request.get('campaign', '');
+					region python:request.get('region', '');
+					monit python:request.get('monit', '');
+					year python:request.get('year', '')">
+
+<h1 i18n:translate="">Sistema di Download dei Dati Ambientali Marini</h1>
+
+<tal:block define="info python:here.make_zip(region, monit, campaign, year, 1);
+					instr python:info[0];
+					stat python:info[1];
+					monit_p python:info[2];
+					monit_pb python:info[3];
+					size python:info[4];">
+<p>
+	More informations regarding the result.
+</p>
+<table class="horizontal_table" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<th i18n:translate="">Region</th> <td tal:content="here/getSessionRegion" />
+</tr>
+<tr>
+	<th i18n:translate="">Monitored data</th> <td tal:content="here/getSessionDataMonit" />
+</tr>
+<tr>
+	<th i18n:translate="">Year</th> <td tal:content="here/getSessionYear" />
+</tr>
+<tr>
+	<th i18n:translate="">Campaign</th> <td tal:content="campaign" />
+</tr>
+<tr>
+	<th i18n:translate="">Files inside</th>
+	<td><span tal:replace="instr/getId" tal:condition="python:instr is not None"/>
+		<br /><span tal:replace="stat/getId" tal:condition="python:stat is not None"/>
+		<br /><span tal:replace="monit_p/getId" tal:condition="python:monit_p is not None"/>
+		<br /><span tal:replace="monit_pb/getId" tal:condition="python:monit_pb is not None"/>
+</tr>
+<tr>
+	<th>Archive size</th> <td tal:content="size" />
+</tr>
+</table>
+</tal:block>
+
+<form action="make_zip" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="monit" tal:attributes="value monit" />
+	<input type="hidden" name="campaign" tal:attributes="value campaign" />
+	<input type="hidden" name="region" tal:attributes="value region" />
+	<input type="hidden" name="year" tal:attributes="value year" />
+	<input type="submit" name="func" value="Download">
+</form>
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />
+]]>
+		</template>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="map" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[View map]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[<span tal:replace="structure here/standard_html_header" />
+<style>
+.floated_image_with_text {
+	float: left;
+	text-align: center;
+	margin: 0px 7px 7px 0px;
+}
+</style>
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+	window.open(theURL,winName,features);
+}
+//-->
+</script>
+
+<h1>Primi risultati</h1>
+
+<p>
+	I risultati delle analisi effettuate
+	durante il Programma di Monitoraggio sono stati integrati
+	in un ambiente GIS (Sistema di informazione geografico).<br />
+	Cliccando sulle aree di indagine riportate sulla carta,
+	si accede alle informazioni sulla localizzazione delle
+	singole stazioni di campionamento ed ai risultati delle
+	analisi eseguite.<br />
+	I dati inviati dalle Regioni al Ministero vengono controllati
+	e verificati prima di essere messi in rete. Tale operazione
+	comporta un intervallo di circa 60 - 90 gg. tra la data
+	di campionamento e la data di pubblicazione dei dati stessi.
+</p>
+
+<div class="floated_image_with_text">
+	<div class="floated_image_with_text">
+		<a href="#" tal:attributes="onClick string:MM_openBrWindow('${here/absolute_url}/map_html','','status=yes,scrollbars=yes,resizable=no,width=715,height=568')"><img src="misc_/Sidimar/map.gif" border="0" /></a>
+		<div><a href="#" tal:attributes="onClick string:MM_openBrWindow('${here/absolute_url}/map_html','','status=yes,scrollbars=yes,resizable=no,width=715,height=568')">Visualizzazione risultati</a></div>
+	</div>
+	<div class="floated_image_with_text">
+		<a href="#" tal:attributes="onClick string:MM_openBrWindow('${here/absolute_url}/posidonia_html','','status=yes,scrollbars=yes,resizable=no,width=715,height=568')" border="0"><img src="misc_/Sidimar/posidonia.gif" border="0" /></a>
+		<div><a href="#" tal:attributes="onClick string:MM_openBrWindow('${here/absolute_url}/posidonia_html','','status=yes,scrollbars=yes,resizable=no,width=715,height=568')" border="0">Visualizzazione risultati</a></div>
+	</div>
+</div>
+
+<div style="clear:both;"><!-- IE bug -->
+</div>&nbsp;
+<div style="border-left:2px solid #ccc;border-right:2px solid #ccc;">
+	<div style="border-top:2px solid #ccc">
+		<div style="float:left;width:50%;">
+			<div style="border-right:2px solid #ccc;position:relative;left:1px;padding:4px;">
+				<div><strong><a href="acque_html">ACQUE</a></strong></div>
+				I dati ottenuti dalle analisi effettuate ogni 15 giorni
+				sulle <a href="http://www.minambiente.it/st/Ministero.aspx?doc=pubblico/difesamare/monitoraggio/variabili.xml" target="_blank">variabili indagate</a>
+				sono elaborati statisticamente con <a href="cam_html">indice
+				denominato CAM</a> e visualizzati attraverso una grafica
+				elementare.<br />
+				Le acque sono distinte in tre classi di qualit&agrave;
+				che caratterizzano rispettivamente:<br />
+				&#8226; acque incontaminate;<br />
+				&#8226; acque con diverso grado di eutrofizzazione, ma
+				ecologicamente integre;<br />
+				&#8226; acque eutrofizzate con evidenze di alterazioni
+				ambientali anche di origine antropica.<br />
+				Un grafico illustra, inoltre, l&#8217;andamento dei parametri
+				monitorati lungo la colonna d&#8217;acqua.
+			</div>
+		</div>
+	&nbsp;
+		<div style="float:right;width:50%;">
+			<div style="border-left:2px solid #ccc;position:relative;left:-1px;padding:4px;">
+
+				<div><strong>PLANCTON</strong></div>
+				La componente planctonica &egrave; rappresentata mediante
+				grafici a torta con l&#8217;indicazione percentuale dei
+				gruppi tassonomici rappresentativi. &Egrave; possibile
+				inoltre, dalla prima campagna di giugno 2002, visualizzare
+				la lista di specie rilevata per ogni gruppo tassonomico.
+				<br />
+				Le stazioni di campionamento del plancton sono coincidenti
+				con le stazioni sottocosta del monitoraggio Acque.
+
+			</div>
+		</div>
+	</div>
+	&nbsp;
+	<div style="border-top:2px solid #ccc;clear:both;">
+		<div style="float:left;width:50%;">
+			<div style="border-right:2px solid #ccc;position:relative;left:1px;padding:4px;">
+
+				<div><strong>SEDIMENTI</strong></div>
+				I risultati delle analisi semestrali sui sedimenti sono
+				rappresentati da istogrammi e le stazioni di campionamento
+				sono prossime (e in alcuni casi coincidenti) a quelle
+				del monitoraggio Acque.
+
+			</div>
+		</div>
+	&nbsp;
+		<div style="float:right;width:50%;">
+			<div style="border-left:2px solid #ccc;position:relative;left:-1px;padding:4px;">
+
+				<div><strong>BIOTA - MOLLUSCHI</strong></div>
+				I risultati delle analisi semestrali sul biota sono riportati
+				in forma di istogrammi. <br />
+				Le stazioni di campionamento sono prossime alla linea
+				di costa e a quelle del monitoraggio Acque.
+
+			</div>
+		</div>
+	</div>
+	&nbsp;
+	<div style="border-top:2px solid #ccc;clear:both;">
+	</div>
+</div>
+
+<div style="text-style:italic; text-align:center;">
+	Non appena completate tutte le procedure di verifica dei risultati
+	analitici saranno pubblicati anche i dati del <strong>Benthos</strong>
+	(Posidonia oceanica e Sabbie Fini Ben Calibrate).<br />
+	Previa registrazione sara inoltre possibile effettuare download
+	dei dati non elaborati.
+</div>
+
+<span tal:replace="structure here/standard_html_footer" />]]>
+    <template id="acque_html" param="0" title="">
+        <![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+	window.open(theURL,winName,features);
+}
+//-->
+</script>
+
+
+<style>
+.floated_image_with_text {
+	float:right;
+	text-align:center;
+	margin: 0px 0px 7px 7px;
+}
+
+div.desc_imgs {
+	padding-left:25px;
+	margin-bottom:20px;
+}
+div.desc_imgs div {
+	text-indent:-21px;
+	margin-bottom:5px;
+}
+div.desc_imgs img {
+	vertical-align:middle;
+	margin-right:3px;
+}
+</style>
+
+	<h1>Programma di Monitoraggio dell'Ambiente Marino costiero 2001 - 2003</h1>
+	<h2>ACQUE</h2>
+
+	<p>
+		Per rappresentare i risultati delle 
+		analisi effettuate nell'ambito del programma di monitoraggio 
+		&egrave; utilizzato un sistema semplificato, un indice a 
+		tre classi, che trasforma i valori misurati in un giudizio 
+		sintetico sullo stato di qualit&agrave; del mare.<BR>
+		L'indice utilizzato &egrave; il <A HREF="cam_html">CAM</A> 
+		(Classificazione Acque Marine) ed &egrave; stato messo a 
+		punto dal Prof. Eugenio Fresi e dal Prof. Michele Scardi 
+		del Dipartimento di Biologia dell'Universit&agrave; di Tor 
+		Vergata.
+	</p>
+
+	<div class="floated_image_with_text">
+		<div><a href="#" tal:attributes="onClick string:MM_openBrWindow('${here/absolute_url}/map_html','','status=yes,scrollbars=yes,resizable=no,width=715,height=568')">Visualizzazione risultati</a></div>
+		<img src="/misc_/Sidimar/map.gif" />
+		<p>
+			Per il corretto funzionamento utilizzare <br /> IExplorer 5.x<br />
+			Netscape 6.2.x<br />
+			Mozilla 1.x 
+		</p>
+	</div>
+
+	<p>
+		Per ottenere 
+		quest'indice &egrave; stato preliminarmente necessario riconoscere, 
+		con mezzi statistico - matematici avanzati, <BR>
+		tipologie ricorrenti delle acque marine costiere, tenendo 
+		conto anche delle peculiarit&agrave; ecologiche dei diversi 
+		bacini marittimi del nostro paese e della variabilit&agrave; 
+		stagionale caratteristica dell'ambiente marino. <BR>
+		Queste tipologie sono state interpretate e ricondotte a tre 
+		sole classe di qualit&agrave;, dove per qualit&agrave; si 
+		intende quella legata allo stato di eutrofizzazione dei sistemi 
+		costieri ed alla potenziale incidenza di rischi di tipo igienico 
+		sanitario.
+	</p>
+
+	<div class="desc_imgs">
+		<div>
+			<img src="misc_/Sidimar/s-21-1.gif" alt="" /><strong>Alta qualit&agrave;</strong> - acque incontaminate;
+		</div>
+		<div>
+			<img src="misc_/Sidimar/s-21-2.gif" alt="" /><strong>Media qualit&agrave;</strong> - acque con diverso grado di eutrofizzazione, ma ecologicamente integre;
+		</div>
+		<div>
+			<img src="misc_/Sidimar/s-21-3.gif" alt="" /><strong>Bassa qualit&agrave; </strong>- acque eutrofizzate con evidenze di alterazioni ambientali anche di origine antropica;
+		</div>
+	</div>
+
+	<h3>Modalit&agrave; di aggiornamento dei dati</h3>
+	<p>
+		Le Regioni devono trasmettere al Ministero entro 30 giorni 
+		dal campionamento i risultati delle analisi su acqua e plancton ed entro 60 
+		giorni i risultati delle analisi su sedimenti, molluschi e benthos. <br />
+		Ad avvenuta trasmissione il Ministero valida i dati pervenuti e, dopo la verifica 
+		con le Regioni di eventuali dati anomali, li elabora per la messa in rete.
+	</p>
+<span tal:replace="structure here/standard_html_footer" />]]>
+    </template>
+    <template id="cam_html" param="0" title="">
+        <![CDATA[
+<span tal:replace="structure here/standard_html_header" />
+
+<html>
+<body>
+
+	<h1>Classificazione delle acque marine</h1>
+	<p>
+		La finalit&agrave; dell'indice<strong> <a href="http://www.mare-net.com/mscardi/work/cam/cam.htm" target="_blank">CAM</a></strong> 
+		&egrave; quella di fornire un giudizio sulla qualit&agrave; 
+		delle acque intesa anche come rischio igienico - sanitario 
+		basata su dati oceanografici di base. <br />
+		In particolare le variabili utilizzate sono: nitrati (NO3); 
+		nitriti (NO2); ammoniaca (NH4); fosfati (PO4); silicati (SiO4); 
+		salinit&agrave;; trasparenza; clorofilla a.<br />
+		Il giudizio di qualit&agrave; viene formulato a due livelli, 
+		di cui uno semplificato al massimo. <br />
+		Il primo livello prevede 6 classi di appartenenza, mentre 
+		il secondo prevede solo tre classi. <br />
+		Il giudizio a tre classi &egrave; ottenuto correggendo la 
+		classificazione originale per mezzo di alcune regole inferenziali.<br />
+		Il giudizio di qualit&agrave; &egrave; ispirato ad un principio 
+		precauzionale, per cui &egrave; stata accettata la possibilit&agrave; 
+		di avere dei falsi positivi piuttosto che dei falsi negativi.<br />
+		Il sistema tiene conto delle differenze ecologiche fra l'Adriatico 
+		e gli altri mari italiani. <br />
+		La mancanza di serie sufficientemente estese di dati di riferimento 
+		pone dei limiti alla capacit&agrave; di discriminare situazioni 
+		particolari all'interno dei due sottosistemi di riferimento.<br />
+		Il sistema &egrave; concepito per essere periodicamente aggiornato 
+		sulla base degli stessi dati che esso analizza.<br />
+		L'uso di tecniche di Intelligenza Artificiale &egrave; allo 
+		studio e potr&agrave; essere presto introdotto nel sistema 
+		di classificazione.
+	</p>
+	<div style="text-align:center;">
+		<a href="http://www.mare-net.com/mscardi/work/cam/cam.htm" target="_blank">
+			<img src="misc_/Sidimar/cam.gif" width="437" height="383" border="0" alt="Classificazione delle acque marine">
+		</a>
+	</div>
+	<p>
+		<em>
+			Esempio di classificazione 
+			dei dati rilevati nella 2&ordf; campagna di febbraio nella stazione 
+			pi&ugrave; esterna di Esino (Regione Marche - Ancona - Falconara 
+			Marittima).
+		</em>
+	</p>
+
+
+</body>
+</html>
+<span tal:replace="structure here/standard_html_footer" />]]>
+    </template>
+    <template id="map_html" param="0" title="Flash map">
+            <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script language="JavaScript">
+function g_disp(str)
+{
+	mystr = str.split(',')[4];
+	if (mystr == 'W' || mystr == 'X')
+		{
+		wnd = window.open("results_html?param=" + str,"stations_info", "height=600,width=500,status=no,resizable=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+		}
+	else
+		{
+		wnd = window.open("results_html?param=" + str,"stations_info", "height=600,width=960,status=no,resizable=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+		}
+	wnd.focus();
+}
+</script>
+<body bgcolor="#ffffff">
+<div style="position:relative;height:550px;">
+<div style="position:absolute">
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="700" height="550" id="external1" align="middle">
+<param name="allowScriptAccess" value="always" />
+<param name="movie" value="SIDIFLASH1.swf" />
+<param name="quality" value="high" />
+<param name="bgcolor" value="#ffffff" />
+<param name="src" value="misc_/Sidimar/SIDIFLASH1.swf" />
+<param name="FlashVars" value="vars=http://m50.finsiel.ro/cgi-bin/mapserv?;/var/mapserver/sidimar1_wms/map/sidimar1_wms.map;http://sidimar.finsiel.ro" />
+<embed src="misc_/Sidimar/SIDIFLASH1.swf" flashvars="vars=http://m50.finsiel.ro/cgi-bin/mapserv?;/var/mapserver/sidimar1_wms/map/sidimar1_wms.map;http://sidimar.finsiel.ro" quality="high" bgcolor="#ffffff" width="700" height="550" name="SIDIFLASH" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object></div>
+</div>
+</body>
+</html>]]>
+		</template>
+    <template id="posidonia_html" param="0" title="Flash map">
+            <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script language="javascript">
+	function g_disp(str)
+	{
+		var folder = str.split(',')[0].toLowerCase()
+		var pagina = str.split(',')[1]
+		var url = 'schede/' + folder + '/' + pagina
+		wnd = window.open(url ,"posidonia_info", "height=600,width=800,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+			wnd.focus();
+	}
+	</script>
+</head>
+
+<body bgcolor="#ffffff">
+<div style="position:relative;height:550px;">
+	<div style="position:absolute">
+		<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="700" height="550" id="external1" align="middle">
+		<param name="allowScriptAccess" value="always" />
+		<param name="movie" value="SIDIFLASH2.swf" />
+		<param name="quality" value="high" />
+		<param name="bgcolor" value="#ffffff" />
+		<param name="src" value="misc_/Sidimar/SIDIFLASH2.swf" />
+		<param name="FlashVars" value="vars=http://m50.finsiel.ro/cgi-bin/mapserv?;/var/mapserver/sidimar2_wms/map/sidimar2_wms.map;NONE" />
+		<embed src="misc_/Sidimar/SIDIFLASH2.swf" flashvars="vars=http://m50.finsiel.ro/cgi-bin/mapserv?;/var/mapserver/sidimar2_wms/map/sidimar2_wms.map;NONE" quality="high" bgcolor="#ffffff" width="700" height="550" name="SIDIFLASH" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+		</object>
+	</div>
+</div>
+
+</body>
+</html>]]>
+		</template>
+    <template id="results_html" param="0" title="Results html">
+            <![CDATA[
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language">
+<head tal:define="layout_tool here/getLayoutTool">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Scheda Stazione</title>
+	<link tal:attributes="href string:${layout_tool/getSkinFilesPath}/style" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_common" />
+	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_print" />
+	<link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_handheld" />
+</head>
+
+<body style="background-image: none; background-color: white;">
+
+<tal:block define="param python:request.get('param', '')">
+<tal:block condition="python:param !=''">
+<div id="includes_tables"
+	tal:define="results python:here.getWaterInfo(param);
+	info python:results[0];
+	stat_descr python:results[1];
+	reg_descr python:results[2];
+	data_descr python:results[3];
+	year python:results[4];
+	campag python:results[5];
+	monit python:results[6];
+	station python:results[7];
+	region python:results[8];
+	station_data python:results[9]">
+
+<!-- Water -->
+
+<tal:block condition="python:monit=='W'">
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td class="header_table" i18n:translate="">Tipologia Punto di prelievo</td>
+	<td tal:content="python:here.mp_descrmonit(data_descr[0])" />
+</tr>
+<tr>
+	<th i18n:translate="">Stazione</th>
+	<td tal:content="station"/>
+</tr>
+<tr>
+	<th i18n:translate="">Fornitore</th>
+	<td tal:content="python:here.mp_region(reg_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Anno</th>
+	<td tal:content="year"/>
+</tr>
+<tr>
+	<th i18n:translate="">Campagna</th>
+	<td tal:content="campag"/>
+</tr>
+<tr>
+	<th i18n:translate="">Localit&agrave;</th>
+	<td tal:content="python:here.mp_staz(stat_descr[0])"/>
+</tr>
+<tal:block condition="python:len(station_data) > 0">
+<tr>
+	<th i18n:translate="">Tipo stazione</th>
+	<td tal:content="python:here.mp_tipo_staz(station_data[0])" />
+</tr>
+<tr>
+	<th i18n:translate="">Prof. tot</th>
+	<td tal:content="python:here.mp_prof_tot(station_data[0])" />
+</tr>
+<tr>
+	<th i18n:translate="">Indice qual.amb.marino</th>
+	<td tal:condition="python:here.mp_indice(station_data[0]) == 1.0">alta qualit&agrave;</td>
+	<td tal:condition="python:here.mp_indice(station_data[0]) == 2.0">media qualit&agrave;</td>
+	<td tal:condition="python:here.mp_indice(station_data[0]) == 3.0">bassa qualit&agrave;</td>
+</tr>
+<tr>
+	<th i18n:translate="">Indice annuale</th>
+	<td><a tal:attributes="href string:indices_html?param=${param}" target="_blank"> Andamento annuale
+	qualit&agrave; <span tal:content="python:here.mp_region(reg_descr[0])"/></a></td>
+</tr>
+<tr>
+	<th i18n:translate="">Grafici altre stazioni</th>
+	<td><a tal:attributes="href string:stations_html?param=${param}" target="_blank">Grafici
+	altre stazioni della <span tal:content="python:here.mp_region(reg_descr[0])"/></a></td>
+</tr>
+<tr>
+	<td id="left_values"><div id="chart_legend"><span i18n:translate="">Legend</span><br />
+	<img src="misc_/Sidimar/legenda.gif" alt="Legend" /><br />
+	Le scale del grafico sono state scelte sulla base dei valori minimi e massimi
+	riscontrati per la regione nella campagna monitorata</div>
+	</td>
+	<tal:block define="graph python:here.getGraph(region, year, campag, station)">
+	<td id="chart" tal:condition="python:graph != 0">
+	<img tal:attributes="src python:graph.absolute_url()" alt="graphic_results" border="1" />
+	</td>
+	<td id="chart" tal:condition="python:graph == 0" i18n:translate="">No graph available</td>
+	</tal:block>
+</tr>
+</tal:block>
+</table>
+<hr />
+
+<tal:block condition="python:len(station_data) > 0">
+<p class="text_title" i18n:translate="">Parametri per la Classificazione delle Acque Marine</p>
+
+<table cellspacing="3" class="table_indicators">
+<tr tal:repeat="i info">
+	<th tal:content="python:here.mp_descrmonit(i)" />
+	<td class="numeric_values" tal:content="python:here.mp_valore(i)"/>
+</tr>
+</table>
+
+<p class="italic_notes" i18n:translate="">(*) Se la trasparenza ha valore di 55 il disco secchi ha toccato il fondo</p>
+<br />
+<p><a class="text_link" href="http://www2.minambiente.it/sito/settori_azione/sdm/tutela_ambiente_marino/monitoraggio_ambiente_marino/triennio_01_03_programma_variabili.asp" target="_blank">Indicazioni
+sui parametri indagati nel Programma di monitoraggio</a></p>
+<br />
+</tal:block>
+
+<p tal:condition="python:len(station_data) == 0" class="text_title" i18n:translate="">
+    No data available in order to create graphs for this station.
+</p>
+
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.print()" value="Print" />
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.close()" value="Close window" />
+</form>
+
+<p>&nbsp;</p>
+
+</tal:block>
+
+<!-- Sedimenti -->
+
+<tal:block condition="python:monit=='S'">
+	<tal:block define="result python:here.createSedimentiCharts(param);
+				stat_descr python:result[0];
+				reg_descr python:result[1];
+				data_descr python:result[2];
+				station python:result[3];
+				tuples python:result[4];
+				granulometria python:result[5];
+				granulometria_legend python:result[6];
+				compostiorganoclorurati python:result[7];
+				compostiorganoclorurati_legend python:result[8];
+				policlorobifenili python:result[9];
+				policlorobifenili_legend python:result[10];
+				idrocarburi python:result[11];
+				idrocarburi_legend python:result[12];
+				others python:result[13]">
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td class="header_table">Tipologia Punto di prelievo</td>
+	<td tal:content="python:here.mp_descrmonit(data_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Station</th>
+	<td tal:content="station"/>
+</tr>
+<tr>
+	<th i18n:translate="">Region</th>
+	<td tal:content="python:here.mp_region(reg_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Year</th>
+	<td tal:content="year"/>
+</tr>
+<tr>
+	<th i18n:translate="">Campaign</th>
+	<td tal:content="campag"/>
+</tr>
+<tr>
+	<th i18n:translate="">Locality</th>
+	<td tal:content="python:here.mp_staz(stat_descr[0])"/>
+</tr>
+</table>
+
+<p><a class="text_link" href="http://www2.minambiente.it/sito/settori_azione/sdm/tutela_ambiente_marino/monitoraggio_ambiente_marino/triennio_01_03_programma_variabili.asp">Indicazioni sui parametri indagati nel Programma di monitoraggio</a>
+</p>
+
+<table border="1" cellspacing="2" class="table_indicators_images">
+<tr tal:repeat="tuple tuples">
+	<td>
+		<div>
+			<img tal:attributes="src python:tuple[0].absolute_url(); alt python:tuple[0].title_or_id()" /><img tal:condition="python:len(tuple)>1" tal:attributes="src python:tuple[1].absolute_url(); alt python:tuple[1].title_or_id()" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src granulometria/absolute_url; alt granulometria/title_or_id" /><img tal:attributes="src granulometria_legend/absolute_url; alt granulometria_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src compostiorganoclorurati/absolute_url; alt compostiorganoclorurati/title_or_id" /><img tal:attributes="src compostiorganoclorurati_legend/absolute_url; alt compostiorganoclorurati_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src policlorobifenili/absolute_url; alt policlorobifenili/title_or_id" /><img tal:attributes="src policlorobifenili_legend/absolute_url; alt policlorobifenili_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src idrocarburi/absolute_url; alt idrocarburi/title_or_id" /><img tal:attributes="src idrocarburi_legend/absolute_url; alt idrocarburi_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img tal:repeat="item others" tal:attributes="src item/absolute_url; alt item/title_or_id" />
+		</div>
+	</td>
+</tr>
+</table>
+
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.print()" value="Print" />
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.close()" value="Close window" />
+</form>
+
+<p>&nbsp;</p>
+
+	</tal:block>
+</tal:block>
+
+<!-- Moluschi -->
+
+<tal:block condition="python:monit=='Z'">
+	<tal:block define="result python:here.createMolluschiCharts(param);
+				stat_descr python:result[0];
+				reg_descr python:result[1];
+				data_descr python:result[2];
+				station python:result[3];
+				tuples python:result[4];
+				compostiorganoclorurati python:result[5];
+				compostiorganoclorurati_legend python:result[6];
+				policlorobifenili python:result[7];
+				policlorobifenili_legend python:result[8];
+				idrocarburi python:result[9];
+				idrocarburi_legend python:result[10];
+				others python:result[11]">
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td class="header_table"> Tipologia Punto di prelievo </td>
+	<td tal:content="python:here.mp_descrmonit(data_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Station</th>
+	<td tal:content="station"/>
+</tr>
+<tr>
+	<th i18n:translate="">Region</th>
+	<td tal:content="python:here.mp_region(reg_descr[0])"/>
+</tr>
+<tr>
+<th i18n:translate="">Year</th>
+<td tal:content="year"/>
+</tr>
+<tr>
+	<th i18n:translate="">Campaign</th>
+	<td tal:content="campag"/>
+</tr>
+<tr>
+	<th i18n:translate="">Locality</th>
+	<td tal:content="python:here.mp_staz(stat_descr[0])"/>
+</tr>
+</table>
+
+<p><a class="text_link" href="http://www2.minambiente.it/sito/settori_azione/sdm/tutela_ambiente_marino/monitoraggio_ambiente_marino/triennio_01_03_programma_variabili.asp">Indicazioni sui parametri indagati nel Programma di monitoraggio</a>
+</p>
+<table border="1" cellspacing="2" class="table_indicators_images">
+<tr tal:repeat="tuple tuples">
+	<td>
+		<div>
+			<img tal:attributes="src python:tuple[0].absolute_url(); alt python:tuple[0].title_or_id()" /><img tal:condition="python:len(tuple)>1" tal:attributes="src python:tuple[1].absolute_url(); alt python:tuple[1].title_or_id()" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src compostiorganoclorurati/absolute_url; alt compostiorganoclorurati/title_or_id" /><img tal:attributes="src compostiorganoclorurati_legend/absolute_url; alt compostiorganoclorurati_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src policlorobifenili/absolute_url; alt policlorobifenili/title_or_id" /><img tal:attributes="src policlorobifenili_legend/absolute_url; alt policlorobifenili_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src idrocarburi/absolute_url; alt idrocarburi/title_or_id" /><img tal:attributes="src idrocarburi_legend/absolute_url; alt idrocarburi_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img tal:repeat="item others" tal:attributes="src item/absolute_url; alt item/title_or_id" />
+		</div>
+	</td>
+</tr>
+</table>
+
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.print()" value="Print" />
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.close()" value="Close window" />
+</form>
+
+<p>&nbsp;</p>
+
+	</tal:block>
+</tal:block>
+
+<!-- Plancton -->
+
+<tal:block condition="python:monit=='P'">
+	<tal:block define="result python:here.getPlanctonData(param);
+						fitoplancton python:result[0];
+						zooplancton python:result[1];
+						stat_descr python:result[2];
+						reg_descr python:result[3];
+						data_descr python:result[4];
+						station python:result[5];
+						year python:result[6];
+						fitoplancton_ob python:result[7];
+						fitoplancton_legend python:result[8];
+						zooplancton_ob python:result[9];
+						zooplancton_legend python:result[10]">
+
+
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td class="header_table">Tipologia Punto di prelievo </td>
+	<td tal:content="python:here.mp_descrmonit(data_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Station</th>
+	<td tal:content="station"/>
+</tr>
+<tr>
+	<th i18n:translate="">Region</th>
+	<td tal:content="python:here.mp_region(reg_descr[0])"/>
+</tr>
+<tr>
+	<th i18n:translate="">Year</th>
+	<td tal:content="year"/>
+</tr>
+<tr>
+	<th i18n:translate="">Campaign</th>
+	<td tal:content="campag"/>
+</tr>
+<tr>
+	<th i18n:translate="">Locality</th>
+	<td tal:content="python:here.mp_staz(stat_descr[0])"/>
+</tr>
+</table>
+
+<table border="0" cellspacing="0" class="table_indicators_images">
+<tr>
+	<td>
+		<div>
+			<img tal:attributes="src fitoplancton_ob/absolute_url; alt fitoplancton_ob/title_or_id" /><img tal:attributes="src zooplancton_ob/absolute_url; alt zooplancton_ob/title_or_id" />
+		</div>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>
+			<img style="vertical-align:top;" tal:attributes="src fitoplancton_legend/absolute_url; alt fitoplancton_legend/title_or_id" /><img tal:attributes="src zooplancton_legend/absolute_url; alt zooplancton_legend/title_or_id" />
+		</div>
+	</td>
+</tr>
+</table>
+
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td colspan="2">Fitoplancton: taxa rilevati</td>
+</tr>
+<tr>
+	<th i18n:translate="">Group</th>
+	<th i18n:translate="">Taxa(*)</th>
+	<th i18n:translate="">Cell/liter</th>
+<tr>
+<tr tal:repeat="val python:fitoplancton.keys()">
+	<td tal:content="python:here.mp_descrmonit(fitoplancton[val][0])" />
+	<td><tal:block repeat="item python:fitoplancton[val]">
+		<span tal:replace="python:here.mp_nomespecie(item)" /><br />
+		</tal:block>
+	</td>
+	<td><tal:block repeat="item python:fitoplancton[val]">
+		<span tal:replace="python:here.mp_valore(item)" /><br />
+		</tal:block>
+	</td>
+</tr>
+</table>
+
+<table cellspacing="3" class="table_indicators">
+<tr>
+	<td colspan="2"> Zooplancton: taxa rilevati</td>
+</tr>
+<tr>
+	<th i18n:translate="">Group</th>
+	<th i18n:translate="">Taxa(*)</th>
+	<th i18n:translate="">Individui/mc</th>
+<tr>
+<tr tal:repeat="val python:zooplancton.keys()">
+	<td tal:content="python:here.mp_descrmonit(zooplancton[val][0])" />
+	<td><tal:block repeat="item python:zooplancton[val]">
+		<span tal:replace="python:here.mp_nomespecie(item)" /><br />
+		</tal:block>
+	</td>
+	<td><tal:block repeat="item python:zooplancton[val]">
+		<span tal:replace="python:here.mp_valore(item)" /><br />
+		</tal:block>
+	</td>
+</tr>
+</table>
+
+<p class="italic_notes">(*) I dati sulle specie sono stati rilevati solo a partire da Luglio 2002</p>
+
+<form name="frmControl" action="" style="text-align: center; margin-top: 2em;">
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.print()" value="Print" />
+	<input type="button" i18n:attributes="value" class="button-normal" onclick="window.close()" value="Close window" />
+</form>
+
+<p>&nbsp;</p>
+
+	</tal:block>
+</tal:block>
+
+<!-- Benthos -->
+
+<tal:block condition="python:monit=='X'">
+	<tal:block define="result python:here.getBenthosData(param);
+						data python:result[0];
+						stat_descr python:result[1];
+						reg_descr python:result[2];
+						data_descr python:result[3];
+						station python:result[4];
+						year python:result[5]">
+
+<table cellspacing="3" class="table_indicators">
+	<tr>
+		<td class="header_table"> Tipologia Punto di prelievo </td>
+		<td tal:content="python:here.mp_descrmonit(data_descr[0])"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Station</th>
+		<td tal:content="station"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Region</th>
+		<td tal:content="python:here.mp_region(reg_descr[0])"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Year</th>
+		<td tal:content="year"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Campaign</th>
+		<td tal:content="campag"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Locality</th>
+		<td tal:content="python:here.mp_staz(stat_descr[0])"/>
+	</tr>
+</table>
+
+<table cellspacing="3" class="table_indicators">
+	<tr tal:repeat="res data">
+		<th tal:content="python:here.mp_descrmonit(res)"></th>
+		<td tal:content="python:here.mp_valore(res)"/>
+	</tr>
+</table>
+
+<br />
+
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" class="button-normal" onclick="window.print()" i18n:attributes="value" value="Print" />
+	<input type="button" class="button-normal" onclick="window.close()" i18n:attributes="value" value="Close window" />
+</form>
+<p>&nbsp;</p>
+
+	</tal:block>
+</tal:block>
+</div>
+</tal:block>
+
+<!-- Invalid parameter -->
+
+<tal:block condition="python:param==''">
+<div style="background-color:white;height:600px">Invalid parameter
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" class="button-normal" onclick="window.close()" i18n:attributes="value" value="Close window" />
+</form>
+</div>
+
+</tal:block>
+</tal:block>
+
+</body>
+</html>]]>
+		</template>
+    <template id="indices_html" param="0" title="Stations indices">
+            <![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<head tal:define="layout_tool here/getLayoutTool">
+	<title>Scheda Stazione</title>
+	<link tal:attributes="href string:${layout_tool/getSkinFilesPath}/style" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_common" />
+	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_print" />
+	<link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_handheld" />
+</head>
+<body style="background-image: none; background-color: white; font-size: 80%;">
+
+<tal:block define="param python:request.get('param', '')">
+<tal:block condition="python:param !=''" 
+			define="tuple python:here.parseParameters(param); reg python:tuple[0]; year python:tuple[3]">
+
+<h1 i18n:translate="">Water quality indicators for the year <span tal:replace="year" /> in the <span tal:replace="python:here.mp_region(reg[0])" /></h1>
+
+	<div id="includes_tables"
+		tal:define="result python:here.showIndices(param);
+					keys python:result[0];
+					values python:result[1]">
+
+		<table border="0" cellspacing="0" cellpadding="0" width="80%" class="table-table">
+			<tr>
+				<td></td>
+				<th i18n:translate="">Month</th>
+				<th colspan="2" i18n:translate="" tal:repeat="item python:range(1,13)" tal:content="item"></th>
+			</tr>
+			<tr>
+				<td></td>
+				<th i18n:translate="">Campaign</th>
+				<tal:block tal:repeat="item python:range(0,12)">
+				<th>1a</th>
+				<th>2a</th>
+				</tal:block>
+			</tr>
+			<tr><td colspan="26" class="line-separator">&nbsp;</td></tr>
+			<tr>
+				<th i18n:translate="">Station</th>
+				<th i18n:translate="">Dist. from coast</th>
+				<td colspan="24"></td>
+			</tr>
+			<tal:block tal:repeat="key keys">
+				<tr><td colspan="26" class="line-separator">&nbsp;</td></tr>
+				<tr>
+					<td tal:content="key" tal:attributes="rowspan python:len(values[key])+1" valign="top"></td>
+				</tr>
+				<tr tal:repeat="row python:here.getSortedDictKeys(values[key])">
+					<td class="right-td"><span tal:replace="row" /> mt</td>
+					<tal:block tal:repeat="cell python:values[key][row]">
+						<td tal:define="v python:cell[0]">
+							<img tal:define="img_path python:here.getSmileyPath(path('repeat/row/number'), v)"
+								tal:attributes="src img_path"
+								tal:condition="python:v!=-1" width="12" height="12" />
+						</td>
+						<td class="middle-td" tal:define="v python:cell[1]">
+							<img tal:define="img_path python:here.getSmileyPath(path('repeat/row/number'), v)"
+								tal:attributes="src img_path"
+								tal:condition="python:v!=-1" width="12" height="12" />
+						</td>
+					</tal:block>
+				</tr>
+			</tal:block>
+			<tr><td colspan="26" class="line-separator">&nbsp;</td></tr>
+		</table>
+	</div>
+	<form style="margin: 2em;">
+        <input i18n:attributes="value" type="button" value="Print" onclick="window.print()" />
+        <input i18n:attributes="value" type="button" value="Close window" onclick="window.close()" /></form>
+</tal:block>
+</tal:block>
+</body>
+</html>]]>
+		</template>
+		<template id="stations_html" param="0" title="View stations">
+		<![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language">
+<head tal:define="layout_tool here/getLayoutTool">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Scheda Stazione</title>
+	<link tal:attributes="href string:${layout_tool/getSkinFilesPath}/style" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_common" />
+	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_print" />
+	<link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${layout_tool/getSkinFilesPath}/style_handheld" />
+</head>
+
+<body style="background-image: none; background-color: white;">
+
+<tal:block define="param python:request.get('param', '')">
+	<tal:block condition="python:param !=''"
+		define="tuple python:here.parseParameters(param); reg python:tuple[0]; camp python:tuple[1]">
+
+<h1>Grafici altre stazioni della <span tal:content="python:here.mp_region(reg[0])" /></h1>
+
+<div id="includes_tables" tal:define="results python:here.showStations(param)">
+
+<fieldset style="width: 10% text-align: right;"><legend i18n:translate="">Legend</legend>
+	<img src="misc_/Sidimar/legenda.gif" alt="Legend" i18n:attributes="alt" />
+</fieldset>
+
+<table class="table_indicators" tal:condition="python:results != 0">
+	<tr tal:repeat="img_path results">
+		<td><strong tal:condition="python:len(img_path)>0"><span i18n:translate="">Station:</span> <span tal:replace="python:img_path[0].station" /></strong><br />
+			<img tal:condition="python:len(img_path)>0"
+				tal:attributes="src python:img_path[0].absolute_url()" alt="graphic" i18n:attributes="alt" />
+		</td>
+		<td><strong tal:condition="python:len(img_path)>1"><span i18n:translate="">Station:</span> <span tal:replace="python:img_path[1].station" /></strong><br />
+			<img tal:condition="python:len(img_path)>1"
+				tal:attributes="src python:img_path[1].absolute_url()" alt="graphic" i18n:attributes="alt" />
+		</td>
+		<td><strong tal:condition="python:len(img_path)>2"><span i18n:translate="">Station:</span> <span tal:replace="python:img_path[2].station" /></strong><br />
+			<img tal:condition="python:len(img_path)>2"
+				tal:attributes="src python:img_path[2].absolute_url()" alt="graphic" i18n:attributes="alt" />
+		</td>
+		<td><strong tal:condition="python:len(img_path)>3"><span i18n:translate="">Station:</span> <span tal:replace="python:img_path[3].station" /></strong><br />
+			<img tal:condition="python:len(img_path)>3"
+				tal:attributes="src python:img_path[3].absolute_url()" alt="graphic" i18n:attributes="alt" />
+		</td>
+	</tr>
+</table>
+
+<h2 tal:condition="python:results == 0" i18n:translate="">No graphs available</h2>
+<form name="frmControl" action="" style="text-align: center;">
+	<input type="button" class="button-normal" i18n:attributes="value" onclick="window.print()" value="Print"  />
+	<input type="button" class="button-normal" i18n:attributes="value" onclick="window.close()" value="Close window" />
+</form>
+
+<p style="margin-bottom: 3em;">&nbsp;</p>
+</div>
+
+	</tal:block>
+</tal:block>
+
+</body>
+</html>]]>
+		</template>
+    </ob>
+	<ob meta_type="Naaya Folder" param="0" id="gen_graphs" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[Generate graphs]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<![CDATA[<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="mysql_tool here/getMySQLTool;
+					results here/processGenerate;
+					regions python:results[0];
+					campaigns python:results[1];
+					years python:results[2]">
+
+<h1 i18n:translate="">Generate graphs</h1>
+
+<p> Please select the parameters below and click <strong>Generate graphs</strong> </p>
+
+<fieldset tal:condition="here/isSessionErrors"><legend><strong>Errors</strong></legend>
+<table border="0" cellspacing="0" cellpadding="0" width="80%">
+	<tr tal:repeat="error_value here/getSessionErrors">
+		<td>&nbsp;</td>
+		<td tal:content="error_value">&nbsp;</td>
+	</tr>
+</table>
+</fieldset>
+
+<form method="post" action="show_graphs" name="frmGenerate" id="frmGenerate">
+	<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<th><label for="region" i18n:translate="">Region</label></th>
+			<td>
+				<select name="region">
+					<tal:block repeat="region regions">
+					<option tal:attributes="value python:mysql_tool.mp_codreg(region)"
+						tal:content="python:mysql_tool.mp_region(region)" />
+					</tal:block>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th><label for="region" i18n:translate="">Campaign</label></th>
+			<td>
+				<select name="campaign">
+					<tal:block repeat="campaign campaigns">
+					<option tal:attributes="value python:mysql_tool.mp_campag(campaign)"
+						tal:content="python:mysql_tool.mp_campag(campaign)" />
+					</tal:block>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th><label for="year" i18n:translate="">Year</label></th>
+			<td>
+				<select name="year">
+				<tal:block repeat="year years">
+					<option tal:define="y python:mysql_tool.mp_year(year)"
+							tal:attributes="value y"
+							tal:content="y" />
+				</tal:block>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th><label for="monitor" i18n:translate="">Data monitored</label></th>
+			<td i18n:translate="">Water</td>
+		</tr>
+		<tr>
+			<td><input type="submit" value="Create graphs" i18n:attributes="value" /></td>
+			<td><input type="reset" value="Reset" i18n:attributes="value" /></td>
+		</tr>
+	</table>
+</form>
+</tal:block>
+
+<span tal:content="here/delSessionErrors" tal:omit-tag=""></span>
+<span tal:replace="structure here/standard_html_footer"/>]]>
+	<template id="show_graphs" param="0" title="Show graphics">
+	<![CDATA[<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="mysql_tool here/getMySQLTool;
+					region python:request.get('region', '');
+					campaign python:request.get('campaign', '');
+					year python:request.get('year', '');
+					s python:here.createGraphs(region, year, campaign);
+					graphs python:here.showGraphs(region, year, campaign)">
+
+
+<p>Selected parameters:</p>
+<table class="horizontal_table" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:1em">
+	<tr>
+		<th i18n:translate="">Region:</th> <td tal:content="region" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Monitored data:</th> <td>Water</td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Campaign:</th> <td tal:content="campaign" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Year:</th> <td tal:content="year" />
+	</tr>
+</table>
+
+<table cellpadding="5" cellspacing="7" tal:condition="python:len(graphs)>0">
+	<tr tal:repeat="graph_url graphs">
+		<td tal:condition="python:len(graph_url)>0">
+			<strong i18n:translate="">Station: <span tal:replace="python:graph_url[0].station" /></strong><br />
+			<strong i18n:translate="">Data monitored: <span tal:replace="python:graph_url[0].monitor" /></strong><br />
+			<img tal:attributes="src python:graph_url[0].absolute_url()" />
+		</td>
+		<td tal:condition="python:len(graph_url)>1">
+			<strong i18n:translate="">Station: <span tal:replace="python:graph_url[1].station" /></strong><br />
+			<strong i18n:translate="">Data monitored: <span tal:replace="python:graph_url[1].monitor" /></strong><br />
+			<img tal:attributes="src python:graph_url[1].absolute_url()" />
+		</td>
+	</tr>
+</table>
+
+<span tal:condition="python:len(graphs)==0" i18n:translate="">No data available</span>
+
+</tal:block>
+<span tal:content="here/delSessionErrors" tal:omit-tag=""></span>
+<span tal:replace="structure here/standard_html_footer"/>]]>
+		</template>
+	</ob>
+</export>

@@ -1,0 +1,77 @@
+<!-- Page Template Diagnostics
+ Compilation failed
+ TAL.HTMLTALParser.NestingError: Open tags <form>, <div> do not match close tag </label>, at line 26, column 122
+-->
+<span tal:replace="structure here/standard_html_header" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<style type="text/css">
+.subtitle {
+	font-weight: bold;
+	padding-top: 1em;
+	font-size: 1.2em;
+	color: #004066;
+}
+</style>
+
+<h1 i18n:translate="">Add Report Comment</h1>
+
+<p i18n:translate="">Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.</p>
+
+<tal:block define="auth_tool here/getAuthenticationTool;
+					user_account request/AUTHENTICATED_USER/getUserName;
+					user_name python:auth_tool.getUserFullNameByID(user_account);
+					user_email python:here.getUserEmail(user_account)">
+<form name="frmAdd" method="post" tal:attributes="action string:${here/absolute_url}/addNySectionComment">
+
+	<div class="subtitle" i18n:translate="">Specific (technical) comments:</div>
+	<div class="field">
+		<label for="habitat"><tal:block i18n:translate="">Habitat Type Code</tal:block>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'habitat')" class="mandatory_field"> *</span></label>
+		<input type="text" name="habitat:utf8:ustring" id="habitat" size="50" tal:attributes="value python:here.getSession('habitat', '')" />
+	</div>
+	<div class="field">
+		<label for="species"><tal:block i18n:translate="">Species Name</tal:block>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'species')" class="mandatory_field"> *</span></label>
+		<input type="text" name="species:utf8:ustring" id="species" size="50" tal:attributes="value python:here.getSession('species', '')" />
+	</div>
+	<div class="field">
+		<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('technical:utf8:ustring', curr_lang, image_support=True)" />
+		<textarea name="technical:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('technical', '')"></textarea>
+	</div>
+	<em i18n:translate="">Previous to inserting each comment, please note down the respective field on the reporting factsheet e.g.. 1.1 Habitat Range Map, 2.4.1 Surface area 1.2 Species Distribution Map, 2.4.1 Population size estimation</em>
+
+	<div class="subtitle" i18n:translate="">General comments:</div>
+	<div class="field">
+		<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('comment:utf8:ustring', curr_lang, image_support=True)" />
+		<textarea name="comment:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('comment', '')"></textarea>
+	</div>
+
+	<div class="subtitle" i18n:translate="">Personal data:</div>
+	<div class="field">
+		<label for="name"><tal:block i18n:translate="">Name</tal:block>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'name')" class="mandatory_field"> *</span></label>
+		<input type="text" name="name:utf8:ustring" id="name" size="50" tal:attributes="value python:here.getSession('name', user_name)" />
+	</div>
+	<div class="field">
+		<label for="profession"><tal:block i18n:translate="">Profession</tal:block>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'profession')" class="mandatory_field"> *</span></label>
+		<input type="text" name="profession:utf8:ustring" id="profession" size="50" tal:attributes="value python:here.getSession('profession', '')" />
+	</div>
+	<div class="field">
+		<label for="email"><tal:block i18n:translate="">Email</tal:block>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'email')" class="mandatory_field"> *</span></label>
+		<input type="text" name="email:utf8:ustring" id="email" size="50" tal:attributes="value python:here.getSession('email', user_email)" />
+	</div>
+	<div class="field">
+		<input type="submit" value="Submit" i18n:attributes="value" />
+	</div>
+</form>
+</tal:block>
+
+<span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
+<span tal:replace="structure here/standard_html_footer" />

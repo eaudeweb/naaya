@@ -1,0 +1,39 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Email Settings</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+	Change the settings for the email services offered by this portal in the form below and click Save changes.
+</p>
+
+
+<form method="post" tal:attributes="action string:${site_url}/admin_email" enctype="multipart/form-data">
+	<dl>
+		<dt i18n:translate="">Mail server name</dt>
+		<dd><input type="text" name="mail_server_name" size="50" tal:attributes="value here/mail_server_name" /></dd>
+		<dt i18n:translate="">Mail server port</dt>
+		<dd><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></dd>
+		<dt i18n:translate="">Default from address</dt>
+		<dd><input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" /></dd>
+		<dt i18n:translate="">Administrator email</dt>
+		<dd><input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /></dd>
+		<dt i18n:translate="">Send email notifications to the administrator</dt>
+		<dd i18n:translate="">On errors</dd>
+		<dd><input type="checkbox" name="notify_on_errors" tal:attributes="checked python:here.notify_on_errors==1" /></dd>
+	</dl>
+	<p><input type="submit" value="Save changes" /></p>
+</form>
+</tal:block>
+
+</tal:block>

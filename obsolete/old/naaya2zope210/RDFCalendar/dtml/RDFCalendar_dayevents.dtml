@@ -1,0 +1,10 @@
+<dtml-var standard_html_header>
+<dtml-comment>
+params: date
+</dtml-comment>
+
+<dtml-let day="_.str(_.DateTime(date).day())" month="_.str(_.DateTime(date).month())" year="_.str(_.DateTime(date).year())">
+<dtml-var show_events_list>
+</dtml-let>
+
+<dtml-var standard_html_footer>

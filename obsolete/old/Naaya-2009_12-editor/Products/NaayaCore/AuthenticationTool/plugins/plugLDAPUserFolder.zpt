@@ -1,0 +1,342 @@
+<script type="text/javascript">
+<!--
+
+function setupWin(url, theWidth, theHeight)
+{
+   pickLocation();
+   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+   wwinn.focus();
+   return true;
+}
+
+function emptyLocation()
+{    if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
+
+function pickLocation()
+{    document.userRoles.loc[1].checked = true;}
+
+function createKey(key)
+{    document.userRoles.location.value = key;}
+
+var set_roles_target = '';
+function fPickRoles(url, target)
+{
+    set_roles_target = target;
+    var wnd = window.open(url, "pickroles", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+    wnd.focus();
+}
+
+function fSetRoles(role, dn) {
+    if (set_roles_target == 'ldap_group') {
+        document.getElementById('ldap_group').value = role;
+        }
+    else {
+        document.frmRoles.role.value = role;
+        document.frmRoles.dn.value = dn;
+    }
+}
+var isSelected = false;
+function toggleSelect()
+{   var frm = document.frmRevoke;
+    var i;
+    if (isSelected == false)
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = true;
+        isSelected = true;}
+    else
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = false;
+        isSelected = false;}
+}
+//-->
+</script>
+
+<style type="text/css">
+<!--
+
+.table_indent {
+	/* margin: 5px 0px 10px 3%; */
+	/*width: 85%;*/
+}
+
+.table_indent td {
+	vertical-align: middle;
+}
+
+.table_indent label {
+	font-size: 100%;
+	font-weight: bold;
+	color: #444444;
+	vertical-align: middle;
+	/*display: block; margin-top: 30px;	border: 1px solid red; background-color: #e8e8e8;*/
+
+
+	padding: 3px;
+}
+
+.padding_td {
+	padding-left: 20px;
+}
+
+.ldap_groups ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+-->
+</style>
+
+
+<tal:block define="user_folder python:here.getUserFolder();
+		    skey python:request.get('skey', 'user');
+		    rkey python:request.get('rkey', 0);
+		    id python:request.get('id', 0);
+		    site_path python:here.getSitePath();
+		    source_id python:request.get('id', '');
+		    req_role python:request.get('req_role', '');
+		    req_location python:request.get('req_location', '')">
+
+<string tal:replace="python:here.deleteCache(user_folder)" />
+<p>
+	The list below presents the LDAP users that have roles in this portal. You can revoke
+	role(s) assigned to a user by ticking in the appropriate check box and clicking on the
+	<em>Revoke selected roles</em> button.
+</p>
+<fieldset><legend>Users with roles in this portal</legend>
+<form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke">
+<table border="0" cellspacing="2" cellpadding="2" class="datatable">
+	<tr>
+	    <tal:block tal:condition="python:skey=='user'">
+		<th width="10%">
+		    <a title="Sorted - Click to reverse" rel="nofollow" 
+			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=user&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=user' % (site_path, id))">User</a>
+		</th>
+	    </tal:block>
+	    <tal:block tal:condition="python:skey!='user'">
+		<th width="10%">
+		    <a title="Sortable" rel="nofollow"
+			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=user">User</a>
+		</th>
+	    </tal:block>
+	    <tal:block tal:condition="python:skey=='cn'">
+		<th width="20%">
+		    <a title="Sorted - Click to reverse" rel="nofollow"
+			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=cn&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=cn' % (site_path, id))">Canonical Name</a>
+		</th>
+	    </tal:block>
+	    <tal:block tal:condition="python:skey!='cn'">
+		<th width="20%">
+		    <a title="Sortable" rel="nofollow"
+			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=cn">Canonical Name</a>
+		</th>
+	    </tal:block>
+	    <tal:block tal:condition="python:skey=='group'">
+		<th width="20%">
+		    <a title="Sorted - Click to reverse" rel="nofollow"
+			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=group&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=group' % (site_path, id))">Group</a>
+		</th>
+	    </tal:block>
+	    <tal:block tal:condition="python:skey!='group'">
+		<th width="20%">
+		    <a title="Sortable" rel="nofollow"
+			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=group">Group</a>
+		</th>
+	    </tal:block>
+	    <th width="35%"><input type="checkbox" name="select_all" onclick="javascript:toggleSelect();" title="Select/Deselect All" /> Roles</th>
+	    <th width="*">Location</th>
+	</tr>
+	<tr tal:define="users_roles python:here.getSortedUserRoles(skey, rkey)"
+		tal:repeat="user python:users_roles"
+		tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
+		<td style="vertical-align: top" tal:content="python:user[0]" />
+		<td style="vertical-align: top" tal:content="python:user[1]" />
+		<td style="vertical-align: top" tal:content="python:user[2]" />
+		<td colspan="2" style="vertical-align: top">
+		    <table border="0" cellspacing="0" cellpadding="0" tal:define="roles python:user[3]">
+			<tr tal:repeat="role roles">
+			    <td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
+				<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user[0],role[1])" />
+			    </td>
+			    <td width="75%" tal:condition="python:role[0] != []">
+				<span tal:replace="python:here.utJoinToString(role[0], ', ')">roles</span>
+			    </td>
+			    <td width="*" tal:condition="python:role[0] != []">
+				<span tal:condition="python:role[1] == ''">Zope</span>
+				<span tal:condition="python:role[1] != ''" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
+				    <a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
+				</span>
+			    </td>
+			</tr>
+		    </table>
+		</td>
+	</tr>
+</table>
+<p><input type="submit" value="Revoke selected roles" /></p>
+</form>
+</fieldset>
+<a name="ldap_user_roles"/>
+<fieldset><legend>Assign roles to users</legend>
+<p>
+	Select a user from the above list by clicking on its ID or just type its userid in the field below,
+	assign new role(s) to it by marking the intended role(s) you want to grant and choosing
+	the specific location you want to grant them to.
+</p>
+<p>
+	Use this form to find users from the LDAP directory, view their details and assign them
+	roles in the current portal.
+</p>
+
+<form method="post" action="" name="frmRoles" id="frmRoles">
+<table border="0" cellspacing="4" cellpadding="0">
+	<tr>
+		<td width="20"><div style="white-space: nowrap; "><label for="params"> matching criteria</label> </div></td>
+		<td width="1"> <select name="params">
+							<option tal:repeat="item python:here.getLDAPSchema(user_folder)"
+								tal:attributes="value python:item[0]"
+								tal:content="python:'%s (%s)' % (item[1], item[0])">Schema item</option>
+						</select>
+		</td>
+		<td width="1"><label for="term">containing</label></td>
+		<td width="1"><input type="text" name="term" value="" /></td>
+		<td>
+			<input type="hidden" name="search" value="" />
+			<input type="hidden" name="id" tal:attributes="value source_id" />
+			<input type="submit" name="search_user" value="Search" />
+		</td>
+	</tr>
+	<tr>
+		<td width="20"><div style="white-space: nowrap; "><label for="role">which have the role</label> </div></td>
+		<td width="1"><input type="text" name="role" size="15" />
+			<input type="hidden" name="dn" /></td>
+		<td width="1"><input type="button" name="pickroles2" value="   Pick   "
+						tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html', 'dn')" /></td>
+		<td width="1">&nbsp;</td>
+		<td> <input type="submit" name="search_role" value="Search"></td>
+	</tr>
+</table>
+</form>
+
+<tal:block define="search_param python:request.get('params', '');
+					search_term python:request.get('term', '');
+					role python:request.get('role', '');
+					dn python:request.get('dn', '')"
+	condition="python:request.has_key('search_user') or request.has_key('search_role')">
+
+<p tal:condition="python:request.has_key('search_user')">
+	Users found for <strong tal:content="search_term" /> search term
+</p>
+
+<p tal:condition="python:request.has_key('search_role')">
+	Users found with <strong tal:content="role" /> role
+</p>
+
+<form name="userRoles" method="post" tal:attributes="action string:${here/absolute_url}/addUserRoles">
+<table class="datatable" width="95%">
+	<tr>
+		<th></th>
+		<th>User ID</th>
+		<th>Canonical name</th>
+		<th width="60%">Distinguished Name</th>
+	</tr>
+	<tr tal:repeat="item python:here.findLDAPUsers(user_folder, search_param, search_term, role, dn)"
+		tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
+		<td><input type="checkbox" name="name" tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/></td>
+		<td tal:content="python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">uid</td>
+		<td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
+		<td tal:content="python:item['dn']">dn</td>
+	</tr>
+</table>
+
+<table border="0" cellspacing="2" cellpadding="2" class="admin_table">
+	<tr>
+		<td style="vertical-align: top">Roles</td>
+		<td><select name="roles" size="5" multiple="multiple">
+			<tal:block repeat="item here/list_valid_roles">
+			<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+					tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+			<option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+			</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
+		<td>
+			<input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation();" /> Entire portal<br />
+			<input type=radio name="loc" value="other" tal:attributes="checked req_location" /> Pick other...<br />
+			<input type=text name="location" size="50" onclick="pickLocation();" value="" tal:attributes="value req_location" />
+			<input type="button" value="Pick" tal:attributes="onclick string:javascript:setupWin('${here/getAuthenticationToolPath}/sitemap', 400, 500);" />
+		</td>
+	</tr>
+	<tr>
+		<td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+		<td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
+	</tr>
+</table>
+<p>
+	<input type="hidden" name="uf" tal:attributes="value here/obj_path" />
+	<input type="hidden" name="user_location" tal:attributes="value python:test(role, role, 'Users')" />
+	<input type="submit" name="add" value="Assign role" />
+</p>
+</form>
+</tal:block>
+
+</fieldset>
+
+<fieldset>
+<legend i18n:translate="">Grant roles to LDAP groups</legend>
+
+    <p i18n:translate="">
+        Type a LDAP group or select one from the list generated when pressing the <em>pick</em> button,
+        then select what role you wish to grant to that group. Roles are granted for the entire portal.
+    </p>
+    <form tal:attributes="action string:${here/absolute_url}/map_group_to_role" method="post">
+        <div class="field">
+        <label for="ldap_group" i18n:translate="">LDAP group</label>
+        <input type="text" id="ldap_group" name="group"/>
+        <input type="button" name="pickroles2" value="Pick" 
+               tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html', 'ldap_group')" />
+        </div>
+
+        <div class="field">
+        <label for="portal_roles" i18n:translate="">Role to grant</label>
+        <select multiple="multiple" id="portal_roles" name="roles:list">
+			<tal:block repeat="item here/list_valid_roles">
+			<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+					tal:attributes="value item" tal:content="item" />
+			<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
+			</tal:block>
+        </select>
+        </div>
+
+        <input type="submit" value="Grant roles" i18n:attributes="value"/>
+    </form>
+
+    <form method="post" tal:attributes="action string:${here/absolute_url}/revoke_group_role" tal:define="groups here/get_mapped_groups" tal:condition="groups">
+        <p i18n:translate="">Roles currently granted for LDAP groups are listed in the table below. To revoke roles, select them and click on the <em>Revoke roles</em> button.</p>
+        <table class="datatable ldap_groups">
+        <thead>
+            <th i18n:translate="">Group</th>
+            <th i18n:translate="">Role</th>
+        </thead>
+        <tbody>
+            <tr tal:repeat="group groups">
+                <td tal:content="group"/>
+                <td><ul>
+                    <li tal:repeat="role python:here.get_group_roles(group)">
+                        <label>
+                            <input type="checkbox" name="roles:list" tal:attributes="value string:${group};;${role}"/>
+                            <span tal:replace="role"/>
+                        </label>
+                    </li>
+                </ul></td>
+            </tr>
+        </tbody>
+        </table>
+        <input type="submit" value="Revoke roles" i18n:attributes="value"/>
+    </form>
+</fieldset>
+
+
+</tal:block>

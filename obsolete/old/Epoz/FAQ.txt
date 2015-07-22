@@ -1,0 +1,91 @@
+Epoz-FAQ
+
+ - What does Epoz mean?
+
+    Nothing special. Don't break your mind! Sounds nice and is simply
+    Zope turned around. Long history for that one...
+
+
+ - Will Epoz be maintained in the future? I've heard of Kupu...
+
+    Yes, it will. The Kupu-project (formerly know as Epoz 1.X)
+    will not replace Epoz 0.x in any of my applications, because
+    I need a "simple, but rock-stable solution". I'll maintain, support
+    and develop Epoz therefore in the future.
+
+
+ - Does Epoz work with Opera, Konqueror, Safari, Mac-IE, ...?
+
+    No! No chance to make it work. Epoz uses a rich-text-feature
+    which is only supported by IE >=5.5 and Mozilla >= 1.3 (or other
+    recent Gecko-based browsers). But there are rumors that Opera
+    and Safari will implement a rich-text-engine in upcoming
+    releases. We'll see...
+
+
+ - Can I use several Epoz-Widgets in one page (e.g. for Archetypes)?
+
+    Yes, but you must use Epoz 2.x and upward!
+    Many thanks to Benoit Pin for his great work on making this feature
+    real!!!!!
+
+
+ - How can I get relative URLs from Epoz?
+
+    Install the shipped EpozPostTidy-Hook. Create an External Method
+    as described in the README.txt to make it work. Very simple.
+
+
+ - Why doesn't Epoz support different fonts or sizes?
+
+    Simple answer: because I don't like crazy people playing with fonts and
+    different font-sizes. All fonts or sizes should be set in stylesheets
+    and not in the content. If you want this feature, please do it yourself.
+
+
+ - How can I get valid XHTML from Epoz?
+
+    Simply install mxTidy (http://www.lemburg.com/files/python/mxTidy.html)
+    and restart your server. Please see the mxTidyHowTo.txt provided with
+    Epoz if you have problems installing mxTidy. Please note: I do NOT
+    support mxTidy-problems!
+
+
+ - How can I edit ZPT, DTML or JavaScript with Epoz?
+
+    Simple answer: you can't!!! Epoz is a HTML-wysiwyg-**content**-editor,
+    just a simple replacement for (Re)StructuredText for the average user.
+    You CAN'T (!!!) edit any JavaScript, DTML, ZPT, PHP, ASP, JSP, PSP,
+    CSP, ABC, XYZ, AWK, Python, Forth, Assembler, AmigaBasic,
+    Half-Life-Mod or your haircut with Epoz... it's sad, but I have no
+    time to work on these features...;)
+
+
+ - How can I change the background-color of the Epoz-Wysiwyg-Area in Plone?
+
+    Epoz uses the Plone-CSS for rendering the wyswyg-area. In some cases
+    this might be a problem, so you want to specify another background-color
+    for editing content. Simply add a customized css-definition to your
+    ploneCustom.css::
+
+     .visualFontSizeCorrection {font-size: 75%; background-color: #e0e0e0;}
+
+
+  - How can I customize the Epoz-Toolbar? I want to remove some buttons.
+
+     Two solutions (first is recommended, second for backward compatibility):
+
+       1) Use a simple CSS-definition to hide all the buttons you don't like:
+
+        <style type="text/css">
+        <!--
+         .epoz_button_bold {display:none;}
+         .epoz_button_indent {display:none;}
+        //-->
+        </style>
+
+       See epoz/epoz_core/epoz_script_widget.js for the appropriate CSS-Classes.
+
+       2) Customize the epoz/epoz_core/epoz_script_widget.js as you like
+       and feed it into Epoz by calling Epoz with the widget-parameter which
+       should point to an url where your customized widget can be loaded from.

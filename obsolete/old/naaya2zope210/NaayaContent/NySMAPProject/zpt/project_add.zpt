@@ -1,0 +1,87 @@
+<span tal:replace="structure here/standard_html_header" />
+<!-- TODO put editor/includeLibs in head -->
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+<script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script>
+
+<h1 tal:content="string:Submit ${form_helper/get_meta_label}" />
+
+<p i18n:translate="">
+	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+</p>
+
+<form name="frmAdd" method="post"  tal:attributes="action action">
+<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+	<label i18n:translate="" for="lang">Posting language</label>
+	<select name="lang" id="lang">
+		<option tal:repeat="item here/gl_get_languages_mapping"
+			tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+			tal:content="python:item['name']" />
+	</select>
+</div>
+
+<!-- Schema properties -->
+<tal:block repeat="form_item form_helper/form_items">
+    <tal:block replace="structure form_item/html" />
+</tal:block>
+
+<tal:block tal:define="priorities here/getPrioritiesTypesList;
+					first_priority_id python:test(len(priorities), priorities[0].id, '');
+					priority_area python:here.getSession('priority_area', first_priority_id);
+					countries here/getCountriesList;
+					focuses python:here.getFocusesTypesList(priority_area)">
+
+<div class="field">
+	<label for="country">
+		<span i18n:translate="" tal:omit-tag="">Country(ies)</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'country')" class="mandatory_field"> *</span>
+	</label>
+	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate=""><em><strong>Tip:</strong> press the Ctrl key to select more than one.</em></p>
+	<select name="country" id="country" multiple="multiple" size="5">
+		<option tal:repeat="c countries"
+			tal:attributes="value c/id; selected python:c.id in here.getSession('country', '')" tal:content="c/title" i18n:translate="" >country</option>
+	</select>
+</div>
+<div class="field">
+	<!-- <a href="javascript:ddtreemenu.flatten('tree', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('tree', 'contact')">Contract All</a> -->
+	<label for="priority_area">
+		<span i18n:translate="" tal:omit-tag="">Project(s) area</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'priority_area')" class="mandatory_field"> *</span>
+	</label>
+	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
+		<em><strong>Tip:</strong> Select focus(es) of the project by expanding each project</em>
+	</p>
+	<ul id="tree" class="treeview">
+	<tal:block repeat="priority priorities">
+	<li><span tal:content="priority/title" i18n:translate="" />
+		<ul tal:define="focuses python:here.getFocusesTypesList(priority.id)">
+			<tal:block repeat="fc focuses">
+			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}" /><span tal:content="fc/title" i18n:translate="" /></li>
+			</tal:block>
+		</ul>
+	</li>
+	</tal:block>
+	</ul>
+	<script type="text/javascript">
+		ddtreemenu.createTree("tree", false)
+	</script>
+</div>
+
+<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
+	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
+	<tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
+</div>
+
+<div class="field">
+	<input type="submit" value="Submit" i18n:attributes="value" />
+</div>
+</tal:block>
+</form>
+
+<span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
+<span tal:replace="structure here/standard_html_footer" />

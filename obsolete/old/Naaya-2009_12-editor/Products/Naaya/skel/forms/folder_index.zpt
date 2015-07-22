@@ -1,0 +1,59 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<script language="JavaScript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+
+<div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
+	<h1>
+		<img tal:attributes="
+			src python:test(here.approved, here.icon, here.icon_marked);
+			title here/get_meta_label;
+			alt here/get_meta_label" />
+		<tal:block tal:replace="here/title_or_id" />
+		<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+			[Limited access]
+		</tal:block>
+		<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+			[Restricted access]
+		</tal:block>
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']"
+					tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+	</h1>
+
+	<p tal:condition="python:here.description!=''"
+		tal:content="structure here/description" />
+
+	<span tal:replace="structure here/menusubmissions" />
+
+	<metal:block use-macro="here/folder_listing/macros/content" />
+
+	<div class="folder-feeds">
+		<a tal:attributes="href string:${here/absolute_url}/index_rdf">
+			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/index_atom">
+			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+		</a>
+	</div>
+
+<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+	<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+</tal:block>
+</div>
+
+
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
+
+<span tal:replace="structure here/comments_box" />
+<span tal:replace="structure here/standard_html_footer"/>
+
+

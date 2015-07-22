@@ -1,0 +1,139 @@
+<span tal:replace="python:request.RESPONSE.setHeader('content-type','application/xhtml+xml;charset=utf-8')" />
+<span tal:replace="structure here/standard_html_header" />
+<tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds()); 
+                       geo_query python:request.get('geo_query', '');
+                       center python:request.get('center', here.center_locality);
+                       zoom python:request.get('zoom', '');
+                       path python:request.get('path', '');
+                       records python:here.searchGeoPoints(path, geo_types, geo_query);
+                       width python:request.get('width', here.map_width);
+                       height python:request.get('height', here.map_height)">
+
+<style type="text/css">
+  div.marker {
+    display: none;
+  }
+  div.marker-body {
+    width: 290px;
+    margin-top: 0;
+  }
+  div.marker-more {
+    padding: 10px 5px 5px 30px; /* T   R   B   L */
+  }
+  div.marker-body h3 {
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 0;
+    padding-top: 0;
+    text-transform: uppercase;
+  }
+  .map-button {
+    font-size: x-small;
+    color: white;
+    border: 1px outset white;
+    background-color: #336699;
+    margin-top: 1em;
+    padding: 0.3em 0.2em;
+  }
+  #record_counter_message {
+    font-size: x-small;
+  }
+</style>
+
+<span tal:condition="python: here.map_engine == 'google'">
+  <script type="text/javascript" tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${here/googleApiKey}"></script>
+  <script type="text/javascript" src="misc_/NaayaCore/googlemaps.js"></script>
+</span>
+<span tal:condition="python:here.map_engine == 'yahoo'">
+  <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${here/mapsapikey}"></script>
+  <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+</span>
+<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
+<span tal:replace="structure python:here.jsMapControl(here.map_engine, center, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
+<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
+  <div id="right_port">
+    <div class="right_portlet right_link_portlet portlet_right">
+      <a style="float:right; margin-right: 0.2em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
+      <div class="right_portlet_title portlet_title portlet-title" i18n:translate="">Filter locations</div>
+      <div class="right_portlet_content portlet_content content">
+        <!--div>
+          <input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
+        </div-->
+        <ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsListOrdered" tal:condition="parentsList">
+          <tal:block repeat="item parentsList">
+          <tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
+          <li>
+            <input type="checkbox" name="geo_types:list"
+                   tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
+            <img tal:condition="python:item.picture is not None"
+                 tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
+            <span i18n:translate="" tal:content="item/title" />
+          </li>
+          <ul tal:condition="children" class="category_child">
+            <li tal:repeat="child children">
+              <input type="checkbox" name="geo_types:list"
+                     tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
+              <img tal:condition="python:child.picture is not None"
+                   tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
+              <label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
+            </li>
+          </ul>
+          </tal:block>
+          </tal:block>
+        </ul>
+        <div>
+          <input type="hidden" id="center" name="center" tal:attributes="value center" />
+          <input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
+          <input type="hidden" id="path" name="path" tal:attributes="value path" />
+          <input type="button" id="showSelected" class="map-button" value="Show selected" i18n:attributes="value"
+                   style="display: none" onclick="javascript: showMapLocations()" />
+          <noscript>
+            <input type="submit" value="Show selected" class="map-button" name="index_html:method" i18n:attributes="value" />
+          </noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="center_content" style="width: 78%; overflow-x: auto;">
+    <h1 tal:content="here/title_or_id" />
+    <noscript>
+      <p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
+    </noscript>
+    <a id="mappage"></a>
+    <div id="record_counter_message">
+      <span id="record_counter"></span>
+      <span i18n:translate="">location(s)</span>
+    </div>
+    <br clear="all" style="clear:both"/>
+    <div id="map" tal:attributes="style string:width: ${width}px;; height: ${height}px;;"></div>
+    <br clear="all" style="clear:both"/>
+    <noscript>
+      <tal:block define="skey python:None;
+              rkey python:None;
+              map_url here/absolute_url;
+              map_ob here;
+              edit_mode python:False;
+              sortable python:False;">
+        <table metal:use-macro="here/locations_table_html/macros/main"></table>
+      </tal:block>
+    </noscript>
+    <p i18n:translate="">
+      Additionally you can display the points in <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher) <input type="submit" value="View in Google Earth" name="downloadLocationsKml:method" i18n:attributes="value" class="map-button" />
+    </p>
+    <div style="display:none" id="map_markers"></div>
+  </div>
+
+</form>
+<script type="text/javascript">
+<!--
+	// show the elements that are used when JavaScript is available
+	var showSelected = document.getElementById("showSelected");
+	showSelected.style.display = "inline";
+	showMap();
+	mapTool.showMapLocations();
+//-->;
+</script>
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />

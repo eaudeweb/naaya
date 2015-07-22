@@ -1,0 +1,101 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<tal:block define="came_from python:request.get('came_from', '') or request.get('HTTP_REFERER', '');
+				action_url string:logged_in;
+        action_url_logout_directly string: 'logout'">
+
+<tal:block define="user python:request.AUTHENTICATED_USER.getUserName();
+								auth_tool python:here.getAuthenticationTool();
+								user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());"
+								condition="python:user!='Anonymous User'">
+
+
+<h1 i18n:translate="">Log out</h1>
+<div class="tips_box" style="float: right; width: 30%; background-color: #FFFFE1;">
+	<div class="tips_box_title" style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
+	<ul>
+		<li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
+		<li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
+	</ul>
+</div>
+
+<div class="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="user" /></em>.</div>
+<div class="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
+<br />
+<tal:block tal:define="roles python:here.getAuthenticationTool().getAuthenticatedUserRoles()">
+	<div tal:condition="python:user_obj is None">
+		<!-- List roles for Zope user here -->
+	</div>
+	<tal:block tal:condition="python:len(roles) and user_obj is not None">
+		<tal:block i18n:translate="">You have the following rights in this portal:</tal:block><br />
+		<ul>
+			<li tal:repeat="item roles">
+				<span tal:replace="python:', '.join(item[0])" />
+				on
+				<a tal:define="object python:here.utGetObject(item[1])"
+					tal:attributes="href string:${object/absolute_url}/"
+					tal:content="object/title_or_id" />
+			</li>
+		</ul>
+	</tal:block>
+	<tal:block tal:condition="python:not len(roles)" i18n:translate="">
+		You have no special rights in this portal.
+	</tal:block>
+</tal:block>
+<br />
+</tal:block>
+
+<tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
+<h1 i18n:translate="">Log in</h1>
+
+<h2 i18n:translate="">Existing user</h2>
+<form tal:attributes="action action_url" method="post">
+
+<tal:block define="retry python:request.get('retry', '')">
+<div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
+	The username or password you provided are incorrect or this account doesn't have
+	enough rights to access this resource. Please try again.
+</div>
+</tal:block>
+
+<div tal:condition="python:came_from!=''">
+	<input type="hidden" name="came_from" tal:attributes="value came_from" />
+</div>
+
+<div class="field">
+	<label for="__ac_name" i18n:translate="">Username</label>
+	<input type="text" name="__ac_name" id="__ac_name" size="20"
+		tal:attributes="value python:request.get('__ac_name', '')" />
+</div>
+
+<div class="field">
+	<label for="__ac_password" i18n:translate="">Password</label>
+	<input type="password" name="__ac_password" id="__ac_password" size="20" />
+</div>
+
+<div class="field">
+	<input type="submit" name="submit" value=" Login " i18n:attributes="value" />
+</div>
+
+</form>
+
+<h2 i18n:translate="">New user</h2>
+
+<p i18n:translate="">First <a href="requestrole_html">create an account</a> on this server and then return to this page to log in. The newly created user will have no role on this portal, <a href="feedback_html">contact the Webmaster</a> if you need one.</p>
+
+<div class="tips_box">
+	<div class="tips_box_title" i18n:translate="">Tips</div>
+	<ul>
+		<li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+		<li i18n:translate="">Don't forget to logout or exit your browser when you're done</li>
+		<li i18n:translate="">Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+		<li i18n:translate="">Forgot your password? <a href="feedback_html">Contact the Webmaster</a> and explain the problem</li>
+	</ul>
+</div>
+
+</tal:block>
+
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

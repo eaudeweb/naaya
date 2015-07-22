@@ -1,0 +1,7 @@
+<configure
+  xmlns:naaya="http://namespaces.zope.org/naaya"
+  i18n_domain="naaya.content">
+
+  <naaya:content factory=".contact_item.get_config" />
+
+</configure>

@@ -1,0 +1,63 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Roles</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getAuthenticationTool;
+				role python:request.get('role', '');
+				skey python:request.get('skey', 'name');
+				rkey python:request.get('rkey', '');
+				sortdata python:({'sortable': 0, 'key': '', 'label': 'Permission'}, {'sortable': 0, 'key': '', 'label': 'Description'},)">
+
+<div class="tabs_firstlevel">
+	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+		<li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
+	</ul>
+</div>
+
+<h2 i18n:translate="" style="clear: left;">
+	Role: <span tal:replace="role" />
+</h2>
+
+<p i18n:translate="">
+	This page offers detailed information about the permission(s) given to this role.
+</p>
+
+<table id="folderfile_list" class="sortable" width="70%">
+	<thead>
+		<tr>
+			<tal:block tal:repeat="item sortdata">
+				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
+				<tal:block tal:condition="item/sortable">
+					<tal:block tal:condition="python:skey==item['key']">
+						<th tal:condition="python:rkey==''" class="sorted" scope="col">
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_role_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_role_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+					</tal:block>
+					<th tal:condition="python:skey!=item['key']" scope="col">
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_role_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+					</th>
+				</tal:block>
+			</tal:block>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="item python:user_tool.getRolePermissions(role)">
+			<td tal:content="item" />
+			<td tal:content="python:user_tool.getPermissionDescription(item)" />
+		</tr>
+	</tbody>
+</table>
+
+</tal:block>
+
+</tal:block>

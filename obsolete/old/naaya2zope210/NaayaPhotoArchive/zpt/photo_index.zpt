@@ -1,0 +1,188 @@
+<metal:block define-macro="page">
+<span tal:replace="structure here/standard_html_header" />
+<link rel="stylesheet" type="text/css"
+	tal:attributes="href string:${here/absolute_url}/style_css" />
+
+<h1>
+	<span tal:replace="string:${here/getAlbumTitle} - ${here/title_or_id}" />
+</h1>
+
+<!-- Admin section -->
+<div id="admin_this_folder">
+	<div class="floated-buttons">
+		<a tal:attributes="href python:here.getParentNode().absolute_url()">
+			<span i18n:translate="">Back to album</span>
+		</a>
+	</div>
+
+	<div tal:condition="here/checkPermissionEditObject">
+		<a tal:attributes="href string:${here/absolute_url}/edit_html">
+			<span i18n:translate="">Edit</span>
+		</a>
+	</div>
+
+	<div style="clear: both"></div>
+</div>
+
+<!-- Right boxes -->
+<div class="g-boxes">
+	<!-- Downloads box -->
+	<div class="g-box">
+		<div class="title">
+			<span i18n:translate="">View photo</span>
+		</div>
+		<div class="body">
+			<dl class="photo_links">
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=XSmall">Very small</a> (200px)
+				</dd>
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=Small">Small</a> (320px)
+				</dd>
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=Medium">Medium</a> (480px)
+				</dd>
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=Large">Large</a> (768px)
+				</dd>
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=XLarge">Very large</a> (1024px)
+				</dd>
+				<dd>
+					<a tal:attributes="href string:${here/absolute_url}?display=Original">Original</a>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<!-- Details box -->
+	<div class="photo-details g-box" tal:condition="here/minimap">
+		<div class="title">
+			<span i18n:translate="">Geographic location</span>
+		</div>
+		<div class="body">
+			<tal:block content="structure here/minimap" />
+		</div>
+	</div>
+	<metal:block define-slot="photo-details-map" />
+</div>
+
+<!-- Image -->
+<div class="g-main-content-buttons g-main-content-text" tal:define="
+		next here/next;
+		previous here/previous;">
+		<a tal:attributes="href previous" tal:condition="previous" title="Go to previous image" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/left.gif"
+				alt="Previous" i18n:attributes="alt" />
+		</a>
+		<tal:block condition="here/checkPermissionEditObject">
+		<a tal:attributes="href string:${here/absolute_url}/rotate_left" title="Rotate left" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/rotate_left.gif" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/rotate_right" title="Rotate right" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/rotate_right.gif" />
+		</a>
+		</tal:block>
+		<a id="slideshow_link" tal:attributes="href string:${here/getId}" title="Slideshow" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/slideshow.gif" />
+		</a>
+		<tal:block condition="here/checkPermissionEditObject">
+		<a tal:attributes="href string:${here/absolute_url}/flip_horizontally" title="Flip horizontally" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/flip_horizontally.gif" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/flip_vertically" title="Flip vertically" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/flip_vertically.gif" />
+		</a>
+		</tal:block>
+		<a tal:attributes="href next" tal:condition="next" title="Go to next image" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/right.gif"
+				alt="Next" i18n:attributes="alt" />
+		</a>
+</div>
+
+<div class="g-main-content g-main-content-text"
+	tal:define="display python:request.get('display', 'Medium');
+				photo_link string:${here/absolute_url}/view?display=${display};
+				is_authorised python:here.check_view_photo_permission(display);">
+	<div class="g-image-holder" tal:condition="is_authorised">
+		<img name="imgDisplay" tal:attributes="
+			src photo_link; 
+			alt here/title_or_id" />
+	</div>
+	<div class="g-image-description" tal:condition="python:not is_authorised" i18n:translate="">
+		The access to this photo size is restricted.
+	</div>
+	<div class="g-image-description" tal:condition="is_authorised">
+		<span tal:content="here/title_or_id" />
+	</div>
+	<div class="g-image-link" tal:condition="is_authorised">
+		<label i18n:translate="">Link to this photo</label>
+		<input type="text" name="display_photo_link" size="80" readonly="readonly"
+			tal:attributes="value photo_link" />
+	</div>
+</div>
+
+<div class="g-main-content" tal:define="
+	album here/getParentNode;
+	description python:getattr(here, 'description', '') or getattr(album, 'description', '');
+	coverage python:getattr(here, 'coverage', '') or getattr(album, 'coverage', '');
+	keywords python:getattr(here, 'keywords', '') or getattr(album, 'keywords', '');
+	releasedate python:getattr(here, 'releasedate', '') or getattr(album, 'releasedate', '');
+	author python:getattr(here, 'author', '') or getattr(album, 'author', '');
+	source python:getattr(here, 'source', '') or getattr(album, 'source', '');
+	">
+
+
+	<metal:block define-slot="photo-details-extra">
+		<fieldset tal:condition="description">
+			<legend i18n:translate="">Description</legend>
+			<div tal:content="structure description"/>
+		</fieldset>
+		<br/>
+		<fieldset>
+			<legend i18n:translate="">Autor</legend>
+			<dl>
+				<dt tal:condition="author" i18n:translate="">Author:</dt>
+				<dd tal:content="author"/>
+				<dt tal:condition="source" i18n:translate="">Source:</dt>
+				<dd tal:content="source"/>
+				<dt tal:condition="releasedate" i18n:translate="">Uploaded on:</dt>
+				<dd tal:content="python:here.utShowDateTime(releasedate)"></dd>
+				<dt i18n:translate="">Release date:</dt>
+				<dd tal:content="python:here.utShowDateTime(releasedate)"/>
+			</dl>
+		</fieldset>
+		<br/>
+		<fieldset tal:condition="python:coverage or keywords">
+			<legend i18n:translate="">Picture details</legend>
+			<dl>
+				<dt tal:condition="coverage" i18n:translate="">Geographical coverage:</dt>
+				<dd tal:condition="coverage" tal:content="coverage"/>
+				<dt tal:condition="keywords" i18n:translate="">Keywords:</dt>
+				<dd tal:condition="keywords" tal:content="keywords"/>
+			</dl>
+		</fieldset>
+		<br/>
+		<fieldset>
+			<legend i18n:translate="">Technical information</legend>
+			<dl>
+				<dt tal:condition="here/getContentType" i18n:translate="">Image type:</dt>
+				<dd tal:content="here/getContentType"/>
+				<dt tal:condition="python:here.get_size(here.getId())" i18n:translate="">Image size:</dt>
+				<dd tal:content="python:here.utShowSize(here.get_size(here.getId()))"/>
+			</dl>
+		</fieldset>
+	</metal:block>
+</div>
+<div class="g-main-content" tal:condition="here/is_open_for_comments">
+	<span tal:replace="structure here/comments_box" />
+</div>
+
+<div style="clear: both"></div>
+
+
+<link tal:attributes="href string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/NaayaPhotoArchive/slideshow.js"></script>
+
+<span tal:replace="structure here/standard_html_footer" />
+</metal:block>

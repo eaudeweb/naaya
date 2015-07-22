@@ -1,0 +1,49 @@
+<tal:block metal:use-macro="here/DocBase_manage_edit/macros/page">
+
+    <tal:block metal:fill-slot="description">
+        Change the properties in the form below and click <b>Save changes</b>.
+    </tal:block>
+
+    <tal:block metal:fill-slot="custom_properties">
+        <tr>
+            <th class="edit-header">File status</th>
+            <td>
+                <select name="status">
+                    <option tal:repeat="status here/getStatuses"
+                        tal:attributes="value status; selected python:status==here.status"
+                        tal:content="status">STATUS</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class="edit-header">File version</th>
+            <td>
+                <div>
+                    <input type="text" name="file_version" size="2" tal:attributes="value here/file_version" />
+                    <small><em>* The version will change only if this property is modified</em></small>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th class="edit-header">Content Type</th>
+            <td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type"></td>
+        </tr>
+        <tr>
+            <th class="edit-header">Precondition</th>
+            <td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition"></td>
+        </tr>
+        <tr>
+            <th class="edit-header">File Size</th>
+            <td><span tal:replace="here/size"/> bytes</td>
+        </tr>
+        <tr>
+            <th class="edit-header">Upload from</th>
+            <td><input type="file" name="file" size="40" /></td>
+        </tr>
+        <tr>
+            <th class="edit-header">Download file name</th>
+            <td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename"></td>
+        </tr>
+    </tal:block>
+
+</tal:block>

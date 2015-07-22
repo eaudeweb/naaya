@@ -1,0 +1,21 @@
+<metal:block define-macro="version-status"
+    tal:define="version options/version;
+                editable options/editable;
+                can_operate here/checkPermissionEditObject
+                ">
+    <td class="checkin" tal:condition="can_operate">
+        <tal:block condition="not:version">n/a</tal:block> 
+        <a tal:condition="python:version and editable" tal:attributes="href string:${here/absolute_url}/startVersion">
+            <img src="misc_/Naaya/checkout" alt="Checkout - start new version" i18n:attributes="alt" />
+        </a>
+        <a tal:condition="python:version and not editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+            <img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
+        </a>
+    </td>
+    <td class="edit" tal:condition="can_operate">
+        <a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+            <img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+        </a>
+        <tal:block condition="not:editable">n/a</tal:block> 
+    </td>
+</metal:block>

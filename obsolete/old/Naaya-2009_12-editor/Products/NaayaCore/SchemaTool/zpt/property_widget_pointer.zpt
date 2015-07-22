@@ -1,0 +1,20 @@
+<div class="field" tal:define="
+    value options/value|nothing;
+    errors options/errors;
+    prop_id here/prop_name;">
+    <label tal:attributes="for prop_id" class="widget-title">
+        <span tal:content="here/title" />
+        <span tal:condition="here/required" class="mandatory_field">*</span>
+    </label>
+    <p class="form-errors" tal:condition="errors" tal:content="errors" />
+    <div id="pointer_tree" class="extjs_tree custom-tree"></div>
+    <div style="clear: both"></div>
+    <input class="extjs_target" type="text" tal:attributes="
+        value value;
+        size here/width;
+        maxlength python:test(here.size_max, here.size_max, None);
+        name string:${prop_id}:utf8:ustring;
+        id prop_id" />
+    <!-- Ajax tree scripts -->
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+</div>

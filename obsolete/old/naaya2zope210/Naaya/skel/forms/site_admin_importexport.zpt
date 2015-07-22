@@ -1,0 +1,193 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Import/Export messages</h1>
+
+<tal:block metal:fill-slot="section" 
+	tal:define="site_url here/getSitePath;
+				languages here/gl_get_languages_mapping">
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_translations_html" i18n:translate="">Messages</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_importexport_html" i18n:translate="">Import/Export</a></li>
+</ul>
+</div>
+
+<p class="cleaner">
+	<strong i18n:translate="">Note:</strong> <span tal:omit-tag="" i18n:translate="">the source of the messages in this portal is <em i18n:name="english" i18n:translate="">English</em>. This page allows you to import/export translations of messages in other languages.</span>
+</p>
+<fieldset>
+	<legend i18n:translate="">Export messages to PO file</legend>
+	<div class="fieldset_div">
+		<p i18n:translate="">
+			You can export the messages and their translations to PO files. Check <em i18n:name="locale-pot" i18n:translate="">locale.pot</em> to get only the messages, without their translations. Check any other option to get a PO file with the messages and their	translations to the selected language. Then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+		</p>
+		<form method="post" tal:attributes="action string:${site_url}/admin_exportmessages">
+		<dl>
+			<dt i18n:translate="">File / Language</dt>
+			<dd>
+				<select name="x">
+					<option value="locale.pot" selected="selected">locale.pot</option>
+					<tal:block repeat="lang languages">
+						<option tal:attributes="value lang/code"
+							tal:content="string:${lang/code}.po/${lang/name}" />
+					</tal:block>
+				</select>
+			</dd>
+		</dl>
+		<p><input type="submit" value="Export" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+<br />
+<fieldset>
+	<legend i18n:translate="">Import translations from PO file</legend>
+	<div class="fieldset_div">
+		<p i18n:translate="">
+			You can add new messages and translations by importing a PO file. Enter the
+			filename, select the language of the translations and click the
+			<em i18n:name="import" i18n:translate="">Import</em> button.
+		</p>
+		<form method="post" tal:attributes="action string:${site_url}/admin_importmessages" enctype="multipart/form-data">
+		<dl>
+			<dt i18n:translate="">File</dt>
+			<dd><input type="file" name="file" /></dd>
+			<dt i18n:translate="">Language</dt>
+			<dd>
+				<select name="lang">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code; selected python:path('repeat/lang/start')"
+							tal:content="string:${lang/name}[${lang/code}]" />
+					</tal:block>
+				</select>			
+			</dd>
+		</dl>
+		<p><input type="submit" value="Import" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+<br />
+<fieldset>
+	<legend i18n:translate="">Export messages to XLIFF file</legend>
+	<div class="fieldset_div">
+		<p i18n:translate="">
+			You can export the messages and their translations to XLIFF files. Check any option to get a XLIFF file with the messages and their translations to the selected language. Then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+		</p>
+		<form method="post" tal:attributes="action string:${site_url}/admin_exportxliff">
+		<dl>
+			<dt>
+				<input type="radio" name="export_all" value="1" checked="checked" />
+				<span i18n:translate="" tal:omit-tag="">Export all messages</span>
+			</dt>
+			<dt>
+				<input type="radio" name="export_all" value="0" />
+				<span i18n:translate="" tal:omit-tag="">Export only untranslated messages for the language you select</span>
+			</dt>
+			<dt i18n:translate="">Language</dt>
+			<dd>
+				<select name="x">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code; selected python:path('repeat/lang/start')"
+							tal:content="string:${lang/name}[${lang/code}]" />
+					</tal:block>
+				</select>
+			</dd>
+		</dl>
+		<p><input type="submit" value="Export" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+<br />
+<fieldset>
+	<legend i18n:translate="">Import translations from XLIFF file</legend>
+	<div class="fieldset_div">
+		<p i18n:translate="">
+			You can add new messages and translations by importing an XLIFF file. Enter the filename that contains messages translated in one of the portal languages and click the <em i18n:name="import" i18n:translate="">Import</em> button. The language of the translations should be specified inside the XLIFF file.
+		</p>
+		<form method="post" tal:attributes="action string:${site_url}/admin_importxliff" enctype="multipart/form-data">
+		<dl>
+			<dt i18n:translate="">File</dt>
+			<dd><input type="file" name="file" /></dd>
+		</dl>
+		<p><input type="submit" value="Import" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+<br />
+<fieldset>
+	<legend i18n:translate="">Export messages as spreadsheet</legend>
+	<div class="fieldset_div" tal:define="site here/getSite; 
+						trans_url site/getPortalTranslationsPath; 
+						default_lang site/gl_get_default_language;">
+		<p i18n:translate="">
+			You can export the messages and their translations to spreadsheet files. Choose the language and the desired format then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+		</p>
+		<p i18n:translate="">
+			<strong i18n:name="warning" i18n:translate="">WARNING:</strong> Make sure your editor (eg. MS Excel) supports UTF-8 encoding, otherwise some characters might not display correctly.
+		</p>
+		<form method="post" tal:attributes="action string:${trans_url}/spreadsheet_export">
+		<dl>
+			<dt i18n:translate="">Language</dt>
+			<dd>
+				<select name="target_lang">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code" tal:content="string:${lang/name}[${lang/code}]" />
+					</tal:block>
+				</select>
+			</dd>
+			<dt i18n:translate="">Format</dt>
+			<dd>
+				<select name="dialect">
+					<option value="excel" i18n:translate="">CSV (Comma delimited)</option>
+					<option value="excel-tab" i18n:translate="">Text (Tab delimited)</option>
+				</select>
+			</dd>
+		</dl>
+		<p><input type="submit" value="Export" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+<br />
+<fieldset>
+	<legend i18n:translate="">Import messages from spreadsheet</legend>
+	<div class="fieldset_div" tal:define="site here/getSite; 
+						trans_url site/getPortalTranslationsPath; 
+						default_lang site/gl_get_default_language;">
+		<p i18n:translate="">
+			You can import the messages and their translations from spreadsheet files. Choose the language and the format then click the <em i18n:name="import" i18n:translate="">Import</em> button.
+		</p>
+		<p i18n:translate="">
+			<strong i18n:name="warning" i18n:translate="">WARNING:</strong> Make sure the file you are importing is encoded in UTF-8, otherwise translated messages might not be imported correctly.
+		</p>
+		<form method="post" tal:attributes="action string:${trans_url}/spreadsheet_import" enctype="multipart/form-data">
+		<dl>
+			<dt i18n:translate="">File</dt>
+			<dd><input type="file" name="file" /></dd>
+			<dt i18n:translate="">Language</dt>
+			<dd>
+				<select name="target_lang">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code" tal:content="string:${lang/name}[${lang/code}]"  />
+					</tal:block>
+				</select>
+			</dd>
+			<dt i18n:translate="">Format</dt>
+			<dd>
+				<select name="dialect">
+					<option value="comma" i18n:translate="">CSV (Comma delimited)</option>
+					<option value="tab" i18n:translate="">Text (Tab delimited)</option>
+				</select>
+			</dd>
+		</dl>
+		<p><input type="submit" value="Import" i18n:attributes="value" /></p>
+		</form>
+	</div>
+</fieldset>
+
+<tal:block tal:condition="python:languages == []">
+	<em i18n:translate="">No languages available, please add them using the Languages tab</em>
+</tal:block>
+
+</tal:block>
+
+</tal:block>

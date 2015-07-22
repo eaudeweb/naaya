@@ -1,0 +1,31 @@
+<tal:block tal:replace="structure here/manage_page_header"/>
+<tal:block tal:replace="structure here/manage_tabs"/>
+
+<tal:block tal:define="versions here/getVersions">
+<br />
+<table border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td class="form-label">Number of versions</td>
+		<td tal:content="python:len(versions.keys())" />
+	</tr>
+	<tr>
+		<td class="form-label">Current version id</td>
+		<td tal:content="here/getCurrentVersionId" />
+	</tr>
+</table>
+<br />
+<table border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<th>Version id</th>
+		<th>Date</th>
+		<th>User</th>
+	</tr>
+	<tr tal:repeat="version python:versions.keys()">
+		<td tal:content="version" />
+		<td><a target="_blank" tal:attributes="href string:showVersionData?vid=${version}" tal:content="python:versions[version][0]">version date</a></td>
+		<td tal:content="python:versions[version][1]" />
+	</tr>
+</table>
+</tal:block>
+
+<tal:block tal:replace="structure here/manage_page_footer"/>

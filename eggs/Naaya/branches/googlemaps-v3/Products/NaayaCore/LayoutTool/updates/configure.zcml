@@ -1,7 +1,0 @@
-<configure xmlns:naaya="http://namespaces.zope.org/zope">
-    <naaya:utility
-         name="UpdateViewPermission.update"
-         provides="Products.naayaUpdater.interfaces.IUpdateScript"
-         component=".view_perm_anonymous.UpdateViewPermission"
-         permission="zope2.ViewManagementScreens" />
-</configure>

@@ -1,0 +1,102 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<style type="text/css">
+/*table with information on rows*/
+.horizontal_table{
+}
+
+	.horizontal_table th {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		vertical-align:top;
+	}
+
+	.horizontal_table td {
+		border-bottom: 1px solid #f0f0f0;
+		border-right:  1px dotted #f0f0f0;
+		text-align:left;
+		vertical-align:top;
+		padding:2px 3px 2px 5px;
+	}
+
+	.horizontal_table caption {
+		background-color:#f0f0f0;
+		border-bottom:2px solid white;
+		text-align:left;
+		padding:2px 10px 2px 5px;
+		font-weight:bold;
+	}
+
+	.horizontal_table .short {
+		width: 10px;
+	}
+
+
+/*tabbed divs*/
+.sidimar_tabbed {
+	margin: 3px 0px;
+}
+	.sidimar_tabbed .header {
+	}
+
+		.sidimar_tabbed .header a {
+			color:black;
+			text-decoration:none;
+		}
+
+		.sidimar_tabbed .header a:visited {
+			color:black;
+		}
+
+
+		.sidimar_tabbed .active {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 1px 5px;
+			border-bottom:1px solid #f0f0f0;
+
+			font-weight: bold;
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+		}
+
+		.sidimar_tabbed .inactive {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 0px 5px;
+
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+
+		}
+
+	.sidimar_tabbed .content {
+		padding: 10px 5px;
+		border:1px solid #989898;
+	}
+
+	.sidimar_tabbed .ie_table_fixer {
+		width:100%;
+	}
+
+
+/*form related styles*/
+	.wider_elements input {
+		width: 20em;
+	}
+
+	.wider_elements .button {
+		width: auto;
+	}
+
+
+	.wider_elements textarea {
+		width: 20em;
+	}
+
+
+</style>

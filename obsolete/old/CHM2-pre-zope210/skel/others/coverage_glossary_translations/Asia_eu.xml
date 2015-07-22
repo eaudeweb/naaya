@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Basque">
+    <body>
+      <trans-unit approved="1" id="United_Arab_Emirates">
+        <source>United Arab Emirates</source>
+        <target>Arabiar Emirrerri Batuak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Afghanistan">
+        <source>Afghanistan</source>
+        <target>Afganistan</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="China">
+        <source>China</source>
+        <target>Txina</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Micronesia">
+        <source>Micronesia</source>
+        <target>Mikronesia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Iraq">
+        <source>Iraq</source>
+        <target>Irak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Jordan">
+        <source>Jordan</source>
+        <target>Jordania</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Japan">
+        <source>Japan</source>
+        <target>Japonia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Kyrgyzstan">
+        <source>Kyrgyzstan</source>
+        <target>Kirgizistan</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cambodia">
+        <source>Cambodia</source>
+        <target>Kanbodia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="North_Korea">
+        <source>North Korea</source>
+        <target>Ipar Korea</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="South_Korea">
+        <source>South Korea</source>
+        <target>Hego Korea</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Lebanon">
+        <source>Lebanon</source>
+        <target>Libano</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Marshall_Islands">
+        <source>Marshall Islands</source>
+        <target>Marshall uharteak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Maldives">
+        <source>Maldives</source>
+        <target>Maldivak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Malaysia">
+        <source>Malaysia</source>
+        <target>Malasia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="New_Zealand">
+        <source>New Zealand</source>
+        <target>Zeelanda Berria</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Papua_New_Guinea">
+        <source>Papua New Guinea</source>
+        <target>Papua Ginea Berria</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Philippines">
+        <source>Philippines</source>
+        <target>Filipinak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Qatar">
+        <source>Qatar</source>
+        <target>Katar</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Solomon_Islands">
+        <source>Solomon Islands</source>
+        <target>Salomon uharteak</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Singapore">
+        <source>Singapore</source>
+        <target>Singapur</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Syria">
+        <source>Syria</source>
+        <target>Siria</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Thailand">
+        <source>Thailand</source>
+        <target>Tailandia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Tajikistan">
+        <source>Tajikistan</source>
+        <target>Tadjikistan</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Turkey">
+        <source>Turkey</source>
+        <target>Turkia</target>
+        <context-group name="Asia"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,50 @@
+<span metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+	<tal:block metal:fill-slot="doc_manager_title">
+		<tal:block content="here/title_or_id" />
+	</tal:block>
+
+	<tal:block metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+
+		<link rel="stylesheet" type="text/css" href="DocManager_style" />
+
+		<h1>
+			FinShare feedback
+		</h1>
+
+		<div class="msg-info" tal:condition="python:request.has_key('send')">
+			The message was sent. (<span tal:replace="here/ZopeTime"/>)
+		</div>
+
+		<p>
+			We're glad you're taking the time to visit our feedback page.<br />
+			Use the form below to send us your comments.<br />
+			We take great interest in our user's comments.
+		</p>
+
+		<form action="sendFeedback" name="frmFeedback" id="frmFeedback" method="post">
+			<table cellpadding="3" cellspacing="0" class="from-table">
+				<tr>
+					<th>
+						<label for="fname">Title</label>
+					</th>
+					<td>
+						<input type="text" name="title" id="title" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="fname">Comments</label>
+					</th>
+					<td>
+						<textarea name="comments" cols="40" rows="4" id=""></textarea>
+					</td>
+				</tr>
+			</table>
+			<div class="navigation" style="text-align:left;">
+				<input type="hidden" name="destination" value="feedback_html" />
+				<input type="submit" name="SendButton" id="SendButton" value="Send feedback" />
+			</div>
+		</form>
+	</tal:block>
+</span>

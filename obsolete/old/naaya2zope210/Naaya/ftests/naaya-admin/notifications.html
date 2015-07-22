@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>notifications</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">notifications</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>admin_notifications_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_notifications</td>
+	<td>notifications_subject</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_newsletter</td>
+	<td>newsletter_subject</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save changes']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>subject_notifications</td>
+	<td>notifications_subject</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>subject_newsletter</td>
+	<td>newsletter_subject</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>from_email</td>
+	<td>localhost</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_notifications</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_newsletter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>from_email</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save changes']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The Sender email was not provided. Changes NOT saved</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_newsletter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject_notifications</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save changes']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>subject_notifications</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>subject_newsletter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>from_email</td>
+	<td>localhost</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Monitorised folders</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>absolute_urls_to_be_added</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='center_content']/form[1]/fieldset/div/table/tbody/tr[1]/td[2]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>absolute_urls_to_be_deleted</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@id='center_content']/form[1]/fieldset/div/table/tbody/tr[1]/td[2]/a/span</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

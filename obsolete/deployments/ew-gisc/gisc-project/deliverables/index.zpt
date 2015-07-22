@@ -1,0 +1,39 @@
+<metal:block use-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
+<metal:block fill-slot="page-middle">
+
+	<p tal:condition="python:here.description!=''"
+		tal:content="structure here/description" />
+
+	<div class="folder-contents" style="display: none;">
+
+	<span tal:replace="structure here/menusubmissions" />
+
+	<metal:block use-macro="here/folder_listing/macros/content" />
+
+	</div>
+	<script type="text/javascript">(function() {
+		var folder_contents = $('div.folder-contents');
+		var btn = $('<a href="#" class="b_download"'+'>Show folder contents<'+'/a>');
+		btn.click(function(evt) {evt.preventDefault(); folder_contents.show(); btn.remove();});
+		btn.appendTo($('div#center_content > h1'));
+	})();</script>
+
+	<metal:block use-macro="here/the_table/macros/deliverables-table" />
+
+	<p>
+		<a href="index_rdf" target="_blank">
+			<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" />
+		</a>
+	</p>
+
+	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.show_contributor_request_role">
+		<a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
+	</p>
+
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+	</tal:block>
+
+	<span tal:replace="structure here/comments_box" />
+</metal:block>
+</metal:block>

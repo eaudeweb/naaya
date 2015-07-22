@@ -1,6 +1,0 @@
-<configure xmlns='http://namespaces.zope.org/zope'
-           xmlns:ny="http://namespaces.zope.org/naaya">
-
-  <ny:call factory=".EmailTool.configure_mail_queue"/>
-
-</configure>

@@ -1,0 +1,47 @@
+// Epoz-Language-File: pl (Polish)
+// qbak@qbak.net, 2003
+
+EpozLang["Normal"]='Normalny';
+EpozLang["Paragraph"]='Akapit';
+EpozLang["Heading1"]='Nag³ówek 1';
+EpozLang["Heading2"]='Nag³ówek 2';
+EpozLang["Heading3"]='Nag³ówek 3';
+EpozLang["Heading4"]='Nag³ówek 4';
+EpozLang["Heading5"]='Nag³ówek 5';
+EpozLang["Heading6"]='Nag³ówek 6';
+EpozLang["Formatted"]='Sformatowany';
+
+EpozLang["Bold"]='Pogrubienie';
+EpozLang["Italic"]='Kursywa';
+EpozLang["Underline"]='Podkre¶lenie';
+
+EpozLang["Subscript"]='Indeks dolny';
+EpozLang["Superscript"]='Indeks górny';
+
+EpozLang["TextColor"]='Kolor tekstu';
+EpozLang["BackColor"]='Kolor t³a';
+
+EpozLang["AlignLeft"]='Wyrównanie do lewej';
+EpozLang["Center"]='Wy¶rodkowanie';
+EpozLang["AlignRight"]='Wyrównanie do prawej';
+
+EpozLang["OrderedList"]='Lista numerowana';
+EpozLang["UnorderedList"]='Lista wypunktowana';
+EpozLang["Outdent"]='Zmniejsz wciêcie';
+EpozLang["Indent"]='Zwiêksz wciêcie';
+
+EpozLang["InsertLink"]='Wstaw odno¶nik';
+EpozLang["InsertImage"]='Wstaw obrazek';
+EpozLang["InsertRule"]='Wstaw linijkê';
+EpozLang["InsertTable"]='Wstaw tabelê';
+EpozLang["Toolbox"]='Narzêdzia';
+
+EpozLang["Undo"]='Cofnij';
+EpozLang["Redo"]='Powtórz';
+
+EpozLang["EnterLinkURL"]='Wprowad¼ URL odno¶nika';
+EpozLang["EnterImageURL"]='Wprowad¼ URL obrazka';
+
+EpozLang["EnterTableRows"]='Wprowad¼ wiersze';
+EpozLang["EnterTableColumns"]='Wprowad¼ kolumny';
+EpozLang["EnterTableBorder"]='Wprowad¼ ramkê';

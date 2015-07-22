@@ -1,0 +1,48 @@
+// Epoz-Language-File: fi (Finnish)
+// petri.savolainen@iki.fi, 2003
+
+EpozLang["Normal"]='Normaali';
+EpozLang["Paragraph"]='Kappale';
+EpozLang["Heading1"]='Otsikko 1';
+EpozLang["Heading2"]='Otsikko 2';
+EpozLang["Heading3"]='Otsikko 3';
+EpozLang["Heading4"]='Otsikko 4';
+EpozLang["Heading5"]='Otsikko 5';
+EpozLang["Heading6"]='Otsikko 6';
+EpozLang["Formatted"]='Muotoiltu';
+
+EpozLang["Bold"]='Lihavoitu';
+EpozLang["Italic"]='Kursivoitu';
+EpozLang["Underline"]='Alleviivattu';
+EpozLang["Strikethrough"]='Yliviivattu';
+
+EpozLang["Subscript"]='Alaindeksi';
+EpozLang["Superscript"]='Yläindeksi';
+
+EpozLang["TextColor"]='Tekstin väri';
+EpozLang["BackColor"]='Taustan väri';
+
+EpozLang["AlignLeft"]='Tasaa vasemmalle';
+EpozLang["Center"]='Keskitä';
+EpozLang["AlignRight"]='Tasaa oikealle';
+
+EpozLang["OrderedList"]='Järjestetty lista';
+EpozLang["UnorderedList"]='Järjestämätön lista';
+EpozLang["Outdent"]='Vähennä sisennystä';
+EpozLang["Indent"]='Kasvata sisennystä';
+
+EpozLang["InsertLink"]='Lisää linkki';
+EpozLang["InsertImage"]='Lisää kuva';
+EpozLang["InsertRule"]='Lisää viiva';
+EpozLang["InsertTable"]='Lisää taulukko';
+EpozLang["Toolbox"]='Työkalupakki';
+
+EpozLang["Undo"]='Peru';
+EpozLang["Redo"]='Tee uudelleen';
+
+EpozLang["EnterLinkURL"]='Anna linkin URL';
+EpozLang["EnterImageURL"]='Anna kuvan URL';
+
+EpozLang["EnterTableRows"]='Anna rivimäärä';
+EpozLang["EnterTableColumns"]='Anna sarakemäärä';
+EpozLang["EnterTableBorder"]='Anna kehyksen määrittely';

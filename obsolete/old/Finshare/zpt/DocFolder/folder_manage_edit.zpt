@@ -1,0 +1,14 @@
+<tal:block metal:use-macro="here/DocBase_manage_edit/macros/page">
+
+    <tal:block metal:fill-slot="description">
+        Change the properties in the form below and click <b>Save changes</b>.
+    </tal:block>
+
+    <tal:block metal:fill-slot="custom_properties">
+        <tr>
+            <th class="edit-header">Maintainer email</th>
+            <td><input type="text" name="maintainer_email" size="50" tal:attributes="value here/maintainer_email"></td>
+        </tr>
+    </tal:block>
+
+</tal:block>

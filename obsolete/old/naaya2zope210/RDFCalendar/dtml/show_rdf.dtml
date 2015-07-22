@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ev="http://purl.org/rss/1.0/modules/event/" xmlns="http://purl.org/rss/1.0/">
+<!-- I should really use rdf:ID instead of rdf:about everywhere,
+     but many RSS consumers are pretty sloppy, so let's play it safe.
+-->
+  <channel rdf:about="&dtml-URL;">
+    <title><dtml-var title_or_id html_quote></title>
+    <link>&dtml-URL1;</link>
+    <items>
+      <rdf:Seq>
+      <dtml-in get_events sort=startdate mapping>
+        <rdf:li rdf:resource="&dtml-URL;#i<dtml-var sequence-index>" />
+      </dtml-in>
+      </rdf:Seq>
+    </items>
+  </channel>
+
+<dtml-in get_events sort=startdate mapping>
+<dtml-let item="_['sequence-item']">
+  <item rdf:about="&dtml-URL;#i<dtml-var sequence-index>">
+    <link><dtml-var link></link>
+    <title><dtml-var title></title>
+    <ev:startdate><dtml-var startdate></ev:startdate>
+    <dtml-if "item.has_key('enddate') and enddate"><ev:enddate><dtml-var enddate></ev:enddate></dtml-if>
+    <dtml-if "item.has_key('description') and description"><dc:description>&dtml-description;</dc:description></dtml-if>
+    <dtml-if "item.has_key('location') and location"><ev:location><dtml-var location></ev:location></dtml-if>
+    <dtml-if "item.has_key('organiser') and organiser"><ev:organizer><dtml-var organiser></ev:organizer></dtml-if>
+    <dtml-if "item.has_key('type') and type"><ev:type><dtml-var type></ev:type></dtml-if>
+  </item>
+</dtml-let>
+</dtml-in>
+</rdf:RDF>

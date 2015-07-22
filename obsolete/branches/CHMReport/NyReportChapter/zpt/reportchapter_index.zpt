@@ -1,0 +1,216 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="this_absolute_url python:here.absolute_url(0); perm_edit_object here/checkPermissionEditObject; submissions here/process_submissions;
+		perm_add_something python:len(submissions)>0; perm_publish_objects here/checkPermissionPublishObjects;
+		logged_in python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
+
+<div class="nav_report" tal:define="navig here/getNavigationInfo; prev python:navig[0]; up python:navig[1]; next python:navig[2]">
+	<div class="nav_report_main"> 
+		<a class="nav_toc" id="nav_toc" tal:attributes="href here/toc" title="Table of contents" i18n:attributes="title"> &nbsp;<span i18n:translate="">Table of contents</span> </a>
+		<tal:block condition="prev">
+			<a class="nav_arrow" id="arr_left" tal:attributes="href prev/absolute_url" title="Previous" i18n:attributes="title"> &nbsp; <span i18n:translate="">Previous</span> </a> 
+		</tal:block>
+		<tal:block condition="not:prev">
+			<span class="nav_arrow" > &nbsp; <span i18n:translate="">Previous</span> </span>
+		</tal:block>
+		<tal:block condition="up">
+			<a class="nav_arrow" id="arr_up" tal:attributes="href up/absolute_url" title="One level up" i18n:attributes="title"> &nbsp; <span i18n:translate="">One level up</span> </a> 
+		</tal:block>
+		<tal:block condition="not:up">
+			<span class="nav_arrow" ><span i18n:translate=""> One level up </span></span> 
+		</tal:block>
+		<tal:block condition="next">
+			<a class="nav_arrow" id="arr_right" tal:attributes="href next/absolute_url" title="Next" i18n:attributes="title"> &nbsp; <span i18n:translate="">Next</span> </a>
+		</tal:block>
+		<tal:block condition="not:next">
+			  <span class="nav_arrow" ><span i18n:translate=""> Next</span></span>
+		</tal:block>
+	</div>
+</div>
+
+<h1 class="report_h1">
+	<span tal:replace="here/title_or_id" />
+	<span class="draft"><span i18n:translate="">draft for review!</span></span>
+</h1>
+
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object">
+	<span id="submission" tal:condition="perm_add_something">
+		<span i18n:translate="" tal:omit-tag="">Submit</span>:
+		<select name="typetoadd"
+			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+			<option value="#" i18n:translate="">Type to add</option>
+			<option tal:repeat="item submissions"
+				tal:attributes="value python:item[0]"
+				tal:content="python:item[1]" i18n:translate="" />
+		</select>
+	</span>
+	<tal:block tal:condition="python:perm_edit_object">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:condition="python:False" tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+		</tal:block>
+		<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+		<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span i18n:translate="">Restrict</span></a>
+	</tal:block>
+</div>
+
+
+<tal:block define="report here/getReport; permission_answer report/is_open_for_comments">
+	<div style="float: right;" tal:condition="logged_in">
+		<div class="comm_but">
+			<tal:block tal:condition="permission_answer">
+				<div class="online_cons" i18n:translate="">On-line consultation </div>
+				<a class="comm_link" href="sectioncomment_add_html" i18n:translate="">Post comments</a>
+			</tal:block>
+			<a tal:condition="here/hasComments" class="comm_link" href="chaptercomments_html" i18n:translate="">View comments</a>
+		</div>
+	</div>
+	
+	<strong tal:condition="not:permission_answer" i18n:translate="">Consultation on the draft report is now closed - thank you for your contribution</strong>
+</tal:block>
+
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+</tal:block>
+
+<tal:block define="objects here/getSections">
+<div class="toc0" tal:condition="objects">
+	<div class="toc">
+		<tal:block metal:use-macro="python:here.report_macro_sec_objecttree_html(objects).macros['objs_sublist']"/>
+	</div>
+</div>
+
+<tal:block condition="not:objects">
+<tal:block condition="logged_in">
+<tal:block define="objects_info here/checkPermissionManageObjects;
+    folders_list python:objects_info[6];
+    objects_list python:objects_info[7];
+    btn_select python:objects_info[0];
+    btn_delete python:objects_info[1];
+    can_operate python:objects_info[5] ">
+
+<script type="text/javascript" tal:condition="btn_select">
+<!--
+var isSelected = false;
+function toggleSelect()
+{   var frm = document.objectItems;
+    var i;
+    if (isSelected == false)
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
+        isSelected = true;}
+    else
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
+        isSelected = false;}}
+
+function fCheckSelection()
+{   var frm = document.objectItems;
+    var i;
+    check = false;
+    for(i=0; i<frm.elements.length; i++)
+        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+        {   check = true; break;}
+    return check;}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fDeleteObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="deleteObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to delete.');}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fRenameObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="renameobject_html";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to rename.');}
+//-->
+</script>
+
+
+<div tal:condition="python:btn_select or btn_delete">
+    <div id="toolbar">
+        <tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span i18n:translate="" tal:omit-tag="">Select all</span></a></tal:block>
+        <tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span i18n:translate="" tal:omit-tag="">Delete</span></a></tal:block>
+        <tal:block tal:condition="python: here.rename_id and btn_delete"><a href="javascript:fRenameObjects();"><span i18n:translate="" tal:omit-tag="">Rename</span></a></tal:block>
+    </div>
+</div>
+
+<form name="objectItems" method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+<tr tal:condition="can_operate">
+    <th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+    <th class="type" style="width: 4%;" i18n:translate="">Type</th>
+    <th class="title-column" i18n:translate="">Title</th>
+    <th class="edit" i18n:translate="">Edit</th>
+</tr>
+<tr tal:repeat="objects objects_list">
+    <tal:block define="del_permission python:objects[0];
+            edit_permission python:objects[1];
+            object python:objects[4]">
+    <tal:block condition="python:object.meta_type != 'Naaya Section Comment'">
+    <td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
+    <td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" /></td>
+    <td class="title-column">
+        <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+        <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+            [<span tal:replace="object/count_comments" />
+            <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+        </tal:block>
+    </td>
+    <td class="edit" tal:condition="can_operate">
+        <a tal:condition="python:edit_permission and not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
+        <tal:block tal:condition="python:edit_permission and object.hasVersion() or not edit_permission" i18n:translate="">n/a</tal:block>
+    </td>
+	</tal:block>
+    </tal:block>
+</tr>
+</table>
+</form>
+
+</tal:block>
+</tal:block>
+<tal:block condition="not:logged_in">
+<strong i18n:translate="">Note: You must login in order to download the report files</strong>
+</tal:block>
+</tal:block>
+
+<div class="nav_art_down">
+	<div class="nav_report" tal:define="navig here/getNavigationInfo; prev python:navig[0]; up python:navig[1]; next python:navig[2]">
+		<div class="nav_report_main"> 
+			<a class="nav_toc" id="nav_toc" tal:attributes="href here/toc" title="Table of contents" i18n:attributes="title"> &nbsp;<span i18n:translate="">Table of contents</span> </a>
+			<tal:block condition="prev">
+				<a class="nav_arrow" id="arr_left" tal:attributes="href prev/absolute_url" title="Previous" i18n:attributes="title"> &nbsp; <span i18n:translate="">Previous</span> </a> 
+			</tal:block>
+			<tal:block condition="not:prev">
+				<span class="nav_arrow" > &nbsp; <span i18n:translate="">Previous</span> </span>
+			</tal:block>
+			<tal:block condition="up">
+				<a class="nav_arrow" id="arr_up" tal:attributes="href up/absolute_url" title="One level up" i18n:attributes="title"> &nbsp; <span i18n:translate="">One level up</span> </a> 
+			</tal:block>
+			<tal:block condition="not:up">
+				<span class="nav_arrow" ><span i18n:translate=""> One level up </span></span> 
+			</tal:block>
+			<tal:block condition="next">
+				<a class="nav_arrow" id="arr_right" tal:attributes="href next/absolute_url" title="Next" i18n:attributes="title"> &nbsp; <span i18n:translate="">Next</span> </a>  
+			</tal:block>
+			<tal:block condition="not:next">
+				<span class="nav_arrow" ><span i18n:translate=""> Next</span></span>
+			</tal:block>
+		</div>
+	</div>
+</div>
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />

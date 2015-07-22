@@ -1,0 +1,34 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">URLs management</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_urls_html" i18n:translate="">Location of portal URLs</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_linkchecker_html" i18n:translate="">URL checker</a></li>
+</ul>
+</div>
+<p i18n:translate="">
+	This page displays the existing remote URLs published in this portal, 
+	properties of either <em>URL</em> items, <em>news</em> items or <em>events</em>,
+	along with the locations where these appear.
+</p>
+<dl tal:repeat="url_struct python:here.getURLProperties().items()">
+	<tal:block tal:define="url python:url_struct[0]; pairs python:url_struct[1]">
+		<dt>
+			<a tal:attributes="href url" tal:content="python:here.utTruncateString(url, 50)" />
+		</dt>
+		<dd tal:repeat="pair pairs">
+			Title: <strong tal:content="python:pair[0].title_or_id()" /><br />
+			Parent(s):
+			<tal:block tal:repeat="item python:here.getAllParents(pair[1])">
+				<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" />
+				<tal:block tal:condition="python:not path('repeat/item/end')">/</tal:block>
+			</tal:block>
+		</dd>
+	</tal:block>
+</dl>
+</tal:block>
+
+</tal:block>

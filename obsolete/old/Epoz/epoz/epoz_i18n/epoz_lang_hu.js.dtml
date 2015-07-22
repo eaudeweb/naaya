@@ -1,0 +1,50 @@
+// Epoz-Language-File: hu (Hungarian)
+// dtamas@pressflex.com, 2003
+
+EpozLang["Normal"]='Norm&aacute;l';
+EpozLang["Paragraph"]='Bekezd&eacute;s';
+EpozLang["Heading1"]='C&iacute;msor 1';
+EpozLang["Heading2"]='C&iacute;msor 2';
+EpozLang["Heading3"]='C&iacute;msor 3';
+EpozLang["Heading4"]='C&iacute;msor 4';
+EpozLang["Heading5"]='C&iacute;msor 5';
+EpozLang["Heading6"]='C&iacute;msor 6';
+EpozLang["Formatted"]='Form&aacute;zott';
+
+EpozLang["Bold"]='F&eacute;lk&ouml;v&eacute;r';
+EpozLang["Italic"]='Kurz&iacute;v';
+EpozLang["Underline"]='Al&aacute;h&uacute;zott';
+EpozLang["Strikethrough"]='&Aacute;th&uacute;zott';
+
+EpozLang["Subscript"]='Als&oacute; index';
+EpozLang["Superscript"]='Fels&ocirc; index';
+
+EpozLang["TextColor"]='Sz&ouml;vegsz&iacute;n';
+EpozLang["BackColor"]='H&aacute;tt&eacute;rsz&iacute;n';
+
+EpozLang["AlignLeft"]='Balra igaz&iacute;tott';
+EpozLang["Center"]='K&ouml;z&eacute;p';
+EpozLang["AlignRight"]='Jobbra igaz&iacute;tott';
+
+EpozLang["OrderedList"]='Sorsz&aacute;mozott lista';
+EpozLang["UnorderedList"]='Felsorol&aacute;s';
+EpozLang["Outdent"]='Kih&uacute;z&aacute;s';
+EpozLang["Indent"]='Beh&uacute;z&aacute;s';
+    
+EpozLang["InsertLink"]='Hivatkoz&aacute;s besz&uacute;r&aacute;sa';
+EpozLang["InsertImage"]='K&eacute;p besz&uacute;r&aacute;sa';
+EpozLang["InsertRule"]='Elv&aacute;laszt&oacute; besz&uacute;r&aacute;sa';
+EpozLang["InsertTable"]='T&aacute;bl&aacute;zat besz&uacute;r&aacute;sa';
+EpozLang["Toolbox"]='Eszk&ouml;zt&aacute;r';
+
+EpozLang["Undo"]='Vissza';
+EpozLang["Redo"]='&Uacute;jra';
+
+EpozLang["EnterLinkURL"]='&Iacute;rja be a hivatkoz&aacute;s URL-j&eacute;t';
+EpozLang["EnterImageURL"]='&Iacute;rja be a k&eacute;p URL-j&eacute;t';
+
+EpozLang["EnterTableRows"]='Sorok sz&aacute;ma';
+EpozLang["EnterTableColumns"]='Oszlopok sz&aacute;ma';
+EpozLang["EnterTableBorder"]='Keretvastags&aacute;g';
+EpozLang["TableWithHead"]='T&aacute;bl&aacute;zat fejl&eacute;ccel';
+EpozLang["TableWithoutHead"]='T&aacute;bl&aacute;zat fejl&eacute;c n&eacute;lk&uuml;l';

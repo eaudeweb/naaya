@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Maltese">
+    <body>
+      <trans-unit approved="1" id="Argentina">
+        <source>Argentina</source>
+        <target>Arġentina</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bolivia">
+        <source>Bolivia</source>
+        <target>Bolivja</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Brazil">
+        <source>Brazil</source>
+        <target>Brażil</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bahamas">
+        <source>Bahamas</source>
+        <target>Baħamas</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Chile">
+        <source>Chile</source>
+        <target>Ċili</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Colombia">
+        <source>Colombia</source>
+        <target>Kolumbja</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ecuador">
+        <source>Ecuador</source>
+        <target>Ekwador</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Falkland_Islands">
+        <source>Falkland Islands</source>
+        <target>Falkland Islands</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="French_Guiana">
+        <source>French Guiana</source>
+        <target>Gujana Franċiża</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="South_Georgia_and_the_South_Sandwich_Islands">
+        <source>South Georgia and the South Sandwich Islands</source>
+        <target>South Georgia and the South Sandwich Islands</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guyana">
+        <source>Guyana</source>
+        <target>Gujana</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Peru">
+        <source>Peru</source>
+        <target>Peru</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Paraguay">
+        <source>Paraguay</source>
+        <target>Paragwaj</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Suriname">
+        <source>Suriname</source>
+        <target>Surinam</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Uruguay">
+        <source>Uruguay</source>
+        <target>Urugwaj</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Venezuela">
+        <source>Venezuela</source>
+        <target>Venezwela</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,7 +1,0 @@
-<configure xmlns='http://namespaces.zope.org/zope'
-           xmlns:naaya="http://namespaces.zope.org/naaya">
-
-  <naaya:call factory=".load_bundles" />
-  <include package=".chm_nl" />
-
-</configure>

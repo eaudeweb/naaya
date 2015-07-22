@@ -1,0 +1,21 @@
+<style type="text/css">
+	#slideshow_pics { width: 480px; height: 480px; }
+	.slideshow img { padding: 15px; border: 1px solid #ccc; background-color: #eee;}
+</style>
+<!-- include Cycle plugin -->
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/NaayaPhotoArchive/jquery.cycle.all.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.slideshow').cycle({
+		fx: 'fade',
+		speed: 700,
+		timeout: 3000
+	});
+});
+</script>
+
+<div class="slideshow">
+	<img tal:attributes="src string:${pic/absolute_url}/view?display=Medium;
+			 width python:pic.width('Medium');
+			 height python:pic.height('Medium');" tal:repeat="pic options/pics"/>
+</div>

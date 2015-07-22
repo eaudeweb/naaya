@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<base tal:attributes="href python: request.get('pageurl',here.absolute_url())+'/'" />
+<meta http-equiv="Content-Type"
+          tal:define="dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=%s' % request.get('charset','utf-8'))"
+          tal:attributes="content python: 'text/html;; charset=%s' % request.get('charset','utf-8')" />
+<style media="all" type="text/css">
+<!--
+ a[name] {
+     border:1px solid grey;
+     background: lightgrey url(misc_/Epoz/epoz_button_anchor.gif) -2px -3px no-repeat;
+     padding: 1px 0px 1px 20px;
+     margin: 5px;
+ }
+
+ a[name]:after {
+     content: attr(name);
+ }
+
+.moretag {
+   height: 16px;
+   border-bottom: 1px solid #ddd;
+   background: url(misc_/Epoz/epoz_button_readmore.gif) no-repeat top right;
+   display: block !important;
+}
+
+-->
+</style>
+<style tal:condition="python: request.get('css')" type="text/css" media="all"
+          tal:content="string:@import url(${request/css});"></style>
+<style tal:condition="python: request.get('customcss')" type="text/css" media="all"
+          tal:content="string:@import url(${request/customcss});"></style>
+
+<script language="javascript" type="text/javascript" src="misc_/Epoz/epoz_script_detect.js"></script>
+<script language="javascript" type="text/javascript" src="misc_/Epoz/epoz_iframe_trigger.js"></script>
+</head>
+<body class="visualFontSizeCorrection" contentEditable="true" style="height:100%">
+</body>
+</html>
