@@ -119,6 +119,8 @@ class NyFSContainer(NyContainer):
     def getContentType(self, sid=None):
         # Child content-type
         attached_file = self._get_attached_file(sid)
+        #import pdb; pdb.set_trace()
+        print "Attached file", type(attached_file)
         if not attached_file:
             return ''
         return attached_file.getContentType()

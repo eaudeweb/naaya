@@ -326,11 +326,7 @@
                 the_map.setCenter(point);    //, map_zoom)
                 the_map.setZoom(map_zoom);
             } else {
-                if (map_zoom) {
-                    go_to_address_with_zoom(config.initial_address, map_zoom);
-                } else {
-                    go_to_address(config.initial_address);
-                }
+                go_to_address_with_zoom(config.initial_address, map_zoom);
             }
 
             return {

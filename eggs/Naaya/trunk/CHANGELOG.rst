@@ -1,10 +1,8 @@
-3.4.0 (2014-10-09)
+3.4.0 (2014-10-08)
 -------------------
 * Feature: merge with the no-ext-files branch that implements
   blob files for storage of files
   [tiberich #3929]
-* Bug fix: fix bug with zooming of google engine portal map
-  [tiberich]
 
 3.3.67 (2014-10-06)
 -------------------
