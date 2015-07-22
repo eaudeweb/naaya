@@ -1,3 +1,0 @@
-include *.rst *.txt
-recursive-include Products *
-global-exclude *py[co]

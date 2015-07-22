@@ -1,6 +1,0 @@
-<tal:block metal:define-macro="portlet">
-<div class="right_link_portlet">
-	<tal:block metal:define-slot="portlet_title"><div class="portlet-title">PORTLET TITLE</div></tal:block>
-	<tal:block metal:define-slot="portlet_content"><div class="content">PORTLET CONTENT</div></tal:block>
-</div>
-</tal:block>

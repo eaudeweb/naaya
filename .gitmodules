@@ -2,3 +2,7 @@
 	path = eggs/bundles
 	url = git@github.com:eaudeweb/naaya-bundles
     branch = master
+[submodule "eggs/Products.CHM2BE"]
+	path = eggs/Products.CHM2BE
+	url = git@github.com:eaudeweb/naaya.Products.CHM2BE.git
+    branch = master
