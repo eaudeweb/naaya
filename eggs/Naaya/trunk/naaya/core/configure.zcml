@@ -3,6 +3,8 @@
     xmlns:naaya="http://namespaces.zope.org/naaya"
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
+    <include file="async.zcml" />
+
     <adapter factory="naaya.core.portlets.MainSectionsPortlet"
              name="portlet_maincategories" />
 

@@ -482,13 +482,21 @@ class NotificationTool(Folder):
         address. The values should be dictionaries suitable to be passed
         as kwargs (options) to the template.
         """
+
+        if not hasattr(self.REQUEST, 'URL'):
+            # this is bulk import
+            return
+
         portal = self.getSite()
         email_tool = portal.getEmailTool()
         addr_from = email_tool.get_addr_from()
         for addr_to, kwargs in messages_by_email.iteritems():
             translate = self.portal_i18n.get_translation
             kwargs.update({'portal': portal, '_translate': translate})
-            mail_data = template(**kwargs)
+            try:
+                mail_data = template(**kwargs)
+            except:
+                continue
             notif_logger.info('.. sending notification to %r', addr_to)
             utils.send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])

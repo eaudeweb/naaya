@@ -12,6 +12,7 @@ class CSVImportEvent(object):
         self.context = context
         self.ids = ids
 
+
 class ZipImportEvent(object):
     """Event triggered after a successful zip upload
     """
