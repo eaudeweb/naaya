@@ -12,3 +12,6 @@
     branch = master
 [submodule "Products.NaayaContent.NyConsultation"]
 	branch = master
+[submodule "eggs/Products.NaayaContent.NyConsultation"]
+	path = eggs/Products.NaayaContent.NyConsultation
+	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyConsultation.git
