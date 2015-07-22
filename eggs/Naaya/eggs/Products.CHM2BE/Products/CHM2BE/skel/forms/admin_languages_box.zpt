@@ -1,7 +1,0 @@
-<tal:block repeat="item here/gl_get_languages_map">
-	<form action="gl_changeLanguage" method="post">
-		<input type="hidden" tal:attributes="value item/id;" name="old_lang" />
-		<input type="submit" tal:attributes="value item/id; class string:langButton ${item/id}" />
-	</form>
-	<span>|</span>
-</tal:block>
