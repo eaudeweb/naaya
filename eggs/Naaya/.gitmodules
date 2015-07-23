@@ -1,32 +1,28 @@
 [submodule "eggs/bundles"]
 	path = eggs/bundles
 	url = git@github.com:eaudeweb/naaya-bundles
-    branch = master
+    	branch = master
 [submodule "eggs/Products.CHM2BE"]
 	path = eggs/Products.CHM2BE
 	url = git@github.com:eaudeweb/naaya.Products.CHM2BE.git
-    branch = master
+    	branch = master
 [submodule "eggs/Products.NaayaContent.NyBlogEntry"]
 	path = eggs/Products.NaayaContent.NyBlogEntry
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyBlogEntry.git
-    branch = master
-[submodule "Products.NaayaContent.NyConsultation"]
-	branch = master
+    	branch = master
 [submodule "eggs/Products.NaayaContent.NyConsultation"]
 	path = eggs/Products.NaayaContent.NyConsultation
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyConsultation.git
-[submodule "Products.NaayaContent.NyPublication"]
 	branch = master
 [submodule "eggs/Products.NaayaContent.NyPublication"]
 	path = eggs/Products.NaayaContent.NyPublication
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyPublication.git
+	branch = master
 [submodule "eggs/Products.NaayaContent.NySimpleConsultation"]
 	path = eggs/Products.NaayaContent.NySimpleConsultation
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NySimpleConsultation.git
-[submodule "Products.NaayaContent.NySimpleConsultation"]
 	branch = master
 [submodule "eggs/Products.NaayaContent.NyStudy"]
 	path = eggs/Products.NaayaContent.NyStudy
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyStudy.git
-[submodule "Products.NaayaContent.NyStudy"]
 	branch = master
