@@ -1,4 +1,7 @@
-1.1.17 (unreleased)
+1.1.18 (unreleased)
+------------------
+
+1.1.17 (2015-07-28)
 ------------------
 * allow redirection to glossary folder after element add [dumitval]
 
