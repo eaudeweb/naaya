@@ -794,7 +794,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             parent.manage_addGlossaryElement(id, entry_title, entry_subjects,
                                              entry_source, entry_contributor)
         if REQUEST:
-            return REQUEST.RESPONSE.redirect('index_html')
+            if REQUEST.get('redirect_to_folder'):
+                return REQUEST.RESPONSE.redirect(parent.absolute_url())
+            else:
+                return REQUEST.RESPONSE.redirect('index_html')
 
     def checkPermissionManageGlossary(self):
         return getSecurityManager().checkPermission(
