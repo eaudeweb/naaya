@@ -4,6 +4,10 @@
 
 This repository contains links to other git repositories, as described in `.gitmodules`.
 
+To clone the entire repository plus linked submodules, use:
+
+    git clone --recursive git@github.com:eaudeweb/naaya.git
+    
 To update code to latest version, use:
 
     git submodule update --remote
