@@ -1,5 +1,6 @@
 1.1.17 (unreleased)
 ------------------
+* allow redirection to glossary folder after element add [dumitval]
 
 1.1.16 (2015-06-22)
 ------------------
