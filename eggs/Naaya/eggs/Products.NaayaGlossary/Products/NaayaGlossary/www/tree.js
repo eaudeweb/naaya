@@ -28,6 +28,17 @@ function edit_link(self){
     );
 }
 
+function delete_link(self){
+    var link = $(self.find('a')[0]);
+    var pathname = window.location.pathname.substring(1)//remove first slash
+    var uri = '/' + pathname + '/del_element?item=' + self.attr("data-path");
+    link.after($('<a>')
+        .attr('href', uri)
+        .html('delete')
+        .addClass("button edit-link")
+    );
+}
+
 function get_children(TREE_OBJ, NODE) {
     var all_children = [];
     var node_children = TREE_OBJ.children(NODE);
@@ -63,6 +74,7 @@ $('#jstree_container').tree({
                     edit_link(self);
                     add_link(self);
                     self.find('li').each(function(){//Elements
+                        delete_link($(this));
                         edit_link($(this));
                     });
                 });

@@ -739,6 +739,17 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY,
                               'updateGlossaryProperties')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'del_element')
+
+    def del_element(self, REQUEST):
+        """ delete a glossary element """
+        folder_id, element_id = REQUEST.get('item').split('/')
+        folder = getattr(self, folder_id)
+        if element_id:
+            folder.manage_delObjects(element_id)
+            self.setSessionInfoTrans('Element successfully deleted')
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
     def updateGlossaryProperties(self, title='', approved='',
                                  parent_anchors='', REQUEST=None):
         """ """
