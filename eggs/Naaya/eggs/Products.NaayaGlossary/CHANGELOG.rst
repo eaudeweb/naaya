@@ -1,4 +1,7 @@
-1.1.18 (unreleased)
+1.1.19 (unreleased)
+------------------
+
+1.1.18 (2015-07-29)
 ------------------
 * add option to delete glossary element [dumitval]
 
