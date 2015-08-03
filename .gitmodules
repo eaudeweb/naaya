@@ -54,3 +54,7 @@
 	path = bundles/NaayaBundles-CHMBE-training
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMBE-training.git
 	branch = master
+[submodule "bundles/NaayaBundles-CHMBE"]
+	path = bundles/NaayaBundles-CHMBE
+	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMBE.git
+	branch = master
