@@ -14,6 +14,10 @@ To update code to latest version, use:
     
 To push changes commited inside submodule folders, use:
 
+    # inside submodule folder
+    git push
+    
+    # inside main folder
     git push --recurse-submodules=check
     
 For a full reference of the git submodules feature, please check: https://git-scm.com/book/en/v2/Git-Tools-Submodules
