@@ -1,1 +1,0 @@
-from semnews_item import NySemNews

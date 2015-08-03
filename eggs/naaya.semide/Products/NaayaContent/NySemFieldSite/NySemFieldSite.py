@@ -1,1 +1,0 @@
-from naaya.content.semide.fieldsite.semfieldsite_item import NySemFieldSite

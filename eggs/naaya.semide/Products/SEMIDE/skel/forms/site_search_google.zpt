@@ -1,9 +1,0 @@
-<metal:block use-macro="here/standard_template_macro">
-<metal:block fill-slot="body">
-<h1 i18n:translate="">Google search</h1>
-<p i18n:translate="">This search uses the Google engine to retrieve results from this website. <br i18n:name="br"/>
-Also, you can use the internal search <a tal:attributes="href string: ${here/absolute_url}/search_html" tal:content="string: ${here/absolute_url}/search_html" i18n:name="internal_search"></a>
-</p>
-<script src="http://www.gmodules.com/ig/ifr?url=http://www.google.com/cse/api/013048354574988497156/cse/l8vwz47mr7a/gadget&amp;synd=open&amp;w=320&amp;h=75&amp;title=Semide+Google+Search&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"></script>
-</metal:block>
-</metal:block>

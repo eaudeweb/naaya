@@ -90,3 +90,7 @@
 	path = eggs/naaya.sql
 	url = git@github.com:eaudeweb/naaya.sql.git
 	branch = master
+[submodule "eggs/naaya.semide"]
+	path = eggs/naaya.semide
+	url = git@github.com:eaudeweb/naaya.semide.git
+	branch = master

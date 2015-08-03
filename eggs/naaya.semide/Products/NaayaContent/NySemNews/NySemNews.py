@@ -1,1 +1,0 @@
-from naaya.content.semide.news.semnews_item import NySemNews

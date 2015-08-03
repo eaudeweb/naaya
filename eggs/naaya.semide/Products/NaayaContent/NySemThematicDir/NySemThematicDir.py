@@ -1,1 +1,0 @@
-from naaya.content.semide.thematicdir.semthematicdir_item import NySemThematicDir
