@@ -82,3 +82,7 @@
 	branch = master
 	path = eggs/naaya.wise
 	url = git@github.com:eaudeweb/naaya.wise.git
+[submodule "eggs/naaya.updater"]
+	path = eggs/naaya.updater
+	url = git@github.com:eaudeweb/naaya.updater.git
+	branch = master
