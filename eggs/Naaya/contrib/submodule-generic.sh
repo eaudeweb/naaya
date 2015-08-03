@@ -1,9 +1,9 @@
 #!/bin/bash
 
 NAME=$1
-GIT_REPO=naaya.buildout.$1.git
-REPO_FOLDER=buildout
-SVN_FOLDER=buildout
+GIT_REPO=naaya.bundles.$1.git
+REPO_FOLDER=bundles
+SVN_FOLDER=trunk/eggs
 REPO_PATH=/Users/alex/Projects/bun3/
 
 echo "Please ensure http://github.com/eaudeweb/$GIT_REPO exists, prior to running this script"
