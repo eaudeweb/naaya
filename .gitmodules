@@ -26,3 +26,5 @@
 	path = eggs/Products.NaayaContent.NyStudy
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyStudy.git
 	branch = master
+[submodule "eggs/chm-be"]
+	branch = master
