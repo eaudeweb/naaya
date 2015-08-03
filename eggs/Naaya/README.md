@@ -10,7 +10,7 @@ To clone the entire repository plus linked submodules, use:
     
 To update code to latest version, use:
 
-    git submodule update --remote
+    git submodule update --remote --merge/--rebase
     
 To push changes commited inside submodule folders, use:
 
