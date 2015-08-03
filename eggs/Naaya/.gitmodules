@@ -48,3 +48,5 @@
 	branch = master
 [submodule "bundles/NaayaBundles-CHMBE-cop10"]
 	branch = master
+	path = bundles/NaayaBundles-CHMBE-cop10
+	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMBE-cop10.git
