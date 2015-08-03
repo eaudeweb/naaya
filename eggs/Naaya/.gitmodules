@@ -41,3 +41,8 @@
 	url = git@github.com:eaudeweb/naaya.buildout.destinet.git
 [submodule "eggs/destinet"]
 	branch = master
+[submodule "buildout/eionet"]
+	path = buildout/eionet
+	url = git@github.com:eaudeweb/naaya.buildout.eionet.git
+[submodule "eggs/eionet"]
+	branch = master
