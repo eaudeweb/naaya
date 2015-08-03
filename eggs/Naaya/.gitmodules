@@ -86,3 +86,7 @@
 	path = eggs/naaya.updater
 	url = git@github.com:eaudeweb/naaya.updater.git
 	branch = master
+[submodule "eggs/naaya.sql"]
+	path = eggs/naaya.sql
+	url = git@github.com:eaudeweb/naaya.sql.git
+	branch = master

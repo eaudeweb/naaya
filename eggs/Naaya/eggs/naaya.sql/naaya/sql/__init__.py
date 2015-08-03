@@ -1,1 +1,0 @@
-from naayasql import *
