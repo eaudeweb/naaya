@@ -62,3 +62,7 @@
 	path = bundles/NaayaBundles-CHMEU
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMEU.git
 	branch = master
+[submodule "bundles/NaayaBundles-DESTINET"]
+	path = bundles/NaayaBundles-DESTINET
+	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-DESTINET.git
+	branch = master
