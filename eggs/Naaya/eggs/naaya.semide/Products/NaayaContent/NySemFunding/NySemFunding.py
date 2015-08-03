@@ -1,1 +1,0 @@
-from naaya.content.semide.funding.semfunding_item import NySemFunding

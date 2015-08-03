@@ -1,1 +1,0 @@
-from naaya.content.semide.publication.NySemPublication import NySemPublication

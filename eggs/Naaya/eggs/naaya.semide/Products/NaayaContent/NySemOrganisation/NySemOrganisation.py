@@ -1,1 +1,0 @@
-from naaya.content.semide.organisation.semorganisation_item import NySemOrganisation

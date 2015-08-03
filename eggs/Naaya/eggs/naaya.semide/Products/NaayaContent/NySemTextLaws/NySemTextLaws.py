@@ -1,1 +1,0 @@
-from naaya.content.semide.textlaws.semtextlaws_item import NySemTextLaws

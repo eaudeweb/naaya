@@ -1,7 +1,0 @@
-
-This is an automatically generated message to inform you that an account has been created
-for you on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@).
-
-Click the following link to acces the eFlash administration - @@EFLASH_URL@@.
-
-eFlash notification will be send on @@NOTIF_DATE@@.
