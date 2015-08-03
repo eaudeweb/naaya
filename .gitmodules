@@ -74,3 +74,7 @@
 	path = bundles/NaayaBundles-PBE
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-PBE.git
 	branch = master
+[submodule "bundles/NaayaBundles-SINAnet"]
+	path = bundles/NaayaBundles-SINAnet
+	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-SINAnet.git
+	branch = master
