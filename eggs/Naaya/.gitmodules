@@ -26,28 +26,28 @@
 	path = eggs/Products.NaayaContent.NyStudy
 	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyStudy.git
 	branch = master
-[submodule "eggs/chm-be"]
-	branch = master
 [submodule "buildout/chm-be"]
 	path = buildout/chm-be
 	url = git@github.com:eaudeweb/naaya.buildout.chm-be.git
+	branch = master
 [submodule "buildout/chm-eu"]
 	path = buildout/chm-eu
 	url = git@github.com:eaudeweb/naaya.buildout.chm-eu.git
-[submodule "eggs/chm-eu"]
 	branch = master
 [submodule "buildout/destinet"]
 	path = buildout/destinet
 	url = git@github.com:eaudeweb/naaya.buildout.destinet.git
-[submodule "eggs/destinet"]
 	branch = master
 [submodule "buildout/eionet"]
 	path = buildout/eionet
 	url = git@github.com:eaudeweb/naaya.buildout.eionet.git
-[submodule "eggs/eionet"]
 	branch = master
 [submodule "buildout/enisa-privacy-forum"]
 	path = buildout/enisa-privacy-forum
 	url = git@github.com:eaudeweb/naaya.buildout.enisa-privacy-forum.git
-[submodule "eggs/enisa-privacy-forum"]
+	branch = master
+[submodule "buildout/groupware"]
+	path = buildout/groupware
+	url = git@github.com:eaudeweb/naaya.buildout.groupware.git
+[submodule "eggs/groupware"]
 	branch = master
