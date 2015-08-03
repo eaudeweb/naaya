@@ -100,6 +100,3 @@
 	branch = master
 [submodule "eggs/naaya.photoarchive"]
 	branch = master
-[submodule "contrib/naaya.wise"]
-	path = contrib/naaya.wise
-	url = git@github.com:naaya.wise.git
