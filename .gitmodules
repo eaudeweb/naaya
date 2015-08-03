@@ -78,3 +78,5 @@
 	path = bundles/NaayaBundles-SINAnet
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-SINAnet.git
 	branch = master
+[submodule "eggs/naaya.wise"]
+	branch = master

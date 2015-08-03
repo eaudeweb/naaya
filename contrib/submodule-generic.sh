@@ -1,8 +1,8 @@
 #!/bin/bash
 
 NAME=$1
-GIT_REPO=naaya.bundles.$1.git
-REPO_FOLDER=bundles
+GIT_REPO=$1.git
+REPO_FOLDER=eggs
 SVN_FOLDER=trunk/eggs
 REPO_PATH=/Users/alex/Projects/bun3/
 
