@@ -70,3 +70,7 @@
 	path = bundles/NaayaBundles-Forum
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-Forum.git
 	branch = master
+[submodule "bundles/NaayaBundles-PBE"]
+	path = bundles/NaayaBundles-PBE
+	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-PBE.git
+	branch = master
