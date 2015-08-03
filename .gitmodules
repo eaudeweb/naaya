@@ -46,3 +46,5 @@
 	path = buildout/groupware
 	url = git@github.com:eaudeweb/naaya.buildout.groupware.git
 	branch = master
+[submodule "bundles/NaayaBundles-CHMBE-cop10"]
+	branch = master
