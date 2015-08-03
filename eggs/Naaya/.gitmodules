@@ -80,3 +80,5 @@
 	branch = master
 [submodule "eggs/naaya.wise"]
 	branch = master
+	path = eggs/naaya.wise
+	url = git@github.com:eaudeweb/naaya.wise.git
