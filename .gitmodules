@@ -94,3 +94,7 @@
 	path = eggs/naaya.semide
 	url = git@github.com:eaudeweb/naaya.semide.git
 	branch = master
+[submodule "eggs/naaya.selenium"]
+	path = eggs/naaya.selenium
+	url = git@github.com:eaudeweb/naaya.selenium.git
+	branch = master
