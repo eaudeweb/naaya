@@ -31,3 +31,8 @@
 [submodule "buildout/chm-be"]
 	path = buildout/chm-be
 	url = git@github.com:eaudeweb/naaya.buildout.chm-be.git
+[submodule "buildout/chm-eu"]
+	path = buildout/chm-eu
+	url = git@github.com:eaudeweb/naaya.buildout.chm-eu.git
+[submodule "eggs/chm-eu"]
+	branch = master
