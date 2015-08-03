@@ -28,3 +28,6 @@
 	branch = master
 [submodule "eggs/chm-be"]
 	branch = master
+[submodule "buildout/chm-be"]
+	path = buildout/chm-be
+	url = git@github.com:eaudeweb/naaya.buildout.chm-be.git
