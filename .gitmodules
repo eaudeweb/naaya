@@ -1,5 +1,5 @@
 [submodule "bundles"]
-	path = eggs/bundles
+	path = bundles
 	url = git@github.com:eaudeweb/naaya-bundles
     	branch = master
 [submodule "eggs/Products.CHM2BE"]
