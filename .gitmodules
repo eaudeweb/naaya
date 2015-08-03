@@ -49,5 +49,4 @@
 [submodule "buildout/groupware"]
 	path = buildout/groupware
 	url = git@github.com:eaudeweb/naaya.buildout.groupware.git
-[submodule "eggs/groupware"]
 	branch = master
