@@ -234,3 +234,7 @@
 	path = eggs/ispraforum
 	url = git@github.com:eaudeweb/naaya.ispraforum.git
 	branch = master
+[submodule "eggs/naaya-survey"]
+	path = eggs/naaya-survey
+	url = git@github.com:eaudeweb/naaya.naaya-survey.git
+	branch = master
