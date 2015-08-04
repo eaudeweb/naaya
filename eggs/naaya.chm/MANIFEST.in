@@ -1,4 +1,0 @@
-include *.rst
-recursive-include extra *
-recursive-include Products *
-global-exclude *py[co]
