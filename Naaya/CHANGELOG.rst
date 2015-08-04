@@ -1,3 +1,6 @@
+4.0.7 (unreleased)
+-------------------
+
 4.0.6 (2015-08-04)
 -------------------
 * Bug fix: fix sending emails on non-EEA websites
