@@ -206,3 +206,7 @@
 	path = eggs/Products.OMI
 	url = git@github.com:eaudeweb/naaya.Products.OMI.git
 	branch = master
+[submodule "eggs/Products.OracleDA"]
+	path = eggs/Products.OracleDA
+	url = git@github.com:eaudeweb/naaya.Products.OracleDA.git
+	branch = master
