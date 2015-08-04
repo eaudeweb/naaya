@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=$1
-GIT_REPO=naaya.$1.git
+GIT_REPO=$1.git
 REPO_FOLDER=eggs
 SVN_FOLDER=trunk/eggs
 REPO_PATH=/Users/alex/Projects/bun3/
@@ -12,7 +12,7 @@ echo "Source clone..."
 git svn clone https://svn.eionet.europa.eu/repositories/Naaya/$SVN_FOLDER/$NAME -A authors-transform.txt 
 cd $NAME
 git remote add origin git@github.com:eaudeweb/$GIT_REPO 
-git push -u origin master
+git push --force -u origin master
 
 echo "Submodule..."
 cd $REPO_PATH/$REPO_FOLDER

@@ -238,3 +238,7 @@
 	path = eggs/naaya-survey
 	url = git@github.com:eaudeweb/naaya.naaya-survey.git
 	branch = master
+[submodule "eggs/naaya.cache"]
+	path = eggs/naaya.cache
+	url = git@github.com:eaudeweb/naaya.cache.git
+	branch = master
