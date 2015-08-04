@@ -1,4 +1,0 @@
-include *.rst
-recursive-include naaya *
-recursive-include extra *
-global-exclude *py[co]
