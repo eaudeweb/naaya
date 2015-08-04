@@ -158,3 +158,7 @@
 	path = eggs/naaya.content.municipality
 	url = git@github.com:eaudeweb/naaya.content.municipality.git
 	branch = master
+[submodule "eggs/naaya.content.meeting"]
+	path = eggs/naaya.content.meeting
+	url = git@github.com:eaudeweb/naaya.content.meeting.git
+	branch = master

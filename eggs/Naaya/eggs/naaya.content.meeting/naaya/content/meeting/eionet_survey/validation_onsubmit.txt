@@ -1,8 +1,0 @@
-if datamodel['w_8.1-ideas-further-improving-eionet-workshops-address-additional-topics'] == 0 and datamodel['w_if-yes-please-specify'] == '':
-    errors.append(("You answered that you have ideas for further improvement"
-                    "of the Eionet workshops (question 8.1). Please specify."))
-if datamodel['w_8.2-do-you-consider-communication-between-eea-and-nrcs-between-workshops'] == 1 and datamodel['w_if-no-please-provide-suggestions'] == '':
-    errors.append(("You found the communication between EEA and NRCs "
-                   "insufficient (question 8.2). "
-                    "Please provide suggestions for communication improvement."))
-
