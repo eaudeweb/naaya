@@ -1,6 +1,0 @@
-<subject>New application - <tal:block replace="options/username"/></subject>
-<body_text>This is an automated email to inform you that user <tal:block replace="options/username"/> (<tal:block replace="options/userid"/>) has submitted 
-an interest group application. You can review and approve or reject the application at <tal:block replace="options/appurl"/>
-
-A listing of all the applications is available at <tal:block replace="options/basketurl"/>
-</body_text>
