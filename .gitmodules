@@ -116,3 +116,5 @@
 	path = eggs/naaya.i18n
 	url = git@github.com:eaudeweb/naaya.i18n.git
 	branch = master
+[submodule "eggs/naaya.gwhelp"]
+	branch = master
