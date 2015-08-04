@@ -198,3 +198,7 @@
 	path = eggs/Products.NaayaThesaurus
 	url = git@github.com:eaudeweb/naaya.Products.NaayaThesaurus.git
 	branch = master
+[submodule "eggs/Products.NotificationList"]
+	path = eggs/Products.NotificationList
+	url = git@github.com:eaudeweb/naaya.Products.NotificationList.git
+	branch = master
