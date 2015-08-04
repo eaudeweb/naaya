@@ -226,3 +226,7 @@
 	path = eggs/edw.productsinfo
 	url = git@github.com:eaudeweb/naaya.edw.productsinfo.git
 	branch = master
+[submodule "eggs/eea.gisc-gnaccess"]
+	path = eggs/eea.gisc-gnaccess
+	url = git@github.com:eaudeweb/naaya.eea.gisc-gnaccess.git
+	branch = master
