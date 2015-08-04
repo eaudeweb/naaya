@@ -18,6 +18,6 @@ To push changes commited inside submodule folders, use:
     git push
     
     # inside main folder
-    git push --recurse-submodules=check
+    git push --recurse-submodules=on-demand
     
 For a full reference of the git submodules feature, please check: https://git-scm.com/book/en/v2/Git-Tools-Submodules
