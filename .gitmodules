@@ -178,3 +178,7 @@
 	path = eggs/Products.NaayaGlossary
 	url = git@github.com:eaudeweb/naaya.Products.NaayaGlossary.git
 	branch = master
+[submodule "eggs/Products.NaayaLinkChecker"]
+	path = eggs/Products.NaayaLinkChecker
+	url = git@github.com:eaudeweb/naaya.Products.NaayaLinkChecker.git
+	branch = master
