@@ -166,3 +166,7 @@
 	path = eggs/Products.CountryProfile
 	url = git@github.com:eaudeweb/naaya.Products.CountryProfile.git
 	branch = master
+[submodule "eggs/Products.NaayaCalendar"]
+	path = eggs/Products.NaayaCalendar
+	url = git@github.com:eaudeweb/naaya.Products.NaayaCalendar.git
+	branch = master
