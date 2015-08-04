@@ -130,3 +130,7 @@
 	path = eggs/naaya.forum-publish
 	url = git@github.com:eaudeweb/naaya.forum-publish.git
 	branch = master
+[submodule "eggs/naaya.flowplayer"]
+	path = eggs/naaya.flowplayer
+	url = git@github.com:eaudeweb/naaya.flowplayer.git
+	branch = master
