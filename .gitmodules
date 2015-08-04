@@ -122,3 +122,7 @@
 	path = eggs/naaya.gwapplications
 	url = git@github.com:eaudeweb/naaya.gwapplications.git
 	branch = master
+[submodule "eggs/naaya.groupware"]
+	path = eggs/naaya.groupware
+	url = git@github.com:eaudeweb/naaya.groupware.git
+	branch = master
