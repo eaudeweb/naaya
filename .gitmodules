@@ -100,3 +100,7 @@
 	branch = master
 [submodule "eggs/naaya.photoarchive"]
 	branch = master
+[submodule "eggs/naaya.observatory"]
+	path = eggs/naaya.observatory
+	url = git@github.com:eaudeweb/naaya.observatory.git
+	branch = master
