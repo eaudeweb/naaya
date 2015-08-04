@@ -138,3 +138,7 @@
 	path = eggs/naaya.fake_envirowindows
 	url = git@github.com:eaudeweb/naaya.fake_envirowindows.git
 	branch = master
+[submodule "eggs/naaya.ew-aoa-library"]
+	path = eggs/naaya.ew-aoa-library
+	url = git@github.com:eaudeweb/naaya.ew-aoa-library.git
+	branch = master
