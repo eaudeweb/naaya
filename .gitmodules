@@ -146,3 +146,7 @@
 	path = eggs/naaya.envirowindows
 	url = git@github.com:eaudeweb/naaya.envirowindows.git
 	branch = master
+[submodule "eggs/naaya.content.youtube"]
+	path = eggs/naaya.content.youtube
+	url = git@github.com:eaudeweb/naaya.content.youtube.git
+	branch = master
