@@ -1,3 +1,0 @@
-include *.txt *.rst
-recursive-include ispraforum *
-global-exclude *py[co]

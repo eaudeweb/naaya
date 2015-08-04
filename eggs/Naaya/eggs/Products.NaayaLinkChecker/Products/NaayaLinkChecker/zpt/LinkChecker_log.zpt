@@ -1,6 +1,0 @@
-<span tal:replace="structure here/manage_page_header" tal:omit-tag="" />
-<span tal:replace="structure here/manage_tabs" tal:omit-tag="" />
-
-<span tal:replace="structure here/view_log" tal:omit-tag="" />
-
-<span tal:replace="structure here/manage_page_footer" tal:omit-tag="" />

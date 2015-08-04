@@ -1,6 +1,0 @@
-REQUIREMENTS
-------------
-
-The File widget needs the ExtFile product from
-https://svn.eionet.europa.eu/repositories/Zope/bundles/SEMIDE/third-party/ExtFile
-which has some enhancements over the original; revision 10168 is recommended.

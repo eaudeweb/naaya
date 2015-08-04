@@ -1,9 +1,0 @@
-<tal:block metal:use-macro="options/macro">
-
-<tal:block metal:fill-slot="portlet_title">
-	<a tal:attributes="href string:${here/getSitePath}/submit_site" i18n:translate="">Submit your site</a>
-</tal:block>
-
-<tal:block metal:fill-slot="portlet_content"></tal:block>
-
-</tal:block>

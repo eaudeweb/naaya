@@ -1,3 +1,0 @@
-include *.txt
-recursive-include chm *
-global-exclude *py[co]

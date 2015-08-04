@@ -1,6 +1,0 @@
-<metal:block use-macro="here/standard_template_macro">
-  <metal:block fill-slot="body">
-    <h1>Import files and folders from CIRCA - results</h1>
-    <code><pre tal:content="structure options/report"></pre></code>
-  </metal:block>
-</metal:block>

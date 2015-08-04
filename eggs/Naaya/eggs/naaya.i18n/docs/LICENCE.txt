@@ -1,8 +1,0 @@
-
-Used code or concepts from Localizer 1.2.4
-------------------------------------------
-
- * languages.txt
- * LocalPropertyManager concepts like storing in _local_properties[_metadata]
- * Message Catalog concept of first indexing by message id, then by language
- * portal_tool.get_namespace and zpt/messages.dtml

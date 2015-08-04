@@ -1,8 +1,0 @@
-<configure xmlns="http://namespaces.zope.org/zope">
-
-  <subscriber
-    handler=".patch_style.patch_style_for_new_site"
-    for="naaya.gwapplications.application_item.IApplicationApproved"
-    />
-
-</configure>

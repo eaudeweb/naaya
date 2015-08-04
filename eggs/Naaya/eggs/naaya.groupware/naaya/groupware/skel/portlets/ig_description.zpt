@@ -1,8 +1,0 @@
-<div style="font: bold; border: 1px solid #346d9f; margin: 0.5em 1em 2em 0.5em; background-color: #dee6ff; padding: 0.3em;">
-	<p>The main sections of the Interest Group are:</p>
-	<ul>
-		<li>the <a tal:attributes="href string:${here/getSitePath}/library">Library</a> containing the uploaded documents</li>
-		<li>the <a tal:attributes="href string:${here/getSitePath}/about">About</a>, which contains general information about the Interest Group</li>
-		<li>the <a tal:attributes="href string:${here/getSitePath}/member_search">Member search</a> where you can find other members of the Interest Group</li>
-	</ul>
-</div>
