@@ -12,7 +12,7 @@ echo "Source clone..."
 git svn clone https://svn.eionet.europa.eu/repositories/Naaya/$SVN_FOLDER/$NAME -A authors-transform.txt 
 cd $NAME
 git remote add origin git@github.com:eaudeweb/$GIT_REPO 
-git push -u origin master
+git push --force -u origin master
 
 echo "Submodule..."
 cd $REPO_PATH/$REPO_FOLDER

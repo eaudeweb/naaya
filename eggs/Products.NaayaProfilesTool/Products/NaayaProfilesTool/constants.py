@@ -1,5 +1,0 @@
-ID_PROFILESTOOL = 'portal_profiles'
-TITLE_PROFILESTOOL = 'Portal profiles'
-METATYPE_PROFILESTOOL = 'Naaya Profiles Tool'
-METATYPE_PROFILE = 'Naaya Profile'
-METATYPE_PROFILESHEET = 'Naaya Profile Sheet'

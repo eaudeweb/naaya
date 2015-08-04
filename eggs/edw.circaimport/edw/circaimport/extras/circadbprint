@@ -1,5 +1,0 @@
-#!/bin/sh
-PERL5LIB="/opt/circa21/lib/perl5/5.6.1:/opt/circa21/lib/perl5/5.6.1/i686-linux:/opt/circa21/www/lib:/opt/circa21/www/sys:/opt/circa21/www/cgi-bin"
-LD_LIBRARY_PATH="/opt/circa21/lib:/lib:/usr/lib:/usr/local/lib"
-export PERL5LIB LD_LIBRARY_PATH
-/opt/circa21/bin/perl /usr/local/bin/circadbprint.pl $@

@@ -1,5 +1,0 @@
-<subject>IG application rejected</subject>
-<body_text>This is an automated email to inform you that your interest group application with title "<tal:block content="options/igtitle"/>" was rejected.
-<tal:block condition="python:options['admin_comments'].strip()">The administrator had the following comments regarding your application:
-<tal:block replace="options/admin_comments"/></tal:block>
-</body_text>

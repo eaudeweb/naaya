@@ -78,10 +78,6 @@
 	path = bundles/NaayaBundles-SINAnet
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-SINAnet.git
 	branch = master
-[submodule "eggs/naaya.wise"]
-	branch = master
-	path = eggs/naaya.wise
-	url = git@github.com:eaudeweb/naaya.wise.git
 [submodule "eggs/naaya.updater"]
 	path = eggs/naaya.updater
 	url = git@github.com:eaudeweb/naaya.updater.git
@@ -100,3 +96,187 @@
 	branch = master
 [submodule "eggs/naaya.photoarchive"]
 	branch = master
+	path = eggs/naaya.photoarchive
+	url = git@github.com:eaudeweb/naaya.photoarchive.git
+[submodule "eggs/naaya.observatory"]
+	path = eggs/naaya.observatory
+	url = git@github.com:eaudeweb/naaya.observatory.git
+	branch = master
+[submodule "eggs/naaya.monitor"]
+	path = eggs/naaya.monitor
+	url = git@github.com:eaudeweb/naaya.monitor.git
+	branch = master
+[submodule "eggs/naaya.ldapdump"]
+	path = eggs/naaya.ldapdump
+	url = git@github.com:eaudeweb/naaya.ldapdump.git
+	branch = master
+[submodule "eggs/naaya.i18n"]
+	path = eggs/naaya.i18n
+	url = git@github.com:eaudeweb/naaya.i18n.git
+	branch = master
+[submodule "eggs/naaya.gwhelp"]
+	branch = master
+[submodule "eggs/naaya.gwapplications"]
+	path = eggs/naaya.gwapplications
+	url = git@github.com:eaudeweb/naaya.gwapplications.git
+	branch = master
+[submodule "eggs/naaya.groupware"]
+	path = eggs/naaya.groupware
+	url = git@github.com:eaudeweb/naaya.groupware.git
+	branch = master
+[submodule "eggs/naaya.forum-publish"]
+	path = eggs/naaya.forum-publish
+	url = git@github.com:eaudeweb/naaya.forum-publish.git
+	branch = master
+[submodule "eggs/naaya.flowplayer"]
+	path = eggs/naaya.flowplayer
+	url = git@github.com:eaudeweb/naaya.flowplayer.git
+	branch = master
+[submodule "eggs/naaya.fake_envirowindows"]
+	path = eggs/naaya.fake_envirowindows
+	url = git@github.com:eaudeweb/naaya.fake_envirowindows.git
+	branch = master
+[submodule "eggs/naaya.ew-aoa-library"]
+	path = eggs/naaya.ew-aoa-library
+	url = git@github.com:eaudeweb/naaya.ew-aoa-library.git
+	branch = master
+[submodule "eggs/naaya.envirowindows"]
+	path = eggs/naaya.envirowindows
+	url = git@github.com:eaudeweb/naaya.envirowindows.git
+	branch = master
+[submodule "eggs/naaya.content.youtube"]
+	path = eggs/naaya.content.youtube
+	url = git@github.com:eaudeweb/naaya.content.youtube.git
+	branch = master
+[submodule "eggs/naaya.content.talkback"]
+	path = eggs/naaya.content.talkback
+	url = git@github.com:eaudeweb/naaya.content.talkback.git
+	branch = master
+[submodule "eggs/naaya.content.municipality"]
+	path = eggs/naaya.content.municipality
+	url = git@github.com:eaudeweb/naaya.content.municipality.git
+	branch = master
+[submodule "eggs/naaya.content.meeting"]
+	path = eggs/naaya.content.meeting
+	url = git@github.com:eaudeweb/naaya.content.meeting.git
+	branch = master
+[submodule "eggs/Products.CountryProfile"]
+	path = eggs/Products.CountryProfile
+	url = git@github.com:eaudeweb/naaya.Products.CountryProfile.git
+	branch = master
+[submodule "eggs/Products.NaayaCalendar"]
+	path = eggs/Products.NaayaCalendar
+	url = git@github.com:eaudeweb/naaya.Products.NaayaCalendar.git
+	branch = master
+[submodule "eggs/Products.NaayaForum"]
+	path = eggs/Products.NaayaForum
+	url = git@github.com:eaudeweb/naaya.Products.NaayaForum.git
+	branch = master
+[submodule "eggs/Products.NaayaGlossary"]
+	path = eggs/Products.NaayaGlossary
+	url = git@github.com:eaudeweb/naaya.Products.NaayaGlossary.git
+	branch = master
+[submodule "eggs/Products.NaayaLinkChecker"]
+	path = eggs/Products.NaayaLinkChecker
+	url = git@github.com:eaudeweb/naaya.Products.NaayaLinkChecker.git
+	branch = master
+[submodule "eggs/Products.NaayaNetRepository"]
+	path = eggs/Products.NaayaNetRepository
+	url = git@github.com:eaudeweb/naaya.Products.NaayaNetRepository.git
+	branch = master
+[submodule "eggs/Products.NaayaProfilesTool"]
+	path = eggs/Products.NaayaProfilesTool
+	url = git@github.com:eaudeweb/naaya.Products.NaayaProfilesTool.git
+	branch = master
+[submodule "eggs/Products.NaayaSimpleSurvey"]
+	path = eggs/Products.NaayaSimpleSurvey
+	url = git@github.com:eaudeweb/naaya.Products.NaayaSimpleSurvey.git
+	branch = master
+[submodule "eggs/Products.NaayaThesaurus"]
+	path = eggs/Products.NaayaThesaurus
+	url = git@github.com:eaudeweb/naaya.Products.NaayaThesaurus.git
+	branch = master
+[submodule "eggs/Products.NotificationList"]
+	path = eggs/Products.NotificationList
+	url = git@github.com:eaudeweb/naaya.Products.NotificationList.git
+	branch = master
+[submodule "eggs/Products.OMI"]
+	path = eggs/Products.OMI
+	url = git@github.com:eaudeweb/naaya.Products.OMI.git
+	branch = master
+[submodule "eggs/Products.OracleDA"]
+	path = eggs/Products.OracleDA
+	url = git@github.com:eaudeweb/naaya.Products.OracleDA.git
+	branch = master
+[submodule "eggs/chm.utilities"]
+	path = eggs/chm.utilities
+	url = git@github.com:eaudeweb/naaya.chm.utilities.git
+	branch = master
+[submodule "eggs/destinet.extra"]
+	path = eggs/destinet.extra
+	url = git@github.com:eaudeweb/naaya.destinet.extra.git
+	branch = master
+[submodule "eggs/edw.circaimport"]
+	path = eggs/edw.circaimport
+	url = git@github.com:eaudeweb/naaya.edw.circaimport.git
+	branch = master
+[submodule "eggs/edw.productsinfo"]
+	path = eggs/edw.productsinfo
+	url = git@github.com:eaudeweb/naaya.edw.productsinfo.git
+	branch = master
+[submodule "eggs/eea.gisc-gnaccess"]
+	path = eggs/eea.gisc-gnaccess
+	url = git@github.com:eaudeweb/naaya.eea.gisc-gnaccess.git
+	branch = master
+[submodule "eggs/ispraforum"]
+	path = eggs/ispraforum
+	url = git@github.com:eaudeweb/naaya.ispraforum.git
+	branch = master
+[submodule "eggs/naaya-survey"]
+	path = eggs/naaya-survey
+	url = git@github.com:eaudeweb/naaya.naaya-survey.git
+	branch = master
+[submodule "eggs/naaya.cache"]
+	path = eggs/naaya.cache
+	url = git@github.com:eaudeweb/naaya.cache.git
+	branch = master
+[submodule "eggs/naaya.chm"]
+	path = eggs/naaya.chm
+	url = git@github.com:eaudeweb/naaya.chm.git
+	branch = master
+[submodule "eggs/naaya.content-compat"]
+	path = eggs/naaya.content-compat
+	url = git@github.com:eaudeweb/naaya.content-compat.git
+	branch = master
+[submodule "eggs/naaya.content-expnet"]
+	path = eggs/naaya.content-expnet
+	url = git@github.com:eaudeweb/naaya.content-expnet.git
+	branch = master
+[submodule "eggs/naaya.content-sdo"]
+	path = eggs/naaya.content-sdo
+	url = git@github.com:eaudeweb/naaya.content-sdo.git
+	branch = master
+[submodule "eggs/naaya.content.bestpractice"]
+	path = eggs/naaya.content.bestpractice
+	url = git@github.com:eaudeweb/naaya.content.bestpractice.git
+	branch = master
+[submodule "eggs/naaya.content.bfile"]
+	path = eggs/naaya.content.bfile
+	url = git@github.com:eaudeweb/naaya.content.bfile.git
+	branch = master
+[submodule "eggs/naaya.content.case-study"]
+	path = eggs/naaya.content.case-study
+	url = git@github.com:eaudeweb/naaya.content.case-study.git
+	branch = master
+[submodule "eggs/naaya.content.eduproduct"]
+	path = eggs/naaya.content.eduproduct
+	url = git@github.com:eaudeweb/naaya.content.eduproduct.git
+	branch = master
+[submodule "eggs/naaya.content.localizedbfile"]
+	path = eggs/naaya.content.localizedbfile
+	url = git@github.com:eaudeweb/naaya.content.localizedbfile.git
+	branch = master
+[submodule "eggs/naaya.wise"]
+	path = eggs/naaya.wise
+	url = git@github.com:eaudeweb/naaya.wise.git
+    branch = master

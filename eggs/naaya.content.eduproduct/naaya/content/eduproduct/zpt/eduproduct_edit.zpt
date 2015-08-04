@@ -1,5 +1,0 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Edit EduProduct</h1>
-
-</tal:block>

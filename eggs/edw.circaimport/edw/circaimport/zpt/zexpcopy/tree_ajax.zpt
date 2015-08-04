@@ -1,8 +1,0 @@
-
-<input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-<small>(choose a location from the tree below)</small>
-<div id="sitemap_tree" class="sitemap_tree"></div>
-<tal:block define="tree_get_url string:${options/site/absolute_url}/getNavigationSiteMap/?only_folders=1&subportals=1;
-                   here options/site/getSite">
-    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
-</tal:block>
