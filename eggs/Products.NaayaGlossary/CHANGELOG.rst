@@ -1,5 +1,13 @@
-1.1.17 (unreleased)
+1.1.19 (unreleased)
 ------------------
+
+1.1.18 (2015-07-29)
+------------------
+* add option to delete glossary element [dumitval]
+
+1.1.17 (2015-07-28)
+------------------
+* allow redirection to glossary folder after element add [dumitval]
 
 1.1.16 (2015-06-22)
 ------------------

@@ -287,6 +287,16 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
             if subj_info['code'] == code:
                 self.subjects.remove(subj_info)
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'del_element')
+
+    def del_element(self, REQUEST):
+        """ delete a glossary element """
+        element_id = REQUEST.get('item')
+        if element_id:
+            self.manage_delObjects(element_id)
+            self.setSessionInfoTrans('Element successfully deleted')
+        return REQUEST.RESPONSE.redirect('index_html')
+
     #################
     #   SITE MAP    #
     #################
