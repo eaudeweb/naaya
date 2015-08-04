@@ -162,3 +162,7 @@
 	path = eggs/naaya.content.meeting
 	url = git@github.com:eaudeweb/naaya.content.meeting.git
 	branch = master
+[submodule "eggs/Products.CountryProfile"]
+	path = eggs/Products.CountryProfile
+	url = git@github.com:eaudeweb/naaya.Products.CountryProfile.git
+	branch = master
