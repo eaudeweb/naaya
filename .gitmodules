@@ -262,3 +262,7 @@
 	path = eggs/naaya.content.bestpractice
 	url = git@github.com:eaudeweb/naaya.content.bestpractice.git
 	branch = master
+[submodule "eggs/naaya.content.bfile"]
+	path = eggs/naaya.content.bfile
+	url = git@github.com:eaudeweb/naaya.content.bfile.git
+	branch = master
