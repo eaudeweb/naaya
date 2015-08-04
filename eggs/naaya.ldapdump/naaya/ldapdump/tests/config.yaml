@@ -1,8 +1,0 @@
-ldap:
-    host: localhost
-    encoding: latin-1
-    root_DNs:
-        - ou=people,dc=naaya,dc=org
-
-sqlite:
-    path: ./naaya.test.db
