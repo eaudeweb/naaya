@@ -202,3 +202,7 @@
 	path = eggs/Products.NotificationList
 	url = git@github.com:eaudeweb/naaya.Products.NotificationList.git
 	branch = master
+[submodule "eggs/Products.OMI"]
+	path = eggs/Products.OMI
+	url = git@github.com:eaudeweb/naaya.Products.OMI.git
+	branch = master
