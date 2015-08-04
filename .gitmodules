@@ -104,3 +104,7 @@
 	path = eggs/naaya.observatory
 	url = git@github.com:eaudeweb/naaya.observatory.git
 	branch = master
+[submodule "eggs/naaya.monitor"]
+	path = eggs/naaya.monitor
+	url = git@github.com:eaudeweb/naaya.monitor.git
+	branch = master
