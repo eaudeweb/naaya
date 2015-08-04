@@ -266,3 +266,7 @@
 	path = eggs/naaya.content.bfile
 	url = git@github.com:eaudeweb/naaya.content.bfile.git
 	branch = master
+[submodule "eggs/naaya.content.case-study"]
+	path = eggs/naaya.content.case-study
+	url = git@github.com:eaudeweb/naaya.content.case-study.git
+	branch = master
