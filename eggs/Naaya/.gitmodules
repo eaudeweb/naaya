@@ -218,3 +218,7 @@
 	path = eggs/destinet.extra
 	url = git@github.com:eaudeweb/naaya.destinet.extra.git
 	branch = master
+[submodule "eggs/edw.circaimport"]
+	path = eggs/edw.circaimport
+	url = git@github.com:eaudeweb/naaya.edw.circaimport.git
+	branch = master
