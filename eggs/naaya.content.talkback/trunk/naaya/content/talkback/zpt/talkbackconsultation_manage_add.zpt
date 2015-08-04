@@ -1,1 +1,0 @@
-<tal:block metal:use-macro="template/macro_manage_add/macros/page"></tal:block>
