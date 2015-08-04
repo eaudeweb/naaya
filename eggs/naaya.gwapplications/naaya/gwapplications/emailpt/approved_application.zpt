@@ -1,6 +1,0 @@
-<subject>IG application approved</subject>
-<body_text>This is an automated email to inform you that your interest group application was approved.
-<tal:block condition="python:options['admin_comments'].strip()">The administrator had the following comments regarding your application:
-<tal:block replace="options/admin_comments"/></tal:block>
-You can access the newly created interest group at <tal:block replace="options/igurl"/> and use your EIONET account to login as the interest group Administrator.
-</body_text>
