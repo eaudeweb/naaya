@@ -246,3 +246,7 @@
 	path = eggs/naaya.chm
 	url = git@github.com:eaudeweb/naaya.chm.git
 	branch = master
+[submodule "eggs/naaya.content-compat"]
+	path = eggs/naaya.content-compat
+	url = git@github.com:eaudeweb/naaya.content-compat.git
+	branch = master
