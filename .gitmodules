@@ -230,3 +230,7 @@
 	path = eggs/eea.gisc-gnaccess
 	url = git@github.com:eaudeweb/naaya.eea.gisc-gnaccess.git
 	branch = master
+[submodule "eggs/ispraforum"]
+	path = eggs/ispraforum
+	url = git@github.com:eaudeweb/naaya.ispraforum.git
+	branch = master
