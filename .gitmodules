@@ -112,3 +112,7 @@
 	path = eggs/naaya.ldapdump
 	url = git@github.com:eaudeweb/naaya.ldapdump.git
 	branch = master
+[submodule "eggs/naaya.i18n"]
+	path = eggs/naaya.i18n
+	url = git@github.com:eaudeweb/naaya.i18n.git
+	branch = master
