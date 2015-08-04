@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=$1
-GIT_REPO=$1.git
+GIT_REPO=naaya.$1.git
 REPO_FOLDER=eggs
 SVN_FOLDER=trunk/eggs
 REPO_PATH=/Users/alex/Projects/bun3/
