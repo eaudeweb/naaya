@@ -1,3 +1,0 @@
-include *.rst
-recursive-include edw *
-global-exclude *py[co]
