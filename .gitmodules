@@ -186,3 +186,7 @@
 	path = eggs/Products.NaayaNetRepository
 	url = git@github.com:eaudeweb/naaya.Products.NaayaNetRepository.git
 	branch = master
+[submodule "eggs/Products.NaayaProfilesTool"]
+	path = eggs/Products.NaayaProfilesTool
+	url = git@github.com:eaudeweb/naaya.Products.NaayaProfilesTool.git
+	branch = master
