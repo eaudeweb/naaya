@@ -177,16 +177,20 @@ class EmailTool(Folder):
         Send email message on transaction commit. If the transaction fails,
         the message is discarded.
         """
-        from eea.usersdb.factories import agent_from_uf
 
         agent = None
         try:
-            uf = self.restrictedTraverse('/acl_users')
-            agent = agent_from_uf(uf, bind=True)
-        except Exception, msg:
-            log.debug(
-                "Could not get LDAP agent to check email availability: %s", msg
-            )
+            from eea.usersdb.factories import agent_from_uf
+        except ImportError:
+            pass
+        else:
+            try:
+                uf = self.restrictedTraverse('/acl_users')
+                agent = agent_from_uf(uf, bind=True)
+            except Exception, msg:
+                log.debug(
+                    "Could not get LDAP agent to check email availability: %s", msg
+                )
 
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',')]

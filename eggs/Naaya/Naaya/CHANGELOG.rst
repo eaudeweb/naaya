@@ -1,5 +1,7 @@
-4.0.6 (unreleased)
+4.0.6 (2015-08-04)
 -------------------
+* Bug fix: fix sending emails on non-EEA websites
+  [tiberich]
 
 4.0.5 (2015-06-25)
 -------------------
