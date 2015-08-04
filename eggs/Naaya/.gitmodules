@@ -134,3 +134,7 @@
 	path = eggs/naaya.flowplayer
 	url = git@github.com:eaudeweb/naaya.flowplayer.git
 	branch = master
+[submodule "eggs/naaya.fake_envirowindows"]
+	path = eggs/naaya.fake_envirowindows
+	url = git@github.com:eaudeweb/naaya.fake_envirowindows.git
+	branch = master
