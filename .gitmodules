@@ -250,3 +250,7 @@
 	path = eggs/naaya.content-compat
 	url = git@github.com:eaudeweb/naaya.content-compat.git
 	branch = master
+[submodule "eggs/naaya.content-expnet"]
+	path = eggs/naaya.content-expnet
+	url = git@github.com:eaudeweb/naaya.content-expnet.git
+	branch = master
