@@ -270,3 +270,7 @@
 	path = eggs/naaya.content.case-study
 	url = git@github.com:eaudeweb/naaya.content.case-study.git
 	branch = master
+[submodule "eggs/naaya.content.eduproduct"]
+	path = eggs/naaya.content.eduproduct
+	url = git@github.com:eaudeweb/naaya.content.eduproduct.git
+	branch = master
