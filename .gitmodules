@@ -190,3 +190,7 @@
 	path = eggs/Products.NaayaProfilesTool
 	url = git@github.com:eaudeweb/naaya.Products.NaayaProfilesTool.git
 	branch = master
+[submodule "eggs/Products.NaayaSimpleSurvey"]
+	path = eggs/Products.NaayaSimpleSurvey
+	url = git@github.com:eaudeweb/naaya.Products.NaayaSimpleSurvey.git
+	branch = master
