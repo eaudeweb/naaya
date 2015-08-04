@@ -222,3 +222,7 @@
 	path = eggs/edw.circaimport
 	url = git@github.com:eaudeweb/naaya.edw.circaimport.git
 	branch = master
+[submodule "eggs/edw.productsinfo"]
+	path = eggs/edw.productsinfo
+	url = git@github.com:eaudeweb/naaya.edw.productsinfo.git
+	branch = master
