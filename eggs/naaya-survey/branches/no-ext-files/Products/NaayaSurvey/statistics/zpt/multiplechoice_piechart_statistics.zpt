@@ -1,7 +1,0 @@
-<div tal:define="question options/question;
-				 chart_url options/chart_url;"
-     class="statistic">
-	<strong tal:content="question/title">question</strong>
-	<br />
-	<img tal:attributes="src chart_url" />
-</div>
