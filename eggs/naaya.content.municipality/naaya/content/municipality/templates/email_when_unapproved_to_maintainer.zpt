@@ -1,7 +1,0 @@
-<subject i18n:translate="">Municipality object changed and is now unapproved</subject>
-
-<body_text>
-<tal:block i18n:translate="">Dear <tal:block content="options/NAME" i18n:name="admin_name"></tal:block>,</tal:block>
-
-<tal:block i18n:translate=""><tal:block content="options/CONTRIBUTOR" i18n:name="contributor_name"></tal:block> has changed the municipality <tal:block content="options/MUNICIPALITY_TITLE" i18n:name="municipality_title"></tal:block> <tal:block content="options/MUNICIPALITY_URL" i18n:name="municipality_url"></tal:block>.</tal:block>
-</body_text>

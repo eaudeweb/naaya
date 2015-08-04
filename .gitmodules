@@ -154,3 +154,7 @@
 	path = eggs/naaya.content.talkback
 	url = git@github.com:eaudeweb/naaya.content.talkback.git
 	branch = master
+[submodule "eggs/naaya.content.municipality"]
+	path = eggs/naaya.content.municipality
+	url = git@github.com:eaudeweb/naaya.content.municipality.git
+	branch = master
