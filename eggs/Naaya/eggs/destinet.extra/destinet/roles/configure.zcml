@@ -1,8 +1,0 @@
-<configure xmlns:naaya="http://namespaces.zope.org/naaya">
-    <naaya:simpleView
-        for="Products.EnviroWindows.interfaces.IEWSite"
-        name="admin_assign_role_html"
-        handler=".roles.admin_assign_role"
-        permission="zope2.ViewManagementScreens" />
-</configure>
-

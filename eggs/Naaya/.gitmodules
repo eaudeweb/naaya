@@ -214,3 +214,7 @@
 	path = eggs/chm.utilities
 	url = git@github.com:eaudeweb/naaya.chm.utilities.git
 	branch = master
+[submodule "eggs/destinet.extra"]
+	path = eggs/destinet.extra
+	url = git@github.com:eaudeweb/naaya.destinet.extra.git
+	branch = master
