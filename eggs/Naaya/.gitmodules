@@ -258,3 +258,7 @@
 	path = eggs/naaya.content-sdo
 	url = git@github.com:eaudeweb/naaya.content-sdo.git
 	branch = master
+[submodule "eggs/naaya.content.bestpractice"]
+	path = eggs/naaya.content.bestpractice
+	url = git@github.com:eaudeweb/naaya.content.bestpractice.git
+	branch = master
