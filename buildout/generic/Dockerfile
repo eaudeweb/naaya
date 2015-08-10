@@ -1,6 +1,7 @@
 FROM centos:7
 
-RUN yum -y install wget
+# Enable epel release
+RUN yum -y updateinfo && yum -y install wget
 RUN wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm && \
     rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt && \
     rpm -i rpmforge-release-0.5.3-1.el6.rf.*.rpm && \
@@ -30,11 +31,8 @@ RUN \
     sqlite-devel \
     zlib-devel
 
-#RUN yum groupinstall -y 'Development Tools'
-
 # Install packages
 RUN \
-  yum -y updateinfo && \
   yum -y install \
     gcc \
     gcc-c++ \
@@ -85,7 +83,7 @@ RUN /var/local/python/python26/bin/easy_install pip
 # Install pdb++
 RUN /var/local/python/python26/bin/pip install pdbpp
 
-#Install postgresql
+# Install postgresql
 RUN yum -y install uuid
 RUN rpm -iUvh http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm
 RUN yum -y updateinfo && \
@@ -94,8 +92,7 @@ RUN systemctl enable postgresql-9.3
 
 RUN yum clean all
 
-RUN mkdir /var/local/forum
-RUN mkdir /var/local/forum/var
+RUN mkdir -p /var/local/forum/var
 #VOLUME /var/local/forum/var
 COPY bootstrap.py /var/local/forum/
 COPY buildout.cfg /var/local/forum/
@@ -106,4 +103,5 @@ COPY zope-2.12.28-versions.cfg /var/local/forum/
 WORKDIR /var/local/forum
 RUN /var/local/python/python26/bin/python ./bootstrap.py --version=1.4.4
 RUN bin/buildout
-CMD bin/forum start
+
+CMD ["bin/forum", "start"]
