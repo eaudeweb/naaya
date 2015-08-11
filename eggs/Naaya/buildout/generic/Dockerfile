@@ -1,5 +1,12 @@
 FROM centos:7
 
+ENV ZOPE_HOME /var/local/forum
+ENV GOOGLE_AUTH_CLIENT_ID ''
+ENV GOOGLE_AUTH_CLIENT_SECRET ''
+ENV reCAPTCHA_PUBLIC_KEY ''
+ENV reCAPTCHA_PRIVATE_KEY ''
+ENV WEBEX_CONTACTS ''
+
 # Enable epel release
 RUN yum -y updateinfo && yum -y install wget
 RUN wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm && \
@@ -80,28 +87,21 @@ RUN wget https://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.
 # Install pip
 RUN /var/local/python/python26/bin/easy_install pip
 
-# Install pdb++
-RUN /var/local/python/python26/bin/pip install pdbpp
 
-# Install postgresql
-RUN yum -y install uuid
-RUN rpm -iUvh http://yum.postgresql.org/9.3/redhat/rhel-7-x86_64/pgdg-centos93-9.3-1.noarch.rpm
-RUN yum -y updateinfo && \
-    yum -y install postgresql93 postgresql93-server postgresql93-contrib postgresql93-libs --disablerepo=* --enablerepo=pgdg93
-RUN systemctl enable postgresql-9.3
+RUN mkdir -p $ZOPE_HOME/var && \
+    groupadd -g 500 zope && \
+    useradd  -g 500 -u 500 -m -s /bin/bash zope && \
+    chown -R 500:500 $ZOPE_HOME
 
-RUN yum clean all
-
-RUN mkdir -p /var/local/forum/var
-#VOLUME /var/local/forum/var
-COPY bootstrap.py /var/local/forum/
-COPY buildout.cfg /var/local/forum/
-COPY secret.cfg /var/local/forum/
-COPY versions.cfg /var/local/forum/
-COPY zope-2.12.28-versions.cfg /var/local/forum/
+COPY bootstrap.py $ZOPE_HOME/
+COPY buildout.cfg $ZOPE_HOME/
+COPY versions.cfg $ZOPE_HOME/
+COPY zope-2.12.28-versions.cfg $ZOPE_HOME/
 
 WORKDIR /var/local/forum
 RUN /var/local/python/python26/bin/python ./bootstrap.py --version=1.4.4
 RUN bin/buildout
+
+VOLUME ["$ZOPE_HOME/var"]
 
 CMD ["bin/forum", "start"]
