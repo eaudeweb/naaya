@@ -1,12 +1,18 @@
 from fabric.api import *
+from fabric.api import env
 from fabric.contrib.files import *
+from path import path as ppath
 
 app = env.app = {
-    'buildout_repo': 'https://svn.eionet.europa.eu/repositories/Naaya/buildout/chm-be',
-    'bundle_repo': 'https://svn.eionet.europa.eu/repositories/Naaya/trunk/eggs/NaayaBundles-CHMBE/',
+    'buildout_repo': 'https://github.com/eaudeweb/naaya.buildout.chm-be.git',
+    'bundle_repo':
+        'https://github.com/eaudeweb/naaya.bundles.NaayaBundles-CHMBE.git',
 }
 
-from localcfg import *
+env.hosts = ['zope@193.190.234.37:1974']
+
+app['repo'] = ppath('/var/local/bch')
+
 
 app.update({
     'buildout_var': app['repo']/'src/buildout-chm-be',
@@ -19,20 +25,22 @@ def ssh():
     open_shell("cd '%(repo)s'" % app)
 
 
-def _svn_repo(repo_path, origin_url, update=True):
-    if not exists(repo_path/'.svn'):
+def _git_repo(repo_path, origin_url, update=True):
+    if not exists(repo_path/'.git'):
         run("mkdir -p '%s'" % repo_path)
         with cd(repo_path):
-            run("svn co '%s' ." % origin_url)
+            run("git clone '%s' buildout-chm-be" % origin_url)
 
     elif update:
         with cd(repo_path):
-            run("svn up")
+            run("git pull")
+
 
 @task
 def _update_repos():
-    _svn_repo(app['buildout_var'], app['buildout_repo'], update=True)
-    _svn_repo(app['bundle_var'], app['bundle_repo'], update=True)
+    _git_repo(app['buildout_var'], app['buildout_repo'], update=True)
+    _git_repo(app['bundle_var'], app['bundle_repo'], update=True)
+
 
 @task
 def restart_chmbe():
@@ -53,10 +61,12 @@ def restart_chmbe():
     run("sleep 0.5")
     run("%(repo)s/bin/zope-instance-training start" % app)
 
+
 @task
 def update_chmbe():
     execute('_update_repos')
     execute('restart_chmbe')
+
 
 @task
 def shutdown_chmbe():
@@ -70,6 +80,7 @@ def shutdown_chmbe():
     run("%(repo)s/bin/zope-instance-cop10 stop" % app)
     run("sleep 0.5")
     run("%(repo)s/bin/zope-instance-training stop" % app)
+
 
 @task
 def start_chmbe():
