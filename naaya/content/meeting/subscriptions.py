@@ -221,12 +221,16 @@ class Subscriptions(SimpleItem):
 
     def _is_signup(self, key):
         """ """
-        return key in self._signups and \
+        return key in self._signups
+
+    def _is_accepted_signup(self, key):
+        """ """
+        return self._is_signup(key) and \
             self._signups[key].accepted == 'accepted'
 
     def _is_pending_signup(self, key):
         """ """
-        return key in self._signups and \
+        return self._is_signup(key) and \
             self._signups[key].accepted == 'new'
 
     def manageSubscriptions(self, REQUEST):
@@ -276,7 +280,7 @@ class Subscriptions(SimpleItem):
 
         key = REQUEST.get('key', None)
         signup = self.getSignup(key)
-        if self._is_signup(key) or self._is_pending_signup(key):
+        if self._is_signup(key):
             REQUEST.SESSION['nymt-current-key'] = key
             if came_from:
                 return REQUEST.RESPONSE.redirect(came_from)
@@ -522,10 +526,10 @@ class SignupUsersTool(BasicUserFolder):
         subscriptions = participants.getSubscriptions()
 
         key = REQUEST.SESSION.get('nymt-current-key', None)
-        if subscriptions._is_signup(key):
+        if subscriptions._is_accepted_signup(key):
             role = participants._get_attendees()[key]['role']
             return SimpleUser('signup:' + key, '', (role,), [])
-        if subscriptions._is_pending_signup(key):
+        elif subscriptions._is_pending_signup(key):
             role = 'Meeting Waiting List'
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
