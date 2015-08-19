@@ -116,6 +116,8 @@
 	branch = master
 [submodule "eggs/naaya.gwhelp"]
 	branch = master
+	path = eggs/naaya.gwhelp
+	url = git@github.com:eaudeweb/naaya.gwhelp.git
 [submodule "eggs/naaya.gwapplications"]
 	path = eggs/naaya.gwapplications
 	url = git@github.com:eaudeweb/naaya.gwapplications.git
