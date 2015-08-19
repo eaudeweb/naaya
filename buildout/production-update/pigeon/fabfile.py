@@ -4,8 +4,10 @@ from fabric.contrib.files import *
 from path import path as ppath
 
 app = env.app = {
-    'buildout_repo': 'https://svn.eionet.europa.eu/repositories/Naaya/buildout/groupware/zope212/',
-    'forum_bundle_repo': 'https://svn.eionet.europa.eu/repositories/Naaya/trunk/eggs/NaayaBundles-Forum/',
+    'buildout_repo':
+        'https://github.com/eaudeweb/naaya.buildout.groupware.git',
+    'forum_bundle_repo':
+        'https://github.com/eaudeweb/naaya.bundles.NaayaBundles-Forum.git',
 }
 
 env.hosts = ['edw@pigeon.eea.europa.eu']
@@ -29,34 +31,34 @@ def ssh():
     open_shell("cd '%(forum_repo)s'" % app)
 
 
-def _svn_repo(repo_path, origin_url, update=True):
-    if not exists(repo_path/'.svn'):
+def _git_repo(repo_path, origin_url, update=True):
+    if not exists(repo_path/'.git'):
         run("mkdir -p '%s'" % repo_path)
         with cd(repo_path):
-            run("svn co '%s' ." % origin_url)
+            run("git clone '%s' ." % origin_url)
 
     elif update:
         with cd(repo_path):
-            run("svn up")
+            run("git pull")
 
 
 @task
 def _update_forum():
-    _svn_repo(app['forum_buildout_var'], app['buildout_repo'], update=True)
-    _svn_repo(app['forum_bundle_var'], app['forum_bundle_repo'], update=True)
+    _git_repo(app['forum_buildout_var'], app['buildout_repo'], update=True)
+    _git_repo(app['forum_bundle_var'], app['forum_bundle_repo'], update=True)
 
 
 @task
 def _update_projects():
-    _svn_repo(app['projects_buildout_var'], app['buildout_repo'], update=True)
-    _svn_repo(app['projects_bundle_var'], app['forum_bundle_repo'],
+    _git_repo(app['projects_buildout_var'], app['buildout_repo'], update=True)
+    _git_repo(app['projects_bundle_var'], app['forum_bundle_repo'],
               update=True)
 
 
 @task
 def _update_archives():
-    _svn_repo(app['archives_buildout_var'], app['buildout_repo'], update=True)
-    _svn_repo(app['archives_bundle_var'], app['forum_bundle_repo'],
+    _git_repo(app['archives_buildout_var'], app['buildout_repo'], update=True)
+    _git_repo(app['archives_bundle_var'], app['forum_bundle_repo'],
               update=True)
 
 
@@ -100,10 +102,6 @@ def restart_archives():
     run("%(archives_repo)s/bin/zope-instance-0 stop" % app)
     run("sleep 0.5")
     run("%(archives_repo)s/bin/zope-instance-0 start" % app)
-    run("sleep 5")
-    run("%(archives_repo)s/bin/zope-instance-1 stop" % app)
-    run("sleep 0.5")
-    run("%(archives_repo)s/bin/zope-instance-1 start" % app)
 
 
 @task
