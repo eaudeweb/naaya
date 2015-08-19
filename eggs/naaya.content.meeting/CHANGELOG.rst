@@ -1,5 +1,6 @@
 1.2.83 (unreleased)
 -------------------
+* fix for signup approve/reject [dumitval]
 
 1.2.82 (2015-07-03)
 -------------------
