@@ -50,11 +50,13 @@
 		tal:content="python:request.get('description', '') or here.getSession('description', '')">
 	</textarea>
 </div>
-<div class="field">
+<div class="field" tal:define="file_max_size here/file_max_size;
+                               file_too_large request/file_max_size|nothing">
 	<label for="attachment" i18n:translate="">Attachment</label>
-	<div style="color: red;" tal:define="file_max_size python:request.get('file_max_size', '')"
-		tal:condition="file_max_size"
+	<div style="color: red;" tal:condition="file_too_large"
 		tal:content="string:The attachment is larger than permitted (${file_max_size} Bytes). Please select a smaller file."/>
+	<div tal:condition="not:file_too_large"
+		tal:content="string:Maximum file size: ${file_max_size} Bytes"/>
 	<input type="file" name="attachment" id="attachment" />
 </div>
 

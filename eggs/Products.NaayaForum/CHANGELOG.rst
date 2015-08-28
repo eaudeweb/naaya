@@ -1,5 +1,6 @@
 1.2.21 (unreleased)
 -------------------
+* added file_max_size info on post message page [dumitval]
 
 1.2.20 (2015-03-10)
 -------------------
