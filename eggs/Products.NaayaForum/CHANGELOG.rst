@@ -1,4 +1,7 @@
-1.2.21 (unreleased)
+1.2.22 (unreleased)
+-------------------
+
+1.2.21 (2015-08-28)
 -------------------
 * added file_max_size info on post message page [dumitval]
 
