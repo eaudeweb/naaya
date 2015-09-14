@@ -1,4 +1,7 @@
-4.0.7 (unreleased)
+4.0.8 (unreleased)
+-------------------
+
+4.0.7 (2015-09-14)
 -------------------
 * add email in listUsersInGroup results info [dumitval]
 
