@@ -1,5 +1,6 @@
 1.2.84 (unreleased)
 -------------------
+* add email in search by role user details (add signup) [dumitval]
 
 1.2.83 (2015-08-19)
 -------------------
