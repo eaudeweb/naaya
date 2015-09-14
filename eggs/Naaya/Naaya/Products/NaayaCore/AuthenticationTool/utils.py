@@ -140,6 +140,7 @@ def listUsersInGroup(site, search_role):
                 'organization': _decode(user.organisation,
                                         source.default_encoding),
                 'info': user.dn,
+                'mail': user.email,
             })
 
     return ret

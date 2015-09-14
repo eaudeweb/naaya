@@ -1,5 +1,6 @@
 4.0.7 (unreleased)
 -------------------
+* add email in listUsersInGroup results info [dumitval]
 
 4.0.6 (2015-08-04)
 -------------------
