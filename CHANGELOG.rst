@@ -1,4 +1,7 @@
-1.2.84 (unreleased)
+1.2.85 (unreleased)
+-------------------
+
+1.2.84 (2015-09-14)
 -------------------
 * add email in search by role user details (add signup) [dumitval]
 
