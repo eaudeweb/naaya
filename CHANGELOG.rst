@@ -1,5 +1,7 @@
 1.2.85 (unreleased)
 -------------------
+* remove testing for disabled@eionet.europa.eu when searching for users
+  (they are filtered in the search method) [dumitval]
 
 1.2.84 (2015-09-14)
 -------------------
