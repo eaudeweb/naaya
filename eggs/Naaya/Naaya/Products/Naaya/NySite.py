@@ -84,7 +84,6 @@ from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
 from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
-from Products.NaayaCore.constants import DISABLED_EMAIL
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
@@ -1280,14 +1279,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             while 1:
                 if node == self:
                     for email in node.administrator_email.split(','):
-                        if (email not in ['', DISABLED_EMAIL] and
-                                email not in l_emails):
+                        if (email != '' and email not in l_emails):
                             l_emails.append(email)
                     break
                 if hasattr(node, 'maintainer_email'):
                     for email in node.maintainer_email.split(','):
-                        if (email not in ['', DISABLED_EMAIL]
-                                and email not in l_emails):
+                        if (email != '' and email not in l_emails):
                             l_emails.append(email)
                 node = node.getParentNode()
         return l_emails

@@ -656,10 +656,6 @@ class LDAPUserInfo(UserInfo):
 def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
 
     def extract(name):
-        if name == 'mail':
-            if getattr(zope_user, 'employeeType', None) == 'disabled':
-                return u'disabled@eionet.europa.eu'
-
         value = getattr(zope_user, name, '')
         if value is None:
             return ''
@@ -693,11 +689,6 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
     def extract(name):
         # encode values back to strings, because the rest of our ancient code
         # expects that.
-
-        if name == 'mail':
-            is_disabled = cached_record.get('employeeType') == 'disabled'
-            if is_disabled:
-                return u'disabled@eionet.europa.eu'
 
         value = cached_record.get(name, u'')
         if isinstance(value, list):

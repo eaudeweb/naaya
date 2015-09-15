@@ -1,7 +1,6 @@
 from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailSender import build_email
 from containers import AccountSubscription, AnonymousSubscription
-from Products.NaayaCore.constants import DISABLED_EMAIL
 from datetime import timedelta
 from interfaces import ISubscriptionContainer
 import constants
@@ -179,7 +178,8 @@ def get_subscribers_data(self, ob, notif_type='instant', **kw):
         if subscription.notif_type != notif_type:
             continue
         email = subscription.get_email(ob)
-        if email in [None, DISABLED_EMAIL]:
+        # TODO exclude disabled users
+        if email is None:
             continue
         content_types = getattr(subscription, 'content_types', [])
         if content_types and ob.meta_type not in content_types:
