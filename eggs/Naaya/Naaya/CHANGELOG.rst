@@ -1,4 +1,7 @@
-4.0.8 (unreleased)
+4.0.9 (unreleased)
+-------------------
+
+4.0.8 (2015-09-15)
 -------------------
 * filter out disabled users from search results [dumitval]
 
