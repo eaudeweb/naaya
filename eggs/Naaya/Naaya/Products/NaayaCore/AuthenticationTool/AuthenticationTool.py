@@ -18,7 +18,8 @@ from Products.Naaya.interfaces import INySite
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.interfaces import IRoleLogger
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
-from Products.NaayaCore.AuthenticationTool.recover_password import RecoverPassword
+from Products.NaayaCore.AuthenticationTool.recover_password import (
+    RecoverPassword)
 from Products.NaayaCore.constants import ID_AUTHENTICATIONTOOL
 from Products.NaayaCore.constants import METATYPE_AUTHENTICATIONTOOL
 from Products.NaayaCore.constants import METATYPE_FOLDER
@@ -26,7 +27,8 @@ from Products.NaayaCore.constants import TITLE_AUTHENTICATIONTOOL
 from Products.NaayaCore.managers.import_export import UnicodeReader
 from Products.NaayaCore.managers.import_export import set_response_attachment
 from Products.NaayaCore.managers.session_manager import session_manager
-from Products.NaayaCore.managers.utils import InvalidStringError, file_utils, utils
+from Products.NaayaCore.managers.utils import InvalidStringError
+from Products.NaayaCore.managers.utils import file_utils, utils
 from Products.NaayaCore.managers.utils import string2object, object2string
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Role import Role
@@ -48,6 +50,7 @@ import time
 
 log = logging.getLogger(__name__)
 
+
 def manage_addAuthenticationTool(self, REQUEST=None):
     """ """
     ob = AuthenticationTool(ID_AUTHENTICATIONTOOL, TITLE_AUTHENTICATIONTOOL)
@@ -55,9 +58,11 @@ def manage_addAuthenticationTool(self, REQUEST=None):
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+
 def check_username(name):
     name_expr = re.compile(r'^[A-Za-z0-9._-]+$')
     return re.match(name_expr, name)
+
 
 def is_anonymous(user_obj):
     """ check if the given user is `anonymous` (i.e. not authenticated) """
@@ -65,6 +70,7 @@ def is_anonymous(user_obj):
         return True
     else:
         return False
+
 
 class DummyUser(SimpleUser):
     """ Wrapper for User Sources. It is used for user searchs
@@ -91,15 +97,17 @@ class DummyUser(SimpleUser):
             return getattr(self, self.map[name])
         else:
             return getattr(super(DummyUser, self), name)
+
     def getRoles(self):
         roles = []
         for role in self.roles:
             if isinstance(role, (tuple, list)):
-                for r  in role[0]:
+                for r in role[0]:
                     roles.append(r)
             else:
                 roles.append(role)
         return roles
+
     def getUserCreatedDate(self):
         return self.created
 
@@ -124,14 +132,14 @@ class UserInfo(object):
         assert not missing_fields, "Missing fields: %r" % list(missing_fields)
 
         # we may want to comment this out for speed reasons
-        assert isinstance(fields.get('user_id', None), str),\
-               "user_id %r must be str" % fields['user_id']
+        assert isinstance(fields.get('user_id', None), str), (
+            "user_id %r must be str" % fields['user_id'])
         for key, value in fields.iteritems():
             if key in ['user_id', '_get_zope_user', '_source', 'jpegPhoto']:
                 continue
-            assert isinstance(value, unicode), \
-                   ("value %r (for %r, user %r) not unicode" %
-                   (value, key, fields['user_id']))
+            assert isinstance(value, unicode), (
+                "value %r (for %r, user %r) not unicode" %
+                (value, key, fields['user_id']))
 
         self.__dict__.update(fields)
 
@@ -160,7 +168,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         {'label': 'Users', 'action': 'manage_users_html'},
         {'label': 'Other sources', 'action': 'manage_sources_html'},
         {'label': 'Properties', 'action': 'manage_propertiesForm',
-         'help': ('OFSP','Properties.stx')},
+         'help': ('OFSP', 'Properties.stx')},
         {'label': 'Sending email log',
          'action': 'manage_send_emails_log_html'},
     )
@@ -191,11 +199,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self.data = PersistentMapping()
 
     security.declarePrivate('loadDefaultData')
+
     def loadDefaultData(self):
-        #load default stuff
+        # load default stuff
         pass
 
     security.declarePrivate('_doAddTempUser')
+
     def _doAddTempUser(self, **kwargs):
         """Generate a confirmation string, add it to temp users list,
            and return it.
@@ -204,14 +214,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if not hasattr(self, '_temp_users'):
             self._temp_users = []
         if text in self._temp_users:
-            raise ValidationError, 'User already request access roles.'
+            raise ValidationError('User already request access roles.')
         self._temp_users.append(text)
         self._p_changed = 1
         return text
 
     security.declarePrivate('_doAddUser')
+
     def _doAddUser(self, name, password, roles, domains, firstname, lastname,
-                    email, **kw):
+                   email, **kw):
         """Create a new user. The 'password' will be the
            original input password, unencrypted. This
            method is responsible for performing any needed encryption."""
@@ -219,22 +230,23 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if password is not None and self.encrypt_passwords:
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains, firstname,
-                    lastname, email)
+                               lastname, email)
         log.info('User %s, email:%s added.', name, email)
         self._p_changed = 1
         return name
 
     security.declarePrivate('_doChangeUser')
+
     def _doChangeUser(self, name, password, roles, domains, firstname,
-                lastname, email, lastupdated, **kw):
+                      lastname, email, lastupdated, **kw):
         """Modify an existing user. The 'password' will be the
            original input password, unencrypted. The implementation of this
            method is responsible for performing any needed encryption."""
 
-        user=self.data[name]
+        user = self.data[name]
         if password is not None:
             if (self.encrypt_passwords and
-                not self._isPasswordEncrypted(password)):
+                    not self._isPasswordEncrypted(password)):
                 password = self._encryptPassword(password)
             user.__ = password
         user.setRoles(self.getSite(), roles)
@@ -246,36 +258,41 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self._p_changed = 1
 
     security.declarePublic('changeLastLogin')
+
     def changeLastLogin(self, name):
-        user=self.data.get(name, None)
+        user = self.data.get(name, None)
         if user:
             user.lastlogin = time.strftime('%d %b %Y %H:%M:%S')
             self._p_changed = 1
 
     security.declarePublic('changeLastPost')
+
     def changeLastPost(self, name):
-        user=self.data.get(name, None)
+        user = self.data.get(name, None)
         if user:
             user.lastpost = time.strftime('%d %b %Y %H:%M:%S')
             self._p_changed = 1
 
     security.declareProtected(manage_users, 'getUserPass')
+
     def getUserPass(self):
         """Return a list of usernames"""
         temp = {}
-        names=self.data.keys()
+        names = self.data.keys()
         for name in names:
             temp[name] = self.getUser(name).__
         return temp
 
     security.declarePrivate('_doChangeUserRoles')
+
     def _doChangeUserRoles(self, name, roles, **kw):
         """ """
-        user=self.data[name]
+        user = self.data[name]
         user.setRoles(self.getSite(), roles)
         self._p_changed = 1
 
     security.declarePrivate('_doDelUserRoles')
+
     def _doDelUserRoles(self, name, **kw):
         """ """
         for user in name:
@@ -284,10 +301,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self._p_changed = 1
 
     security.declarePrivate('_doDelUsers')
+
     def _doDelUsers(self, names):
         """Delete one or more users."""
 
-        #Delete local roles (from folder property)
+        # Delete local roles (from folder property)
         users_roles = self.getUsersRoles()
         for user, roles in users_roles.iteritems():
             if user not in names:
@@ -304,17 +322,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         self._p_changed = True
 
-    #zmi actions
+    # zmi actions
     security.declareProtected(manage_users, 'manage_confirmUser')
+
     def manage_confirmUser(self, key='', REQUEST=None):
         """ Add user from key
         """
         if key not in getattr(self, '_temp_users', []):
-            raise ValidationError, 'Invalid activation key !'
+            raise ValidationError('Invalid activation key !')
         try:
             res = string2object(key)
         except InvalidStringError:
-            raise ValidationError, 'Invalid activation key !'
+            raise ValidationError('Invalid activation key !')
         else:
             self._temp_users.remove(key)
             self._doAddUser(**res)
@@ -324,44 +343,48 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return res
 
     security.declareProtected(manage_users, 'manage_addUser')
+
     def manage_addUser(self, name='', password='', confirm='', roles=[],
-                domains=[], firstname='', lastname='', email='', strict=0,
-                REQUEST=None):
+                       domains=[], firstname='', lastname='', email='',
+                       strict=0, REQUEST=None):
         """ """
         email = email.strip()
         if not check_username(name):
-            raise ValidationError, 'Username: only letters and numbers allowed'
+            raise ValidationError('Username: only letters and numbers allowed')
         if not firstname:
-            raise ValidationError, 'The first name must be specified'
+            raise ValidationError('The first name must be specified')
         if not lastname:
-            raise ValidationError, 'The last name must be specified'
+            raise ValidationError('The last name must be specified')
         if not email:
-            raise ValidationError, 'The email must be specified'
+            raise ValidationError('The email must be specified')
         if not is_valid_email(email):
-            raise ValidationError, 'Invalid email address.'
+            raise ValidationError('Invalid email address.')
         if not name:
-            raise ValidationError, 'A username must be specified'
+            raise ValidationError('A username must be specified')
         if not password or not confirm:
-            raise ValidationError, 'Password and confirmation must be specified'
+            raise ValidationError(
+                'Password and confirmation must be specified')
 
         name = str(name)
 
         existing_usernames = set(username.lower
-            for username in self.getUserNames())
-        if self.get_user_with_userid(name) is not None or name.lower() in existing_usernames:
+                                 for username in self.getUserNames())
+        if (self.get_user_with_userid(name) is not None or
+                name.lower() in existing_usernames):
             raise i18n_exception(ValidationError,
                                  'Username ${user} already in use', user=name)
         if (password or confirm) and (password != confirm):
-            raise ValidationError, 'Password and confirmation do not match'
+            raise ValidationError('Password and confirmation do not match')
         if strict:
             users = self.getUserNames()
             for n in users:
                 us = self.getUser(n)
                 if email.lower() == us.email.lower():
-                    raise i18n_exception(ValidationError,
-                            'A user with the specified email already exists, '
-                            'username ${user}', user=n)
-        #convert data
+                    raise i18n_exception(
+                        ValidationError,
+                        'A user with the specified email already exists, '
+                        'username ${user}', user=n)
+        # convert data
         roles = self.utConvertToList(roles)
         domains = self.utConvertToList(domains)
         #
@@ -381,6 +404,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return user
 
     security.declareProtected(manage_users, 'manage_changeUser')
+
     def manage_changeUser(self, name='', password='', confirm='', roles=[],
                           domains=[], firstname='', lastname='', email='',
                           REQUEST=None):
@@ -390,39 +414,42 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if password == '' and confirm == '':
             password = confirm = None
         if not firstname:
-            raise ValidationError, 'The first name must be specified'
+            raise ValidationError('The first name must be specified')
         if not lastname:
-            raise ValidationError, 'The last name must be specified'
+            raise ValidationError('The last name must be specified')
         if not email:
-            raise ValidationError, 'The email must be specified'
+            raise ValidationError('The email must be specified')
         if not is_valid_email(email):
-            raise ValidationError, 'Invalid email address.'
+            raise ValidationError('Invalid email address.')
 
-        #If the e-mail address changed check if it's not used
+        # If the e-mail address changed check if it's not used
         if user_ob.email != email.strip():
             users = self.getUserNames()
             for n in users:
                 us = self.getUser(n)
                 if email == us.email:
-                    raise i18n_exception(ValidationError,
+                    raise i18n_exception(
+                        ValidationError,
                         'A user with the specified email already exists, '
                         'username ${user}', user=n)
         if not name:
-            raise ValidationError, 'A username must be specified'
+            raise ValidationError('A username must be specified')
         if not self.getUser(name):
-            raise ValidationError, 'Unknown user'
+            raise ValidationError('Unknown user')
         if (password or confirm) and (password != confirm):
-            raise ValidationError, 'Password and confirmation do not match'
+            raise ValidationError('Password and confirmation do not match')
 
-        #convert data
+        # convert data
         roles = self.getUserRoles(user_ob)
         domains = user_ob.getDomains()
         lastupdated = time.strftime('%d %b %Y %H:%M:%S')
         self._doChangeUser(name, password, roles, domains, firstname, lastname,
                            email, lastupdated)
-        if REQUEST is not None: REQUEST.RESPONSE.redirect('manage_users_html')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_users_html')
 
     security.declareProtected(manage_users, 'manage_addUsersRoles')
+
     def manage_addUsersRoles(self, name='', roles=[], location='',
                              REQUEST=None):
         """ """
@@ -440,9 +467,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 raise ValidationError('Invalid location')
             location_obj.manage_setLocalRoles(name, roles)
 
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('manage_userRoles_html')
 
     security.declareProtected(manage_users, 'manage_revokeUserRole')
+
     def manage_revokeUserRole(self, user, location, REQUEST=None):
         """ """
         user = [user]
@@ -455,12 +484,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             REQUEST.RESPONSE.redirect('manage_userRoles_html')
 
     security.declareProtected(manage_users, 'manage_delUsers')
+
     def manage_delUsers(self, names=[], REQUEST=None):
         """ """
         self._doDelUsers(self.utConvertToList(names))
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_users_html')
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('manage_users_html')
 
     security.declareProtected(manage_users, 'getUserNames')
+
     def getUserNames(self):
         """
         Return a list of userids of all users registered in this portal.
@@ -468,35 +500,40 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return sorted(self.data.keys())
 
     security.declareProtected(manage_users, 'getUserNamesSortedByAttr')
+
     def getUserNamesSortedByAttr(self, skey='', rkey=0):
         """Return a list of usernames sorted by a specified attribute"""
-        if not skey or skey=='__':skey = 'name'
-        users_obj=self.data.values()
-        users_obj = utils().utSortObjsListByAttr(users_obj,skey,rkey)
-        res=[]
+        if not skey or skey == '__':
+            skey = 'name'
+        users_obj = self.data.values()
+        users_obj = utils().utSortObjsListByAttr(users_obj, skey, rkey)
+        res = []
         for user_obj in users_obj:
             res.append(user_obj.name)
         return res
 
     security.declareProtected(manage_users, 'getUsersRolesRestricted')
+
     def getUsersRolesRestricted(self, path):
         """
         Returns information about all the users' roles inside the given path.
         """
         users_roles = {}
         for folder in self.getCatalogedObjects(
-                meta_type=[METATYPE_FOLDER,'Folder'],
+                meta_type=[METATYPE_FOLDER, 'Folder'],
                 has_local_role=1, path=path):
             for roles_tuple in folder.get_local_roles():
                 local_roles = self.getLocalRoles(roles_tuple[1])
-                if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
-                    if not users_roles.has_key(str(roles_tuple[0])):
+                if (roles_tuple[0] in self.user_names() and
+                        len(local_roles) > 0):
+                    if str(roles_tuple[0]) not in users_roles:
                         users_roles[str(roles_tuple[0])] = []
                     users_roles[str(roles_tuple[0])].append(
-                            (local_roles, folder.absolute_url(1)))
+                        (local_roles, folder.absolute_url(1)))
         return users_roles
 
     security.declareProtected(manage_users, 'getUsersRolesRestricted')
+
     def getLocationUserRoles(self, user_id, path):
         """
         Returns information about the user's local roles at the exact location.
@@ -523,6 +560,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return list(roles - set(['Owner', 'Anonymous', 'Authenticated']))
 
     security.declareProtected(manage_users, 'search_users')
+
     def search_users(self, query, REQUEST=None, **kw):
         """ Search users based of query and other criteria, returning user
         like objects or rendered html for an ajax request.
@@ -554,9 +592,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         def match_user(user_info):
             if not user_info:
                 return None
-            return (user_info.user_id.lower().find(query) !=-1 or
-                    user_info.full_name.lower().find(query) !=-1 or
-                    user_info.email.lower().find(query) !=-1)
+            return (user_info.user_id.lower().find(query) != -1 or
+                    user_info.full_name.lower().find(query) != -1 or
+                    user_info.email.lower().find(query) != -1)
         users_info = filter(match_user, users_info)
 
         # gather source title for remaining users
@@ -565,7 +603,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 user_info.source_title = u'Local'
             else:
                 user_info.source_title = force_to_unicode(
-                                                    user_info._source.title)
+                    user_info._source.title)
+
         # sort users by skey
         def sort_key(obj):
             if skey == 'username':
@@ -580,12 +619,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         # filter by role and location
         if filter_role == 'noroles':
-            #users_roles = {userid: [([role, ...], location), ...], ...}
+            # users_roles = {userid: [([role, ...], location), ...], ...}
             users_roles = self.get_all_users_roles()
             users_info = [user_info for user_info in users_info
-                                        if user_info.user_id not in users_roles]
+                          if user_info.user_id not in users_roles]
         else:
-            #users_roles = {userid: [([role, ...], location), ...], ...}
+            # users_roles = {userid: [([role, ...], location), ...], ...}
             if filter_location == '_all_':
                 users_roles = self.get_all_users_roles()
             else:
@@ -599,12 +638,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         if filter_role in roles:
                             filtered_users_roles.setdefault(user_id, [])
                             filtered_users_roles[user_id].append(
-                                                    ([filter_role], location))
+                                ([filter_role], location))
                 users_roles = filtered_users_roles
 
             if filter_role != '' or filter_location != '_all_':
                 users_info = [user_info for user_info in users_info
-                                            if user_info.user_id in users_roles]
+                              if user_info.user_id in users_roles]
 
         # gather role info
         for user_info in users_info:
@@ -614,7 +653,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         for user_info in users_info:
             try:
                 user_info.is_new_user = self.isNewUser(user_info.zope_user)
-            except AttributeError: # should work for local users only
+            except AttributeError:  # should work for local users only
                 user_info.is_new_user = False
 
         disabled_type = form_data.get('disabled_type', 'no_disabled')
@@ -624,11 +663,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             mail = getattr(usr, 'email', '')
             is_disabled = getattr(usr, 'status', 'active') == 'disabled'
             if ((disabled_type == 'no_disabled') and (not is_disabled)
-                or
-                (disabled_type == 'include_disabled')
-                or
-                ((disabled_type == 'only_disabled') and is_disabled)
-                ):
+                or (disabled_type == 'include_disabled')
+                    or ((disabled_type == 'only_disabled') and is_disabled)):
                 response.append(usr)
         return response
 
@@ -648,7 +684,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         for user_id in usernames:
             for local_roles, location in users_roles.get(user_id, []):
-                if role_to_revoke: # keep the other roles the user has
+                if role_to_revoke:  # keep the other roles the user has
                     if role_to_revoke not in local_roles:
                         continue
                     all_roles = location.get_local_roles_for_userid(user_id)
@@ -658,35 +694,37 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     else:
                         location.manage_delLocalRoles([user_id])
                     actually_revoked = [role_to_revoke]
-                else: # remove all roles
-                    actually_revoked = location.get_local_roles_for_userid(user_id)
+                else:  # remove all roles
+                    actually_revoked = location.get_local_roles_for_userid(
+                        user_id)
                     location.manage_delLocalRoles([user_id])
                 if manager_id:
-                    notify(RoleAssignmentEvent(location, manager_id,
-                               user_id, [], actually_revoked,
-                               send_mail='Administrator' in actually_revoked))
+                    notify(RoleAssignmentEvent(
+                        location, manager_id, user_id, [], actually_revoked,
+                        send_mail='Administrator' in actually_revoked))
 
         # remove local roles for the site
-        if filter_location in ['_all_', '']: # remove site roles
+        if filter_location in ['_all_', '']:  # remove site roles
             for user_id in usernames:
                 if user_id not in self.user_names():
                     continue
                 local_user = self.getUser(user_id)
-                if role_to_revoke: # keep the other roles the user has
+                if role_to_revoke:  # keep the other roles the user has
                     if role_to_revoke not in local_user.roles:
                         continue
                     local_user.roles.remove(role_to_revoke)
                     actually_revoked = [role_to_revoke]
-                else: # remove all roles
+                else:  # remove all roles
                     actually_revoked = local_user.roles
                     local_user.roles = []
                 if manager_id:
-                    notify(RoleAssignmentEvent(self.getSite(), manager_id,
-                               user_id, [], actually_revoked,
-                               send_mail='Administrator' in actually_revoked))
-
+                    notify(RoleAssignmentEvent(
+                        self.getSite(), manager_id, user_id, [],
+                        actually_revoked,
+                        send_mail='Administrator' in actually_revoked))
 
     security.declareProtected(manage_users, 'searchUsers')
+
     def searchUsers(self, query, limit=0):
         """
         Search `query` in all users' first/last/full names and emails
@@ -696,11 +734,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             users = []
             users_a = users.append
             for user in self.getUsers():
-                if (user.name.find(self.utToUtf8(query))!=-1 or
-                    user.email.find(self.utToUtf8(query))!=-1 or
-                    user.firstname.find(self.utToUtf8(query))!=-1 or
-                    user.lastname.find(self.utToUtf8(query))!=-1
-                ):
+                if (user.name.find(self.utToUtf8(query)) != -1 or
+                    user.email.find(self.utToUtf8(query)) != -1 or
+                    user.firstname.find(self.utToUtf8(query)) != -1 or
+                        user.lastname.find(self.utToUtf8(query)) != -1):
                     users_a((user.name, '%s %s' % (
                         user.firstname, user.lastname), user.email))
             if limit and len(users) > int(limit):
@@ -714,14 +751,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return get_zope_env(key)
 
     security.declareProtected(manage_users, 'get_local_usernames')
+
     def get_local_usernames(self):
         local_users = self.user_names()
         ret = [{'name': self.getUserFullName(self.getUser(user_id)),
                 'uid': user_id,
                 'is_new_user': self.isNewUser(self.getUser(user_id))}
-                    for user_id in local_users]
+               for user_id in local_users]
         user_list = sorted(ret, key=lambda user: user['name'].lower())
-        #Move new users to the top if we are not in EEA (=no external sources)
+        # Move new users to the top if we are not in EEA (=no external sources)
         old_users = list(user_list)
         new_users = []
         if not get_zope_env('NETWORK_NAME').lower() == 'eionet':
@@ -731,6 +769,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return new_users + old_users
 
     security.declareProtected(manage_users, 'isNewUser')
+
     def isNewUser(self, user_obj, days=5):
         """
         return True if user was created in the last 5 days
@@ -739,6 +778,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return (DateTime() - DateTime(self.getUserCreatedDate(user_obj))) <= 5
 
     security.declareProtected(view, 'isLocalUser')
+
     def isLocalUser(self, REQUEST=None):
         """
         Return 1 if the current user is registered in this user folder,
@@ -756,6 +796,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return [self.data[name] for name in names_sorted]
 
     security.declareProtected(view, 'getUser')
+
     def getUser(self, name):
         """
         Return the user object for the specified userid ( None if not found)
@@ -776,7 +817,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         This function looks at the site level, then inside all folders for
         local roles.
         """
-        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
+        if p_meta_types is None:
+            p_meta_types = self.get_containers_metatypes()
         r = []
         ra = r.append
         username = user.getUserName()
@@ -784,9 +826,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         for x in ['Anonymous', 'Authenticated', 'Owner']:
             if x in userroles:
                 userroles.remove(x)
-        if len(userroles): ra((userroles, ''))
+        if len(userroles):
+            ra((userroles, ''))
         folders = self.getCatalogedObjects(meta_type=p_meta_types,
-                    has_local_role=1)
+                                           has_local_role=1)
         folders.insert(0, self.getSite())
         for folder in folders:
             for roles_tuple in folder.get_local_roles():
@@ -840,7 +883,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 sites.append(child)
 
         users_roles = {}
-        for username in self.user_names():   #get the users
+        for username in self.user_names():  # get the users
             user = self.getUser(username)
             users_roles[username] = [(self.getUserRoles(user), '')]
 
@@ -851,16 +894,19 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 picked_meta_types = meta_types
 
             for folder in site.getCatalogedObjects(meta_type=picked_meta_types,
-                    has_local_role=1):
+                                                   has_local_role=1):
                 for roles_tuple in folder.get_local_roles():
                     local_roles = self.getLocalRoles(roles_tuple[1])
-                    if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
+                    if (roles_tuple[0] in self.user_names() and
+                            len(local_roles) > 0):
                         roles_list = users_roles[str(roles_tuple[0])]
-                        roles_list.append((local_roles,
-                                    relative_object_path(folder, current_site)))
+                        roles_list.append(
+                            (local_roles,
+                             relative_object_path(folder, current_site)))
         return users_roles
 
     security.declareProtected(manage_users, 'getUsersWithRoles')
+
     def getUsersWithRoles(self):
         """
         Honestly, we're stumped. Don't use this in new code.
@@ -868,11 +914,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         users = {}
         for k, v in self.getUsersRoles().items():
             if ((len(v) > 1 and len(v[1][0]) > 0) or
-                (len(v) == 1 and len(v[0][0]) > 0)):
+                    (len(v) == 1 and len(v[0][0]) > 0)):
                 users[k] = v
         return users
 
     security.declareProtected(manage_users, 'getUsersWithRole')
+
     def getUsersWithRole(self, roles=[]):
         """
         Don't use this in new code.
@@ -880,6 +927,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         if not isinstance(roles, list):
             roles = [roles]
+
         def handle_unicode(s):
             if not isinstance(s, unicode):
                 try:
@@ -889,7 +937,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             else:
                 return s
         local_users = self.getUsersWithRoles()
-        #dictionary that will hold local users
+        # dictionary that will hold local users
         local_result = {}
         for user_id, user_roles in local_users.items():
             for location in user_roles:
@@ -897,18 +945,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if user_id not in local_result.keys():
                         user_obj = self.getUser(user_id)
                         user_name = "%s %s" % (self.getUserFirstName(user_obj),
-                                self.getUserLastName(user_obj))
+                                               self.getUserLastName(user_obj))
                         user_email = self.getUserEmail(user_obj)
                         local_result[user_id] = {
                             'name': handle_unicode(user_name),
                             'email': user_email
                         }
 
-
-        #dictionary that will hold external users
+        # dictionary that will hold external users
         external_users = {}
         for source in self.getSources():
-            #acl_folder = source.getUserFolder()
             source_obj = self.getSourceObj(source.getId())
             users = source_obj.getSortedUserRoles(skey='user')
             for user in users:
@@ -917,8 +963,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if set(user_role[0]).intersection(set(roles)):
                         user_id = user[0]
                         user_name = user[1]
-                        user_email = source_obj.getUserEmail(user_id,
-                                source_obj.getUserFolder())
+                        user_email = source_obj.getUserEmail(
+                            user_id, source_obj.getUserFolder())
                         external_users[user_id] = {
                             'name': handle_unicode(user_name),
                             'email': user_email
@@ -936,12 +982,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         'name': handle_unicode(user_info.full_name),
                         'email': handle_unicode(user_info.email),
                     }
-            #update external users
+            # update external users
             external_users.update(group_users)
 
-        #add external users data to local_result
+        # add external users data to local_result
         local_result.update(external_users)
-        #and return everything
+        # and return everything
         return local_result
 
     def getSortedUsersWithRoles(self, roles, skey, rkey):
@@ -977,6 +1023,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 return 'n/a'
 
     security.declarePrivate('get_local_user_info')
+
     def get_local_user_info(self, user_id):
         zope_user = self.getUser(user_id)
 
@@ -993,6 +1040,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return LocalUserInfo(**fields)
 
     security.declarePrivate('get_user_info')
+
     def get_user_info(self, user_id):
         """
         Given a `user_id`, search for the user locally and in all sources
@@ -1009,27 +1057,31 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 raise KeyError("User not found: %r" % (user_id,))
 
     security.declarePrivate('get_users_info')
+
     def get_users_info(self, local_users_only=False):
         """
         Returns the user info for all local users and all users in the sources.
         For LDAP sources only returns the users that have roles in the site.
         """
         user_info_objects = [self.get_user_info(username)
-                                for username in self.getUserNames()]
+                             for username in self.getUserNames()]
         if local_users_only:
             return user_info_objects
 
         for user_source in self.getSources():
             user_folder = user_source.getUserFolder()
             if user_folder.meta_type == 'User Folder':
-                user_info_objects.extend([self.get_user_info(username)
-                    for username in user_folder.getUserNames()])
+                user_info_objects.extend(
+                    [self.get_user_info(username) for
+                     username in user_folder.getUserNames()])
             elif user_folder.meta_type == 'LDAPUserFolder':
-                user_info_objects.extend([self.get_user_info(username)
-                    for username in user_source.getUsersRoles(user_folder)])
+                user_info_objects.extend(
+                    [self.get_user_info(username) for
+                     username in user_source.getUsersRoles(user_folder)])
         return user_info_objects
 
     security.declareProtected(manage_users, 'getUsersFullNames')
+
     def getUsersFullNames(self, users):
         """
         Given a list of users ids it returns the list with their names.
@@ -1039,26 +1091,30 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         r = []
         ra = r.append
         buf = copy(users)
-        #first check local users
+        # first check local users
         local_users = self.user_names()
         for user in users:
             if user in local_users:
                 name = self.getUserFullName(self.getUser(user))
-                if name is not None: ra(name)
+                if name is not None:
+                    ra(name)
                 buf.remove(user)
         if len(buf):
             buf1 = copy(buf)
-            #check sources
+            # check sources
             for source in self.getSources():
                 source_acl = source.getUserFolder()
                 for user in buf:
                     name = source.getUserFullName(user, source_acl)
-                    if name is not None: ra(name)
+                    if name is not None:
+                        ra(name)
                     buf1.remove(user)
-                    if len(buf1)==0: break
+                    if len(buf1) == 0:
+                        break
         return r
 
     security.declarePrivate('get_user_with_userid')
+
     def get_user_with_userid(self, userid):
         """
         Search for a user with the given ID, in this user folder and
@@ -1079,6 +1135,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return None
 
     security.declarePublic('name_from_userid')
+
     def name_from_userid(self, userid):
         """
         Given a userid, try to get its full name. If userid is None then we
@@ -1104,6 +1161,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return u''
 
     security.declarePublic('source_name_from_userid')
+
     def source_name_from_userid(self, userid):
         """
         Given a userid, return the source name (local, EIONET, or...)
@@ -1123,6 +1181,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return u''
 
     security.declarePrivate('get_current_userid')
+
     def get_current_userid(self):
         """
         Get the userid of the currently logged-in user. Returns `None` if
@@ -1134,12 +1193,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return self.REQUEST.AUTHENTICATED_USER.getId()
 
     security.declarePrivate('lookup_user_by_email')
+
     def lookup_user_by_email(self, email):
         for user in self.getUsers():
             if user.email.lower() == email.lower():
                 yield user
 
     security.declarePublic('get_user_photo_url')
+
     def get_user_photo_url(self, user_id=None):
         """
         Get the user photo URL for the user_id. Returns the URL for the
@@ -1165,6 +1226,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 return self.absolute_url() + '/user_photo?user_id=' + user_id
 
     security.declarePublic('user_photo')
+
     def user_photo(self, REQUEST, RESPONSE, user_id=None):
         """
         Get the user photo for the user_id. Returns the photo for the
@@ -1186,6 +1248,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return user_info.jpegPhoto
 
     security.declareProtected(manage_users, 'getUsersEmails')
+
     def getUsersEmails(self, users):
         """
         Given a list of users ids it returns the list with their emails.
@@ -1195,23 +1258,26 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         r = []
         ra = r.append
         buf = copy(users)
-        #first check local users
+        # first check local users
         local_users = self.user_names()
         for user in users:
             if user in local_users:
                 email = self.getUserEmail(self.getUser(user))
-                if email is not None: ra(email)
+                if email is not None:
+                    ra(email)
                 buf.remove(user)
         if len(buf):
             buf1 = copy(buf)
-            #check sources
+            # check sources
             for source in self.getSources():
                 source_acl = source.getUserFolder()
                 for user in buf:
                     email = source.getUserEmail(user, source_acl)
-                    if email is not None: ra(email)
+                    if email is not None:
+                        ra(email)
                     buf1.remove(user)
-                    if len(buf1)==0: break
+                    if len(buf1) == 0:
+                        break
         return r
 
     def getUserAccount(self, user_obj):
@@ -1233,6 +1299,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return user_obj.roles
 
     security.declarePrivate('get_all_user_roles')
+
     def get_all_user_roles(self, user):
         """
         Given a userid, returns all the roles of that user, looking at this
@@ -1248,7 +1315,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         for source in self.getSources():
             # users
             portal_roles = source.getUsersRoles(
-                    source.getUserFolder()).get(uid, [])
+                source.getUserFolder()).get(uid, [])
             if portal_roles:
                 for role, location in portal_roles:
                     if location == self.getSite().absolute_url(1):
@@ -1257,15 +1324,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             try:
                 roles.extend(source.get_group_roles_in_site(user))
             except AttributeError:
-                pass # probably not an LDAP plugin
+                pass  # probably not an LDAP plugin
 
         roles.extend(user.getRoles())
         return roles
 
     def get_all_users_roles(self, filter_path=''):
         """
-        Returns a structure with user roles by objects starting from filter_path
-        {userid: [([role, ...], location), ...], ...}
+        Returns a structure with user roles by objects starting from
+        filter_path {userid: [([role, ...], location), ...], ...}
         """
         users_roles = {}
         this_site = self.getSite()
@@ -1277,8 +1344,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     users_roles[username] = [(local_user.roles, this_site)]
 
         # search for sub-sites directly below the current site
-        sites = [self.getSite()] + [obj for obj in self.getSite().objectValues()
-                                            if INySite.providedBy(obj)]
+        sites = [self.getSite()] + [obj
+                                    for obj in self.getSite().objectValues()
+                                    if INySite.providedBy(obj)]
         for site in sites:
             path = relative_object_path(site, this_site)
             if (not path.startswith(filter_path)
@@ -1286,8 +1354,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 continue
 
             containers = site.getCatalogedObjects(
-                            meta_type=site.get_containers_metatypes(),
-                            has_local_role=1)
+                meta_type=site.get_containers_metatypes(), has_local_role=1)
             containers.append(site)
             for container in containers:
                 path = relative_object_path(container, this_site)
@@ -1300,10 +1367,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     local_roles = self.getLocalRoles(roles_tuple[1])
                     if local_roles:
                         users_roles.setdefault(username, []).append(
-                                (local_roles, container))
+                            (local_roles, container))
         return users_roles
 
     security.declareProtected(manage_users, 'get_all_containers_with_roles')
+
     def get_all_containers_with_roles(self):
         """
         Returns a list of objects with user roles
@@ -1311,13 +1379,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         ret = []
 
-        sites = [self.getSite()] + [obj for obj in self.getSite().objectValues()
-                                            if INySite.providedBy(obj)]
+        sites = [self.getSite()] + [obj
+                                    for obj in self.getSite().objectValues()
+                                    if INySite.providedBy(obj)]
         for site in sites:
             site_containers = []
             containers = site.getCatalogedObjects(
-                            meta_type=site.get_containers_metatypes(),
-                            has_local_role=1)
+                meta_type=site.get_containers_metatypes(), has_local_role=1)
             for container in containers:
                 for roles_tuple in container.get_local_roles():
                     local_roles = self.getLocalRoles(roles_tuple[1])
@@ -1397,27 +1465,28 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return user_obj.lastpost
 
     def getSuperUserFolders(self):
-        #return s list with user folders
+        # return s list with user folders
         ufs = self.superValues(self.getKnownMetaTypes())
-        if self in ufs: ufs.remove(self)
+        if self in ufs:
+            ufs.remove(self)
         return ufs
 
-    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSources')
     def getSources(self):
         """
         returns a list with all registered external sources
         """
         return map(self._getOb, map(lambda x: x['id'], self._objects))
 
-    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSourceObj')
     def getSourceObj(self, p_source_id):
         """
         returns a source object
         """
-        try: return self._getOb(p_source_id)
-        except: return None
+        try:
+            return self._getOb(p_source_id)
+        except:
+            return None
 
-    def manageAddSource(self, source_path, title='', REQUEST = None):
+    def manageAddSource(self, source_path, title='', REQUEST=None):
         """ """
         source_obj = self.unrestrictedTraverse('/' + source_path, None)
         plugin_factory = self.getPluginFactory(source_obj.meta_type)
@@ -1430,6 +1499,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             REQUEST.RESPONSE.redirect('manage_sources_html')
 
     security.declareProtected(manage_users, 'emailConfirmationEnabled')
+
     def emailConfirmationEnabled(self):
         """
         Check to see if email confirmation is enabled
@@ -1439,10 +1509,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # No email confirmation need if user is not anonymous
         return False
 
-    def manageDeleteSource(self, id, REQUEST = None):
+    def manageDeleteSource(self, id, REQUEST=None):
         """ """
-        try: self._delObject(id)
-        except: pass
+        try:
+            self._delObject(id)
+        except:
+            pass
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_sources_html')
 
@@ -1451,7 +1523,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return self.checkPermissionPublishObjects()
 
     def makeRolesString(self, roles, path='', date=None,
-            user_granting_roles=None, from_group=None):
+                        user_granting_roles=None, from_group=None):
         filtered_roles = self.getLocalRoles(roles)
         if filtered_roles == []:
             return None
@@ -1469,15 +1541,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return ret
 
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'downloadUsersCsv')
+
     def downloadUsersCsv(self, REQUEST=None, RESPONSE=None):
         """ Return a csv file as a session response.
         """
         if not (REQUEST and RESPONSE):
             return ""
 
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if (REQUEST and
+                not self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
 
         output = StringIO()
@@ -1486,46 +1559,53 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                              'Postal address', 'Email address',
                              'LDAP Group(s)', 'Roles', 'Account type'])
 
-        # get local_roles_by_location[location][user] = list of {roles, date, user_granting_roles}
+        # get local_roles_by_location[location][user] =
+        # list of {roles, date, user_granting_roles}
         local_roles_by_location = {}
-        meta_types = ['Naaya Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder',
-                'Naaya Forum', 'Naaya Forum Topic', 'Naaya TalkBack Consultation',
-                'Naaya Survey Questionnaire']
-        locations = self.getCatalogedObjects(meta_type=meta_types, has_local_role=1)
+        meta_types = ['Naaya Folder', 'Naaya Photo Gallery',
+                      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
+                      'Naaya TalkBack Consultation',
+                      'Naaya Survey Questionnaire']
+        locations = self.getCatalogedObjects(meta_type=meta_types,
+                                             has_local_role=1)
         locations.append(self.getSite())
         for l in locations:
-            local_roles_by_location[l.absolute_url(1)] = IRoleLogger(l).getAllLocalRolesInfo()
+            local_roles_by_location[
+                l.absolute_url(1)] = IRoleLogger(l).getAllLocalRolesInfo()
 
         # get user_roles[user] = list of {roles, date, user_granting_roles}
         user_roles = IRoleLogger(self.getSite()).getAllUserRolesInfo()
 
-        # local_roles_by_location[location][user] -> roles_by_user[user][location]
+        # local_roles_by_location[location][user] ->
+        # roles_by_user[user][location]
         roles_by_user = {}
         for l, v in local_roles_by_location.items():
             for u, data in v.items():
-                if not roles_by_user.has_key(u):
+                if u not in roles_by_user:
                     roles_by_user[u] = {}
                 roles_by_user[u][l] = data
 
         # user_roles[user] -> roles_by_user[user][location]
         for u, data in user_roles.items():
-            if not roles_by_user.has_key(u):
+            if u not in roles_by_user:
                 roles_by_user[u] = {}
             roles_by_user[u][self.getSite().absolute_url(1)] = data
 
-
-        # get group_roles_by_location[location][group] = list of {roles, date, user_granting_roles}
+        # get group_roles_by_location[location][group] =
+        # list of {roles, date, user_granting_roles}
         group_roles_by_location = {}
         locations = self.getCatalogedObjects(meta_type=meta_types)
         locations.append(self.getSite())
         for l in locations:
-            group_roles_by_location[l.absolute_url(1)] = IRoleLogger(l).getAllLDAPGroupRolesInfo()
+            group_roles_by_location[
+                l.absolute_url(1)] = IRoleLogger(l).getAllLDAPGroupRolesInfo()
 
-        # group_roles_by_location[location][group] -> group_roles_by_group[group][location]
+        # group_roles_by_location[location][group] ->
+        # group_roles_by_group[group][location]
         group_roles_by_group = {}
         for l, v in group_roles_by_location.items():
             for g, data in v.items():
-                if not group_roles_by_group.has_key(g):
+                if g not in group_roles_by_group:
                     group_roles_by_group[g] = {}
                 group_roles_by_group[g][l] = data
 
@@ -1536,9 +1616,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 userids = source.group_member_ids(group)
                 if userids != []:
                     groups_data[group] = {
-                            'source': source,
-                            'members': userids
-                            }
+                        'source': source,
+                        'members': userids
+                        }
                     break
 
         # get groups_for_user[userid] = list of groups
@@ -1586,10 +1666,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for path, roles_infos in roles_for_user.items():
                 for ri in roles_infos:
                     roles_info_str = self.makeRolesString(
-                            ri['roles'],
-                            path,
-                            ri.get('date', None),
-                            ri.get('user_granting_roles', None))
+                        ri['roles'],
+                        path,
+                        ri.get('date', None),
+                        ri.get('user_granting_roles', None))
                     if roles_info_str is not None:
                         roles_info_str_list.append(roles_info_str)
             # add roles from groups
@@ -1597,11 +1677,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 for path, roles_infos in group_roles_by_group[g].items():
                     for ri in roles_infos:
                         roles_info_str = self.makeRolesString(
-                                ri['roles'],
-                                path,
-                                ri.get('date', None),
-                                ri.get('user_granting_roles', None),
-                                g)
+                            ri['roles'],
+                            path,
+                            ri.get('date', None),
+                            ri.get('user_granting_roles', None),
+                            g)
                         if roles_info_str is not None:
                             roles_info_str_list.append(roles_info_str)
 
@@ -1622,13 +1702,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         RESPONSE.setHeader('Content-Length', output.len)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="users.csv"')
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment; filename="users.csv"')
 
         ret = output.getvalue()
 
         return ret
 
     security.declareProtected(manage_users, 'get_send_emails_log_items')
+
     def get_send_emails_log_items(self):
         """
         Returns all email errors
@@ -1640,6 +1722,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return getattr(self, '_send_emails_log', PersistentList())[::-1]
 
     security.declareProtected(manage_users, 'clear_send_emails_log')
+
     def clear_send_emails_log(self, REQUEST=None):
         """
         Clear all email errors
@@ -1654,11 +1737,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             REQUEST.RESPONSE.redirect('manage_send_emails_log_html')
 
     security.declareProtected(manage_users, 'manage_importUsers')
+
     def manage_importUsers(self, data=None, REQUEST=None):
         """ """
 
-        #import_errors = {}
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if (REQUEST and
+                not self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
 
         errors = []
@@ -1686,7 +1770,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     record_errors = []
                     for column, value in zip(header, row):
                         if column == 'roles':
-                            if not properties.has_key('roles'):
+                            if 'roles' not in properties:
                                 properties['roles'] = []
                             if value:
                                 properties['roles'].append(value.strip())
@@ -1707,42 +1791,67 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     email = str(email).lower()
 
                     if not check_username(name):
-                        record_errors.append('Record %s: Username: only letters, numbers, dot (.), minus (-) and underscore (_) are allowed' % record_number)
+                        record_errors.append(
+                            'Record %s: Username: only letters, numbers, dot '
+                            '(.), minus (-) and underscore (_) are allowed'
+                            % record_number)
                     if not firstname:
-                        record_errors.append('Record %s: The first name must be specified' % record_number)
+                        record_errors.append(
+                            'Record %s: The first name must be specified'
+                            % record_number)
                     if not lastname:
-                        record_errors.append('Record %s: The last name must be specified' % record_number)
+                        record_errors.append(
+                            'Record %s: The last name must be specified'
+                            % record_number)
                     if not email:
-                        record_errors.append('Record %s: The email must be specified' % record_number)
+                        record_errors.append(
+                            'Record %s: The email must be specified'
+                            % record_number)
                     if not is_valid_email(email):
-                        record_errors.append('Record %s: Invalid email address.' % record_number)
+                        record_errors.append(
+                            'Record %s: Invalid email address.'
+                            % record_number)
                     if not name:
-                        record_errors.append('Record %s: A username must be specified' % record_number)
+                        record_errors.append(
+                            'Record %s: A username must be specified'
+                            % record_number)
                     if not password:
-                        record_errors.append('Record %s: Password must be specified' % record_number)
+                        record_errors.append(
+                            'Record %s: Password must be specified'
+                            % record_number)
 
-                    existing_usernames = set(username.lower for username in self.getUserNames())
-                    if self.get_user_with_userid(name) is not None or name in existing_usernames:
-                        record_errors.append('Record %s: Username %s already in use' % (record_number, name))
+                    existing_usernames = set(
+                        username.lower for username in self.getUserNames())
+                    if (self.get_user_with_userid(name) is not None or
+                            name in existing_usernames):
+                        record_errors.append(
+                            'Record %s: Username %s already in use'
+                            % (record_number, name))
 
-                    existing_emails = set(user.email.lower() for user in self.getUsers())
+                    existing_emails = set(user.email.lower() for
+                                          user in self.getUsers())
                     if email in existing_emails:
-                        users_with_same_email = [user.name for user in self.getUsers()
+                        users_with_same_email = [
+                            user.name for user in self.getUsers()
                             if user.email.lower() == email]
-                        record_errors.append('Record %s: Email %s already in use - user(s): %s'
-                            % (record_number, email, ', '.join(users_with_same_email)))
+                        record_errors.append(
+                            'Record %s: Email %s already in use - user(s): %s'
+                            % (record_number, email,
+                               ', '.join(users_with_same_email)))
                     if record_errors:
                         errors += record_errors
                         continue
 
-                    user = self._doAddUser(name, password, roles, domains, firstname, lastname, email)
+                    user = self._doAddUser(name, password, roles, domains,
+                                           firstname, lastname, email)
                     successfully_imported += 1
 
                 except UnicodeDecodeError, e:
                     raise
                 except Exception, e:
                     self.log_current_error()
-                    msg = ('Error while importing from CSV, row ${record_number}: ${error}',
+                    msg = ('Error while importing from CSV, '
+                           'row ${record_number}: ${error}',
                            {'record_number': record_number, 'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
@@ -1758,22 +1867,26 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             self.setSessionErrorsTrans(errors)
         if REQUEST is not None:
             if successfully_imported > 0:
-                self.setSessionInfoTrans('%s user(s) successfully imported.' % successfully_imported)
+                self.setSessionInfoTrans('%s user(s) successfully imported.'
+                                         % successfully_imported)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(manage_users, 'template')
+
     def template(self, as_attachment=True, REQUEST=None):
         """ """
         output = StringIO()
-        columns = ['firstname', 'lastname','email', 'name', 'password', 'roles', 'domains']
+        columns = ['firstname', 'lastname', 'email', 'name', 'password',
+                   'roles', 'domains']
         csv.writer(output).writerow(columns)
         if as_attachment and REQUEST is not None:
             filename = 'users import.csv'
             set_response_attachment(REQUEST.RESPONSE, filename,
-                'text/csv; charset=utf-8', output.len)
+                                    'text/csv; charset=utf-8', output.len)
         return output.getvalue()
 
     security.declareProtected(view, 'get_ldap_user_groups')
+
     def get_ldap_user_groups(self, user_id):
         """ """
         try:
@@ -1787,17 +1900,24 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return ldap_roles
 
-    manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
-    manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
-    manage_editUser_html = PageTemplateFile('zpt/authentication_edituser', globals())
+    manage_users_html = PageTemplateFile('zpt/authentication_content',
+                                         globals())
+    manage_addUser_html = PageTemplateFile('zpt/authentication_adduser',
+                                           globals())
+    manage_editUser_html = PageTemplateFile('zpt/authentication_edituser',
+                                            globals())
 
-    manage_userRoles_html = PageTemplateFile('zpt/authentication_user_roles', globals())
+    manage_userRoles_html = PageTemplateFile('zpt/authentication_user_roles',
+                                             globals())
     sitemap = PageTemplateFile('zpt/authentication_sitemap', globals())
 
-    manage_sources_html = PageTemplateFile('zpt/authentication_sources', globals())
-    manage_source_html = PageTemplateFile('zpt/authentication_source', globals())
+    manage_sources_html = PageTemplateFile('zpt/authentication_sources',
+                                           globals())
+    manage_source_html = PageTemplateFile('zpt/authentication_source',
+                                          globals())
 
-    manage_send_emails_log_html = PageTemplateFile('zpt/authentication_send_emails_log', globals())
+    manage_send_emails_log_html = PageTemplateFile(
+        'zpt/authentication_send_emails_log', globals())
 
     recover_password = RecoverPassword('recover_password')
 
