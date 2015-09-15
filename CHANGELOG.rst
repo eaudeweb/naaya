@@ -1,5 +1,7 @@
 1.4.42 (unreleased)
 -------------------
+* removed disabled@eionet.europa.eu as filter for users
+  (disabled users are already filtered out) [dumitval]
 
 1.4.41 (2015-06-25)
 -------------------
