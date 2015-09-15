@@ -106,8 +106,7 @@
                     <tr tal:repeat="item users"
                             tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
                       <tal:block
-                        condition="python:item['mail'] != 'disabled@eionet.europa.eu'"
-                        define="existing python:here.registration_status(username=item['uid'])">
+                          define="existing python:here.registration_status(username=item['uid'])">
                         <td><input type="checkbox" name="uids:list"
                           tal:attributes="value item/uid;
                                           disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
@@ -159,8 +158,7 @@
                     <tr tal:repeat="item users"
                             tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
                       <tal:block
-                        condition="python:item['mail'] != 'disabled@eionet.europa.eu'"
-                        define="existing python:here.registration_status(username=item['uid'])">
+                          define="existing python:here.registration_status(username=item['uid'])">
                         <td><input type="checkbox" name="uids:list"
                           tal:attributes="value item/uid;
                                           disabled python:test(existing in ['new', 'accepted', 'rejected'], True, None)" /></td>
