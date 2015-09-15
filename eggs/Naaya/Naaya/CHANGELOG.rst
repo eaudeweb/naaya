@@ -1,5 +1,6 @@
 4.0.8 (unreleased)
 -------------------
+* filter out disabled users from search results [dumitval]
 
 4.0.7 (2015-09-14)
 -------------------
