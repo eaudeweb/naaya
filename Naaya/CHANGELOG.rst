@@ -1,5 +1,6 @@
 4.0.9 (unreleased)
 -------------------
+* removed further references to disabled@eionet.europa.eu [dumitval]
 
 4.0.8 (2015-09-15)
 -------------------

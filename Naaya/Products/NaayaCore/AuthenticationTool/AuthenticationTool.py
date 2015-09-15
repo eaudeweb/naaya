@@ -23,7 +23,6 @@ from Products.NaayaCore.constants import ID_AUTHENTICATIONTOOL
 from Products.NaayaCore.constants import METATYPE_AUTHENTICATIONTOOL
 from Products.NaayaCore.constants import METATYPE_FOLDER
 from Products.NaayaCore.constants import TITLE_AUTHENTICATIONTOOL
-from Products.NaayaCore.constants import DISABLED_EMAIL
 from Products.NaayaCore.managers.import_export import UnicodeReader
 from Products.NaayaCore.managers.import_export import set_response_attachment
 from Products.NaayaCore.managers.session_manager import session_manager
@@ -623,8 +622,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         response = []
         for usr in users_info:
             mail = getattr(usr, 'email', '')
-            status_disabled = getattr(usr, 'status', 'active') == 'disabled'
-            is_disabled = (DISABLED_EMAIL in mail) or status_disabled
+            is_disabled = getattr(usr, 'status', 'active') == 'disabled'
             if ((disabled_type == 'no_disabled') and (not is_disabled)
                 or
                 (disabled_type == 'include_disabled')

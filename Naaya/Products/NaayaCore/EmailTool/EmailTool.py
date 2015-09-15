@@ -14,7 +14,6 @@ from Products.NaayaCore.constants import METATYPE_EMAILTEMPLATE
 from Products.NaayaCore.constants import METATYPE_EMAILTOOL
 from Products.NaayaCore.constants import PERMISSION_ADD_NAAYACORE_TOOL
 from Products.NaayaCore.constants import TITLE_EMAILTOOL
-from Products.NaayaCore.constants import DISABLED_EMAIL
 from Products.NaayaCore.managers import import_export
 from Products.NaayaCore.managers import utils
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -159,8 +158,6 @@ class EmailTool(Folder):
     def _filter_disabled_users(self, emails, agent):
         disabled = []
         for e in emails:
-            if e == DISABLED_EMAIL:
-                disabled.append(e)
             users = agent.search_user_by_email(e)
             for user in users:
                 if user['status'] == 'disabled':
@@ -189,7 +186,8 @@ class EmailTool(Folder):
                 agent = agent_from_uf(uf, bind=True)
             except Exception, msg:
                 log.debug(
-                    "Could not get LDAP agent to check email availability: %s", msg
+                    "Could not get LDAP agent to check email availability: %s",
+                    msg
                 )
 
         if not isinstance(p_to, list):
