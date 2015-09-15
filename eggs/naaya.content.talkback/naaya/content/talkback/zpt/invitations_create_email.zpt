@@ -38,18 +38,16 @@
                     $('#results_table_'+recp_type).show();
                     $('#span_add_'+recp_type).show();
                     $.each(data, function(idx, user){
-                      if (user['mail'] != 'disabled@eionet.europa.eu'){
-                        results_tbody.append(
-                        $('<tr>').append(
-                          $('<td>').append(
-                            $('<input>').attr(
-                              {'type': 'checkbox',
-                               'name': recp_type+'_emails:list',
-                               'value': user['mail']}))).append(
-                          $('<td>').text(user['cn'])).append(
-                          $('<td>').text(user['uid'])).append(
-                          $('<td>').text(user['mail'])));
-                      }
+                      results_tbody.append(
+                      $('<tr>').append(
+                        $('<td>').append(
+                          $('<input>').attr(
+                            {'type': 'checkbox',
+                             'name': recp_type+'_emails:list',
+                             'value': user['mail']}))).append(
+                        $('<td>').text(user['cn'])).append(
+                        $('<td>').text(user['uid'])).append(
+                        $('<td>').text(user['mail'])));
                     })
                   };
                 },
