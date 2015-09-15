@@ -105,10 +105,14 @@ def findUsers(site, search_param, search_term):
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
         if schemaHasParam(acl_folder, search_param):
+            attrs = ['employeeType'] + acl_folder.getSchemaConfig().keys()
             users = acl_folder.findUser(
                 search_param=search_param,
-                search_term=search_term.encode('utf-8'))
+                search_term=search_term.encode('utf-8'),
+                attrs=attrs)
             for user in users:
+                if user.get('employeeType') == 'disabled':
+                    continue
                 uid = user.get('uid', '')
                 cn = _decode(user.get('cn', ''), source.default_encoding)
                 mail = user.get('mail', '')
