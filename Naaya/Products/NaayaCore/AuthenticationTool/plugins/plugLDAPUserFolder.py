@@ -13,7 +13,6 @@ from zope.interface import implements
 
 try:
     import ldap
-    #from Products.LDAPUserFolder.utils import GROUP_MEMBER_MAP
     from Products.LDAPUserFolder.LDAPDelegate import filter_format
 except:
     pass
@@ -21,10 +20,12 @@ except:
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import UserInfo
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
-from Products.NaayaCore.AuthenticationTool.interfaces import IAuthenticationToolPlugin
+from Products.NaayaCore.AuthenticationTool.interfaces import (
+    IAuthenticationToolPlugin)
 
 from Products.Naaya.NySite import NySite
-from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
+from Products.NaayaBase.events import NyAddGroupRoleEvent
+from Products.NaayaBase.events import NyRemoveGroupRoleEvent
 
 from naaya.core.utils import is_ajax
 from naaya.core.zope2util import relative_object_path
@@ -36,26 +37,29 @@ LDAP_ROOT_ID = 'ROOT'
 
 log = logging.getLogger('naaya.core.auth.ldap')
 
+
 class LDAPUserNotFound(Exception):
     pass
+
 
 class ldap_user:
     """Defines a ldap_user. """
 
     def __init__(self, id, dn, cn, description, parent, childs, cached):
         """Constructor"""
-        self.id = id    #unique id, integer
-        self.dn = dn    #cannonical name, string
-        self.cn= cn     #distinguished name, string
-        self.description = description  #string
-        self.parent = parent    #parent's id, integer
-        self.childs = childs    #a list with all childs nodes
-        self.cached = cached    #if this node content is chached or not
+        self.id = id    # unique id, integer
+        self.dn = dn    # cannonical name, string
+        self.cn = cn     # distinguished name, string
+        self.description = description  # string
+        self.parent = parent    # parent's id, integer
+        self.childs = childs    # a list with all childs nodes
+        self.cached = cached    # if this node content is chached or not
 
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
 
 InitializeClass(ldap_user)
+
 
 class plugLDAPUserFolder(PlugBase):
     """ Plugin for LDAPUserFolder """
@@ -99,15 +103,17 @@ class plugLDAPUserFolder(PlugBase):
             pass
 
     def sort_list(self, list, n, r):
-        #returns a sorted list of messages - sort without case-sensitivity
+        # returns a sorted list of messages - sort without case-sensitivity
         t = [(x[n].lower(), x) for x in list]
         t.sort()
-        if r: t.reverse()
+        if r:
+            t.reverse()
         return [val for (key, val) in t]
 
     def initializeCache(self, root_dn):
         """Init"""
-        self._user_objs[LDAP_ROOT_ID] = ldap_user(LDAP_ROOT_ID, root_dn, LDAP_ROOT_ID, LDAP_ROOT_ID, '', [], 0)
+        self._user_objs[LDAP_ROOT_ID] = ldap_user(
+            LDAP_ROOT_ID, root_dn, LDAP_ROOT_ID, LDAP_ROOT_ID, '', [], 0)
         self._p_changed = 1
 
     def deleteCache(self, acl_folder):
@@ -152,7 +158,9 @@ class plugLDAPUserFolder(PlugBase):
                 continue
             user_info = self.get_source_user_info(user)
             if not user_info:
-                log.warning("For getSortedUserRoles, Could not find user info for %s", user)
+                log.warning(
+                    "For getSortedUserRoles, Could not find user info for %s",
+                    user)
                 continue
             is_disabled = user_info.status == 'disabled'
             buf.append((user, user_info.full_name,
@@ -171,7 +179,8 @@ class plugLDAPUserFolder(PlugBase):
            and returns a tuple (dn, value1, value2)"""
         dn = role.get('dn', '')
         cn = role.get('cn', '')
-        if cn:  cn = cn[0]
+        if cn:
+            cn = cn[0]
         description = role.get('description', '')
         if description:
             description = description[0].decode(self.default_encoding)
@@ -186,38 +195,43 @@ class plugLDAPUserFolder(PlugBase):
         else:
             res = []
         if role_id in expand:
-            #must expand this node
+            # must expand this node
             if not role.cached:
-                #must cache this node
+                # must cache this node
                 self._cacheRole(role)
             if role.cached:
-                #this node is cached
+                # this node is cached
                 for child_role_id in role.childs:
                     res.append((self._user_objs[child_role_id], depth))
                     if self.isInList(expand, child_role_id):
-                        res.extend(self.getRoles(expand, child_role_id, depth+1))
+                        res.extend(self.getRoles(expand, child_role_id,
+                                                 depth+1))
         return res
 
     def _searchRoles(self, dn):
         """Search roles in LDAP"""
         searchScope = ldap.SCOPE_ONELEVEL
         searchFilter = 'objectClass=*'
-        ROLESretrieveAttributes = ('cn','description')
+        ROLESretrieveAttributes = ('cn', 'description')
         delegate = self.get_ldap_delegate()
-        roles = delegate.search(dn, searchScope, searchFilter, ROLESretrieveAttributes)
+        roles = delegate.search(dn, searchScope, searchFilter,
+                                ROLESretrieveAttributes)
         return roles['results']
 
     def _cacheRole(self, role):
         """Cache a role"""
-        #2. get all childs
+        # 2. get all childs
         child_roles = self._searchRoles(role.dn)
         childs = []
         for child_role in child_roles:
-            #3. parse
-            child_role_dn, child_role_cn, child_role_description = self._parseRole(child_role)
-            self._user_objs[child_role_cn] = ldap_user(child_role_cn, child_role_dn, child_role_cn, child_role_description, role.id, [], 0)
+            # 3. parse
+            child_role_dn, child_role_cn, child_role_description = (
+                self._parseRole(child_role))
+            self._user_objs[child_role_cn] = ldap_user(
+                child_role_cn, child_role_dn, child_role_cn,
+                child_role_description, role.id, [], 0)
             childs.append(child_role_cn)
-        #3. update current node
+        # 3. update current node
         role.childs = childs
         role.cached = 1
         self._p_changed = 1
@@ -234,11 +248,13 @@ class plugLDAPUserFolder(PlugBase):
         return isinstance(l, list)
 
     security.declareProtected(manage_users, 'addUserRoles')
+
     def addUserRoles(self, name=[], roles=[], location='',
-            user_location='', send_mail='', REQUEST=None):
+                     user_location='', send_mail='', REQUEST=None):
         """ """
         super(plugLDAPUserFolder, self).addUserRoles(name, roles, location,
-                user_location, send_mail, REQUEST)
+                                                     user_location, send_mail,
+                                                     REQUEST)
         if REQUEST is not None:
             if is_ajax(REQUEST):
                 url = (REQUEST['HTTP_REFERER'] +
@@ -248,9 +264,11 @@ class plugLDAPUserFolder(PlugBase):
             return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revokeUserRoles')
+
     def revokeUserRoles(self, user, location, REQUEST=None):
         """ """
-        super(plugLDAPUserFolder, self).revokeUserRoles(user, location, REQUEST)
+        super(plugLDAPUserFolder, self).revokeUserRoles(user, location,
+                                                        REQUEST)
         if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
@@ -261,19 +279,20 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_groups_roles_map(self):
         groups_roles_map = {}
+
         def add_roles_from_ob(ob, is_brain=False):
             if is_brain:
                 ob_roles = getattr(ob, 'ny_ldap_group_roles', MV)
-                if not ob.has_key('ny_ldap_group_roles') or ob_roles is MV:
-                    # catalog field (meta) not created or missing value in brain
+                if 'ny_ldap_group_roles' not in ob or ob_roles is MV:
+                    # catalog field (meta) not created or missing brain value
                     is_brain = False
                     ob = ob.getObject()
             if not is_brain:
                 try:
                     ob_roles = ob.acl_satellite.getAllLocalRoles()
                 except AttributeError:
-                    return # looks like we found a broken object
-            elif ob_roles: # brain with roles, get the object
+                    return  # looks like we found a broken object
+            elif ob_roles:  # brain with roles, get the object
                 ob = ob.getObject()
             for group_id, group_roles in ob_roles.iteritems():
                 all_group_roles = groups_roles_map.setdefault(group_id, [])
@@ -283,7 +302,7 @@ class plugLDAPUserFolder(PlugBase):
                         'path': relative_object_path(ob, site),
                         'is_site': ob == site,
                     }
-                    all_group_roles.append( (role, location) )
+                    all_group_roles.append((role, location))
 
         site = self.getSite()
         add_roles_from_ob(site)
@@ -291,7 +310,7 @@ class plugLDAPUserFolder(PlugBase):
             try:
                 add_roles_from_ob(b, is_brain=True)
             except Unauthorized:
-                pass # suppress restricted obs from breaking publishing
+                pass  # suppress restricted obs from breaking publishing
 
         return groups_roles_map
 
@@ -307,7 +326,8 @@ class plugLDAPUserFolder(PlugBase):
         """
         local_roles = {}
         all_roles = self.get_groups_roles_map()
-        user_in_group = self.getSite().acl_satellite.user_in_group_factory(user)
+        user_in_group = self.getSite().acl_satellite.user_in_group_factory(
+            user)
         for group, role_list in all_roles.items():
             if user_in_group(group):
                 for role in role_list:
@@ -316,8 +336,9 @@ class plugLDAPUserFolder(PlugBase):
         return local_roles
 
     security.declareProtected(manage_users, 'map_group_to_role')
+
     def map_group_to_role(self, group, roles=[], location='',
-            send_mail='', REQUEST=None):
+                          send_mail='', REQUEST=None):
         """ """
         def on_error(error_str):
             if REQUEST is not None:
@@ -352,6 +373,7 @@ class plugLDAPUserFolder(PlugBase):
             return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revoke_group_role')
+
     def revoke_group_role(self, group_id, role, location, REQUEST=None):
         """ """
         ob = self.getSite().unrestrictedTraverse(location)
@@ -361,7 +383,7 @@ class plugLDAPUserFolder(PlugBase):
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
             notify(RoleAssignmentEvent(ob, manager_id, group_id,
                                        [], [role], is_group=True,
-                                       send_mail='Administrator'==role))
+                                       send_mail='Administrator' == role))
             self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
@@ -375,13 +397,15 @@ class plugLDAPUserFolder(PlugBase):
         root_dn = self.getRootDN(ldap_folder)
         scope = self.getGroupScope(ldap_folder)
         delegate = self.get_ldap_delegate()
-        result = delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+        result = delegate.search(
+            root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
         if result['size'] > 0:
-            group_user_members = result['results'][result['size']-1]['uniqueMember']
+            group_user_members = result['results'][result['size']-1][
+                'uniqueMember']
             group_users = []
             for member in group_user_members:
                 if member == '':
-                    continue # we found a placeholder member for empty groups
+                    continue  # we found a placeholder member for empty groups
                 try:
                     uid = member.split(',')[0].split('=')[1]
                 except IndexError:
@@ -397,18 +421,19 @@ class plugLDAPUserFolder(PlugBase):
 
     def getUsersByRole(self, acl_folder, groups=None):
         """ Return all those users that are in a group """
-        #all_dns = {}
         res = []
         res_append = res.append
-        #member_attrs = GROUP_MEMBER_MAP.values()
 
-        if groups is None:  return ()
+        if groups is None:
+            return ()
 
         for group_id, group_dn in groups:
             dn = self.getRootDN(acl_folder)
             scope = self.getGroupScope(acl_folder)
             delegate = self.get_ldap_delegate()
-            result = delegate.search(dn, scope, filter_format('(cn=%s)', (group_id,)), ['uniqueMember', 'member'])
+            result = delegate.search(
+                dn, scope, filter_format('(cn=%s)', (group_id,)),
+                ['uniqueMember', 'member'])
             for val in result['results']:
                 for dn in val['uniqueMember']:
                     p_username = self._user_id_from_dn(dn)
@@ -418,29 +443,28 @@ class plugLDAPUserFolder(PlugBase):
 
     def findLDAPUsers(self, acl_folder, params='', term='', role='', dn=''):
         """ search for users in LDAP """
-        attrs=['employeeType'] + acl_folder.getSchemaConfig().keys()
+        attrs = ['employeeType'] + acl_folder.getSchemaConfig().keys()
 
-        if self.REQUEST.has_key('search_user'):
+        if 'search_user' in self.REQUEST:
             if params and term:
                 try:
                     self.buffer = {}
                     users = acl_folder.findUser(search_param=params,
                                                 search_term=term,
                                                 attrs=attrs)
-                    [self.buffer.setdefault(u['uid'],
-                                            self.decode_cn(u['cn']))
-                        for u in users if not u.get('employeeType') == 'disabled']
+                    [self.buffer.setdefault(u['uid'], self.decode_cn(u['cn']))
+                     for u in users if not u.get('employeeType') == 'disabled']
                     return [self.get_source_user_info(u['uid']) for u in users
-                                if not u.get('employeeType') == 'disabled']
+                            if not u.get('employeeType') == 'disabled']
                 except:
                     return ()
             else:
                 return ()
-        elif self.REQUEST.has_key('search_role'):
+        elif 'search_role' in self.REQUEST:
             try:
                 self.buffer = {}
                 users = self.getUsersByRole(acl_folder, [(role, dn)])
-                [ self.buffer.setdefault(u.user_id, u.full_name) for u in users ]
+                [self.buffer.setdefault(u.user_id, u.full_name) for u in users]
                 return users
             except:
                 return ()
@@ -448,7 +472,7 @@ class plugLDAPUserFolder(PlugBase):
             return ()
 
     def getUserEmail(self, p_username, acl_folder):
-        #return the email of the given user id
+        # return the email of the given user id
         try:
             user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
@@ -457,7 +481,7 @@ class plugLDAPUserFolder(PlugBase):
             return user_info.email.encode(self.default_encoding)
 
     def getUserFullName(self, p_username, acl_folder):
-        #return the full name of the given user id
+        # return the full name of the given user id
         try:
             user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
@@ -483,7 +507,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_group_members(self, group_id):
         member_ids = self.group_member_ids(group_id)
-        #ldap_user_folder = self.getUserFolder()
+        # ldap_user_folder = self.getUserFolder()
 
         def user_data(user_id):
             try:
@@ -528,21 +552,26 @@ class plugLDAPUserFolder(PlugBase):
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
 
     security.declarePublic('section_manage_all_html')
-    section_manage_all_html = PageTemplateFile('plugLDAPUserFolderManage', globals())
+    section_manage_all_html = PageTemplateFile(
+        'plugLDAPUserFolderManage', globals())
 
     security.declarePublic('section_assign_to_users_html')
-    section_assign_to_users_html = PageTemplateFile('plugLDAPUserFolderAssignUsers', globals())
+    section_assign_to_users_html = PageTemplateFile(
+        'plugLDAPUserFolderAssignUsers', globals())
 
     security.declarePublic('section_assign_to_groups_html')
-    section_assign_to_groups_html = PageTemplateFile('plugLDAPUserFolderAssignGroups', globals())
+    section_assign_to_groups_html = PageTemplateFile(
+        'plugLDAPUserFolderAssignGroups', globals())
 
     security.declarePublic('section_group_members_html')
-    section_group_members_html = PageTemplateFile('plugLDAPUserFolderGroupMembers', globals())
+    section_group_members_html = PageTemplateFile(
+        'plugLDAPUserFolderGroupMembers', globals())
 
     security.declareProtected(manage_users, 'pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
 
 InitializeClass(plugLDAPUserFolder)
+
 
 class LdapSatelliteProvider(Acquisition.Implicit):
     """
@@ -597,7 +626,8 @@ class LdapSatelliteProvider(Acquisition.Implicit):
         return list(roles)
 
     def add_group_roles(self, group, roles):
-        assert not isinstance(roles, basestring), "Roles must be a list or tuple, not string"
+        assert not isinstance(
+            roles, basestring), "Roles must be a list or tuple, not string"
         if not roles:
             return
 
@@ -618,15 +648,14 @@ class LdapSatelliteProvider(Acquisition.Implicit):
             if role not in assigned_roles:
                 roles_to_add.append(role)
         assigned_roles += roles_to_add
-        #catalog = current_folder.getSite().getCatalogTool()
-        #catalog.recatalogNyObject(current_folder)
 
         notify(NyAddGroupRoleEvent(current_folder, group, roles_to_add))
 
         current_folder._p_changed = True
 
     def remove_group_roles(self, group, roles):
-        assert not isinstance(roles, basestring), "Roles must be a list or tuple, not string"
+        assert not isinstance(
+            roles, basestring), "Roles must be a list or tuple, not string"
 
         current_folder = self.aq_parent
         local_roles = current_folder.__ny_ldap_group_roles__
@@ -639,8 +668,6 @@ class LdapSatelliteProvider(Acquisition.Implicit):
                 raise ValueError('Trying to remove non-existent role')
         if not assigned_roles:
             del local_roles[group]
-        #catalog = current_folder.getSite().getCatalogTool()
-        #catalog.recatalogNyObject(current_folder)
 
         notify(NyRemoveGroupRoleEvent(current_folder, group, roles))
 
@@ -648,10 +675,12 @@ class LdapSatelliteProvider(Acquisition.Implicit):
 
 NySite.acl_satellite = LdapSatelliteProvider()
 
+
 class LDAPUserInfo(UserInfo):
     """ a UserInfo with an extra property for LDAP (`dn`) """
-    mandatory_fields = UserInfo.mandatory_fields | set(['dn', 'organisation',
-            'postal_address', 'phone_number'])
+    mandatory_fields = UserInfo.mandatory_fields | set(
+        ['dn', 'organisation', 'postal_address', 'phone_number'])
+
 
 def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
 
@@ -678,6 +707,7 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
 
     return LDAPUserInfo(**fields)
 
+
 def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
     def get_zope_user():
         zope_user = ldap_plugin._get_zope_user(user_id)
@@ -685,7 +715,6 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
                                        "not found via LDAPUserFolder")
         return zope_user
 
-    #encoding = ldap_plugin.default_encoding
     def extract(name):
         # encode values back to strings, because the rest of our ancient code
         # expects that.
