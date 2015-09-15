@@ -46,18 +46,16 @@
                     $('#cc_emails').attr('rows', data.length + +current_rows);
                     $('#results_table').show();
                     $.each(data, function(idx, user){
-                      if (user['mail'] != 'disabled@eionet.europa.eu'){
-                        results_tbody.append(
-                        $('<tr>').append(
-                          $('<td>').append(
-                            $('<input>').attr(
-                              {'type': 'checkbox',
-                               'name': 'emails:list',
-                               'value': user['mail']}))).append(
-                          $('<td>').text(user['cn'])).append(
-                          $('<td>').text(user['uid'])).append(
-                          $('<td>').text(user['mail'])));
-                      }
+                      results_tbody.append(
+                      $('<tr>').append(
+                        $('<td>').append(
+                          $('<input>').attr(
+                            {'type': 'checkbox',
+                             'name': 'emails:list',
+                             'value': user['mail']}))).append(
+                        $('<td>').text(user['cn'])).append(
+                        $('<td>').text(user['uid'])).append(
+                        $('<td>').text(user['mail'])));
                     })
                   };
                 },
