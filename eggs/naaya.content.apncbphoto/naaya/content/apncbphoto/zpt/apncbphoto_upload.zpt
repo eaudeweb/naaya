@@ -1,0 +1,99 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | Upload photo metadata from file | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+        <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+        <script type="text/javascript">
+            $(document).ready(function(){
+                  $('.datatable').dataTable({
+                      'aaSorting': [[0, "desc"]],
+                      'sPaginationType': 'full_numbers',
+                      "aLengthMenu": [[10, 25, 50, -1],
+                                      [10, 25, 50, "All"]]
+                  });
+            });
+        </script>
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'));
+                              lang here/gl_get_selected_language"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <form action="upload" method="post" enctype="multipart/form-data"
+          tal:condition="not:options/workbook">
+            <div class="field">
+              <label for="metadata_file">Upload file with metadata</label>
+              <input type="file" id="metadata_file" name="metadata_file" />
+            </div>
+            <div class="field">
+              <input type="submit" value="Upload" name="submit_metadata" />
+            </div>
+        </form>
+
+        <table tal:condition="options/workbook" class="datatable">
+          <thead>
+            <th></th>
+            <th>Auteur</th>
+            <th>Image</th>
+            <th>Sujet</th>
+            <th>Parc</th>
+            <th>Topic</th>
+            <th>Biome</th>
+            <th>Vegetation</th>
+            <th>Altitude</th>
+            <th>Date</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+          </thead>
+          <tbody>
+            <tal:sheet repeat="sheet options/workbook">
+              <tr tal:repeat="row sheet">
+                <td tal:repeat="cell row" tal:content="cell" />
+              </tr>
+            </tal:sheet>
+          </tbody>
+        </table>
+
+        <tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>
