@@ -40,11 +40,23 @@
                 </span>
         </h1>
 
+        <div id="admin_this_folder">
+          <a tal:attributes="href string:${here/absolute_url}/">
+            <span i18n:translate="">Search</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/upload">
+            <span i18n:translate="">Upload metadata</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/edit_html">
+            <span i18n:translate="">Edit description</span>
+          </a>
+        </div>
 
         <!-- Map widget -->
         <tal:block condition="python:here.prop_details('geo_location')['show']"
             content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
+        <h2 i18n:translate="">Edit parks</h2>
         <table class="datatable">
           <thead>
             <th i18n:translate="" width="40em">Park id</th>
@@ -75,6 +87,7 @@
           </tbody>
         </table>
 
+        <h2 i18n:translate="">Edit authors</h2>
         <table class="datatable">
           <thead>
             <th i18n:translate="" width="40em">Author id</th>

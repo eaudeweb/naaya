@@ -52,10 +52,24 @@
                 </span>
         </h1>
 
+        <div id="admin_this_folder">
+          <a tal:attributes="href string:${here/absolute_url}/">
+            <span i18n:translate="">Search</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/edit_html">
+            <span i18n:translate="">Edit description</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/admin">
+            <span i18n:translate="">Manage lists</span>
+          </a>
+        </div>
+
 
         <!-- Map widget -->
         <tal:block condition="python:here.prop_details('geo_location')['show']"
             content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <p i18n:translate="">Here you can upload metadata into the photo database. The photos themselves are uploaded via FTP</p>
 
         <form action="upload" method="post" enctype="multipart/form-data"
           tal:condition="not:options/workbook">
