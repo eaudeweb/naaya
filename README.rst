@@ -10,6 +10,7 @@ Install
 Server config
 -------------
 Edit database connection details in buildout secret.cfg
+
 * CONGODB_USER =
 * CONGODB_PASSWORD =
 * CONGODB_HOST =
