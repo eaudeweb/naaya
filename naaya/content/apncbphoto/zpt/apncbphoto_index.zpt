@@ -1,0 +1,225 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link href="++resource++naaya.photoarchive/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox.pack.js"></script>
+        <link href="++resource++naaya.photoarchive/jquery.fancybox-thumbs.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="++resource++naaya.photoarchive/jquery.fancybox-thumbs.js"></script>
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+        <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+        <script type="text/javascript">
+            $(document).ready(function(){
+                  $('.datatable').dataTable({
+                      'oLanguage':{
+                        'sSearch': 'Filter results '
+                      },
+                      'aaSorting': [[0, "desc"]],
+                      'sPaginationType': 'full_numbers',
+                      "aLengthMenu": [[10, 25, 50, -1],
+                                      [10, 25, 50, "All"]]
+                  });
+            });
+        </script>
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $(".fancybox").fancybox({
+              type: 'image',
+              arrows: false,
+            });
+          });
+        </script>
+
+        <style>
+          .title{
+            min-width: 150px;
+            display: inline-block;
+          }
+          .image{
+            float: left;
+            height: 110%;
+            width: 30%;
+          }
+          .image img{
+            float: right;
+            max-height: 100%;
+            max-width: 100%
+          }
+          .description{
+            float: left;
+            width: 70%;
+          }
+          .docitem{
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 5px;
+          }
+          .search-block{
+            float: left;
+            padding: 0.5rem;
+          }
+        </style>
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'));
+                              lang here/gl_get_selected_language"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+        <div id="admin_this_folder">
+          <a tal:attributes="href string:${here/absolute_url}/upload">
+            <span i18n:translate="">Upload metadata</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/edit_html">
+            <span i18n:translate="">Edit description</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/admin">
+            <span i18n:translate="">Manage lists</span>
+          </a>
+        </div>
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+        <form id="search_form" action=".">
+          <div class="search-block">
+            <div class="field">
+              <label for="subject" i18n:translate="">Subject</label>
+              <input type="text" id="subject" name="subject:utf8:ustring" />
+            </div>
+
+            <div class="field">
+              <label for="date" i18n:translate="">Date</label>
+              <input type="text" id="date" name="date:utf8:ustring" />
+            </div>
+          </div>
+          <div class="search-block">
+            <div class="field">
+              <label for="esp_nom_com" i18n:translate="">Esp nom com</label>
+              <input type="text" id="esp_nom_com" name="esp_nom_com:utf8:ustring" />
+            </div>
+
+            <div class="field">
+              <label for="esp_nom_lat" i18n:translate="">Esp nom lat</label>
+              <input type="text" id="esp_nom_lat" name="esp_nom_lat:utf8:ustring" />
+            </div>
+          </div>
+          <div class="search-block">
+            <div class="field">
+              <label for="park" i18n:translate="">Park</label>
+              <select id="park" name="park:utf8:ustring">
+                <option value="" i18n:translate="">All parks</option>
+                <option tal:repeat="park here/get_parks"
+                  tal:attributes="value park/code" tal:content="park/name" />
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="author" i18n:translate="">Author</label>
+              <select id="author" name="author:utf8:ustring">
+                <option value="" i18n:translate="">All authors</option>
+                <option tal:repeat="author here/get_authors"
+                  tal:attributes="value author/code" tal:content="author/name"/>
+              </select>
+            </div>
+          </div>
+          <div class="field clearer">
+            <input type="hidden" id="submit" name="submit" />
+            <input type="submit" i18n:attributes="value" value="Search"
+              style="margin-top: 0px;" />
+          </div>
+        </form>
+
+        <table class="datatable" tal:condition="results">
+          <thead>
+            <tr>
+              <th>Search results</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="result results">
+              <td>
+                <li style="list-style-type: none" class="docitem">
+                  <div class="description">
+                    <div>
+                      <span class="title" i18n:translate="">Subject:</span>
+                      <span i18n:translate="" tal:content="result/subject" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Author:</span>
+                      <span i18n:translate="" tal:content="result/author" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Ref geo:</span>
+                      <span i18n:translate="" tal:content="result/ref_geo" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Park:</span>
+                      <span i18n:translate="" tal:content="result/park" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Date:</span>
+                      <span i18n:translate="" tal:content="result/date" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Altitude:</span>
+                      <span i18n:translate="" tal:content="result/altitude" />
+                    </div>
+                    <div>
+                      <span class="title" i18n:translate="">Esp nom LAT:</span>
+                      <span i18n:translate="" tal:content="result/esp_nom_lat" />
+                    </div>
+                  </div>
+                  <div class="image">
+                    <a rel="fancybox" class="fancybox"
+                      tal:attributes="href string:http://www.biodiv.be/php/congoimage/big/${result/image}.jpg">
+                      <img tal:attributes="alt result/image;
+                      src string:http://www.biodiv.be/php/congoimage/big/${result/image}.jpg" />
+                    </a>
+                  </div>
+                </li>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>

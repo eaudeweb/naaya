@@ -1,0 +1,112 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | Upload photo metadata from file | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'));
+                              lang here/gl_get_selected_language"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+                <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <table class="datatable">
+          <thead>
+            <th i18n:translate="" width="40em">Park id</th>
+            <th i18n:translate="" width="120em">Code</th>
+            <th i18n:translate="">Name</th>
+            <th i18n:translate="" width="160em">Options</th>
+          </thead>
+          <tbody>
+            <tr tal:repeat="park here/get_parks">
+              <form tal:attributes="name string:edit_park_${park/id}; id string:edit_park_${park/id}"
+                  action=".">
+                <td tal:content="park/id" />
+                <td tal:content="park/code" />
+                <td>
+                  <input type="text" style="border:none" size="75"
+                    name="name" tal:attributes="value park/name" />
+                </td>
+                <td>
+                  <input type="hidden" tal:attributes="value park/id"
+                    name="park_id" />
+                  <input type="submit" value="Update" style="margin-top:0px;"
+                    name="update_park:method" />
+                  <input type="submit" value="Delete" style="margin-top:0px;"
+                    name="delete_park:method" onclick="return confirm('Are you sure?');"/>
+                </td>
+              </form>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="datatable">
+          <thead>
+            <th i18n:translate="" width="40em">Author id</th>
+            <th i18n:translate="" width="120em">Code</th>
+            <th i18n:translate="">Name</th>
+            <th i18n:translate="" width="160em">Options</th>
+          </thead>
+          <tbody>
+            <tr tal:repeat="author here/get_authors">
+              <form tal:attributes="name string:edit_author_${author/id}; id string:edit_author_${author/id}"
+                  action=".">
+                <td tal:content="author/id" />
+                <td tal:content="author/code" />
+                <td>
+                  <input type="text" style="border:none" size="75"
+                    name="name" tal:attributes="value author/name" />
+                </td>
+                <td>
+                  <input type="hidden" tal:attributes="value author/id"
+                    name="author_id"/>
+                  <input type="submit" value="Update" style="margin-top:0px;"
+                    name="update_author:method" />
+                  <input type="submit" value="Delete" style="margin-top:0px;"
+                    name="delete_author:method" onclick="return confirm('Are you sure?')" />
+                </td>
+              </form>
+            </tr>
+          </tbody>
+        </table>
+
+        <tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>
