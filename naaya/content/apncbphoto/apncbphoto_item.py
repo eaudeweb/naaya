@@ -21,6 +21,7 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from AccessControl.Permissions import view_management_screens
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
@@ -391,6 +392,22 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         session.commit()
         self.setSessionInfoTrans(
             "Author deleted")
+
+        return self._admin(REQUEST)
+
+    security.declareProtected(view_management_screens, 'delete_all')
+
+    def delete_all(self, REQUEST):
+        """ Delete all records """
+        session.query(Document).delete()
+        session.query(Park).delete()
+        session.query(Author).delete()
+        session.query(Image).delete()
+        session.query(Author).delete()
+        session.query(Biome).delete()
+        session.query(Vegetation).delete()
+        session.commit()
+        self.setSessionInfoTrans("All records deleted")
 
         return self._admin(REQUEST)
 
