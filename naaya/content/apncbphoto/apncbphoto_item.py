@@ -21,7 +21,6 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from AccessControl.Permissions import view_management_screens
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
