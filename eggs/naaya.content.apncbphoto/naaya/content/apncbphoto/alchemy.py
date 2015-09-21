@@ -10,7 +10,6 @@ DB_USER = get_zope_env('CONGODB_USER')
 DB_PASSWORD = get_zope_env('CONGODB_PASSWORD')
 DB_HOST = get_zope_env('CONGODB_HOST')
 DB_NAME = get_zope_env('CONGODB_NAME')
-UPLOAD_DIR = get_zope_env('CONGODB_UPLOAD_DIR')
 
 
 class Document(Base):
