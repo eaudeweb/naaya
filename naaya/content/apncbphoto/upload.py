@@ -102,7 +102,8 @@ def save_uploaded_file(workbook):
                                    code=author_code
                                    )
             image = get_or_create(session, Image,
-                                  code=matrix[row][IMAGE_CODE_COL].lower(),
+                                  code=str(
+                                      matrix[row][IMAGE_CODE_COL]).lower(),
                                   id=matrix[row][IMAGE_ID_COL],
                                   format=matrix[row][IMAGE_FORMAT_COL],
                                   form=matrix[row][IMAGE_FORM_COL],
