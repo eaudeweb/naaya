@@ -211,9 +211,9 @@
                   </div>
                   <div class="image">
                     <a rel="fancybox" class="fancybox"
-                      tal:attributes="href string:http://www.biodiv.be/php/congoimage/big/${result/image}.jpg">
+                      tal:attributes="href string:http://www.biodiv.be/php/congoimage/big/${result/image}">
                       <img tal:attributes="alt result/image;
-                      src string:http://www.biodiv.be/php/congoimage/big/${result/image}.jpg" />
+                      src string:http://www.biodiv.be/php/congoimage/big/${result/image}" />
                     </a>
                   </div>
                 </li>
