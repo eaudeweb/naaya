@@ -177,6 +177,10 @@
                 <li style="list-style-type: none" class="docitem">
                   <div class="description">
                     <div>
+                      <span class="title" i18n:translate="">Photo ID:</span>
+                      <span i18n:translate="" tal:content="result/image" />
+                    </div>
+                    <div>
                       <span class="title" i18n:translate="">Subject:</span>
                       <span i18n:translate="" tal:content="result/subject" />
                     </div>
