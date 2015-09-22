@@ -282,3 +282,6 @@
 	path = eggs/naaya.wise
 	url = git@github.com:eaudeweb/naaya.wise.git
     branch = master
+[submodule "eggs/naaya.content.apncbphoto"]
+	path = eggs/naaya.content.apncbphoto
+	url = git@github.com:eaudeweb/naaya.content.apncbphoto.git
