@@ -1,5 +1,5 @@
 import xlrd
-from alchemy import get_or_create, session
+from alchemy import get_or_create, Session
 from alchemy import Author, Image, Park, Biome, Vegetation, Document
 import datetime
 
@@ -90,55 +90,62 @@ def create_sheet_matrix(sheet, workbook):
 
 def save_uploaded_file(workbook):
 
-    for sheet in workbook.sheets():
-        matrix = create_sheet_matrix(sheet, workbook)
-        for row in range(len(matrix)):
-            author_name = matrix[row][AUTHOR_NAME_COL] if matrix[row][
-                AUTHOR_NAME_COL] else 'undefined'
-            author_code = matrix[row][AUTHOR_CODE_COL] if matrix[row][
-                AUTHOR_CODE_COL] else 'undefined'
-            author = get_or_create(session, Author,
-                                   name=author_name,
-                                   code=author_code
-                                   )
-            image = get_or_create(session, Image,
-                                  code=str(
-                                      matrix[row][IMAGE_CODE_COL]).lower(),
-                                  id=matrix[row][IMAGE_ID_COL],
-                                  format=matrix[row][IMAGE_FORMAT_COL],
-                                  form=matrix[row][IMAGE_FORM_COL],
-                                  stock=matrix[row][IMAGE_STOCK_COL]
-                                  )
-            park_code = matrix[row][PARK_CODE_COL] if matrix[row][
-                PARK_CODE_COL] else 'undefined'
-            park = get_or_create(session, Park, code=park_code)
-            biome = get_or_create(session, Biome, name=matrix[row][
-                BIOME_NAME_COL])
-            vegetation = get_or_create(
-                session, Vegetation, name=matrix[row][VEGETATION_NAME_COL])
-            document = Document(
-                authorid=author.authorid,
-                imageid=image.imageid,
-                subject=matrix[row][SUBJECT_COL],
-                parkid=park.parkid,
-                topic=matrix[row][TOPIC_COL],
-                ref_geo=matrix[row][REF_GEO_COL],
-                no_collection=matrix[row][NO_COLLECTION_COL],
-                sujet_bref=matrix[row][SUJET_BREF_COL],
-                esp_nom_com=matrix[row][ESP_NOM_COM_COL],
-                esp_nom_lat=matrix[row][ESP_NOM_LAT_COL],
-                biomeid=biome.biomeid,
-                vegetationid=vegetation.vegetationid,
-                paysage=matrix[row][PAYSAGE_COL],
-                batiment=matrix[row][BATIMENT_COL],
-                personne=matrix[row][PERSONNE_COL],
-                date=matrix[row][DATE_COL],
-                reference=matrix[row][REFERENCE_COL],
-                ref_id_local=matrix[row][REF_ID_LOCAL_COL],
-                altitude=matrix[row][ALTITUDE_COL],
-                longitude=matrix[row][LONGITUDE_COL],
-                latitude=matrix[row][LATITUDE_COL],
-            )
-            session.add(document)
-            session.commit()
+    session = Session()
+    try:
+        for sheet in workbook.sheets():
+            matrix = create_sheet_matrix(sheet, workbook)
+            for row in range(len(matrix)):
+                author_name = matrix[row][AUTHOR_NAME_COL] if matrix[row][
+                    AUTHOR_NAME_COL] else 'undefined'
+                author_code = matrix[row][AUTHOR_CODE_COL] if matrix[row][
+                    AUTHOR_CODE_COL] else 'undefined'
+                author = get_or_create(session, Author,
+                                       name=author_name,
+                                       code=author_code
+                                       )
+                image = get_or_create(session, Image,
+                                      code=str(
+                                          matrix[row][IMAGE_CODE_COL]).lower(),
+                                      id=matrix[row][IMAGE_ID_COL],
+                                      format=matrix[row][IMAGE_FORMAT_COL],
+                                      form=matrix[row][IMAGE_FORM_COL],
+                                      stock=matrix[row][IMAGE_STOCK_COL]
+                                      )
+                park_code = matrix[row][PARK_CODE_COL] if matrix[row][
+                    PARK_CODE_COL] else 'undefined'
+                park = get_or_create(session, Park, code=park_code)
+                biome = get_or_create(session, Biome, name=matrix[row][
+                    BIOME_NAME_COL])
+                vegetation = get_or_create(
+                    session, Vegetation, name=matrix[row][VEGETATION_NAME_COL])
+                document = Document(
+                    authorid=author.authorid,
+                    imageid=image.imageid,
+                    subject=matrix[row][SUBJECT_COL],
+                    parkid=park.parkid,
+                    topic=matrix[row][TOPIC_COL],
+                    ref_geo=matrix[row][REF_GEO_COL],
+                    no_collection=matrix[row][NO_COLLECTION_COL],
+                    sujet_bref=matrix[row][SUJET_BREF_COL],
+                    esp_nom_com=matrix[row][ESP_NOM_COM_COL],
+                    esp_nom_lat=matrix[row][ESP_NOM_LAT_COL],
+                    biomeid=biome.biomeid,
+                    vegetationid=vegetation.vegetationid,
+                    paysage=matrix[row][PAYSAGE_COL],
+                    batiment=matrix[row][BATIMENT_COL],
+                    personne=matrix[row][PERSONNE_COL],
+                    date=matrix[row][DATE_COL],
+                    reference=matrix[row][REFERENCE_COL],
+                    ref_id_local=matrix[row][REF_ID_LOCAL_COL],
+                    altitude=matrix[row][ALTITUDE_COL],
+                    longitude=matrix[row][LONGITUDE_COL],
+                    latitude=matrix[row][LATITUDE_COL],
+                )
+                session.add(document)
+                session.commit()
+    except:
+        raise
+    finally:
+        if session is not None:
+            session.close()
     return process_workbook(workbook)

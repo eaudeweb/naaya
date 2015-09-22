@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String, create_engine, exc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -91,9 +91,23 @@ def get_or_create(session, model, defaults=None, **kwargs):
         session.add(instance)
         return instance
 
+
+class LookLively(object):
+    """Ensures that MySQL connections checked out of the pool are alive."""
+    def checkout(self, dbapi_con, con_record, con_proxy):
+        try:
+            try:
+                dbapi_con.ping(False)
+            except TypeError:
+                dbapi_con.ping()
+        except dbapi_con.OperationalError, ex:
+            if ex.args[0] in (2006, 2013, 2014, 2045, 2055):
+                raise exc.DisconnectionError()
+            else:
+                raise
+
 engine = create_engine('mysql://' + DB_USER + ':' + DB_PASSWORD + '@' +
-                       DB_HOST + '/' + DB_NAME, echo=False)
+                       DB_HOST + '/' + DB_NAME, echo=False, pool_size=20,
+                       max_overflow=0, listeners=[LookLively()])
 engine.connect()
 Session = sessionmaker(bind=engine)
-
-session = Session()
