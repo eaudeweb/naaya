@@ -31,10 +31,12 @@ from Products.NaayaCore.managers.utils import make_id
 from interfaces import INyAPNCBPhoto
 from permissions import PERMISSION_ADD_APNCBPHOTO
 
-from alchemy import session, Document, Author, Image, Park, Biome, Vegetation
+from alchemy import Session, Document, Author, Image, Park, Biome, Vegetation
 from upload import save_uploaded_file
 
 DEFAULT_SCHEMA = {
+    'survey_required': dict(sortorder=15, widget_type='Checkbox',
+                            label='Test database', data_type='bool'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['coverage'].update(visible=False)
@@ -281,33 +283,40 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             park = REQUEST.form.get('park', '').encode('utf-8')
             author = REQUEST.form.get('author', '').encode('utf-8')
 
-            documents = session.query(
-                Document, Author, Image, Park, Biome, Vegetation)\
-                .filter(Document.subject.like('%' + subject + '%'))\
-                .filter(Document.date.like('%' + date + '%'))\
-                .filter(Document.esp_nom_com.like('%' + esp_nom_com + '%'))\
-                .filter(Document.esp_nom_lat.like('%' + esp_nom_lat + '%'))\
-                .filter(Author.authorid == Document.authorid)\
-                .filter(Image.imageid == Document.imageid)\
-                .filter(Park.parkid == Document.parkid)\
-                .filter(Biome.biomeid == Document.biomeid)\
-                .filter(Vegetation.vegetationid == Document.vegetationid)
-            if park:
-                documents = documents.filter(Park.code == park)
-            if author:
-                documents = documents.filter(Author.code == author)
-            documents = documents.all()
-            for document in documents:
-                results.append({
-                    'subject': document.Document.subject,
-                    'author': document.Author.name,
-                    'image': document.Image.code,
-                    'ref_geo': document.Document.ref_geo,
-                    'park': document.Park.name,
-                    'date': document.Document.date,
-                    'altitude': document.Document.altitude,
-                    'esp_nom_lat': document.Document.esp_nom_lat,
-                    })
+            session = Session()
+            try:
+                documents = session.query(
+                    Document, Author, Image, Park, Biome, Vegetation)\
+                    .filter(Document.subject.like('%' + subject + '%'))\
+                    .filter(Document.date.like('%' + date + '%'))\
+                    .filter(Document.esp_nom_com.like('%' + esp_nom_com + '%'))\
+                    .filter(Document.esp_nom_lat.like('%' + esp_nom_lat + '%'))\
+                    .filter(Author.authorid == Document.authorid)\
+                    .filter(Image.imageid == Document.imageid)\
+                    .filter(Park.parkid == Document.parkid)\
+                    .filter(Biome.biomeid == Document.biomeid)\
+                    .filter(Vegetation.vegetationid == Document.vegetationid)
+                if park:
+                    documents = documents.filter(Park.code == park)
+                if author:
+                    documents = documents.filter(Author.code == author)
+                documents = documents.all()
+                for document in documents:
+                    results.append({
+                        'subject': document.Document.subject,
+                        'author': document.Author.name,
+                        'image': document.Image.code,
+                        'ref_geo': document.Document.ref_geo,
+                        'park': document.Park.name,
+                        'date': document.Document.date,
+                        'altitude': document.Document.altitude,
+                        'esp_nom_lat': document.Document.esp_nom_lat,
+                        })
+            except:
+                raise
+            finally:
+                if session is not None:
+                    session.close()
 
         return self.getFormsTool().getContent(
             {'here': self, 'results': results},
@@ -348,9 +357,16 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update park name """
         name = REQUEST.get('name')
         park_id = REQUEST.get('park_id')
-        park = session.query(Park).filter(Park.parkid == park_id).first()
-        park.name = name
-        session.commit()
+        session = Session()
+        try:
+            park = session.query(Park).filter(Park.parkid == park_id).first()
+            park.name = name
+            session.commit()
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
         self.setSessionInfoTrans(
             'Park name changed successfully (Park ID: %s)' % park_id)
 
@@ -361,8 +377,15 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_park(self, REQUEST):
         """ Delete park """
         park_id = REQUEST.get('park_id')
-        session.query(Park).filter(Park.parkid == park_id).delete()
-        session.commit()
+        session = Session()
+        try:
+            session.query(Park).filter(Park.parkid == park_id).delete()
+            session.commit()
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
         self.setSessionInfoTrans('Park deleted')
 
         return self._admin(REQUEST)
@@ -373,10 +396,17 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update author name """
         name = REQUEST.get('name')
         author_id = REQUEST.get('author_id')
-        author = session.query(Author).filter(
-            Author.authorid == author_id).first()
-        author.name = name
-        session.commit()
+        session = Session()
+        try:
+            author = session.query(Author).filter(
+                Author.authorid == author_id).first()
+            author.name = name
+            session.commit()
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
         self.setSessionInfoTrans(
             "Author's name changed successfully (Author ID: %s)" % author_id)
 
@@ -387,8 +417,14 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_author(self, REQUEST):
         """ Delete author """
         author_id = REQUEST.get('author_id')
-        session.query(Author).filter(Author.authorid == author_id).delete()
-        session.commit()
+        session = Session()
+        try:
+            session.query(Author).filter(Author.authorid == author_id).delete()
+            session.commit()
+        except:
+            raise
+        finally:
+            session.close()
         self.setSessionInfoTrans(
             "Author deleted")
 
@@ -398,14 +434,20 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_all(self, REQUEST):
         """ Delete all records """
-        session.query(Document).delete()
-        session.query(Park).delete()
-        session.query(Author).delete()
-        session.query(Image).delete()
-        session.query(Author).delete()
-        session.query(Biome).delete()
-        session.query(Vegetation).delete()
-        session.commit()
+        session = Session()
+        try:
+            session.query(Document).delete()
+            session.query(Park).delete()
+            session.query(Author).delete()
+            session.query(Image).delete()
+            session.query(Author).delete()
+            session.query(Biome).delete()
+            session.query(Vegetation).delete()
+            session.commit()
+        except:
+            raise
+        finally:
+            session.close()
         self.setSessionInfoTrans("All records deleted")
 
         return self._admin(REQUEST)
@@ -414,7 +456,14 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_parks(self):
         """ return all parks """
-        parks = session.query(Park).all()
+        session = Session()
+        try:
+            parks = session.query(Park).all()
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
         return [{'code': park.code, 'name': park.name, 'id': park.parkid}
                 for park in parks]
 
@@ -422,7 +471,14 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_authors(self):
         """ return all authors """
-        authors = session.query(Author).all()
+        session = Session()
+        try:
+            authors = session.query(Author).all()
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
         return [{'code': author.code, 'name': author.name,
                  'id': author.authorid}
                 for author in authors]

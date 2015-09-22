@@ -1,5 +1,6 @@
 1.0.1 (unreleased)
 ------------------
+* implement connection listener [dumitval]
 * convert ids to lowercase [dumitval]
 * added option to delete records [dumitval]
 
