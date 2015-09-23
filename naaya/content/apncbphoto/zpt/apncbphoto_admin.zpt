@@ -21,6 +21,32 @@
     <metal:block fill-slot="head">
         <link rel="alternate" type="application/rdf+xml" title="RDF"
               tal:attributes="href here/absolute_url" />
+        <script type="text/javascript">
+          $(document).ready(function(){
+            $('#confirm_delete').click(function(e){
+              var delete_link = $(this).attr('href');
+              e.preventDefault();
+              $("#dialog-delete-confirm" ).dialog({
+                open: function() {
+                  $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+                },
+                resizable: false,
+                height: 200,
+                width: 500,
+                modal: true,
+                draggable: false,
+                buttons: {
+                  "Delete items": function() {
+                    window.location = delete_link;
+                  },
+                  "Cancel": function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              });
+            });
+          });
+        </script>
     </metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable;
@@ -49,6 +75,10 @@
           </a>
           <a tal:attributes="href string:${here/absolute_url}/edit_html">
             <span i18n:translate="">Edit description</span>
+          </a>
+          <a tal:attributes="href string:${here/absolute_url}/delete_all"
+             tal:condition="here/db_test"
+             id="confirm_delete"><span i18n:translate="">Delete database</span>
           </a>
         </div>
 
@@ -121,5 +151,8 @@
         <tal:block content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />
+
+        <metal:block use-macro="python: here.getFormsTool().getForm('delete_confirmation').macros['delete_confirmation']"></metal:block>
+
     </metal:block>
 </metal:block>

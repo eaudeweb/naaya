@@ -1,5 +1,5 @@
 import xlrd
-from alchemy import get_or_create, Session
+from alchemy import get_or_create
 from alchemy import Author, Image, Park, Biome, Vegetation, Document
 import datetime
 
@@ -88,9 +88,8 @@ def create_sheet_matrix(sheet, workbook):
     return matrix
 
 
-def save_uploaded_file(workbook):
+def save_uploaded_file(workbook, session):
 
-    session = Session()
     try:
         for sheet in workbook.sheets():
             matrix = create_sheet_matrix(sheet, workbook)
@@ -103,14 +102,14 @@ def save_uploaded_file(workbook):
                                        name=author_name,
                                        code=author_code
                                        )
-                image = get_or_create(session, Image,
-                                      code=str(
-                                          matrix[row][IMAGE_CODE_COL]).lower(),
-                                      id=matrix[row][IMAGE_ID_COL],
-                                      format=matrix[row][IMAGE_FORMAT_COL],
-                                      form=matrix[row][IMAGE_FORM_COL],
-                                      stock=matrix[row][IMAGE_STOCK_COL]
-                                      )
+                image = get_or_create(
+                    session, Image,
+                    code=str(matrix[row][IMAGE_CODE_COL]).lower()+'.jpg',
+                    id=matrix[row][IMAGE_ID_COL],
+                    format=matrix[row][IMAGE_FORMAT_COL],
+                    form=matrix[row][IMAGE_FORM_COL],
+                    stock=matrix[row][IMAGE_STOCK_COL]
+                    )
                 park_code = matrix[row][PARK_CODE_COL] if matrix[row][
                     PARK_CODE_COL] else 'undefined'
                 park = get_or_create(session, Park, code=park_code)

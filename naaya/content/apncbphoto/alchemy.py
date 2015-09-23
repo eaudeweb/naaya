@@ -10,6 +10,7 @@ DB_USER = get_zope_env('CONGODB_USER')
 DB_PASSWORD = get_zope_env('CONGODB_PASSWORD')
 DB_HOST = get_zope_env('CONGODB_HOST')
 DB_NAME = get_zope_env('CONGODB_NAME')
+DBTEST_NAME = get_zope_env('CONGODBTEST_NAME')
 
 
 class Document(Base):
@@ -111,3 +112,10 @@ engine = create_engine('mysql://' + DB_USER + ':' + DB_PASSWORD + '@' +
                        max_overflow=0, listeners=[LookLively()])
 engine.connect()
 Session = sessionmaker(bind=engine)
+
+engine_test = create_engine('mysql://' + DB_USER + ':' + DB_PASSWORD + '@' +
+                            DB_HOST + '/' + DBTEST_NAME, echo=False,
+                            pool_size=20, max_overflow=0,
+                            listeners=[LookLively()])
+engine_test.connect()
+SessionTest = sessionmaker(bind=engine_test)
