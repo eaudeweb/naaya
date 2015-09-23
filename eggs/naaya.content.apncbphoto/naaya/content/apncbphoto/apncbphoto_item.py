@@ -31,15 +31,18 @@ from Products.NaayaCore.managers.utils import make_id
 from interfaces import INyAPNCBPhoto
 from permissions import PERMISSION_ADD_APNCBPHOTO
 
-from alchemy import Session, Document, Author, Image, Park, Biome, Vegetation
+from alchemy import Session, SessionTest
+from alchemy import Document, Author, Image, Park, Biome, Vegetation
 from upload import save_uploaded_file
 
 DEFAULT_SCHEMA = {
-    'survey_required': dict(sortorder=15, widget_type='Checkbox',
-                            label='Test database', data_type='bool'),
+    'db_test': dict(sortorder=30, widget_type='Checkbox',
+                    label='Test database', data_type='bool'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['coverage'].update(visible=False)
+DEFAULT_SCHEMA['discussion'].update(visible=False)
+DEFAULT_SCHEMA['keywords'].update(visible=False)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -283,7 +286,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             park = REQUEST.form.get('park', '').encode('utf-8')
             author = REQUEST.form.get('author', '').encode('utf-8')
 
-            session = Session()
+            if self.db_test:
+                session = SessionTest()
+            else:
+                session = Session()
             try:
                 documents = session.query(
                     Document, Author, Image, Park, Biome, Vegetation)\
@@ -347,7 +353,11 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         if 'submit_metadata' in REQUEST.form:
             file = REQUEST.get('metadata_file')
             workbook = xlrd.open_workbook(file_contents=file.read())
-            imported = save_uploaded_file(workbook)
+            if self.db_test:
+                session = SessionTest()
+            else:
+                session = Session()
+            imported = save_uploaded_file(workbook, session)
             self.setSessionInfoTrans('Excel file imported successfully')
         return self._upload(REQUEST, workbook=imported)
 
@@ -357,7 +367,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update park name """
         name = REQUEST.get('name')
         park_id = REQUEST.get('park_id')
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             park = session.query(Park).filter(Park.parkid == park_id).first()
             park.name = name
@@ -377,7 +390,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_park(self, REQUEST):
         """ Delete park """
         park_id = REQUEST.get('park_id')
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             session.query(Park).filter(Park.parkid == park_id).delete()
             session.commit()
@@ -396,7 +412,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update author name """
         name = REQUEST.get('name')
         author_id = REQUEST.get('author_id')
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             author = session.query(Author).filter(
                 Author.authorid == author_id).first()
@@ -417,7 +436,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_author(self, REQUEST):
         """ Delete author """
         author_id = REQUEST.get('author_id')
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             session.query(Author).filter(Author.authorid == author_id).delete()
             session.commit()
@@ -434,7 +456,13 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_all(self, REQUEST):
         """ Delete all records """
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        elif REQUEST.get('force'):
+            session = Session()
+        else:
+            self.setSessionErrorsTrans("Production database cannot be deleted")
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         try:
             session.query(Document).delete()
             session.query(Park).delete()
@@ -450,13 +478,16 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             session.close()
         self.setSessionInfoTrans("All records deleted")
 
-        return self._admin(REQUEST)
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'get_parks')
 
     def get_parks(self):
         """ return all parks """
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             parks = session.query(Park).all()
         except:
@@ -471,7 +502,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_authors(self):
         """ return all authors """
-        session = Session()
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
         try:
             authors = session.query(Author).all()
         except:
