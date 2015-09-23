@@ -44,7 +44,7 @@
                 arrows: false,
             });
 
-            $('#confirm_delete').click(function(e){
+            $('.confirm_delete').click(function(e){
               var delete_link = $(this).attr('href');
               e.preventDefault();
               $("#dialog-delete-confirm" ).dialog({
@@ -117,7 +117,7 @@
                 </span>
         </h1>
 
-        <div id="admin_this_folder">
+        <div id="admin_this_folder" tal:condition="here/checkPermissionPublishObjects">
           <a tal:attributes="href string:${here/absolute_url}/upload">
             <span i18n:translate="">Upload metadata</span>
           </a>
@@ -128,8 +128,8 @@
             <span i18n:translate="">Manage lists</span>
           </a>
           <a tal:attributes="href string:${here/absolute_url}/delete_all"
-             tal:condition="here/db_test"
-             id="confirm_delete"><span i18n:translate="">Delete database</span>
+             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()"
+             class="confirm_delete"><span i18n:translate="">Delete database</span>
           </a>
         </div>
 
@@ -192,6 +192,7 @@
           <thead>
             <tr>
               <th>Search results</th>
+              <th tal:condition="here/checkPermissionViewManagementScreens">Options</th>
             </tr>
           </thead>
           <tbody>
@@ -240,6 +241,11 @@
                     </a>
                   </div>
                 </li>
+              </td>
+              <td tal:condition="here/checkPermissionViewManagementScreens">
+                <a style="text-decoration: none; margin-left: 0" class="upload_photos confirm_delete"
+                   tal:attributes="href string:${here/absolute_url}/delete_photo?photo_id=${result/imageid}">
+                  Delete</a>
               </td>
             </tr>
           </tbody>
