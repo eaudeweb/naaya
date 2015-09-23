@@ -1,5 +1,7 @@
 1.0.1 (unreleased)
 ------------------
+* permissions for the different pages [dumitval]
+* add option to delete records [dumitval]
 * add button to delete database (on test) [dumitval]
 * add support for test database [dumitval]
 * implement connection listener [dumitval]

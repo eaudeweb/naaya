@@ -312,6 +312,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                         'subject': document.Document.subject,
                         'author': document.Author.name,
                         'image': document.Image.code,
+                        'imageid': document.Image.imageid,
                         'ref_geo': document.Document.ref_geo,
                         'park': document.Park.name,
                         'date': document.Document.date,
@@ -337,7 +338,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     _admin = PageTemplateFile('zpt/apncbphoto_admin', globals())
 
-    security.declareProtected(view, 'admin')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'admin')
 
     def admin(self, REQUEST=None):
         """ Edit lists (parks, authors) """
@@ -345,7 +346,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     _upload = PageTemplateFile('zpt/apncbphoto_upload', globals())
 
-    security.declareProtected(view, 'upload_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'upload')
 
     def upload(self, REQUEST=None):
         """ upload metatada into the database """
@@ -452,6 +453,30 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
         return self._admin(REQUEST)
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'delete_photo')
+
+    def delete_photo(self, REQUEST):
+        """ Delete record of a photo """
+        photo_id = REQUEST.get('photo_id')
+        if not photo_id:
+            return
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
+        try:
+            session.query(Document).filter(
+                Document.imageid == photo_id).delete()
+            session.commit()
+        except:
+            raise
+        finally:
+            session.close()
+        self.setSessionInfoTrans(
+            "Record deleted")
+
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
     security.declareProtected(view_management_screens, 'delete_all')
 
     def delete_all(self, REQUEST):
@@ -516,6 +541,9 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         return [{'code': author.code, 'name': author.name,
                  'id': author.authorid}
                 for author in authors]
+
+    def checkPermissionViewManagementScreens(self):
+        return self.checkPermission(view_management_screens)
 
 
 InitializeClass(NyAPNCBPhoto)

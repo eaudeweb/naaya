@@ -77,7 +77,7 @@
             <span i18n:translate="">Edit description</span>
           </a>
           <a tal:attributes="href string:${here/absolute_url}/delete_all"
-             tal:condition="here/db_test"
+             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()"
              id="confirm_delete"><span i18n:translate="">Delete database</span>
           </a>
         </div>
