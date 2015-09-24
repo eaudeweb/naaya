@@ -351,17 +351,45 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def upload(self, REQUEST=None):
         """ upload metatada into the database """
-        imported = None
+        rows = None
         if 'submit_metadata' in REQUEST.form:
             file = REQUEST.get('metadata_file')
+            update_existing = REQUEST.get('update_existing')
             workbook = xlrd.open_workbook(file_contents=file.read())
             if self.db_test:
                 session = SessionTest()
             else:
                 session = Session()
-            imported = save_uploaded_file(workbook, session)
-            self.setSessionInfoTrans('Excel file imported successfully')
-        return self._upload(REQUEST, workbook=imported)
+            rows, imported, skipped = save_uploaded_file(workbook, session,
+                                                         update_existing)
+            have_errors = False
+            for sheet in skipped:
+                if sheet:
+                    have_errors = True
+            if have_errors:
+                errors = []
+                for sheet in range(len(skipped)):
+                    if skipped[sheet]:
+                        errors.append(
+                            'Sheet %s: %s row(s) already in the database and '
+                            'skipped: %s' % (
+                                sheet+1, len(skipped[sheet]),
+                                ', '.join(str(x+2) for x in skipped[sheet])))
+                    if imported[sheet]:
+                        self.setSessionInfoTrans(
+                            'Sheet %s: %s row(s) imported: %s' % (
+                                sheet+1, len(imported[sheet]),
+                                ', '.join(str(x+2) for x in imported[sheet])))
+                if not imported:
+                    errors.append('No rows imported')
+                self.setSessionErrorsTrans(errors)
+            else:
+                total_imported = 0
+                for sheet in imported:
+                    total_imported += len(sheet)
+                self.setSessionInfoTrans('File imported successfully (%s rows)'
+                                         % total_imported)
+        return self._upload(REQUEST, workbook=rows)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_park')
 
@@ -466,10 +494,13 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         else:
             session = Session()
         try:
-            count = len(session.query(Document).filter(
-                Document.docid == docid).all())
+            docs = session.query(Document).filter(
+                Document.docid == docid).all()
+            count = len(docs)
             session.query(Document).filter(
                 Document.docid == docid).delete()
+            session.query(Image).filter(
+                Image.imageid == docs[0].imageid).delete()
             session.commit()
             self.setSessionInfoTrans("%s record(s) deleted" % count)
         except:
