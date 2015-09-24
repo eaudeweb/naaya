@@ -1,5 +1,6 @@
 1.0.1 (unreleased)
 ------------------
+* implement updating records via re-import [dumitval]
 * improvements to individual records delete [dumitval]
 * permissions for the different pages [dumitval]
 * add option to delete records [dumitval]

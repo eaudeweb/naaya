@@ -68,11 +68,14 @@
 
         <p i18n:translate="">Here you can upload metadata into the photo database. The photos themselves are uploaded via FTP</p>
 
-        <form action="upload" method="post" enctype="multipart/form-data"
-          tal:condition="not:options/workbook">
+        <form action="upload" method="post" enctype="multipart/form-data">
             <div class="field">
               <label for="metadata_file">Upload file with metadata</label>
               <input type="file" id="metadata_file" name="metadata_file" />
+            </div>
+            <div class="field-inline">
+              <label for="update_existing">Update existing records</label>
+              <input type="checkbox" id="update_existing" name="update_existing" />
             </div>
             <div class="field">
               <input type="submit" value="Upload" name="submit_metadata" />
