@@ -318,6 +318,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                         'date': document.Document.date,
                         'altitude': document.Document.altitude,
                         'esp_nom_lat': document.Document.esp_nom_lat,
+                        'docid': document.Document.docid,
                         })
             except:
                 raise
@@ -457,23 +458,24 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_photo(self, REQUEST):
         """ Delete record of a photo """
-        photo_id = REQUEST.get('photo_id')
-        if not photo_id:
+        docid = REQUEST.get('docid')
+        if not docid:
             return
         if self.db_test:
             session = SessionTest()
         else:
             session = Session()
         try:
+            count = len(session.query(Document).filter(
+                Document.docid == docid).all())
             session.query(Document).filter(
-                Document.imageid == photo_id).delete()
+                Document.docid == docid).delete()
             session.commit()
+            self.setSessionInfoTrans("%s record(s) deleted" % count)
         except:
             raise
         finally:
             session.close()
-        self.setSessionInfoTrans(
-            "Record deleted")
 
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
