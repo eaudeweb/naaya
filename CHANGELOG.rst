@@ -1,5 +1,6 @@
 1.0.1 (unreleased)
 ------------------
+* improvements to individual records delete [dumitval]
 * permissions for the different pages [dumitval]
 * add option to delete records [dumitval]
 * add button to delete database (on test) [dumitval]

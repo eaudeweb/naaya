@@ -43,30 +43,28 @@
                 type: 'image',
                 arrows: false,
             });
-
-            $('.confirm_delete').click(function(e){
-              var delete_link = $(this).attr('href');
-              e.preventDefault();
-              $("#dialog-delete-confirm" ).dialog({
-                open: function() {
-                  $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
-                },
-                resizable: false,
-                height: 200,
-                width: 500,
-                modal: true,
-                draggable: false,
-                buttons: {
-                  "Delete items": function() {
-                    window.location = delete_link;
-                  },
-                  "Cancel": function() {
-                    $( this ).dialog( "close" );
-                  }
-                }
-              });
-            });
           });
+
+          function delete_document(delete_link){
+            $("#dialog-delete-confirm" ).dialog({
+              open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+              },
+              resizable: false,
+              height: 200,
+              width: 500,
+              modal: true,
+              draggable: false,
+              buttons: {
+                "Delete items": function() {
+                  window.location = delete_link;
+                },
+                "Cancel": function() {
+                  $( this ).dialog( "close" );
+                }
+              }
+            });
+          };
         </script>
 
         <style>
@@ -243,8 +241,10 @@
                 </li>
               </td>
               <td tal:condition="here/checkPermissionViewManagementScreens">
-                <a style="text-decoration: none; margin-left: 0" class="upload_photos confirm_delete"
-                   tal:attributes="href string:${here/absolute_url}/delete_photo?photo_id=${result/imageid}">
+                <a style="text-decoration: none; margin-left: 0"
+                   class="upload_photos confirm_delete"
+                   tal:define="href string:${here/absolute_url}/delete_photo?docid=${result/docid}"
+                   tal:attributes="href string:javascript:delete_document('${href}');">
                   Delete</a>
               </td>
             </tr>
