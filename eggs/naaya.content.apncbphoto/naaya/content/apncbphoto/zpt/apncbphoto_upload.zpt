@@ -23,39 +23,8 @@
               tal:attributes="href here/absolute_url" />
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-        <script type="text/javascript">
-          $(document).ready(function(){
-            $('.datatable').dataTable({
-                'aaSorting': [[0, "desc"]],
-                'sPaginationType': 'full_numbers',
-                "aLengthMenu": [[10, 25, 50, -1],
-                                [10, 25, 50, "All"]]
-            });
-
-            $('#confirm_delete').click(function(e){
-              var delete_link = $(this).attr('href');
-              e.preventDefault();
-              $("#dialog-delete-confirm" ).dialog({
-                open: function() {
-                  $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
-                },
-                resizable: false,
-                height: 200,
-                width: 500,
-                modal: true,
-                draggable: false,
-                buttons: {
-                  "Delete items": function() {
-                    window.location = delete_link;
-                  },
-                  "Cancel": function() {
-                    $( this ).dialog( "close" );
-                  }
-                }
-              });
-            });
-          });
-        </script>
+        <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
+        <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
     </metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable;
@@ -85,9 +54,10 @@
           <a tal:attributes="href string:${here/absolute_url}/admin">
             <span i18n:translate="">Manage lists</span>
           </a>
-          <a tal:attributes="href string:${here/absolute_url}/delete_all"
-             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()"
-             id="confirm_delete"><span i18n:translate="">Delete database</span>
+          <a tal:define="href string:${here/absolute_url}/delete_all"
+            tal:attributes="href string:javascript:delete_document('${href}');"
+             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()">
+             <span i18n:translate="">Delete database</span>
           </a>
         </div>
 

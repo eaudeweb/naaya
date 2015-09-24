@@ -1,8 +1,14 @@
 <configure
   xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="naaya.content">
 
   <naaya:content factory=".apncbphoto_item.get_config" />
   <naaya:call factory=".permissions.register_permissions" />
 
-</configure>
+  <browser:resourceDirectory
+      name="naaya.content.apncbphoto"
+      directory="www"
+  />
+
+ </configure>

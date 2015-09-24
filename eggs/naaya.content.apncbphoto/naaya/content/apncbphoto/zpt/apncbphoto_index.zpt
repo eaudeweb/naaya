@@ -27,75 +27,9 @@
               tal:attributes="href here/absolute_url" />
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-        <script type="text/javascript">
-          $(document).ready(function(){
-            $('.datatable').dataTable({
-                'oLanguage':{
-                  'sSearch': 'Filter results '
-                },
-                'aaSorting': [[0, "desc"]],
-                'sPaginationType': 'full_numbers',
-                "aLengthMenu": [[10, 25, 50, -1],
-                                [10, 25, 50, "All"]]
-            });
-
-            $(".fancybox").fancybox({
-                type: 'image',
-                arrows: false,
-            });
-          });
-
-          function delete_document(delete_link){
-            $("#dialog-delete-confirm" ).dialog({
-              open: function() {
-                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
-              },
-              resizable: false,
-              height: 200,
-              width: 500,
-              modal: true,
-              draggable: false,
-              buttons: {
-                "Delete items": function() {
-                  window.location = delete_link;
-                },
-                "Cancel": function() {
-                  $( this ).dialog( "close" );
-                }
-              }
-            });
-          };
-        </script>
-
-        <style>
-          .title{
-            min-width: 150px;
-            display: inline-block;
-          }
-          .image{
-            float: left;
-            height: 110%;
-            width: 30%;
-          }
-          .image img{
-            float: right;
-            max-height: 100%;
-            max-width: 100%
-          }
-          .description{
-            float: left;
-            width: 70%;
-          }
-          .docitem{
-            height: 100px;
-            margin-bottom: 10px;
-            padding: 5px;
-          }
-          .search-block{
-            float: left;
-            padding: 0.5rem;
-          }
-        </style>
+        <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
+        <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
     </metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable;
@@ -125,9 +59,10 @@
           <a tal:attributes="href string:${here/absolute_url}/admin">
             <span i18n:translate="">Manage lists</span>
           </a>
-          <a tal:attributes="href string:${here/absolute_url}/delete_all"
-             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()"
-             class="confirm_delete"><span i18n:translate="">Delete database</span>
+          <a tal:define="href string:${here/absolute_url}/delete_all"
+            tal:attributes="href string:javascript:delete_document('${href}');"
+             tal:condition="python:here.db_test and here.checkPermissionViewManagementScreens()">
+             <span i18n:translate="">Delete database</span>
           </a>
         </div>
 
@@ -242,7 +177,7 @@
               </td>
               <td tal:condition="here/checkPermissionViewManagementScreens">
                 <a style="text-decoration: none; margin-left: 0"
-                   class="upload_photos confirm_delete"
+                   class="upload_photos"
                    tal:define="href string:${here/absolute_url}/delete_photo?docid=${result/docid}"
                    tal:attributes="href string:javascript:delete_document('${href}');">
                   Delete</a>
