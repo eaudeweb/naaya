@@ -125,6 +125,14 @@
           </tbody>
         </table>
 
+        <h2 i18n:translate="">Export database</h2>
+        <p i18n:translate="">You can export the entire database of photo metadata to an excel file.</p>
+
+        <div class="field">
+          <a class="upload_photos" href="export_database"
+            style="text-decoration: none; margin-left: 0px;">Export to excel</a>
+        </div>
+
         <tal:block content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />

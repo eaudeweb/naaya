@@ -11,6 +11,7 @@ setup(name='naaya.content.apncbphoto',
       install_requires=[
           'Naaya',
           'xlrd',
+          'xlwt',
           'SQLAlchemy',
       ]
       )

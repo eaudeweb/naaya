@@ -2,6 +2,7 @@ from copy import deepcopy
 import os
 import sys
 import xlrd
+from datetime import datetime
 
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -27,6 +28,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.import_export import generate_excel
 
 from interfaces import INyAPNCBPhoto
 from permissions import PERMISSION_ADD_APNCBPHOTO
@@ -286,10 +288,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             park = REQUEST.form.get('park', '').encode('utf-8')
             author = REQUEST.form.get('author', '').encode('utf-8')
 
-            if self.db_test:
-                session = SessionTest()
-            else:
-                session = Session()
+            session = self._get_session()
             try:
                 documents = session.query(
                     Document, Author, Image, Park, Biome, Vegetation)\
@@ -356,10 +355,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             file = REQUEST.get('metadata_file')
             update_existing = REQUEST.get('update_existing')
             workbook = xlrd.open_workbook(file_contents=file.read())
-            if self.db_test:
-                session = SessionTest()
-            else:
-                session = Session()
+            session = self._get_session()
             rows, imported, skipped = save_uploaded_file(workbook, session,
                                                          update_existing)
             have_errors = False
@@ -397,10 +393,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update park name """
         name = REQUEST.get('name')
         park_id = REQUEST.get('park_id')
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             park = session.query(Park).filter(Park.parkid == park_id).first()
             park.name = name
@@ -420,10 +413,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_park(self, REQUEST):
         """ Delete park """
         park_id = REQUEST.get('park_id')
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             session.query(Park).filter(Park.parkid == park_id).delete()
             session.commit()
@@ -442,10 +432,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         """ Update author name """
         name = REQUEST.get('name')
         author_id = REQUEST.get('author_id')
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             author = session.query(Author).filter(
                 Author.authorid == author_id).first()
@@ -466,10 +453,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_author(self, REQUEST):
         """ Delete author """
         author_id = REQUEST.get('author_id')
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             session.query(Author).filter(Author.authorid == author_id).delete()
             session.commit()
@@ -489,10 +473,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         docid = REQUEST.get('docid')
         if not docid:
             return
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             docs = session.query(Document).filter(
                 Document.docid == docid).all()
@@ -514,10 +495,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_all(self, REQUEST):
         """ Delete all records """
-        if self.db_test:
-            session = SessionTest()
-        elif REQUEST.get('force'):
-            session = Session()
+        session = self._get_session()
         else:
             self.setSessionErrorsTrans("Production database cannot be deleted")
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -542,10 +520,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_parks(self):
         """ return all parks """
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             parks = session.query(Park).all()
         except:
@@ -560,10 +535,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_authors(self):
         """ return all authors """
-        if self.db_test:
-            session = SessionTest()
-        else:
-            session = Session()
+        session = self._get_session()
         try:
             authors = session.query(Author).all()
         except:
@@ -575,8 +547,81 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                  'id': author.authorid}
                 for author in authors]
 
+    security.declareProtected(view, 'export_database')
+
+    def export_database(self):
+        """ export the entire database to excel """
+        assert self.rstk.we_provide('Excel export')
+        session = self._get_session()
+
+        header = ['Author', 'Au', 'Id_unique', 'ImageID', 'Format', 'Form',
+                  'Stock_Armoires', 'Sujet_tot', 'Nat-Parc', 'Topic',
+                  'Ref_geo', 'No_collection', 'Sujet_bref', 'Esp_nom_com',
+                  'Esp_nom_lat', 'Biome', 'V\xc3\xa9g\xc3\xa9tation',
+                  'Paysage', 'Batiment', 'Personne', 'Altitude', 'Date',
+                  'R\xc3\xa9f\xc3\xa9rence', 'Ref_ID_Local', 'Longitude',
+                  'Latitude']
+        rows = []
+        try:
+            documents = session.query(
+                Document, Author, Image, Park, Biome, Vegetation)\
+                .filter(Author.authorid == Document.authorid)\
+                .filter(Image.imageid == Document.imageid)\
+                .filter(Park.parkid == Document.parkid)\
+                .filter(Biome.biomeid == Document.biomeid)\
+                .filter(Vegetation.vegetationid == Document.vegetationid)
+            for document in documents:
+                rows.append([check_encoding(document.Author.name),
+                             check_encoding(document.Author.code),
+                             check_encoding(document.Image.code),
+                             str(document.Image.imageid),
+                             check_encoding(document.Image.format),
+                             check_encoding(document.Image.form),
+                             check_encoding(document.Image.stock),
+                             check_encoding(document.Document.subject),
+                             check_encoding(document.Park.code),
+                             check_encoding(document.Document.topic),
+                             check_encoding(document.Document.ref_geo),
+                             check_encoding(document.Document.no_collection),
+                             check_encoding(document.Document.sujet_bref),
+                             check_encoding(document.Document.esp_nom_com),
+                             check_encoding(document.Document.esp_nom_lat),
+                             check_encoding(document.Biome.name),
+                             check_encoding(document.Vegetation.name),
+                             check_encoding(document.Document.paysage),
+                             check_encoding(document.Document.batiment),
+                             check_encoding(document.Document.personne),
+                             check_encoding(document.Document.altitude),
+                             check_encoding(document.Document.date),
+                             check_encoding(document.Document.reference),
+                             check_encoding(document.Document.ref_id_local),
+                             check_encoding(document.Document.longitude),
+                             check_encoding(document.Document.latitude)
+                             ])
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
+        filename = 'apncb_photo_%s.xls' % datetime.now().strftime(
+            "%Y-%m-%d_%H-%M-%S")
+        self.REQUEST.RESPONSE.setHeader('Content-Type',
+                                        'application/vnd.ms-excel')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition',
+                                        'attachment; filename=%s' % filename)
+        return generate_excel(header, rows)
+
     def checkPermissionViewManagementScreens(self):
         return self.checkPermission(view_management_screens)
+
+    security.declarePrivate('_get_session')
+
+    def _get_session(self):
+        if self.db_test:
+            session = SessionTest()
+        else:
+            session = Session()
+        return session
 
 
 InitializeClass(NyAPNCBPhoto)
@@ -600,3 +645,11 @@ config.update({
 
 def get_config():
     return config
+
+
+def check_encoding(value):
+    try:
+        value.decode('utf-8')
+        return value
+    except UnicodeDecodeError:
+        return value.decode('latin-1').encode('utf-8')
