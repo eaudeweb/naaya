@@ -3,6 +3,10 @@ import os
 import sys
 import xlrd
 from datetime import datetime
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -625,6 +629,68 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         else:
             session = Session()
         return session
+
+    def get_results(self, REQUEST):
+        """ return ajax results for the datatable """
+        from sqlalchemy import or_, desc
+
+        def get_column(sort_by, asc):
+            if not sort_by:
+                return None
+            else:
+                col = columns[sort_by]
+                if asc == 'asc':
+                    return getattr(col[0], col[1])
+                else:
+                    return desc(getattr(col[0], col[1]))
+
+        form = REQUEST.form
+        sort_by = int(form.get('order[0][column]'))
+        asc = form.get('order[0][dir]')
+        session = self._get_session()
+        filterstr = form.get('search[value]')
+        columns = [(Image, 'code'), (Document, 'subject'),
+                   (Author, 'name'), (Document, 'ref_geo'),
+                   (Park, 'name'), (Document, 'date'), (Document, 'altitude'),
+                   (Document, 'esp_nom_lat')]
+
+        documents = session.query(
+            Document, Author, Image, Park, Biome, Vegetation)\
+            .filter(Author.authorid == Document.authorid)\
+            .filter(Image.imageid == Document.imageid)\
+            .filter(Park.parkid == Document.parkid)\
+            .filter(Biome.biomeid == Document.biomeid)\
+            .filter(Vegetation.vegetationid == Document.vegetationid)\
+            .filter(or_(
+                Image.code.like('%' + filterstr + '%'),
+                Document.subject.like('%' + filterstr + '%'),
+                Author.name.like('%' + filterstr + '%'),
+                Document.ref_geo.like('%' + filterstr + '%'),
+                Park.name.like('%' + filterstr + '%'),
+                Document.date.like('%' + filterstr + '%'),
+                Document.altitude.like('%' + filterstr + '%'),
+                Document.esp_nom_lat.like('%' + filterstr + '%')
+                ))\
+            .order_by(get_column(sort_by, asc))
+        results = []
+        for doc in documents:
+            results.append([check_encoding(doc.Image.code),
+                            check_encoding(doc.Document.subject),
+                            check_encoding(doc.Author.name),
+                            check_encoding(doc.Document.ref_geo),
+                            check_encoding(doc.Park.name),
+                            check_encoding(doc.Document.date),
+                            check_encoding(doc.Document.altitude),
+                            check_encoding(doc.Document.esp_nom_lat),
+                            'Image', 'Delete?'
+                            ])
+
+        return json.dumps({
+            'data': results,
+            'draw': int(form.get('draw')),
+            'recordsTotal': 200,
+            'recordsFiltered': 200,
+            })
 
 
 InitializeClass(NyAPNCBPhoto)

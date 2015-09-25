@@ -124,11 +124,19 @@
         <table class="datatable" tal:condition="results">
           <thead>
             <tr>
-              <th>Search results</th>
-              <th tal:condition="here/checkPermissionViewManagementScreens">Options</th>
+              <th>Photo ID</th>
+              <th>Subject</th>
+              <th>Author</th>
+              <th>Ref geo</th>
+              <th>Park</th>
+              <th>Date</th>
+              <th>Altitude</th>
+              <th>Esp nom LAT</th>
+              <th>Image</th>
+              <th>Options</th>
             </tr>
           </thead>
-          <tbody>
+<!--          <tbody>
             <tr tal:repeat="result results">
               <td>
                 <li style="list-style-type: none" class="docitem">
@@ -183,7 +191,7 @@
                   Delete</a>
               </td>
             </tr>
-          </tbody>
+          </tbody>-->
         </table>
 
         <tal:block content="structure here/set_content_rating" />
