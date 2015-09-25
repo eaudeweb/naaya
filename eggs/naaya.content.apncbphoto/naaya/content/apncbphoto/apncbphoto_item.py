@@ -495,7 +495,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_all(self, REQUEST):
         """ Delete all records """
-        session = self._get_session()
+        if self.db_test:
+            session = SessionTest()
+        elif REQUEST.get('force'):
+            session = Session()
         else:
             self.setSessionErrorsTrans("Production database cannot be deleted")
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
