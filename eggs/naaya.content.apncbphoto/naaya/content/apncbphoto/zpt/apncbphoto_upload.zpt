@@ -52,7 +52,7 @@
             <span i18n:translate="">Edit description</span>
           </a>
           <a tal:attributes="href string:${here/absolute_url}/admin">
-            <span i18n:translate="">Manage lists</span>
+            <span i18n:translate="">Admin</span>
           </a>
           <a tal:define="href string:${here/absolute_url}/delete_all"
             tal:attributes="href string:javascript:delete_document('${href}');"
