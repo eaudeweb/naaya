@@ -476,9 +476,14 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_photo(self, REQUEST):
         """ Delete record of a photo """
         docid = REQUEST.get('docid')
+        # set current filter values (search and page) to be able to
+        # return to the same page after the record is deleted
         search_value = REQUEST.get('search_value')
         if search_value:
             self.setSession('search_value', search_value)
+        start_value = REQUEST.get('start_value')
+        if start_value:
+            self.setSession('start_value', start_value)
         if not docid:
             return
         session = self._get_session()
@@ -655,7 +660,11 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         self.setSession('search_value', '')
         filterstr = search_value or form.get('search[value]')
         length = int(form.get('length'))
-        start = int(form.get('start'))
+        start_value = self.getSession('start_value', '')
+        if start_value:
+            start_value = int(start_value)
+        self.setSession('start_value', '')
+        start = start_value or int(form.get('start'))
         columns = [(Image, 'code'), (Document, 'subject'),
                    (Author, 'name'), (Document, 'ref_geo'),
                    (Park, 'name'), (Document, 'date'), (Document, 'altitude'),
@@ -683,8 +692,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         recordsFiltered = len(documents)
         results = []
         for doc in documents[start:start+length]:
-            delete_link = "'%s/delete_photo?docid=%s&search_value=%s'" % (
-                self.absolute_url(), doc.Document.docid, filterstr)
+            delete_link = ("'%s/delete_photo?docid=%s&search_value=%s&"
+                           "start_value=%s'") % (
+                self.absolute_url(), doc.Document.docid,
+                filterstr, start)
             results.append([check_encoding(doc.Image.code),
                             check_encoding(doc.Document.subject),
                             check_encoding(doc.Author.name),
