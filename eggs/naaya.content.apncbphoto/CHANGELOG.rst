@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+1.1.1 (unreleased)
+------------------
+
+1.1.0 (2015-09-28)
 ------------------
 * serverside processing for the datatable listing [dumitval]
 * export database to excel [dumitval]
