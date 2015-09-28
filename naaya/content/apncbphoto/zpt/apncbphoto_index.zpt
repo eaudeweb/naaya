@@ -32,6 +32,7 @@
         <script>
           $(document).ready(function(){
             $('.datatable').dataTable({
+                'stateSave': true,
                 'aaSorting': [[0, "desc"]],
                 'sPaginationType': 'full_numbers',
                 "aLengthMenu": [[10, 25, 50, -1],
