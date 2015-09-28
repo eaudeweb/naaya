@@ -24,6 +24,16 @@
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
         <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
+        <script>
+          $(document).ready(function(){
+            $('.datatable').dataTable({
+                'aaSorting': [[0, "desc"]],
+                'sPaginationType': 'full_numbers',
+                "aLengthMenu": [[10, 25, 50, -1],
+                                [10, 25, 50, "All"]],
+            });
+          });
+        </script>
         <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
     </metal:block>
 

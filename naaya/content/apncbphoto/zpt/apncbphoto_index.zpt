@@ -29,6 +29,23 @@
         <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
         <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
+        <script>
+          $(document).ready(function(){
+            $('.datatable').dataTable({
+                'aaSorting': [[0, "desc"]],
+                'sPaginationType': 'full_numbers',
+                "aLengthMenu": [[10, 25, 50, -1],
+                                [10, 25, 50, "All"]],
+                "processing": true,
+                "serverSide": true,
+                "ajax": "get_results"
+            });
+             $(".fancybox").fancybox({
+                type: 'image',
+                arrows: false,
+            });
+          });
+        </script>
         <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
     </metal:block>
 
@@ -72,7 +89,7 @@
 
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-        <form id="search_form" action=".">
+        <!--<form id="search_form" action=".">
           <div class="search-block">
             <div class="field">
               <label for="subject" i18n:translate="">Subject</label>
@@ -119,79 +136,24 @@
             <input type="submit" i18n:attributes="value" value="Search"
               style="margin-top: 0px;" />
           </div>
-        </form>
+        </form>-->
 
-        <table class="datatable" tal:condition="results">
+        <table class="datatable">
           <thead>
             <tr>
-              <th>Photo ID</th>
-              <th>Subject</th>
-              <th>Author</th>
-              <th>Ref geo</th>
-              <th>Park</th>
-              <th>Date</th>
-              <th>Altitude</th>
-              <th>Esp nom LAT</th>
-              <th>Image</th>
-              <th>Options</th>
+              <th i18n:translate="">Photo ID</th>
+              <th i18n:translate="">Subject</th>
+              <th i18n:translate="">Author</th>
+              <th i18n:translate="">Ref geo</th>
+              <th i18n:translate="">Park</th>
+              <th i18n:translate="">Date</th>
+              <th i18n:translate="">Altitude</th>
+              <!--<th>Esp nom LAT</th>-->
+              <th i18n:translate="">Image</th>
+              <th tal:condition="here/checkPermissionViewManagementScreens"
+                i18n:translate="">Opt</th>
             </tr>
           </thead>
-<!--          <tbody>
-            <tr tal:repeat="result results">
-              <td>
-                <li style="list-style-type: none" class="docitem">
-                  <div class="description">
-                    <div>
-                      <span class="title" i18n:translate="">Photo ID:</span>
-                      <span i18n:translate="" tal:content="result/image" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Subject:</span>
-                      <span i18n:translate="" tal:content="result/subject" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Author:</span>
-                      <span i18n:translate="" tal:content="result/author" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Ref geo:</span>
-                      <span i18n:translate="" tal:content="result/ref_geo" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Park:</span>
-                      <span i18n:translate="" tal:content="result/park" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Date:</span>
-                      <span i18n:translate="" tal:content="result/date" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Altitude:</span>
-                      <span i18n:translate="" tal:content="result/altitude" />
-                    </div>
-                    <div>
-                      <span class="title" i18n:translate="">Esp nom LAT:</span>
-                      <span i18n:translate="" tal:content="result/esp_nom_lat" />
-                    </div>
-                  </div>
-                  <div class="image">
-                    <a rel="fancybox" class="fancybox"
-                      tal:attributes="href string:http://www.biodiv.be/php/congoimage/big/${result/image}">
-                      <img tal:attributes="alt result/image;
-                      src string:http://www.biodiv.be/php/congoimage/big/${result/image}" />
-                    </a>
-                  </div>
-                </li>
-              </td>
-              <td tal:condition="here/checkPermissionViewManagementScreens">
-                <a style="text-decoration: none; margin-left: 0"
-                   class="upload_photos"
-                   tal:define="href string:${here/absolute_url}/delete_photo?docid=${result/docid}"
-                   tal:attributes="href string:javascript:delete_document('${href}');">
-                  Delete</a>
-              </td>
-            </tr>
-          </tbody>-->
         </table>
 
         <tal:block content="structure here/set_content_rating" />

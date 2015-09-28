@@ -7,6 +7,7 @@ try:
     import simplejson as json
 except ImportError:
     import json
+from sqlalchemy import or_, desc, func
 
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -475,6 +476,9 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def delete_photo(self, REQUEST):
         """ Delete record of a photo """
         docid = REQUEST.get('docid')
+        search_value = REQUEST.get('search_value')
+        if search_value:
+            self.setSession('search_value', search_value)
         if not docid:
             return
         session = self._get_session()
@@ -632,7 +636,6 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def get_results(self, REQUEST):
         """ return ajax results for the datatable """
-        from sqlalchemy import or_, desc
 
         def get_column(sort_by, asc):
             if not sort_by:
@@ -648,12 +651,17 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
         sort_by = int(form.get('order[0][column]'))
         asc = form.get('order[0][dir]')
         session = self._get_session()
-        filterstr = form.get('search[value]')
+        search_value = self.getSession('search_value', '')
+        self.setSession('search_value', '')
+        filterstr = search_value or form.get('search[value]')
+        length = int(form.get('length'))
+        start = int(form.get('start'))
         columns = [(Image, 'code'), (Document, 'subject'),
                    (Author, 'name'), (Document, 'ref_geo'),
                    (Park, 'name'), (Document, 'date'), (Document, 'altitude'),
                    (Document, 'esp_nom_lat')]
 
+        recordsTotal = session.query(func.count(Document.docid)).scalar()
         documents = session.query(
             Document, Author, Image, Park, Biome, Vegetation)\
             .filter(Author.authorid == Document.authorid)\
@@ -671,9 +679,12 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                 Document.altitude.like('%' + filterstr + '%'),
                 Document.esp_nom_lat.like('%' + filterstr + '%')
                 ))\
-            .order_by(get_column(sort_by, asc))
+            .order_by(get_column(sort_by, asc)).all()
+        recordsFiltered = len(documents)
         results = []
-        for doc in documents:
+        for doc in documents[start:start+length]:
+            delete_link = "'%s/delete_photo?docid=%s&search_value=%s'" % (
+                self.absolute_url(), doc.Document.docid, filterstr)
             results.append([check_encoding(doc.Image.code),
                             check_encoding(doc.Document.subject),
                             check_encoding(doc.Author.name),
@@ -681,15 +692,23 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                             check_encoding(doc.Park.name),
                             check_encoding(doc.Document.date),
                             check_encoding(doc.Document.altitude),
-                            check_encoding(doc.Document.esp_nom_lat),
-                            'Image', 'Delete?'
+                            # check_encoding(doc.Document.esp_nom_lat),
+                            '<a rel="fancybox" class="fancybox" '
+                            'href="http://www.biodiv.be/php/congoimage/big/'
+                            '%(imageid)s"><img alt="%(imageid)s" '
+                            'src="http://www.biodiv.be/php/congoimage/big/'
+                            '%(imageid)s"/></a>'
+                            % {'imageid': check_encoding(doc.Image.code)},
+                            '<a href="javascript:delete_document(%s)">'
+                            '<img src="/misc_/Naaya/delete.gif" /></a>' %
+                            delete_link
                             ])
 
         return json.dumps({
             'data': results,
             'draw': int(form.get('draw')),
-            'recordsTotal': 200,
-            'recordsFiltered': 200,
+            'recordsTotal': recordsTotal,
+            'recordsFiltered': recordsFiltered,
             })
 
 
