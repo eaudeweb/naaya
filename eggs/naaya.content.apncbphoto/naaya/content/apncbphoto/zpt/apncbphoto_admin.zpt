@@ -22,6 +22,17 @@
         <link rel="alternate" type="application/rdf+xml" title="RDF"
               tal:attributes="href here/absolute_url" />
         <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
+        <script>
+          $(document).ready(function(){
+            $('.datatable').dataTable({
+                'aaSorting': [[0, "desc"]],
+                'sPaginationType': 'full_numbers',
+                "aLengthMenu": [[10, 25, 50, -1],
+                                [10, 25, 50, "All"]],
+            });
+          });
+        </script>
+
         <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
     </metal:block>
 

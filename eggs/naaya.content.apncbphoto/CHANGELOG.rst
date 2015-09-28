@@ -1,5 +1,6 @@
 1.0.1 (unreleased)
 ------------------
+* serverside processing for the datatable listing [dumitval]
 * export database to excel [dumitval]
 * implement updating records via re-import [dumitval]
 * add option to delete records [dumitval]
