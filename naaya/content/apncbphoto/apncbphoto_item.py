@@ -736,6 +736,7 @@ def get_config():
 
 
 def check_encoding(value):
+    value = value or ''
     try:
         value.decode('utf-8')
         return value
