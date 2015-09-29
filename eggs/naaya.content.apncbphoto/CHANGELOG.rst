@@ -1,5 +1,6 @@
 1.1.1 (unreleased)
 ------------------
+* fix search with non-ascii characters [dumitval]
 * load the same page of results after deleting a record [dumitval]
 
 1.1.0 (2015-09-28)
