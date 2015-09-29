@@ -7,6 +7,12 @@ app = env.app = {
     'buildout_repo': 'https://github.com/eaudeweb/naaya.buildout.chm-be.git',
     'bundle_repo':
         'https://github.com/eaudeweb/naaya.bundles.NaayaBundles-CHMBE.git',
+    'bundle_cop10_repo':
+        'https://github.com/eaudeweb/'
+        'naaya.bundles.NaayaBundles-CHMBE-cop10.git',
+    'bundle_training_repo':
+        'https://github.com/eaudeweb/'
+        'naaya.bundles.NaayaBundles-CHMBE-training.git',
 }
 
 env.hosts = ['zope@193.190.234.37:1974']
@@ -17,6 +23,8 @@ app['repo'] = ppath('/var/local/bch')
 app.update({
     'buildout_var': app['repo']/'src/buildout-chm-be',
     'bundle_var': app['repo']/'src/NaayaBundles-CHMBE',
+    'bundle_cop10_var': app['repo']/'src/NaayaBundles-CHMBE',
+    'bundle_training_var': app['repo']/'src/NaayaBundles-CHMBE',
 })
 
 
@@ -40,6 +48,8 @@ def _git_repo(repo_path, origin_url, update=True):
 def _update_repos():
     _git_repo(app['buildout_var'], app['buildout_repo'], update=True)
     _git_repo(app['bundle_var'], app['bundle_repo'], update=True)
+    _git_repo(app['bundle_var'], app['bundle_cop10_repo'], update=True)
+    _git_repo(app['bundle_var'], app['bundle_training_repo'], update=True)
 
 
 @task
