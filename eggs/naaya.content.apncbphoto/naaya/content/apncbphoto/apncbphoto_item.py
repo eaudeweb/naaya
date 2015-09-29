@@ -676,28 +676,31 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                 ))\
             .order_by(get_column(sort_by, asc)).all()
         recordsFiltered = len(documents)
+        admin = self.checkPermissionPublishObjects()
         results = []
         for doc in documents[start:start+length]:
             delete_link = ("'%s/delete_photo?docid=%s'") % (
                 self.absolute_url(), doc.Document.docid)
-            results.append([check_encoding(doc.Image.code),
-                            check_encoding(doc.Document.subject),
-                            check_encoding(doc.Author.name),
-                            check_encoding(doc.Document.ref_geo),
-                            check_encoding(doc.Park.name),
-                            check_encoding(doc.Document.date),
-                            check_encoding(doc.Document.altitude),
-                            # check_encoding(doc.Document.esp_nom_lat),
-                            '<a rel="fancybox" class="fancybox" '
-                            'href="http://www.biodiv.be/php/congoimage/big/'
-                            '%(imageid)s"><img alt="%(imageid)s" '
-                            'src="http://www.biodiv.be/php/congoimage/big/'
-                            '%(imageid)s"/></a>'
-                            % {'imageid': check_encoding(doc.Image.code)},
-                            '<a href="javascript:delete_document(%s)">'
-                            '<img src="/misc_/Naaya/delete.gif" /></a>' %
-                            delete_link
-                            ])
+            result = [check_encoding(doc.Document.subject),
+                      check_encoding(doc.Author.name),
+                      check_encoding(doc.Document.ref_geo),
+                      check_encoding(doc.Park.name),
+                      check_encoding(doc.Document.date),
+                      check_encoding(doc.Document.altitude),
+                      # check_encoding(doc.Document.esp_nom_lat),
+                      '<a rel="fancybox" class="fancybox" '
+                      'href="http://www.biodiv.be/php/congoimage/big/'
+                      '%(imageid)s"><img alt="%(imageid)s" '
+                      'src="http://www.biodiv.be/php/congoimage/big/'
+                      '%(imageid)s"/></a>' %
+                      {'imageid': check_encoding(doc.Image.code).lower()}
+                      ]
+            if admin:
+                result.insert(0, check_encoding(doc.Image.code))
+                result.append(
+                    '<a href="javascript:delete_document(%s)">'
+                    '<img src="/misc_/Naaya/delete.gif" /></a>' % delete_link)
+            results.append(result)
 
         return json.dumps({
             'data': results,
