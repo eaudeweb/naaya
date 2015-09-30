@@ -1,4 +1,7 @@
-4.0.9 (unreleased)
+4.0.10 (unreleased)
+-------------------
+
+4.0.9 (2015-09-30)
 -------------------
 * updated datatables to 1.10.9 [dumitval]
 * removed further references to disabled@eionet.europa.eu [dumitval]
