@@ -361,8 +361,14 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             update_existing = REQUEST.get('update_existing')
             workbook = xlrd.open_workbook(file_contents=file.read())
             session = self._get_session()
-            rows, imported, skipped = save_uploaded_file(workbook, session,
-                                                         update_existing)
+            try:
+                rows, imported, skipped = save_uploaded_file(
+                    workbook, session, update_existing)
+            except:
+                raise
+            finally:
+                if session is not None:
+                    session.close()
             have_errors = False
             for sheet in skipped:
                 if sheet:
@@ -397,10 +403,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def update_park(self, REQUEST):
         """ Update park name """
         name = REQUEST.get('name')
-        park_id = REQUEST.get('park_id')
+        parkid = REQUEST.get('parkid')
         session = self._get_session()
         try:
-            park = session.query(Park).filter(Park.parkid == park_id).first()
+            park = session.query(Park).filter(Park.parkid == parkid).first()
             park.name = name
             session.commit()
         except:
@@ -409,7 +415,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             if session is not None:
                 session.close()
         self.setSessionInfoTrans(
-            'Park name changed successfully (Park ID: %s)' % park_id)
+            'Park name changed successfully (Park ID: %s)' % parkid)
 
         return self._admin(REQUEST)
 
@@ -417,10 +423,16 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_park(self, REQUEST):
         """ Delete park """
-        park_id = REQUEST.get('park_id')
+        parkid = REQUEST.get('parkid')
+        if not self.can_delete(parkid=parkid):
+            self.setSessionErrorsTrans([
+                'This park cannot be deleted, '
+                'there are references to it in the database'])
+            return self._admin(REQUEST)
+
         session = self._get_session()
         try:
-            session.query(Park).filter(Park.parkid == park_id).delete()
+            session.query(Park).filter(Park.parkid == parkid).delete()
             session.commit()
         except:
             raise
@@ -436,11 +448,11 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
     def update_author(self, REQUEST):
         """ Update author name """
         name = REQUEST.get('name')
-        author_id = REQUEST.get('author_id')
+        authorid = REQUEST.get('authorid')
         session = self._get_session()
         try:
             author = session.query(Author).filter(
-                Author.authorid == author_id).first()
+                Author.authorid == authorid).first()
             author.name = name
             session.commit()
         except:
@@ -449,7 +461,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             if session is not None:
                 session.close()
         self.setSessionInfoTrans(
-            "Author's name changed successfully (Author ID: %s)" % author_id)
+            "Author's name changed successfully (Author ID: %s)" % authorid)
 
         return self._admin(REQUEST)
 
@@ -457,10 +469,16 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
 
     def delete_author(self, REQUEST):
         """ Delete author """
-        author_id = REQUEST.get('author_id')
+        authorid = REQUEST.get('authorid')
+        if not self.can_delete(authord=authorid):
+            self.setSessionErrorsTrans([
+                'This author cannot be deleted, '
+                'there are references to it in the database'])
+            return self._admin(REQUEST)
+
         session = self._get_session()
         try:
-            session.query(Author).filter(Author.authorid == author_id).delete()
+            session.query(Author).filter(Author.authorid == authorid).delete()
             session.commit()
         except:
             raise
@@ -555,7 +573,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                  'id': author.authorid}
                 for author in authors]
 
-    security.declareProtected(view, 'export_database')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'export_database')
 
     def export_database(self):
         """ export the entire database to excel """
@@ -631,6 +649,49 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             session = Session()
         return session
 
+    security.declareProtected(view, 'can_delete')
+
+    def can_delete(self, authorid=None, parkid=None):
+        """ check if an author or park is referenced in the database """
+
+        session = self._get_session()
+        if authorid:
+            try:
+                documents = session.query(Document)\
+                    .filter(Document.authorid == authorid)
+            except:
+                raise
+            finally:
+                if session is not None:
+                    session.close()
+            return not documents.count()
+        if parkid:
+            try:
+                documents = session.query(Document)\
+                    .filter(Document.parkid == parkid)
+            except:
+                raise
+            finally:
+                if session is not None:
+                    session.close()
+            return not documents.count()
+
+    security.declareProtected(view, 'show_records')
+
+    def show_records(self, REQUEST):
+        """ list records referencing a given author or park """
+
+        authorid = REQUEST.get('authorid')
+        if authorid:
+            self.setSession('authorid', authorid)
+        parkid = REQUEST.get('parkid')
+        if parkid:
+            self.setSession('parkid', parkid)
+
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(view, 'get_results')
+
     def get_results(self, REQUEST):
         """ return ajax results for the datatable """
 
@@ -645,11 +706,19 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                     return desc(getattr(col[0], col[1]))
 
         form = REQUEST.form
-        session = self._get_session()
         sort_by = int(form.get('order[0][column]'))
         asc = form.get('order[0][dir]')
         length = int(form.get('length'))
         start = int(form.get('start'))
+
+        # get authorid and parkid from the browser session (used when an
+        # admin tries to delete an author or park who is still
+        # referenced in the database - filtered listing
+        authorid = self.getSession('authorid', None)
+        self.setSession('authorid', None)
+        parkid = self.getSession('parkid', None)
+        self.setSession('parkid', None)
+
         species = form.get('search[value]').decode('utf-8')
         offset = 0
         admin = self.checkPermissionPublishObjects()
@@ -671,55 +740,67 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                    (Park, 'name'), (Document, 'date'), (Document, 'altitude'),
                    (Document, 'esp_nom_lat')]
 
-        recordsTotal = session.query(func.count(Document.docid)).scalar()
-        documents = session.query(
-            Document, Author, Image, Park, Biome, Vegetation)\
-            .filter(Author.authorid == Document.authorid)\
-            .filter(Image.imageid == Document.imageid)\
-            .filter(Park.parkid == Document.parkid)\
-            .filter(Biome.biomeid == Document.biomeid)\
-            .filter(Vegetation.vegetationid == Document.vegetationid)\
-            .filter(or_(
-                Document.esp_nom_com.like('%' + species + '%'),
-                Document.esp_nom_lat.like('%' + species + '%'),
-                ))\
-            .filter(
-                # Image.code.like('%' + filterstr + '%'),
-                Document.subject.like('%' + subject + '%'),
-                Document.ref_geo.like('%' + geo + '%'),
-                Document.date.like('%' + date + '%'),
-                )
-        if author:
-            documents = documents.filter(Author.code == author)
-        if park:
-            documents = documents.filter(Park.code == park)
-        recordsFiltered = documents.count()
-        documents = documents.order_by(get_column(sort_by, asc))
-        documents = documents.slice(start, start+length).all()
-        results = []
-        for doc in documents:
-            delete_link = ("'%s/delete_photo?docid=%s'") % (
-                self.absolute_url(), doc.Document.docid)
-            result = [check_encoding(doc.Document.subject),
-                      check_encoding(doc.Author.name),
-                      check_encoding(doc.Document.ref_geo),
-                      check_encoding(doc.Park.name),
-                      check_encoding(doc.Document.date),
-                      check_encoding(doc.Document.altitude),
-                      # check_encoding(doc.Document.esp_nom_lat),
-                      '<a rel="fancybox" class="fancybox" '
-                      'href="http://www.biodiv.be/php/congoimage/big/'
-                      '%(imageid)s"><img alt="%(imageid)s" '
-                      'src="http://www.biodiv.be/php/congoimage/big/'
-                      '%(imageid)s"/></a>' %
-                      {'imageid': check_encoding(doc.Image.code).lower()}
-                      ]
-            if admin:
-                result.insert(0, check_encoding(doc.Image.code))
-                result.append(
-                    '<a href="javascript:delete_document(%s)">'
-                    '<img src="/misc_/Naaya/delete.gif" /></a>' % delete_link)
-            results.append(result)
+        session = self._get_session()
+        try:
+            recordsTotal = session.query(func.count(Document.docid)).scalar()
+            documents = session.query(
+                Document, Author, Image, Park, Biome, Vegetation)\
+                .filter(Author.authorid == Document.authorid)\
+                .filter(Image.imageid == Document.imageid)\
+                .filter(Park.parkid == Document.parkid)\
+                .filter(Biome.biomeid == Document.biomeid)\
+                .filter(Vegetation.vegetationid == Document.vegetationid)\
+                .filter(or_(
+                    Document.esp_nom_com.like('%' + species + '%'),
+                    Document.esp_nom_lat.like('%' + species + '%'),
+                    ))\
+                .filter(
+                    # Image.code.like('%' + filterstr + '%'),
+                    Document.subject.like('%' + subject + '%'),
+                    Document.ref_geo.like('%' + geo + '%'),
+                    Document.date.like('%' + date + '%'),
+                    )
+            if author:
+                documents = documents.filter(Author.code == author)
+            if park:
+                documents = documents.filter(Park.code == park)
+            if authorid:
+                documents = documents.filter(Author.authorid == authorid)
+            if parkid:
+                documents = documents.filter(Park.parkid == parkid)
+            recordsFiltered = documents.count()
+            documents = documents.order_by(get_column(sort_by, asc))
+            documents = documents.slice(start, start+length).all()
+            results = []
+            for doc in documents:
+                delete_link = ("'%s/delete_photo?docid=%s'") % (
+                    self.absolute_url(), doc.Document.docid)
+                result = [check_encoding(doc.Document.subject),
+                          check_encoding(doc.Author.name),
+                          check_encoding(doc.Document.ref_geo),
+                          check_encoding(doc.Park.name),
+                          check_encoding(doc.Document.date),
+                          check_encoding(doc.Document.altitude),
+                          # check_encoding(doc.Document.esp_nom_lat),
+                          '<a rel="fancybox" class="fancybox" '
+                          'href="http://www.biodiv.be/php/congoimage/big/'
+                          '%(imageid)s"><img alt="%(imageid)s" '
+                          'src="http://www.biodiv.be/php/congoimage/big/'
+                          '%(imageid)s"/></a>' %
+                          {'imageid': check_encoding(doc.Image.code).lower()}
+                          ]
+                if admin:
+                    result.insert(0, check_encoding(doc.Image.code))
+                    result.append(
+                        '<a href="javascript:delete_document(%s)">'
+                        '<img src="/misc_/Naaya/delete.gif" /></a>'
+                        % delete_link)
+                results.append(result)
+        except:
+            raise
+        finally:
+            if session is not None:
+                session.close()
 
         return json.dumps({
             'data': results,

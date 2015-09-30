@@ -1,5 +1,6 @@
 1.1.2 (unreleased)
 ------------------
+* check references before deleting parks or authors [dumitval]
 * search by columns implemented [dumitval]
 * performance improvement when listing all records [dumitval]
 
