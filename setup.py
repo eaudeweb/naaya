@@ -9,7 +9,7 @@ setup(name='naaya.content.apncbphoto',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya',
+          'Naaya >= 4.0.9',
           'xlrd',
           'xlwt',
           'SQLAlchemy',

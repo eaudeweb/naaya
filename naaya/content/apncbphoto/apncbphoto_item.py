@@ -645,12 +645,27 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                     return desc(getattr(col[0], col[1]))
 
         form = REQUEST.form
+        session = self._get_session()
         sort_by = int(form.get('order[0][column]'))
         asc = form.get('order[0][dir]')
-        session = self._get_session()
-        filterstr = form.get('search[value]').decode('utf-8')
         length = int(form.get('length'))
         start = int(form.get('start'))
+        species = form.get('search[value]').decode('utf-8')
+        offset = 0
+        admin = self.checkPermissionPublishObjects()
+        if admin:
+            # admins have an extra column at position 0
+            offset = 1
+        subject = form.get('columns[%s][search][value]' % str(0 + offset)
+                           ).decode('utf-8')
+        author = form.get('columns[%s][search][value]' % str(1 + offset)
+                          ).decode('utf-8')
+        geo = form.get('columns[%s][search][value]' % str(2 + offset)
+                       ).decode('utf-8')
+        park = form.get('columns[%s][search][value]' % str(3 + offset)
+                        ).decode('utf-8')
+        date = form.get('columns[%s][search][value]' % str(4 + offset)
+                        ).decode('utf-8')
         columns = [(Image, 'code'), (Document, 'subject'),
                    (Author, 'name'), (Document, 'ref_geo'),
                    (Park, 'name'), (Document, 'date'), (Document, 'altitude'),
@@ -665,19 +680,22 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
             .filter(Biome.biomeid == Document.biomeid)\
             .filter(Vegetation.vegetationid == Document.vegetationid)\
             .filter(or_(
-                Image.code.like('%' + filterstr + '%'),
-                Document.subject.like('%' + filterstr + '%'),
-                Author.name.like('%' + filterstr + '%'),
-                Document.ref_geo.like('%' + filterstr + '%'),
-                Park.name.like('%' + filterstr + '%'),
-                Document.date.like('%' + filterstr + '%'),
-                Document.altitude.like('%' + filterstr + '%'),
-                Document.esp_nom_lat.like('%' + filterstr + '%')
+                Document.esp_nom_com.like('%' + species + '%'),
+                Document.esp_nom_lat.like('%' + species + '%'),
                 ))\
-            .order_by(get_column(sort_by, asc))
+            .filter(
+                # Image.code.like('%' + filterstr + '%'),
+                Document.subject.like('%' + subject + '%'),
+                Document.ref_geo.like('%' + geo + '%'),
+                Document.date.like('%' + date + '%'),
+                )
+        if author:
+            documents = documents.filter(Author.code == author)
+        if park:
+            documents = documents.filter(Park.code == park)
         recordsFiltered = documents.count()
+        documents = documents.order_by(get_column(sort_by, asc))
         documents = documents.slice(start, start+length).all()
-        admin = self.checkPermissionPublishObjects()
         results = []
         for doc in documents:
             delete_link = ("'%s/delete_photo?docid=%s'") % (

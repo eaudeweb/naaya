@@ -1,5 +1,7 @@
 1.1.2 (unreleased)
 ------------------
+* search by columns implemented [dumitval]
+* performance improvement when listing all records [dumitval]
 
 1.1.1 (2015-09-29)
 ------------------
