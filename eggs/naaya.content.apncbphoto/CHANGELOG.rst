@@ -1,4 +1,7 @@
-1.1.2 (unreleased)
+1.1.3 (unreleased)
+------------------
+
+1.1.2 (2015-09-30)
 ------------------
 * check references before deleting parks or authors [dumitval]
 * search by columns implemented [dumitval]
