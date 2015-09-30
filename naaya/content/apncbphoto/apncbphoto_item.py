@@ -674,11 +674,12 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                 Document.altitude.like('%' + filterstr + '%'),
                 Document.esp_nom_lat.like('%' + filterstr + '%')
                 ))\
-            .order_by(get_column(sort_by, asc)).all()
-        recordsFiltered = len(documents)
+            .order_by(get_column(sort_by, asc))
+        recordsFiltered = documents.count()
+        documents = documents.slice(start, start+length).all()
         admin = self.checkPermissionPublishObjects()
         results = []
-        for doc in documents[start:start+length]:
+        for doc in documents:
             delete_link = ("'%s/delete_photo?docid=%s'") % (
                 self.absolute_url(), doc.Document.docid)
             result = [check_encoding(doc.Document.subject),
