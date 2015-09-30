@@ -74,6 +74,8 @@
         <tal:block condition="python:here.prop_details('geo_location')['show']"
             content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
+        <p i18n:translate="">Here you can edit or delete existing authors and parks entries. Records can be deleted only if there are no entries in the database who relate to that respective item.</p>
+
         <h2 i18n:translate="">Edit parks</h2>
         <table class="datatable">
           <thead>
@@ -94,11 +96,15 @@
                 </td>
                 <td>
                   <input type="hidden" tal:attributes="value park/id"
-                    name="park_id" />
+                    name="parkid" />
                   <input type="submit" value="Update" style="margin-top:0px;"
                     name="update_park:method" />
-                  <input type="submit" value="Delete" style="margin-top:0px;"
+                  <input tal:condition="python:here.can_delete(parkid=park['id'])"
+                    type="submit" value="Delete" style="margin-top:0px;"
                     name="delete_park:method" onclick="return confirm('Are you sure?');"/>
+                  <input tal:condition="python:not here.can_delete(parkid=park['id'])"
+                    type="submit" value="Delete" style="margin-top:0px;"
+                    name="show_records:method" onclick="return alert('Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.');"/>
                 </td>
               </form>
             </tr>
@@ -125,11 +131,15 @@
                 </td>
                 <td>
                   <input type="hidden" tal:attributes="value author/id"
-                    name="author_id"/>
+                    name="authorid"/>
                   <input type="submit" value="Update" style="margin-top:0px;"
                     name="update_author:method" />
-                  <input type="submit" value="Delete" style="margin-top:0px;"
+                  <input  tal:condition="python:here.can_delete(authorid=author['id'])"
+                    type="submit" value="Delete" style="margin-top:0px;"
                     name="delete_author:method" onclick="return confirm('Are you sure?')" />
+                  <input  tal:condition="python:not here.can_delete(authorid=author['id'])"
+                    type="submit" value="Delete" style="margin-top:0px;"
+                    name="show_records:method" onclick="return confirm('Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.')" />
                 </td>
               </form>
             </tr>

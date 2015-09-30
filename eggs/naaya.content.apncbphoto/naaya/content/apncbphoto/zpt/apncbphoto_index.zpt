@@ -35,7 +35,6 @@
                 'oLanguage':{
                   'sSearch': 'Search species name '
                   },
-                'stateSave': true,
                 'aaSorting': [[0, "desc"]],
                 'sPaginationType': 'full_numbers',
                 "aLengthMenu": [[10, 25, 50, -1],

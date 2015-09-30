@@ -116,7 +116,7 @@ Session = sessionmaker(bind=engine)
 
 engine_test = create_engine('mysql://' + DB_USER + ':' + DB_PASSWORD + '@' +
                             DB_HOST + '/' + DBTEST_NAME, echo=False,
-                            pool_size=20, max_overflow=0,
+                            pool_size=20, max_overflow=10,
                             listeners=[LookLively()])
 engine_test.connect()
 SessionTest = sessionmaker(bind=engine_test)
