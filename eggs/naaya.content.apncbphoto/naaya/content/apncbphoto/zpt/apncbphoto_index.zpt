@@ -31,7 +31,10 @@
         <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
         <script>
           $(document).ready(function(){
-            $('.datatable').dataTable({
+            var table = $('.datatable').DataTable({
+                'oLanguage':{
+                  'sSearch': 'Search species name '
+                  },
                 'stateSave': true,
                 'aaSorting': [[0, "desc"]],
                 'sPaginationType': 'full_numbers',
@@ -40,6 +43,32 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": "get_results"
+            });
+            table.columns().every(function(){
+              var that = this;
+
+              $('input', this.header()).on('keyup change', function(){
+                if (that.search() != this.value) {
+                  that
+                    .search(this.value)
+                    .draw();
+                }
+              });
+
+              $('select', this.header()).on('change', function(){
+                if (that.search() != this.value) {
+                  that
+                    .search(this.value)
+                    .draw();
+                }
+              });
+
+              $('input', this.header()).on('click', function(e){
+                e.stopPropagation();
+              });
+              $('select', this.header()).on('click', function(e){
+                e.stopPropagation();
+              });
             });
              $(".fancybox").fancybox({
                 type: 'image',
@@ -139,19 +168,42 @@
           </div>
         </form>-->
 
+        <style>
+          table tbody tr td:first-child{
+            word-break: break-all;
+          }
+        </style>
         <table class="datatable">
           <thead>
             <tr>
-              <th i18n:translate="">Photo ID</th>
-              <th i18n:translate="">Subject</th>
-              <th i18n:translate="">Author</th>
-              <th i18n:translate="">Ref geo</th>
-              <th i18n:translate="">Park</th>
-              <th i18n:translate="">Date</th>
+              <th tal:condition="here/checkPermissionPublishObjects"
+                i18n:translate="">Photo ID</th>
+              <th>
+                <input type="text" size="7" i18n:attributes="placeholder"
+                  placeholder="Subject" /></th>
+              <th>
+                <select style="width: 85px;">
+                  <option i18n:translate="" value="">All authors</option>
+                  <option tal:repeat="author here/get_authors"
+                    tal:attributes="value author/code" tal:content="author/name" />
+                </select>
+              </th>
+              <th>
+                <input type="text" size="7" i18n:attributes="placeholder"
+                  placeholder="Ref geo" /></th>
+              <th>
+                <select style="width: 75px;">
+                  <option i18n:translate="" value="">All parks</option>
+                  <option tal:repeat="park here/get_parks"
+                    tal:attributes="value park/code" tal:content="park/name" />
+                </select>
+              </th>
+              <th>
+                <input type="text" size="5" i18n:attributes="placeholder"
+                  placeholder="Date" /></th>
               <th i18n:translate="">Altitude</th>
-              <!--<th>Esp nom LAT</th>-->
               <th i18n:translate="">Image</th>
-              <th tal:condition="here/checkPermissionViewManagementScreens"
+              <th tal:condition="here/checkPermissionPublishObjects"
                 i18n:translate="">Opt</th>
             </tr>
           </thead>
