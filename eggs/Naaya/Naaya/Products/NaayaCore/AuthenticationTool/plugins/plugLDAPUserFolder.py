@@ -282,8 +282,9 @@ class plugLDAPUserFolder(PlugBase):
 
         def add_roles_from_ob(ob, is_brain=False):
             if is_brain:
-                ob_roles = getattr(ob, 'ny_ldap_group_roles', MV)
-                if 'ny_ldap_group_roles' not in ob or ob_roles is MV:
+                _marker = object()
+                ob_roles = getattr(ob, 'ny_ldap_group_roles', _marker)
+                if (ob_roles is _marker) or (ob_roles is MV):
                     # catalog field (meta) not created or missing brain value
                     is_brain = False
                     ob = ob.getObject()
