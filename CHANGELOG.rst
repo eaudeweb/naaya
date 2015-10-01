@@ -1,5 +1,6 @@
 1.1.3 (unreleased)
 ------------------
+* apply break-word on table cells only for administrators [dumitval]
 
 1.1.2 (2015-09-30)
 ------------------
