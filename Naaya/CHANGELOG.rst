@@ -1,4 +1,7 @@
-4.0.10 (unreleased)
+4.0.11 (unreleased)
+-------------------
+
+4.0.10 (2015-10-01)
 -------------------
 * fix in plugLDAPUserFolder.py [dumitval]
 
