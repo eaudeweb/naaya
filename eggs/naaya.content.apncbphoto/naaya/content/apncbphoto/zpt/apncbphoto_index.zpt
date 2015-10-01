@@ -167,7 +167,7 @@
           </div>
         </form>-->
 
-        <style>
+        <style tal:condition="here/checkPermissionPublishObjects">
           table tbody tr td:first-child{
             word-break: break-all;
           }
