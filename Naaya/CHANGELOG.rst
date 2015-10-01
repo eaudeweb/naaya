@@ -1,5 +1,6 @@
 4.0.10 (unreleased)
 -------------------
+* fix in plugLDAPUserFolder.py [dumitval]
 
 4.0.9 (2015-09-30)
 -------------------
