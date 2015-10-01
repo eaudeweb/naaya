@@ -1,4 +1,7 @@
-1.1.3 (unreleased)
+1.1.4 (unreleased)
+------------------
+
+1.1.3 (2015-10-01)
 ------------------
 * apply break-word on table cells only for administrators [dumitval]
 

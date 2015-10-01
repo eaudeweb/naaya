@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.apncbphoto',
-      version='1.1.3',
+      version='1.1.4',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
