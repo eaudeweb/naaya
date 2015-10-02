@@ -1,5 +1,6 @@
 1.2.9 (unreleased)
 ------------------
+* bugfix (no more _send_notifications) [dumitval]
 
 1.2.8 (2015-03-10)
 ------------------

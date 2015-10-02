@@ -194,8 +194,6 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate',
                                                                 ''))
 
-    schema_raw_data.pop('_send_notifications')
-
     _title = '%s, %s' % (
         schema_raw_data.get('municipality', ''),
         self.get_node_title('provinces',
