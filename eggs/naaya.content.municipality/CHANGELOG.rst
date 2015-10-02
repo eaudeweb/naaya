@@ -1,4 +1,7 @@
-1.2.9 (unreleased)
+1.2.10 (unreleased)
+------------------
+
+1.2.9 (2015-10-02)
 ------------------
 * bugfix (no more _send_notifications) [dumitval]
 
