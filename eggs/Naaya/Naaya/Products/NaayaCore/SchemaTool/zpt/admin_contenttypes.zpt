@@ -10,8 +10,8 @@
 		</p>
 
 		<tal:block tal:define="schemas python:here.listSchemas(installed=True).values()">
-		<ul tal:condition="schemas" tal:repeat="schema schemas">
-			<li>
+		<ul>
+			<li tal:condition="schemas" tal:repeat="schema schemas">
 				<a tal:attributes="href string:${schema/absolute_url}/admin_html" tal:content="schema/title" i18n:translate="" />
 			</li>
 		</ul>
