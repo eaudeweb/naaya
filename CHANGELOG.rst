@@ -1,5 +1,6 @@
 1.4.23 (unreleased)
 --------------------
+* show file in other language if the current language has no version [dumitval]
 
 1.4.22 (2015-07-07)
 --------------------
