@@ -23,7 +23,10 @@
             tal:attributes="href here/absolute_url" />
     </metal:block>
 
-    <metal:block tal:define="site_object_index python:here.getFormsTool()['site_object_index']" fill-slot="body">
+    <metal:block tal:define="site_object_index python:here.getFormsTool()['site_object_index'];
+                             versions options/versions;
+                             current_lang here/gl_get_selected_language"
+                 fill-slot="body">
 
         <h1>
             <metal:block use-macro="site_object_index/macros/icon"></metal:block>
@@ -45,50 +48,56 @@
     content="structure python:here.portal_map.render_object_map(here.geo_location)"></tal:block>
 
 <table class="datatable" tal:define="portal_map here/getGeoMapTool;
-    current_version options/current_version|nothing">
-
-    <tr>
-        <th i18n:translate="">Download</th>
-        <td tal:condition="current_version">
-            <img tal:attributes="src current_version/icon_url;
-                title current_version/content_type" />
-            <a tal:attributes="href current_version/url"
-                tal:content="current_version/filename"></a>
-            (<tal:block content="current_version/pretty_size" />)
-        </td>
-        <td tal:condition="not:current_version">
-            <em i18n:translate="">No file uploaded</em>
-        </td>
-    </tr>
-    <tr tal:condition="current_version/viewable|nothing">
-        <th i18n:translate="">View</th>
-        <td>
-            <a tal:attributes="href string:${current_version/url}?action=view"
-                tal:content="string: Open in browser"></a>
-        </td>
-    </tr>
-    <tr tal:condition="current_version">
-        <th i18n:translate="">Upload date</th>
-        <td tal:content="current_version/pretty_timestamp" />
-    </tr>
-    <metal:block use-macro="site_object_index/macros/contributor_tr" />
-    <tal:block condition="here/coverage"
-        content="structure python: here.prop_display_tr('coverage')" />
-    <tal:block condition="here/keywords"
-        content="structure python: here.prop_display_tr('keywords')" />
-    <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-
-    <tal:block condition="here/is_geo_enabled">
-        <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
-            picture python:portal_map.getSymbolPicture(here.geo_type)"
-            tal:condition="python: title != '' and here.geo_location">
-            <th i18n:translate="Type (translate as a noun)">Type</th>
-            <td>
-                <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
-                (<span tal:replace="title" />)
-            </td>
-        </tr>
+    current_any_lang_version options/current_version|nothing">
+  <tal:block condition="current_any_lang_version">
+    <tal:block define="language python: current_any_lang_version[0];
+                       current_version python: current_any_lang_version[1]">
+      <tr>
+          <th i18n:translate="">Download</th>
+          <td tal:condition="current_version">
+              <img tal:attributes="src current_version/icon_url;
+                  title current_version/content_type" />
+              <a tal:attributes="href current_version/url"
+                  tal:content="current_version/filename"></a>
+              (<tal:block condition="python: not versions[current_lang]"
+              tal:content="string:${language}, "/>
+               <tal:block content="current_version/pretty_size" />)
+          </td>
+          <td tal:condition="not:current_version">
+              <em i18n:translate="">No file uploaded</em>
+          </td>
+      </tr>
+      <tr tal:condition="current_version/viewable|nothing">
+          <th i18n:translate="">View</th>
+          <td>
+              <a tal:attributes="href string:${current_version/url}?action=view"
+                  tal:content="string: Open in browser"></a>
+          </td>
+      </tr>
+      <tr tal:condition="current_version">
+          <th i18n:translate="">Upload date</th>
+          <td tal:content="current_version/pretty_timestamp" />
+      </tr>
     </tal:block>
+  </tal:block>
+  <metal:block use-macro="site_object_index/macros/contributor_tr" />
+  <tal:block condition="here/coverage"
+      content="structure python: here.prop_display_tr('coverage')" />
+  <tal:block condition="here/keywords"
+      content="structure python: here.prop_display_tr('keywords')" />
+  <tal:block content="structure python: here.prop_display_tr('releasedate')" />
+
+  <tal:block condition="here/is_geo_enabled">
+      <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+          picture python:portal_map.getSymbolPicture(here.geo_type)"
+          tal:condition="python: title != '' and here.geo_location">
+          <th i18n:translate="Type (translate as a noun)">Type</th>
+          <td>
+              <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
+              (<span tal:replace="title" />)
+          </td>
+      </tr>
+  </tal:block>
 
 </table>
 
@@ -101,6 +110,7 @@
     <thead>
         <tr>
             <th i18n:translate="">#</th>
+            <th tal:condition="python: not versions[current_lang]" i18n:translate="">Language</th>
             <th i18n:translate="">File name</th>
             <th i18n:translate="">Contributor</th>
             <th i18n:translate="">Upload date</th>
@@ -109,7 +119,9 @@
         </tr>
     </thead>
     <tbody>
-        <tr tal:repeat="version options/versions">
+        <tal:block repeat="lang versions">
+        <tr tal:repeat="version python: versions[lang]"
+          tal:condition="python: lang==current_lang">
             <td tal:content="repeat/version/number" />
             <td>
                 <a tal:attributes="href version/url"
@@ -128,6 +140,28 @@
                 <tal:block content="version/content_type" />
             </td>
         </tr>
+        <tr tal:repeat="version python:versions[lang]"
+          tal:condition="python:current_lang in versions and lang != current_lang">
+            <td tal:content="repeat/version/number" />
+            <td tal:content="python:here.gl_get_language_name(lang)" />
+            <td>
+                <a tal:attributes="href version/url"
+                    tal:content="version/filename"></a>
+                <em tal:condition="version/is_current"
+                    i18n:translate="">(current)</em>
+            </td>
+            <td>
+                <metal:block use-macro="site_object_index/macros/version_contributor" />
+            </td>
+            <td tal:content="version/pretty_timestamp" />
+            <td tal:content="version/pretty_size" />
+            <td>
+                <img tal:attributes="src version/icon_url;
+                    title version/content_type" />
+                <tal:block content="version/content_type" />
+            </td>
+        </tr>
+        </tal:block>
     </tbody>
 </table>
 

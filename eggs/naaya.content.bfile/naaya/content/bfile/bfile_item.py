@@ -462,7 +462,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
-        versions = [tmpl_version(self, ver, str(n+1)) for n, ver in
+        versions = [tmpl_version(self, ver, str(n+1), language) for n, ver in
                     enumerate(self.all_versions(language))]
         versions = filter(lambda x: not x['removed'], versions)
         if versions:
@@ -475,10 +475,21 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         language = self.get_selected_language()
-        versions = self._versions_for_tmpl(language)
+        versions = {}
+        for lang in self.gl_get_languages_map():
+            versions[lang['id']] = self._versions_for_tmpl(lang['id'])
         options = {'versions': versions}
-        if versions:
-            options['current_version'] = versions[-1]
+        if versions[language]:
+            options['current_version'] = (
+                self.gl_get_language_name(language),
+                versions.get(language)[-1])
+        else:
+            for lang in versions:
+                if versions[lang]:
+                    options['current_version'] = (
+                        self.gl_get_language_name(lang),
+                        versions.get(lang)[-1])
+                    break
 
         template_vars = {'here': self, 'options': options}
         to_return = self.getFormsTool().getContent(template_vars,
