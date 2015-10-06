@@ -1,4 +1,7 @@
-1.4.23 (unreleased)
+1.4.24 (unreleased)
+--------------------
+
+1.4.23 (2015-10-06)
 --------------------
 * show file in other language if the current language has no version [dumitval]
 
