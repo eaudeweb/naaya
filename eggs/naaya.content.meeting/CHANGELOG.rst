@@ -1,4 +1,7 @@
-1.2.85 (unreleased)
+1.2.86 (unreleased)
+-------------------
+
+1.2.85 (2015-10-07)
 -------------------
 * fix for excel export of participants in meetings with mandatory survey
   [dumitval]
