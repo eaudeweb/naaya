@@ -443,9 +443,16 @@ class Participants(SimpleItem):
                   'Status', 'Last modified by',
                   'Reason for modification (when saved by an administrator)']
         meeting = self.getMeeting()
-        if meeting.survey_required and self.get_survey():
-            header.extend(
-                [question[1] for question in self.get_survey_questions()])
+        survey = self.get_survey()
+        if meeting.survey_required and survey:
+            survey_questions = []
+            for question in self.get_survey_questions():
+                survey_question = getattr(survey, question[0])
+                if survey_question.meta_type == 'Naaya Radio Matrix Widget':
+                    survey_questions.extend(survey_question.rows)
+                else:
+                    survey_questions.append(question[1])
+            header.extend(survey_questions)
         rows = []
         participants = self.getAttendees()
         for participant in participants:
@@ -456,10 +463,18 @@ class Participants(SimpleItem):
                 country_from_country_code.get(part_info['country'], ''),
                 part_info['reimbursed'], part_info['phone'], part_info['role'],
                 part_info['saved_by'], part_info['justification']]
-            if meeting.survey_required and self.get_survey():
-                survey_answers = [
-                    self.get_survey_answer(part_info['uid'], question[0]) or
-                    '-' for question in self.get_survey_questions()]
+            if meeting.survey_required and survey:
+                survey_answers = []
+                for question in self.get_survey_questions():
+                    survey_question = getattr(survey, question[0])
+                    survey_answer = self.get_survey_answer(part_info['uid'],
+                                                           question[0])
+                    if survey_answer is None:
+                        survey_answer = '-'
+                    if isinstance(survey_answer, basestring):
+                        survey_answers.append(survey_answer)
+                    else:
+                        survey_answers.extend(survey_answer)
                 participant_info.extend(survey_answers)
             rows.append(participant_info)
 

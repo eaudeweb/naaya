@@ -1,5 +1,7 @@
 1.2.85 (unreleased)
 -------------------
+* fix for excel export of participants in meetings with mandatory survey
+  [dumitval]
 * remove testing for disabled@eionet.europa.eu when searching for users
   (they are filtered in the search method) [dumitval]
 
