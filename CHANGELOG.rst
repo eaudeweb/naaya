@@ -1,5 +1,6 @@
 1.4.42 (unreleased)
 -------------------
+* consultations index customisations based on ampconsultation IG [dumitval]
 * removed disabled@eionet.europa.eu as filter for users
   (disabled users are already filtered out) [dumitval]
 
