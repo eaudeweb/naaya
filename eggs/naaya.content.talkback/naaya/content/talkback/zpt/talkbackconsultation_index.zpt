@@ -147,6 +147,9 @@
 </thead>
 <tbody>
     <tr tal:repeat="section here/list_sections">
+      <tal:block
+        define="header_only python:section.objectValues()[0].body=='<p>Header</p>';
+                level_one section/is_level_one_section|nothing">
         <td tal:condition="manage_perm"
             class="talkback-section_list-edit_column">
             <input type="checkbox" name="del_section_id:list"
@@ -154,14 +157,28 @@
             <input type="hidden" name="sort_section_id:list"
                    tal:attributes="value section/getId" />
         </td>
-        <td><a tal:attributes="href section/absolute_url"
-               tal:content="section/title_or_id"></a></td>
-        <td tal:content="section/comment_count" />
+        <td>
+            <tal:block condition="section/is_level_two_section|nothing">
+              &nbsp;&nbsp;&nbsp;
+            </tal:block>
+            <tal:block condition="section/is_level_three_section|nothing">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </tal:block>
+            <a tal:condition="not: header_only"
+               tal:attributes="href section/absolute_url;
+                               style python:test(level_one, 'font-size: large;; font-weight: bold', '')"
+               tal:content="section/title_or_id"></a>
+            <span style="font-size: large" tal:condition="header_only">
+              <strong i18n:translate=""
+                tal:content="section/title_or_id"></strong></span>
+        </td>
+        <td tal:content="python:test(header_only, '', section.comment_count())" />
         <td tal:condition="manage_perm"
             class="talkback-section_list-edit_column">
             <a tal:attributes="href string:${section/absolute_url}/edit_html"
                rel="nofollow" i18n:translate="">Edit</a>
         </td>
+      </tal:block>
     </tr>
 </tbody>
 </table>
@@ -171,6 +188,8 @@
 <input tal:condition="manage_perm"
        type="submit" name="save_sort_order:method"
        value="Save sort order" i18n:attributes="value" />
+<input id="is_fullscreen" type="hidden"
+    tal:attributes=" value here/is_fullscreen|nothing"/>
 </form>
 
 <p tal:condition="python:not here.list_sections() and here.checkPermissionManageTalkBackConsultation()" i18n:translate="">You have not added any sections to this consultation yet.
@@ -188,6 +207,10 @@ $(function(){
     var tbody = $('form[name=section_list] table.talkback-section_list tbody');
     tbody.css('cursor', 'move');
     tbody.sortable({axis: 'y'});
+    var is_fullscreen = $('#is_fullscreen').val();
+    if (is_fullscreen){
+        $("body").addClass("fullscreen");
+    }
 });
 </script>
 
