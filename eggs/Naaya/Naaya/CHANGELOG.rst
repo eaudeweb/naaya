@@ -1,4 +1,7 @@
-4.0.11 (unreleased)
+4.0.12 (unreleased)
+-------------------
+
+4.0.11 (2015-10-15)
 -------------------
 * upgrade mediafile to HTML5 (mp4 file encoding, flowplayer 6.0.3) [dumitval]
 * cosmetic improvement on admin_contenttypes page [dumitval]
