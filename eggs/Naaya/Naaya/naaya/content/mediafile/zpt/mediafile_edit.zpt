@@ -81,7 +81,7 @@ Example:
 				broken here/mediaBroken;
 				here_url here/absolute_url;
 				media_id here/getSingleMediaId;
-				flvpath string:${here_url}/${media_id};">
+				mp4path string:${here_url}/${media_id};">
 <legend>
 	<span i18n:translate="">Attached file</span>
 	<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file')" class="mandatory_field"> *</span>
@@ -110,7 +110,7 @@ Example:
 <div class="field-inline" tal:condition="python:here.getSize()>0 and ready">
 	<input type="radio" name="source" id="source-none" value="" checked="checked" />
 	<label for="source-none" i18n:translate="">Keep</label>
-	<a tal:attributes="href flvpath">
+	<a tal:attributes="href mp4path">
 		<span tal:content="media_id" />
 		<span tal:content="python:'(' + here.utShowSize(here.getSize()) + ')'" />
 	</a>

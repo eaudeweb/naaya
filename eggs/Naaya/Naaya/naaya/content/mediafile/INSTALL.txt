@@ -1,59 +1,12 @@
-The following products/tools are required in order to provide all the features:
-  * ExtFile 1.5.6;
-  * ffmpeg;
-  * flvtool2;
-If one of this is missing video conversion will not be supported (the users will
-be able to upload only flash video files ".flv");
-
-1 Install ExtFile:
---------------------
-- Download it from provided URL and unpack into your zope instance:
-    cd </path to my zope instance/>
-    wget http://www.zope.org/Members/shh/ExtFile/1.5.6/ExtFile-1.5.6.tar.gz
-    tar -zxvf ExtFile-1.5.6.tar.gz
-    rm ExtFile-1.5.6.tar.gz
-- Edit REPOSITORY_PATH in ExtFile/Config.py:
-    REPOSITORY_PATH = ["var", "reposit"]
+FFMPEG is required in order to provide all the features.
+If this is missing, video conversion will not be supported (the users will
+be able to upload only mp4 video files ".mp4");
 
 2 Install ffmpeg
 ------------------
-You need a ffmpeg newer than revision 10703 compiled with mp3lame support.
-Also make sure that the ffmpeg executable is in your PATH.
-
-	2.1 Unix install
-	----------------
-	- Download it from provided URL and unpack into tmp folder:
-	    cd /tmp
-	    wget http://ffmpeg.mplayerhq.hu/ffmpeg-checkout-snapshot.tar.bz2
-	    tar -xvf ffmpeg-checkout-snapshot.tar.bz2
-	    cd <ffmpeg-checkout-extract-folder>
-	- Ensure you have installed lame, lame-devel on your machine:
-	    (yum user): yum install lame lame-devel
-	    (apt user): apt-get install lame lame-devel
-	- Install:
-	    ./configure --enable-libmp3lame && make && sudo make install
-
-	2.2 Windows install
-	-------------------
-	Use ffmpeg from http://ffdshow.faireal.net/mirror/ffmpeg/ffmpeg.rev12665.7z.
-
-
-3 Install flvtool2
---------------------
-While flvtool2 is optional, it is highly recommended to install it, because 
-without it subtitles (and other features) will not work.
-
-- Download it from provided URL and unpack into tmp folder:
-    cd /tmp
-    wget http://rubyforge.org/frs/download.php/17497/flvtool2-1.0.6.tgz
-    tar -xvf flvtool2-1.0.6.tgz
-    cd flvtool2-1.0.6
-    ruby setup.rb config && ruby setup.rb setup && sudo ruby setup.rb install
-
-4 Finish installation
------------------------
-- Restart zope;
-- Login into ZMI, navigate to Naaya instance;
-- Select Control Panel tab;
-- Uninstall 'Naaya Media File' if installed;
-- Install 'Naaya Media File';
+You need a ffmpeg newer than revision 10703 compiled with lib264 and
+libfdk_aac or libfaac support. Also make sure that the ffmpeg executable is in
+your PATH.
+Since there is now current ffmpeg version in any of the linux repositories
+(as of October 2015), the only possibility is to compile from source (libx264,
+libfdk_aac and ffmpeg).

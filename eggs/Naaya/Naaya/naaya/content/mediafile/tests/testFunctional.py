@@ -46,8 +46,8 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         form['coverage:utf8:ustring'] = 'test_mediafile_coverage'
         form['keywords:utf8:ustring'] = 'keyw1, keyw2'
 
-        form.find_control('file').add_file(StringIO('the_FLV_data'),
-            filename='testvid.flv', content_type='video/x-flv')
+        form.find_control('file').add_file(StringIO('the_MP4_data'),
+            filename='testvid.mp4', content_type='video/mp4')
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -63,14 +63,14 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('keyw1, keyw2' in html)
 
         media_id = self.portal.myfolder.test_create_mediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid.flv')
+        self.failUnlessEqual(media_id, 'testvid.mp4')
         self.browser.go('http://localhost/portal/myfolder/test_create_mediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
+        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
 
-        # apparently the test publisher doesn't serve our flv file correctly.
-        #self.failUnlessEqual(html, 'the_FLV_data')
+        # apparently the test publisher doesn't serve our mp4 file correctly.
+        #self.failUnlessEqual(html, 'the_MP4_data')
 
         self.browser_do_logout()
 
@@ -99,8 +99,8 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'My media file')
 
         form['title:utf8:ustring'] = 'new_mediafile_title'
-        form.find_control('file').add_file(StringIO('the_FLV_data_B'),
-            filename='testvid_B.flv', content_type='video/x-flv')
+        form.find_control('file').add_file(StringIO('the_MP4_data_B'),
+            filename='testvid_B.mp4', content_type='video/mp4')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
@@ -111,31 +111,31 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.myfolder.mymediafile.approveThis()
 
         media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid_B.flv')
+        self.failUnlessEqual(media_id, 'testvid_B.mp4')
         self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
-        # apparently the test publisher doesn't serve our flv file correctly.
-        #self.failUnlessEqual(html, 'the_FLV_data_B')
+        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
+        # apparently the test publisher doesn't serve our mp4 file correctly.
+        #self.failUnlessEqual(html, 'the_MP4_data_B')
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
         form['title:utf8:ustring'] = 'french_title'
-        form.find_control('file').add_file(StringIO('the_FLV_data_C'),
-            filename='testvid_C.flv', content_type='video/x-flv')
+        form.find_control('file').add_file(StringIO('the_MP4_data_C'),
+            filename='testvid_C.mp4', content_type='video/mp4')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
         self.failUnless('Saved changes' in self.browser.get_html())
 
         media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid_B.flv') # the file is not renamed - is this correct?
+        self.failUnlessEqual(media_id, 'testvid_B.mp4') # the file is not renamed - is this correct?
         self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
-        # apparently the test publisher doesn't serve our flv file correctly.
-        #self.failUnlessEqual(html, 'the_FLV_data_C')
+        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
+        # apparently the test publisher doesn't serve our mp4 file correctly.
+        #self.failUnlessEqual(html, 'the_MP4_data_C')
 
         self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
         self.failUnlessEqual(self.portal.myfolder.mymediafile.getLocalProperty('title', 'fr'), 'french_title')

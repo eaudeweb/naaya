@@ -206,6 +206,7 @@
 		<contenttype id="audio/x-ms-wma" title="WMA" picture="wma.png"/>
 		<contenttype id="audio/mpeg" title="MP3" picture="mp3.png"/>
 		<contenttype id="video/mpeg" title="MPG" picture="mpg.png"/>
+		<contenttype id="video/mp4" title="MP4" picture="mp4.png"/>
 		<contenttype id="video/x-ms-wmv" title="WMV" picture="wmv.png"/>
 	</properties>
 	<emails>

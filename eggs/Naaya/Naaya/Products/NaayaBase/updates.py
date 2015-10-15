@@ -238,11 +238,14 @@ class AddAspectRatioToMediaFiles(UpdateScript):
                 continue
             file_path = media.get_filename()
             try:
-                resolution = get_resolution(file_path)
-                aspect_ratio = resolution[0]/resolution[1]
-                media.aspect_ratio = aspect_ratio
-                self.log.debug('Aspect ratio %s saved for %s' %
-                    (aspect_ratio, ob.absolute_url()))
+                if file_path:
+                    resolution = get_resolution(file_path)
+                    aspect_ratio = resolution[0]/resolution[1]
+                    media.aspect_ratio = aspect_ratio
+                    self.log.debug('Aspect ratio %s saved for %s' %
+                        (aspect_ratio, ob.absolute_url()))
+                else:
+                    self.log.debug('Media file %s missing' % ob.absolute_url())
             except ValueError:
                 self.log.error('Media file not found for %s' % ob.absolute_url())
         return True
