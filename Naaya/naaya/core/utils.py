@@ -32,6 +32,7 @@ content_type_to_icons = {
     "application/msaccess": ["MDB", "mdb"],
     "audio/mpeg": ["MP3", "mp3"],
     "video/mpeg": ["MPG", "mpg"],
+    "video/mp4": ["MP4", "mp4"],
     "text/x-ms-odc": ["ODC", "odc"],
     "application/vnd.oasis.opendocument.formula": ["ODF", "odf"],
     "application/vnd.oasis.opendocument.graphics": ["ODG", "odg"],

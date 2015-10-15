@@ -22,7 +22,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from converters.MediaConverter import media2flv, can_convert, get_conversion_errors
+from converters.MediaConverter import media2mp4, can_convert, get_conversion_errors
 from lxml import etree
 from lxml.builder import ElementMaker
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -32,6 +32,7 @@ from naaya.core import submitter
 from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.core.zope2util import ofs_path, launch_job
+from naaya.content.mediafile.converters.MediaConverter import get_resolution
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from parsers import DEFAULT_PARSER as SubtitleParser
 from permissions import PERMISSION_ADD_MEDIA_FILE
@@ -48,15 +49,15 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-# If converters installed file must be video, otherwise must be flash video (flv)
+# If converters installed file must be video, otherwise must be mp4 video (mp4)
 
 ffmpeg_available = can_convert() and NyFSContainer.is_blobfile
 if not ffmpeg_available:
     zLOG.LOG("NyMediaFile", zLOG.WARNING,
              "Video conversion will not be supported.")
 
-FLV_HEADERS = ["application/x-flash-video", "video/x-flv", "video/flv"]
-MP3_HEADERS = ["audio/mpeg"]
+MP4_HEADERS = ["video/mp4"]
+MP3_HEADERS = ["audio/mp4", "audio/mpeg"]
 
 # this dictionary is updated at the end of the module
 config = {
@@ -114,9 +115,9 @@ def _check_media_file(the_file):
         return []
     else:
         if not the_file or \
-        (the_file.headers.get("content-type", "") not in FLV_HEADERS+MP3_HEADERS \
-        and file_extension not in ['.flv', 'mp3']):
-            return ['The file must be a valid flash video file (.flv)']
+        (the_file.headers.get("content-type", "") not in MP4_HEADERS+MP3_HEADERS \
+        and file_extension not in ['.mp4', 'mp3']):
+            return ['The file must be a valid mp4 video file (.mp4)']
     return []
 
 def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
@@ -427,8 +428,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if filename[1] == '.mp3':
             self.manage_addFile('', file)
         else:
-            file.filename = filename[0] + ".flv"
-            file.headers["content-type"] = "application/x-flash-video"
+            file.filename = filename[0] + ".mp4"
+            file.headers["content-type"] = MP4_HEADERS[0]
             mid = self.manage_addFile('', file)
             self._processFile(mid, ctype)
 
@@ -457,7 +458,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """
         from OFS.ObjectManager import ObjectManager
         media = ObjectManager._getOb(self, mid)
-        launch_job(media2flv, self.aq_parent, ofs_path(media))
+        launch_job(media2mp4, self.aq_parent, ofs_path(media))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -581,6 +582,13 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        mediafile = self.getSingleMediaObject()
+        if not getattr(mediafile, 'aspect_ratio', None):
+            filepath = mediafile.get_filename()
+            width, height = get_resolution(filepath)
+            mediafile.aspect_ratio = width/height
+            mediafile._p_changed = True
+
         return self.getFormsTool().getContent({'here': self}, 'mediafile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

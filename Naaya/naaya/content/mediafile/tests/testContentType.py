@@ -15,12 +15,12 @@ class NaayaContentTestCase(FunctionalTestCase):
         data = StringIO(open(filename, 'rb').read())
         data.filename = os.path.basename(filename)
         return data
-    
+
     """ TestCase for NaayaContent object
     """
     def afterSetUp(self):
         self.login()
-        
+
     def beforeTearDown(self):
         self.logout()
 
@@ -29,20 +29,20 @@ class NaayaContentTestCase(FunctionalTestCase):
             time.sleep(1)
         broken = doc.mediaBroken()
         self.failIf(broken, broken)
-        self.assertNotEqual(self.loadFile('data/square.flv').read(), doc.get_data())
+        self.assertNotEqual(self.loadFile('data/square.mp4').read(), doc.get_data())
         self.failUnless(doc.get_size()>=4000)
-    
+
     @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
     def test_upload(self, mock_can_convert):
         mock_can_convert.return_value = False
         addNyMediaFile(self._portal().info, id='media1', title='media1', lang='en', _skip_videofile_check=True)
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])[0]
-        f = self.loadFile('data/square.flv')
-        f.headers = {'content-type': 'application/x-flash-video'}
+        f = self.loadFile('data/square.mp4')
+        f.headers = {'content-type': 'video/mp4'}
         meta.handleMediaUpload(f)
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'media1')
-        
-        self.assertEqual(self.loadFile('data/square.flv').read(), meta.get_data())
+
+        self.assertEqual(self.loadFile('data/square.mp4').read(), meta.get_data())
 
         self._portal().info.manage_delObjects([meta.id])
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])
@@ -53,31 +53,31 @@ class NaayaContentTestCase(FunctionalTestCase):
         #add NyMediaFile
         addNyMediaFile(self._portal().info, id='media1', title='media1', lang='en', _skip_videofile_check=True)
         addNyMediaFile(self._portal().info, id='media1_fr', title='media1_fr', lang='fr', _skip_videofile_check=True)
-        
+
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])
-        
+
         ffmpeg = can_convert()
-        
+
         #get added NyMediaFile
         for x in meta:
             if x.getLocalProperty('title', 'en') == 'media1':
                 meta = x
             if x.getLocalProperty('title', 'fr') == 'media1_fr':
                 meta_fr = x
-        
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'media1')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'media1_fr')
-        
+
         #change NyMediaFile title
         meta.saveProperties(title='media1_edited', lang='en')
         meta_fr.saveProperties(title='media1_fr_edited', lang='fr')
-        
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'media1_edited')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'media1_fr_edited')
-        
+
         #delete NyMediafile
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
-        
+
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])
         self.assertEqual(meta, [])

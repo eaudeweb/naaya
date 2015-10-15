@@ -74,8 +74,9 @@
         <div tal:condition="ready" tal:define="
           site python:here.getSite();
           site_url site/absolute_url;
-          flvpath string:${here/absolute_url}/${here/getSingleMediaId};
+          mediapath string:${here/absolute_url}/${here/getSingleMediaId};
           flowplayer_js string:$site_url/flowplayer.js;
+          flowplayer_css string:$site_url/flowplayer.css;
           flowconfig_js string:$site_url/flowplayer.config.js;
           has_subtitle here/subtitle|nothing;
           has_subtitle python:not not has_subtitle;
@@ -89,14 +90,19 @@
           <!-- Player -->
           <div>
             <script type="text/javascript" tal:attributes="src flowplayer_js"></script>
-            <script type="text/javascript" tal:attributes="src flowconfig_js"></script>
+            <link rel="stylesheet" tal:attributes="href
+                flowplayer_css">
+            <script type="text/javascript" tal:attributes="src
+flowconfig_js"></script>
             <tal:block condition="python:not is_audio or has_startup_image"
                 tal:define="height python:500/aspect_ratio">
-                <div id="player" tal:attributes="style string:width:500px;; height:${height}px;;">
+                <div class="is-splash" id="player"
+                  tal:attributes="style string:width:500px;; height:${height}px;;
+                                               background-color:#777;;">
                 </div>
                 <script type="text/javascript" tal:content='string:
                   jQuery(document).ready(function(){
-                    flowplayer_config("$site_url", "player", "$flvpath",
+                    flowplayer_config("player", "$mediapath",
                     "$subtitle", "$startup_image");
                   });
                 '></script>
@@ -106,8 +112,8 @@
                 </div>
                 <script type="text/javascript" tal:content='string:
                   jQuery(document).ready(function(){
-                    flowplayer_config("$site_url", "audio", "$flvpath",
-                    "$subtitle", "$startup_image", "", "false");
+                    flowplayer_config("audio", "$mediapath",
+                    "$subtitle", "$startup_image");
                   });
                 '></script>
             </tal:block>
@@ -122,24 +128,26 @@
             tal:define="height python:280/aspect_ratio"
             tal:attributes='value string:<!-- Embed video - copy & paste -->
               <script type="text/javascript" src="$flowplayer_js"></script>
+              <link rel="stylesheet" href="$flowplayer_css"></script>
               <script type="text/javascript" src="$flowconfig_js"></script>
               <div id="miniplayer" style="width:280px;;height:${height}px"></div>
               <script
-              type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url",
-              "miniplayer", "$flvpath", "$subtitle", "$startup_image")})</script>'/>
+              type="text/javascript">jQuery(document).ready(function(){flowplayer_config(
+              "miniplayer", "$mediapath", "$subtitle", "$startup_image")})</script>'/>
           <input tal:condition="python:is_audio and not has_startup_image"
             id="videoEmbed" name="videoEmbed" type="text" style="width: 500px;"
             readonly="true" onclick="javascript:this.select();"
             tal:attributes='value string:<!-- Embed video - copy & paste -->
               <script type="text/javascript" src="$flowplayer_js"></script>
+              <link rel="stylesheet" href="$flowplayer_css"></script>
               <script type="text/javascript" src="$flowconfig_js"></script>
               <div id="miniplayer" style="width:280px;;height:210px"></div>
               <script
-              type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url",
-              "miniplayer", "$flvpath", "$subtitle", "$startup_image", "", "false")})</script>'/>
+              type="text/javascript">jQuery(document).ready(function(){flowplayer_config(
+              "miniplayer", "$mediapath", "$subtitle", "$startup_image", "", "false")})</script>'/>
           <!-- Download -->
           <div>
-            <a tal:attributes="href flvpath">
+            <a tal:attributes="href mediapath">
               <span i18n:translate="">Download</span>
               <span tal:content="python:'(' + here.utShowSize(here.getSize()) + ')'" />
             </a><span i18n:translate="">as</span>

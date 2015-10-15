@@ -49,8 +49,8 @@ def _fill_specific_form_fields(form, type_name):
             form['geo_location.lon:utf8:ustring'] = '12.587142'
             form['geo_location.lat:utf8:ustring'] = '55.681004'
         elif type_name == 'NyMediaFile':
-            form.find_control('file').add_file(StringIO('the_FLV_data'),
-                filename='testvid.flv', content_type='video/x-flv')
+            form.find_control('file').add_file(StringIO('the_MP4_data'),
+                filename='testvid.mp4', content_type='video/mp4')
         elif type_name == 'event_item':
             form['start_date'] = '10/10/2000'
 
