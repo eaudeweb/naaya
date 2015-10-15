@@ -18,55 +18,89 @@
 
   <browser:page
     for="*"
+    name="flowplayer.css"
+    class=".resources.FlowPlayerCSS"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="fpicons.eot"
+    class=".resources.FlowPlayerCSSeot"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="fpicons.svg"
+    class=".resources.FlowPlayerCSSsvg"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="fpicons.ttf"
+    class=".resources.FlowPlayerCSSttf"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="fpicons.woff"
+    class=".resources.FlowPlayerCSSwoff"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="flowplayer.png"
+    class=".resources.FlowPlayerCSSimg1"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="flowplayer@2x.png"
+    class=".resources.FlowPlayerCSSimg2"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="play_white.png"
+    class=".resources.FlowPlayerCSSimg3"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="play_white@x2.png"
+    class=".resources.FlowPlayerCSSimg4"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="play_white_rtl.png"
+    class=".resources.FlowPlayerCSSimg5"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
+    name="play_white_rtl@x2.png"
+    class=".resources.FlowPlayerCSSimg6"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
     name="flowplayer.config.js"
     class=".resources.ConfigJs"
     permission="zope.Public"
     />
 
-  <!-- Player -->
-  <browser:page
-    for="*"
-    name="flowplayer.swf"
-    class=".resources.FlowPlayer"
-    permission="zope.Public"
-    />
-
   <!-- Plugins -->
-  <browser:page
-    for="*"
-    name="flowplayer.controls.swf"
-    class=".resources.ControlsPlugin"
-    permission="zope.Public"
-    />
-
-  <browser:page
-    for="*"
-    name="flowplayer.controls-tube.swf"
-    class=".resources.ControlsTubePlugin"
-    permission="zope.Public"
-    />
-
-  <browser:page
-    for="*"
-    name="flowplayer.captions.swf"
-    class=".resources.CaptionPlugin"
-    permission="zope.Public"
-    />
-
-  <browser:page
-    for="*"
-    name="flowplayer.content.swf"
-    class=".resources.ContentPlugin"
-    permission="zope.Public"
-    />
-
-  <browser:page
-    for="*"
-    name="flowplayer.audio.swf"
-    class=".resources.AudioPlugin"
-    permission="zope.Public"
-    />
-
   <browser:page
     for="*"
     name="flowplayer.srt"

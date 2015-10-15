@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ------------------
+* update to flowplayer 6.0.3 [dumitval]
 
 1.1.6 (2012-03-05)
 ------------------

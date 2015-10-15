@@ -17,51 +17,70 @@ class FlowPlayerBase(BrowserView):
         res = self.context.unrestrictedTraverse(self.resource)
         return res.GET()
 
-class FlowPlayer(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/flowplayer-3.2.7.swf'
-
 class FlowPlayerJs(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/flowplayer-3.2.6.js'
+        return '/++resource++flowplayer/flowplayer-6.0.3.min.js'
+
+class FlowPlayerCSS(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/flowplayer-6.0.3.functional.css'
+
+class FlowPlayerCSSeot(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/fpicons.eot'
+
+class FlowPlayerCSSsvg(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/fpicons.svg'
+
+class FlowPlayerCSSttf(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/fpicons.ttf'
+
+class FlowPlayerCSSwoff(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/fpicons.woff'
+
+class FlowPlayerCSSimg1(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/flowplayer.png'
+
+class FlowPlayerCSSimg2(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/flowplayer@2x.png'
+
+class FlowPlayerCSSimg3(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/play_white.png'
+
+class FlowPlayerCSSimg4(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/play_white@x2.png'
+
+class FlowPlayerCSSimg5(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/play_white_rtl.png'
+
+class FlowPlayerCSSimg6(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/play_white_rtl@x2.png'
 
 class ConfigJs(FlowPlayerBase):
     @property
     def resource(self):
         return '/++resource++flowplayer/flowplayer.config.js'
-
-class ControlsPlugin(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/plugins/controls/flowplayer.controls-3.2.3.swf'
-
-class ControlsTubePlugin(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/plugins/controls/flowplayer.controls-tube-3.1.4.swf'
-
-class CaptionPlugin(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/plugins/caption/flowplayer.captions-3.2.3.swf'
-
-class ContentPlugin(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/plugins/content/flowplayer.content-3.2.0.swf'
-
-class AudioPlugin(FlowPlayerBase):
-    @property
-    def resource(self):
-        self.request.response.enableHTTPCompression(disable=True)
-        return '/++resource++flowplayer/plugins/audio/flowplayer.audio-3.2.2.swf'
 
 class SubRip(BrowserView):
     """ Get subtitle property """
