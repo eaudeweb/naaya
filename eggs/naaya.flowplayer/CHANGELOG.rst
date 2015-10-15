@@ -1,4 +1,7 @@
-1.1.7 (unreleased)
+1.1.8 (unreleased)
+------------------
+
+1.1.7 (2015-10-15)
 ------------------
 * update to flowplayer 6.0.3 [dumitval]
 
