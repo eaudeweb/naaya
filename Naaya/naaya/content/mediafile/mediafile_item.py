@@ -22,7 +22,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from converters.MediaConverter import media2mp4, can_convert, get_conversion_errors
+from converters.MediaConverter import media2mp4, can_convert
 from lxml import etree
 from lxml.builder import ElementMaker
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -33,6 +33,7 @@ from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.core.zope2util import ofs_path, launch_job
 from naaya.content.mediafile.converters.MediaConverter import get_resolution
+from naaya.content.mediafile.converters.MediaConverter import is_audio
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from parsers import DEFAULT_PARSER as SubtitleParser
 from permissions import PERMISSION_ADD_MEDIA_FILE
@@ -40,6 +41,7 @@ from webdav.Lockable import ResourceLockedError
 from zope.event import notify
 import Products
 import os
+import ntpath
 import sys
 import zLOG
 
@@ -330,28 +332,16 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """ Check if media is ready
         """
         media = self.getSingleMediaObject()
-        if media:
-            return self.isReady(media.getId())
+        if hasattr(media, '_conversion_log'):
+            return not media._conversion_log
         return False
 
     def mediaBroken(self):
         """ Check if media conversion finished and no error occured.
         """
-        if self.mediaReady():
-            return ""
-
         media = self.getSingleMediaObject()
-        if not media:
-            return "File broken."
-
-        if not self.is_blobfile:
-            #TODO: Handle ZODB files
-            return ""
-
-        # TODO: implement this
-        return "File broken"
-        mpath = media.get_filename()
-        return get_conversion_errors(mpath)
+        if hasattr(media, '_conversion_log'):
+            return media._conversion_log
 
     def getMediaObjects(self):
         """
@@ -424,9 +414,13 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         self.manage_delObjects(self.objectIds())
 
         ctype = file.headers.get("content-type")
-        filename = os.path.splitext(getattr(file, 'filename', ''))
+        filename = ntpath.basename(getattr(file, 'filename', ''))
+        filename = os.path.splitext(filename)
         if filename[1] == '.mp3':
             self.manage_addFile('', file)
+            mediafile = self.getSingleMediaObject()
+            mediafile._conversion_log = ''
+            mediafile._p_changed = True
         else:
             file.filename = filename[0] + ".mp4"
             file.headers["content-type"] = MP4_HEADERS[0]
@@ -583,13 +577,15 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         mediafile = self.getSingleMediaObject()
-        if not getattr(mediafile, 'aspect_ratio', None):
-            filepath = mediafile.get_filename()
-            width, height = get_resolution(filepath)
-            mediafile.aspect_ratio = width/height
-            mediafile._p_changed = True
+        if self.mediaReady():
+            if not getattr(mediafile, 'aspect_ratio', None):
+                filepath = mediafile.get_filename()
+                width, height = get_resolution(filepath)
+                mediafile.aspect_ratio = width/height
+                mediafile._p_changed = True
 
-        return self.getFormsTool().getContent({'here': self}, 'mediafile_index')
+        return self.getFormsTool().getContent({'here': self},
+                                              'mediafile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
@@ -623,7 +619,9 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         return getattr(video, 'aspect_ratio', aspect_ratio)
 
     def is_audio(self):
-        return '.mp3' == os.path.splitext(self.getSingleMediaId())[1]
+        mediafile = self.getSingleMediaObject()
+        filepath = mediafile.get_filename()
+        return is_audio(filepath)
 
 InitializeClass(NyMediaFile_extfile)
 

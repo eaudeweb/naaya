@@ -35,7 +35,7 @@ def media2mp4(mediafile):
     width = int(resolution[0])/8*8
     height = int(resolution[1])/8*8
 
-    cmd = [CONVERSION_TOOL, "-y", "-v", "0", "-benchmark", "-i", tcv_path,
+    cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
            "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
            "-c:a", "libfdk_aac", "-q:a", "100", "-f", "mp4", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
@@ -53,7 +53,6 @@ def media2mp4(mediafile):
             shutil.rmtree(tempdir)
         except Exception, err:
             logger.exception(err)
-        return
 
     process = None
 
@@ -70,8 +69,6 @@ def _finish(mediafile, tempdir, cvd_path, log):
         mediafile._blob.consumeFile(cvd_path)
     except Exception, err:
         logger.exception(err)
-        log.write(
-            'MediaConverterError: Could not finish conversion %s' % err)
 
     log.seek(0)
     mediafile._conversion_log = log.read()
@@ -153,29 +150,6 @@ def can_convert():
     return bool(CONVERSION_TOOL)
 
 
-def get_conversion_errors(fpath, suffix=".log"):
-    """ Open error file and parse it for errors
-    """
-    error_path = fpath + suffix
-
-    # If mp4 file exists conversion is done
-    if os.path.isfile(fpath):
-        return ""
-
-    try:
-        error_file = open(error_path, "r")
-    except IOError:
-        return ""
-
-    for error in error_file.readlines():
-        if "MediaConverterError:" in error:
-            error_file.close()
-            return error
-
-    error_file.close()
-    return ""
-
-
 def get_resolution(video_path):
     txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
                            stderr=subprocess.PIPE).communicate()[1]
@@ -185,6 +159,19 @@ def get_resolution(video_path):
             m = re.search(r'Video: .*\ (\d+)x(\d+)', line)
             if m is not None:
                 return float(m.group(1)), float(m.group(2))
-        elif 'mp3 @' in line:
+    for line in txt.splitlines():
+        if 'Audio: ' in line:
             return (1, 1)
     raise ValueError('Cannot parse ffmpeg output')
+
+
+def is_audio(video_path):
+    txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
+                           stderr=subprocess.PIPE).communicate()[1]
+    for line in txt.splitlines():
+        if 'Video: ' in line:
+            return False
+    for line in txt.splitlines():
+        if 'Audio: ' in line:
+            return True
+
