@@ -111,7 +111,9 @@ def _get_convertor_tool():
             if process.returncode != 0:
                 continue
 
-            if tool == 'ffmpeg' and "--enable-libfdk_aac" not in stdout:
+            if tool == 'ffmpeg' and not (
+                    "--enable-libfdk_aac" not in stdout or
+                    "--enable-libfdk-aac" not in stdout):
                 raise MediaConverterError(
                     'ffmpeg was not compiled with --enable-libfdk_aac '
                     '- Audio compression not possible')
@@ -183,4 +185,6 @@ def get_resolution(video_path):
             m = re.search(r'Video: .*\ (\d+)x(\d+)', line)
             if m is not None:
                 return float(m.group(1)), float(m.group(2))
+        elif 'mp3 @' in line:
+            return (1, 1)
     raise ValueError('Cannot parse ffmpeg output')

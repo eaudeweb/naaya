@@ -1,5 +1,6 @@
 4.0.13 (unreleased)
 -------------------
+* mediafile fix for mp3 files [dumitval]
 
 4.0.12 (2015-10-16)
 -------------------
