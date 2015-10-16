@@ -1,4 +1,7 @@
-4.0.13 (unreleased)
+4.0.14 (unreleased)
+-------------------
+
+4.0.13 (2015-10-16)
 -------------------
 * mediafile fix for mp3 files [dumitval]
 
