@@ -1,5 +1,7 @@
 4.0.14 (unreleased)
 -------------------
+* mediafile: show "still encoding" message, catch encodding error message [dumitval]
+* mediafile: fix for file upload on IE [dumitval]
 
 4.0.13 (2015-10-16)
 -------------------
