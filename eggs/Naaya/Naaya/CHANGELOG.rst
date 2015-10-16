@@ -1,5 +1,6 @@
 4.0.12 (unreleased)
 -------------------
+* change libfaac to libfdk_aac for audio encoding [dumitval]
 
 4.0.11 (2015-10-15)
 -------------------
