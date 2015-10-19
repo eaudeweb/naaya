@@ -1,4 +1,7 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
+------------------
+
+1.0.4 (2015-10-19)
 ------------------
 * updated to youtube API v.3 (checking for existing video ID) [dumitval]
 
