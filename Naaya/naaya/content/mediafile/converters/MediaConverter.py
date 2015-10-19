@@ -174,4 +174,3 @@ def is_audio(video_path):
     for line in txt.splitlines():
         if 'Audio: ' in line:
             return True
-
