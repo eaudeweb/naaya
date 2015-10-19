@@ -1,6 +1,7 @@
 from copy import deepcopy
 import os
 import sys
+import urllib2
 
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -27,7 +28,6 @@ from Products.NaayaCore.managers.utils import make_id
 from interfaces import INyYoutube
 from permissions import PERMISSION_ADD_YOUTUBE
 
-from gdata.youtube.service import YouTubeService
 from gdata.service import RequestError
 
 DEFAULT_SCHEMA = {
@@ -136,11 +136,7 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
         form_errors['youtube_id'] = ['Youtube Id is mandatory']
 
     if schema_raw_data['youtube_id']:
-        yt_service = YouTubeService()
-        try:
-            yt_service.GetYouTubeVideoEntry(
-                video_id=schema_raw_data['youtube_id'])
-        except RequestError:
+        if not checkExistingVideo(schema_raw_data['youtube_id']):
             form_errors['youtube_id'] = [
                 'Invalid Youtube ID (inexisting video)']
 
@@ -264,11 +260,7 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
             form_errors['youtube_id'] = ['Youtube Id is mandatory']
 
         if schema_raw_data['youtube_id']:
-            yt_service = YouTubeService()
-            try:
-                yt_service.GetYouTubeVideoEntry(
-                    video_id=schema_raw_data['youtube_id'])
-            except RequestError:
+            if not checkExistingVideo(schema_raw_data['youtube_id']):
                 form_errors['youtube_id'] = [
                     'Invalid Youtube ID (inexisting video)']
 
@@ -315,8 +307,14 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
                 schema_raw_data['youtube_id'] = schema_raw_data[
                     'youtube_id'].split('watch?v=')[1][:11]
             except IndexError:
-                schema_raw_data['youtube_id'] = schema_raw_data[
-                    'youtube_id'].split('&v=')[1][:11]
+                try:
+                    schema_raw_data['youtube_id'] = schema_raw_data[
+                        'youtube_id'].split('&v=')[1][:11]
+                except IndexError:
+                    # the id is definitely not how we expect it, it will
+                    # return HTTPError a bit further down and the user
+                    # will find out
+                    pass
 
         form_errors = self.process_submitted_form(
             schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -335,13 +333,13 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
             form_errors['youtube_id'] = ['Youtube Id is mandatory']
 
         if schema_raw_data['youtube_id']:
-            yt_service = YouTubeService()
-            try:
-                yt_service.GetYouTubeVideoEntry(
-                    video_id=schema_raw_data['youtube_id'])
-            except RequestError:
-                form_errors['youtube_id'] = [
-                    'Invalid Youtube ID (inexisting video)']
+            if not checkExistingVideo(schema_raw_data['youtube_id']):
+                try:
+                    form_errors['youtube_id'].append(
+                        'Invalid Youtube ID (inexisting video)')
+                except KeyError:
+                    form_errors['youtube_id'] = [
+                        'Invalid Youtube ID (inexisting video)']
 
         if not form_errors:
             if self.discussion:
@@ -407,3 +405,12 @@ config.update({
 
 def get_config():
     return config
+
+
+def checkExistingVideo(video_id):
+    try:
+        urllib2.urlopen('https://www.youtube.com/oembed?format=json&url='
+                        'http://www.youtube.com/watch?v=%s' % video_id)
+    except urllib2.HTTPError:
+        return False
+    return True
