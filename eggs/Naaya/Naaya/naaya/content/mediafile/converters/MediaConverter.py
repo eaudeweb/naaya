@@ -31,10 +31,14 @@ def media2mp4(mediafile):
     cvd_path = os.path.join(tempdir, fname + ".cvd")  # converted
     log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
 
-    resolution = get_resolution(tcv_path)
-    width = int(resolution[0])/8*8
-    height = int(resolution[1])/8*8
-
+    o_width, o_height = get_resolution(tcv_path)
+    ratio = o_width/o_height
+    if o_height > 720:
+        width = int(ratio*720)/16*16
+        height = 720
+    else:
+        width = int(o_width)/16*16
+        height = int(o_height)/16*16
     cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
            "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
            "-c:a", "libfdk_aac", "-q:a", "100", "-f", "mp4", cvd_path]
@@ -161,7 +165,7 @@ def get_resolution(video_path):
                 return float(m.group(1)), float(m.group(2))
     for line in txt.splitlines():
         if 'Audio: ' in line:
-            return (1, 1)
+            return (5, 1)
     raise ValueError('Cannot parse ffmpeg output')
 
 
@@ -173,4 +177,15 @@ def is_audio(video_path):
             return False
     for line in txt.splitlines():
         if 'Audio: ' in line:
+            return True
+
+
+def is_valid_audio(video_path):
+    txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
+                           stderr=subprocess.PIPE).communicate()[1]
+    for line in txt.splitlines():
+        if 'Video: ' in line:
+            return False
+    for line in txt.splitlines():
+        if 'Audio: aac' in line or 'Audio: mp3' in line:
             return True
