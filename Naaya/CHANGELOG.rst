@@ -1,4 +1,7 @@
-4.0.14 (unreleased)
+4.0.15 (unreleased)
+-------------------
+
+4.0.14 (2015-10-19)
 -------------------
 * mediafile: skip encoding for compliant audio and mp4 max 720p [dumitval]
 * mediafile: show "still encoding" message, catch encodding error message [dumitval]
