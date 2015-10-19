@@ -34,6 +34,7 @@ from naaya.core.zope2util import abort_transaction_keep_session
 from naaya.core.zope2util import ofs_path, launch_job
 from naaya.content.mediafile.converters.MediaConverter import get_resolution
 from naaya.content.mediafile.converters.MediaConverter import is_audio
+from naaya.content.mediafile.converters.MediaConverter import is_valid_audio
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from parsers import DEFAULT_PARSER as SubtitleParser
 from permissions import PERMISSION_ADD_MEDIA_FILE
@@ -463,15 +464,23 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         ctype = file.headers.get("content-type")
         filename = ntpath.basename(getattr(file, 'filename', ''))
         filename = os.path.splitext(filename)
-        if filename[1] == '.mp3':
-            self.manage_addFile('', file)
-            mediafile = self.getSingleMediaObject()
+        if filename[1] != '.mp3':
+            file.filename = filename[0] + ".mp4"
+            file.headers["content-type"] = MP4_HEADERS[0]
+        mid = self.manage_addFile('', file)
+        mediafile = self.getSingleMediaObject()
+        filepath = mediafile.get_filename()
+        resolution = get_resolution(filepath)
+        # for valid mp3 or mp4 audio files and for mp4 video files with
+        # valid resolutions of max 720p we skip re-encoding
+        if is_valid_audio(filepath) or (
+                filename[1] == '.mp4' and
+                resolution[1] <= 720 and
+                int(resolution[0])/16*16 == resolution[0] and
+                int(resolution[1])/16*16 == resolution[1]):
             mediafile._conversion_log = ''
             mediafile._p_changed = True
         else:
-            file.filename = filename[0] + ".mp4"
-            file.headers["content-type"] = MP4_HEADERS[0]
-            mid = self.manage_addFile('', file)
             self._processFile(mid, ctype)
 
     security.declarePrivate("_processFile")
