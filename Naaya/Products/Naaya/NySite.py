@@ -1021,7 +1021,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         conf = getConfiguration()
         if conf.environment.get('TZ'):
             return conf.environment['TZ']
-        elif os.environ.has_key('TZ') and os.environ['TZ']:
+        elif os.environ.get('TZ'):
                 return os.environ['TZ']
         elif len(time.tzname):
             return time.tzname[0]
@@ -1034,7 +1034,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def get_tzinfo(self):
         return pytz.timezone(self.get_timezone())
 
-    #not used anymore
+    # not used anymore
     security.declarePublic('isArabicLanguage')
 
     def isArabicLanguage(self, lang=None):
@@ -1045,147 +1045,191 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def isRTL(self, lang=None):
         """ test if lang is a RTL language """
-        #Arabic          [AR]
-        #Azerbaijani     [AZ]
-        #Persian         [FA]
-        #Javanese        [JV]
-        #Kashmiri        [KS]
-        #Kazakh          [KK]
-        #Kurdish         [KU]
-        #Malay           [MS]
-        #Malayalam       [ML]
-        #Pashto          [PS]
-        #Punjabi         [PA]
-        #Sindhi          [SD]
-        #Somali          [SO]
-        #Turkmen         [TK]
-        #Hebrew          [HE]
-        #Yiddish         [YI]
-        #Urdu            [UR]
-        if not lang: lang = self.gl_get_selected_language()
-        return lang in ['ar', 'az', 'fa', 'jv', 'ks', 'kk', 'ku', 'ms', 'ml',\
+        # Arabic          [AR]
+        # Azerbaijani     [AZ]
+        # Persian         [FA]
+        # Javanese        [JV]
+        # Kashmiri        [KS]
+        # Kazakh          [KK]
+        # Kurdish         [KU]
+        # Malay           [MS]
+        # Malayalam       [ML]
+        # Pashto          [PS]
+        # Punjabi         [PA]
+        # Sindhi          [SD]
+        # Somali          [SO]
+        # Turkmen         [TK]
+        # Hebrew          [HE]
+        # Yiddish         [YI]
+        # Urdu            [UR]
+        if not lang:
+            lang = self.gl_get_selected_language()
+        return lang in ['ar', 'az', 'fa', 'jv', 'ks', 'kk', 'ku', 'ms', 'ml',
                         'ps', 'pa', 'sd', 'so', 'tk', 'he', 'yi', 'ur']
 
-
-    #objects getters
+    # objects getters
     security.declarePublic('getSite')
+
     def getSite(self):
         return self
 
     security.declarePublic('getPropertiesTool')
+
     def getPropertiesTool(self):
         return self._getOb(ID_PROPERTIESTOOL)
 
     security.declarePublic('getPortletsTool')
+
     def getPortletsTool(self):
         return self._getOb(ID_PORTLETSTOOL)
 
     security.declarePublic('getAuthenticationTool')
+
     def getAuthenticationTool(self):
         return self._getOb(ID_AUTHENTICATIONTOOL)
 
     security.declarePublic('getDynamicPropertiesTool')
+
     @deprecate('DynamicPropertiesTool is deprecated. Use SchemaTool instead.')
     def getDynamicPropertiesTool(self):
         return self._getOb(ID_DYNAMICPROPERTIESTOOL)
 
     security.declarePublic('getCatalogTool')
+
     def getCatalogTool(self):
         return self._getOb(ID_CATALOGTOOL)
 
     security.declarePublic('getLayoutTool')
+
     def getLayoutTool(self):
         return self._getOb(ID_LAYOUTTOOL)
 
     security.declarePublic('getSyndicationTool')
+
     def getSyndicationTool(self):
         return self._getOb(ID_SYNDICATIONTOOL)
 
     security.declarePublic('getEmailTool')
+
     def getEmailTool(self):
         return self._getOb(ID_EMAILTOOL)
 
     security.declarePublic('getFormsTool')
+
     def getFormsTool(self):
         return self._getOb(ID_FORMSTOOL)
 
     security.declarePublic('getSchemaTool')
+
     def getSchemaTool(self):
         return self._getOb(ID_SCHEMATOOL)
 
     security.declarePublic('getPortalTranslations')
+
     def getPortalTranslations(self):
         portal_i18n = self.getPortalI18n()
         return TranslationsToolWrapper(portal_i18n).__of__(portal_i18n)
 
     security.declarePublic('getImagesFolder')
+
     def getImagesFolder(self):
         return self._getOb(ID_IMAGESFOLDER)
 
     security.declarePublic('getNotificationTool')
+
     def getNotificationTool(self):
         return self._getOb(ID_NOTIFICATIONTOOL)
 
     security.declarePublic('getEditorTool')
+
     def getEditorTool(self):
         return self._getOb(ID_EDITORTOOL)
 
     security.declarePublic('getAnalyticsTool')
+
     def getAnalyticsTool(self):
         return self._getOb(ID_ANALYTICSTOOL)
 
     security.declarePublic('getGeoMapTool')
+
     def getGeoMapTool(self):
         return self._getOb(ID_GEOMAPTOOL, None)
 
     security.declarePublic('getPortalI18n')
+
     def getPortalI18n(self):
         return self._getOb(ID_NAAYAI18N, None)
 
-    #objects absolute/relative path getters
+    # objects absolute/relative path getters
     security.declarePublic('getSitePath')
+
     def getSitePath(self, p=0):
         return self.absolute_url(p)
     security.declarePublic('getPropertiesToolPath')
+
     def getPropertiesToolPath(self, p=0):
         return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
+
     security.declarePublic('getPortletsToolPath')
+
     def getPortletsToolPath(self, p=0):
         return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
+
     security.declarePublic('getAuthenticationToolPath')
+
     def getAuthenticationToolPath(self, p=0):
         return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
+
     security.declarePublic('getCatalogToolPath')
+
     def getCatalogToolPath(self, p=0):
         return self._getOb(ID_CATALOGTOOL).absolute_url(p)
+
     security.declarePublic('getLayoutToolPath')
+
     def getLayoutToolPath(self, p=0):
         return self._getOb(ID_LAYOUTTOOL).absolute_url(p)
+
     security.declarePublic('getSyndicationToolPath')
+
     def getSyndicationToolPath(self, p=0):
         return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
+
     security.declarePublic('getEmailToolPath')
+
     def getEmailToolPath(self, p=0):
         return self._getOb(ID_EMAILTOOL).absolute_url(p)
+
     security.declarePublic('getFormsToolPath')
+
     def getFormsToolPath(self, p=0):
         return self._getOb(ID_FORMSTOOL).absolute_url(p)
+
     security.declarePublic('getFolderByPath')
+
     def getFolderByPath(self, p_folderpath):
         return self.unrestrictedTraverse(p_folderpath, None)
+
     security.declarePublic('getNotificationToolPath')
+
     def getNotificationToolPath(self, p=0):
         return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
+
     security.declarePublic('getGeoMapToolPath')
+
     def getGeoMapToolPath(self, p=0):
         return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
+
     security.declarePublic('getPortalI18nPath')
+
     def getPortalI18nPath(self, p=0):
         return self._getOb(ID_NAAYAI18N).absolute_url(p)
 
     def getFolderMetaType(self):
         return METATYPE_FOLDER
+
     security.declarePublic('getFolderMainParent')
+
     def getFolderMainParent(self, p_folder):
         """
         Returns the main parent of the given folder.
@@ -1199,6 +1243,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return l_parent
 
     security.declarePublic('getAllParents')
+
     def getAllParents(self, p_folder):
         """
         Returns all parents of a folder, without aquisition.
@@ -1215,16 +1260,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return l_result
 
     security.declarePublic('get_containers')
+
     def get_containers(self):
-        #this method returns all container type that can be used in an export operation
-        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted == 1]
+        # this method returns all container type that can be used in an
+        # export operation
+        return [x for x in self.objectValues(METATYPE_FOLDER)
+                if x.submitted == 1]
 
     security.declarePublic('getObjectById')
+
     def getObjectById(self, p_id):
         """ Get an object with a given `p_id` from `self` container"""
         return self._getOb(p_id, None)
 
     security.declarePublic('get_containers_metatypes')
+
     def get_containers_metatypes(self):
         """
         Get meta_type-s which are containers.
@@ -1234,6 +1284,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return list(CONTAINERS_METATYPES)
 
     security.declarePublic('get_naaya_containers_metatypes')
+
     def get_naaya_containers_metatypes(self):
         """
         Get meta_type-s which are containers (Naaya content types only).
@@ -1242,7 +1293,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         return list(NAAYA_CONTAINERS_METATYPES)
 
-    #layer over selection lists
+    # layer over selection lists
     def get_list_nodes(self, list_id):
         """ Return a list with the items of the selection
         list, first try RefLists then try RefTrees"""
@@ -1267,6 +1318,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 return ''
 
     security.declarePublic('getEventTypesList')
+
     def getEventTypesList(self):
         """
         Return the selection list for event types.
@@ -1279,8 +1331,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         return self.get_node_title('event_types', id)
 
-    #api
+    # api
     security.declarePublic('process_releasedate')
+
     def process_releasedate(self, p_string='', p_date=None):
         """
         Process a value for an object's release date.
@@ -1293,26 +1346,32 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         releasedate = self.utConvertStringToDateTimeObj(p_string)
         if releasedate is None:
-            if p_date is None: releasedate = self.utGetTodayDate()
-            else: releasedate = p_date
+            if p_date is None:
+                releasedate = self.utGetTodayDate()
+            else:
+                releasedate = p_date
         else:
             if p_date is not None:
-                #check if the day was changed: if no then restore release date
-                if (p_date.year() == releasedate.year()) and \
-                    (p_date.month() == releasedate.month()) and \
-                    (p_date.day() == releasedate.day()):
+                # check if the day was changed: if no then restore release date
+                if (p_date.year() == releasedate.year() and
+                        p_date.month() == releasedate.month() and
+                        p_date.day() == releasedate.day()):
                     releasedate = p_date
         return releasedate
 
     security.declarePublic('getMainFolders')
+
     def getMainFolders(self):
         """
         Returns a list with all folders objects at the first level
         that are approved and sorted by 'order' property
         """
-        return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved == 1 and x.submitted == 1], 'sortorder', 0)
+        return self.utSortObjsListByAttr(
+            [x for x in self.objectValues(METATYPE_FOLDER)
+             if x.approved == 1 and x.submitted == 1], 'sortorder', 0)
 
     security.declarePublic('getMainTopics')
+
     def getMainTopics(self):
         """
         Returns the list of main topic folder objects
@@ -1321,6 +1380,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                       (self.utGetObject(path) for path in self.maintopics))
 
     security.declarePublic('getMainTopic')
+
     def getMainTopic(self, ob):
         """
         Returns the main topic in which the currect object is located
@@ -1328,13 +1388,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         site_ob = self.getSite()
         while ob is not None and ob != site_ob:
-            if ob.getId() in self.maintopics and ob.meta_type == 'Naaya Folder' and ob.aq_parent == site_ob:
+            if (ob.getId() in self.maintopics and
+                    ob.meta_type == 'Naaya Folder' and
+                    ob.aq_parent == site_ob):
                 return ob
             ob = getattr(ob, 'aq_parent')
         else:
             return None
 
     security.declarePublic('getMainTopicId')
+
     def getMainTopicId(self, ob):
         """
         Returns the id of the main topic in which the currect object is located
@@ -1346,19 +1409,23 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return None
 
     security.declarePublic('getFoldersWithPendingItems')
+
     def getFoldersWithPendingItems(self):
-        """ returns a list with all folders that contain pending(draft) objects """
+        """ returns a list with all folders that contain
+            pending(draft) objects """
         d = {}
         for x in self.getCatalogedObjects(METATYPE_FOLDER):
             c = len(x.getPendingContent())
-            if c > 0: #this folder has pending content
+            if c > 0:  # this folder has pending content
                 p = self.getFolderMainParent(x)
                 url = p.absolute_url(1)
-                if not d.has_key(url): d[url] = [p, []]
+                if url not in d:
+                    d[url] = [p, []]
                 d[url][1].append((x, c))
         return d
 
     security.declarePublic('getFoldersWithUntranslatedContent')
+
     def getFoldersWithTranslatableContent(self, lang):
         """
         returns a list with all folders that contain objects that
@@ -1371,36 +1438,46 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             translatable.setdefault(main_parent_url, {})
             translatable[main_parent_url]['obj'] = main_parent
             translatable[main_parent_url].setdefault('content', [])
-            translatable[main_parent_url]['content'].extend(folder.getTranslatableContent(lang))
-        #if there are no un-translated items for the given language, return an empty dictionary
-        if not [object for object in translatable.values() if object['content']]:
+            translatable[main_parent_url]['content'].extend(
+                folder.getTranslatableContent(lang))
+        # if there are no un-translated items for the given language,
+        # return an empty dictionary
+        if not [object for object in translatable.values()
+                if object['content']]:
             return {}
         return translatable
 
     security.declarePublic('getLatestUploads')
+
     def getLatestUploads(self, howmany=None):
         """
         Returns a list with the latest published items in the portal
         """
-        if howmany is None: howmany = 50
-        return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
+        if howmany is None:
+            howmany = 50
+        return self.getCatalogedObjects(
+            meta_type=self.get_meta_types(), approved=1, howmany=howmany,
+            path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
 
     security.declarePublic('getCheckedOutObjects')
+
     def getCheckedOutObjects(self):
-        """ Returns a list with all checked out objects in the portal (open versions) """
+        """ Returns a list with all checked out objects in the portal
+            (open versions) """
         return self.getCatalogCheckedOutObjects()
 
     security.declarePublic('getBreadCrumbTrail')
+
     def getBreadCrumbTrail(self, REQUEST):
         """ generates the breadcrumb trail """
         root = self.utGetROOT()
         breadcrumbs = []
-        vRoot = REQUEST.has_key('VirtualRootPhysicalPath')
+        vRoot = 'VirtualRootPhysicalPath' in REQUEST
         PARENTS = REQUEST.PARENTS[:]
         PARENTS.reverse()
         if vRoot:
-             root = REQUEST.VirtualRootPhysicalPath
-             PARENTS = PARENTS[len(root)-1:]
+            root = REQUEST.VirtualRootPhysicalPath
+            PARENTS = PARENTS[len(root)-1:]
         PARENTS.reverse()
         for crumb in PARENTS:
             breadcrumbs.append(crumb)
@@ -1410,7 +1487,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return breadcrumbs
 
     def grabFromUrl(self, p_url):
-        #it gets the content from the given url
+        # it gets the content from the given url
         try:
             l_urlgrab = urlgrab_tool()
             l_http_proxy = self.get_http_proxy()
@@ -1424,7 +1501,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return (None, 'text/x-unknown-content-type')
 
     def getMaintainersEmails(self, node):
-        #returns a list of emails for given folder until the site object
+        # returns a list of emails for given folder until the site object
         l_emails = []
         if node is self:
             return l_emails
@@ -1447,12 +1524,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return auth_tool.getUsersFullNames(usernames)
 
     security.declarePrivate('get_administrators')
+
     def get_administrator(self, node):
         l_users = []
         for roles_tuple in node.get_local_roles():
             roles = roles_tuple[1]
             user = roles_tuple[0]
-            if ('Administrator' in list(roles) or 'Manager' in list(roles)) and user not in l_users:
+            if ('Administrator' in list(roles) or
+                    'Manager' in list(roles)) and user not in l_users:
                 l_users.append(user)
         return l_users
 
@@ -1462,12 +1541,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         else:
             return self.portal_url
 
-    # deprecated
+    #  deprecated
     def get_portal_mail_address(self):
         return self.getEmailTool().get_addr_from()
 
     @deprecate(("portal/notifyFolderMaintainer is deprecated, use "
-                "portal.getNotificationTool().notify_maintainer(ob, folder, **kwargs)"))
+                "portal.getNotificationTool().notify_maintainer("
+                "ob, folder, **kwargs)"))
     def notifyFolderMaintainer(self, p_folder, p_object, **kwargs):
         """
         Process and notify by email that B{p_object} has been
@@ -1479,50 +1559,72 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
         output = {}
-        for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(meta_type):
-            try: output[l_prop.id] = REQUEST.get(l_prop.id, keywords.get(l_prop.id, ''))
-            except: output[l_prop.id] = ''
+        for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(
+                meta_type):
+            try:
+                output[l_prop.id] = REQUEST.get(l_prop.id,
+                                                keywords.get(l_prop.id, ''))
+            except:
+                output[l_prop.id] = ''
 
         return output
 
-    def getItemsAge(self): return self.search_age
-    def setItemsAge(self, age): self.search_age = age
-    def getNumberOfResults(self): return self.numberresultsperpage
-    def setNumberOfResults(self, results_number): self.numberresultsperpage = results_number
+    def getItemsAge(self):
+        return self.search_age
 
-    #layer over the Localizer and MessageCatalog
-    #the scope is to centralize the list of available languages
+    def setItemsAge(self, age):
+        self.search_age = age
+
+    def getNumberOfResults(self):
+        return self.numberresultsperpage
+
+    def setNumberOfResults(self, results_number):
+        self.numberresultsperpage = results_number
+
+    # layer over the Localizer and MessageCatalog
+    # the scope is to centralize the list of available languages
     security.declarePublic('gl_get_all_languages')
+
     def gl_get_all_languages(self):
         portal_i18n = self.getPortalI18n()
         return portal_i18n.get_admin_i18n().get_all_languages()
 
     security.declarePublic('gl_get_languages')
+
     def gl_get_languages(self):
         lang_manager = self.getPortalI18n().get_lang_manager()
         return lang_manager.getAvailableLanguages()
 
     security.declarePublic('gl_get_languages_mapping')
+
     def gl_get_languages_mapping(self):
         return self.getPortalI18n().get_languages_mapping()
 
     security.declarePublic('gl_get_default_language')
+
     def gl_get_default_language(self):
         lang_manager = self.getPortalI18n().get_lang_manager()
         return lang_manager.get_default_language()
 
     security.declarePublic('gl_get_selected_language')
+
     def gl_get_selected_language(self):
         return self.getPortalI18n().get_selected_language(self.REQUEST)
 
     security.declarePublic('gl_get_languages_map')
+
     def gl_get_languages_map(self):
-        lang, langs, r = self.gl_get_selected_language(), self.gl_get_languages(), []
+        lang, langs, r = (self.gl_get_selected_language(),
+                          self.gl_get_languages(),
+                          [])
         for x in langs:
-            r.append({'id': x, 'title': self.gl_get_language_name(x), 'selected': x==lang})
+            r.append({'id': x,
+                      'title': self.gl_get_language_name(x),
+                      'selected': x == lang})
         return r
 
     security.declarePublic('gl_get_language_name')
+
     def gl_get_language_name(self, lang):
         return self.getPortalI18n().get_language_name(lang)
 
@@ -1545,7 +1647,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect(referer)
 
     def gl_add_site_language(self, language_code, language_name=None):
-        #this is called when a new language is added for the portal
+        # this is called when a new language is added for the portal
         self.getPortalI18n().add_language(language_code, language_name)
 
         catalog_tool = self.getCatalogTool()
@@ -1566,17 +1668,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 continue
 
     def gl_add_site_language_custom(self, language):
-        #this is called to handle other types of multilanguage objects
+        # this is called to handle other types of multilanguage objects
         pass
 
     def gl_del_site_languages(self, languages):
-        #this is called when one or more languages are deleted from the portal
+        # this is called when one or more languages are deleted from the portal
         catalog_tool = self.getCatalogTool()
         for language in languages:
             self.getPortalI18n().del_language(language)
             catalog_tool.del_indexes_for_lang(language)
         self.gl_del_site_languages_custom(languages)
-        # Custom update site children languages
+        #  Custom update site children languages
         for x in self.objectValues():
             object_del_meth = getattr(x, 'custom_object_del_language', None)
             if not object_del_meth:
@@ -1585,23 +1687,27 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 try:
                     object_del_meth(language)
                 except Exception, exc_error:
-                    zLOG.LOG('NySite', zLOG.DEBUG, 'Could not delete language %s for object %s: %s' % (language, x.getId(), exc_error))
+                    zLOG.LOG('NySite', zLOG.DEBUG,
+                             'Could not delete language %s for object %s: %s'
+                             % (language, x.getId(), exc_error))
                     continue
 
     def gl_del_site_languages_custom(self, languages):
-        #this is called to handle other types of multilanguage objects
+        # this is called to handle other types of multilanguage objects
         pass
 
     def gl_change_site_defaultlang(self, language):
-        #this is called when site default language is changed
+        # this is called when site default language is changed
         self.getPortalI18n().get_lang_manager().set_default_language(language)
         self.gl_change_site_defaultlang_custom(language)
 
     def gl_change_site_defaultlang_custom(self, language):
-        #this is called to handle other types of multilanguage objects
+        # this is called to handle other types of multilanguage objects
         pass
 
-    security.declareProtected(view_management_screens, 'gl_clean_objects_translations')
+    security.declareProtected(view_management_screens,
+                              'gl_clean_objects_translations')
+
     def gl_clean_objects_translations(self, prop, lang):
         """
         Method that cleans all empty translations of the I{title}
@@ -1614,7 +1720,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if p:
                 t = p.get(lang, None)
                 if t:
-                    if len(t[0])==0:
+                    if len(t[0]) == 0:
                         del ob._local_properties[prop][lang]
                         self.recatalogNyObject(ob)
         return 'gl_clean_objects_translations OK.'
@@ -1625,8 +1731,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
+
     def getNavigationSiteMap(self, REQUEST=None, all=False, only_folders=False,
-                             subportals=False, filter_meta_types=None, **kwargs):
+                             subportals=False, filter_meta_types=None,
+                             **kwargs):
         """
         Return JSON tree of the sitemap
         Used with javascript tree libraries
@@ -1636,13 +1744,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if not node or node == '/':
             node = ''
 
-        ret = self.getNavigationObjects(node, all, only_folders, subportals, meta_types=filter_meta_types)
+        ret = self.getNavigationObjects(node, all, only_folders, subportals,
+                                        meta_types=filter_meta_types)
 
         return json.dumps(ret)
 
     security.declarePrivate('getNavigationObjects')
+
     def getNavigationObjects(self, node='', all=False, only_folders=False,
-                             subportals=False, root_site=None, meta_types=None):
+                             subportals=False, root_site=None,
+                             meta_types=None):
         """
         Returns list of objects needed by getNavigationSiteMap to construct
         JSON for js tree
@@ -1659,8 +1770,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             res = []
             for item in items:
                 if INySite.providedBy(item):
-                    res.append(item.getNavigationObjects('', all, only_folders, subportals,
-                                                         root_site=root_site, meta_types=meta_types))
+                    res.append(item.getNavigationObjects(
+                        '', all, only_folders, subportals, root_site=root_site,
+                        meta_types=meta_types))
                     continue
 
                 children_items = []
@@ -1673,19 +1785,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     children_items = recurse(containers, level+1, stop_level)
 
                 res.append(dict(
-                    data = dict(
-                        title=self.utStrEscapeHTMLTags(self.utToUtf8(item.title_or_id())),
+                    data=dict(
+                        title=self.utStrEscapeHTMLTags(
+                            self.utToUtf8(item.title_or_id())),
                         icon=item.approved and item.icon or item.icon_marked
                     ),
                     attributes=dict(
                         title=relative_object_path(item, root_site)
                     ),
-                    children = children_items
+                    children=children_items
                 ))
             return res
 
-        items = self.getContents(node, published=(not all),
-                               only_folders=only_folders, subportals=subportals, meta_types=meta_types)
+        items = self.getContents(
+            node, published=(not all), only_folders=only_folders,
+            subportals=subportals, meta_types=meta_types)
         ret = recurse(items)
 
         # Adding the portal if we are in root
@@ -1704,23 +1818,29 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return ret
 
     security.declareProtected(view, 'getCompleteNavigationSiteMap')
+
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
         """ Returns site map including unapproved items,
         in order to be used to display a tree"""
         self.getNavigationSiteMap(REQUEST=REQUEST, all=True, **kwargs)
 
     def getSiteMap(self, expand=[], root=None, showitems=0, sort_order=1):
-        #returns a list of objects with additional information
-        #in order to draw the site map
-        if root is None: root = self
+        # returns a list of objects with additional information
+        # in order to draw the site map
+        if root is None:
+            root = self
         return self.__getSiteMap(root, showitems, expand, 0, sort_order)
 
     def getSiteMapTrail(self, expand, tree):
-        #given a list with all tree nodes, returns a string with all relatives urls
-        if expand == 'all': return ','.join([node[0].absolute_url(1) for node in tree])
-        else: return expand
+        # given a list with all tree nodes, returns a string
+        # with all relatives urls
+        if expand == 'all':
+            return ','.join([node[0].absolute_url(1) for node in tree])
+        else:
+            return expand
 
     security.declarePrivate('getContainerContents')
+
     def getContents(self, path='', only_folders=False,
                     published=True, subportals=False, meta_types=None):
         """
@@ -1730,11 +1850,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         * If published is True, only return `approved` items.
 
         Returns list of items found in location.
-        OBS: if lookup location provides INySite, skip non-container meta_type-s
+        OBS: if lookup location provides INySite,
+        skip non-container meta_type-s
 
         """
         if path == '/':
-            path=''
+            path = ''
         ob = self.restrictedTraverse(path)
         objects = []
         containers = self.get_naaya_containers_metatypes()
@@ -1743,7 +1864,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if only_folders:
                 # leave subportals out of this filtering, if selected
                 if not (subportals and INySite.providedBy(sub_ob)):
-                    if sub_ob.meta_type not in [METATYPE_FOLDER, METATYPE_MEETING]:
+                    if sub_ob.meta_type not in [METATYPE_FOLDER,
+                                                METATYPE_MEETING]:
                         continue
             # if portal and only_folders=False, filter out non-containers
             elif INySite.providedBy(ob):
@@ -1775,20 +1897,30 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return objects
 
     def __getSiteMap(self, root, showitems, expand, depth, sort_order=1):
-        #site map core
+        # site map core
         l_tree = []
-        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted == 1]
-        else: l_folders = call_method(root, 'getPublishedFolders', [])
+        if root is self:
+            l_folders = [
+                x for x in root.objectValues(
+                    self.get_naaya_containers_metatypes())
+                if x.approved == 1 and x.submitted == 1]
+        else:
+            l_folders = call_method(root, 'getPublishedFolders', [])
         l_folders = self.utSortObjsListByAttr(l_folders, 'title', sort_order)
-        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', sort_order)
+        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder',
+                                              sort_order)
         for l_folder in l_folders:
-            if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems == 1):
+            if (len(l_folder.objectValues(
+                    self.get_naaya_containers_metatypes())) > 0) or (
+                    (len(l_folder.getObjects()) > 0) and showitems == 1):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
                     l_tree.append((l_folder, 0, depth))
                     if showitems:
-                        for l_item in call_method(l_folder, 'getPublishedObjects', []):
+                        for l_item in call_method(
+                                l_folder, 'getPublishedObjects', []):
                             l_tree.append((l_item, -1, depth+1))
-                    l_tree.extend(self.__getSiteMap(l_folder, showitems, expand, depth+1, sort_order))
+                    l_tree.extend(self.__getSiteMap(
+                        l_folder, showitems, expand, depth+1, sort_order))
                 else:
                     l_tree.append((l_folder, 1, depth))
             else:
@@ -1803,33 +1935,37 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             objects_list = obj.getFolders()
             if showitems:
                 objects_list += obj.getObjects()
-        elif obj is self or obj.meta_type in self.get_naaya_containers_metatypes():
-            objects_list = obj.objectValues(self.get_naaya_containers_metatypes())
+        elif (obj is self or
+                obj.meta_type in self.get_naaya_containers_metatypes()):
+            objects_list = obj.objectValues(
+                self.get_naaya_containers_metatypes())
         else:
             objects_list = None
 
         if objects_list:
             output['has_children'] = True
-            if expand=='all' or path_in_site(obj) in expand:
-                children=[]
+            if expand == 'all' or path_in_site(obj) in expand:
+                children = []
                 for ob in objects_list:
-                    children.append(self.getSiteMapTree(ob, showitems, expand, sort_order=sort_order))
+                    children.append(self.getSiteMapTree(
+                        ob, showitems, expand, sort_order=sort_order))
                 output['children'] = children
 
         return output
 
     def processExpand(self, expand, node):
-        #process a click in the site map tree on an expand button
+        # process a click in the site map tree on an expand button
         return self.joinToList(self.addToList(expand, str(node)))
 
     def processCollapse(self, expand, node):
-        #process a click in the site map tree on a collapse button
+        # process a click in the site map tree on a collapse button
         return self.joinToList(self.removeFromList(expand, str(node)))
 
-    #site actions
+    # site actions
     security.declareProtected(view, 'processFeedbackForm')
+
     def processFeedbackForm(self, username='', email='', comments='',
-            recaptcha_response='', REQUEST=None):
+                            recaptcha_response='', REQUEST=None):
         """ """
         err = []
         if not self.checkPermissionPublishDirect():
@@ -1849,19 +1985,25 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 self.setFeedbackSession(username, email, comments)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
-            self.sendFeedbackEmail(self.administrator_email, username, email, comments)
+            self.sendFeedbackEmail(self.administrator_email, username, email,
+                                   comments)
         if REQUEST:
             self.setSession('title', 'Thank you for your feedback')
-            self.setSession('body', 'The administrator will process your comments and get back to you.')
+            self.setSession('body', 'The administrator will process your '
+                            'comments and get back to you.')
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     security.declareProtected(view, 'processChangeCredentials')
-    def processChangeCredentials(self, password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
+
+    def processChangeCredentials(self, password='', confirm='', firstname='',
+                                 lastname='', email='', REQUEST=None):
         """ """
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
         user = self.getAuthenticationTool().getUser(auth_user)
         try:
-            self.getAuthenticationTool().manage_changeUser(auth_user, password, confirm, user.roles, user.domains, firstname, lastname, email)
+            self.getAuthenticationTool().manage_changeUser(
+                auth_user, password, confirm, user.roles, user.domains,
+                firstname, lastname, email)
         except ValidationError, e:
             err = [e]
         else:
@@ -1873,11 +2015,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if err is not None:
             if REQUEST:
                 self.setSessionErrorsTrans(err)
-                self.setUserSession(auth_user, user.roles, user.domains, firstname, lastname, email, password)
+                self.setUserSession(auth_user, user.roles, user.domains,
+                                    firstname, lastname, email, password)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        if REQUEST: return REQUEST.RESPONSE.redirect('changecredentials_html')
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('changecredentials_html')
 
     security.declareProtected(view, 'confirm_user')
+
     def confirm_user(self, key='', REQUEST=None):
         """ Confirm user by string
         """
@@ -1898,14 +2043,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             approriate role.'
             self.sendCreateAccountEmail(
                 p_to=self.administrator_email,
-                p_name=res.get('firstname', '') + ' ' + res.get('lastname', ''),
+                p_name=res.get('firstname', '') + ' ' + res.get('lastname',
+                                                                ''),
                 p_email=res.get('email', ''),
                 p_organisation=res.get('organisation', ''),
                 p_username=res.get('name', ''),
                 p_location_path=self.absolute_url(1),
                 p_location_title=self.site_title,
                 p_comments=res.get('comments', ''),
-                p_template = 'email_requestrole'
+                p_template='email_requestrole'
             )
         self.setSession('title', title)
         self.setSession('body', body)
@@ -1913,15 +2059,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declareProtected(PERMISSION_CREATE_USER,
                               '_dummy_permission_create_user')
+
     def _dummy_permission_create_user(self):
         pass
         # dummy view to register the 'Naaya - Create user' permission
 
     security.declareProtected(view, 'processRequestRoleForm')
+
     def processRequestRoleForm(self, username='', password='', confirm='',
                                firstname='', lastname='', email='',
                                organisation='', location='',
-                               comments='', apply_role='contributor', REQUEST=None):
+                               comments='', apply_role='contributor',
+                               REQUEST=None):
         """
         Sends notification email(s) to the administrators when people apply
         for a role. If the role is requested at portal level, the addresses
@@ -1944,16 +2093,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 location_path = obj.absolute_url(1)
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
-        #if given role is 'contributor', proceed with default behaviour
+        # if given role is 'contributor', proceed with default behaviour
         if apply_role == 'contributor':
-            #create an account without role
+            # create an account without role
             try:
                 if not self.checkPermissionCreateUser():
                     raise i18n_exception(ValueError,
                                          "Self-registration not allowed")
-                userinfo = acl_tool.manage_addUser(name=username, password=password,
-                           confirm=confirm, roles=[], domains=[], firstname=firstname,
-                           lastname=lastname, email=email, strict=0)
+                userinfo = acl_tool.manage_addUser(
+                    name=username, password=password, confirm=confirm,
+                    roles=[], domains=[], firstname=firstname,
+                    lastname=lastname, email=email, strict=0)
             except Exception, error:
                 err = unicode(error)
             else:
@@ -1962,14 +2112,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 if not REQUEST:
                     return err
                 self.setSessionErrorsTrans(err)
-                self.setRequestRoleSession(username, firstname, lastname, email,
-                                           password, organisation, comments,
-                                           location)
+                self.setRequestRoleSession(
+                    username, firstname, lastname, email, password,
+                    organisation, comments, location)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
             if acl_tool.emailConfirmationEnabled():
-                self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
-                message_body = 'Please follow the link in your email in order to complete the registration.'
+                self.sendConfirmationEmail(firstname + ' ' + lastname,
+                                           userinfo, email)
+                message_body = ('Please follow the link in your email in order'
+                                ' to complete the registration.')
             else:
                 self.sendCreateAccountEmail(
                     p_to=location_maintainer_email,
@@ -1987,12 +2139,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if not REQUEST:
                 return message_body
 
-        #if given role differs from 'contributor'
-        #proceed with customised behaviour
+        # if given role differs from 'contributor'
+        # proceed with customised behaviour
         elif apply_role != 'contributor':
             user_info = acl_tool.get_user_info(username)
 
-            #send administrator email
+            # send administrator email
             self.sendCreateAccountEmail(
                 p_to=location_maintainer_email,
                 p_name=user_info.full_name,
@@ -2003,14 +2155,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 p_location_title=location_title,
                 p_comments=comments,
                 role=apply_role)
-            message_body = 'The administrator will be informed of your request '
-            'and may or may not grant your account with the approriate role.'
+            message_body = ('The administrator will be informed of your '
+                            'request and may or may not grant your account '
+                            'with the approriate role.')
         if not REQUEST:
             return message_body
 
         self.setSession('title', 'Thank you for registering')
         self.setSession('body', message_body)
-        return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+        return REQUEST.RESPONSE.redirect('%s/messages_html' %
+                                         self.absolute_url())
 
     def get_portal_url(self):
         if self.portal_url:
@@ -2019,6 +2173,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return self.REQUEST.SERVER_URL
 
     security.declarePublic('processNotifyOnErrors')
+
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
         if not self.notify_on_errors_email:
@@ -2030,35 +2185,38 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
 
-        self.notifyOnErrorsEmail(p_to = self.notify_on_errors_email,
-                                 p_from = mail_from,
-                                 p_error_url = REQUEST.get('URL', ''),
-                                 p_error_ip = self.utGetRefererIp(REQUEST),
-                                 p_error_type = str(error_type),
-                                 p_error_value = str(error_value),
-                                 p_error_user = auth_user,
-                                 p_error_time = self.utGetTodayDate())
+        self.notifyOnErrorsEmail(p_to=self.notify_on_errors_email,
+                                 p_from=mail_from,
+                                 p_error_url=REQUEST.get('URL', ''),
+                                 p_error_ip=self.utGetRefererIp(REQUEST),
+                                 p_error_type=str(error_type),
+                                 p_error_value=str(error_value),
+                                 p_error_user=auth_user,
+                                 p_error_time=self.utGetTodayDate())
 
     security.declarePublic('dumpErrorToJSON')
+
     def dumpErrorToJSON(self, error_type, error_value):
         """ """
         conf = getConfiguration()
-        if not conf.environment.has_key('JSON_ERROR_DUMPFILE'):
+        if 'JSON_ERROR_DUMPFILE' not in conf.environment:
             return
 
         f = open(conf.environment['JSON_ERROR_DUMPFILE'], 'a')
         try:
             f.write(json.dumps({'error_time': str(datetime.now()),
                                 'portal_url': self.get_portal_url(),
-                                'INSTANCE_HOME': INSTANCE_HOME, # comes from Globals()
+                                # INSTANCE_HOME comes from Globals()
+                                'INSTANCE_HOME': INSTANCE_HOME,
                                 'error_type': str(error_type),
                                 'error_value': str(error_value)})
                     + '\n')
         finally:
             f.close()
 
-    #external search
+    # external search
     security.declarePublic('external_search_capabilities')
+
     def external_search_capabilities(self):
         """
         Returns info about the searches that can be performed.
@@ -2066,18 +2224,22 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return [x['id'] for x in self.gl_get_languages_map()]
 
     security.declareProtected(view, 'get_remote_servers')
+
     def get_remote_servers(self):
-        #get remote servers
+        # get remote servers
         xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(self.repository_url, 'get_sites')
-        if res is None: return {}
-        else: return res
+        if res is None:
+            return {}
+        else:
+            return res
 
     def getNetworkPortals(self):
-        #returns the list of user defined network portals
+        # returns the list of user defined network portals
         return self.__network_portals
 
     security.declareProtected(view, 'getDataForExternalSearch')
+
     def getDataForExternalSearch(self):
         """
         Returns two lists:
@@ -2089,24 +2251,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l, d = {}, {}
         for x in self.get_networkportals_list():
             url, langs = x.url, x.langs
-            if url.endswith('/'): url = url[:-1]
+            if url.endswith('/'):
+                url = url[:-1]
             d[url] = {'url': url, 'title': x.title}
             for lang in langs:
                 l[lang] = self.gl_get_language_name(lang)
         for x in self.get_remote_servers():
             url, langs = x['url'], x['langs']
-            if url.endswith('/'): url = url[:-1]
+            if url.endswith('/'):
+                url = url[:-1]
             d[url] = {'url': url, 'title': x['title']}
             for lang in langs:
                 l[lang] = self.gl_get_language_name(lang)
         return l.items(), d.values()
 
     security.declarePublic('handle_external_search')
+
     def handle_external_search(self, query, langs, max_items=250):
         """
         Handle an external call: performs the search in the given languages.
         """
-        if isinstance(query, unicode): query = query.encode('utf-8')
+        if isinstance(query, unicode):
+            query = query.encode('utf-8')
         r = []
         ra = r.append
         index = 0
@@ -2125,33 +2291,39 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 try:
                     description = ob.getLocalProperty('description', lang)
                     if description:
-                        #strip all HTML tags from the description and take just
-                        #the first 200 characters
-                        desc = self.html2text(description.encode('utf-8', 'ignore'), trim_length=200)
+                        # strip all HTML tags from the description and take
+                        # just the first 200 characters
+                        desc = self.html2text(description.encode('utf-8',
+                                                                 'ignore'),
+                                              trim_length=200)
                         desc = self.utStripMSWordUTF8(desc)
                         # Remove non-ascii unknown chars
-                        desc = desc.decode('utf-8', 'ignore').encode('utf-8', 'ignore')
+                        desc = desc.decode('utf-8', 'ignore').encode('utf-8',
+                                                                     'ignore')
                         item['description'] = desc
                 except:
                     pass
                 try:
                     title = ob.getLocalProperty('title', lang)
                     if not title:
-                        #get title; if it is empty return the id instead
+                        # get title; if it is empty return the id instead
                         title = title.encode('utf-8')
-                        if len(title) == 0: title = ob.getId()
+                        if len(title) == 0:
+                            title = ob.getId()
                     title = self.utStripMSWordUTF8(title)
                     item['title'] = title
                 except:
-                    #save id as title
+                    # save id as title
                     item['title'] = ob.getId()
-                t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
+                t = unicode(str(ob.bobobase_modification_time()),
+                            'latin-1').encode('utf-8')
                 item['time'] = t
                 ra(item)
                 index += 1
         return r
 
     security.declarePublic('external_search')
+
     def external_search(self, portal_url, query, langs):
         """
         Perform an XMLRPC call to handle this external search
@@ -2159,27 +2331,33 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(portal_url, 'handle_external_search', query, langs)
-        if res is None: return []
-        else: return res
+        if res is None:
+            return []
+        else:
+            return res
 
     security.declareProtected(view, 'externalSearch')
-    def externalSearch(self, servers=[], langs=[], query='', skey='', rkey='', start=0):
+
+    def externalSearch(self, servers=[], langs=[], query='', skey='', rkey='',
+                       start=0):
         """ """
         r = []
         rex = r.extend
-        try: start = abs(int(start))
-        except: start = 0
+        try:
+            start = abs(int(start))
+        except:
+            start = 0
         if len(query.strip()):
             query = self.utStrEscapeForSearch(query)
             temp = self.utRemoveDuplicates(servers)
-            #search in portals in your network
+            # search in portals in your network
             for portal in self.get_networkportals_list():
                 if portal.url in temp:
                     m = self.utListIntersection(portal.langs, langs)
                     if len(m):
                         rex(self.external_search(portal.url, query, m))
                         temp.remove(portal.url)
-            #search in repository's portals
+            # search in repository's portals
             for portal in self.get_remote_servers():
                 if portal['url'] in temp:
                     m = self.utListIntersection(portal['langs'], langs)
@@ -2192,13 +2370,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if len(r):
             paging_informations = batch_obj.butGetPagingInformations()
         else:
-            paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-        return (paging_informations, r[paging_informations[0]:paging_informations[1]])
+            paging_informations = (-1, 0, 0, -1, -1, 0,
+                                   self.numberresultsperpage, [0])
+        return (paging_informations,
+                r[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'internalSearch')
+
     def internalSearch(self, query='', langs=None, releasedate=None,
-                        releasedate_range=None, meta_types=[], skey='', rkey='',
-                        path=''):
+                       releasedate_range=None, meta_types=[], skey='',
+                       rkey='', path=''):
         """ """
         object_list = []
 
@@ -2216,16 +2397,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return {'object_list': None, 'error': None}
 
         if not query.strip():
-            query = None # because query_brains_ex expects None for no query
+            query = None  # because query_brains_ex expects None for no query
 
-        #search in each language
+        # search in each language
         brains_list = []
         for lang in langs:
             try:
-                lang_brains = self.query_brains_ex(meta_types, query, lang,
-                                                   path,
-                                                   releasedate=releasedate,
-                                                   releasedate_range=releasedate_range)
+                lang_brains = self.query_brains_ex(
+                    meta_types, query, lang, path, releasedate=releasedate,
+                    releasedate_range=releasedate_range)
                 brains_list.extend(lang_brains)
             except Exception, e:
                 return {'object_list': None, 'error': unicode(e)}
@@ -2242,10 +2422,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             object_list = self.utSortObjsListByAttr(object_list, skey, rkey)
         return {'object_list': object_list, 'error': None}
 
-    #paging stuff
+    # paging stuff
     def process_querystring(self, p_querystring):
         """
-        Removes empty values and 'start', 'skey', 'rkey' keys out of QUERYSTRING
+        Removes empty values and 'start', 'skey', 'rkey' keys out of
+        QUERYSTRING
 
         """
         keep = []
@@ -2261,19 +2442,24 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return '&'.join(keep)
 
     def page_something(self, p_result, p_start, p_perpage=10):
-        #Returns results with paging information
+        # Returns results with paging information
         l_paging_information = (0, 0, 0, -1, -1, 0, p_perpage, [0])
-        try: p_start = abs(int(p_start))
-        except: p_start = 0
+        try:
+            p_start = abs(int(p_start))
+        except:
+            p_start = 0
         if len(p_result) > 0:
-            l_paging_information = batch_utils(p_perpage, len(p_result), p_start).butGetPagingInformations()
+            l_paging_information = batch_utils(
+                p_perpage, len(p_result), p_start).butGetPagingInformations()
         if len(p_result) > 0:
-            return (l_paging_information, p_result[l_paging_information[0]:l_paging_information[1]])
+            return (l_paging_information,
+                    p_result[l_paging_information[0]:l_paging_information[1]])
         else:
             return (l_paging_information, [])
 
-    #rdf files
+    # rdf files
     security.declareProtected(view, 'localchannels_rdf')
+
     def localchannels_rdf(self):
         """
         Returns a RDF feed with all local channels.
@@ -2283,12 +2469,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         r.extend(syndication_tool.get_local_channels())
         return syndication_tool.syndicateSomething(self.absolute_url(), r)
 
-    #administration actions
+    # administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_metadata')
-    def admin_metadata(self, site_title='', site_subtitle='', description='', publisher='',
-        contributor='', creator='', rights='', lang=None, REQUEST=None):
+
+    def admin_metadata(self, site_title='', site_subtitle='', description='',
+                       publisher='', contributor='', creator='', rights='',
+                       lang=None, REQUEST=None):
         """ """
-        if lang is None: lang = self.gl_get_selected_language()
+        if lang is None:
+            lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, site_title)
         self._setLocalPropValue('site_title', lang, site_title)
         self._setLocalPropValue('site_subtitle', lang, site_subtitle)
@@ -2298,10 +2487,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self._setLocalPropValue('creator', lang, creator)
         self._setLocalPropValue('rights', lang, rights)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_metadata_html?lang=%s' % (self.absolute_url(), lang))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_metadata_html?lang=%s' %
+                                      (self.absolute_url(), lang))
 
     security.declarePublic('leftLogoUrl')
+
     def leftLogoUrl(self):
         """Returns the left logo url"""
         layout_tool = self.getLayoutTool()
@@ -2311,6 +2503,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return logo.absolute_url()
 
     security.declarePublic('rightLogoUrl')
+
     def rightLogoUrl(self):
         """Returns the right logo url"""
         layout_tool = self.getLayoutTool()
@@ -2320,39 +2513,45 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return logo.absolute_url()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
-    def admin_logos(self, left_logo='', right_logo='', del_leftlogo='', del_rightlogo='', REQUEST=None):
+
+    def admin_logos(self, left_logo='', right_logo='', del_leftlogo='',
+                    del_rightlogo='', REQUEST=None):
         """ Allows changing and deleting the left and right logos for a Naaya site.
             Left and right logos are independent of the layout chosen and are
             images called 'left_logo.gif' and 'right_logo.gif'
         """
-        self._update_logo('left_logo.gif', left_logo, 'Site logo', del_leftlogo)
-        self._update_logo('right_logo.gif', right_logo, 'Site logo (right side)',
-                del_rightlogo)
+        self._update_logo('left_logo.gif', left_logo, 'Site logo',
+                          del_leftlogo)
+        self._update_logo('right_logo.gif', right_logo,
+                          'Site logo (right side)', del_rightlogo)
 
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_logos_html' %
+                                      self.absolute_url())
 
     def _update_logo(self, logo_id, logo_file, title, del_logo):
         layouttool = self.getLayoutTool()
         original_file = layouttool._getOb(logo_id, None)
         new_logo_test = bool(logo_file != '' and hasattr(logo_file, 'filename')
-                and logo_file.filename != '' and logo_file.read() != '')
+                             and logo_file.filename != ''
+                             and logo_file.read() != '')
         if del_logo and original_file is not None:
             layouttool.manage_delObjects([logo_id])
             original_file = None
         if new_logo_test:
             if original_file is not None:
                 layouttool.manage_delObjects([logo_id])
-            layouttool.manage_addImage(id=logo_id, file=logo_file,
-                    title=title)
+            layouttool.manage_addImage(id=logo_id, file=logo_file, title=title)
 
     def _set_submit_unapproved(self, submit_unapproved):
         if submit_unapproved:
             # permission will not be acquired and is granted to nobody
             Permission(PERMISSION_SKIP_APPROVAL, (), self).setRoles(())
         else:
-            permission_add_role(self, PERMISSION_SKIP_APPROVAL, 'Administrator')
+            permission_add_role(self, PERMISSION_SKIP_APPROVAL,
+                                'Administrator')
             permission_add_role(self, PERMISSION_SKIP_APPROVAL, 'Manager')
 
     def get_submit_unapproved(self):
@@ -2375,8 +2574,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         roles = Permission(PERMISSION_EDIT_OBJECTS, (), self).getRoles()
         return bool('Owner' in roles)
 
-    #administration actions
+    # administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+
     def admin_properties(self, REQUEST=None, **kwargs):
         """ Update portal properties.
 
@@ -2396,57 +2596,76 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             kwargs.update(getattr(REQUEST, 'form', {}))
 
         # Update portal properties
-        self.rdf_max_items          = kwargs.get('rdf_max_items', 10)
-        self.show_releasedate       = kwargs.get('show_releasedate', 0) and 1 or 0
-        self.rename_id              = kwargs.get('rename_id', 0) and 1 or 0
+        self.rdf_max_items = kwargs.get('rdf_max_items', 10)
+        self.show_releasedate = kwargs.get('show_releasedate', 0) and 1 or 0
+        self.rename_id = kwargs.get('rename_id', 0) and 1 or 0
         self._set_submit_unapproved(kwargs.get('submit_unapproved', ''))
         self._set_edit_own_content(kwargs.get('edit_own_content', ''))
-        self.repository_url         = kwargs.get('repository_url', '')
-        self.portal_url             = kwargs.get('portal_url', '')
-        self.http_proxy             = kwargs.get('http_proxy', '')
-        self.recaptcha_public_key   = kwargs.get('recaptcha_public_key', '')
-        self.recaptcha_private_key  = kwargs.get('recaptcha_private_key', '')
-        self.switch_language        = kwargs.get('switch_language', 0)
-        self.display_contributor    = kwargs.get('display_contributor', '')
-        self.display_subobject_count= kwargs.get('display_subobject_count', '')
-        self.display_subobject_count_for_admins= kwargs.get('display_subobject_count_for_admins', '')
+        self.repository_url = kwargs.get('repository_url', '')
+        self.portal_url = kwargs.get('portal_url', '')
+        self.http_proxy = kwargs.get('http_proxy', '')
+        self.recaptcha_public_key = kwargs.get('recaptcha_public_key', '')
+        self.recaptcha_private_key = kwargs.get('recaptcha_private_key', '')
+        self.switch_language = kwargs.get('switch_language', 0)
+        self.display_contributor = kwargs.get('display_contributor', '')
+        self.display_subobject_count = kwargs.get('display_subobject_count',
+                                                  '')
+        self.display_subobject_count_for_admins = kwargs.get(
+            'display_subobject_count_for_admins', '')
 
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_properties_html' %
+                                      self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
-    def admin_email(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
-        """ """
-        self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors_email)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_email_html' % self.absolute_url())
 
-    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_maintopics_children')
-    def get_maintopics_children(self, first_level='0', foldermetatypes=[METATYPE_FOLDER]):
-        """returns a list of tuples, with maintopics and their children, used in notification sitemap form
+    def admin_email(self, mail_server_name='', mail_server_port='',
+                    administrator_email='', mail_address_from='',
+                    notify_on_errors_email='', REQUEST=None):
+        """ """
+        self.getEmailTool().manageSettings(
+            mail_server_name, mail_server_port, administrator_email,
+            mail_address_from, notify_on_errors_email)
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_email_html' %
+                                      self.absolute_url())
+
+    def get_maintopics_children(self, first_level='0',
+                                foldermetatypes=[METATYPE_FOLDER]):
+        """returns a list of tuples, with maintopics and their children,
+        used in notification sitemap form
         (first_level_folder, [the list of children])
         first_level can be one of:
         0 --> only the maintopics will be parsed
-        1 --> all firstlevel NaayaFolders will be parsed (approved & not approved)
+        1 --> all firstlevel NaayaFolders will be parsed (approved &
+                                                          not approved)
         2 --> all firstlevel Folders & NaayaFolders will be parsed
         2 --> approved firstlevel Naaya Folders will be parsed
         """
-        first_folders_children=[]
-        first_level_folders=[]
-        if first_level == '0': first_level_folders = self.getMainTopics()
-        elif first_level == '1': first_level_folders = self.objectValues(METATYPE_FOLDER)
-        elif first_level == '2': first_level_folders = self.objectValues(self.get_containers_metatypes())
+        first_folders_children = []
+        first_level_folders = []
+        if first_level == '0':
+            first_level_folders = self.getMainTopics()
+        elif first_level == '1':
+            first_level_folders = self.objectValues(METATYPE_FOLDER)
+        elif first_level == '2':
+            first_level_folders = self.objectValues(
+                self.get_containers_metatypes())
         else:
             for x in self.objectValues(foldermetatypes):
-                if x.approved: first_level_folders.append(x)
+                if x.approved:
+                    first_level_folders.append(x)
         for x in first_level_folders:
             children = x.objectValues(foldermetatypes)
-            first_folders_children.append((x,children))
+            first_folders_children.append((x, children))
         return first_folders_children
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
+
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
         """ """
         if theMasterList == '' or theSlaveList == '':
@@ -2454,8 +2673,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         else:
             self.getLayoutTool().manageLayout(theMasterList, theSlaveList)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_layout_html' %
+                                      self.absolute_url())
 
     def get_naaya_permissions_in_site(self):
         """ Return list of permissions relevant to this portal. """
@@ -2486,6 +2707,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     #
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
+
     def admin_adduser(self, firstname='', lastname='', email='', name='',
                       password='', confirm='', strict=0, REQUEST=None):
         """
@@ -2495,9 +2717,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         err = ''
         success = False
         try:
-            userinfo = self.getAuthenticationTool().manage_addUser(name,
-                            password, confirm, [], [], firstname, lastname,
-                            email, strict)
+            userinfo = self.getAuthenticationTool().manage_addUser(
+                name, password, confirm, [], [], firstname, lastname, email,
+                strict)
         except ValidationError, error:
             err = error
         else:
@@ -2518,6 +2740,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return userinfo
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
+
     def admin_edituser(self, firstname='', lastname='', email='', name='',
                        password='', confirm='', REQUEST=None):
         """
@@ -2526,8 +2749,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         err = ''
         success = True
         try:
-            self.getAuthenticationTool().manage_changeUser(name, password,
-                            confirm, [], [], firstname, lastname, email)
+            self.getAuthenticationTool().manage_changeUser(
+                name, password, confirm, [], [], firstname, lastname, email)
         except ValidationError, error:
             err = error
             success = False
@@ -2543,11 +2766,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                       (self.absolute_url(), name))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
+
     def admin_deleteusers(self, names=[], REQUEST=None):
         """ """
         if REQUEST is not None:
-            redirect_url = REQUEST.environ.get('HTTP_REFERER',
-                                '%s/admin_users_html' % self.absolute_url())
+            redirect_url = REQUEST.environ.get(
+                'HTTP_REFERER', '%s/admin_users_html' % self.absolute_url())
         if len(names):
             self.getAuthenticationTool().manage_delUsers(names)
         else:
@@ -2559,8 +2783,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.setSessionInfoTrans("User(s) successfully deleted")
             REQUEST.RESPONSE.redirect(redirect_url)
 
-    #Admin User Roles
+    # Admin User Roles
     security.declareProtected(change_permissions, 'admin_addrole')
+
     def admin_addrole(self, role='', REQUEST=None):
         """ Create a role, redirect to edit permissions page """
         err = ''
@@ -2581,12 +2806,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 user = REQUEST.AUTHENTICATED_USER.getId()
                 site = self.getSite().getId()
                 log.info('User "%s" added role "%s" to site "%s".' %
-                        (user, role, site))
+                         (user, role, site))
                 self.setSessionInfoTrans("Role added")
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
 
     security.declareProtected(change_permissions, 'admin_editrole_html')
+
     def admin_editrole_html(self, role, REQUEST):
         """ """
         permission_list = self.get_naaya_permissions_in_site().values()
@@ -2607,6 +2833,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return tmpl(REQUEST, **options)
 
     security.declareProtected(change_permissions, 'admin_editrole')
+
     def admin_editrole(self, role, zope_perm_list=[], REQUEST=None):
         """ Change the permissions of a role """
 
@@ -2625,9 +2852,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if REQUEST is not None:
             self.setSessionInfoTrans("Your changes have been saved.")
             REQUEST.RESPONSE.redirect("%s/admin_editrole_html?role=%s" %
-                                  (self.absolute_url(), role))
+                                      (self.absolute_url(), role))
 
     security.declareProtected(change_permissions, 'admin_resetrole_html')
+
     def admin_resetrole_html(self, role, REQUEST):
         """ resets permissions to defaults for `role` """
         # reload skel, make sure we use child class
@@ -2640,8 +2868,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 role_in_skel = True
                 sk_permissions = map(lambda x: x.name, sk_role.permissions)
         if not role_in_skel:
-            self.setSessionErrorsTrans(("This is a custom role - we don't have "
-                                       "any defaults to reset to."))
+            self.setSessionErrorsTrans("This is a custom role - we don't have"
+                                       " any defaults to reset to.")
         else:
             ny_permissions = self.get_naaya_permissions_in_site().values()
             for perm in ny_permissions:
@@ -2657,6 +2885,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                   (self.absolute_url(), role))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
+
     def admin_addroles(self, names=[], roles=[], location='', send_mail='',
                        redirect='', REQUEST=None):
         """
@@ -2672,12 +2901,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         history = {}
         roles = self.utConvertToList(roles)
         names = self.utConvertToList(names)
-        if len(names)<=0:
+        if len(names) <= 0:
             err = 'A username must be specified'
         else:
             try:
                 for name in names:
-                    history[name] = auth_tool.getLocationUserRoles(name, location)
+                    history[name] = auth_tool.getLocationUserRoles(name,
+                                                                   location)
                     auth_tool.manage_addUsersRoles(name, roles, location)
             except ValidationError, error:
                 err = error
@@ -2696,15 +2926,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     REQUEST.environ.get('HTTP_REFERER', redirect_url))
             elif success:
                 context = ((location in ("/", "")) and self.getSite() or
-                            self.unrestrictedTraverse(location, None))
+                           self.unrestrictedTraverse(location, None))
                 manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
                 for name in names:
-                    notify(RoleAssignmentEvent(context, manager_id, name, roles,
-                                           history[name], send_mail=send_mail))
+                    notify(RoleAssignmentEvent(
+                        context, manager_id, name, roles, history[name],
+                        send_mail=send_mail))
                 self.setSessionInfoTrans("Role(s) successfully assigned")
                 REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokerole')
+
     def admin_revokerole(self, user, location, REQUEST=None):
         """ Can be called via normal or ajax request.
         Returns empty string on ajax
@@ -2721,17 +2953,20 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
             for loc in location:
                 context = ((loc in ("/", "")) and self.getSite() or
-                            self.unrestrictedTraverse(loc, None))
+                           self.unrestrictedTraverse(loc, None))
                 notify(RoleAssignmentEvent(context, manager_id, user,
                                            [], history[loc]))
             if is_ajax(REQUEST):
                 return 'SUCCESS'
             else:
                 self.setSessionInfoTrans("Role(s) succesfully revoked")
-                REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
-                            '%s/admin_local_users_html' % self.absolute_url()))
+                REQUEST.RESPONSE.redirect(REQUEST.environ.get(
+                    'HTTP_REFERER', '%s/admin_local_users_html' %
+                    self.absolute_url()))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revoke_searched_roles')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_revoke_searched_roles')
+
     def admin_revoke_searched_roles(self, names=[], role='', location='_all_',
                                     REQUEST=None):
         """ """
@@ -2741,14 +2976,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                                            location, REQUEST)
         if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) succesfully revoked")
-            REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
-                        '%s/admin_local_users_html' % self.absolute_url()))
+            REQUEST.RESPONSE.redirect(REQUEST.environ.get(
+                'HTTP_REFERER', '%s/admin_local_users_html' %
+                self.absolute_url()))
 
     #
     # END Admin User management. XXX: Should be moved to AuthenticationTool
     #
 
     security.declareProtected(view, 'admin_welcome_page')
+
     def admin_welcome_page(self, REQUEST=None):
         """
         Redirect to welcome page, in this case is the login_html page
@@ -2756,125 +2993,171 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         REQUEST.RESPONSE.redirect('%s/login_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletereflist')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletereflist')
+
     def admin_deletereflist(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' %
+                                      self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addreflist')
+
     def admin_addreflist(self, id='', title='', description='', REQUEST=None):
         """ """
         self.getPortletsTool().manage_addRefList(id, title, description)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' %
+                                      self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editreflist')
+
     def admin_editreflist(self, id='', title='', description='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manageProperties(title, description)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteitems')
+
     def admin_deleteitems(self, id='', ids=[], REQUEST=None):
         """ """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_delete_items(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_additem')
+
     def admin_additem(self, id='', item='', title='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_add_item(item, title)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edititem')
+
     def admin_edititem(self, id='', item='', title='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_update_item(item, title)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinkslist')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletelinkslist')
+
     def admin_deletelinkslist(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' %
+                                      self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlinkslist')
+
     def admin_addlinkslist(self, id='', title='', portlet='', REQUEST=None):
         """ """
         self.getPortletsTool().manage_addLinksList(id, title, portlet)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlinkslist')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editlinkslist')
+
     def admin_editlinkslist(self, id='', title='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manageProperties(title)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinks')
+
     def admin_deletelinks(self, id='', ids=[], REQUEST=None):
         """ """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manage_delete_links(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlink')
-    def admin_addlink(self, id='', title='', description='', url='', relative='', permission='', order='', REQUEST=None):
+
+    def admin_addlink(self, id='', title='', description='', url='',
+                      relative='', permission='', order='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
-            ob.manage_add_link_item('', title, description, url, relative, permission, order)
+            ob.manage_add_link_item('', title, description, url, relative,
+                                    permission, order)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlink')
-    def admin_editlink(self, id='', item='', title='', description='', url='', relative='', permission='', order='', REQUEST=None):
+
+    def admin_editlink(self, id='', item='', title='', description='', url='',
+                       relative='', permission='', order='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
-            ob.manage_update_link_item(item, title, description, url, relative, permission, order)
+            ob.manage_update_link_item(item, title, description, url, relative,
+                                       permission, order)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' %
+                                      (self.absolute_url(), id))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addnetworkportal')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addnetworkportal')
+
     def admin_addnetworkportal(self, title='', url='', REQUEST=None):
         """ """
         err, res = '', None
         success = False
         xconn = XMLRPCConnector(self.get_http_proxy())
-        if url.endswith('/'): url = url[:-1]
+        if url.endswith('/'):
+            url = url[:-1]
         res = xconn(url, 'external_search_capabilities')
         if res is None:
             err = 'Cannot connect to the given URL.'
@@ -2882,11 +3165,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.add_networkportal_item(url, title, url, res)
             success = True
         if REQUEST:
-            if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+            if err != '':
+                self.setSessionErrorsTrans(err)
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatenetworkportal')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_updatenetworkportal')
+
     def admin_updatenetworkportal(self, id='', REQUEST=None):
         """ """
         err, res = '', None
@@ -2898,36 +3187,49 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if res is None:
                 err = 'Cannot connect to the given URL.'
             else:
-                self.edit_networkportal_item(id, networkportal.title, networkportal.url, res)
+                self.edit_networkportal_item(id, networkportal.title,
+                                             networkportal.url, res)
                 success = True
         else:
             err = 'Invalid network portal.'
         if REQUEST:
-            if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+            if err != '':
+                self.setSessionErrorsTrans(err)
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletenetworkportal')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletenetworkportal')
+
     def admin_deletenetworkportal(self, ids=[], REQUEST=None):
         """ """
         self.delete_networkportal_item(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' %
+                                      self.absolute_url())
 
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_discardversion')
+
     def admin_discardversion(self, url=None, REQUEST=None):
         """ """
         ob = self.utGetObject(url)
         if ob is not None:
             ob.discardVersion()
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_versioncontrol_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_versioncontrol_html' %
+                                      self.absolute_url())
 
-    #Main topics
+    # Main topics
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_updatemaintopics')
+
     def admin_updatemaintopics(self, folder_url='', REQUEST=None):
         """ """
         try:
@@ -2937,7 +3239,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 self.setSessionErrorsTrans("Path not found")
                 return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' %
                                                  self.absolute_url())
-            else: raise
+            else:
+                raise
 
         if folder_url and folder_url not in self.maintopics:
             self.maintopics.append(folder_url)
@@ -2951,6 +3254,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_updatemaintopics_navigation')
+
     def admin_updatemaintopics_navigation(self, REQUEST=None, **kwargs):
         """ Save navigations settings """
         if REQUEST:
@@ -2969,7 +3273,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         self.setSessionErrorsTrans("Error saving data")
                         return REQUEST.RESPONSE.redirect(
                             '%s/admin_maintopics_html' % self.absolute_url())
-                    else: raise
+                    else:
+                        raise
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
@@ -2978,6 +3283,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_ordermaintopics')
+
     def admin_ordermaintopics(self, positions=None, REQUEST=None):
         """ Save sortorder to maintopics by creating a new in the new order """
         if positions:
@@ -2991,8 +3297,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         New order list and old list have different length"
                 if REQUEST is not None:
                     self.setSessionErrorsTrans(error)
-                    return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
-                                      % self.absolute_url())
+                    return REQUEST.RESPONSE.redirect(
+                        '%s/admin_maintopics_html' % self.absolute_url())
                 else:
                     raise ValueError(error)
         if REQUEST is not None:
@@ -3003,13 +3309,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_deletemaintopics')
+
     def admin_deletemaintopics(self, ids=None, REQUEST=None):
         """ """
-        if ids is not None: ids = self.utConvertToList(ids)
-        else: ids = []
+        if ids is not None:
+            ids = self.utConvertToList(ids)
+        else:
+            ids = []
         for id in ids:
-            try: self.maintopics.remove(id)
-            except: self.log_current_error()
+            try:
+                self.maintopics.remove(id)
+            except:
+                self.log_current_error()
         self._p_changed = True
 
         if REQUEST is not None:
@@ -3018,150 +3329,242 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
                                       % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannel')
-    def admin_addremotechannel(self, title='', url='', numbershownitems='', portlet='',
-        saveit='', providername='', location='', obtype='', filter_by_language='',
-        automatic_translation_portlet='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addremotechannel')
+
+    def admin_addremotechannel(self, title='', url='', numbershownitems='',
+                               portlet='', saveit='', providername='',
+                               location='', obtype='', filter_by_language='',
+                               automatic_translation_portlet='', REQUEST=None):
         """ """
         if saveit:
-            self.getSyndicationTool().manage_addRemoteChannelFacade('', title, url, providername,
-                location, obtype, numbershownitems, portlet)
+            self.getSyndicationTool().manage_addRemoteChannelFacade(
+                '', title, url, providername, location, obtype,
+                numbershownitems, portlet)
         else:
-            self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet,
-                    filter_by_language, automatic_translation_portlet)
+            self.getSyndicationTool().manage_addRemoteChannel(
+                '', title, url, numbershownitems, portlet, filter_by_language,
+                automatic_translation_portlet)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannel')
-    def admin_editremotechannel(self, id='', title='', url='', numbershownitems='', filter_by_language='', harvester_name='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editremotechannel')
+
+    def admin_editremotechannel(self, id='', title='', url='',
+                                numbershownitems='', filter_by_language='',
+                                harvester_name='', REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems, filter_by_language, harvester_name)
+        self.getSyndicationTool().get_channel(id).manageProperties(
+            title, url, numbershownitems, filter_by_language, harvester_name)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannelfacade')
-    def admin_editremotechannelfacade(self, id='', title='', url='', numbershownitems='',
-        providername='', location='', obtype='news', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editremotechannelfacade')
+
+    def admin_editremotechannelfacade(self, id='', title='', url='',
+                                      numbershownitems='', providername='',
+                                      location='', obtype='news',
+                                      REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, url,
-            providername, location, obtype, numbershownitems)
+        self.getSyndicationTool().get_channel(id).manageProperties(
+            title, url, providername, location, obtype, numbershownitems)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updateremotechannel')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_updateremotechannel')
+
     def admin_updateremotechannel(self, id='', REQUEST=None):
         """ """
-        res = self.getSyndicationTool().get_channel(id).updateChannel(self.get_site_uid())
+        res = self.getSyndicationTool().get_channel(id).updateChannel(
+            self.get_site_uid())
         if REQUEST:
             if res == '':
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
             else:
                 self.setSessionErrorsTrans(res)
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechannel')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deleteremotechannel')
+
     def admin_deleteremotechannel(self, ids=[], REQUEST=None):
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannels_aggregator')
-    def admin_addremotechannels_aggregator(self, title='', channels=[], portlet='', description='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addremotechannels_aggregator')
+
+    def admin_addremotechannels_aggregator(self, title='', channels=[],
+                                           portlet='', description='',
+                                           REQUEST=None):
         """ """
-        self.getSyndicationTool().manage_addChannelAggregator('', title, channels, portlet, description)
+        self.getSyndicationTool().manage_addChannelAggregator(
+            '', title, channels, portlet, description)
 
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(
+                '%s/admin_remotechannels_aggregators_html' %
+                self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannels_aggregator')
-    def admin_editremotechannels_aggregator(self, id='', title='', channels=[], description='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editremotechannels_aggregator')
+
+    def admin_editremotechannels_aggregator(self, id='', title='', channels=[],
+                                            description='', REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, channels, description)
+        self.getSyndicationTool().get_channel(id).manageProperties(
+            title, channels, description)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(
+                '%s/admin_remotechannels_aggregators_html' %
+                self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechannel')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deleteremotechannel')
+
     def admin_deleteremotechannels_aggregator(self, ids=[], REQUEST=None):
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect(
+                '%s/admin_remotechannels_aggregators_html' %
+                self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlocalchannel')
-    def admin_addlocalchannel(self, title='', description='', language=None, type=None, objmetatype=[], numberofitems='', portlet='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addlocalchannel')
+
+    def admin_addlocalchannel(self, title='', description='', language=None,
+                              type=None, objmetatype=[], numberofitems='',
+                              portlet='', REQUEST=None):
         """ """
-        self.getSyndicationTool().manage_addLocalChannel('', title, description, language, type, objmetatype, numberofitems, portlet)
+        self.getSyndicationTool().manage_addLocalChannel(
+            '', title, description, language, type, objmetatype, numberofitems,
+            portlet)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlocalchannel')
-    def admin_editlocalchannel(self, id='', title='', description='', language=None, type=None, objmetatype=[], numberofitems='', portlet='', REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editlocalchannel')
+
+    def admin_editlocalchannel(self, id='', title='', description='',
+                               language=None, type=None, objmetatype=[],
+                               numberofitems='', portlet='', REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, description, language, type, objmetatype, numberofitems, portlet)
+        self.getSyndicationTool().get_channel(id).manageProperties(
+            title, description, language, type, objmetatype, numberofitems,
+            portlet)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelocalchannel')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletelocalchannel')
+
     def admin_deletelocalchannel(self, ids=[], REQUEST=None):
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_leftportlets')
+
     def admin_leftportlets(self, portlets=[], REQUEST=None):
         """ """
         self.set_left_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_leftportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_leftportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_frontportlets')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_frontportlets')
+
     def admin_frontportlets(self, portlets=[], REQUEST=None):
         """ """
         self.set_center_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_frontportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_frontportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_rightportlets')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_rightportlets')
+
     def admin_rightportlets(self, folder='', portlets=[], REQUEST=None):
         """ """
-        self.set_right_portlets_locations(folder, self.utConvertToList(portlets))
+        self.set_right_portlets_locations(folder,
+                                          self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleterightportlets')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deleterightportlets')
+
     def admin_deleterightportlets(self, portlets=[], REQUEST=None):
         """ """
         for pair in self.utConvertToList(portlets):
             location, id = pair.split('||')
             self.delete_right_portlets_locations(location, id)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deleteremotechportlet')
+
     def admin_deleteremotechportlet(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addremotechportlet')
+
     def admin_addremotechportlet(self, id='', REQUEST=None):
         """ """
         ob = self.getSyndicationTool().get_channel(id)
@@ -3171,35 +3574,52 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             elif ob.meta_type == METATYPE_REMOTECHANNELFACADE:
                 self.create_portlet_for_remotechannelfacade(ob)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelocalchportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletelocalchportlet')
+
     def admin_deletelocalchportlet(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlocalchportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addlocalchportlet')
+
     def admin_addlocalchportlet(self, id='', REQUEST=None):
         """ """
         ob = self.getSyndicationTool().get_channel(id)
-        if ob is not None: self.create_portlet_for_localchannel(ob)
+        if ob is not None:
+            self.create_portlet_for_localchannel(ob)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletefolderportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletefolderportlet')
+
     def admin_deletefolderportlet(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addfolderportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addfolderportlet')
+
     def admin_addfolderportlet(self, folder='', REQUEST=None):
         """ """
         if folder != '':
@@ -3208,75 +3628,110 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 if not self.exists_portlet_for_object(ob):
                     self.create_portlet_for_folder(ob)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinksportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletelinksportlet')
+
     def admin_deletelinksportlet(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlinksportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addlinksportlet')
+
     def admin_addlinksportlet(self, id='', REQUEST=None):
         """ """
         ob = self.getPortletsTool().getLinksListById(id)
-        if ob is not None: self.create_portlet_for_linkslist(ob)
+        if ob is not None:
+            self.create_portlet_for_linkslist(ob)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addhtmlportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addhtmlportlet')
+
     def admin_addhtmlportlet(self, REQUEST=None):
         """ """
         id = PREFIX_PORTLET + self.utGenRandomId(6)
         self.getPortletsTool().addHTMLPortlet(id=id, title='New portlet')
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' %
+                                      (self.absolute_url(), id))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edithtmlportlet')
-    def admin_edithtmlportlet(self, id='', title='', body='', lang=None, REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_edithtmlportlet')
+
+    def admin_edithtmlportlet(self, id='', title='', body='', lang=None,
+                              REQUEST=None):
         """ """
         ob = self.getPortletsTool().getPortletById(id)
         if ob is not None:
             ob.manage_properties(title, body, lang)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' %
+                                      (self.absolute_url(), id))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletehtmlportlet')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletehtmlportlet')
+
     def admin_deletehtmlportlet(self, ids=[], REQUEST=None):
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html' %
+                                      self.absolute_url())
 
-    #administration pages
+    # administration pages
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_centre_html')
+
     def admin_centre_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_centre')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_centre')
 
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_topcontent_html')
+
     def admin_topcontent_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_topcontent')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_topcontent')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basketofapprovals_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_basketofapprovals_html')
+
     def admin_basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_basketofapprovals')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_basketofapprovals')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_metadata_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_metadata_html')
+
     def admin_metadata_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_metadata')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_metadata')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email_html')
+
     def admin_email_html(self, REQUEST=None, RESPONSE=None):
         """ """
         from zope.sendmail.interfaces import IMailDelivery
@@ -3286,99 +3741,141 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.getFormsTool().getContent(vars, 'site_admin_email')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos_html')
+
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_logos')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_logos')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_properties_html')
+
     def admin_properties_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_properties')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_properties')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout_html')
+
     def admin_layout_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_layout')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_layout')
 
     security.declareProtected('View', 'admin_documentation_html')
+
     def admin_documentation_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_documentation')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_documentation')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_html')
+
     def admin_users_html(self):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_users')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_users')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_local_users_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_local_users_html')
+
     def admin_local_users_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self},
-            'site_admin_local_users')
+                                              'site_admin_local_users')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_all_users_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_all_users_html')
+
     def admin_all_users_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self},
-            'site_admin_all_users')
+                                              'site_admin_all_users')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser_html')
+
     def admin_adduser_html(self):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_adduser')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_adduser')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_importusers_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_importusers_html')
+
     def admin_importusers_html(self):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_importusers')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_importusers')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_edituser_html')
+
     def admin_edituser_html(self, **kwargs):
         """ """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_edituser')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_assignroles_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_assignroles_html')
+
     def admin_assignroles_html(self, **kwargs):
         """ """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_assignroles')
 
     security.declareProtected(change_permissions, 'admin_roles_html')
+
     def admin_roles_html(self):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_roles')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_roles')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_sources_html')
+
     def admin_sources_html(self, REQUEST=None):
         """ """
         if REQUEST is not None:
             came_from = REQUEST.get('came_from', None)
             if came_from is not None:
                 return REQUEST.RESPONSE.redirect(came_from)
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_sources')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_sources')
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_translations_html')
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES,
+                              'admin_translations_html')
+
     def admin_translations_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_translations_html')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
+                                  '/admin_translations_html')
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_messages_html')
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES,
+                              'admin_messages_html')
+
     def admin_messages_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_messages_html')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
+                                  '/admin_messages_html')
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importexport_html')
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES,
+                              'admin_importexport_html')
+
     def admin_importexport_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_importexport_html')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
+                                  '/admin_importexport_html')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslists_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_linkslists_html')
+
     def admin_linkslists_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_linkslists')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_linkslists')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslist_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_linkslist_html')
+
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
         """ """
         permission_list = self.get_naaya_permissions_in_site().values()
@@ -3392,140 +3889,209 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         }
         return tmpl(REQUEST, **options)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_reflists_html')
+
     def admin_reflists_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_reflists')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_reflists')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflist_html')
+
     def admin_reflist_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_reflist')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_reflist')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_network_html')
+
     def admin_network_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_network')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_network')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_html')
+
     def admin_basket_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_basket')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_basket')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_translations_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_basket_translations_html')
+
     def admin_basket_translations_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_basket_translations_html')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
+                                  '/admin_basket_translations_html')
 
-    security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'admin_validation_html')
+    security.declareProtected(PERMISSION_VALIDATE_OBJECTS,
+                              'admin_validation_html')
+
     def admin_validation_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_validation')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_validation')
 
-    security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'admin_validation_tree_html')
+    security.declareProtected(PERMISSION_VALIDATE_OBJECTS,
+                              'admin_validation_tree_html')
+
     def admin_validation_tree_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_validation_tree')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_validation_tree')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_versioncontrol_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_versioncontrol_html')
+
     def admin_versioncontrol_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_versioncontrol')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_versioncontrol')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_maintopics_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_maintopics_html')
+
     def admin_maintopics_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_maintopics')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_maintopics')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_localchannels_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_localchannels_html')
+
     def admin_localchannels_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_localchannels')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_localchannels')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remotechannels_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_remotechannels_html')
+
     def admin_remotechannels_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechannels')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_remotechannels')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remotechannels_aggregators_html')
-    def admin_remotechannels_aggregators_html(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_remotechannels_aggregators_html')
+
+    def admin_remotechannels_aggregators_html(self, REQUEST=None,
+                                              RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechannels_aggregators')
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets_html_old')
+        return self.getFormsTool().getContent(
+            {'here': self}, 'site_admin_remotechannels_aggregators')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_leftportlets_html_old')
+
     def admin_leftportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_leftportlets')
-    admin_leftportlets_html = redirect_to(
-            '%(self_url)s/portal_portlets/admin_layout')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_leftportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_frontportlets_html_old')
+    admin_leftportlets_html = redirect_to(
+        '%(self_url)s/portal_portlets/admin_layout')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_frontportlets_html_old')
+
     def admin_frontportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_frontportlets')
-    admin_rightportlets_html = redirect_to(
-            '%(self_url)s/portal_portlets/admin_layout')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_frontportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_rightportlets_html_old')
+    admin_rightportlets_html = redirect_to(
+        '%(self_url)s/portal_portlets/admin_layout')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_rightportlets_html_old')
+
     def admin_rightportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_rightportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_rightportlets')
 
     admin_leftportlets_html = redirect_to(
-            '%(self_url)s/portal_portlets/admin_layout')
+        '%(self_url)s/portal_portlets/admin_layout')
 
     admin_rightportlets_html = redirect_to(
-            '%(self_url)s/portal_portlets/admin_layout')
+        '%(self_url)s/portal_portlets/admin_layout')
 
     admin_frontportlets_html = redirect_to(
-            '%(self_url)s/portal_portlets/admin_layout')
+        '%(self_url)s/portal_portlets/admin_layout')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_specialportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_specialportlets_html')
+
     def admin_specialportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_specialportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_specialportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remotechportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_remotechportlets_html')
+
     def admin_remotechportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_remotechportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_localchportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_localchportlets_html')
+
     def admin_localchportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_localchportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_localchportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folderportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_folderportlets_html')
+
     def admin_folderportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_folderportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_folderportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linksportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_linksportlets_html')
+
     def admin_linksportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_linksportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_linksportlets')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_htmlportlets_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_htmlportlets_html')
+
     def admin_htmlportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_htmlportlets')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_htmlportlets')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_saved_bulk_emails')
+
     def admin_saved_bulk_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved bulk emails """
         emails = get_bulk_emails(self)
-        return self.getFormsTool().getContent({'here': self, 'emails': emails},
+        return self.getFormsTool().getContent(
+            {'here': self, 'emails': emails},
             'site_admin_bulk_mail_listing')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_view_bulk_email')
+
     def admin_view_bulk_email(self, filename, REQUEST=None, RESPONSE=None):
         """ Display a specfic saved bulk email """
         email = get_bulk_email(self, filename)
-        return self.getFormsTool().getContent({'here': self, 'email': email},
+        return self.getFormsTool().getContent(
+            {'here': self, 'email': email},
             'site_admin_bulk_mail_view')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'check_emails')
+
     def check_emails(self, REQUEST):
         """Return already resolved email addresses
         and a list with those to be resolved by a different call"""
@@ -3535,55 +4101,77 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         invalid, not_resolved = check_cached_valid_emails(self, emails)
         return json.dumps({'invalid': invalid, 'notResolved': not_resolved})
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_notifications_html')
+
     def admin_notifications_html(self, REQUEST):
         """ redirect to new notifications admin page """
         notification_tool_url = self.getNotificationTool().absolute_url()
         return REQUEST.RESPONSE.redirect(notification_tool_url + '/admin_html')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_subobjects_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_folder_subobjects_html')
+
     def admin_folder_subobjects_html(self, REQUEST):
         """ Admin view for editing global (default) folder subobjects """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_folder_subobjects')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_folder_subobjects')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_subobjects_submit')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_folder_subobjects_submit')
+
     def admin_folder_subobjects_submit(self, subobjects=None,
-                                       ny_subobjects=None, only_nyobjects=False,
+                                       ny_subobjects=None,
+                                       only_nyobjects=False,
                                        REQUEST=None):
         """ Updating global (default) folder subobjects """
         portal_properties = self.getPropertiesTool()
-        portal_properties.manageSubobjects(subobjects, ny_subobjects, only_nyobjects)
+        portal_properties.manageSubobjects(subobjects, ny_subobjects,
+                                           only_nyobjects)
         if REQUEST:
             REQUEST.RESPONSE.redirect('admin_folder_subobjects_html?save=ok')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_comments_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_comments_html')
+
     def admin_comments_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_comments')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_site_logging_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_site_logging_html')
+
     def admin_site_logging_html(self, REQUEST=None, RESPONSE=None):
         """ Web viewer for site logger """
 
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_logging')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_admin_logging')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'get_site_logger_content')
+
     def get_site_logger_content(self, REQUEST=None, RESPONSE=None, month=None):
         """
         Returns plain text and parsed lines of logging files for actions on
         content
 
         """
-        return site_logging.get_site_logger_content(self, REQUEST, RESPONSE, month=month)
+        return site_logging.get_site_logger_content(self, REQUEST, RESPONSE,
+                                                    month=month)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_site_logger_content')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'get_site_logger_content')
+
     def get_logged_months(self, REQUEST=None, RESPONSE=None):
         """
         Returns a list of logged months
         """
         return site_logging.get_logged_months(self, REQUEST, RESPONSE)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_download_log_file')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_download_log_file')
+
     def admin_download_log_file(self, REQUEST=None, RESPONSE=None):
         """
         Download logging files for actions made on content types
@@ -3591,12 +4179,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         return site_logging.admin_download_log_file(self, REQUEST, RESPONSE)
 
-    #others
+    # others
     def get_localch_noportlet(self):
-        local_channels = [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
+        local_channels = [
+            x for x in self.getSyndicationTool().get_local_channels() if
+            not self.exists_portlet_for_object(x)]
         local_channels.extend(
-            [x for x in self.getSyndicationTool().get_script_channels()
-                if not self.exists_portlet_for_object(x)])
+            [x for x in self.getSyndicationTool().get_script_channels() if not
+             self.exists_portlet_for_object(x)])
         return local_channels
 
     def get_remotech_noportlet(self):
@@ -3606,12 +4196,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return [x for x in l if not x.exists_portlet_for_object(x)]
 
     def get_linkslists_noportlet(self):
-        return [x for x in self.getPortletsTool().getLinksLists() if not x.exists_portlet_for_object(x)]
+        return [x for x in self.getPortletsTool().getLinksLists()
+                if not x.exists_portlet_for_object(x)]
 
     def checkPermissionForLink(self, name, context):
-        #checks the given group of permissions in the given context
-        if name != '': return context.checkPermission(name)
-        else: return 1
+        # checks the given group of permissions in the given context
+        if name != '':
+            return context.checkPermission(name)
+        else:
+            return 1
 
     def checkPermissionAddFolders(self, context):
         """
@@ -3620,24 +4213,29 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return context.checkPermission(PERMISSION_ADD_FOLDER)
 
     def list_glossaries(self):
-        #this method can be overwritten
+        # this method can be overwritten
         return self.objectValues(['Naaya Glossary', 'Naaya Thesaurus'])
 
     def get_keywords_glossary(self):
         # TODO: deprecate and remove this
-        try: return self._getOb(self.keywords_glossary)
-        except: return None
+        try:
+            return self._getOb(self.keywords_glossary)
+        except:
+            return None
 
     def get_coverage_glossary(self):
         # TODO: deprecate and remove this
-        try: return self._getOb(self.coverage_glossary)
-        except: return None
+        try:
+            return self._getOb(self.coverage_glossary)
+        except:
+            return None
 
     security.declareProtected(PERMISSION_PUBLISH_DIRECT, 'publish_direct')
+
     def publish_direct(self):
         raise NotImplemented
 
-    #sending emails
+    # sending emails
     def sendConfirmationEmail(self, name, confirm_key, mto):
         # Send confirmation email
         param = urllib.urlencode({'key': confirm_key})
@@ -3648,7 +4246,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 'PORTAL_URL': portal_url,
                 'LINK': link,
                 'SENDER_NAME': self.site_title + ' team',
-            }
+                }
         etool = self.getEmailTool()
         template = etool._getOb('email_confirmuser')
         msubj = template.title
@@ -3656,8 +4254,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         mfrom = etool.get_addr_from()
         etool.sendEmail(mbody, mto, mfrom, msubj)
 
-    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
-        #sends a confirmation email to the newlly created account's owner
+    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST,
+                                p_roles=[]):
+        # sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
         l_subject = email_template.title
         l_content = email_template.body
@@ -3666,23 +4265,27 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@NAME@@', p_name)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@EMAIL@@', p_email)
-        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        l_content = l_content.replace('@@TIMEOFPOST@@',
+                                      str(self.utGetTodayDate()))
         email_tool = self.getEmailTool()
         mail_from = email_tool.get_addr_from()
         email_tool.sendEmail(l_content, p_email, mail_from, l_subject)
 
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
-        #sends a feedback email
+        # sends a feedback email
         email_template = self.getEmailTool()._getOb('email_feedback')
         l_subject = email_template.title
         l_content = email_template.body
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@COMMENTS@@', p_comments)
-        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        l_content = l_content.replace('@@TIMEOFPOST@@',
+                                      str(self.utGetTodayDate()))
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
-    def notifyOnErrorsEmail(self, p_to, p_from, p_error_url, p_error_ip, p_error_type, p_error_value, p_error_user, p_error_time):
-        #notify on errors email
+    def notifyOnErrorsEmail(self, p_to, p_from, p_error_url, p_error_ip,
+                            p_error_type, p_error_value, p_error_user,
+                            p_error_time):
+        # notify on errors email
         email_template = self.getEmailTool()._getOb('email_notifyonerrors')
         l_subject = email_template.title
         l_content = email_template.body
@@ -3692,14 +4295,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@IPADDRESS@@', p_error_ip)
         l_content = l_content.replace('@@USER@@', p_error_user)
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
-        self.getEmailTool().sendEmailImmediately(l_content, p_to, p_from, l_subject)
+        self.getEmailTool().sendEmailImmediately(l_content, p_to, p_from,
+                                                 l_subject)
 
     def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation,
-                            p_username, p_location_path,
-                            p_location_title, p_comments, **kwargs):
+                               p_username, p_location_path,
+                               p_location_title, p_comments, **kwargs):
 
         role = kwargs.get('role')
-        #sends a request role email
+        # sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title
         l_content = email_template.body
@@ -3710,31 +4314,37 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@LOCATIONPATH@@', p_location_path)
         l_content = l_content.replace('@@ROLE@@', role)
         if p_location_path:
-            l_content = l_content.replace('@@LOCATION@@', "the %s folder (%s/%s)" % (p_location_title, self.portal_url, p_location_path))
+            l_content = l_content.replace('@@LOCATION@@',
+                                          "the %s folder (%s/%s)" %
+                                          (p_location_title, self.portal_url,
+                                           p_location_path))
         else:
             l_content = l_content.replace('@@LOCATION@@', 'entire portal')
         l_content = l_content.replace('@@COMMENTS@@', p_comments)
         l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
         l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
-        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        l_content = l_content.replace('@@TIMEOFPOST@@',
+                                      str(self.utGetTodayDate()))
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
     def log_current_error(self):
-        """ Log the current error (from sys.exc_info) into the site's error_log """
+        """ Log the current error (from sys.exc_info)
+            into the site's error_log """
         import sys
         self.error_log.raising(sys.exc_info())
 
-    #pluggable content
+    # pluggable content
     def get_pluggable_content(self):
-        #information about the available types
+        # information about the available types
         return naaya.content.base.discover.get_pluggable_content()
 
     def get_pluggable_metatypes(self):
         return self.get_pluggable_content().keys()
 
     def get_pluggable_metatypes_validation(self):
-        #returns a list with all meta_types for validation process
-        return [x['meta_type'] for x in self.get_pluggable_content().values() if x.get('validation', None) == 1]
+        # returns a list with all meta_types for validation process
+        return [x['meta_type'] for x in self.get_pluggable_content().values()
+                if x.get('validation', None) == 1]
 
     def get_pluggable_item(self, meta_type):
         return self.get_pluggable_content().get(meta_type, None)
@@ -3743,20 +4353,22 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.__pluggable_installed_content.keys()
 
     def is_pluggable_item_installed(self, meta_type):
-        return self.__pluggable_installed_content.has_key(meta_type)
+        return meta_type in self.__pluggable_installed_content
 
-    #pluggable meta types properties
+    # pluggable meta types properties
     def get_pluggable_item_properties_ids(self, meta_type):
         if meta_type in ('Naaya Folder',):
-            #XXX: Hardcoded
-            return ['title', 'description', 'coverage', 'keywords', 'sortorder',
-                    'releasedate', 'maintainer_email']
+            # XXX: Hardcoded
+            return ['title', 'description', 'coverage', 'keywords',
+                    'sortorder', 'releasedate', 'maintainer_email']
         if self.is_pluggable_item_installed(meta_type):
-            return self.get_pluggable_content().get(meta_type, None).get('properties', {}).keys()
+            return self.get_pluggable_content().get(meta_type, None).get(
+                'properties', {}).keys()
         return []
 
     def get_pluggable_item_properties_item(self, meta_type, prop):
-        return self.get_pluggable_content().get(meta_type, None)['properties'][prop]
+        return self.get_pluggable_content().get(
+            meta_type, None)['properties'][prop]
 
     def get_pluggable_item_property_mandatory(self, meta_type, prop):
         if self.is_pluggable_item_installed(meta_type):
@@ -3769,23 +4381,31 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l = []
         la = l.append
         gt = self.getPortalI18n().get_translation
-        for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
-            if v[0] == 1 or v[1]:   #this property is mandatory
-                if args.has_key(k):    #property found in parameters list
+        for k, v in self.get_pluggable_content().get(
+                meta_type, None).get('properties', {}).items():
+            if v[0] == 1 or v[1]:   # this property is mandatory
+                if k in args:    # property found in parameters list
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
-                        if self.utIsEmptyString(value): la(gt(v[2]))
+                        if self.utIsEmptyString(value):
+                            la(gt(v[2]))
                     elif v[1] == MUST_BE_DATETIME:
-                        if not self.utIsValidDateTime(value): la(gt(v[2]))
+                        if not self.utIsValidDateTime(value):
+                            la(gt(v[2]))
                     elif v[1] == MUST_BE_DATETIME_STRICT:
-                        if self.utIsEmptyString(value) or not self.utIsValidDateTime(value):
+                        if (self.utIsEmptyString(value) or
+                                not self.utIsValidDateTime(value)):
                             la(gt(v[2]))
                     elif v[1] == MUST_BE_POSITIV_INT:
-                        if not self.utIsAbsInteger(value): la(gt(v[2]))
+                        if not self.utIsAbsInteger(value):
+                            la(gt(v[2]))
                     elif v[1] == MUST_BE_POSITIV_FLOAT:
-                        if not value or not self.utIsFloat(value, positive=0): la(gt(v[2]))
+                        if not value or not self.utIsFloat(value, positive=0):
+                            la(gt(v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
-                        if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(gt(v[2]))
+                        if (value != self.getSession('captcha', '') and
+                                not self.checkPermissionPublishDirect()):
+                            la(gt(v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
@@ -3796,53 +4416,63 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         for l_prop in self.get_pluggable_item_properties_ids(meta_type):
             self.delSession(l_prop)
 
-    security.declareProtected(view_management_screens, 'manage_install_pluggableitem')
+    security.declareProtected(view_management_screens,
+                              'manage_install_pluggableitem')
+
     def manage_install_pluggableitem(self, meta_type=None, REQUEST=None):
         """
-        Makes the content with the given meta_type available for usage in the portal.
-        Raises ValueError if content does not exist.
+        Makes the content with the given meta_type available for usage in
+        the portal. Raises ValueError if content does not exist.
         If the content specifies an `on_install` function in it's `config`
         this method will call `[on_install](self)`
         """
-        #data_path = join(self.get_data_path(), 'skel', 'forms')
+        # data_path = join(self.get_data_path(), 'skel', 'forms')
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
-            if pitem == None:
-                raise ValueError('Missing pluggable content type "%s"' % meta_type)
+            if pitem is None:
+                raise ValueError('Missing pluggable content type "%s"' %
+                                 meta_type)
 
-            #add content's permission to some roles
+            # add content's permission to some roles
             role_names = ('Manager', 'Administrator', 'Contributor')
             self.manage_permission(pitem['permission'], role_names, acquire=1)
 
-            #run `on_install` function if defined in content's `config`
+            # run `on_install` function if defined in content's `config`
             if 'on_install' in pitem:
                 pitem['on_install'](self)
 
-            #send the requisite event
+            # send the requisite event
             notify(NyPluggableItemInstalled(self, meta_type))
 
-            #remember that this meta_type was installed
+            # remember that this meta_type was installed
             self.__pluggable_installed_content[meta_type] = 1
             self.searchable_content.append(meta_type)
             self._p_changed = 1
 
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' %
+                                      self.absolute_url())
 
-    security.declareProtected(view_management_screens, 'manage_uninstall_pluggableitem')
+    security.declareProtected(view_management_screens,
+                              'manage_uninstall_pluggableitem')
+
     def manage_uninstall_pluggableitem(self, meta_type=None, REQUEST=None):
         """ """
         if meta_type is not None:
-            #remember that this meta_type was removed
+            # remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
-            self.searchable_content = [x for x in self.searchable_content if x != meta_type]
+            self.searchable_content = [x for x in self.searchable_content
+                                       if x != meta_type]
             # not removing the permission (why bother?)
 
-            #pitem = self.get_pluggable_item(meta_type)
-            #run `on_uninstall` function if defined in content's `config`
-            #if 'on_uninstall' in pitem:
+            # pitem = self.get_pluggable_item(meta_type)
+            # run `on_uninstall` function if defined in content's `config`
+            # if 'on_uninstall' in pitem:
             #    pitem['on_uninstall'](self)
 
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' %
+                                      self.absolute_url())
 
     def is_logged(self, REQUEST=None):
         """ """
@@ -3850,7 +4480,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST = self.REQUEST
         return REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User'
 
-    #methods to be runned by OS scheduler - crond
+    # methods to be runned by OS scheduler - crond
     def updateRemoteChannels(self, uid):
         """
         Used by cron tools to update the remote channels.
@@ -3858,13 +4488,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         @param uid: site uid
         @type uid: string
         """
-        if uid==self.get_site_uid():
+        if uid == self.get_site_uid():
             syndicationtool_ob = self.getSyndicationTool()
             for c in syndicationtool_ob.get_remote_channels():
                 c.updateChannel(uid)
             for c in syndicationtool_ob.get_remote_channels_facade():
                 c.updateChannel(uid)
-            return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
+            return ("Update Remote Channels ended successfully on site %s" %
+                    self.absolute_url())
 
     def cleanupUnsubmittedObjects(self, uid):
         """
@@ -3873,16 +4504,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         @param uid: site uid
         @type uid: string
         """
-        if uid==self.get_site_uid():
+        if uid == self.get_site_uid():
             today = self.utGetTodayDate()
             self.getCatalogTool()   # TODO: is this needed?
             for x in self.getCatalogedUnsubmittedObjects():
                 if x.bobobase_modification_time() + 1 < today:
-                    #delete only unsubmitted objects older than 1 day
+                    # delete only unsubmitted objects older than 1 day
                     x.getParentNode().manage_delObjects([x.id])
-            return "Clean up unsubmitted objects ended successfully on site %s" % self.absolute_url()
+            return ("Clean up unsubmitted objects ended successfully on site "
+                    "%s" % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_mail_to_roles')
+
     def send_mail_to_roles(self, mail_subject, mail_body, mails,
                            mail_mappings={}, REQUEST=None):
         """
@@ -3900,10 +4533,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             mail_custom_body = mail_body
             for (k, v) in mail_mappings.get(mail.lower(), {}).items():
                 mail_custom_body = mail_custom_body.replace(k, v)
-            email_tool.sendEmail(mail_custom_body, mail, addr_from, mail_subject)
+            email_tool.sendEmail(mail_custom_body, mail, addr_from,
+                                 mail_subject)
 
         try:
-            save_bulk_email(self, mails, self.REQUEST.AUTHENTICATED_USER.getUserName(), mail_subject, mail_body)
+            save_bulk_email(self, mails,
+                            self.REQUEST.AUTHENTICATED_USER.getUserName(),
+                            mail_subject, mail_body)
         except Exception:
             log.exception("Failed saving bulk email on disk")
 
@@ -3913,9 +4549,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html'
                                       % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'export_contacts_vcard')
+
     def export_contacts_vcard(self, location='', REQUEST=None):
-        """ Exports all portal contacts in vCard format contained in a zip file """
+        """ Exports all portal contacts in vCard format contained
+            in a zip file """
         if not location or location == '/':
             loc_obj = self
         else:
@@ -3924,20 +4563,30 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if not location.startswith(site_id):
                 location = '%s/%s' % (site_id, location)
 
-        contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'], path=location)
-        files = [vcard_file(contact.id, contact.export_vcard()) for contact in contacts]
+        contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'],
+                                            path=location)
+        files = [vcard_file(contact.id, contact.export_vcard())
+                 for contact in contacts]
         if REQUEST:
             if not contacts:
-                self.setSessionInfoTrans('No contacts found in the selected location.')
-                return REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=vcard' % self.absolute_url())
-            return self.utGenerateZip('%s-contacts.zip' % loc_obj.title_or_id(),
+                self.setSessionInfoTrans(
+                    'No contacts found in the selected location.')
+                return REQUEST.RESPONSE.redirect(
+                    '%s/admin_contacts_html?section=vcard' %
+                    self.absolute_url())
+            return self.utGenerateZip('%s-contacts.zip' %
+                                      loc_obj.title_or_id(),
                                       files, self.REQUEST.RESPONSE)
-        else: return files
+        else:
+            return files
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_vcard')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'import_contacts_vcard')
+
     def import_contacts_vcard(self, vcard_zipfile, location, REQUEST=None):
         """ Import contacts in vCard format from a zip file """
-        from naaya.content.contact.contact_item import addNyContact, parse_vcard_data
+        from naaya.content.contact.contact_item import addNyContact
+        from naaya.content.contact.contact_item import parse_vcard_data
         container = self.restrictedTraverse(location)
         errors = []
         success = False
@@ -3948,7 +4597,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             try:
                 contact_data = parse_vcard_data(data)
             except:
-                errors.append(('Error parsing "${filename}"', {'filename': filename}, ))
+                errors.append(('Error parsing "${filename}"',
+                              {'filename': filename}, ))
             else:
                 objects_created += 1
                 contact_data['title'] = '%s %s' % (
@@ -3956,33 +4606,45 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 addNyContact(container, **contact_data)
 
         if objects_created:
-            transaction.get().note('Imported %d Naaya Contact objects' % objects_created)
+            transaction.get().note('Imported %d Naaya Contact objects' %
+                                   objects_created)
             success = True
 
         if REQUEST is not None:
-            if len(errors): self.setSessionErrorsTrans(errors)
-            if success: self.setSessionInfoTrans('Imported ${objects} contact objects', objects=objects_created)
-            return REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
-
+            if len(errors):
+                self.setSessionErrorsTrans(errors)
+            if success:
+                self.setSessionInfoTrans('Imported ${objects} contact objects',
+                                         objects=objects_created)
+            return REQUEST.RESPONSE.redirect('%s/admin_contacts_html' %
+                                             self.absolute_url())
 
     security.declareProtected(view, 'HEAD')
+
     def HEAD(self, REQUEST=None):
         """ """
         modified = self.bobobase_modification_time()
         return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_controlpanel_html')
-    manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel', globals())
+    # zmi pages
+    security.declareProtected(view_management_screens,
+                              'manage_controlpanel_html')
+
+    manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel',
+                                                globals())
 
     security.declareProtected(view, 'macro_manage_add')
+
     macro_manage_add = PageTemplateFile('zpt/site_macro_manage_add', globals())
 
     security.declareProtected(view, 'macro_manage_edit')
-    macro_manage_edit= PageTemplateFile('zpt/site_macro_manage_edit', globals())
 
-    #site pages
+    macro_manage_edit = PageTemplateFile('zpt/site_macro_manage_edit',
+                                         globals())
+
+    # site pages
     security.declareProtected(view, 'standard_html_header')
+
     @deprecate('standard_html_header is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_header(self, REQUEST=None, RESPONSE=None):
@@ -3990,10 +4652,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         context = self.REQUEST.PARENTS[0]
         ltool = self.getLayoutTool()
         if hasattr(ltool.get_current_skin(), 'site_header'):
-            return ltool.getContent({'here': context}, 'site_header').split('<!--SITE_HEADERFOOTER_MARKER-->')[0]
-        return ltool.render_standard_template(context).split('<!--SITE_HEADERFOOTER_MARKER-->')[0]
+            return ltool.getContent(
+                {'here': context}, 'site_header').split(
+                    '<!--SITE_HEADERFOOTER_MARKER-->')[0]
+        return ltool.render_standard_template(context).split(
+            '<!--SITE_HEADERFOOTER_MARKER-->')[0]
 
     security.declareProtected(view, 'standard_html_footer')
+
     @deprecate('standard_html_footer is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
@@ -4001,10 +4667,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         context = self.REQUEST.PARENTS[0]
         ltool = self.getLayoutTool()
         if hasattr(ltool.get_current_skin(), 'site_footer'):
-            return ltool.getContent({'here': context}, 'site_footer').split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
-        return ltool.render_standard_template(context).split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
+            return ltool.getContent({'here': context}, 'site_footer').split(
+                '<!--SITE_HEADERFOOTER_MARKER-->')[1]
+        return ltool.render_standard_template(context).split(
+            '<!--SITE_HEADERFOOTER_MARKER-->')[1]
 
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         layout_tool = self.getLayoutTool()
@@ -4015,76 +4684,99 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.getFormsTool().getContent({'here': self}, 'site_index')
 
     security.declareProtected(view, 'menusubmissions')
+
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_menusubmissions')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_menusubmissions')
 
     security.declareProtected(view, 'messages_html')
+
     def messages_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_messages')
 
     security.declarePublic('messages_box')
+
     def messages_box(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'messages_box')
 
     security.declarePublic('languages_box')
+
     def languages_box(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'languages_box')
 
     security.declareProtected(view, 'form_languages_box')
+
     def form_languages_box(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'form_languages_box')
+        return self.getFormsTool().getContent({'here': self},
+                                              'form_languages_box')
 
     security.declarePublic('changecredentials_html')
+
     def changecredentials_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_changecredentials')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_changecredentials')
 
     security.declarePublic('login_html')
+
     def login_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_login')
 
     security.declarePublic('logout_html')
+
     def logout_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_logout')
 
     security.declarePublic('unauthorized_html')
+
     def unauthorized_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_unauthorized')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_unauthorized')
 
     security.declareProtected(view, 'search_html')
+
     def search_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_search')
 
     security.declareProtected(view, 'external_search_html')
+
     def external_search_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_external_search')
+        return self.getFormsTool().getContent({'here': self},
+                                              'site_external_search')
 
     security.declareProtected(view, 'sitemap_html')
+
     def sitemap_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_sitemap')
 
     security.declareProtected(view, 'sitemap_add_html')
+
     def sitemap_add_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'sitemap_add')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_bulk_mail_html')
+
     def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
+        return PageTemplateFile('skel/forms/site_admin_bulk_mail',
+                                globals()).__of__(self)()
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_list_export')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_bulk_mail_list_export')
+
     def admin_bulk_mail_list_export(self, REQUEST=None, RESPONSE=None):
         """ Aggregate an xcel file from emails on disk
         (just like get_bulk_emails does to populate the web page)"""
@@ -4102,7 +4794,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition',
-                            'attachment; filename=admin_bulk_email_list.xls')
+                           'attachment; filename=admin_bulk_email_list.xls')
         cols = zip(headers, keys)
         return export_email_list_xcel(self, cols, ids)
 
@@ -4117,13 +4809,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return template.macros[macro]
 
     security.declareProtected(view, 'sitemap_xml')
+
     def sitemap_xml(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'sitemap_xml')
 
-    sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(), 'naaya.semanticweb.sitemap')
+    sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(),
+                                            'naaya.semanticweb.sitemap')
 
-    #calendar widget
+    # calendar widget
     security.declarePublic('calendar_js')
     calendar_js = DTMLFile('zpt/calendar/calendar_js', globals())
 
@@ -4131,11 +4825,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     core_js = DTMLFile('zpt/calendar/core_js', globals())
 
     security.declarePublic('i18n_js')
+
     def i18n_js(self, lang='en', REQUEST=None):
         """ translations for messages used by JavaScript """
         message_catalog = self.getPortalI18n().get_message_catalog()
-        translations = dict( (msg, message_catalog.gettext(msg, lang))
-                            for msg in JS_MESSAGES )
+        translations = dict((msg, message_catalog.gettext(msg, lang))
+                            for msg in JS_MESSAGES)
 
         if REQUEST is not None:
             REQUEST.RESPONSE.setHeader('Content-Type',
@@ -4146,7 +4841,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
 
-    #common javascript
+    # common javascript
     security.declarePublic('common_js')
     common_js = DTMLFile('zpt/common_js', globals())
     #
@@ -4187,7 +4882,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if REQUEST is not None:
             raise Unauthorized
 
-        transaction.commit() # commit earlier stuff; fresh transaction
+        transaction.commit()  # commit earlier stuff; fresh transaction
         transaction.get().note('cron heartbeat at %s' % ofs_path(self))
 
         from naaya.core.heartbeat import Heartbeat
@@ -4211,7 +4906,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         from naaya.core.utils import _cooldown_map
         name = 'site heartbeat %r' % '/'.join(self.getPhysicalPath())
-        if _cooldown_map.has_key(name):
+        if name in _cooldown_map:
             last_heartbeat = _cooldown_map[name]
             time_ever_since = datetime.now() - last_heartbeat
             minutes_ever_since = int(time_ever_since.seconds / 60)
@@ -4247,7 +4942,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def buildout_recaptcha_private(self):
         conf = getConfiguration()
-        return getattr(conf, 'environment', {}).get('reCAPTCHA_PRIVATE_KEY', '')
+        return getattr(conf, 'environment', {}).get('reCAPTCHA_PRIVATE_KEY',
+                                                    '')
 
     def get_recaptcha_private_key(self):
         return self.recaptcha_private_key or self.buildout_recaptcha_private()
