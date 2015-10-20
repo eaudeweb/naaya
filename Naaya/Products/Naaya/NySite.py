@@ -64,11 +64,13 @@ from Products.NaayaCore import ID_SCHEMATOOL
 from Products.NaayaCore import ID_SYNDICATIONTOOL
 from Products.NaayaCore import METATYPE_REMOTECHANNEL
 from Products.NaayaCore import METATYPE_REMOTECHANNELFACADE
-from Products.NaayaCore.AuthenticationTool.AuthenticationTool import manage_addAuthenticationTool
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import \
+    manage_addAuthenticationTool
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
-from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
+from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import \
+    manage_addDynamicPropertiesTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 from Products.NaayaCore.EmailTool.EmailTool import check_cached_valid_emails
 from Products.NaayaCore.EmailTool.EmailTool import export_email_list_xcel
@@ -79,16 +81,21 @@ from Products.NaayaCore.EmailTool.EmailTool import save_bulk_email
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
-from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsTool
+from Products.NaayaCore.GoogleDataTool.AnalyticsTool import \
+    manage_addAnalyticsTool
 from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
 from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
-from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
+from Products.NaayaCore.NotificationTool.NotificationTool import \
+    manage_addNotificationTool
 from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
-from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
-from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
+from Products.NaayaCore.PortletsTool.managers.portlets_manager import \
+    portlets_manager
+from Products.NaayaCore.PropertiesTool.PropertiesTool import \
+    manage_addPropertiesTool
 from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
-from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
+from Products.NaayaCore.SyndicationTool.SyndicationTool import \
+    manage_addSyndicationTool
 from Products.NaayaCore.constants import PREFIX_PORTLET
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
 from Products.NaayaCore.managers.import_export import CSVImportTool
@@ -98,10 +105,12 @@ from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
-from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
+from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils
+from Products.NaayaCore.managers.utils import file_utils
 from Products.NaayaCore.managers.utils import vcard_file
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
-from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
+from Products.NaayaCore.managers.zip_import_export import ZipImportTool
+from Products.NaayaCore.managers.zip_import_export import ZipExportTool
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
@@ -126,12 +135,12 @@ from naaya.core.exceptions import i18n_exception
 from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
-from naaya.core.zope2util import redirect_to    #, get_zope_env
+from naaya.core.zope2util import redirect_to
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
 from naaya.i18n.portal_tool import manage_addNaayaI18n
-from os.path import join    #, dirname
+from os.path import join
 from urlparse import urlparse
 from zipfile import ZipFile
 from zope import component
@@ -173,14 +182,16 @@ NAAYA_CONTAINERS_METATYPES = \
      'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire',
      'Naaya Meeting']
 
-#constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
+
+
 def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
                      default_content=True, REQUEST=None):
     """ """
     ut = utils()
     id = ut.utSlugify(id)
-    if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
+    if not id:
+        id = PREFIX_SITE + ut.utGenRandomId(6)
     self._setObject(id, NySite(id, title, lang))
     ob = self._getOb(id)
     ob.createPortalTools()
@@ -188,6 +199,7 @@ def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
         ob.loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
 
 class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
              Folder, NyBase, NyPermissions, NyImportExport, utils,
@@ -203,7 +215,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     manage_options = (
         tuple(op for op in Folder.manage_options
-                    if op['action'] != 'manage_propertiesForm')
+              if op['action'] != 'manage_propertiesForm')
         +
         (
             {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},
@@ -243,16 +255,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         self.id = id
 
-        #Set local site manager
+        # Set local site manager
         sm = LocalSiteManager(self)
 
-        #This was done because Zope2 setSiteManager does not set the ISite
-        #interface which is needed to do component lookup in site managers.
+        # This was done because Zope2 setSiteManager does not set the ISite
+        # interface which is needed to do component lookup in site managers.
         SiteManagerContainer.setSiteManager.im_func(self, sm)
         self.setSiteManager(sm)
         sm.__name__ = 'database'
 
-        #Set up a default bundle for this site
+        # Set up a default bundle for this site
         bundle = bundles.get('Naaya')
         self.set_bundle(bundle)
 
@@ -279,7 +291,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         # The email address (must exist) from which the email tool sends mails
         self.mail_address_from = ''
         self.administrator_email = ''
-        #holds info about customized folder's contact us page
+        # holds info about customized folder's contact us page
         self.rdf_max_items = 10
         self.folder_customized_feedback = {}
         self.portal_url = ''
@@ -305,11 +317,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         networkportals_manager.__dict__['__init__'](self)
 
     security.declarePrivate('get_bundle')
+
     def get_bundle(self):
         """ Get current Naaya bundle"""
         return self.getSiteManager().__bases__[0]
 
     security.declarePrivate('set_bundle')
+
     def set_bundle(self, bundle):
         """ Setup a bundle for this site. This tells the site manager that
         it's parent is the bundle. Without the bundle the resolution of
@@ -325,6 +339,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.getSiteManager().__bases__ = (bundle,)
 
     security.declarePrivate('createPortalTools')
+
     def createPortalTools(self):
         """ """
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
@@ -348,11 +363,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         manage_addSchemaTool(self)
 
     security.declarePrivate('loadDefaultData')
+
     def loadDefaultData(self):
         """ """
 
         sm = self.getSiteManager()
-        #Register Action Logger utility
+        # Register Action Logger utility
         sm.registerUtility(ActionLogger(), IActionLogger)
 
         # initially, nobody can skip approval process
@@ -363,15 +379,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         roles_with_view = view_perm.getRoles()
         view_perm.setRoles(tuple(roles_with_view))
 
-        #load default skeleton
+        # load default skeleton
         self.loadSkeleton(NAAYA_PRODUCT_PATH)
-        #set default main topics
+        # set default main topics
         self.getPropertiesTool().manageMainTopics(['info'])
         self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
 
     skel_handler_cache = {}
 
     security.declarePrivate('get_skel_handler')
+
     def get_skel_handler(self, product_path, enable_cache=True):
         if enable_cache and product_path in self.skel_handler_cache:
             return self.skel_handler_cache[product_path]
@@ -382,9 +399,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return skel_handler
 
     security.declarePrivate('loadSkeleton')
+
     def loadSkeleton(self, product_path):
         """ """
-        #load site skeleton - configuration
+        # load site skeleton - configuration
         self._load_skel_from_handler(self.get_skel_handler(product_path))
 
     def _load_skel_from_handler(self, skel_handler):
@@ -400,22 +418,26 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             authenticationtool_ob = self.getAuthenticationTool()
             self.getNotificationTool()      # TODO: is this needed?
 
-            #load pluggable content types
-            if skel_handler.root.pluggablecontenttypes is not None:
-                for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
-                    try: action = abs(int(pluggablecontenttype.action))
-                    except: action = 1
+            # load pluggable content types
+            ctypes = skel_handler.root.pluggablecontenttypes
+            if ctypes is not None:
+                for pluggablecontenttype in ctypes.pluggablecontenttypes:
+                    try:
+                        action = abs(int(pluggablecontenttype.action))
+                    except:
+                        action = 1
                     meta_type = pluggablecontenttype.meta_type
                     if self.get_pluggable_item(meta_type) is None:
                         log.info("Skipping pluggable content type %r "
                                  "because it's not available", meta_type)
                         continue
                     if action == 0:
-                        self.manage_uninstall_pluggableitem(meta_type=meta_type)
+                        self.manage_uninstall_pluggableitem(
+                            meta_type=meta_type)
                     else:
                         self.manage_install_pluggableitem(meta_type=meta_type)
 
-            #load security permissions and roles
+            # load security permissions and roles
             if skel_handler.root.security is not None:
                 for role in skel_handler.root.security.roles:
                     if role.name not in self.__ac_roles__:
@@ -423,67 +445,87 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     for permission in role.permissions:
                         permission_add_role(self, permission.name, role.name)
 
-            #load properties
+            # load properties
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
                     i18n_tool.add_language(language.code)
-            #forms are loaded from disk at runtime; they can be customized in portal_forms.
-            #load skins
+            # forms are loaded from disk at runtime; they can be customized
+            # in portal_forms.
+            # load skins
             layout = skel_handler.root.layout
             if layout is not None:
                 def layout_diskpath_prefix():
-                    assert layout.diskpath_prefix is not None, ("Please set a "
-                            "`diskpath_prefix` attribute on the <layout> tag")
+                    assert layout.diskpath_prefix is not None, (
+                        "Please set a `diskpath_prefix` attribute on the "
+                        "<layout> tag")
                     return layout.diskpath_prefix
 
                 for skin in skel_handler.root.layout.skins:
                     if not layouttool_ob._getOb(skin.id, None):
-                        layouttool_ob.manage_addSkin(id=skin.id, title=skin.title)
+                        layouttool_ob.manage_addSkin(id=skin.id,
+                                                     title=skin.title)
                     skin_ob = layouttool_ob._getOb(skin.id)
                     for template in skin.templates:
-                        content = self.futRead(join(skel_path, 'layout', skin.id, '%s.zpt' % template.id), 'r')
+                        content = self.futRead(
+                            join(skel_path, 'layout', skin.id,
+                                 '%s.zpt' % template.id), 'r')
                         if not skin_ob._getOb(template.id, None):
-                            skin_ob.manage_addTemplate(id=template.id, title=template.title, file='')
-                        skin_ob._getOb(template.id).pt_edit(text=content, content_type='')
+                            skin_ob.manage_addTemplate(
+                                id=template.id, title=template.title, file='')
+                        skin_ob._getOb(template.id).pt_edit(text=content,
+                                                            content_type='')
                     for style in skin.styles:
-                        content = self.futRead(join(skel_path, 'layout', skin.id, '%s.css' % style.id), 'r')
+                        content = self.futRead(
+                            join(skel_path, 'layout', skin.id,
+                                 '%s.css' % style.id),
+                            'r')
                         if skin_ob._getOb(style.id, None):
                             skin_ob.manage_delObjects([style.id])
-                        skin_ob.manage_addStyle(id=style.id, title=style.title, file=content)
+                        skin_ob.manage_addStyle(id=style.id, title=style.title,
+                                                file=content)
                     if skin.images:
                         if not skin_ob._getOb('images', None):
-                            skin_ob.manage_addFolder(id='images', title='Images common to all schemes contained in this skin.')
+                            skin_ob.manage_addFolder(
+                                id='images',
+                                title=('Images common to all schemes contained'
+                                       ' in this skin.'))
                         images_folder = skin_ob._getOb('images')
                         for image in skin.images:
-                            content = self.futRead(join(skel_path, 'layout', skin.id, 'images', image.id), 'rb')
+                            content = self.futRead(
+                                join(skel_path, 'layout', skin.id, 'images',
+                                     image.id),
+                                'rb')
                             if not images_folder._getOb(image.id, None):
-                                images_folder.manage_addImage(id=image.id, file='', title=image.title)
+                                images_folder.manage_addImage(
+                                    id=image.id, file='', title=image.title)
                             image_ob = images_folder._getOb(image.id)
                             image_ob.update_data(data=content)
-                            image_ob._p_changed=1
+                            image_ob._p_changed = 1
 
                     for file in skin.files:
-                        content = self.futRead(join(skel_path, 'layout', skin.id, file.id), 'rb')
+                        content = self.futRead(
+                            join(skel_path, 'layout', skin.id, file.id), 'rb')
                         if not skin_ob._getOb(file.id, None):
-                            skin_ob.manage_addFile(id=file.id, file='', title=file.title)
+                            skin_ob.manage_addFile(id=file.id, file='',
+                                                   title=file.title)
                         file_ob = skin_ob._getOb(file.id)
                         content_type = getattr(file, 'content_type', None)
                         file_ob.update_data(content, content_type)
-                        file_ob._p_changed=1
+                        file_ob._p_changed = 1
 
                     for diskfile in skin.diskfiles:
                         manage_addDiskFile(skin_ob, pathspec='/'.join([
                             layout_diskpath_prefix(),
                             'layout',
                             skin.id,
-                            diskfile.path ]), id=(diskfile.id or ''))
+                            diskfile.path]), id=(diskfile.id or ''))
 
                     for disktemplate in skin.disktemplates:
                         manage_addDiskTemplate(skin_ob, pathspec='/'.join([
                             layout_diskpath_prefix(),
                             'layout',
                             skin.id,
-                            disktemplate.path ]), id=(disktemplate.id or ''))
+                            disktemplate.path]), id=(disktemplate.id or ''))
 
                     for folder in skin.folders:
                         skin_ob.manage_addFolder(folder.id or '', folder.title)
@@ -495,43 +537,60 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                 'layout',
                                 skin.id,
                                 folder.id,
-                                diskfile.path ]), id=(diskfile.id or ''))
+                                diskfile.path]), id=(diskfile.id or ''))
 
                         for file in folder.files:
-                            content = self.futRead(join(skel_path, 'layout', skin.id, folder.id, file.id), 'rb')
+                            content = self.futRead(
+                                join(skel_path, 'layout', skin.id, folder.id,
+                                     file.id),
+                                'rb')
                             if not folder_ob._getOb(file.id, None):
-                                folder_ob.manage_addFile(id=file.id, file='', title=file.title)
+                                folder_ob.manage_addFile(id=file.id, file='',
+                                                         title=file.title)
                             file_ob = folder_ob._getOb(file.id)
                             content_type = getattr(file, 'content_type', None)
                             file_ob.update_data(content, content_type)
-                            file_ob._p_changed=1
+                            file_ob._p_changed = 1
 
                     for scheme in skin.schemes:
                         if skin_ob._getOb(scheme.id, None):
                             skin_ob.manage_delObjects([scheme.id])
-                        skin_ob.manage_addScheme(id=scheme.id, title=scheme.title)
+                        skin_ob.manage_addScheme(id=scheme.id,
+                                                 title=scheme.title)
                         scheme_ob = skin_ob._getOb(scheme.id)
                         for style in scheme.styles:
-                            content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, '%s.css' % style.id), 'r')
+                            content = self.futRead(
+                                join(skel_path, 'layout', skin.id, scheme.id,
+                                     '%s.css' % style.id),
+                                'r')
                             if scheme_ob._getOb(style.id, None):
                                 scheme_ob.manage_delObjects([style.id])
-                            scheme_ob.manage_addStyle(id=style.id, title=style.title, file=content)
+                            scheme_ob.manage_addStyle(
+                                id=style.id, title=style.title, file=content)
                         for image in scheme.images:
-                            content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, image.id), 'rb')
+                            content = self.futRead(
+                                join(skel_path, 'layout', skin.id, scheme.id,
+                                     image.id),
+                                'rb')
                             if not scheme_ob._getOb(image.id, None):
-                                scheme_ob.manage_addImage(id=image.id, file='', title=image.title)
+                                scheme_ob.manage_addImage(id=image.id, file='',
+                                                          title=image.title)
                             image_ob = scheme_ob._getOb(image.id)
                             image_ob.update_data(data=content)
-                            image_ob._p_changed=1
+                            image_ob._p_changed = 1
 
                         for file in scheme.files:
-                            content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, file.id), 'rb')
+                            content = self.futRead(
+                                join(skel_path, 'layout', skin.id, scheme.id,
+                                     file.id),
+                                'rb')
                             if not scheme_ob._getOb(file.id, None):
-                                scheme_ob.manage_addFile(id=file.id, file='', title=file.title)
+                                scheme_ob.manage_addFile(id=file.id, file='',
+                                                         title=file.title)
                             file_ob = scheme_ob._getOb(file.id)
                             content_type = getattr(file, 'content_type', None)
                             file_ob.update_data(content, content_type)
-                            file_ob._p_changed=1
+                            file_ob._p_changed = 1
 
                         for diskfile in scheme.diskfiles:
                             manage_addDiskFile(scheme_ob, pathspec='/'.join([
@@ -539,88 +598,128 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                 'layout',
                                 skin.id,
                                 scheme.id,
-                                diskfile.path ]), id=(diskfile.id or ''))
+                                diskfile.path]), id=(diskfile.id or ''))
 
                         for disktemplate in scheme.disktemplates:
-                            manage_addDiskTemplate(scheme_ob, pathspec='/'.join([
-                                layout_diskpath_prefix(),
-                                'layout',
-                                skin.id,
-                                scheme.id,
-                                disktemplate.path ]), id=(disktemplate.id or ''))
+                            manage_addDiskTemplate(
+                                scheme_ob,
+                                pathspec='/'.join([layout_diskpath_prefix(),
+                                                   'layout',
+                                                   skin.id,
+                                                   scheme.id,
+                                                   disktemplate.path]),
+                                id=(disktemplate.id or ''))
 
-                if skel_handler.root.layout.default_skin_id and skel_handler.root.layout.default_scheme_id:
-                    layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
-                #load logos
+                if (skel_handler.root.layout.default_skin_id and
+                        skel_handler.root.layout.default_scheme_id):
+                    layouttool_ob.manageLayout(
+                        skel_handler.root.layout.default_skin_id,
+                        skel_handler.root.layout.default_scheme_id)
+                # load logos
                 try:
-                    content = self.futRead(join(skel_path, 'layout', 'left_logo.gif'), 'rb')
+                    content = self.futRead(
+                        join(skel_path, 'layout', 'left_logo.gif'), 'rb')
                 except IOError, err:
                     zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
                 else:
                     image_ob = layouttool_ob._getOb('left_logo.gif', None)
                     if image_ob is None:
-                        layouttool_ob.manage_addImage(id='left_logo.gif', file='', title='Site logo')
+                        layouttool_ob.manage_addImage(
+                            id='left_logo.gif', file='', title='Site logo')
                         image_ob = layouttool_ob._getOb('left_logo.gif')
                     image_ob.update_data(data=content)
-                    image_ob._p_changed=1
+                    image_ob._p_changed = 1
                 try:
-                    content = self.futRead(join(skel_path, 'layout', 'right_logo.gif'), 'rb')
+                    content = self.futRead(
+                        join(skel_path, 'layout', 'right_logo.gif'), 'rb')
                 except IOError, err:
                     zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
                 else:
                     image_ob = layouttool_ob._getOb('right_logo.gif', None)
                     if image_ob is None:
-                        layouttool_ob.manage_addImage(id='right_logo.gif', file='', title='Site secondary logo')
+                        layouttool_ob.manage_addImage(
+                            id='right_logo.gif', file='',
+                            title='Site secondary logo')
                         image_ob = layouttool_ob._getOb('right_logo.gif')
                     image_ob.update_data(data=content)
-                    image_ob._p_changed=1
-            #load syndication
+                    image_ob._p_changed = 1
+            # load syndication
             if skel_handler.root.syndication is not None:
                 for namespace in skel_handler.root.syndication.namespaces:
-                    syndicationtool_ob.createNamespaceItem(namespace.id, namespace.prefix, namespace.value)
+                    syndicationtool_ob.createNamespaceItem(
+                        namespace.id, namespace.prefix, namespace.value)
                 for channeltype in skel_handler.root.syndication.channeltypes:
-                    syndicationtool_ob.add_channeltype_item(channeltype.id, channeltype.title)
+                    syndicationtool_ob.add_channeltype_item(
+                        channeltype.id, channeltype.title)
                 for channel in skel_handler.root.syndication.scriptchannels:
                     language = self.utEmptyToNone(channel.language)
                     ch_type = self.utEmptyToNone(channel.type)
-                    body = self.futRead(join(skel_path, 'syndication', '%s.py' % channel.id), 'r')
+                    body = self.futRead(
+                        join(skel_path, 'syndication', '%s.py' % channel.id),
+                        'r')
                     channel_ob = syndicationtool_ob._getOb(channel.id, None)
                     if channel_ob is None:
-                        syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, ch_type, body, channel.numberofitems, channel.portlet)
+                        syndicationtool_ob.manage_addScriptChannel(
+                            channel.id, channel.title, channel.description,
+                            language, ch_type, body, channel.numberofitems,
+                            channel.portlet)
                         channel_ob = syndicationtool_ob._getOb(channel.id)
                     else:
                         channel_ob.write(body)
                     if channel.portlet:
-                        content = self.futRead(join(skel_path, 'syndication', '%s.zpt' % channel.id), 'r')
-                        portletstool_ob._getOb('%s%s' % (PREFIX_PORTLET, channel.id)).pt_edit(text=content, content_type='')
+                        content = self.futRead(
+                            join(skel_path, 'syndication',
+                                 '%s.zpt' % channel.id),
+                            'r')
+                        portletstool_ob._getOb(
+                            '%s%s' % (PREFIX_PORTLET,
+                                      channel.id)).pt_edit(text=content,
+                                                           content_type='')
                 for channel in skel_handler.root.syndication.localchannels:
                     language = self.utEmptyToNone(channel.language)
                     ch_type = self.utEmptyToNone(channel.type)
-                    syndicationtool_ob.manage_addLocalChannel(channel.id, channel.title, channel.description, language, ch_type, channel.objmetatype.split(','), channel.numberofitems, 1)
+                    syndicationtool_ob.manage_addLocalChannel(
+                        channel.id, channel.title, channel.description,
+                        language, ch_type, channel.objmetatype.split(','),
+                        channel.numberofitems, 1)
                 for channel in skel_handler.root.syndication.remotechannels:
-                    syndicationtool_ob.manage_addRemoteChannel(channel.id, channel.title, channel.url, channel.numbershownitems, 1)
-            #load portlets and links lists
+                    syndicationtool_ob.manage_addRemoteChannel(
+                        channel.id, channel.title, channel.url,
+                        channel.numbershownitems, 1)
+            # load portlets and links lists
             if skel_handler.root.portlets is not None:
                 for portlet in skel_handler.root.portlets.portlets:
-                    content = self.futRead(join(skel_path, 'portlets', '%s.zpt' % portlet.id), 'r')
-                    self.create_portlet_special(portlet.id, portlet.title, content)
+                    content = self.futRead(
+                        join(skel_path, 'portlets', '%s.zpt' % portlet.id),
+                        'r')
+                    self.create_portlet_special(portlet.id, portlet.title,
+                                                content)
                 for linkslist in skel_handler.root.portlets.linkslists:
                     linkslist_ob = portletstool_ob._getOb(linkslist.id, None)
                     if linkslist_ob is None:
-                        portletstool_ob.manage_addLinksList(linkslist.id, linkslist.title, linkslist.portlet)
+                        portletstool_ob.manage_addLinksList(
+                            linkslist.id, linkslist.title, linkslist.portlet)
                         linkslist_ob = portletstool_ob._getOb(linkslist.id)
                     else:
-                        linkslist_ob.manage_delete_links(linkslist_ob.get_links_collection().keys())
+                        linkslist_ob.manage_delete_links(
+                            linkslist_ob.get_links_collection().keys())
                     for link in linkslist.links:
-                        try: relative = abs(int(link.relative))
-                        except: relative = 0
-                        try: order = abs(int(link.order))
-                        except: order = 0
-                        linkslist_ob.add_link_item(link.id, link.title, link.description, link.url, relative, link.permission, order)
+                        try:
+                            relative = abs(int(link.relative))
+                        except:
+                            relative = 0
+                        try:
+                            order = abs(int(link.order))
+                        except:
+                            order = 0
+                        linkslist_ob.add_link_item(
+                            link.id, link.title, link.description, link.url,
+                            relative, link.permission, order)
                 for reflist in skel_handler.root.portlets.reflists:
                     reflist_ob = portletstool_ob._getOb(reflist.id, None)
                     if reflist_ob is None:
-                        portletstool_ob.manage_addRefTree(reflist.id, reflist.title, reflist.description)
+                        portletstool_ob.manage_addRefTree(
+                            reflist.id, reflist.title, reflist.description)
                         reflist_ob = portletstool_ob._getOb(reflist.id)
                     else:
                         reflist_ob.manage_delObjects(reflist_ob.objectIds())
@@ -633,96 +732,129 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         reftree_ob = portletstool_ob._getOb(reftree.id)
                         for property, langs in reftree.properties.items():
                             for lang in langs:
-                                reftree_ob._setLocalPropValue(property, lang, langs[lang])
+                                reftree_ob._setLocalPropValue(property, lang,
+                                                              langs[lang])
                     else:
                         reftree_ob.manage_delObjects(reftree_ob.objectIds())
                     for node in reftree.nodes:
-                        reftree_ob.manage_addRefTreeNode(node.id, '', node.parent, node.pickable)
+                        reftree_ob.manage_addRefTreeNode(
+                            node.id, '', node.parent, node.pickable)
                         node_ob = reftree_ob._getOb(node.id)
                         for property, langs in node.properties.items():
                             for lang in langs:
-                                node_ob._setLocalPropValue(property, lang, langs[lang])
+                                node_ob._setLocalPropValue(property, lang,
+                                                           langs[lang])
 
                 if skel_handler.root.portlets.inherit:
-                    # this can have 'left', 'right', 'center' and also portlet_ids
-                    inherit_portlets = set(skel_handler.root.portlets.inherit.split(','))
+                    # this can have 'left', 'right', 'center' and also
+                    # portlet_ids
+                    inherit_portlets = set(
+                        skel_handler.root.portlets.inherit.split(','))
                 else:
                     # default inherit just left portlets (as it was before)
                     inherit_portlets = set(['left'])
                 if skel_handler.root.portlets.left:
-                    for portlet_id in portletstool_ob.get_portlet_ids_for('', 'left'):
-                        portletstool_ob.unassign_portlet('', 'left', portlet_id)
-                    for portlet_id in skel_handler.root.portlets.left.split(','):
+                    for portlet_id in portletstool_ob.get_portlet_ids_for(
+                            '', 'left'):
+                        portletstool_ob.unassign_portlet('', 'left',
+                                                         portlet_id)
+                    for portlet_id in skel_handler.root.portlets.left.split(
+                            ','):
                         inherit = (('left' in inherit_portlets)
-                                or (portlet_id in inherit_portlets))
-                        portletstool_ob.assign_portlet('', "left", portlet_id, inherit)
+                                   or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet('', "left", portlet_id,
+                                                       inherit)
                 if skel_handler.root.portlets.center:
-                    for portlet_id in portletstool_ob.get_portlet_ids_for('', 'center'):
-                        portletstool_ob.unassign_portlet('', 'center', portlet_id)
-                    for portlet_id in skel_handler.root.portlets.center.split(','):
+                    for portlet_id in portletstool_ob.get_portlet_ids_for(
+                            '', 'center'):
+                        portletstool_ob.unassign_portlet('', 'center',
+                                                         portlet_id)
+                    for portlet_id in skel_handler.root.portlets.center.split(
+                            ','):
                         inherit = (('center' in inherit_portlets)
-                                or (portlet_id in inherit_portlets))
-                        portletstool_ob.assign_portlet('', "center", portlet_id, inherit)
+                                   or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet(
+                            '', "center", portlet_id, inherit)
                 if skel_handler.root.portlets.right:
-                    for portlet_id in portletstool_ob.get_portlet_ids_for('', 'right'):
-                        portletstool_ob.unassign_portlet('', 'right', portlet_id)
-                    for portlet_id in skel_handler.root.portlets.right.split(','):
+                    for portlet_id in portletstool_ob.get_portlet_ids_for(
+                            '', 'right'):
+                        portletstool_ob.unassign_portlet('', 'right',
+                                                         portlet_id)
+                    for portlet_id in skel_handler.root.portlets.right.split(
+                            ','):
                         inherit = (('right' in inherit_portlets)
-                                or (portlet_id in inherit_portlets))
-                        portletstool_ob.assign_portlet('', "right", portlet_id, inherit)
+                                   or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet('', "right", portlet_id,
+                                                       inherit)
                 if skel_handler.root.portlets.assign:
-                    # unassign any existing portlets if using explicit assignment
+                    # unassign any existing portlets if using explicit
+                    # assignment
                     for position in ['left', 'right', 'center']:
-                        for portlet_id in portletstool_ob.get_portlet_ids_for('', position):
-                            portletstool_ob.unassign_portlet('', position, portlet_id)
+                        for portlet_id in portletstool_ob.get_portlet_ids_for(
+                                '', position):
+                            portletstool_ob.unassign_portlet('', position,
+                                                             portlet_id)
                 for assignment in skel_handler.root.portlets.assign:
                     parent = assignment.parent or ''
                     position = assignment.position
                     portlet_id = assignment.id
                     inherit = bool(assignment.inherit == '1')
-                    portletstool_ob.assign_portlet(parent, position, portlet_id, inherit)
-            #load email templates
+                    portletstool_ob.assign_portlet(parent, position,
+                                                   portlet_id, inherit)
+            # load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
-                    content = self.futRead(join(skel_path, 'emails', '%s.txt' % emailtemplate.id), 'r')
+                    content = self.futRead(
+                        join(skel_path, 'emails', '%s.txt' % emailtemplate.id),
+                        'r')
                     email_ob = emailtool_ob._getOb(emailtemplate.id, None)
                     if email_ob is None:
-                        emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
+                        emailtool_ob.manage_addEmailTemplate(
+                            emailtemplate.id, emailtemplate.title, content)
                     else:
-                        email_ob.manageProperties(title=email_ob.title, body=content)
-            #set subobjects for folders
-            self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
-            #other stuff
+                        email_ob.manageProperties(title=email_ob.title,
+                                                  body=content)
+            # set subobjects for folders
+            self.getPropertiesTool().manageSubobjects(
+                subobjects=None, ny_subobjects=self.get_meta_types(1))
+            # other stuff
             if skel_handler.root.others is not None:
                 if skel_handler.root.others.robots is not None:
-                    content = self.futRead(join(skel_path, 'others', 'robots.txt'), 'r')
+                    content = self.futRead(
+                        join(skel_path, 'others', 'robots.txt'), 'r')
                     file_ob = self._getOb('robots.txt', None)
                     if file_ob is None:
                         self.manage_addFile(id='robots.txt', file='', title='')
                         file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
-                    file_ob._p_changed=1
+                    file_ob._p_changed = 1
                 if skel_handler.root.others.favicon is not None:
-                    content = self.futRead(join(skel_path, 'others', 'favicon.ico'), 'rb')
+                    content = self.futRead(
+                        join(skel_path, 'others', 'favicon.ico'), 'rb')
                     image_ob = self._getOb('favicon.ico', None)
                     if image_ob is None:
-                        self.manage_addImage(id='favicon.ico', file='', title='')
+                        self.manage_addImage(id='favicon.ico', file='',
+                                             title='')
                         image_ob = self._getOb('favicon.ico')
                     image_ob.update_data(data=content)
-                    image_ob._p_changed=1
+                    image_ob._p_changed = 1
                 if skel_handler.root.others.nyexp_schema is not None:
-                    self.nyexp_schema = skel_handler.root.others.nyexp_schema.url
+                    self.nyexp_schema = (
+                        skel_handler.root.others.nyexp_schema.url)
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
                     self._p_changed = 1
         self.setDefaultSearchableContent()
-        #load site skeleton - default content
-        import_handler, error = import_parser().parse(self.futRead(join(skel_path, 'skel.nyexp'), 'r'))
+        # load site skeleton - default content
+        import_handler, error = import_parser().parse(
+            self.futRead(join(skel_path, 'skel.nyexp'), 'r'))
         if import_handler is not None:
             for object in import_handler.root.objects:
                 self.import_data(object)
         else:
-            raise Exception, EXCEPTION_PARSINGFILE % (join(skel_path, 'skel.nyexp'), error)
+            raise Exception(EXCEPTION_PARSINGFILE % (join(skel_path,
+                                                          'skel.nyexp'),
+                                                     error))
 
         notify(SkelLoad(self, skel_handler))
 
@@ -743,24 +875,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 select_all, delete_all, flag = 1, 1, 1
             if edit_permission and flag == 0:
                 flag, select_all = 1, 1
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+            if ((del_permission or edit_permission)
+                    and not x.approved) or x.approved:
                 results.append((del_permission, edit_permission, x))
         return (select_all, delete_all, results)
 
     security.declareProtected(view, 'getArchiveListing')
+
     def getArchiveListing(self, p_archive, p_attr='releasedate', p_desc=1):
-        """ Returns a list of objects sorted by an attribute such as the 'releasedate'
-            Used by custom folder indexes
+        """ Returns a list of objects sorted by an attribute such as the
+            'releasedate'. Used by custom folder indexes
         """
         p_objects = p_archive.getObjects()
         p_objects = self.utSortObjsListByAttr(p_objects, p_attr, p_desc)
         return self.get_archive_listing(p_objects)
 
     security.declareProtected(view, 'getActionLogger')
+
     def getActionLogger(self):
         return component.getUtility(IActionLogger, context=self)
 
     security.declarePrivate('setSearchableContent')
+
     def setSearchableContent(self, p_meta_types):
         """
         Set the meta types to be considered in searches.
@@ -769,6 +905,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self._p_changed = 1
 
     security.declarePrivate('setDefaultSearchableContent')
+
     def setDefaultSearchableContent(self):
         """
         Set the default meta types to be considered in searches.
@@ -777,9 +914,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l.append(METATYPE_FOLDER)
         self.setSearchableContent(l)
 
-    #import/export
+    # import/export
     def exportdata_custom(self):
-        #exports all the Naaya content in XML format from the portal
+        # exports all the Naaya content in XML format from the portal
         r = []
         ra = r.append
         for x in self.getSite().get_containers():
@@ -787,27 +924,30 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return ''.join(r)
 
     def import_data(self, object):
-        #import an object
+        # import an object
         if object.meta_type == METATYPE_FOLDER:
-            importNyFolder(self, object.param, object.id, object.attrs, object.content,
-                object.properties, object.discussion, object.objects)
+            importNyFolder(self, object.param, object.id, object.attrs,
+                           object.content, object.properties,
+                           object.discussion, object.objects)
         else:
             self.import_data_custom(self, object)
 
     def import_data_custom(self, node, object):
-        #import some special type of object
+        # import some special type of object
         if object.meta_type == 'Image':
             id = object.attrs['id'].encode('utf-8')
             node.manage_addImage(id=id, file='')
             image_ob = node._getOb(id)
-            image_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
-            image_ob._p_changed=1
+            image_ob.update_data(data=self.utBase64Decode(
+                object.attrs['content'].encode('utf-8')))
+            image_ob._p_changed = 1
         elif object.meta_type == 'File':
             id = object.attrs['id'].encode('utf-8')
             node.manage_addFile(id=id, file='')
             file_ob = node._getOb(id)
-            file_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
-            file_ob._p_changed=1
+            file_ob.update_data(data=self.utBase64Decode(
+                object.attrs['content'].encode('utf-8')))
+            file_ob._p_changed = 1
         elif object.meta_type == 'Page Template':
             id = object.attrs['id'].encode('utf-8')
             title = object.attrs['title'].encode('utf-8')
@@ -817,14 +957,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         else:
             print 'Import an object of type [%s]' % object.meta_type
 
-    #api
+    # api
     security.declarePublic('get_site_uid')
-    def get_site_uid(self): return self.__portal_uid
+
+    def get_site_uid(self):
+        return self.__portal_uid
 
     security.declarePublic('get_constant')
-    def get_constant(self, c): return naaya.content.base.discover.get_constant(c)
+
+    def get_constant(self, c):
+        return naaya.content.base.discover.get_constant(c)
 
     security.declarePublic('get_label_for_meta_type')
+
     def get_label_for_meta_type(self, meta_type):
         """Returns the label associated with the given meta_type
         it can be a Naaya Folder or a pluggable content type
@@ -838,10 +983,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if meta_type == METATYPE_FOLDER:
             return LABEL_NYFOLDER
         else:
-            try: return self.getSchemaTool().getSchemaForMetatype(meta_type).title_or_id()
-            except: return meta_type
+            try:
+                return self.getSchemaTool().getSchemaForMetatype(
+                    meta_type).title_or_id()
+            except:
+                return meta_type
 
     security.declarePublic('getProductsMetaTypes')
+
     def getProductsMetaTypes(self):
         """returns a list with all meta types"""
 
@@ -856,6 +1005,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return NAAYA_PRODUCT_PATH
 
     security.declarePublic('get_timezone')
+
     def get_timezone(self):
         """
         Returns a string representing portal timezone. For example::
@@ -869,7 +1019,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         """
         conf = getConfiguration()
-        if conf.environment.has_key('TZ') and conf.environment['TZ']:
+        if conf.environment.get('TZ'):
             return conf.environment['TZ']
         elif os.environ.has_key('TZ') and os.environ['TZ']:
                 return os.environ['TZ']
@@ -880,16 +1030,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return 'Europe/Copenhagen'
 
     security.declarePublic('get_tzinfo')
+
     def get_tzinfo(self):
         return pytz.timezone(self.get_timezone())
 
     #not used anymore
     security.declarePublic('isArabicLanguage')
+
     def isArabicLanguage(self, lang=None):
         """ test if lang is a RTL language """
         return self.isRTL(lang)
 
     security.declarePublic('isRTL')
+
     def isRTL(self, lang=None):
         """ test if lang is a RTL language """
         #Arabic          [AR]
@@ -1064,7 +1217,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('get_containers')
     def get_containers(self):
         #this method returns all container type that can be used in an export operation
-        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
+        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted == 1]
 
     security.declarePublic('getObjectById')
     def getObjectById(self, p_id):
@@ -1157,7 +1310,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         Returns a list with all folders objects at the first level
         that are approved and sorted by 'order' property
         """
-        return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
+        return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved == 1 and x.submitted == 1], 'sortorder', 0)
 
     security.declarePublic('getMainTopics')
     def getMainTopics(self):
@@ -1621,12 +1774,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def __getSiteMap(self, root, showitems, expand, depth, sort_order=1):
         #site map core
         l_tree = []
-        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
+        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted == 1]
         else: l_folders = call_method(root, 'getPublishedFolders', [])
         l_folders = self.utSortObjsListByAttr(l_folders, 'title', sort_order)
         l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', sort_order)
         for l_folder in l_folders:
-            if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
+            if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems == 1):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
                     l_tree.append((l_folder, 0, depth))
                     if showitems:
