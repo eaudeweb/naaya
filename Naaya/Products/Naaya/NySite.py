@@ -173,14 +173,14 @@ CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder',
      'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation',
      'Naaya Simple Consultation', 'Naaya TalkBack Consultation',
-     'Naaya Survey Questionnaire', 'Naaya Meeting']
+     'Naaya Survey Questionnaire', 'Naaya Meeting', 'Naaya Glossary']
 
 NAAYA_CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Naaya Photo Gallery',
      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
      'Naaya Consultation', 'Naaya Simple Consultation',
      'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire',
-     'Naaya Meeting']
+     'Naaya Meeting', 'Naaya Glossary']
 
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 
@@ -1752,7 +1752,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     if not (subportals and INySite.providedBy(sub_ob)):
                         continue
 
-            if not INySite.providedBy(sub_ob):
+            if not (INySite.providedBy(sub_ob) or
+                    sub_ob.meta_type in ['Naaya Glossary',
+                                         'Naaya Glossary Folder',
+                                         'Naaya Glossary Element']):
                 if not getattr(sub_ob, 'submitted', False):
                     continue
 
