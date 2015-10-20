@@ -1,5 +1,6 @@
 4.0.15 (unreleased)
 -------------------
+* show glossary and its elements in portal editor link creator [dumitval]
 
 4.0.14 (2015-10-19)
 -------------------
