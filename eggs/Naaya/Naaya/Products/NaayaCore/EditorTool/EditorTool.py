@@ -409,7 +409,7 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
     link_js = ImageFile('www/link.js', globals())
     image_css = ImageFile('www/image.css', globals())
     tinymce = StaticServeFromZip(
-        'tinymce', 'www/tinymce_3_4_7_jquery_naaya.zip', globals())
+        'tinymce', 'www/tinymce_3_5_11_jquery_naaya.zip', globals())
     tinymce_naaya = StaticServeFromZip(
         'Naaya', 'www/tinymce_naaya.zip', globals())
     select_image = PageTemplateFile('zpt/select_image', globals())
