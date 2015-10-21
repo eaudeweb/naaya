@@ -1,4 +1,7 @@
-4.0.16 (unreleased)
+4.0.17 (unreleased)
+-------------------
+
+4.0.16 (2015-10-21)
 -------------------
 * updated tinymce to v. 3.5.11 to fix IE insert link bug [dumitval]
 
