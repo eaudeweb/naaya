@@ -173,14 +173,14 @@ CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder',
      'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation',
      'Naaya Simple Consultation', 'Naaya TalkBack Consultation',
-     'Naaya Survey Questionnaire', 'Naaya Meeting', 'Naaya Glossary']
+     'Naaya Survey Questionnaire', 'Naaya Meeting']
 
 NAAYA_CONTAINERS_METATYPES = \
     [METATYPE_FOLDER, 'Naaya Photo Gallery',
      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
      'Naaya Consultation', 'Naaya Simple Consultation',
      'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire',
-     'Naaya Meeting', 'Naaya Glossary']
+     'Naaya Meeting']
 
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 
@@ -1859,6 +1859,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         ob = self.restrictedTraverse(path)
         objects = []
         containers = self.get_naaya_containers_metatypes()
+        containers.append('Naaya Glossary')
 
         for sub_ob in ob.objectValues():
             if only_folders:
