@@ -1876,9 +1876,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         continue
 
             if not (INySite.providedBy(sub_ob) or
-                    sub_ob.meta_type in ['Naaya Glossary',
-                                         'Naaya Glossary Folder',
-                                         'Naaya Glossary Element']):
+                    getattr(sub_ob, 'meta_type', '') in [
+                        'Naaya Glossary',
+                        'Naaya Glossary Folder',
+                        'Naaya Glossary Element']):
                 if not getattr(sub_ob, 'submitted', False):
                     continue
 

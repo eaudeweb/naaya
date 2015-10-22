@@ -1,5 +1,7 @@
 4.0.18 (unreleased)
 -------------------
+* bugfix related to showing glossary elements in portal editor tree
+  [dumitval]
 
 4.0.17 (2015-10-22)
 -------------------
