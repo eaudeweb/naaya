@@ -165,6 +165,42 @@ config = {
 talkbackconsultation_add = NaayaPageTemplateFile(
     'zpt/talkbackconsultation_add', globals(), 'tbconsultation_add')
 
+REVIEWER_ROLE = 'Reviewer'
+
+
+def talkback_on_install(site):
+    """
+    !!! Adding REVIEWER_ROLE on talkback installation.
+    Permissions are set similar to the Authenticated role.
+    Additionally give review and administration permissions to Administrator
+    """
+    permissions = ['Naaya - Skip Captcha',
+                   'Naaya - Review TalkBack Consultation']
+    admin_permissions = ['Naaya - Add Naaya TalkBack Consultation objects',
+                         'Naaya - Invite to TalkBack Consultation',
+                         'Naaya - Manage TalkBack Consultation',
+                         'Naaya - Review TalkBack Consultation',
+                         'Naaya - Review TalkBack after deadline']
+
+    auth_tool = site.getAuthenticationTool()
+
+    if 'Reviewer' not in auth_tool.list_all_roles():
+        auth_tool.addRole('Reviewer')
+
+    extend_permissions(site, 'Reviewer', permissions)
+    extend_permissions(site, 'Administrator', admin_permissions)
+    # the same permissions also for owner, since the add permission
+    # applies to the parent folder, where the owner should have the
+    # possibility to add consultations
+    extend_permissions(site, 'Owner', admin_permissions)
+
+
+def extend_permissions(site, role, permissions):
+    b = [x['name'] for x in site.permissionsOfRole(role)
+         if x['selected'] == 'SELECTED']
+    b.extend(permissions)
+    site.manage_role(role, b)
+
 
 def talkbackconsultation_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -675,6 +711,7 @@ manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
 manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
 
 config.update({
+    'on_install': talkback_on_install,
     'constructors': (manage_addNyTalkBackConsultation_html,
                      addNyTalkBackConsultation),
     'folder_constructors': [
