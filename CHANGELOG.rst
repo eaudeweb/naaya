@@ -1,4 +1,7 @@
-1.4.43 (unreleased)
+1.4.48 (unreleased)
+-------------------
+
+1.4.43 (2015-10-22)
 -------------------
 * set initial permissions on install + update script [dumitval]
 
