@@ -11,6 +11,11 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".add_invitations.AddInvitations"
              permission="zope2.ViewManagementScreens" />
+
+    <utility name="set_reviewer_permission.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".set_reviewer_permission.SetReviewerPermission"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
