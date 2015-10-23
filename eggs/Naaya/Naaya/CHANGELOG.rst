@@ -1,4 +1,7 @@
-4.0.19 (unreleased)
+4.0.20 (unreleased)
+-------------------
+
+4.0.19 (2015-10-23)
 -------------------
 * fix url_quote crash for unicode properties [dumitval]
 * select image from current portal brought back to Editor Tool [dumitval]
