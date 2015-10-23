@@ -271,14 +271,16 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         def get_image_info(source, image):
             image_object = {
                 'url': image.absolute_url(),
-                'title': url_quote(image.title_or_id()),
+                'title': url_quote(image.title_or_id().encode('utf-8')),
                 'source': '',
                 'author': ''
             }
 
             if source == 'album':
-                image_object['source'] = url_quote(image.source)
-                image_object['author'] = url_quote(image.author)
+                image_object['source'] = url_quote(
+                    image.source.encode('utf-8'))
+                image_object['author'] = url_quote(
+                    image.author.encode('utf-8'))
 
             return image_object
 
