@@ -1,5 +1,6 @@
 3.0.28 (unreleased)
 ------------------
+* update skel.xml with permissions for reset role [dumitval]
 
 3.0.27 (2014-10-03)
 ------------------
