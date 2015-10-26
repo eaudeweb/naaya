@@ -1,5 +1,6 @@
 1.4.35 (unreleased)
 -------------------
+* updated skel permissions for use in reset role [dumitval]
 
 1.4.34 (2015-04-28)
 -------------------
