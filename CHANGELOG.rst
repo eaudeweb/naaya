@@ -1,4 +1,7 @@
-1.4.36 (unreleased)
+1.4.37 (unreleased)
+-------------------
+
+1.4.36 (2015-10-26)
 -------------------
 * typo fix in skel.xml [dumitval]
 
