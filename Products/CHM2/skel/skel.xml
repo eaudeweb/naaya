@@ -314,18 +314,178 @@
 	<emails>
 		<emailtemplate id="email_createaccount" title="Create account"/>
 	</emails>
-	<security>
-		<role name="Authenticated">
-			<permission name="Naaya - Add comments for content" />
-			<permission name="Naaya - Add Naaya Story objects" />
-			<permission name="Naaya - Add Naaya News objects" />
-			<permission name="Naaya - Add Naaya Event objects" />
-			<permission name="Naaya - Skip Captcha" />
-		</role>
-		<role name="Validator">
-			<permission name="Naaya - Validate content" />
-		</role>
-	</security>
+    <security>
+        <role name="Administrator">
+            <permission name="Access Transient Objects" />
+            <permission name="Access contents information" />
+            <permission name="Access session data" />
+            <permission name="Add Naaya Forum" />
+            <permission name="Add Naaya Forum Message" />
+            <permission name="Add/Edit/Delete Naaya Forum Topic" />
+            <permission name="Change permissions" />
+            <permission name="Edit/Delete Forum Message" />
+            <permission name="Manage Naaya Glossary" />
+            <permission name="Manage users" />
+            <permission name="Naaya - Access administrative area" />
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Add Naaya Blob File objects" />
+            <permission name="Naaya - Add Naaya Contact objects" />
+            <permission name="Naaya - Add Naaya Document objects" />
+            <permission name="Naaya - Add Naaya Event objects" />
+            <permission name="Naaya - Add Naaya Folder objects" />
+            <permission name="Naaya - Add Naaya GeoPoint objects" />
+            <permission name="Naaya - Add Naaya Media File objects" />
+            <permission name="Naaya - Add Naaya Meeting objects" />
+            <permission name="Naaya - Add Naaya Mega Survey" />
+            <permission name="Naaya - Add Naaya News objects" />
+            <permission name="Naaya - Add Naaya Photo" />
+            <permission name="Naaya - Add Naaya Photo Folder" />
+            <permission name="Naaya - Add Naaya Photo Gallery" />
+            <permission name="Naaya - Add Naaya Pointer objects" />
+            <permission name="Naaya - Add Naaya Story objects" />
+            <permission name="Naaya - Add Naaya Survey Answer" />
+            <permission name="Naaya - Add Naaya Survey Attachment" />
+            <permission name="Naaya - Add Naaya Survey Report" />
+            <permission name="Naaya - Add Naaya TalkBack Consultation objects" />
+            <permission name="Naaya - Add Naaya URL objects" />
+            <permission name="Naaya - Add Naaya Youtube objects" />
+            <permission name="Naaya - Copy content" />
+            <permission name="Naaya - Create user" />
+            <permission name="Naaya - Delete content" />
+            <permission name="Naaya - Edit Naaya Survey Answers" />
+            <permission name="Naaya - Edit content" />
+            <permission name="Naaya - Invite to TalkBack Consultation" />
+            <permission name="Naaya - Manage TalkBack Consultation" />
+            <permission name="Naaya - Manage comments for content" />
+            <permission name="Naaya - Meeting - Administrate the meeting" />
+            <permission name="Naaya - Meeting - Participate in the meeting" />
+            <permission name="Naaya - Publish content" />
+            <permission name="Naaya - Publish direct" />
+            <permission name="Naaya - Request Webex" />
+            <permission name="Naaya - Review TalkBack Consultation" />
+            <permission name="Naaya - Review TalkBack after deadline" />
+            <permission name="Naaya - Skip Captcha" />
+            <permission name="Naaya - Skip approval" />
+            <permission name="Naaya - Translate pages" />
+            <permission name="Naaya - Validate content" />
+            <permission name="Naaya - View Naaya Survey Answers" />
+            <permission name="Naaya - View Naaya Survey Reports" />
+            <permission name="Naaya - Zip export" />
+            <permission name="View"  />
+        </role>
+
+        <role name="Authenticated">
+            <permission name="Add Naaya Forum Message" />
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Zip export" />
+            <permission name="Naaya - Skip Captcha" />
+            <permission name="Naaya - Add comments for content" />
+        </role>
+
+        <role name="Contributor">
+            <permission name="Add Naaya Forum Message" />
+            <permission name="Add/Edit/Delete Naaya Forum Topic" />
+            <permission name="Naaya - Add Naaya Blob File objects" />
+            <permission name="Naaya - Add Naaya Contact objects" />
+            <permission name="Naaya - Add Naaya Document objects" />
+            <permission name="Naaya - Add Naaya Event objects" />
+            <permission name="Naaya - Add Naaya Folder objects" />
+            <permission name="Naaya - Add Naaya Media File objects" />
+            <permission name="Naaya - Add Naaya News objects" />
+            <permission name="Naaya - Add Naaya Photo" />
+            <permission name="Naaya - Add Naaya Pointer objects" />
+            <permission name="Naaya - Add Naaya Story objects" />
+            <permission name="Naaya - Add Naaya Survey Answer" />
+            <permission name="Naaya - Add Naaya Survey Attachment" />
+            <permission name="Naaya - Add Naaya URL objects" />
+            <permission name="Naaya - Add Naaya Youtube objects" />
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Skip approval" />
+            <permission name="View" />
+        </role>
+
+        <role name="Manager">
+            <permission name="Access Transient Objects" />
+            <permission name="Access contents information" />
+            <permission name="Access session data" />
+            <permission name="Add Naaya Forum" />
+            <permission name="Add Naaya Forum Message" />
+            <permission name="Add/Edit/Delete Naaya Forum Topic" />
+            <permission name="Change permissions" />
+            <permission name="Edit/Delete Forum Message" />
+            <permission name="Manage users" />
+            <permission name="Naaya - Access administrative area" />
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Add Naaya Blob File objects" />
+            <permission name="Naaya - Add Naaya Contact objects" />
+            <permission name="Naaya - Add Naaya Document objects" />
+            <permission name="Naaya - Add Naaya Event objects" />
+            <permission name="Naaya - Add Naaya Folder objects" />
+            <permission name="Naaya - Add Naaya GeoPoint objects" />
+            <permission name="Naaya - Add Naaya Media File objects" />
+            <permission name="Naaya - Add Naaya Meeting objects" />
+            <permission name="Naaya - Add Naaya Mega Survey" />
+            <permission name="Naaya - Add Naaya News objects": />
+            <permission name="Naaya - Add Naaya Photo" />
+            <permission name="Naaya - Add Naaya Photo Folder" />
+            <permission name="Naaya - Add Naaya Photo Gallery" />
+            <permission name="Naaya - Add Naaya Pointer objects" />
+            <permission name="Naaya - Add Naaya Story objects" />
+            <permission name="Naaya - Add Naaya Survey Answer" />
+            <permission name="Naaya - Add Naaya Survey Attachment" />
+            <permission name="Naaya - Add Naaya Survey Report" />
+            <permission name="Naaya - Add Naaya TalkBack Consultation objects" />
+            <permission name="Naaya - Add Naaya URL objects" />
+            <permission name="Naaya - Add Naaya Youtube objects" />
+            <permission name="Naaya - Copy content" />
+            <permission name="Naaya - Create user" />
+            <permission name="Naaya - Delete content" />
+            <permission name="Naaya - Edit Naaya Survey Answers" />
+            <permission name="Naaya - Edit content" />
+            <permission name="Naaya - Invite to TalkBack Consultation" />
+            <permission name="Naaya - Manage TalkBack Consultation" />
+            <permission name="Naaya - Manage comments for content" />
+            <permission name="Naaya - Meeting - Administrate the meeting" />
+            <permission name="Naaya - Meeting - Participate in the meeting" />
+            <permission name="Naaya - Publish content" />
+            <permission name="Naaya - Publish direct" />
+            <permission name="Naaya - Request Webex" />
+            <permission name="Naaya - Review TalkBack Consultation" />
+            <permission name="Naaya - Review TalkBack after deadline" />
+            <permission name="Naaya - Skip Captcha" />
+            <permission name="Naaya - Skip approval" />
+            <permission name="Naaya - Translate pages" />
+            <permission name="Naaya - Validate content" />
+            <permission name="Naaya - View Naaya Survey Answers" />
+            <permission name="Naaya - View Naaya Survey Reports" />
+            <permission name="Naaya - Zip export" />
+            <permission name="View"  />
+        </role>
+
+        <role name="Owner">
+            <permission name="Add/Edit/Delete Naaya Forum Topic" />
+            <permission name="Add Naaya Forum Message" />
+            <permission name="Edit/Delete Forum Message" />
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Copy content" />
+            <permission name="Naaya - Delete content" />
+            <permission name="Naaya - Edit content" />
+            <permission name="Naaya - Skip Captcha" />
+            <permission name="Naaya - Skip approval" />
+            <permission name="Naaya - Zip export" />
+            <permission name="View"  />
+        </role>
+
+        <role name="Reviewer">
+            <permission name="Naaya - Add comments for content" />
+            <permission name="Naaya - Review TalkBack Consultation" />
+            <permission name="View" />
+        </role>
+
+        <role name="Viewer">
+            <permission name="View" />
+        </role>
+    </security>
 	<others>
 		<favicon />
 		<robots />

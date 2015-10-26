@@ -823,7 +823,7 @@ class CHMSite(NySite):
         else:
             return self.get_mainsection(ob.aq_parent)
 
-    security.declareProtected(view, 'show_main_section_image')
+    security.declareProtected(view, 'show_mainsection_image')
     def show_mainsection_image(self, ob):
         """
         Returns true/false - should the main section image be shown
