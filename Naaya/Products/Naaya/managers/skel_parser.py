@@ -9,7 +9,8 @@ log = logging.getLogger(__name__)
 # Translation Map
 '''
 Key is path in xml, starting from root (<skel> tag)
-Dict specifies new name (optional) and type of element: `node`, `list` or `dict`
+Dict specifies new name (optional) and type of element:
+    `node`, `list` or `dict`
 Used for handling attribute type in skel tree and for returning
 default values (None, [] or {}) in __getattr__
 
@@ -59,11 +60,13 @@ TAG_MAPPING = {
 # create secondary keys for the same dict, based on renamed path
 REVERSE_TAG_MAPPING = {}
 for k in TAG_MAPPING.keys():
-    if TAG_MAPPING[k].has_key('rename'):
+    if 'rename' in TAG_MAPPING[k]:
         # if it's renamed, construct new mapping
-        REVERSE_TAG_MAPPING[k[:k.rfind('/')+1] + TAG_MAPPING[k]['rename']] = TAG_MAPPING[k]
+        REVERSE_TAG_MAPPING[k[:k.rfind('/')+1] + TAG_MAPPING[k][
+            'rename']] = TAG_MAPPING[k]
     else:
         REVERSE_TAG_MAPPING[k] = TAG_MAPPING[k]
+
 
 class SkelTree(object):
     """
@@ -79,7 +82,7 @@ class SkelTree(object):
 
     def __getattr__(self, name):
         k = '/'.join(self.skel_element_path + (name, ))
-        if REVERSE_TAG_MAPPING.has_key(k):
+        if k in REVERSE_TAG_MAPPING:
             spec = REVERSE_TAG_MAPPING[k]
             if spec['type'] == 'list':
                 return []
@@ -88,9 +91,11 @@ class SkelTree(object):
             elif spec['type'] == 'dict':
                 return {}
             else:
-                raise ValueError('unexpected value: spec[\'type\'] = %r' % spec['type'])
+                raise ValueError('unexpected value: spec[\'type\'] = %r' %
+                                 spec['type'])
         else:
             return None
+
 
 class skel_parser(object):
     """ Class that handles parsing of skeleton xml """
@@ -117,10 +122,10 @@ class skel_parser(object):
                 continue
             path = tag_path + (c.nodeName, )
             name = c.nodeName
-            if TAG_MAPPING.has_key('/'.join(path)):
-            # we have a hardcoded specification for this path
+            if '/'.join(path) in TAG_MAPPING:
+                # we have a hardcoded specification for this path
                 spec = TAG_MAPPING['/'.join(path)]
-                if spec.has_key('rename'):
+                if 'rename' in spec:
                     name = spec['rename']
                 if spec['type'] == 'list':
                     # element is part of a list of nodes
