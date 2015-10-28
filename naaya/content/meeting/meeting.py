@@ -942,23 +942,26 @@ def _create_eionet_survey(container):
     for widget in eionet_survey.objectValues():
         widget.locked = True
         widget._p_changed = True
-    # Create validation_html and validation_onsubmit for custom validation
-    validation_onsubmit = os.path.join(os.path.dirname(__file__),
+    if meeting_type == 'NRC meeting':
+        # Create validation_html and validation_onsubmit for custom validation
+        validation_onsubmit = os.path.join(
+            os.path.dirname(__file__), 'eionet_survey',
+            'validation_onsubmit_NRC_meeting.txt')
+        manage_addPythonScript(eionet_survey, 'validation_onsubmit')
+        script_content = open(validation_onsubmit, 'rb').read()
+        params = 'datamodel, errors'
+        script_title = 'Custom validation logic'
+        eionet_survey._getOb('validation_onsubmit').ZPythonScript_edit(
+            params, script_content)
+        eionet_survey._getOb('validation_onsubmit').ZPythonScript_setTitle(
+            script_title)
+        validation_html = os.path.join(os.path.dirname(__file__),
                                        'eionet_survey',
-                                       'validation_onsubmit.txt')
-    manage_addPythonScript(eionet_survey, 'validation_onsubmit')
-    script_content = open(validation_onsubmit, 'rb').read()
-    params = 'datamodel, errors'
-    script_title = 'Custom validation logic'
-    eionet_survey._getOb('validation_onsubmit').ZPythonScript_edit(
-        params, script_content)
-    eionet_survey._getOb('validation_onsubmit').ZPythonScript_setTitle(
-        script_title)
-    validation_html = os.path.join(os.path.dirname(__file__), 'eionet_survey',
-                                   'validation_html.txt')
-    validation_title = "Custom questionnaire HTML"
-    manage_addPageTemplate(eionet_survey, 'validation_html', validation_title,
-                           open(validation_html).read())
+                                       'validation_html_NRC_meeting.txt')
+        validation_title = "Custom questionnaire HTML"
+        manage_addPageTemplate(eionet_survey, 'validation_html',
+                               validation_title,
+                               open(validation_html).read())
 
 
 def _approve(context, request):
