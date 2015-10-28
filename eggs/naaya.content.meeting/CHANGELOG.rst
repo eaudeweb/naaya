@@ -1,4 +1,7 @@
-1.2.86 (unreleased)
+1.2.87 (unreleased)
+-------------------
+
+1.2.86 (2015-10-28)
 -------------------
 * bugifx in automatic survey generation [dumitval]
 
