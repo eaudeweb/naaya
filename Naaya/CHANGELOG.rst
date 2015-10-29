@@ -1,5 +1,6 @@
 4.0.21 (unreleased)
 -------------------
+* added language packs for tinymce [dumitval]
 
 4.0.20 (2015-10-26)
 -------------------
