@@ -19,7 +19,7 @@ class FixLinks(UpdateScript):
                 value.replace('/nrc-flis/portal_glossary',
                               '/terms-and-definitions')
             )
-            setattr(element, def_attr, force_to_unicode(value))
+            setattr(element, def_attr, value)
 
     def _update(self, portal):
         for glossary in portal.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
