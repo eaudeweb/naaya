@@ -1,5 +1,6 @@
 1.1.19 (unreleased)
 ------------------
+* update script for flis pbe [dumitval]
 
 1.1.18 (2015-07-29)
 ------------------
