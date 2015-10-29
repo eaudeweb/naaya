@@ -14,6 +14,11 @@
           component=".convert_to_unicode.ConvertToUnicode"
           permission="zope2.ViewManagementScreens" />
 
+    <utility name="Links.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".fix_links.FixLinks"
+          permission="zope2.ViewManagementScreens" />
+
   </configure>
 
 </configure>
