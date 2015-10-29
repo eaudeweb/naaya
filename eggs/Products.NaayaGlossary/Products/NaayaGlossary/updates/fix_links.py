@@ -1,9 +1,13 @@
 from Products.naayaUpdater.updates import UpdateScript
 
+from Products.NaayaGlossary.constants import (NAAYAGLOSSARY_CENTRE_METATYPE,
+                                              NAAYAGLOSSARY_FOLDER_METATYPE,
+                                              NAAYAGLOSSARY_ELEMENT_METATYPE)
+
 
 class FixLinks(UpdateScript):
     title = 'Fix links in FLIS PBE terms'
-    authors = ('Alex Eftimie')
+    authors = ['Alex Eftimie']
     creation_date = 'Oct 29, 2015'
     description = (
         'Fix links in Foresight Dictionary imported from Forum to PBE'
