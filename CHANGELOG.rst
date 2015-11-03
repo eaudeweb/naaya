@@ -1,4 +1,7 @@
-1.4.48 (unreleased)
+1.4.45 (unreleased)
+-------------------
+
+1.4.44 (2015-11-03)
 -------------------
 * check and correct paragraph_list for consistency [dumitval]
 * add a 'delete paragraph' button on section edit [dumitval]
