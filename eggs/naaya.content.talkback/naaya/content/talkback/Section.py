@@ -92,10 +92,15 @@ class Section(Folder):
         Make sure this Section instance has the paragraph_ids list
         attached to it (some legacy objects don't have it)
         """
+        actual_paragraphs = [p.id for p in  self.objectValues(
+            [METATYPE_TALKBACKCONSULTATION_PARAGRAPH])]
         if getattr(self, 'paragraph_ids', None) is None:
-            self.paragraph_ids = [p.id for p in  self.objectValues(
-                    [METATYPE_TALKBACKCONSULTATION_PARAGRAPH])]
+            self.paragraph_ids = actual_paragraphs
             self._p_changed = 1
+        if len(self.paragraph_ids) != len(actual_paragraphs):
+            for p_id in self.paragraph_ids:
+                if p_id not in actual_paragraphs:
+                    self.paragraph_ids.remove(p_id)
 
     security.declareProtected(view, 'get_section')
     def get_section(self):

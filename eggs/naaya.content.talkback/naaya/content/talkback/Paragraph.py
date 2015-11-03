@@ -180,6 +180,20 @@ class Paragraph(Folder):
                 (section.absolute_url(), self.get_anchor()))
 
     security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'remove_paragraph')
+
+    def remove_paragraph(self, REQUEST):
+        """ """
+
+        self.get_section().remove_paragraph(self.id)
+
+        # refresh the section page
+        self.setSessionInfoTrans("Paragraph deleted")
+        REQUEST.RESPONSE.redirect("%s/edit_html#%s" %
+                                  (self.get_section().absolute_url(),
+                                   self.get_anchor()))
+
+    security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
 
     def merge_down(self, REQUEST):
