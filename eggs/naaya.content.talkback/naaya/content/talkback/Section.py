@@ -18,26 +18,29 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
-#Zope imports
+# Zope imports
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from App.ImageFile import ImageFile
 
-#Product imports
+# Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from parser import parse
 from Paragraph import addParagraph
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from constants import *
+from constants import METATYPE_TALKBACKCONSULTATION_SECTION
+from constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
 from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 
 
 addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),
                                         'tbconsultation_section_add')
+
+
 def addSection(self, id='', title='', body='', skip_splitting='',
-                REQUEST=None):
+               REQUEST=None):
     """ """
 
     errors = []
@@ -77,22 +80,25 @@ class Section(Folder):
     security = ClassSecurityInfo()
 
     meta_types = [
-        {'name': METATYPE_TALKBACKCONSULTATION_PARAGRAPH, 'action': 'addParagraph',
-            'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
+        {'name': METATYPE_TALKBACKCONSULTATION_PARAGRAPH,
+         'action': 'addParagraph',
+         'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
     ]
 
     def __init__(self, id, title):
-        self.id =  id
+        self.id = id
         self.title = title
-        self.next_available_id = 0 # some legacy Section instances might not have this attribute
-        self.paragraph_ids = [] # some legacy Section instances might not have this attribute
+        # some legacy Section instances might not have this attribute
+        self.next_available_id = 0
+        # some legacy Section instances might not have this attribute
+        self.paragraph_ids = []
 
     def _ensure_paragraph_ids(self):
         """
         Make sure this Section instance has the paragraph_ids list
         attached to it (some legacy objects don't have it)
         """
-        actual_paragraphs = [p.id for p in  self.objectValues(
+        actual_paragraphs = [p.id for p in self.objectValues(
             [METATYPE_TALKBACKCONSULTATION_PARAGRAPH])]
         if getattr(self, 'paragraph_ids', None) is None:
             self.paragraph_ids = actual_paragraphs
@@ -103,20 +109,23 @@ class Section(Folder):
                     self.paragraph_ids.remove(p_id)
 
     security.declareProtected(view, 'get_section')
+
     def get_section(self):
         return self
 
     security.declarePrivate('make_paragraph_id')
+
     def make_paragraph_id(self):
         next_id = getattr(self, 'next_available_id', None)
         if next_id is None:
             # this must be an old Section instance
             self._ensure_paragraph_ids()
-            next_id = int( list(self.paragraph_ids)[-1] ) + 1
+            next_id = int(list(self.paragraph_ids)[-1]) + 1
         self.next_available_id = next_id + 1
         return '%03d' % next_id
 
     security.declarePrivate('remove_paragraph')
+
     def remove_paragraph(self, paragraph_id):
         self._ensure_paragraph_ids()
         self.manage_delObjects([paragraph_id])
@@ -124,12 +133,14 @@ class Section(Folder):
         self._p_changed = 1
 
     security.declareProtected(view, 'get_paragraphs')
+
     def get_paragraphs(self):
         self._ensure_paragraph_ids()
         for p in self.paragraph_ids:
             yield self._getOb(p)
 
     security.declareProtected(view, 'get_previous_section')
+
     def get_previous_section(self):
         sections = self.list_sections()
         i = sections.index(self)
@@ -139,6 +150,7 @@ class Section(Folder):
             return None
 
     security.declareProtected(view, 'get_next_section')
+
     def get_next_section(self):
         sections = self.list_sections()
         i = sections.index(self)
@@ -148,16 +160,20 @@ class Section(Folder):
             return None
 
     security.declareProtected(view, 'comment_count')
+
     def comment_count(self):
         return sum(p.comment_count() for p in self.get_paragraphs())
 
     security.declarePrivate('parseBody')
+
     def parseBody(self, body):
         output = parse(body)
         for paragraph in output:
             addParagraph(self, body=paragraph)
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'saveProperties')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'saveProperties')
+
     def saveProperties(self, title, REQUEST=None):
         """ """
         self.title = title
@@ -166,7 +182,8 @@ class Section(Folder):
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'edit_html')
     edit_html = NaayaPageTemplateFile('zpt/section_edit', globals(),
                                       'tbconsultation_section_edit')
 
