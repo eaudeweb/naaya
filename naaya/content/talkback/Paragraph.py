@@ -33,7 +33,8 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from comment_item import addComment, TalkBackConsultationComment
 from comment_item import cleanup_message
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from constants import *
+from constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
+from constants import METATYPE_TALKBACKCONSULTATION_COMMENT
 from Products.NaayaCore.managers.utils import html2text
 from permissions import (PERMISSION_REVIEW_TALKBACKCONSULTATION,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION)
