@@ -38,6 +38,11 @@
                 tal:attributes="href string:${paragraph/absolute_url}/move_down"
                 tal:condition="python:here.checkPermissionManageTalkBackConsultation() and not repeat['paragraph'].end"
                 >Swap with next paragraph</a>
+            <a i18n:translate="" class="button_sect_edit"
+                tal:attributes="href string:${paragraph/absolute_url}/remove_paragraph"
+                tal:condition="python:here.checkPermissionManageTalkBackConsultation() and not (
+                                      repeat['paragraph'].start and repeat['paragraph'].end)"
+                >Delete paragraph</a>
 
     </tal:block>
 </div>

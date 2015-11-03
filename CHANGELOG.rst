@@ -1,5 +1,7 @@
 1.4.48 (unreleased)
 -------------------
+* check and correct paragraph_list for consistency [dumitval]
+* add a 'delete paragraph' button on section edit [dumitval]
 
 1.4.43 (2015-10-22)
 -------------------
