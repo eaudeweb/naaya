@@ -1,5 +1,6 @@
 1.4.37 (unreleased)
 -------------------
+* fix for a crash with latin1 username [dumitval]
 
 1.4.36 (2015-10-26)
 -------------------

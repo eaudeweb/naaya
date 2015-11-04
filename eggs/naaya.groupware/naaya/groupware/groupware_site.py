@@ -262,7 +262,7 @@ class GroupwareSite(NySite):
                 ob_id = addNyMeeting(self.getSite().library,
                                      contributor=requester_auth_user,
                                      **args)
-            except Exception, e:
+            except Exception:
                 self.setSessionErrorsTrans("Error in adding a new meeting.")
                 REQUEST.RESPONSE.redirect('%s/library' % self.absolute_url())
             else:
@@ -410,7 +410,7 @@ class GroupwareSite(NySite):
                                      mail_subject, mail_body,
                                      where_to_save='sent-webex',
                                      others=meeting_info)
-                except Exception, e:
+                except Exception:
                     log.exception("Failed saving webex email on disk")
 
                 self.setSessionInfoTrans(
@@ -574,7 +574,7 @@ class GroupwareSite(NySite):
         """
 
         if self.portal_is_archived:
-            raise BadRequest, "You can't request access to archived IGs"
+            raise BadRequest("You can't request access to archived IGs")
 
         role = REQUEST.form.get('role', '')
         location = REQUEST.form.get('location', '')
@@ -640,12 +640,20 @@ class GroupwareSite(NySite):
         mail_tool = self.getEmailTool()
         mail_to = self.administrator_email
         mail_from = mail_tool.get_addr_from()
+        try:
+            firstname = getattr(user, 'firstname', '').decode('utf-8')
+        except UnicodeDecodeError:
+            firstname = getattr(user, 'firstname', '').decode('latin1')
+        try:
+            lastname = getattr(user, 'lastname', '').decode('utf-8')
+        except UnicodeDecodeError:
+            lastname = getattr(user, 'lastname', '').decode('latin1')
         mail_data = self.request_ig_access_emailpt.render_email(**{
             'here': self,
             'role': role,
             'user': user,
-            'firstname': getattr(user, 'firstname', '').decode('utf-8'),
-            'lastname': getattr(user, 'lastname', '').decode('utf-8'),
+            'firstname': firstname,
+            'lastname': lastname,
             'email': getattr(user, 'mail', ''),
             'location_title': location_title,
             'user_admin_link': user_admin_link,
