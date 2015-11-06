@@ -271,16 +271,16 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         def get_image_info(source, image):
             image_object = {
                 'url': image.absolute_url(),
-                'title': url_quote(image.title_or_id().encode('utf-8')),
+                'title': url_quote(to_utf8(image.title_or_id())),
                 'source': '',
                 'author': ''
             }
 
             if source == 'album':
                 image_object['source'] = url_quote(
-                    image.source.encode('utf-8'))
+                    to_utf8(image.source))
                 image_object['author'] = url_quote(
-                    image.author.encode('utf-8'))
+                    to_utf8(image.author))
 
             return image_object
 
@@ -420,3 +420,11 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
     select_link = PageTemplateFile('zpt/select_link', globals())
 
 InitializeClass(EditorTool)
+
+
+def to_utf8(string):
+    try:
+        string.decode('utf-8')
+        return string
+    except UnicodeDecodeError:
+        return string.encode('utf-8')
