@@ -1,5 +1,6 @@
 4.0.22 (unreleased)
 -------------------
+* fix in editor tool insert image [dumitval]
 
 4.0.21 (2015-10-29)
 -------------------
