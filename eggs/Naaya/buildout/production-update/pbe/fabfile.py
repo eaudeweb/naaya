@@ -67,8 +67,6 @@ def shutdown_pbe():
     run("sleep 0.5")
     run("%(repo)s/bin/zope-instance-3 stop" % app)
     run("sleep 0.5")
-    run("%(repo)s/bin/zope-instance-technologies stop" % app)
-    run("sleep 0.5")
     run("%(repo)s/bin/zeoserver stop" % app)
 
 
@@ -82,7 +80,5 @@ def start_pbe():
     run("%(repo)s/bin/zope-instance-2 start" % app)
     run("sleep 0.5")
     run("%(repo)s/bin/zope-instance-3 start" % app)
-    run("sleep 0.5")
-    run("%(repo)s/bin/zope-instance-technologies start" % app)
     run("sleep 0.5")
     run("%(repo)s/bin/poundctl start" % app)
