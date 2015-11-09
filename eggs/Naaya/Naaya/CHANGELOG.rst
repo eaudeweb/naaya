@@ -1,5 +1,6 @@
 4.0.23 (unreleased)
 -------------------
+* bugfix in admin page of notifications [dumitval]
 
 4.0.22 (2015-11-06)
 -------------------
