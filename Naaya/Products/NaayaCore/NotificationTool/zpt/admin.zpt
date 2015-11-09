@@ -102,7 +102,7 @@
     </select>
     -->
 </div>
-<div class="field-inline">
+<div class="field-inline" tal:condition="not: here/portal_is_restricted|nothing">
     <input type="checkbox" id="enable_anonymous" name="enable_anonymous:boolean"
         tal:attributes="checked python:test(get_config('enable_anonymous'), 'checked', None)" />
     <label for="enable_anonymous"

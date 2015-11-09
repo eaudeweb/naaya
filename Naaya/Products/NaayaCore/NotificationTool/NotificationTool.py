@@ -949,8 +949,9 @@ class NotificationTool(Folder):
         """ save settings from the admin page """
 
         form = REQUEST.form
-        for field, value in self.config.items():
-            self.config[field] = form.get(field, self.default_config[field])
+        notif_types = ['instant', 'daily', 'weekly', 'monthly', 'anonymous']
+        for field in notif_types:
+            self.config['enable_'+field] = form.get('enable_'+field, False)
 
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
