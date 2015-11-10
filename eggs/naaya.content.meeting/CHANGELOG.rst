@@ -1,4 +1,7 @@
-1.2.87 (unreleased)
+1.2.88 (unreleased)
+-------------------
+
+1.2.87 (2015-11-10)
 -------------------
 * add "I prefer not to answer" option on radio button questions of
   Eionet surveys (incl. update script) [dumitval]
