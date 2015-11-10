@@ -1,4 +1,7 @@
-4.0.23 (unreleased)
+4.0.24 (unreleased)
+-------------------
+
+4.0.23 (2015-11-10)
 -------------------
 * bugfix in admin page of notifications [dumitval]
 
