@@ -354,7 +354,7 @@ class MakeParticipantsSubscribers(UpdateScript):
                    '(if they are not signups)')
 
     def _update(self, portal):
-        diverted_mail = EmailTool.divert_mail()
+        EmailTool.divert_mail()
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
             subscriptions = meeting.getParticipants().getSubscriptions()
@@ -483,4 +483,42 @@ class UpdateMeetingTypes(UpdateScript):
             self.log.debug(
                 'is_eionet_meeting-property not present in Meeting schema')
 
+        return True
+
+
+class AddChoiceToRadioWidgets(UpdateScript):
+    title = 'Add "I prefer not to answer" choice on all radio widgets'
+    creation_date = 'Nov 10, 2015'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ('Add "I prefer not to answer" choice on all radio widgets'
+                   ' of Eionet surveys')
+
+    def _update(self, portal):
+        EmailTool.divert_mail()
+        eionet_surveys = ['eionet-survey', 'eionet-survey-nfp-meeting',
+                          'eionet-survey-nrc-webinar']
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            for survey_id in eionet_surveys:
+                survey = getattr(meeting, survey_id, None)
+                if survey:
+                    changed = False
+                    for widget in survey.objectValues(
+                            ['Naaya Radio Widget',
+                             'Naaya Radio Matrix Widget']):
+                        # The Eionet Forum has only one language: en
+                        choices = widget._local_properties['choices'][
+                            'en'][0]
+                        if 'I prefer not to answer' not in choices:
+                            choices.append('I prefer not to answer')
+                            widget.set_localpropvalue('choices', 'en',
+                                                      choices)
+                            changed = True
+                    if changed:
+                        self.log.debug('Choice added on survey %s' %
+                                       survey.absolute_url())
+                    else:
+                        self.log.debug('Choice already present on survey %s' %
+                                       survey.absolute_url())
         return True
