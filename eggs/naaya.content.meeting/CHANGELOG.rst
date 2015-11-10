@@ -1,5 +1,7 @@
 1.2.87 (unreleased)
 -------------------
+* add "I prefer not to answer" option on radio button questions of
+  automaticly generated surveys [dumitval]
 
 1.2.86 (2015-10-28)
 -------------------
