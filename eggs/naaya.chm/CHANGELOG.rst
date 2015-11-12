@@ -1,5 +1,7 @@
 3.0.30 (unreleased)
 ------------------
+* fix for uploading slider and main section images with unicode
+  characters in id [dumitval]
 
 3.0.29 (2015-10-26)
 ------------------
