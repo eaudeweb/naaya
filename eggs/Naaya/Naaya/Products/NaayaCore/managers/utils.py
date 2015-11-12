@@ -158,9 +158,8 @@ def uniqueId(id, exists):
     return search_id
 
 
-def make_id(parent, temp_parent=None,
-            id='', title='',
-            prefix='', removelist=None):
+def make_id(parent, temp_parent=None, id='', title='', prefix='',
+            removelist=None, keep_id=True):
     """
     Generates a valid unique id based on a suggested id, title or prefix
     The generated id is checked for uniqueness in the parent folder
@@ -172,7 +171,14 @@ def make_id(parent, temp_parent=None,
     if prefix:
         # prefix implemented no-id-reuse in prev version, keeping it
         prefix = prefix + genRandomId(5)
-    gen_id = slugify(id or title or prefix, removelist=removelist)
+
+    # If an id was passwed and we want to not change it by slugifying
+    if id and keep_id:
+        assert(isinstance(id, basestring))
+        gen_id = id
+    else:
+        gen_id = slugify(id or title or prefix, removelist=removelist)
+
     gen_id = strip_lead_trail(gen_id)
 
     if temp_parent:
