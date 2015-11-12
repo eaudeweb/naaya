@@ -1,5 +1,6 @@
 4.0.24 (unreleased)
 -------------------
+* improvement in make_id [dumitva
 
 4.0.23 (2015-11-10)
 -------------------
