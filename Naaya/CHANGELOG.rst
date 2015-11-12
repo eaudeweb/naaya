@@ -1,4 +1,7 @@
-4.0.25 (unreleased)
+4.0.26 (unreleased)
+-------------------
+
+4.0.25 (2015-11-12)
 -------------------
 * typo fix in skel.xml [dumitval]
 * improvement in make_id [dumitval]
