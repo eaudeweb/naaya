@@ -314,7 +314,7 @@
             <permission name="Naaya - Add Naaya Media File objects" />
             <permission name="Naaya - Add Naaya Meeting objects" />
             <permission name="Naaya - Add Naaya Mega Survey" />
-            <permission name="Naaya - Add Naaya News objects": />
+            <permission name="Naaya - Add Naaya News objects" />
             <permission name="Naaya - Add Naaya Photo" />
             <permission name="Naaya - Add Naaya Photo Folder" />
             <permission name="Naaya - Add Naaya Photo Gallery" />
