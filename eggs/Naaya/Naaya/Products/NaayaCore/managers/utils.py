@@ -172,11 +172,7 @@ def make_id(parent, temp_parent=None,
     if prefix:
         # prefix implemented no-id-reuse in prev version, keeping it
         prefix = prefix + genRandomId(5)
-    if id:
-        assert(isinstance(id, basestring))
-        gen_id = id
-    else:
-        gen_id = slugify(id or title or prefix, removelist=removelist)
+    gen_id = slugify(id or title or prefix, removelist=removelist)
     gen_id = strip_lead_trail(gen_id)
 
     if temp_parent:
