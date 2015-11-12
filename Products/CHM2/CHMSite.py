@@ -622,7 +622,7 @@ class CHMSite(NySite):
             return json_response({'error': "no file"}, REQUEST.RESPONSE)
 
         filename = file.filename
-        id = make_id(temp_folder, id=filename)
+        id = make_id(temp_folder)
         manage_addImage(temp_folder, id, file=file)
         ob = getattr(temp_folder, id)
 
@@ -645,7 +645,7 @@ class CHMSite(NySite):
             return json_response({'error': "no file"}, REQUEST.RESPONSE)
 
         filename = file.filename
-        id = make_id(temp_folder, id=filename)
+        id = make_id(temp_folder)
         manage_addImage(temp_folder, id, file=file)
         ob = getattr(temp_folder, id)
 
