@@ -1,4 +1,3 @@
-import operator
 import logging
 
 from OFS.Folder import Folder
@@ -8,11 +7,8 @@ from AccessControl.Permissions import view
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER
 from Products.Naaya.constants import PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS
-from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from Products.NaayaBase.constants import MESSAGE_ERROROCCURRED
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes
@@ -361,8 +357,11 @@ class NyFolderBase(Folder, NyPermissions):
         else:
             try:
                 self.manage_pasteObjects(None, REQUEST)
-            except:
-                self.setSessionErrorsTrans('Error while pasting data.')
+            except Unauthorized:
+                errors = self.getSessionErrors()
+                errors.append(
+                    'You are not allowed to paste objects in this context.')
+                self.setSessionErrorsTrans(errors)
             else:
                 self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -387,8 +386,8 @@ class NyFolderBase(Folder, NyPermissions):
             try:
                 self.manage_delObjects(id_list)
             except Exception, err:
-                self.setSessionErrorsTrans('Error while deleting data.')
-                logger.exception("Exception when deleting objects")
+                self.setSessionErrorsTrans(err)
+                logger.exception(err)
             else:
                 self.setSessionInfoTrans('Item(s) deleted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -479,6 +478,12 @@ class NyFolderBase(Folder, NyPermissions):
         return r
 
     def _verifyObjectPaste(self, object, validate_src=1):
+        all_meta_types = [mtp['name'] for mtp in self.all_meta_types()]
+        if object.meta_type not in all_meta_types:
+            self.setSessionErrorsTrans(
+                'The object is not in the allowed objects list '
+                '(check subobjects list of this folder)')
+            raise Unauthorized
         if validate_src == 2:   # paste after cut
             if not object.checkPermissionDeleteObject():
                 raise Unauthorized
