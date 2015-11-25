@@ -5,9 +5,14 @@ from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view
 
-from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
+from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER
+from Products.Naaya.constants import PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS, PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES, MESSAGE_ERROROCCURRED
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import MESSAGE_ERROROCCURRED
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes
@@ -37,8 +42,8 @@ class NyFolderBase(Folder, NyPermissions):
         return [f for f in self.objectValues(METATYPE_FOLDER)
                 if getattr(f, 'submitted', 0) == 1]
 
-
     security.declarePublic('getPublishedFolders')
+
     def getPublishedFolders(self):
         folders = []
         if not self.checkPermissionView():
@@ -73,14 +78,22 @@ class NyFolderBase(Folder, NyPermissions):
         r.extend(self.getPublishedObjects())
         return r
 
-    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
-    def getPendingObjects(self): return [x for x in self.contained_objects() if x.approved==0 and x.submitted==1]
+    def getPendingFolders(self):
+        return [x for x in self.objectValues(METATYPE_FOLDER)
+                if x.approved == 0 and x.submitted == 1]
+
+    def getPendingObjects(self):
+        return [x for x in self.contained_objects()
+                if x.approved == 0 and x.submitted == 1]
+
     def getPendingContent(self):
         r = self.getPendingFolders()
         r.extend(self.getPendingObjects())
         return r
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'processPendingContent')
+
     def processPendingContent(self, appids=[], delids=[], REQUEST=None):
         """
         Process the pending content inside this folder.
@@ -103,13 +116,18 @@ class NyFolderBase(Folder, NyPermissions):
             self.recatalogNyObject(ob)
 
         for id in self.utConvertToList(delids):
-            try: self._delObject(id)
-            except: pass
+            try:
+                self._delObject(id)
+            except:
+                pass
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'processPublishedContent')
+
     def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
         """
         Process the published content inside this folder.
@@ -130,12 +148,14 @@ class NyFolderBase(Folder, NyPermissions):
                 ob.dont_inherit_view_permission()
             self.recatalogNyObject(ob)
         for id in self.utConvertToList(delids):
-            try: self._delObject(id)
-            except: pass
+            try:
+                self._delObject(id)
+            except:
+                pass
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-
 
     def listed_folders_info(self, skey='sortorder', rkey=0,
                             sort_on='title', sort_order=0):
@@ -193,16 +213,18 @@ class NyFolderBase(Folder, NyPermissions):
 
         return ret
 
-
     security.declareProtected(view, 'folder_listing_info')
+
     def folder_listing_info(self, skey='sortorder', rkey=0,
                             sort_on='title', sort_order=0):
         """ This function is called on the folder listing and checks whether to
         display various buttons in the form it is called.
 
         """
-        folders_info = self.listed_folders_info(skey, rkey, sort_on, sort_order)
-        objects_info = self.listed_objects_info(skey, rkey, sort_on, sort_order)
+        folders_info = self.listed_folders_info(skey, rkey, sort_on,
+                                                sort_order)
+        objects_info = self.listed_objects_info(skey, rkey, sort_on,
+                                                sort_order)
 
         if skey == 'modif_date':
             def modif_date_getter(info):
@@ -228,12 +250,14 @@ class NyFolderBase(Folder, NyPermissions):
         ret['btn_delete'] = len(can_be_deleted) > 0
         ret['btn_copy'] = len(can_be_copied) > 0
         ret['btn_cut'] = len(can_be_cut) > 0
-        ret['btn_paste'] = self.cb_dataValid() and self.checkPermissionPasteObjects()
+        ret['btn_paste'] = (self.cb_dataValid() and
+                            self.checkPermissionPasteObjects())
         ret['can_operate'] = len(can_be_operated) > 0
 
         return ret
 
     security.declareProtected(view, 'folder_listing_ratings')
+
     def folder_listing_ratings(self):
         """ This function is called on the folder listing and it checks
         whether there is at least one object that provides ratings
@@ -250,18 +274,22 @@ class NyFolderBase(Folder, NyPermissions):
         for info in infos:
             try:
                 ratable = info['self'].is_ratable()
-                if ratable: return True
-            except: pass
+                if ratable:
+                    return True
+            except:
+                pass
         return False
 
     security.declareProtected(view, 'item_has_title')
+
     def item_has_title(self, object, obj_title=''):
         """
         Checks if the object has no display title and if it
         has a title in at least one of the portal languages
         """
 
-        if isinstance(object, str): return 0
+        if isinstance(object, str):
+            return 0
 
         if obj_title == '':
             for lang in self.gl_get_languages():
@@ -269,6 +297,7 @@ class NyFolderBase(Folder, NyPermissions):
                     return 1
 
     security.declareProtected(view, 'copyObjects')
+
     def copyObjects(self, REQUEST=None, **kwargs):
         """ """
         ids = self.utConvertToList(kwargs.get('id', []))
@@ -282,14 +311,19 @@ class NyFolderBase(Folder, NyPermissions):
         kwargs.update(REQUEST.form)
         ids = self.utConvertToList(kwargs.get('id', []))
         if not ids:
-            self.setSessionErrorsTrans('Please select one or more items to copy.')
+            self.setSessionErrorsTrans(
+                'Please select one or more items to copy.')
         else:
-            try: self.manage_copyObjects(ids, REQUEST)
-            except: self.setSessionErrorsTrans('Error while copy data.')
-            else: self.setSessionInfoTrans('Item(s) copied.')
+            try:
+                self.manage_copyObjects(ids, REQUEST)
+            except:
+                self.setSessionErrorsTrans('Error while copy data.')
+            else:
+                self.setSessionInfoTrans('Item(s) copied.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'cutObjects')
+
     def cutObjects(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
@@ -302,14 +336,19 @@ class NyFolderBase(Folder, NyPermissions):
         if not REQUEST:
             return self.manage_cutObjects(id_list)
         elif not id_list:
-            self.setSessionErrorsTrans('Please select one or more items to cut.')
+            self.setSessionErrorsTrans(
+                'Please select one or more items to cut.')
         else:
-            try: self.manage_cutObjects(id_list, REQUEST)
-            except: self.setSessionErrorsTrans('Error while cut data.')
-            else: self.setSessionInfoTrans('Item(s) cut.')
+            try:
+                self.manage_cutObjects(id_list, REQUEST)
+            except:
+                self.setSessionErrorsTrans('Error while cut data.')
+            else:
+                self.setSessionInfoTrans('Item(s) cut.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'pasteObjects')
+
     def pasteObjects(self, REQUEST=None, **kwargs):
         """ """
         if not REQUEST:
@@ -317,14 +356,19 @@ class NyFolderBase(Folder, NyPermissions):
             return self.manage_pasteObjects(cp)
 
         if not self.checkPermissionPasteObjects():
-            self.setSessionErrorsTrans('You are not allowed to paste objects in this context.')
+            self.setSessionErrorsTrans(
+                'You are not allowed to paste objects in this context.')
         else:
-            try: self.manage_pasteObjects(None, REQUEST)
-            except: self.setSessionErrorsTrans('Error while pasting data.')
-            else: self.setSessionInfoTrans('Item(s) pasted.')
+            try:
+                self.manage_pasteObjects(None, REQUEST)
+            except:
+                self.setSessionErrorsTrans('Error while pasting data.')
+            else:
+                self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'deleteObjects')
+
     def deleteObjects(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
@@ -337,7 +381,8 @@ class NyFolderBase(Folder, NyPermissions):
         if not REQUEST:
             return self.manage_delObjects(id_list)
         elif not id_list:
-            self.setSessionErrorsTrans('Please select one or more items to delete.')
+            self.setSessionErrorsTrans(
+                'Please select one or more items to delete.')
         else:
             try:
                 self.manage_delObjects(id_list)
@@ -349,19 +394,20 @@ class NyFolderBase(Folder, NyPermissions):
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declarePublic('get_meta_types')
+
     def get_meta_types(self, folder=0):
         """
         returns a list with objects metatypes
         """
         res = []
-        if folder==1:
+        if folder == 1:
             res.append(METATYPE_FOLDER)
         res.extend(self._dynamic_content_types.keys())
         res.extend(self.get_pluggable_installed_meta_types())
         return res
 
-
     security.declarePublic('get_meta_type_label')
+
     def get_meta_type_label(self, meta_type=None):
         """
         returns label from meta_type
@@ -400,7 +446,7 @@ class NyFolderBase(Folder, NyPermissions):
         r = []
         ra = r.append
 
-        #check for adding folders
+        # check for adding folders
         if METATYPE_FOLDER in folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
                 ra(('folder_add_html', LABEL_NYFOLDER))
@@ -411,7 +457,7 @@ class NyFolderBase(Folder, NyPermissions):
                 if self.checkPermission(dynamic_value[2]):
                     ra(dynamic_value[:2])
 
-        #check pluggable content
+        # check pluggable content
         pc = self.get_pluggable_content()
         schema_tool = self.getSchemaTool()
 
@@ -436,8 +482,9 @@ class NyFolderBase(Folder, NyPermissions):
         if validate_src == 2:   # paste after cut
             if not object.checkPermissionDeleteObject():
                 raise Unauthorized
-            validate_src = 1 # let super validate as in paste after copy
-        return super(NyFolderBase, self)._verifyObjectPaste(object, validate_src)
+            validate_src = 1  # let super validate as in paste after copy
+        return super(NyFolderBase, self)._verifyObjectPaste(object,
+                                                            validate_src)
 
 
 class ObjectListingPortlet(object):
@@ -450,4 +497,5 @@ class ObjectListingPortlet(object):
     def __call__(self, context, position):
         return self.template.__of__(context)()
 
-    template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.core.folder.listing_portlet')
+    template = NaayaPageTemplateFile('zpt/listing_portlet', globals(),
+                                     'naaya.core.folder.listing_portlet')
