@@ -10,7 +10,7 @@ app = env.app = {
         'https://github.com/eaudeweb/naaya.git',
 }
 
-env.hosts = ['vali@sepia.eea.europa.eu']
+env.hosts = ['edw@nautilus.eea.europa.eu']
 
 app['repo'] = ppath('/var/local/groupware/gw-test')
 
