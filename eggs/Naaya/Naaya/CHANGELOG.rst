@@ -1,5 +1,7 @@
 4.0.26 (unreleased)
 -------------------
+* meaningful error message when pasting objects fails because of
+  subobjects setting [dumitval]
 
 4.0.25 (2015-11-12)
 -------------------
