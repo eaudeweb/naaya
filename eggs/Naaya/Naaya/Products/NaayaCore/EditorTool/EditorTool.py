@@ -426,5 +426,5 @@ def to_utf8(string):
     try:
         string.decode('utf-8')
         return string
-    except UnicodeDecodeError:
+    except UnicodeEncodeError:
         return string.encode('utf-8')
