@@ -1,5 +1,6 @@
 4.0.27 (unreleased)
 -------------------
+* bugfix in editor tool, insert image module [dumitval]
 
 4.0.26 (2015-11-25)
 -------------------
