@@ -1,4 +1,7 @@
-4.0.27 (unreleased)
+4.0.28 (unreleased)
+-------------------
+
+4.0.27 (2015-11-26)
 -------------------
 * bugfix in editor tool, insert image module [dumitval]
 
