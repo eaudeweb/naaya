@@ -1057,7 +1057,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             entry.appendChild(summary_node)
 
             type_node = doc.createElement("georss:featuretypetag")
-            coords = doc.createTextNode(self.getSymbol(item.geo_type).title)
+            coords = doc.createTextNode(
+                getattr(self.getSymbol(item.geo_type), 'title', ''))
             type_node.appendChild(coords)
             entry.appendChild(type_node)
 

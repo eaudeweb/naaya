@@ -1,5 +1,6 @@
 4.0.28 (unreleased)
 -------------------
+* handle crash on export_geo_rss [dumitval]
 
 4.0.27 (2015-11-26)
 -------------------
