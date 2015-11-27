@@ -1,4 +1,7 @@
-4.0.28 (unreleased)
+4.0.29 (unreleased)
+-------------------
+
+4.0.28 (2015-11-27)
 -------------------
 * handle crash on export_geo_rss [dumitval]
 
