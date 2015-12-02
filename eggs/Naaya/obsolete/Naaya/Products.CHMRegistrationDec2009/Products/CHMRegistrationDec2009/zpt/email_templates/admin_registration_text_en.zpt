@@ -1,8 +1,0 @@
-Hallo,
-
-Een nieuwe inschrijving is ontvangen voor de "%(registration_event)s". U kunt de ingestuurde informatie inzien via de volgende link:
-
-%(registration_edit_link)s (login om deze registratie te bekijken).
-
----
-Dit is een automatisch gegenereerd bericht

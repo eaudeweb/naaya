@@ -1,6 +1,0 @@
-<tal:block define="site here/getSite">
-<div>
-	<!--SITE_HEADERFOOTER_MARKER-->
-</div>
-<span tal:replace="structure site/standard_html_footer" />
-</tal:block>

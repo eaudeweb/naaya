@@ -1,4 +1,0 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
-  <include package=".adapter" />
-  <include package="Products.NaayaCore.NotificationTool" />
-</configure>

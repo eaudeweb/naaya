@@ -1,4 +1,0 @@
-0.5.2 (2005/03/13)
-
-  Bugs fixed
-  - Get it working with Plone again.

@@ -1,2 +1,0 @@
-recursive-include Captcha/data *
-include README.rst

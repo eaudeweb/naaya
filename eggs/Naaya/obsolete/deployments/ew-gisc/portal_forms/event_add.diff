@@ -1,8 +1,0 @@
----
-+++
-@@ -22,6 +22,7 @@
-</tal:block>
-</tal:block>
-+<metal:block use-macro="python:here.getFormsTool()['gisc_event_helper'].macros['block']" />
-</tal:block>
-</tal:block>

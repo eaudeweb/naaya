@@ -1,9 +1,0 @@
-			<span>
-				SITE SEARCH
-			</span>
-			<div id="search" class="left_bodies">
-				<label for="query" class="noshow" accesskey="4">Site Search:</label>
-				<input name="query" type="text" id="query" class="searchfield" size="15" />
-				<input name="Button" type="button" value="Find"  class="buttgo"/>
-				<div style="margin-top:5px;"><a href="#">Advanced search</a></div>
-			</div>

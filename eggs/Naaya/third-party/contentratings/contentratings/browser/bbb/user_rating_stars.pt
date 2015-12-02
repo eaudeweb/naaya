@@ -1,9 +1,0 @@
-    <div id="user-rating-display"
-         i18n:domain="contentratings"
-         tal:define="avg view/averageRating;
-                     stars python:range(1,view.scale+1);
-                     star_icon string:/++resource++star_icon.gif;
-                     blank_star_icon string:/++resource++blank_star_icon.gif;
-                     numberOfRatings view/numberOfRatings;">
-        <img tal:repeat="star stars" tal:attributes="src python:avg &lt; star and blank_star_icon or star_icon; alt star"/>
-    </div>

@@ -1,3 +1,0 @@
-<tal:block repeat="user here/getOnlineUsers">
-	<span class="onlineuser"><a class="pm-invite" tal:attributes="id user" href="#" onClick="javascript:pmInvite(this)" i18n:translate="">invite</a><span tal:replace="user" /></span>
-</tal:block>

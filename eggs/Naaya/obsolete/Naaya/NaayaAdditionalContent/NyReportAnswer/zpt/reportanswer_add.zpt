@@ -1,7 +1,0 @@
-<span tal:replace="structure here/standard_html_header" />
-
-<h1 i18n:translate="">Submit Report Answer</h1>
-
-<p i18n:translate="">Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.</p>
-
-<tal:block tal:replace="structure here/standard_html_footer"/>

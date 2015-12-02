@@ -1,9 +1,0 @@
-<span tal:replace="structure here/manage_page_header" />
-<span tal:replace="structure here/manage_tabs" />
-<span tal:replace="structure here/style_html" />
-
-<h2>Issue History</h2>
-
-<span tal:replace="structure here/history_form_html" />
-
-<span tal:replace="structure here/manage_page_footer" />

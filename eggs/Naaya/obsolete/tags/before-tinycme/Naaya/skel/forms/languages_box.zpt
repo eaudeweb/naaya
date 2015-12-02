@@ -1,6 +1,0 @@
-<form id="change_language" action="gl_changeLanguage" method="post">
-	<div><select name="old_lang" id="old_lang" onchange="javascript:document.getElementById('change_language').submit()">
-		<option tal:repeat="item here/gl_get_languages_map" tal:attributes="value python:item['id']; selected python:item['selected']" tal:content="python:item['title']" i18n:translate="" />
-	</select></div>
-	<noscript><div><input type="submit" value="Change" i18n:attributes="value" /></div></noscript>
-</form>

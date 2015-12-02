@@ -1,4 +1,0 @@
-<div class="gisc-homepage-portlet right">
-	<tal:block content="structure here/portal_calendar/show_calendar" />
-	<p>See also: <a href="http://www.gmes.info/pages-principales/projects/participation-in-events/">GMES events calendar</a></p>
-</div>

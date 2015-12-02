@@ -1,4 +1,0 @@
-<configure xmlns="http://namespaces.zope.org/zope">
-    <adapter factory="naaya.core.portlets.MainSectionsPortlet"
-             name="portlet_maincategories" />
-</configure>

@@ -1,9 +1,0 @@
-<tal:block define="editable options/editable;">
-    <td class="checkin">n/a</td>
-    <td class="edit">
-        <a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
-            <img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
-        </a>
-        <tal:block condition="not:editable">n/a</tal:block>
-    </td>
-</tal:block>

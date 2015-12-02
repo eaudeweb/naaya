@@ -1,5 +1,0 @@
-[bundle]
-name={{repr(project)}}
-parents=
-    {{parent}}
-

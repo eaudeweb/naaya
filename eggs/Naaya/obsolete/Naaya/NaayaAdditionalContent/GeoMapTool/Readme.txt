@@ -1,1 +1,0 @@
-Naaya geographical map 

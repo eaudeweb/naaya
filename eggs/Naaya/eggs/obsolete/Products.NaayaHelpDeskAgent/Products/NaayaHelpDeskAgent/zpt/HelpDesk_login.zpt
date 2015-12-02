@@ -1,1 +1,0 @@
-<span tal:replace="python:request.RESPONSE.redirect(request['HTTP_REFERER'])" />

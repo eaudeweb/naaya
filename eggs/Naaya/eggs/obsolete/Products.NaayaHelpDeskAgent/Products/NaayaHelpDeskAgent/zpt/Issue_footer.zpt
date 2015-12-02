@@ -1,8 +1,0 @@
-<span tal:replace="structure here/info_login_html" />
-
-<tal:block tal:condition="here/user_email">
-	<hr class="wide_space" />
-	<div style="text-align: center">
-		<a href="feedback_html" class="feedbacklink" i18n:translate="">Feedback to this issue's author</a>
-	</div>
-</tal:block>

@@ -1,8 +1,0 @@
-<span tal:replace="structure here/standard_html_header"/>
-
-<h1>Your application has been sent!</h1>
-
-<p>The request will be analyzed by the EnviroWindows administrators and the contact person 
-you have mentioned will be informed of its result.</p>
-
-<span tal:replace="structure here/standard_html_footer"/>

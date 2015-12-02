@@ -1,5 +1,0 @@
-include *.txt
-include *.rst
-recursive-include Products *
-recursive-include docs *
-global-exclude *py[co]
