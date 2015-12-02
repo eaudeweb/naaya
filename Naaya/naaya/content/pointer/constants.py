@@ -1,1 +1,0 @@
-META_TYPE_NAAYA_POINTER = 'Naaya Pointer'
