@@ -69,10 +69,12 @@
                 e.stopPropagation();
               });
             });
-             $(".fancybox").fancybox({
+            $(".fancybox").fancybox({
                 type: 'image',
                 arrows: false,
             });
+            $('div.portlet-column-left').hide();
+            $('body').removeAttr('class');
           });
         </script>
         <link rel="stylesheet" type="text/css" href="/++resource++naaya.content.apncbphoto/apncbphoto.css" />
