@@ -24,12 +24,8 @@
         <script type="text/javascript" src="/++resource++naaya.content.apncbphoto/apncbphoto.js"></script>
         <script>
           $(document).ready(function(){
-            $('.datatable').dataTable({
-                'aaSorting': [[0, "desc"]],
-                'sPaginationType': 'full_numbers',
-                "aLengthMenu": [[10, 25, 50, -1],
-                                [10, 25, 50, "All"]],
-            });
+            $('div.portlet-column-left').hide();
+            $('body').removeAttr('class');
           });
         </script>
 
