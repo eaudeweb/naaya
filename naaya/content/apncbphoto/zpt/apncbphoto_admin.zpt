@@ -83,7 +83,7 @@
           <tbody>
             <tr tal:repeat="park here/get_parks">
               <form tal:attributes="name string:edit_park_${park/id}; id string:edit_park_${park/id}"
-                  action=".">
+                  action="." tal:define="can_delete python:here.can_delete(parkid=park['id'])">
                 <td tal:content="park/id" />
                 <td tal:content="park/code" />
                 <td>
@@ -95,12 +95,14 @@
                     name="parkid" />
                   <input type="submit" value="Update" style="margin-top:0px;"
                     name="update_park:method" />
-                  <input tal:condition="python:here.can_delete(parkid=park['id'])"
+                  <input tal:condition="python:can_delete"
                     type="submit" value="Delete" style="margin-top:0px;"
                     name="delete_park:method" onclick="return confirm('Are you sure?');"/>
-                  <input tal:condition="python:not here.can_delete(parkid=park['id'])"
+                  <input tal:condition="not: can_delete"
                     type="submit" value="Delete" style="margin-top:0px;"
-                    name="show_records:method" onclick="return alert('Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.');"/>
+                    name="show_records:method"
+                    onclick="return alert(
+                      'Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.');"/>
                 </td>
               </form>
             </tr>
@@ -118,7 +120,7 @@
           <tbody>
             <tr tal:repeat="author here/get_authors">
               <form tal:attributes="name string:edit_author_${author/id}; id string:edit_author_${author/id}"
-                  action=".">
+                  action="." tal:define="can_delete python:here.can_delete(authorid=author['id'])">
                 <td tal:content="author/id" />
                 <td tal:content="author/code" />
                 <td>
@@ -130,12 +132,13 @@
                     name="authorid"/>
                   <input type="submit" value="Update" style="margin-top:0px;"
                     name="update_author:method" />
-                  <input  tal:condition="python:here.can_delete(authorid=author['id'])"
+                  <input  tal:condition="can_delete"
                     type="submit" value="Delete" style="margin-top:0px;"
                     name="delete_author:method" onclick="return confirm('Are you sure?')" />
-                  <input  tal:condition="python:not here.can_delete(authorid=author['id'])"
+                  <input  tal:condition="not: can_delete"
                     type="submit" value="Delete" style="margin-top:0px;"
-                    name="show_records:method" onclick="return confirm('Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.')" />
+                    name="show_records:method" onclick="return confirm(
+                      'Authors and parks can only be deleted if they are not referenced in any image. You will be redirected to a listing with the affected records.')" />
                 </td>
               </form>
             </tr>
