@@ -1,5 +1,10 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
 ------------------
+
+1.1.4 (2015-12-04)
+------------------
+* hide left portlet column for more table space [dumitval]
+* performance improvement on admin page [dumitval]
 
 1.1.3 (2015-10-01)
 ------------------
