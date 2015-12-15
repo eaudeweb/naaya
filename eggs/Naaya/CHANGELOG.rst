@@ -1,5 +1,6 @@
 4.0.29 (unreleased)
 -------------------
+* remove skip approval permission from owner [dumitval]
 
 4.0.28 (2015-11-27)
 -------------------
