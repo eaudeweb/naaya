@@ -1,4 +1,7 @@
-4.0.29 (unreleased)
+4.0.30 (unreleased)
+-------------------
+
+4.0.29 (2015-12-15)
 -------------------
 * remove skip approval permission from owner [dumitval]
 
