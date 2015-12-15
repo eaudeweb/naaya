@@ -400,7 +400,6 @@
             <permission name="Naaya - Add Naaya URL objects" />
             <permission name="Naaya - Add Naaya Youtube objects" />
             <permission name="Naaya - Add comments for content" />
-            <permission name="Naaya - Skip approval" />
             <permission name="View" />
         </role>
 
@@ -471,7 +470,6 @@
             <permission name="Naaya - Delete content" />
             <permission name="Naaya - Edit content" />
             <permission name="Naaya - Skip Captcha" />
-            <permission name="Naaya - Skip approval" />
             <permission name="Naaya - Zip export" />
             <permission name="View"  />
         </role>

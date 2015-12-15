@@ -1,5 +1,6 @@
 3.0.31 (unreleased)
 ------------------
+* remove the skip approval permission from owner and contributor [dumitval]
 
 3.0.30 (2015-11-12)
 ------------------
