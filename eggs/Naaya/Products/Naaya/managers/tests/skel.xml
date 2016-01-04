@@ -174,7 +174,7 @@
 		<contenttype id="image/pjpeg" title="JPEG" picture="jpeg.png"/>
 		<contenttype id="image/jpeg" title="JPEG" picture="jpeg.png"/>
 		<contenttype id="image/jpg" title="JPG" picture="jpg.png"/>
-		<contenttype id="image/bmp" title="BMP" picture="jpg.png"/>
+		<contenttype id="image/bmp" title="BMP" picture="bmp.png"/>
 		<contenttype id="image/png" title="PNG" picture="png.png"/>
 		<contenttype id="image/x-png" title="PNG" picture="png.png"/>
 		<contenttype id="application/octet-stream" title="BINARY" picture="file.png"/>
