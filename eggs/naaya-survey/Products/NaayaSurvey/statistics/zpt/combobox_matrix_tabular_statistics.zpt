@@ -22,14 +22,14 @@
 						tal:attributes="rowspan python:len(question.values)+1" />
 					<th tal:content="python: question.values[v]"/>
 					<tal:block repeat="statistics python: per_row_and_choice[r]">
-						<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[v][0], round(statistics[v][1], 2))" />
+          <td class="number" tal:content="structure python: '%u<br/>(%.2f%%)' % (statistics[v][0], round(statistics[v][1], 2))" />
 					</tal:block>
 				</tr>
             </tal:block>
 			<tr tal:define="r python:repeat['row'].index">
 				<th class="scope-col" i18n:translate="">Not answered</th>
 				<tal:block repeat="statistics python: unanswered[r]">
-					<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[0], round(statistics[1], 2))" />
+        <td class="number" tal:content="structure python: '%u<br/>(%.2f%%)' % (statistics[0], round(statistics[1], 2))" />
 				</tal:block>
 			</tr>
 			</tal:block>

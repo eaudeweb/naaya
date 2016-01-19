@@ -18,10 +18,10 @@
 			<tr tal:repeat="row question/rows">
 				<th tal:content="row">Row</th>
 				<tal:block repeat="statistics python: per_row_and_choice[repeat['row'].index]">
-					<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[0], round(statistics[1], 2))">count (percent%)</td>
+        <td class="number" tal:content="structure python: '%u<br/>(%.2f%%)' % (statistics[0], round(statistics[1], 2))">count (percent%)</td>
 				</tal:block>
 				<tal:block define="statistics python: unanswered[repeat['row'].index]">
-					<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[0], round(statistics[1], 2))">count (percent%)</td>
+        <td class="number" tal:content="structure python: '%u<br/>(%.2f%%)' % (statistics[0], round(statistics[1], 2))">count (percent%)</td>
 				</tal:block>
 			</tr>
 		</tbody>

@@ -1,5 +1,6 @@
 1.2.55 (unreleased)
 ===================
+* small improvement in widget listing for many columns [dumitval]
 
 1.2.54 (2015-05-20)
 ===================
