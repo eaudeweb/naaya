@@ -26,6 +26,12 @@
 
 <div tal:condition="here/description" tal:content="structure here/description" />
 
+<style>
+  table, tr, td, th, tbody, thead, tfoot {
+    page-break-inside: avoid !important;
+  }
+</style>
+
 <tal:block define="answers options/answers">
 	<p><span tal:replace="python:len(answers)">NNN</span> <span i18n:translate="">answers were analyzed.</span></p>
 	<tal:block repeat="statistic python:here.getSortedStatistics()">

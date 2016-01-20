@@ -1,5 +1,6 @@
 1.2.56 (unreleased)
 ===================
+* prevent wkhtmltopdf page break within table cell [dumitval]
 
 1.2.55 (2016-01-19)
 ===================
