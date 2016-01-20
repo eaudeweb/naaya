@@ -1,4 +1,7 @@
-1.2.57 (unreleased)
+1.3.1 (unreleased)
+===================
+
+1.3.0 (2016-01-20)
 ===================
 * google charts legend and colours improvements [dumitval]
 * updated pygooglecharts to version 0.4 + changes [dumitval]
