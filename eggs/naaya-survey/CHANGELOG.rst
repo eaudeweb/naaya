@@ -1,5 +1,6 @@
 1.2.57 (unreleased)
 ===================
+* google charts legend and colours improvements [dumitval]
 
 1.2.56 (2016-01-20)
 ===================

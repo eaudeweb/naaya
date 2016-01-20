@@ -18,6 +18,7 @@
 # Cristian Ciupitu, Eau de Web
 
 import urllib
+import colorsys
 from cStringIO import StringIO
 
 # Zope imports
@@ -57,6 +58,15 @@ class MultipleChoicePieChartStatistic(BaseMultipleChoiceStatistic):
         legend = list(self.question.getChoices())
         legend.append(catalog('Not answered', lang=self.gl_get_selected_language(), add=True))
         chart.set_pie_labels(legend)
+        colors = []
+        h, s, v = 0.01, 0.55, 0.95
+        step = float(1 - h) / (len(self.question.getChoices()) + 1)
+        for i in range(len(self.question.getChoices()) + 1):
+            r, g, b = colorsys.hsv_to_rgb(h, s, v)
+            color = "%02x%02x%02x" % tuple([int(x*255) for x in r, g, b])
+            colors.append(color)
+            h += step
+        chart.set_colours(colors)
         return chart
 
     security.declarePublic('render')

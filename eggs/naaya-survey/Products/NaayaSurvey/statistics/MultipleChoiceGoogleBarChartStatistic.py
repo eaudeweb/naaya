@@ -60,6 +60,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         legend = list(self.question.getChoices())
         legend.append(catalog('Not answered', lang=self.gl_get_selected_language(), add=True))
         chart.set_legend(legend)
+        chart.set_legend_position('l')
         # axis
         chart.set_axis_range(pygooglechart.Axis.BOTTOM, *chart.data_x_range())
         # colors
@@ -68,7 +69,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         step = float(1 - h) / (len(self.question.getChoices()) + 1)
         for i in range(len(self.question.getChoices()) + 1):
             r, g, b = colorsys.hsv_to_rgb(h, s, v)
-            color = "%02x%02x%02x" % tuple([int(x*255) for x in h, s, v])
+            color = "%02x%02x%02x" % tuple([int(x*255) for x in r, g, b])
             colors.append(color)
             h += step
         chart.set_colours(colors)
