@@ -31,13 +31,15 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
 import pygooglechart
 
+
 class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     """Barchart ...
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceGoogleBarChartStatistic, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(
+        MultipleChoiceGoogleBarChartStatistic, *args, **kw), )
 
     meta_type = "Naaya Survey - Multiple Choice Google Bar Chart Statistic"
     meta_label = "Multiple Choice Google Bar Chart Statistic"
@@ -45,20 +47,24 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     meta_sortorder = 210
 
     security.declarePublic('get_chart')
+
     def get_chart(self, answers):
         """Render statistics as HTML code"""
-        total, answered, unanswered, per_choice = self.calculate(self.question, answers)
-        chart = pygooglechart.GroupedHorizontalBarChart(500, 23 + (len(self.question.getChoices())+1) * 22)
+        total, answered, unanswered, per_choice = self.calculate(self.question,
+                                                                 answers)
+        chart = pygooglechart.GroupedHorizontalBarChart(
+            500, 23 + (len(self.question.getChoices())+1) * 22)
         chart.set_bar_width(5)
         # data
         data = [i[0] for i in per_choice]
         data.append(unanswered[0])
         for x in data:
-            chart.add_data([x, 0]) # the 0 is an ugly hack
+            chart.add_data([x, 0])  # the 0 is an ugly hack
         # legend
         catalog = self.getPortalTranslations()
         legend = list(self.question.getChoices())
-        legend.append(catalog('Not answered', lang=self.gl_get_selected_language(), add=True))
+        legend.append(catalog('Not answered',
+                              lang=self.gl_get_selected_language(), add=True))
         chart.set_legend(legend)
         chart.set_legend_position('l')
         # axis
@@ -77,6 +83,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         return chart
 
     security.declarePublic('render')
+
     def render(self, answers):
         """Render statistics as HTML code"""
         chart = self.get_chart(answers)
@@ -84,8 +91,10 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
                          chart_url=chart.get_url())
 
     security.declarePrivate('add_to_excel')
+
     def add_to_excel(self, state):
-        """ adds content to the excel file based on the specific statistic type """
+        """ adds content to the excel file based on the specific
+            statistic type """
         import xlwt
         temp_folder = state['temp_folder']
         answers = state['answers']
@@ -93,14 +102,14 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         current_row = state['current_row']
         chart_url = self.get_chart(answers).get_url()
 
-        #define Excel styles
+        # define Excel styles
         style = xlwt.XFStyle()
         normalfont = xlwt.Font()
         headerfont = xlwt.Font()
         headerfont.bold = True
         style.font = headerfont
 
-        #write cell elements similarly to the zpt-->html output
+        # write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, style)
         current_row += 1
         file = urllib.urlopen(chart_url)
@@ -110,9 +119,11 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         ws.insert_bitmap(bitmap_props['path'], current_row, 1, 0, 5)
         state['current_row'] = current_row + int(bitmap_props['height']/17) + 1
 
-    page = PageTemplateFile("zpt/multiplechoice_google_barchart_statistics.zpt", globals())
+    page = PageTemplateFile(
+        "zpt/multiplechoice_google_barchart_statistics.zpt", globals())
 
 InitializeClass(MultipleChoiceGoogleBarChartStatistic)
+
 
 def getStatistic():
     return MultipleChoiceGoogleBarChartStatistic
