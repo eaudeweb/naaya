@@ -487,11 +487,11 @@ class UpdateMeetingTypes(UpdateScript):
 
 
 class AddChoiceToRadioWidgets(UpdateScript):
-    title = 'Add "I prefer not to answer" choice on all radio widgets'
+    title = 'Add "I prefer not to answer" choice on ALL radio widgets'
     creation_date = 'Nov 10, 2015'
     authors = ['Valentin Dumitru']
     priority = PRIORITY['LOW']
-    description = ('Add "I prefer not to answer" choice on all radio widgets'
+    description = ('Add "I prefer not to answer" choice on ALL radio widgets'
                    ' of Eionet surveys')
 
     def _update(self, portal):
