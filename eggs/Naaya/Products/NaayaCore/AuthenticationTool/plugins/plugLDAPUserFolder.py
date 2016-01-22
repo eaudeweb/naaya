@@ -415,10 +415,11 @@ class plugLDAPUserFolder(PlugBase):
                     group_users.append(uid)
             return group_users
         else:
-            return []
+            return None
 
     def user_in_group(self, user, group):
-        return (str(user) in self.group_member_ids(group))
+        group_member_ids = self.group_member_ids(group) or []
+        return (str(user) in group_member_ids)
 
     def getUsersByRole(self, acl_folder, groups=None):
         """ Return all those users that are in a group """
@@ -508,6 +509,8 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_group_members(self, group_id):
         member_ids = self.group_member_ids(group_id)
+        if member_ids is None:
+            return None
         # ldap_user_folder = self.getUserFolder()
 
         def user_data(user_id):

@@ -1,32 +1,35 @@
 <div id="section_parent"
-	 tal:define="group_id request/group_id;
-				members python:here.get_group_members(group_id);">
-	
-	<br />
-	
-	<h3>
-		<strong i18n:translate="">Members of LDAP group</strong>
-		"<tal:block content="group_id" />"
-	</h3>
-	
-	<p>
-		<a tal:define="mail_addr string:${group_id}@roles.eea.eionet.europa.eu"
-		   tal:attributes="href string:mailto::${mail_addr};
-		                   title string:Send mail to all members of ${group_id}"
-		   tal:content="mail_addr"></a>
-	</p>
-	
-	<div class="description-text">
-		<p i18n:translate="">
-			Found <tal:block i18n:name="number" content="python:len(members)"/>
-			users in this LDAP group.
-		</p>
-	</div>
+   tal:define="group_id request/group_id;
+        members python:here.get_group_members(group_id);">
+  <h3>
+    <strong i18n:translate="">Members of LDAP group</strong>
+    "<tal:block content="group_id" />"
+  </h3>
+
+  <p>
+    <a tal:define="mail_addr string:${group_id}@roles.eea.eionet.europa.eu"
+       tal:attributes="href string:mailto::${mail_addr};
+                       title string:Send mail to all members of ${group_id}"
+       tal:content="mail_addr"></a>
+  </p>
+  <tal:block condition="python: members is not None">
+    <div class="description-text">
+      <p i18n:translate="">
+        Found <tal:block i18n:name="number" content="python:len(members)"/>
+        users in this LDAP group.
+      </p>
+    </div>
 
     <ul>
-        <li tal:repeat="member members">
-            <tal:block content="member/user_name" />
-            <em tal:content="string:(${member/user_id})"></em>
-        </li>
+      <li tal:repeat="member members">
+        <tal:block content="member/user_name" />
+        <em tal:content="string:(${member/user_id})"></em>
+      </li>
     </ul>
+  </tal:block>
+  <div tal:condition="python: members is None" class="description-text">
+    <p i18n:translate="">
+      This LDAP group doesn't exit anymore. You should delete it's permission assignments.
+    </p>
+  </div>
 </div>

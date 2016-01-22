@@ -1,5 +1,6 @@
 4.0.30 (unreleased)
 -------------------
+* allow spotting for deleted LDAP groups in admin_sources_html [dumitval]
 * add missing mime icon for bmp [dumitval]
 
 4.0.29 (2015-12-15)

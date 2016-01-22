@@ -660,7 +660,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # sort according to disabled_type
         response = []
         for usr in users_info:
-            mail = getattr(usr, 'email', '')
             is_disabled = getattr(usr, 'status', 'active') == 'disabled'
             if ((disabled_type == 'no_disabled') and (not is_disabled)
                 or (disabled_type == 'include_disabled')
@@ -975,7 +974,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for group, group_roles in source.get_groups_roles_map().items():
                 if not set(roles).intersection([x[0] for x in group_roles]):
                     continue
-                userids = source.group_member_ids(group)
+                userids = source.group_member_ids(group) or []
                 for userid in userids:
                     user_info = source.get_source_user_info(userid)
                     group_users[userid] = {
@@ -1613,7 +1612,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         groups_data = {}
         for group in group_roles_by_group.keys():
             for source in self.getSources():
-                userids = source.group_member_ids(group)
+                userids = source.group_member_ids(group) or []
                 if userids != []:
                     groups_data[group] = {
                         'source': source,

@@ -27,7 +27,7 @@ def post_user_management_action(event):
         notif_tool = event.context.getNotificationTool()
         if event.is_group:
             for user_source in auth_tool.getSources():
-                user_ids = user_source.group_member_ids(event.user_id)
+                user_ids = user_source.group_member_ids(event.user_id) or []
                 if user_ids:
                     break
             for user_id in user_ids:
