@@ -289,7 +289,7 @@ EIONET_SURVEYS = {
              'title': ('How many Eionet-relevant webinars in this topic '
                        'area have you participated in?'),
              'choices': ['First time', '2-5 times', '6-10 times',
-                         'More than 10 times', 'I prefer not to answer'],
+                         'More than 10 times'],
              'sortorder': 2,
              'required': False},
             {'meta_type': 'Naaya Radio Widget',
