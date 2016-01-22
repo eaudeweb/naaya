@@ -113,7 +113,7 @@ EIONET_SURVEYS = {
              'rows': 5},
             {'meta_type': 'Naaya Text Area Widget',
              'title': '6. Additional comments (for example usefulness of joint'
-                      ' meetings with other networks)',
+                      ' meetings with other networks).',
              'sortorder': 16,
              'rows': 5},
             {'meta_type': 'Naaya Label Widget',
@@ -168,8 +168,7 @@ EIONET_SURVEYS = {
             {'meta_type': 'Naaya Radio Widget',
              'title': '2.1. How did you find the workshop overall in terms '
                       'of usefulness?',
-             'choices': ['Poor', 'Satisfactory', 'Good', 'Excellent',
-                         'I prefer not to answer'],
+             'choices': ['Poor', 'Satisfactory', 'Good', 'Excellent'],
              'sortorder': 3,
              'required': False},
             {'meta_type': 'Naaya Radio Matrix Widget',
