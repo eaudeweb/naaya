@@ -1,4 +1,7 @@
-1.4.37 (unreleased)
+1.4.38 (unreleased)
+-------------------
+
+1.4.37 (2016-01-22)
 -------------------
 * compatibility update in group_member_search [dumitval]
 * fix for a crash with latin1 username [dumitval]
