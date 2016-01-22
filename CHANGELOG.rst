@@ -1,5 +1,6 @@
 1.2.88 (unreleased)
 -------------------
+* structural changes to the automatic surveys for Eionet meetings [dumitval]
 
 1.2.87 (2015-11-10)
 -------------------
