@@ -223,7 +223,8 @@ class MemberSearch(Implicit, Item):
         group_userids_map = {}
         source = sources_info[source_id]['source']
         for group_id in sources_info[source_id]['group_map'].keys():
-            group_userids_map[group_id] = source.group_member_ids(group_id)
+            group_userids_map[group_id] = (source.group_member_ids(group_id) or
+                                           [])
         return group_userids_map
 
     security.declarePrivate('get_user_access_level')
