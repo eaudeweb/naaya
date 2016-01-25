@@ -29,7 +29,7 @@
   </tal:block>
   <div tal:condition="python: members is None" class="description-text">
     <p i18n:translate="">
-      This LDAP group doesn't exit anymore. You should delete it's permission assignments.
+      This LDAP group doesn't exist. You should delete it's permission assignments.
     </p>
   </div>
 </div>

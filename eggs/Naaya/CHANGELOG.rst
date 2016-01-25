@@ -1,5 +1,6 @@
 4.0.31 (unreleased)
 -------------------
+* fixed typo in admin_sources_html [dumitval]
 
 4.0.30 (2016-01-22)
 -------------------
