@@ -1,4 +1,7 @@
-1.2.88 (unreleased)
+1.2.89 (unreleased)
+-------------------
+
+1.2.88 (2016-01-26)
 -------------------
 * structural changes to the automatic surveys for Eionet meetings [dumitval]
 
