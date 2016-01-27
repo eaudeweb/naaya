@@ -6,6 +6,7 @@ import os.path
 
 import xlwt
 import pdfkit
+from tempfile import NamedTemporaryFile
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -656,10 +657,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         for cookie in http_cookies.split('; '):
             if cookie.startswith('__ac'):
                 __ac = cookie.replace('__ac="', '')[:-1]
+                cookie_string = '__ac=%s; domain=%s; path=/;' % (
+                    __ac, self.REQUEST['HTTP_X_FORWARDED_HOST'])
+                cookie_jar = NamedTemporaryFile()
+                cookie_jar.write(cookie_string)
+                cookie_jar.flush()
                 options = {'print-media-type': False,
                            'no-images': False,
-                           'cookie': '__ac=%s' % __ac}
-                return pdfkit.from_url(url, False, options=options)
+                           'cookie-jar': cookie_jar.name}
+                pdf = pdfkit.from_url(url, False, options=options)
+                cookie_jar.close()
+                return pdf
         else:
             options = {'print-media-type': False, 'no-images': False}
             return pdfkit.from_url(url, False, options=options)

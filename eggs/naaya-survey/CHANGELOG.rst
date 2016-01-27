@@ -1,5 +1,6 @@
 1.3.1 (unreleased)
 ===================
+* use cookie-jar in wkhtmltopdf to fix Unauthorized issue [dumitval]
 
 1.3.0 (2016-01-20)
 ===================
