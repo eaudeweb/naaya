@@ -1,5 +1,6 @@
 1.2.89 (unreleased)
 -------------------
+* set duration interval for the eionet meetings automatic survey [dumitval]
 
 1.2.88 (2016-01-26)
 -------------------

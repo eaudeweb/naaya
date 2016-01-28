@@ -289,6 +289,15 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
                       ob.objectValues('Naaya Mega Survey')]
         if EIONET_SURVEYS[meeting_type]['id'] not in survey_ids:
             _create_eionet_survey(ob)
+            eionet_survey = _get_eionet_survey(ob)
+            start_date = DateTime(ob.interval.start_date.year,
+                                  ob.interval.start_date.month,
+                                  ob.interval.start_date.day)
+            if start_date != eionet_survey.releasedate:
+                eionet_survey.releasedate = start_date
+                eionet_survey.expirationdate = start_date + 13
+            if start_date + 13 != eionet_survey.expirationdate:
+                eionet_survey.expirationdate = start_date + 13
     if self.checkPermissionSkipApproval():
         approved, approved_by = (1,
                                  self.REQUEST.AUTHENTICATED_USER.getUserName())
@@ -596,6 +605,15 @@ class NyMeeting(NyContentData, NyFolder):
                               self.objectValues('Naaya Mega Survey')]
                 if EIONET_SURVEYS[meeting_type]['id'] not in survey_ids:
                     _create_eionet_survey(self)
+                eionet_survey = _get_eionet_survey(self)
+                start_date = DateTime(self.interval.start_date.year,
+                                      self.interval.start_date.month,
+                                      self.interval.start_date.day)
+                if start_date != eionet_survey.releasedate:
+                    eionet_survey.releasedate = start_date
+                    eionet_survey.expirationdate = start_date + 13
+                if start_date + 13 != eionet_survey.expirationdate:
+                    eionet_survey.expirationdate = start_date + 13
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
@@ -962,6 +980,13 @@ def _create_eionet_survey(container):
         manage_addPageTemplate(eionet_survey, 'validation_html',
                                validation_title,
                                open(validation_html).read())
+
+
+def _get_eionet_survey(container):
+    portal_map = container.getGeoMapTool()
+    meeting_type = portal_map.getSymbolTitle(container.geo_type)
+    survey_details = EIONET_SURVEYS[meeting_type]
+    return container[survey_details['id']]
 
 
 def _approve(context, request):
