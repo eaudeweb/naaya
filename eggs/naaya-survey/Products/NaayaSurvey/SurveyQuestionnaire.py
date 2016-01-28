@@ -663,7 +663,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                 cookie_jar.write(cookie_string)
                 cookie_jar.flush()
                 options = {'print-media-type': False,
-                           'no-images': False,
                            'cookie-jar': cookie_jar.name}
                 pdf = pdfkit.from_url(url, False, options=options)
                 cookie_jar.close()
