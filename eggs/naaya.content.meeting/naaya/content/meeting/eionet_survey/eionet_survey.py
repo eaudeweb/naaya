@@ -139,11 +139,11 @@ EIONET_SURVEYS = {
              'required': False},
             {'meta_type': 'Naaya Text Area Widget',
              'title': ('7.4 Additional comments related to webinars'),
-             'sortorder': 19,
+             'sortorder': 21,
              'rows': 5},
             {'meta_type': 'Naaya Label Widget',
              'title': 'Thank you!',
-             'sortorder': 20}
+             'sortorder': 22}
         ]
     },
     'NRC meeting': {
