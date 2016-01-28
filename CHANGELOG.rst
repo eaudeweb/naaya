@@ -1,5 +1,9 @@
-1.2.89 (unreleased)
+1.2.90 (unreleased)
 -------------------
+
+1.2.89 (2016-01-28)
+-------------------
+* fix in question order of the eionet meeting survey [dumitval]
 
 1.2.88 (2016-01-26)
 -------------------
