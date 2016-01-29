@@ -97,6 +97,12 @@
           component=".updates.AddChoiceToRadioWidgets"
           permission="zope2.ViewManagementScreens" />
   </configure>
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="set_duration_on_eionet_surveys.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.SetDurationOnEionetSurvey"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
 
  <browser:resourceDirectory
       name="naaya.content.meeting-www"
