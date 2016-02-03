@@ -3,8 +3,18 @@ function init() {
     var selLink = inst.dom.getParent(inst.selection.getNode(), 'A');
     if(selLink !== null) {
         var url = inst.dom.getAttrib(selLink, 'href');
+        var urlsplit = url.replace('mailto:', '').split('?');
         if(url !== null && url !== '') {
             document.getElementById('url').value = url;
+        }
+        if(url !== null && url !== '') {
+            var email = urlsplit[0];
+            if (Validator.isEmail(email)){
+                document.getElementById('email').value = email;
+                if (urlsplit.length > 1){
+                    document.getElementById('subject').value = urlsplit[1].replace('subject=', '');
+                }
+            }
         }
         var title = inst.dom.getAttrib(selLink, 'title');
         if(title !== null && title !== '') {
@@ -18,12 +28,19 @@ function init() {
 }
 
 function insert_link() {
-    var ctrl_url = document.getElementById('url');
+    var email_page = $('#email').is(':visible');
+    var ctrl_url;
+    if (email_page){
+        ctrl_url = document.getElementById('email');
+    } else {
+        ctrl_url = document.getElementById('url');
+    }
+    var ctrl_subject = document.getElementById('subject');
     var inst = tinyMCEPopup.editor;
     var elm;
 
     elm = inst.selection.getNode();
-    checkPrefix(ctrl_url);
+    checkPrefix(ctrl_url, ctrl_subject);
     var elm = inst.dom.getParent(elm, 'A');
     // Remove element if there is no href
     if (!ctrl_url.value) {
@@ -41,10 +58,19 @@ function insert_link() {
         inst.getDoc().execCommand('unlink', false, null);
         tinyMCEPopup.execCommand('CreateLink', false, '#mce_temp_url#', {skip_undo : 1});
         elementArray = tinymce.grep(inst.dom.select('a'), function(n) {return inst.dom.getAttrib(n, 'href') == '#mce_temp_url#';});
-        for (i=0; i<elementArray.length; i++)
-            setAllAttribs(elm = elementArray[i]);
+        for (i=0; i<elementArray.length; i++){
+            if (email_page){
+                setEmailAttribs(elm = elementArray[i]);
+            } else {
+                setAllAttribs(elm = elementArray[i]);
+            }
+        }
     } else {
-        setAllAttribs(elm);
+            if (email_page){
+                setEmailAttribs(elm);
+            } else {
+                setAllAttribs(elm);
+            }
     }
 
     // Don't move caret if selection was image
@@ -72,11 +98,24 @@ function setAllAttribs(link) {
     dom.setAttrib(link, 'target', target);
 }
 
-function checkPrefix(n) {
-    if (n.value && Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_email')))
-        n.value = 'mailto:' + n.value;
+function setEmailAttribs(link) {
+    var inst = tinyMCEPopup.editor;
+    var dom = tinyMCEPopup.editor.dom;
+    var val = getCtrlValue('email');
+    dom.setAttrib(link, 'href', val);
+}
 
-    if (/^\s*www\./i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_external')))
+function checkPrefix(n, subject) {
+    subject = subject || '';
+    if (n.value && Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value)){
+        if (subject == '') {
+            n.value = 'mailto:' + n.value;
+        } else {
+            n.value = 'mailto:' + n.value + '?subject=' + subject.value;
+        }
+    }
+
+    if (/^\s*www\./i.test(n.value))
         n.value = 'http://' + n.value;
 }
 
