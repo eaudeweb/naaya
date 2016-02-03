@@ -40,6 +40,7 @@
             <li>
               <div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
               <div style="float: left; clear: both;margin: 10px 0 10px 0" i18n:translate="">To choose a link from this portal, click on the desired item from the sitemap above</div>
+              <br class="cleaner" />
             </li>
             <li>
               <div class="propfield" style="clear:both;"><label for="url" i18n:translate="">URL:</label></div>
