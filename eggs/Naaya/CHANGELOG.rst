@@ -1,5 +1,6 @@
 4.0.32 (unreleased)
 -------------------
+* portlet administration layout improvements [dumitval]
 
 4.0.31 (2016-01-25)
 -------------------

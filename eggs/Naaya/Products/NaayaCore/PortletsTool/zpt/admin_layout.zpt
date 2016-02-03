@@ -64,7 +64,18 @@ $(function(){
         }
     });
 
-    $('select[name="portlet_id"]').chosen();
+    $('select[name="portlet_id"]').chosen({allow_single_deselect: true});
+
+    $('#cancel').click(function(evt){
+      evt.preventDefault();
+      $('#position').val('left');
+      $('select[name="portlet_id"]').val('').trigger('liszt:updated');
+      $('#inherit').attr('checked', 'checked');
+      $('#location').val('');
+      $('a[class="clicked"]').removeAttr('class');
+      $('li[class="open"]').attr('class', 'closed');
+      alert(gettext('All fields are now at their default values'));
+    });
 });
 </script>
 
@@ -150,6 +161,7 @@ $(function(){
     <div class="field-inline">
     <label for="portlet_id" i18n:translate="">Portlet</label>
     <select id="portlet_id" name="portlet_id">
+        <option value=""></option>
         <option tal:repeat="portlet here/get_all_portlets"
           tal:attributes="value portlet/id">
             <tal:block content="portlet/title_or_id" />
@@ -174,9 +186,11 @@ $(function(){
     <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
     </div>
 
-    <div class="field">
-    <input type="submit" name="action" value="Assign" />
+    <div class="field" style="margin-top: 5em">
+      <input type="submit" name="action" value="Assign" />
+      <input id="cancel" type="submit" name="cancel" value="Cancel" />
     </div>
+
 </fieldset>
 </form>
 </metal:block>
