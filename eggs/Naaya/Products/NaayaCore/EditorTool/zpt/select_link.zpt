@@ -1,81 +1,118 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-	<head>
-		<title i18n:translate="">Insert/Edit link</title>
-		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
-		<style type="text/css">
-			#link_prepare {
-				margin:0 0 .5em 0;
-			}
-			#link_prepare input { width: 20em; }
-			#link_prepare ul {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			#link_prepare li { margin: .5em 0 0 0; }
-			.cleaner {
-				clear: both;
-			}
-			.propfield {
-				width: 8em;
-				float: left;
-			}
-		</style>
-		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/Naaya/jquery.js"></script>
-	</head>
-	<body>
-		<div id="link_prepare">
-			<ul>
-				<li>
-					<div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
-					<div style="float: left; clear: both;" i18n:translate="">To choose a link from this portal, click on the desired item from the sitemap above</div>
-					<div class="propfield" style="clear:both;"><label for="url" i18n:translate="">URL:</label></div>
-					<input class="sitemap_tree_target" type="text" id="url" name="url" style="width: 32em;" />
-				</li>
-				<li>
-					<div class="propfield" style="clear: both;"><label for="target">Target</label></div>
-					<select id="target" name="target">
-						<option value="" i18n:translate="">Open link in same window</option>
-						<option value="_new" i18n:translate="">Open link in new window</option>
-					</select>
-				</li>
-				<li>
-					<div class="propfield"><label for="title" i18n:translate="">Title</label></div>
-					<input id="title" type="text" name="title" value="" style="width: 25em;" />
-				</li>
-			</ul>
-		</div>
-		<br class="cleaner" />
-		<div class="mceActionPanel">
-			<input id="insert" type="button" i18n:attributes="value" value="Insert" onclick="insert_link();" />
-			<input id="cancel" type="button" i18n:attributes="value" value="Cancel" onclick="popup_close();" />
-		</div>
-		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
-		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
-		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/link_js"></script>
-		<script type="text/javascript">
-			function popup_close() {
-				tinyMCEPopup.close();
-			}
-			window.onload = init;
-		</script>
-		<metal:block use-macro="here/macro_utils/macros/ajaxtree">
-			<metal:block fill-slot="treedefinitions">
-				<script type="text/javascript"
-					tal:define="site here/getSite;
-								tree_initial_node tree_initial_node|string:;
-								tree_get_url tree_get_url|string:${here/absolute_url}/getNavigationSiteMap/"
-					tal:content="string:
-						$(document).ready(function(){
-							load_js_tree({
-								TREE_URL_PREFIX: '${site/absolute_url}/',
-								TREE_GET_URL: '${tree_get_url}',
-								TREE_INITIAL_NODE: '${tree_initial_node}',
-								TREE_CONTAINER: '.sitemap_tree'
-						});
-					});"></script>
-			</metal:block>
-		</metal:block>
-	</body>
+  <head>
+    <title i18n:translate="">Insert/Edit link</title>
+    <link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
+    <style type="text/css">
+      #link_prepare {
+        margin:0 0 .5em 0;
+      }
+      #link_prepare input { width: 20em; }
+      #link_prepare ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      #link_prepare li { margin: .5em 0 0 0; }
+      .cleaner {
+        clear: both;
+      }
+      .propfield {
+        width: 8em;
+        float: left;
+      }
+    </style>
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/Naaya/jquery.js"></script>
+  </head>
+  <body>
+
+    <div class="tabs">
+      <ul>
+        <li id="url_tab" class="current"><span><a href="javascript:mcTabs.displayTab('url_tab','url_panel');" onmousedown="return false;" i18n:translate="">URL</a></span></li>
+        <li id="email_tab"><span><a href="javascript:mcTabs.displayTab('email_tab','email_panel');" onmousedown="return false;" i18n:translate="">eMail</a></span></li>
+      </ul>
+    </div>
+
+    <div class="panel_wrapper">
+      <div id="url_panel" class="panel current">
+        <div id="link_prepare">
+          <ul>
+            <li>
+              <div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
+              <div style="float: left; clear: both;margin: 10px 0 10px 0" i18n:translate="">To choose a link from this portal, click on the desired item from the sitemap above</div>
+              <br class="cleaner" />
+            </li>
+            <li>
+              <div class="propfield" style="clear:both;"><label for="url" i18n:translate="">URL:</label></div>
+              <input class="sitemap_tree_target" type="text" id="url" name="url" style="width: 32em;" />
+            </li>
+            <li>
+              <div class="propfield" style="clear: both;"><label for="target">Target</label></div>
+              <select id="target" name="target">
+                <option value="" i18n:translate="">Open link in same window</option>
+                <option value="_new" i18n:translate="">Open link in new window</option>
+              </select>
+            </li>
+            <li>
+              <div class="propfield"><label for="title" i18n:translate="">Title</label></div>
+              <input id="title" type="text" name="title" value="" style="width: 25em;" />
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="email_panel" class="panel">
+        <div id="link_prepare">
+          <ul>
+            <li>
+              <div style="float: left; clear: both;margin: 20px 0 10px 0" i18n:translate="">Enter email address and a possible subject to the email. If the subject field is present, the link will be created so that when clicked, it will open an email window with the subject field already filled in.</div>
+            </li>
+            <li>
+              <div class="propfield" style="clear:both;"><label for="email" i18n:translate="">eMail:</label></div>
+              <input type="text" id="email" name="email" style="width: 32em;" />
+            </li>
+            <li>
+              <div class="propfield"><label for="subject" i18n:translate="">Subject</label></div>
+              <input id="subject" type="text" name="subject" value="" style="width: 32em;" />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <br class="cleaner" />
+
+    <div class="mceActionPanel">
+      <input id="insert" type="button" i18n:attributes="value" value="Insert" onclick="insert_link();" />
+      <input id="cancel" type="button" i18n:attributes="value" value="Cancel" onclick="popup_close();" />
+    </div>
+
+    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
+    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/link_js"></script>
+    <script type="text/javascript">
+      function popup_close() {
+        tinyMCEPopup.close();
+      }
+      window.onload = init;
+    </script>
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree">
+      <metal:block fill-slot="treedefinitions">
+        <script type="text/javascript"
+          tal:define="site here/getSite;
+                tree_initial_node tree_initial_node|string:;
+                tree_get_url tree_get_url|string:${here/absolute_url}/getNavigationSiteMap/"
+          tal:content="string:
+            $(document).ready(function(){
+              load_js_tree({
+                TREE_URL_PREFIX: '${site/absolute_url}/',
+                TREE_GET_URL: '${tree_get_url}',
+                TREE_INITIAL_NODE: '${tree_initial_node}',
+                TREE_CONTAINER: '.sitemap_tree'
+            });
+          });"></script>
+      </metal:block>
+    </metal:block>
+  </body>
 </html>
