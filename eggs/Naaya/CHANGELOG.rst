@@ -1,4 +1,7 @@
-4.0.32 (unreleased)
+4.0.33 (unreleased)
+-------------------
+
+4.0.32 (2016-02-09)
 -------------------
 * portlet administration layout improvements [dumitval]
 * Editor tool: add email tab in insert link plugin [dumitval]
