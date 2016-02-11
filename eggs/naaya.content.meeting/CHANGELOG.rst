@@ -1,4 +1,7 @@
-1.2.90 (unreleased)
+1.2.91 (unreleased)
+-------------------
+
+1.2.90 (2016-02-11)
 -------------------
 * set duration interval for the eionet meetings automatic survey +
   update script [dumitval]
