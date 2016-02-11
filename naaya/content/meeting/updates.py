@@ -1,6 +1,7 @@
 import re
 import os
 from datetime import datetime
+from DateTime import DateTime
 
 from AccessControl.Permission import Permission
 
@@ -521,4 +522,42 @@ class AddChoiceToRadioWidgets(UpdateScript):
                     else:
                         self.log.debug('Choice already present on survey %s' %
                                        survey.absolute_url())
+        return True
+
+
+class SetDurationOnEionetSurvey(UpdateScript):
+    title = ('Set the duration of eionet surveys to 14 days, '
+             'starting the first day of the meeting')
+    creation_date = 'Jan 29, 2016'
+    authors = ['Valentin Dumitru']
+    priority = PRIORITY['LOW']
+    description = ('Set the duration of eionet surveys to 14 days, '
+                   'starting the first day of the meeting')
+
+    def _update(self, portal):
+        EmailTool.divert_mail()
+        eionet_surveys = ['eionet-survey', 'eionet-survey-nfp-meeting',
+                          'eionet-survey-nrc-webinar']
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            for survey_id in eionet_surveys:
+                survey = getattr(meeting, survey_id, None)
+                if survey:
+                    meeting_start = DateTime(meeting.interval.start_date.year,
+                                             meeting.interval.start_date.month,
+                                             meeting.interval.start_date.day)
+                    if meeting_start > DateTime() - 14:
+                        if (survey.releasedate == meeting_start and
+                                survey.expirationdate == meeting_start + 13):
+                            self.log.debug(
+                                'Interval already correct for survey %s' %
+                                survey.absolute_url())
+                        elif survey.releasedate < meeting_start:
+                            self.log.debug('Survey %s might be too old!' %
+                                           survey.absolute_url())
+                        else:
+                            survey.releasedate = meeting_start
+                            survey.expirationdate = meeting_start + 13
+                            self.log.debug('Interval set for survey %s' %
+                                           survey.absolute_url())
         return True
