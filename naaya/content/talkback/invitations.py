@@ -40,7 +40,6 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
 from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
-from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 import xlwt
 import xlrd
 
@@ -113,7 +112,8 @@ class InvitationsContainer(SimpleItem):
     _create_email_html = NaayaPageTemplateFile(
         'zpt/invitations_create_email', globals(),
         'tbconsultation_invitations_create_email')
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'create')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'send_email')
 
     def send_email(self, REQUEST):
         """ Send e-mail """
