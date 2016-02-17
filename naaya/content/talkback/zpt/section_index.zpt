@@ -7,6 +7,17 @@
     replace="structure editor/includeLibs" />
 
 <script type="text/javascript" src="section_js"></script>
+<script>
+$(function(){
+    var tbody = $('form[name=section_list] table.talkback-section_list tbody');
+    tbody.css('cursor', 'move');
+    tbody.sortable({axis: 'y'});
+    var is_fullscreen = $('#is_fullscreen').val();
+    if (is_fullscreen){
+        $("body").addClass("fullscreen");
+    }
+});
+</script>
 
 <div class="cleaner" ></div>
 
@@ -51,6 +62,9 @@
           i18n:translate="">Hide comments</a>
     </span>
 </div>
+
+<input id="is_fullscreen" type="hidden"
+    tal:attributes=" value here/is_fullscreen|nothing"/>
 
 <div class="talkback-section">
     <div tal:repeat="paragraph here/get_paragraphs">
