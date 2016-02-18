@@ -25,6 +25,8 @@ from Products.Naaya.constants import LABEL_NYFOLDER
 from Products.Naaya.constants import METATYPE_FOLDER
 from Products.Naaya.constants import METATYPE_MEETING
 from Products.Naaya.constants import METATYPE_NYSITE
+from Products.Naaya.constants import METATYPE_SURVEY
+from Products.Naaya.constants import METATYPE_TALKBACK
 from Products.Naaya.constants import NAAYA_PRODUCT_PATH
 from Products.Naaya.constants import NYEXP_SCHEMA_LOCATION
 from Products.Naaya.constants import PERMISSION_ADD_FOLDER
@@ -1866,7 +1868,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 # leave subportals out of this filtering, if selected
                 if not (subportals and INySite.providedBy(sub_ob)):
                     if sub_ob.meta_type not in [METATYPE_FOLDER,
-                                                METATYPE_MEETING]:
+                                                METATYPE_MEETING,
+                                                METATYPE_SURVEY,
+                                                METATYPE_TALKBACK]:
                         continue
             # if portal and only_folders=False, filter out non-containers
             elif INySite.providedBy(ob):

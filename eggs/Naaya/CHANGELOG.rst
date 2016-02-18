@@ -1,5 +1,6 @@
 4.0.34 (unreleased)
 -------------------
+* show talkbacks and surveys in the assign roles interface [dumitval]
 
 4.0.33 (2016-02-18)
 -------------------
