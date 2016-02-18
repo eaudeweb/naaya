@@ -44,7 +44,7 @@
                         href="" tal:attributes="title role_description;onclick string:window.opener.fSetRoles('${role_id}');;
                         window.close();;"></a>&nbsp;<em tal:content="python:role_description[:60]" />
 					<small><a target="_blank"
-					   tal:define="n_members python:len(here.group_member_ids(role_id));
+					   tal:define="n_members python:len(here.group_member_ids(role_id) or []);
                                    site here/getSite;
                                    url_base string:${site/absolute_url}/admin_sources_html?id=${here/getId}"
 					   tal:attributes="href string:${url_base}&s=group_members&group_id=${role_id}"
