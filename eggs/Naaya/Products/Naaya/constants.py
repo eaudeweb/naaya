@@ -37,35 +37,38 @@ WRONG_PASSWORD = 'Current password is not correct. Changes NOT saved.'
 
 MESSAGE_ROLEADDED = 'Role(s) successfully granted to user ${user}'
 MESSAGE_ROLEREVOKED = 'Role(s) successfully revoked to selected user(s)'
-MESSAGE_USERADDED = 'User successfully added. Now you can assign a role to this account.'
+MESSAGE_USERADDED = ('User successfully added. '
+                     'Now you can assign a role to this account.')
 MESSAGE_USERMODIFIED = 'User\'s credentials saved'
 
-NYEXP_SCHEMA_LOCATION = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd'
+NYEXP_SCHEMA_LOCATION = ('http://svn.eionet.eu.int/repositories/Zope/trunk/'
+                         'Naaya/NaayaDocuments/schemas/naaya/'
+                         'naaya-nyexp-1.0.0.xsd')
 
 JS_MESSAGES = [
-# datetime_js
+    # datetime_js
     u'Today',
     u'Yesterday',
     u'Tomorrow',
     u'Calendar',
     u'Cancel',
-# calendar_js
+    # calendar_js
     (u'January February March April May June July '
      u'August September October November December'),
-     u'S M T W T F S',
-# portal_map
+    u'S M T W T F S',
+    # portal_map
     u'Show All',
     u'Hide All',
     u'Type location address',
     u'Type keywords to filter locations',
     u'close',
-# folder_listing.zpt error messages
+    # folder_listing.zpt error messages
     u'Please select one or more items to copy.',
     u'Please select one or more items to cut.',
     u'Please select one or more items to delete.',
     u'Please select one or more items to rename.',
-# Ajax file upload (CHM NyMunicipality)
+    # Ajax file upload (CHM NyMunicipality)
     u'Replace picture',
-# glossary widget, jquery-ui dialog
+    # glossary widget, jquery-ui dialog
     u'Close',
 ]
