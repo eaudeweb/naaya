@@ -1,4 +1,7 @@
-4.0.33 (unreleased)
+4.0.34 (unreleased)
+-------------------
+
+4.0.33 (2016-02-18)
 -------------------
 * fix for pickRoles [dumitval]
 
