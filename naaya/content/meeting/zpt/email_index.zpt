@@ -222,7 +222,7 @@
                 </metal:block>
                 <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
             </div>
-            <input type="submit" name="send_email" value="Send newsletter"/>
+            <input type="submit" name="send_email" value="Send email"/>
         </form>
     </metal:block>
 
