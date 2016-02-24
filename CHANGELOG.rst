@@ -1,4 +1,7 @@
-1.2.91 (unreleased)
+1.2.92 (unreleased)
+-------------------
+
+1.2.91 (2016-02-24)
 -------------------
 * fix textarea resize in IE [dumitval]
 
