@@ -29,3 +29,6 @@ table.meeting-registration-methods {
 .rejected {
     text-decoration: line-through;
 }
+textarea {
+    overflow:hidden;
+}
