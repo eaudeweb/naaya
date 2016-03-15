@@ -1,3 +1,7 @@
+1.2.21 - (unreleased)
+=======================
+* assign keywords on list of map locations [dumitval]
+
 1.2.20 - (2014-01-28)
 =======================
 * Bug fix: make the Topic required only when the landscape type is filled in

@@ -13,6 +13,7 @@ from Products.NaayaCore.constants import *
 
 tmpl = PageTemplateFile('zpt/site_allocate_keywords', globals())
 
+
 class allocate_keywords_html(BrowserPage):
     """
     Render the 'allocate keywords' form for selected objects
@@ -33,7 +34,8 @@ class allocate_keywords_html(BrowserPage):
             item = context.getObjectById(id)
             if not item:
                 item = context.unrestrictedTraverse(id)
-            item_schema = get_schema_helper_for_metatype(context, item.meta_type)
+            item_schema = get_schema_helper_for_metatype(context,
+                                                         item.meta_type)
             keywords_glossary = getattr(item_schema.schema,
                                         'keywords-property', None)
 
@@ -62,6 +64,7 @@ class allocate_keywords_html(BrowserPage):
 
         return tmpl.__of__(context)(**options)
 
+
 class allocateKeywords(BrowserPage):
     """
     Update objects' keywords, whether there are bulk keywords selected or
@@ -77,7 +80,8 @@ class allocateKeywords(BrowserPage):
             bulk_action = REQUEST.form['bulk_action']
         except KeyError:
             self.context.setSessionErrorsTrans('No keywords to allocate!')
-            return self.request.RESPONSE.redirect(self.aq_parent.absolute_url())
+            return self.request.RESPONSE.redirect(
+                self.aq_parent.absolute_url())
 
         bulk_items = REQUEST.form.get('checked_paths', [])
         bulk_keywords = split_keywords(REQUEST.form['bulk_keywords'])
@@ -92,9 +96,8 @@ class allocateKeywords(BrowserPage):
                         if keyword not in keywords:
                             if bulk_action == "allocate":
                                 keywords.add(keyword)
-                        if keyword in keywords:
-                            if bulk_action == "remove":
-                                keywords.remove(keyword)
+                        elif bulk_action == "remove":
+                            keywords.remove(keyword)
                     else:
                         if keyword in keywords:
                             keywords.remove(keyword)
@@ -103,7 +106,8 @@ class allocateKeywords(BrowserPage):
             keywords = ", ".join(keyword for keyword in keywords if keyword)
 
             site = self.context.getSite()
-            item.set_localpropvalue('keywords', site.gl_get_selected_language(),
+            item.set_localpropvalue('keywords',
+                                    site.gl_get_selected_language(),
                                     keywords)
             item.recatalogNyObject(item)
 
