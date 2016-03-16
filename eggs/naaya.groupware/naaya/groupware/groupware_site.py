@@ -483,7 +483,7 @@ class GroupwareSite(NySite):
         if REQUEST is not None:
             kw.update(REQUEST.form)
 
-        key = kw['key']
+        key = kw.get('key', '')
         log_entry = None
         if key in session_data:
             log_entry_id = session_data[key]
@@ -523,7 +523,8 @@ class GroupwareSite(NySite):
                 source_obj.addUserRoles(name=log_entry.user,
                                         location=log_entry.location,
                                         roles=log_entry.role,
-                                        send_mail=send_mail)
+                                        send_mail=send_mail,
+                                        REQUEST=REQUEST)
 
                 new_log_entry.action = 'Granted'
                 action_logger.append(new_log_entry)
@@ -564,8 +565,7 @@ class GroupwareSite(NySite):
             # one administrator (or delegate) to access the link several times
             del session_data[key]
 
-            return self.review_ig_request_html(log_entry=log_entry,
-                                               result=result)
+            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url())
 
     def request_ig_access(self, REQUEST):
         """ Called when `request_ig_access_html` submits.
