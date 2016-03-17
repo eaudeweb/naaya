@@ -1634,9 +1634,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         # not needed, we don't keep langs in separate places anymore
         pass
 
-    def gl_changeLanguage(self, old_lang, REQUEST=None):
+    def gl_changeLanguage(self, old_lang=None, REQUEST=None):
         """ Changing portal browsing language """
-        self.getPortalI18n().change_selected_language(old_lang)
+        if old_lang is not None:
+            self.getPortalI18n().change_selected_language(old_lang)
         if REQUEST:
             referer = REQUEST.get('HTTP_REFERER', None)
             if not referer:
