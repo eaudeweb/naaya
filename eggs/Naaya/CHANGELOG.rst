@@ -1,4 +1,7 @@
-4.0.35 (unreleased)
+4.0.36 (unreleased)
+-------------------
+
+4.0.35 (2016-03-17)
 -------------------
 * get rid of BadRequest errors on gl_changeLanguage [dumitval]
 
