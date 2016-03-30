@@ -954,10 +954,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['topics'] = topics
         options['geo_query'] = geo_query
         options['country'] = country
-        options['step'] = int(kw.get('step', '50'))
+        try:
+            options['step'] = int(kw.get('step', '50'))
+        except ValueError:
+            options['step'] = 50
         step = options['step']
-        options['start'] = int(kw.get('start', '0'))
-        options['end'] = int(kw.get('end', step))
+        try:
+            options['start'] = int(kw.get('start', '0'))
+        except ValueError:
+            options['start'] = 0
+        try:
+            options['end'] = int(kw.get('end', step))
+        except ValueError:
+            options['end'] = int(step)
         options['sortable'] = kw.get('sortable', 'True')
         options['sort_on'] = sort_on
         options['sort_order'] = sort_order
