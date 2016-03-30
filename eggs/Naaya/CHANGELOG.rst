@@ -1,4 +1,7 @@
-4.0.36 (unreleased)
+4.0.37 (unreleased)
+-------------------
+
+4.0.36 (2016-03-30)
 -------------------
 * handle incorrect coordinates on map list_locations [dumitval]
 
