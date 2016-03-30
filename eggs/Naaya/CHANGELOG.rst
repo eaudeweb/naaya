@@ -1,4 +1,7 @@
-4.0.37 (unreleased)
+4.0.38 (unreleased)
+-------------------
+
+4.0.37 (2016-03-30)
 -------------------
 * further handling for incorrect arguments on map list_locations [dumitval]
 
