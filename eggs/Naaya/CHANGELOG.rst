@@ -1,5 +1,6 @@
 4.0.36 (unreleased)
 -------------------
+* handle incorrect coordinates on map list_locations [dumitval]
 
 4.0.35 (2016-03-17)
 -------------------

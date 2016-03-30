@@ -885,6 +885,26 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             kw.get('lat_max', ''),\
             kw.get('lon_min', ''),\
             kw.get('lon_max', '')
+        try:
+            float(lat_min)
+        except ValueError:
+            # incorrect format of the coordinate
+            lat_min = ''
+        try:
+            float(lat_max)
+        except ValueError:
+            # incorrect format of the coordinate
+            lat_max = ''
+        try:
+            float(lon_min)
+        except ValueError:
+            # incorrect format of the coordinate
+            lon_min = ''
+        try:
+            float(lon_max)
+        except ValueError:
+            # incorrect format of the coordinate
+            lon_max = ''
         geo_types = kw.get('geo_types', [])
         if geo_types == '':
             geo_types = []
