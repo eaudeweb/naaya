@@ -1,4 +1,7 @@
-4.0.38 (unreleased)
+4.0.39 (unreleased)
+-------------------
+
+4.0.38 (2016-03-31)
 -------------------
 * bugfix in manage email settings [dumitval]
 
