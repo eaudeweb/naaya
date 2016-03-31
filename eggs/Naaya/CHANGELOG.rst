@@ -1,5 +1,6 @@
 4.0.38 (unreleased)
 -------------------
+* bugfix in manage email settings [dumitval]
 
 4.0.37 (2016-03-30)
 -------------------

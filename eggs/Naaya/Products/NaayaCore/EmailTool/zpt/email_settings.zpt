@@ -38,7 +38,7 @@
   </tr>
   <tr>
     <td class="form-label">On errors</td>
-    <td><input tal:define="here/notify_on_errors|string:1" type="checkbox" name="notify_on_errors"
+    <td><input tal:define="notify_on_errors here/notify_on_errors|string:1" type="checkbox" name="notify_on_errors"
       tal:attributes="checked python:notify_on_errors==1" /></td>
   </tr>
   <tr>
