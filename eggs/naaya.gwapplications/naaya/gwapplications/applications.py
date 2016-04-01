@@ -22,7 +22,7 @@ class GWApplications(Folder):
 
     implements(IGWApplications)
     email_sender = EmailTool('email_sender', 'Applications email sender')
-    email_sender.mail_server_name = 'localhost'
+    email_sender.mail_server_name = 'postfix'
     email_sender.mail_server_port = '25'
 
     _properties = (

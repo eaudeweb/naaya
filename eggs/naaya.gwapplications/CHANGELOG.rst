@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* change default mailserver name for docker compatibility [dumitval]
 
 1.1.7 (2013-10-31)
 ------------------
