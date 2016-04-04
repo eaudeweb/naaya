@@ -1,4 +1,7 @@
-1.4.38 (unreleased)
+1.4.39 (unreleased)
+-------------------
+
+1.4.38 (2016-04-04)
 -------------------
 * fix sending notification email after role request approval [dumitval]
 
