@@ -26,7 +26,7 @@
               href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
         <h1 tal:content="meta_info/root_site_title">Eionet Forum</h1>
         <p class="documentDescription"
-          tal:content="structure meta_info/welcome_text">Welcome to the Forum.
+          tal:content="structure meta_info/welcome_text|nothing">Welcome to the Forum.
           The purpose of this site is to cooperate on items of shared interest.
           In order to become a member (i.e. obtain a username and a password)
           you should read the information supplied for each interest group and
