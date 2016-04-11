@@ -1,5 +1,6 @@
 1.4.39 (unreleased)
 -------------------
+* root index fix for IGs without welcome text property [dumitval]
 
 1.4.38 (2016-04-04)
 -------------------
