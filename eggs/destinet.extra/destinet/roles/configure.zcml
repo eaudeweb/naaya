@@ -4,5 +4,9 @@
         name="admin_assign_role_html"
         handler=".roles.admin_assign_role"
         permission="zope2.ViewManagementScreens" />
+    <naaya:simpleView
+        for="naaya.content.contact.interfaces.INyContact"
+        name="admin_assign_role_html"
+        handler=".roles.admin_assign_role"
+        permission="zope2.ViewManagementScreens" />
 </configure>
-
