@@ -1,5 +1,6 @@
 1.2.21 - (unreleased)
 =======================
+* assign local editor roles directly from contact objects [dumitval]
 * assign keywords on list of map locations [dumitval]
 
 1.2.20 - (2014-01-28)
