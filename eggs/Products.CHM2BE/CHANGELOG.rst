@@ -1,7 +1,6 @@
 1.1.3 (unreleased)
 ------------------
 
-
 1.1.2 (2012-04-24)
 ------------------
 * Added 'Comments on content' and 'API keys status' in
