@@ -1,4 +1,7 @@
-1.4.24 (unreleased)
+1.4.25 (unreleased)
+--------------------
+
+1.4.24 (2016-05-30)
 --------------------
 * switch to datetime.now for last modification (i.e. CET) [dumitval]
 
