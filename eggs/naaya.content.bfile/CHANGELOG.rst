@@ -1,5 +1,6 @@
 1.4.24 (unreleased)
 --------------------
+* switch to datetime.now for last modification (i.e. CET) [dumitval]
 
 1.4.23 (2015-10-06)
 --------------------

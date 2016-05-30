@@ -332,7 +332,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         """ """
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.utcnow(),
+                           timestamp=datetime.now(),
                            contributor=contributor)
 
         if language is None:
@@ -363,7 +363,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         ver.removed = True
         ver.removed_by = removed_by
-        ver.removed_at = datetime.utcnow()
+        ver.removed_at = datetime.now()
         ver.size = None
 
         f = ver.open_write()
