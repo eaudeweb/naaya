@@ -24,9 +24,13 @@ from Globals import InitializeClass
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaCore.managers.utils import utils
 
-def addFileWidget(container, id="", title="String Widget", REQUEST=None, **kwargs):
+
+def addFileWidget(container, id="", title="String Widget", REQUEST=None,
+                  **kwargs):
     """ Contructor for String widget"""
-    return manage_addWidget(FileWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(FileWidget, container, id, title, REQUEST,
+                            **kwargs)
+
 
 class FileWidget(Widget):
     """ String Widget """
@@ -48,7 +52,7 @@ class FileWidget(Widget):
 
     size_max = 1048576
     width = 50
-   
+
     def getDatamodel(self, form):
         """Get datamodel from form"""
         attached_file = form.get(self.getWidgetId(), None)
@@ -70,11 +74,14 @@ class FileWidget(Widget):
         read_size = len(value.read(self.size_max + 1))
         if self.required and not read_size:
             value.seek(0)
-            raise WidgetError('Value required for "%s". Empty file provided.' % self.title)
+            raise WidgetError('Value required for "%s". Empty file provided.' %
+                              self.title)
         if read_size > self.size_max:
             max_size_str = utils().utShowSize(self.size_max)
             value.seek(0)
-            raise WidgetError('The uploaded file for "%s" is too big, the maximum allowed size is %s bytes' % (self.title, max_size_str))
+            raise WidgetError('The uploaded file for "%s" is too big, '
+                              'the maximum allowed size is %s bytes' %
+                              (self.title, max_size_str))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
@@ -83,6 +90,7 @@ class FileWidget(Widget):
         return 'File uploaded'
 
 InitializeClass(FileWidget)
+
 
 def register():
     return FileWidget
