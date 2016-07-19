@@ -1,5 +1,7 @@
 1.3.2 (unreleased)
 ===================
+* increase the maximum default file upload size to 10MB [dumitval]
+* increase the font size of the question title [dumitval]
 
 1.3.1 (2016-01-28)
 ===================

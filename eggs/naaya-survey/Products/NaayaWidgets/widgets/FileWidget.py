@@ -50,7 +50,7 @@ class FileWidget(Widget):
     _constructors = (addFileWidget,)
     render_meth = PageTemplateFile('zpt/widget_file.zpt', globals())
 
-    size_max = 1048576
+    size_max = 10485760
     width = 50
 
     def getDatamodel(self, form):

@@ -63,7 +63,7 @@ div.widgetViewMode {
 .widgetEditMode .widget-title {
 	display: block;
 	font-weight: bold;
-	font-size: 100%;
+	font-size: 120%;
 	padding-top: 1em;
 	color: #468966;
 }
