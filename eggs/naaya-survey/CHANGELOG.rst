@@ -1,4 +1,7 @@
-1.3.2 (unreleased)
+1.3.3 (unreleased)
+===================
+
+1.3.2 (2016-07-19)
 ===================
 * increase the maximum default file upload size to 10MB [dumitval]
 * increase the font size of the question title [dumitval]
