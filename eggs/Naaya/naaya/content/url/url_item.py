@@ -12,7 +12,8 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NyContentType
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyItem import NyItem
@@ -27,22 +28,27 @@ from naaya.core.zope2util import abort_transaction_keep_session
 from interfaces import INyURL
 from permissions import PERMISSION_ADD_URL
 
-#module constants
+# module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
-    'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
+    'title':        (1, MUST_BE_NONEMPTY,
+                     'The Title field must have a value.'),
     'description':  (0, '', ''),
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
-    'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
+    'sortorder':    (0, MUST_BE_POSITIV_INT,
+                     'The Sort order field must contain a positive integer.'),
+    'releasedate':  (0, MUST_BE_DATETIME,
+                     'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'locator':      (1, MUST_BE_NONEMPTY, 'The URL field must have a value.'),
     'lang':         (0, '', '')
 }
 DEFAULT_SCHEMA = {
-    'redirect': dict(sortorder=100, widget_type='Checkbox', data_type='bool', label='Automatically redirect to the given URL'),
-    'locator': dict(sortorder=110, widget_type='URL', label='URL', localized=True),
+    'redirect': dict(sortorder=100, widget_type='Checkbox', data_type='bool',
+                     label='Automatically redirect to the given URL'),
+    'locator': dict(sortorder=110, widget_type='URL', label='URL',
+                    localized=True),
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
@@ -69,6 +75,7 @@ config = {
             },
     }
 
+
 def url_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
@@ -82,6 +89,7 @@ def url_add_html(self, REQUEST=None, RESPONSE=None):
         },
         'url_add')
 
+
 def _create_NyURL_object(parent, id, contributor):
     id = uniqueId(slugify(id or 'url', removelist=[]),
                   lambda x: parent._getOb(x, None) is not None)
@@ -92,6 +100,7 @@ def _create_NyURL_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
+
 def addNyURL(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create an URL type of object.
@@ -101,17 +110,20 @@ def addNyURL(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate',
+                                                                ''))
     schema_raw_data.setdefault('locator', '')
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'url',
                           removelist=[]),
                   lambda x: self._getOb(x, None) is not None)
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyURL_object(self, id, contributor)
 
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang,
+                                            _override_releasedate=_releasedate)
 
     if REQUEST is not None:
         submitter_errors = submitter.info_check(self, REQUEST, ob)
@@ -119,16 +131,17 @@ def addNyURL(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if form_errors:
         if REQUEST is None:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
         else:
             abort_transaction_keep_session(REQUEST)
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/url_add_html' % self.absolute_url())
             return
 
-    #process parameters
+    # process parameters
     if self.checkPermissionSkipApproval():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (1,
+                                 self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
@@ -136,61 +149,78 @@ def addNyURL(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    #log post date
+    # log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    #redirect if case
+    # redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1:
+        if (l_referer == 'url_manage_add' or
+                l_referer.find('url_manage_add') != -1):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'url_add_html':
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-        else: # undefined state (different referer, called in other context)
+        else:  # undefined state (different referer, called in other context)
             return ob
 
     return ob.getId()
 
-def importNyURL(self, param, id, attrs, content, properties, discussion, objects):
-    #this method is called during the import process
-    try: param = abs(int(param))
-    except: param = 0
+
+def importNyURL(self, param, id, attrs, content, properties, discussion,
+                objects):
+    # this method is called during the import process
+    try:
+        param = abs(int(param))
+    except:
+        param = 0
     if param == 3:
-        #just try to delete the object
-        try: self.manage_delObjects([id])
-        except: pass
+        # just try to delete the object
+        try:
+            self.manage_delObjects([id])
+        except:
+            pass
     else:
         ob = self._getOb(id, None)
-        if param in [0, 1] or (param==2 and ob is None):
+        if param in [0, 1] or (param == 2 and ob is None):
             if param == 1:
-                #delete the object if exists
-                try: self.manage_delObjects([id])
-                except: pass
+                # delete the object if exists
+                try:
+                    self.manage_delObjects([id])
+                except:
+                    pass
 
-            ob = _create_NyURL_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
+            ob = _create_NyURL_object(
+                self, id,
+                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
             ob.sortorder = attrs['sortorder'].encode('utf-8')
             ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
 
             for property, langs in properties.items():
-                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+                [ob._setLocalPropValue(property, lang, langs[lang]) for
+                    lang in langs if langs[lang] != '']
+            ob.approveThis(
+                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(
+                    attrs['approved_by'].encode('utf-8')))
             if attrs['releasedate'].encode('utf-8') != '':
                 ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
             ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                attrs['validation_comment'].encode('utf-8'),
-                attrs['validation_by'].encode('utf-8'),
-                attrs['validation_date'].encode('utf-8'))
+                         attrs['validation_comment'].encode('utf-8'),
+                         attrs['validation_by'].encode('utf-8'),
+                         attrs['validation_date'].encode('utf-8'))
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
+
 
 class url_item(Implicit, NyContentData):
     """ """
     redirect = True
 
-class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
+
+class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
+            NyContentType):
     """ """
 
     implements(INyURL)
@@ -205,8 +235,10 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
+            l_options += ({'label': 'Properties',
+                           'action': 'manage_edit_html'},)
+        l_options += (
+            {'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()
@@ -221,58 +253,68 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
         self.contributor = contributor
 
     security.declarePrivate('export_this_tag_custom')
+
     def export_this_tag_custom(self):
-        return 'validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+        return ('validation_status="%s" validation_date="%s" '
+                'validation_by="%s" validation_comment="%s"') % \
                 (self.utXmlEncode(self.validation_status),
-                self.utXmlEncode(self.validation_date),
-                self.utXmlEncode(self.validation_by),
-                self.utXmlEncode(self.validation_comment))
+                 self.utXmlEncode(self.validation_date),
+                 self.utXmlEncode(self.validation_by),
+                 self.utXmlEncode(self.validation_comment))
 
     security.declarePrivate('export_this_body_custom')
+
     def export_this_body_custom(self):
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<locator lang="%s"><![CDATA[%s]]></locator>' % (l, self.utToUtf8(self.getLocalProperty('locator', l))))
+            ra('<locator lang="%s"><![CDATA[%s]]></locator>' %
+               (l, self.utToUtf8(self.getLocalProperty('locator', l))))
         return ''.join(r)
 
-    #zmi actions
+    # zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
+
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
 
         if _approved != self.approved:
-            if _approved == 0: _approved_by = None
-            else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if _approved == 0:
+                _approved_by = None
+            else:
+                _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
-    #site actions
+    # site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
+
     def commitVersion(self, REQUEST=None):
         """ """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        if (not self.checkPermissionEditObject()) or (
-            self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if not self.checkPermissionEditObject() or self.checkout_user != user:
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -280,33 +322,38 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
         self._p_changed = 1
         self.recatalogNyObject(self)
         notify(NyContentObjectEditEvent(self, user))
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
+
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = url_item()
         self.version.copy_naaya_properties_from(self)
         self._p_changed = 1
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            if (self.checkout_user !=
+                    self.REQUEST.AUTHENTICATED_USER.getUserName()):
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 
@@ -315,41 +362,50 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(
+            schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
             self._p_changed = 1
             self.recatalogNyObject(self)
-            #log date
+            # log date
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect(
+                    '%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self._prepare_error_response(REQUEST, form_errors,
+                                             schema_raw_data)
+                REQUEST.RESPONSE.redirect(
+                    '%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
             else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
+                raise ValueError(form_errors.popitem()[1])  # pick an error
 
-    #zmi pages
+    # zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/url_manage_edit', globals())
 
-    #site pages
+    # site pages
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         self.notify_access_event(REQUEST)
-        if self.redirect: REQUEST.RESPONSE.redirect(self.locator)
+        if self.redirect:
+            REQUEST.RESPONSE.redirect(self.locator)
         return self.getFormsTool().getContent({'here': self}, 'url_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         if self.hasVersion():
@@ -376,6 +432,7 @@ config.update({
     'validation': issubclass(NyURL, NyValidation),
     '_class': NyURL,
 })
+
 
 def get_config():
     return config
