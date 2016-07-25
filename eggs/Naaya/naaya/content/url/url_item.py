@@ -401,7 +401,15 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
         """ """
         self.notify_access_event(REQUEST)
         if self.redirect:
-            REQUEST.RESPONSE.redirect(self.locator)
+            lang = self.gl_get_selected_language()
+            locator = self.getLocalProperty('locator', lang)
+            if locator:
+                REQUEST.RESPONSE.redirect(locator)
+            else:
+                for lang in self.gl_get_languages():
+                    locator = self.getLocalProperty('locator', lang)
+                    if locator:
+                        REQUEST.RESPONSE.redirect(locator)
         return self.getFormsTool().getContent({'here': self}, 'url_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
