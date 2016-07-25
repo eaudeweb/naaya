@@ -1,4 +1,7 @@
-4.0.39 (unreleased)
+4.0.40 (unreleased)
+-------------------
+
+4.0.39 (2016-07-25)
 -------------------
 * redirect to localised url (even if a non-localised url is present) [dumitval]
 * redirect to any existing url (if an url in the current lang is not
