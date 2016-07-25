@@ -1,5 +1,8 @@
 4.0.39 (unreleased)
 -------------------
+* redirect to localised url (even if a non-localised url is present) [dumitval]
+* redirect to any existing url (if an url in the current lang is not
+  set) [dumitval]
 
 4.0.38 (2016-03-31)
 -------------------
