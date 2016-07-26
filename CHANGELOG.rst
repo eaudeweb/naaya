@@ -1,5 +1,6 @@
 1.2.92 (unreleased)
 -------------------
+* fix an error with mixed ascii and utf8 strings [dumitval]
 
 1.2.91 (2016-02-24)
 -------------------
