@@ -377,7 +377,7 @@ class Participants(SimpleItem):
         role = attendee['role']
         country = attendee['country']
         reimbursed = attendee['reimbursed']
-        saved_by = attendee['saved_by']
+        saved_by = attendee['saved_by'].encode('utf-8')
         justification = attendee['justification']
         ret = {'uid': uid, 'name': name, 'email': email,
                'organization': organization, 'phone': phone, 'role': role,
