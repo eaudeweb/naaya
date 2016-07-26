@@ -1,5 +1,6 @@
 1.3.3 (unreleased)
 ===================
+* change the style to display list bullets in answer view [dumitval]
 
 1.3.2 (2016-07-19)
 ===================

@@ -35,12 +35,6 @@ div.widgetViewMode {
 	color: red;
 }
 
-.widgetViewMode ul {
-	list-style: none;
-	padding-left: 0;
-	margin: 0;
-}
-
 .widgetViewMode li {
 	background: fancy_checkmark no-repeat 0 50%;
 	padding-left: 11px;
