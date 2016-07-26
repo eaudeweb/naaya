@@ -1,4 +1,7 @@
-1.2.92 (unreleased)
+1.2.93 (unreleased)
+-------------------
+
+1.2.92 (2016-07-26)
 -------------------
 * fix an error with mixed ascii and utf8 strings [dumitval]
 
