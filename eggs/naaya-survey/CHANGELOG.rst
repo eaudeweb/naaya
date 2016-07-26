@@ -1,4 +1,7 @@
-1.3.3 (unreleased)
+1.3.4 (unreleased)
+===================
+
+1.3.3 (2016-07-26)
 ===================
 * change the style to display list bullets in answer view [dumitval]
 
