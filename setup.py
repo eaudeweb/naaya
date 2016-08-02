@@ -13,5 +13,6 @@ setup(name='naaya.content.apncbphoto',
           'xlrd',
           'xlwt',
           'SQLAlchemy',
+          'MySQL-python',
       ]
       )
