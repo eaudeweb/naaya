@@ -1,5 +1,6 @@
 4.0.40 (unreleased)
 -------------------
+* update the recaptcha error message [dumitval]
 
 4.0.39 (2016-07-25)
 -------------------

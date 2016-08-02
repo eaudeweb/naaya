@@ -54,7 +54,7 @@ class NyCommonView(object):
         if self.recaptcha_is_present():
             if not self.is_valid_recaptcha(self, REQUEST):
                 return [
-                    'Verification words do not match the ones in the picture.']
+                    'The reCaptcha test failed. Please try again.']
 
     security.declareProtected(view, 'feedback_html')
 
