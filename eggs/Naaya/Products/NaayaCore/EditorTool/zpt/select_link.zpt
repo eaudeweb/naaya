@@ -21,6 +21,9 @@
         width: 8em;
         float: left;
       }
+      .panel {
+        height: auto !important;
+      }
     </style>
     <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/Naaya/jquery.js"></script>
   </head>
