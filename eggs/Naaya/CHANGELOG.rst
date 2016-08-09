@@ -1,4 +1,7 @@
-4.0.40 (unreleased)
+4.0.41 (unreleased)
+-------------------
+
+4.0.40 (2016-08-09)
 -------------------
 * update script for exporting News and Events [dumitval]
 * update the recaptcha error message [dumitval]
