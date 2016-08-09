@@ -1,4 +1,5 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <utility provides=".meta.INaayaContent"
     factory=".meta.NaayaContent" />
@@ -29,5 +30,11 @@
            for=".interfaces.INyContentObject"
            provides=".interfaces.INyRdfView" />
 
-</configure>
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility name="export_content.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.ExportContent"
+             permission="zope2.ViewManagementScreens" />
+  </configure>
 
+</configure>
