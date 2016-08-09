@@ -1,4 +1,7 @@
-4.0.41 (unreleased)
+4.0.42 (unreleased)
+-------------------
+
+4.0.41 (2016-08-09)
 -------------------
 * fix portal editor insert link buttons [dumitval]
 
