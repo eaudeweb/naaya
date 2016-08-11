@@ -1,5 +1,6 @@
 1.4.46 (unreleased)
 -------------------
+* added support for the verbose edw version of validate_email [dumitval]
 * fullscreen to apply to section index, too [dumitval]
 
 1.4.45 (2016-02-17)
