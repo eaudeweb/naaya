@@ -1,7 +1,6 @@
 // make this a global object to be used later
 var check_emails = {
 	toBeResolvedText: [],
-    invalid_email_text: gettext("cannot be reached!"),
 
 	setupWorkingData: function (cssSelection, callback) {
 		that = this;
@@ -13,15 +12,14 @@ var check_emails = {
 	},
 
     findInvalidDomItems: function (invalidItems) {
-		that = this;
-        for (i=0; i < invalidItems.length; ++i) {
-			// FIXME: if an email name contains the other then this method will match both
-			specificSelection = that.cssSelection + ":contains('"+ invalidItems[i]+"')";
-			$(specificSelection).each(
-					function () {
-						that.callback($(this), $(this).text());
-					});
-        }
+        that = this;
+        $.each(invalidItems, function(email, error){
+            specificSelection = that.cssSelection + ":contains('" + email +"')";
+            $(specificSelection).each(
+                function () {
+                    that.callback($(this), error);
+                });
+        });
     },
 
 	resolveTheRest: function () {

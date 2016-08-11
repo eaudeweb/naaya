@@ -25,7 +25,8 @@ class EmailValidatorTest(unittest.TestCase):
 
     def test_validate_from_cache(self):
         r = self.email_validator.validate_from_cache('alreadyBad@edw.ro')
-        self.assertEqual(r, False)
+        self.assertNotEqual(r, True)
+        self.assertNotEqual(r, None)
 
         r = self.email_validator.validate_from_cache('alreadyGood@edw.ro')
         self.assertEqual(r, True)

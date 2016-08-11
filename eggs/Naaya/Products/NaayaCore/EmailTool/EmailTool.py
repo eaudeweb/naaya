@@ -617,17 +617,17 @@ def check_cached_valid_emails(obj, emails):
     """Instance calling this (obj) must have a dict like member checked_emails
     on it.
     This breaks encapsulation and should be done better, probably in NySite"""
-    invalid_emails = []
+    invalid_emails = {}
     not_resolved_emails = []
     if type(emails) == str:
         emails = [emails]
     email_validator.bind(obj)
     for eml in emails:
         check_value = email_validator.validate_from_cache(eml)
-        if check_value is False:
-            invalid_emails.append(eml)
-        elif check_value is None:
+        if check_value is None:
             not_resolved_emails.append(eml)
+        elif check_value is not True:
+            invalid_emails[eml] = check_value
     if not_resolved_emails:
         _defer_check_valid_emails(obj, not_resolved_emails)
     return invalid_emails, not_resolved_emails

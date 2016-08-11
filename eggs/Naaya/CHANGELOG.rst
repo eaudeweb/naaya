@@ -1,5 +1,6 @@
 4.0.42 (unreleased)
 -------------------
+* support for the verbose edw version of validate_email [dumitval]
 
 4.0.41 (2016-08-09)
 -------------------

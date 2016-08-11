@@ -72,7 +72,7 @@ class EmailValidator(object):
         now = time.time()
         check_value, check_ts = getattr(self._outputObj, self._storage_name).get(email, (None, None));
         if ( check_value is None
-            or (check_value is False and check_ts < now - self.VERIFY_EMAIL_BADADDRESS_TTL)
+            or (check_value is not True and check_ts < now - self.VERIFY_EMAIL_BADADDRESS_TTL)
             or (check_value is True and check_ts < now - self.VERIFY_EMAIL_GOODADDRESS_TTL) ):
             return None
         return check_value
@@ -100,7 +100,8 @@ class EmailValidator(object):
                 for i in range(self.VALIDATION_ATTEMPTS):
                     # long I/O bound operation
                     try:
-                        check_value = validate_email(email, verify=True)
+                        check_value = validate_email(email, verify=True,
+                                                     verbose=True)
                     except:
                         check_value = False
                     if check_value:
@@ -117,4 +118,3 @@ class EmailValidator(object):
         self._workersLock.release()
         LOG.debug("thread exits after %d seconds idle: %s" % (self.THREAD_IDLE_SEC, name))
         self._workerCountSemaphore.release()
-
