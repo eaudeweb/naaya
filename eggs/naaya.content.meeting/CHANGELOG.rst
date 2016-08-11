@@ -1,5 +1,6 @@
 1.2.93 (unreleased)
 -------------------
+* added support for the verbose edw version of validate_email [dumitval]
 
 1.2.92 (2016-07-26)
 -------------------
