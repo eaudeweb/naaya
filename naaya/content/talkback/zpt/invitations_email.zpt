@@ -3,7 +3,7 @@
     i18n:name="consultation_title" /></subject>
 <body_text>
 <tal:block i18n:translate="">
-    Hello <tal:block content="options/name" i18n:name="name" />,
+    Dear <tal:block content="options/name" i18n:name="name" />,
 </tal:block>
 
 <tal:block i18n:translate="">
@@ -15,7 +15,8 @@
 </tal:block>
 
 <tal:block i18n:translate="">
-    You can access the consultation and submit your comments using the following address:
+    You can access the consultation and submit your comments ONLY by using the
+    following authentication link:
     <tal:block content="options/keyed_url" i18n:name="keyed_url" />
 </tal:block>
 

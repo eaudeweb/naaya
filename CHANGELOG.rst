@@ -1,5 +1,6 @@
 1.4.46 (unreleased)
 -------------------
+* wording change in invitation email [dumitval]
 * added support for the verbose edw version of validate_email [dumitval]
 * fullscreen to apply to section index, too [dumitval]
 
