@@ -1,5 +1,6 @@
 4.0.42 (unreleased)
 -------------------
+* different cache expiration for email validation in test env [dumitval]
 * support for the verbose edw version of validate_email [dumitval]
 
 4.0.41 (2016-08-09)

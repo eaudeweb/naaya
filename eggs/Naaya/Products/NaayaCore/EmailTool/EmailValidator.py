@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 LOG = logging.getLogger(__name__)
@@ -21,8 +22,13 @@ class EmailValidator(object):
     # to be validated (it willnot be a Q duplicate,
     # another thread will pick it up, it will not find it in the cache
     # and will start validating it). This is benign however.
-    VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
-    VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
+    test_env = os.environ.get('TEST_ENVIRONMENT')
+    if test_env:
+        VERIFY_EMAIL_BADADDRESS_TTL = (5 * 60)
+        VERIFY_EMAIL_GOODADDRESS_TTL = (5 * 60)
+    else:
+        VERIFY_EMAIL_BADADDRESS_TTL = (24 * 60 * 60)
+        VERIFY_EMAIL_GOODADDRESS_TTL = (30 * 24 * 60 * 60)
     THREAD_IDLE_SEC = 60
     VALIDATION_ATTEMPTS = 3 # number of consecutive attempt to avoid false negatives
 
