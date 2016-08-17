@@ -15,7 +15,7 @@ app = env.app = {
         'naaya.bundles.NaayaBundles-CHMBE-training.git',
 }
 
-env.hosts = ['zope@193.190.234.37:1974']
+env.hosts = ['edw@193.190.234.38:1974']
 
 app['repo'] = ppath('/var/local/bch')
 
