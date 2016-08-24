@@ -315,6 +315,8 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
 
     edit_access = NyAccess('edit_access', {
         PERMISSION_REVIEW_TALKBACKCONSULTATION: "Submit comments",
+        PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE:
+            "Submit comments after deadline",
         PERMISSION_MANAGE_TALKBACKCONSULTATION: "Administer consultation",
         PERMISSION_INVITE_TO_TALKBACKCONSULTATION: "Send invitations",
     })
