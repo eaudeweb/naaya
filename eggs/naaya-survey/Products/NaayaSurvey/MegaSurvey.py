@@ -156,7 +156,8 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
                                'attachment; filename=%s.xls' % self.id)
             return generate_excel(header, rows)
         else:
-            raise ValueError('unknown file format %r' % file_type)
+            log.info('Invalid download file type %s', file_type)
+            return None
 
     #
     # Site pages

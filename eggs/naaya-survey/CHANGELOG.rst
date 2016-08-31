@@ -1,5 +1,7 @@
 1.3.4 (unreleased)
 ===================
+* trying to download invalid file types should not return an error since
+  it's only bots who try this [dumitval]
 
 1.3.3 (2016-07-26)
 ===================
