@@ -1,4 +1,7 @@
-1.3.4 (unreleased)
+1.3.5 (unreleased)
+===================
+
+1.3.4 (2016-08-31)
 ===================
 * trying to download invalid file types should not return an error since
   it's only bots who try this [dumitval]
