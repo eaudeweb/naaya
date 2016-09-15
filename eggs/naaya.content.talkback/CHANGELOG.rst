@@ -1,4 +1,7 @@
-1.4.46 (unreleased)
+1.4.47 (unreleased)
+-------------------
+
+1.4.46 (2016-09-15)
 -------------------
 * add permission to comment after deadline to permission administration
   [dumitval]
