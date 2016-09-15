@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='4.1.0',
+      version='4.1.1',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -39,7 +39,7 @@ setup(name='Naaya',
           'scrubber',
           'simplejson >= 2.0.9',
           'Unidecode',
-          'validate_email >= edw.1.3.1',
+          'validate_email',
           'vobject >= 0.8.1c',
           'xlwt',
           'xlrd',
