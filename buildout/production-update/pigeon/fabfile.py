@@ -128,8 +128,8 @@ def update_pigeon():
     execute('restart_forum')
     execute('_update_projects')
     execute('restart_projects')
-    execute('_update_archives')
-    execute('restart_archives')
+#    execute('_update_archives')
+#    execute('restart_archives')
 
 
 @task
