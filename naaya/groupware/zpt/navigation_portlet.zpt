@@ -3,7 +3,8 @@
 <div class="left_portlet_content">
     <tal:block tal:define="site_url here/getSitePath;
                             site here/getSite;
-                            nfp_admin_link site/nfp_admin_link_html | nothing;
+                            nrc_admin_link site/nrc_admin_link_html | nothing;
+                            awp_admin_link site/awp_admin_link_html | nothing;
                             howto_link site/howto_link_html | nothing;
                             organisations_link site/organisations_link_html | nothing">
         <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
@@ -14,11 +15,15 @@
                         tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
             </tal:block>
 
-            <li tal:condition="nfp_admin_link">
-                <a tal:attributes="href nfp_admin_link" title="Edit NFP members"
+            <li tal:condition="nrc_admin_link">
+                <a tal:attributes="href nrc_admin_link" title="Edit NRC members"
                   i18n:translate="" i18n:attributes="title">Edit NRC members</a>
             </li>
-            <li tal:condition="nfp_admin_link">
+            <li tal:condition="awp_admin_link">
+                <a tal:attributes="href awp_admin_link" title="Edit Reportnet AWP members"
+                  i18n:translate="" i18n:attributes="title">Edit Reportnet AWP members</a>
+            </li>
+            <li tal:condition="nrc_admin_link">
                 <a tal:attributes="href string:${site_url}/nfp_nrc/create_user" title="Create a new user"
                   i18n:translate="" i18n:attributes="title">Create new account</a>
             </li>
