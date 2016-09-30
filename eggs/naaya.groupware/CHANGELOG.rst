@@ -1,5 +1,6 @@
 1.4.40 (unreleased)
 -------------------
+* added some error handling in index_html [dumitval]
 
 1.4.39 (2016-04-11)
 -------------------
