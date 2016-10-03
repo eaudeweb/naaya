@@ -1,4 +1,7 @@
-1.4.40 (unreleased)
+1.4.41 (unreleased)
+-------------------
+
+1.4.40 (2016-10-03)
 -------------------
 * added NFP AWP roles administration link [dumitval]
 * added some error handling in index_html [dumitval]
