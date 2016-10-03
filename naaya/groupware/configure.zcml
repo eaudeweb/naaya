@@ -29,8 +29,15 @@
 
   <naaya:simpleView
     for=".interfaces.IGWSite"
-    name="nfp_admin_link_html"
-    handler=".ui.nfp_admin_link"
+    name="nrc_admin_link_html"
+    handler=".ui.nrc_admin_link"
+    permission="zope2.View"
+    />
+
+  <naaya:simpleView
+    for=".interfaces.IGWSite"
+    name="awp_admin_link_html"
+    handler=".ui.awp_admin_link"
     permission="zope2.View"
     />
 
