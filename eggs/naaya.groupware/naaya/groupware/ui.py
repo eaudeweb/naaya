@@ -50,11 +50,11 @@ class LocalUsersPage(BrowserPage):
             local_users=local_users, grouped_igs=grouped_igs(self.context))
 
 
-def nfp_admin_link(context, request):
+def nrc_admin_link(context, request):
     """
     Check if LDAP user is NFP and return the URL to 'Edit NRC members' section
     """
-    nfp_url = ''
+    nrc_url = ''
 
     user = context.REQUEST.AUTHENTICATED_USER
     site_id = context.getSite().getId()
@@ -71,10 +71,38 @@ def nfp_admin_link(context, request):
                 country = leaf['id'].rsplit('-', 1)[-1]
 
         if country:
-            nfp_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
+            nrc_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
                        (context.getSite().absolute_url(), country))
 
-    return nfp_url
+    return nrc_url
+
+
+def awp_admin_link(context, request):
+    """
+    Check if LDAP user is NFP and return the URL to 'Edit Extranet AWP members'
+    section
+    """
+    awp_url = ''
+
+    user = context.REQUEST.AUTHENTICATED_USER
+    site_id = context.getSite().getId()
+
+    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
+        zope_app = context.unrestrictedTraverse('/')
+        client = ProfileClient(zope_app, user)
+        roles_list = client.roles_list_in_ldap()
+        leaf_roles_list = [r for r in roles_list if not r['children']]
+
+        country = ''
+        for leaf in leaf_roles_list:
+            if 'eionet-nfp-' in leaf['id']:
+                country = leaf['id'].rsplit('-', 1)[-1]
+
+        if country:
+            awp_url = ("%s/nfp_nrc/awps?nfp=%s" %
+                       (context.getSite().absolute_url(), country))
+
+    return awp_url
 
 
 def organisations_link(context, request):
