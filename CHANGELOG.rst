@@ -1,4 +1,7 @@
-1.1.5 (unreleased)
+1.1.6 (unreleased)
+------------------
+
+1.1.5 (2016-10-06)
 ------------------
 * change format of imported date for Excel date field [dumitval]
 
