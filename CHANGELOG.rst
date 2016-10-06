@@ -1,4 +1,7 @@
-1.1.6 (unreleased)
+1.1.7 (unreleased)
+------------------
+
+1.1.6 (2016-10-06)
 ------------------
 * added photo id to search by species scope [dumitval]
 
