@@ -48,9 +48,10 @@ def process_workbook(workbook):
                             if elem:
                                 try:
                                     tval = datetime.datetime(
-                                        *xlrd.xldate_as_tuple(elem,
-                                                              workbook.datemode
-                                                              )).date()
+                                        *xlrd.xldate_as_tuple(
+                                            elem,
+                                            workbook.datemode
+                                            )).date().strftime("%d/%m/%Y")
                                 except ValueError:
                                     tval = elem
                                 except TypeError:
@@ -72,8 +73,9 @@ def create_sheet_matrix(sheet, workbook):
                 if elem:
                     try:
                         matrix[row-1][column] = datetime.datetime(
-                            *xlrd.xldate_as_tuple(elem,
-                                                  workbook.datemode)).date()
+                            *xlrd.xldate_as_tuple(
+                                elem, workbook.datemode)).date().strftime(
+                            "%d/%m/%Y")
                     except ValueError:
                         matrix[row-1][column] = elem
                     except TypeError:
