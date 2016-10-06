@@ -1,5 +1,6 @@
 1.1.5 (unreleased)
 ------------------
+* change format of imported date for Excel date field [dumitval]
 
 1.1.4 (2015-12-04)
 ------------------
