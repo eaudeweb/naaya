@@ -1,5 +1,6 @@
 1.1.6 (unreleased)
 ------------------
+* added photo id to search by species scope [dumitval]
 
 1.1.5 (2016-10-06)
 ------------------
