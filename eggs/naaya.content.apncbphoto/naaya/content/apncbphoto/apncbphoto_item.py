@@ -299,8 +299,10 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                     Document, Author, Image, Park, Biome, Vegetation)\
                     .filter(Document.subject.like('%' + subject + '%'))\
                     .filter(Document.date.like('%' + date + '%'))\
-                    .filter(Document.esp_nom_com.like('%' + esp_nom_com + '%'))\
-                    .filter(Document.esp_nom_lat.like('%' + esp_nom_lat + '%'))\
+                    .filter(Document.esp_nom_com.like(
+                        '%' + esp_nom_com + '%'))\
+                    .filter(Document.esp_nom_lat.like(
+                        '%' + esp_nom_lat + '%'))\
                     .filter(Author.authorid == Document.authorid)\
                     .filter(Image.imageid == Document.imageid)\
                     .filter(Park.parkid == Document.parkid)\
@@ -753,6 +755,7 @@ class NyAPNCBPhoto(Implicit, NyContentData, NyAttributes, NyItem,
                 .filter(or_(
                     Document.esp_nom_com.like('%' + species + '%'),
                     Document.esp_nom_lat.like('%' + species + '%'),
+                    Image.code.like('%' + species + '%'),
                     ))\
                 .filter(
                     # Image.code.like('%' + filterstr + '%'),
