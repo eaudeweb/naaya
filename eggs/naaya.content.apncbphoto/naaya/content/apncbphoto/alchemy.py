@@ -82,7 +82,8 @@ class Vegetation(Base):
 
 
 def get_or_create(session, model, defaults=None, **kwargs):
-    instance = session.query(model).filter_by(**kwargs).first()
+    code = kwargs.get('code')
+    instance = session.query(model).filter_by(code=code).first()
     if instance:
         return (True, instance)
     else:
