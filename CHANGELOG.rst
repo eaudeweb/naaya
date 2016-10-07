@@ -1,4 +1,7 @@
-1.1.7 (unreleased)
+1.1.8 (unreleased)
+------------------
+
+1.1.7 (2016-10-07)
 ------------------
 * bugfix in updating existing records [dumitval]
 
