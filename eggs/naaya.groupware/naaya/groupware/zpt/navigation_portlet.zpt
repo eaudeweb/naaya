@@ -20,7 +20,7 @@
                   i18n:translate="" i18n:attributes="title">Edit NRC members</a>
             </li>
             <li tal:condition="awp_admin_link">
-                <a tal:attributes="href awp_admin_link" title="Edit Reportnet AWP members"
+                <a tal:attributes="href awp_admin_link" title="Edit Reporters"
                   i18n:translate="" i18n:attributes="title">Edit Reporters</a>
             </li>
             <li tal:condition="nrc_admin_link">
