@@ -21,7 +21,7 @@
             </li>
             <li tal:condition="awp_admin_link">
                 <a tal:attributes="href awp_admin_link" title="Edit Reportnet AWP members"
-                  i18n:translate="" i18n:attributes="title">Edit Reportnet AWP members</a>
+                  i18n:translate="" i18n:attributes="title">Edit Reporters</a>
             </li>
             <li tal:condition="nrc_admin_link">
                 <a tal:attributes="href string:${site_url}/nfp_nrc/create_user" title="Create a new user"

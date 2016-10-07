@@ -1,5 +1,6 @@
 1.4.41 (unreleased)
 -------------------
+* wording change for NFP Reportnet members edit link [dumitval]
 
 1.4.40 (2016-10-03)
 -------------------
