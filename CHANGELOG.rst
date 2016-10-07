@@ -1,5 +1,6 @@
 1.1.7 (unreleased)
 ------------------
+* bugfix in updating existing records [dumitval]
 
 1.1.6 (2016-10-06)
 ------------------
