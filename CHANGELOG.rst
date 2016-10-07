@@ -1,4 +1,7 @@
-1.4.41 (unreleased)
+1.4.42 (unreleased)
+-------------------
+
+1.4.41 (2016-10-07)
 -------------------
 * wording change for NFP Reportnet members edit link [dumitval]
 
