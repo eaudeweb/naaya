@@ -1,4 +1,7 @@
-1.3.5 (unreleased)
+1.3.6 (unreleased)
+===================
+
+1.3.5 (2016-11-07)
 ===================
 * error message when respondent name is not submitted (answers on behalf
   of participants) [dumitval]
