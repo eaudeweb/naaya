@@ -160,7 +160,7 @@ class LocalChannel(SimpleItem, utils):
                 )
             xml.append(image)
         received_items = ''.join([i.syndicateThis() for i in l_items])
-        received = '<rdf:RDF %s>%s</rdf:RDF>' % (''.join(header),
+        received = '<rdf:RDF %s>%s</rdf:RDF>' % (' '.join(header),
                                                  received_items)
         xml_received = etree.XML(received, etree.XMLParser(strip_cdata=False))
         xml.extend(xml_received)

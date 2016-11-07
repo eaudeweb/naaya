@@ -1,5 +1,6 @@
 4.1.1 (unreleased)
 -------------------
+* bugfix in RDF generation(XMLSyntaxError) [dumitval]
 
 4.1.0 (2016-09-15)
 -------------------
