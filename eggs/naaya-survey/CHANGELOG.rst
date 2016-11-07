@@ -1,5 +1,7 @@
 1.3.5 (unreleased)
 ===================
+* error message when respondent name is not submitted (answers on behalf
+  of participants) [dumitval]
 
 1.3.4 (2016-08-31)
 ===================

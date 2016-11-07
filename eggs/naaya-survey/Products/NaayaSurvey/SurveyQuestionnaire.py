@@ -219,6 +219,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         # check datamodel
         datamodel = {}
         errors = []
+        if self.checkPermissionPublishObjects():
+            if kwargs.get('respondent') == '':
+                errors.append('Please select the participant '
+                              'for which you enter the answer')
         if self.allow_anonymous and not self.isAnonymousUser():
             anonymous_answer = kwargs.get('anonymous_answer')
             if anonymous_answer not in [0, 1]:
