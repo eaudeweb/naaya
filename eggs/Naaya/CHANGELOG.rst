@@ -1,4 +1,7 @@
-4.1.1 (unreleased)
+4.1.2 (unreleased)
+-------------------
+
+4.1.1 (2016-11-07)
 -------------------
 * bugfix in RDF generation(XMLSyntaxError) [dumitval]
 
