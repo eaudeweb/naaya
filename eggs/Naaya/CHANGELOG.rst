@@ -1,4 +1,7 @@
-4.1.2 (unreleased)
+4.1.3 (unreleased)
+-------------------
+
+4.1.2 (2016-11-11)
 -------------------
 * get notify_on_errors_email from buildout, if available [dumitval]
 * get default from address for errors from buildout, if available [dumitval]
