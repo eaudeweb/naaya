@@ -1,5 +1,6 @@
 1.4.42 (unreleased)
 -------------------
+* get notify_on_errors_email from buildout [dumitval]
 
 1.4.41 (2016-10-07)
 -------------------
