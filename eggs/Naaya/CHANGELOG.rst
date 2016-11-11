@@ -1,5 +1,7 @@
 4.1.2 (unreleased)
 -------------------
+* get notify_on_errors_email from buildout, if available [dumitval]
+* get default from address for errors from buildout, if available [dumitval]
 
 4.1.1 (2016-11-07)
 -------------------

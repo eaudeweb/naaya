@@ -42,10 +42,14 @@
     <input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /><br />
     <em i18n:translate="">comma separated</em>
   </div>
-  <div class="field">
+  <div class="field" tal:define="buildout_notify_on_errors_email here/buildout_notify_on_errors_email">
     <label for="mail_address_from" i18n:translate="">Email address for notifications on errors</label>
-    <input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /><br />
-    <em i18n:translate="">comma separated, leave empty to prevent error notifications</em>
+    <input type="text" name="notify_on_errors_email" size="50"
+      tal:attributes="value here/get_notify_on_errors_email; disabled buildout_notify_on_errors_email"/><br />
+    <em i18n:translate="" tal:condition="not:buildout_notify_on_errors_email">
+      comma separated, leave empty to prevent error notifications</em>
+    <em i18n:translate="" tal:condition="buildout_notify_on_errors_email">
+      the email set in the server's configuration and cannot be changed</em>
   </div>
   <p>
     <input type="submit" value="Save changes" i18n:attributes="value" />

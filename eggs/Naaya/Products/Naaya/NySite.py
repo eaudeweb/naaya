@@ -2183,16 +2183,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
-        if not self.notify_on_errors_email:
+        if not self.get_notify_on_errors_email():
             return
 
         portal_url = self.get_portal_url()
         scheme, netloc, path, params, query, fragment = urlparse(portal_url)
-        mail_from = 'error@%s' % netloc
+        conf = getConfiguration()
+        mail_from = getattr(conf, 'environment', {}).get('ERROR_FROM_EMAIL',
+                                                         'error@%s' % netloc)
 
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
 
-        self.notifyOnErrorsEmail(p_to=self.notify_on_errors_email,
+        self.notifyOnErrorsEmail(p_to=self.get_notify_on_errors_email(),
                                  p_from=mail_from,
                                  p_error_url=REQUEST.get('URL', ''),
                                  p_error_ip=self.utGetRefererIp(REQUEST),
@@ -4951,8 +4953,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         conf = getConfiguration()
         return getattr(conf, 'environment', {}).get('reCAPTCHA_PRIVATE_KEY',
                                                     '')
-
     def get_recaptcha_private_key(self):
         return self.recaptcha_private_key or self.buildout_recaptcha_private()
+
+    def buildout_notify_on_errors_email(self):
+        conf = getConfiguration()
+        return getattr(conf, 'environment', {}).get('NOTIFY_ON_ERRORS_EMAIL',
+                                                    '')
+    def get_notify_on_errors_email(self):
+        return (self.buildout_notify_on_errors_email() or
+                self.notify_on_errors_email)
 
 InitializeClass(NySite)
