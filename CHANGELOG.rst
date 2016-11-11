@@ -1,4 +1,7 @@
-1.4.42 (unreleased)
+1.4.43 (unreleased)
+-------------------
+
+1.4.42 (2016-11-11)
 -------------------
 * get notify_on_errors_email from buildout [dumitval]
 
