@@ -27,9 +27,6 @@
 		<a tal:condition="parent" tal:attributes="href string:${parent/absolute_url}/${datamodel/filename}/index_html?as_attachment:int=1"
 		   tal:content="python:datamodel.title or 'download'">
 		</a>
-		<!-- <a tal:attributes="href python:here.rstk.path_in_site(datamodel)"
-		   tal:content="datamodel/title">
-		</a> -->
 	</tal:block>
 	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
 		-

@@ -1,4 +1,6 @@
 from DateTime import DateTime
+from datetime import datetime
+from StringIO import StringIO
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
@@ -6,8 +8,9 @@ from zope import interface
 from zope.event import notify
 from AccessControl.Permissions import view
 from AccessControl import Unauthorized
+import mimetypes
 
-from Products.ExtFile.ExtFile import manage_addExtFile
+from naaya.content.bfile.NyBlobFile import make_blobfile
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -113,10 +116,31 @@ class SurveyAnswer(Folder, NyProperties):
     security.declarePrivate('handle_upload')
 
     def handle_upload(self, id, attached_file):
+        if not attached_file:
+            return
         if id in self.objectIds():
             self.manage_delObjects([id, ])
-        manage_addExtFile(self, id, title=attached_file.filename,
-                          file=attached_file)
+        attached_file.seek(0)
+        data = attached_file.read()
+        sfile = StringIO(data)
+        sfile.filename = attached_file.filename[-1]
+        content_type = mimetypes.guess_type(attached_file.filename)[0]
+        if content_type is None:
+            content_type = getattr(attached_file, 'headers', {}).get(
+                'content-type', 'application/octet-stream')
+        sfile.headers = {'content-type': content_type}
+        if id in self.objectIds():
+            self.manage_delObjects([id, ])
+        bf = make_blobfile(sfile,
+                           title=attached_file.filename,
+                           removed=False,
+                           timestamp=datetime.utcnow(),
+                           contributor='')
+        bf.content_type = content_type
+        bf.filename = id
+        attached_file.seek(0)
+        bf.size = len(attached_file.read())
+        setattr(self, id, bf)
 
     security.declareProtected(view, 'getDatamodel')
 

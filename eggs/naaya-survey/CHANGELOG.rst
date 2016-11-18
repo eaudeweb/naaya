@@ -1,5 +1,6 @@
 1.3.6 (unreleased)
 ===================
+* update file widget to use blob storage instead of extfile [dumitval]
 
 1.3.5 (2016-11-07)
 ===================
