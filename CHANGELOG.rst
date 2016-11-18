@@ -1,4 +1,7 @@
-1.4.25 (unreleased)
+1.4.26 (unreleased)
+--------------------
+
+1.4.25 (2016-11-18)
 --------------------
 * update script for naaya survey file widgets [dumitval]
 
