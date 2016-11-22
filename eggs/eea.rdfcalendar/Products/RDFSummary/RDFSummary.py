@@ -49,6 +49,7 @@ from rdfparser import RDFParser
 
 
 CONFIG = getConfiguration()
+CONFIG.environment.update(os.environ)
 _repos = join(CLIENT_HOME, 'RDFSummary')
 _repos = getattr(CONFIG, 'environment', {}).get('rdfsummary_repo', _repos)
 
