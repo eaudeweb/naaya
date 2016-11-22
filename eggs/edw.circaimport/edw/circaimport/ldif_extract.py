@@ -2,11 +2,12 @@ import sys
 import tarfile
 from ldif import LDIFParser
 from pprint import pprint
-import os.path
+import os
 
 from App.config import getConfiguration
 
 CONFIG = getConfiguration()
+CONFIG.environment.update(os.environ)
 CIRCA_CIRCLE_NAME = getattr(CONFIG, 'environment', {}).get('CIRCA_CIRCLE_NAME', 'eionet-circle')
 
 class LDIFClassesParser(LDIFParser):

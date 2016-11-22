@@ -1,4 +1,4 @@
-import os.path
+import os
 import unittest
 import tempfile
 
@@ -21,6 +21,7 @@ class ZexpCopyNaayaTestSuite(NaayaTestCase):
 
     def test_write_zexp(self):
         config = getConfiguration()
+        config.environment.update(os.environ)
         ob = self.portal.info
         path = zexpcopy.write_zexp(ob)
         self.assertEqual(path, os.path.join(config.clienthome,
