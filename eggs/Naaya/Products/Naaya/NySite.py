@@ -8,7 +8,7 @@ from AccessControl.Permission import Permission
 from AccessControl.Permissions import change_permissions
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
-from App.config import getConfiguration
+from naaya.core.zope2util import getExtConfiguration as getConfiguration
 from Globals import DTMLFile
 from Globals import InitializeClass
 from NyFolder import folder_add_html, addNyFolder, importNyFolder

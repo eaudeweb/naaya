@@ -1,4 +1,4 @@
-from App.config import getConfiguration
+from naaya.core.zope2util import getExtConfiguration as getConfiguration
 from Products.Five.browser import BrowserView
 from Products.NaayaBase import akismet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile

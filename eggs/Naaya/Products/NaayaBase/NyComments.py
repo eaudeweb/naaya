@@ -14,7 +14,7 @@ from zope.component import adapter
 from zope.event import notify
 from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
                                             IObjectMovedEvent)
-from App.config import getConfiguration
+from naaya.core.zope2util import getExtConfiguration as getConfiguration
 from zope.component.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
 from Globals import InitializeClass

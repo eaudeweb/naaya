@@ -7,6 +7,7 @@ import threading
 import logging
 import transaction
 import datetime
+import os
 import sys
 import sha
 import types
@@ -39,6 +40,12 @@ log = logging.getLogger(__name__)
 html_escape_table = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
     ' ': '&nbsp;', '\t': '&#09'}
+
+
+def getExtConfiguration():
+    CONFIG = getConfiguration()
+    CONFIG.environment.update(os.environ)
+    return CONFIG
 
 
 def redirect_to(tmpl):
@@ -199,7 +206,7 @@ def google_analytics(context, ga_id=''):
     `ga_id` Analytics Website property ID (UA-number).
 
     """
-    conf = getConfiguration()
+    conf = getExtConfiguration()
     environment = getattr(conf, 'environment', {})
     master_ga_id = environment.get('GA_ID', '')
     ga_domain_name = environment.get('GA_DOMAIN_NAME', '')
@@ -634,5 +641,5 @@ def get_zope_env(var, default=''):
     otherwise returns a default value
 
     """
-    configuration = getConfiguration()
+    configuration = getExtConfiguration()
     return getattr(configuration, 'environment', {}).get(var, default)

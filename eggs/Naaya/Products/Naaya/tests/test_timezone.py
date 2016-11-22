@@ -13,7 +13,7 @@ summer = datetime(2011, 6, 1, 10, 0, 0, 0, pytz.timezone('UTC'))
 class TestGetTimezone(unittest.TestCase):
 
     def setUp(self):
-        from App.config import getConfiguration
+        from naaya.core.zope2util import getExtConfiguration as getConfiguration
         from Products.Naaya.NySite import NySite
 
         self.config = getConfiguration()

@@ -1,5 +1,6 @@
 4.1.3 (unreleased)
 -------------------
+* add os environ to zope environment [dumitval]
 
 4.1.2 (2016-11-11)
 -------------------

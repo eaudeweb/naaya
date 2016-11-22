@@ -1,7 +1,7 @@
 import logging
 import zExceptions
 from AccessControl.unauthorized import Unauthorized
-
+from naaya.core.zope2util import get_zope_env
 
 ignored_types = [
     zExceptions.Redirect,
@@ -66,9 +66,7 @@ def initialize():
     except ImportError:
         return
     else:
-        from App.config import getConfiguration
-        env = getattr(getConfiguration(), 'environment', {})
-        sentry_dsn = env.get('SENTRY_DSN')
+        sentry_dsn = get_zope_env('SENTRY_DSN')
         if sentry_dsn:
             sentry_handler = ZopeSentryHandler(sentry_dsn)
             publish_error_log.addHandler(sentry_handler)

@@ -46,7 +46,7 @@ class EmailTestCase(FunctionalTestCase):
 
 class EmailSaveTestCase(unittest.TestCase):
     def setUp(self):
-        from App.config import getConfiguration
+        from naaya.core.zope2util import getExtConfiguration as getConfiguration
         from Products.Naaya.NySite import NySite
 
         self.config = getConfiguration()
@@ -92,7 +92,7 @@ class EmailSaveTestCase(unittest.TestCase):
 
 class EmailToolTestCase(unittest.TestCase):
     def setUp(self):
-        from App.config import getConfiguration
+        from naaya.core.zope2util import getExtConfiguration as getConfiguration
         from Products.Naaya.NySite import NySite
 
         self.config = getConfiguration()
