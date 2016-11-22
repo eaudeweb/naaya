@@ -1,4 +1,4 @@
-import os.path
+import os
 from time import time
 import logging
 import simplejson as json
@@ -94,7 +94,9 @@ class SearchMapDocuments(BrowserPage):
         return json.dumps(get_map_async_config(site))
 
 
-tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
+CONFIG = getConfiguration()
+CONFIG.environment.update(os.environ)
+tiles_url = CONFIG.environment.get('AOA_MAP_TILES', '')
 
 def map_config_for_document(shadow):
     return {
