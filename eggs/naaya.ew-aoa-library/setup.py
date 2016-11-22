@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.ew-aoa-library',
-      version='1.0.4',
+      version='1.0.5',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       packages=find_packages(),
