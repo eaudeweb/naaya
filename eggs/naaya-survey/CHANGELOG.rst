@@ -1,5 +1,6 @@
 1.3.7 (unreleased)
 ===================
+* bugfix in survey answers export [dumitval]
 
 1.3.6 (2016-11-18)
 ===================

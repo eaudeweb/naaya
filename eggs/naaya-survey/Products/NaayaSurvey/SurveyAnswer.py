@@ -80,7 +80,7 @@ class SurveyAnswer(Folder, NyProperties):
         {'label': 'View', 'action': 'index_html'},
         {'label': 'Contents', 'action': 'manage_main',
          'help': ('OFSP', 'ObjectManager_Contents.stx')},
-        )
+    )
 
     security = ClassSecurityInfo()
 
@@ -206,7 +206,7 @@ class SurveyAnswer(Folder, NyProperties):
         for widget in widgets:
             value = widget.get_value(datamodel=datamodel.get(widget.id, None),
                                      **kwargs)
-            if isinstance(value, basestring):
+            if isinstance(value, basestring) or isinstance(value, DateTime):
                 res.append(value)
             else:
                 # This is a Matrix widget
@@ -244,8 +244,8 @@ class SurveyAnswer(Folder, NyProperties):
             has_edit_permission = self.checkPermissionEditAnswers()
             user_is_respondent = bool(authenticated_user == self.respondent)
             answer_is_approved = self.get('approved_date')
-            return has_edit_permission or (user_is_respondent
-                                           and not answer_is_approved)
+            return has_edit_permission or (user_is_respondent and
+                                           not answer_is_approved)
 
     security.declarePublic('can_view')
 
