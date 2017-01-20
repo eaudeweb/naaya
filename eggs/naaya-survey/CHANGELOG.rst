@@ -1,4 +1,7 @@
-1.3.7 (unreleased)
+1.3.8 (unreleased)
+===================
+
+1.3.7 (2017-01-20)
 ===================
 * bugfix in survey answers export [dumitval]
 
