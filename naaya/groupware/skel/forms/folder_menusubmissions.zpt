@@ -6,7 +6,7 @@
     perm_publish_objects here/checkPermissionPublishObjects;
     perm_validate_objects here/checkPermissionValidateObjects;
     standard_submissions python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects;
-    perm_request_access not:here/checkPermissionAddObjects;
+    perm_request_access python:not here.portal_is_archived and not here.checkPermissionAddObjects();
     allowed_to_zip_import here/checkAllowedToZipImport">
 <div id="admin_this_folder" tal:condition="python:standard_submissions or perm_request_access">
     <span id="submission" tal:condition="perm_add_something">
