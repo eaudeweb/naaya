@@ -1,5 +1,6 @@
 4.1.4 (unreleased)
 -------------------
+* bugfix in zip download [dumitval]
 
 4.1.3 (2016-11-22)
 -------------------

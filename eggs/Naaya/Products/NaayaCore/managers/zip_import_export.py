@@ -311,7 +311,11 @@ class RecursiveZipBuilder(object):
         if target.skip:
             return
 
-        target_path = parent_path + target.filename
+        filename = getattr(target, 'filename', '')
+        if not filename:
+            # happens for file items without an uploaded file
+            return
+        target_path = parent_path + filename
 
         if isinstance(target_path, unicode):
             # we could convert target_path to utf-8, but that would just mask
