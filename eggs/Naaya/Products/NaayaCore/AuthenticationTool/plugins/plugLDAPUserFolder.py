@@ -31,8 +31,6 @@ from naaya.core.utils import is_ajax
 from naaya.core.zope2util import relative_object_path
 import naaya.cache.cache as naaya_cache
 
-import ldap_cache
-
 LDAP_ROOT_ID = 'ROOT'
 
 log = logging.getLogger('naaya.core.auth.ldap')
@@ -532,22 +530,14 @@ class plugLDAPUserFolder(PlugBase):
         return self.getUserFolder().getUser(user_id)
 
     def get_source_user_info(self, user_id):
-        # first, try to use the cache
-        cached_record = ldap_cache.get(self._user_dn_from_id(user_id), None)
-        if cached_record is not None:
-            log.debug("loading user from cache: %r", user_id)
-            return user_info_from_ldap_cache(user_id, cached_record, self)
-
-        # not in cache, ask LDAPUserFolder
+        # ask LDAPUserFolder
         zope_user = self._get_zope_user(user_id)
         if zope_user is None:
             raise LDAPUserNotFound(user_id)
         return user_info_from_zope_user(self, zope_user, self.default_encoding)
 
     def has_user(self, user_id):
-        if ldap_cache.has(self._user_dn_from_id(user_id)):
-            return True
-        elif self._get_zope_user(user_id) is not None:
+        if self._get_zope_user(user_id) is not None:
             return True
         else:
             return False

@@ -1,5 +1,11 @@
-4.1.5 (unreleased)
+4.1.6 (unreleased)
 -------------------
+
+4.1.5 (2017-04-03)
+-------------------
+* Bug fix: LDAP dump causes large spikes in load
+  - removed ldap_cache reference and refactor the code
+  [chiridra #80233]
 
 4.1.4 (2017-03-14)
 -------------------
@@ -392,7 +398,7 @@
 
 3.3.58 (2014-07-08)
 -------------------
-* Bug fix: cleanup the source code of google map engine js. 
+* Bug fix: cleanup the source code of google map engine js.
 * Bug fix: fix go_to_address_with_zoom function of google map engine
   [tiberich #15626]
 
