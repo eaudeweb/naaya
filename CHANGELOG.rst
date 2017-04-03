@@ -1,5 +1,11 @@
-1.4.43 (unreleased)
+1.4.44 (unreleased)
 -------------------
+
+1.4.43 (2017-04-03)
+-------------------
+* Bug fix: LDAP dump causes large spikes in load
+  - removed ldap_cache reference and refactor the code
+  [chiridra #80233]
 
 1.4.42 (2016-11-11)
 -------------------
