@@ -8,7 +8,6 @@ from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
      import plugLDAPUserFolder
-from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
 from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
 from naaya.core.utils import force_to_unicode
 from eea.usersdb.factories import agent_from_uf
@@ -100,21 +99,19 @@ class MemberSearch(Implicit, Item):
                             user.get('uid', user.get('id', None)) and
                          user.get('uid', user.get('id')) in userids]
             else:
-                cache = ldap_cache.Cache()
-                cache.update()
                 users = []
-
-                for user_dn in cache.users:
-                    user = cache.get(user_dn)
-                    if user.has_key('uid') and user['uid'] in userids:
+                acl_folder = source.getUserFolder()
+                for uid in userids:
+                    user = acl_folder.getUser(uid)
+                    if user:
                         users.append({
-                        'id': user['uid'],
-                        'first_name': user['givenName'],
-                        'last_name': user['sn'],
-                        'full_name': user['cn'],
-                        'email': user.get('mail', ''),
-                        'organisation': user.get('o', 'N/A'),
-                        'postal_address': user.get('postalAddress', 'N/A'),
+                        'id': user.uid,
+                        'first_name': user.firstname,
+                        'last_name': user.lastname,
+                        'full_name': user.cn,
+                        'email': user.mail,
+                        'organisation': getattr(user, 'o', 'N/A'),
+                        'postal_address': getattr(user, 'postalAddress', 'N/A'),
                         })
 
             # precalculate user roles for performance
