@@ -1,4 +1,7 @@
-4.1.6 (unreleased)
+4.1.7 (unreleased)
+-------------------
+
+4.1.6 (2017-04-07)
 -------------------
 * Bug fix: LDAP dump causes large spikes in load
   - reverse changes
