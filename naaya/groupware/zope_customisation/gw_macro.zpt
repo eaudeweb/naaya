@@ -7,9 +7,9 @@
   <head metal:define-slot="head">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title tal:content="meta_info/root_site_title">Groupware</title>
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
+    <link rel="stylesheet" type="text/css" href="https://www.eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="https://www.eionet.europa.eu/styles/eionet2007/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="https://www.eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
     <link rel="stylesheet" type="text/css" href="/++resource++naaya.groupware/eionet/css/style.css" media="screen" />
     <script src="++resource++Products.Naaya/js/jquery-1.7.1.min.js"></script>
 
@@ -28,7 +28,7 @@
     <link rel="shortcut icon" href="/++resource++naaya.groupware/eionet/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="/++resource++naaya.groupware/eionet/eeaicon.gif" type="image/gif" />
     <link rel="start" title="Home" href="/" />
-    <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
+    <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="https://www.eionet.europa.eu/announcements.rdf" />
     <style type="text/css">
         .right-floated-tip {
             width: 80%;
@@ -80,13 +80,12 @@
             <div id="toolribbon" metal:define-slot="div-toolribbon">
                 <div id="lefttools">
                   <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
-                  <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
                 </div>
                 <div id="righttools" metal:define-slot="div-righttools"
                   tal:define="uid user/getUserName;
                               user_full_name user/cn|uid">
                     <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:uid == 'Anonymous User'">Login</a>
-                    <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:uid != 'Anonymous User'">Logout</a><a target="_blank" tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${uid}">(<span tal:replace="user_full_name"/>)</a>
+                    <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:uid != 'Anonymous User'">Logout</a><a target="_blank" tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${uid}">(<span tal:replace="user_full_name"/>)</a>
 	        <form action="http://google.com/search" method="get">			<div id="freesrchform"><label for="freesrchfld">Search</label>
 			<input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10"/>
 			<input type="hidden" name="sitesearch" value="forum.eionet.europa.eu"/>
@@ -106,7 +105,7 @@
             </div>
 			<div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
 				<div class="breadcrumbhead" i18n:translate="">You are here: </div>
-				<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
+				<span class="breadcrumbitem"><a href="https://www.eionet.europa.eu">Eionet</a></span>
                                 <tal:block metal:define-slot="generated-breadcrumbs">
 				<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
 					<span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
@@ -141,7 +140,7 @@
  <h2>Account services</h2>
 <ul>
  <div tal:condition="python:user.getUserName() == 'Anonymous User'" tal:omit-tag="">
-   <li>I have <a href="http://www.eionet.europa.eu/password-reset">lost my password</a></li>
+   <li>I have <a href="https://www.eionet.europa.eu/password-reset">lost my password</a></li>
  </div>
  <li>Edit my <a href="/profile">user profile</a></li>
  <li>View my <a href="/profile_overview">memberships</a></li>
@@ -149,8 +148,7 @@
 </div>
                 <h2>Places</h2>
                 <ul>
-                    <li><a href="http://www.eionet.europa.eu/">Eionet portal</a></li>
-                    <li><a href="http://ew.eea.europa.eu/">EnviroWindows</a></li>
+                    <li><a href="https://www.eionet.europa.eu/">Eionet portal</a></li>
                     <li><a href="http://www.eea.europa.eu/">EEA home</a></li>
                     <li><a href="http://www.europa.eu" title="EU website">Europa</a></li>
                     <li><a href="http://forum-test.eionet.europa.eu/">Forum test site</a></li>
