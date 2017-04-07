@@ -1,7 +1,11 @@
-1.4.44 (unreleased)
+1.4.45 (unreleased)
 -------------------
+
+1.4.44 (2017-04-07)
+-------------------
+* updated some links to www.eionet.europa.eu to https [dumitval]
 * Bug fix: LDAP dump causes large spikes in load
-  - reverse changes
+  - revert changes
   [chiridra #80233]
 
 1.4.43 (2017-04-03)
