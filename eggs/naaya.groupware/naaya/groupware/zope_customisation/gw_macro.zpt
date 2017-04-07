@@ -151,7 +151,7 @@
                     <li><a href="https://www.eionet.europa.eu/">Eionet portal</a></li>
                     <li><a href="http://www.eea.europa.eu/">EEA home</a></li>
                     <li><a href="http://www.europa.eu" title="EU website">Europa</a></li>
-                    <li><a href="http://forum-test.eionet.europa.eu/">Forum test site</a></li>
+                    <li><a href="https://forum-test.eionet.europa.eu/">Forum test site</a></li>
                 </ul>
             </div>
             <div id="workarea" metal:define-slot="div-workarea">

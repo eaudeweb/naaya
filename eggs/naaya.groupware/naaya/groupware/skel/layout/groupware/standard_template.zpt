@@ -85,7 +85,7 @@
                         <div id="left_topnav">
                             <ul>
                                 <li><a href="http://www.eea.europa.eu" id="eealink">EEA</a></li>
-                                <li><a href="http://www.eionet.europa.eu">Eionet</a></li>
+                                <li><a href="https://www.eionet.europa.eu">Eionet</a></li>
                             </ul>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                     </div>
 					<div id="breadcrumbtrail" on-error="python:here.log_page_error(error)" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
 						<span class="breadcrumbhead" i18n:translate="">You are here: </span>
-						<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
+						<span class="breadcrumbitem"><a href="https://www.eionet.europa.eu">Eionet</a></span>
 						<span class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="python:here.get_gw_site_root().title_or_id()" /></span>
 						<tal:block repeat="crumb crumbs">
 							<span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
