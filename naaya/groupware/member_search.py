@@ -107,13 +107,15 @@ class MemberSearch(Implicit, Item):
                 for user_dn in cache.users:
                     user = cache.get(user_dn)
                     if user.has_key('uid') and user['uid'] in userids:
-                        'id': user['uid'],
-                        'first_name': user['givenName'],
-                        'last_name': user['sn'],
-                        'full_name': user['cn'],
-                        'email': user.get('mail', ''),
-                        'organisation': user.get('o', 'N/A'),
-                        'postal_address': user.get('postalAddress', 'N/A'),
+                         users.append({
+                            'id': user['uid'],
+                            'first_name': user['givenName'],
+                            'last_name': user['sn'],
+                            'full_name': user['cn'],
+                            'email': user.get('mail', ''),
+                            'organisation': user.get('o', 'N/A'),
+                            'postal_address': user.get('postalAddress', 'N/A'),
+                         })
 
             # precalculate user roles for performance
             user_roles_map = {}
