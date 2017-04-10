@@ -1,5 +1,8 @@
 1.4.45 (unreleased)
 -------------------
+* Bug fix: forum-test eionet is not responding
+  - fixed reverse changes
+  [chiridra #84148]
 
 1.4.44 (2017-04-07)
 -------------------
