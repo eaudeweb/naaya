@@ -1,4 +1,7 @@
-1.4.45 (unreleased)
+1.4.46 (unreleased)
+-------------------
+
+1.4.45 (2017-04-10)
 -------------------
 * Bug fix: forum-test eionet is not responding
   - fixed reverse changes
