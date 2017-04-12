@@ -240,14 +240,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 f_lower = f.copy()
                 f_lower['full_title'] = {
                     'query': (first_letter.upper(),
-                              chr(ord(first_letter.upper())+1)),
+                              chr(ord(first_letter.upper()) + 1)),
                     'range': 'min:max'}
                 letter_filters.append(f_lower)
 
                 f_upper = f.copy()
                 f_upper['full_title'] = {
                     'query': (first_letter.lower(),
-                              chr(ord(first_letter.lower())+1)),
+                              chr(ord(first_letter.lower()) + 1)),
                     'range': 'min:max'}
                 letter_filters.append(f_upper)
             filters = letter_filters
@@ -1012,14 +1012,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         objects = self.search_geo_objects(meta_types=[meta_type], **kw)
 
         csv_export = self.getSite().csv_export
-        ret = csv_export.generate_csv_output(meta_type, objects)
+        ret = csv_export.generate_excel_output(meta_type, objects)
 
-        RESPONSE.setHeader('Content-Type', 'text/x-csv')
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Length', len(ret))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         RESPONSE.setHeader('Content-Disposition',
-                           'attachment; filename="map_contacts.csv"')
+                           'attachment; filename="map_contacts.xls"')
 
         return ret
 
