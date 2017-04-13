@@ -6,7 +6,7 @@ function loadArchivedPortals(){
     var portals;
 
     $.ajax({
-        url: "http://archives.eionet.europa.eu/archived_portals_json?jsonp=parseData",
+        url: "https://archives.eionet.europa.eu/archived_portals_json?jsonp=parseData",
         type: "GET",
         dataType: "jsonp",
         async: true,
