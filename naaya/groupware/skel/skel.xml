@@ -49,10 +49,9 @@
         <portlet id="ig_description" title="IG description" />
         <portlet id="portlet_rdfcalendar" title="Meetings and events" />
         <linkslist id="places" title="Places" portlet="1">
-            <link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
-            <link id="105" title="Europa" description="EU website" url="http://www.europa.eu" relative="0" permission="" order="3"/>
-            <link id="106" title="Eionet" description="" url="http://eionet.europa.eu/" relative="0" permission="" order="4"/>
-            <link id="107" title="EWindows" description="EnviroWindows" url="http://ew.eea.europa.eu/" relative="0" permission="" order="1"/>
+            <link id="104" title="EEA home" description="" url="https://www.eea.europa.eu/" relative="0" permission="" order="2"/>
+            <link id="105" title="Europa" description="EU website" url="https://www.europa.eu" relative="0" permission="" order="3"/>
+            <link id="106" title="Eionet" description="" url="https://eionet.europa.eu/" relative="0" permission="" order="4"/>
         </linkslist>
         <linkslist id="top" title="Top navigation links" portlet="">
             <link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>

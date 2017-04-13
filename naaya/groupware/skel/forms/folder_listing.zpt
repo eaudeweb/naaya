@@ -342,7 +342,7 @@ function submit_form_action(action){
 					</td>
 					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
-							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
@@ -438,7 +438,7 @@ function submit_form_action(action){
 					</td>
 					<td>
 						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
-							tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
