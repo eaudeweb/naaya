@@ -84,7 +84,7 @@
                         </div>
                         <div id="left_topnav">
                             <ul>
-                                <li><a href="http://www.eea.europa.eu" id="eealink">EEA</a></li>
+                                <li><a href="https://www.eea.europa.eu" id="eealink">EEA</a></li>
                                 <li><a href="https://www.eionet.europa.eu">Eionet</a></li>
                             </ul>
                         </div>
@@ -130,7 +130,7 @@
                         <p>European Environment Agency, Kongens Nytorv 6, 1050 Copenhagen K, Denmark</p>
                         <a tal:attributes="href string:${site_url}/about/contact" i18n:translate="">Contact us</a>
                         <a tal:attributes="href string:${site_url}/about/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
-                        <a href="http://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
+                        <a href="https://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
                     </div>
                 </metal:block>
             </div>

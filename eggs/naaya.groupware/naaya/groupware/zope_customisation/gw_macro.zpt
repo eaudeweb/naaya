@@ -79,14 +79,14 @@
         <div id="container" metal:define-slot="div-container">
             <div id="toolribbon" metal:define-slot="div-toolribbon">
                 <div id="lefttools">
-                  <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
+                  <a href="https://www.eea.europa.eu/" id="eealink">EEA</a>
                 </div>
                 <div id="righttools" metal:define-slot="div-righttools"
                   tal:define="uid user/getUserName;
                               user_full_name user/cn|uid">
                     <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:uid == 'Anonymous User'">Login</a>
                     <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:uid != 'Anonymous User'">Logout</a><a target="_blank" tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${uid}">(<span tal:replace="user_full_name"/>)</a>
-	        <form action="http://google.com/search" method="get">			<div id="freesrchform"><label for="freesrchfld">Search</label>
+	        <form action="https://google.com/search" method="get">			<div id="freesrchform"><label for="freesrchfld">Search</label>
 			<input type="text" id="freesrchfld" name="q" onfocus="if(this.value=='Search Forum')this.value='';" onblur="if(this.value=='')this.value='Search Forum';" value="Search Forum" size="10"/>
 			<input type="hidden" name="sitesearch" value="forum.eionet.europa.eu"/>
 			<input id="freesrchbtn" type="image" src="/++resource++naaya.groupware/eionet/button_go.gif" alt="Go"/>
@@ -149,8 +149,8 @@
                 <h2>Places</h2>
                 <ul>
                     <li><a href="https://www.eionet.europa.eu/">Eionet portal</a></li>
-                    <li><a href="http://www.eea.europa.eu/">EEA home</a></li>
-                    <li><a href="http://www.europa.eu" title="EU website">Europa</a></li>
+                    <li><a href="https://www.eea.europa.eu/">EEA home</a></li>
+                    <li><a href="https://www.europa.eu" title="EU website">Europa</a></li>
                     <li><a href="https://forum-test.eionet.europa.eu/">Forum test site</a></li>
                 </ul>
             </div>

@@ -75,7 +75,7 @@
                 <label for="__ac_password">Password</label>
                 <input type="password" name="__ac_password" id="__ac_password"
                     size="20" />
-                (<a href="http://www.eionet.europa.eu/password-reset">forgot password?</a>)
+                (<a href="https://www.eionet.europa.eu/password-reset">forgot password?</a>)
             </div>
 
             <div class="field">
