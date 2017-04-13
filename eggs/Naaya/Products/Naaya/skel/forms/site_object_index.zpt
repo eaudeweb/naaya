@@ -6,7 +6,7 @@
                 source_title python: auth_tool.source_name_from_userid(contributor);">
       <tal:block condition="python:source_title.lower() == 'eionet'" >
         <a rel="external"
-        tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+        tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
         tal:content="username"/>
       </tal:block>
       <tal:block condition="python:source_title.lower() == 'local' and
@@ -33,7 +33,7 @@
     <td>
         <tal:block condition="python:source_title.lower() == 'eionet'" >
           <a rel="external"
-          tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+          tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
           tal:content="username"/>
         </tal:block>
         <tal:block condition="python:source_title.lower() == 'local' and

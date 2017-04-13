@@ -196,7 +196,7 @@
 
                         <td>
                             <a title="User Profile"
-                               tal:attributes="href string:http://www.eionet.europa.eu/users/${line/who};"
+                               tal:attributes="href string:https://www.eionet.europa.eu/users/${line/who};"
                                tal:condition="python: line['who'] != 'Anonymous User'"
                                i18n:attributes="title"
                                target="_blank">

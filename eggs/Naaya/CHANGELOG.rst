@@ -1,5 +1,6 @@
 4.1.7 (unreleased)
 -------------------
+* updated several links from http to https [dumitval]
 * export from portal_map to excel instead of csv [dumitval]
 
 4.1.6 (2017-04-07)

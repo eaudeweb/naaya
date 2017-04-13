@@ -182,7 +182,7 @@
             <tal:block condition="python: source_title.lower()=='eionet'"
               define="user_quoted python:here.utUrlEncode(user_id)">
               <a rel="external" tal:content="string:${user_name} (${user_id})"
-              tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
+              tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}" />
             </tal:block>
             <tal:block condition="python: source_title.lower()!='eionet'"
                       content="string:${user_name} (${user_id})" />

@@ -73,7 +73,7 @@
                                                 </tal:block>
                                                 <tal:block condition="python: user_source_title.lower() == 'eionet'">
                                                     <a rel="external" tal:define="user_quoted python:here.utUrlEncode(user_id)"
-                                                        tal:attributes="href string:http://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
+                                                        tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
                                                         tal:content="user_id">username</a>
                                                 </tal:block>
                                                 <tal:block condition="python: user_source_title.lower() not in ['local', 'eionet']" tal:content="user_id"></tal:block>
