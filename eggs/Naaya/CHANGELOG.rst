@@ -1,4 +1,7 @@
-4.1.7 (unreleased)
+4.1.8 (unreleased)
+-------------------
+
+4.1.7 (2017-04-13)
 -------------------
 * updated several links from http to https [dumitval]
 * export from portal_map to excel instead of csv [dumitval]
