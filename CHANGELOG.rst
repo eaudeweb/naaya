@@ -1,5 +1,6 @@
 1.4.46 (unreleased)
 -------------------
+* updated ajax call to archives to https [dumitval]
 
 1.4.45 (2017-04-10)
 -------------------
