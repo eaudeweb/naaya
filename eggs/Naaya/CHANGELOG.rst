@@ -1,4 +1,7 @@
-4.1.8 (unreleased)
+4.1.9 (unreleased)
+-------------------
+
+4.1.8 (2017-05-02)
 -------------------
 * remove notifications for content imported from Excel/CSV [dumitval]
 * implemented async geolocation for content imported from Excel/CSV [dumitval]
