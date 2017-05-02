@@ -134,7 +134,7 @@ def addNyPointer(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    ob.approveThis(approved, approved_by)
+    ob.approveThis(approved, approved_by, _send_notifications=schema_raw_data.get('_send_notifications'))
     ob.submitThis()
 
     self.recatalogNyObject(ob)

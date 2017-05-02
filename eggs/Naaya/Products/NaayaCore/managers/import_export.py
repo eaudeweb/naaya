@@ -16,6 +16,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from StringIO import StringIO
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.ggeocoding import GeocoderServiceError
+from naaya.core.zope2util import path_in_site
 from zope.event import notify
 import csv, codecs
 import logging
@@ -93,12 +94,13 @@ class CSVImportTool(Implicit, Item):
 
         errors = []
         warnings = []
+        site = self.getSite()
 
-        schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
+        schema = site.getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
             raise ValueError('Schema for meta-type not found: "%s"' % meta_type)
 
-        content_type = self.getSite().get_pluggable_item(meta_type)
+        content_type = site.get_pluggable_item(meta_type)
         add_object = content_type['add_method']
 
         location_obj = self.getParentNode()
@@ -180,15 +182,7 @@ class CSVImportTool(Implicit, Item):
                         key = prop_map[column]['column']
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
-                    try:
-                        properties = self.do_geocoding(properties)
-                    except GeocoderServiceError, e:
-                        msg = ('Warnings: could not find a valid address '
-                               'for row ${record_number}: ${error}',
-                               {'record_number': record_number + 1,     # account for header
-                                'error': str(e)})
-                        warnings.append(msg)
-                        address = properties.pop(self.geo_fields['address'])
+                    address = properties.pop(self.geo_fields['address'])
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
                     ob = location_obj._getOb(ob_id)
@@ -197,6 +191,11 @@ class CSVImportTool(Implicit, Item):
                                 Geo(address=address))
                         #user = self.REQUEST.AUTHENTICATED_USER.getUserName()
                         #notify(NyContentObjectEditEvent(ob, user))
+                    if getattr(site, 'geolocation_queue', None):
+                        site.geolocation_queue.append(
+                            '/' + site.getId() + '/' + path_in_site(ob))
+                    else:
+                        site.geolocation_queue = ['/' + site.getId() + '/' + path_in_site(ob)]
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:

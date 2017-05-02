@@ -1,4 +1,5 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+           xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <adapter for="Products.Naaya.interfaces.INyFolder"
            factory=".zip_export_adapters.FolderZipAdapter" />
@@ -23,5 +24,9 @@
 
   <adapter for="naaya.content.url.interfaces.INyURL"
            factory=".zip_export_adapters.URLZipAdapter" />
+
+  <subscriber for="Products.Naaya.interfaces.INySite
+                   Products.Naaya.interfaces.IHeartbeat"
+              handler=".async_geolocator._cron_geolocate" />
 
 </configure>
