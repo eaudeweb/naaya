@@ -111,9 +111,9 @@ def place_pointers(ob, exclude=[]):
         pointer = getattr(loc, p_id)
         if pointer:
             if ob.approved:
-                pointer.approveThis(1, ob.contributor)
+                pointer.approveThis(1, ob.contributor, _send_notifications=False)
             else:
-                pointer.approveThis(0, None)
+                pointer.approveThis(0, None, _send_notifications=False)
 
 
 def _qualifies_for_both(obj):
@@ -204,27 +204,6 @@ def alter_contact(obj):
     obj._p_changed = True
 
 
-def set_address(obj):
-    """ Set the postal address based on geo address and viceversa
-    """
-    # convert postaladdress to geolocation
-    if obj.postaladdress and not obj.geo_location:
-        try:
-            lat, lon = geocoding.location_geocode(obj.postaladdress)
-            obj.geo_location = Geo(lat, lon, obj.postaladdress)
-        except:
-            pass
-
-        return
-
-    # convert geolocation to postal address
-    lang = 'en'
-    v = obj.getLocalAttribute("postaladdress", lang)
-    if obj.geo_location and not v:
-        obj.set_localpropvalue('postaladdress', lang, obj.geo_location.address)
-        return
-
-
 def handle_add_content(event):
     """
     Tests whether this requires adding pointers and perform the action
@@ -242,7 +221,6 @@ def handle_add_content(event):
 
     # Make sure that the Destinet User keyword is added
     if obj.meta_type == "Naaya Contact":
-        set_address(obj)
         obj.geo_type = _get_geo_type(obj)
         if obj.aq_parent.getId() == "destinet-users":
             alter_contact(obj)
@@ -282,7 +260,6 @@ def handle_edit_content(event):
     # Make sure that the Destinet User keyword is added
     #langs = obj.aq_parent.gl_get_languages()
     if (obj.meta_type == "Naaya Contact"):
-        set_address(obj)
         obj.geo_type = _get_geo_type(obj)
         if (obj.aq_parent.getId() == "destinet-users"):
             alter_contact(obj)
