@@ -1,5 +1,6 @@
 1.2.22 - (unreleased)
 =======================
+* remove geolocation for pointers [dumitval]
 
 1.2.21 - (2016-04-19)
 =======================
