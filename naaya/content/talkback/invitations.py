@@ -524,7 +524,7 @@ class InvitationsContainer(SimpleItem):
     NaayaPageTemplateFile('zpt/email_archive', globals(),
                           'tbconsultation-email_archive')
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
-                              'saved_mails')
+                              'saved_emails')
 
     def saved_emails(self, REQUEST=None, RESPONSE=None):
         """ Display all saved invitation emails """

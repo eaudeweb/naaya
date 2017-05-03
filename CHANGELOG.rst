@@ -1,5 +1,6 @@
 1.4.47 (unreleased)
 -------------------
+* corrected security declaration [dumitval]
 
 1.4.46 (2016-09-15)
 -------------------
