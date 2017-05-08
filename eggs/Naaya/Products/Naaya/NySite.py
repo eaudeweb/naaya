@@ -1768,7 +1768,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if root_site is None:
             root_site = self
 
-        def recurse(items, level=0, stop_level=7):
+        def recurse(items, level=0, stop_level=1):
             """ Create a dict with node properties and children """
             res = []
             for item in items:
@@ -1897,6 +1897,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     continue
                 if not getattr(ob, 'approved', False):
                     objects.remove(ob)
+                    continue
 
                 if meta_types and ob.meta_type not in meta_types:
                     objects.remove(ob)
