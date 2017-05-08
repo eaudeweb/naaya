@@ -1,4 +1,7 @@
-4.1.9 (unreleased)
+4.1.10 (unreleased)
+-------------------
+
+4.1.9 (2017-05-08)
 -------------------
 * reduce the preloaded objects in NavigationSitemap [dumitval]
 
