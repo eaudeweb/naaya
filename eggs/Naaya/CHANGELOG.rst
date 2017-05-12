@@ -1,4 +1,7 @@
-4.1.10 (unreleased)
+4.1.11 (unreleased)
+-------------------
+
+4.1.10 (2017-05-12)
 -------------------
 * improvements in async geolocation [dumitval]
 
