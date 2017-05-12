@@ -21,8 +21,7 @@ def _cron_geolocate(site, heartbeat):
 
 
 def geolocate_queue(site):
-    while len(site.geolocation_queue) > 0:
-        site_path = site.geolocation_queue[0]
+    for site_path in list(site.geolocation_queue):
         try:
             obj = site.unrestrictedTraverse(site_path)
         except KeyError:
@@ -49,10 +48,14 @@ def geolocate_queue(site):
                          (lat, lon, address))
                 transaction.commit()
             except GeocoderServiceError, e:
-                LOG.info(e)
-                site.previous_geolocation = datetime.now()
-                site._p_changed = True
-                break
+                if 'ZERO_RESULTS' in e.message:
+                    LOG.info('coodrdinates not found for %s' % address)
+                    site.geolocation_queue.remove(site_path)
+                else:
+                    LOG.info(e)
+                    site.previous_geolocation = datetime.now()
+                    site._p_changed = True
+                    break
         else:
             LOG.info('object already geolocated %s' % site_path)
             site.geolocation_queue.remove(site_path)
