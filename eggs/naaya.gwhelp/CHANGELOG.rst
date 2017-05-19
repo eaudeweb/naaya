@@ -1,4 +1,7 @@
-1.0.6 (unreleased)
+1.0.7 (unreleased)
+-------------------
+
+1.0.6 (2017-05-19)
 -------------------
 * updated links to eionet and youtube to HTTPS [dumitval]
 
