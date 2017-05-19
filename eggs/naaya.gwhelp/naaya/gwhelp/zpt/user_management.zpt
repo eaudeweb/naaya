@@ -13,7 +13,7 @@
 		<p><img class="screenshot" src="/++resource++naaya.gwhelp/user-overview.png"
 			alt="User overview" title="User overview" /></p>
 				<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 <a id="local-users"></a><h3>Local users</h3>
@@ -23,7 +23,7 @@
 		<p>The <em>Assign roles to users</em> submenu offers in-IG browsing so users can be assigned roles only on a specific part (folder).</p>
 		<p>New users can be added one by one, or can be bulk-imported from an Excel file in the dedicated submenus.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="ldap-users"></a><h3>Eionet users</h3>
@@ -32,7 +32,7 @@
 			alt="Eionet users" title="Eionet users" />
 		<p><strong>Note.</strong> Eionet users cannot be created from within the Eionet Forum or Projects platforms.</p>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 		<a id="roles"></a><h3>Roles</h3>
@@ -64,7 +64,7 @@
 			<li>Full access to management system</li>
 		</ul>
 		<div class="right">
-			<a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+			<a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
 			<a href="#top">Back to top</a>
 		</div>
 	</metal:block>

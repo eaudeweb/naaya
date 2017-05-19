@@ -1,5 +1,6 @@
 1.0.6 (unreleased)
 -------------------
+* updated links to eionet and youtube to HTTPS [dumitval]
 
 1.0.5 (2015-06-25)
 -------------------

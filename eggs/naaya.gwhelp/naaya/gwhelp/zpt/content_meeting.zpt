@@ -43,7 +43,7 @@
       alt="Meeting view" title="Meeting view" /></p>
 
     <div class="right">
-      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
       <a href="#top">Back to top</a>
 
     </div>
@@ -81,7 +81,7 @@
       alt="Meeting view" title="Meeting view" /></p>
 
     <div class="right">
-      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
       <a href="#top">Back to top</a>
     </div>
 
@@ -96,7 +96,7 @@
     <h3>Account subscriptions</h3>
     <p>Account subscriptions are people who signed up to participate while being logged on with their Eionet or local account. Administrators can select applicants and click on either <em>Accept as participant(s)</em> or <em>Reject signup(s)</em> or <em>Reject and delete signup(s)</em>.</p>
     <div class="right">
-      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
       <a href="#top">Back to top</a>
     </div>
     <a id="participants"></a><h2>Participants management</h2>
@@ -108,14 +108,14 @@
     <p><img class="screenshot" src="/++resource++naaya.gwhelp/meeting-participants.png"
       alt="Meeting participants" title="Meeting participants" /></p>
     <div class="right">
-      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
       <a href="#top">Back to top</a>
     </div>
 
     <a id="emails"></a><h2>Send emails</h2>
     <p>In order to communicate with the attendees before a meeting, administrators can use a form for sending emails to all or part of the registered participants. The <em>From:</em> address will be pre-filled with the email address of the contact person, recipients can be selected from the overview and <em>Subject</em> and <em>Body</em> can be entered manually.</p>
     <div class="right">
-      <a href="#top"><img src="http://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
+      <a href="#top"><img src="https://www.eionet.europa.eu/styles/eionet2007/arrow_up.gif" alt="Back to top" /></a>
       <a href="#top">Back to top</a>
     </div>
 
