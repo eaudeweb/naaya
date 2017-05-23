@@ -6,5 +6,6 @@
     <include package="destinet.keywords" />
     <include package="destinet.roles" />
     <include package="destinet.registration" />
+    <include package="destinet.geomap_tool" />
 
 </configure>
