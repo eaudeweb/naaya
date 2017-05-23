@@ -1,4 +1,7 @@
-1.2.23 - (unreleased)
+1.2.24 - (unreleased)
+=======================
+
+1.2.23 - (2017-05-23)
 =======================
 * add custom rss export of map locations [dumitval]
 
