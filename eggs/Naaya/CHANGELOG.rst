@@ -1,5 +1,6 @@
 4.1.11 (unreleased)
 -------------------
+* allow map objects export in CSV, next to Excel [dumitva]
 
 4.1.10 (2017-05-12)
 -------------------

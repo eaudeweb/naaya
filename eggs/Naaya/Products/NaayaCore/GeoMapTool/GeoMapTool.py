@@ -1012,15 +1012,24 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         objects = self.search_geo_objects(meta_types=[meta_type], **kw)
 
         csv_export = self.getSite().csv_export
-        ret = csv_export.generate_excel_output(meta_type, objects)
+        file_type = kw.get('file_type', 'excel')
+        if file_type == 'excel':
+            ret = csv_export.generate_excel_output(meta_type, objects)
+            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename="map_contacts.xls"')
+        else:
+            ret = csv_export.generate_csv_output(meta_type, objects)
+            RESPONSE.setHeader('Content-Type', 'text/x-csv')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename="map_contacts.csv"')
+        if isinstance(ret, Exception):
+            self.setSessionErrorsTrans(ret)
+            return self.REQUEST.RESPONSE.redirect(self.REQUEST.HTTP_REFERER)
 
-        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Length', len(ret))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition',
-                           'attachment; filename="map_contacts.xls"')
-
         return ret
 
     security.declareProtected(view, 'export_geo_rss')
