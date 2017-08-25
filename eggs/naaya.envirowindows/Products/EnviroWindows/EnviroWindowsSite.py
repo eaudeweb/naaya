@@ -184,7 +184,7 @@ class EnviroWindowsSite(NySite):
             'Naaya Consultation')
         if naaya_consultation_schema:
             naaya_consultation_schema.addWidget(
-                'show_contributor_request_role',  **widget_args)
+                'show_contributor_request_role', **widget_args)
 
         naaya_simple_consultation_schema = schema_tool.getSchemaForMetatype(
             'Naaya Simple Consultation')
@@ -254,7 +254,7 @@ class EnviroWindowsSite(NySite):
         PARENTS.reverse()
         if vRoot:
             root = REQUEST.VirtualRootPhysicalPath
-            PARENTS = PARENTS[len(root)-1:]
+            PARENTS = PARENTS[len(root) - 1:]
         PARENTS.reverse()
         for crumb in PARENTS:
             if crumb.meta_type == self.meta_type:
@@ -1185,8 +1185,8 @@ class EnviroWindowsSite(NySite):
             self.REQUEST.RESPONSE.setHeader(
                 "Content-Disposition",
                 "attachment;filename=contacts_template.csv")
-            return 'Title,Description,Coverage,Keywords,Personal title,Job title,'\
-                   'First name,Last name,Department,Organisation,'\
+            return 'Title,Description,Coverage,Keywords,Personal title,'\
+                   'Job title,First name,Last name,Department,Organisation,'\
                    'Postal address,Phone,Fax,Cell phone,Email,Webpage,'\
                    'Location url,Geographical type,Latitude,Longitude'
 
