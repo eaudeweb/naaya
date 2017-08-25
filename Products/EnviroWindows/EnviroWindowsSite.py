@@ -612,8 +612,15 @@ class EnviroWindowsSite(NySite):
 
     security.declareProtected(view, 'processRequestRole')
 
-    def processRequestRole(self, role, REQUEST=None, RESPONSE=None):
+    def processRequestRole(self, role=None, REQUEST=None, RESPONSE=None):
         """ """
+        if role is None:
+            self.setSessionErrorsTrans(
+                'It is mandatory to specify the requested role')
+            if 'return_path' in REQUEST:
+                return RESPONSE.redirect(REQUEST['return_path'])
+            else:
+                return RESPONSE.redirect(self.getSitePath())
         if 'cancel' in REQUEST:
             if 'return_path' in REQUEST:
                 return RESPONSE.redirect(REQUEST['return_path'])
