@@ -1,4 +1,7 @@
-1.1.15 (unreleased)
+1.1.16 (unreleased)
+-------------------
+
+1.1.15 (2017-08-25)
 -------------------
 * bad request handling in processRequestRole [dumitval]
 
