@@ -1,3 +1,5 @@
+alert('asdasdasd');
+
 function init() {
     var inst = tinyMCEPopup.editor;
     var selLink = inst.dom.getParent(inst.selection.getNode(), 'A');

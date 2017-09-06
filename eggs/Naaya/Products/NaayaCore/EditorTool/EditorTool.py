@@ -26,6 +26,10 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from naaya.core.StaticServe import StaticServeFromZip
 
 
+TINY_MCE_PATH = '{base_url}/tinymce/js/tinymce'
+# TINY_MCE_PATH = '{base_url}/tinymce/jscripts/tiny_mce'
+
+
 def manage_addEditorTool(self, REQUEST=None):
     """ ZMI method that creates an EditorTool object instance
         into the portal"""
@@ -50,17 +54,26 @@ def loadConfig(section='tinymce'):
         'convert_urls',
         'paste_use_dialog',
         'verify_html',
-        'theme_advanced_resizing'
-        ]
+        'theme_advanced_resizing',
+        'remove_trailing_brs',
+        'menubar',
+        'style_formats_merge',
+    ]
+    json_settings = [
+        'style_formats',
+    ]
     ret = {}
     config = ConfigParser()
     config.read(join(dirname(__file__), 'config.ini'))
     if config.has_section(section):
         for option in config.options(section):
-            if option.strip() in boolean_settings:
-                ret[option.strip()] = config.getboolean(section, option)
+            option_name = option.strip()
+            if option_name in boolean_settings:
+                ret[option_name] = config.getboolean(section, option)
+            elif option_name in json_settings:
+                ret[option_name] = json.loads(config.get(section, option))
             else:
-                ret[option.strip()] = config.get(section, option).strip()
+                ret[option_name] = config.get(section, option).strip()
     return ret
 
 configuration = loadConfig()  # Global configuration loaded from *config.ini*
@@ -95,10 +108,15 @@ class EditorTool(Folder):
             `lang`
                 **Not used**
         """
+       #  return (
+       #      '<script type="text/javascript" language="javascript" '
+       #      'src="{path}/jquery.tinymce.js"></script>'
+       # ).format(path=TINY_MCE_PATH.format(base_url=self.absolute_url()))
+
         return (
             '<script type="text/javascript" language="javascript" '
-            'src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js">'
-            '</script>') % {'parent_url': self.absolute_url()}
+            'src="{path}/jquery.tinymce.min.js"></script>'
+       ).format(path=TINY_MCE_PATH.format(base_url=self.absolute_url()))
 
     security.declarePublic('additional_styles')
 
@@ -190,24 +208,29 @@ class EditorTool(Folder):
                 templates from `config.ini`. Default is 'tinymce'.
                 Also you can use 'tinymce_noimage' to disable image insertion.
         """
-        if not lang:
-            lang = self.gl_get_selected_language()
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
+
         if 'config_template' in extra_options:
             template = extra_options['config_template']
             cfg = loadConfig(template)
         else:
             cfg = copy.copy(configuration)
+
+        base_url = self.absolute_url()
+
         cfg.update({
-            'language': lang,
-            'select_image_url': '%s/select_image?document=%s' %
-            (self.absolute_url(), doc_url),
-            'edit_image_url': '%s/prepare_image?mode=edit&document=%s' %
-            (self.absolute_url(), doc_url),
-            'link_popup_url': '%s/select_link' % self.absolute_url(),
+            'select_image_url': '{}/select_image?document={}'.format(
+                base_url, doc_url),
+            'edit_image_url': '{}/prepare_image?mode=edit&document={}'.format(
+                base_url, doc_url),
+            'link_popup_url': '{}/select_link'.format(self.absolute_url()),
             'element_id': element,
-            'script_url': '%s/tinymce/jscripts/tiny_mce/tiny_mce.js' %
-            self.absolute_url(),
+            # 'script_url': '{}/tiny_mce.js'.format(
+            #     TINY_MCE_PATH.format(base_url=self.absolute_url())
+            # ),
+            'script_url': '{}/tinymce.min.js'.format(
+                TINY_MCE_PATH.format(base_url=self.absolute_url())
+            ),
             'site_url': self.getSite().absolute_url(),
             'language': self.gl_get_selected_language(),
         })
@@ -226,9 +249,13 @@ class EditorTool(Folder):
         if old_css != '':
             cfg['content_css'] += ',' + old_css
 
-        return "<script type=\"text/javascript\">\
-$().ready(function() {$('textarea#%s').tinymce(%s);})\
-</script>" % (element, json.dumps(cfg, indent=2))
+        return (
+            '<script type="text/javascript">'
+            '$().ready(function() {{'
+            '   $("textarea#{element}").tinymce({config});'
+            '}});'
+            '</script>'
+        ).format(element=element, config=json.dumps(cfg, indent=2))
 
     def get_preview_img(self, REQUEST=None):
         """ Compute src attribute for the preview image. Uploads image if
@@ -410,8 +437,10 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
     image_js = ImageFile('www/image.js', globals())
     link_js = ImageFile('www/link.js', globals())
     image_css = ImageFile('www/image.css', globals())
+    # tinymce = StaticServeFromZip(
+    #     'tinymce', 'www/tinymce_3_5_11_jquery_naaya.zip', globals())
     tinymce = StaticServeFromZip(
-        'tinymce', 'www/tinymce_3_5_11_jquery_naaya.zip', globals())
+        'tinymce', 'www/tinymce_4.6.6.zip', globals())
     tinymce_naaya = StaticServeFromZip(
         'Naaya', 'www/tinymce_naaya.zip', globals())
     select_image = PageTemplateFile('zpt/select_image', globals())
