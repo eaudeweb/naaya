@@ -90,7 +90,7 @@
 			<input id="cancel" type="button" i18n:attributes="value" value="Cancel" onclick="imageOb.cancel()" />
 		</div>
 		<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
-		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+		<script type="text/javascript" src="tinymce/js/tinymce/tiny_mce_popup.js"></script>
 		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
 		<input type="hidden" id="fe_url_file" name="url_file" tal:attributes="value img_url" />
 		<script type="text/javascript">

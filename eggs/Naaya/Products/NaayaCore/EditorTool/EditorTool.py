@@ -27,7 +27,6 @@ from naaya.core.StaticServe import StaticServeFromZip
 
 
 TINY_MCE_PATH = '{base_url}/tinymce/js/tinymce'
-# TINY_MCE_PATH = '{base_url}/tinymce/jscripts/tiny_mce'
 
 
 def manage_addEditorTool(self, REQUEST=None):
@@ -108,10 +107,6 @@ class EditorTool(Folder):
             `lang`
                 **Not used**
         """
-       #  return (
-       #      '<script type="text/javascript" language="javascript" '
-       #      'src="{path}/jquery.tinymce.js"></script>'
-       # ).format(path=TINY_MCE_PATH.format(base_url=self.absolute_url()))
 
         return (
             '<script type="text/javascript" language="javascript" '
@@ -225,9 +220,6 @@ class EditorTool(Folder):
                 base_url, doc_url),
             'link_popup_url': '{}/select_link'.format(self.absolute_url()),
             'element_id': element,
-            # 'script_url': '{}/tiny_mce.js'.format(
-            #     TINY_MCE_PATH.format(base_url=self.absolute_url())
-            # ),
             'script_url': '{}/tinymce.min.js'.format(
                 TINY_MCE_PATH.format(base_url=self.absolute_url())
             ),
@@ -437,10 +429,7 @@ class EditorTool(Folder):
     image_js = ImageFile('www/image.js', globals())
     link_js = ImageFile('www/link.js', globals())
     image_css = ImageFile('www/image.css', globals())
-    # tinymce = StaticServeFromZip(
-    #     'tinymce', 'www/tinymce_3_5_11_jquery_naaya.zip', globals())
-    tinymce = StaticServeFromZip(
-        'tinymce', 'www/tinymce_4.6.6.zip', globals())
+    tinymce = StaticServeFromZip('tinymce', 'www/tinymce.zip', globals())
     tinymce_naaya = StaticServeFromZip(
         'Naaya', 'www/tinymce_naaya.zip', globals())
     select_image = PageTemplateFile('zpt/select_image', globals())

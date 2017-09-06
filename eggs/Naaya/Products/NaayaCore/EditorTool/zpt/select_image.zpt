@@ -115,11 +115,11 @@
       </div>
     </div>
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/form_utils.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/editable_selects.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/tiny_mce_popup.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/mctabs.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/form_utils.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/validate.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/editable_selects.js"></script>
     <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
                 <script type="text/javascript" src="++resource++Products.Naaya/js/jquery.paginate.js"></script>
                 <link rel="stylesheet" type="text/css" href="++resource++Products.Naaya/js/css/jquery.paginate.css" />

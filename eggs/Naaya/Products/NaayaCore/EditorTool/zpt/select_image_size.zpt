@@ -52,7 +52,7 @@
 			<img tal:attributes="src photo_link;"/>
 		</div>
 
-		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+		<script type="text/javascript" src="tinymce/js/tinymce/tiny_mce_popup.js"></script>
 	</body>
 </html>
 </tal:block>

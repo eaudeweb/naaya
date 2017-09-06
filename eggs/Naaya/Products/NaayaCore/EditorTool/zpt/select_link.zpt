@@ -90,16 +90,15 @@
       <input id="cancel" type="button" i18n:attributes="value" value="Cancel" onclick="popup_close();" />
     </div>
 
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
-    <script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
-    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/link_js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/tiny_mce_popup.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/validate.js"></script>
+    <script type="text/javascript" src="tinymce/js/tinymce/utils/mctabs.js"></script>
     <script type="text/javascript">
       function popup_close() {
         tinyMCEPopup.close();
       }
-      window.onload = init;
     </script>
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/link_js"></script>
     <metal:block use-macro="here/macro_utils/macros/ajaxtree">
       <metal:block fill-slot="treedefinitions">
         <script type="text/javascript"
