@@ -6,7 +6,7 @@ types.
 """
 
 import re
-import copy
+from copy import deepcopy
 from ConfigParser import ConfigParser
 from os.path import join, dirname
 import simplejson as json
@@ -21,6 +21,7 @@ from Products.NaayaCore.constants import METATYPE_EDITORTOOL
 from Products.NaayaCore.EditorTool.utilities import parse_css_margin
 from Products.NaayaCore.EditorTool.utilities import parse_css_border_width
 from Products.NaayaCore.EditorTool.utilities import strip_unit
+from Products.NaayaCore.EditorTool.config import SECTIONS
 from naaya.core.zope2util import url_quote
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from naaya.core.StaticServe import StaticServeFromZip
@@ -39,43 +40,15 @@ def manage_addEditorTool(self, REQUEST=None):
 
 
 def loadConfig(section='tinymce'):
-    """ Loads the default configuration from *config.ini*.
-    The configuration is loaded from the *config.ini* file.
-    `section` Section to load from config.ini. You can use config.ini
+    """ Loads the default configuration from *config.py*.
+    The configuration is loaded from the *config.py* file.
+    `section` Section to load from config.py. You can use config.py
     to create multiple templates for the editor and name them differently.
     Returns a dictionary with tinymce configuration options
     """
-    boolean_settings = [
-        'button_tile_map',
-        'apply_source_formatting',
-        'remove_linebreaks',
-        'relative_urls',
-        'convert_urls',
-        'paste_use_dialog',
-        'verify_html',
-        'theme_advanced_resizing',
-        'remove_trailing_brs',
-        'menubar',
-        'style_formats_merge',
-    ]
-    json_settings = [
-        'style_formats',
-    ]
-    ret = {}
-    config = ConfigParser()
-    config.read(join(dirname(__file__), 'config.ini'))
-    if config.has_section(section):
-        for option in config.options(section):
-            option_name = option.strip()
-            if option_name in boolean_settings:
-                ret[option_name] = config.getboolean(section, option)
-            elif option_name in json_settings:
-                ret[option_name] = json.loads(config.get(section, option))
-            else:
-                ret[option_name] = config.get(section, option).strip()
-    return ret
+    return deepcopy(SECTIONS.get(section, dict()))
 
-configuration = loadConfig()  # Global configuration loaded from *config.ini*
+configuration = loadConfig()  # Global configuration loaded from *config.py*
 
 
 class EditorTool(Folder):
@@ -196,20 +169,20 @@ class EditorTool(Folder):
                 **No longer used** In order to disable images.
                 Use extra_options, see below.
             `extra_options`
-                Extra options you can pass to tinyMCE editor. See `config.ini`
+                Extra options you can pass to tinyMCE editor. See `config.py`
                 for further reference. You can pass any option from there
                 to override default one.
                 `extra_options['config_template']` Loads one of the defined
-                templates from `config.ini`. Default is 'tinymce'.
+                templates from `config.py`. Default is 'tinymce'.
                 Also you can use 'tinymce_noimage' to disable image insertion.
         """
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
 
         if 'config_template' in extra_options:
-            template = extra_options['config_template']
-            cfg = loadConfig(template)
+            section = extra_options['config_template']
+            cfg = loadConfig(section)
         else:
-            cfg = copy.copy(configuration)
+            cfg = deepcopy(configuration)
 
         base_url = self.absolute_url()
 
