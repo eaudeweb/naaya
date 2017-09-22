@@ -278,10 +278,6 @@
 	path = eggs/naaya.content.localizedbfile
 	url = git@github.com:eaudeweb/naaya.content.localizedbfile.git
 	branch = master
-[submodule "eggs/naaya.wise"]
-	path = eggs/naaya.wise
-	url = git@github.com:eaudeweb/naaya.wise.git
-    branch = master
 [submodule "eggs/naaya.content.apncbphoto"]
 	path = eggs/naaya.content.apncbphoto
 	url = git@github.com:eaudeweb/naaya.content.apncbphoto.git
