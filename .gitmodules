@@ -1,7 +1,3 @@
-[submodule "eggs/Products.NaayaContent.NyPublication"]
-	path = eggs/Products.NaayaContent.NyPublication
-	url = git@github.com:eaudeweb/naaya.Products.NaayaContent.NyPublication.git
-	branch = master
 [submodule "buildout/chm-be"]
 	path = buildout/chm-be
 	url = git@github.com:eaudeweb/naaya.buildout.chm-be.git
