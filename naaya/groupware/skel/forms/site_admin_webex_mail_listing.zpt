@@ -1,0 +1,125 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+<h1 metal:fill-slot="title" i18n:translate="">WebEx planning email</h1>
+
+<tal:block metal:fill-slot="section">
+<script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        if ($('#emails-list').length){
+            $('#emails-list').dataTable({
+                'aaSorting': [[0, "desc"]],
+                'sPaginationType': 'full_numbers',
+                "aLengthMenu": [[10, 25, 50, -1],
+                                [10, 25, 50, "All"]]
+            });
+        }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+<link rel="stylesheet" href="/++resource++naaya.updater/updater.css" type="text/css" media="screen" charset="utf-8" />
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_webex_mail_html" i18n:translate="">Send new WebEx conference request</a></li>
+	<li id="currenttab"><a i18n:translate="">View sent WebEx requests</a></li>
+</ul>
+</div>
+<div id="tabbedmenuend"></div>
+
+<p>&nbsp</p>
+<p i18n:translate="">This page lists all sent WebEx requests emails.</p>
+
+<table cellpadding="0" cellspacing="0" class="datatable display listing" id="emails-list">
+    <thead>
+        <tr class="list-header">
+            <th i18n:translate="" width="10%">
+                Date
+            </th>
+
+            <th i18n:translate="" width="30%">
+                Subject
+            </th>
+
+            <th i18n:translate="" width="20%">
+                Recipients
+            </th>
+
+            <th i18n:translate="" width="30%">
+                Content
+            </th>
+
+            <th i18n:translate="" width="10%">
+                Sender
+            </th>
+            <th style="display:none">
+                Content to be indexed by Search
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+<tal:block repeat="email emails">
+        <tr>
+            <td tal:content="python:here.utShowFullDateTime(email['date'])" />
+
+            <td><a tal:content="email/subject" tal:attributes="href string:${site_url}/admin_view_webex_email?filename=${email/filename}" /></td>
+
+            <td>
+                <tal:block condition="python: len(email['recipients']) <= 3" repeat="recipient email/recipients">
+                <a tal:attributes="href string:mailto:${recipient};
+                                   title string:Send email to ${recipient}"
+                   tal:content="recipient"
+                   i18n:attributes="title" />
+                <br />
+                </tal:block>
+                <tal:block  define="recp_count python: len(email['recipients'])"
+                  condition="python:recp_count > 3">
+                  <tal:block
+                    repeat="recipient python:email['recipients'][:3]">
+                    <a tal:attributes="href string:mailto:${recipient};
+                                       title string:Send email to ${recipient}"
+                       tal:content="recipient"
+                       i18n:attributes="title" />
+                    <br />
+                  </tal:block>
+                  ... <tal:block i18n:translate="">and <tal:block content="python:recp_count-3" i18n:name="recipients_count"/> more.</tal:block>
+                </tal:block>
+            </td>
+
+            <td tal:content="python:here.html2text(email['content'], 30, True)" />
+
+            <td tal:content="email/sender" />
+
+            <td style="display:none" tal:content="python:here.html2text(email['content'])" />
+        </tr>
+</tal:block>
+    </tbody>
+    <tfoot>
+        <tr class="list-header">
+            <th i18n:translate="" width="10%">
+                Date
+            </th>
+
+            <th i18n:translate="" width="30%">
+                Subject
+            </th>
+
+            <th i18n:translate="" width="20%">
+                Recipients
+            </th>
+
+            <th i18n:translate="" width="30%">
+                Content
+            </th>
+
+            <th i18n:translate="" width="10%">
+                Sender
+            </th>
+            <th style="display:none">
+                Content to be indexed by Search
+            </th>
+        </tr>
+    </tfoot>
+</table>
+
+</tal:block>
+</tal:block>
