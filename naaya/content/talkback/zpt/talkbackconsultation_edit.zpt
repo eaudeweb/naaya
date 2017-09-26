@@ -1,0 +1,11 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
+<!-- Schema properties -->
+<tal:block metal:fill-slot="schema_properties" define="schema_helper python:here.get_schema_helper(lang=curr_lang)"
+        repeat="form_item schema_helper/form_items">
+        <tal:block condition="python: form_item['name'] not in ['sortorder']" replace="structure form_item/html" />
+        <div tal:condition="python: form_item['name'] == 'sortorder'" class="field">
+            <label for="sortorder" i18n:translate="">Sortorder</label>
+            <input type="text" name="sortorder" id="sortorder" tal:attributes="value here/sortorder" />
+        </div>
+</tal:block>
+</tal:block>
