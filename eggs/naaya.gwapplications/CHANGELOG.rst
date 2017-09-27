@@ -1,4 +1,7 @@
-1.1.8 (unreleased)
+1.1.9 (unreleased)
+------------------
+
+1.1.8 (2017-09-27)
 ------------------
 * change default mailserver name for docker compatibility [dumitval]
 
