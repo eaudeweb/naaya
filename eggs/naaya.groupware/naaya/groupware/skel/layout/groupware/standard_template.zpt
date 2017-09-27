@@ -51,6 +51,16 @@
 	<metal:block fill-slot="standard-body">
         <metal:block define-slot="standard-body">
             <body>
+            <metal:block define-slot="disclaimer">
+              <div id="disclaimer">
+                <p><img src="misc_/Naaya/info.png" />
+                  This site uses cookies in order to function as expected.
+                  By continuing, you are agreeing to our
+                    <a tal:attributes="href string:${site_url}/about/cookie_policy">
+                      cookie policy</a>.<br/>
+                    <a href="javascript:void(0);" id="acknowledge">Agree and close</a></p>
+              </div>
+            </metal:block>
             <tal:block tal:define="site_url here/getSitePath;
                        pss modules/Products.PythonScripts.standard;
                        proc_came_from python:request.get('URL', '');
