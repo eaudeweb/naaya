@@ -1,0 +1,2046 @@
+/* Load Naaya Content custom styles */
+<span tal:replace="python:here.getLayoutTool().getNaayaContentStyles()" />
+
+/* Required tags - these classes appear in the forms */
+
+/* errors and messages box */
+.message ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.information fieldset {
+	background: #f0f5fb !important;
+	border: 2px dashed #999;
+	color: #3d8101;
+}
+.error fieldset {
+	background: #f0f5fb !important;
+	color: #f40000;
+}
+.message-error, .error {
+	color: #f30;
+}
+.message-error fieldset,.error fieldset {
+	border: 2px dashed red;
+	color: #f40000;
+}
+.message-information fieldset, .information fieldset {
+	border: 2px dashed #999 !important;
+}
+.fieldset_div {
+	margin: 5px 0px;
+}
+.form-errors {
+	color: red;
+	font-weight: bold;
+	font-size: 95%;
+}
+.mandatory_field {
+	color: blue;
+}
+/* tip boxes */
+.right-floated-tip {
+	width: 20%;
+	float: right;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.tip {
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.left-floated-tip {
+	width: 20%;
+	float: left;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+
+/* Operations buttons */
+.floated-buttons {
+	float: right;
+	margin-right: 0.5em;
+}
+.buttons {
+	font-weight: bold;
+}
+.buttons a {
+	text-decoration: none;
+	background: #ffffff;
+	color: #666;
+	line-height: 2em;
+	border-left:2px solid #EEEEEE;
+	border-top:2px solid #EEEEEE;
+	border-bottom:2px solid #2F6C91;
+	border-right:2px solid #2F6C91;
+	padding:0.2em 0.5em;
+	margin: 0em 0.3em;
+	font-size: 90%;
+	font-weight: bold;
+}
+.buttons a:visited {
+	color: #000;
+}
+.submission_button {
+	margin-top: 20px;
+	padding: 1px 2px 0px 2px;
+	background-color: #8194A0;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid #637785;
+	border-bottom: 1px solid #637785;
+	font-size: 100%;
+	color: white;
+}
+a.button-like, a.button-like:visited {
+	text-decoration: none;
+	background-color: #fff;
+	color: #000;
+	line-height: 2em;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding:0.1em 0.4em;
+	margin: 0em 0.3em;
+	font-size: 95%;
+}
+
+/* site + folder index menu */
+#admin_this_folder{
+	padding: 0.5em;
+	border: 1px solid #eee;
+	background-color: #fafafa;
+	text-align: left;
+	text-indent: 0.3em;
+}
+#admin_this_folder #submission {
+	font-weight: bold;
+}
+#admin_this_folder a {
+	text-decoration: none;
+	background-color: #fff;
+	color: #000;
+	line-height: 2em;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding:2px 2px;
+	font-size: 90%;
+}
+#admin_this_folder a span {
+	padding:0em 0.3em;
+	margin: 0em 0.3em;
+	white-space: nowrap;
+}
+#admin_this_folder img {
+	vertical-align: middle;
+	padding-right: 4px;
+}
+#admin_this_folder select {
+	vertical-align: middle;
+}
+dd#admin_textarea{
+	margin-top: -0.5em;
+	margin-left: 3px;
+	width: 650px;
+}
+/* second site + folder index menu */
+#toolbar{
+	padding: 0.6em;
+	padding-left: 0.6em;
+	margin-top: 0.9em;
+	background-color: #eee;
+}
+#toolbar a{
+	text-decoration: none;
+}
+#toolbar span{
+	white-space: nowrap;
+	font-size: 0.85em;
+	font-weight: bold;
+	background-color: #e6e6e6;
+	border-top: 1px solid #bebebe;
+	border-left: 1px solid #bebebe;
+	border-bottom: 1px solid #303030;
+	border-right: 1px solid #303030;
+	margin-right: 0.4em;
+	padding:0.15em;
+	padding-left: 0.3em;
+	color: #333333;
+}
+#toolbar img{
+	position: relative;
+	top:1px;
+}
+#toolbar input, #toolbar button, #toolbar span {
+	white-space: nowrap;
+	font-size: 0.85em;
+	font-weight: bold;
+	background: #fff;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding: 0.1em 0.2em;
+	color: #333333;
+}
+#toolbar input:hover, #toolbar button:hover, #toolbar span:hover {
+	border-left:1px solid #6791c3;
+	border-top:1px solid #6791c3;
+	border-bottom:1px solid #34649b;
+	border-right:1px solid #34649b;
+	color: #4e7cb0;
+}
+/* bulk download button */
+a.b_download {
+	float: right;
+	font-size: 0.70em;
+	font-size: normal;
+	text-decoration: none;
+	padding-right: 0.3em;
+}
+
+a.b_download:hover {
+	text-decoration: underline;
+}
+a.download_link {
+	background: url("misc_/Naaya/download.png") no-repeat scroll left center transparent;
+	float: right;
+	padding-left: 25px;
+	width: auto;
+}
+/* sub-objects listing */
+#folderfile_list th{
+	background-color: #eeeeee;
+	padding: 0.1em;
+	color: #303030;
+	font-size: 0.9em;
+	font-weight: normal;
+	border-right: 1px solid #c7c7c7;
+}
+#folderfile_list td{
+	color: #999999;
+	padding: 0.4em 0.1em;
+	border-bottom: 1px solid #eeeeee;
+}
+#folderfile_list .checkbox{
+	vertical-align: top;
+	text-align: left;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+}
+#folderfile_list th.checkbox{
+	vertical-align: middle;
+}
+#folderfile_list .type{
+	vertical-align: top;
+	text-align: center;
+	width: 0.5em;
+}
+#folderfile_list .type img{
+	margin-top: 4px;
+}
+#folderfile_list th.type{
+	vertical-align: middle;
+	width: 0.5em;
+}
+#folderfile_list .title-column{
+	vertical-align: middle;
+	text-align: left;
+}
+td.title-column a{
+	color: #0f75b3;
+}
+td.title-column a:hover{
+	text-decoration: none;
+}
+#folderfile_list th.title-column{
+	vertical-align: middle;
+	padding-left: 0.3em;
+}
+#folderfile_list .checkin{
+	vertical-align: top;
+	text-align: center;
+}
+#folderfile_list th.checkin{
+	vertical-align: middle;
+}
+#folderfile_list .checkout{
+	vertical-align: top;
+	text-align: center;
+}
+#folderfile_list th.checkout{
+	vertical-align: middle;
+}
+#folderfile_list .edit{
+	vertical-align: top;
+	text-align: center;
+}
+#folderfile_list th.edit{
+	vertical-align: middle;
+}
+
+/* Object language availability */
+.available_langs {
+	font-size: x-small;
+}
+.available_langs a{
+	border-right: 1px solid #0F75B3;
+	padding-right: 0.3em;
+	padding-left: 0.3em;
+}
+.available_langs a:first-child {
+	border-left:1px solid #0F75B3;
+}
+
+/* Tabbed menus  */
+#tabbedmenu, .tabbedmenu {
+	float:left;
+	width:100%;
+	border-bottom: 1px solid #346d9f;
+	font-size: 0.8em;
+	line-height: 1.5em;
+	position: relative !important;
+	left: -1em !important;
+}
+#tabbedmenu ul, .tabbedmenu ul {
+	margin:0;
+	padding: 1em 1em 0;
+	list-style:none;
+}
+#tabbedmenu li, .tabbedmenu li {
+	float:left;
+	margin: 0;
+	padding:0;
+	white-space: nowrap;
+}
+#tabbedmenu a, .tabbedmenu a {
+	display:block;
+	text-decoration: none;
+	font-weight: normal;
+	color: black;
+	background: #F0F5FB;
+	padding: 0.3em 1em 0.3em 1em;
+	margin: 0.3em 0.1em 0 0.1em;
+	border: 1px solid #346d9f;
+	border-bottom: none;
+}
+#tabbedmenu a:hover, .tabbedmenu a:hover {
+	background: #A8C7EC;
+	color: #000;
+}
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
+	background: #F0F5FB;
+}
+#tabbedmenu #currenttab a, .tabbedmenu .currenttab a {
+	text-decoration: none;
+	font-weight: bold;
+	background: #346D9F;
+	margin: 0em 0.1em 0 0.1em;
+	padding: 0.5em 1em 0.4em 1em;
+	color: #fafafa !important;
+	border: 1px solid #fff;
+	border-bottom: none;
+}
+#tabbedmenu #currenttab span, .tabbedmenu .currenttab span {
+	display:block;
+	text-decoration: none;
+}
+#tabbedmenu #currenttab a:hover, #tabbedmenu #currenttab a:visited, .tabbedmenu .currenttab a:hover, .tabbedmenu .currenttab a:visited {
+	color: #fafafa !important;
+}
+
+/* warning box for active versions of items */
+.version_box {
+	background-color: #f4fff4;
+	color: red;
+	padding: 1em;
+	float: right;
+	border: 1px solid black;
+	width: 200px;
+	text-align: center;
+}
+
+/* Content translation boxes */
+.edit-holder {
+	margin: 1.5em 0 0 0;
+}
+div.translate-top {
+	line-height: 2.29em;
+}
+.translate {
+	background: #fff;
+	color: #333;
+	font-size: 95%;
+	font-weight: normal;
+	font-family:Arial, Helvetica, sans-serif;
+	line-height: 2.3em;
+}
+*html .translate {
+	padding: 0;
+}
+*:first-child+html .translate {
+	padding: 0;
+}
+.translate span {
+	padding: 0.5em;
+}
+*html .translate span {
+	padding: 0;
+}
+*:first-child+html .translate span {
+	padding: 0;
+}
+.translate a {
+	color: #000;
+	background: #def2cc;
+	text-decoration: none;
+	font-weight: bold;
+	padding: 0.5em;
+	margin: 0 0 0 0.7em;
+}
+.translate .current {
+	margin: 0 0 0 0.7em;
+	padding: 0.5em;
+	display: inline;
+	background: #def2ff;
+}
+.translate .current span {
+	color: #444444;
+	font-weight: normal;
+	padding: 0 3px 0 3px;
+}
+.translate a:hover {
+	background: #def299;
+	color: #666666;
+}
+.translate_bar_right {
+	display: inline;
+	float: right;
+	width: 30em;
+	text-align: right;
+	position: relative;
+	margin: 1em;
+	font-size: 95%;
+}
+.edit_right_box {
+	clear: both;
+	background-color: #f4fff4;
+	padding: 1em;
+	float: right;
+	border: 1px solid black;
+	width: 200px;
+	text-align: right;
+	margin: 0.5em 1em 0.5em 0;
+}
+.edit_right_box p {
+	font-size: 90%;
+	text-align: justify;
+	border-top: 1px dotted #000;
+	padding-top: 0.5em;
+}
+
+/* styles for the add/edit forms */
+.field {
+	margin: 1em;
+}
+.field-inline {
+	margin: 1em 0 0 1em;
+}
+.field label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+.field-inline label {
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+.field .invisible {
+	display: none;
+}
+.field-inline .invisible {
+	display: none;
+}
+.form-field label {
+	display: block;
+	width: 20%;
+	float: left;
+}
+.form-fieldset {
+	margin-top: 1em;
+	border: 1px solid #ccc;
+}
+
+/*  Comment box form */
+.comment_box {
+	background-color:#FAFAFA;
+	border: 1px dashed #cccccc;
+	margin:1em;
+	padding:1em;
+	}
+.older {
+	color:grey;
+	}
+a.deletecomment, a.deletecomment:visited {
+	font-size: 90%;
+	float:right;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(misc_/Naaya/trash.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	margin-bottom: 0.5em;
+}
+a.addcomment, a.addcomment:visited {
+	font-size: 90%;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(misc_/Naaya/addcomment.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	margin-bottom: 0.5em;
+}
+a.logincomment, a.logincomment:visited {
+	font-size: 90%;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(misc_/Naaya/logintoadd.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	margin-bottom: 0.5em;
+}
+.commentbox_title {
+	font-weight: bold;
+	font-size: 110%;
+	padding-left: 17px;
+	background-image: url(misc_/Naaya/comment.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.commentbox_content {
+	color:#666666;
+	font-size: 80%;
+}
+.commentbox_add {
+	margin: 1em;
+	clear: both;
+}
+.hr_addcomment {
+	border-top: 1px solid #eaeaea;
+	border-bottom:1px solid white;
+}
+.hr_inside_comment {
+	border-top: 1px solid #eaeaea;
+	border-bottom:1px solid white;
+	margin-top:0.5em;
+}
+
+.hr_invisible {
+	clear: both;
+	border: 1px solid white;
+}
+
+.table_indent td {
+	vertical-align: middle;
+}
+.table_indent label {
+	font-size: 100%;
+	font-weight: bold;
+	color: #444444;
+	vertical-align: middle;
+	padding: 3px;
+}
+
+.padding_td {
+	padding-left: 20px;
+}
+
+.ldap_groups ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+div#sub_btns {
+	margin: 1em;
+}
+div#sub_btns a {
+	margin-right: 0.5em;
+}
+
+/* sortable tables second, to be merged with the existing one */
+.sortable {
+	font-size: 0.9em;
+	line-height:normal;
+}
+.sortable th {
+	background: #ccc;
+	border: 1px outset #fff;
+	margin:0;
+	padding:0;
+	white-space: nowrap;
+	vertical-align: top;
+}
+.sortable th a:link, .sortable th a:visited, .sortable th span {
+	display:block;
+	text-decoration: none;
+	font-weight: normal;
+	color: black;
+	padding:1px 0.5em;
+}
+.sortable th a:hover {
+	color:white;
+	background: #aaa;
+}
+.sortable tbody tr.zebraeven {
+	background-color: white;
+}
+
+/* tables with duplicates */
+tr.duplicate {
+	color: #ff0000;
+}
+tr.duplicate a {
+	color: #ff0000;
+}
+tr.not-duplicate {
+}
+
+/* users and roles listing */
+.roles_per_folder ul {
+	margin: 0 0 0 1px;
+	padding: 0px 3px 0px 3px;
+	list-style: none;
+	color: #555555;
+	border: 1px solid #97A7B0;
+}
+.roles_per_folder li {
+	margin: 3px 0 3px 0px;
+	background-color: #eaeaea;
+	padding: 4px;
+}
+.folder_of_roles {
+	display: inline;
+}
+.list_of_roles {
+	display: inline;
+}
+
+/* Pop up windows used as pickers */
+.pick_pop_up {
+	font-family: Verdana, Arial;
+	font-size: 70%;
+	color: #333333;
+}
+.pick_pop_up	a {
+	color: #286185;
+}
+.pick_pop_up h1 {
+	margin-top: 0.8em;
+	position: relative;
+	color:#8da559;/*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/
+	color: #666666;
+	font-family: arial, sans-serif;
+	font-size: 1.9em;
+	font-weight: bold;
+}
+.pick_pop_up input {
+	font-size: 100%;
+	vertical-align: middle;
+}
+.pick_pop_up table {
+	font-size: 100%;
+}
+.pick_pop_up table img {
+	border: 3px solid #eaeaea;
+}
+.pick_pop_up th {
+	text-align: left;
+	color: #333333;
+	font-weight: normal;
+	background-color: #eaeaea;
+	padding-right: 20px;
+	border-bottom: 5px solid white;
+}
+.pick_pop_up td {
+	padding-right: 20px;
+}
+
+/* Thesaurus style */
+.h2term {
+	font-family: Arial, Verdana;
+	margin-bottom: 20px;
+}
+.bar {
+	background-color: #EFF6FA;
+	color: #006CAE;
+	text-align: center;
+	font-weight: bold;
+	padding: 3px 0px;
+	margin: 10px 0px;
+	font-size: 85%;
+}
+.item_term {
+	margin-bottom: 10px;
+	font-size: 80%;
+}
+.item_term a {
+	font-weight: bold;
+	color: #005A91;
+}
+.tab_term {
+	font-size: 90%;
+	color: #333333;
+	margin-bottom: 10px;
+}
+.tab_term td {
+	vertical-align: middle!important;
+	border-bottom: 1px solid white!important;
+}
+.th_cat {
+	vertical-align: middle!important;
+	width: 100px;
+	text-align: left;
+	font-weight: normal;
+	background-color: white;
+	color: #333333;
+}
+
+/* Feeds */
+div.xmlExportButtons {
+	padding-top: 1em;
+}
+div.xmlExportButtons a {
+	border: 1px outset #ff6600;
+	background: #fff;
+	color: #f60;
+	font: bold 85% 'Lucida Grande', Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	padding: 0.1em 0.5em 0.2em 2em;
+	margin: 0 0.1em 0 0.1em;
+}
+div.xmlExportButtons a.pdf {
+	background-image: url("images/pdf.gif");
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+div.xmlExportButtons a.xml {
+	background-image: url("misc_/NaayaCore/xml.png");
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+/* calendars & clocks */
+.calendarbox, .clockbox {
+	margin:5px auto;
+	font-size:11px;
+	width:16em;
+	text-align:center;
+	background:white;
+	position:relative;
+	border: 1px solid #ccc;
+}
+.clockbox {
+	width:9em;
+}
+.calendar {
+	margin:0;padding: 0;
+}
+.calendar table {
+	margin:0;padding:0;
+	border-collapse:collapse;
+	background:white;
+	width:99%;
+}
+.calendar caption,.calendarbox h2 {
+	margin: 0;
+	font-size:11px;
+	text-align:center;
+	border-top:none;
+}
+.calendar th {
+	font-size:10px;
+	color:#666;
+	padding:2px 3px;
+	text-align:center;
+	background:#e1e1e1 url(misc_/Naaya/nav-bg.gif) 0 50% repeat-x;
+	border-bottom:1px solid #ddd;
+}
+.calendar td {
+	font-size:11px;
+	text-align: center;
+	padding: 0;
+	border-top:1px solid #eee;
+	border-bottom:none;
+}
+.calendar td.selected a {
+	background: #C9DBED;
+}
+.calendar td.nonday {
+	background:#efefef;
+}
+.calendar td.today a {
+	 background:#ffc;
+}
+.calendar td a, .timelist a {
+	 display: block;
+	 font-weight:bold;
+	 padding:4px;
+	 text-decoration: none;
+	 color:#444;
+}
+.calendar td a:hover, .timelist a:hover {
+	 background: #5b80b2;
+	 color:white;
+}
+.calendar td a:active, .timelist a:active {
+	 background: #036;
+	 color:white;
+}
+.calendarnav {
+	 font-size:10px;
+	 text-align: center;
+	 color:#ccc;margin:0;
+	 padding:1px 3px;
+}
+.calendarnav a:link, #calendarnav a:visited, #calendarnav a:hover {
+	color: #999;
+	text-decoration: none;
+	font-weight: bold;
+	padding: 3px;
+}
+.calendar-shortcuts {
+	background:white;
+	font-size:10px;
+	line-height:11px;
+	border-top:1px solid #eee;
+	padding:3px 0 4px;
+	color:#ccc;
+}
+.calendarbox.calendarnav-previous,.calendarbox.calendarnav-next {
+	 display:block;
+	 position:absolute;
+	 font-weight:bold;
+	 font-size:12px;
+	 background:#C9DBED url(misc_/Naaya/default-bg.gif) bottom left repeat-x;
+	 padding:1px 4px 2px 4px;
+	 color:white;
+	 text-decoration: none;
+}
+.calendarnav-previous:hover,.calendarnav-next:hover {
+	 background:#036;
+}
+.calendarnav-previous {
+	 top:0;left:0;
+}
+.calendarnav-next {
+	 top:0;right:0;
+}
+.calendar-cancel {
+	 margin:0 !important;
+	 padding: 4px 0;
+	 color: #000 !important;
+	 font-size:10px;
+	 background:#e1e1e1;
+	 border-top:1px solid #ddd;
+}
+.calendar-cancel a {
+	 padding:2px;color:#999;
+}
+ul.timelist, .timelist li {
+	list-style-type:none;
+	margin:0;padding:0;
+}
+.timelist a {
+	padding:2px;
+}
+.vDateField {
+	margin-left:4px;
+}
+
+/* Map styles */
+#div.marker {
+	display: none;
+}
+div.marker-body {
+	width: 290px;
+	margin-top: 0;
+}
+div.marker-more {
+	padding: 10px 5px 5px 30px;	/* T   R   B   L */
+}
+div.marker-body h3 {
+	font-weight: bold;
+	font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	text-transform: uppercase;
+}
+.map-button {
+	color: #fff;
+	font-size: 90%;
+	border: 1px solid white;
+	background-color: #336699;
+	padding: 0.3em 0.2em;
+}
+#record_counter_message {
+	font-size: x-small;
+}
+div#center_content.portalmap-map-box {
+	width: 78% !important;
+}
+#portalmap {
+	width: 18%;
+	font-size: 90%;
+	float: left;
+	padding: 7px;
+	background: #fff;
+	border: 1px solid #ccc;
+	margin: 0 0 0 10px;
+	white-space: normal;
+}
+.portalmap_location_filters {
+	width: 50%;
+	display: inline;
+}
+.portalmap_portlet {
+	padding: 10px;
+	margin: 0;
+	background: #f3f3f3;
+	line-height: 1.5;
+}
+#address {
+	width: 40%;
+}
+#geo_query {
+	width: 30%;
+}
+.portalmap_portlet .portalmap_portlet_title p{
+	border-bottom:2px solid #BBBBBB;
+	font-size:1.3em;
+	font-weight:bold;
+	margin:0 0 1em;
+	padding:0.3em 0;
+}
+.portalmap_portlet div input[type="text"]:focus {
+	border: 1px solid #000;
+	padding: 1px;
+}
+.portalmap_portlet .portalmap_portlet_title small a{
+	color: #000;
+	text-decoration: underline;
+	font-weight: bold;
+	margin: 0.5em 0;
+}
+.portalmap_portlet .portalmap_portlet_title small a:hover{
+	color: #bbb;
+}
+.portalmap_portlet .map_filters {
+	margin: 0;
+	padding: 0;
+}
+.portalmap_portlet .map_filters div {
+	margin: 0.5em 0 0 0;
+	padding: 0;
+}
+.portalmap_portlet .map_filters ul {
+	margin: 0.7em 0 0.7em 0.3em;
+	padding: 0;
+	list-style: none;
+	font-size: 95%;
+}
+.portalmap_portlet .map_filters ul ul {
+	padding: 0 0 0 2em;
+}
+.maptypes {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.maptypes li {
+	margin: 2px;
+	padding: 2px;
+	display: inline;
+}
+/*.marker-balloon {
+	background-color: white;
+	border: 2px solid #CCCCCC;
+	padding: 5px;
+	position: absolute;
+	z-index: 1000;
+}*/
+/* forum styles */
+.forum_message_top a {
+	margin-right: 0px;
+	padding: 0px 2px 0px 3px;
+	text-decoration: none;
+	color: white;
+	background-color: #638FBC;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid #416B96;
+	border-bottom: 1px solid #416B96;
+	position: relative;
+}
+.forum_message_top a:visited {
+	color: white;
+}
+.message_top_buttons {
+	float: right;
+	margin-top: 2px;
+	position: relative;
+}
+.message_top_buttons2 {
+	padding: 2px;
+}
+.forum_topic {
+	margin-bottom: 15px;
+	border: 1px solid #eeeeee;
+	padding: 5px;
+	color: #333333;
+}
+.forum_topic_top {
+	background-color: #eeeeee;
+	padding: 2px 5px 6px 2px;
+	font-size: 90%;
+}
+.forum_topic_author {
+	padding: 10px 0 5px 4px;
+	border-bottom: 1px dashed #dddddd;
+	font-size: 90%;
+}
+.forum_topic_content {
+	margin-top: 10px;
+}
+.forum_topic_bottom {
+	padding:5px;
+	border-top: 1px dashed #dddddd;
+	font-size: 90%;
+}
+.forum_messages_slot {
+	margin-top: 15px;
+}
+.forum_message {
+	margin-bottom:5px;
+	background-color: #F7F7F7;
+}
+.forum_message_top {
+	background-color:#E9E9E9;
+	border-bottom: 1px solid #E4E4E4;
+	padding: 2px;
+	font-size: 90%;
+	color: #006CAD;
+	position: relative;
+}
+.forum_message_top a {
+	color: white;
+}
+.forum_message_top a:visited {
+	color: white;
+}
+.forum_message_top img {
+	margin-right: 3px;
+	border-left: 3px solid #E4E4E4;
+}
+.forum_message_author {
+	padding:5px;
+	border-bottom:1px dashed #E4E4E4;
+	font-size: 90%;
+	color: #444444;
+}
+.forum_message_description {
+	padding: 5px;
+	color: #111111;
+}
+.forum_message_bottom {
+	padding:5px;
+	border-top: 1px dashed #E4E4E4;
+	color: #666666;
+	font-size: 90%;
+}
+
+/* Data tables */
+.datatable caption {
+	font-weight: bold;
+}
+.datatable th {
+	text-align: center;
+	background-color: #f6f6f6;
+	font-weight: bold;
+	border-bottom: 2px solid white;
+}
+.datatable th.scope-row {/* IE6 doesn't understand [scope="row"] */
+	text-align: right;
+	vertical-align:top;
+}
+.datatable th[scope="row"] {
+	text-align: right;
+	vertical-align:top;
+}
+.datatable td, .datatable th  {
+	margin:0;
+	padding: 0.3em;
+	vertical-align: top;
+}
+.datatable td {
+	border-top:    2px solid #f6f6f6;
+	border-bottom: 2px solid #f6f6f6;
+}
+.datatable tr.zebraeven {
+	background-color: #f6f6f6;
+}
+.datatable tr:hover, .datatable tr:hover th {
+	background-color: #e4f1bc;
+}
+table.datatable {
+	border: 1px solid #b6b6b6;
+	color: #666666;
+	margin: 1em 0em;
+}
+
+/* Media file style sheet */
+.flvPlayer {
+}
+.flvPlayerBroken, .flvPlayerNotReady, .flashPlayerNotInstalled  {
+	width: 450px;
+	min-height: 10em;
+	overflow: auto;
+	background: url('flv-bg.jpg') no-repeat top left #555;
+	color: #ffffff;
+	text-align: center;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	border: 1px solid #777;
+	padding-top: 5em;
+	margin: 0 auto;
+}
+* html .flvPlayerBroken, * html .flvPlayerNotReady, * html .flashPlayerNotInstalled  {
+	height: 10em;
+}
+.flvPlayerBroken p, .flvPlayerNotReady p, .flashPlayerNotInstalled p {
+	margin: 0;
+	padding: 0.5em;
+	background: #000;
+	font-size: 0.90em;
+}
+
+/* survey styles */
+table .number {
+	text-align: right;
+}
+table .sum {
+	font-weight: bold;
+}
+table .center {
+	text-align: center;
+}
+
+/* site search page */
+.searchQuery {
+	float: left;
+	width: 59%;
+}
+.searchQuery li {
+	float: left;
+	margin: 0.2em;
+	width: 13em;
+}
+.searchQuery ul {
+	float: left;
+}
+.tooltip {
+	float: right;
+	border-top: 1px solid #A8BFBC;
+	border-bottom: 1px solid #A8BFBC;
+	font-size: 0.88em;
+	width: 25%;
+	background-color: #F3F3F3;
+	padding: 0.5em;
+}
+.tip_item {
+	padding:0.3em 0.3em 0.3em 0;
+	color: #6e8381;
+}
+
+/* main sections page */
+ul.boxy {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+	width: 30em;
+}
+ul.boxy li {
+	cursor:move;
+	padding: 4px;
+	border: 1px solid #ccc;
+	background-color: #eee;
+}
+#maintopicslist {
+	margin-bottom: 1em;
+}
+#maintopicslist li {
+	margin-bottom: 0px;
+	margin-top: 4px;
+}
+#maintopicslist .chk {
+	margin: 0px;
+}
+
+td.portlet_arrange_left {
+	background-color: #fdd;
+}
+td.portlet_arrange_right {
+	background-color: #ddf;
+}
+td.portlet_arrange_center {
+	background-color: #dfd;
+}
+
+/* request role styles */
+.request_role {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	padding-bottom: 1em;
+	background: #fff;
+}
+.request_role h2 {
+	color: #669933;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+.request_role div p {
+	border: 1px solid #ddd;
+	padding: 0.5em;
+}
+.request_role .input_submit {
+	padding: 0.2em 0.5em;
+	border: 1px solid #ccc;
+	background: #fafafa;
+}
+* html .request_role .input_submit {
+	padding: 0 !important;
+}
+.request_role h3 {
+	color: #000;
+	font-weight: bold;
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+	text-transform: uppercase;
+}
+* html .request_role form {
+	padding: 0;
+	margin: 0;
+}
+.request_role fieldset {
+	margin: 0;
+	padding: 0;
+}
+.request_role .existing_acc {
+	border-top: 1px solid #eee;
+	margin: 0;
+	padding: 0;
+}
+.request_role .nonexisting_acc {
+	margin: 0;
+	padding: 2em 0 0 0;
+}
+.request_role .existing_acc p, .request_role .nonexisting_acc p {
+	font-size: 0.9em;
+	border: none;
+	margin: 0;
+	padding: 0.4em;
+}
+.request_role .existing_acc td, .request_role .nonexisting_acc td  {
+	padding: 0.4em;
+	font-size: 0.9em;
+}
+.request_role .existing_acc td input, .request_role .nonexisting_acc td input, .request_role .nonexisting_acc td textarea {
+	margin-right: 0.3em;
+	font-size: 1em;
+	color: #555;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.request_role .existing_acc td input, .request_role .nonexisting_acc td input {
+	height: 1.4em;
+}
+.request_role .mandatory {
+	color: #990000;
+}
+#addrole-form {
+	clear: left;
+	padding: 1em;
+}
+
+/* other styles */
+a.skiplink {
+	display: none;
+}
+.clearer, .cleaner {
+	clear:both;
+}
+
+/* site search page */
+.searchQuery {
+	float: left;
+	width: 70%;
+}
+.searchQueryFilters {
+	padding: 0.3em;
+	background-color: #F1F7F6;
+	border-top: 1px solid #A8BFBC;
+	border-bottom: 1px solid #A8BFBC;
+	margin: 0.5em 0;
+}
+
+/**
+ * Added
+ *
+ * Bogdan Tanase - Eau de Web
+ * 14 Oct 2010
+ *
+ * NaayaForumStyle
+*/
+
+/* forum styles */
+.forum_message_top a {
+	margin-right: 0px;
+	padding: 0.3em 0.4em;
+	text-decoration: none;
+	color: white;
+	background-color: #638FBC;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid #416B96;
+	border-bottom: 1px solid #416B96;
+	position: relative;
+	color: #41ad00;
+}
+.forum_message_top a:visited {
+	color: white;
+}
+.message_top_buttons {
+	float: right;
+	margin-top: 2px;
+	position: relative;
+}
+.message_top_buttons2 {
+	padding: 2px;
+}
+.forum_topic {
+	margin-bottom: 15px;
+	border: 1px solid #eeeeee;
+	padding: 5px;
+	color: #333333;
+}
+.forum_topic_top {
+	background-color: #eeeeee;
+	padding: 2px 5px 6px 2px;
+	font-size: 90%;
+}
+.forum_topic_author {
+	padding: 10px 0 5px 4px;
+	border-bottom: 1px dashed #dddddd;
+	font-size: 90%;
+}
+.forum_topic_content {
+	margin-top: 10px;
+}
+.forum_topic_bottom {
+	padding:5px;
+	border-top: 1px dashed #dddddd;
+	font-size: 90%;
+}
+.forum_messages_slot {
+	margin-top: 15px;
+}
+.forum_message {
+	margin-bottom:5px;
+	background-color: #F7F7F7;
+}
+.forum_message_top {
+	background-color:#E9E9E9;
+	border-bottom: 1px solid #E4E4E4;
+	padding: 5px;
+	font-size: 90%;
+	position: relative;
+}
+.forum_message_top a {
+	color: white;
+}
+.forum_message_top a:visited {
+	color: white;
+}
+.forum_message_top img {
+	margin-right: 3px;
+	border-left: 3px solid #E4E4E4;
+	vertical-align: middle;
+}
+.forum_message_author {
+	padding:5px;
+	border-bottom:1px dashed #E4E4E4;
+	font-size: 90%;
+	color: #444444;
+}
+.forum_message_description {
+	padding: 5px;
+	color: #111111;
+}
+.forum_message_bottom {
+	padding:5px;
+	border-top: 1px dashed #E4E4E4;
+	color: #666666;
+	font-size: 90%;
+}
+
+/**
+ * Added
+ * Bogdan Tanase 21 Sep 2010
+*/
+
+div#name_filter, .filters {
+    display:inline-block;
+	margin: 0.5em 0.5em 0em 0em;
+}
+
+#name_filter {
+	text-align: right;
+}
+
+div#role_filter {
+	float: left;
+	vertical-align: middle;
+}
+
+img.ajax-loader {
+	vertical-align: middle;
+}
+
+.loader {
+		display: none;
+		font-style: italic;
+		color: #346d9f;
+		vertical-align: 12px;
+		padding-left: 15em;
+}
+
+/**
+ * Subtabs style
+*/
+
+.second_tab_set {
+	font-family: tahoma,verdana,sans-serif;
+	font-size: 90%;
+	background-color: #F2F2F2;
+	padding: 5px 7px 7px 7px;
+	clear: both;
+}
+
+.second_tab_set ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	clear: both;
+	height: 1.1em;
+}
+
+.second_tab_set li {
+	float: left;
+	padding: 0 8px 0 8px;
+	border-left: 1px solid #444444;
+	white-space: nowrap;
+}
+
+.second_tab_set li:first-child {
+    border-left: none;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+.second_tab_set li a {
+	color: #444444 !important;
+}
+
+.second_tab_set li a:hover {
+	text-decoration: none !important;
+}
+
+.second_tab_set ul li a.current_sub {
+	font-weight: bold;
+	text-decoration: none;
+	background: transparent url('misc_/Naaya/arrow.png') no-repeat left center;
+	padding-left: 12px;
+}
+
+.second_tabset ul li a.current_sub:first-child {
+    padding-left: 0 !important;
+}
+
+.second_tabset_content {
+	background-color: #F6F6F7; /* custom-color-mainbackground*/
+	padding: 0px 10px 10px 10px;
+	border-top-width: 0.01em;
+}
+
+.second_tabset_content h2 {
+	clear: both;
+	margin: 0px;
+	padding-top: 15px;
+}
+
+/**
+ * Update 19 Oct 2010
+ * Bogdan Tanase - Eau de Web
+ */
+
+#tabbedmenu, .tabbedmenu {
+    margin-bottom: 0em !important;
+	margin-left: 1em;
+}
+
+#tabbedmenu ul {
+		padding: 1em 0em 0em !important;
+}
+
+tr.row-odd {
+    background-color: #F7F7F7;
+}
+
+.user-role-revoke {
+    text-align: center;
+}
+
+.datatable tr.tr-messages td {
+	border-bottom: none;
+	border-right: none;
+}
+
+.tr-messages {
+	border: none;
+	color: #000000;
+	padding: 0.5em;
+}
+
+.datatable tr.row-even td:last-child, .datatable tr.row-odd td:last-child {
+	border-right: none !important;
+}
+
+.datatable th:hover {
+	color: #333333;
+	background-color: #EFEFEF;
+}
+
+.datatable a, .table-message a, .message-empty a {
+	color: #346D9F;
+	text-decoration: underline;
+}
+
+.datatable a:hover, .table-message a:hover, .message-empty a:hover {
+		text-decoration: none;
+}
+
+.table-message, .message-empty {
+	font-weight: bold;
+	font-size: 1em;
+	line-height: 1em;
+}
+
+td.checkbox {
+		text-align: center;
+}
+
+th.th-left {
+	text-align: left;
+}
+
+.sortable th a:link, .sortable th a:visited, .sortable th span {
+	display: inline;
+}
+
+/**
+ * IE does no support first(last)-child
+*/
+td.td-center {
+	text-align: center;
+}
+
+.datatable tr.row-odd:hover, .datatable tr.row-even:hover {
+	background-color: #F6FCE3;
+}
+
+label {
+    vertical-align: 2px;
+}
+
+label:hover {
+		cursor: pointer;
+}
+
+.search-box {
+	background-color: #F0F5FB;
+    padding: 0.5em 1em 0.5em 1em;
+	border: 1px dotted #999999;
+	margin-top: 1.5em;
+}
+
+.search-box:hover {
+	background-color: #FFFFDD;
+}
+
+/**
+ * Paginator
+*/
+
+.paginator {
+	margin-top: 1em;
+	padding: 0.5em 0;
+	clear: both;
+}
+
+.paginator-head {
+		float: right;
+
+}
+
+.paginator-footer {
+		float: right;
+		clear: both;
+}
+
+.paginator-body {
+		float: left;
+}
+
+.paginator span a {
+	border: 1px solid #c8dcf2;
+	line-height: 18px;
+	padding: 3px 5px 3px 5px;
+	background: #f0f5fb;
+	color: #333;
+	text-decoration: none;
+}
+.paginator span span {
+	font-weight: bold;
+	font-size: 1.1em;
+	padding-left: 5px;
+	padding-right: 5px;
+	color: #36669d;
+}
+
+.paginator-details {
+	float: right;
+	display: none;
+}
+
+/**
+ * Other
+*/
+.icon-image {
+		vertical-align: 0;
+}
+
+.form-buttons {
+		float: left;
+}
+
+.form-buttons a {
+	background-color: #FFFFFF;
+	color: #000000;
+	border-left:1px solid #BBBBBB;
+	border-top:1px solid #BBBBBB;
+	border-bottom:1px solid #666666;
+	border-right:1px solid #666666;
+	padding:0.2em 0.4em 0.3em 0.4em;
+	font-size: 11px;
+	line-height: 11px;
+	vertical-align: 3px;
+	text-decoration: none;
+}
+
+img {
+		vertical-align: middle;
+}
+
+a.context-link {
+		color: #346D9F;
+		text-decoration: underline;
+}
+
+a.context-link:hover {
+		text-decoration: none;
+}
+
+.sort-image {
+		width: 12px;
+		height: 12px;
+		border: 0;
+}
+
+.section-subtitle, .title-inline {
+	display: inline;
+}
+
+.section-subtitle {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #4E7CB0;
+}
+
+.groups-roles-list {
+	margin-bottom: 1em;
+}
+
+div.separator {
+	height: 1px;
+	background-color: #F6F6F6;
+	width: 100%;
+	clear: both;
+	margin: 0.5em 0em;
+}
+
+tr.tr-hover {
+	padding: 0.5em;
+}
+
+tr.tr-hover:hover {
+	background-color: #FFFFDD;
+}
+
+.assign-form .field, .assign-form .field-inline, .assign-form input[type="checkbox"], .assign-form input[type="submit"] {
+	margin-left: 0em !important;
+}
+
+/**
+ * Temp style
+*/
+
+table.datatable {
+		width: 100% !important;
+}
+
+#center_content {
+		overflow-x: visible !important;
+		overflow-y: visible!important;
+		overflow: visible !important;
+}
+
+/**
+ * Action form
+ *
+ * Notes: Action forms are edit/add forms. Tables may exists in forms but not with .action-form class
+*/
+.action-form {
+		border-top: 1px dotted #333333;
+		margin: 0 auto;
+		margin-top: 1em;
+		padding: 1em;
+}
+
+.action-form table {
+		margin-bottom: 1em;
+}
+
+.action-form td.form-label {
+		text-align: right !important;
+		vertical-align: top !important;
+}
+
+.action-form tr:hover {
+		background-color: #FFFFDD;
+}
+
+.action-form select {
+		min-width: 8em;
+}
+
+.action-form-buttons {
+		margin: 0 auto;
+}
+
+.action-form fieldset {
+		border: 1px dotted #333333;
+		padding: 1em;
+}
+
+.action-form fieldset legend {
+		color: #346D9F;
+}
+
+.action-form dl dt {
+		color: #333333;
+}
+
+.action-form input, .action-form select {
+	margin: 0 !important;
+}
+
+/**
+ * Roles
+*/
+
+.roles-list table {
+	width: 350px !important;
+}
+
+.roles-list table th:first-child {
+	text-align: left;
+}
+
+#add-role-form input[type="submit"], #add-role-form input[type="reset"] {
+	margin: 0 !important;
+}
+
+/**
+ * Description text
+*/
+
+.description-text {
+	margin-top: 1em;
+}
+
+.description-text p {
+	margin: 0;
+	padding: 0;
+	line-height: normal;
+}
+
+/**
+ * Tip/'Note' box
+*/
+
+.tip {
+	padding: 0.5em 1em !important;
+	background-color: #FFFFEF !important; /* Overwrite for site update */
+}
+
+.tip p {
+	margin: 0 !important;
+	line-height: 1.5em;
+}
+
+.tip img {
+	margin-right: 0.5em;
+}
+
+/**
+ * All Users LDAP Groups
+*/
+
+table.ldap_groups th {
+	text-align: left;
+}
+
+table.ldap_groups td.checkbox {
+	text-align: left;
+}
+
+/**
+ * Add user form
+*/
+
+form.user-form .field-inline, form.user-form .field {
+	margin-left: 0em !important;
+}
+
+form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inline input[type="password"]:focus {
+	background-color: #FFFFDD;
+}
+
+/**
+ * Added 15 Iun 2011
+*/
+.right {
+	float: right;
+}
+
+.middle-label {
+	vertical-align: middle;
+	line-height: 1.9
+	float: left;
+}
+
+.info-link {
+	background: url("misc_/Naaya/info.png") no-repeat scroll 6px center transparent;
+	font-size: 1px;
+	-moz-outline: none;
+	     outline: none;
+	text-indent: -9999px;
+	padding: 10px;
+	text-decoration: none !important;
+	position: relative;
+	zoom: 1;
+}
+
+.admin-info-text {
+	display: none;
+	clear: both;
+	margin: 0;
+	border-top: 1px dashed #DFDFDF;
+	padding: 5px;
+	color: #333;
+	background: #FFFAE2;
+}
+
+/**
+ * Admin comments list
+ *
+ * Added:  21 Mar 2012
+ * Author: Bogdan Tanase
+*/
+#comments-list .actions-label {
+    position: relative;
+    top: 0px;
+    font-weight: bold;
+}
+
+#comments-list .comment-actions {
+    opacity: 0;
+    -webkit-transition: opacity .1s ease-in-out;
+       -moz-transition: opacity .1s ease-in-out;
+            transition: opacity .1s ease-in-out;
+}
+
+#comments-list tr:hover .comment-actions {
+    opacity: 1;
+}
+
+.comment-actions a.toggle-spam-status .icon {
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+}
+
+a.toggle-spam-status.spam-status .icon {
+    background: transparent url('/++resource++Products.Naaya/spam-icon.png') no-repeat scroll center center;
+}
+
+a.toggle-spam-status.ham-status .icon{
+    background: transparent url('/++resource++Products.Naaya/ham-icon.png') no-repeat scroll center center;
+}
+
+a.delete-comment .icon {
+    display: inline-block;
+    height: 16px;
+    width: 15px;
+    background: transparent url('/++resource++Products.Naaya/trash-icon.png') no-repeat scroll center center;
+}
+
+.akismet-loading {
+    display: none;
+}
+
+.akismet-loading .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: transparent url('/++resource++Products.Naaya/ajax-loader-small.gif') no-repeat scroll center center;
+    position: relative;
+    top: 3px;
+    margin-top: -4px;
+}
+
+#comments-list tr.spam-comment {
+    /*background: #FEE;*/
+}
+
+#comments-list tr.spam-comment a.comment-title {
+    color: red;
+}
+
+#comments-list tr.ham-comment a.comment-title {
+    color: blue;
+}
+
+#comments-list tr.spam-comment .spam-status,
+#comments-list tr.spam-comment .ham-status-label {
+    display: none;
+}
+
+#comments-list tr.ham-comment .ham-status,
+#comments-list tr.ham-comment .spam-status-label {
+    display: none;
+}
+
+#comments-list tr {
+    background: #FFF;
+}
+/**
+ * END Admin comments list
+*/
+
+/**
+ * Admin API Keys status
+ *
+ * Added: 23 Mar 2012
+ * Author: Bogdan Tanase
+*/
+.api-keys-list tr.invalid {
+    background-color: #FFF9F9;
+}
+/**
+ * END Admin API Keys status
+*/
+
+.commentbutton:hover {
+    color: #333;
+}
+.commentbutton {
+    font-size: 90%;
+    float:right;
+    padding: 3px;
+    text-decoration: none;
+    margin-bottom: 0.5em;
+    margin-left: 10px;
+}
+/* generic class for hidden portions */
+.hidden {
+	display: none;
+}
+
+#flashcontent {
+	height: 400px;
+	/*height: 100%;*/
+}

@@ -1,0 +1,206 @@
+#center_content { width: 100% !important; overflow-x: visible !important;}
+
+html, body {
+	margin:0px;
+	padding:0px;
+	font-family: "New baskerville", times, serif;
+	font-size: 10pt; 
+	font-style: normal; 
+	line-height: normal; 
+	background-color: #FFFFFF;
+}
+a:link, a:visited {
+	color: black;
+	text-decoration: none;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: Avenir, Helvetica, sans-serif;
+	font-style: normal; 
+	font-weight: bold; 
+	text-decoration: none
+}
+h1 {
+	font-size: 14pt; 
+	line-height: 120%; 
+}
+h2 {
+	font-size: 12pt; 
+	line-height: normal; 
+}
+h3 {
+	font-size: 11pt; 
+	line-height: normal;
+}
+h4, h5, h6 {
+	font-size: 10pt; 
+	line-height: normal; 
+	padding-left: 0.5em;
+}
+img {
+	border: 0;
+}
+ul.menu { /* Simple menu of items */
+	list-style: none;
+	list-style-image: none;
+	padding:0;
+	margin:0;
+}
+td, th {
+	font-family: Avenir, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	font-style: normal; 
+	line-height: normal; 
+	text-decoration: none;
+	empty-cells: show;
+	widows: 3; orphans: 3; /* not understood by IE6 */
+}
+th {
+	font-weight: bold; 
+	text-align: left;
+}
+
+#language, #logo, #right_logo, .skiplink, #toolribbon, #breadcrumbtrail, #left_port, #footer, #topnav {
+	display: none;
+}
+
+#header {
+	position: relative;
+	padding: 10px;
+}
+
+#header img {
+	display: none;
+}
+
+#middle_port {
+	margin: 1% 0%;
+}
+
+#right_port {
+	display: none;
+}
+
+#toptitle {
+	margin-left: 20%;
+	margin-top: 0.5em;
+}
+	
+#last_modified {
+	margin: 1% 0% 1% 0%;
+}
+
+#admin_this_folder, #toolbar, .folder-feeds, #tabbedmenu, #menunav, .b_download {
+	display: none;
+}
+
+.page_title {
+	color: #009590;
+	font-family: Avenir, Helvetica, sans-serif;
+	font-size: 14pt;
+	font-weight: bold;
+}
+.page_subtitle {
+	color: #005E9D;
+	font-family: Avenir, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+/* Data tables */
+.sortable, .datatable {
+	font-family: Verdana, Avenir, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	margin: 1em 0.5em;
+	border-collapse: collapse;
+	border-top:    1.5pt solid black;
+	border-bottom: 1.5pt solid black;
+	empty-cells: show;
+}
+.sortable td, .datatable td {
+	border-bottom: 1pt solid black;
+	padding: 0.3em;
+}
+.sortable th, .datatable th {
+	color: black;
+	font-weight: bold; 
+	text-align: center;
+	border-bottom: 2pt solid black;
+	padding: 0.3em;
+}
+.sortable th.scope-row, .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+.sortable th[scope="row"], .datatable th[scope="row"] {
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+
+table .number {
+	text-align: right;
+}
+table .center {
+	text-align: center;
+}
+table .sum {
+	font-weight: bold;
+}
+
+/* Data tables */
+.datatable caption {
+	font-weight: bold;
+}
+.datatable th {
+	text-align: center;
+	background-color: #f6f6f6;
+	font-weight: bold;
+	border-bottom: 2px solid white;
+}
+.datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+	text-align: right;
+	vertical-align:top;
+}
+.datatable th[scope="row"] {
+	text-align: right;
+	vertical-align:top;
+}
+.datatable td, .datatable th  {
+	margin:0;
+	padding: 0.3em;
+	vertical-align: top;
+}
+.datatable td {
+	border-bottom: 2px solid #f6f6f6;
+}
+.datatable tr.zebraeven {
+	background-color: #f6f6f6;
+}
+.datatable tr:hover, .datatable tr:hover th {
+	background-color: #e4f1bc;
+}
+table.datatable {
+	border: 1px solid #b6b6b6;
+	color: #666666;
+	margin: 1em 0em;
+}
+
+/* talkback consultation styles */
+.talkback-section_toc, .talkback-add_comment-p, .tb-comment-head a, .talkback-add_comment_form {
+	display:none
+}
+.tb-comments-tree, .tb-comments-tree ul {
+	border-left:2px solid black;
+	list-style:none;
+	margin-left:0.5em;
+	padding-left:0.5em;
+}
+div.tb-comment-body blockquote {
+	border-left:2px solid #668899;
+	color:#668899;
+	margin-left:0;
+	padding-left:8px;
+	font-style:italic;
+}
+.tb-comment-head {
+	font-weight: bold;
+}

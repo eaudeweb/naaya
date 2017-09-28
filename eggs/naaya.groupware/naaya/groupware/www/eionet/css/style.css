@@ -1,0 +1,115 @@
+ul.ig_listing {
+	line-height: 1.1em !important;
+	list-style: none;
+	list-style-type: none;
+	list-style-image: none;
+}
+
+ul.ig_listing li {
+	list-style: none !important;
+	list-style-type: none;
+	list-style-image: none;
+	background: url(/++resource++naaya.groupware/eionet/bullet_site.jpg) no-repeat 0 0;
+	padding-left: 1.7em; 
+}
+ul.ig_listing li {
+	line-height: 1.1em !important;
+}
+a.ig_title {
+	color: #828D8D;
+	font-family: Arial,Helvetica,sans-serif;
+	font-weight: bold;
+	margin-left: 0.2em;
+}
+.ig_subtitle {
+	margin: 0.3em 0 0 1.5em;
+	color: green;
+	font-size: 90%;
+	font-style: italic;
+	display: block;
+	margin-top: 0.4em;
+}
+.ig_description {
+	margin: 0 0 0 1.5em;
+	font-size: 90%;
+	line-height: 1em !important;
+}
+
+.ig_description p {
+	margin-top: 0.5em;
+}
+
+#leftcolumn {
+        position: relative;
+}
+
+#leftcolumn, #workarea {
+        display: table-cell;
+}
+
+.ie-clear {
+        display: none;
+}
+
+/**
+ * Added 04 Apr. 2012
+*/
+.breadcrumbtrail {
+        line-height: 25px;
+}
+
+.breadcrumbitem {
+        background-position: right center;
+}
+
+/* styles for the add/edit forms */
+.field {
+	margin: 1em;
+}
+.field-inline {
+	margin: 1em 0 0 1em;
+}
+.field label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+.field-inline label {
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+
+
+/* improve Request access page */
+ul.ig_listing li {
+	margin-bottom: 15px;
+}
+
+span.access-definition {
+	display: block;
+	margin-left: 26px;
+	margin-top: 5px;
+	color: #777;
+}
+
+label.for-block {
+	margin-top: 30px;
+}
+
+#explanatory_text,
+#reason {
+	width: 500px;
+	font-family: Arial, sans-serif;
+}
+
+input.request-access {
+	margin-left: 15px;
+}
+
+body label.for-checkbox {
+	display: inline-block;
+}
+
+.hidden{
+	display: none;
+}
