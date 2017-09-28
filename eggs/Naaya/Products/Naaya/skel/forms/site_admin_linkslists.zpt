@@ -1,0 +1,52 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Lists of links</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+<p i18n:translate="">
+	This page allows you to define, customise and delete lists (groups) of links
+	to internal or external pages. When these links are displayed in the portal,
+	their titles and descriptions will be translatable from the
+	<em i18n:name="translate-messages" i18n:translate="">Translate messages</em>
+	area. If you choose to automatically create a portlet, you can then choose to
+	have it displayed in this portal, in the desired location.
+</p>
+<fieldset><legend i18n:translate="">Add new list of links</legend>
+<form method="post" tal:attributes="action string:${site_url}/admin_addlinkslist">
+  <div class="field">
+    <label for="id" i18n:translate="">ID</label>
+    <input type="text" name="id" value=""/>
+  </div>
+  <div class="field">
+    <label for="title" i18n:translate="">Title</label>
+    <input type="title" name="title" value="" size="30"/>
+  </div>
+  <div class="field">
+    <label for="portlet" i18n:translate="">Create a portlet</label>
+    <input type="checkbox" name="portlet" checked="checked" />
+  </div>
+  <p>
+    <input type="submit" value="Add" i18n:attributes="value" />
+  </p>
+</form>
+</fieldset>
+<form method="post" tal:attributes="action string:${site_url}/admin_deletelinkslist">
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th class="scope-col" scope="col">&nbsp;</th>
+				<th class="scope-col" scope="col" i18n:translate="">Title</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="item python:here.getPortletsTool().getLinksLists()" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
+				<td><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
+				<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${item/id}" tal:content="item/title_or_id" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" value="Delete" i18n:attributes="value" />
+</form>
+</tal:block>
+
+</tal:block>

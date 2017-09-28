@@ -1,0 +1,20 @@
+<tal:block define="
+		this_absolute_url python:here.absolute_url(0);
+		submissions here/process_submissions;
+		perm_add_something python:len(submissions) > 0;
+		perm_publish_objects python:here.checkPermissionPublishObjects();">
+	<div id="admin_this_folder">
+		<span id="submission" tal:condition="perm_add_something">
+			<span i18n:translate="" tal:omit-tag="">Submit</span>:
+			<select name="typetoadd"
+					tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+				<option value="#" i18n:translate="Type to add (translate ''type'' as a noun)">Type to add</option>
+				<option tal:repeat="item submissions"
+						tal:attributes="value python:item[0]"
+						tal:content="python:item[1]" i18n:translate="" />
+			</select>
+		</span>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/admin_maintopics_html"><span i18n:translate="">Main sections</span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/admin_basketofapprovals_html"><span i18n:translate="">Approve/unapprove content</span></a>
+	</div>
+</tal:block>

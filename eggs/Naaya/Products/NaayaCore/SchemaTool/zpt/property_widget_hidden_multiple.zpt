@@ -1,0 +1,6 @@
+<tal:block define="field_value options/value|nothing; prop_id here/prop_name">
+    <input type="hidden"
+           tal:repeat="value_item field_value"
+           tal:attributes="value value_item;
+                           name string:${prop_id}:list:utf8:ustring" />
+</tal:block>

@@ -1,0 +1,179 @@
+<tal:block define="
+field_class string:field-inline;
+value options/value|nothing;
+opt_value options/value;
+json_opt_value python:here.coord_as_json(opt_value);
+errors options/errors;
+prop_id here/prop_name;
+lat_id string:${prop_id}.lat;
+lon_id string:${prop_id}.lon;
+address_id string:${prop_id}.address;
+opt_value_lat opt_value/lat|python:request.SESSION.get(lat_id);
+opt_value_lon opt_value/lon|python:request.SESSION.get(lon_id);
+opt_value_address opt_value/address|python:request.SESSION.get(address_id);
+portal_map here/getGeoMapTool;
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+<tal:block define="site here/getSite; portal_map here/getGeoMapTool"
+       content="structure python:portal_map.setup_map_engine_html(request)" />
+
+<style>
+    .schema-widget-geo {
+        background-color: #ecf5fa;
+        border: 1px solid #b6cde1;
+        margin-top: 0.5em;
+        padding: 0.5em;
+        width: 430px;
+    }
+    .schema-widget-geo #map {
+        width: 400px;
+        height: 400px;
+        position: relative;
+    }
+</style>
+
+<div class="schema-widget-geo">
+    <div class="tooltips">
+        <p i18n:translate="">
+            Please provide the best fit for a geographical location. You can place the information using the options below.
+        </p>
+        <strong i18n:translate="">A. Identifying a location on the map:</strong>
+        <ul>
+            <li i18n:translate="">
+              Move inside the map and zoom in to the most relevant location;
+            </li>
+            <li i18n:translate="">
+              Click again at that specific location, a pin will appear and the
+              coordinates for that point will be automatically retrieved and
+              filled in.
+            </li>
+        </ul>
+        <strong i18n:translate="">B. If you know the address:</strong>
+        <ul>
+            <li i18n:translate="">Type the address in the <em i18n:translate="" i18n:name="address">Address</em> field;</li>
+            <li i18n:translate="">
+              Click on the <em i18n:translate="" i18n:name="center_map">Center map</em> button, right next to the
+              <em i18n:translate="" i18n:name="address">Address</em>
+              field, and get the coordinates for the address.
+            </li>
+        </ul>
+    </div>
+    <p>
+        <a id="map-toggle" href="javascript:">[<tal:block
+            i18n:translate="">Hide map</tal:block> &#x25bc;]</a>
+    </p>
+
+    <div class="field-inline">
+        <label tal:attributes="for lat_id"
+               class="widget-title" i18n:translate="">Latitude</label>
+        <input type="text" size="20" maxlength="20"
+               tal:attributes="value opt_value_lat|nothing;
+                               name string:${lat_id}:utf8:ustring;
+                               id string:${lat_id}" />
+    </div>
+
+    <div class="field-inline">
+        <label tal:attributes="for lon_id"
+               class="widget-title" i18n:translate="">Longitude</label>
+        <input type="text" size="20" maxlength="20"
+               tal:attributes="value opt_value_lon|nothing;
+                               name string:${lon_id}:utf8:ustring;
+                               id string:${lon_id}" />
+    </div>
+
+    <noscript><p class="message-error" i18n:translate="">
+        You must have Javascript turned on to be able to
+        pick locations from the map.
+    </p></noscript>
+
+    <!-- Map widget -->
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <p i18n:translate="">
+        Use the address to retrieve the location coordinates (e.g.
+        <em i18n:name="example_address">Kongens Nytorv 6,
+        1050 Copenhagen K, Denmark</em>)
+    </p>
+
+    <label tal:attributes="for address_id" class="widget-title"
+           i18n:translate="">Address</label>
+    <input type="text" size="50"
+           tal:attributes="value opt_value_address|nothing;
+                           name string:${address_id}:utf8:ustring;
+                           id string:${address_id}" />
+
+    <input type="button" name="address_button" value="Center map"
+           tal:attributes="id string:${prop_id}-centermap"
+           i18n:attributes="value"/>
+
+    <script tal:define="val python:here.rstk['json_dumps'](prop_id)"
+            tal:content="structure string:
+                    var prop_name = ${val};
+                    var coord_value = ${json_opt_value};
+            "></script>
+    <script type="text/javascript">
+    (function() {
+        var map_visible = true;
+        var map_container = $('#map-container');
+        var map_toggle_button = $('#map-toggle');
+        var search_button = $('#' + prop_name + '-centermap');
+        var map_engine = naaya_map_engine.object_edit_map(
+                            'map', coord_value, setLatLonValues);
+        map_toggle_button.click(function(evt) {
+            if(map_visible) {
+                map_toggle_button.html("[Show map &#x25bc;]");
+                map_container.hide();
+                search_button.hide();
+                map_visible = false;
+            }
+            else {
+                map_toggle_button.html("[Hide map &#x25b2;]");
+                map_container.show();
+                search_button.show();
+                map_visible = true;
+            }
+            return false;
+        });
+        var geo_form = {
+            'lat': document.getElementById(prop_name + '.lat'),
+            'lon': document.getElementById(prop_name + '.lon'),
+            'address': document.getElementById(prop_name + '.address')
+        };
+
+        $(geo_form['lat']).keypress(findLocOnEnter);
+        $(geo_form['lon']).keypress(findLocOnEnter);
+        $(geo_form['address']).keypress(findLocOnEnter);
+
+        search_button.click(findLocation);
+
+        function findLocation() {
+            var address = geo_form['address'].value;
+            var lat = geo_form['lat'].value;
+            var lon = geo_form['lon'].value;
+            if(address) {
+                map_engine.marker_at_address(address, setLatLonValues);
+            }
+        }
+
+        function setLatLonValues(coord) {
+            geo_form['lat'].value = coord.lat;
+            geo_form['lon'].value = coord.lon;
+        }
+
+        function findLocOnEnter(e) {
+            if(e.keyCode == 13) {
+                e.preventDefault();
+                findLocation();
+            }
+        }
+    })();
+    </script>
+</div>
+
+
+    </metal:block>
+</metal:block>
+</tal:block>

@@ -1,0 +1,141 @@
+<metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
+
+<metal:block fill-slot="page-middle">
+	<tal:block define="folder_listing_info python: here.folder_listing_info(sort_on='releasedate', sort_order=1);
+						global object_list python:folder_listing_info['objects'];
+						objects_info python:here.getArchiveListing(here)">
+
+		<div class="folder_social">
+			<tal:block content="structure here/set_content_rating" />
+			<div class="folder_social_icons">
+			<a class="feed_link"
+				tal:attributes="href string:${here/absolute_url}/index_atom">
+				&nbsp;</a>
+			<a class="facebook_link"
+				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+				&nbsp;</a>
+			<a class="twitter_link"
+				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+				&nbsp;</a>
+			</div>
+		</div>
+
+		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
+			<metal:block use-macro="site_object_index/macros/icon"/>
+			<tal:block replace="here/title_or_id" />
+			<tal:block condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+				[Limited access]
+			</tal:block>
+			<tal:block condition="python:not here.can_be_seen()" i18n:translate="">
+				[Restricted access]
+			</tal:block>
+			<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+				<span i18n:translate="">Item only translated in </span>
+				<span tal:repeat="lang here/gl_get_languages_map">
+					<a tal:content="python:' %s' % lang['title']"
+						tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+						tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+				</span>
+			</span>
+		</h1>
+
+		<div class="folder_description">
+			<p tal:condition="python:here.description!=''"
+				tal:content="structure here/description" />
+		</div>
+
+	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+		<metal:block fill-slot="menu_extension">
+			<h3 tal:condition="python:len(objects_list)==0" i18n:translate="">
+				There are no news.
+			</h3>
+			<span tal:replace="structure here/menusubmissions" />
+		</metal:block>
+		<metal:block fill-slot="toolbar">
+			<div id="toolbar"
+				tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete">
+				<input type="submit" value="Copy" class="action-button" name="copyObjects:method"
+					i18n:attributes="value"
+					tal:condition="btn_copy" />
+				<input type="submit" value="Cut" class="action-button" name="cutObjects:method"
+					i18n:attributes="value"
+					tal:condition="btn_cut" />
+				<input type="submit" value="Paste" class="action-button" name="pasteObjects:method"
+					i18n:attributes="value"
+					tal:condition="btn_paste" />
+				<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
+					i18n:attributes="value"
+					tal:condition="btn_delete" />
+				<input type="submit" value="Rename" class="action-button" name="renameobject_html:method"
+					i18n:attributes="value"
+					tal:condition="python: here.rename_id and btn_delete" />
+			</div>
+		</metal:block>
+		<metal:block fill-slot="table_head"
+			tal:condition="python:len(object_list)>0">
+			<tr>
+				<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="btn_delete">Delete</th>
+				<th i18n:translate="" style="width: 10%;">Release date</th>
+				<th class="title-column" i18n:translate="">Title</th>
+				<th class="checkin" i18n:translate="" tal:condition="python:btn_select">On front</th>
+				<th class="edit" i18n:translate="" tal:condition="python:btn_select">Edit</th>
+			</tr>
+		</metal:block>
+		<metal:block fill-slot="table_objects_default">
+			<tal:block define="del_permission object_info/del_permission;
+								edit_permission object_info/edit_permission;
+								object object_info/self">
+				<td class="checkbox" tal:condition="del_permission" width="4%" valign="top">
+					<input type="checkbox" name="id" tal:attributes="value object/id" />
+				</td>
+				<td class="releasedate">
+					<span tal:replace="python:object.utShowDateTime(object.releasedate)" />
+				</td>
+				<td class="title-column">
+					<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked);
+										alt object/meta_type;
+										title object/meta_type" />
+					<a tal:attributes="href object/absolute_url;
+										title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+					<tal:block
+            define="source object/source|string:;
+                    source python: object.utTruncateString(source, 40)" condition="source">
+						<br/>
+						<tal:block i18n:translate="">Source:</tal:block> <tal:block content="source" />
+					</tal:block>
+					<tal:block condition="python:object.is_open_for_comments() and object.count_comments()>0">
+						[<span tal:replace="object/count_comments" />
+						<span i18n:translate="">comment(s)</span>]
+					</tal:block>
+				</td>
+				<td class="onfront" tal:condition="edit_permission">
+					<a tal:condition="object/topitem|nothing"
+						tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to hide news item from the front page">
+						<img src="misc_/Naaya/yes.gif" alt="Click to hide news item from the front page" i18n:attributes="alt" />
+					</a>
+          <a tal:condition="not: object/topitem|nothing"
+						tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to show news item on the front page">
+						<img src="misc_/Naaya/no.gif" alt="Click to show news item on the front page" i18n:attributes="alt" />
+					</a>
+				</td>
+				<td class="edit" tal:condition="edit_permission">
+					<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html">
+						<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+					</a>
+				</td>
+			</tal:block>
+		</metal:block>
+	</metal:block>
+</tal:block>
+</metal:block>
+<metal:block fill-slot="folder_footer">
+	<div id="folder_footer" class="folder_footer">
+		<a class="download_link"
+			rel="nofollow" href="./zip_export/do_export"
+			title="Download the contents of this folder to a Zip file"
+			tal:condition="python: here.checkPermission('Naaya - Zip export') and len(object_list) > 0"
+			i18n:attributes="title"
+			i18n:translate="">Zip download</a>
+	</div>
+</metal:block>
+</metal:block>

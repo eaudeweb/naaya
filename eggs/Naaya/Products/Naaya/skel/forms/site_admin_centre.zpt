@@ -1,0 +1,44 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal administration centre</h1>
+
+<tal:block metal:fill-slot="section">
+
+  <style>
+    p.naaya-logo,
+    p.naaya-logo > img {
+      text-align: center;
+    }
+  </style>
+
+  <p i18n:translate="">
+    This section allows administrators to manage the content, the look &amp;
+    feel and maintain various functions of the current portal.
+  </p>
+
+  <p>
+    <strong i18n:translate="">
+      All administration functionalities are available from the right-side
+      menu.
+    </strong>
+  </p>
+
+  <p class="error"
+     tal:condition="not: here/recaptcha_is_present"
+     i18n:translate="">
+    WARNING: reCAPTCHA is not configured on this site.
+    reCAPTCHA will not be available when the user doesn't have the permission
+    to skip captcha. This means that some forms might not be protected for
+    submission (anyone allowed to view the form will be able to submit data).
+    To configure reCAPTCHA you need to add a public/private key pair in the
+    "Portal properties" &gt; "Other properties" page.
+  </p>
+
+  <p class="naaya-logo">
+    <img src="misc_/Naaya/admin_schema"
+         alt="Overview of the administrative functionality"
+         i18n:attributes="alt" />
+  </p>
+</tal:block>
+
+</tal:block>

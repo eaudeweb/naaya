@@ -1,0 +1,48 @@
+<tal:block condition="options/required/captcha">
+    <metal:block use-macro="template/macros/captcha" />
+</tal:block>
+
+<tal:block condition="options/required/name_and_email">
+    <metal:block use-macro="template/macros/name_and_email" />
+</tal:block>
+
+
+<tal:block condition="nothing">
+<!-- we define macros below, sort of like functions, and call them above -->
+
+<metal:block define-macro="captcha">
+    <tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+        content="structure python:here.show_recaptcha(here)" />
+    <p class="form-errors"
+       tal:define="errors request/SESSION/captcha-errors|nothing"
+       tal:condition="errors" tal:content="errors" />
+</metal:block>
+
+<metal:block define-macro="name_and_email">
+    <tal:block define="formdata request/SESSION/submitter-info|nothing">
+    <div class="field">
+        <label for="submitter-name">
+            <tal:block i18n:translate="">Your name</tal:block>
+            <span class="mandatory_field">*</span>
+        </label>
+        <p class="form-errors"
+           tal:define="errors request/SESSION/submitter-name-errors|nothing"
+           tal:condition="errors" tal:content="errors" />
+        <input name="submitter-name" size="50" id="submitter-name"
+               tal:attributes="value formdata/name|nothing" />
+    </div>
+    <div class="field">
+        <label for="submitter-email">
+            <tal:block i18n:translate="">Your e-mail address</tal:block>
+            <span class="mandatory_field">*</span>
+        </label>
+        <p class="form-errors"
+           tal:define="errors request/SESSION/submitter-email-errors|nothing"
+           tal:condition="errors" tal:content="errors" />
+        <input name="submitter-email" size="50" id="submitter-email"
+               tal:attributes="value formdata/email|nothing" />
+    </div>
+    </tal:block>
+</metal:block>
+
+</tal:block>

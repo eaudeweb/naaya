@@ -1,0 +1,5 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+	<metal:block fill-slot="menu_extension">
+		<span tal:replace="structure here/menusubmissions" />
+	</metal:block>
+</metal:block>

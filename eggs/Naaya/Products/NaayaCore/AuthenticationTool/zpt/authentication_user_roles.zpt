@@ -1,0 +1,167 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<script type="text/javascript">
+function emptyLocation()
+{
+   if (document.forms['frmUsersRoles'].loc[0].checked == true)
+       document.forms['frmUsersRoles'].location.value = '';
+}
+
+function pickLocation()
+{
+   document.forms['frmUsersRoles'].loc[1].checked = true;
+}
+
+function setupWin(url, theWidth, theHeight)
+{
+   pickLocation();
+   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+   wwinn.focus();
+   return true;
+}
+
+function createKey(key)
+{
+   document.forms['frmUsersRoles'].location.value = key;
+}
+</script>
+
+
+<h2>User Roles</h2>
+<p class="page-description">
+	This page displays the local users that have role(s) assigned to them, either on the entire
+	portal or just in specific folders. You can revoke a role prior assigned to a user by ticking
+	in the appropiate check box and clicking on the <em>Revoke roles</em> selected roles button.
+</p>
+
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<tal:block define="users_roles here/getUsersWithRoles;">
+<form action="manage_revokeUsersRoles" method="post">
+<table border="1" cellspacing="0" cellpadding="2" width="80%">
+	<tr class="row-header">
+		<th width="20%">User</th>
+		<th width="35%">Roles</th>
+		<th width="*">Location</th>
+	</tr>
+	<tal:block condition="python:users_roles.keys()">
+	<tr tal:repeat="user python:users_roles.keys()"
+		tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+		<td style="vertical-align: top" tal:content="user">user</td>
+		<td colspan="2" style="vertical-align: top">
+			<table width="100%" tal:define="roles python:users_roles[user]">
+			<tr tal:repeat="role roles">
+				<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
+					<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])" />
+				</td>
+				<td width="40%" tal:condition="python:role[0] != []">
+					<span tal:repeat="r python:here.utConvertToList(role[0])">
+					<strong tal:content="r">role name</strong>
+					</span>
+				</td>
+				<td width="*" tal:condition="python:role[0] != []">
+					<span tal:condition="python:role[1] == ''">Entire portal</span>
+					<span tal:condition="python:role[1] != ''" tal:define="obj python:here.utGetObject(role[1])">
+						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
+					</span>
+				</td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	</tal:block>
+	<tal:block condition="python: not users_roles.keys()">
+		<td colspan="3">No users available </td>
+	</tal:block>
+</table>
+<br />
+<input type="hidden" name="destination" value="manage_userRoles_html">
+<input type="submit" name="del" value="Revoke roles">
+</form>
+</tal:block>
+
+<tal:block define="query python:request.get('query', '');">
+<fieldset><legend>Assign role to an existing user</legend>
+<p>
+	Search for a specific user in the form below by specifying a string that occurs either in the <em>name</em>, <em>email</em>
+	or <em>username</em>; on the search results check the user(s), select the intended role(s) and choose
+	the specific location from the portal where you want the role to be granted.
+</p>
+<p>
+	<form method="get" action="manage_userRoles_html" name="frmSearchUsers">
+		<label for="query_users">
+			<span tal:omit-tag="" i18n:translate="">Search users</span>
+		</label>
+		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
+		<input type="submit" value="Search" i18n:attributes="value" />
+	</form>
+</p>
+<br />
+
+<form action="manage_addUsersRoles" method="post" name="frmUsersRoles"
+      class="admin-users-roles-form">
+<tal:block tal:define="results python:here.searchUsers(query, limit=20);
+						error python:results[0];
+						users python:results[1]">
+<table border="1" cellspacing="0" cellpadding="2" width="80%" tal:condition="python:len(users) > 0">
+	<thead>
+		<tr>
+			<th width="4%">&nbsp;</th>
+			<th width="20%">Username</th>
+			<th width="40%">Name</th>
+			<th width="*">Email</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="user users">
+			<td><input type="checkbox" name="name" tal:attributes="value python:user[0]"></td>
+			<td tal:content="python:user[0]" />
+			<td tal:content="python:user[1]" />
+			<td tal:content="python:user[2]" />
+		</tr>
+	</tbody>
+</table>
+<p tal:condition="python:len(users) == 0 and error == 1" style="color:red">
+	No users found for this criteria.
+</p>
+<p tal:condition="python:error == 0" style="color:red">
+	There are more than 20 users found for this criteria. Please refine your search and try again.
+</p>
+</tal:block>
+
+<table>
+	<tr>
+		<td style="vertical-align: top" width="20%">Roles:</td>
+		<td style="vertical-align: top" width="*" tal:define="roles here/list_valid_roles">
+			<select name="roles" size="5" multiple="multiple">
+				<option tal:repeat="role roles" tal:attributes="value role" tal:content="role" />
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top" width="20%">
+			<tal:block i18n:translate="">Location:(folder)</tal:block><br />
+			<tal:block i18n:translate="">e.g. /folderURL</tal:block>
+		</td>
+		<td style="vertical-align: top" width="*">
+			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
+			<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
+			<input type=text name="location" size="40" onclick="pickLocation();" value="" />
+			<input type="button" value="Pick" onclick="setupWin('sitemap', 300, 500);" />
+		</td>
+	</tr>
+</table>
+<p>
+	<input type="hidden" name="destination" value="manage_userRoles_html">
+	<input type="submit" value="Assign role" i18n:attributes="value"/>
+</p>
+
+</form>
+</fieldset>
+
+</tal:block>
+<span tal:replace="structure here/manage_page_footer"/>

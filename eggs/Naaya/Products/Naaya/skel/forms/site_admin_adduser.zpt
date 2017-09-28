@@ -1,0 +1,58 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Add user</metal:block>
+
+<metal:block fill-slot="second-tabs">
+	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
+</metal:block>
+
+<metal:block fill-slot="description-text"></metal:block>
+
+<metal:block fill-slot="section-title">
+	<div class="cleaner">&nbsp;</div>
+	<h3 i18n:translate="">
+		Add new local user
+	</h3>
+</metal:block>
+
+<metal:block fill-slot="content">
+	<form method="post" tal:attributes="action string:${site_url}/admin_adduser" class="user-form">
+		<div class="field-inline">
+			<label for="firstname" i18n:translate="">First name:</label>
+			<br />
+			<input type="text" id="firstname" name="firstname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserFirstname" />
+		</div>
+		
+		<div class="field-inline">
+			<label for="lastname" i18n:translate="">Last name:</label>
+			<br />
+			<input type="text" id="lastname" name="lastname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserLastname" />
+		</div>
+		<div class="field-inline">
+			<label for="email" i18n:translate="">Email address:</label>
+			<br />
+			<input type="text" id="email" name="email:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
+		</div>
+		<br />
+		<div class="field-inline">
+			<label for="username" i18n:translate="">Username:</label>
+			<br />
+			<input type="text" name="name:utf8:ustring" size="50" tal:attributes="value here/getSessionUserName" maxLength="255" />
+		</div>
+		<div class="field-inline">
+			<label for="password" i18n:translate="">Password:</label>
+			<br />
+			<input type="password" id="password" name="password:utf8:ustring" size="50" value="" maxLength="255" />
+		</div>
+		<div class="field-inline">
+			<label for="confirm" i18n:translate="">Password verification:</label>
+			<br />
+			<input type="password" id="confirm" name="confirm:utf8:ustring" size="50" value="" maxLength="255" />
+		</div>
+		<div class="field">
+			<input type="submit" value="Add user" i18n:attributes="value" />
+		</div>
+	</form>
+	<span tal:replace="here/delUserSession" />
+
+</metal:block>
+</metal:block>

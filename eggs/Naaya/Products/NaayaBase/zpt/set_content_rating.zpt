@@ -1,0 +1,11 @@
+<div tal:define="skin_files_path python:here.getLayoutTool().getSkinFilesPath();
+	user_rating_set here/user_rating_set;
+	is_ratable here/is_ratable;
+	portal_status_message python:request.get('portal_status_message', '')"
+	tal:condition="python:is_ratable and user_rating_set or portal_status_message"
+	id="ratings">
+	<tal:block content="structure user_rating_set"/>
+	<span class="ratings_message" tal:condition="portal_status_message" >
+		<span tal:content="portal_status_message" />
+	</span>
+</div>

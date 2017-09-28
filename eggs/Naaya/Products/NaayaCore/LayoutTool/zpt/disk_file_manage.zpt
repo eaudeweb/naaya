@@ -1,0 +1,69 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<style>
+    p.infotext {
+        font-style: italic;
+    }
+    dl.metadata {
+        margin: 1em;
+        overflow-y: auto;
+        font-family: monospace;
+    }
+    dl.metadata dt {
+        float: left;
+        clear: left;
+    }
+    dl.metadata dd {
+        float: left;
+        margin-left: .3em;
+        color: #080;
+    }
+    img.preview, pre.preview {
+        border: 1px solid #737373;
+        margin: 0 1em;
+    }
+    pre.preview {
+        background-color: #ddd;
+        overflow-x: auto;
+    }
+    img.preview {
+        background: url("misc_/NaayaCore/checkered.png") repeat;
+    }
+    form.diskfile-to-database {
+        display: inline;
+    }
+</style>
+
+<form class="diskfile-to-database" method="post"
+      tal:attributes="action string:${here/absolute_url}/manage_copy_to_database">
+    <p class="infotext">
+        This object is a <tt>DiskFile</tt>: it displays read-only data from a
+        file on disk. To change its contents, first
+        <button type="submit">copy the file to ZODB</button>.
+    </p>
+</form>
+
+<dl class="metadata">
+    <dt>Pathspec:</dt>
+    <dd tal:content="here/pathspec" />
+
+    <dt>Filesystem path:</dt>
+    <dd tal:content="options/fs_path" />
+
+    <dt>Content-Type:</dt>
+    <dd tal:content="options/mime_type" />
+</dl>
+
+<tal:block define="mime_type options/mime_type">
+    <pre class="preview"
+         tal:condition="python:( mime_type.startswith('text/')
+                                 or mime_type == 'application/javascript' )"
+         tal:content="options/file_data" />
+
+    <img class="preview"
+         tal:condition="python: options['mime_type'].startswith('image/')"
+         tal:attributes="src here/absolute_url" />
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer"/>

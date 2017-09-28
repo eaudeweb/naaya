@@ -1,0 +1,85 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title"></metal:block>
+
+<metal:block fill-slot="section-title">
+    <div class="cleaner">&nbsp;</div>
+	<h3 i18n:translate="">
+		Edit permissions for <i i18n:name="role_name" tal:content="options/role" />
+	</h3>
+</metal:block>
+
+<metal:block fill-slot="description-text">
+</metal:block>
+
+<metal:block fill-slot="content"><metal:block define-macro="content">
+<metal:block tal:define="
+    role options/role;
+    has_permission python:lambda zp: options['zope_perm_for_role'][zp];">
+
+    <p>If you have trouble setting up permission, you can always choose to
+    <a class="tipsy-title"
+       onclick="return confirm('This will reset all permissions to defaults for this role. Are you sure you want to continue?')"
+	tal:attributes="title string:Reset permission settings to defaults, for ${role} role;
+		        href string:${site_url}/admin_resetrole_html?role=${role}">start over</a>.</p>
+
+    <form method="post" name="editRole"
+        tal:attributes="action string:${here/absolute_url}/admin_editrole">
+        <input type="hidden" name="role" tal:attributes="value role" />
+        <metal:block define-macro="datatable">
+        <div class="roles-list">
+            <table cellspacing="0" cellpadding="4" class="datatable sortable">
+            <tr>
+                <th width="5%" align="left" class="checkbox">
+                    <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
+                </th>
+                <th i18n:translate="" class="th-left">Permission</th>
+            </tr>
+            <tal:block repeat="perm options/permission_list">
+            <tal:block define="input_id string:inperm-${repeat/perm/index};
+                zope_perm perm/zope_permission">
+            <tr tal:attributes="class python:test(path('repeat/perm/odd'),
+                                         'row-odd', 'row-even')">
+                <td class="center checkbox">
+
+                    <input type="checkbox"
+                           tal:attributes="
+                        name string:zope_perm_list:list;
+                        value zope_perm;
+                        id input_id;
+                        checked python:has_permission(zope_perm)" />
+                </td>
+                <td>
+                    <label tal:attributes="title zope_perm; for input_id"
+                           tal:content="perm/title"
+                           class="middle-label" />
+                    <a class="right info-link" href="javascript:void(0);" i18n:translate="">Details</a>
+                </td>
+            </tr>
+            <tr class="admin-info-text">
+                <td colspan="2">
+                  <p tal:content="perm/description"/>
+                  <p>
+                    <em>Zope permission:
+                    <tal:block content="zope_perm"/></em>
+                  </p>
+                </td>
+            </tr>
+            </tal:block>
+            </tal:block>
+        </table>
+        </div>
+        </metal:block>
+
+        <br />
+
+        <input type="submit" value="Save changes" i18n:attributes="value" />
+    </form>
+
+<script>
+$(function() {
+});
+</script>
+
+</metal:block>
+</metal:block></metal:block>
+</metal:block>

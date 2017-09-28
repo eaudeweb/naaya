@@ -1,0 +1,36 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal statistics</h1>
+
+<tal:block metal:fill-slot="section">
+  <div class="tabbedmenu">
+    <ul>
+      <li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+      <li><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+      <li class="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Google Snippets</a></li>
+    </ul>
+  </div>
+
+  <form method="post" action="" name="frmVerify" id="frmVerify">
+    <div class="field">
+      <label for="ga_id" i18n:translate="">Google Analytics web property ID</label>
+      <p i18n:translate="">
+          Copy the <a i18n:name="ga-link-ua" i18n:translate="" href="https://www.google.com/support/googleanalytics/bin/answer.py?answer=113500"
+          target="_blank">web property ID (UA-number)</a> from Google Analytics' page and paste it in the field below, 
+          in order to allow Google access your website traffic data.</p>
+      <input name="ga_id" tal:attributes="value here/ga_id; placeholder string:UA-XXXXX-X; title string:UA-XXXXX-X" />
+    </div>
+    <div class="field">
+      <label for="gw_verify" i18n:translate="">Google Webmaster verification meta tag</label>
+      <p i18n:translate="">
+          Upon ownership verification, choose the meta tag (verification) method, and copy the meta tag code generated in the text area below
+          in order to have it inserted properly following Google's requests. Save it and go back to Google to complete the verification process.</p>
+      <textarea name="gw_verify" cols="80" rows="2" tal:content="here/gw_verify" />
+    </div>
+    <p>
+      <input type="submit" value="save" name="save" />
+    </p>
+  </form>
+
+</tal:block>
+</tal:block>

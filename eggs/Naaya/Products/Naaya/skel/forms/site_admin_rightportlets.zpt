@@ -1,0 +1,261 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Arrange portlets - Right side</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				mode python:request.get('mode', '');
+				location python:request.get('location', '');
+				location_obj python:test(location=='', None, here.getFolderByPath(location));
+				records here/get_right_portlets_locations">
+
+<div class="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_leftportlets_html" i18n:translate="">Left side</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_frontportlets_html" i18n:translate="">Front page</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_rightportlets_html" i18n:translate="">Right side</a></li>
+</ul>
+</div>
+
+<script type="text/javascript">
+<!--
+function add()
+{
+	var selectleft = document.frmportlets.available;
+	var selectright = document.frmportlets.portlets;
+	var i;
+	for(i = 0; i < selectleft.options.length; i++)
+	{
+		if(selectleft.options[i].selected)
+		{
+			var o = document.createElement( "option");
+			o.text = selectleft.options[i].text;
+			o.value = selectleft.options[i].value;
+			selectright.options[selectright.options.length] = o;
+			selectleft.remove(i);
+			i--;
+		}
+	}
+}
+function remove()
+{
+	var selectleft = document.frmportlets.available;
+	var selectright = document.frmportlets.portlets;
+	var i;
+	for( i = 0; i < selectright.options.length; i++)
+	{
+		if(selectright.options[i].selected)
+		{
+			var o = document.createElement( "option");
+			o.text = selectright.options[i].text;
+			o.value = selectright.options[i].value;
+			selectleft.options[selectleft.options.length] = o;
+			selectright.remove(i);
+			i--;
+		}
+	}
+}
+function moveup()
+{
+	var selectright = document.frmportlets.portlets;
+	var i;
+	for( i = 0; i < selectright.options.length; i++)
+	{
+		if(selectright.options[i].selected && (i > 0))
+		{
+			var o1 = document.createElement( "option");
+			o1.text = selectright.options[i-1].text;
+			o1.value = selectright.options[i-1].value;
+			var o2 = document.createElement( "option");
+			o2.text = selectright.options[i].text;
+			o2.value = selectright.options[i].value;
+			selectright.options[i-1] = o2;
+			selectright.options[i] = o1;
+			selectright.options[i-1].selected = true;
+		}
+	}
+}
+function movedown()
+{
+	var selectright = document.frmportlets.portlets;
+	var i;
+	for( i = selectright.options.length-1; i >= 0; i--)
+	{
+		if(selectright.options[i].selected && (i < selectright.options.length-1))
+		{
+			var o1 = document.createElement( "option");
+			o1.text = selectright.options[i].text;
+			o1.value = selectright.options[i].value;
+			var o2 = document.createElement( "option");
+			o2.text = selectright.options[i+1].text;
+			o2.value = selectright.options[i+1].value;
+			selectright.options[i] = o2;
+			selectright.options[i+1] = o1;
+			selectright.options[i+1].selected = true;
+		}
+	}
+}
+function dosubmit()
+{
+	var selectright = document.frmportlets.portlets;
+	var i;
+	for( i = 0; i < selectright.options.length; i++)
+	{
+		selectright.options[i].selected = true;
+	}
+}
+// -->
+</script>
+
+<p i18n:translate="" class="cleaner">
+	This page allows you to establish the list of portlets displayed in the right side of 
+	various portal sections (front page and folders).
+	The portlet(s) must already exist - if you want to define new ones, choose the 
+	appropriate link from the administration menu.
+</p>
+<p i18n:translate="">
+	You are presented with a sitemap of this portal: click on a folder link to select it 
+	(skip the selection if you are choosing portlets for the front page) then choose the
+	corresponding portlets.
+</p>
+
+<form name="frmportlets" method="post" tal:attributes="action string:${site_url}/admin_rightportlets">
+<input type="hidden" name="location" tal:attributes="value location" />
+<table border="0" cellspacing="4" cellpadding="4">
+<tr>
+	<td class="form-label" width="20%" valign="top" i18n:translate="">Location</td>
+	<td colspan="4">
+		<tal:block tal:condition="python:mode=='edit'">
+			<strong tal:condition="python:location_obj is None" i18n:translate="">Portal front page</strong>
+			<strong tal:condition="python:location_obj is not None" tal:content="location_obj/title_or_id">location</strong>
+			<input type="hidden" name="folder" tal:attributes="value location" />
+		</tal:block>
+		<tal:block tal:condition="python:mode!='edit'">
+		<script type="text/javascript">
+		<!--
+		function fTreeClick(expand)
+		{
+			document.frmportlets.action = '';
+			document.frmportlets.expand.value = expand;
+		}
+		function fTreeNodeClick(node_path)
+		{
+			document.frmportlets.folder.value = node_path;
+		}
+		//-->
+		</script>
+		<tal:block tal:define="expand python:request.get('expand', '');
+								expand_list python:here.splitToList(expand);
+								tree python:here.getSiteMap(expand_list, None, 0);
+								folder python:request.get('folder', '')">
+		<table border="0" cellspacing="1" cellpadding="1" width="90%">
+		<tr tal:repeat="tree_node tree">
+			<td>
+				<table border="0" cellspacing="1" cellpadding="1">
+					<tr>
+						<td>
+							<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
+							<tal:block tal:condition="python:tree_node[1]==-1">
+								<img src="misc_/Naaya/square.gif" alt="" />
+							</tal:block>
+							<tal:block tal:condition="python:tree_node[1]==0"
+								tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))">
+								<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" src="misc_/Naaya/minus.gif" alt="Collapse node" i18n:attributes="alt" />
+							</tal:block>
+							<tal:block tal:condition="python:tree_node[1]==1"
+								tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))">
+								<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" src="misc_/Naaya/plus.gif" alt="Expand node" i18n:attributes="alt" />
+							</tal:block>
+						</td>
+						<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
+						<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}')" tal:content="python:tree_node[0].title_or_id()">folder</a></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="text" name="folder" tal:attributes="value folder" size="35" readonly="readonly" />
+			</td>
+		</tr>
+		</table>
+		<input type="hidden" name="expand" tal:attributes="value expand" />
+		</tal:block>
+		</tal:block>
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top" i18n:translate="">Available portlets</td>
+	<td>
+		<select name="available" size="10" multiple="multiple"
+			tal:define="available_portlets python:test(mode=='edit', here.get_available_right_locations_objects(location), here.getPortletsTool().getPortlets())">
+			<option tal:repeat="item available_portlets"
+					tal:attributes="value item/id">
+				<span tal:replace="item/title_or_id" /> (<span i18n:translate="" tal:omit-tag="" tal:content="item/get_type_label" />)
+			</option>
+		</select>
+	</td>
+	<td valign="middle">
+		<input type="button" value="Add ->" i18n:attributes="value" onclick="javascript:add();"/>
+		<br /><br />
+		<input type="button" value="<- Remove" i18n:attributes="value" onclick="javascript:remove();" />
+	</td>
+	<td>
+		<select name="portlets" size="10" multiple="multiple"
+			tal:define="current_portlets python:test(mode=='edit', here.get_right_portlets_locations_objects(location_obj), [])">
+			<option tal:repeat="item current_portlets"
+					tal:attributes="value item/id">
+				<span tal:replace="item/title_or_id" /> (<span i18n:translate="" tal:omit-tag="" tal:content="item/get_type_label" />)
+			</option>
+		</select>
+	</td>
+	<td valign="middle">
+		<input type="button" value="Move Up" i18n:attributes="value" onclick="javascript:moveup();" />
+		<br /><br />
+		<input type="button" value="Move Down" i18n:attributes="value" onclick="javascript:movedown();" />
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td colspan="4"><input type="submit" value="Save changes" i18n:attributes="value" onclick="javascript:dosubmit();" /></td>
+</tr>
+</table>
+</form>
+<h2 i18n:translate="">Right-side portlets defined in this portal</h2>
+<p i18n:translate="">
+	You are presented with the list of locations (folders or front page) from this portal
+	where right-side portlets have been defined. Click on a location to edit its list of right side portlets.
+</p>
+<form method="post" tal:attributes="action string:${site_url}/admin_deleterightportlets">
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th class="scope-col" scope="col" i18n:translate="">Location</th>
+				<th class="scope-col" scope="col" i18n:translate="">Portlets</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="record python:records.keys()">
+				<td tal:define="fol python:here.getFolderByPath(record)">
+					<a tal:condition="python:fol" tal:attributes="href string:admin_rightportlets_html?mode=edit&location=${record}" 
+					tal:content="python:fol.title_or_id()">location</a>
+					<span class="error" tal:condition="python:not fol" i18n:translate="">Folder deleted:</span>
+					<strong class="error" tal:condition="python:not fol" tal:content="record" />
+				</td>
+				<td>
+					<tal:block tal:repeat="item python:map(here.getPortletsTool().getPortletById, records[record])">
+						<tal:block tal:condition="python:item is not None">
+							<input type="checkbox" name="portlets" tal:attributes="value python:'%s||%s' % (record, item.id)" />
+							<span tal:replace="item/title_or_id" /> (<span i18n:translate="" tal:omit-tag="" tal:content="item/get_type_label" />)
+							<br />
+						</tal:block>
+					</tal:block>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" value="Delete" i18n:attributes="value" />
+</form>
+</tal:block>
+
+</tal:block>

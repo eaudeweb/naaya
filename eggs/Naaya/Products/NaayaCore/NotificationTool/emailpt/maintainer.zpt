@@ -1,0 +1,23 @@
+<subject>
+	<tal:block condition="not:options/comment|nothing" i18n:translate="">
+		Maintainer notification for object: <tal:block content="options/ob/title_or_id" i18n:name="object" /></tal:block>
+	<tal:block condition="options/comment|nothing" i18n:translate="">
+		Maintainer notification - new comment on: <tal:block content="options/parent/title_or_id" i18n:name="parent" /></tal:block>
+</subject>
+
+<body_text>
+<tal:block i18n:translate="" condition="not:options/comment|nothing">
+	The item 
+	"<tal:block content="options/ob/title_or_id" i18n:name="title" />" has been
+	<tal:block i18n:translate="" condition="not:options/ob_edited"
+	i18n:name="created">created</tal:block><tal:block i18n:translate=""
+	condition="options/ob_edited" i18n:name="edited">edited</tal:block>
+	at <tal:block content="options/ob/absolute_url" i18n:name="url" />
+	by "<tal:block content="options/person" i18n:name="person" />".
+</tal:block><tal:block i18n:translate="" condition="options/comment|nothing">
+	A comment has been added to the item 
+	"<tal:block content="options/parent/title_or_id" i18n:name="parent_title" />"
+	at <tal:block content="string:${options/parent/absolute_url}#comment_${options/comment/getId}" i18n:name="url" />
+	by "<tal:block content="options/person" i18n:name="person" />".
+</tal:block>
+</body_text>

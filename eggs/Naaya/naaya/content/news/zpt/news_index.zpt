@@ -1,0 +1,93 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+    </metal:block>
+
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'))"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
+            <span tal:replace="here/title_or_id" />
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
+            <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+                <span i18n:translate="">Item only translated in </span>
+                <span tal:repeat="lang here/gl_get_languages_map">
+                    <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                </span>
+            </span>
+        </h1>
+
+        <metal:block use-macro="site_object_index/macros/action_buttons"/>
+
+        <!-- Map widget -->
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+        <div tal:define="description python:here.prop_value_or_none('description')"
+            tal:condition="description" tal:content="structure description" />
+
+        <div class="news_picture" tal:condition="here/hasSmallPicture">
+            <a tal:condition="here/hasBigPicture" tal:attributes="href string:${here/absolute_url}/picture_html">
+                <img src="getSmallPicture" i18n:attributes="alt"
+                    alt="Click here to show large image" />
+            </a>
+            <img tal:condition="python:not here.hasBigPicture()" src="getSmallPicture" alt="" />
+        </div>
+
+        <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+
+        <tal:block content="structure python: here.prop_display_tr('resourceurl', as_href=True)" />
+        <tal:block content="structure python: here.prop_display_tr('source')" />
+        <tal:block content="structure python: here.prop_display_tr('releasedate')" />
+        <metal:block use-macro="site_object_index/macros/contributor_tr" />
+        <tal:block content="structure python: here.prop_display_tr('coverage')" />
+
+		<tal:block condition="here/is_geo_enabled">
+			<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+					picture python:portal_map.getSymbolPicture(here.geo_type)"
+					tal:condition="python: title != '' and here.geo_location">
+				<th i18n:translate="Type (translate as a noun)">Type</th>
+				<td>
+					<img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
+					<span tal:replace="title" />
+				</td>
+			</tr>
+		</tal:block>
+
+        <tal:block content="structure python: here.prop_display_tr('keywords')" />
+
+        </table>
+
+        <p tal:content="structure here/details" />
+
+        <p>
+            <strong tal:condition="here/has_expired" i18n:translate="">Please note that this information has expired.</strong>
+        </p>
+
+        <tal:block content="structure here/set_content_rating" />
+
+        <tal:block content="structure here/comments_box" />
+    </metal:block>
+</metal:block>

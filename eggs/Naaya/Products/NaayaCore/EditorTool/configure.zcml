@@ -1,0 +1,7 @@
+<configure xmlns:naaya="http://namespaces.zope.org/naaya">
+    <naaya:simpleView
+        for="Products.Naaya.interfaces.INySite"
+        name="enumerateImages"
+        handler=".EditorTool.enumerateImages"
+        permission="zope2.ViewManagementScreens" />
+</configure>

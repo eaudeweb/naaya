@@ -1,0 +1,65 @@
+<tal:block define="
+    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+    trans_tool python: here.getSite().getPortalI18n();
+    field_class python:' '.join(['field', 'glossary-widget-mode-%s' % here.display_mode,]);
+    schema_tool here/getSchemaTool;
+    default_val python:trans_tool.get_translation(getattr(here, 'default', ''));
+    value python:test(options['value'].strip() != '', options['value'], default_val);
+    errors options/errors;
+    prop_id here/prop_name;
+    glossary python:here.get_glossary();
+    glossary_elements glossary/get_all_element_titles|nothing
+    ">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="scripts">
+        <script tal:content="string:
+    var WWW_URL='${schema_tool/absolute_url}/www/';"></script>
+        <script tal:attributes="src string:${schema_tool/absolute_url}/www/glossary.js"></script>
+    </metal:block>
+    <metal:block fill-slot="help">
+        <p tal:condition="python:glossary is not None" i18n:translate="">
+            <strong i18n:name="tip" i18n:translate="">Tip:</strong>
+            you can type free text in the field below or pick words from the list
+        </p>
+    </metal:block>
+    <metal:block fill-slot="input">
+        <input type="text" tal:attributes="
+           value value;
+           size here/width;
+           maxlength python:test(here.size_max, here.size_max, None);
+           name string:${prop_id}:utf8:ustring;
+           id prop_id"/>
+    <tal:block tal:condition="python:glossary is not None">
+      <tal:block define="is_thesaurus python: glossary.meta_type == 'Naaya Thesaurus'">
+        <tal:block condition="is_thesaurus">
+          <input type="button" value="Pick"
+               tal:attributes="onclick string:fPick('${glossary/absolute_url}/GlossMap_html?ctrl=${prop_id}')"
+               i18n:attributes="value"/>
+        </tal:block>
+        <tal:block condition="not: is_thesaurus">
+          <input type="button" value="Pick"
+               class="glossary-widget-pick" style="display: none"
+               i18n:attributes="value"/>
+          <div class="glossary-widget-dialog-content" style="display: none">
+          <div class="glossary-widget-tree-buttons">
+              [<a href="javascript:" i18n:translate="">Expand all</a>]
+              [<a href="javascript:" i18n:translate="">Collapse all</a>]
+              [<a tal:attributes="href glossary/absolute_url"
+                 i18n:translate="">View glossary</a>]
+            </div>
+            <div class="glossary-widget-tree"></div>
+          </div>
+          <script tal:define="js_options python:here.rstk['json_dumps']({
+                      'input_id': prop_id,
+                      'widget_url': here.absolute_url(),
+                      'lang': curr_lang,
+                      'separator': here.separator,
+                      'select_folders': bool(glossary.parent_anchors),
+                    })"
+              tal:content="string:ny_glossary_widget_js(${js_options})"/>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+    </metal:block>
+</metal:block>
+</tal:block>

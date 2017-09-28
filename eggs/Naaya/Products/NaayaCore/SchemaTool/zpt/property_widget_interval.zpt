@@ -1,0 +1,110 @@
+<tal:block define="
+field_class string:field right-position;
+opt_value options/value;
+start_date_id string:${here/prop_name}.start_date;
+end_date_id string:${here/prop_name}.end_date;
+start_time_id string:${here/prop_name}.start_time;
+end_time_id string:${here/prop_name}.end_time;
+all_day_id string:${here/prop_name}.all_day;
+
+opt_value_start_date opt_value/start_date|python:request.SESSION.get(start_date_id);
+opt_value_end_date opt_value/end_date|python:request.SESSION.get(end_date_id);
+opt_value_start_time opt_value/start_time|python:request.SESSION.get(start_time_id);
+opt_value_end_time opt_value/end_time|python:request.SESSION.get(end_time_id);
+opt_value_all_day opt_value/all_day|python:request.SESSION.get(all_day_id);
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="scripts">
+
+        <script tal:define="val python:here.rstk['json_dumps'](prop_id)"
+                tal:content="structure string:
+                        var prop_name = ${val};
+                "></script>
+        <script type="text/javascript">
+        jQuery(function() {
+            var interval_form = {
+                'all_day': document.getElementById(prop_name + '.all_day'),
+                'start_date': document.getElementById(prop_name + '.start_date'),
+                'end_date': document.getElementById(prop_name + '.end_date'),
+                'start_time': document.getElementById(prop_name + '.start_time'),
+                'end_time': document.getElementById(prop_name + '.end_time'),
+            };
+
+            function update_interval_form(){
+                if(interval_form['all_day'].checked){
+                    jQuery('#' + prop_name + '\\.start_time\\.span').hide();
+                    jQuery('#' + prop_name + '\\.end_time\\.span').hide();
+                }else{
+                    jQuery('#' + prop_name + '\\.start_time\\.span').show();
+                    jQuery('#' + prop_name + '\\.end_time\\.span').show();
+                }
+            }
+
+            update_interval_form();
+            jQuery(interval_form['all_day']).change(update_interval_form);
+
+        });
+        </script>
+
+    </metal:block>
+    <metal:block fill-slot="input">
+    <div style="background-color: #ecf5fa; border: 1px solid #b6cde1;
+            margin-top: 0.5em; padding: 0.5em; width: 430px;">
+        <div class="tooltips">
+            <p>
+                Please provide start and end date.
+                <br />
+                Time of day is requested only if "All day" is not checked.
+            </p>
+        </div>
+
+        <input type="checkbox" tal:attributes="
+            checked python:test(opt_value_all_day, 'checked', None);
+            name string:${all_day_id}:boolean;
+            id string:${all_day_id};
+            value string:on;" />
+        <label style="display:inline"
+               class="widget-title" i18n:translate=""
+               tal:attributes="for all_day_id" >All day</label>
+        <br />
+
+        <label style="display:inline"
+               class="widget-title" i18n:translate=""
+               tal:attributes="for start_date_id">Start date</label>
+        <input type="text" class="vDateField"
+               size="10" maxlength="10" placeholder="dd/mm/yyyy"
+               tal:attributes="value opt_value_start_date|nothing;
+                               name string:${start_date_id};
+                               id string:${start_date_id}" />
+
+        <span tal:attributes="id string:${start_time_id}.span">
+        <input type="text"
+               size="5" maxlength="5" placeholder="hh:mm"
+               tal:attributes="value opt_value_start_time|nothing;
+                               name string:${start_time_id};
+                               id string:${start_time_id}" />
+        hh:mm
+        </span>
+        <br />
+
+        <label style="display:inline"
+               class="widget-title" i18n:translate=""
+               tal:attributes="for end_date_id">End date</label>&nbsp;
+        <input type="text" class="vDateField"
+               size="10" maxlength="10" placeholder="dd/mm/yyyy"
+               tal:attributes="value opt_value_end_date|nothing;
+                               name string:${end_date_id};
+                               id string:${end_date_id}" />
+
+        <span tal:attributes="id string:${end_time_id}.span">
+        <input type="text"
+               size="5" maxlength="5" placeholder="hh:mm"
+               tal:attributes="value opt_value_end_time|nothing;
+                               name string:${end_time_id};
+                               id string:${end_time_id}" />
+        hh:mm
+        </span>
+        </div>
+    </metal:block>
+</metal:block>
+</tal:block>

@@ -1,0 +1,2 @@
+[physicalpath: <tal:block content="python:'/'.join(here.getPhysicalPath())" />]
+[optiona: <tal:block content="options/a" />]

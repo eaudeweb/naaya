@@ -1,0 +1,5 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_add').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Submit Folder</h1>
+
+</tal:block>

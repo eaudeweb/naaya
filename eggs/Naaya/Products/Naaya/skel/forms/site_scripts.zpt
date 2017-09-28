@@ -1,0 +1,22 @@
+<tal:block define="
+    site_url here/getSitePath;
+    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-ui.js"></script>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.form.js"></script>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js?lang=${curr_lang}"></script><!-- Translated messages in json format -->
+    <tal:block replace="structure string:&lt;!--[if lt IE 8]&gt;"></tal:block>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/json2.min.js"></script>
+    <tal:block replace="structure string:&lt;![endif]--&gt;"></tal:block>
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/utils.js"></script>
+
+    <link rel="stylesheet" type="text/css" tal:attributes="href string:${site_url}/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.css" />
+    <link rel="stylesheet" type="text/css" tal:attributes="href string:${site_url}/++resource++Products.Naaya/lib/tipsy/naaya.tipsy.css" />
+    <script type="text/javascript" tal:attributes="src string:${site_url}/++resource++Products.Naaya/lib/tipsy/jquery.tipsy.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+          jQuery(".tipsy-title").tipsy({gravity: 'e', html: true});
+    });
+    </script>
+
+</tal:block>

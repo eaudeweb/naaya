@@ -1,0 +1,82 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Monitorised folders</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				languages here/gl_get_languages_mapping;
+                ob_notificationtool here/getNotificationTool;
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<div class="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_notifications_html" i18n:translate="">Settings</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_notif_sitemap_html" i18n:translate="">Monitorised folders</a></li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+This is the list with monitorised folders. The notifications and newsletters are based on updating of the content of these folders. Here you can add or delete folders from this list.
+</p>
+<tal:block tal:define="maintopics_children python:here.get_maintopics_children(first_level='0',foldermetatypes=ob_notificationtool.foldermetatypes)">
+
+<form method="post" tal:attributes="action string:${site_url}/admin_notif_add_folders">
+<fieldset><legend i18n:translate="">Add a new monitorized folder</legend>
+<div class="fieldset_div">
+<table border="0" cellspacing="1" cellpadding="1">
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Add" i18n:attributes="value" /></td>
+    </tr>    
+<tal:block tal:repeat="first_level_folder python:maintopics_children">
+    <tr>
+        <td><input type="checkbox" name="absolute_urls_to_be_added" tal:attributes="value python: first_level_folder[0].absolute_url(1)" /></td>
+        <td><a tal:attributes="href python:first_level_folder[0].absolute_url()"><span tal:content="python:first_level_folder[0].title_or_id()"/></a>
+        </td>
+        <td></td>
+    </tr>
+    <tal:block tal:repeat="second_level_folder python:first_level_folder[1]">
+    <tr>
+        <td></td>
+        <td>
+			<img src="misc_/Naaya/square.gif" alt="" />
+			<input type="checkbox" name="absolute_urls_to_be_added" tal:attributes="value python: second_level_folder.absolute_url(1)" />
+			<a tal:attributes="href second_level_folder/absolute_url"><span tal:content="second_level_folder/title_or_id" /></a>
+        </td>
+    </tr>
+    </tal:block>
+</tal:block>    
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Add" i18n:attributes="value" /></td>
+    </tr>
+</table>
+</div>
+</fieldset>
+
+</form>
+
+<tal:block tal:condition="python:ob_notificationtool.get_monitorized_folders != []">
+<form method="post" tal:attributes="action string:${site_url}/admin_notif_delete_folders">
+<fieldset><legend i18n:translate="">Delete a monitorized folder</legend>
+<div class="fieldset_div">
+<table border="0" cellspacing="1" cellpadding="1">
+	<tr tal:repeat="notification_folder ob_notificationtool/get_monitorized_folders">
+		<td width="1%" valign="top"><input type="checkbox" name="absolute_urls_to_be_deleted" tal:attributes="value python: notification_folder" /></td>
+		<td valign="top"><a tal:attributes="href python:here.utGetObject(notification_folder).absolute_url()"> <span tal:content="python: here.utGetObject(notification_folder).title_or_id()" /></a>
+        </td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="4"><input type="submit" value="Delete" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</div>
+</fieldset>
+</form>
+</tal:block>
+<div style="border:4px solid white">
+</div>
+</tal:block>
+</tal:block>
+</tal:block>

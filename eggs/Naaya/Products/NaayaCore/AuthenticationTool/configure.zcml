@@ -1,0 +1,45 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <browser:resourceDirectory
+         name="Products.NaayaCore.AuthenticationTool"
+         directory="./www"
+         permission="zope.Public"
+         />
+
+    <utility name="plugUserFolder"
+        provides=".interfaces.IAuthenticationToolPlugin"
+        component=".plugins.plugUserFolder.plugUserFolder"/>
+
+    <utility name="plugLDAPUserFolder"
+        provides=".interfaces.IAuthenticationToolPlugin"
+        component=".plugins.plugLDAPUserFolder.plugLDAPUserFolder"/>
+
+    <subscriber
+        for="Products.NaayaBase.interfaces.INyAddGroupRoleEvent"
+        handler=".subscribers.auto_catalog_object" />
+    <subscriber
+        for="Products.NaayaBase.interfaces.INyRemoveGroupRoleEvent"
+        handler=".subscribers.auto_catalog_object" />
+
+    <subscriber
+        for=".interfaces.IRoleAssignmentEvent"
+        handler=".subscribers.post_user_management_action" />
+
+    <naaya:simpleView
+         for="Products.Naaya.interfaces.INyFolder"
+         name="access_overview"
+         handler=".inspector.access_overview"
+         permission="zope2.View" />
+
+   <configure zcml:condition="installed Products.naayaUpdater">
+      <utility
+         name="AddNyLdapGroupRolesToCatalog.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.AddNyLdapGroupRolesToCatalog"
+         permission="zope2.ViewManagementScreens" />
+   </configure>
+
+</configure>

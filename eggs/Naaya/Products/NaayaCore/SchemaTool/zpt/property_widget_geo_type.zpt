@@ -1,0 +1,16 @@
+<tal:block define="
+    field_class string:field-inline;
+    geo_type_list python:here.getSite().getGeoMapTool().getSymbolsListOrdered();
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+            <option value=""></option>
+            <option tal:repeat="geo_type_item geo_type_list"
+                tal:content="geo_type_item/title" i18n:translate=""
+                tal:attributes="value geo_type_item/id;
+                  selected python:geo_type_item.id == value" />
+        </select>
+    </metal:block>
+</metal:block>
+</tal:block>

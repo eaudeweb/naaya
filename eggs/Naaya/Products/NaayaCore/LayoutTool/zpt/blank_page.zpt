@@ -1,0 +1,2 @@
+<metal:block use-macro="here/standard_template_macro">
+</metal:block>

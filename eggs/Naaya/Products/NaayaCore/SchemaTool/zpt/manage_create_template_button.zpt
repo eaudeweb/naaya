@@ -1,0 +1,74 @@
+<script src="/misc_/Naaya/jquery.min.js"></script>
+
+<style>
+    a.buttonish {
+        margin: .5em;
+        padding: 0 .5em;
+        border: 1px solid #888;
+        color: #222;
+        background: #eee;
+    }
+    div.help {
+        position: absolute;
+        font-weight: normal;
+        background: white;
+        border: 1px solid #888;
+        padding: .5em;
+        width: 50%;
+    }
+</style>
+
+<tal:block condition="python: options['show'] == 'create_template'">
+    <form name="create-custom-template" method="post" style="display: none"
+          tal:define="here_url here/absolute_url;
+                      view_name string:manage_create_custom_template"
+          tal:attributes="action string:${here_url}/${view_name}">
+    </form>
+    <script>$(function() {
+        var button = $('<a class="buttonish">').text("create it");
+        button.click(function(evt) {
+            evt.preventDefault();
+            $('form[name=create-custom-template]').submit();
+        });
+        $('label[for="cb-custom_template"]').append(
+            '<br>', 'Template missing, ', button);
+    });</script>
+</tal:block>
+
+<tal:block condition="python: options['show'] == 'edit_template'">
+    <script tal:define="site here/getSite;
+                        site_url site/absolute_url;
+                        template_path here/custom_template;
+                        url_json python: here.rstk['json_dumps'](
+                                '%s/%s/manage_workspace' %
+                                (site_url, template_path));"
+            tal:content="string: var template_url = ${url_json};"></script>
+    <script>$(function() {
+        var button = $('<a class="buttonish"'+'>').text("edit");
+        button.attr('href', template_url);
+        $('label[for="cb-custom_template"]').append(button);
+    });</script>
+</tal:block>
+
+<tal:block condition="python: options['show'] == 'help'">
+    <script tal:define="path_json python:here.rstk['json_dumps'](
+                            'portal_forms/schemawidget-%s-%s' % (
+                                here.aq_parent.getId(), here.prop_name()))"
+            tal:content="string:var example_path = ${path_json}"></script>
+    <script>$(function() {
+        var button = $('<a class="buttonish" href="#">').text("?");
+        button.click(function(evt) {
+            evt.preventDefault();
+            var help_div = $('<div class="help" id="template-help-container">').html("<br>" +
+                "Enter the path to a custom template that will be used to " +
+                "render this widget in add/edit pages. " +
+                "You can try this one: <tt>" + example_path + "<" + "/tt>.");
+            var close = $('<a>').text('[x]').click(function(evt) {
+                evt.preventDefault();
+                help_div.remove();
+            }).prependTo(help_div);
+            button.after(help_div);
+        });
+        $('label[for="cb-custom_template"]').append(button);
+    });</script>
+</tal:block>

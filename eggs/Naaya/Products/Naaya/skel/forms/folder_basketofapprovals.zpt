@@ -1,0 +1,145 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<h1 i18n:translate="">Basket of approvals</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">
+	This page lists all pending (not yet approved) and published (approved) items
+	from this folder.  You can review, <strong i18n:name="approve-button"
+	i18n:translate="">Approve</strong> or <strong i18n:name="delete-button"
+	i18n:translate="">Delete</strong> any subset of the pending items.  You can
+	unapprove some of the published items, therefore making them no longer
+	available for the public, and you can delete published items.
+</p>
+
+<p i18n:translate="">
+	Don't forget to click the <strong i18n:name="save-button"
+	i18n:translate="">Save changes</strong> button to confirm your changes.
+</p>
+
+<h2 i18n:translate="">Pending items</h2>
+
+<tal:block tal:define="pendings here/getPendingContent">
+<form method="post" name="pndForm" id="pndForm" tal:attributes="action string:${here/absolute_url}/processPendingContent" tal:condition="python:len(pendings)>0">
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th class="scope-col" scope="col">&nbsp;</th>
+				<th class="scope-col" scope="col" i18n:translate="">Submitted at</th>
+				<th class="scope-col" scope="col" i18n:translate="">Title</th>
+				<th class="scope-col" scope="col" i18n:translate="">Contributor</th>
+				<th class="scope-col" scope="col" i18n:translate="">Edit</th>
+				<th class="scope-col" scope="col" i18n:translate="">Approve</th>
+				<th class="scope-col" scope="col" i18n:translate="">Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="item pendings" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
+				<td><img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
+				         tal:attributes="src icon/url; title icon/title; alt icon/title" width="16" /></td>
+				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
+				<td tal:define="contributor item/contributor; username python:here.getAuthenticationTool().name_from_userid(item.contributor)"
+					tal:content="string: ${contributor} (${username})" />
+				<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
+				<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
+				<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</form>
+<tal:block tal:condition="python:len(pendings)==0">
+	<p><strong i18n:translate="">No pending items to review.</strong></p>
+</tal:block>
+</tal:block>
+
+<h2 i18n:translate="">Published items</h2>
+<tal:block tal:define="published here/getPublishedContent">
+<form method="post" name="pblForm" id="pblForm" tal:attributes="action string:${here/absolute_url}/processPublishedContent" tal:condition="python:len(published)>0">
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th class="scope-col" scope="col">&nbsp;</th>
+				<th class="scope-col" scope="col" i18n:translate="">Submitted at</th>
+				<th class="scope-col" scope="col" i18n:translate="">Title</th>
+				<th class="scope-col" scope="col" i18n:translate="">Contributor</th>
+				<th class="scope-col" scope="col" i18n:translate="">Edit</th>
+				<th class="scope-col" scope="col" i18n:translate="">Unapprove</th>
+				<th class="scope-col" scope="col" i18n:translate="">Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="item published" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
+				<td><img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
+				         tal:attributes="src icon/url; title icon/title; alt icon/title" width="16" /></td>
+				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
+				<td tal:define="contributor item/contributor; username python:here.getAuthenticationTool().name_from_userid(item.contributor)"
+					tal:content="string: ${contributor} (${username})" />
+				<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
+				<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>
+				<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</form>
+<tal:block tal:condition="python:len(published)==0">
+	<p><strong i18n:translate="">No published items available.</strong></p>
+</tal:block>
+</tal:block>
+
+<metal:block use-macro="python: here.getFormsTool().getForm('delete_confirmation').macros['delete_confirmation']"></metal:block>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	var deleteObjects = function() {
+		$( "#dialog-delete-confirm" ).dialog({
+		    open: function() {
+                $(this).siblings(".ui-dialog-buttonpane").find("button:eq(1)").focus();
+		    },
+			resizable: false,
+			height: 200,
+			width: 500,
+			modal: true,
+			draggable: false,
+			buttons: {
+				"Delete items": function() {
+					return $('#pblForm').submit()
+				},
+				"Cancel": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+	};
+
+	$('#pblForm input[type="submit"]').click(function(e){
+		e.preventDefault()
+
+		if($('input[name="delids"]:checked').length > 0) {
+			deleteObjects();
+		} else {
+			return $('#pblForm').submit();
+		}
+	});
+
+	$('input[name="appids"]').click(function () {
+		var value = $(this).val();
+		$('input[name="delids"][value="' + value + '"]').attr('checked', false);
+	});
+
+	$('input[name="delids"]').click(function () {
+		var value = $(this).val();
+		$('input[name="appids"][value="' + value + '"]').attr('checked', false);
+	});
+});
+
+</script>
+
+</metal:block>
+</metal:block>

@@ -1,0 +1,21 @@
+<tal:block metal:use-macro="options/macro">
+
+<tal:block metal:fill-slot="portlet_title" i18n:translate="">Statistics</tal:block>
+
+<tal:block metal:fill-slot="portlet_content">
+	<tal:block tal:define="analytics_tool here/getAnalyticsTool; 
+							summary analytics_tool/getSiteSummary; 
+							month analytics_tool/get_date_interval;
+							start python:month[0]; 
+							end python:month[1]">
+		<ul tal:condition="summary">
+			<li><strong i18n:translate="">Visits:</strong> <span tal:replace="summary/visits" /></li>
+			<li><strong i18n:translate="">Visitors:</strong> <span tal:replace="summary/visitors" /></li>
+			<li><strong i18n:translate="">Pageviews:</strong> <span tal:replace="summary/pageviews" /></li>
+			<li><strong i18n:translate="">TimeOnSite:</strong> <span tal:replace="summary/timeOnSite" /></li>
+		</ul>
+		(<span tal:replace="python:here.utShowDateTime1(start)" /> - <span tal:replace="python:here.utShowDateTime1(end)" />)
+	</tal:block>
+</tal:block>
+
+</tal:block>

@@ -1,0 +1,46 @@
+<span tal:replace="structure here/manage_page_header" />
+
+<style>
+    ul.pathspecs li a { color: #080; font-size: 10pt; }
+    ul.pathspecs li a:hover { text-decoration: underline; }
+</style>
+
+<script tal:attributes="src string:misc_/Naaya/jquery.min.js"
+></script>
+
+<h2>Add disk style</h2>
+
+<form action="manage_addDiskTemplate" method="post">
+
+    <label><b>id</b> <i>(leave empty to use filename without extension)</i><br>
+        <input type="text" name="id" size="20">
+    </label><br>
+
+    <label><b>pathspec</b> <i>(select from below)</i><br>
+        <input type="text" name="pathspec" size="80">
+    </label><br>
+
+    <input type="submit" value="Add">
+
+</form>
+
+<h3>Available pathspecs</h3>
+<ul class="pathspecs">
+    <li tal:repeat="pathspec template/list_available_pathspecs">
+        <a tal:content="pathspec" href="#"></a>
+    </li>
+</ul>
+
+<script>
+$(function() {
+    $('ul.pathspecs li a').each(function() {
+        var link = $(this);
+        link.click(function(evt) {
+            evt.preventDefault();
+            $('input[name=pathspec]').val(link.text());
+        });
+    });
+});
+</script>
+
+<span tal:replace="structure here/manage_page_footer" />

@@ -1,0 +1,135 @@
+
+<script type="text/javascript"
+        tal:content="string:var sitemap_url='${here/getAuthenticationToolPath
+                                               }/sitemap';" />
+<script type="text/javascript">
+<!--
+
+function onclick_pick_location(form_name) {
+    pickLocation(form_name);
+    wwinn = window.open(sitemap_url + '?form_name='+form_name, 'wwinn',
+        'width=400,height=500,scrollbars,top=50,left=600');
+    wwinn.focus();
+    return true;
+}
+
+function emptyLocation(form_name)
+{
+   if (document.forms[form_name].loc[0].checked == true)
+       document.forms[form_name].location.value = '';
+}
+
+function pickLocation(form_name)
+{
+   document.forms[form_name].loc[1].checked = true;
+}
+
+function createKey(key, form_name)
+{    document.forms[form_name].location.value = key;}
+
+var set_roles_target = '';
+function fPickRoles(url, target)
+{
+    set_roles_target = target;
+    var wnd = window.open(url, "pickroles", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+    wnd.focus();
+}
+
+function fSetRoles(role, dn) {
+    if (set_roles_target == 'ldap_group') {
+        document.getElementById('ldap_group').value = role;
+        }
+    else {
+        document.frmRoles.role.value = role;
+        document.frmRoles.dn.value = dn;
+    }
+}
+var isSelected = false;
+function toggleSelect()
+{   var frm = document.frmRevoke;
+    var i;
+    if (isSelected == false)
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = true;
+        isSelected = true;}
+    else
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = false;
+        isSelected = false;}
+}
+//-->
+</script>
+
+    <tal:block define="user_folder python:here.getUserFolder();
+            id python:request.get('id', 0);
+            site_path python:here.getSitePath();
+            section python:request.get('s', 'manage_all');
+            source_url string:${site_path}/admin_sources_html?id=${id};">
+
+    <div class="second_tab_set">
+    <ul>
+        <li>
+            <a id="link_manage_all"
+                tal:attributes="href string:${source_url}&s=manage_all;
+                class python:test(section=='manage_all',
+                                 'current_sub second_tab',
+                                 'second_tab');"
+                i18n:translate="">Manage Users & Groups</a>
+        </li>
+
+        <li>
+            <a id="link_assign_to_users"
+                tal:attributes="href string:${source_url}&s=assign_to_users;
+                class python:test(section=='assign_to_users',
+                                 'current_sub second_tab',
+                                 'second_tab');"
+                i18n:translate="">Assign Roles to Users</a>
+        </li>
+
+        <li>
+            <a id="link_assign_to_groups"
+                tal:attributes="href string:${source_url}&s=assign_to_groups;
+                class python:test(section=='assign_to_groups',
+                                 'current_sub second_tab',
+                                 'second_tab')"
+                i18n:translate="">Assign Roles to Groups</a>
+        </li>
+    </ul>
+    </div>
+
+    <div class="clear"></div>
+
+    <string tal:replace="python:here.deleteCache(user_folder)" />
+
+    <div id="section_wating_response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting
+        </p>
+    </div>
+
+    <div id="section_error_response" class="message-error" style="display:none">
+        <p i18n:translate="">
+            Error displaying user management section.
+        </p>
+    </div>
+
+    <tal:block condition="python:section=='manage_all'">
+        <tal:block replace="structure here/section_manage_all_html"/>
+    </tal:block>
+
+    <tal:block tal:condition="python:section=='assign_to_users'">
+        <tal:block replace="structure here/section_assign_to_users_html"/>
+    </tal:block>
+
+    <tal:block tal:condition="python:section=='assign_to_groups'">
+        <tal:block replace="structure here/section_assign_to_groups_html"/>
+    </tal:block>
+
+    <tal:block tal:condition="python:section=='group_members'">
+        <tal:block replace="structure here/section_group_members_html"/>
+    </tal:block>
+
+    <div class="clear"></div>
+
+</tal:block>

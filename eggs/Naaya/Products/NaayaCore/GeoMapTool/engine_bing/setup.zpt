@@ -1,0 +1,10 @@
+<tal:ie content="structure string:<![if !IE]>"/>
+  <script src="http://ecn.dev.virtualearth.net/mapcontrol/v6.3/js/atlascompat.js">
+  </script>
+<tal:ie content="structure string:<![endif]>"/>
+<script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2">
+</script>
+<script tal:content="structure
+    string:var naaya_bing_map_api_config = ${options/js_config};"></script>
+<script tal:attributes="src
+    string:${here/absolute_url}/naaya_bing_js"></script>

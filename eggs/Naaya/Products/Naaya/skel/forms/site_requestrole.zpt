@@ -1,0 +1,89 @@
+<metal:block use-macro="python:here.standard_template_macro('light')">
+
+<metal:block metal:fill-slot="header-title">
+	<title><tal:block i18n:translate="">Request Role</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta i18n:attributes="content" content="Web form used to obtain contribution privileges" name="description" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
+<tal:block define="role python:request.get('role', 'contributor')">
+
+<h1><span i18n:translate="">Application for</span> <span tal:content="role">contributor</span> <span i18n:translate="">privileges</span></h1>
+
+<p>
+	<span i18n:translate="">Fill your data in the form below and press the <strong i18n:name="Submit-request" i18n:translate="">Submit request</strong> button.
+	The Webmaster will be informed of your application for</span> <span tal:replace="role">contribution</span> <span i18n:translate="">privileges</span>.
+	<span i18n:translate="">You will be notified about the result of your request</span>.
+</p>
+
+<form class="RequestRoleForm" method="post"
+	tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
+
+<input type="hidden" name="apply_role" tal:attributes="value role" />
+
+<table border="0" cellspacing="2" cellpadding="2">
+
+<tal:block condition="python:role == 'contributor'">
+	<tr>
+		<td valign="top" i18n:translate="">Username<br i18n:name="br"/></td>
+		<td><input type="text" name="username" size="40" tal:attributes="value here/getSessionUserName" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">First name</td>
+		<td><input type="text" name="firstname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Last name</td>
+		<td><input type="text" name="lastname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Email address</td>
+		<td><input type="text" name="email" size="40" tal:attributes="value here/getSessionUserEmail" />*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Password:</td>
+		<td><input type="password" name="password" size="30" value="" maxlength="255">*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Password verification:</td>
+		<td><input type="password" name="confirm" value="" size="30" maxlength="255">*</td>
+	</tr>
+	<tr>
+		<td i18n:translate="">Organisation</td>
+		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
+	</tr>
+</tal:block>
+
+	<tr tal:condition="python:role != 'contributor'">
+		<td valign="top" i18n:translate="">Username<br i18n:name="br"/></td>
+		<td><input type="text" readonly="readonly" name="username" size="40" tal:attributes="value python:request.AUTHENTICATED_USER.getUserName()" />*</td>
+	</tr>
+	<tr>
+		<td valign="top" i18n:translate="">Location<br i18n:name="br"/>the privileges should apply</td>
+		<td><input type="radio" name="location"
+			tal:attributes="value python:here.absolute_url(1); checked python:here.getSessionUserLocation() == here.absolute_url(1)" /> <span i18n:translate="" tal:omit-tag="">This section</span> -- <em tal:content="here/title_or_id" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation() == ''"/> <span i18n:translate="" tal:omit-tag="">Entire portal</span></td>
+	</tr>
+	<tr>
+		<td valign="top" i18n:translate="">Comments<br i18n:name="br"/>(optional)</td>
+		<td><textarea name="comments" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Submit request" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</form>
+<span tal:replace="python:here.delSessionErrors()" />
+<span tal:replace="python:here.delRequestRoleSession()" />
+
+</tal:block>
+
+</metal:block>
+</metal:block>

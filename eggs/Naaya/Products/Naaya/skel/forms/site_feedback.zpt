@@ -1,0 +1,70 @@
+<metal:block use-macro="python:here.standard_template_macro('light')">
+
+<metal:block metal:fill-slot="header-title">
+	<title><tal:block i18n:translate="">Feedback Form</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta i18n:attributes="content" content="Use our feedback form to report problems or errors, offer suggestions, or provide feedback." name="description" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
+	<h1 i18n:translate="">Feedback to Webmaster</h1>
+
+	<tal:block tal:condition="python:here.meta_type!=here.getFolderMetaType()">
+	<form method="post" tal:attributes="action string:${here/getSitePath}/processFeedbackForm">
+	<table border="0" cellspacing="2" cellpadding="2">
+		<tr><td i18n:translate="">Full name</td><td><input type="text" name="username" size="40" value="" /></td></tr>
+		<tr><td i18n:translate="">Email address</td><td><input type="text" name="email" size="40" value="" /></td></tr>
+		<tr><td valign="top" i18n:translate="">Comments</td><td><textarea name="comments" rows="10" cols="50"></textarea></td></tr>
+		<tal:block condition="not:here/checkPermissionPublishDirect">
+		<tr><td>&nbsp;</td>
+			<td valign="top">
+				<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+			</td>
+		</tr>
+		</tal:block>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Send" /></td></tr>
+	</table>
+	</form>
+	</tal:block>
+
+	<tal:block tal:condition="python:here.meta_type==here.getFolderMetaType()">
+	<tal:block tal:define="res here/getParentFeedbackCustomized;
+		folder python:res[0];
+		path python:res[1]">
+	<form method="post" tal:attributes="action string:${path}/admin_folder_feedback_form">
+	<table border="0" cellspacing="2" cellpadding="2">
+		<tr tal:condition="folder">
+			<td valign="top" i18n:translate="">Send feedback to</td>
+			<td>
+				<input type="radio" name="who" value="0" tal:attributes="checked python:test(here.getSessionFeedbackWho(), '', 'checked')" /> <span i18n:translate="">entire site's administrator</span>
+				<br />
+				<input type="radio" name="who" value="1" tal:attributes="checked python:test(here.getSessionFeedbackWho(), 'checked', '')" /> <span i18n:translate="">the administrator of </span><strong tal:content="folder/title_or_id" /> section
+				<br />
+				<div tal:condition="here/getFeedbackCustomizedPostal">
+					<span i18n:translate="">Postal address of the</span> <strong tal:content="folder/title_or_id" /> <span i18n:translate="">section administrator</span>
+					<div tal:content="structure python:here.utTextareaEncode(here.getFeedbackCustomizedPostal())" />
+				</div>
+			</td>
+		</tr>
+		<tr><td i18n:translate="">Full name</td><td><input type="text" name="username" size="40" tal:attributes="value here/getSessionFeedbackName" /></td></tr>
+		<tr><td i18n:translate="">Email address</td><td><input type="text" name="email" size="40" tal:attributes="value here/getSessionFeedbackEmail" /></td></tr>
+		<tr><td valign="top" i18n:translate="">Comments<br i18n:name="br"/>(if any)</td><td><textarea name="comments" rows="10" cols="50" tal:content="here/getSessionFeedbackComments" /></td></tr>
+		<tal:block condition="not:here/checkPermissionPublishDirect">
+		<tr><td>&nbsp;</td>
+			<td valign="top">
+				<tal:block condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()"
+					content="structure python:here.show_recaptcha(here)" />
+			</td>
+		</tr>
+		</tal:block>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Send" i18n:attributes="value" /></td></tr>
+	</table>
+	</form>
+	</tal:block>
+	</tal:block>
+</metal:block>
+
+</metal:block>

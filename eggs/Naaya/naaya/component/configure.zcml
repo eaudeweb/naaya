@@ -1,0 +1,26 @@
+<configure xmlns:browser="http://namespaces.zope.org/browser">
+
+    <browser:page
+        name="inspector_view"
+        for="Products.Naaya.interfaces.INySite"
+        class=".inspector.InspectorView"
+        template="./zpt/inspector.pt"
+        permission="zope2.ViewManagementScreens"
+        />
+
+    <browser:page
+        name="inspector_diff_view"
+        for="Products.Naaya.interfaces.INySite"
+        class=".inspector.InspectorDiffView"
+        template="./zpt/inspector_diff.pt"
+        permission="zope2.ViewManagementScreens"
+        />
+
+    <browser:page
+        name="inspector_reload_bundle"
+        for="Products.Naaya.interfaces.INySite"
+        class=".inspector.InspectorReloadView"
+        permission="zope2.ViewManagementScreens"
+        />
+
+</configure>

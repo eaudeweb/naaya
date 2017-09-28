@@ -1,0 +1,15 @@
+<metal:block define-macro="content">
+
+<div id="footer">
+  <div class="footer_menu">
+    <a href="http://naaya.eaudeweb.ro" target="_blank" id="poweredby" title="powered by Naaya">Powered by Naaya</a> |
+    <a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a> |
+    <a tal:attributes="href string:${site_url}/info/cookie_policy" i18n:translate="">Cookie policy</a> |
+    <a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+    <tal:block condition="nocall:here/manage_workspace" on-error="string:">
+      | <a tal:attributes="href string:${here/absolute_url}/manage_workspace" i18n:translate="">Access the ZMI</a>
+    </tal:block>
+  </div>
+</div>
+
+</metal:block>

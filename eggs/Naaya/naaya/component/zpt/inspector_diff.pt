@@ -1,0 +1,27 @@
+<tal:block replace="structure context/manage_page_header" />
+<tal:block replace="structure context/manage_tabs" />
+
+<style>
+    div.diff .line_added { background-color: #cfc; }
+    div.diff .line_removed { background-color: #fcc; }
+    div.diff .line_heading { background-color: #bdf; }
+    div.diff .line_normal { background-color: #ddd; }
+</style>
+
+<tal:block define="interface_name python: request.get('interface', None);
+                   utility_name python: request.get('utility', None);
+                   interface python: view.get_interface_by_name(interface_name);
+                   utility_registrations python: view.get_utility_registrations(interface, utility_name)">
+    <h2 tal:content="string:${utility_name} (${interface_name})"></h2>
+    <tal:block repeat="diff python: view.get_diffs(utility_registrations)">
+    <h3 tal:define="manager1 diff/manager1;
+                    manager1_name python: view.get_manager_name(manager1);
+                    manager1_class_name python: view.get_manager_class_name(manager1);
+                    manager2 diff/manager2;
+                    manager2_name python: view.get_manager_name(manager2);
+                    manager2_class_name python: view.get_manager_class_name(manager2);"
+        tal:content="string:Changed in ${manager2_name} (${manager2_class_name}) compared to ${manager1_name} (${manager1_class_name})"></h3>
+    <div class="diff" tal:content="structure diff/html_diff"></div>
+    </tal:block>
+</tal:block>
+<tal:block replace="structure context/manage_page_footer" />

@@ -1,0 +1,28 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<h1>Content types</h1>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<p class="page-description">
+	<code>Files</code> icons can be listed in a folder according to the content type of the file.
+</p>
+
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
+    <tr class="row-header">
+        <th width="10%" class="cell-header">Picture</th>
+        <th width="50%" class="cell-header">Title</th>
+        <th width="40%" class="cell-header">Content type</th>
+    </tr>
+    <tr tal:repeat="record here/list_mime_tipes"
+        tal:attributes="class python:test(path('repeat/record/odd'), 'row-odd', 'row-even')">
+			<td><img tal:attributes="src python:'++resource++naaya.mime_icons/%s.png' % record[2]" /></td>
+			<td tal:content="python:record[1]" />
+			<td tal:content="python:record[0]"></td>
+    </tr>
+</table>
+
+<span tal:replace="structure here/manage_page_footer"/>

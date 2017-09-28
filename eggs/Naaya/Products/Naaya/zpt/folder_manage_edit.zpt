@@ -1,0 +1,101 @@
+<tal:block metal:define-macro="page"
+           metal:extend-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+    Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+
+<link rel="stylesheet" type="text/css" media="screen"
+    href="misc_/Naaya/jquery.autocomplete.css" />
+
+<script src="misc_/Naaya/jquery.min.js"></script>
+
+<style>
+    a.buttonish {
+        margin: .5em;
+        padding: 0 .5em;
+        border: 1px solid #888;
+        color: #222;
+        background: #eee;
+    }
+    div.help {
+        position: absolute;
+        font-weight: normal;
+        background: white;
+        border: 1px solid #888;
+        padding: .5em;
+        width: 50%;
+    }
+</style>
+
+<tr>
+    <td class="form-label">Maintainer email</td>
+    <td><input type="text" name="maintainer_email" size="50"
+               tal:attributes="value here/maintainer_email" /></td>
+</tr>
+<tr tal:define="global custom_index here/compute_custom_index_value;
+                global custom_index_tmpl here/get_custom_index_template">
+    <td>
+        <label class="form-label">Custom index</label>
+        <br />
+        Examples:
+            <ul>
+                <li>custom index in this folder: 'local:index'
+                <li>custom index from portal forms: 'site:portal_forms/folder_index'
+            </ul>
+    </td>
+    <td>
+        <input type="text" name="custom_index" size="70"
+               tal:attributes="value custom_index" />
+    </td>
+
+    <tal:block condition="python: custom_index and not custom_index_tmpl">
+        <script tal:content="python: 'var here_url=%s;' % here.rstk['json_dumps'](
+                                here.absolute_url())"></script>
+        <script>$(function() {
+            var button = $('<a class="buttonish">').text("create it");
+            button.click(function(evt) {
+                evt.preventDefault();
+                var submit_url = here_url + '/manage_create_custom_template';
+                var frm = $('<form>').appendTo('body');
+                frm.attr({action: submit_url, method: 'post'});
+                frm.submit();
+            });
+            $('input[name="custom_index"]').parent('td').append(
+                'Template missing, ', button);
+        });</script>
+    </tal:block>
+
+    <tal:block condition="python: custom_index and custom_index_tmpl">
+        <script tal:define="url_json python: here.rstk['json_dumps'](
+                    custom_index_tmpl.absolute_url() + '/manage_workspace');"
+                tal:content="string: var template_url = ${url_json};"></script>
+        <script>$(function() {
+            var button = $('<a class="buttonish"'+'>').text("edit");
+            button.attr('href', template_url);
+            $('input[name="custom_index"]').parent('td').append(button);
+        });</script>
+    </tal:block>
+
+</tr>
+
+<tal:block metal:define-slot="non_folder_custom_properties">
+</tal:block>
+
+<script src="misc_/Naaya/jquery.autocomplete.min.js"></script>
+<script tal:content="string:var form_ids=${here/portal_forms/registered_templates};">
+</script>
+<script>
+    $(document).ready(function(){
+        var data = form_ids.map(function(id){return'site:portal_forms/'+id;});
+        data.push('local:index');
+        $('input[name=\"custom_index\"]').autocomplete(data);
+    });
+</script>
+
+
+</tal:block>
+
+</tal:block>

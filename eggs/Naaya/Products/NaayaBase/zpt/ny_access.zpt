@@ -1,0 +1,105 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<metal:block fill-slot="body" tal:define="
+    object here/getObject;
+    sorted_permissions here/sortedPermissions;
+    roles here/getValidRoles;
+    mapping here/getPermissionMapping;
+    acquired_mapping here/getPermissionAcquiredMapping;
+    acquiring_permissions here/getPermissionsWithAcquiredRoles;
+    ">
+    <h1 i18n:translate="">Edit permissions for this item</h1>
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href object/absolute_url"
+               i18n:translate="">Back to index</a>
+        </span>
+    </div>
+    <div class="clearer"></div>
+    <br />
+    <p class="page-description" i18n:translate="">
+        This page lists the permissions and assigned roles for the current item.
+    </p>
+    <div id="save-permissions-waiting-response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting
+        </p>
+    </div>
+    <div id="save-permissions-error-response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error saving permission mapping.
+        </p>
+    </div>
+    <form method="post" id="save-permissions" name="save-permissions"
+        tal:attributes="action string:${here/absolute_url}/savePermissionMapping">
+
+        <tal:block repeat="role roles">
+            <input type="hidden" name="known_roles:list"
+                tal:attributes="value role"/>
+        </tal:block>
+
+        <table class="datatable">
+            <tr>
+                <th rowspan="2" i18n:translate="">Inherit from parent</th>
+                <th rowspan="2" i18n:translate="">Permission</th>
+                <th tal:attributes="colspan python:len(roles)"
+                    i18n:translate="">Roles</th>
+            </tr>
+            <tr>
+                <th tal:repeat="role roles">
+                    <tal:block tal:replace="role"/>
+                </th>
+            </tr>
+            <tr tal:repeat="permission sorted_permissions">
+                <td>
+                    <input type="checkbox" tal:attributes="
+                        name string:acquires${permission};
+                        checked python:permission in acquiring_permissions;
+                    "/>
+                </td>
+                <td tal:content="python:here.permissions[permission]"
+                    tal:attributes="title permission" i18n:translate=""></td>
+                <td tal:repeat="role roles">
+                    <input type="checkbox" tal:attributes="
+                        name string:${permission}:list;
+                        checked python:role in mapping[permission];
+                        value role"/>
+                    <img tal:condition="python:role in acquired_mapping[permission]"
+                        tal:attributes="id string:acquired${role}${permission};"
+                        title="This role is also granted the permission. It is inherited from the parent folders."
+                        alt="Inherited"
+                        src="misc_/Naaya/info.png" i18n:attributes="title;alt"/>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Save changes" i18n:attributes="value" />
+    </form>
+
+    <script type="text/javascript">
+        function save_permissions_form() {
+            $('#save-permissions').ajaxForm({
+                beforeSubmit: function() {
+                    $('#save-permissions-waiting-response').show();
+                    $('#save-permissions-error-response').hide();
+                },
+                success: function(data) {
+                        var html = $('#middle_port', $(data)).html();
+                        $('#middle_port').html(html);
+                        save_permissions_form();
+
+                        $('#save-permissions-waiting-response').hide();
+                },
+                error: function() {
+                    $('#save-permissions-waiting-response').hide();
+                    $('#save-permissions-error-response').show();
+                }
+            });
+        }
+        $(document).ready(function() { save_permissions_form(); });
+    </script>
+</metal:block>
+
+
+</metal:block>
