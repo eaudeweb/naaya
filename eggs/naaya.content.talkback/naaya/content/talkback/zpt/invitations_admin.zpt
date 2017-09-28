@@ -1,0 +1,119 @@
+<tal:block define="global name_from_userid python:options['name_from_userid']" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<script type="text/javascript" src="/++resource++Products.Naaya/js/check_emails.js"></script>
+<script type="text/javascript" src="/++resource++naaya.content.talkback/invitation_check_emails.js"></script>
+
+<div class="floated-buttons">
+    <span class="buttons">
+        <a tal:attributes="href string: ${here/absolute_url}/invitations_export?headers=Name,Organization,Invited%20by,Invited%20by%20userid,Date,Notes,Email,Private%20URL&keys=name,organization,name_from_userid,inviter_userid,create_date,notes,email,private_url">
+            Export to Excel
+        </a>
+    </span>
+    <span class="buttons">
+        <a tal:define="section here/get_consultation"
+          tal:attributes="href section/absolute_url"
+          i18n:translate="">Back to consultation index</a>
+    </span>
+</div>
+
+<h1 i18n:translate="">Invitations administration</h1>
+
+<div id="tabbedmenu">
+  <ul>
+      <li id="currenttab"><a i18n:translate="">
+          Administer invitations</a></li>
+      <li><a tal:attributes="href string:${here/absolute_url}/create"
+        i18n:translate="">
+          Send new invitation</a></li>
+      <li><a tal:attributes="href string:${here/absolute_url}/send_email"
+        i18n:translate="">
+          Send new email</a></li>
+      <li><a i18n:translate=""
+        tal:attributes="href string:${here/absolute_url}/saved_emails">
+          View sent emails</a></li>
+  </ul>
+</div>
+<div class="clearer"></div>
+
+<p i18n:translate="">
+Email addresses listed below are now one by one automatically checked for validity
+(i.e. the email server is online and the address exists at there).
+As this happens, each invalid address will change colour to red.
+</p>
+<tal:block condition="nothing"><metal:block define-macro="invitation">
+    <dt>
+        <strong tal:content="invite/name"></strong>
+        <tal:block condition="invite/organization"
+                   content="string:(${invite/organization})" />
+    </dt>
+    <dd tal:define="inviter_userid invite/inviter_userid;
+                    inviter_name python:name_from_userid(inviter_userid);"
+        i18n:translate="">
+        Invited by
+        <em i18n:name="name_of_inviter"
+            tal:content="string:${inviter_name} (${invite/inviter_userid})"
+            ></em>
+        on <em i18n:name="invite_date" tal:content="invite/create_date"></em>
+    </dd>
+    <dd tal:condition="invite/notes"><p tal:content="invite/notes" /></dd>
+    <metal:block define-slot="other_info" />
+</metal:block></tal:block>
+
+
+<dl class="tb-invitations">
+<tal:block repeat="invite options/invites_active">
+    <metal:block use-macro="template/macros/invitation">
+    <metal:block fill-slot="other_info">
+    <dd tal:define="emails invite/email">
+        <tal:block i18n:translate="">E-mail address:</tal:block>
+        <tal:block repeat="addr python: emails.split(',')">
+            <code tal:content="addr"/>
+            <span tal:condition="not: repeat/addr/end">,</span>
+        </tal:block>
+    </dd>
+    <dd i18n:translate="">
+        Private URL:
+        <small tal:content="string:${here/absolute_url}/welcome?key=${invite/key}"
+               i18n:name="private_url"></small>
+    </dd>
+    <dd>
+        <form method="post" tal:attributes="action
+          string:${here/absolute_url}/admin_invitation_enabled">
+            <input type="hidden" name="key" tal:attributes="value invite/key" />
+            <input type="hidden" name="value:boolean" value="False" />
+            <input type="submit" value="revoke" />
+        </form>
+    </dd>
+    </metal:block>
+    </metal:block>
+</tal:block>
+</dl>
+<p tal:condition="not:options/invites_active"
+   i18n:translate="">
+    There are no active invitations.
+    Go to <a tal:attributes="href string:${here/absolute_url}/create"
+                 i18n:name="create_invitation_url">send new invitation</a>
+    to send invitations.
+</p>
+
+<h2 tal:condition="options/invites_revoked"
+    i18n:translate="">Revoked invitations</h2>
+<dl class="tb-invitations revoked">
+<tal:block repeat="invite options/invites_revoked">
+    <metal:block use-macro="template/macros/invitation">
+    <dd metal:fill-slot="other_info">
+        <form method="post" tal:attributes="action
+          string:${here/absolute_url}/admin_invitation_enabled">
+            <input type="hidden" name="key" tal:attributes="value invite/key" />
+            <input type="hidden" name="value:boolean" value="True" />
+            <input type="submit" value="re-enable" />
+        </form>
+    </dd>
+    </metal:block>
+</tal:block>
+</dl>
+
+</metal:block>
+</metal:block>

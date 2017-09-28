@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      tal:define="feed_url string:${here/absolute_url}/comments_atom;
+                  atom_date_format python:options['atom_date_format'];
+                  feed_updated options/feed_updated">
+
+    <title tal:content="here/title_or_id"></title>
+    <link tal:attributes="href feed_url" rel="self" />
+    <link tal:attributes="href here/absolute_url" />
+    <id tal:content="feed_url"></id>
+    <updated tal:content="python:atom_date_format(feed_updated)"></updated>
+
+    <tal:block repeat="comment options/comments_list">
+    <entry tal:define="author_name comment/get_contributor_name">
+        <title tal:content="string:Comment by ${author_name}"></title>
+        <author><name tal:content="author_name"></name></author>
+        <id tal:content="comment/absolute_url"></id>
+        <updated tal:define="comment_date comment/comment_date"
+                 tal:content="python:atom_date_format(comment_date)"></updated>
+        <summary type="html" tal:content="comment/message"></summary>
+        <link tal:define="url python:'%s#%s' % (
+                                comment.get_section().absolute_url(),
+                                comment.get_paragraph().get_anchor())"
+              tal:attributes="href url"
+              rel="alternate" />
+    </entry>
+    </tal:block>
+
+</feed>
