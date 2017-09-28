@@ -1,0 +1,10 @@
+<tal:block metal:define-macro="portlet">
+<div class="middle-portlet">
+<div><h4 class="center-portlet-title"><tal:block metal:define-slot="portlet_title">PORTLET TITLE</tal:block></h4></div>
+<div class="center-portlet-content">
+<tal:block metal:define-slot="portlet_content">PORTLET CONTENT</tal:block>
+</div>
+<div class="middle-portlet-footer">
+</div>
+</div>
+</tal:block>
