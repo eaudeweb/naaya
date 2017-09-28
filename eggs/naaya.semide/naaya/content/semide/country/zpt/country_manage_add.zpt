@@ -1,0 +1,62 @@
+<tal:block metal:use-macro="template/macro_manage_add/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Fill the properties in the form below and click <strong>Add</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<tr>
+	<td class="form-label">Upload flag</td>
+	<td>
+		<input type="radio" name="source" value="file" checked="checked" />
+		File
+		<input type="file" name="flag_file" size="40" value="" />
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td>
+		<input type="radio" name="source" value="url" />
+		Url
+		<input type="text" name="flag_url" size="40" value="" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">NFP short label</td>
+	<td><input type="text" name="nfp_label" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">NFP URL</td>
+	<td><input type="text" name="nfp_url" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Institutions URL</td>
+	<td><input type="text" name="link_ins" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Documentation URL</td>
+	<td><input type="text" name="link_doc" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Training URL</td>
+	<td><input type="text" name="link_train" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Research &amp; Development URL</td>
+	<td><input type="text" name="link_rd" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Data management URL</td>
+	<td><input type="text" name="link_data" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Legislation on Water RSS feed URL</td>
+	<td><input type="text" name="legislation_feed_url" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Project Water RSS feed URL</td>
+	<td><input type="text" name="project_feed_url" size="50" value="http://" /></td>
+</tr>
+</tal:block>
+
+</tal:block>

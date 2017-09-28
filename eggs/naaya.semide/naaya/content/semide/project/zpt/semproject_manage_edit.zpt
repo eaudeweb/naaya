@@ -1,0 +1,63 @@
+<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<tr>
+	<td class="form-label" valign="top">Project number</td>
+	<td><input type="text" name="pr_number" id="pr_number" tal:attributes="value here/pr_number" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Subject</td>
+	<td>
+		<select name="subject" id="subject" multiple="multiple" size="6">
+			<tal:block repeat="item python:here.getPortalThesaurus().getThemesList(here.gl_get_selected_language())">
+				<option tal:condition="item/theme_name"
+						tal:attributes="value item/theme_id;
+										selected python:item.theme_id in here.subject"
+						tal:content="item/theme_name" />
+				<option tal:condition="not:item/theme_name"
+						tal:attributes="value item/theme_id;
+										selected python:item.theme_id in here.subject"
+						i18n:translate="">no translation available</option>
+			</tal:block>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Acronym</td>
+	<td><input type="text" name="acronym:utf8:ustring" id="acronym" size="50" tal:attributes="value here/acronym" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Budget</td>
+	<td><input type="text" name="budget" id="budget" tal:attributes="value here/budget" /> &euro;</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Programme</td>
+	<td><input type="text" name="programme:utf8:ustring" id="programme" size="50" tal:attributes="value here/programme" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Web site (URL)</td>
+	<td><input type="text" name="resourceurl" id="resourceurl" size="50" tal:attributes="value here/resourceurl" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Objectives</td>
+	<td><input type="text" name="objectives:utf8:ustring" id="objectives" size="50" tal:attributes="value here/objectives" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Results</td>
+	<td><input type="text" name="results:utf8:ustring" id="results" size="50" tal:attributes="value here/results" /></td>
+</tr>
+<tr>
+	<td class="form-label">Start date (<em>dd/mm/yyyy</em>)</td>
+	<td><input type="text" name="start_date" size="10" id="start_date" tal:attributes="value python:here.utConvertDateTimeObjToString(here.start_date)" /></td>
+</tr>
+<tr>
+	<td class="form-label">End date (<em>dd/mm/yyyy</em>)</td>
+	<td><input type="text" name="end_date" size="10" id="end_date" tal:attributes="value python:here.utConvertDateTimeObjToString(here.end_date)" /></td>
+</tr>
+</tal:block>
+
+</tal:block>

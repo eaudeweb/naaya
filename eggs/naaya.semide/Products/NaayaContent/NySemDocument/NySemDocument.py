@@ -1,0 +1,1 @@
+from naaya.content.semide.document.semdocument_item import NySemDocument
