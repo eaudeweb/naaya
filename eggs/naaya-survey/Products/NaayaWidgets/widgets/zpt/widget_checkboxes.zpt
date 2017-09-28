@@ -1,0 +1,70 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+    widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python:test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    ">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget">
+	<strong tal:content="nonEmptyTitle" class="widget-title" />
+	<br />
+	<ul tal:attributes="id widget_id" tal:condition="datamodel">
+		<li tal:repeat="answer python:[here.getChoices()[i] for i in datamodel]">
+			<span tal:replace="answer" />
+		</li>
+	</ul>
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
+		-
+	</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);
+	             datamodel python:test(datamodel is None, [], datamodel)">
+	<label tal:attributes="for widget_id" class="widget-title">
+		<span tal:content="nonEmptyTitle" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
+	<tal:block repeat="choice python: here.getChoices(anyLangNonEmpty=True)">
+		<tal:block define="choice_idx repeat/choice/index;
+		                   input_id python:'%s_%d' % (widget_id, choice_idx);">
+			<input type="checkbox" tal:attributes="
+				value choice_idx;
+				name string:${widget_id}:list;
+				id input_id;
+				checked python:choice_idx in datamodel"/>
+			<label tal:attributes="for input_id" tal:content="choice">Choice</label>
+		</tal:block>
+		<br tal:condition="python:here.display == 'vertical'" />
+	</tal:block>
+</div>
+
+<!-- Edit widget properties -->
+<metal:block use-macro="here/multiplechoice_render_meth/macros/manage">
+	<!-- Custom fields -->
+	<metal:block fill-slot="custom_fields">
+		<!-- Display mode -->
+		<div class="field">
+			<label for="display" i18n:translate="">Display mode</label>
+			<select id="display" name="display">
+				<tal:block repeat="mode here/display_modes">
+					<option tal:content="mode"  tal:attributes="
+						value mode;
+						selected python:test(mode == here.display, 'selected', None)"/>
+				</tal:block>
+			</select>
+		</div>
+	</metal:block>
+</metal:block>
+
+</tal:block>

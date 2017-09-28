@@ -1,0 +1,104 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
+<h1><span i18n:translate="">Survey report:</span> <span tal:replace="here/title" /></h1>
+
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit report</span></a>
+</div>
+
+<div id="admin_this_folder">
+	<form method="post" action=".">
+		<label for="question" i18n:translate="">Question</label>
+		<select id="question" name="question">
+			<tal:block repeat="widget python:here.getSortedWidgets()">
+				<option tal:attributes="value widget/getId" tal:content="python:widget.title[:100]"></option>
+			</tal:block>
+		</select>
+		<br />
+
+		<span i18n:translate="">Statistic type</span><br />
+		<tal:block repeat="statistic here/getAvailableStatistics">
+			<tal:block define="input_id string:meta_type_${repeat/statistic/index}">
+			<div class="field-inline">
+				<input type="radio" name="meta_type"
+				       tal:attributes="id input_id;
+				                       value statistic/meta_type" />
+				<label tal:attributes="for input_id" 
+				       tal:content="statistic/meta_label"
+				       i18n:translate="" />
+			</div>
+				<span tal:content="statistic/meta_description" i18n:translate=""></span>
+
+			</tal:block>
+		</tal:block>
+		<br />
+
+		<input class="submission_button" type="submit" name="addStatistic:method" value="Add statistic" i18n:attributes="value" />
+	</form>
+</div>
+
+
+<!-- statistics management table -->
+
+<form name="objectItems" method="post" action="." tal:define="
+	objects here/getSortedStatistics|python:[]"
+	tal:condition="objects">
+
+<div id="toolbar">
+	<input type="submit" value="Delete" name="deleteStatistics:method"
+		onclick="javascript:return window.confirm('Are you sure?')"
+		i18n:attributes="value" />
+	<input type="submit" value="Set sort order" i18n:attributes="value"
+	       name="setSortOrder:method" />
+</div>
+
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+
+<tr>
+	<th class="checkbox" style="width: 4%;">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
+	<th class="type" style="width: 4%;" i18n:translate="Type (translate as a noun)">Type</th>
+	<th class="title-column" i18n:translate="">Title</th>
+	<th class="type" style="width: 8%;" i18n:translate="">Sort order</th>
+</tr>
+
+<tr tal:repeat="object objects">
+	<td class="checkbox" style="width: 4%; vertical-align: top;">
+		<input type="checkbox" name="ids:list" 
+			tal:attributes="value object/getId" />
+	</td>
+	<td class="type" style="width: 4%;">
+		<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
+		     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+	</td>
+	<td class="title-column" tal:content="object/question/title_or_id">
+	</td>
+	<td class="edit">
+		<input type="text" size="3"
+		       tal:attributes="name string:${object/getId}:int;
+		                       value object/sortorder" />
+	</td>
+</tr>
+
+</table>
+
+</form>
+
+</metal:block>
+</metal:block>

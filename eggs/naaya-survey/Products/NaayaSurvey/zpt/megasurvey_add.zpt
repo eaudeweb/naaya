@@ -1,0 +1,161 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<div class="floated-buttons">
+	<span class="buttons">
+		<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
+	</span>
+</div>
+<h1 i18n:translate="">Submit Survey</h1>
+
+<p i18n:translate="">Fill the properties in the form below and click <strong i18n:name="submit" i18n:translate="">Submit</strong>.</p>
+
+
+<script type="text/javascript">
+<!--
+function fPick(glossary_url)
+{
+	var frm = document.frmAdd;
+	var wnd = window.open(glossary_url + '&amp;lang=' + frm.lang[frm.lang.selectedIndex].value, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmAdd;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		if (items.value == '')
+			items.value = value;
+		else
+			items.value = items.value + ', ' + value;
+	}
+}
+// -->
+</script>
+
+<form name="frmAdd" method="post" action="." enctype="multipart/form-data">
+	<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+		<label i18n:translate="" for="lang">Posting language</label>
+		<select name="lang" id="lang">
+			<option tal:repeat="item here/gl_get_languages_mapping"
+			        tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+			        tal:content="python:item['name']" />
+		</select>
+	</div>
+	<div class="field">
+		<label for="title" i18n:translate="">Title</label>
+		<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
+	</div>
+	<div class="field">
+		<label for="description" i18n:translate="">Description</label>
+		<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description')" />
+		<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+	</div>
+	<div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
+		<label for="coverage" i18n:translate="">Geographical coverage</label>
+		<tal:block tal:condition="python:coverage_glossary is None">
+			<p><strong i18n:translate="">Tip:</strong> <span i18n:translate="">in order to specify more values, separate them by commas</span></p>
+		</tal:block>
+		<tal:block tal:condition="python:coverage_glossary is not None">
+			<p ><strong i18n:translate="">Tip</strong>:<tal:block i18n:translate=""> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</tal:block></p>
+		</tal:block>
+		<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:define="default_geographical_coverage python: getattr(here, 'default_geographical_coverage', '')"
+			tal:attributes="value python:test(default_geographical_coverage, default_geographical_coverage, here.getSession('coverage', ''))" />
+		<tal:block tal:condition="python:coverage_glossary is not None">
+			<label for="pick-coverage" class="invisible" i18n:translate="">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');" />
+		</tal:block>
+	</div>
+	<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
+		<label for="keywords" i18n:translate="">Keywords</label>
+		<tal:block tal:condition="python:keywords_glossary is not None">
+			<p ><strong i18n:translate="">Tip</strong>:<tal:block i18n:translate=""> you can type free text in the field below or pick words from the list</tal:block></p>
+		</tal:block>
+		<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', '')" />
+		<tal:block tal:condition="python:keywords_glossary is not None">
+			<label for="pick-keywords" class="invisible" i18n:translate="">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords');" />
+		</tal:block>
+	</div>
+	<div class="field">
+		<label for="releasedate" i18n:translate="">First day</label>
+		<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
+	</div>
+	<!-- Document expiration date -->
+	<div class="field">
+		<label for="expirationdate" i18n:translate="">Last day</label>
+		<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="20" tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(DateTime() + 30))" />
+	</div>
+	<!-- Notify owner -->
+	<div class="field">
+		<label for="notify_owner" i18n:translate="">Notify owner when someone takes the survey</label>
+		<select id="notify_owner" name="notify_owner:boolean" tal:define="notify_owner python:here.getSession('notify_owner', True)">
+			<option value="True" tal:attributes="selected notify_owner" i18n:translate="">Yes</option>
+			<option value="False" tal:attributes="selected not:notify_owner" i18n:translate="">No</option>
+		</select>
+	</div>
+	<!-- Notify respondents -->
+	<div class="field">
+		<label for="notify_respondents" i18n:translate="">Email answer to respondents</label>
+		<select id="notify_respondents" name="notify_respondents:string" tal:define="notify_respondents python:here.getSession('notify_respondents', 'NOTIFY_RESPONDENTS_LET_THEM_CHOOSE_YES')">
+			<option value="ALWAYS" tal:attributes="selected python:notify_respondents == 'ALWAYS'" i18n:translate="">Always</option>
+			<option value="NEVER" tal:attributes="selected python:notify_respondents == 'NEVER'" i18n:translate="">Never</option>
+			<option value="LET_THEM_CHOOSE_YES" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_YES'" i18n:translate="">Let them choose (default is yes)</option>
+			<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
+		</select>
+	</div>
+	<!-- Allow overtime -->
+	<div class="field">
+		<label for="allow_overtime" i18n:translate="">
+			Allow posting answers after the survey expiration date
+		</label>
+		<select id="allow_overtime" name="allow_overtime">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
+	<!-- Allow multiple answers -->
+	<div class="field">
+		<label for="allow_multiple_answers" i18n:translate="">
+			Authenticated users can respond more than one time
+		</label>
+		<select id="allow_multiple_answers" name="allow_multiple_answers">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
+	<!-- Allow drafts -->
+	<div class="field">
+		<label for="allow_drafts" i18n:translate="">
+			Allow users to save drafts of their answers?
+		</label>
+		<select id="allow_drafts" name="allow_drafts">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
+	<!-- Allow Anonymous answers -->
+	<div class="field">
+		<label for="allow_anonymous" i18n:translate="">
+			Allow registered users to submit anonymous answers?
+		</label>
+		<select id="allow_anonymous" name="allow_anonymous">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
+
+	<!-- Submit buttons-->
+	<div class="field">
+		<input type="hidden" name="redirect_url" value="index_html" />
+		<input type="submit" value="Save changes" i18n:attributes="value"
+			tal:attributes="name string:manage_addMegaSurvey:method"/>
+	</div>
+</form>
+
+<tal:block tal:replace="structure here/standard_html_footer"/>

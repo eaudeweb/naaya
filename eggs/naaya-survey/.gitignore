@@ -1,0 +1,5 @@
+*.pyc
+
+/naaya_survey.egg-info
+
+/sys$command

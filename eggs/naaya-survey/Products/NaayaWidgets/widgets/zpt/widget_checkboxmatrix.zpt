@@ -1,0 +1,84 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+	widget_id here/getWidgetId;
+    nonEmptyTitle python:test(here.title, here.title,
+        here.getNonEmptyAttribute('title'));
+    nonEmptyTooltips python: test(here.tooltips, here.tooltips,
+        here.getNonEmptyAttribute('tooltips'));
+    nonEmptyRows python: test(here.rows, here.rows,
+        here.getNonEmptyAttribute('rows'));
+    nonEmptyChoices python: here.getChoices(anyLangNonEmpty=True);
+    ">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxMatrixWidget">
+	<table class="datatable" tal:condition="datamodel">
+		<caption tal:content="nonEmptyTitle"></caption>
+		<tbody>
+			<tr tal:repeat="row nonEmptyRows">
+				<th scope="row" class="scope-row" tal:content="row">row</th>
+				<td tal:define="checked_choices python:datamodel[repeat['row'].index]">
+					<ul tal:condition="checked_choices">
+						<li tal:repeat="choice_idx checked_choices">
+							<span tal:replace="python:here.choices[choice_idx]">answer</span>
+						</li>
+					</ul>
+					<span tal:condition="not: checked_choices" i18n:translate="" class="no-response">
+						-
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<tal:block condition="not: datamodel">
+		<strong tal:content="nonEmptyTitle" class="widget-title" />
+		<br />
+		<span class="no-response" i18n:translate="">-</span>
+	</tal:block>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);">
+	<label tal:attributes="for widget_id" class="widget-title">
+		<span tal:content="nonEmptyTitle" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="structure nonEmptyTooltips" />
+	<table>
+		<thead>
+			<tr>
+				<th></th>
+				<tal:block repeat="choice nonEmptyChoices">
+					<th style="text-align: center" tal:content="choice">Choice</th>
+				</tal:block>
+			</tr>
+		</thead>
+		<tbody>
+			<tal:block repeat="row nonEmptyRows">
+				<tr tal:define="row_idx repeat/row/index">
+					<th tal:content="row">Row</th>
+                    <tal:block repeat="choice nonEmptyChoices">
+						<td style="text-align: center" tal:define="choice_idx repeat/choice/index">
+							<input type="checkbox" tal:attributes="
+							    name python:'%s_%d:list' % (widget_id, row_idx);
+							    checked python:datamodel and choice_idx in datamodel[row_idx];
+							    value choice_idx;"/>
+						</td>
+					</tal:block>
+				</tr>
+			</tal:block>
+		</tbody>
+	</table>
+</div>
+
+<!-- Edit widget properties -->
+<metal:block use-macro="here/matrix_render_meth/macros/manage">
+</metal:block>
+
+</tal:block>

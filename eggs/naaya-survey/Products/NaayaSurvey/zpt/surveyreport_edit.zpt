@@ -1,0 +1,57 @@
+<tal:block define="
+	lang request/lang|here/gl_get_selected_language;
+	languages languages|here/gl_get_languages_mapping;
+	title python:here.getSession('title', here.getLocalProperty('title', lang));
+	description python:here.getSession('description', here.getLocalProperty('description', lang));
+">
+<tal:block tal:replace="structure here/standard_html_header"/>
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<h1 i18n:translate="">Edit Survey Report</h1>
+
+<p i18n:translate="">Change the properties in the form below and click <strong i18n:name="save_changes" i18n:translate="">Save changes</strong>.</p>
+
+<!-- Translation bar on top -->
+<div class="translate" metal:define-macro="translation_bar">
+	<span i18n:translate="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+	<div class="current" tal:condition="python:language['code'] == lang">
+	<span tal:content="python:language['name']" i18n:translate="" />
+		</div>
+		<a tal:condition="python:language['code'] != lang"
+			tal:attributes="href string:edit_html?lang=${language/code}; title python:language['name']">
+		<span tal:content="python:language['name']" i18n:translate="" />
+		</a>
+	</tal:block>
+</div>
+
+<form name="frmEdit" method="post" action=".">
+<div class="field">
+	<label for="title">
+		<span i18n:translate="">Title</span>
+		<span class="mandatory_field"> *</span>
+	</label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value title" />
+</div>
+<div class="field" tal:define="editor here/getEditorTool">
+	<label for="description" i18n:translate="">Description</label>
+	<span tal:replace="structure python:editor.render('description', image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="description" />
+</div>
+<div class="field">
+	<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />
+	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method" />
+</div>
+</form>
+
+<!-- Translation bar on bottom -->
+<div metal:use-macro="here/edit_html/macros/translation_bar" />
+
+<tal:block tal:replace="structure here/standard_html_footer"/>
+</tal:block>

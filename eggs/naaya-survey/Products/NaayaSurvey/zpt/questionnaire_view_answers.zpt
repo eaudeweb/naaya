@@ -1,0 +1,103 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked);
+		title here/meta_label;
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<div tal:condition="here/description" tal:content="structure here/description" />
+
+<div class="buttons" tal:condition="here/checkPermissionViewAnswers">
+	<a tal:attributes="href string:${here/absolute_url}/download?file_type=CSV" i18n:translate="">Download as CSV</a>
+	<a tal:condition="python:here.rstk.we_provide('Excel export')"
+        tal:attributes="href string:${here/absolute_url}/download?file_type=Excel" i18n:translate="">
+        Download as Excel
+    </a>
+</div>
+
+<tal:block define="can_edit here/checkPermissionEditAnswers;
+					auth_tool python:here.getSite().getAuthenticationTool()">
+<tal:block define="answers python:here.getAnswers()">
+	<tal:block condition="answers">
+		<p><span i18n:translate="">List of answers</span> (<tal:block replace="python:len(answers)"/> <span i18n:translate="">answers</span>)</p>
+		<ol>
+			<tal:block repeat="answer answers">
+				<li>
+					<a tal:attributes="href answer/absolute_url" i18n:translate="">
+						Answered by
+						<tal:block replace="answer/get_respondent_name"
+							i18n:name="respondent">respondent name</tal:block>
+						on
+						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)" i18n:name="answer-date">date</tal:block>
+					</a>
+					<span tal:condition="can_edit">(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
+				</li>
+			</tal:block>
+		</ol>
+	</tal:block>
+	<tal:block condition="not: answers">
+		<p i18n:translate="">There are no answers.</p>
+	</tal:block>
+</tal:block>
+<tal:block condition="can_edit">
+<tal:block define="drafts python:here.getAnswers(draft=True)">
+	<tal:block condition="drafts">
+		<p><span i18n:translate="">List of drafts</span> (<tal:block replace="python:len(drafts)"/> <span i18n:translate="">drafts</span>)</p>
+		<ol>
+			<tal:block repeat="draft drafts">
+				<li>
+					<a tal:attributes="href draft/absolute_url" i18n:translate="">
+						Draft by
+						<tal:block replace="draft/get_respondent_name"
+							i18n:name="respondent">respondent name</tal:block>
+						on
+						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)" i18n:name="answer-date">date</tal:block>
+					</a>
+					<span tal:condition="can_edit">(<a tal:attributes="href string:${draft/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
+				</li>
+			</tal:block>
+		</ol>
+	</tal:block>
+	<tal:block condition="not: drafts">
+		<p i18n:translate="">There are no drafts.</p>
+	</tal:block>
+</tal:block>
+</tal:block>
+<tal:block condition="not: can_edit">
+<tal:block define="my_drafts python:here.getMyAnswer(multiple=True, draft=True)"
+	condition="my_drafts">
+		<p><span i18n:translate="">My drafts</span> (<tal:block replace="python:len(my_drafts)"/> <span i18n:translate="">drafts</span>)</p>
+		<ol>
+			<tal:block repeat="draft my_drafts">
+				<li>
+					<a tal:attributes="href draft/absolute_url" i18n:translate="">
+						Draft on
+						<tal:block replace="python: here.utShowFullDateTime(draft.modification_time)" i18n:name="answer-date">date</tal:block>
+					</a>
+					<span>(<a tal:attributes="href string:${draft/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
+				</li>
+			</tal:block>
+		</ol>
+</tal:block>
+</tal:block>
+</tal:block>
+
+</metal:block>
+</metal:block>
