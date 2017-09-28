@@ -1,0 +1,11 @@
+<configure 
+    xmlns="http://namespaces.zope.org/zope" 
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <include package="destinet.publishing" />
+    <include package="destinet.keywords" />
+    <include package="destinet.roles" />
+    <include package="destinet.registration" />
+    <include package="destinet.geomap_tool" />
+
+</configure>
