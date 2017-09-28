@@ -1,0 +1,44 @@
+<tal:block replace="structure here/standard_html_header" />
+
+<script type="text/javascript"
+        tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript"
+        tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript"
+        tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1 i18n:translate="">Photo submission</h1>
+
+<p i18n:translate="">Select an image or zip file to upload.</p>
+
+<form action="." name="frmUpload" class="photo-upload-form" method="post" enctype="multipart/form-data">
+
+<div class="field-inline">
+    <label class="widget-title" for="upload_file"
+           i18n:translate="">Upload file</label>
+    <input type="file" id="upload_file" name="upload_file"
+           class="gallery-input" size="15"/>
+</div>
+
+<br/>
+<br/>
+<br/>
+
+<p i18n:translate="">
+    The metadata below will be set on all photos you are now uploading.
+    Leave title empty to use the filename.
+</p>
+
+<!-- Schema properties -->
+<tal:block repeat="form_item options/form_items">
+    <tal:block replace="structure form_item/html" />
+</tal:block>
+
+<input class="gallery-input" type="submit" value="Upload"
+       name="uploadPhotoOrZip:method" />
+
+</form>
+
+<tal:block content="structure template/cc_license_template" />
+
+<tal:block replace="structure here/standard_html_footer" />
