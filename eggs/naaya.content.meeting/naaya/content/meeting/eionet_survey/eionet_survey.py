@@ -1,4 +1,4 @@
-EIONET_MEETINGS = ['NRC meeting', 'NRC webinar', 'NFP neeting', 'NFP webinar']
+EIONET_MEETINGS = ['NRC meeting', 'NRC webinar', 'NFP meeting', 'NFP webinar']
 EIONET_SURVEYS = {
     'NFP meeting': {
         'id': 'eionet-survey-nfp-meeting',
