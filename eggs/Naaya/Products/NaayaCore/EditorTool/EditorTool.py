@@ -84,7 +84,7 @@ class EditorTool(Folder):
         return (
             '<script type="text/javascript" language="javascript" '
             'src="{path}/jquery.tinymce.min.js"></script>'
-       ).format(path=TINY_MCE_PATH.format(base_url=self.absolute_url()))
+        ).format(path=TINY_MCE_PATH.format(base_url=self.absolute_url()))
 
     security.declarePublic('additional_styles')
 
@@ -189,13 +189,14 @@ class EditorTool(Folder):
         base_url = self.absolute_url()
 
         cfg.update({
-            'select_image_url': '{}/select_image?document={}'.format(
+            'select_image_url': '{0}/select_image?document={1}'.format(
                 base_url, doc_url),
-            'edit_image_url': '{}/prepare_image?mode=edit&document={}'.format(
-                base_url, doc_url),
-            'link_popup_url': '{}/select_link'.format(self.absolute_url()),
+            'edit_image_url':
+                '{0}/prepare_image?mode=edit&document={1}'.format(
+                    base_url, doc_url),
+            'link_popup_url': '{0}/select_link'.format(self.absolute_url()),
             'element_id': element,
-            'script_url': '{}/tinymce.min.js'.format(
+            'script_url': '{0}/tinymce.min.js'.format(
                 TINY_MCE_PATH.format(base_url=self.absolute_url())
             ),
             'site_url': self.getSite().absolute_url(),
