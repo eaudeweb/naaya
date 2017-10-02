@@ -1,4 +1,7 @@
-4.1.11 (unreleased)
+4.2.1 (unreleased)
+-------------------
+
+4.2.0 (2017-10-02)
 -------------------
 * upgrade tinymce to version 4.6.6 [batradav]
 * allow map objects export in CSV, next to Excel [dumitval]
