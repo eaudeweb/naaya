@@ -1,5 +1,6 @@
 1.2.94 (unreleased)
 -------------------
+* typo fix in automatic survey templates [dumitval]
 
 1.2.93 (2016-09-20)
 -------------------
