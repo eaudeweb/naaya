@@ -1,4 +1,7 @@
-1.2.94 (unreleased)
+1.2.95 (unreleased)
+-------------------
+
+1.2.94 (2017-10-02)
 -------------------
 * typo fix in automatic survey templates [dumitval]
 
