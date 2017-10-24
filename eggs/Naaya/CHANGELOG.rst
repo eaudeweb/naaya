@@ -1,5 +1,6 @@
 4.2.1 (unreleased)
 -------------------
+* add unidecode method to covert to ascii [dumitval]
 
 4.2.0 (2017-10-02)
 -------------------

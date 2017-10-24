@@ -87,6 +87,10 @@
         getattrPatch="yes" />
 
     <naaya:rstkMethod
+        handler=".zope2util.uni_decode"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
         handler=".zope2util.we_provide"
         getattrPatch="yes" />
 

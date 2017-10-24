@@ -12,6 +12,7 @@ import sys
 import sha
 import types
 import urllib
+from unidecode import unidecode
 import simplejson as json
 from decimal import Decimal
 
@@ -82,6 +83,13 @@ def json_dumps(obj):
     Convert a Python object to JSON
     """
     return json.dumps(obj, default=json_default)
+
+
+def uni_decode(text):
+    """
+    Convert a unicode string to ascii (closest letter based on unidecode)
+    """
+    return unidecode(text)
 
 
 json_loads = json.loads  # needed for ZCML registration of RSTK method
@@ -366,7 +374,7 @@ def dt2DT(date):
     timezone = args[7].utcoffset(date)
     secs = timezone.seconds
     days = timezone.days
-    hours = secs/3600 + days*24
+    hours = secs / 3600 + days * 24
     mod = "+"
     if hours < 0:
         mod = ""
@@ -381,7 +389,7 @@ def DT2dt(date):
     # seconds (parts[6]) is a float, so we map to int
     args = map(int, date.parts()[:6])
     args.append(0)
-    args.append(UnnamedTimeZone(int(date.tzoffset()/60)))
+    args.append(UnnamedTimeZone(int(date.tzoffset() / 60)))
     return datetime.datetime(*args)
 
 
@@ -479,7 +487,7 @@ def relative_object_path(obj, ancestor):
 
     if not obj_path.startswith(ancestor_path):
         raise ValueError('My path is not in the site. Panicking.')
-    return obj_path[len(ancestor_path)+1:]
+    return obj_path[len(ancestor_path) + 1:]
 
 
 def ofs_path(obj):
@@ -552,7 +560,7 @@ def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
 def simple_paginate(items, per_page=4):
     output = []
     for offset in xrange(0, len(items), per_page):
-        output.append(items[offset:offset+per_page])
+        output.append(items[offset:offset + per_page])
     return output
 
 
