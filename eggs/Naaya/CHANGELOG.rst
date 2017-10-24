@@ -1,4 +1,7 @@
-4.2.1 (unreleased)
+4.2.2 (unreleased)
+-------------------
+
+4.2.1 (2017-10-24)
 -------------------
 * add unidecode method to covert to ascii [dumitval]
 
