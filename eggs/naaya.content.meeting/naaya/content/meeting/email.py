@@ -48,7 +48,7 @@ def configureEmailNotifications(site):
         {'id': 'naaya.content.meeting.email_account_subscription_rejected',
          'title': 'Account subscription rejected',
          'file': 'zpt/email_account_subscription_rejected.zpt'},
-        ]
+    ]
     email_tool = site.getEmailTool()
     for t in templates:
         f = open(os.path.join(os.path.dirname(__file__), t['file']), 'r')
@@ -409,7 +409,7 @@ class EmailSender(SimpleItem):
             check_values[key] = archived_email[key]
         return _mail_in_queue(self.getSite(), filename, check_values)
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'searchUsers')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsers')
 
     def findUsers(self, search_param, search_term):
         """ """
