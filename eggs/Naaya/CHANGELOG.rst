@@ -1,5 +1,6 @@
 4.2.2 (unreleased)
 -------------------
+* fix media converters not finding ffmpeg [dumitval]
 
 4.2.1 (2017-10-24)
 -------------------

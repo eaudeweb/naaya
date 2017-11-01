@@ -32,13 +32,13 @@ def media2mp4(mediafile):
     log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
 
     o_width, o_height = get_resolution(tcv_path)
-    ratio = o_width/o_height
+    ratio = o_width / o_height
     if o_height > 720:
-        width = int(ratio*720)/16*16
+        width = int(ratio * 720) / 16 * 16
         height = 720
     else:
-        width = int(o_width)/16*16
-        height = int(o_height)/16*16
+        width = int(o_width) / 16 * 16
+        height = int(o_height) / 16 * 16
     cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
            "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
            "-c:a", "libfdk_aac", "-q:a", "100", "-f", "mp4", cvd_path]
@@ -99,7 +99,7 @@ def _get_convertor_tool():
     a MediaConverterError exception will be raised.
 
     """
-    tools = ['ffmpeg', 'avconv']
+    tools = ['/usr/local/bin/ffmpeg', 'ffmpeg', 'avconv']
 
     for tool in tools:
         try:
