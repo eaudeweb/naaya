@@ -16,7 +16,7 @@ def _cron_geolocate(site, heartbeat):
     # per day so when reached we need to wait a day
     when = heartbeat.when
     previous = getattr(site, 'previous_geolocation', None)
-    if not previous or when > previous + timedelta(days=1):
+    if not previous or when > previous + timedelta(hours=1):
         geolocate_queue(site)
 
 
@@ -39,7 +39,7 @@ def geolocate_queue(site):
                 # Google also restricts requests per second, so we need
                 # to be careful for this, too
                 time.sleep(2)
-                lat, lon = geocoding.location_geocode(address)
+                lat, lon = geocoding.location_geocode(address.encode('utf-8'))
                 if lat and lon:
                     obj.geo_location = Geo(lat, lon, address)
                 site.geolocation_queue.remove(site_path)
@@ -48,7 +48,7 @@ def geolocate_queue(site):
                          (lat, lon, address))
                 transaction.commit()
             except GeocoderServiceError, e:
-                if 'ZERO_RESULTS' in e.message:
+                if 'ZERO_RESULTS' in e.args[0]:
                     LOG.info('coodrdinates not found for %s' % address)
                     site.geolocation_queue.remove(site_path)
                 else:
