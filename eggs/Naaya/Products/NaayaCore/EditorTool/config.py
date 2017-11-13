@@ -88,6 +88,8 @@ _DEFAULT = {
                 'alignleft aligncenter alignright alignjustify | '
                 'forecolor backcolor | removeformat',
 
+    'fontsize_formats': '8pt 10pt 11pt 12pt 14pt 18pt 24pt 36pt',
+
     'style_formats': [
         {
             'title': 'Box',
@@ -97,8 +99,8 @@ _DEFAULT = {
     ],
     'style_formats_merge': True,
 
-    'plugins': 'compat3x advlist autolink lists advlink advimage charmap print '
-               'preview hr anchor pagebreak searchreplace wordcount '
+    'plugins': 'compat3x advlist autolink lists advlink advimage charmap print'
+               ' preview hr anchor pagebreak searchreplace wordcount '
                'visualblocks visualchars code fullscreen code insertdatetime '
                'media nonbreaking table contextmenu directionality '
                'template paste textcolor colorpicker textpattern '

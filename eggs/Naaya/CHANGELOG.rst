@@ -1,5 +1,6 @@
 4.2.2 (unreleased)
 -------------------
+* add font size configuration to TinyMce [dumitval]
 * prepare for google maps API key (ENV) [dumitval]
 * improve async geolocation [dumitval]
 * fix media converters not finding ffmpeg [dumitval]
