@@ -9,6 +9,7 @@ from AccessControl.Permissions import change_permissions
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
 from naaya.core.zope2util import getExtConfiguration as getConfiguration
+from naaya.core.zope2util import get_zope_env
 from Globals import DTMLFile
 from Globals import InitializeClass
 from NyFolder import folder_add_html, addNyFolder, importNyFolder
@@ -4964,5 +4965,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def get_notify_on_errors_email(self):
         return (self.buildout_notify_on_errors_email() or
                 self.notify_on_errors_email)
+
+    def get_zope_env(self, key):
+        return get_zope_env(key)
 
 InitializeClass(NySite)

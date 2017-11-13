@@ -746,9 +746,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             return 2, []
 
-    def get_zope_env(self, key):
-        return get_zope_env(key)
-
     security.declareProtected(manage_users, 'get_local_usernames')
 
     def get_local_usernames(self):
