@@ -120,55 +120,6 @@
 
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-        <!--<form id="search_form" action=".">
-          <div class="search-block">
-            <div class="field">
-              <label for="subject" i18n:translate="">Subject</label>
-              <input type="text" id="subject" name="subject:utf8:ustring" />
-            </div>
-
-            <div class="field">
-              <label for="date" i18n:translate="">Date</label>
-              <input type="text" id="date" name="date:utf8:ustring" />
-            </div>
-          </div>
-          <div class="search-block">
-            <div class="field">
-              <label for="esp_nom_com" i18n:translate="">Esp nom com</label>
-              <input type="text" id="esp_nom_com" name="esp_nom_com:utf8:ustring" />
-            </div>
-
-            <div class="field">
-              <label for="esp_nom_lat" i18n:translate="">Esp nom lat</label>
-              <input type="text" id="esp_nom_lat" name="esp_nom_lat:utf8:ustring" />
-            </div>
-          </div>
-          <div class="search-block">
-            <div class="field">
-              <label for="park" i18n:translate="">Park</label>
-              <select id="park" name="park:utf8:ustring">
-                <option value="" i18n:translate="">All parks</option>
-                <option tal:repeat="park here/get_parks"
-                  tal:attributes="value park/code" tal:content="park/name" />
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="author" i18n:translate="">Author</label>
-              <select id="author" name="author:utf8:ustring">
-                <option value="" i18n:translate="">All authors</option>
-                <option tal:repeat="author here/get_authors"
-                  tal:attributes="value author/code" tal:content="author/name"/>
-              </select>
-            </div>
-          </div>
-          <div class="field clearer">
-            <input type="hidden" id="submit" name="submit" />
-            <input type="submit" i18n:attributes="value" value="Search"
-              style="margin-top: 0px;" />
-          </div>
-        </form>-->
-
         <style tal:condition="here/checkPermissionPublishObjects">
           table tbody tr td:first-child{
             word-break: break-all;
