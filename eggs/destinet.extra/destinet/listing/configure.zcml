@@ -1,0 +1,19 @@
+<configure xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:zope="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+    <naaya:simpleView
+        for="*"
+        name="get_content"
+        handler=".listing.get_content"
+        permission="zope.Public" />
+
+    <naaya:simpleView
+        for="*"
+        name="get_object_types"
+        handler=".listing.get_object_types"
+        permission="zope.Public" />
+
+</configure>

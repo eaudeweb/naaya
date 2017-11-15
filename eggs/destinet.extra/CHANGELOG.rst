@@ -1,5 +1,6 @@
 1.2.24 - (unreleased)
 =======================
+* first stage of custom folder listings [dumtival]
 
 1.2.23 - (2017-05-23)
 =======================

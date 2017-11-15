@@ -4,6 +4,7 @@
 
     <include package="destinet.publishing" />
     <include package="destinet.keywords" />
+    <include package="destinet.listing" />
     <include package="destinet.roles" />
     <include package="destinet.registration" />
     <include package="destinet.geomap_tool" />
