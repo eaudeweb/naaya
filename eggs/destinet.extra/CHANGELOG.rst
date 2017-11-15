@@ -1,4 +1,7 @@
-1.2.24 - (unreleased)
+1.2.25 - (unreleased)
+=======================
+
+1.2.24 - (2017-11-15)
 =======================
 * first stage of custom folder listings [dumtival]
 
