@@ -128,3 +128,15 @@ def get_content(context, request):
         'recordsTotal': len(all_objects),
         'recordsFiltered': len(objects),
     })
+
+
+def change_to_english(context, request):
+    """
+    Change to english if the user didn't specifically change to another
+    language.
+    Called in the standard template, it only applies for specific users
+    """
+    if not request.cookies.get('LOCALIZER_LANGUAGE'):
+        context.getSite().portal_i18n.get_negotiator().change_language(
+            'en', context, request)
+    return

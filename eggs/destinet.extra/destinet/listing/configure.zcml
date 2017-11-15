@@ -16,4 +16,10 @@
         handler=".listing.get_object_types"
         permission="zope.Public" />
 
+    <naaya:simpleView
+        for="*"
+        name="change_to_english"
+        handler=".listing.change_to_english"
+        permission="zope.Public" />
+
 </configure>

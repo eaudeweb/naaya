@@ -1,5 +1,6 @@
 1.2.25 - (unreleased)
 =======================
+* add possibility to always change to english (herbert's request) [dumitval]
 
 1.2.24 - (2017-11-15)
 =======================
