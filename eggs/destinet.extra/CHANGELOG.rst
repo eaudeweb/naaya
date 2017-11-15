@@ -1,4 +1,7 @@
-1.2.25 - (unreleased)
+1.2.26 - (unreleased)
+=======================
+
+1.2.25 - (2017-11-15)
 =======================
 * add possibility to always change to english (herbert's request) [dumitval]
 
