@@ -1,9 +1,8 @@
 import calendar
 from time import localtime
 from datetime import datetime, date
-
-#Can we lose this please?
 from DateTime import DateTime
+
 
 class DateFunctions(object):
     """ date functions """
@@ -12,16 +11,15 @@ class DateFunctions(object):
     #   CONSTANTS   #
     #################
 
-    LongWeekdays = {"0":"Monday",
-                    "1":"Tuesday",
-                    "2":"Wednesday",
-                    "3":"Thursday",
-                    "4":"Friday",
-                    "5":"Saturday",
-                    "6":"Sunday"}
-    day_name_length =['1', '2', '3', 'All']
+    LongWeekdays = {"0": "Monday",
+                    "1": "Tuesday",
+                    "2": "Wednesday",
+                    "3": "Thursday",
+                    "4": "Friday",
+                    "5": "Saturday",
+                    "6": "Sunday"}
+    day_name_length = ['1', '2', '3', 'All']
     mdays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
 
     ###############
     #   GETTERS   #
@@ -41,7 +39,8 @@ class DateFunctions(object):
 
     def getShortWeekdays(self, p_length):
         """."""
-        return self.utGenerateList(self.getDayIndex(self.start_day), self.utDayLength(p_length))
+        return self.utGenerateList(self.getDayIndex(self.start_day),
+                                   self.utDayLength(p_length))
 
     def LongMonths(self, p_index):
         """ return the month's name """
@@ -91,9 +90,9 @@ class DateFunctions(object):
 
     def getLongWeekdays(self):
         """ return long weekdays """
-        l_LongWeekdays={}
+        l_LongWeekdays = {}
         for i in range(7):
-            l_LongWeekdays[str(i)]=self.LongDays(i)
+            l_LongWeekdays[str(i)] = self.LongDays(i)
         return l_LongWeekdays
 
     def getLongWeekdaysSorted(self):
@@ -103,8 +102,9 @@ class DateFunctions(object):
     def getDayIndex(self, p_day):
         """ return the day index """
         for key in self.LongWeekdays.keys():
-            if self.LongWeekdays[key] == p_day:  return int(key)
-#the code bellow will not work if week days will be translated:
+            if self.LongWeekdays[key] == p_day:
+                return int(key)
+# the code bellow will not work if week days will be translated:
 #        for key in self.getLongWeekdays().keys():
 #            if self.getLongWeekdays()[key] == p_day:  return int(key)
 
@@ -121,59 +121,71 @@ class DateFunctions(object):
     def isCurrentDay(self, p_day, p_month, p_year):
         """ test if current day """
         return self.getCurrentDay() == p_day and \
-               self.getCurrentMonth() == int(p_month) and \
-               int(self.getCurrentYear()) == int(p_year)
+            self.getCurrentMonth() == int(p_month) and \
+            int(self.getCurrentYear()) == int(p_year)
 
     def getNextDate(self, p_month, p_year):
         """ return next month """
         if int(p_month) < 12:
-            return (int(p_month)+1, int(p_year))
+            return (int(p_month) + 1, int(p_year))
         else:
-            return (1, int(p_year)+1)
+            return (1, int(p_year) + 1)
 
     def getPrevDate(self, p_month, p_year):
         """ return last month """
         if int(p_month) > 1:
-            return (int(p_month)-1, int(p_year))
+            return (int(p_month) - 1, int(p_year))
         else:
-            return (12, int(p_year)-1)
+            return (12, int(p_year) - 1)
 
     def getMonthName(self, p_month):
         """ reurns the month's name """
-        return self.LongMonths(int(p_month)-1)
+        return self.LongMonths(int(p_month) - 1)
 
     def getYear(self, p_date):
         """ return year from a given date """
         l_date = str(p_date)
         if l_date != '':
-            try:    return str(DateTime(l_date).year())
-            except: return ''
-        else:       return ''
+            try:
+                return str(DateTime(l_date).year())
+            except:
+                return ''
+        else:
+            return ''
 
     def getMonth(self, p_date):
         """ return month from a given date """
         l_date = str(p_date)
         if l_date != '':
-            try:    return str(DateTime(l_date).month())
-            except: return ''
-        else:       return ''
+            try:
+                return str(DateTime(l_date).month())
+            except:
+                return ''
+        else:
+            return ''
 
     def getDay(self, p_date):
         """ return day from a given date """
         l_date = str(p_date)
         if l_date != '':
-            try:    return str(DateTime(l_date).day())
-            except: return ''
-        else:       return ''
+            try:
+                return str(DateTime(l_date).day())
+            except:
+                return ''
+        else:
+            return ''
 
     def getDate(self, p_date):
         """ return date """
         setTranslation = self.getSite().getPortalI18n().get_translation
         l_date = str(p_date)
         if l_date != '':
-            try:    return DateTime(l_date).strftime("%d %B %Y")
-            except: return setTranslation('empty')
-        else:       return setTranslation('empty')
+            try:
+                return DateTime(l_date).strftime("%d %B %Y")
+            except:
+                return setTranslation('empty')
+        else:
+            return setTranslation('empty')
 
     def getDateFromMinutes(self, minutes):
         """ return date based on minutes coresponding to an indexed date """
@@ -187,4 +199,3 @@ class DateFunctions(object):
         for year, month """
         start_day, end_day = calendar.monthrange(year, month)
         return date(year, month, 1).weekday(), end_day
-

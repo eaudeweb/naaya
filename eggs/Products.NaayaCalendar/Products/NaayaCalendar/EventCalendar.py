@@ -16,8 +16,6 @@
 #
 # Alex Ghica, Finsiel Romania
 
-__version__='$Revision: 1.38 $'[11:-2]
-
 # python imports
 import calendar
 
@@ -38,29 +36,29 @@ from Utils import Utils, evalPredicate
 
 manage_addEventCalendar_html = PageTemplateFile('zpt/add', globals())
 
+
 def manage_addEventCalendar(self, id, title='', description='',
                             day_len='', start_day='Monday',
                             catalog='', REQUEST=None):
     """ Adds a new EventCalendar object """
     ob = EventCalendar(id, title, description, day_len, start_day, catalog)
     self._setObject(id, ob)
-    calendar = self._getOb(id)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
-class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Folder
+class EventCalendar(Folder, DateFunctions, Utils):
     """ Event calendar """
 
     meta_type = 'Naaya Calendar'
     product_name = 'Naaya Calendar'
 
-    manage_options =((Folder.manage_options[0],) +
-                     ({'label':'Properties',     'action':'manage_properties'},
-                      {'label':'View',            'action':'index_html'},
-                      {'label':'Calendar',        'action':'show_calendar'},
-                      {'label':'Undo',            'action':'manage_UndoForm'},) +
-                     (Folder.manage_options[3],))
+    manage_options = ((Folder.manage_options[0],) +
+                      ({'label': 'Properties', 'action': 'manage_properties'},
+                       {'label': 'View', 'action': 'index_html'},
+                       {'label': 'Calendar', 'action': 'show_calendar'},
+                       {'label': 'Undo', 'action': 'manage_UndoForm'},) +
+                      (Folder.manage_options[3],))
 
     security = ClassSecurityInfo()
 
@@ -74,38 +72,45 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         self.catalog = catalog
         self.cal_meta_types = {}
 
-    def __str__(self):  return self.index_html()
+    def __str__(self):
+        return self.index_html()
 
     def all_meta_types(self):
         """ What can you put inside me? """
         local_meta_types = []
-        f = lambda x: x['name'] in ('Page Template', 'Script (Python)', 'File', 'Folder', 'DTML Method', 'Image')
+        f = lambda x: x['name'] in (
+            'Page Template', 'Script (Python)', 'File', 'Folder',
+            'DTML Method', 'Image')
         for x in filter(f, Products.meta_types):
             local_meta_types.append(x)
         return local_meta_types
 
     security.declareProtected(view, 'getSortedMetaTypes')
+
     def getSortedMetaTypes(self):
         """ sorts the meta_type list """
-        return self.sortedKeysOfDict(self.cal_meta_types) # TODO: use sorted in newer Pythons
+        return self.sortedKeysOfDict(self.cal_meta_types)
 
     security.declareProtected(view, 'getCalMetaTypes')
+
     def getCalMetaTypes(self):
         """ convert to lines the meta_type list"""
         return self.utConvertListToLines(self.getSortedMetaTypes())
 
     security.declareProtected(view, 'getArrowURL')
+
     def getArrowURL(self):
         """ return the arrow's URL """
-        other_qs=self.utRemoveFromQS(['cmonth', 'cyear'])
-        if len(other_qs)>0:
-            other_qs=other_qs+"&"
+        other_qs = self.utRemoveFromQS(['cmonth', 'cyear'])
+        if len(other_qs) > 0:
+            other_qs = other_qs + "&"
         return self.absolute_url(0) + "?" + other_qs
 
     #########################
     #   EVENTS FUNCTIONS    #
     #########################
     security.declareProtected(view, 'getEvents')
+
     def getEvents(self, year, month, day=None):
         """Return the events for the specified date or the whole month if day
             is not specified.
@@ -113,13 +118,14 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         if day:
             dates = [DateTime(year, month, day)]
         else:
-            dates = [DateTime(year, month, day)
-                        for day in range(1, calendar.monthrange(year, month)[1] + 1)]
+            dates = [DateTime(year, month, dayidx) for dayidx in
+                     range(1, calendar.monthrange(year, month)[1] + 1)]
 
         events = []
         catalog = self.unrestrictedTraverse(self.catalog)
         items = {}
-        for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+        for meta_type, (interval_idx,
+                        predicate) in self.cal_meta_types.items():
             catalog_index = catalog._catalog.getIndex(interval_idx)
             for date in dates:
                 for brain in catalog({'meta_type': meta_type,
@@ -134,29 +140,31 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                         # get start_date/end_date from cat. index, not from obj
                         rid = brain.getRID()
                         # dates are stored in index as minutes since 1st jan 70
-                        (start_minutes, end_minutes) = \
-                                          catalog_index.getEntryForObject(rid)
+                        (start_minutes,
+                         end_minutes) = catalog_index.getEntryForObject(rid)
 
                         start_date = self.getDateFromMinutes(start_minutes)
                         end_date = self.getDateFromMinutes(end_minutes)
 
                         events.append((event,
-                                        self.getDate(start_date),
-                                        self.getDate(end_date)))
+                                       self.getDate(start_date),
+                                       self.getDate(end_date)))
 
         return events
 
     security.declareProtected(view, 'getEventsByMonth')
+
     def getEventsByMonth(self, month_events_limit=0):
         """
-        Return the events grouped by start_date per month (sorted by start_date)
-
+        Return the events grouped by start_date per month
+        (sorted by start_date)
         @param month_events_limit: if not 0 limits the results per one month
         """
         ret = {}
         catalog = self.unrestrictedTraverse(self.catalog)
         visited_paths = set()
-        for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+        for meta_type, (interval_idx,
+                        predicate) in self.cal_meta_types.items():
             catalog_index = catalog._catalog.getIndex(interval_idx)
             for brain in catalog({'meta_type': meta_type, 'approved': 1}):
                 path = brain.getPath()
@@ -165,8 +173,8 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                 visited_paths.add(path)
 
                 rid = brain.getRID()
-                start_minutes, end_minutes = \
-                        catalog_index.getEntryForObject(rid)
+                start_minutes, end_minutes = catalog_index.getEntryForObject(
+                    rid)
 
                 start_date = self.getDateFromMinutes(start_minutes)
                 end_date = self.getDateFromMinutes(end_minutes)
@@ -192,6 +200,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         return ret
 
     security.declareProtected(view, 'hasEventsByDay')
+
     def hasEventsByDay(self, year, month):
         """Returns if there are any events for each date in this month """
         brains_by_day = {}
@@ -200,7 +209,8 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         for day in range(1, calendar.monthrange(year, month)[1] + 1):
             date = DateTime(year, month, day)
             brains_by_day[day] = []
-            for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+            for meta_type, (interval_idx,
+                            predicate) in self.cal_meta_types.items():
                 brains_by_day[day].extend(catalog({'meta_type': meta_type,
                                                    interval_idx: date,
                                                    'approved': 1}))
@@ -237,6 +247,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         return ret
 
     security.declareProtected(view, 'getDayEvents')
+
     def getDayEvents(self, date=''):
         """Return the events for the given day"""
         try:
@@ -245,6 +256,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             return []
 
     security.declareProtected(view, 'show_date')
+
     def show_date(self, date):
         try:
             return date.strftime('%d %B %Y')
@@ -256,19 +268,22 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     #############################
 
     security.declareProtected(view_management_screens, 'testMetaType')
+
     def testMetaType(self, p_meta, p_property):
         """ test the meta types and asociated object properties """
         parent = self.aq_inner.getParentNode()
-        l_find = self.PrincipiaFind(parent, obj_metatypes=[p_meta], search_sub=1)
-        if len(l_find)==0:
+        l_find = self.PrincipiaFind(parent, obj_metatypes=[p_meta],
+                                    search_sub=1)
+        if len(l_find) == 0:
             return (0, 'No object found')
-        if len(p_property)==0:
+        if len(p_property) == 0:
             return (0, 'Empty')
         if hasattr(l_find[0][1], p_property):
             return (1, 'Property found')
         return (0, 'No such property')
 
     security.declarePrivate('setCalMetaTypes')
+
     def setCalMetaTypes(self, p_meta_types):
         """ creates the dictionary for the cal_meta_types property """
         l_dict = {}
@@ -279,17 +294,18 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                 l_dict[item] = ('resource_interval', '')
         return l_dict
 
-
     ######################
     #   PROPERTIES TABS  #
     ######################
 
     security.declareProtected(view_management_screens, 'get_catalog')
+
     def get_catalog(self):
         """ get catalog  """
         return self.unrestrictedTraverse(self.catalog, None)
 
     security.declareProtected(view_management_screens, 'manageProperties')
+
     def manageProperties(self, title='', description='', day_len='',
                          cal_meta_types='', start_day='', catalog='',
                          REQUEST=None):
@@ -305,15 +321,15 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             return REQUEST.RESPONSE.redirect('manage_properties')
 
     security.declareProtected(view_management_screens, 'manageMetaTypes')
+
     def manageMetaTypes(self, REQUEST=None):
         """ manage meta types properties """
         for meta in self.cal_meta_types:
-            self.cal_meta_types[meta]=(self.REQUEST['idx_'+meta],
-                                       self.REQUEST['app_'+meta])
+            self.cal_meta_types[meta] = (self.REQUEST['idx_' + meta],
+                                         self.REQUEST['app_' + meta])
         self._p_changed = 1
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('manage_properties')
-
 
     #####################
     #   MANAGEMENT TABS #
@@ -331,10 +347,10 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
 
     security.declarePublic('show_calendar')
     show_calendar = NaayaPageTemplateFile('zpt/index',
-                                        globals(), 'calendar_box')
+                                          globals(), 'calendar_box')
 
     security.declarePublic('calendar_style')
     calendar_style = NaayaPageTemplateFile('zpt/style_css',
-                                globals(), 'calendar_style')
+                                           globals(), 'calendar_style')
 
 InitializeClass(EventCalendar)
