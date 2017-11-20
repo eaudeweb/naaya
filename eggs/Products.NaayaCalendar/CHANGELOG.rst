@@ -1,4 +1,7 @@
-1.3.11 (unreleased)
+1.3.12 (unreleased)
+------------------
+
+1.3.11 (2017-11-20)
 ------------------
 * ajax navigation in calendar portlet [dumitval]
 
