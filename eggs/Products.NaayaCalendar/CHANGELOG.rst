@@ -1,5 +1,6 @@
 1.3.11 (unreleased)
 ------------------
+* ajax navigation in calendar portlet [dumitval]
 
 1.3.10 (2012-04-27)
 ------------------
