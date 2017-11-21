@@ -1,4 +1,7 @@
-1.3.12 (unreleased)
+1.3.13 (unreleased)
+------------------
+
+1.3.12 (2017-11-21)
 ------------------
 * catalog portlet links directly to event if only one event in a day [dumitval]
 
