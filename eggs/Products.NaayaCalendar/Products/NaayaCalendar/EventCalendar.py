@@ -220,30 +220,49 @@ class EventCalendar(Folder, DateFunctions, Utils):
         negative_paths = set()
         ret = {}
         for day in range(1, calendar.monthrange(year, month)[1] + 1):
+            # we count events in each day. if there is only one, then
+            # the method will store its url, otherwise just the flag
+            # that the day has events
+            count = 0
+            ret[day] = False
             for brain in brains_by_day[day]:
                 path = brain.getPath()
                 if path in positive_paths:
-                    ret[day] = True
-                    break
+                    ret[day] = brain.absolute_url
+                    count += 1
+                    if count > 1:
+                        break
+                    else:
+                        continue
                 elif path in negative_paths:
                     continue
 
                 # optimization if predicate is missing
                 if not predicate:
                     positive_paths.add(path)
-                    ret[day] = True
-                    break
+                    ret[day] = brain.absolute_url
+                    count += 1
+                    if count > 1:
+                        break
+                    else:
+                        continue
 
                 event = brain.getObject()
                 predicate = self.cal_meta_types[event.meta_type][1]
                 if evalPredicate(predicate, event):
                     positive_paths.add(path)
-                    ret[day] = True
-                    break
+                    ret[day] = brain.absolute_url
+                    count += 1
+                    if count > 1:
+                        break
+                    else:
+                        continue
                 else:
                     negative_paths.add(path)
-            else:
-                ret[day] = False
+            if count > 1:
+                # if we have more than one event, we just return true
+                # and the calendar will redirect to a month view
+                ret[day] = True
         return ret
 
     security.declareProtected(view, 'getDayEvents')
