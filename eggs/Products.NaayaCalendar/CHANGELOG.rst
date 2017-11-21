@@ -1,5 +1,6 @@
 1.3.13 (unreleased)
 ------------------
+* improvement in catalog portlet URL forming [dumitval]
 
 1.3.12 (2017-11-21)
 ------------------

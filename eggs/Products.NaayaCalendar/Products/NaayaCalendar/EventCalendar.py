@@ -26,6 +26,7 @@ from OFS.Folder import Folder
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from naaya.core.zope2util import path_in_site
 
 import Products
 from DateTime import DateTime
@@ -216,7 +217,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
                                                    'approved': 1}))
 
         # cache getObject + evalPredicate results for each path
-        positive_paths = set()
+        positive_paths = {}
         negative_paths = set()
         ret = {}
         for day in range(1, calendar.monthrange(year, month)[1] + 1):
@@ -228,7 +229,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
             for brain in brains_by_day[day]:
                 path = brain.getPath()
                 if path in positive_paths:
-                    ret[day] = brain.absolute_url
+                    ret[day] = positive_paths[path]
                     count += 1
                     if count > 1:
                         break
@@ -237,21 +238,21 @@ class EventCalendar(Folder, DateFunctions, Utils):
                 elif path in negative_paths:
                     continue
 
+                event = brain.getObject()
                 # optimization if predicate is missing
                 if not predicate:
-                    positive_paths.add(path)
-                    ret[day] = brain.absolute_url
+                    positive_paths[path] = '/%s' % path_in_site(event)
+                    ret[day] = positive_paths[path]
                     count += 1
                     if count > 1:
                         break
                     else:
                         continue
 
-                event = brain.getObject()
                 predicate = self.cal_meta_types[event.meta_type][1]
                 if evalPredicate(predicate, event):
-                    positive_paths.add(path)
-                    ret[day] = brain.absolute_url
+                    positive_paths[path] = '/%s' % path_in_site(event)
+                    ret[day] = positive_paths[path]
                     count += 1
                     if count > 1:
                         break
