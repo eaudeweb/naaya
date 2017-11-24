@@ -1,4 +1,7 @@
-4.2.2 (unreleased)
+4.2.3 (unreleased)
+-------------------
+
+4.2.2 (2017-11-24)
 -------------------
 * add missing languages to tinymce [dumitval]
 * add font size configuration to TinyMce [dumitval]
