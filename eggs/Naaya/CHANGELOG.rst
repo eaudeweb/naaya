@@ -1,5 +1,6 @@
 4.2.2 (unreleased)
 -------------------
+* add missing languages to tinymce [dumitval]
 * add font size configuration to TinyMce [dumitval]
 * prepare for google maps API key (ENV) [dumitval]
 * improve async geolocation [dumitval]
