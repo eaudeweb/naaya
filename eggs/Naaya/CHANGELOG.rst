@@ -1,4 +1,7 @@
-4.2.3 (unreleased)
+4.2.4 (unreleased)
+-------------------
+
+4.2.3 (2017-12-07)
 -------------------
 * update google translate link to https [dumitval]
 
