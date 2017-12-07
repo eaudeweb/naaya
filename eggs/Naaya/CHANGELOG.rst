@@ -1,5 +1,6 @@
 4.2.3 (unreleased)
 -------------------
+* update google translate link to https [dumitval]
 
 4.2.2 (2017-11-24)
 -------------------

@@ -100,7 +100,7 @@ _GOOGLE_TRANSLATE_BASE_URL = \
         'http://ajax.googleapis.com/ajax/services/language/translate'
 _GOOGLE_CHUNK_SIZE = 500 # Max num of characters that google API accepts
 
-_GOOGLE_TRANSLATE_WEBPAGE_URL = 'http://translate.google.com/translate'
+_GOOGLE_TRANSLATE_WEBPAGE_URL = 'https://translate.google.com/translate'
 
 ###################
 # Language name to google format
@@ -312,9 +312,9 @@ class TestTranslation(unittest.TestCase):
 
 class TestTranslateURL(unittest.TestCase):
     def test_translate_url(self):
-        self.assertEqual(translate_url('http://google.com', 'it', 'en'),
-            'http://translate.google.com/translate'
-            '?hl=it&sl=en&tl=it&u=http%3A%2F%2Fgoogle.com')
+        self.assertEqual(translate_url('https://google.com', 'it', 'en'),
+            'https://translate.google.com/translate'
+            '?hl=it&sl=en&tl=it&u=https%3A%2F%2Fgoogle.com')
 
 if __name__ == '__main__':
     unittest.main()
