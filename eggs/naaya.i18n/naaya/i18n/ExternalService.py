@@ -7,8 +7,10 @@ import urllib2
 from urllib import urlencode
 import re
 
-DUMMY_TEXT = "XXXXX" # google tends to change other wildcards like ${}
+
+DUMMY_TEXT = "XXXXX"  # google tends to change other wildcards like ${}
 REQUEST_URI = 'https://translate.google.com/translate_a/t'
+
 
 def external_translate(message, target_lang):
     """
@@ -40,16 +42,17 @@ def external_translate(message, target_lang):
         json_data = json.loads(body)
 
         try:
-            translation = ''.join([ x[0] for x in json_data[0] ])
+            translation = ''.join([x[0] for x in json_data[0]])
         except LookupError:
             # no translation or unexpected response
             return ''
         else:
             if mappings is not []:
                 for m in mappings:
-                    translation = translation.replace(DUMMY_TEXT, "${"+m+"}", 1)
+                    translation = translation.replace(DUMMY_TEXT,
+                                                      "${" + m + "}", 1)
             return translation
 
     except Exception:
-        ### Google translate should fall silently, not a critical functionality
+        # Google translate should fall silently, not a critical functionality
         return ''
