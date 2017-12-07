@@ -1,5 +1,6 @@
 1.1.10 (unreleased)
 -------------------
+* update google translate link to https [dumitval]
 
 1.1.9 (2015-05-25)
 -------------------

@@ -8,7 +8,7 @@ from urllib import urlencode
 import re
 
 DUMMY_TEXT = "XXXXX" # google tends to change other wildcards like ${}
-REQUEST_URI = 'http://translate.google.com/translate_a/t'
+REQUEST_URI = 'https://translate.google.com/translate_a/t'
 
 def external_translate(message, target_lang):
     """
