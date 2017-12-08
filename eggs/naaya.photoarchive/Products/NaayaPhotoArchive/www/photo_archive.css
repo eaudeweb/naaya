@@ -321,8 +321,6 @@ fieldset dt {
 	width: 15em
 }
 fieldset dd {
-	float: left;
-	margin-left: 0.5em;
 	width: 35em;
 }
 
