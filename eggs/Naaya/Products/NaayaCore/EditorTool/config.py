@@ -80,7 +80,7 @@ _DEFAULT = {
     'insert_button_items': 'media image link | charmap hr anchor pagebreak '
                            'insertdatetime nonbreaking template toc',
 
-    'toolbar1': 'preview searchreplace | undo redo | insert | '
+    'toolbar1': 'preview searchreplace | undo redo | insert link | '
                 'bullist numlist outdent indent | '
                 'visualblocks code fullscreen help',
     'toolbar2': 'styleselect | fontselect | fontsizeselect | '
