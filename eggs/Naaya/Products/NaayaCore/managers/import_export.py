@@ -17,6 +17,7 @@ from StringIO import StringIO
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.ggeocoding import GeocoderServiceError
 from naaya.core.zope2util import path_in_site
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from zope.event import notify
 import csv, codecs
 import logging
@@ -242,7 +243,7 @@ class CSVImportTool(Implicit, Item):
             return self.index_html(REQUEST, meta_type=meta_type)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
-    index_html = PageTemplateFile('../zpt/bulk_import', globals())
+    index_html = NaayaPageTemplateFile('../zpt/bulk_import', globals(), 'bulk_import')
     csv_specifications = PageTemplateFile('../zpt/csv_specifications', globals())
 
 InitializeClass(CSVImportTool)

@@ -1,5 +1,6 @@
 4.2.4 (unreleased)
 -------------------
+* change bulk_import to Naaya Page Template [dumitval]
 * add link icon in portal editor [dumitval]
 
 4.2.3 (2017-12-07)
