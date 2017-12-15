@@ -1,5 +1,6 @@
 4.2.4 (unreleased)
 -------------------
+* allow listing of all locations in page (for use with datatables) [dumitval]
 * change bulk_import to Naaya Page Template [dumitval]
 * add link icon in portal editor [dumitval]
 
