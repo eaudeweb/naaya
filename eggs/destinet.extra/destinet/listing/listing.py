@@ -1,3 +1,7 @@
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+
+NaayaPageTemplateFile('zpt/topic', globals(), 'destinet_topics_listing')
+
 """ User interface methods (views) used for the custom listing """
 
 META_TYPES = [
@@ -87,7 +91,7 @@ def get_content(context, request):
         objects = all_objects
     objects = [ob for ob in objects]
     objects.sort(key=lambda x: context.rstk['uni_decode'](
-        x.title.lower()) or x.id, reverse=reversed)
+        x.title.strip('"\' ').lower()) or x.id, reverse=reversed)
     page_brains = objects[start:start + length]
     page_objects = [brain.getObject() for brain in page_brains]
 

@@ -1,5 +1,6 @@
 1.2.26 - (unreleased)
 =======================
+* add Naaya Page Template for topic folder customisation [dumitval]
 
 1.2.25 - (2017-11-15)
 =======================
