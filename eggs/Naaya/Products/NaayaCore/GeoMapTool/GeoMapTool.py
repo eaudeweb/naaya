@@ -208,7 +208,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if administrative_level:
             base_filter['administrative_level'] = administrative_level
 
-        if country:
+        if country and country != 'undefined':
+            try:
+                country.remove('undefined')
+            except (ValueError, AttributeError):
+                pass
             base_filter['coverage'] = country
 
         base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)),
