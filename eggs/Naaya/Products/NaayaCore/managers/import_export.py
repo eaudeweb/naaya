@@ -411,7 +411,8 @@ class ExportTool(Implicit, Item):
         return json.dumps(data, default=json_encode, **kwargs)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
-    index_html = PageTemplateFile('../zpt/bulk_export', globals())
+    index_html = NaayaPageTemplateFile(
+        '../zpt/bulk_export', globals(), 'bulk_export')
 
 InitializeClass(ExportTool)
 

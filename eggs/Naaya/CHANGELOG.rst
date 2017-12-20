@@ -2,7 +2,7 @@
 -------------------
 * geomaptool - handle select2 selection lists [dumitval]
 * allow listing of all locations in page (for use with datatables) [dumitval]
-* change bulk_import to Naaya Page Template [dumitval]
+* change bulk_import, bulk_export to Naaya Page Template [dumitval]
 * add link icon in portal editor [dumitval]
 
 4.2.3 (2017-12-07)
