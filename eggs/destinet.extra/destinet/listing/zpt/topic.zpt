@@ -71,140 +71,156 @@
           }
         });
 
-        // datatable configuration
-        var columns = [{
-            "data": "name",
-            "render": function(data, type, row, meta) {
-              try {
-                if (data.translated.title == '') {
-                  return '<a href="' + data.url + '">' + data.title + '<' + '/a>';
-                } else {
-                  return data.title + ' (Item only translated in <a href="' + data.url + '/gl_changeLanguage?old_lang=' + data.translated.id + '">' + data.translated.title + '<' + '/a>' + ')';
-                }
-              } catch (e) {
-                return '<a href="' + data.url + '">' + data.title + '<' + '/a>';
-              }
-            }
-          },
-          {
-            "data": "coverage",
-            "orderable": false
-          }
-        ]
-        if ($('#location').val() == 'tools') {
-          columns.unshift({
-            "data": "meta_type",
-            "orderable": false
-          })
-          columns[columns.length] = {
-            "data": "target-groups",
-            "orderable": false
-          }
-        }
-        var table = $('.datatable').DataTable({
-          'aaSorting': [
-            [0, "desc"]
-          ],
-          'sPaginationType': 'full_numbers',
-          "pageLength": 10,
-          "lengthMenu": [10, 15, 25, 50, 100],
-          "processing": true,
-          "serverSide": true,
-          "ajax": {
-            "url": "/get_content",
-            "data": function(d) {
-              d.topic = $('#template_id').val();
-              d.meta_type = $('#meta_type').val();
-              d.target_groups = $('#target_groups').val();
-            }
-          },
-          "columns": columns
-        });
-        table.columns().every(function() {
-          var that = this;
-          $('input', this.header()).on('keyup change', function() {
-            if (that.search() != this.value) {
-              that
-                .search(this.value)
-                .draw();
-            }
-          });
-          $('select', this.header()).on('change', function() {
-            if (that.search() != this.value) {
-              that
-                .search(this.value)
-                .draw();
-            }
-          });
-          $('input', this.header()).on('click', function(e) {
-            e.stopPropagation();
-          });
-          $('select', this.header()).on('click', function(e) {
-            e.stopPropagation();
-          });
-        });
         $('#compas_topics').click(function(event) {
           event.preventDefault();
         });
 
-        $('#geo_query').select2({
-          allowClear: true,
-          placeholder: 'Enter keyword',
-          tags: true,
-          createTag: function (params) {
-            return {
-              id: params.term,
-              text: params.term,
-              newOption: true
+        // datatable configuration
+        if(['events', 'tools', 'news'].indexOf($('#location').val()) > -1){
+          var columns = [{
+              "data": "name",
+              "render": function(data, type, row, meta) {
+                try {
+                  if (data.translated.title == '') {
+                    return '<a href="' + data.url + '">' + data.title + '<' + '/a>';
+                  } else {
+                    return data.title + ' (Item only translated in <a href="' + data.url + '/gl_changeLanguage?old_lang=' + data.translated.id + '">' + data.translated.title + '<' + '/a>' + ')';
+                  }
+                } catch (e) {
+                  return '<a href="' + data.url + '">' + data.title + '<' + '/a>';
+                }
+              }
+            },
+            {
+              "data": "coverage",
+              "orderable": false
             }
-          },
-          templateResult: function (data) {
-            var $result = $("<span></span>");
-
-            $result.text(data.text);
-
-            return $result;
+          ]
+          if ($('#location').val() == 'tools') {
+            columns.unshift({
+              "data": "meta_type",
+              "orderable": false
+            })
+            columns[columns.length] = {
+              "data": "target-groups",
+              "orderable": false
+            }
           }
-        });
-        $('#geo_query').change(function(){
-          startMapRefresh();
-        });
+          var table = $('.datatable').DataTable({
+            'aaSorting': [
+              [0, "desc"]
+            ],
+            'sPaginationType': 'full_numbers',
+            "pageLength": 10,
+            "lengthMenu": [10, 15, 25, 50, 100],
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+              "url": "/get_content",
+              "data": function(d) {
+                d.topic = $('#template_id').val();
+                d.meta_type = $('#meta_type').val();
+                d.target_groups = $('#target_groups').val();
+              }
+            },
+            "columns": columns
+          });
+          table.columns().every(function() {
+            var that = this;
+            $('input', this.header()).on('keyup change', function() {
+              if (that.search() != this.value) {
+                that
+                  .search(this.value)
+                  .draw();
+              }
+            });
+            $('select', this.header()).on('change', function() {
+              if (that.search() != this.value) {
+                that
+                  .search(this.value)
+                  .draw();
+              }
+            });
+            $('input', this.header()).on('click', function(e) {
+              e.stopPropagation();
+            });
+            $('select', this.header()).on('click', function(e) {
+              e.stopPropagation();
+            });
+          });
+        };
 
-        $('#country').select2({placeholder: 'All'})
-        $('#country').change(function(){
-          startMapRefresh();
-        });
+        //map configuration
+        if(['gp', 'who', 'mp'].indexOf($('#location').val()) > -1){
+          $('#geo_query').select2({
+            allowClear: true,
+            placeholder: 'Enter keyword',
+            tags: true,
+            createTag: function (params) {
+              return {
+                id: params.term,
+                text: params.term,
+                newOption: true
+              }
+            },
+            templateResult: function (data) {
+              var $result = $("<span></span>");
 
-        $('#operational_level').select2({placeholder: 'All'})
-        $('#operational_level').change(function(){
-          if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
-            $(this).val("").trigger('change');
+              $result.text(data.text);
+
+              return $result;
+            }
+          });
+          $('#geo_query').change(function(){
+            startMapRefresh();
+          });
+
+          $('#country').select2({placeholder: 'All'})
+          $('#country').change(function(){
+            startMapRefresh();
+          });
+
+          $('#operational_level').select2({placeholder: 'All'})
+          $('#operational_level').change(function(){
+            if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
+              $(this).val("").trigger('change');
+            }
+            startMapRefresh();
+          });
+
+          $('#geo_types').select2({placeholder: 'Select at least one organisation type'})
+          $('#geo_types').val(geo_types).trigger('change.select2');
+          $('#geo_types').change(function(){
+            if ($(this).val() == null){
+              $('#geo_types').val(geo_types).trigger('change.select2');
+            }
+            startMapRefresh();
+          });
+
+          $('#landscape_type').select2({placeholder: 'All'})
+          $('#landscape_type').change(function(){
+            if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
+              $(this).val("").trigger('change');
+            }
+            startMapRefresh();
+          });
+        };
+
+        function formatState (state) {
+          if (!state.id) {
+            return state.text;
           }
-          startMapRefresh();
-        });
+          var baseUrl = "/user/pages/images/flags";
+          var $state = $(
+            '<span><img src="' + baseUrl + '/' + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + '</span>'
+          );
+          return $state;
+        };
 
-        $('#geo_types').select2({placeholder: 'Select at least one organisation type'})
-        $('#geo_types').val(geo_types).trigger('change.select2');
-        $('#geo_types').change(function(){
-          if ($(this).val() == null){
-            $('#geo_types').val(geo_types).trigger('change.select2');
-          }
-          startMapRefresh();
-        });
-
-        $('#landscape_type').select2({placeholder: 'All'})
-        $('#landscape_type').change(function(){
-          if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
-            $(this).val("").trigger('change');
-          }
-          startMapRefresh();
-        });
 
                /*       <!--<img tal:condition="python:child.picture is not None"
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${child/id};
                         alt child/title" width="16" height="16" />-->*/
-
-
 
       });
     </script>
@@ -228,8 +244,8 @@
                        notif_tool python: site.portal_notification;
                        notif_url notif_tool/absolute_url;
                        subscriptions_url string:${notif_url}/my_subscriptions_html">
-        <a tal:define="location python: here.rstk['path_in_site'](here)"
-           tal:attributes="href string:${subscriptions_url}?location=${location}"
+        <a tal:define="path_in_site python: here.rstk['path_in_site'](here)"
+           tal:attributes="href string:${subscriptions_url}?location=${path_in_site}"
            title="Subscribe to notifications"
            i18n:attributes="title"
            i18n:translate=""
@@ -293,6 +309,20 @@
       </div>
 
       <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+      <div tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator', 'Section Admin'], here)">
+      <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+          <metal:block fill-slot="menu_extension">
+              <span tal:replace="structure here/menusubmissions" />
+          </metal:block>
+          <metal:block fill-slot="toolbar_extend">
+              <tal:block tal:condition="here/checkPermissionPublishObjects">
+                  <input type="submit" id="allocate_keywords" i18n:attributes="value"
+                      value="Allocate keywords for selected items" />
+              </tal:block>
+          </metal:block>
+      </metal:block>
+      </div>
 
       <tal:svg>
         <object class="homepage-nav" id="compass">
@@ -435,7 +465,7 @@
             </style>
             <g id="Layer_1_1_">
               <g>
-                <a tal:attributes="href string:preview?location=events&topics%3Alist=${context/id}&meta_types%3Alist=Naaya Event#main_listing" id="compas_events">
+                <a tal:attributes="href string:?location=events&topics%3Alist=${context/id}&meta_types%3Alist=Naaya Event#main_listing" id="compas_events">
                   <g class="svg_menu_item" id="svg_events">
                     <polygon class="st12" points="886.3,37.7 687,175 684,207.3 742.8,223.1 827.5,273.5 1055.7,195.7         "/>
                     <g>
@@ -488,7 +518,7 @@
                     </g>
                   </g>
                 </a>
-                <a tal:attributes="href string:preview?location=tools&topics%3Alist=${context/id}&target_groups=all#main_listing"
+                <a tal:attributes="href string:?location=tools&topics%3Alist=${context/id}&target_groups=all#main_listing"
                   id="compas_resources">
                   <g class="svg_menu_item" id="svg_tools">
                     <polygon class="st12" points="1055.7,195.7 814.2,274.5 853.6,379.1 1215.7,370.9         "/>
@@ -674,7 +704,7 @@
                     <polygon style="fill: white;" class="st3" points="746,113 645.8,175 640.9,175.3 614.9,59 750.3,59         "/>
                   </g>
                 </a>
-                <a tal:attributes="href string:preview?location=gp&topics%3Alist=${context/id}&geo_query=excellence#compass"
+                <a tal:attributes="href string:?location=gp&topics%3Alist=${context/id}&geo_query=excellence#compass"
                   id="compas_gp">
                   <g class="svg_menu_item" id="svg_tourism">
                     <polygon class="st12" points="1215.7,370.9 853.6,379.1 842.7,461.2 810.4,517.1 901.6,740        "/>
@@ -764,9 +794,8 @@
                   </g>
                 </a>
                 <a tal:define="org_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol921')];
-                  org_types python:org_types + ['symbol921'];
                   org_types_filter python: ''.join(['&geo_types%3Alist='+org_type for org_type in org_types]);"
-                  tal:attributes="href string:preview?location=who&topics%3Alist=${context/id}${org_types_filter}#compass" id="compas_who">
+                  tal:attributes="href string:?location=who&topics%3Alist=${context/id}${org_types_filter}#compass" id="compas_who">
                   <g class="svg_menu_item" id="svg_who">
                     <polygon class="st12" points="810.4,517.1 725,580 646.2,584.5 488.1,724.4 901.6,740         "/>
                     <path class="st13" d="M803,565.5L803,565.5L803,565.5l-18.5-22.7c-28.7,23.4-64.3,38.5-103.3,41.9l2.6,29.6c0,0,1.9-0.1,4.7-0.3
@@ -907,12 +936,10 @@
                   </g>
                 </a>
                 <a tal:define="mp_types python:[mp_type.id for mp_type in portal_map.getSymbolChildrenOrdered('symbol984')];
-                  mp_types python:mp_types + ['symbol984'];
                   mp_types_filter python: ''.join(['&geo_types%3Alist='+mp_type for mp_type in mp_types]);
                   ms_types python:[ms_type.id for ms_type in portal_map.getSymbolChildrenOrdered('symbol247')];
-                  ms_types python:ms_types + ['symbol247'];
                   ms_types_filter python: ''.join(['&geo_types%3Alist='+ms_type for ms_type in ms_types]);"
-                  tal:attributes="href string:preview?location=mp&topics%3Alist=${context/id}${mp_types_filter}${ms_types_filter}#compass"
+                  tal:attributes="href string:?location=mp&topics%3Alist=${context/id}${mp_types_filter}${ms_types_filter}#compass"
                   id="compas_mp">
                   <g class="svg_menu_item" id="svg_market">
                     <polygon class="st12" points="476,377.7 214.3,245.9 208,532.6 528.2,536.7 475,454.4         "/>
@@ -1014,7 +1041,7 @@
                     </g>
                   </g>
                 </a>
-                <a tal:attributes="href string:preview?location=news&topics%3Alist=${context/id}&meta_types%3Alist=Naaya News#main_listing" id="compas_news">
+                <a tal:attributes="href string:?location=news&topics%3Alist=${context/id}&meta_types%3Alist=Naaya News#main_listing" id="compas_news">
                   <g class="svg_menu_item" id="svg_news">
                     <polygon class="st12" points="544.8,249.3 436.3,44.7 214.3,245.9 476,377.7 495.3,311        "/>
                     <path class="st13" d="M519,274.8l-22.8-18.9l-48.5-48.4l-0.7,0.6V207H299v3h146.9l46.2,46.6C464.7,290.4,448,331,443.8,375h2.2
@@ -1141,7 +1168,6 @@
       </tal:svg>
 
       <table id="main_listing" class="datatable" tal:condition="python:location in ['events', 'tools', 'news']">
-        <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|None" />
         <input id="template_id" type="hidden" tal:attributes="value context/id" />
         <input id="meta_type" type="hidden" tal:attributes="value python:test(events, 'Naaya Event', test(news, 'Naaya News', ''))" />
         <input id="target_groups" type="hidden" tal:attributes="value context/REQUEST/target_groups|string:" />
@@ -1409,12 +1435,13 @@
                 </div>
                 <select name="geo_query" id="geo_query">
                   <option></option>
-                  <option tal:attributes="value item"
-                    tal:content="item"
+                  <option tal:content="item"
+                    tal:attributes="value item;
+                                    selected python:test(geo_query, 'selected', None)"
                     tal:repeat="item python:
                       [x.title for x in here.getSite().keywords_glossary.get_all_elements() if x.title.strip()] +
                       [node.title for node in here.getSite().portal_portlets['user-groups'].get_tree_nodes()
-                          if x.title.strip()]"/>
+                          if x.title.strip()] + [geo_query]" />
                 </select>
               </div>
               <div class="portalmap_portlet portalmap_filter">
@@ -1447,16 +1474,14 @@
               <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
                 tal:define="parentsList portal_map/getParentsListOrdered">
                 <div class="portalmap_portlet_title" i18n:translate="">Show organisation types</div>
-                <div class="country_list" tal:define="item python:parentsList[0];
-                    children python:portal_map.getSymbolChildrenOrdered(item.id);">
+                <div class="org_list">
                   <select name="geo_types" id="geo_types" multiple="multiple">
-                    <img tal:condition="python:item.picture is not None"
-                      tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${item/id}; alt item/title"
-                      width="16" height="16" />
                       <option></option>
-                      <option tal:repeat="child children"
-                          tal:attributes="value child/id"
-                          tal:content="child/title" />
+                      <tal:block repeat="geo_type geo_types">
+                        <option tal:condition="python:geo_type not in ['symbol984', 'symbol921', 'symbol247']"
+                          tal:attributes="value geo_type"
+                          tal:content="python:portal_map.getSymbolTitle(geo_type)" />
+                      </tal:block
                   </select>
                 </div>
               </div>
@@ -1599,5 +1624,6 @@
           <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
       </tal:rportlets>
     </div>
+    <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|string:" />
   </metal:body>
 </metal:page>
