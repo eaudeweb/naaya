@@ -1,4 +1,7 @@
-1.2.26 - (unreleased)
+1.2.27 - (unreleased)
+=======================
+
+1.2.26 - (2017-12-20)
 =======================
 * add Naaya Page Template for topic folder customisation [dumitval]
 
