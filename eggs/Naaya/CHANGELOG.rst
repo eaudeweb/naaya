@@ -1,4 +1,7 @@
-4.2.4 (unreleased)
+4.2.5 (unreleased)
+-------------------
+
+4.2.4 (2017-12-20)
 -------------------
 * geomaptool - handle select2 selection lists [dumitval]
 * allow listing of all locations in page (for use with datatables) [dumitval]
