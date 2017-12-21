@@ -164,7 +164,7 @@
               }
             },
             templateResult: function (data) {
-              var $result = $("<span></span>");
+              var $result = $("<span />");
 
               $result.text(data.text);
 
@@ -212,7 +212,7 @@
           }
           var baseUrl = "/user/pages/images/flags";
           var $state = $(
-            '<span><img src="' + baseUrl + '/' + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + '</span>'
+            '<span><img src="' + baseUrl + '/' + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + '<' + '/span>'
           );
           return $state;
         };
@@ -1481,7 +1481,7 @@
                         <option tal:condition="python:geo_type not in ['symbol984', 'symbol921', 'symbol247']"
                           tal:attributes="value geo_type"
                           tal:content="python:portal_map.getSymbolTitle(geo_type)" />
-                      </tal:block
+                      </tal:block>
                   </select>
                 </div>
               </div>
