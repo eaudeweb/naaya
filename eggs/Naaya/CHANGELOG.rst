@@ -1,4 +1,7 @@
-4.2.5 (unreleased)
+4.2.6 (unreleased)
+-------------------
+
+4.2.5 (2018-01-30)
 -------------------
 * fix import from file procedure when the address is missing [dumitval]
 
