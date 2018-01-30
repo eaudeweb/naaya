@@ -1,10 +1,7 @@
 """ Core methods for dealing with registration in Destinet """
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.SchemaTool.widgets.Widget import WidgetError
-from naaya.core.zope2util import path_in_site
-from naaya.content.pointer.pointer_item import addNyPointer
 
-from destinet.registration.constants import WIDGET_NAMES, USER_GROUPS
+from destinet.registration.constants import WIDGET_NAMES
 
 
 def validate_widgets(contact_schema, registration_schema, form):
@@ -23,8 +20,9 @@ def validate_widgets(contact_schema, registration_schema, form):
 
     extra_required = ["landscape_type", "topics"]
 
-    required_flag = False   # if any field in any_of has value,
-                            # then all widgets in extra_required are required
+    # if any field in any_of has value,
+    # then all widgets in extra_required are required
+    required_flag = False
 
     for widget in widgets:
         field_name = widget.prop_name()
@@ -101,52 +99,9 @@ def prepare_error_response(context, contact_schema, register_schema,
                 context.setSession(key, value)
 
 
-def place_pointer_to_contact(ob, pointer_parent):
-    """
-    Very much like :func:~destinet.publishing.subscribers.place_pointers:
-
-    """
-    props = {
-        'title': ob.title,
-        'description': getattr(ob, 'description', ''),
-        'topics': ob.__dict__.get('topics', []),
-        'target-groups': ob.__dict__.get('target-groups', []),
-        'geo_location.lat': '',
-        'geo_location.lon': '',
-        'geo_location.address': '',
-        'geo_type': getattr(ob, 'geo_type', ''),
-        'coverage': ob.__dict__.get('coverage', ''),
-        'keywords': ob.__dict__.get('keywords', ''),
-        'sortorder': getattr(ob, 'sortorder', ''),
-        'redirect': True,
-        'pointer': path_in_site(ob)
-    }
-    if ob.geo_location:
-        if ob.geo_location.lat:
-            props['geo_location.lat'] = unicode(ob.geo_location.lat)
-        if ob.geo_location.lon:
-            props['geo_location.lon'] = unicode(ob.geo_location.lon)
-        if ob.geo_location.address:
-            props['geo_location.address'] = ob.geo_location.address
-    if not props['sortorder']:
-        props['sortorder'] = '200'
-
-    p_id = addNyPointer(pointer_parent, ob.getId(),
-                        contributor=ob.contributor, **props)
-    pointer = pointer_parent._getOb(p_id, None)
-    if pointer:
-        if ob.approved:
-            pointer.approveThis(1, ob.contributor)
-        else:
-            pointer.approveThis(0, None)
-        return pointer
-
-
 def handle_groups(ob, req_form):
     """
-    If user selected a group to be member/user of, then a pointer must
-    be created to his profile (hist contact object) in folder of each
-    selected group.
+    Assign roles, set keywords, recatalog.
 
     """
     site = ob.getSite()
@@ -163,6 +118,3 @@ def handle_groups(ob, req_form):
             ob._setLocalPropValue('keywords', lang,
                                   'European Ecotourism Network')
             ob.recatalogNyObject(ob)
-        if group in USER_GROUPS:
-            pointer_location = site.unrestrictedTraverse(USER_GROUPS[group])
-            place_pointer_to_contact(ob, pointer_location)

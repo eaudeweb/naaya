@@ -14,12 +14,6 @@
       permission="zope2.ViewManagementScreens" />
 
    <zope:utility
-      name="RebuildPointers.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.update_rebuild_pointers.RebuildPointers"
-      permission="zope2.ViewManagementScreens" />
-
-   <zope:utility
       name="SetKeywordsForDestinetUsers.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".updates.update_set_keyword_for_users.SetKeywordsForDestinetUsers"
@@ -78,22 +72,6 @@
    <zope:subscriber
         for="naaya.content.base.interfaces.INyContentObjectEditEvent"
         handler=".subscribers.handle_edit_content"
-        />
-
-    <zope:subscriber
-        for="naaya.content.base.interfaces.INyContentObjectApproveEvent"
-        handler=".subscribers.handle_approve_content"
-        />
-
-    <zope:subscriber
-        for="naaya.content.base.interfaces.INyContentObjectUnapproveEvent"
-        handler=".subscribers.handle_unapprove_content"
-        />
-
-   <zope:subscriber
-        for="naaya.content.base.interfaces.INyContentObject
-             zope.app.container.interfaces.IObjectRemovedEvent"
-        handler=".subscribers.handle_del_content"
         />
 
 </configure>
