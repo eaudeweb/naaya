@@ -1,10 +1,8 @@
 """ Core methods for dealing with registration in Destinet """
 from Products.NaayaCore.SchemaTool.widgets.Widget import WidgetError
 
-from destinet.registration.constants import WIDGET_NAMES
 
-
-def validate_widgets(contact_schema, registration_schema, form):
+def validate_widgets(registration_schema, form):
     """
     This is almost the same code and logic from
     :meth:`~Products.NaayaCore.SchemaTool.Schema.Schema.processForm`
@@ -12,8 +10,7 @@ def validate_widgets(contact_schema, registration_schema, form):
     """
     form_data = {}
     form_errors = {}
-    widgets = [contact_schema["%s-property" % w] for w in WIDGET_NAMES]
-    widgets.extend(registration_schema.objectValues())
+    widgets = registration_schema.objectValues()
 
     any_of = ["category-marketplace",
               "category-supporting-solutions"]
@@ -68,8 +65,7 @@ def validate_widgets(contact_schema, registration_schema, form):
     return form_data, form_errors
 
 
-def prepare_error_response(context, contact_schema, register_schema,
-                           form_errors, req_form):
+def prepare_error_response(context, register_schema, form_errors, req_form):
     """
     Almost the same as
     :meth:`~Products.NaayaBase.NyContentType.\
@@ -83,13 +79,6 @@ def prepare_error_response(context, contact_schema, register_schema,
     for key, value in form_errors.iteritems():
         if value:
             context.setSession('%s-errors' % key, '; '.join(value))
-
-    for prop_name in WIDGET_NAMES:
-        for key in req_form:
-            if key == prop_name or key.startswith(prop_name + '.'):
-                widget = contact_schema.getWidget(prop_name)
-                value = widget.convert_to_session(req_form[key])
-                context.setSession(key, value)
 
     for widget in register_schema.objectValues():
         prop_name = widget.prop_name()

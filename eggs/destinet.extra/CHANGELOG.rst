@@ -1,5 +1,6 @@
 1.2.27 - (unreleased)
 =======================
+* no contact on user creation anymore [dumitval]
 * removed all automatic pointer creation [dumitval]
 
 1.2.26 - (2017-12-20)
