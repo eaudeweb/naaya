@@ -185,7 +185,7 @@ class CSVImportTool(Implicit, Item):
                         properties[key] = convert(value)
                     try:
                         address = properties.pop(self.geo_fields['address'])
-                    except AttributeError:
+                    except (AttributeError, KeyError):
                         address = ''
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
