@@ -4,6 +4,7 @@ except ImportError:
     import json
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.unauthorized import Unauthorized
 try:  # Zope >= 2.12
     from App.class_init import InitializeClass
 except ImportError:
@@ -293,6 +294,25 @@ class DestinetPublisher(SimpleItem):
         }, 'contact_add')
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH,
+                              "user_contact")
+
+    def user_contact(self, REQUEST=None, RESPONSE=None):
+
+        """ Extend the user information with contact details """
+        user = self.REQUEST.AUTHENTICATED_USER.getId()
+        if self.contact_object(user):
+            raise Unauthorized
+        meta_type = 'Naaya Contact'
+        form_helper = get_schema_helper_for_metatype(self, meta_type)
+        return self.getFormsTool().getContent({
+            'here': self,
+            'kind': meta_type,
+            'action': 'addNyContact_user',
+            'form_helper': form_helper,
+            'submitter_info_html': submitter.info_html(self, REQUEST),
+        }, 'contact_add')
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH,
                               "market_place_contact")
 
     def market_place_contact(self, REQUEST=None, RESPONSE=None):
@@ -337,6 +357,35 @@ class DestinetPublisher(SimpleItem):
             'form_helper': form_helper,
             'submitter_info_html': submitter.info_html(self, REQUEST),
         }, 'publication_add')
+
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH,
+                              "addNyContact_user")
+
+    def addNyContact_user(self, id='', REQUEST=None, contributor=None,
+                          **kwargs):
+        """
+        Create a Contact type of object in 'who-who' folder adding
+        * extra validation for topics and target-groups
+
+        """
+        schema_raw_data = dict(REQUEST.form)
+        topics = schema_raw_data.get("topics", [])
+        if not topics:
+            # unfortunately we both need _prepare_error_response
+            # (on NyContentData) and methods for session (by acquisition)
+            ob = NyContact('', '').__of__(self)
+            form_errors = {'topics': ['Please select at least one Topic']}
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            REQUEST.RESPONSE.redirect('%s/user_contact' % self.absolute_url())
+            return
+
+        container = self.getSite()['who-who']['destinet-users']
+        response = contact_item.addNyContact(container, '', REQUEST)
+        if isinstance(response, NyContact):
+            REQUEST.RESPONSE.redirect(response.absolute_url())
+            pass    # Contacts are now redirected from post-add event
+        else:       # we have errors
+            REQUEST.RESPONSE.redirect('%s/user_contact' % self.absolute_url())
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH,
                               "addNyContact_who_who")
@@ -509,7 +558,6 @@ class DestinetPublisher(SimpleItem):
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
         user = self.REQUEST.AUTHENTICATED_USER.getId()
-        cat = site.getCatalogTool()
 
         user_obj = auth_tool.getUser(user)
         contact_obj = None
@@ -517,21 +565,7 @@ class DestinetPublisher(SimpleItem):
             user_info = {'first_name': user_obj.firstname,
                          'last_name': user_obj.lastname,
                          'email': user_obj.email}
-            # --- since destinet.registration: --- #
-            container = site['who-who']['destinet-users']
-            candidate_brains = cat.search({'path': ofs_path(container),
-                                           'contributor': user})
-            for candidate_br in candidate_brains:
-                try:
-                    candidate = candidate_br.getObject()
-                except Exception:
-                    continue
-                else:
-                    owner_tuple = candidate.getOwnerTuple()
-                    if owner_tuple and owner_tuple[1] == user:
-                        contact_obj = candidate
-                        break
-            # --- end --- #
+            contact_obj = self.contact_object(user)
         else:
             user_info = None
 
@@ -539,5 +573,25 @@ class DestinetPublisher(SimpleItem):
                                                'user_info': user_info,
                                                'contact_obj': contact_obj},
                                               'destinet_userinfo')
+
+    security.declarePrivate("contact_object")
+
+    def contact_object(self, user):
+        """ returns the contact object associated with the authenticated user
+        """
+        site = self.getSite()
+        cat = site.getCatalogTool()
+        container = site['who-who']['destinet-users']
+        candidate_brains = cat.search({'path': ofs_path(container),
+                                       'contributor': user})
+        for candidate_br in candidate_brains:
+            try:
+                candidate = candidate_br.getObject()
+            except Exception:
+                continue
+            else:
+                owner_tuple = candidate.getOwnerTuple()
+                if owner_tuple and owner_tuple[1] == user:
+                    return candidate
 
 InitializeClass(DestinetPublisher)

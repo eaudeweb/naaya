@@ -1,5 +1,7 @@
 1.2.27 - (unreleased)
 =======================
+* allow users with no attached contact to create one, warning message on
+  the logon page [dumitval]
 * no contact on user creation anymore [dumitval]
 * removed all automatic pointer creation [dumitval]
 
