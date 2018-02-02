@@ -1,11 +1,14 @@
-1.3.1 - (unreleased)
+1.3.2 - (unreleased)
 =======================
 
-1.3.0 - (2018-01-30)
+1.3.1 - (2018-02-02)
 =======================
 * allow users with no attached contact to create one, warning message on
   the logon page [dumitval]
 * no contact on user creation anymore [dumitval]
+
+1.3.0 - (2018-01-30)
+=======================
 * removed all automatic pointer creation [dumitval]
 
 1.2.26 - (2017-12-20)
