@@ -1,24 +1,35 @@
 <br />
 <tal:block condition="user_info">
-<h2>My Contact Details</h2>
-<p><span class="label">First Name:</span>
-    <span class="label_value" tal:content="user_info/first_name"></span>
-</p>
-<p><span class="label">Last Name:</span>
-    <span class="label_value" tal:content="user_info/last_name"></span>
-</p>
-<p><span class="label">E-mail:</span>
-    <span class="label_value" tal:content="user_info/email"></span>
-</p>
-<tal:block condition="contact_obj">
-    <p>
-        Full contact details can be viewed and modified here:
-        <span class="label_value">
-            <a tal:attributes="href contact_obj/absolute_url"
-               tal:content="contact_obj/title_or_id"></a>
-        </span>
-    </p>
-</tal:block>
+  <h2>My Contact Details</h2>
+  <p><span class="label">First Name:</span>
+      <span class="label_value" tal:content="user_info/first_name"></span>
+  </p>
+  <p><span class="label">Last Name:</span>
+      <span class="label_value" tal:content="user_info/last_name"></span>
+  </p>
+  <p><span class="label">E-mail:</span>
+      <span class="label_value" tal:content="user_info/email"></span>
+  </p>
+  <tal:block condition="contact_obj">
+      <p i18n:translate="">
+          Full contact details can be viewed and modified here:
+          <span class="label_value" i18n:name="link">
+              <a tal:attributes="href contact_obj/absolute_url"
+                 tal:content="contact_obj/title_or_id"></a>
+          </span>
+      </p>
+  </tal:block>
+  <tal:block condition="not:contact_obj">
+      <p i18n:translate="" class="message-error">
+          Please extend your contact details in order to be displayed on the map:
+          <span class="label_value" i18n:name="link">
+              <a tal:attributes="href python:here.getSite().absolute_url() +
+                '/destinet.publisher/user_contact'" i18n:translate="">
+                Create contact
+              </a>
+          </span>
+      </p>
+  </tal:block>
 </tal:block>
 
 <h2>My submissions</h2>
@@ -73,7 +84,7 @@
 	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
 </div>
 <div class="userinfo_item" id="events_objects">
-	<h3 class="open">My events
+	<h3 class="open">My Events
 		<span class="ob_counter"></span>
 	</h3>
 	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
