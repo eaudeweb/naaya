@@ -6,6 +6,7 @@ from zope.component import queryUtility
 log = logging.getLogger('naaya.core.auth.ldap')
 _raise_if_not_found = object()
 
+
 class Cache(object):
     """
     Store LDAP user information in-memory for quick access.
@@ -22,8 +23,8 @@ class Cache(object):
         self._last_update = None
 
     def _store_dump(self, dump_stream):
-        users = dict( (dn, pickle.dumps(record, pickle.HIGHEST_PROTOCOL))
-                      for (dn, record) in dump_stream )
+        users = dict((dn, pickle.dumps(record, pickle.HIGHEST_PROTOCOL))
+                     for (dn, record) in dump_stream)
         self.users = users
 
     def update(self):
@@ -36,7 +37,7 @@ class Cache(object):
         what we have, load it.
         """
         now = time()
-        if now - (60*15) < self._last_update: # 15 minute cooldown
+        if now - (60 * 15) < self._last_update:  # 15 minute cooldown
             return
         self._last_update = now
 
@@ -59,7 +60,7 @@ class Cache(object):
         self.timestamp = timestamp
 
         log.info("got ldap users dump: %d records, %.3f seconds",
-                  len(self.users), (time() - time0))
+                 len(self.users), (time() - time0))
 
     def get(self, user_dn, default=_raise_if_not_found):
         """
@@ -68,7 +69,7 @@ class Cache(object):
         try:
             self.update()
         except Exception, e:
-            log.exception("Update failed for empty cache")
+            log.exception("Update failed for empty cache (%s)" % e)
             # behave as cache miss
             if default is _raise_if_not_found:
                 raise
@@ -95,6 +96,7 @@ class Cache(object):
 _cache = Cache()
 get = _cache.get
 has = _cache.has
+
 
 def update(*args):
     """ event handler that updates the ldap user cache """
