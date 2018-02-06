@@ -36,7 +36,7 @@ class Cache(object):
         what we have, load it.
         """
         now = time()
-        if now - (60*8) < self._last_update: # 8 minute cooldown
+        if now - (60*15) < self._last_update: # 15 minute cooldown
             return
         self._last_update = now
 
@@ -65,16 +65,15 @@ class Cache(object):
         """
         Retrieve a record from this cache. Raises KeyError if record not found.
         """
-        if self.timestamp is None:
-            try:
-                self.update()
-            except Exception, e:
-                log.exception("Update failed for empty cache")
-                # behave as cache miss
-                if default is _raise_if_not_found:
-                    raise
-                else:
-                    return default
+        try:
+            self.update()
+        except Exception, e:
+            log.exception("Update failed for empty cache")
+            # behave as cache miss
+            if default is _raise_if_not_found:
+                raise
+            else:
+                return default
 
         try:
             record = self.users[user_dn]

@@ -1,5 +1,6 @@
 4.2.6 (unreleased)
 -------------------
+* fix in ldap users cache update refs #89821 [dumitval]
 
 4.2.5 (2018-01-30)
 -------------------
