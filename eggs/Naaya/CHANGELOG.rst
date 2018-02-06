@@ -1,4 +1,7 @@
-4.2.6 (unreleased)
+4.2.7 (unreleased)
+-------------------
+
+4.2.6 (2018-02-06)
 -------------------
 * fix in ldap users cache update refs #89821 [dumitval]
 
