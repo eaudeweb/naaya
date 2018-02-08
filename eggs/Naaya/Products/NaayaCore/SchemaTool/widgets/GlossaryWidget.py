@@ -70,7 +70,8 @@ class GlossaryWidget(StringWidget):
     def convert_formvalue_to_pythonvalue(self, value):
         if self.data_type == 'list':
             value = self.splitToList(value, self.separator)
-
+        elif self.data_type == 'str':
+            value = value.strip(',').strip(', ')
         else:
             if isinstance(value, (list, tuple)):
                 value = self.separator.join(v for v in value if v.strip())

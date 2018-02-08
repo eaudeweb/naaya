@@ -1,5 +1,6 @@
 4.2.7 (unreleased)
 -------------------
+* bugfix in glossary widget (separator stripping) [dumitval]
 
 4.2.6 (2018-02-06)
 -------------------
