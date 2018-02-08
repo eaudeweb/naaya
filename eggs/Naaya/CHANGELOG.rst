@@ -1,4 +1,7 @@
-4.2.7 (unreleased)
+4.2.8 (unreleased)
+-------------------
+
+4.2.7 (2018-02-08)
 -------------------
 * bugfix in glossary widget (separator stripping) [dumitval]
 
