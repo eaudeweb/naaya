@@ -1,4 +1,7 @@
-4.2.8 (unreleased)
+4.2.9 (unreleased)
+-------------------
+
+4.2.8 (2018-02-15)
 -------------------
 * compatibility fix for tinymce link plugin in IE [dumitval]
 
