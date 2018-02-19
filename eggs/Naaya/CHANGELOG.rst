@@ -1,4 +1,7 @@
-4.2.9 (unreleased)
+4.2.10 (unreleased)
+-------------------
+
+4.2.9 (2018-02-19)
 -------------------
 * google analytics IP anonymisation refs #87835 [dumitval]
 
