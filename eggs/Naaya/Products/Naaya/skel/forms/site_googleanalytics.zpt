@@ -12,6 +12,7 @@
     "></script>
 </tal:block>
     <script>
+      ga('set', 'anonymizeIp', true);
       ga('send', 'pageview');
     </script>
 

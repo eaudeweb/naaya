@@ -1,5 +1,6 @@
 4.2.9 (unreleased)
 -------------------
+* google analytics IP anonymisation refs #87835 [dumitval]
 
 4.2.8 (2018-02-15)
 -------------------
