@@ -1,5 +1,6 @@
 4.2.10 (unreleased)
 -------------------
+* pin Google maps api to v. 3.31, 3.32 exp fails to show the map [dumitval]
 
 4.2.9 (2018-02-19)
 -------------------
