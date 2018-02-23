@@ -1,5 +1,8 @@
 4.2.11 (unreleased)
 -------------------
+
+4.2.11 (2018-02-23)
+-------------------
 * bugfix in import from excel (lat and lon were ignored) [dumitval]
 
 4.2.10 (2018-02-22)
