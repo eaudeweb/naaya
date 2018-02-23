@@ -1,10 +1,14 @@
 """ User interface methods (views) regarding registration in Destinet """
 
+import transaction
+
+from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaBase.NyContentType import SchemaFormHelper
 from destinet.registration.constants import EW_REGISTER_FIELD_NAMES
 from destinet.registration.constants import WIDGET_NAMES
 from destinet.registration.core import prepare_error_response
 from destinet.registration.core import validate_widgets
+from naaya.core.utils import is_valid_email
 
 
 def render_create_account_tpl(context, widgets, request_form=None,
@@ -17,22 +21,16 @@ def create_destinet_account_html(context, request):
     schema_tool = context.getSite().getSchemaTool()
 
     contact_schema = schema_tool['NyContact']
-    register_extra_schema = schema_tool['registration']
 
     contact_helper = SchemaFormHelper(contact_schema, context)
-    register_helper = SchemaFormHelper(register_extra_schema, context)
 
     widgets = {}
     for name in WIDGET_NAMES:
         widgets[name] = contact_helper._get_renderer(
             name, contact_schema["%s-property" % name], False)
 
-    groups_widget = register_helper._get_renderer(
-        'groups', register_extra_schema['groups-property'], False)
-
     ns = {'widgets': widgets,
-          'here': context,
-          'groups_widget': groups_widget}
+          'here': context}
 
     return context.getFormsTool().getContent(ns, 'site_createaccount')
 
@@ -44,12 +42,13 @@ def process_create_account(context, request):
     register_schema = context.getSite().getSchemaTool()['registration']
     form_data, form_errors = validate_widgets(register_schema, request.form)
 
-    # if filling up the lower part, then the upper part is required as well
-
+    if not is_valid_email(request.form.get('email')):
+        form_errors['email'] = ['Invalid email address']
+    if request.form.get('password') != request.form.get('confirm'):
+        form_errors['password'] = ["Password doesn't match verification"]
     if form_errors:
         prepare_error_response(context, register_schema, form_errors,
                                request.form)
-        # we need to put ourselves the user specific values in form
         args_for_session = {}
         for key in EW_REGISTER_FIELD_NAMES:
             args_for_session[key] = request.form.get(key)
@@ -62,7 +61,15 @@ def process_create_account(context, request):
         if not real_comment:
             request.form['comments'] = " "
         site.processRequestRoleForm(request)
-        redirect = request.RESPONSE.headers.get('location')
+        request.form[context.name_cookie] = request.form.get('username')
+        request.form[context.pw_cookie] = request.form.get('password')
+        request.SESSION.set(
+            'title', '%s %s' %
+            (request.form.get('firstname'), request.form.get('lastname')))
+        transaction.commit()
+        CookieCrumbler().modifyRequest(request, request.RESPONSE)
+        redirect = request.RESPONSE.redirect(
+            context.absolute_url() + '/login_html')
         if redirect != referer:
             # redirects to referer only when something is wrong in
             # the register form

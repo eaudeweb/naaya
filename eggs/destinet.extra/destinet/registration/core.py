@@ -12,15 +12,6 @@ def validate_widgets(registration_schema, form):
     form_errors = {}
     widgets = registration_schema.objectValues()
 
-    any_of = ["category-marketplace",
-              "category-supporting-solutions"]
-
-    extra_required = ["landscape_type", "topics"]
-
-    # if any field in any_of has value,
-    # then all widgets in extra_required are required
-    required_flag = False
-
     for widget in widgets:
         field_name = widget.prop_name()
 
@@ -53,12 +44,6 @@ def validate_widgets(registration_schema, form):
             errors.append(str(e))
             form_data[field_name] = value
 
-        if field_name in any_of and value:
-            required_flag = True
-
-        if (field_name in extra_required) and required_flag and not value:
-            errors.append(u'Value required for "%s"' % widget.title)
-
         if errors:
             form_errors[field_name] = errors
 
@@ -73,6 +58,9 @@ def prepare_error_response(context, register_schema, form_errors, req_form):
     but we have our own list of widgets, not a schema.
 
     """
+    for err in context.REQUEST.SESSION.keys():
+        if err.endswith('-errors'):
+            del context.REQUEST.SESSION[err]
     if form_errors:
         context.setSessionErrorsTrans('The form contains errors. '
                                       'Please correct them and try again.')
