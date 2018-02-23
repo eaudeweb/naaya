@@ -187,19 +187,26 @@ class CSVImportTool(Implicit, Item):
                         address = properties.pop(self.geo_fields['address'])
                     except (AttributeError, KeyError):
                         address = ''
+                    try:
+                        lat = properties.pop(self.geo_fields['lat'])
+                        lon = properties.pop(self.geo_fields['lon'])
+                    except (AttributeError, KeyError):
+                        lat = lon = None
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
                     ob = location_obj._getOb(ob_id)
                     if address:
-                        setattr(ob, self.geo_fields['address'].split('.')[0],
-                                Geo(address=address))
-                        #user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-                        #notify(NyContentObjectEditEvent(ob, user))
-                    if getattr(site, 'geolocation_queue', None):
-                        site.geolocation_queue.append(
-                            '/' + site.getId() + '/' + path_in_site(ob))
-                    else:
-                        site.geolocation_queue = ['/' + site.getId() + '/' + path_in_site(ob)]
+                        if lat and lon:
+                            setattr(ob, self.geo_fields['address'].split('.')[0],
+                                    Geo(address=address, lat=lat, lon=lon))
+                        else:
+                            setattr(ob, self.geo_fields['address'].split('.')[0],
+                                    Geo(address=address))
+                            if getattr(site, 'geolocation_queue', None):
+                                site.geolocation_queue.append(
+                                    '/' + site.getId() + '/' + path_in_site(ob))
+                            else:
+                                site.geolocation_queue = ['/' + site.getId() + '/' + path_in_site(ob)]
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
@@ -208,6 +215,7 @@ class CSVImportTool(Implicit, Item):
                             if extra_props_messages:
                                 errors.append(extra_props_messages)
                     obj_ids.append(ob.getId())
+                    location_obj.recatalogNyObject(ob)
                     ob.submitThis()
                     ob.approveThis(_send_notifications=False)
                 except UnicodeDecodeError, e:
