@@ -1,4 +1,7 @@
-1.3.2 - (unreleased)
+1.3.3 - (unreleased)
+=======================
+
+1.3.2 - (2018-02-23)
 =======================
 * directly authenticate user after account creation, redirect to
   login_html [dumitval]
