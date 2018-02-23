@@ -14,12 +14,11 @@ from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from StringIO import StringIO
-from naaya.content.base.events import NyContentObjectEditEvent
-from naaya.core.ggeocoding import GeocoderServiceError
 from naaya.core.zope2util import path_in_site
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from zope.event import notify
-import csv, codecs
+import csv
+import codecs
 import logging
 import simplejson as json
 import transaction
@@ -40,9 +39,12 @@ class CSVImportTool(Implicit, Item):
         self.id = id
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'template')
-    def template(self, meta_type, file_type, as_attachment=False, REQUEST=None):
+
+    def template(self, meta_type, file_type, as_attachment=False,
+                 REQUEST=None):
         """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if REQUEST and not (
+                self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
 
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
@@ -66,31 +68,35 @@ class CSVImportTool(Implicit, Item):
             content_type = 'application/vnd.ms-excel'
             filename = schema.title_or_id() + ' bulk upload.xls'
 
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
         if REQUEST is not None:
             set_response_attachment(REQUEST.RESPONSE, filename,
-                content_type, len(ret))
+                                    content_type, len(ret))
 
         return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
+
     def do_geocoding(self, properties):
         lat = properties.get(self.geo_fields['lat'], '')
         lon = properties.get(self.geo_fields['lon'], '')
         address = properties.get(self.geo_fields['address'], '')
         if lat.strip() == '' and lon.strip() == '' and address:
             coordinates = geocoding.geocode(self.portal_map, address)
-            if coordinates != None:
+            if coordinates is not None:
                 lat, lon = coordinates
                 properties[self.geo_fields['lat']] = lat
                 properties[self.geo_fields['lon']] = lon
         return properties
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
+
     def do_import(self, meta_type, file_type, data, REQUEST=None):
         """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if REQUEST and not (
+                self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
 
         errors = []
@@ -99,7 +105,8 @@ class CSVImportTool(Implicit, Item):
 
         schema = site.getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
-            raise ValueError('Schema for meta-type not found: "%s"' % meta_type)
+            raise ValueError(
+                'Schema for meta-type not found: "%s"' % meta_type)
 
         content_type = site.get_pluggable_item(meta_type)
         add_object = content_type['add_method']
@@ -161,7 +168,8 @@ class CSVImportTool(Implicit, Item):
                 else:
                     errors.append('CSV file is not utf-8 encoded')
 
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
         record_number = 0
         obj_ids = []
@@ -170,7 +178,7 @@ class CSVImportTool(Implicit, Item):
             for row in rows:
                 try:
                     record_number += 1
-                    #TODO: extract this block into a separate function
+                    # TODO: extract this block into a separate function
                     properties = {}
                     extra_properties = {}
                     address = None
@@ -197,16 +205,21 @@ class CSVImportTool(Implicit, Item):
                     ob = location_obj._getOb(ob_id)
                     if address:
                         if lat and lon:
-                            setattr(ob, self.geo_fields['address'].split('.')[0],
-                                    Geo(address=address, lat=lat, lon=lon))
+                            setattr(
+                                ob, self.geo_fields['address'].split('.')[0],
+                                Geo(address=address, lat=lat, lon=lon))
                         else:
-                            setattr(ob, self.geo_fields['address'].split('.')[0],
-                                    Geo(address=address))
+                            setattr(
+                                ob, self.geo_fields['address'].split('.')[0],
+                                Geo(address=address))
                             if getattr(site, 'geolocation_queue', None):
                                 site.geolocation_queue.append(
-                                    '/' + site.getId() + '/' + path_in_site(ob))
+                                    '/' + site.getId() + '/' +
+                                    path_in_site(ob))
                             else:
-                                site.geolocation_queue = ['/' + site.getId() + '/' + path_in_site(ob)]
+                                site.geolocation_queue = [
+                                    '/' + site.getId() + '/' +
+                                    path_in_site(ob)]
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
@@ -222,8 +235,9 @@ class CSVImportTool(Implicit, Item):
                     raise
                 except Exception, e:
                     self.log_current_error()
-                    msg = ('Error while importing from file, row ${record_number}: ${error}',
-                           {'record_number': record_number + 1,     # account for header
+                    msg = ('Error while importing from file, '
+                           'row ${record_number}: ${error}',
+                           {'record_number': record_number + 1,
                             'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
@@ -246,13 +260,17 @@ class CSVImportTool(Implicit, Item):
             else:
                 if warnings:
                     self.setSessionErrorsTrans(warnings)
-                self.setSessionInfoTrans('${records} object(s) of type "${title}" successfully imported.',
-                records=record_number, title=schema.title_or_id())
+                self.setSessionInfoTrans(
+                    '${records} object(s) of type "${title}" '
+                    'successfully imported.',
+                    records=record_number, title=schema.title_or_id())
             return self.index_html(REQUEST, meta_type=meta_type)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
-    index_html = NaayaPageTemplateFile('../zpt/bulk_import', globals(), 'bulk_import')
-    csv_specifications = PageTemplateFile('../zpt/csv_specifications', globals())
+    index_html = NaayaPageTemplateFile('../zpt/bulk_import', globals(),
+                                       'bulk_import')
+    csv_specifications = PageTemplateFile('../zpt/csv_specifications',
+                                          globals())
 
 InitializeClass(CSVImportTool)
 
@@ -330,12 +348,14 @@ class ExportTool(Implicit, Item):
         return dump_header, dump_items
 
     security.declarePrivate('generate_csv_output')
+
     def generate_csv_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
         return generate_csv(dump_header, dump_items)
 
     security.declarePrivate('generate_excel_output')
+
     def generate_excel_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
@@ -347,7 +367,7 @@ class ExportTool(Implicit, Item):
                     for col in range(len(item)):
                         if len(item[col]) >= self.CELL_CHAR_LIMIT:
                             org = item[0]
-                            object_type =  meta_type.replace('Naaya ', '', 1)
+                            object_type = meta_type.replace('Naaya ', '', 1)
                             oversized_col = header[col]
                             error_msg = ("Unable to export to Excel file."
                                          "There is a %s (%s) with "
@@ -363,9 +383,12 @@ class ExportTool(Implicit, Item):
         return validate_column_size(dump_header, dump_items)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
-    def export(self, meta_type, file_type="CSV", as_attachment=False, REQUEST=None):
+
+    def export(self, meta_type, file_type="CSV", as_attachment=False,
+               REQUEST=None):
         """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if REQUEST and not (
+                self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
 
         search = self.getSite().getCatalogedObjects
@@ -382,7 +405,8 @@ class ExportTool(Implicit, Item):
             content_type = 'application/vnd.ms-excel'
             filename = '%s Export.xls' % meta_type
 
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
         if isinstance(ret, ValueError):
             self.setSessionErrors(ret)
@@ -391,19 +415,21 @@ class ExportTool(Implicit, Item):
         if as_attachment and REQUEST is not None:
             filesize = len(ret)
             set_response_attachment(REQUEST.RESPONSE, filename,
-                content_type, filesize)
+                                    content_type, filesize)
         return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_json')
+
     def export_json(self, meta_type=None, pretty=False,
-            as_attachment=False, REQUEST=None):
+                    as_attachment=False, REQUEST=None):
         """
         export all objects of `meta_type` (or, if None, all content) as JSON
         """
 
         if as_attachment and REQUEST is not None:
-            set_response_attachment(REQUEST.RESPONSE,
-                '%s.json' % self.getSite().getId(), 'application/json')
+            set_response_attachment(
+                REQUEST.RESPONSE, '%s.json' % self.getSite().getId(),
+                'application/json')
         data = {}
         for ob in self.getSite().getCatalogedObjects():
             if not isinstance(ob, NyContentData):
@@ -424,11 +450,13 @@ class ExportTool(Implicit, Item):
 
 InitializeClass(ExportTool)
 
+
 def json_encode(ob):
     """ try to encode some known value types to JSON """
     if isinstance(ob, DateTime):
         return str(ob)
     raise ValueError
+
 
 def attachment_header(filename):
     assert isinstance(filename, str)
@@ -440,6 +468,7 @@ def attachment_header(filename):
         value = "filename=%s" % urllib.quote(filename)
     return "attachment; " + value
 
+
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Content-Type', content_type)
     if length is not None:
@@ -447,6 +476,7 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Pragma', 'public')
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
     RESPONSE.setHeader('Content-Disposition', attachment_header(filename))
+
 
 def relative_path_to_site(ob):
     site = ob.getSite()
@@ -493,11 +523,11 @@ class CSVReader(object):
     def __init__(self, file, dialect, encoding):
         """ """
         if dialect == 'comma':
-            dialect=csv.excel
+            dialect = csv.excel
         elif dialect == 'tab':
-            dialect=csv.excel_tab
+            dialect = csv.excel_tab
         else:
-            dialect=csv.excel
+            dialect = csv.excel
         self.csv = UnicodeReader(file, dialect, encoding)
 
     def read(self):
@@ -515,6 +545,7 @@ class CSVReader(object):
             logger.exception('Read error')
             return (None, ex)
 
+
 def generate_csv(header, rows):
 
     output = StringIO()
@@ -525,6 +556,7 @@ def generate_csv(header, rows):
         csv_writer.writerow([value.encode('utf-8') for value in item])
 
     return output.getvalue()
+
 
 def generate_excel(header, rows):
     style = xlwt.XFStyle()
