@@ -164,11 +164,15 @@
             <tal:block condition="section/is_level_three_section|nothing">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </tal:block>
+            <tal:block condition="section/is_level_four_section|nothing">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </tal:block>
             <a tal:condition="not: header_only"
                tal:attributes="href section/absolute_url;
                                style python:test(level_one, 'font-size: large;; font-weight: bold', '')"
                tal:content="section/title_or_id"></a>
-            <span style="font-size: large" tal:condition="header_only">
+            <span tal:condition="header_only"
+                tal:attributes="style python:test(level_one, 'font-size: large;; font-weight: bold', '')">
               <strong i18n:translate=""
                 tal:content="section/title_or_id"></strong></span>
         </td>
