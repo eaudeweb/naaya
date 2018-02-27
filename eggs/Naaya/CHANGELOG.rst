@@ -1,4 +1,7 @@
-4.2.11 (unreleased)
+4.2.13 (unreleased)
+-------------------
+
+4.2.12 (2018-02-27)
 -------------------
 * fix for value is None in GlossaryWidget [dumitval]
 
