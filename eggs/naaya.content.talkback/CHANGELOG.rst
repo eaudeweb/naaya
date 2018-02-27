@@ -1,4 +1,7 @@
-1.4.47 (unreleased)
+1.4.48 (unreleased)
+-------------------
+
+1.4.47 (2018-02-27)
 -------------------
 * improvement for section formatting in talkback index [dumitval]
 * corrected security declaration [dumitval]
