@@ -1,5 +1,6 @@
 4.2.11 (unreleased)
 -------------------
+* fix for value is None in GlossaryWidget [dumitval]
 
 4.2.11 (2018-02-23)
 -------------------
