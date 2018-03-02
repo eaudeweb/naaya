@@ -1,0 +1,213 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block metal:fill-slot="header-title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="head">
+        <tal:block define="description here/description; content python:here.html2text(description)">
+            <meta tal:condition="content" tal:attributes="content content" name="description" />
+        </tal:block>
+        <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+    </metal:block>
+
+    <metal:block fill-slot="body">
+        <div class="content-index-page contact-page" id="center_content">
+        <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" border="0" /> <span tal:replace="here/title_or_id" />
+        </h1>
+        <tal:block tal:condition="python:here.checkPermissionEditObject()">
+        <div id="admin_this_folder">
+            <tal:block tal:condition="python: not here.hasVersion()">
+                <a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+                <a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+            </tal:block>
+            <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+            <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"><span i18n:translate="">This item has been checked out by another user</span>(<span tal:replace="here/checkout_user" />)</strong>
+            <a tal:condition="here/checkPermissionPublishObjects"
+              tal:attributes="href string:${here/absolute_url}/admin_assign_role_html">
+                <span i18n:translate="">Assign local editor role</span></a>
+        </div>
+        </tal:block>
+        <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+        <!-- Map widget -->
+        <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+
+
+        <table class="contact-table" border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+        <tr tal:condition="here/organisation | nothing">
+            <th i18n:translate="">Organisation</th>
+            <td tal:content="here/organisation">organisation</td>
+        </tr>
+        <tr tal:condition="here/geo_location | nothing">
+            <th i18n:translate="">Postal Address</th>
+            <td tal:content="here/geo_location/address">postaladdress</td>
+        </tr>
+        <tr tal:condition="here/phone | nothing">
+            <th i18n:translate="">Phone Number</th>
+            <td tal:content="here/phone">phone</td>
+        </tr>
+        <tr tal:condition="here/fax | nothing">
+            <th i18n:translate="">Fax Number</th>
+            <td tal:content="here/fax">fax</td>
+        </tr>
+        <tr tal:condition="here/cellphone | nothing">
+            <th i18n:translate="">Mobile</th>
+            <td tal:content="here/cellphone">cellphone</td>
+        </tr>
+        <tr tal:condition="python:getattr(here, 'email', None) and here.checkPermissionEditObject()" >
+            <th i18n:translate="">Email</th>
+            <td>
+                <a tal:attributes="href string:mailto:${here/email}"
+                    tal:content="here/email" />
+            </td>
+        </tr>
+        <tr tal:condition="here/webpage | nothing">
+            <th i18n:translate="">Webpage</th>
+            <td>
+                <a target="_new" tal:attributes="href here/webpage" tal:content="here/webpage"/>
+                <small><a tal:attributes="href here/webpage" rel="external" style="display: none" i18n:translate=""> - open in new window</a></small>
+            </td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Released</th>
+            <td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+        </tr>
+        <tal:cond tal:condition="python:here.checkPermissionEditObject()" >
+        <tr tal:condition="here/display_contributor | nothing">
+            <th i18n:translate="">Contributor</th>
+            <td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+        </tr>
+        </tal:cond>
+        <tr tal:condition="here/coverage | nothing">
+            <th i18n:translate="">Country</th>
+            <td tal:content="here/coverage" />
+        </tr>
+        <tr tal:condition="python: here.keywords and (not here.checkPermissionEditObject())">
+            <th i18n:translate="">Keywords</th>
+            <td tal:content="here/keywords" />
+        </tr>
+
+    <tal:block define="categories python:
+        {'Organization Category': getattr(here, 'category-organization', None),
+        'Marketplace Category': getattr(here, 'category-marketplace', None),
+        'Supporting Solutions Category': getattr(here, 'category-supporting-solutions', None)};"
+        >
+        <tal:cond tal:define="category python:categories['Organization Category']" condition="category | nothing">
+            <tr tal:define="
+                title python:portal_map.getSymbolTitle(category);
+                picture python:portal_map.getSymbolPicture(category)"
+                tal:condition="python: title != ''">
+                <th i18n:translate="">Organization Type</th>
+                <td>
+                    <img tal:condition="picture | nothing" 
+                        tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
+                    <span tal:replace="title" />
+                </td>
+            </tr>
+        </tal:cond>
+        <tal:cond tal:define="category python:categories['Marketplace Category']" condition="category | nothing">
+            <tr tal:define="
+                title python:portal_map.getSymbolTitle(category);
+                picture python:portal_map.getSymbolPicture(category)"
+                tal:condition="python: title != ''">
+                <th i18n:translate="">Marketplace Type</th>
+                <td>
+                    <img tal:condition="picture | nothing" 
+                        tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
+                    <span tal:replace="title" />
+                </td>
+            </tr>
+        </tal:cond>
+        <tal:cond tal:define="category python:categories['Supporting Solutions Category']" condition="category | nothing">
+            <tr tal:define="
+                title python:portal_map.getSymbolTitle(category);
+                picture python:portal_map.getSymbolPicture(category)"
+                tal:condition="python: title != ''">
+                <th i18n:translate="">Supporting Solutions Type</th>
+                <td>
+                    <img tal:condition="picture" 
+                        tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
+                    <span tal:replace="title" />
+                </td>
+            </tr>
+        </tal:cond>
+
+    </tal:block>
+
+        <tal:block tal:condition="python:here.checkPermissionEditObject()" content="structure python: here.prop_display_tr('keywords')" />
+
+        <tr tal:condition="python:here.prop_exists('topics') and here.topics" tal:define="sel_list2 python:here.portal_schemas.NyContact['topics-property'].get_selection_list()">
+            <th i18n:translate="">Topics</th>
+            <td>
+              <tal:block repeat="the_topic here/topics">
+                <span i18n:translate="" tal:replace="python: [x.title for x in sel_list2 if x.id == the_topic][0]" />
+                <span tal:condition="not:repeat/the_topic/end">,</span>
+                </tal:block>
+            </td>
+        </tr>
+
+        <tr>
+            <th i18n:translate="">Certified categories</th>
+            <td tal:condition="here/category | nothing">
+              <ul>
+                <tal:block repeat="item here/category">
+                  <li tal:define="
+                    title python:portal_map.getSymbolTitle(item);
+                    picture python:portal_map.getSymbolPicture(item)">
+                    <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${item}; alt title; title title" />
+                    <span tal:replace="title" i18n:translate=""/>
+                  </li>
+                </tal:block
+              </ul>
+            </td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Operational level</th>
+            <td tal:condition="here/administrative_level | nothing">
+              <tal:level repeat="item here/administrative_level">
+                <tal:block content="python:here.get_node_title('administrative_level', item)"
+                  i18n:translate="" />
+                <tal:block condition="not:repeat/item/end" content="string:, " />
+              </tal:level>
+            </td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Sustainability</th>
+            <td tal:condition="here/sustainability | nothing">
+              <tal:level repeat="item here/sustainability">
+                <tal:block content="python:here.get_node_title('certificate_sustainability', item)"
+                  i18n:translate="" />
+                <tal:block condition="not:repeat/item/end" content="string:, " />
+              </tal:level>
+            </td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Credibility</th>
+            <td tal:condition="here/credibility | nothing">
+              <tal:level repeat="item here/credibility">
+                <tal:block content="python:here.get_node_title('certificate_credibility', item)"
+                  i18n:translate="" />
+                <tal:block condition="not:repeat/item/end" content="string:, " />
+              </tal:level>
+            </td>
+        </tr>
+        <tr>
+            <th i18n:translate="">Services</th>
+            <td tal:condition="here/certificate_services | nothing">
+              <tal:level repeat="item here/certificate_services">
+                <tal:block content="python:here.get_node_title('certificate_services', item)"
+                  i18n:translate="" />
+                <tal:block condition="not:repeat/item/end" content="string:, " />
+              </tal:level>
+            </td>
+        </tr>
+        </table>
+
+        <tal:block content="structure here/set_content_rating" />
+        <tal:block content="structure here/comments_box" tal:condition="python:here.checkPermissionEditObject()" />
+    </div>
+    </metal:block>
+</metal:block>
+
