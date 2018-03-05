@@ -93,7 +93,7 @@ DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['coverage'].update(glossary_id='countries_glossary',
                                   required=True, localized=False)
 DEFAULT_SCHEMA['keywords'].update(glossary_id='keywords_glossary',
-                                  required=True, localized=False)
+                                  required=True, localized=True)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -174,7 +174,8 @@ def addNyCertificate(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     form_errors = ob.process_submitted_form(
         schema_raw_data, _lang, _override_releasedate=_releasedate)
-    if not is_valid_email(schema_raw_data.get('email')):
+    if schema_raw_data.get('email') and not is_valid_email(
+            schema_raw_data.get('email')):
         form_errors['email'] = ['Invalid email address']
 
     if REQUEST is not None:
@@ -384,7 +385,8 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
 
         form_errors = self.process_submitted_form(
             schema_raw_data, _lang, _override_releasedate=_releasedate)
-        if not is_valid_email(schema_raw_data.get('email')):
+        if schema_raw_data.get('email') and not is_valid_email(
+                schema_raw_data.get('email')):
             form_errors['email'] = ['Invalid email address']
 
         if not form_errors:

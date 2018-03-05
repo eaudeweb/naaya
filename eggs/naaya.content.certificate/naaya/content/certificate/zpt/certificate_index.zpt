@@ -101,7 +101,7 @@
                 tal:condition="python: title != ''">
                 <th i18n:translate="">Organization Type</th>
                 <td>
-                    <img tal:condition="picture | nothing" 
+                    <img tal:condition="picture | nothing"
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
                     <span tal:replace="title" />
                 </td>
@@ -114,7 +114,7 @@
                 tal:condition="python: title != ''">
                 <th i18n:translate="">Marketplace Type</th>
                 <td>
-                    <img tal:condition="picture | nothing" 
+                    <img tal:condition="picture | nothing"
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
                     <span tal:replace="title" />
                 </td>
@@ -127,7 +127,7 @@
                 tal:condition="python: title != ''">
                 <th i18n:translate="">Supporting Solutions Type</th>
                 <td>
-                    <img tal:condition="picture" 
+                    <img tal:condition="picture"
                         tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
                     <span tal:replace="title" />
                 </td>
@@ -151,7 +151,7 @@
         <tr>
             <th i18n:translate="">Certified categories</th>
             <td tal:condition="here/category | nothing">
-              <ul>
+              <ul style="list-style-type: none; padding-left: 0;">
                 <tal:block repeat="item here/category">
                   <li tal:define="
                     title python:portal_map.getSymbolTitle(item);
@@ -159,48 +159,48 @@
                     <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${item}; alt title; title title" />
                     <span tal:replace="title" i18n:translate=""/>
                   </li>
-                </tal:block
+                </tal:block>
               </ul>
             </td>
         </tr>
         <tr>
             <th i18n:translate="">Operational level</th>
             <td tal:condition="here/administrative_level | nothing">
-              <tal:level repeat="item here/administrative_level">
-                <tal:block content="python:here.get_node_title('administrative_level', item)"
-                  i18n:translate="" />
-                <tal:block condition="not:repeat/item/end" content="string:, " />
-              </tal:level>
+              <ul>
+                  <li tal:content="python:here.get_node_title('administrative_level', item)"
+                    i18n:translate=""
+                    tal:repeat="item here/administrative_level" />
+              </ul>
             </td>
         </tr>
         <tr>
             <th i18n:translate="">Sustainability</th>
             <td tal:condition="here/sustainability | nothing">
-              <tal:level repeat="item here/sustainability">
-                <tal:block content="python:here.get_node_title('certificate_sustainability', item)"
-                  i18n:translate="" />
-                <tal:block condition="not:repeat/item/end" content="string:, " />
-              </tal:level>
+              <ul>
+                <li tal:content="python:here.get_node_title('certificate_sustainability', item)"
+                  i18n:translate=""
+                  tal:repeat="item here/sustainability" />
+              </ul>
             </td>
         </tr>
         <tr>
             <th i18n:translate="">Credibility</th>
             <td tal:condition="here/credibility | nothing">
-              <tal:level repeat="item here/credibility">
-                <tal:block content="python:here.get_node_title('certificate_credibility', item)"
-                  i18n:translate="" />
-                <tal:block condition="not:repeat/item/end" content="string:, " />
-              </tal:level>
+              <ul>
+                <li tal:content="python:here.get_node_title('certificate_credibility', item)"
+                  i18n:translate="" 
+                  tal:repeat="item here/credibility"/>
+              </ul>
             </td>
         </tr>
         <tr>
             <th i18n:translate="">Services</th>
             <td tal:condition="here/certificate_services | nothing">
-              <tal:level repeat="item here/certificate_services">
-                <tal:block content="python:here.get_node_title('certificate_services', item)"
-                  i18n:translate="" />
-                <tal:block condition="not:repeat/item/end" content="string:, " />
-              </tal:level>
+              <ul>
+                <li tal:content="python:here.get_node_title('certificate_services', item)"
+                  i18n:translate="" 
+                  tal:repeat="item here/certificate_services"/>
+              </ul>
             </td>
         </tr>
         </table>
@@ -210,4 +210,3 @@
     </div>
     </metal:block>
 </metal:block>
-

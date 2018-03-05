@@ -305,31 +305,76 @@ function destinet_get_form_data() {
     }
   })
   if ($('#landscape_type').val() != null){
-  $.each($('#landscape_type').val(), function(index, value){
-    form_data[form_data.length] = '&landscape_type%3Alist=' + value;
-  })
+    $.each($('#landscape_type').val(), function(index, value){
+      form_data[form_data.length] = '&landscape_type%3Alist=' + value;
+    })
   }
-  if ($('#country').val() != null){
-  $.each($('#country').val(), function(index, value){
-    form_data[form_data.length] = '&country%3Alist=' + value;
-  })
+/*  if ($('#country').val() != null){
+    $.each($('#country').val(), function(index, value){
+      form_data[form_data.length] = '&country%3Alist=' + value;
+    })
+  }*/
+  if ([undefined, '', null].indexOf($('#country').val()) == -1){
+    if ($('#country').val() && $('#country').val().constructor == Array){
+      $.each($('#country').val(), function(index, value){
+        form_data[form_data.length] = '&country%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&country%3Alist=' + $('#country').val();
+    }
   }
-  if (['', null].indexOf($('#operational_level').val()) == -1){
-    if ($('#operational_level').val().constructor == Array){
-      $.each($('#operational_level').val(), function(index, value){
+  if ([undefined, '', null].indexOf($('#administrative_level').val()) == -1){
+    if ($('#administrative_level').val() && $('#administrative_level').val().constructor == Array){
+      $.each($('#administrative_level').val(), function(index, value){
         form_data[form_data.length] = '&administrative_level%3Alist=' + value;
       });
     } else {
-        form_data[form_data.length] = '&administrative_level%3Alist=' + $('#operational_level').val();
+        form_data[form_data.length] = '&administrative_level%3Alist=' + $('#administrative_level').val();
     }
   }
-  if (['', null].indexOf($('#geo_types').val()) == -1){
-    if ($('#geo_types').val().constructor == Array){
+  if ([undefined, '', null].indexOf($('#geo_types').val()) == -1){
+    if ($('#geo_types').val() && $('#geo_types').val().constructor == Array){
       $.each($('#geo_types').val(), function(index, value){
         form_data[form_data.length] = '&geo_types%3Alist=' + value;
       });
     } else {
         form_data[form_data.length] = '&geo_types%3Alist=' + $('#geo_types').val();
+    }
+  }
+  if ([undefined, '', null].indexOf($('#category').val()) == -1){
+    if ($('#category').val() && $('#category').val().constructor == Array){
+      $.each($('#category').val(), function(index, value){
+        form_data[form_data.length] = '&category%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&category%3Alist=' + $('#category').val();
+    }
+  }
+  if ([undefined, '', null].indexOf($('#sustainability').val()) == -1){
+    if ($('#sustainability').val() && $('#sustainability').val().constructor == Array){
+      $.each($('#sustainability').val(), function(index, value){
+        form_data[form_data.length] = '&sustainability%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&sustainability%3Alist=' + $('#sustainability').val();
+    }
+  }
+  if ([undefined, '', null].indexOf($('#credibility').val()) == -1){
+    if ($('#credibility').val() && $('#credibility').val().constructor == Array){
+      $.each($('#credibility').val(), function(index, value){
+        form_data[form_data.length] = '&credibility%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&credibility%3Alist=' + $('#credibility').val();
+    }
+  }
+  if ([undefined, '', null].indexOf($('#certificate_services').val()) == -1){
+    if ($('#certificate_services').val() && $('#certificate_services').val().constructor == Array){
+      $.each($('#certificate_services').val(), function(index, value){
+        form_data[form_data.length] = '&certificate_services%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&certificate_services%3Alist=' + $('#certificate_services').val();
     }
   }
   $('.administrative_list input:checkbox:checked').each(function() {
@@ -567,3 +612,4 @@ function onclickpoint(lat, lon, point_id, point_tooltip) {
 
 // can be overwritten to get notifications for the mouse over events
 function onmouseoverpoint(lat, lon, point_id, point_tooltip) {}
+

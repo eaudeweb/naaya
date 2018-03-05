@@ -107,7 +107,7 @@
 
         $('#certificate_services').select2({placeholder: 'All'})
         $('#certificate_services').change(function(){
-          if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
+          if ($(this).val() !== null && $(this).val().indexOf("") !== -1){
             $(this).val("").trigger('change');
           }
           refreshMap();
@@ -117,8 +117,8 @@
           refreshMap();
         });
 
-        $('.placeholder-all').select2({placeholder: 'All'})
-        $('.placeholder-one').select2({placeholder: 'Select at least one'})
+        $('.placeholder-all').select2()
+        $('.placeholder-one').select2()
 
         function refreshMap(){
           clearTimeout(refreshTimer);
@@ -533,16 +533,27 @@
           </div>
           <div class="second-row">
             <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
+              tal:define="parentsList portal_map/getParentsListOrdered" style="display:none">
+              <div class="portalmap_portlet_title" i18n:translate="">Category</div>
+
+              <div class="org_list">
+                <select name="geo_types" id="geo_types">
+                  <option value="symbol998" selected="selected">Certificate</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
               tal:define="parentsList portal_map/getParentsListOrdered">
               <div class="portalmap_portlet_title" i18n:translate="">Category</div>
 
               <div class="org_list" tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
-                <select name="geo_types" id="geo_types" class="map-refresh placeholder-one">
-                    <option></option>
-                    <tal:block repeat="geo_type geo_types">
-                      <option tal:attributes="value geo_type"
-                        tal:content="python:portal_map.getSymbolTitle(geo_type)" />
-                    </tal:block>
+                <select name="category" id="category" class="map-refresh placeholder-all">
+                  <option value="">All</option>
+                  <tal:block repeat="geo_type geo_types">
+                    <option tal:attributes="value geo_type"
+                      tal:content="python:portal_map.getSymbolTitle(geo_type)" />
+                  </tal:block>
                 </select>
               </div>
             </div>
@@ -550,9 +561,9 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
-                <select name="country" id="country" multiple="multiple" class="map-refresh placeholder-all"
+                <select name="country" id="country" class="map-refresh placeholder-all"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
-                  <option></option>
+                  <option value="">All</option>
                   <option tal:attributes="value item/title"
                     tal:content="item/title"
                     tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
@@ -564,8 +575,8 @@
               tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
               <div class="portalmap_portlet_title" i18n:translate="">Operational level</div>
               <div class="operational_level">
-                <select name="operational_level" id="operational_level" class="map-refresh placeholder-all">
-                <option value="">All</option>
+                <select name="administrative_level" id="administrative_level" class="map-refresh placeholder-all">
+                  <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item administrative_list" />
@@ -578,7 +589,7 @@
               <div class="portalmap_portlet_title" i18n:translate="">Sustainability</div>
               <div class="sustainability">
                 <select name="sustainability" id="sustainability" class="map-refresh placeholder-all">
-                  <option></option>
+                  <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item sustainability_types" />
@@ -591,7 +602,7 @@
               <div class="portalmap_portlet_title" i18n:translate="">Credibility</div>
               <div class="credibility">
                 <select name="credibility" id="credibility" class="map-refresh placeholder-all">
-                <option value="all">All</option>
+                <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item credibility_types" />
@@ -604,7 +615,7 @@
               <div class="portalmap_portlet_title" i18n:translate="">Services</div>
               <div class="certificate_services">
                 <select name="services" id="certificate_services" multiple="multiple">
-                <option value="all">All</option>
+                <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item services_types" />
