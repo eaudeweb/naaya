@@ -26,6 +26,8 @@ from naaya.content.base.constants import MUST_BE_NONEMPTY
 from naaya.content.base.constants import MUST_BE_POSITIV_INT
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.certificate.skel import KEYWORD_INDEXES, UPDATE_INDEXES
+from naaya.content.certificate.skel import REF_TREES
 from naaya.core import submitter
 from naaya.core.utils import is_valid_email
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -94,6 +96,41 @@ DEFAULT_SCHEMA['coverage'].update(glossary_id='countries_glossary',
                                   required=True, localized=False)
 DEFAULT_SCHEMA['keywords'].update(glossary_id='keywords_glossary',
                                   required=True, localized=True)
+DEFAULT_SCHEMA['geo_type'].update(
+    custom_template='portal_forms/schemawidget-certificate-geo_type')
+
+
+def certificate_on_install(site):
+    cat = site.getCatalogTool()
+    reindex = []
+    for index in KEYWORD_INDEXES:
+        if index not in cat.indexes():
+            cat.addIndex(index, 'KeywordIndex')
+            reindex.append(index)
+    for index in UPDATE_INDEXES:
+        if cat._catalog.indexes[index['id']].meta_type != index['type']:
+            cat.delIndex(index['id'])
+            cat.addIndex(index['id'], index['type'], extra=index['extra'])
+            reindex.append(index['id'])
+    cat.manage_reindexIndex(reindex)
+    ptool = site.getPortletsTool()
+    for tree in REF_TREES:
+        if not getattr(ptool, tree[0], None):
+            ptool.manage_addRefTree(tree[0])
+            ref_tree = getattr(ptool, tree[0])
+            for k, v in tree[1].items():
+                ref_tree.manage_addRefTreeNode(k, v)
+
+
+def certificate_on_uninstall(site):
+    cat = site.getCatalogTool()
+    for index in KEYWORD_INDEXES:
+        if index in cat.indexes():
+            cat.delIndex(index)
+    ptool = site.getPortletsTool()
+    for tree in REF_TREES:
+        if getattr(ptool, tree[0], None):
+            ptool.manage_delObjects(tree[0])
 
 # this dictionary is updated at the end of the module
 config = {
@@ -101,6 +138,8 @@ config = {
     'module': 'certificate_item',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': 'Naaya Certificate',
+    'on_install': certificate_on_install,
+    'on_uninstall': certificate_on_uninstall,
     'label': 'Certificate',
     'permission': PERMISSION_ADD_CERTIFICATE,
     'forms': ['certificate_add', 'certificate_edit', 'certificate_index'],
