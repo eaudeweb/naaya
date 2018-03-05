@@ -1,5 +1,7 @@
 4.2.13 (unreleased)
 -------------------
+* bugfix in Schema Tool - setting of the glossary id in glossary widget
+  [dumitval]
 
 4.2.12 (2018-02-27)
 -------------------

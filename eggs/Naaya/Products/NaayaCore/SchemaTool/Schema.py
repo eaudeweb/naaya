@@ -92,7 +92,7 @@ class Schema(Folder):
             value = getattr(self.getSite(), '%s_glossary' % name, None)
             if value is None:
                 return
-            self[prop_name].glossary_id = value
+            self[prop_name].glossary_id = value.getId()
         set_glossary('keywords')
         set_glossary('coverage')
 
