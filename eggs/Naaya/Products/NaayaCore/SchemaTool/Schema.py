@@ -11,9 +11,10 @@ from naaya.core.zope2util import folder_manage_main_plus
 from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
-    'String', 'TextArea', 'Date', 'Interval', 'Checkbox', 'URL',
-    'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer', 'File',
+    'String', 'TextArea', 'Date', 'Interval', 'Checkbox', 'URL', 'Select',
+    'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer', 'File',
 ]
+
 
 # widgets
 def _load_widgets():
@@ -23,13 +24,15 @@ def _load_widgets():
         module_name = 'widgets.%sWidget' % name
         method_name = 'add%sWidget' % name
         class_name = '%sWidget' % name
-        i = __import__(module_name, globals(), locals(), [method_name, class_name])
+        i = __import__(
+            module_name, globals(), locals(), [method_name, class_name])
         meta_type = getattr(i, class_name).meta_type
         widget_constructors[name] = getattr(i, method_name)
         widget_types_by_metatype[meta_type] = name
     return widget_constructors, widget_types_by_metatype
 
 widget_constructors, widget_types_by_metatype = _load_widgets()
+
 
 class Schema(Folder):
     """ Container for Schema objects """
@@ -39,12 +42,12 @@ class Schema(Folder):
 
     security = ClassSecurityInfo()
 
-    meta_types = tuple( {
-            'name': meta_type,
-            'action': widget_constructors[
-                            widget_types_by_metatype[meta_type]].func_name,
-            'permission': view_management_screens,
-        } for meta_type in widget_types_by_metatype)
+    meta_types = tuple({
+        'name': meta_type,
+        'action': widget_constructors[
+            widget_types_by_metatype[meta_type]].func_name,
+        'permission': view_management_screens,
+    } for meta_type in widget_types_by_metatype)
 
     all_meta_types = meta_types
 
@@ -58,6 +61,7 @@ class Schema(Folder):
     manage_addWidget_html = PageTemplateFile('zpt/propdef_add', globals())
 
     security.declareProtected(view_management_screens, 'manage_addWidget')
+
     def manage_addWidget(self, name, widget, REQUEST):
         """ form submit handler to create new property definition """
         self.addWidget(name, widget)
@@ -70,6 +74,7 @@ class Schema(Folder):
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declarePrivate('populateSchema')
+
     def populateSchema(self, schema_def):
         """
         Populate this schema with properties from schema_def - this
@@ -80,14 +85,16 @@ class Schema(Folder):
         """
 
         if self.objectIds():
-            raise ValueError('Schema "%s" has already been populated' % self.title_or_id())
+            raise ValueError(
+                'Schema "%s" has already been populated' % self.title_or_id())
         for name, data in schema_def.iteritems():
             self.addWidget(name, **data)
 
         # manually set the keywords & coverage glossaries (ugly hack)
         def set_glossary(name):
             prop_name = '%s-property' % name
-            if prop_name not in self.objectIds(['Naaya Schema Glossary Widget']):
+            if prop_name not in self.objectIds(
+                    ['Naaya Schema Glossary Widget']):
                 return
             value = getattr(self.getSite(), '%s_glossary' % name, None)
             if value is None:
@@ -97,19 +104,22 @@ class Schema(Folder):
         set_glossary('coverage')
 
     security.declareProtected(view_management_screens, 'manage_addProperty')
+
     def manage_addProperty(self, REQUEST):
         """ Web method to create property widgets from ZMI """
         self.addWidget(**REQUEST.form)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_workspace')
 
     security.declarePrivate('addWidget')
+
     def addWidget(self, name, **kwargs):
         """ Add a Widget object to this schema """
 
         propdef_id = widgetid_from_propname(name)
         title = kwargs.get('label', name)
 
-        widget_id = widget_constructors[kwargs['widget_type']](self, id=propdef_id, title=title)
+        widget_id = widget_constructors[kwargs['widget_type']](
+            self, id=propdef_id, title=title)
         widget = self._getOb(widget_id)
 
         for name, value in kwargs.iteritems():
@@ -130,8 +140,8 @@ class Schema(Folder):
         try:
             return self._getOb(widgetid_from_propname(prop_name))
         except AttributeError:
-            raise KeyError('Property "%s" not found in schema "%s"' \
-                    % (prop_name, self.title_or_id()))
+            raise KeyError('Property "%s" not found in schema "%s"'
+                           % (prop_name, self.title_or_id()))
 
     def listWidgets(self):
         """ List this schema's properties, sorted by their sortorder """
@@ -140,6 +150,7 @@ class Schema(Folder):
         return output
 
     security.declarePrivate('listPropNames')
+
     def listPropNames(self, local=False):
         """
         Returns a set with the names of all properties (or just the localized
@@ -151,6 +162,7 @@ class Schema(Folder):
         return set(map(lambda w: w.prop_name(), widgets))
 
     security.declarePrivate('processForm')
+
     def processForm(self, form, _all_values=True):
         """
         Parse the given form against this schema, do validation, then
@@ -169,7 +181,7 @@ class Schema(Folder):
                 raw_value = {}
                 for key, value in form.iteritems():
                     if key.startswith(field_name + '.'):
-                        raw_value[key[len(field_name)+1:]] = value
+                        raw_value[key[len(field_name) + 1:]] = value
                 if not raw_value:
                     raw_value = None
             else:
@@ -188,7 +200,8 @@ class Schema(Folder):
             errors = []
             try:
                 widget.validateDatamodel(value)
-                # we pass a doctored dict that looks like what our widget expects from the form
+                # we pass a doctored dict that looks like what our widget
+                # expects from the form
                 widget_value = widget.parseFormData(value)
                 form_data[field_name] = widget.convertValue(widget_value)
             except WidgetError, e:
@@ -201,6 +214,7 @@ class Schema(Folder):
         return form_data, form_errors
 
     security.declarePrivate('get_content_type')
+
     def get_content_type(self):
         """ Get content_type with this schema attached"""
         for content_type in self.get_pluggable_content().values():
@@ -209,8 +223,10 @@ class Schema(Folder):
         return None
 
     security.declarePrivate('getDefaultDefinition')
+
     def getDefaultDefinition(self):
-        """ get initial definition for this schema, from the NyZzz Python module """
+        """ get initial definition for this schema,
+        from the NyZzz Python module """
         content_type = self.get_content_type()
         if content_type is not None:
             return content_type.get('default_schema', None)
@@ -225,8 +241,10 @@ class Schema(Folder):
     admin_html = PageTemplateFile('zpt/admin_schema', globals())
 
     manage_main = folder_manage_main_plus
-    _manage_extra_footer = PageTemplateFile('zpt/manage_extra_footer', globals())
+    _manage_extra_footer = PageTemplateFile('zpt/manage_extra_footer',
+                                            globals())
     security.declareProtected(view_management_screens, 'ny_after_listing')
+
     def ny_after_listing(self):
         options = {
             'widget_types': widget_constructors.keys(),
