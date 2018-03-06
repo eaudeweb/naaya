@@ -1,5 +1,6 @@
 4.2.14 (unreleased)
 -------------------
+* uncomment method to uninstall product [dumitval]
 
 4.2.13 (2018-03-06)
 -------------------

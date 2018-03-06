@@ -4476,10 +4476,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                        if x != meta_type]
             # not removing the permission (why bother?)
 
-            # pitem = self.get_pluggable_item(meta_type)
+            pitem = self.get_pluggable_item(meta_type)
             # run `on_uninstall` function if defined in content's `config`
-            # if 'on_uninstall' in pitem:
-            #    pitem['on_uninstall'](self)
+            if 'on_uninstall' in pitem:
+                pitem['on_uninstall'](self)
 
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' %
