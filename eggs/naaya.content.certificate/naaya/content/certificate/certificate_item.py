@@ -98,6 +98,8 @@ DEFAULT_SCHEMA['keywords'].update(glossary_id='keywords_glossary',
                                   required=True, localized=True)
 DEFAULT_SCHEMA['geo_type'].update(
     custom_template='portal_forms/schemawidget-certificate-geo_type')
+DEFAULT_SCHEMA['description'].update(
+    custom_template='portal_forms/schemawidget-certificate-description')
 
 
 def certificate_on_install(site):

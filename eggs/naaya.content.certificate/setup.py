@@ -9,6 +9,6 @@ setup(name='naaya.content.certificate',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya >= 4.2.0',
+          'Naaya >= 4.2.13',
       ]
       )
