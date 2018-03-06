@@ -1,4 +1,7 @@
-0.0.2 (unreleased)
+0.0.3 (unreleased)
+------------------
+
+0.0.2 (2018-03-06)
 ------------------
 * added index for credibility to skel [dumitval]
 
