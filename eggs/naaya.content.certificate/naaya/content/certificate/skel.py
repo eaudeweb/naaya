@@ -19,7 +19,8 @@ REF_TREES = [
      )
 ]
 
-KEYWORD_INDEXES = ['category', 'sustainability', 'certificate_services']
+KEYWORD_INDEXES = ['category', 'credibility', 'certificate_services',
+                   'sustainability']
 UPDATE_INDEXES = [
     {'id': 'administrative_level',
      'type': 'KeywordIndex',

@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import transaction
 from copy import deepcopy
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -129,10 +130,14 @@ def certificate_on_uninstall(site):
     for index in KEYWORD_INDEXES:
         if index in cat.indexes():
             cat.delIndex(index)
+            cat._p_changed = True
+            transaction.commit()
     ptool = site.getPortletsTool()
     for tree in REF_TREES:
         if getattr(ptool, tree[0], None):
             ptool.manage_delObjects(tree[0])
+            ptool._p_changed = True
+            transaction.commit()
 
 # this dictionary is updated at the end of the module
 config = {
