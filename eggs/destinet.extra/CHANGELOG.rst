@@ -1,5 +1,6 @@
 1.3.3 - (unreleased)
 =======================
+* add methods to support the quickfinder [dumitval]
 
 1.3.2 - (2018-02-23)
 =======================
