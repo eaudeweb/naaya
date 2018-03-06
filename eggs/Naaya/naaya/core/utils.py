@@ -195,7 +195,7 @@ def is_valid_email(email):
     """
     Validate e-mail address against regular expression
     """
-    if VALID_EMAIL_PATTERN.match(str(email)):
+    if VALID_EMAIL_PATTERN.match(str(email.encode('utf-8'))):
         return True
     return False
 
