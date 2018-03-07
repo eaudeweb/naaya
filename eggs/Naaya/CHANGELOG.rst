@@ -1,4 +1,7 @@
-4.2.15 (unreleased)
+4.2.16 (unreleased)
+-------------------
+
+4.2.15 (2018-03-07)
 -------------------
 * bugfix in the list_locations method [dumitval]
 
