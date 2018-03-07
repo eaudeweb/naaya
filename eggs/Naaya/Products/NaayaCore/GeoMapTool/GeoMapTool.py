@@ -968,7 +968,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         except ValueError:
             options['start'] = 0
         try:
-            options['end'] = kw.get('all_records') and len(results) - 1 or int(
+            options['end'] = kw.get('all_records') and len(results) or int(
                 kw.get('end', step))
         except ValueError:
             options['end'] = int(step)
