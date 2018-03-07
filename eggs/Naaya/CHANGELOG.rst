@@ -1,5 +1,6 @@
 4.2.14 (unreleased)
 -------------------
+* bugfix in import from excel adding to geolocation queue [dumitval]
 * handle unicode characters fed to is_valid_email [dumitval]
 * uncomment method to uninstall product [dumitval]
 

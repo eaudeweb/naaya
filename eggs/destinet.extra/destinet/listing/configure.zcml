@@ -22,16 +22,4 @@
         handler=".listing.change_to_english"
         permission="zope.Public" />
 
-    <naaya:simpleView
-        for="*"
-        name="get_market_place_types"
-        handler=".listing.get_market_place_types"
-        permission="zope.Public" />
-
-    <naaya:simpleView
-        for="*"
-        name="get_market_place_types_js"
-        handler=".listing.get_market_place_types_js"
-        permission="zope.Public" />
-
 </configure>

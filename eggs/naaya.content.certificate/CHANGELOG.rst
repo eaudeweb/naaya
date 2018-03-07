@@ -1,5 +1,7 @@
 0.0.3 (unreleased)
 ------------------
+* removed custom template for category property [dumitval]
+* extended on_install and on_uninstall methods [dumitval]
 * remove mandatory status on some fields [dumitval]
 * allow comma separated emails when checking for validity [dumitval]
 

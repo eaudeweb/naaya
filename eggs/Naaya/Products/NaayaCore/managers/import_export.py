@@ -216,6 +216,8 @@ class CSVImportTool(Implicit, Item):
                                 site.geolocation_queue.append(
                                     '/' + site.getId() + '/' +
                                     path_in_site(ob))
+                                site._p_changed = True
+                                transaction.commit()
                             else:
                                 site.geolocation_queue = [
                                     '/' + site.getId() + '/' +

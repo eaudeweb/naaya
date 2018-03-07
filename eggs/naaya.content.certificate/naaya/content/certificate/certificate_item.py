@@ -67,8 +67,7 @@ PROPERTIES_OBJECT = {
 DEFAULT_SCHEMA = {
     'category': dict(
         sortorder=100, widget_type='SelectMultiple', required=True,
-        label='Certified categories',
-        custom_template='portal_forms/schemawidget-certificate-category',
+        label='Certified categories', list_id="certificate_categories",
         help_text='Click on the items from the list below to '
                   'select/deselect them.'),
     'administrative_level': dict(
@@ -84,7 +83,7 @@ DEFAULT_SCHEMA = {
         sortorder=140, widget_type='SelectMultiple', label='Service',
         list_id='certificate_services', required=True),
     'organisation': dict(sortorder=150, widget_type='String',
-                         label='Organisation', localized=True, required=True),
+                         label='Organisation', localized=True),
     'phone': dict(sortorder=170, widget_type='String', label='Phone'),
     'fax': dict(sortorder=180, widget_type='String', label='Fax'),
     'cellphone': dict(sortorder=190, widget_type='String', label='Cell phone'),
@@ -98,7 +97,8 @@ DEFAULT_SCHEMA['coverage'].update(glossary_id='countries_glossary',
 DEFAULT_SCHEMA['keywords'].update(glossary_id='keywords_glossary',
                                   localized=True)
 DEFAULT_SCHEMA['geo_type'].update(
-    custom_template='portal_forms/schemawidget-certificate-geo_type')
+    custom_template='portal_forms/schemawidget-certificate-geo_type',
+    visible=True)
 DEFAULT_SCHEMA['description'].update(
     custom_template='portal_forms/schemawidget-certificate-description')
 
@@ -123,6 +123,14 @@ def certificate_on_install(site):
             ref_tree = getattr(ptool, tree[0])
             for k, v in tree[1].items():
                 ref_tree.manage_addRefTreeNode(k, v)
+    maptool = site.getGeoMapTool()
+    parent = maptool.getParentByTitle('MARKET PLACE')
+    geo_type_list = maptool.getSymbolChildrenOrdered(parent.id)
+    if not getattr(ptool, 'certificate_categories', None):
+        ptool.manage_addRefTree('certificate_categories')
+        ref_tree = getattr(ptool, 'certificate_categories')
+        for geo_type in geo_type_list:
+            ref_tree.manage_addRefTreeNode(geo_type.id, geo_type.title)
 
 
 def certificate_on_uninstall(site):
@@ -138,6 +146,10 @@ def certificate_on_uninstall(site):
             ptool.manage_delObjects(tree[0])
             ptool._p_changed = True
             transaction.commit()
+    if getattr(ptool, 'certificate_categories', None):
+        ptool.manage_delObjects('certificate_categories')
+        ptool._p_changed = True
+        transaction.commit()
 
 # this dictionary is updated at the end of the module
 config = {

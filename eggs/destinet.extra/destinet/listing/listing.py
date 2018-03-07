@@ -1,7 +1,3 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 NaayaPageTemplateFile('zpt/topic', globals(), 'destinet_topics_listing')
@@ -150,39 +146,3 @@ def change_to_english(context, request):
         context.getSite().portal_i18n.get_negotiator().change_language(
             'en', context, request)
     return
-
-
-def get_market_place_types_js(context, request):
-    """
-    get the market place geo types for the multiple select schema widget
-    (custom template).
-    """
-    gettext = context.getSite().getPortalTranslations()
-
-    def get_info(ob):
-        return {
-            'data': gettext(ob.title),
-            'attributes': {
-                'id': ob.id,  # TODO: rename for this field, "id"
-                              # happens to mean someting in HTML.
-                'rel': 'node',
-                'weight': geo_type_list.index(ob),
-            },
-            'children': [],
-        }
-    maptool = context.getSite().getGeoMapTool()
-    parent = maptool.getParentByTitle('MARKET PLACE')
-    geo_type_list = maptool.getSymbolChildrenOrdered(parent.id)
-    return json.dumps([get_info(ob) for ob in geo_type_list])
-
-
-def get_market_place_types(context, request):
-    """
-    get the market place geo types for the multiple select schema widget
-    (custom template).
-    """
-    gettext = context.getSite().getPortalTranslations()
-    maptool = context.getSite().getGeoMapTool()
-    parent = maptool.getParentByTitle('MARKET PLACE')
-    geo_type_list = maptool.getSymbolChildrenOrdered(parent.id)
-    return [{'id': ob.id, 'title': gettext(ob.title)} for ob in geo_type_list]
