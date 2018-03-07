@@ -8,6 +8,7 @@ def initialize(context):
     source = 'Products.NaayaCore.GeoMapTool.GeoMapTool'
     geomap_tool = importlib.import_module(source).GeoMapTool
     geomap_tool.export_geo_rss_dzt = export_geo_rss_dzt
+    geomap_tool.list_locations = list_locations
 
 
 def export_geo_rss_dzt(self, sort_on='', sort_order='',
@@ -128,3 +129,123 @@ def export_geo_rss_dzt(self, sort_on='', sort_order='',
                                    'attachment;filename=locations.xml')
     rss.append("</feed>")
     return '\n'.join(rss)
+
+
+def list_locations(self, REQUEST=None, **kw):
+    """" """
+    if REQUEST is not None:
+        kw.update(REQUEST.form)
+    lat_min, lat_max, lon_min, lon_max = \
+        kw.get('lat_min', ''),\
+        kw.get('lat_max', ''),\
+        kw.get('lon_min', ''),\
+        kw.get('lon_max', '')
+    try:
+        float(lat_min)
+    except ValueError:
+        # incorrect format of the coordinate
+        lat_min = ''
+    try:
+        float(lat_max)
+    except ValueError:
+        # incorrect format of the coordinate
+        lat_max = ''
+    try:
+        float(lon_min)
+    except ValueError:
+        # incorrect format of the coordinate
+        lon_min = ''
+    try:
+        float(lon_max)
+    except ValueError:
+        # incorrect format of the coordinate
+        lon_max = ''
+    geo_types = kw.get('geo_types', [])
+    if geo_types == '':
+        geo_types = []
+    if isinstance(geo_types, str):
+        geo_types = geo_types.split(',')
+    category = kw.get('category', '')
+    sustainability = kw.get('sustainability', '')
+    credibility = kw.get('credibility', '')
+    certificate_services = kw.get('certificate_services', [])
+    if isinstance(certificate_services, basestring):
+        certificate_services = certificate_services.split(',')
+
+    administrative_level = kw.get('administrative_level', [])
+    if administrative_level == '':
+        administrative_level = []
+    if isinstance(administrative_level, str):
+        administrative_level = administrative_level.split(',')
+    landscape_type = kw.get('landscape_type', [])
+    if landscape_type == '':
+        landscape_type = []
+    if isinstance(landscape_type, str):
+        landscape_type = landscape_type.split(',')
+    topics = kw.get('topics', [])
+    if topics == '':
+        topics = []
+    if isinstance(topics, str):
+        topics = topics.split(',')
+    geo_query = kw.get('geo_query', '')
+    country = kw.get('country', '')
+
+    sort_on, sort_order = '', ''
+    if kw.get('sortable', ''):
+        sort_on = kw.get('sort_on', '')
+        sort_order = kw.get('sort_order', '')
+
+    first_letter = kw.get('first_letter', '')
+
+    results = self.search_geo_objects(
+        lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,
+        lon_max=lon_max, geo_types=geo_types, category=category,
+        sustainability=sustainability, credibility=credibility,
+        certificate_services=certificate_services, query=geo_query,
+        administrative_level=administrative_level,
+        landscape_type=landscape_type, topics=topics,
+        first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
+        country=country,
+    )
+    options = {}
+    options['lat_min'] = lat_min
+    options['lat_max'] = lat_max
+    options['lon_min'] = lon_min
+    options['lon_max'] = lon_max
+    options['geo_types'] = geo_types
+    options['category'] = category
+    options['sustainability'] = sustainability
+    options['credibility'] = credibility
+    options['certificate_services'] = certificate_services
+    options['administrative_level'] = administrative_level
+    options['landscape_type'] = landscape_type
+    options['topics'] = topics
+    options['geo_query'] = geo_query
+    options['country'] = country
+    try:
+        options['step'] = int(kw.get('step', '50'))
+    except ValueError:
+        options['step'] = 50
+    step = options['step']
+    try:
+        options['start'] = int(kw.get('start', '0'))
+    except ValueError:
+        options['start'] = 0
+    try:
+        options['end'] = kw.get('all_records') and len(results) or int(
+            kw.get('end', step))
+    except ValueError:
+        options['end'] = int(step)
+    options['sortable'] = kw.get('sortable', 'True')
+    options['sort_on'] = sort_on
+    options['sort_order'] = sort_order
+    options['first_letter'] = first_letter
+    options['results'] = len(results)
+    options['next_start'] = options['end']
+    options['next_end'] = options['end'] + step
+    options['prev_start'] = options['start'] - step
+    options['prev_end'] = options['start']
+    options['records'] = results[options['start']:options['end']]
+    options['ratable_records'] = self._ratable_results(
+        results[options['start']:options['end']])
+    return self._list_locations(**options)

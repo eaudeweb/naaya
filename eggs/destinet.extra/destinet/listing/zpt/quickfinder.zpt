@@ -502,7 +502,7 @@
         <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
-          <div class="first-row clearfix">
+          <div class="first-row clearfix" id="filter_map">
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Filter by Keyword
@@ -653,7 +653,8 @@
           <p id="js_links" style="display: none;">
             <span tal:condition="not:map_only" i18n:translate="">
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
-            </span>
+            </span>&nbsp;
+            <a href="" style="display:none" id="view_as_list">View as list</a>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">
             <div id="map"></div>

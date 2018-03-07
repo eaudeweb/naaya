@@ -1,5 +1,7 @@
 1.3.5 - (unreleased)
 =======================
+* customised geomaptool list_locations [dumitval]
+* make list_locations available from outside the portal map [dumitval]
 
 1.3.4 - (2018-03-07)
 =======================

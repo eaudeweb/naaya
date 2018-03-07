@@ -1,4 +1,5 @@
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.GeoMapTool.GeoMapTool import GeoMapTool
 
 NaayaPageTemplateFile('zpt/topic', globals(), 'destinet_topics_listing')
 NaayaPageTemplateFile('zpt/quickfinder', globals(),
@@ -146,3 +147,8 @@ def change_to_english(context, request):
         context.getSite().portal_i18n.get_negotiator().change_language(
             'en', context, request)
     return
+
+
+def map_list_locations(context, request, **kw):
+    """ make list_locations available outside of portal_map """
+    return context.getGeoMapTool().list_locations(request, **kw)

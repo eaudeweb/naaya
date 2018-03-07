@@ -22,4 +22,10 @@
         handler=".listing.change_to_english"
         permission="zope.Public" />
 
+    <naaya:simpleView
+        for="*"
+        name="list_locations"
+        handler=".listing.map_list_locations"
+        permission="zope.Public" />
+
 </configure>
