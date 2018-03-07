@@ -1,4 +1,7 @@
-1.3.4 - (unreleased)
+1.3.5 - (unreleased)
+=======================
+
+1.3.4 - (2018-03-07)
 =======================
 * moved certificate related methods to the respective content type [dumitval]
 
