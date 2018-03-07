@@ -1,4 +1,7 @@
-4.2.14 (unreleased)
+4.2.15 (unreleased)
+-------------------
+
+4.2.14 (2018-03-07)
 -------------------
 * bugfix in import from excel adding to geolocation queue [dumitval]
 * handle unicode characters fed to is_valid_email [dumitval]
