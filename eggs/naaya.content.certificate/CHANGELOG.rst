@@ -1,4 +1,7 @@
-0.0.3 (unreleased)
+0.0.4 (unreleased)
+------------------
+
+0.0.3 (2018-03-07)
 ------------------
 * removed custom template for category property [dumitval]
 * extended on_install and on_uninstall methods [dumitval]
