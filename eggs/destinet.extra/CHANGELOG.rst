@@ -1,5 +1,6 @@
 1.3.6 - (unreleased)
 =======================
+* add custom listing for green travel maps [dumitval]
 
 1.3.5 - (2018-03-07)
 =======================
