@@ -1,4 +1,7 @@
-1.3.6 - (unreleased)
+1.3.7 - (unreleased)
+=======================
+
+1.3.6 - (2018-03-08)
 =======================
 * add custom listing for green travel maps [dumitval]
 
