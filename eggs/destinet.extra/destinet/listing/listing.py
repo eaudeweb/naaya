@@ -1,26 +1,29 @@
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.GeoMapTool.GeoMapTool import GeoMapTool
 
 NaayaPageTemplateFile('zpt/topic', globals(), 'destinet_topics_listing')
 NaayaPageTemplateFile('zpt/quickfinder', globals(),
                       'destinet_quickfinder_listing')
+NaayaPageTemplateFile('zpt/green_travel_maps', globals(),
+                      'destinet_green_travel_maps_listing')
 
 """ User interface methods (views) used for the custom listing """
 
 META_TYPES = [
-    'Naaya Youtube', 'Naaya Contact', 'Naaya News', 'Naaya Story',
-    'Naaya Best Practice', 'Naaya Blob File', 'Naaya Document',
+    'Naaya Youtube', 'Naaya Certificate', 'Naaya Contact', 'Naaya News',
+    'Naaya Story', 'Naaya Best Practice', 'Naaya Blob File', 'Naaya Document',
     'Naaya Pointer', 'Naaya Event', 'Naaya URL', 'Naaya Publication',
     'Naaya File'
 ]
 
 RESOURCE_META_TYPES = [
     'Naaya News', 'Naaya Best Practice', 'Naaya Blob File', 'Naaya Pointer',
-    'Naaya Event', 'Naaya URL', 'Naaya Publication', 'Naaya File'
+    'Naaya Event', 'Naaya URL', 'Naaya Publication', 'Naaya File',
+    'Naaya Certificate'
 ]
 
 META2FRIENDLY = {
     'Naaya Youtube': 'Youtube Video',
+    'Naaya Certificate': 'Certificate',
     'Naaya Contact': 'Contact',
     'Naaya News': 'News Item',
     'Naaya Story': 'Story Item',
@@ -36,6 +39,7 @@ META2FRIENDLY = {
 
 RESOURCE_FRIENDLY_NAMES = {
     'News Item': ['Naaya News'],
+    'Certificate': ['Naaya Certificate'],
     'Best Practice': ['Naaya Best Practice'],
     'File': ['Naaya Blob File', 'Naaya File'],
     'Pointer': ['Naaya Pointer'],
@@ -43,6 +47,34 @@ RESOURCE_FRIENDLY_NAMES = {
     'URL': ['Naaya URL'],
     'Publication': ['Naaya Publication']
 }
+
+CERTIFICATE_KEYWORDS = (
+    ('Alpine Pearls', 'Alpine Pearls'),
+    ('austrian ecolabel', 'Austrian Ecolabel'),
+    ('Biohotels', 'Biohotels'),
+    ('Biosph\xc3\xa4rengastgeber', 'Biosph\xc3\xa4rengastgeber'),
+    ('Blaue Schwalbe', 'Blaue Schwalbe'),
+    ('BR-Bliesgau', 'BR-Bliesgau'),
+    ('CGH', 'CGH'),
+    ('DEHOGA-Umweltcheck', 'DEHOGA-Umweltcheck'),
+    ('eco certification malta', 'ECO certification Malta'),
+    ('eco-romania', 'ECO Romania'),
+    ('ecocamping', 'Ecocamping'),
+    ('ecolabel luxemburg', 'Ecolabel Luxemburg'),
+    ('Fzn', 'FZN'),
+    ('green globe', 'Green globe'),
+    ('green key', 'Green key'),
+    ('greenpearls', 'Green Pearls'),
+    ('Greensign', 'GreenSign'),
+    ('GTBS', 'GTBS'),
+    ('QualityCoast Award', 'QualityCoast Award'),
+    ('lapalmaclub', 'Lapalmaclub'),
+    ('lt-c', 'LT-C'),
+    ('NP-SH-Wattenmeer', 'NP-SH-Wattenmeer'),
+    ('terresdelebro', 'Terresdelebro'),
+    ('TourCert', 'TourCert'),
+    ('Viabono', 'Viabono'),
+)
 
 
 def get_object_types(context, request):
@@ -152,3 +184,8 @@ def change_to_english(context, request):
 def map_list_locations(context, request, **kw):
     """ make list_locations available outside of portal_map """
     return context.getGeoMapTool().list_locations(request, **kw)
+
+
+def get_keywords(context, request):
+    """ return main keywords for map filtering in Green Travel Maps """
+    return CERTIFICATE_KEYWORDS

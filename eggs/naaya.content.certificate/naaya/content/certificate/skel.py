@@ -16,7 +16,7 @@ REF_TREES = [
       'environmental': 'Environmental',
       'gstc-recognised': 'GSTC recognised',
       'unspecified': 'Unspecified'}
-     )
+     ),
 ]
 
 KEYWORD_INDEXES = ['category', 'credibility', 'certificate_services',

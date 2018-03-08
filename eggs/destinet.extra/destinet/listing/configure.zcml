@@ -33,4 +33,10 @@
         handler=".listing.map_list_locations"
         permission="zope.Public" />
 
+    <naaya:simpleView
+        for="*"
+        name="get_keywords"
+        handler=".listing.get_keywords"
+        permission="zope.Public" />
+
 </configure>

@@ -1,0 +1,383 @@
+<metal:page metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
+  <metal:meta fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:condition="here/keywords"
+          tal:attributes="content here/keywords" name="keywords" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </metal:meta>
+
+  <metal:title metal:fill-slot="header-title">
+      <title tal:content="string:${here/title} | ${here/site_title}" />
+  </metal:title>
+
+  <metal:head metal:fill-slot="head">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/diacritics-sort.js"></script>
+    <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
+    <style>
+      .show_more{
+        font-weight: bold;
+      }
+    </style>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      $(document).ready(function() {
+        var plus_url = 'misc_/Naaya/plus.gif';
+        var minus_url = 'misc_/Naaya/minus.gif';
+        var refreshTimer;
+        var refreshInterval = 2000;
+        $('.hidden').hide();
+        $('.hidden').each(function() {
+          if ($(this).attr('id') != 'dialog-delete-confirm') {
+            $(this).before('<img class="show_more" src=' + plus_url + ' /> <a class="show_more" href="javascript:void(0)">More<' + '/a>');
+          }
+        });
+        $('a.show_more').click(function() {
+          if ($(this).text() == 'More') {
+            $(this).text('Less');
+            $(this).prev().attr('src', minus_url);
+            $(this).next().slideDown();
+          } else {
+            $(this).next().slideUp();
+            $(this).text('More');
+            $(this).prev().attr('src', plus_url);
+          }
+        });
+        $('img.show_more').click(function() {
+          if ($(this).attr('src') == plus_url) {
+            $(this).next().text('Less');
+            $(this).attr('src', minus_url);
+            $(this).next().next().slideDown();
+          } else {
+            $(this).next().next().slideUp();
+            $(this).next().text('More');
+            $(this).attr('src', plus_url);
+          }
+        });
+        if ($('#folderfile_list table tr').length > 0){
+          $('#folderfile_list').DataTable({
+            'sPaginationType': 'full_numbers',
+            "pageLength": 10,
+            "lengthMenu": [ [10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "All"] ]
+          });
+        }
+
+        $('#compas_topics').click(function(event) {
+          event.preventDefault();
+        });
+
+        $('.select2').select2()
+
+        //map configuration
+        $('#geo_types').select2({placeholder: 'Select at least one organisation type'})
+        $('#geo_types').val(geo_types).trigger('change.select2');
+        $('#geo_types').change(function(){
+          if ($(this).val() == null){
+            $('#geo_types').val(geo_types).trigger('change.select2');
+          }
+          refreshMap();
+        });
+
+        $('#landscape_type').select2({placeholder: 'All'})
+        $('#landscape_type').change(function(){
+          if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
+            $(this).val("").trigger('change');
+          }
+          refreshMap();
+        });
+
+        $('.map-refresh').change(function(){
+          refreshMap();
+        });
+
+        function refreshMap(){
+          clearTimeout(refreshTimer);
+          refreshTimer = setTimeout(startMapRefresh, refreshInterval);
+        }
+
+        function formatState (state) {
+          if (!state.id) {
+            return state.text;
+          }
+          var baseUrl = "/user/pages/images/flags";
+          var $state = $(
+            '<span><img src="' + baseUrl + '/' + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + '<' + '/span>'
+          );
+          return $state;
+        };
+
+      });
+    </script>
+  </metal:head>
+
+  <metal:body fill-slot="body"
+    tal:define="objects_info here/checkPermissionManageObjects;
+                    folders_list python:objects_info[6];
+                    objects_list python:objects_info[7];
+                    logo here/getFolderLogo;
+                    portal_map here/getGeoMapTool;
+                    target_groups python:here.REQUEST.get('target_groups', [])">
+    <div id="center_content" class="main-content">
+      <script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
+
+      <div class="content-actions"
+           tal:define="site here/getSite;
+                       notif_tool python: site.portal_notification;
+                       notif_url notif_tool/absolute_url;
+                       subscriptions_url string:${notif_url}/my_subscriptions_html">
+        <a tal:define="path_in_site python: here.rstk['path_in_site'](here)"
+           tal:attributes="href string:${subscriptions_url}?location=${path_in_site}"
+           title="Subscribe to notifications"
+           i18n:attributes="title"
+           i18n:translate=""
+           class="btn btn-content"><i class="fa fa-newspaper-o" aria-hidden="true"></i>
+            Subscribe
+        </a>
+        <a href="javascript:this.print();" class="btn btn-content"><i class="fa fa-print"></i> Print</a>
+        <button class="btn btn-content" id="share_button"><i class="fa fa-share"></i> Share</button>
+        <div class="folder_social">
+          <div class="folder_social_icons">
+            <div id="fb-root"></div>
+            <a class="feed_link" rel="external"
+                tal:attributes="href string:${here/absolute_url}/index_atom">
+                &nbsp;</a>
+            <a class="facebook_link" rel="external"
+                tal:attributes="href string:https://www.facebook.com/sharer.php?u=${here/absolute_url}">
+                &nbsp;</a>
+            <a class="twitter_link" rel="external"
+                tal:attributes="href string:https://twitter.com/intent/tweet?text=${here/absolute_url}">
+                &nbsp;</a>
+            <a class="linkedin_link" rel="external"
+                tal:attributes="href string:https://www.linkedin.com/shareArticle?mini=true&url=${here/absolute_url}&title=${here/site_title}, ${here/title_or_id}">
+                &nbsp;</a>
+          </div>
+        </div>
+        <form method="get" tal:attributes="action string:${site_url}/search_html" class="search-form">
+          <div class="search-wrapper">
+            <input id="query" type="text" name="query:utf8:ustring" accesskey="4"  class="search-input" type="text" placeholder="Search"/><i class="fa fa-search"></i>
+            <input type="submit" value="GO" class="search_btn" />
+          </div>
+        </form>
+      </div>
+      <h1 class="content-title">
+        <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" />
+        <tal:title tal:replace="here/title_or_id" />
+        <tal:hasview tal:condition="here/can_be_seen">
+          <tal:restrictions tal:condition="here/has_restrictions" i18n:translate="">
+              [Limited access]
+          </tal:restrictions>
+        </tal:hasview>
+        <tal:noview tal:condition="python:not here.can_be_seen()" i18n:translate="">
+            [Restricted access]
+        </tal:noview>
+        <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+          <span i18n:translate="">Item only translated in </span>
+          <span tal:repeat="lang here/gl_get_languages_map">
+            <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+          </span>
+        </span>
+      </h1>
+
+      <div tal:attributes="style python:test(here.getLocalProperty('intro'),None,'border: none')"
+           class="content-header clearfix">
+        <div class="content-left"
+             tal:condition="python:here.getLocalProperty('intro')"
+             tal:attributes="style python:test(logo,None,'width:100%')"
+             tal:content="structure python:here.getLocalProperty('intro')">
+        </div>
+        <div tal:condition="logo" tal:attributes="style python:test(here.getLocalProperty('intro'),None,'width:100%')"
+              class="content-right">
+          <img tal:attributes="src logo/absolute_url"
+              alt="Folder logo" i18n:attributes="alt" />
+        </div>
+      </div>
+
+      <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+      <!-- BEGIN MAP INTEGRATION -->
+      <link rel="stylesheet" type="text/css"
+        tal:attributes="href python:here.getSite().absolute_url()+'/++resource++destinet.listing/map_integration.css'" />
+      <tal:map
+        define="topics python:request.get('topics', []);
+                geo_query request/geo_query|nothing;
+                address request/address|nothing;
+                path python:'/'.join(here.getSite().getPhysicalPath()) + '/' + request.get('path', '');
+                zoom request/zoom|nothing;
+                map_only python:request.get('map_only', 0);
+                map_override python:{};
+                ">
+        <tal:address condition="address">
+          <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
+        </tal:address>
+        <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
+        <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
+        <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
+        <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>
+
+        <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
+          <div class="second-row clearfix" id="filter_map">
+            <div class="portalmap_portlet portalmap_filter" style="display:none">
+              <div class="portalmap_portlet_title" i18n:translate="">
+                Zoom to location
+              </div>
+              <div class="portalmap_portlet_content">
+                <input type="text" id="address" name="address:ustring:utf8" readonly="readonly"
+                tal:attributes="value request/address|string:"
+                onkeypress="return handleKeyPress(this, event);" />
+                <input type="button" name="address_button" id="address_button"
+                value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
+              </div>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
+              <div class="country_list">
+                <select name="country" id="country" class="map-refresh select2"
+                  tal:define="glossary python:here.getSite()['countries_glossary']">
+                  <option value="">All</option>
+                  <option tal:attributes="value item/title"
+                    tal:content="item/title"
+                    tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
+                </select>
+              </div>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by categories</div>
+              <div class="org_list">
+                <select name="geo_types" id="geo_types" multiple="multiple" class="select2"
+                    tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
+                  <option></option>
+                  <tal:block repeat="geo_type geo_types">
+                    <option tal:attributes="value geo_type"
+                      tal:content="python:portal_map.getSymbolTitle(geo_type)" />
+                  </tal:block>
+                </select>
+              </div>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter"
+                tal:define="certificate_keywords here/get_keywords">
+              <div class="portalmap_portlet_title" i18n:translate="">
+                Filter by Certificate
+              </div>
+              <select name="geo_query" id="geo_query" class="map-refresh select2">
+                <option value="">All</option>
+                  <option tal:attributes="value python:item[0]"
+                          tal:content="python:item[1]"
+                          tal:repeat="item certificate_keywords" />
+              </select>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter"
+              tal:define="landscape_list python:here.get_list_nodes('landscape_type')">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by landscape type</div>
+              <select id="landscape_type" name="landscape_type" multiple="multiple" class="map-refresh select2">
+                <option value="all">All</option>
+                <option tal:repeat="item landscape_list"
+                  tal:attributes="value item/id" tal:content="item/title" />
+              </select>
+            </div>
+            <input type="hidden" id="path" name="path"
+              tal:attributes="value path" />
+          </div>
+          <noscript>
+            <p i18n:translate="" style="color: #77b81f;">
+              You must have Javascript turned on to access all the Geo Map features.
+            </p>
+          </noscript>
+          <p id="js_links" style="display: none;">
+            <span tal:condition="not:map_only" i18n:translate="">
+              Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
+            </span>&nbsp;
+            <a href="" style="display:none" id="view_as_list">View as list</a>
+          </p>
+          <div id="center_content_map" style="overflow-x: auto;">
+            <div id="map"></div>
+            <br clear="all" style="clear:both"/>
+            <div style="display:none" id="map_markers"></div>
+          </div>
+        </form>
+        <form id="list_locations_form" action="list_locations" method="get" style="display:none">
+          <input type="hidden" name="lat_min" />
+          <input type="hidden" name="lat_max" />
+          <input type="hidden" name="lon_min" />
+          <input type="hidden" name="lon_max" />
+          <input type="hidden" name="symbols" />
+          <input type="hidden" name="geo_query" id="geo_query" />
+        </form>
+
+      </tal:map>
+      <script type="text/javascript" tal:attributes="src python:here.getSite().absolute_url()+'/++resource++destinet.listing/map_integration.js'"></script>
+      <!-- END MAP INTEGRATION -->
+
+      <div tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator', 'Section Admin'], here)">
+      <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+          <metal:block fill-slot="menu_extension">
+              <span tal:replace="structure here/menusubmissions" />
+          </metal:block>
+          <metal:block fill-slot="toolbar_extend">
+              <tal:block tal:condition="here/checkPermissionPublishObjects">
+                  <input type="submit" id="allocate_keywords" i18n:attributes="value"
+                      value="Allocate keywords for selected items" />
+              </tal:block>
+          </metal:block>
+      </metal:block>
+      </div>
+
+      <metal:footer metal:define-slot="folder_footer">
+        <div id="folder_footer" class="folder_footer">
+          <div tal:replace="nothing">
+            <a class="download_link"
+                rel="nofollow" href="./zip_export/do_export"
+                title="Download the contents of this folder to a Zip file"
+                tal:condition="python: here.checkPermission('Naaya - Zip export') and len(folders_list) + len(objects_list)> 0"
+                i18n:attributes="title"
+                i18n:translate="">Zip download</a>
+            <div class="fb-like" data-send="false" data-width="275" data-show-faces="false"></div>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </metal:footer>
+
+      <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.getLocalProperty('show_contributor_request_role')">
+        <a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
+      </p>
+
+      <tal:cportlets repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+              <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+      </tal:cportlets>
+
+      <span tal:replace="structure here/comments_box" />
+    </div>
+    <div id="right_port"
+        tal:define="right_portlets python:here.get_right_portlets_locations_objects(here)" >
+      <tal:admin tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
+          <span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+      </tal:admin>
+      <tal:rportlets tal:repeat="item right_portlets">
+          <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+      </tal:rportlets>
+    </div>
+    <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|string:" />
+  </metal:body>
+</metal:page>
+
