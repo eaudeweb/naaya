@@ -4,6 +4,11 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     >
 
+    <browser:resourceDirectory
+        name="destinet.listing"
+        directory="www"
+        />
+
     <naaya:simpleView
         for="*"
         name="get_content"

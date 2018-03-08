@@ -84,6 +84,8 @@
           event.preventDefault();
         });
 
+        $('.select2').select2()
+
         //map configuration
         $('#geo_query').select2({
           allowClear: true,
@@ -117,9 +119,6 @@
           refreshMap();
         });
 
-        $('.placeholder-all').select2()
-        $('.placeholder-one').select2()
-
         function refreshMap(){
           clearTimeout(refreshTimer);
           refreshTimer = setTimeout(startMapRefresh, refreshInterval);
@@ -135,11 +134,6 @@
           );
           return $state;
         };
-
-
-               /*       <!--<img tal:condition="python:child.picture is not None"
-                        tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${child/id};
-                        alt child/title" width="16" height="16" />-->*/
 
       });
     </script>
@@ -168,7 +162,9 @@
            title="Subscribe to notifications"
            i18n:attributes="title"
            i18n:translate=""
-           class="btn btn-content"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Subscribe</a>
+           class="btn btn-content"><i class="fa fa-newspaper-o" aria-hidden="true"></i>
+            Subscribe
+        </a>
         <a href="javascript:this.print();" class="btn btn-content"><i class="fa fa-print"></i> Print</a>
         <button class="btn btn-content" id="share_button"><i class="fa fa-share"></i> Share</button>
         <div class="folder_social">
@@ -191,7 +187,7 @@
         <form method="get" tal:attributes="action string:${site_url}/search_html" class="search-form">
           <div class="search-wrapper">
             <input id="query" type="text" name="query:utf8:ustring" accesskey="4"  class="search-input" type="text" placeholder="Search"/><i class="fa fa-search"></i>
-               <input type="submit" value="GO" class="search_btn" />
+            <input type="submit" value="GO" class="search_btn" />
           </div>
         </form>
       </div>
@@ -219,7 +215,8 @@
         <div class="content-left"
              tal:condition="python:here.getLocalProperty('intro')"
              tal:attributes="style python:test(logo,None,'width:100%')"
-             tal:content="structure python:here.getLocalProperty('intro')" />
+             tal:content="structure python:here.getLocalProperty('intro')">
+        </div>
         <div tal:condition="logo" tal:attributes="style python:test(here.getLocalProperty('intro'),None,'width:100%')"
               class="content-right">
           <img tal:attributes="src logo/absolute_url"
@@ -228,20 +225,6 @@
       </div>
 
       <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
-
-      <div tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator', 'Section Admin'], here)">
-      <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
-          <metal:block fill-slot="menu_extension">
-              <span tal:replace="structure here/menusubmissions" />
-          </metal:block>
-          <metal:block fill-slot="toolbar_extend">
-              <tal:block tal:condition="here/checkPermissionPublishObjects">
-                  <input type="submit" id="allocate_keywords" i18n:attributes="value"
-                      value="Allocate keywords for selected items" />
-              </tal:block>
-          </metal:block>
-      </metal:block>
-      </div>
 
       <table id="main_listing" class="datatable" tal:condition="python:location in ['events', 'tools', 'news']">
         <input id="template_id" type="hidden" tal:attributes="value context/id" />
@@ -272,216 +255,8 @@
       </table>
 
       <!-- BEGIN MAP INTEGRATION -->
-      <style TYPE="text/css">
-        #center_content_map {
-          float: left;
-          width: 100%;
-          height: 600px;
-          background: none;
-        }
-
-        h2 {
-          color: #444;
-          padding: 5px 0 0 5px;
-          font-size: 1.1em;
-          font-weight: normal;
-        }
-
-        #portalmap {
-          width: 30%;
-          font-size: 90%;
-          float: left;
-          padding: 1px;
-          background: #fff;
-          border: 1px solid #ccc;
-          margin: 0 0 0 10px;
-          white-space: normal;
-        }
-
-        .portalmap_portlet {
-          padding: 10px;
-          margin: 0;
-          background: none;
-          display: inline-block;
-          line-height: 1.5;
-        }
-        .portalmap_filter {
-          width: calc(25% - 3px);
-          padding: 0;
-          margin: 0;
-          /* min-height: 200px; */
-          display: inline-flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: center;
-        }
-
-        .portalmap_filter > div {
-          width: 100%;
-        }
-        .select2-container {
-          width: 100%!important;
-        }
-
-        #js_links {
-          color: white;
-        padding-top: 1rem;
-        margin-top: 1rem;
-        border-top: 3px solid #0071be;
-        }
-        #js_links a {
-          /*color:  #00cc53;*/
-          color: white;
-          font-weight: bold;
-        }
-
-       .first-row .portalmap_filter:first-of-type {
-          display: inline-block;
-          width: 69%;
-          background: #0071bd;
-          border-top-left-radius: 1rem;
-          border-top-right-radius: 1rem;
-        }
-
-
-        .first-row  .portalmap_filter:first-of-type .portalmap_portlet_title {
-          color: white;
-        }
-
-       .first-row .portalmap_filter:last-of-type {
-        width: 30%;
-        float: right;
-       }
-
-       .first-row .portalmap_filter:last-of-type input[type="button"]{
-          width: 20%;
-          height: 29px;
-          border: 1px solid #aaa;
-          border-radius: 4px;
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-          background: white;
-          display: inline-block;
-          float: none;
-          margin-left: -3px;
-        }
-
-
-      .first-row .portalmap_filter:last-of-type input[type="text"]{
-          color: rgb(0, 0, 0);
-          width: 79%!important;
-          height: 29px;
-          border: 1px solid #aaa;
-          border-radius: 4px;
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-
-
-        .portalmap_portlet_title {
-          color: white;
-        }
-
-        .portalmap_portlet_title p {
-          border-bottom: 2px solid #BBBBBB;
-          font-size: 1.3em;
-          font-weight: bold;
-          margin: 0 0 1em;
-          padding: 0.3em 0;
-        }
-
-        .map_filters {
-          margin: 0;
-          padding: 0;
-        }
-
-        .map_filters div {
-          margin: 0.5em 0 0 0;
-          padding: 0;
-        }
-
-        .map_filters ul {
-          margin: 0.7em 0 0.7em 0.3em;
-          padding: 0;
-          list-style: none;
-          font-size: 95%;
-        }
-
-        .map_filters ul ul {
-          padding: 0 0 0 2em;
-        }
-
-        .map-button {
-          color: #fff;
-          font-size: 90%;
-          border: 1px solid white;
-          background-color: #336699;
-          padding: 0.3em 0.2em;
-        }
-
-        #map {
-          width: 100%;
-          height: 100%;
-        }
-
-        #frmFilterMap {
-          border: 1px solid #0071be;
-          border-top-left-radius: 1rem;
-          border-top-right-radius: 1rem;
-          overflow: hidden;
-          background: #0071be;
-          padding: 1rem;
-        }
-
-        .clearfix:after {
-          visibility: hidden;
-          display: block;
-          font-size: 0;
-          content: " ";
-          clear: both;
-          height: 0;
-        }
-
-       .second-row .portalmap_filter  .select2-container--default  {
-          background: none!important;
-          border-color: white!important;
-          border-width: 2px!important;
-        }
-
-       .second-row .portalmap_filter .select2-selection__choice {
-          color: #424242;
-          background: none!important;
-          border-color: transparent!important;
-          font-size: 1.1rem;
-          cursor: pointer;
-          margin-bottom: 2px;
-          box-shadow: 1px 1px 2px #ddd;
-        }
-        .second-row .portalmap_filter .select2-selection  {
-          background: white!important;
-          border-color: black;
-        }
-
-     /*   .portalmap_filter:not(:first-of-type) .select2-selection input::-webkit-input-placeholder {
-            color: #aaa;
-        }*/
-
-        .second-row .portalmap_filter .select2-container--default.select2-container--focus {
-          border-color: white;
-        }
-
-        .second-row .portalmap_filter .select2-selection__choice__remove {
-            color: black!important;
-        }
-
-      </style>
-      <!--[if IE]>
-      <style type="text/css">
-        #map{
-          height:400px;
-          }
-      </style>
-      <![endif]-->
+      <link rel="stylesheet" type="text/css"
+        tal:attributes="href python:here.getSite().absolute_url()+'/++resource++destinet.listing/map_integration.css'" />
       <tal:map
         define="geo_types python:request.get('geo_types', portal_map.getSymbolsIds());
                 topics python:request.get('topics', []);
@@ -548,7 +323,7 @@
               <div class="portalmap_portlet_title" i18n:translate="">Category</div>
 
               <div class="org_list" tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
-                <select name="category" id="category" class="map-refresh placeholder-all">
+                <select name="category" id="category" class="map-refresh select2">
                   <option value="">All</option>
                   <tal:block repeat="geo_type geo_types">
                     <option tal:attributes="value geo_type"
@@ -561,7 +336,7 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
-                <select name="country" id="country" class="map-refresh placeholder-all"
+                <select name="country" id="country" class="map-refresh select2"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
                   <option value="">All</option>
                   <option tal:attributes="value item/title"
@@ -575,7 +350,7 @@
               tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
               <div class="portalmap_portlet_title" i18n:translate="">Operational level</div>
               <div class="operational_level">
-                <select name="administrative_level" id="administrative_level" class="map-refresh placeholder-all">
+                <select name="administrative_level" id="administrative_level" class="map-refresh select2">
                   <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
@@ -588,7 +363,7 @@
               tal:define="sustainability_types python:here.get_list_nodes('certificate_sustainability')">
               <div class="portalmap_portlet_title" i18n:translate="">Sustainability</div>
               <div class="sustainability">
-                <select name="sustainability" id="sustainability" class="map-refresh placeholder-all">
+                <select name="sustainability" id="sustainability" class="map-refresh select2">
                   <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
@@ -601,7 +376,7 @@
               tal:define="credibility_types python:here.get_list_nodes('certificate_credibility')">
               <div class="portalmap_portlet_title" i18n:translate="">Credibility</div>
               <div class="credibility">
-                <select name="credibility" id="credibility" class="map-refresh placeholder-all">
+                <select name="credibility" id="credibility" class="map-refresh select2">
                 <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
@@ -615,13 +390,14 @@
               <div class="portalmap_portlet_title" i18n:translate="">Services</div>
               <div class="certificate_services">
                 <select name="services" id="certificate_services" multiple="multiple">
-                <option value="">All</option>
+                  <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item services_types" />
                 </select>
               </div>
             </div>
+          </div>
 
           <div class="portalmap_portlet_box" style="display:none">
             <div class="topics_list"
@@ -671,39 +447,23 @@
           <input type="hidden" name="geo_query" />
         </form>
 
-        <script type="text/javascript">
-          showPageElements();
-          window.map_engine = naaya_map_engine.portal_map('map');
-        </script>
       </tal:map>
-      <script>
-        function custom_balloon(lat, lon, content) {
-          clear_custom_balloon();
-          var map_jq = $('#map');
-          var css = {
-            position: 'absolute',
-            border: '2px solid #999',
-            background: 'white',
-            padding: '5px',
-            'z-index': 1000
-          };
-          var point_position = map_engine.page_position(lat, lon);
-          css.left = point_position.x + map_jq.position().left - 20;
-          css.top = map_jq.offset().top + point_position.y - 100;
-
-          var balloon = $('<' + 'div>').css(css);
-          var close_button = $('<' + 'a>[' + naaya_map_i18n["close"] + ']<' + '/a>').css({ color: '#999', float: 'right' });
-          close_button.click(function() { clear_custom_balloon(); });
-          balloon.append(close_button, $('<' + 'div>').html(content));
-          map_jq.parent().append(balloon);
-
-          $('div.marker-more > a', balloon).attr('target', '_blank');
-          $('div.marker-body > small', balloon).remove();
-
-          clear_custom_balloon = function() { balloon.remove(); }
-        }
-      </script>
+      <script type="text/javascript" tal:attributes="src python:here.getSite().absolute_url()+'/++resource++destinet.listing/map_integration.js'"></script>
       <!-- END MAP INTEGRATION -->
+
+      <div tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator', 'Section Admin'], here)">
+      <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+          <metal:block fill-slot="menu_extension">
+              <span tal:replace="structure here/menusubmissions" />
+          </metal:block>
+          <metal:block fill-slot="toolbar_extend">
+              <tal:block tal:condition="here/checkPermissionPublishObjects">
+                  <input type="submit" id="allocate_keywords" i18n:attributes="value"
+                      value="Allocate keywords for selected items" />
+              </tal:block>
+          </metal:block>
+      </metal:block>
+      </div>
 
       <metal:footer metal:define-slot="folder_footer">
         <div id="folder_footer" class="folder_footer">
@@ -742,3 +502,4 @@
     <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|string:" />
   </metal:body>
 </metal:page>
+
