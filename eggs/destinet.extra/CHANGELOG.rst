@@ -1,5 +1,6 @@
 1.3.7 - (unreleased)
 =======================
+* handle missing item proporty in export_geo_rss_dzt [dumitval]
 
 1.3.6 - (2018-03-08)
 =======================

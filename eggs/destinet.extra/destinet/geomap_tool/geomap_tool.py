@@ -91,7 +91,7 @@ def export_geo_rss_dzt(self, sort_on='', sort_order='',
 
         address_node = doc.createElement("extData:address")
         address = doc.createTextNode(
-            item.postaladdress.encode('utf-8').decode('utf-8'))
+            getattr(item, 'postaladdress', '').encode('utf-8').decode('utf-8'))
         address_node.appendChild(address)
         entry.appendChild(address_node)
 
