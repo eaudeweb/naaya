@@ -462,7 +462,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
-        versions = [tmpl_version(self, ver, str(n+1), language) for n, ver in
+        versions = [tmpl_version(self, ver, str(n + 1), language) for n, ver in
                     enumerate(self.all_versions(language))]
         versions = filter(lambda x: not x['removed'], versions)
         if versions:
