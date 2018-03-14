@@ -1,4 +1,7 @@
-1.3.7 - (unreleased)
+1.3.8 - (unreleased)
+=======================
+
+1.3.7 - (2018-03-14)
 =======================
 * bugfix in show_on_atlas (contact creation) [dumitval]
 * handle missing item property in export_geo_rss_dzt [dumitval]
