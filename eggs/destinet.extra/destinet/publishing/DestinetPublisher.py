@@ -278,19 +278,12 @@ class DestinetPublisher(SimpleItem):
         meta_type = 'Naaya Contact'
         form_helper = get_schema_helper_for_metatype(self, meta_type)
 
-        schema_tool = self.getSite().getSchemaTool()
-        register_extra_schema = schema_tool['registration']
-        register_helper = SchemaFormHelper(register_extra_schema, self)
-        groups_widget = register_helper._get_renderer(
-            'groups', register_extra_schema['groups-property'], False)
-
         return self.getFormsTool().getContent({
             'here': self,
             'kind': meta_type,
             'action': 'addNyContact_who_who',
             'form_helper': form_helper,
             'submitter_info_html': submitter.info_html(self, REQUEST),
-            'groups_widget': groups_widget,
         }, 'contact_add')
 
     security.declareProtected(PERMISSION_DESTINET_PUBLISH,
