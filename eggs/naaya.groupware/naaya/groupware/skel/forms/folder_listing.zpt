@@ -331,19 +331,22 @@ function submit_form_action(action){
 
 					<tal:block define="contributor folder/contributor;
 									user_quoted python:here.utUrlEncode(contributor);
+                  is_disabled python:auth_tool.is_disabled(contributor);
 									username python: auth_tool.name_from_userid(contributor) or contributor;
 									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
 					<td>
-						<a class="fancybox-thumb" tal:condition="user_photo_url" tal:attributes="href user_photo_url">
+						<a class="fancybox-thumb" tal:condition="python:not is_disabled and user_photo_url" tal:attributes="href user_photo_url">
 							<img style="max-width:20px; max-height:20px"
 								tal:attributes="src user_photo_url" />
 						</a>
 					</td>
 					<td>
-						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
+						<a rel="external" tal:condition="python:source_title.lower() == 'eionet' and not is_disabled"
 							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
+						<tal:block condition="python:source_title.lower() == 'eionet' and is_disabled"
+							content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
 							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
@@ -427,6 +430,7 @@ function submit_form_action(action){
 
 					<tal:block define="contributor object/contributor;
 									user_quoted python:here.utUrlEncode(contributor);
+                  is_disabled python:auth_tool.is_disabled(contributor);
 									username python: auth_tool.name_from_userid(contributor) or contributor;
 									user_photo_url python:auth_tool.get_user_photo_url(contributor);
 									source_title python: auth_tool.source_name_from_userid(contributor);">
@@ -437,9 +441,11 @@ function submit_form_action(action){
 						</a>
 					</td>
 					<td>
-						<a rel="external" tal:condition="python:source_title.lower() == 'eionet'"
+						<a rel="external" tal:condition="python:source_title.lower() == 'eionet' and not is_disabled"
 							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
+						<tal:block condition="python:source_title.lower() == 'eionet' and is_disabled"
+							content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
 							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"

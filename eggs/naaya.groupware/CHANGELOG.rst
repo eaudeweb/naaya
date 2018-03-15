@@ -1,5 +1,8 @@
 1.4.47 (unreleased)
 -------------------
+* no link to user profile for disabled users
+* display generic user name for disabled users (when displaying owner
+  info)
 * google analytics IP anonymisation refs #87835 [dumitval]
 
 1.4.46 (2017-04-13)
