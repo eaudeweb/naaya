@@ -1,4 +1,7 @@
-4.2.16 (unreleased)
+4.2.17 (unreleased)
+-------------------
+
+4.2.16 (2018-03-15)
 -------------------
 * no link to user profile for disabled users [dumitval]
 * display generic user name for disabled users (when displaying owner
