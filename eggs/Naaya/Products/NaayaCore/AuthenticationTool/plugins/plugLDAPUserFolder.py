@@ -34,6 +34,7 @@ import naaya.cache.cache as naaya_cache
 import ldap_cache
 
 LDAP_ROOT_ID = 'ROOT'
+DISABLED_USER_NAME = 'Former Eionet member'
 
 log = logging.getLogger('naaya.core.auth.ldap')
 
@@ -205,7 +206,7 @@ class plugLDAPUserFolder(PlugBase):
                     res.append((self._user_objs[child_role_id], depth))
                     if self.isInList(expand, child_role_id):
                         res.extend(self.getRoles(expand, child_role_id,
-                                                 depth+1))
+                                                 depth + 1))
         return res
 
     def _searchRoles(self, dn):
@@ -401,7 +402,7 @@ class plugLDAPUserFolder(PlugBase):
         result = delegate.search(
             root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
         if result['size'] > 0:
-            group_user_members = result['results'][result['size']-1][
+            group_user_members = result['results'][result['size'] - 1][
                 'uniqueMember']
             group_users = []
             for member in group_user_members:
@@ -487,10 +488,13 @@ class plugLDAPUserFolder(PlugBase):
         try:
             user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
-            return ''
+            return DISABLED_USER_NAME
         else:
             if user_info is not None:
-                return user_info.full_name.encode(self.default_encoding)
+                if user_info.status != 'disabled':
+                    return user_info.full_name.encode(self.default_encoding)
+                else:
+                    return DISABLED_USER_NAME
             else:
                 log.warning("Could not retrieve user info  for %s", p_username)
                 return p_username

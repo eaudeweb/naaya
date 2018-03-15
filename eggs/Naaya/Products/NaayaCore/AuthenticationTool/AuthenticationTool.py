@@ -661,9 +661,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         response = []
         for usr in users_info:
             is_disabled = getattr(usr, 'status', 'active') == 'disabled'
-            if ((disabled_type == 'no_disabled') and (not is_disabled)
-                or (disabled_type == 'include_disabled')
-                    or ((disabled_type == 'only_disabled') and is_disabled)):
+            if ((disabled_type == 'no_disabled') and (not is_disabled) or
+                (disabled_type == 'include_disabled') or
+                    ((disabled_type == 'only_disabled') and is_disabled)):
                 response.append(usr)
         return response
 
@@ -1130,6 +1130,22 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return None
 
+    security.declareProtected(view, 'is_disabled')
+
+    def is_disabled(self, userid):
+        """
+        Search for a user with the given ID, and return True
+        if it is disabled.
+        If the user doens't exist, the return is still None, we only want to
+        know if the user exists and is disabled
+        """
+        try:
+            user = self.get_user_info(userid)
+        except KeyError:
+            user = None
+        if user is not None:
+            return getattr(user, 'status', None) == 'disabled'
+
     security.declarePublic('name_from_userid')
 
     def name_from_userid(self, userid):
@@ -1345,8 +1361,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                     if INySite.providedBy(obj)]
         for site in sites:
             path = relative_object_path(site, this_site)
-            if (not path.startswith(filter_path)
-                    and not filter_path.startswith(path)):
+            if (not path.startswith(filter_path) and
+                    not filter_path.startswith(path)):
                 continue
 
             containers = site.getCatalogedObjects(
@@ -1614,7 +1630,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     groups_data[group] = {
                         'source': source,
                         'members': userids
-                        }
+                    }
                     break
 
         # get groups_for_user[userid] = list of groups
