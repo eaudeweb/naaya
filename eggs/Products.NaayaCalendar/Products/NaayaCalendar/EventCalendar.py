@@ -102,10 +102,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
 
     def getArrowURL(self):
         """ return the arrow's URL """
-        other_qs = self.utRemoveFromQS(['cmonth', 'cyear'])
-        if len(other_qs) > 0:
-            other_qs = other_qs + "&"
-        return self.absolute_url(0) + "?" + other_qs
+        return self.absolute_url(0) + "?"
 
     #########################
     #   EVENTS FUNCTIONS    #

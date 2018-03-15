@@ -1,5 +1,6 @@
 1.3.14 (unreleased)
 ------------------
+* vulnerability fix [dumitval]
 
 1.3.13 (2017-11-21)
 ------------------
