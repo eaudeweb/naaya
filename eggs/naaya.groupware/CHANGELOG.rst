@@ -1,4 +1,7 @@
-1.4.47 (unreleased)
+1.4.48 (unreleased)
+-------------------
+
+1.4.47 (2018-03-15)
 -------------------
 * no link to user profile for disabled users
 * display generic user name for disabled users (when displaying owner
