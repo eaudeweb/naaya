@@ -1,5 +1,6 @@
 1.0.3 (unreleased)
 ----------------
+* vulnerability fix [dumitval]
 
 1.0.2 (2016-11-22)
 ----------------

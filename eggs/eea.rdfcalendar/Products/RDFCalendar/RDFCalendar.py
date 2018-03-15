@@ -200,23 +200,19 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
             next_month=1
             next_year=year+1
 
-        other_qs=self.removeFromQS(['month', 'year'])
-        if len(other_qs)>0:
-            other_qs="%s&amp;" % other_qs
-
         arrowurl = self.REQUEST.URL0
         out = []
 
         # Left arrow (allow to go back in time only wihtin <time_slice> years - to prevent indexing of infinite urls)
         if prev_year>=(DateTime().year()-time_slice) and prev_year<=(DateTime().year()+time_slice):
-            out.append('<a href="%s?%smonth=%s&amp;year=%s" title="previous month" class="nav previous-month">&laquo;</a>' % (arrowurl, other_qs, str(prev_month), str(prev_year)))
+            out.append('<a href="%s?month=%s&amp;year=%s" title="previous month" class="nav previous-month">&laquo;</a>' % (arrowurl, str(prev_month), str(prev_year)))
 
         # Current month/year
         out.append('<a href="%s/index_html?cal=1&amp;month=%s&amp;year=%s" class="current-month">%s %s</a>' % (self.absolute_url(), str(month), str(year), calendar.month_name[month], str(year)))
 
         # Right arrow (allow to go further in time only within <time_slice> years - to prevent indexing of infinite urls)
         if next_year<=(DateTime().year()+time_slice) and next_year>=(DateTime().year()-time_slice):
-            out.append('<a href="%s?%smonth=%s&amp;year=%s" title="next month" class="nav next-month">&raquo;</a>' % (arrowurl, other_qs, str(next_month), str(next_year)))
+            out.append('<a href="%s?month=%s&amp;year=%s" title="next month" class="nav next-month">&raquo;</a>' % (arrowurl, str(next_month), str(next_year)))
 
         return ''.join(out)
 
