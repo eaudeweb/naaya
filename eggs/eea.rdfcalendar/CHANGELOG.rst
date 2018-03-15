@@ -1,4 +1,7 @@
-1.0.3 (unreleased)
+1.0.4 (unreleased)
+----------------
+
+1.0.3 (2018-03-15)
 ----------------
 * vulnerability fix [dumitval]
 
