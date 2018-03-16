@@ -1,5 +1,6 @@
 4.2.17 (unreleased)
 -------------------
+* improvements in displaying info about disabled users [dumitval]
 
 4.2.16 (2018-03-15)
 -------------------

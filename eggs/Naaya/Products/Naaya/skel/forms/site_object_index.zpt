@@ -2,14 +2,15 @@
     tal:define="contributor version/contributor;
                 auth_tool here/getAuthenticationTool;
                 is_disabled python:auth_tool.is_disabled(contributor);
+                is_deleted python:auth_tool.is_deleted(contributor);
                 username python: auth_tool.name_from_userid(contributor) or contributor;
                 user_quoted python:here.utUrlEncode(contributor);
                 source_title python: auth_tool.source_name_from_userid(contributor);">
       <tal:block condition="python:source_title.lower() == 'eionet'" >
-        <a rel="external" tal:condition="not:is_disabled"
+        <a rel="external" tal:condition="python:not is_disabled and not is_deleted"
         tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
         tal:content="username"/>
-        <tal:block content="username" tal:condition='is_disabled' />
+        <tal:block content="username" tal:condition='python:is_disabled or is_deleted' />
       </tal:block>
       <tal:block condition="python:source_title.lower() == 'local' and
                             here.checkPermissionPublishObjects()" >
@@ -28,6 +29,7 @@
                 submitter_email here/submitter_info/email|nothing;
                 auth_tool here/getAuthenticationTool;
                 is_disabled python:auth_tool.is_disabled(contributor);
+                is_deleted python:auth_tool.is_deleted(contributor);
                 username python: submitter_name or auth_tool.name_from_userid(contributor) or contributor;
                 user_quoted python:here.utUrlEncode(contributor);
                 source_title python: auth_tool.source_name_from_userid(contributor);"
@@ -35,10 +37,10 @@
     <th i18n:translate="">Contributor</th>
     <td>
         <tal:block condition="python:source_title.lower() == 'eionet'" >
-          <a rel="external" tal:condition="not:is_disabled"
+          <a rel="external" tal:condition="python:not is_disabled and not is_deleted"
           tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
           tal:content="username"/>
-          <tal:block content="username" tal:condition='is_disabled' />
+          <tal:block content="username" tal:condition='python:is_disabled or is_deleted' />
         </tal:block>
         <tal:block condition="python:source_title.lower() == 'local' and
                               here.checkPermissionPublishObjects()" >

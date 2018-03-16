@@ -1146,6 +1146,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if user is not None:
             return getattr(user, 'status', None) == 'disabled'
 
+    security.declareProtected(view, 'is_deleted')
+
+    def is_deleted(self, userid):
+        """
+        Search for a user with the given ID, and return True
+        if ldap returns Not Found.
+        Since this is only used to get user details from our records,
+        Not Found cannot mean the user id is wrong, only that it was deleted
+        """
+        try:
+            self.get_user_info(userid)
+        except KeyError:
+            return True
+
     security.declarePublic('name_from_userid')
 
     def name_from_userid(self, userid):
