@@ -342,16 +342,16 @@ function submit_form_action(action){
 						</a>
 					</td>
 					<td>
-						<a rel="external" tal:condition="python:source_title.lower() == 'eionet' and not is_disabled"
+						<a rel="external" tal:condition="python:'eionet' in source_title.lower() and not is_disabled"
 							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
-						<tal:block condition="python:source_title.lower() == 'eionet' and is_disabled"
-							content="username" />
+						<tal:block condition="python:'eionet' in source_title.lower() and is_disabled"
+            content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
 							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
 							tal:content="username" />
-						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+						<tal:block condition="python:('local' not in source_title.lower() and 'eionet' not in source_title.lower()) or ('local' in source_title.lower() and not here.checkPermissionPublishObjects())"
 							content="username" />
 					</td>
 					</tal:block>
@@ -441,16 +441,16 @@ function submit_form_action(action){
 						</a>
 					</td>
 					<td>
-						<a rel="external" tal:condition="python:source_title.lower() == 'eionet' and not is_disabled"
+						<a rel="external" tal:condition="python:'eionet' in source_title.lower() and not is_disabled"
 							tal:attributes="href string:https://www.eionet.europa.eu/directory/user?uid=${user_quoted}"
 							tal:content="username" />
-						<tal:block condition="python:source_title.lower() == 'eionet' and is_disabled"
+						<tal:block condition="python:'eionet' in source_title.lower() and is_disabled"
 							content="username" />
 						<a tal:condition="python:source_title.lower() == 'local' and
 																		here.checkPermissionPublishObjects()"
 							tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all"
 							tal:content="username" />
-						<tal:block condition="python:source_title.lower() not in ['local', 'eionet'] or (source_title == 'Local' and not here.checkPermissionPublishObjects())"
+						<tal:block condition="python:('local' not in source_title.lower() and 'eionet' not in source_title.lower()) or ('local' in source_title.lower() and not here.checkPermissionPublishObjects())"
 							content="username" />
 					</td>
 					</tal:block>

@@ -1,5 +1,6 @@
 1.4.48 (unreleased)
 -------------------
+* improvements in displaying info about disabled users [dumitval]
 
 1.4.47 (2018-03-15)
 -------------------
