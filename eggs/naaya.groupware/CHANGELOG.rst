@@ -1,4 +1,7 @@
-1.4.48 (unreleased)
+1.4.49 (unreleased)
+-------------------
+
+1.4.48 (2018-03-19)
 -------------------
 * improvements in displaying info about disabled users [dumitval]
 
