@@ -49,11 +49,10 @@ PROPERTIES_OBJECT = {
                     'The Release date field must contain a valid date.'),
     'discussion': (0, '', ''),
     'category': (1, MUST_BE_NONEMPTY, 'Please select at least one category'),
-    'operational_level': (1, MUST_BE_NONEMPTY,
-                          'Please select at least one operational level'),
-    'sustainability': (1, MUST_BE_NONEMPTY,
-                       'The sustainability field is mandatory'),
-    'credibility': (1, MUST_BE_NONEMPTY, 'The credibility field is mandatory'),
+    'administrative_level': (1, MUST_BE_NONEMPTY,
+                             'Please select the administrative level'),
+    'sustainability': (1, MUST_BE_NONEMPTY, 'Please select sustainability'),
+    'credibility': (1, MUST_BE_NONEMPTY, 'Please select credibility'),
     'certificate_services': (1, MUST_BE_NONEMPTY,
                              'Please select at least one service'),
     'organisation': (0, '', ''),
@@ -71,13 +70,13 @@ DEFAULT_SCHEMA = {
         help_text='Click on the items from the list below to '
                   'select/deselect them.'),
     'administrative_level': dict(
-        sortorder=110, widget_type='SelectMultiple', label='Operation Level',
+        sortorder=110, widget_type='Select', label='Operation Level',
         list_id='administrative_level', required=True),
     'sustainability': dict(
-        sortorder=120, widget_type='SelectMultiple', label='Sustainability',
+        sortorder=120, widget_type='Select', label='Sustainability',
         list_id='certificate_sustainability', required=True),
     'credibility': dict(
-        sortorder=130, widget_type='SelectMultiple', label='Credibility',
+        sortorder=130, widget_type='Select', label='Credibility',
         list_id='certificate_credibility', required=True),
     'certificate_services': dict(
         sortorder=140, widget_type='SelectMultiple', label='Service',

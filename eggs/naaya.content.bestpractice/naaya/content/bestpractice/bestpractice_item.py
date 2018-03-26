@@ -15,7 +15,7 @@ from naaya.core.zope2util import CaptureTraverse
 from interfaces import INyBestPractice
 
 from Products.NaayaBase.NyContentType import (
-    NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA)
+    NyContentData, NY_CONTENT_BASE_SCHEMA)
 from naaya.content.base.constants import *
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyItem import NyItem
@@ -27,51 +27,129 @@ from naaya.core.zope2util import abort_transaction_keep_session
 
 from naaya.content.bfile.NyBlobFile import trim_filename
 from naaya.content.bfile.utils import file_has_content
-from naaya.content.bfile.bfile_item import localizedbfile_download as bestpractice_download
+from naaya.content.bfile.bfile_item import localizedbfile_download as \
+    bestpractice_download
 from naaya.content.bfile.bfile_item import NyBFile
 
 from permissions import PERMISSION_ADD_BESTPRACTICE
 
-#module constants
+# module constants
 DEFAULT_SCHEMA = {
-    # add NyBestPractice-specific properties here
+    'gstc_criteria': dict(
+        sortorder=110, widget_type='SelectMultiple', label='GSTC criteria',
+        list_id='gstc_criteria', required=True),
+    'landscape_type': dict(
+        sortorder=120, widget_type='Select', label='Landscape type',
+        list_id='landscape_type', required=True),
+    'topics': dict(
+        sortorder=130, widget_type='SelectMultiple', label='Topics',
+        list_id='topics', required=True),
+    'marketplace_category': dict(
+        sortorder=140, widget_type='SelectMultiple',
+        label='Market place category',
+        list_id='certificate_categories', required=True),
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA['coverage'].update(glossary_id='countries_glossary',
+                                  label='Country',
+                                  required=True, localized=False)
+DEFAULT_SCHEMA['description'].update(
+    label='Short description of content',
+    custom_template='portal_forms/schemawidget-NyBestPractice-description',
+    required=True)
+DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
+DEFAULT_SCHEMA['geo_type'].update(
+    custom_template='portal_forms/schemawidget-category-geo_type',
+    visible=True)
+
+
+def bestpractice_on_install(site):
+    '''cat = site.getCatalogTool()
+    reindex = []
+    for index in KEYWORD_INDEXES:
+        if index not in cat.indexes():
+            cat.addIndex(index, 'KeywordIndex')
+            reindex.append(index)
+    for index in UPDATE_INDEXES:
+        if cat._catalog.indexes[index['id']].meta_type != index['type']:
+            cat.delIndex(index['id'])
+            cat.addIndex(index['id'], index['type'], extra=index['extra'])
+            reindex.append(index['id'])
+    cat.manage_reindexIndex(reindex)
+    ptool = site.getPortletsTool()
+    for tree in REF_TREES:
+        if not getattr(ptool, tree[0], None):
+            ptool.manage_addRefTree(tree[0])
+            ref_tree = getattr(ptool, tree[0])
+            for k, v in tree[1].items():
+                ref_tree.manage_addRefTreeNode(k, v)
+    maptool = site.getGeoMapTool()
+    parent = maptool.getParentByTitle('MARKET PLACE')
+    geo_type_list = maptool.getSymbolChildrenOrdered(parent.id)
+    if not getattr(ptool, 'certificate_categories', None):
+        ptool.manage_addRefTree('certificate_categories')
+        ref_tree = getattr(ptool, 'certificate_categories')
+        for geo_type in geo_type_list:
+            ref_tree.manage_addRefTreeNode(geo_type.id, geo_type.title)'''
+
+
+def bestpractice_on_uninstall(site):
+    '''cat = site.getCatalogTool()
+    for index in KEYWORD_INDEXES:
+        if index in cat.indexes():
+            cat.delIndex(index)
+            cat._p_changed = True
+            transaction.commit()
+    ptool = site.getPortletsTool()
+    for tree in REF_TREES:
+        if getattr(ptool, tree[0], None):
+            ptool.manage_delObjects(tree[0])
+            ptool._p_changed = True
+            transaction.commit()
+    if getattr(ptool, 'certificate_categories', None):
+        ptool.manage_delObjects('certificate_categories')
+        ptool._p_changed = True
+        transaction.commit()'''
+
 
 # this dictionary is updated at the end of the module
 config = {
-        'product': 'NaayaContent',
-        'module': 'bestpractice_item',
-        'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': 'Naaya Best Practice',
-        'label': 'Best practice',
-        'permission': PERMISSION_ADD_BESTPRACTICE,
-        'forms': ['bestpractice_add', 'bestpractice_edit', 'bestpractice_index',
-                  'bestpractice_quickview_zipfile'],
-        'add_form': 'bestpractice_add_html',
-        'description': 'File objects that store data using ZODB BLOBs',
-        'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyBestPractice',
-        '_module': sys.modules[__name__],
-        'icon': os.path.join(os.path.dirname(__file__), 'www', 'bestpractice.gif'),
-        '_misc': {
-                'NyBestPractice.gif': ImageFile('www/bestpractice.gif', globals()),
-                'NyBestPractice_marked.gif': ImageFile('www/bestpractice_marked.gif', globals()),
-            },
-    }
+    'product': 'NaayaContent',
+    'module': 'bestpractice_item',
+    'package_path': os.path.abspath(os.path.dirname(__file__)),
+    'meta_type': 'Naaya Best Practice',
+    'on_install': 'bestpractice_on_install',
+    'on_uninstall': 'bestpractice_on_uninstall',
+    'label': 'Best practice',
+    'permission': PERMISSION_ADD_BESTPRACTICE,
+    'forms': ['bestpractice_add', 'bestpractice_edit', 'bestpractice_index',
+              'bestpractice_quickview_zipfile'],
+    'add_form': 'bestpractice_add_html',
+    'description': 'File objects that store data using ZODB BLOBs',
+    'default_schema': DEFAULT_SCHEMA,
+    'schema_name': 'NyBestPractice',
+    '_module': sys.modules[__name__],
+    'icon': os.path.join(os.path.dirname(__file__), 'www', 'bestpractice.gif'),
+    '_misc': {
+        'NyBestPractice.gif': ImageFile('www/bestpractice.gif', globals()),
+        'NyBestPractice_marked.gif': ImageFile('www/bestpractice_marked.gif',
+                                               globals()),
+    },
+}
+
 
 def bestpractice_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
-            'here': self,
-            'kind': config['meta_type'],
-            'action': 'addNyBestPractice',
-            'form_helper': form_helper,
-            'submitter_info_html': submitter.info_html(self, REQUEST),
-        },
-        'bestpractice_add')
+        'here': self,
+        'kind': config['meta_type'],
+        'action': 'addNyBestPractice',
+        'form_helper': form_helper,
+        'submitter_info_html': submitter.info_html(self, REQUEST),
+    }, 'bestpractice_add')
+
 
 def _create_NyBestPractice_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix='bestpractice')
@@ -82,6 +160,7 @@ def _create_NyBestPractice_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
+
 def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a BFile type of object.
@@ -91,22 +170,25 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    _releasedate = self.process_releasedate(
+        schema_raw_data.pop('releasedate', ''))
     _uploaded_file = schema_raw_data.pop('uploaded_file', None)
 
     title = schema_raw_data.get('title', '')
     if not title:
         filename = trim_filename(getattr(_uploaded_file, 'filename', ''))
-        base_filename = filename.rsplit('.', 1)[0] # strip extension
+        base_filename = filename.rsplit('.', 1)[0]  # strip extension
         if base_filename:
             schema_raw_data['title'] = title = base_filename.decode('utf-8')
     id = toAscii(id)
     id = make_id(self, id=id, title=title, prefix='file')
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyBestPractice_object(self, id, contributor)
 
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    form_errors = ob.process_submitted_form(
+        schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     if REQUEST is not None:
         submitter_errors = submitter.info_check(self, REQUEST, ob)
@@ -114,19 +196,21 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if form_errors:
         if REQUEST is None:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            raise ValueError(form_errors.popitem()[1])  # pick a random error
         else:
             abort_transaction_keep_session(REQUEST)
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/bestpractice_add_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect(
+                '%s/bestpractice_add_html' % self.absolute_url())
             return
 
     if file_has_content(_uploaded_file):
         ob._save_file(_uploaded_file, contributor)
 
-    #process parameters
+    # process parameters
     if self.checkPermissionSkipApproval():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        approved, approved_by = (
+            1, self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
@@ -134,19 +218,21 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    #log post date
+    # log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    #redirect if case
+    # redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'bfile_manage_add' or l_referer.find('bfile_manage_add') != -1:
+        if l_referer == 'bfile_manage_add' or l_referer.find(
+                'bfile_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'bestpractice_add_html':
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
 
     return ob.getId()
+
 
 class NyBestPractice(NyBFile):
     """ """
@@ -169,8 +255,8 @@ class NyBestPractice(NyBFile):
         self.contributor = contributor
         self._versions = PersistentList()
 
-
     security.declareProtected(view, 'index_html')
+
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         versions = self._versions_for_tmpl()
@@ -180,14 +266,17 @@ class NyBestPractice(NyBFile):
 
         template_vars = {'here': self, 'options': options}
         self.notify_access_event(REQUEST)
-        return self.getFormsTool().getContent(template_vars, 'bestpractice_index')
+        return self.getFormsTool().getContent(template_vars,
+                                              'bestpractice_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
-        return self.getFormsTool().getContent(template_vars, 'bestpractice_edit')
+        return self.getFormsTool().getContent(template_vars,
+                                              'bestpractice_edit')
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bestpractice_download)
@@ -197,13 +286,14 @@ InitializeClass(NyBestPractice)
 config.update({
     'constructors': (addNyBestPractice,),
     'folder_constructors': [
-            ('bestpractice_add_html', bestpractice_add_html),
-            ('addNyBestPractice', addNyBestPractice),
-        ],
+        ('bestpractice_add_html', bestpractice_add_html),
+        ('addNyBestPractice', addNyBestPractice),
+    ],
     'add_method': addNyBestPractice,
     'validation': issubclass(NyBestPractice, NyValidation),
     '_class': NyBestPractice,
 })
+
 
 def get_config():
     return config
