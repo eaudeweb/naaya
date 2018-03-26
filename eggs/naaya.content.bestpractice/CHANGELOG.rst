@@ -1,5 +1,7 @@
 0.0.5 (unreleased)
 ------------------
+* update schema to site modifications [dumitval]
+* add on_install method to create reftrees [dumitval]
 
 0.0.4 (2014-11-20)
 ------------------

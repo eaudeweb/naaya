@@ -32,6 +32,7 @@ from naaya.content.bfile.bfile_item import localizedbfile_download as \
 from naaya.content.bfile.bfile_item import NyBFile
 
 from permissions import PERMISSION_ADD_BESTPRACTICE
+from naaya.content.bestpractice.skel import REF_TREES
 
 # module constants
 DEFAULT_SCHEMA = {
@@ -64,18 +65,6 @@ DEFAULT_SCHEMA['geo_type'].update(
 
 
 def bestpractice_on_install(site):
-    '''cat = site.getCatalogTool()
-    reindex = []
-    for index in KEYWORD_INDEXES:
-        if index not in cat.indexes():
-            cat.addIndex(index, 'KeywordIndex')
-            reindex.append(index)
-    for index in UPDATE_INDEXES:
-        if cat._catalog.indexes[index['id']].meta_type != index['type']:
-            cat.delIndex(index['id'])
-            cat.addIndex(index['id'], index['type'], extra=index['extra'])
-            reindex.append(index['id'])
-    cat.manage_reindexIndex(reindex)
     ptool = site.getPortletsTool()
     for tree in REF_TREES:
         if not getattr(ptool, tree[0], None):
@@ -83,33 +72,6 @@ def bestpractice_on_install(site):
             ref_tree = getattr(ptool, tree[0])
             for k, v in tree[1].items():
                 ref_tree.manage_addRefTreeNode(k, v)
-    maptool = site.getGeoMapTool()
-    parent = maptool.getParentByTitle('MARKET PLACE')
-    geo_type_list = maptool.getSymbolChildrenOrdered(parent.id)
-    if not getattr(ptool, 'certificate_categories', None):
-        ptool.manage_addRefTree('certificate_categories')
-        ref_tree = getattr(ptool, 'certificate_categories')
-        for geo_type in geo_type_list:
-            ref_tree.manage_addRefTreeNode(geo_type.id, geo_type.title)'''
-
-
-def bestpractice_on_uninstall(site):
-    '''cat = site.getCatalogTool()
-    for index in KEYWORD_INDEXES:
-        if index in cat.indexes():
-            cat.delIndex(index)
-            cat._p_changed = True
-            transaction.commit()
-    ptool = site.getPortletsTool()
-    for tree in REF_TREES:
-        if getattr(ptool, tree[0], None):
-            ptool.manage_delObjects(tree[0])
-            ptool._p_changed = True
-            transaction.commit()
-    if getattr(ptool, 'certificate_categories', None):
-        ptool.manage_delObjects('certificate_categories')
-        ptool._p_changed = True
-        transaction.commit()'''
 
 
 # this dictionary is updated at the end of the module
@@ -118,8 +80,8 @@ config = {
     'module': 'bestpractice_item',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': 'Naaya Best Practice',
-    'on_install': 'bestpractice_on_install',
-    'on_uninstall': 'bestpractice_on_uninstall',
+    'on_install': bestpractice_on_install,
+    # 'on_uninstall': bestpractice_on_uninstall,
     'label': 'Best practice',
     'permission': PERMISSION_ADD_BESTPRACTICE,
     'forms': ['bestpractice_add', 'bestpractice_edit', 'bestpractice_index',
