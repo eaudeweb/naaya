@@ -1,4 +1,4 @@
-0.0.4 (unreleased)
+0.0.4 (2018-03-26)
 ------------------
 * three properties set to single select [dumitval]
 
