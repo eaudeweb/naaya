@@ -11,14 +11,14 @@ from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeNodeForm = PageTemplateFile('zpt/reftreenode_manage_add', globals())
 def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
-    lang=None, REQUEST=None):
+    lang=None, REQUEST=None, weight=0):
     """ """
     id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if parent == '': parent = None
     if pickable: pickable = 1
     else: pickable = 0
     if lang is None: lang = self.gl_get_selected_language()
-    ob = RefTreeNode(id, title, parent, pickable, lang)
+    ob = RefTreeNode(id, title, parent, pickable, lang, weight)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     if REQUEST is not None:
@@ -56,13 +56,13 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
 
     title = localizer_patcher
 
-    def __init__(self, id, title, parent, pickable, lang):
+    def __init__(self, id, title, parent, pickable, lang, weight=0):
         """ """
         self.id = id
         self.title = title
         self.parent = parent
         self.pickable = pickable
-        self.weight = 0
+        self.weight = weight
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
