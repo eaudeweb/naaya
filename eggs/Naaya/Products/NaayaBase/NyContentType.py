@@ -581,7 +581,7 @@ class NyContentData(NyProperties):
             if prop_name in local_properties:
                 pass # these will be copied a bit later in bulk
             else:
-                setattr(self, prop_name, getattr(other, prop_name))
+                setattr(self, prop_name, getattr(other, prop_name, ''))
 
         # copy Localizer's data structures
         self._local_properties = deepcopy(other._local_properties)

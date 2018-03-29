@@ -1,5 +1,6 @@
 4.2.18 (unreleased)
 -------------------
+* startVersion fix for objects with missing properties [dumitval]
 
 4.2.17 (2018-03-19)
 -------------------
