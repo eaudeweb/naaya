@@ -166,12 +166,12 @@ def list_locations(self, REQUEST=None, **kw):
     if isinstance(geo_types, str):
         geo_types = geo_types.split(',')
     category = kw.get('category', '')
+    gstc_criteria = kw.get('gstc_criteria', '')
     sustainability = kw.get('sustainability', '')
     credibility = kw.get('credibility', '')
     certificate_services = kw.get('certificate_services', [])
     if isinstance(certificate_services, basestring):
         certificate_services = certificate_services.split(',')
-
     administrative_level = kw.get('administrative_level', [])
     if administrative_level == '':
         administrative_level = []
@@ -205,7 +205,7 @@ def list_locations(self, REQUEST=None, **kw):
         administrative_level=administrative_level,
         landscape_type=landscape_type, topics=topics,
         first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
-        country=country,
+        country=country, gstc_criteria=gstc_criteria,
     )
     options = {}
     options['lat_min'] = lat_min

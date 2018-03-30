@@ -5,6 +5,8 @@ NaayaPageTemplateFile('zpt/quickfinder', globals(),
                       'destinet_quickfinder_listing')
 NaayaPageTemplateFile('zpt/green_travel_maps', globals(),
                       'destinet_green_travel_maps_listing')
+NaayaPageTemplateFile('zpt/good_practice_browser', globals(),
+                      'destinet_good_practice_browser_listing')
 
 """ User interface methods (views) used for the custom listing """
 

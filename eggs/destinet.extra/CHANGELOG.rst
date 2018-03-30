@@ -1,5 +1,6 @@
 1.3.8 - (unreleased)
 =======================
+* add Good Practice browser [dumitval]
 
 1.3.7 - (2018-03-14)
 =======================

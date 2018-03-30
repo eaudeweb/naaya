@@ -350,6 +350,15 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&category%3Alist=' + $('#category').val();
     }
   }
+  if ([undefined, '', null].indexOf($('#gstc_criteria').val()) == -1){
+    if ($('#gstc_criteria').val() && $('#gstc_criteria').val().constructor == Array){
+      $.each($('#gstc_criteria').val(), function(index, value){
+        form_data[form_data.length] = '&gstc_criteria%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&gstc_criteria%3Alist=' + $('#gstc_criteria').val();
+    }
+  }
   if ([undefined, '', null].indexOf($('#sustainability').val()) == -1){
     if ($('#sustainability').val() && $('#sustainability').val().constructor == Array){
       $.each($('#sustainability').val(), function(index, value){
@@ -418,6 +427,7 @@ function update_locations_values(bounds, enc_form, query) {
       "&geo_query=" + query;
 
     $('#view_as_list').attr('href', "./list_locations" + req_link + '&all_records=True');
+    $('#view_as_map').attr('href', "./portal_map" + req_link + '&all_records=True');
     $('#map_url').val(portal_map_url + "/" + req_link);
     $('#download_georss').attr('href', "./export_geo_rss" + req_link);
     var form_symbols = form.symbols.value.split(',');
