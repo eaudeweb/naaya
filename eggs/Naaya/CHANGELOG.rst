@@ -1,4 +1,7 @@
-4.2.18 (unreleased)
+4.2.19 (unreleased)
+-------------------
+
+4.2.18 (2018-03-30)
 -------------------
 * allow setting of weight when creating a RefTreeNode [dumitval]
 * startVersion fix for objects with missing properties [dumitval]
