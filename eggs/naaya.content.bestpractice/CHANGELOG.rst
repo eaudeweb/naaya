@@ -1,4 +1,7 @@
-0.0.6 (unreleased)
+0.0.7 (unreleased)
+------------------
+
+0.0.6 (2018-03-30)
 ------------------
 * change object icon [dumitval]
 
