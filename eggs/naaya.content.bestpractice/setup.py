@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.bestpractice',
-      version='0.0.5',
+      version='0.0.6',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -12,4 +12,4 @@ setup(name='naaya.content.bestpractice',
           'naaya.content.bfile',
           'Naaya >= 3.3.0',
       ]
-)
+      )

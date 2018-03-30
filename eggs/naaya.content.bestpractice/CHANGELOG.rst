@@ -1,4 +1,7 @@
-0.0.5 (unreleased)
+0.0.6 (unreleased)
+------------------
+
+0.0.5 (2018-03-30)
 ------------------
 * update schema to include fields in Naaya Contact [dumitval]
 * add on_install method to create reftrees [dumitval]
