@@ -1,4 +1,7 @@
-1.3.8 - (unreleased)
+1.3.9 - (unreleased)
+=======================
+
+1.3.8 - (2018-03-30)
 =======================
 * update scripts related to the Good practice changes [dumitval]
 * add Good Practice browser [dumitval]
