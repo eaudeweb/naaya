@@ -55,6 +55,17 @@
       component=".updates.update_assign_keyword_for_role.AssignKeywordForUserRole"
       permission="zope2.ViewManagementScreens" />
 
+   <zope:utility
+      name="AssignGSTCFromKeywords.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_assign_gstc_from_keywords.AssignGSTCFromKeywords"
+      permission="zope2.ViewManagementScreens" />
+
+   <zope:utility
+      name="ConvertContactsGoodpractice.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.update_convert_contacts_bestpractice.ConvertContactsBestpractice"
+      permission="zope2.ViewManagementScreens" />
 
    <naaya:call factory=".patches.patch_addNyContact" />
 
