@@ -1,6 +1,7 @@
 """Naaya Best Practice"""
 import os
 import sys
+import transaction
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -32,21 +33,57 @@ from naaya.content.bfile.bfile_item import localizedbfile_download as \
 from naaya.content.bfile.bfile_item import NyBFile
 
 from permissions import PERMISSION_ADD_BESTPRACTICE
-from naaya.content.bestpractice.skel import REF_TREES
+from naaya.content.bestpractice.skel import REF_TREES, KEYWORD_INDEXES
 
 # module constants
 DEFAULT_SCHEMA = {
+    'personaltitle': dict(
+        sortorder=110, widget_type='String', label='Personal title',
+        localized=True),
+    'firstname': dict(
+        sortorder=120, widget_type='String', label='First name'),
+    'lastname': dict(
+        sortorder=130, widget_type='String', label='Last name'),
+    'jobtitle': dict(
+        sortorder=140, widget_type='String', label='Job title',
+        localized=True),
+    'department': dict(
+        sortorder=150, widget_type='String', label='Personal title',
+        localized=True),
+    'organisation': dict(
+        sortorder=160, widget_type='String', label='Organisation',
+        localized=True),
+    'postaladdress': dict(
+        sortorder=170, widget_type='String', label='Postal address',
+        localized=True),
+    'phone': dict(
+        sortorder=180, widget_type='String', label='Phone'),
+    'fax': dict(
+        sortorder=190, widget_type='String', label='Fax'),
+    'cellphone': dict(
+        sortorder=200, widget_type='String', label='Cell phone'),
+    'email': dict(
+        sortorder=210, widget_type='String', label='Email'),
+    'webpage': dict(
+        sortorder=220, widget_type='String', label='Webpage',
+        localized=True),
+    'facebook': dict(
+        sortorder=230, widget_type='String', label='Facebook profile'),
+    'linkedin': dict(
+        sortorder=240, widget_type='String', label='Linked In profile'),
+    'twitter': dict(
+        sortorder=250, widget_type='String', label='Twitter profile'),
     'gstc_criteria': dict(
-        sortorder=110, widget_type='SelectMultiple', label='GSTC criteria',
+        sortorder=310, widget_type='SelectMultiple', label='GSTC criteria',
         list_id='gstc_criteria', required=True),
     'landscape_type': dict(
-        sortorder=120, widget_type='Select', label='Landscape type',
+        sortorder=320, widget_type='Select', label='Landscape type',
         list_id='landscape_type', required=True),
     'topics': dict(
-        sortorder=130, widget_type='SelectMultiple', label='Topics',
+        sortorder=330, widget_type='SelectMultiple', label='Topics',
         list_id='topics', required=True),
-    'marketplace_category': dict(
-        sortorder=140, widget_type='SelectMultiple',
+    'category': dict(
+        sortorder=340, widget_type='Select',
         label='Market place category',
         list_id='certificate_categories', required=True),
 }
@@ -60,7 +97,7 @@ DEFAULT_SCHEMA['description'].update(
     required=True)
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['geo_type'].update(
-    custom_template='portal_forms/schemawidget-category-geo_type',
+    custom_template='portal_forms/schemawidget-bestpractice-geo_type',
     visible=True)
 
 
@@ -70,8 +107,24 @@ def bestpractice_on_install(site):
         if not getattr(ptool, tree[0], None):
             ptool.manage_addRefTree(tree[0])
             ref_tree = getattr(ptool, tree[0])
-            for k, v in tree[1].items():
+            for k, v in tree[1]:
                 ref_tree.manage_addRefTreeNode(k, v)
+    cat = site.getCatalogTool()
+    reindex = []
+    for index in KEYWORD_INDEXES:
+        if index not in cat.indexes():
+            cat.addIndex(index, 'KeywordIndex')
+            reindex.append(index)
+    cat.manage_reindexIndex(reindex)
+
+
+def bestpractice_on_uninstall(site):
+    cat = site.getCatalogTool()
+    for index in KEYWORD_INDEXES:
+        if index in cat.indexes():
+            cat.delIndex(index)
+            cat._p_changed = True
+            transaction.commit()
 
 
 # this dictionary is updated at the end of the module
@@ -81,7 +134,7 @@ config = {
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': 'Naaya Best Practice',
     'on_install': bestpractice_on_install,
-    # 'on_uninstall': bestpractice_on_uninstall,
+    'on_uninstall': bestpractice_on_uninstall,
     'label': 'Best practice',
     'permission': PERMISSION_ADD_BESTPRACTICE,
     'forms': ['bestpractice_add', 'bestpractice_edit', 'bestpractice_index',
@@ -143,7 +196,7 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
         if base_filename:
             schema_raw_data['title'] = title = base_filename.decode('utf-8')
     id = toAscii(id)
-    id = make_id(self, id=id, title=title, prefix='file')
+    id = make_id(self, id=id, title=title, prefix='bestpractice')
     if contributor is None:
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 

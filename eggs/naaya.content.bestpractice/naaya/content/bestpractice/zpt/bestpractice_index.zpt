@@ -44,17 +44,14 @@
 <table class="datatable" tal:define="portal_map here/getGeoMapTool;
                                      current_version options/current_version|nothing">
 
-<tr>
+<tr tal:condition="current_version">
     <th i18n:translate="">Download</th>
-    <td tal:condition="current_version">
+    <td>
         <img tal:attributes="src current_version/icon_url;
                              title current_version/content_type" />
         <a tal:attributes="href current_version/url"
            tal:content="current_version/filename"></a>
         (<tal:block content="current_version/pretty_size" />)
-    </td>
-    <td tal:condition="not:current_version">
-        <em i18n:translate="">No file uploaded</em>
     </td>
 </tr>
 <tr tal:condition="current_version/viewable|nothing">
