@@ -5,7 +5,7 @@
     </h1>
   </metal:block>
   <tal:block metal:fill-slot="section"
-    tal:define="contact options/contact|nothing;
+    tal:define="ob options/ob|nothing;
           orig_id request/orig_id|nothing;
           new_users request/new_users|python:[];
           objects options/objects|python:{};
@@ -23,7 +23,7 @@
       </div>
       <div class="cleaner">&nbsp;</div>
     </tal:block>
-    <tal:block condition="not:contact">
+    <tal:block condition="not:ob">
       <div class="description-text">
         <p i18n:translate="">
           Choose contributor and click on <span i18n:name="Search"><strong i18n:translate="">Search</strong></span> to find content.
@@ -61,12 +61,12 @@
         </select>
 
         <div class="cleaner">&nbsp;</div>
-        <div class="description-text" tal:condition="not:contact">
+        <div class="description-text" tal:condition="not:ob">
           <p i18n:translate="">
           Select objects to be modified from the table below and then click <span i18n:name="AssignRole"><strong i18n:translate="">Assign editor role</strong></span>.
           </p>
         </div>
-        <div class="description-text" tal:condition="contact">
+        <div class="description-text" tal:condition="ob">
           <p i18n:translate="">
           Click <span i18n:name="AssignRole"><strong i18n:translate="">Assign editor role</strong></span>.
           </p>
@@ -85,7 +85,7 @@
           <thead>
             <tr>
               <th width="5%" align="left" class="checkbox">
-                <input tal:condition="not:contact" type="checkbox" class="select-all" onclick="selectAll();" />
+                <input tal:condition="not:ob" type="checkbox" class="select-all" onclick="selectAll();" />
               </th>
               <th><span i18n:translate="">Objects contributed by</span> <tal:block content="orig_id" /></th>
               <th i18n:translate="">Users with local editing role</th>
