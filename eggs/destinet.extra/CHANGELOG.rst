@@ -1,4 +1,7 @@
-1.3.9 - (unreleased)
+1.3.10 - (unreleased)
+=======================
+
+1.3.9 - (2018-04-04)
 =======================
 * extend admin_assign_role to Certificates [dumitval]
 
