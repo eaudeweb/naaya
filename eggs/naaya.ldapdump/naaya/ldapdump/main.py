@@ -15,6 +15,7 @@ except ImportError:
 log = logging.getLogger('naaya.ldapdump')
 log.setLevel(logging.DEBUG)
 
+
 def get_config(config_path):
     try:
         file = open(config_path)
@@ -27,6 +28,7 @@ def get_config(config_path):
         return config
     finally:
         file.close()
+
 
 def get_db_path(config):
     return os.path.join(config['_root_path'],
@@ -62,7 +64,7 @@ class LDAPConnection(object):
 
     def get_schema(self):
         subschemasubentry_dn = self._connection.search_subschemasubentry_s(
-                self._ldap_url.dn)
+            self._ldap_url.dn)
         if subschemasubentry_dn is None:
             log.error("Couldn't find the schema subentry")
             return None
@@ -73,7 +75,7 @@ class LDAPConnection(object):
             schema_attrs = ldap.schema.subentry.SCHEMA_ATTRS
 
         subschemasubentry_entry = self._connection.read_subschemasubentry_s(
-                                    subschemasubentry_dn, attrs=schema_attrs)
+            subschemasubentry_dn, attrs=schema_attrs)
 
         return ldap.schema.SubSchema(subschemasubentry_entry)
 
@@ -93,17 +95,20 @@ class LDAPConnection(object):
             ret[dn] = {}
             for attr, values in attr_dict.items():
                 syntax = schema.get_syntax(attr)
-                if syntax in ldap.schema.models.NOT_HUMAN_READABLE_LDAP_SYNTAXES:
+                if syntax in \
+                        ldap.schema.models.NOT_HUMAN_READABLE_LDAP_SYNTAXES:
                     ret[dn][attr] = {'type': 'binary', 'values': values}
                 else:
                     try:
                         ret[dn][attr] = {
-                                'type': 'text',
-                                'values': [v.decode(self._encoding) for v in values],
-                                }
+                            'type': 'text',
+                            'values': [v.decode(self._encoding) for
+                                       v in values],
+                        }
                     except UnicodeDecodeError:
                         log.exception('dn:%s attr:%s', dn, attr)
         return ret
+
 
 def get_ldap_connection(config):
     host = config['ldap']['host']
@@ -123,7 +128,8 @@ def write_values(cursor, results_list):
 
     cursor.execute("DROP TABLE IF EXISTS LDAPMappingBlobs")
     cursor.execute(
-        "CREATE TABLE LDAPMappingBlobs(id INTEGER PRIMARY KEY ASC, dn, attr, value BLOB)"
+        "CREATE TABLE LDAPMappingBlobs(id INTEGER PRIMARY KEY ASC, dn, attr, "
+        "value BLOB)"
     )
     for result in results_list:
         for dn, attrs in result.items():
@@ -153,11 +159,13 @@ def write_values(cursor, results_list):
                                           dn, attr, '<binary>')
                             raise
 
+
 def reset_dump_timestamp(cursor):
     cursor.execute("CREATE TABLE IF NOT EXISTS LDAPMetadata"
                    "(key PRIMARY KEY, value)")
     cursor.execute("INSERT OR REPLACE INTO LDAPMetadata(key, value) "
                    "VALUES ('date', ?)", (datetime.now().isoformat(),))
+
 
 def save_results(config, results_list):
     db_path = get_db_path(config)
@@ -175,6 +183,7 @@ def save_results(config, results_list):
         log.info("Successfully dumped ldap data")
     cursor.close()
 
+
 def setup_log_handler(config):
     logging_config = config.get('logging', {})
     if 'file' not in logging_config:
@@ -188,6 +197,7 @@ def setup_log_handler(config):
     handler.setFormatter(logging.Formatter(msg_format))
 
     log.addHandler(handler)
+
 
 def dump_ldap(config_path):
     """ Perform a dump of an LDAP database according to the config file. """
@@ -219,9 +229,10 @@ def get_db_meta(db_path, key):
             return row[0]
         except sqlite3.OperationalError, e:
             log.exception("Error getting value for key %s", key)
-            raise KeyError, key
+            raise KeyError(key)
     finally:
         db_conn.close()
+
 
 class DumpReader(object):
     def __init__(self, db_path):
@@ -253,8 +264,9 @@ class DumpReader(object):
 
         for dn, iter in attriter:
             tuples = [(attr, value) for _dn, attr, value in iter]
-            if blob_dn == dn: # match in iteration
-                tuples.extend([(attr, str(value)) for _dn, attr, value in blob_iter])
+            if blob_dn == dn:  # match in iteration
+                tuples.extend([(attr, str(value)) for
+                               _dn, attr, value in blob_iter])
                 try:
                     blob_dn, blob_iter = blobiter.next()
                 except StopIteration:
@@ -267,7 +279,8 @@ class DumpReader(object):
         log.debug('Starting read of dump')
         for dn, tuples in self._get_dump_items():
             mapping = {}
-            for attr, iter in itertools.groupby(tuples, operator.itemgetter(0)):
+            for attr, iter in itertools.groupby(tuples,
+                                                operator.itemgetter(0)):
                 values = [value for _attr, value in iter]
                 if len(values) == 1:
                     mapping[attr] = values[0]
@@ -275,6 +288,7 @@ class DumpReader(object):
                     mapping[attr] = values
             mapping[u'dn'] = dn
             yield dn, mapping
+
 
 def get_reader(config_path):
     config = get_config(config_path)
