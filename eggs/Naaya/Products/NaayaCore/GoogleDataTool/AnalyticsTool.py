@@ -382,7 +382,7 @@ class AnalyticsTool(SimpleItem, utils):
             return cached_data
 
         data = self._api_get_ga_data({
-            'metrics': 'ga:visits,ga:visitors,ga:pageviews,ga:timeOnSite',
+            'metrics': 'ga:visits,ga:visitors,ga:pageviews,ga:sessionDuration',
         })
         if 'rows' in data:
             # take the first entry
@@ -391,7 +391,7 @@ class AnalyticsTool(SimpleItem, utils):
                 'visits': formatter.format(float(stats['ga:visits'])),
                 'visitors': formatter.format(float(stats['ga:visitors'])),
                 'pageviews': formatter.format(float(stats['ga:pageviews'])),
-                'timeOnSite': humanize_time(float(stats['ga:timeOnSite']) /
+                'sessionDuration': humanize_time(float(stats['ga:sessionDuration']) /
                                             float(stats['ga:visits'])),
             }
             # no data in the cache, so cache it
@@ -404,7 +404,7 @@ class AnalyticsTool(SimpleItem, utils):
         """ Get the site usage """
         data = self._api_get_ga_data({
             'metrics': ('ga:visits,ga:bounces,ga:pageviews,'
-                        'ga:timeOnSite,ga:newVisits,ga:entrances'),
+                        'ga:sessionDuration,ga:newVisits,ga:entrances'),
         })
         if 'rows' in data:
             # take the first entry
@@ -420,7 +420,7 @@ class AnalyticsTool(SimpleItem, utils):
                 'bounces': '%.2f%%' % bounce_rate,
                 'pages_visit': '%.2f' % pages_visit,
                 'pageviews': formatter.format(float(stats['ga:pageviews'])),
-                'timeOnSite': humanize_time(float(stats['ga:timeOnSite']) /
+                'sessionDuration': humanize_time(float(stats['ga:sessionDuration']) /
                                             float(stats['ga:visits'])),
                 'newVisits': '%.2f%%' % newVisits,
             }

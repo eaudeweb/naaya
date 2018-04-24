@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<th i18n:translate="">Avg. Time on Site:</th>
-				<td tal:content="site_usage/timeOnSite" />
+				<td tal:content="site_usage/sessionDuration" />
 			</tr>
 			<tr>
 				<th i18n:translate="">% New Visits:</th>

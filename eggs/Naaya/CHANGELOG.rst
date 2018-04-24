@@ -1,5 +1,6 @@
 4.2.19 (unreleased)
 -------------------
+* update google analytics metric [dumitval]
 
 4.2.18 (2018-03-30)
 -------------------

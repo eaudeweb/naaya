@@ -12,7 +12,7 @@
 			<li><strong i18n:translate="">Visits:</strong> <span tal:replace="summary/visits" /></li>
 			<li><strong i18n:translate="">Visitors:</strong> <span tal:replace="summary/visitors" /></li>
 			<li><strong i18n:translate="">Pageviews:</strong> <span tal:replace="summary/pageviews" /></li>
-			<li><strong i18n:translate="">TimeOnSite:</strong> <span tal:replace="summary/timeOnSite" /></li>
+			<li><strong i18n:translate="">Session Duration:</strong> <span tal:replace="summary/sessionDuration" /></li>
 		</ul>
 		(<span tal:replace="python:here.utShowDateTime1(start)" /> - <span tal:replace="python:here.utShowDateTime1(end)" />)
 	</tal:block>
