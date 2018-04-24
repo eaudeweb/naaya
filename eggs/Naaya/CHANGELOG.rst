@@ -1,4 +1,7 @@
-4.2.19 (unreleased)
+4.2.20 (unreleased)
+-------------------
+
+4.2.19 (2018-04-24)
 -------------------
 * update google analytics metric [dumitval]
 
