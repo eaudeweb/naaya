@@ -1,4 +1,7 @@
-1.3.11 - (unreleased)
+1.3.12 - (unreleased)
+=======================
+
+1.3.11 - (2018-04-24)
 =======================
 * update in certificate keywords (standardisation) [dumitval]
 * add event and certificate to the dissemination page [dumitval]
