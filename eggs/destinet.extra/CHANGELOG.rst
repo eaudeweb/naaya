@@ -1,4 +1,7 @@
-1.3.10 - (unreleased)
+1.3.11 - (unreleased)
+=======================
+
+1.3.10 - (2018-04-24)
 =======================
 * add "View as a list" in topic listing map [dumitval]
 * add "View as a list" in certificate quickfinder [dumitval]
