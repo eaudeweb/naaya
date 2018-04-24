@@ -163,35 +163,20 @@
               </ul>
             </td>
         </tr>
-        <tr>
+        <tr tal:condition="here/administrative_level | nothing">
             <th i18n:translate="">Operational level</th>
-            <td tal:condition="here/administrative_level | nothing">
-              <ul>
-                  <li tal:content="python:here.get_node_title('administrative_level', item)"
-                    i18n:translate=""
-                    tal:repeat="item here/administrative_level" />
-              </ul>
-            </td>
+            <td tal:content="python:here.get_node_title('administrative_level', here.administrative_level)"
+                i18n:translate="" />
         </tr>
-        <tr>
+        <tr tal:condition="here/sustainability | nothing">
             <th i18n:translate="">Sustainability</th>
-            <td tal:condition="here/sustainability | nothing">
-              <ul>
-                <li tal:content="python:here.get_node_title('certificate_sustainability', item)"
-                  i18n:translate=""
-                  tal:repeat="item here/sustainability" />
-              </ul>
-            </td>
+            <td tal:content="python:here.get_node_title('certificate_sustainability', here.sustainability)"
+                i18n:translate="" />
         </tr>
-        <tr>
+        <tr tal:condition="here/credibility | nothing">
             <th i18n:translate="">Credibility</th>
-            <td tal:condition="here/credibility | nothing">
-              <ul>
-                <li tal:content="python:here.get_node_title('certificate_credibility', item)"
-                  i18n:translate="" 
-                  tal:repeat="item here/credibility"/>
-              </ul>
-            </td>
+            <td tal:content="python:here.get_node_title('certificate_credibility', here.credibility)"
+                i18n:translate="" />
         </tr>
         <tr>
             <th i18n:translate="">Services</th>
@@ -210,3 +195,4 @@
     </div>
     </metal:block>
 </metal:block>
+
