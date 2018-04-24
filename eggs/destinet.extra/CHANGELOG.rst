@@ -1,5 +1,7 @@
 1.3.11 - (unreleased)
 =======================
+* update in certificate keywords (standardisation) [dumitval]
+* add event and certificate to the dissemination page [dumitval]
 
 1.3.10 - (2018-04-24)
 =======================

@@ -27,10 +27,10 @@
             <a tal:attributes="href string:${here/absolute_url}/market_place_contact">Contact</a>
         </p>
 
-        <p>The DestiNet market place is a fee-based service that raises funds to support this portal. Currently this service is provided without cost to first-time users. This is made possible through the FAST-LAIN project with support from the European Commission  CIP Programme.</p>
+        <p>The Tourism2030 market place is a fee-based service that raises funds to support this portal. Currently this service is provided without cost to first-time users. This is made possible through the FAST-LAIN project with support from the European Commission  CIP Programme.</p>
 
 <div tal:define="site here/getSite">
-<p>DestiNet follows the GSTC process in order to ensure market-place entries avoid green-washing. Market-place items are categorised as certified (3rd party/2nd party), recommended or self-assessed.</p>
+<p>Tourism2030 follows the GSTC process in order to ensure market-place entries avoid green-washing. Market-place items are categorised as certified (3rd party/2nd party), recommended or self-assessed.</p>
 
 <p>If you have many items to upload, you may wish to <a tal:attributes="href string:${site/absolute_url}/feedback_html">contact us</a> to use our bulk upload form.</p>
 

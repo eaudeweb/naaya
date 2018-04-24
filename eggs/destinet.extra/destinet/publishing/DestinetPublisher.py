@@ -11,7 +11,6 @@ except ImportError:
     from Globals import InitializeClass
 
 from destinet.registration.core import handle_groups
-from Products.NaayaBase.NyContentType import SchemaFormHelper
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from naaya.core import submitter
