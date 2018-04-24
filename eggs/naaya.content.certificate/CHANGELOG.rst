@@ -1,3 +1,11 @@
+0.0.6 (unreleased)
+------------------
+
+0.0.5 (2018-04-24)
+------------------
+* update the certificate index to reflect the new single select
+  properties [dumitval]
+
 0.0.4 (2018-03-26)
 ------------------
 * three properties set to single select [dumitval]
