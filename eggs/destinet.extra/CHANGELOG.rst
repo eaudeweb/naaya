@@ -1,5 +1,9 @@
 1.3.10 - (unreleased)
 =======================
+* add "View as a list" in topic listing map [dumitval]
+* add "View as a list" in certificate quickfinder [dumitval]
+* update the compass in topic listing [dumitval]
+* customise NyContentType [dumitval]
 
 1.3.9 - (2018-04-04)
 =======================

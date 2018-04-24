@@ -105,6 +105,14 @@ function load_map_points(bounds, callback) {
       }
     });
     setRecordCounter(num_records);
+    if (num_records > 0){
+        var req_link = '?' + str_bounds + '&' + enc_form + '&geo_query=' + query + '&all_records=True';
+        $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+    } else {
+        $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
+        $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
+    }
     update_locations_values(bounds, enc_form, query);
     return response.points;
   }
@@ -235,29 +243,19 @@ function _refresh_map_points(bounds, callback, loader) {
       }
     });
     setRecordCounter(num_records);
+    if (num_records > 0){
+        var req_link = '?' + str_bounds + '&' + enc_form + '&geo_query=' + query + '&all_records=True';
+        $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+    } else {
+        $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
+        $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
+    }
     update_locations_values(bounds, enc_form, query);
     return response.points;
   }
 
-  // function parse_response_data(response) {
-  //     if(response.error) {
-  //         alert("Error loading points: " + response.error);
-  //     }
-  //     var num_records = 0;
-  //     $.each(response.points, function(i, point) {
-  //         if (point.label === 'cluster') {
-  //             num_records += point.num_records;
-  //         } else {
-  //             num_records++;
-  //         }
-  //     });
-  //     setRecordCounter(num_records);
-  //     var geo_query = filter_dict['geo_query:ustring:utf8'];
-  //     if(! geo_query) geo_query = "";
-  //     update_locations_values(bounds, geo_query);
-  // }
 }
-// end override tibi
 
 
 
@@ -578,7 +576,7 @@ function showPageElements() {
   }
 
   //document.getElementById('checkall').style.display = "inline";
-  document.getElementById('js_links').style.display = "block";
+  document.getElementById('js_links').style.display = "inline";
   a = document.getElementById('address').readOnly = false;
   document.getElementById('address_button').disabled = false;
   displayParentCheckboxes();
@@ -622,4 +620,5 @@ function onclickpoint(lat, lon, point_id, point_tooltip) {
 
 // can be overwritten to get notifications for the mouse over events
 function onmouseoverpoint(lat, lon, point_id, point_tooltip) {}
+
 

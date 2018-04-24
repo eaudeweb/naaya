@@ -8,5 +8,6 @@
     <include package="destinet.roles" />
     <include package="destinet.registration" />
     <include package="destinet.geomap_tool" />
+    <include package="destinet.NyContentType" />
 
 </configure>
