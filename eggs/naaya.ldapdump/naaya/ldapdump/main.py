@@ -41,8 +41,8 @@ class LDAPConnection(object):
         Connects to a LDAP server
         can raise ldap.LDAPError
         """
-        if not host.startswith('ldap://'):
-            uri = 'ldap://' + host
+        if not (host.startswith('ldap://') or host.startswith('ldaps://')):
+            uri = 'ldaps://' + host
         else:
             uri = host
 
