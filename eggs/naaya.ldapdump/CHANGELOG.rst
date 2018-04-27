@@ -1,4 +1,7 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
+------------------
+
+1.0.4 (2018-04-27)
 ------------------
 * fix for ldaps [dumitval]
 
