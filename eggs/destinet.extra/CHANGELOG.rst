@@ -1,5 +1,6 @@
 1.3.12 - (unreleased)
 =======================
+* change location of certificate creation [dumitval]
 
 1.3.11 - (2018-04-24)
 =======================

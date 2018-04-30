@@ -12,7 +12,7 @@
 
         <p>  Chose the type of information to post </p>
         <ul>
-            <li><a tal:attributes="href string:/resources/certificates/certificate_add_html">Add Certificate</a></li>
+            <li><a tal:attributes="href string:/resources/certificate_add_html">Add Certificate</a></li>
             <li><a tal:attributes="href string:/events/event_add_html">Add Event</a></li>
             <li><a tal:attributes="href string:${here/absolute_url}/disseminate_file">Add File</a></li>
             <li><a tal:attributes="href string:${here/absolute_url}/disseminate_mediafile">Add Media File</a></li>
