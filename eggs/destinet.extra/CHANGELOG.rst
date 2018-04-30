@@ -1,4 +1,7 @@
-1.3.12 - (unreleased)
+1.3.13 - (unreleased)
+=======================
+
+1.3.12 - (2018-04-30)
 =======================
 * change location of certificate creation [dumitval]
 
