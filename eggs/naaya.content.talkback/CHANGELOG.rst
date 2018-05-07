@@ -1,5 +1,6 @@
 1.4.48 (unreleased)
 -------------------
+* add hyperlink to user profile in comments export [dumitval]
 
 1.4.47 (2018-02-27)
 -------------------

@@ -159,6 +159,7 @@ class CommentsAdmin(SimpleItem):
 
         header_style = xlwt.easyxf('font: bold on; align: horiz left;')
         normal_style = xlwt.easyxf('align: horiz left, vert top;')
+        link_style = xlwt.easyxf('font: colour blue, underline on;')
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
@@ -177,8 +178,19 @@ class CommentsAdmin(SimpleItem):
         for item in comments:
             row += 1
             for col in range(len(fields)):
-                ws.row(row).set_cell_text(col, fields[col][1](item),
-                                          normal_style)
+                text = fields[col][1](item)
+                # if the user is invited, we don't have a user profile
+                # so no hyperlink
+                if (fields[col][0] == 'Contributor' and
+                        'invited by' not in text
+                        and '(' in text):
+                    link = 'https://www.eionet.europa.eu/users/' + text[
+                        text.find("(")+1:text.find(")")]
+                    formula = 'HYPERLINK("{}", "{}")'.format(
+                        link, text)
+                    ws.write(row, col, xlwt.Formula(formula), link_style)
+                else:
+                    ws.row(row).set_cell_text(col, text, normal_style)
         output = StringIO()
         wb.save(output)
 
