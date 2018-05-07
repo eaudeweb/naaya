@@ -18,7 +18,6 @@
 # Alex Morega, Eau de Web
 # Mihai Tabara, Eau de Web
 
-#Python imports
 from cStringIO import StringIO
 import csv
 import codecs
@@ -31,7 +30,6 @@ except ImportError:
 
 import xlwt
 
-#Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
@@ -40,6 +38,7 @@ from Paragraph import Paragraph
 from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
+
 
 class CommentsAdmin(SimpleItem):
     security = ClassSecurityInfo()
@@ -60,6 +59,7 @@ class CommentsAdmin(SimpleItem):
                                             'tbconsultation_comments_admin')
 
     security.declarePublic('index_html')
+
     def index_html(self, REQUEST):
         """ the admin page for comments """
 
@@ -116,7 +116,9 @@ class CommentsAdmin(SimpleItem):
 
         return contrib_stats
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'get_comments_trend')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'get_comments_trend')
+
     def get_comments_trend(self):
         """ get comments trend """
         days = {
@@ -136,6 +138,7 @@ class CommentsAdmin(SimpleItem):
         return json.dumps(sorted(data, key=lambda x: x['day']))
 
     security.declarePrivate('generate_csv_output')
+
     def generate_csv_output(self, fields, comments):
 
         output = StringIO()
@@ -143,7 +146,8 @@ class CommentsAdmin(SimpleItem):
 
         csv_writer.writerow(['Consultation deadline',
                              (self.end_date + 1).strftime('%Y/%m/%d %H:%M')])
-        csv_writer.writerow(['Date of export', DateTime().strftime('%Y/%m/%d %H:%M')])
+        csv_writer.writerow(['Date of export',
+                             DateTime().strftime('%Y/%m/%d %H:%M')])
 
         csv_writer.writerow([field[0] for field in fields])
 
@@ -151,10 +155,10 @@ class CommentsAdmin(SimpleItem):
             row = [field[1](item).encode('utf-8') for field in fields]
             csv_writer.writerow(row)
 
-
         return codecs.BOM_UTF8 + output.getvalue()
 
     security.declarePrivate('generate_excel_output')
+
     def generate_excel_output(self, fields, comments):
 
         header_style = xlwt.easyxf('font: bold on; align: horiz left;')
@@ -165,8 +169,8 @@ class CommentsAdmin(SimpleItem):
         ws = wb.add_sheet('Sheet 1')
 
         ws.row(0).set_cell_text(0, 'Consultation deadline', header_style)
-        ws.row(0).set_cell_text(1, (self.end_date + 1).strftime('%Y/%m/%d %H:%M'),
-                                normal_style)
+        ws.row(0).set_cell_text(
+            1, (self.end_date + 1).strftime('%Y/%m/%d %H:%M'), normal_style)
         ws.row(1).set_cell_text(0, 'Date of export', header_style)
         ws.row(1).set_cell_text(1, DateTime().strftime('%Y/%m/%d %H:%M'),
                                 normal_style)
@@ -182,10 +186,10 @@ class CommentsAdmin(SimpleItem):
                 # if the user is invited, we don't have a user profile
                 # so no hyperlink
                 if (fields[col][0] == 'Contributor' and
-                        'invited by' not in text
-                        and '(' in text):
+                        'invited by' not in text and
+                        '(' in text):
                     link = 'https://www.eionet.europa.eu/users/' + text[
-                        text.find("(")+1:text.find(")")]
+                        text.find("(") + 1:text.find(")")]
                     formula = 'HYPERLINK("{}", "{}")'.format(
                         link, text)
                     ws.write(row, col, xlwt.Formula(formula), link_style)
@@ -197,10 +201,12 @@ class CommentsAdmin(SimpleItem):
         return output.getvalue()
 
     security.declarePrivate('generate_custom_excel_output')
+
     def generate_custom_excel_output(self, fields, comments):
 
         normal_style = xlwt.easyxf('align: wrap on, horiz left, vert top;')
-        header_style = xlwt.easyxf('font: bold on; align: wrap on, horiz left;')
+        header_style = xlwt.easyxf(
+            'font: bold on; align: wrap on, horiz left;')
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
@@ -218,7 +224,7 @@ class CommentsAdmin(SimpleItem):
                 ws.row(row).set_cell_text(col, fields[col][1](item),
                                           normal_style)
             row += 1
-            ws.row(row).set_cell_text(0, 'EEA Comments' , header_style)
+            ws.row(row).set_cell_text(0, 'EEA Comments', header_style)
         output = StringIO()
         wb.save(output)
 
@@ -238,7 +244,6 @@ class CommentsAdmin(SimpleItem):
                     for c in replies(top_comment):
                         yield c
 
-
     def all_comments(self):
         perm_manage = self.checkPermissionManageTalkBackConsultation()
         if perm_manage:
@@ -255,6 +260,7 @@ class CommentsAdmin(SimpleItem):
             raise Unauthorized
 
         html2text = self.getSite().html2text
+
         def plain(s, trim=None):
             return html2text(s, trim)
 
@@ -296,16 +302,17 @@ class CommentsAdmin(SimpleItem):
             content_type = 'application/vnd.ms-excel'
             filename = 'comments.xls'
 
-        else: raise ValueError('unknown file format %r' % file_type)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
 
         if as_attachment and REQUEST is not None:
             filesize = len(ret)
             set_response_attachment(REQUEST.RESPONSE, filename,
-                content_type, filesize)
+                                    content_type, filesize)
         return ret
 
-    _comments_table_html = NaayaPageTemplateFile('zpt/comments_table',
-                                globals(), 'tbconsultation_comments_table')
+    _comments_table_html = NaayaPageTemplateFile(
+        'zpt/comments_table', globals(), 'tbconsultation_comments_table')
 
     def comments_table_html(self):
         """ table showing all comments from all participants (manager)
