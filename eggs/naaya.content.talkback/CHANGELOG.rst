@@ -1,4 +1,7 @@
-1.4.48 (unreleased)
+1.4.49 (unreleased)
+-------------------
+
+1.4.48 (2018-05-07)
 -------------------
 * add hyperlink to user profile in comments export [dumitval]
 
