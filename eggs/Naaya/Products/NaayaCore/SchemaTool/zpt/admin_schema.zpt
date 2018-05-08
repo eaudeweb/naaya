@@ -36,10 +36,10 @@
         <td><a tal:attributes="href string:${widget/absolute_url}/admin_html" tal:content="widget/prop_name" /></td>
         <td tal:content="widget/title" />
         <td tal:content="widget/data_type" />
-        <td style="text-align: center" tal:content="structure python:test(widget.required, u'&#x2713;', '')" />
-        <td style="text-align: center" tal:content="structure python:test(widget.localized, u'&#x2713;', '')" />
+        <td style="text-align: center" tal:content="structure python:test(widget.required, '&check;', '')" />
+        <td style="text-align: center" tal:content="structure python:test(widget.localized, '&check;', '')" />
         <td tal:content="widget/sortorder" />
-        <td style="text-align: center" tal:content="structure python:test(widget.visible, u'&#x2713;', '')" />
+        <td style="text-align: center" tal:content="structure python:test(widget.visible, '&check;', '')" />
     </tr>
 </tbody>
 
