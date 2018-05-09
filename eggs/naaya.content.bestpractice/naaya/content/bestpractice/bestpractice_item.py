@@ -48,7 +48,7 @@ DEFAULT_SCHEMA = {
         sortorder=140, widget_type='String', label='Job title',
         localized=True),
     'department': dict(
-        sortorder=150, widget_type='String', label='Personal title',
+        sortorder=150, widget_type='String', label='Department',
         localized=True),
     'organisation': dict(
         sortorder=160, widget_type='String', label='Organisation',
