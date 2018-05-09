@@ -1,5 +1,6 @@
 0.0.7 (unreleased)
 ------------------
+* update index to include several properties from contacts [dumitval]
 * property label correction [dumitval]
 
 0.0.6 (2018-03-30)

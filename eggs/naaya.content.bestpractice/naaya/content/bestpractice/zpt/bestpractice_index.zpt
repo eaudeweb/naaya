@@ -27,14 +27,14 @@
              fill-slot="body">
 
 <h1>
-	<metal:block use-macro="site_object_index/macros/icon"/>
-	<span tal:replace="here/title_or_id" />
-	<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
-		<span i18n:translate="">Item only translated in </span>
-		<span tal:repeat="lang here/gl_get_languages_map">
-			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-		</span>
-	</span>
+  <metal:block use-macro="site_object_index/macros/icon"/>
+  <span tal:replace="here/title_or_id" />
+  <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+    <span i18n:translate="">Item only translated in </span>
+    <span tal:repeat="lang here/gl_get_languages_map">
+      <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+    </span>
+  </span>
 </h1>
 
 <metal:block use-macro="site_object_index/macros/action_buttons"/>
@@ -68,34 +68,104 @@
 <metal:block use-macro="site_object_index/macros/contributor_tr" />
 <tal:block condition="here/coverage"
            content="structure python: here.prop_display_tr('coverage')" />
-<tal:block condition="here/keywords"
-           content="structure python: here.prop_display_tr('keywords')" />
+<tr tal:condition="here/keywords|nothing">
+  <th i18n:translate="">Keywords</th>
+  <td>
+    <ul>
+      <li tal:repeat="keyword python:here.keywords.split(', ')"
+        tal:content="keyword" i18n:translate="" />
+    </ul>
+  </td>
+</tr>
+<tal:block condition="here/personaltitle"
+           content="structure python: here.prop_display_tr('personaltitle')" />
+<tal:block condition="here/firstname"
+           content="structure python: here.prop_display_tr('firstname')" />
+<tal:block condition="here/lastname"
+           content="structure python: here.prop_display_tr('lastname')" />
+<tal:block condition="here/jobtitle"
+           content="structure python: here.prop_display_tr('jobtitle')" />
+<tal:block condition="here/department"
+           content="structure python: here.prop_display_tr('department')" />
+<tal:block condition="here/organisation"
+           content="structure python: here.prop_display_tr('organisation')" />
+<tal:block condition="here/postaladdress"
+           content="structure python: here.prop_display_tr('postaladdress')" />
+<tal:block condition="here/phone"
+           content="structure python: here.prop_display_tr('phone')" />
+<tal:block condition="here/fax"
+           content="structure python: here.prop_display_tr('fax')" />
+<tal:block condition="here/cellphone"
+           content="structure python: here.prop_display_tr('cellphone')" />
+<tal:block condition="here/email"
+           content="structure python: here.prop_display_tr('email')" />
+<tr tal:condition="python:here.webpage.strip()">
+  <th i18n:translate="">Webpage</th>
+  <td><a tal:attributes="href here/webpage; target here/title_or_id" tal:content="here/webpage" /></td>
+</tr>
+<tal:block condition="here/facebook"
+           content="structure python: here.prop_display_tr('facebook')" />
+<tal:block condition="here/linkedin"
+           content="structure python: here.prop_display_tr('linkedin')" />
+<tal:block condition="here/twitter"
+           content="structure python: here.prop_display_tr('twitter')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
+<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['landscape_type-property'].get_selection_list()" tal:condition="here/landscape_type|nothing">
+  <th i18n:translate="">Landscape type</th>
+    <td i18n:translate=""
+      tal:content="python:[x.title for x in sel_list if x.id == here.landscape_type][0]"
+      tal:on-error="python:', '.join([x.title for x in sel_list if x.id in here.landscape_type.replace('[u\'', '').replace('[\'', '').replace('\', u\'', ',').replace('\', \'', ',').replace('\']', '').split(',')])" />
+</tr>
+
 <tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['topics-property'].get_selection_list()">
     <th i18n:translate="">Topics</th>
     <td>
-        <tal:block repeat="topic here/topics">
-        <tal:block i18n:translate="" tal:content="python:[x.title for x in sel_list if x.id == topic][0]" />
-        <tal:block condition="not:repeat/topic/end" >, </tal:block>
-        </tal:block>
+      <ul>
+        <li tal:repeat="topic here/topics" i18n:translate=""
+         tal:content="python:[x.title for x in sel_list if x.id == topic][0]" />
+      </ul>
     </td>
 </tr>
 
+<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['gstc_criteria-property'].get_selection_list()"
+  tal:condition="here/gstc_criteria|nothing" >
+    <th i18n:translate="">GSTC Criteria</th>
+    <td>
+      <ul>
+        <li tal:repeat="criteria here/gstc_criteria" i18n:translate=""
+          tal:content="python:[x.title for x in sel_list if x.id == criteria][0]" />
+      </ul>
+    </td>
+</tr>
+
+<tr tal:define="
+    category here/category|nothing;
+    title python:category and portal_map.getSymbolTitle(category);
+    picture python:category and portal_map.getSymbolPicture(category)"
+    tal:condition="python: category and title != ''">
+    <th i18n:translate="">Marketplace category</th>
+    <td>
+        <img tal:condition="picture | nothing"
+            tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${category}; alt title; title title" />
+        <span tal:replace="title" />
+    </td>
+</tr>
+    
 <tal:block condition="here/is_geo_enabled">
-	<tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
-		picture python:portal_map.getSymbolPicture(here.geo_type)"
-		tal:condition="python: title != '' and here.geo_location">
-	<th i18n:translate="Type (translate as a noun)">Type</th>
-	<td>
-		<img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
-		(<span tal:replace="title" />)
-	</td>
-	</tr>
+  <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+    picture python:portal_map.getSymbolPicture(here.geo_type)"
+    tal:condition="python: title != '' and here.geo_location">
+  <th i18n:translate="Type (translate as a noun)">Type</th>
+  <td>
+    <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolPicture?id=${here/geo_type}; alt title; title title" />
+    (<span tal:replace="title" />)
+  </td>
+  </tr>
 </tal:block>
 
 </table>
 <tal:block condition="python:here.prop_details('geo_location')['show']"
-	content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+  content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
 <noscript><style type="text/css">
     table.ny-bfile-all-versions { display: table; }
