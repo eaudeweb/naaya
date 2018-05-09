@@ -1,5 +1,6 @@
 1.3.13 - (unreleased)
 =======================
+* move certificate_keywords to RefTree [dumitval]
 
 1.3.12 - (2018-04-30)
 =======================

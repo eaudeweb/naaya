@@ -50,34 +50,6 @@ RESOURCE_FRIENDLY_NAMES = {
     'Publication': ['Naaya Publication']
 }
 
-CERTIFICATE_KEYWORDS = (
-    ('AlpinePearls', 'Alpine Pearls'),
-    ('AustrianEcolabel', 'Austrian Ecolabel'),
-    ('Biohotels', 'Biohotels'),
-    ('Biosph\xc3\xa4rengastgeber', 'Biosph\xc3\xa4rengastgeber'),
-    ('BlaueSchwalbe', 'Blaue Schwalbe'),
-    ('BR-Bliesgau', 'BR-Bliesgau'),
-    ('CGH', 'CGH'),
-    ('DEHOGA-Umweltcheck', 'DEHOGA-Umweltcheck'),
-    ('EcoCertificationMalta', 'ECO certification Malta'),
-    ('Eco-Romania', 'ECO Romania'),
-    ('Ecocamping', 'Ecocamping'),
-    ('EcolabelLuxemburg', 'Ecolabel Luxemburg'),
-    ('FZN', 'FZN'),
-    ('GreenGlobe', 'Green globe'),
-    ('GreenKey', 'Green key'),
-    ('Greenpearls', 'Green Pearls'),
-    ('Greensign', 'GreenSign'),
-    ('GTBS', 'GTBS'),
-    ('QualityCoastAward', 'QualityCoast Award'),
-    ('Lapalmaclub', 'Lapalmaclub'),
-    ('LT-C', 'LT-C'),
-    ('NP-SH-Wattenmeer', 'NP-SH-Wattenmeer'),
-    ('Terresdelebro', 'Terresdelebro'),
-    ('TourCert', 'TourCert'),
-    ('Viabono', 'Viabono'),
-)
-
 
 def get_object_types(context, request):
     """ """
@@ -190,4 +162,6 @@ def map_list_locations(context, request, **kw):
 
 def get_keywords(context, request):
     """ return main keywords for map filtering in Green Travel Maps """
-    return CERTIFICATE_KEYWORDS
+    return sorted([(node.id, node.title) for
+                   node in context.get_list_nodes('certificate_keywords')],
+                  key=lambda x: x[0].lower())
