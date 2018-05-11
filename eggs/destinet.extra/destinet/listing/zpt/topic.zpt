@@ -189,8 +189,8 @@
             refreshMap();
           });
 
-          $('#operational_level').select2({placeholder: 'All'})
-          $('#operational_level').change(function(){
+          $('#administrative_level').select2({placeholder: 'All'})
+          $('#administrative_level').change(function(){
             if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
               $(this).val("").trigger('change');
             }
@@ -908,7 +908,7 @@
                 tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
                 <div class="portalmap_portlet_title" i18n:translate="">operational level</div>
                 <div class="operational_level">
-                  <select name="operational_level" id="operational_level" multiple="multiple">
+                  <select name="administrative_level" id="administrative_level" multiple="multiple">
                   <option value="all">All</option>
                     <option tal:attributes="value item/id"
                             tal:content="item/title"

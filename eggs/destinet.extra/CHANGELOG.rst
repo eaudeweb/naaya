@@ -1,5 +1,6 @@
 1.3.14 - (unreleased)
 =======================
+* fix field id for map filtering in topics [dumitval]
 
 1.3.13 - (2018-05-09)
 =======================
