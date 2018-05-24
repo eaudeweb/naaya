@@ -54,3 +54,7 @@
 	path = bundles/NaayaBundles-SINAnet
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-SINAnet.git
 	branch = master
+[submodule "bundles/NaayaBundles-Privacyforum"]
+	path = bundles/NaayaBundles-Privacyforum
+	url = https://github.com/eaudeweb/NaayaBundles-Privacyforum
+	branch = master
