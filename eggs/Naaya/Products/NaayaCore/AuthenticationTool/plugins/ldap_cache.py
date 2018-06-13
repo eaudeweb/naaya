@@ -37,7 +37,8 @@ class Cache(object):
         what we have, load it.
         """
         now = time()
-        if now - (60 * 15) < self._last_update:  # 15 minute cooldown
+        if self.timestamp and now - (60 * 15) < self._last_update:
+            # 15 minute cooldown
             return
         self._last_update = now
 

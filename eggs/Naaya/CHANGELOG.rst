@@ -1,5 +1,6 @@
-4.2.20 (unreleased)
+4.3.0 (unreleased)
 -------------------
+* user administration optimisation (fewer ldap calls) [dumitval]
 * fixed a template character in schema tool [dumitval]
 
 4.2.19 (2018-04-24)

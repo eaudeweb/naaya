@@ -28,7 +28,9 @@ class PlugBase(SimpleItem):
     def getLocalRoles(self, p_local_roles):
         #returns a list of local roles
         return [role for role in p_local_roles
-                        if role not in ['Owner', 'Authenticated']]
+                if role not in [
+                    'Owner', 'Authenticated', 'Meeting Participant',
+                    'Meeting Waiting List']]
 
     def getUsersRoles(self, p_user_folder, p_meta_types=None):
         #returns a structure with user roles by objects
@@ -47,11 +49,12 @@ class PlugBase(SimpleItem):
             for l_roles_tuple in l_item.get_local_roles():
                 l_local_roles = self.getLocalRoles(l_roles_tuple[1])
                 user = l_roles_tuple[0]
-                if get_source(user) == self.title and len(l_local_roles)>0:
-                    if l_users_roles.has_key(str(user)):
-                        l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
-                    else:
-                        l_users_roles[str(user)] = [(l_local_roles, l_item.absolute_url(1))]
+                if len(l_local_roles):
+                    if get_source(user) == self.title:
+                        if l_users_roles.has_key(str(user)):
+                            l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
+                        else:
+                            l_users_roles[str(user)] = [(l_local_roles, l_item.absolute_url(1))]
         return l_users_roles
 
     def revokeUserRoles(self, user, location, REQUEST=None):
