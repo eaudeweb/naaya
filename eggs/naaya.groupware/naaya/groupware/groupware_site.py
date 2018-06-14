@@ -731,7 +731,8 @@ class GroupwareSite(NySite):
     def check_inside_meeting(self, came_from=None):
         """ """
         if came_from:
-            o = urlparse(came_from.replace('/index_html', ''))
+            o = urlparse(
+                came_from.replace('/index_html', '').replace('/edit_html', ''))
             if o.path:
                 location_obj = self.unrestrictedTraverse(o.path, None)
                 return _inside_meeting(location_obj)

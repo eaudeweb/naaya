@@ -1,5 +1,6 @@
 1.4.49 (unreleased)
 -------------------
+* fix for inside_meeting method crashing [dumitval]
 
 1.4.48 (2018-03-19)
 -------------------
