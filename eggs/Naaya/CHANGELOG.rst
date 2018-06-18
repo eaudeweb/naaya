@@ -1,4 +1,7 @@
-4.3.1 (unreleased)
+4.3.2 (unreleased)
+-------------------
+
+4.3.1 (2018-06-18)
 -------------------
 * strip cookie information from error report [dumitval]
 
