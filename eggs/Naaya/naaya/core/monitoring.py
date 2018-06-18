@@ -30,6 +30,7 @@ def get_known_headers(request):
         headers[header] = request.getHeader(header)
     return headers
 
+
 def data_for_sentry(request):
     """
     Returns extra information to append to message to be sent to Sentry
@@ -40,11 +41,12 @@ def data_for_sentry(request):
     environ['HTTP_COOKIE'] = '-- stripped --'
 
     return {
-            'env': environ,
-            'cookies': request.cookies,
-            'headers': get_known_headers(request),
-            'data': request.form,
-           }
+        'env': environ,
+        'cookies': request.cookies,
+        'headers': get_known_headers(request),
+        'data': request.form,
+    }
+
 
 def log_pub_failure(event):
     if event.retry:
@@ -53,8 +55,8 @@ def log_pub_failure(event):
     if publish_error_log.handlers:
         if event.exc_info[0] not in ignored_types:
             req = event.request
-            publish_error_log.error('Exception on %s [%s]', req.URL, req.method,
-                                    exc_info=event.exc_info,
+            publish_error_log.error('Exception on %s [%s]', req.URL,
+                                    req.method, exc_info=event.exc_info,
                                     extra={
                                         'stack': True,
                                         'data': data_for_sentry(req),

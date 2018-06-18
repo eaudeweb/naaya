@@ -5,12 +5,13 @@ from Globals import InitializeClass
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 
+
 class PlugBase(SimpleItem):
     """ """
 
     manage_options = (
         SimpleItem.manage_options
-        )
+    )
 
     def __init__(self, id, source_obj, title):
         """ """
@@ -20,30 +21,35 @@ class PlugBase(SimpleItem):
         self.title = title
 
     def getUserFolder(self):
-        #return the user folder object
+        # return the user folder object
         l_obj = self.unrestrictedTraverse('/' + self.obj_path, None)
-        if l_obj is None: return None
-        else: return l_obj
+        if l_obj is None:
+            return None
+        else:
+            return l_obj
 
     def getLocalRoles(self, p_local_roles):
-        #returns a list of local roles
+        # returns a list of local roles
         return [role for role in p_local_roles
                 if role not in [
                     'Owner', 'Authenticated', 'Meeting Participant',
                     'Meeting Waiting List']]
 
     def getUsersRoles(self, p_user_folder, p_meta_types=None):
-        #returns a structure with user roles by objects
+        # returns a structure with user roles by objects
         _memo = {}
+
         def get_source(user):
             """ memoize for getUserSource """
             if user not in _memo:
                 _memo[user] = self.getUserSource(user)
             return _memo[user]
 
-        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
+        if p_meta_types is None:
+            p_meta_types = self.get_containers_metatypes()
         l_users_roles = {}
-        l_folders = self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1)
+        l_folders = self.getCatalogedObjects(meta_type=p_meta_types,
+                                             has_local_role=1)
         l_folders.append(self.getSite())
         for l_item in l_folders:
             for l_roles_tuple in l_item.get_local_roles():
@@ -51,10 +57,12 @@ class PlugBase(SimpleItem):
                 user = l_roles_tuple[0]
                 if len(l_local_roles):
                     if get_source(user) == self.title:
-                        if l_users_roles.has_key(str(user)):
-                            l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
+                        if str(user) in l_users_roles:
+                            l_users_roles[str(user)].append(
+                                (l_local_roles, l_item.absolute_url(1)))
                         else:
-                            l_users_roles[str(user)] = [(l_local_roles, l_item.absolute_url(1))]
+                            l_users_roles[str(user)] = [
+                                (l_local_roles, l_item.absolute_url(1))]
         return l_users_roles
 
     def revokeUserRoles(self, user, location, REQUEST=None):
@@ -99,14 +107,14 @@ class PlugBase(SimpleItem):
 
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
-        #process form values
+        # process form values
         if location == "/" or location == '':
             loc, location_ob = 'all', site
         else:
             loc, location_ob = 'other', self.utGetObject(location)
         if location_ob is None:
             return on_error('Invalid location path')
-        #assing roles
+        # assing roles
         if not isinstance(roles, list):
             roles = [roles]
         history = {}
