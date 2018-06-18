@@ -37,6 +37,7 @@ def data_for_sentry(request):
     """
     environ = dict(request)
     environ['RESPONSE'] = '-- stripped --'
+    environ['HTTP_COOKIE'] = '-- stripped --'
 
     return {
             'env': environ,
