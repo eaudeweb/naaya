@@ -22,6 +22,7 @@ from App.ImageFile import ImageFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 
 from zope.interface import implements
+from zopyx.txng3.core.parsers.english import QueryParserError
 from interfaces import IGeoMapTool
 
 from Products.NaayaBase.constants import *
@@ -289,8 +290,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         catalog_tool = self.getCatalogTool()
 
         brains = []
-        for f in filters:
-            brains.extend(catalog_tool(f))
+        try:
+            for f in filters:
+                brains.extend(catalog_tool(f))
+        except QueryParserError as e:
+            self.setSessionErrorsTrans(e)
+            pass
 
         # getting the unique data record ids
         dict_rids = {}
