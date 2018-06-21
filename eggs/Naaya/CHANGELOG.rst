@@ -1,4 +1,7 @@
-4.3.2 (unreleased)
+4.3.3 (unreleased)
+-------------------
+
+4.3.2 (2018-06-21)
 -------------------
 * handle QueryParserError in map list_locations [dumitval]
 
