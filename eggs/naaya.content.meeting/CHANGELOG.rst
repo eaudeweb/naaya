@@ -1,4 +1,7 @@
-1.2.95 (unreleased)
+1.2.96 (unreleased)
+-------------------
+
+1.2.95 (2018-06-28)
 -------------------
 * check that the meeting survey is really a survey [dumitval]
 * handle unicode characters in subscription index [dumitval]
