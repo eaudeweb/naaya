@@ -22,6 +22,7 @@ from cStringIO import StringIO
 import csv
 import codecs
 from DateTime import DateTime
+from unidecode import unidecode
 
 try:
     import json
@@ -105,7 +106,7 @@ class CommentsAdmin(SimpleItem):
         contrib_stats = {}
         for comment in self._iter_comments():
             try:
-                test = contrib_stats[comment.contributor]
+                contrib_stats[comment.contributor]
             except KeyError:
                 new_user_info = comment.get_contributor_info()
                 new_user_info['count'] = 1
@@ -190,8 +191,12 @@ class CommentsAdmin(SimpleItem):
                         '(' in text):
                     link = 'https://www.eionet.europa.eu/users/' + text[
                         text.find("(") + 1:text.find(")")]
-                    formula = 'HYPERLINK("{}", "{}")'.format(
-                        link, text)
+                    try:
+                        formula = 'HYPERLINK("{}", "{}")'.format(
+                            link, text)
+                    except UnicodeEncodeError:
+                        formula = 'HYPERLINK("{}", "{}")'.format(
+                            link, unidecode(text))
                     ws.write(row, col, xlwt.Formula(formula), link_style)
                 else:
                     ws.row(row).set_cell_text(col, text, normal_style)

@@ -1,5 +1,6 @@
 1.4.49 (unreleased)
 -------------------
+* handle UnicodeEncodeError in xlwt in formulas [dumitval]
 
 1.4.48 (2018-05-07)
 -------------------
