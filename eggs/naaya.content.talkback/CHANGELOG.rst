@@ -1,4 +1,6 @@
-1.4.49 (unreleased)
+1.4.50 (unreleased)
+-------------------
+1.4.49 (2018-06-28)
 -------------------
 * handle UnicodeEncodeError in xlwt in formulas [dumitval]
 
