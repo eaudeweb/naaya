@@ -211,7 +211,11 @@
                         define="country_code subscription/country|nothing;
                                 country_name python:here.get_country(country_code);
                                 saved_by subscription/saved_by|nothing;
-                                justification subscription/justification|nothing;
+                                auth_tool here/getAuthenticationTool;
+                                saved_by_name python:auth_tool.name_from_userid(saved_by).encode('utf-8');
+                                justification subscription/justification|string:;
+                                justification_text python:test(justification,
+                                          'Justification for the change: '+justification, '');
                                 uid subscription/uid|subscription/key;
                                 reimbursed subscription/reimbursed|nothing">
 
@@ -219,10 +223,6 @@
                           <tal:block content="country_name" />
                           <tal:block condition="saved_by">
                             <img src="misc_/Naaya/info.png"
-                              tal:define="justification_text python:test(justification,
-                                          'Justification for the change: '+justification, '');
-                                           auth_tool here/getAuthenticationTool;
-                                           saved_by_name python:auth_tool.name_from_userid(saved_by)"
                                tal:attributes="title string:Last saved by: ${saved_by_name}
 
                                                ${justification_text}" />
@@ -234,10 +234,6 @@
                               <tal:block content="country_name" />
                               <tal:block condition="saved_by">
                                 <img src="misc_/Naaya/info.png"
-                                  tal:define="justification_text python:test(justification,
-                                              'Justification for the change: '+justification, '');
-                                              auth_tool here/getAuthenticationTool;
-                                              saved_by_name python:auth_tool.name_from_userid(saved_by)"
                                   tal:attributes="title string:Last saved by: ${saved_by_name}
 
                                                   ${justification_text}" />
@@ -259,10 +255,6 @@
                             i18n:translate="" />
                           <tal:block condition="saved_by">
                             <img src="misc_/Naaya/info.png"
-                              tal:define="justification_text python:test(justification,
-                                          'Justification for the change: '+justification, '');
-                                          auth_tool here/getAuthenticationTool;
-                                          saved_by_name python:auth_tool.name_from_userid(saved_by)"
                               tal:attributes="title string:Last saved by: ${saved_by_name}
 
                               ${justification_text}" />
@@ -274,10 +266,6 @@
                                 i18n:translate="" />
                               <tal:block condition="saved_by">
                                 <img src="misc_/Naaya/info.png"
-                                  tal:define="justification_text python:test(justification,
-                                              'Justification for the change: '+justification, '');
-                                              auth_tool here/getAuthenticationTool;
-                                              saved_by_name python:auth_tool.name_from_userid(saved_by)"
                                   tal:attributes="title string:Last saved by: ${saved_by_name}
 
                                   ${justification_text}" />

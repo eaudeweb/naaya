@@ -1,5 +1,6 @@
 1.2.95 (unreleased)
 -------------------
+* handle unicode characters in subscription index [dumitval]
 * fix security declaration [dumitval]
 
 1.2.94 (2017-10-02)
