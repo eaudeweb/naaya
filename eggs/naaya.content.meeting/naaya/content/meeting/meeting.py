@@ -73,40 +73,56 @@ from eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
 # module constants
 NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
 DEFAULT_SCHEMA = {
-    'interval':             dict(sortorder=140, widget_type='Interval',
-                                 label='Meeting Interval',
-                                 data_type='interval', required=True),
-    'location':             dict(sortorder=143, widget_type='String',
-                                 label='Organization/Building/Room'),
-    'allow_register':       dict(sortorder=147, widget_type='Checkbox',
-                                 label=('Allow people to register to '
-                                        'participate'), data_type='bool'),
-    'auto_register':        dict(sortorder=148, widget_type='Checkbox',
-                                 label=('Automatically approve participants '
-                                        'when they register'),
-                                 data_type='bool'),
-    'restrict_items':       dict(sortorder=149, widget_type='Checkbox',
-                                 label=('Restrict user access to the contents '
-                                        'in the meeting'), default=True,
-                                 data_type='bool'),
-    'max_participants':     dict(sortorder=150, widget_type='String',
-                                 label='Maximum number of participants',
-                                 data_type='int'),
-    'contact_person':       dict(sortorder=150, widget_type='String',
-                                 label='Contact person'),
-    'contact_email':        dict(sortorder=160, widget_type='String',
-                                 label='Contact email', required=True),
-    'survey_pointer':       dict(sortorder=230, widget_type='Pointer',
-                                 label='Link to the Meeting Survey',
-                                 relative=True),
-    'survey_required':      dict(sortorder=240, widget_type='Checkbox',
-                                 label='Survey Required', data_type='bool'),
-    'agenda_pointer':       dict(sortorder=310, widget_type='Pointer',
-                                 label='Link to the Meeting Agenda',
-                                 relative=True),
-    'minutes_pointer':      dict(sortorder=320, widget_type='Pointer',
-                                 label='Link to the Meeting Minutes',
-                                 relative=True),
+    'interval':
+        dict(
+            sortorder=140, widget_type='Interval', label='Meeting Interval',
+            data_type='interval', required=True),
+    'location':
+        dict(
+            sortorder=143, widget_type='String',
+            label='Organization/Building/Room'),
+    'allow_register':
+        dict(
+            sortorder=147, widget_type='Checkbox',
+            label=('Allow people to register to participate'),
+            data_type='bool'),
+    'auto_register':
+        dict(
+            sortorder=148, widget_type='Checkbox',
+            label=('Automatically approve participants when they register'),
+            data_type='bool'),
+    'restrict_items':
+        dict(
+            sortorder=149, widget_type='Checkbox',
+            label=('Restrict user access to the contents in the meeting'),
+            default=True, data_type='bool'),
+    'max_participants':
+        dict(
+            sortorder=150, widget_type='String',
+            label='Maximum number of participants', data_type='int'),
+    'contact_person':
+        dict(
+            sortorder=150, widget_type='String', label='Contact person'),
+    'contact_email':
+        dict(
+            sortorder=160, widget_type='String', label='Contact email',
+            required=True),
+    'survey_pointer':
+        dict(
+            sortorder=230, widget_type='Pointer',
+            label='Link to the Meeting Survey', relative=True),
+    'survey_required':
+        dict(
+            sortorder=240, widget_type='Checkbox', label='Survey Required',
+            data_type='bool'),
+    'agenda_pointer':
+        dict(
+            sortorder=310, widget_type='Pointer',
+            label='Link to the Meeting Agenda', relative=True),
+    'minutes_pointer':
+        dict(
+            sortorder=320, widget_type='Pointer',
+            label='Link to the Meeting Minutes', relative=True),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
@@ -146,7 +162,7 @@ config = {
         'RegisterNewAccount.jpg': ImageFile('www/RegisterNewAccount.jpg',
                                             globals()),
     },
-    }
+}
 
 # add meeting reports to NySite
 NySite.meeting_reports = MeetingReports('meeting_reports')
@@ -465,7 +481,7 @@ class NyMeeting(NyContentData, NyFolder):
             Ev.location(self.geo_address()),
             Ev.organizer(self.contact_person),
             Ev.type('Meeting')
-            )
+        )
         item.extend(the_rest)
         return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
@@ -677,7 +693,9 @@ class NyMeeting(NyContentData, NyFolder):
         site = self.getSite()
         path = str(self.survey_pointer)
         if path:
-            return site.unrestrictedTraverse(path, None)
+            obj = site.unrestrictedTraverse(path, None)
+            if obj and obj.meta_type == 'Naaya Mega Survey':
+                return obj
 
     security.declareProtected(view, 'get_survey_questions')
 
@@ -697,7 +715,7 @@ class NyMeeting(NyContentData, NyFolder):
             question = getattr(survey, qid, None)
             if question:
                 for answer in survey.objectValues('Naaya Survey Answer'):
-                    if answer.respondent in [uid, 'signup:'+uid]:
+                    if answer.respondent in [uid, 'signup:' + uid]:
                         try:
                             return question.get_value(getattr(answer.aq_base,
                                                               qid))
@@ -887,7 +905,7 @@ class NyMeeting(NyContentData, NyFolder):
                     'email': signup.email,
                     'organization': signup.organization,
                     'phone': signup.phone
-                    }
+                }
                 return json.dumps(signup_details)
 
     security.declarePublic('in_eionet')
@@ -934,7 +952,7 @@ config.update({
         ('manage_addNyMeeting', manage_addNyMeeting_html),
         ('meeting_add_html', meeting_add_html),
         ('addNyMeeting', addNyMeeting),
-        ],
+    ],
     'add_method': addNyMeeting,
     'validation': issubclass(NyMeeting, NyValidation),
     '_class': NyMeeting,

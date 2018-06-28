@@ -1,5 +1,6 @@
 1.2.95 (unreleased)
 -------------------
+* check that the meeting survey is really a survey [dumitval]
 * handle unicode characters in subscription index [dumitval]
 * fix security declaration [dumitval]
 
