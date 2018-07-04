@@ -151,9 +151,16 @@ class AnalyticsTool(SimpleItem, utils):
         cached_data = self.get_cache(view_name=view_name)
         if cached_data is None:
             # no data in the cache, so cache it
-            data_to_cache = self._stats_info(self.REQUEST)
-            self._set_cache(data_to_cache, view_name=view_name)
-            return data_to_cache
+            try:
+                data_to_cache = self._stats_info(self.REQUEST)
+                self._set_cache(data_to_cache, view_name=view_name)
+                return data_to_cache
+            except RuntimeError, e:
+                if 'invalid_grant' in e.message:
+                    self._reset(revoke=True)
+                    if self.REQUEST is not None:
+                        return self.REQUEST.RESPONSE.redirect(
+                            self.absolute_url() + '/admin_account')
         # get cached data
         return cached_data
 

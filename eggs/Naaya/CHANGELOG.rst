@@ -1,5 +1,6 @@
 4.3.3 (unreleased)
 -------------------
+* handle expired Google Analytics token [dumitval]
 
 4.3.2 (2018-06-21)
 -------------------
