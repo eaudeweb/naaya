@@ -969,7 +969,7 @@ class utils:
         if isinstance(start_date, DateTime):
             start_date = DT2dt(start_date)
         if isinstance(end_date, DateTime):
-            end_date = D2dt(end_date)
+            end_date = DT2dt(end_date)
         if all_day:
             if start_date == end_date:
                 return self.utShowDateTime(start_date)
