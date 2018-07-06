@@ -1,4 +1,7 @@
-4.3.4 (unreleased)
+4.3.5 (unreleased)
+-------------------
+
+4.3.4 (2018-07-06)
 -------------------
 * fix typo in utils [dumitval]
 
