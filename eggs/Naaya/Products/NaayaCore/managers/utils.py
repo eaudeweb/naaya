@@ -105,7 +105,7 @@ def slugify(s, maxlen=80, removelist=None):
             removelist = default_remove_words
 
     ignore_words = '|'.join([r for r in removelist])
-    ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
+    ignore_words_pat = re.compile(r'\b(' + ignore_words + r')\b', re.I)
     ignore_chars_pat = re.compile(r'[^-_\.A-Z0-9\s]', re.I)
     outside_space_pat = re.compile(r'^[-\s]+|[-\s]+$')
     inside_space_pat = re.compile(r'[-\s]+')
@@ -119,8 +119,8 @@ def slugify(s, maxlen=80, removelist=None):
     wordlist = s.split('-')
     picked_words = []
     for w in wordlist:
-        if (sum([len(x) for x in picked_words])
-                + len(picked_words) + len(w)) <= maxlen:
+        if (sum([len(x) for x in picked_words]) +
+                len(picked_words) + len(w)) <= maxlen:
             picked_words.append(w)
         else:
             break
@@ -259,7 +259,7 @@ def html2text(html, trim_length=512, ellipsis=False):
 
 
 def normalize_template(src):
-    src = (src.strip().replace('\r', '')+'\n')
+    src = (src.strip().replace('\r', '') + '\n')
     if isinstance(src, unicode):
         src = src.encode('utf-8')
     return src
@@ -605,7 +605,7 @@ class utils:
         """
         Split up seq in pieces of size.
         """
-        return [seq[i:i+size] for i in range(0, len(seq), size)]
+        return [seq[i:i + size] for i in range(0, len(seq), size)]
 
     def utNewlinetoBr(self, p_string):
         # convert new lines to <br /> for html display
@@ -643,31 +643,31 @@ class utils:
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
         """Sort a list of objects by an item values"""
         l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,)*l_len),
+        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,) * l_len),
                      xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
-        return map(operator.getitem, l_temp, (-1,)*l_len)
+        return map(operator.getitem, l_temp, (-1,) * l_len)
 
     def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
         """Sort a list of objects by an attribute values"""
         l_len = len(p_list)
         l_temp = map(None, map(lambda x, y: getattr(x, y)(), p_list,
-                               (p_method,)*l_len),
+                               (p_method,) * l_len),
                      xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
-        return map(operator.getitem, l_temp, (-1,)*l_len)
+        return map(operator.getitem, l_temp, (-1,) * l_len)
 
     def utFilterObjsListByAttr(self, p_list, p_attr, p_value):
         """Filter a list of objects by an attribute value"""
         l_len = len(p_list)
-        l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len),
-                     (p_value,)*l_len, p_list)
+        l_temp = map(None, map(getattr, p_list, (p_attr,) * l_len),
+                     (p_value,) * l_len, p_list)
         l_temp = filter(lambda x: x[0] == x[1], l_temp)
-        return map(operator.getitem, l_temp, (-1,)*len(l_temp))
+        return map(operator.getitem, l_temp, (-1,) * len(l_temp))
 
     def utSortListOfDictionariesByKey(self, p_list, p_key, p_order):
         """ Sort a list of dictionary by key """
@@ -853,7 +853,7 @@ class utils:
 
     def utShowSizeKb(self, p_size):
         """ transform a file size in KB """
-        return int(p_size/1024 + 1)
+        return int(p_size / 1024 + 1)
 
     def utShowSize(self, p_size):
         # Transform a file size in KB, MB ..
@@ -861,10 +861,10 @@ class utils:
         l_type = ''
         l_res = ''
         if l_bytes >= 1000:
-            l_bytes = l_bytes/1024
+            l_bytes = l_bytes / 1024
             l_type = 'KB'
             if l_bytes >= 1000:
-                l_bytes = l_bytes/1024
+                l_bytes = l_bytes / 1024
                 l_type = 'MB'
             l_res = '%s %s' % ('%4.2f' % l_bytes, l_type)
         else:
@@ -1410,7 +1410,7 @@ def rss_item_for_channel(channel):
         Dc.type(channel.get_channeltype_title(channel.type)),
         Dc.format('text/xml'),
         Dc.source(channel.publisher)
-        )
+    )
     return item
 
 
@@ -1439,7 +1439,7 @@ def rss_channel_for_channel(channel, lang):
         Dc.source(s.getLocalProperty('publisher', lang)),
         E.items(),
         {'{%s}about' % rdf_namespace: s.absolute_url()}
-        )
+    )
     return channel
 
 
