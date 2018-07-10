@@ -1,4 +1,7 @@
-1.2.96 (unreleased)
+1.2.97 (unreleased)
+-------------------
+
+1.2.96 (2018-07-10)
 -------------------
 * improve email check for signups [dumitval]
 
