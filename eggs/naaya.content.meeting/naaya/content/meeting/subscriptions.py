@@ -17,6 +17,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 # meeting imports
 from naaya.content.meeting import PARTICIPANT_ROLE
+from naaya.core.utils import is_valid_email
 from permissions import PERMISSION_ADMIN_MEETING
 from Products.NaayaCore.AuthenticationTool.utils import (
     getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber)
@@ -51,9 +52,8 @@ class Subscriptions(SimpleItem):
                 formerrors[key] = 'This field is mandatory'
 
         if formerrors == {}:
-            if formdata['email'].count('@') != 1:
-                formerrors['email'] = ('An email address must contain '
-                                       'a single @')
+            if not is_valid_email(formdata['email']):
+                formerrors['email'] = ('Invalid email format')
 
         if formerrors == {}:
             formerrors = None
@@ -375,7 +375,7 @@ class Subscriptions(SimpleItem):
             self._add_account_subscription(uid)
         return REQUEST.RESPONSE.redirect(
             self.absolute_url() +
-            '/subscribe_account_successful?uids='+','.join(uids))
+            '/subscribe_account_successful?uids=' + ','.join(uids))
 
     security.declareProtected(view, 'subscribe_my_account')
 

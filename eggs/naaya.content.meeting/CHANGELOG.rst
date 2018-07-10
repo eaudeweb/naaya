@@ -1,5 +1,6 @@
 1.2.96 (unreleased)
 -------------------
+* improve email check for signups [dumitval]
 
 1.2.95 (2018-06-28)
 -------------------
