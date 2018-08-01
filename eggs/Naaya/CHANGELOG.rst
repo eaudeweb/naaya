@@ -1,4 +1,7 @@
-4.3.5 (unreleased)
+4.3.6 (unreleased)
+-------------------
+
+4.3.5 (2018-08-01)
 -------------------
 * handle cn for LDAP users being a list [dumitval]
 
