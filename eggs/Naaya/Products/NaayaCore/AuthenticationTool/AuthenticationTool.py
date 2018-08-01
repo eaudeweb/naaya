@@ -137,6 +137,9 @@ class UserInfo(object):
         for key, value in fields.iteritems():
             if key in ['user_id', '_get_zope_user', '_source', 'jpegPhoto']:
                 continue
+            if key == 'full_name':
+                if isinstance(value, list):
+                    value = ' '.join(value)
             assert isinstance(value, unicode), (
                 "value %r (for %r, user %r) not unicode" %
                 (value, key, fields['user_id']))
@@ -614,6 +617,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             elif skey == 'email':
                 return force_to_unicode(obj.email).lower()
             else:
+                if isinstance(obj.full_name, list):
+                    obj.full_name = ' '.join(obj.full_name)
                 return force_to_unicode(obj.full_name).lower()
         users_info.sort(key=sort_key, reverse=bool(rkey))
 
