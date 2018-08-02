@@ -1,4 +1,7 @@
-1.0.5 (unreleased)
+1.0.6 (unreleased)
+------------------
+
+1.0.5 (2018-08-02)
 ------------------
 * fix for a change in LDAP search results format [dumitval]
 
