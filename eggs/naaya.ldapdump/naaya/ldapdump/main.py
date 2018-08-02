@@ -99,6 +99,9 @@ class LDAPConnection(object):
                         ldap.schema.models.NOT_HUMAN_READABLE_LDAP_SYNTAXES:
                     ret[dn][attr] = {'type': 'binary', 'values': values}
                 else:
+                    if attr == 'cn':
+                        if len(values) > 1:
+                            values = [' '.join(values)]
                     try:
                         ret[dn][attr] = {
                             'type': 'text',
