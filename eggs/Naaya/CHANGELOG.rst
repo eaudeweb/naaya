@@ -1,4 +1,7 @@
-4.3.6 (unreleased)
+4.3.7 (unreleased)
+-------------------
+
+4.3.6 (2018-08-23)
 -------------------
 * python 2.7 compatibility on event_item and some pep8 [dumitval]
 
