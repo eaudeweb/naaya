@@ -1,4 +1,7 @@
-1.2.98 (unreleased)
+1.2.99 (unreleased)
+-------------------
+
+1.2.98 (2018-09-17)
 -------------------
 * bugfix in participants Excel export [dumitval]
 
