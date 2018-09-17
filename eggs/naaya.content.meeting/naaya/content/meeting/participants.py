@@ -6,6 +6,7 @@ from AccessControl.Permissions import view
 from Globals import InitializeClass
 from AccessControl.requestmethod import postonly
 from datetime import datetime
+from DateTime import DateTime
 
 # Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -473,6 +474,9 @@ class Participants(SimpleItem):
                         survey_answer = '-'
                     if isinstance(survey_answer, basestring):
                         survey_answers.append(survey_answer)
+                    elif isinstance(survey_answer, DateTime):
+                        survey_answers.append(survey_answer.strftime(
+                            "%Y-%m-%d %H-%M-%S"))
                     else:
                         survey_answers.extend(survey_answer)
                 participant_info.extend(survey_answers)
