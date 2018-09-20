@@ -1,4 +1,7 @@
-1.2.99 (unreleased)
+1.3.00 (unreleased)
+-------------------
+
+1.2.99 (2018-09-20)
 -------------------
 * bugfix in sending emails to CC when only signups in TO [dumitval]
 
