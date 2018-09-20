@@ -164,7 +164,7 @@ class EmailSender(SimpleItem):
                     from_email, [signup_email], cc_emails, subject,
                     signup_body_text, only_to=True)
 
-        if account_emails:
+        if account_emails or cc_emails:
             result = self._send_email(from_email, account_emails, cc_emails,
                                       subject, body_text)
 
