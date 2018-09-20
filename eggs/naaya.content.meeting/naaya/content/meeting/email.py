@@ -164,9 +164,13 @@ class EmailSender(SimpleItem):
                     from_email, [signup_email], cc_emails, subject,
                     signup_body_text, only_to=True)
 
-        if account_emails or cc_emails:
+        if account_emails:
             result = self._send_email(from_email, account_emails, cc_emails,
                                       subject, body_text)
+
+        if cc_emails and not account_emails:
+            result = self._send_email(from_email, cc_emails, cc_emails,
+                                      subject, body_text, only_to=True)
 
         save_bulk_email(self.getSite(), to_emails, from_email, subject,
                         body_text,
