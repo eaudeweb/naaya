@@ -1,4 +1,7 @@
-1.1.20 (unreleased)
+1.1.21 (unreleased)
+------------------
+
+1.1.20 (2018-09-21)
 ------------------
 * bugfix in ZMI element approval [dumitval]
 
