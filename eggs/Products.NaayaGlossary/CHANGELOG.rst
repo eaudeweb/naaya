@@ -1,5 +1,6 @@
 1.1.20 (unreleased)
 ------------------
+* bugfix in ZMI element approval [dumitval]
 
 1.1.19 (2015-10-29)
 ------------------
