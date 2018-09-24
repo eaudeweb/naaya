@@ -161,8 +161,9 @@ def list_locations(self, REQUEST=None, **kw):
         # incorrect format of the coordinate
         lon_max = ''
     geo_types = kw.get('geo_types', [])
-    if geo_types == '':
-        geo_types = []
+    if not geo_types:
+        # this method cannot be called without geo_types, so this is a bot
+        return
     if isinstance(geo_types, str):
         geo_types = geo_types.split(',')
     category = kw.get('category', '')
