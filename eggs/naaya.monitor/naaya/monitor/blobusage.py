@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 import operator
+import transaction
 
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
@@ -18,13 +19,14 @@ def blobstorage_stats(app):
             s_id = ob.getId()
             stats[s_id] = {'du': 0, 'objects': 0, 'versions': 0, 'extra': {}}
             catalog = ob.getCatalogTool()
-            bfile_brains = catalog({'meta_type': ['Naaya Blob File',
-                                                  'Naaya Localized Blob File']})
+            bfile_brains = catalog(
+                {'meta_type': ['Naaya Blob File',
+                               'Naaya Localized Blob File']})
             for brain in bfile_brains:
                 try:
                     bfile = brain.getObject()
                 except Exception, e:
-                    continue # bad brain?
+                    continue  # bad brain?
                 else:
                     stats[s_id]['objects'] += 1
                     if bfile.meta_type == 'Naaya Localized Blob File':
@@ -34,8 +36,14 @@ def blobstorage_stats(app):
                             sizes = reduce(operator.add,
                                            [v.size or 0 for v in lg], sizes)
                     else:
-                        stats[s_id]['versions'] += len(bfile._versions)
-                        sizes = [v.size or 0 for v in bfile._versions]
+                        try:
+                            stats[s_id]['versions'] += len(
+                                bfile._versions_i18n)
+                            sizes = [v[0].size or 0 for k, v in
+                                     bfile._versions_i18n.items()]
+                        except AttributeError:
+                            stats[s_id]['versions'] += len(bfile._versions)
+                            sizes = [v.size or 0 for v in bfile._versions]
                     stats[s_id]['du'] = reduce(operator.add, sizes,
                                                stats[s_id]['du'])
     return (stats, time.time())
@@ -47,8 +55,10 @@ def manage_addStatsItem(self, REQUEST=None, RESPONSE=None):
     dt = datetime.fromtimestamp(stats[1])
     ob_id = dt.strftime("%Y_%m_%d_%H_%M")
     self._setObject(ob_id, StatsItem(ob_id, ob_id, stats))
+    transaction.commit()
     if REQUEST is not None:
         REQUEST.RESPONSE.redirect('manage_main')
+
 
 class StatsItem(SimpleItem):
 
@@ -61,6 +71,7 @@ class StatsItem(SimpleItem):
         super(StatsItem, self).__init__(id, title)
 
     security.declareProtected(view_management_screens, 'manage_workspace')
+
     def manage_workspace(self, REQUEST, RESPONSE):
         """ """
         pt = PageTemplateFile('zpt/stats_item', globals())
