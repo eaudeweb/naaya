@@ -1,4 +1,7 @@
-1.2.31 (unreleased)
+1.2.32 (unreleased)
+-------------------
+
+1.2.31 (2018-09-26)
 -------------------
 * update standard template to use matomo [dumitval]
 
