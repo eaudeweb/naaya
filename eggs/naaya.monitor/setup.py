@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.monitor',
-      version='1.1',
+      version='1.2',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='https://github.com/eaudeweb/naaya/tree/master/eggs/naaya.monitor',
