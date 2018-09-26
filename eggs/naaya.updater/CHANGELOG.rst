@@ -1,5 +1,6 @@
 1.2.31 (unreleased)
 -------------------
+* update standard template to use matomo [dumitval]
 
 1.2.30 (2013-07-26)
 -------------------

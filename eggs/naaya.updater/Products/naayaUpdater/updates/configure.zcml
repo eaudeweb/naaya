@@ -417,6 +417,12 @@
       permission="zope2.ViewManagementScreens" />
 
 	<utility
+      name="update_standard_template_matomo.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_standard_template_matomo.UpdateMatomo"
+      permission="zope2.ViewManagementScreens" />
+
+	<utility
       name="user_management_styles.update"
       provides="..interfaces.IUpdateScript"
       component=".update_user_management_styles.UpdateUserManagementStyles"
