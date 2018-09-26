@@ -1,6 +1,3 @@
-1.2 (unreleased)
-=======================
-
 1.1 (2018-09-25)
 =======================
 * add option to create stats from commandline [dumitval]

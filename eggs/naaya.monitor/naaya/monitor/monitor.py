@@ -48,7 +48,7 @@ class NaayaMonitor(Folder):
 def add_monitor_stats():
     ''' '''
     try:
-        monitor = bobo_application().naaya_monitor
-    except AttributeError:
+        monitor = bobo_application().objectValues('Naaya Monitor')[0]
+    except IndexError:
         return
     blobusage.manage_addStatsItem(monitor)
