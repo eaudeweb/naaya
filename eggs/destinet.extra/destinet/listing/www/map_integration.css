@@ -49,13 +49,13 @@ h2 {
   width: 100%!important;
 }
 
-#js_links {
+#js_links, #js_links_finder{
   color: white;
 padding-top: 1rem;
 margin-top: 1rem;
 border-top: 3px solid #0071be;
 }
-#js_links a {
+#js_links a, #js_links_finder a {
   /*color:  #00cc53;*/
   color: white;
   font-weight: bold;
