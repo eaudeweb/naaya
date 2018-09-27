@@ -167,8 +167,8 @@ class session_manager(object):
         self.__delSession('user_email')
         self.__delSession('user_password')
 
-    def setRequestRoleSession(self, name, firstname, lastname, email, password,
-        organisation, comments, location):
+    def setRequestRoleSession(self, name='', firstname='', lastname='', email='', password='',
+        organisation='', comments='', location=''):
         self.setUserSession(name, '', '', firstname, lastname, email, password)
         self.__setSession('user_organisation', organisation)
         self.__setSession('user_comments', comments)

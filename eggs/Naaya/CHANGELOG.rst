@@ -1,5 +1,6 @@
 4.3.7 (unreleased)
 -------------------
+* change setRequestRoleSession to use default arguments [dumitval]
 
 4.3.6 (2018-08-23)
 -------------------
