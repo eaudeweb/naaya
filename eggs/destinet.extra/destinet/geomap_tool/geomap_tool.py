@@ -197,6 +197,9 @@ def list_locations(self, REQUEST=None, **kw):
         sort_order = kw.get('sort_order', '')
 
     first_letter = kw.get('first_letter', '')
+    if len(first_letter) > 1:
+        # this only happens with some bots
+        return None
 
     results = self.search_geo_objects(
         lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,

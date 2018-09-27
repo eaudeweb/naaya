@@ -1,3 +1,7 @@
+1.3.16 - (unreleased)
+=======================
+* handle bot requests of list_locations [dumitval]
+
 1.3.15 - (2018-09-24)
 =======================
 * handle bot requests of list_locations [dumitval]
