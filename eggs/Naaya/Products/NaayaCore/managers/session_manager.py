@@ -1,8 +1,8 @@
 from naaya.core.exceptions import localize_exc
 
-#constants
 _SESSION_ERRORS = "site_errors"
 _SESSION_INFO = "site_infos"
+
 
 class session_manager(object):
     """This class has some methods to work with session variables"""
@@ -27,28 +27,35 @@ class session_manager(object):
         """Test if exists a variable with the given key in SESSION"""
         if not self._sessionExists():
             return 0
-        return self.REQUEST.SESSION.has_key(key)
+        return key in self.REQUEST.SESSION
 
     def __getSession(self, key, default):
-        """Get a key value from SESSION; if that key doesn't exist then return default value"""
+        """Get a key value from SESSION; if that key doesn't exist
+           then return default value"""
         if not self._sessionExists():
             return default
-        try: return self.REQUEST.SESSION[key]
-        except: return default
+        try:
+            return self.REQUEST.SESSION[key]
+        except:
+            return default
 
     def __setSession(self, key, value):
         """Add a value to SESSION"""
-        try: self.REQUEST.SESSION.set(key, value)
-        except: pass
+        try:
+            self.REQUEST.SESSION.set(key, value)
+        except:
+            pass
 
     def __delSession(self, key):
         """Delete a value from SESSION"""
         if not self._sessionExists():
             return
-        try: self.REQUEST.SESSION.delete(key)
-        except: pass
+        try:
+            self.REQUEST.SESSION.delete(key)
+        except:
+            pass
 
-    #Public methods
+    # Public methods
     def getSession(self, key, default):
         return self.__getSession(key, default)
 
@@ -64,7 +71,7 @@ class session_manager(object):
     def isSession(self, key):
         return self.__isSession(key)
 
-    #manage information
+    # manage information
     def isSessionInfo(self):
         return self.__isSession(_SESSION_INFO)
 
@@ -78,10 +85,12 @@ class session_manager(object):
         >>> self._translateSessionMessages(u"Hello world")
         [u'Hello world']
 
-        >>> self._translateSessionMessages("Message ${a1} ${a2}", a1="aaaa", a2="bbbb")
+        >>> self._translateSessionMessages(
+            "Message ${a1} ${a2}", a1="aaaa", a2="bbbb")
         [u'Message aaaa bbbb']
 
-        >>> self._translateSessionMessages([('First message ${arg1}', {'arg1': 'axxx'}), 'Second message', ])
+        >>> self._translateSessionMessages(
+            [('First message ${arg1}', {'arg1': 'axxx'}), 'Second message', ])
         [u'First message axxx', 'Second message']
 
         >>> self._translateSessionMessages(['First message','Second message'])
@@ -91,7 +100,8 @@ class session_manager(object):
         ['bad value']
 
         >>> from naaya.core.exceptions import i18n_exc
-        >>> self._translateSessionMessages(i18n_exc(ValueError, 'bad ${x}', x='gigi'))
+        >>> self._translateSessionMessages(
+            i18n_exc(ValueError, 'bad ${x}', x='gigi'))
         ['bad gigi']
         """
 
@@ -99,32 +109,34 @@ class session_manager(object):
 
         if isinstance(messages, (str, unicode)):
             return [translate(messages, **kwargs), ]
-        elif isinstance(messages, (list, tuple)): # This is the 3rd example
+        elif isinstance(messages, (list, tuple)):  # This is the 3rd example
             translated_messages = []
             for message in messages:
                 if isinstance(message, (list, tuple)):
-                    message_str = message[0] #the message
+                    message_str = message[0]  # the message
                     try:
                         interpolation_params = message[1]
                     except IndexError:
                         interpolation_params = {}
-                    trans_message = translate(message_str, **interpolation_params)
+                    trans_message = translate(message_str,
+                                              **interpolation_params)
                 elif isinstance(message, (str, unicode)):
                     trans_message = translate(message)
                 else:
                     trans_message = translate(str(message))
 
-                if not trans_message: # There is no translation return unmodified
+                if not trans_message:  # is no translation, return unmodified
                     trans_message = message
                 translated_messages.append(trans_message)
             return translated_messages
         elif isinstance(messages, Exception):
-            return [ localize_exc(messages, translate) ]
+            return [localize_exc(messages, translate)]
         else:
             raise ValueError("Invalid arguments")
 
     def setSessionInfoTrans(self, messages, **kwargs):
-        self.__setSession(_SESSION_INFO, self._translateSessionMessages(messages, **kwargs))
+        self.__setSession(_SESSION_INFO,
+                          self._translateSessionMessages(messages, **kwargs))
 
     def setSessionInfo(self, value):
         self.__setSession(_SESSION_INFO, value)
@@ -132,7 +144,7 @@ class session_manager(object):
     def delSessionInfo(self):
         self.__delSession(_SESSION_INFO)
 
-    #manage errors
+    # manage errors
     def isSessionErrors(self):
         return self.__isSession(_SESSION_ERRORS)
 
@@ -140,7 +152,8 @@ class session_manager(object):
         return self.__getSession(_SESSION_ERRORS, default)
 
     def setSessionErrorsTrans(self, messages, **kwargs):
-        self.__setSession(_SESSION_ERRORS, self._translateSessionMessages(messages, **kwargs))
+        self.__setSession(_SESSION_ERRORS,
+                          self._translateSessionMessages(messages, **kwargs))
 
     def setSessionErrors(self, value):
         self.__setSession(_SESSION_ERRORS, value)
@@ -148,11 +161,12 @@ class session_manager(object):
     def delSessionErrors(self):
         self.__delSession(_SESSION_ERRORS)
 
-    #manage users
-    def setUserSession(self, name, roles, domains, firstname, lastname, email, password):
+    # manage users
+    def setUserSession(self, name, roles, domains, firstname, lastname, email,
+                       password):
         self.__setSession('user_name', name)
         self.__setSession('user_roles', roles)
-        self.__setSession('user_domains', domains)  #not used for the moment
+        self.__setSession('user_domains', domains)  # not used for the moment
         self.__setSession('user_firstname', firstname)
         self.__setSession('user_lastname', lastname)
         self.__setSession('user_email', email)
@@ -167,8 +181,9 @@ class session_manager(object):
         self.__delSession('user_email')
         self.__delSession('user_password')
 
-    def setRequestRoleSession(self, name='', firstname='', lastname='', email='', password='',
-        organisation='', comments='', location=''):
+    def setRequestRoleSession(
+            self, name='', firstname='', lastname='', email='', password='',
+            organisation='', comments='', location=''):
         self.setUserSession(name, '', '', firstname, lastname, email, password)
         self.__setSession('user_organisation', organisation)
         self.__setSession('user_comments', comments)
@@ -180,7 +195,8 @@ class session_manager(object):
         self.__delSession('user_comments')
         self.__delSession('user_location')
 
-    def setCreateAccountSession(self, name, firstname, lastname, email, password):
+    def setCreateAccountSession(self, name, firstname, lastname, email,
+                                password):
         self.setUserSession(name, '', '', firstname, lastname, email, password)
 
     def delCreateAccountSession(self):
@@ -216,7 +232,7 @@ class session_manager(object):
     def getSessionUserLocation(self, default=''):
         return self.__getSession('user_location', default)
 
-    #feedback session
+    # feedback session
     def setFeedbackSession(self, name='', email='', comments='', who=0):
         self.__setSession('user_name', name)
         self.__setSession('user_email', email)
@@ -241,7 +257,7 @@ class session_manager(object):
     def getSessionFeedbackWho(self, default=''):
         return self.__getSession('user_who', default)
 
-    #blog session
+    # blog session
     def setBlogSession(self, title='', body='', author='', email=''):
         self.__setSession('blog_title', title)
         self.__setSession('blog_body', body)
