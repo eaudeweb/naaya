@@ -1,4 +1,7 @@
-4.3.8 (unreleased)
+4.3.9 (unreleased)
+-------------------
+
+4.3.8 (2018-09-27)
 -------------------
 * revert some of the changes in 4.3.7 [dumitval]
 
