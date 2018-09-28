@@ -1,5 +1,6 @@
-0.0.8 (unreleased)
+0.0.8 (2018-09-28)
 ------------------
+* object index improvements (handle missing properties) [dumitval]
 
 0.0.7 (2018-05-09)
 ------------------

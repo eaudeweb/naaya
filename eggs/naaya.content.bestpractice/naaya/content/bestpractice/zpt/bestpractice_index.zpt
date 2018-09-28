@@ -77,37 +77,37 @@
     </ul>
   </td>
 </tr>
-<tal:block condition="here/personaltitle"
+<tal:block condition="here/personaltitle|nothing"
            content="structure python: here.prop_display_tr('personaltitle')" />
-<tal:block condition="here/firstname"
+<tal:block condition="here/firstname|nothing"
            content="structure python: here.prop_display_tr('firstname')" />
-<tal:block condition="here/lastname"
+<tal:block condition="here/lastname|nothing"
            content="structure python: here.prop_display_tr('lastname')" />
-<tal:block condition="here/jobtitle"
+<tal:block condition="here/jobtitle|nothing"
            content="structure python: here.prop_display_tr('jobtitle')" />
-<tal:block condition="here/department"
+<tal:block condition="here/department|nothing"
            content="structure python: here.prop_display_tr('department')" />
-<tal:block condition="here/organisation"
+<tal:block condition="here/organisation|nothing"
            content="structure python: here.prop_display_tr('organisation')" />
-<tal:block condition="here/postaladdress"
+<tal:block condition="here/postaladdress|nothing"
            content="structure python: here.prop_display_tr('postaladdress')" />
-<tal:block condition="here/phone"
+<tal:block condition="here/phone|nothing"
            content="structure python: here.prop_display_tr('phone')" />
-<tal:block condition="here/fax"
+<tal:block condition="here/fax|nothing"
            content="structure python: here.prop_display_tr('fax')" />
-<tal:block condition="here/cellphone"
+<tal:block condition="here/cellphone|nothing"
            content="structure python: here.prop_display_tr('cellphone')" />
-<tal:block condition="here/email"
+<tal:block condition="here/email|nothing"
            content="structure python: here.prop_display_tr('email')" />
-<tr tal:condition="python:here.webpage.strip()">
+<tr tal:condition="here/webpage|nothing">
   <th i18n:translate="">Webpage</th>
   <td><a tal:attributes="href here/webpage; target here/title_or_id" tal:content="here/webpage" /></td>
 </tr>
-<tal:block condition="here/facebook"
+<tal:block condition="here/facebook|nothing"
            content="structure python: here.prop_display_tr('facebook')" />
-<tal:block condition="here/linkedin"
+<tal:block condition="here/linkedin|nothing"
            content="structure python: here.prop_display_tr('linkedin')" />
-<tal:block condition="here/twitter"
+<tal:block condition="here/twitter|nothing"
            content="structure python: here.prop_display_tr('twitter')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
 <tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['landscape_type-property'].get_selection_list()" tal:condition="here/landscape_type|nothing">
