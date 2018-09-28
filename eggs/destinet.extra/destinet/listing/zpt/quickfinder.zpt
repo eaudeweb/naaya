@@ -28,6 +28,9 @@
       .show_more{
         font-weight: bold;
       }
+      .select2-container--default .select2-selection--multiple {
+        min-height: 28px;
+      }
     </style>
     <script>
       (function(d, s, id) {
@@ -278,7 +281,7 @@
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
           <div class="first-row clearfix" id="filter_map">
-            <div class="portalmap_portlet portalmap_filter">
+            <div class="portalmap_portlet portalmap_filter" style="display:none">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Filter by Keyword
               </div>
@@ -293,6 +296,35 @@
                         if x.title.strip()] + [geo_query]" />
               </select>
             </div>
+
+            <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
+              tal:define="parentsList portal_map/getParentsListOrdered">
+              <div class="portalmap_portlet_title" i18n:translate="">Category</div>
+
+              <div class="org_list" tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
+                <select name="category" id="category" class="map-refresh select2">
+                  <option value="">All</option>
+                  <tal:block repeat="geo_type geo_types">
+                    <option tal:attributes="value geo_type"
+                      tal:content="python:portal_map.getSymbolTitle(geo_type)" />
+                  </tal:block>
+                </select>
+              </div>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by country of operation</div>
+              <div class="country_list">
+                <select name="country" id="country" class="map-refresh select2"
+                  tal:define="glossary python:here.getSite()['countries_glossary']">
+                  <option value="">All</option>
+                  <option tal:attributes="value item/title"
+                    tal:content="item/title"
+                    tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
+                </select>
+              </div>
+            </div>
+
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Zoom to location
@@ -314,34 +346,6 @@
               <div class="org_list">
                 <select name="geo_types" id="geo_types">
                   <option value="symbol998" selected="selected">Certificate</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
-              tal:define="parentsList portal_map/getParentsListOrdered">
-              <div class="portalmap_portlet_title" i18n:translate="">Category</div>
-
-              <div class="org_list" tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
-                <select name="category" id="category" class="map-refresh select2">
-                  <option value="">All</option>
-                  <tal:block repeat="geo_type geo_types">
-                    <option tal:attributes="value geo_type"
-                      tal:content="python:portal_map.getSymbolTitle(geo_type)" />
-                  </tal:block>
-                </select>
-              </div>
-            </div>
-
-            <div class="portalmap_portlet portalmap_filter">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
-              <div class="country_list">
-                <select name="country" id="country" class="map-refresh select2"
-                  tal:define="glossary python:here.getSite()['countries_glossary']">
-                  <option value="">All</option>
-                  <option tal:attributes="value item/title"
-                    tal:content="item/title"
-                    tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
                 </select>
               </div>
             </div>
@@ -426,12 +430,12 @@
               You must have Javascript turned on to access all the Geo Map features.
             </p>
           </noscript>
-          <p id="js_links" style="display: none;">
+          <p id="js_links_finder" style="display: none;">
             <span tal:condition="not:map_only" i18n:translate="">
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
             </span>&nbsp;
             <a tal:condition="here/checkPermissionEditObjects"
-              href="" style="display:none" id="view_as_list">View as list</a>
+              href="" style="display:none" id="view_as_list" target="view_as_list">View as list</a>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">
             <div id="map"></div>
@@ -503,4 +507,3 @@
     <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|string:" />
   </metal:body>
 </metal:page>
-
