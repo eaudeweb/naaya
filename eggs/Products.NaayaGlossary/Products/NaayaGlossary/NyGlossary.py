@@ -881,17 +881,34 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         json_element_list = json.dumps(elements_list)
         return json_element_list
 
+    def get_folders_list(self):
+
+        ''' return a list with all folders and elements '''
+        return [folder_ob.id for folder_ob in
+                self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]) if
+                folder_ob.approved]
+
+    def get_names_list(self, folders=True, elements=True, folder=None):
+
+        ''' return a list with folders and/or elements. If folder is specified
+            then only the elements in that folder are returned '''
+        terms = []
+        for folder_ob in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
+            if folder_ob.approved and (not folder or folder_ob.id == folder):
+                if folders:
+                    terms.append(folder_ob.id)
+                if elements:
+                    terms.extend(sorted(
+                        [element.title for element in
+                         folder_ob.objectValues(
+                             NAAYAGLOSSARY_ELEMENT_METATYPE) if
+                         element.approved]))
+        return terms
+
     def get_json_tree(self, lang='en', REQUEST=None):
         """ Return a json tree for glossary """
 
         lang_name = self.get_language_by_code(lang)
-
-        def get_label(ob):
-            if hasattr(ob, 'get_translation_by_language'):
-                trans = ob.get_translation_by_language(lang_name)
-                if trans:
-                    return trans
-            return ob.title_or_id()
 
         tree_data = {
             "attributes": {
@@ -899,7 +916,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 "rel": "root",
             },
             "data": {
-                'title': get_label(self),
+                'title': get_label(self, lang_name),
             },
             "children": []
         }
@@ -912,7 +929,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         'data-path': relative_object_path(folder_ob, self)
                     },
                     'data': {
-                        'title': get_label(folder_ob),
+                        'title': get_label(folder_ob, lang_name),
                         'icon': "misc_/NaayaGlossary/folder.gif",
                         'attributes': {
                             'href': folder_ob.absolute_url(),
@@ -932,7 +949,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                                                   self)
                             },
                             'data': {
-                                'title': get_label(element_ob),
+                                'title': get_label(element_ob, lang_name),
                                 'icon': "misc_/NaayaGlossary/element.gif",
                                 'attributes': {
                                     'href': element_ob.absolute_url(),
@@ -1295,7 +1312,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.xml_dump_import(StringIO(translations_xml),
                                  remove_items=remove_items)
 
-            log.info(log_prefix+'%d new, %d removed; %d new translations',
+            log.info(log_prefix + '%d new, %d removed; %d new translations',
                      new_items.count, del_items.count, new_trans.count)
 
         finally:
@@ -1318,7 +1335,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         log.info("Starting synchronization of %r with remote glossary %r",
                  ofs_path(self), self.sync_remote_url)
 
-        temp_file = download_to_temp_file(self.sync_remote_url+'/dump_export')
+        temp_file = download_to_temp_file(
+            self.sync_remote_url + '/dump_export')
 
         if log_to_session:
             log_file = StringIO()
@@ -1411,10 +1429,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
                     l_tree.append((l_folder, 0, depth))
                     l_tree.extend(self.__getStructMap(l_folder, 1, expand,
-                                                      depth+1))
+                                                      depth + 1))
                     if showitems:
                         for l_item in l_folder.getGlossElems():
-                            l_tree.append((l_item, -1, depth+1))
+                            l_tree.append((l_item, -1, depth + 1))
                 else:
                     l_tree.append((l_folder, 1, depth))
             else:
@@ -1456,7 +1474,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     if showitems:
                         for l_item in l_folder.get_object_list():
                             if l_item.is_published():
-                                l_tree.append((l_item, -1, depth+1))
+                                l_tree.append((l_item, -1, depth + 1))
                 else:
                     l_tree.append((l_folder, 1, depth))
             else:
@@ -1548,7 +1566,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     if l is not None:
                         if l not in dict_lang_tree:
                             dict_lang_tree[l] = []
-                        if type(t) == type(u''):
+                        if isinstance(t, unicode):
                             t = t.encode('utf-8')
                         dict_lang_tree[l].append(t)
         for x in self._unicode_map(lang):
@@ -1658,6 +1676,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                               'index_properties_html')
 
 InitializeClass(NyGlossary)
+
+
+def get_label(ob, lang_name):
+    if hasattr(ob, 'get_translation_by_language'):
+        trans = ob.get_translation_by_language(lang_name)
+        if trans:
+            return trans
+    return ob.title_or_id()
 
 
 class mapTiny:

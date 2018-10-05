@@ -1,5 +1,6 @@
 1.1.21 (unreleased)
 ------------------
+* add methods to get folders, elements and mixed lists [dumitval]
 
 1.1.20 (2018-09-21)
 ------------------
