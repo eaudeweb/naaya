@@ -469,6 +469,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if ignored_key in criteria:
                 del criteria[ignored_key]
 
+        countries_glossary = getattr(self.getSite(), 'countries_glossary',
+                                     None)
+        if countries_glossary:
+            if isinstance(criteria.get('country'), list):
+                countries = list(criteria['country'])
+                for country in countries:
+                    if country in countries_glossary.get_names_list(
+                            elements=False):
+                        criteria['country'].remove(country)
+                        criteria['country'].extend(
+                            countries_glossary.get_names_list(
+                                folders=False, folder=country))
+
         return criteria
 
     security.declareProtected(view, 'search_geo_clusters')

@@ -1,5 +1,6 @@
 4.3.9 (unreleased)
 -------------------
+* handle Google GeocodingError when adding objects (add to queue) [dumitval]
 
 4.3.8 (2018-09-27)
 -------------------

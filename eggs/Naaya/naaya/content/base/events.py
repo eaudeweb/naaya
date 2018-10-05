@@ -3,6 +3,7 @@ from zope.interface import implements
 from zope.event import notify
 from zope.component import adapter
 from zope.app.container.interfaces import IObjectMovedEvent
+import transaction
 
 from interfaces import INyContentObject
 from interfaces import INyContentObjectAddEvent
@@ -14,6 +15,8 @@ from interfaces import INyContentObjectViewEvent
 from interfaces import INyContentObjectDownloadEvent
 
 from naaya.core.site_logging import get_site_logger
+from naaya.core.zope2util import path_in_site
+
 
 class NyContentObjectAddEvent(object):
     """ Naaya content object has been created """
@@ -24,6 +27,7 @@ class NyContentObjectAddEvent(object):
         self.contributor = contributor
         self.schema = schema_data
 
+
 class NyContentObjectEditEvent(object):
     """ Naaya content object has been edited """
     implements(INyContentObjectEditEvent)
@@ -31,6 +35,7 @@ class NyContentObjectEditEvent(object):
     def __init__(self, context, contributor):
         self.context = context
         self.contributor = contributor
+
 
 class NyContentObjectApproveEvent(object):
     """ Naaya content object has been approved """
@@ -41,6 +46,7 @@ class NyContentObjectApproveEvent(object):
         self.context = context
         self.contributor = contributor
 
+
 class NyContentObjectUnapproveEvent(object):
     """ Naaya content object has been unapproved """
     implements(INyContentObjectUnapproveEvent)
@@ -49,6 +55,7 @@ class NyContentObjectUnapproveEvent(object):
         self.__dict__.update(kw)
         self.context = context
         self.contributor = contributor
+
 
 class NyContentObjectMovedEvent(object):
     """ Naaya content object has been moved/renamed """
@@ -60,6 +67,7 @@ class NyContentObjectMovedEvent(object):
         self.old_site_path = old_site_path
         self.new_site_path = new_site_path
 
+
 class NyContentObjectViewEvent(object):
     """ Naaya content object has been opened """
     implements(INyContentObjectViewEvent)
@@ -67,6 +75,7 @@ class NyContentObjectViewEvent(object):
     def __init__(self, context, user_id):
         self.context = context
         self.user_id = user_id
+
 
 class NyContentObjectDownloadEvent(object):
     """ Naaya content object has been downloaded """
@@ -76,12 +85,13 @@ class NyContentObjectDownloadEvent(object):
         self.context = context
         self.user_id = user_id
 
+
 @adapter(INyContentObject, IObjectMovedEvent)
 def notify_content_object_moved(obj, event):
     if event.oldParent is None or event.newParent is None:
-        return # this is actually an added/removed event; skip it...
+        return  # this is actually an added/removed event; skip it...
 
-    if hasattr(obj, 'submitted') and obj.submitted == 0: #Not submited, skip
+    if hasattr(obj, 'submitted') and obj.submitted == 0:  # Not submited, skip
         return
 
     new_pp = obj.getPhysicalPath()
@@ -90,7 +100,7 @@ def notify_content_object_moved(obj, event):
     assert new_pp[:len(new_parent_pp)] == new_parent_pp
     assert new_pp[len(new_parent_pp)] == event.newName
     old_pp = (old_parent_pp + (event.oldName,) +
-              new_pp[len(new_parent_pp)+1:])
+              new_pp[len(new_parent_pp) + 1:])
 
     site = obj.getSite()
     site_pp = site.getPhysicalPath()
@@ -105,7 +115,22 @@ def notify_content_object_moved(obj, event):
 
     notify(NyContentObjectMovedEvent(obj, event, old_site_path, new_site_path))
 
+
 def update_last_modification(event):
     obj = event.context
     if not hasattr(obj, 'version') or not obj.version:
         obj.last_modification = DateTime()
+
+
+def add_to_geolocation_queue(event):
+    obj = event.context
+    if hasattr(obj, 'geo_location'):
+        if (obj.geo_location.lat is None and obj.geo_location.lon is None and
+                obj.geo_location.address):
+            site = obj.getSite()
+            if getattr(site, 'geolocation_queue', None):
+                site.geolocation_queue.append(
+                    '/' + site.getId() + '/' +
+                    path_in_site(obj))
+                site._p_changed = True
+                transaction.commit()

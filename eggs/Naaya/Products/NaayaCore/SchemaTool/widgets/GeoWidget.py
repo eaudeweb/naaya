@@ -1,21 +1,24 @@
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, WidgetError, manage_addWidget
 from geo import Geo, geo_as_json
 from Products.NaayaCore.GeoMapTool.managers import geocoding
+from naaya.core.ggeocoding import GeocoderServiceError
+
 
 def addGeoWidget(container, id="", title="Geo Widget", REQUEST=None, **kwargs):
     """ Contructor for Geo widget"""
     return manage_addWidget(GeoWidget, container, id, title, REQUEST, **kwargs)
+
 
 class GeoWidget(Widget):
     """ Geo Widget """
 
     meta_type = "Naaya Schema Geo Widget"
     meta_label = "Latitude, longitude and address"
-    meta_description = "Represents a geographical location - coordinates and street address"
+    meta_description = ("Represents a geographical location - "
+                        "coordinates and street address")
     meta_sortorder = 150
 
     # Constructor
@@ -43,9 +46,12 @@ class GeoWidget(Widget):
                 lon = None
             address = data.get('address', '').strip()
             if address and lat is lon is None:
-                coordinates = geocoding.location_geocode(address)
-                if coordinates is not None:
-                    lat, lon = coordinates
+                try:
+                    coordinates = geocoding.location_geocode(address)
+                    if coordinates is not None:
+                        lat, lon = coordinates
+                except GeocoderServiceError:
+                    lat = lon = None
             return Geo(lat, lon, address)
         except ValueError, e:
             raise WidgetError(str(e))
@@ -73,7 +79,8 @@ class GeoWidget(Widget):
             return None
         return value
 
-    hidden_template = PageTemplateFile('../zpt/property_widget_hidden_geo', globals())
+    hidden_template = PageTemplateFile('../zpt/property_widget_hidden_geo',
+                                       globals())
 
     template = PageTemplateFile('../zpt/property_widget_geo', globals())
 

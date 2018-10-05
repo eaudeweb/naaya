@@ -11,6 +11,10 @@
       handler=".events.update_last_modification" />
 
   <subscriber
+      for="naaya.content.base.interfaces.INyContentObjectAddEvent"
+      handler=".events.add_to_geolocation_queue" />
+
+  <subscriber
       for="naaya.content.base.interfaces.INyContentObjectEditEvent"
       handler=".events.update_last_modification" />
 
