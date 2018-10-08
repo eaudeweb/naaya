@@ -124,7 +124,7 @@ def update_last_modification(event):
 
 def add_to_geolocation_queue(event):
     obj = event.context
-    if hasattr(obj, 'geo_location'):
+    if hasattr(obj, 'geo_location') and obj.geo_location:
         if (obj.geo_location.lat is None and obj.geo_location.lon is None and
                 obj.geo_location.address):
             site = obj.getSite()

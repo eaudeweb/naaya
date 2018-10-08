@@ -1,5 +1,6 @@
 4.3.10 (unreleased)
 -------------------
+* bugfix related to the geocoding queue [dumitval]
 
 4.3.9 (2018-10-05)
 -------------------
