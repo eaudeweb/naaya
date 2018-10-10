@@ -109,9 +109,11 @@ function load_map_points(bounds, callback) {
         var req_link = '?' + str_bounds + '&' + enc_form + '&geo_query=' + query + '&all_records=True';
         $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#view_this_map').attr('href', "./" + req_link).css('opacity', 1).css('pointer-events', 'initial');
     } else {
         $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
         $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
+        $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
     }
     update_locations_values(bounds, enc_form, query);
     return response.points;
@@ -247,9 +249,11 @@ function _refresh_map_points(bounds, callback, loader) {
         var req_link = '?' + str_bounds + '&' + enc_form + '&geo_query=' + query + '&all_records=True';
         $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#view_this_map').attr('href', "./" + req_link).css('opacity', 1).css('pointer-events', 'initial');
     } else {
         $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
         $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
+        $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
     }
     update_locations_values(bounds, enc_form, query);
     return response.points;
@@ -392,8 +396,8 @@ function destinet_get_form_data() {
   $('.meta_type_list').each(function() {
     form_data[form_data.length] = '&meta_types%3Alist=' + this.value;
   })
-  form_data[form_data.length] = '&country=' + $('#country_list').attr('value');
-  form_data[form_data.length] = '&path=' + encodeURIComponent($('#path').attr('value'));
+  //form_data[form_data.length] = '&country=' + $('#country_list').attr('value');
+  //form_data[form_data.length] = '&path=' + encodeURIComponent($('#path').attr('value')); Testing to see if we really need this
   //    form_data[form_data.length] = '&meta_types=Naaya Event';
   return form_data.join('');
 }
@@ -426,6 +430,7 @@ function update_locations_values(bounds, enc_form, query) {
 
     $('#view_as_list').attr('href', "./list_locations" + req_link + '&all_records=True');
     $('#view_as_map').attr('href', "./portal_map" + req_link + '&all_records=True');
+    $('#view_this_map').attr('href', "./" + req_link);
     $('#map_url').val(portal_map_url + "/" + req_link);
     $('#download_georss').attr('href', "./export_geo_rss" + req_link);
     var form_symbols = form.symbols.value.split(',');

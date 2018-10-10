@@ -1,5 +1,6 @@
 1.3.19 - (unreleased)
 =======================
+* updates to green travel maps [dumitval]
 
 1.3.18 - (2018-09-28)
 =======================
