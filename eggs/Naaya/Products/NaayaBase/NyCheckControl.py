@@ -3,12 +3,12 @@ This module contains the class that handles check-in/check-out operations for a
 single object.
 """
 
-
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
 
 from constants import *
+
 
 class NyCheckControl:
     """Class that implements functionality for check-in/check-out operations.
@@ -78,7 +78,8 @@ class NyCheckControl:
 
         """
 
-        return self.checkout_user == self.REQUEST.AUTHENTICATED_USER.getUserName()
+        user = self.REQUEST.AUTHENTICATED_USER
+        return self.checkout_user == user.getUserName()
 
     def hasVersion(self):
         """ Checks if the object is locked."""
@@ -86,6 +87,7 @@ class NyCheckControl:
         return (self.checkout == 1) and (self.version is not None)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
+
     def commitVersion(self, REQUEST=None):
         """Handles the commit operation.
 
@@ -96,6 +98,7 @@ class NyCheckControl:
         raise NotImplementedError('commitVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
+
     def startVersion(self, REQUEST=None):
         """Handles the locking operation.
 
@@ -106,6 +109,7 @@ class NyCheckControl:
         raise NotImplementedError('startVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
+
     def discardVersion(self, REQUEST=None):
         """ Handles the discard operation. """
 
@@ -118,6 +122,7 @@ class NyCheckControl:
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
 InitializeClass(NyCheckControl)
