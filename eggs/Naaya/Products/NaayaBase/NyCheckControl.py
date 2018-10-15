@@ -6,6 +6,7 @@ single object.
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.unauthorized import Unauthorized
 
 from constants import *
 
@@ -92,7 +93,7 @@ class NyCheckControl:
 
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'commitVersion'
+        raise NotImplementedError('commitVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
@@ -102,16 +103,16 @@ class NyCheckControl:
 
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'startVersion'
+        raise NotImplementedError('startVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
     def discardVersion(self, REQUEST=None):
         """ Handles the discard operation. """
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise Unauthorized(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise Exception(EXCEPTION_NOVERSION_MSG)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
