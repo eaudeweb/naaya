@@ -1,4 +1,7 @@
-4.3.11 (unreleased)
+4.3.12 (unreleased)
+-------------------
+
+4.3.11 (2018-10-15)
 -------------------
 * some python 2.6 compatibility fixes, pep8 [dumitval]
 
