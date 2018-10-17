@@ -187,12 +187,18 @@
         the_geocoder.geocode({'address':address}, function(result, status) {
             if (status !== google.maps.GeocoderStatus.OK) {return;}
 
+            if(console){
+                console.log('geocoding results', place)
+            }
+
             var place = result[0];
             var point = place.geometry.location;
             var bounds = place.geometry.bounds;
+            var continent = place.address_components[0].types.indexOf(
+                'continent') !== -1;
             var zoom_level = [3, 6, 8, 10,12, 14, 16, 17, 18, 19];
 
-            callback(point, bounds, zoom_level[place.address_components.length - 1]);
+            callback(point, bounds, zoom_level[place.address_components.length - 1], continent);
             //callback(point, bounds);    //zoom_level[place.AddressDetails.Accuracy]);
         });
     }
@@ -203,7 +209,7 @@
             return go_to_address(address);
         }
         if(console) { console.log("Geocoding", address);}
-        geocode_address(address, function(point, bounds, _zoom) {
+        geocode_address(address, function(point, bounds, _zoom, continent) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
                 return;
@@ -216,15 +222,17 @@
     function go_to_address(address) {
         // given a query address, it finds the coordinates and zooms to it
         if (console) {console.log("Geocoding", address);}
-        geocode_address(address, function(point, bounds, zoom) {
+        geocode_address(address, function(point, bounds, zoom, continent) {
             if(! point) {
                 if(console) { console.log('Could not geocode:', address); }
                 return;
             }
             if(console){console.log("Finish geocoding", point, bounds, zoom);}
-            //the_map.fitBounds(bounds);
+            the_map.fitBounds(bounds);
             the_map.setCenter(point);
-            the_map.setZoom(zoom);
+            if (continent){
+                the_map.setZoom(zoom);
+            }
         });
     }
 
@@ -255,7 +263,7 @@
     }
 
     function editor_marker_at_address(address, callback) {
-        geocode_address(address, function(point, bounds, zoom) {
+        geocode_address(address, function(point, bounds, zoom, continent) {
             editor_show_point(point, zoom);
             callback(point_to_coord(point));   // changed how this is called
         });

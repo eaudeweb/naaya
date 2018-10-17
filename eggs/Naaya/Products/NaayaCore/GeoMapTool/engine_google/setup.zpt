@@ -1,6 +1,6 @@
 <tal:block define="MAPS_KEY python:here.get_zope_env('GOOGLE_MAPS_API_KEY')">
   <tal:block condition="MAPS_KEY">
-  <script type="text/javascript" tal:attributes="src string://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&v=3.31" src=""></script>
+  <script type="text/javascript" tal:attributes="src string://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&v=quarterly" src=""></script>
   </tal:block>
   <tal:block condition="not: MAPS_KEY">
     <script type="text/javascript" tal:attributes="src string://maps.googleapis.com/maps/api/js" src=""></script>

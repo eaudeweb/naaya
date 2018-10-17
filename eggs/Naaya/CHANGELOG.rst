@@ -1,5 +1,6 @@
 4.3.12 (unreleased)
 -------------------
+* Google maps zoom fixes [dumitval]
 
 4.3.11 (2018-10-15)
 -------------------
