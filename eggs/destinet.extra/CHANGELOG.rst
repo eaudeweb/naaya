@@ -1,4 +1,7 @@
-1.3.21 - (unreleased)
+1.3.22 - (unreleased)
+=======================
+
+1.3.21 - (2018-10-22)
 =======================
 * updates to several templates (green travel maps, global certification
   quickfinder, main quickfinder) [dumitval]
