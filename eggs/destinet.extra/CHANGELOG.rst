@@ -1,4 +1,4 @@
-1.3.20 - (unreleased)
+1.3.20 - (2018-10-22)
 =======================
 * add address to the map query (list of filtered locations) [dumitval]
 * add global certification quickfinder as separate template [dumitval]
