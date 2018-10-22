@@ -84,7 +84,7 @@
           event.preventDefault();
         });
 
-        $('.select2').select2()
+        $('.to_select2').select2()
 
         //map configuration
         $('#category').select2({placeholder: 'All'})
@@ -92,7 +92,6 @@
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
           }
-          refreshMap();
         });
 
         $('#landscape_type').select2({placeholder: 'All'})
@@ -100,7 +99,6 @@
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
           }
-          refreshMap();
         });
 
         $('#gstc_criteria').select2({placeholder: 'All'})
@@ -108,7 +106,6 @@
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
           }
-          refreshMap();
         });
 
         $('.map-refresh').change(function(){
@@ -130,7 +127,13 @@
           );
           return $state;
         };
-
+        $('#country').change(function(){
+          var this_country = $(this).val();
+          if (this_country != ''){
+            $('#address').val(this_country);
+            findAddress();
+        }
+        })
       });
     </script>
   </metal:head>
@@ -267,7 +270,7 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
-                <select name="country" id="country" class="map-refresh select2"
+                <select name="country" id="country" class="to_select2"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
                   <option value="">All</option>
                   <option tal:attributes="value item/title"
@@ -280,7 +283,7 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by categories</div>
               <div class="org_list">
-                <select name="category" id="category" multiple="multiple" class="select2"
+                <select name="category" id="category" multiple="multiple" class="to_select2 map-refresh"
                     tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
                   <option value="">All</option>
                   <tal:block repeat="geo_type geo_types">
@@ -294,7 +297,7 @@
             <div class="portalmap_portlet portalmap_filter"
               tal:define="gstc_criteria python:here.get_list_nodes('gstc_criteria')">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by GSTC criteria</div>
-              <select id="gstc_criteria" name="gstc_criteria" multiple="multiple" class="map-refresh select2">
+              <select id="gstc_criteria" name="gstc_criteria" multiple="multiple" class="to_select2 map-refresh">
                 <option value="all">All</option>
                 <option tal:repeat="item gstc_criteria"
                   tal:attributes="value item/id" tal:content="item/title" />
@@ -304,7 +307,7 @@
             <div class="portalmap_portlet portalmap_filter"
               tal:define="landscape_list python:here.get_list_nodes('landscape_type')">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by landscape type</div>
-              <select id="landscape_type" name="landscape_type" multiple="multiple" class="map-refresh select2">
+              <select id="landscape_type" name="landscape_type" multiple="multiple" class="to_select2 map-refresh">
                 <option value="all">All</option>
                 <option tal:repeat="item landscape_list"
                   tal:attributes="value item/id" tal:content="item/title" />
@@ -394,4 +397,3 @@
     <input id="location" type="hidden" tal:attributes="value context/REQUEST/location|string:" />
   </metal:body>
 </metal:page>
-

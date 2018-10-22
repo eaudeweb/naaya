@@ -388,7 +388,7 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&certificate_services%3Alist=' + $('#certificate_services').val();
     }
   }
-  if ([undefined, '', null].indexOf($('#address').val()) == -1){
+  if ([undefined, '', null, 'Type location address'].indexOf($('#address').val()) == -1){
       form_data[form_data.length] = '&address=' + $('#address').val();
   }
   $('.administrative_list input:checkbox:checked').each(function() {

@@ -120,7 +120,7 @@
           $('#geo_types').val(geo_types).trigger('change.select2');
         } else {
           $('#geo_types').val(all_geo_types).trigger('change.select2');
-        } 
+        }
         $('#geo_types').change(function(){
           if ($(this).val() == null || $(this).val().indexOf("all") !== -1){
             $('#geo_types option').each(function(){
@@ -278,10 +278,10 @@
                 ">
         <script tal:content="structure python:'var geo_types = %s;' % geo_types"></script>
         <script tal:content="structure python:'var all_geo_types = %s;' % all_geo_types"></script>
-        <script tal:content="structure python:'var geo_query = \'%s\';' % geo_query"></script>        
-        <script tal:content="structure python:'var landscape_type = \'%s\';' % landscape_type"></script>        
-        <script tal:content="structure python:'var selected_country = %s;' % country"></script>        
-        <script tal:content="structure python:'var address = \'%s\';' % address"></script>        
+        <script tal:content="structure python:'var geo_query = \'%s\';' % geo_query"></script>
+        <script tal:content="structure python:'var landscape_type = \'%s\';' % landscape_type"></script>
+        <script tal:content="structure python:'var selected_country = %s;' % country"></script>
+        <script tal:content="structure python:'var address = \'%s\';' % address"></script>
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>

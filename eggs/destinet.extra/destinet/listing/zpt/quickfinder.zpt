@@ -115,7 +115,6 @@
           if ($(this).val() !== null && $(this).val().indexOf("") !== -1){
             $(this).val("").trigger('change');
           }
-          refreshMap();
         });
 
         $('.map-refresh').change(function(){
@@ -138,6 +137,14 @@
           return $state;
         };
 
+      $('#country').change(function(){
+        var this_country = $(this).val();
+        if (this_country != ''){
+          $('#address').val(this_country);
+          findAddress();
+          clearTimeout(refreshTimer);
+      }
+      })
       });
     </script>
   </metal:head>
@@ -393,7 +400,7 @@
               tal:define="services_types python:here.get_list_nodes('certificate_services')">
               <div class="portalmap_portlet_title" i18n:translate="">Services</div>
               <div class="certificate_services">
-                <select name="services" id="certificate_services" multiple="multiple">
+                <select name="services" id="certificate_services" multiple="multiple" class="map-refresh">
                   <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
@@ -430,7 +437,7 @@
               You must have Javascript turned on to access all the Geo Map features.
             </p>
           </noscript>
-          <p id="js_links_finder" style="display: none;">
+          <p id="js_links" style="display: none;">
             <span tal:condition="not:map_only" i18n:translate="">
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
             </span>&nbsp;
