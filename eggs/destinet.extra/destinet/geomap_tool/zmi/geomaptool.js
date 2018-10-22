@@ -388,6 +388,9 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&certificate_services%3Alist=' + $('#certificate_services').val();
     }
   }
+  if ([undefined, '', null].indexOf($('#address').val()) == -1){
+      form_data[form_data.length] = '&address=' + $('#address').val();
+  }
   $('.administrative_list input:checkbox:checked').each(function() {
     if (this.value != 'on') {
       form_data[form_data.length] = '&administrative_level%3Alist=' + this.value;
@@ -625,5 +628,3 @@ function onclickpoint(lat, lon, point_id, point_tooltip) {
 
 // can be overwritten to get notifications for the mouse over events
 function onmouseoverpoint(lat, lon, point_id, point_tooltip) {}
-
-
