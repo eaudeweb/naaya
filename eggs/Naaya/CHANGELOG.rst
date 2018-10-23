@@ -1,5 +1,6 @@
 4.3.13 (unreleased)
 -------------------
+* add dutch translation to tinymce [dumitval]
 
 4.3.12 (2018-10-17)
 -------------------
