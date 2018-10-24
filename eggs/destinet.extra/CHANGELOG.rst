@@ -1,4 +1,7 @@
-1.3.22 - (unreleased)
+1.3.23- (unreleased)
+=======================
+
+1.3.22 - (2018-10-24)
 =======================
 * mobile layout improvements on the pages with maps [dumitval]
 
