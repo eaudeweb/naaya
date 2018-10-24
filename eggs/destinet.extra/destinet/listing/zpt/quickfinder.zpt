@@ -31,6 +31,24 @@
       .select2-container--default .select2-selection--multiple {
         min-height: 28px;
       }
+      @media(max-width:935px) {
+        #frmFilterMap .second-row {
+          display: flex;
+          flex-direction: column; 
+        }
+
+        .portalmap_filter {
+          width: 100% !important;
+        }
+
+        .second-row .portalmap_filter:last-of-type {
+          display: none;
+        }
+
+        .first-row .portalmap_filter:last-of-type {
+          width: 100% !important;
+        }
+      }
     </style>
     <script>
       (function(d, s, id) {

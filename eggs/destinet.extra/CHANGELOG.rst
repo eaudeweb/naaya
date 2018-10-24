@@ -1,5 +1,6 @@
 1.3.22 - (unreleased)
 =======================
+* mobile layout improvements on the pages with maps [dumitval]
 
 1.3.21 - (2018-10-22)
 =======================
