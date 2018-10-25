@@ -1,4 +1,7 @@
-1.3.24 - (unreleased)
+1.3.25 - (unreleased)
+=======================
+
+1.3.24 - (2018-10-25)
 =======================
 * remove autozoom on country select on certification quickfinder [dumitval]
 
