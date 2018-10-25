@@ -129,18 +129,6 @@
           return $state;
         };
 
-      $('#country').change(function(){
-        var this_country = $(this).val();
-        if (this_country != ''){
-          $('#address').val(this_country);
-          findAddress();
-          clearTimeout(refreshTimer);
-        } else {
-          $('#address').val('Europe');
-          findAddress();
-          clearTimeout(refreshTimer);
-        }
-      })
       });
     </script>
   </metal:head>
