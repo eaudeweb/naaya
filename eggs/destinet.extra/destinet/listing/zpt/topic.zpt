@@ -24,29 +24,6 @@
     <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/diacritics-sort.js"></script>
     <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-    <style>
-      .show_more{
-        font-weight: bold;
-      }
-      @media(max-width:935px) {
-        #frmFilterMap .second-row {
-          display: flex;
-          flex-direction: column; 
-        }
-
-        .portalmap_filter {
-          width: 100% !important;
-        }
-
-        .second-row .portalmap_filter:last-of-type {
-          display: none;
-        }
-
-        .first-row .portalmap_filter:last-of-type {
-          width: 100% !important;
-        }
-      }
-    </style>
     <script>
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -866,6 +843,19 @@
           <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
             <div class="first-row clearfix">
               <div class="portalmap_portlet portalmap_filter">
+                <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
+                <div class="country_list">
+                  <select name="country" id="country"
+                    tal:define="glossary python:here.getSite()['countries_glossary']" multiple="multiple">
+                    <option></option>
+                    <option tal:attributes="value item/title"
+                      tal:content="item/title"
+                      tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
+                  </select>
+                </div>
+              </div>
+
+              <div class="portalmap_portlet portalmap_filter">
                 <div class="portalmap_portlet_title" i18n:translate="">
                   Filter by Keyword
                 </div>
@@ -880,6 +870,20 @@
                           if x.title.strip()] + [geo_query]" />
                 </select>
               </div>
+
+              <div class="portalmap_portlet portalmap_filter"
+                tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
+                <div class="portalmap_portlet_title" i18n:translate="">operational level</div>
+                <div class="operational_level">
+                  <select name="administrative_level" id="administrative_level" multiple="multiple">
+                  <option value="all">All</option>
+                    <option tal:attributes="value item/id"
+                            tal:content="item/title"
+                            tal:repeat="item administrative_list" />
+                  </select>
+                </div>
+              </div>
+
               <div class="portalmap_portlet portalmap_filter">
                 <div class="portalmap_portlet_title" i18n:translate="">
                   Zoom to location
@@ -894,19 +898,6 @@
               </div>
             </div>
             <div class="second-row">
-              <div class="portalmap_portlet portalmap_filter">
-                <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
-                <div class="country_list">
-                  <select name="country" id="country"
-                    tal:define="glossary python:here.getSite()['countries_glossary']" multiple="multiple">
-                    <option></option>
-                    <option tal:attributes="value item/title"
-                      tal:content="item/title"
-                      tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
-                  </select>
-                </div>
-              </div>
-
               <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
                 tal:define="parentsList portal_map/getParentsListOrdered">
                 <div class="portalmap_portlet_title" i18n:translate="">Show organisation types</div>
@@ -920,28 +911,6 @@
                       </tal:block>
                   </select>
                 </div>
-              </div>
-
-              <div class="portalmap_portlet portalmap_filter"
-                tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
-                <div class="portalmap_portlet_title" i18n:translate="">operational level</div>
-                <div class="operational_level">
-                  <select name="administrative_level" id="administrative_level" multiple="multiple">
-                  <option value="all">All</option>
-                    <option tal:attributes="value item/id"
-                            tal:content="item/title"
-                            tal:repeat="item administrative_list" />
-                  </select>
-                </div>
-              </div>
-              <div class="portalmap_portlet portalmap_filter landscape_list"
-                tal:define="landscape_list python:here.get_list_nodes('landscape_type')">
-                <div class="portalmap_portlet_title" i18n:translate="">Filter by landscape type</div>
-                <select id="landscape_type" name="landscape_type" multiple="multiple">
-                  <option value="all">All</option>
-                  <option tal:repeat="item landscape_list"
-                    tal:attributes="value item/id" tal:content="item/title" />
-                </select>
               </div>
             </div>
             <div class="portalmap_portlet_box" style="display:none">

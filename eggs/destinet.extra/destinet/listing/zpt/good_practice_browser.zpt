@@ -24,29 +24,6 @@
     <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/diacritics-sort.js"></script>
     <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-    <style>
-      .show_more{
-        font-weight: bold;
-      }
-      @media(max-width:935px) {
-        #frmFilterMap .second-row {
-          display: flex;
-          flex-direction: column; 
-        }
-
-        .portalmap_filter {
-          width: 100% !important;
-        }
-
-        .second-row .portalmap_filter:last-of-type {
-          display: none;
-        }
-
-        .first-row .portalmap_filter:last-of-type {
-          width: 100% !important;
-        }
-      }
-    </style>
     <script>
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -145,13 +122,6 @@
           );
           return $state;
         };
-        $('#country').change(function(){
-          var this_country = $(this).val();
-          if (this_country != ''){
-            $('#address').val(this_country);
-            findAddress();
-        }
-        })
       });
     </script>
   </metal:head>
@@ -261,7 +231,7 @@
         <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
-          <div class="second-row clearfix" id="filter_map">
+          <div class="first-row clearfix" id="filter_map">
             <div class="portalmap_portlet portalmap_filter" style="display:none">
               <div class="portalmap_portlet_title" i18n:translate="">Category</div>
 

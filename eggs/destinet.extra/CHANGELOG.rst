@@ -1,5 +1,7 @@
 1.3.23- (unreleased)
 =======================
+* further layout improvements on map integrations [dumitval]
+* remove landscape type filter from various map integrations [dumitval]
 
 1.3.22 - (2018-10-24)
 =======================

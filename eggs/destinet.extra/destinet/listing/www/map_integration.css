@@ -32,9 +32,10 @@ h2 {
   line-height: 1.5;
 }
 .portalmap_filter {
-  width: calc(25% - 3px);
+  flex: 1;
   padding: 0;
   margin: 0;
+  margin-right: 5px;
   /* min-height: 200px; */
   display: inline-flex;
   flex-direction: column;
@@ -62,21 +63,13 @@ border-top: 3px solid #0071be;
 }
 
 .first-row .portalmap_filter:first-of-type {
-  display: inline-block;
-  width: 69%;
   background: #0071bd;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
-
-.first-row  .portalmap_filter:first-of-type .portalmap_portlet_title {
-  color: white;
-}
-
-.first-row .portalmap_filter:last-of-type {
-width: 30%;
-float: right;
+.first-row, .second-row {
+  display: flex;
 }
 
 .first-row .portalmap_filter:last-of-type input[type="button"]{
@@ -106,6 +99,7 @@ float: right;
 
 .portalmap_portlet_title {
   color: white;
+  white-space: nowrap;
 }
 
 .portalmap_portlet_title p {
@@ -174,7 +168,7 @@ float: right;
   border-width: 2px!important;
 }
 
-.second-row .portalmap_filter .select2-selection__choice {
+.portalmap_filter .select2-selection__choice {
   color: #424242;
   background: none!important;
   border-color: transparent!important;
@@ -198,4 +192,31 @@ float: right;
 
 .second-row .portalmap_filter .select2-selection__choice__remove {
     color: black!important;
+}
+span.select2-results div.folder{
+    font-weight: bold;
+    font-size: larger;
+    text-transform: uppercase;
+}
+span.select2-results div.element {
+    padding-left: 15px;
+}
+.show_more{
+    font-weight: bold;
+}
+.select2-selection--multiple .select2-search__field {
+    width: auto!important;
+}
+ .select2-container--default .select2-selection--multiple {
+    min-height: 28px;
+}
+@media(max-width:935px) {
+    #frmFilterMap .first-row, #frmFilterMap .second-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portalmap_filter {
+      width: 100% !important;
+    }
 }
