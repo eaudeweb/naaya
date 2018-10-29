@@ -184,7 +184,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                           approved=True, landscape_type=[],
                           administrative_level=[], topics=[], lat_min=-90.,
                           lat_max=90., lon_min=-180., lon_max=180., query='',
-                          country='', first_letter=None, **kwargs):
+                          country='', coverage='', first_letter=None,
+                          **kwargs):
         base_filter = {}
 
         base_filter['path'] = path
@@ -209,12 +210,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if administrative_level:
             base_filter['administrative_level'] = administrative_level
 
+        if coverage and coverage != 'undefined':
+            try:
+                coverage.remove('undefined')
+            except (ValueError, AttributeError):
+                pass
+            base_filter['coverage'] = coverage
+
         if country and country != 'undefined':
             try:
                 country.remove('undefined')
             except (ValueError, AttributeError):
                 pass
-            base_filter['coverage'] = country
+            base_filter['country'] = country
 
         base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)),
                                                  Decimal(str(lat_max))),
@@ -433,6 +441,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'landscape_type': [],
             'administrative_level': [],
             'country': '',
+            'coverage': '',
             'languages': None,
             'meta_types': None,
         }
@@ -472,13 +481,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         countries_glossary = getattr(self.getSite(), 'countries_glossary',
                                      None)
         if countries_glossary:
-            if isinstance(criteria.get('country'), list):
-                countries = list(criteria['country'])
+            if isinstance(criteria.get('coverage'), list):
+                countries = list(criteria['coverage'])
                 for country in countries:
                     if country in countries_glossary.get_names_list(
                             elements=False):
-                        criteria['country'].remove(country)
-                        criteria['country'].extend(
+                        criteria['coverage'].remove(country)
+                        criteria['coverage'].extend(
                             countries_glossary.get_names_list(
                                 folders=False, folder=country))
 
@@ -949,6 +958,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             topics = topics.split(',')
         geo_query = kw.get('geo_query', '')
         country = kw.get('country', '')
+        coverage = kw.get('coverage', '')
 
         sort_on, sort_order = '', ''
         if kw.get('sortable', ''):
@@ -963,7 +973,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             administrative_level=administrative_level,
             landscape_type=landscape_type, topics=topics,
             first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
-            country=country,
+            country=country, coverage=coverage
         )
         options = {}
         options['lat_min'] = lat_min
@@ -976,6 +986,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['topics'] = topics
         options['geo_query'] = geo_query
         options['country'] = country
+        options['coverage'] = coverage
         try:
             options['step'] = int(kw.get('step', '50'))
         except ValueError:

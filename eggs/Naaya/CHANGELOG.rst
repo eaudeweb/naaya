@@ -1,5 +1,6 @@
 4.3.14 (unreleased)
 -------------------
+* additional index for coverage (GeoMapTool) [dumitval]
 
 4.3.13 (2018-10-23)
 -------------------
