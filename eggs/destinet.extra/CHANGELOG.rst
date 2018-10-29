@@ -1,4 +1,7 @@
-1.3.25 - (unreleased)
+1.3.26 - (unreleased)
+=======================
+
+1.3.25 - (2018-10-29)
 =======================
 * topics and green travel maps listing: bugfix when selecting more
   countries - added support for an additional catalog index [dumitval]
