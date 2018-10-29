@@ -179,8 +179,8 @@
             refreshMap();
           });
 
-          $('#country').select2({placeholder: 'All'})
-          $('#country').change(function(){
+          $('#coverage').select2({placeholder: 'All'})
+          $('#coverage').change(function(){
             refreshMap();
           });
 
@@ -845,7 +845,7 @@
               <div class="portalmap_portlet portalmap_filter">
                 <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
                 <div class="country_list">
-                  <select name="country" id="country"
+                  <select name="coverage" id="coverage"
                     tal:define="glossary python:here.getSite()['countries_glossary']" multiple="multiple">
                     <option></option>
                     <option tal:attributes="value item/title"

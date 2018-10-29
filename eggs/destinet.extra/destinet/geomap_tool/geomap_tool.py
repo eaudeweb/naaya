@@ -189,6 +189,7 @@ def list_locations(self, REQUEST=None, **kw):
     if isinstance(topics, str):
         topics = topics.split(',')
     geo_query = kw.get('geo_query', '')
+    coverage = kw.get('coverage', '')
     country = kw.get('country', '')
 
     sort_on, sort_order = '', ''
@@ -209,7 +210,7 @@ def list_locations(self, REQUEST=None, **kw):
         administrative_level=administrative_level,
         landscape_type=landscape_type, topics=topics,
         first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
-        country=country, gstc_criteria=gstc_criteria,
+        country=country, coverage=coverage, gstc_criteria=gstc_criteria,
     )
     options = {}
     options['lat_min'] = lat_min
@@ -226,6 +227,7 @@ def list_locations(self, REQUEST=None, **kw):
     options['topics'] = topics
     options['geo_query'] = geo_query
     options['country'] = country
+    options['coverage'] = coverage
     try:
         options['step'] = int(kw.get('step', '50'))
     except ValueError:

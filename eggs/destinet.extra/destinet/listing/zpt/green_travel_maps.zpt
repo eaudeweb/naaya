@@ -80,7 +80,7 @@
         });
 
         countries_array = [];
-        $('#country option').each(function(){
+        $('#coverage option').each(function(){
             if($(this).hasClass('folder')){
         countries_array.push({id: $(this).val(), text: '<div class="folder">'+$(this).val()+'<'+'/div>'})
             } else {
@@ -88,18 +88,18 @@
             }
         })
 
-        $('#country option').remove()
+        $('#coverage option').remove()
 
-        $("#country").select2({
+        $("#coverage").select2({
           data: countries_array,
           templateResult: function (d) { return $(d.text); },
           templateSelection: function (d) { return $(d.text); },
         });
         if(selected_country){
-          $('#country').val(selected_country[0]).trigger('change.select2');
+          $('#coverage').val(selected_country[0]).trigger('change.select2');
           $('#address').val(address || selected_country[0]);
           findAddress();
-          clearTimeout(refreshTimer); 
+          clearTimeout(refreshTimer);
         }
 
         //map configuration
@@ -152,7 +152,7 @@
           );
           return $state;
         };
-        $('#country').change(function(){
+        $('#coverage').change(function(){
           var this_country = $(this).val();
           if (this_country != ''){
             $('#address').val(this_country);
@@ -255,7 +255,7 @@
       <tal:map
         define="topics python:request.get('topics', []);
                 geo_types request/geo_types|python:[];
-                country request/country|python:[];
+                coverage request/coverage|python:[];
                 geo_query request/geo_query|string:certified gtm;
                 address request/address|string:;
                 path python:'/'.join(here.getSite().getPhysicalPath()) + '/' + request.get('path', '');
@@ -267,7 +267,7 @@
         <script tal:content="structure python:'var geo_types = %s;' % geo_types"></script>
         <script tal:content="structure python:'var all_geo_types = %s;' % all_geo_types"></script>
         <script tal:content="structure python:'var geo_query = \'%s\';' % geo_query"></script>
-        <script tal:content="structure python:'var selected_country = %s;' % country"></script>
+        <script tal:content="structure python:'var selected_country = %s;' % coverage"></script>
         <script tal:content="structure python:'var address = \'%s\';' % address"></script>
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
@@ -282,7 +282,7 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
-                <select name="country" id="country" class="map-refresh"
+                <select name="coverage" id="coverage" class="map-refresh"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
                   <option value="">All</option>
                   <option tal:repeat="item python:glossary.get_names_list()"

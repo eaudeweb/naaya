@@ -311,11 +311,6 @@ function destinet_get_form_data() {
       form_data[form_data.length] = '&landscape_type%3Alist=' + value;
     })
   }
-/*  if ($('#country').val() != null){
-    $.each($('#country').val(), function(index, value){
-      form_data[form_data.length] = '&country%3Alist=' + value;
-    })
-  }*/
   if ([undefined, '', null].indexOf($('#country').val()) == -1){
     if ($('#country').val() && $('#country').val().constructor == Array){
       $.each($('#country').val(), function(index, value){
@@ -323,6 +318,15 @@ function destinet_get_form_data() {
       });
     } else {
         form_data[form_data.length] = '&country%3Alist=' + $('#country').val();
+    }
+  }
+  if ([undefined, '', null].indexOf($('#coverage').val()) == -1){
+    if ($('#coverage').val() && $('#coverage').val().constructor == Array){
+      $.each($('#coverage').val(), function(index, value){
+        form_data[form_data.length] = '&coverage%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&coverage%3Alist=' + $('#coverage').val();
     }
   }
   if ([undefined, '', null].indexOf($('#administrative_level').val()) == -1){
@@ -388,7 +392,7 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&certificate_services%3Alist=' + $('#certificate_services').val();
     }
   }
-  if ([undefined, '', null, 'Type location address'].indexOf($('#address').val()) == -1){
+  if ([undefined, '', null].indexOf($('#address').val()) == -1){
       form_data[form_data.length] = '&address=' + $('#address').val();
   }
   $('.administrative_list input:checkbox:checked').each(function() {
@@ -399,9 +403,6 @@ function destinet_get_form_data() {
   $('.meta_type_list').each(function() {
     form_data[form_data.length] = '&meta_types%3Alist=' + this.value;
   })
-  //form_data[form_data.length] = '&country=' + $('#country_list').attr('value');
-  //form_data[form_data.length] = '&path=' + encodeURIComponent($('#path').attr('value')); Testing to see if we really need this
-  //    form_data[form_data.length] = '&meta_types=Naaya Event';
   return form_data.join('');
 }
 
