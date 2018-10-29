@@ -1,4 +1,7 @@
-4.3.14 (unreleased)
+4.3.15 (unreleased)
+-------------------
+
+4.3.14 (2018-10-29)
 -------------------
 * additional index for coverage (GeoMapTool) [dumitval]
 
