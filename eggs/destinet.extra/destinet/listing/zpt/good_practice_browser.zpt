@@ -258,7 +258,7 @@
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
-                <select name="country" id="country" class="to_select2"
+                <select name="country" id="country" class="to_select2 map-refresh"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
                   <option value="">All</option>
                   <option tal:attributes="value item/title"

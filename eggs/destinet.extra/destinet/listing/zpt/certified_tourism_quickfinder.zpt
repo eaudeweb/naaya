@@ -314,7 +314,7 @@
             </div>
 
             <div class="portalmap_portlet portalmap_filter">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by categories</div>
+              <div class="portalmap_portlet_title" i18n:translate="">Selected categories</div>
               <div class="org_list">
                 <select name="geo_types" id="geo_types" multiple="multiple" class="map-refresh">
                   <option value="all">All</option>

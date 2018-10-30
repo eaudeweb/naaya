@@ -1,5 +1,8 @@
 1.3.26 - (unreleased)
 =======================
+* some template wording changes, refresh map on country change for good
+  practice browser, since the country change doesn't trigger findAddress
+  anymore [dumitval]
 
 1.3.25 - (2018-10-29)
 =======================
