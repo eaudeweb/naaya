@@ -1,5 +1,6 @@
 0.0.6 (unreleased)
 ------------------
+* hide Checkout button, feature is not implemented [dumitval]
 
 0.0.5 (2018-04-24)
 ------------------
