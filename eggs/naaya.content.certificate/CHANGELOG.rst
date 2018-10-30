@@ -1,4 +1,7 @@
-0.0.6 (unreleased)
+0.0.7 (unreleased)
+------------------
+
+0.0.6 (2018-10-30)
 ------------------
 * hide Checkout button, feature is not implemented [dumitval]
 
