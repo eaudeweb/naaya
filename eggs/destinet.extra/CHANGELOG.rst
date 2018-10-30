@@ -1,4 +1,7 @@
-1.3.26 - (unreleased)
+1.3.27 - (unreleased)
+=======================
+
+1.3.26 - (2018-10-30)
 =======================
 * some template wording changes, refresh map on country change for good
   practice browser, since the country change doesn't trigger findAddress
