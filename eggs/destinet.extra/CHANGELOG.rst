@@ -1,4 +1,7 @@
-1.3.27 - (unreleased)
+1.3.28 - (unreleased)
+=======================
+
+1.3.27 - (2018-11-01)
 =======================
 * added filtering of second level folders appearing in the navigation
   dropdown [dumitval]
