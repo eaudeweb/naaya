@@ -39,4 +39,9 @@
         handler=".listing.get_keywords"
         permission="zope.Public" />
 
+    <naaya:simpleView
+        for="*"
+        name="second_level"
+        handler=".listing.second_level"
+        permission="zope.Public" />
 </configure>

@@ -1,3 +1,4 @@
+import os
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 NaayaPageTemplateFile('zpt/topic', globals(), 'destinet_topics_listing')
@@ -167,3 +168,20 @@ def get_keywords(context, request):
     return sorted([(node.id, node.title) for
                    node in context.get_list_nodes('certificate_keywords')],
                   key=lambda x: x[0].lower())
+
+
+def second_level(context, request):
+    """ return second level folders that are allowed to appear in the
+    dropdown navigation (i.e. have 'navigation' as keyword) """
+    second_level_folders = context.utSortObjsListByAttr(
+        [x for x in context.objectValues(['Naaya Folder', 'Naaya Pointer'])
+            if (x.approved or not hasattr(x, 'approved'))],
+        'sortorder', 0)
+    valid_folders = []
+    keyword = os.environ.get('DESTINET_NAVIGATION_KEYWORD', '')
+    for fol in second_level_folders:
+        for lang in context.gl_get_languages():
+            if keyword in fol.getLocalProperty('keywords', lang):
+                valid_folders.append(fol)
+                break
+    return valid_folders

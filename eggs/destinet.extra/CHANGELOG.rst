@@ -1,5 +1,7 @@
 1.3.27 - (unreleased)
 =======================
+* added filtering of second level folders appearing in the navigation
+  dropdown [dumitval]
 
 1.3.26 - (2018-10-30)
 =======================
