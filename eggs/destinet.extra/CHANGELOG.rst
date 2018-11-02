@@ -1,4 +1,7 @@
-1.3.28 - (unreleased)
+1.3.29 - (unreleased)
+=======================
+
+1.3.28 - (2018-11-02)
 =======================
 * customize topics listing: add colapsing h3 [dumitval]
 
