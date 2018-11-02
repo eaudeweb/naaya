@@ -1,5 +1,6 @@
 1.3.28 - (unreleased)
 =======================
+* customize topics listing: add colapsing h3 [dumitval]
 
 1.3.27 - (2018-11-01)
 =======================
