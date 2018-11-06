@@ -171,8 +171,8 @@ def get_keywords(context, request):
 
 
 def second_level(context, request):
-    """ return second level folders that are allowed to appear in the
-    dropdown navigation (i.e. have 'navigation' as keyword) """
+    """ return second level folders that are not marked as hidden for the
+    dropdown navigation (i.e. have 'nomenu' as keyword) """
     second_level_folders = context.utSortObjsListByAttr(
         [x for x in context.objectValues(['Naaya Folder', 'Naaya Pointer'])
             if (x.approved or not hasattr(x, 'approved'))],
@@ -182,6 +182,7 @@ def second_level(context, request):
     for fol in second_level_folders:
         for lang in context.gl_get_languages():
             if keyword in fol.getLocalProperty('keywords', lang):
-                valid_folders.append(fol)
                 break
+        else:
+            valid_folders.append(fol)
     return valid_folders

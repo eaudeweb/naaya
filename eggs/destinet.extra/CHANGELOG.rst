@@ -1,5 +1,6 @@
 1.3.29 - (unreleased)
 =======================
+* changed filtering logic for second level folders [dumitval]
 
 1.3.28 - (2018-11-02)
 =======================
