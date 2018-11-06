@@ -1,4 +1,7 @@
-1.3.29 - (unreleased)
+1.3.30 - (unreleased)
+=======================
+
+1.3.29 - (2018-11-06)
 =======================
 * changed filtering logic for second level folders [dumitval]
 
