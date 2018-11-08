@@ -96,6 +96,11 @@ _DEFAULT = {
             'block': 'div',
             'classes': 'box'
         },
+        {
+            'title': 'Hidden',
+            'block': 'div',
+            'classes': 'hidden'
+        },
     ],
     'style_formats_merge': True,
 
