@@ -1,4 +1,7 @@
-4.3.15 (unreleased)
+4.3.16 (unreleased)
+-------------------
+
+4.3.15 (2018-11-08)
 -------------------
 * add a custom style to the editor tool [dumitval]
 

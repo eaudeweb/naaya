@@ -60,39 +60,25 @@
       }(document, 'script', 'facebook-jssdk'));
 
       $(document).ready(function() {
-        var plus_url = 'misc_/Naaya/plus.gif';
-        var minus_url = 'misc_/Naaya/minus.gif';
         var refreshTimer;
         var refreshInterval = 2000;
-        $('.hidden').closest('p').prev().addClass('dyn-h3');
+        var oldhtml = $('div#center_content')[0].outerHTML
+        var newhtml = oldhtml.replace(/<\/span><\/p>\n<p><span class="hidden">/g, '<br>')
+        $('div#center_content')[0].outerHTML = newhtml
+        $('.hidden').closest('p').prev('h3').addClass('dyn-h3');
         $('.hidden').hide();
         $('.hidden').each(function() {
           if ($(this).attr('id') != 'dialog-delete-confirm') {
-            $(this).before('<img class="show_more" src=' + plus_url + ' /> <a class="show_more" href="javascript:void(0)">More<' + '/a>');
+            $(this).before('<a class="show_more" href="javascript:void(0)"><' + '/a>');
           }
         });
         $('a.show_more').click(function() {
-          if ($(this).text() == 'More') {
-            $(this).text('Less');
-            $(this).closest('p').prev().addClass('reverse');
-            $(this).prev().attr('src', minus_url);
-            $(this).next().slideDown();
-          } else {
+          if ($(this).closest('p').prev('h3').hasClass('reverse')) {
             $(this).next().slideUp();
-            $(this).closest('p').prev().removeClass('reverse');
-            $(this).text('More');
-            $(this).prev().attr('src', plus_url);
-          }
-        });
-        $('img.show_more').click(function() {
-          if ($(this).attr('src') == plus_url) {
-            $(this).next().text('Less');
-            $(this).attr('src', minus_url);
-            $(this).next().next().slideDown();
+            $(this).closest('p').prev('h3').removeClass('reverse');
           } else {
-            $(this).next().next().slideUp();
-            $(this).next().text('More');
-            $(this).attr('src', plus_url);
+            $(this).closest('p').prev('h3').addClass('reverse');
+            $(this).next().slideDown();
           }
         });
         if ($('#folderfile_list table tr').length > 0){
