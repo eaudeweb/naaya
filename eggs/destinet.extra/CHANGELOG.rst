@@ -1,4 +1,7 @@
-1.3.30 - (unreleased)
+1.3.31 - (unreleased)
+=======================
+
+1.3.30 - (2018-11-08)
 =======================
 * update several templates for the dynamic paragraphs [dumitval]
 
