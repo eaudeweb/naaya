@@ -24,31 +24,6 @@
     <script type="text/javascript" src="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/diacritics-sort.js"></script>
     <link rel="stylesheet" type="text/css" href="/++resource++Products.Naaya/lib/datatables/jquery.dataTables.css" />
-    <style>
-        .dyn-h3 {
-            margin-bottom: -4rem;
-            background: #eee;
-            padding: .5rem;
-            padding-left: 1rem;
-            border-radius:.25em;
-        }
-        .show_more {
-            display: block;
-            opacity: 0;
-            height: 40px;
-        }
-        img.show_more{
-            display: none;
-        }
-        .dyn-h3:before {
-            content:"\f0d7";
-            float:right;
-            padding-right: 1rem;
-        }
-        .dyn-h3.reverse:before {
-            content:"\f0d8";
-        }
-    </style>
     <script>
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -62,10 +37,7 @@
       $(document).ready(function() {
         var refreshTimer;
         var refreshInterval = 2000;
-        var oldhtml = $('div#center_content')[0].outerHTML
-        var newhtml = oldhtml.replace(/<\/span><\/p>\n<p><span class="hidden">/g, '<br>')
-        $('div#center_content')[0].outerHTML = newhtml
-        $('.hidden').closest('p').prev('h3').addClass('dyn-h3');
+        $('.hidden').prev('h3').addClass('dyn-h3');
         $('.hidden').hide();
         $('.hidden').each(function() {
           if ($(this).attr('id') != 'dialog-delete-confirm') {
@@ -73,11 +45,11 @@
           }
         });
         $('a.show_more').click(function() {
-          if ($(this).closest('p').prev('h3').hasClass('reverse')) {
+          if ($(this).prev('h3').hasClass('reverse')) {
             $(this).next().slideUp();
-            $(this).closest('p').prev('h3').removeClass('reverse');
+            $(this).prev('h3').removeClass('reverse');
           } else {
-            $(this).closest('p').prev('h3').addClass('reverse');
+            $(this).prev('h3').addClass('reverse');
             $(this).next().slideDown();
           }
         });

@@ -35,36 +35,22 @@
       }(document, 'script', 'facebook-jssdk'));
 
       $(document).ready(function() {
-        var plus_url = 'misc_/Naaya/plus.gif';
-        var minus_url = 'misc_/Naaya/minus.gif';
         var refreshTimer;
         var refreshInterval = 2000;
+        $('.hidden').prev('h3').addClass('dyn-h3');
         $('.hidden').hide();
         $('.hidden').each(function() {
           if ($(this).attr('id') != 'dialog-delete-confirm') {
-            $(this).before('<img class="show_more" src=' + plus_url + ' /> <a class="show_more" href="javascript:void(0)">More<' + '/a>');
+            $(this).before('<a class="show_more" href="javascript:void(0)"><' + '/a>');
           }
         });
         $('a.show_more').click(function() {
-          if ($(this).text() == 'More') {
-            $(this).text('Less');
-            $(this).prev().attr('src', minus_url);
-            $(this).next().slideDown();
-          } else {
+          if ($(this).prev('h3').hasClass('reverse')) {
             $(this).next().slideUp();
-            $(this).text('More');
-            $(this).prev().attr('src', plus_url);
-          }
-        });
-        $('img.show_more').click(function() {
-          if ($(this).attr('src') == plus_url) {
-            $(this).next().text('Less');
-            $(this).attr('src', minus_url);
-            $(this).next().next().slideDown();
+            $(this).prev('h3').removeClass('reverse');
           } else {
-            $(this).next().next().slideUp();
-            $(this).next().text('More');
-            $(this).attr('src', plus_url);
+            $(this).prev('h3').addClass('reverse');
+            $(this).next().slideDown();
           }
         });
         if ($('#folderfile_list table tr').length > 0){

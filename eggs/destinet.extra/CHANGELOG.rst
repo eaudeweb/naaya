@@ -1,5 +1,6 @@
 1.3.30 - (unreleased)
 =======================
+* update several templates for the dynamic paragraphs [dumitval]
 
 1.3.29 - (2018-11-06)
 =======================
