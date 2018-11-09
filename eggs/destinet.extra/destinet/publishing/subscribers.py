@@ -37,8 +37,7 @@ def get_countries(ob):
 def get_category_location(site, geo_type):
     """
     Based on geo_type (Category) value, returns the corresponding location
-    in who-who, who-who/market-place, who-who/market-solutions
-    or None if not found
+    in who-who, who-who/market-place, or None if not found
 
     """
     if not geo_type:
@@ -48,7 +47,7 @@ def get_category_location(site, geo_type):
     slug = slugify(title, removelist=[])
     who_who = site['who-who']
     candidates = map(lambda x: (x, x.objectIds('Naaya Folder')), [
-        who_who, who_who['market-place'], who_who['market-solutions']])
+        who_who, who_who['market-place']])
     for (candidate_parent, candidate_ids) in candidates:
         if slug in candidate_ids:
             return candidate_parent[slug]

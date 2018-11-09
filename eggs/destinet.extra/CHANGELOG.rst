@@ -1,5 +1,6 @@
 1.3.31 - (unreleased)
 =======================
+* remove a target folder contacts (not need anymore) [dumitval]
 
 1.3.30 - (2018-11-08)
 =======================

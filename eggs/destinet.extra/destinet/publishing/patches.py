@@ -18,6 +18,7 @@ def _get_geo_type(schema):
 
 def patch_addNyContact():
     original = contact_item.addNyContact
+
     def patched(self, id='', REQUEST=None, contributor=None, **kwargs):
         """
         addNyContact should place the contact in a location based on
@@ -25,7 +26,7 @@ def patch_addNyContact():
 
         """
         site = self.getSite()
-        # kwargs need to be merged with *args, regardless of applying patch act.
+        # kwargs need to be merged with *args, regardless of applying patch
         if contributor is not None:
             kwargs['contributor'] = contributor
         if id is not None:
@@ -36,11 +37,11 @@ def patch_addNyContact():
         else:
             schema_raw_data = kwargs
 
-        if (not getattr(site, 'destinet.publisher', False)
-            or self != site['who-who']):
+        if (not getattr(site, 'destinet.publisher', False) or
+                self != site['who-who']):
             return original(self, **kwargs)
 
-        geo_type = _get_geo_type(schema_raw_data)   #.get('geo_type', None)
+        geo_type = _get_geo_type(schema_raw_data)
         new_parent = get_category_location(site, geo_type)
         if not new_parent:
             new_parent = self
