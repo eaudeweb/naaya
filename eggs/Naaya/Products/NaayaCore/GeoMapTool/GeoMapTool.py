@@ -28,7 +28,7 @@ from interfaces import IGeoMapTool
 from Products.NaayaBase.constants import *
 import Products.NaayaBase.NyContentType
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, html2text
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
@@ -1278,6 +1278,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the current map engine """
         kwargs.update(request.form)
+        for k, v in kwargs.items():
+            if isinstance(v, list):
+                kwargs[k] = [html2text(item) for item in v]
+            else:
+                kwargs[k] = html2text(v)
 
         global_config = {
             'initial_address': self.initial_address,

@@ -1,5 +1,6 @@
 4.3.16 (unreleased)
 -------------------
+* fix vulnerability in geomap tool parameters [dumitval]
 
 4.3.15 (2018-11-08)
 -------------------
