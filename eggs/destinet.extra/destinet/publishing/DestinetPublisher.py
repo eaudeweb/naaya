@@ -40,6 +40,8 @@ NaayaPageTemplateFile('zpt/destinet_disseminate', globals(),
 NaayaPageTemplateFile('zpt/destinet_add_to_market', globals(),
                       'destinet_add_to_market')
 NaayaPageTemplateFile('zpt/destinet_userinfo', globals(), 'destinet_userinfo')
+NaayaPageTemplateFile('zpt/destinet_usersubmissions', globals(),
+                      'destinet_usersubmissions')
 
 
 def manage_addDestinetPublisher(self, REQUEST=None, RESPONSE=None):
@@ -514,7 +516,10 @@ class DestinetPublisher(SimpleItem):
 
         site = self.getSite()
         cat = site.getCatalogTool()
-        user = self.REQUEST.AUTHENTICATED_USER.getId()
+        if self.aq_parent.meta_type == 'Naaya Contact':
+            user = self.aq_parent.getOwnerTuple()[1]
+        else:
+            user = self.REQUEST.AUTHENTICATED_USER.getId()
         filters = {'contributor': user}
         if ob == 'events':
             filters['meta_type'] = 'Naaya Event'
@@ -522,15 +527,14 @@ class DestinetPublisher(SimpleItem):
         elif ob == 'news':
             filters['meta_type'] = 'Naaya News'
             ob_list = cat.search(filters)
-        elif ob == 'topics':
+        elif ob == 'bestpractice':
             ob_list = cat.search({'path': ofs_path(site.topics),
                                   'contributor': user})
         elif ob == 'resources':
-            ob_list = cat.search({'path': ofs_path(site.resources),
-                                  'contributor': user})
-        elif ob == 'forums':
-            forum_meta_types = ['Naaya Forum Topic', 'Naaya Forum Message']
-            ob_list = cat.search({'meta_type': forum_meta_types,
+            resource_meta_types = [
+                'Naaya Certificate', 'Naaya Blob File', 'Naaya File',
+                'Naaya Media File', 'Naaya URL', 'Naaya Publication']
+            ob_list = cat.search({'meta_type': resource_meta_types,
                                   'contributor': user})
         elif ob == 'contacts':
             ob_list = cat.search({'meta_type': 'Naaya Contact',
@@ -565,6 +569,14 @@ class DestinetPublisher(SimpleItem):
                                                'user_info': user_info,
                                                'contact_obj': contact_obj},
                                               'destinet_userinfo')
+
+    security.declarePublic("usersubmissions")
+
+    def usersubmissions(self):
+        """ Renders a view with everything the member posted """
+
+        return self.getSite().getFormsTool().getContent(
+            {'here': self}, 'destinet_usersubmissions')
 
     security.declarePrivate("contact_object")
 
