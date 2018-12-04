@@ -1,5 +1,6 @@
 4.3.17 (unreleased)
 -------------------
+* typo fix in google engine setup [dumitval]
 
 4.3.16 (2018-11-23)
 -------------------
