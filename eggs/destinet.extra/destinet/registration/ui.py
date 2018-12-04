@@ -3,6 +3,7 @@
 import transaction
 
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
 from Products.NaayaBase.NyContentType import SchemaFormHelper
 from destinet.registration.constants import EW_REGISTER_FIELD_NAMES
 from destinet.registration.constants import WIDGET_NAMES
@@ -41,9 +42,12 @@ def process_create_account(context, request):
     site = context.getSite()
     register_schema = context.getSite().getSchemaTool()['registration']
     form_data, form_errors = validate_widgets(register_schema, request.form)
-
-    if not is_valid_email(request.form.get('email')):
+    email = request.form.get('email')
+    if not (email and is_valid_email(email)):
         form_errors['email'] = ['Invalid email address']
+    username = request.form.get('username')
+    if not (check_username(username)):
+        form_errors['username'] = ['Username: only letters and numbers allowed']
     if request.form.get('password') != request.form.get('confirm'):
         form_errors['password'] = ["Password doesn't match verification"]
     if form_errors:
