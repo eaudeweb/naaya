@@ -68,7 +68,14 @@
         $('.to_select2').select2()
 
         //map configuration
+        if(country){
+          $('#country').val(country[0]).trigger('change.select2');
+        }
+
         $('#category').select2({placeholder: 'All'})
+        if(category){
+          $('#category').val(category).trigger('change.select2');
+        }
         $('#category').change(function(){
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
@@ -76,6 +83,9 @@
         });
 
         $('#landscape_type').select2({placeholder: 'All'})
+        if(landscape_type){
+          $('#landscape_type').val(landscape_type[0]).trigger('change.select2');
+        }
         $('#landscape_type').change(function(){
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
@@ -83,6 +93,9 @@
         });
 
         $('#gstc_criteria').select2({placeholder: 'All'})
+        if(gstc_criteria){
+          $('#gstc_criteria').val(gstc_criteria).trigger('change.select2');
+        }
         $('#gstc_criteria').change(function(){
           if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
             $(this).val("").trigger('change');
@@ -202,6 +215,10 @@
       <tal:map
         define="topics python:request.get('topics', []);
                 geo_types request/geo_types|python:[];
+                gstc_criteria request/gstc_criteria|python:[];
+                category request/category|python:[];
+                country request/country|python:[];
+                landscape_type request/landscape_type|python:[];
                 geo_query request/geo_query|nothing;
                 address request/address|nothing;
                 path python:'/'.join(here.getSite().getPhysicalPath()) + '/' + request.get('path', '');
@@ -213,6 +230,10 @@
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
+        <script tal:content="structure python:'var category = %s;' % category"></script>
+        <script tal:content="structure python:'var landscape_type = %s;' % landscape_type"></script>
+        <script tal:content="structure python:'var gstc_criteria = %s;' % gstc_criteria"></script>
+        <script tal:content="structure python:'var country = %s;' % country"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
         <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>

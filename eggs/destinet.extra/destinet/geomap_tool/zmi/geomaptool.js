@@ -392,7 +392,7 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&certificate_services%3Alist=' + $('#certificate_services').val();
     }
   }
-  if ([undefined, '', null].indexOf($('#address').val()) == -1){
+  if ([undefined, '', null, 'Type location address'].indexOf($('#address').val()) == -1){
       form_data[form_data.length] = '&address=' + $('#address').val();
   }
   $('.administrative_list input:checkbox:checked').each(function() {
@@ -431,6 +431,7 @@ function update_locations_values(bounds, enc_form, query) {
       "&lon_max=" + bounds.lon_max +
       enc_form +
       "&geo_query=" + query;
+
 
     $('#view_as_list').attr('href', "./list_locations" + req_link + '&all_records=True');
     $('#view_as_map').attr('href', "./portal_map" + req_link + '&all_records=True');
