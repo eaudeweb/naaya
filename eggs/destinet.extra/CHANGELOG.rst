@@ -1,4 +1,7 @@
-1.3.32 - (unreleased)
+1.3.33 - (unreleased)
+=======================
+
+1.3.32 - (2018-12-05)
 =======================
 * update good practice browser to allow get parameters [dumitval]
 
