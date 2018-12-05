@@ -502,6 +502,9 @@ function notify_contacts_csv(bounds, query, enc_form) {
 }
 
 function setAjaxWait() {
+  $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
+  $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
+  $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
   document.body.style.cursor = "wait";
   var rec_counter = document.getElementById('record_counter');
   if (rec_counter) {
