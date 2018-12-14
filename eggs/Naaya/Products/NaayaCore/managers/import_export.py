@@ -192,12 +192,12 @@ class CSVImportTool(Implicit, Item):
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
                     try:
-                        address = properties.pop(self.geo_fields['address'])
+                        address = properties[self.geo_fields['address']]
                     except (AttributeError, KeyError):
                         address = ''
                     try:
-                        lat = properties.pop(self.geo_fields['lat'])
-                        lon = properties.pop(self.geo_fields['lon'])
+                        lat = properties[self.geo_fields['lat']]
+                        lon = properties[self.geo_fields['lon']]
                     except (AttributeError, KeyError):
                         lat = lon = None
                     ob_id = add_object(location_obj, _send_notifications=False,
