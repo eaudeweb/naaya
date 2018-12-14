@@ -1,4 +1,7 @@
-4.3.17 (unreleased)
+4.3.18 (unreleased)
+-------------------
+
+4.3.17 (2018-12-14)
 -------------------
 * import_export bugfix for mandatory geolocation field [dumitval]
 * typo fix in google engine setup [dumitval]
