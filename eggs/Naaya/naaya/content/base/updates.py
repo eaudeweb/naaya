@@ -50,14 +50,15 @@ class ExportContent(UpdateScript):
                               ob_data['url'])
         if not os.path.exists(folder):
             os.makedirs(folder)
-        for pic_id in ['bigpicture', 'smallpicture']:
+        for pic_id, get_pic in {'bigpicture': 'getBigPicture',
+                                'smallpicture': 'getSmallPicture'}.items():
             if getattr(ob, pic_id, None):
                 filename = os.path.join(folder, pic_id+'.jpg')
                 with open(filename, 'wb') as f:
                     f.write(getattr(ob, pic_id))
                     self.log.info('Exported %s for News item %s' % (
                         pic_id, ob.getId()))
-                del(ob_data[pic_id])
+                ob_data[pic_id] = ob.absolute_url() + '/' + get_pic
         return self.export_common(ob, ob_data, folder)
 
     def export_events(self, ob, ob_data, portal_id):

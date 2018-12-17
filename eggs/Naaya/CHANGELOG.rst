@@ -1,5 +1,6 @@
 4.3.18 (unreleased)
 -------------------
+* update content export for news items [dumitval]
 
 4.3.17 (2018-12-14)
 -------------------

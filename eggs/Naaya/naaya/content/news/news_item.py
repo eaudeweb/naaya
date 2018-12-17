@@ -333,6 +333,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     def getSmallPicture(self, version=None, REQUEST=None):
         """ """
+        REQUEST.RESPONSE.setHeader('Content-type', 'image/jpeg')
         if version is None: return self.smallpicture
         else:
             if self.checkout: return self.version.smallpicture
@@ -340,6 +341,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     def getBigPicture(self, version=None, REQUEST=None):
         """ """
+        REQUEST.RESPONSE.setHeader('Content-type', 'image/jpeg')
         if version is None: return self.bigpicture
         else:
             if self.checkout: return self.version.bigpicture
