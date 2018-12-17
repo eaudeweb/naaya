@@ -1,4 +1,7 @@
-4.3.18 (unreleased)
+4.3.19 (unreleased)
+-------------------
+
+4.3.18 (2018-12-17)
 -------------------
 * update content export for news items [dumitval]
 
