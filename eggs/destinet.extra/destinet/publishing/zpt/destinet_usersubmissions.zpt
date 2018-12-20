@@ -1,35 +1,42 @@
 <h2>My submissions</h2>
-
-<div class="userinfo_item" id="news_objects">
-	<h3 class="open">My News
-		<span class="ob_counter"></span>
-	</h3>
-	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
-</div>
-<div class="userinfo_item" id="events_objects">
-	<h3 class="open">My Events
-		<span class="ob_counter"></span>
-	</h3>
-	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
-</div>
-<div class="userinfo_item" id="resources_objects">
-	<h3 class="open">My Resources
-		<span class="ob_counter"></span>
-	</h3>
-	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
-</div>
-<div class="userinfo_item" id="contacts_objects">
-	<h3 class="open">My Contacts
-		<span class="ob_counter"></span>
-	</h3>
-	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
-</div>
-<div class="userinfo_item" id="bestpractice_objects">
-	<h3 class="open">My Best Practices
-		<span class="ob_counter"></span>
-	</h3>
-	<div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
-</div>
+<tal:block define="destinet_user python: 'who-who/destinet-users' in request.ACTUAL_URL">
+  <div class="userinfo_item" id="news_objects">
+    <h3 class="open">My News
+      <span class="ob_counter"></span>
+    </h3>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/News/submit_news">Submit News</a></span>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
+  <div class="userinfo_item" id="events_objects">
+    <h3 class="open">My Events
+      <span class="ob_counter"></span>
+    </h3>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/events/event_add_html">Submit Event</a></span>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
+  <div class="userinfo_item" id="resources_objects">
+    <h3 class="open">My Resources
+      <span class="ob_counter"></span>
+    </h3>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/destinet.publisher/disseminate_publication">Submit Publication</a></span><br>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/destinet.publisher/disseminate_file">Submit File</a></span>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
+  <div class="userinfo_item" id="contacts_objects">
+    <h3 class="open">My Contacts
+      <span class="ob_counter"></span>
+    </h3>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/destinet.publisher/show_on_atlas">Submit Contact</a></span>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
+  <div class="userinfo_item" id="bestpractice_objects">
+    <h3 class="open">My Best Practices
+      <span class="ob_counter"></span>
+    </h3>
+    <span tal:condition="not:destinet_user"><a class="btn btn-primary" href="/good-practices/good-practice-browser/best-practice-submissions/bestpractice_add_html">Submit Best practice</a></span>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
+</tal:block>
 
 <script type="text/javascript" src="++resource++destinet.publishing/destinet.publishing.js"></script>
 <style type="text/css">
@@ -39,32 +46,50 @@
 	.userinfo_item .items p{
 		margin: 4px;
 	}
+  .userinfo_item > span {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -1rem;
+  }
+
+  .userinfo_item > span:first-of-type {
+    margin-top: -3rem;
+  }
+
+  .userinfo_item  {
+    padding-bottom: .5rem;
+    border-bottom: 1px solid #aaa;
+  }
 
 	.label{
 		font-weight: bold;
 	}
 
+  #destinet_usersubmissions {
+    max-width: 600px;
+  }
+
 	.userinfo_item h3{
 		font-size: 13px;
 		cursor: pointer;
 		background-color: #DDD;
-		text-indent: 20px;
-		background-image: url('++resource++destinet.publishing/down.gif');
+    font-weight: bold;
 		background-repeat: no-repeat;
 		background-position: 2px 2px;
 	}
-	.userinfo_item h3.close{
-		background-image: url('++resource++destinet.publishing/right.gif');
-	}
-	.userinfo_item h3.open{
-		background-image: url('++resource++destinet.publishing/down.gif');
+
+  .userinfo_item h3:before {
+    padding-right: 5px;
+    content: "\f0ab";
+  }
+	.userinfo_item h3.close:before{
+    content: "\f0a9";
 	}
 	.userinfo_item h3 span{
 		font-weight: normal;
 		font-size: 11px;
 	}
 	.date_label{
-		background-color: #E6EDEF;
 		padding: 2px;
 		display: inline-block;
 		color: #898989;

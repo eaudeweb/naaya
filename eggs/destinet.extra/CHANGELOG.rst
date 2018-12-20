@@ -1,5 +1,6 @@
 1.3.33 - (unreleased)
 =======================
+* improvements to login_html/My Tourism 2030 page [dumitval]
 
 1.3.32 - (2018-12-05)
 =======================
