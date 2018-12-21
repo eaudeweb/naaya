@@ -163,6 +163,11 @@ def map_list_locations(context, request, **kw):
     return context.getGeoMapTool().list_locations(request, **kw)
 
 
+def export_geo_rss_dzt(context, request, **kw):
+    """ make export_geo_rss_dzt available outside of portal_map """
+    return context.getGeoMapTool().export_geo_rss_dzt(request, **kw)
+
+
 def get_keywords(context, request):
     """ return main keywords for map filtering in Green Travel Maps """
     return sorted([(node.id, node.title) for

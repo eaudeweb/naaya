@@ -110,10 +110,13 @@ function load_map_points(bounds, callback) {
         $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_this_map').attr('href', "./" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#download_georss').attr('href', "./export_geo_rss" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+
     } else {
         $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
         $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
         $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
+        $('#download_georss').css('opacity', 0).css('pointer-events', 'none');
     }
     update_locations_values(bounds, enc_form, query);
     return response.points;
@@ -250,10 +253,12 @@ function _refresh_map_points(bounds, callback, loader) {
         $('#view_as_list').attr('href', "./list_locations" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_as_map').attr('href', "./portal_map" + req_link).css('opacity', 1).css('pointer-events', 'initial');
         $('#view_this_map').attr('href', "./" + req_link).css('opacity', 1).css('pointer-events', 'initial');
+        $('#download_georss').attr('href', "./export_geo_rss" + req_link).css('opacity', 1).css('pointer-events', 'initial');
     } else {
         $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
         $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
         $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
+        $('#download_georss').css('opacity', 0).css('pointer-events', 'none');
     }
     update_locations_values(bounds, enc_form, query);
     return response.points;
@@ -505,6 +510,7 @@ function setAjaxWait() {
   $('#view_as_list').css('opacity', 0).css('pointer-events', 'none');
   $('#view_as_map').css('opacity', 0).css('pointer-events', 'none');
   $('#view_this_map').css('opacity', 0).css('pointer-events', 'none');
+  $('#download_georss').css('opacity', 0).css('pointer-events', 'none');
   document.body.style.cursor = "wait";
   var rec_counter = document.getElementById('record_counter');
   if (rec_counter) {

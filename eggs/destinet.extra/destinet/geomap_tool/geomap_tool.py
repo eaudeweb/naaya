@@ -11,8 +11,7 @@ def initialize(context):
     geomap_tool.list_locations = list_locations
 
 
-def export_geo_rss_dzt(self, sort_on='', sort_order='',
-                       REQUEST=None, **kwargs):
+def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
     """ """
     timestamp = datetime.fromtimestamp(time.time())
     timestamp = str(timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
@@ -26,8 +25,10 @@ def export_geo_rss_dzt(self, sort_on='', sort_order='',
           <updated>%s</updated>
           """ % (self.title, self.absolute_url(), self.absolute_url(),
                  timestamp)]
-    items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
-                                    sort_order=sort_order, **kwargs)
+    #items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
+    #                                sort_order=sort_order, **kwargs)
+    items = get_map_results(self, REQUEST, options={}, **kwargs)
+
 
     for item in items:
         doc = minidom.Document()
@@ -84,10 +85,11 @@ def export_geo_rss_dzt(self, sort_on='', sort_order='',
         geo_node.appendChild(coords)
         entry.appendChild(geo_node)
 
-        url_node = doc.createElement("extData:url")
-        url = doc.createTextNode(item.webpage.encode('utf-8').decode('utf-8'))
-        url_node.appendChild(url)
-        entry.appendChild(url_node)
+        if hasattr(item.aq_self, 'webpage'):
+            url_node = doc.createElement("extData:url")
+            url = doc.createTextNode(item.webpage.encode('utf-8').decode('utf-8'))
+            url_node.appendChild(url)
+            entry.appendChild(url_node)
 
         address_node = doc.createElement("extData:address")
         address = doc.createTextNode(
@@ -132,6 +134,14 @@ def export_geo_rss_dzt(self, sort_on='', sort_order='',
 
 
 def list_locations(self, REQUEST=None, **kw):
+    """" """
+    options = {}
+    results = get_map_results(self, REQUEST, options, *kw)
+
+    return self._list_locations(**options)
+
+
+def get_map_results(self, REQUEST=None, options={}, **kw):
     """" """
     if REQUEST is not None:
         kw.update(REQUEST.form)
@@ -191,7 +201,21 @@ def list_locations(self, REQUEST=None, **kw):
     geo_query = kw.get('geo_query', '')
     coverage = kw.get('coverage', '')
     country = kw.get('country', '')
-
+    options['lat_min'] = lat_min
+    options['lat_max'] = lat_max
+    options['lon_min'] = lon_min
+    options['lon_max'] = lon_max
+    options['geo_types'] = geo_types
+    options['category'] = category
+    options['sustainability'] = sustainability
+    options['credibility'] = credibility
+    options['certificate_services'] = certificate_services
+    options['administrative_level'] = administrative_level
+    options['landscape_type'] = landscape_type
+    options['topics'] = topics
+    options['geo_query'] = geo_query
+    options['country'] = country
+    options['coverage'] = coverage
     sort_on, sort_order = '', ''
     if kw.get('sortable', ''):
         sort_on = kw.get('sort_on', '')
@@ -212,22 +236,7 @@ def list_locations(self, REQUEST=None, **kw):
         first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
         country=country, coverage=coverage, gstc_criteria=gstc_criteria,
     )
-    options = {}
-    options['lat_min'] = lat_min
-    options['lat_max'] = lat_max
-    options['lon_min'] = lon_min
-    options['lon_max'] = lon_max
-    options['geo_types'] = geo_types
-    options['category'] = category
-    options['sustainability'] = sustainability
-    options['credibility'] = credibility
-    options['certificate_services'] = certificate_services
-    options['administrative_level'] = administrative_level
-    options['landscape_type'] = landscape_type
-    options['topics'] = topics
-    options['geo_query'] = geo_query
-    options['country'] = country
-    options['coverage'] = coverage
+
     try:
         options['step'] = int(kw.get('step', '50'))
     except ValueError:
@@ -254,4 +263,5 @@ def list_locations(self, REQUEST=None, **kw):
     options['records'] = results[options['start']:options['end']]
     options['ratable_records'] = self._ratable_results(
         results[options['start']:options['end']])
-    return self._list_locations(**options)
+
+    return results
