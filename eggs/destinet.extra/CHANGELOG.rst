@@ -1,4 +1,7 @@
-1.3.34 - (unreleased)
+1.3.35 - (unreleased)
+=======================
+
+1.3.34 - (2018-12-21)
 =======================
 * updates to allow Geo RSS export from green travel maps [dumitval]
 
