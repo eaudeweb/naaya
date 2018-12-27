@@ -1,4 +1,7 @@
-1.4.50 (unreleased)
+1.4.51 (unreleased)
+-------------------
+
+1.4.50 (2018-12-27)
 -------------------
 * remove google analytics [dumitval]
 
