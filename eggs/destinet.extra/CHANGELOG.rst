@@ -1,4 +1,7 @@
-1.3.35 - (unreleased)
+1.3.36 - (unreleased)
+=======================
+
+1.3.35 - (2018-12-27)
 =======================
 * fix some bot-related errors [dumitval]
 
