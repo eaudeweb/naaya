@@ -411,7 +411,7 @@
             <span tal:condition="not:map_only" i18n:translate="">
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
             </span>&nbsp;
-            <a tal:condition="here/checkPermissionEditObjects"
+            <a rel="nofollow" tal:condition="here/checkPermissionEditObjects"
               href="" style="display:none" id="view_as_list" target="view_as_list">View as list</a>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">

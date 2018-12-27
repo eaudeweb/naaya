@@ -1,5 +1,6 @@
 1.3.35 - (unreleased)
 =======================
+* fix some bot-related errors [dumitval]
 
 1.3.34 - (2018-12-21)
 =======================

@@ -2,6 +2,7 @@ import importlib
 import time
 from xml.dom import minidom
 from datetime import datetime
+from AccessControl.unauthorized import Unauthorized
 
 
 def initialize(context):
@@ -13,6 +14,9 @@ def initialize(context):
 
 def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
     """ """
+    if REQUEST and self.isAnonymousUser() and 'portal_map' not in REQUEST.URL:
+        raise Unauthorized
+
     timestamp = datetime.fromtimestamp(time.time())
     timestamp = str(timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
     rss = ["""<feed xmlns="http://www.w3.org/2005/Atom"
@@ -25,10 +29,10 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
           <updated>%s</updated>
           """ % (self.title, self.absolute_url(), self.absolute_url(),
                  timestamp)]
-    #items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
-    #                                sort_order=sort_order, **kwargs)
     items = get_map_results(self, REQUEST, options={}, **kwargs)
-
+    if items is None:
+        # malformed REQUEST, most likely bots
+        raise Unauthorized
 
     for item in items:
         doc = minidom.Document()
@@ -87,7 +91,8 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
 
         if hasattr(item.aq_self, 'webpage'):
             url_node = doc.createElement("extData:url")
-            url = doc.createTextNode(item.webpage.encode('utf-8').decode('utf-8'))
+            url = doc.createTextNode(
+                item.webpage.encode('utf-8').decode('utf-8'))
             url_node.appendChild(url)
             entry.appendChild(url_node)
 
@@ -135,8 +140,14 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
 
 def list_locations(self, REQUEST=None, **kw):
     """" """
+    if REQUEST and self.isAnonymousUser() and 'portal_map' not in REQUEST.URL:
+        raise Unauthorized
+
     options = {}
-    results = get_map_results(self, REQUEST, options, *kw)
+    get_map_results(self, REQUEST, options, *kw)
+    if not options:
+        # malformed REQUEST led to empty options, most likely bots
+        raise Unauthorized
 
     return self._list_locations(**options)
 
@@ -224,7 +235,7 @@ def get_map_results(self, REQUEST=None, options={}, **kw):
     first_letter = kw.get('first_letter', '')
     if len(first_letter) > 1:
         # this only happens with some bots
-        return None
+        raise Unauthorized
 
     results = self.search_geo_objects(
         lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,

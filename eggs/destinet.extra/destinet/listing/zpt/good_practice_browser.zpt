@@ -322,9 +322,9 @@
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
             </span>&nbsp;
             <tal:block condition="here/checkPermissionEditObjects">
-              <a href="" style="display:none" id="view_as_list">View as list &#183;</a>
-              <a href="" style="display:none" id="view_as_map">Link to portal map &#183;</a>
-              <a href="" style="display:none" id="view_this_map">Link to this filtered map</a>
+              <a rel="nofollow" href="" style="display:none" id="view_as_list">View as list &#183;</a>
+              <a rel="nofollow" href="" style="display:none" id="view_as_map">Link to portal map &#183;</a>
+              <a rel="nofollow" href="" style="display:none" id="view_this_map">Link to this filtered map</a>
             </tal:block>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">
