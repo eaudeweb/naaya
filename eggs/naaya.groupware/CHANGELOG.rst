@@ -1,5 +1,6 @@
 1.4.50 (unreleased)
 -------------------
+* remove google analytics [dumitval]
 
 1.4.49 (2018-06-14)
 -------------------

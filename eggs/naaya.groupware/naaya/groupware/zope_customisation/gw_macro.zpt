@@ -68,18 +68,6 @@
             border: none !important;
         }
     </style>
-    <meta name="google-site-verification" content="oV-xE-LH3NMr2_h0HqMJ6M_La5oiZnusXH2OWcTO4bM" />
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-17090641-1', 'europa.eu');
-      ga('set', 'anonymizeIp', true);
-      ga('send', 'pageview');
-    
-    </script>
     </head>
     <body tal:define="gw_root_url string:${here/get_gw_root}/index_html;
                       user python:request.AUTHENTICATED_USER;"
