@@ -1,4 +1,7 @@
-1.3.36 - (unreleased)
+1.3.37 - (unreleased)
+=======================
+
+1.3.36 - (2019-01-04)
 =======================
 * raise a BadRequest on some bot requests [dumitval]
 
