@@ -1,5 +1,6 @@
 1.3.36 - (unreleased)
 =======================
+* raise a BadRequest on some bot requests [dumitval]
 
 1.3.35 - (2018-12-27)
 =======================

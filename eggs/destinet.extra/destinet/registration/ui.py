@@ -1,9 +1,11 @@
 """ User interface methods (views) regarding registration in Destinet """
 
 import transaction
+from zExceptions import BadRequest
 
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
-from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import \
+    check_username
 from Products.NaayaBase.NyContentType import SchemaFormHelper
 from destinet.registration.constants import EW_REGISTER_FIELD_NAMES
 from destinet.registration.constants import WIDGET_NAMES
@@ -38,6 +40,8 @@ def create_destinet_account_html(context, request):
 
 def process_create_account(context, request):
     """ """
+    if request.form == {}:
+        raise BadRequest('Empty request form')
     referer = request.HTTP_REFERER
     site = context.getSite()
     register_schema = context.getSite().getSchemaTool()['registration']
@@ -47,7 +51,8 @@ def process_create_account(context, request):
         form_errors['email'] = ['Invalid email address']
     username = request.form.get('username')
     if not (check_username(username)):
-        form_errors['username'] = ['Username: only letters and numbers allowed']
+        form_errors['username'] = [
+            'Username: only letters and numbers allowed']
     if request.form.get('password') != request.form.get('confirm'):
         form_errors['password'] = ["Password doesn't match verification"]
     if form_errors:
