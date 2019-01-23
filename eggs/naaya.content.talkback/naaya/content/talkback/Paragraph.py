@@ -20,6 +20,9 @@
 
 import re
 
+# Python imports
+from collections import defaultdict
+
 # Zope imports
 from OFS.Folder import Folder
 from Globals import InitializeClass
@@ -32,6 +35,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from comment_item import addComment, TalkBackConsultationComment
 from comment_item import cleanup_message
+from comment_item import Contributor
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
 from constants import METATYPE_TALKBACKCONSULTATION_COMMENT
@@ -274,17 +278,24 @@ class Paragraph(Folder):
         next_page = REQUEST.get('next_page', self.absolute_url())
         reply_to = REQUEST.form.get('reply_to', None)
 
-        contributor_name = REQUEST.form.get('contributor_name', '')
+        req_contributor = REQUEST.form.get('contributor', defaultdict(str))
+        contributor_name = req_contributor['name']
+
         errors = []
+
+        contributor_source = ''
+        contributor_invitation = ''
+
         if invitation is not None:
-            contributor = 'invite:' + invitation.key
+            contributor_source = 'invite'
+            contributor_invitation = invitation.key
         elif userid is None:
             if contributor_name:
-                contributor = 'anonymous:' + contributor_name
+                contributor_source = 'anonymous'
             else:
                 errors.append('Please input your name.')
         else:
-            contributor = userid
+            contributor_name = userid
 
         if not clean_message:
             errors.append('The comment field cannot be empty.')
@@ -293,7 +304,7 @@ class Paragraph(Folder):
 
         if errors:
             self.setSessionErrorsTrans(errors)
-            self.setSession('contributor_name', contributor_name)
+            self.setSession('contributor', req_contributor)
             self.setSession('message', message)
             return REQUEST.RESPONSE.redirect(next_page)
         else:
@@ -301,7 +312,13 @@ class Paragraph(Folder):
             self.delSession('message')
 
         form_data = {
-            'contributor': contributor,
+            'contributor': Contributor(
+                name=contributor_name,
+                email=req_contributor['email'],
+                organisation=req_contributor['organisation'],
+                source=contributor_source,
+                invite=contributor_invitation,
+            ),
             'message': clean_message,
             'file': REQUEST.form.get('file', ''),
             'reply_to': reply_to,

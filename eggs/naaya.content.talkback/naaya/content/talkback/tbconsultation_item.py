@@ -551,15 +551,12 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     def checkTalkBackConsultationUser(self):
         """
         Checks if the user is logged in and has reviewer rights:
-        0 if user is anonymous,
         1 if user has reviewer role
         2 if user doesn't have reviewer role
         """
         review_check = self.checkPermissionReviewTalkBackConsultation()
 
-        if self.isAnonymousUser():
-            return 0
-        elif review_check:
+        if review_check:
             return 1
         elif not review_check:
             return 2
@@ -630,7 +627,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         Check if the current user has any comments on the consultation
         """
         return [comment for comment in self.admin_comments._all_comments()
-                if comment['comment'].contributor ==
+                if comment['comment'].contributor.name ==
                 self.REQUEST.AUTHENTICATED_USER.getUserName()]
 
     security.declareProtected(view, 'custom_editor')

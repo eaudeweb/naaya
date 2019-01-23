@@ -19,13 +19,17 @@
 # Alex Morega, Eau de Web
 # Mihai Tabara, Eau de Web
 
+
 import re
+from collections import namedtuple
 
 import scrubber
+
 if 'any' not in dir(__builtins__):
     from naaya.core.backport import any
     scrubber.any = any
 sanitize = scrubber.Scrubber().scrub
+
 
 def trim(message):
     """ Remove leading and trailing empty paragraphs """
@@ -33,17 +37,18 @@ def trim(message):
     message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
     return message
 
+
 def cleanup_message(message):
     return sanitize(trim(message)).strip()
 
-#Zope imports
+# Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 
-#Product imports
+# Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
@@ -63,6 +68,29 @@ def addComment(self, contributor, message,
     ob.handleUpload(file)
 
     return id
+
+
+# This creates a new Contributor class, which is a namedtuple.
+# It's purpose is to maintain the immutability of the current
+# string storage, while also making it easier to add new properties.
+#
+# The difference between it and a simple tuple is that the fields can
+# be accessed by name, e.g:
+# >>> contributor = Contributor('the name', 'user@localhost', '')
+# >>> contributor.email
+# ... 'user@localhost'
+#
+# WARNING: It is a TUPLE, immutable, field values cannot be changed after
+# instantiation. If edits are needed, a new instance needs to be created!
+Contributor = namedtuple(
+    'Contributor', (
+        'name',
+        'email',
+        'organisation',
+        'source',
+        'invite',
+    )
+)
 
 
 class TalkBackConsultationComment(NyFSFile):
@@ -97,18 +125,19 @@ class TalkBackConsultationComment(NyFSFile):
 
         auth_tool = self.getAuthenticationTool()
         contributor = self.contributor
+        invite_key = contributor.invite
 
-        if contributor.startswith('invite:'):
-            invite = self.invitations.get_invitation(contributor[7:])
+        if invite_key:
+            invite = self.invitations.get_invitation(invite_key)
             inviter_name = auth_tool.name_from_userid(invite.inviter_userid)
             return "%s (invited by %s)" % (invite.name, inviter_name)
 
-        elif contributor.startswith('anonymous:'):
-            return "%s (not authenticated)" % contributor[10:]
+        elif contributor.source == 'anonymous':
+            return "%s (not authenticated)" % contributor.name
 
         else:
-            name = auth_tool.name_from_userid(contributor)
-            return "%s (%s)" % (name, contributor)
+            name = auth_tool.name_from_userid(contributor.name)
+            return "%s (%s)" % (name, contributor.name)
 
     def get_contributor_info(self):
         """
@@ -123,30 +152,35 @@ class TalkBackConsultationComment(NyFSFile):
             'display_name': self.get_contributor_name(),
             'name': '',
             'email': '',
+            'organisation': '',
             'invited': False,
             'anonymous': False,
         }
 
         auth_tool = self.getAuthenticationTool()
         contributor = self.contributor
+        invite_key = contributor.invite
 
-        if contributor.startswith('invite'):
-            invite = self.invitations.get_invitation(contributor[7:])
+        if invite_key:
+            invite = self.invitations.get_invitation(invite_key)
             info['name'] = invite.name
             info['email'] = invite.email
             info['invited'] = True
         else:
-            if contributor.startswith('anonymous:'):
-                info['name'] = contributor
+            if contributor.source == 'anonymous':
+                info['name'] = contributor.name
+                info['email'] = contributor.email
+                info['organisation'] = contributor.organisation
                 info['anonymous'] = True
             else:
-                user = auth_tool.get_user_with_userid(contributor)
-                info['name'] = auth_tool.getUserFullName(user)
-                info['email'] = auth_tool.getUserEmail(user)
+                user = auth_tool.get_user_with_userid(contributor.name)
+                if user:
+                    info['name'] = auth_tool.getUserFullName(user)
+                    info['email'] = auth_tool.getUserEmail(user)
 
         return info
 
-    title = property(lambda self: 'Comment by %s' % self.contributor,
+    title = property(lambda self: 'Comment by %s' % self.contributor.name,
                      lambda self, value: None)
 
     security.declareProtected(
@@ -182,16 +216,16 @@ class TalkBackConsultationComment(NyFSFile):
 
     @property
     def is_invited(self):
-        return self.contributor.startswith('invite:')
+        return self.contributor.source == 'invite'
 
     @property
     def is_anonymous(self):
-        return self.contributor.startswith('anonymous:')
+        return self.contributor.source == 'anonymous'
 
     @property
     def invite_key(self):
         if self.is_invited:
-            return self.contributor[len('invite:'):]
+            return self.contributor.invite
         else:
             return None
 

@@ -16,6 +16,11 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".set_reviewer_permission.SetReviewerPermission"
              permission="zope2.ViewManagementScreens" />
+
+    <utility name="migrate_to_contributor.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".migrate_to_contributor.MigrateToContributor"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

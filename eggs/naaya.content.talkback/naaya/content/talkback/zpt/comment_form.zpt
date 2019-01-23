@@ -30,9 +30,19 @@
         <div class="field-inline">
             <label for="contributor_name" i18n:translate="">Name</label>
             <input tal:condition="anonymous_user" type="text"
-              id="contributor_name" name="contributor_name:utf8:ustring"
-              tal:attributes="value python:here.getSession('contributor_name', '')" />
+              id="contributor_name" name="contributor.name:utf8:ustring:record" required
+              tal:attributes="value python:here.getSession('contributor', {}).get('name', '')" />
             <em tal:condition="not:anonymous_user" tal:content="user_name"></em>
+        </div>
+        <div class="field-inline" tal:condition="anonymous_user">
+            <label for="contributor_organisation" i18n:translate="">Organisation</label>
+            <input type="text" id="contributor_organisation" name="contributor.organisation:utf8:ustring:record"
+              tal:attributes="value python:here.getSession('contributor', {}).get('organisation', '')" />
+        </div>
+        <div class="field-inline" tal:condition="anonymous_user">
+            <label for="contributor_email" i18n:translate="">Email address</label>
+            <input type="email" id="contributor_email" name="contributor.email:utf8:ustring:record" required
+              tal:attributes="value python:here.getSession('contributor', {}).get('email', '')" />
         </div>
 
         <div class="field">
