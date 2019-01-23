@@ -20,7 +20,7 @@
             <input type="hidden" name="reply_to" tal:attributes="value reply_to" />
             <p i18n:translate="" tal:define="comment python:here.get_comment(reply_to)">
                 Replying to comment
-                by <em tal:content="comment/get_contributor_name" i18n:name="name"></em>
+                by <em tal:content="python:comment.get_contributor_info()['display_name']" i18n:name="name"></em>
                 at <em tal:content="python:here.utShowFullDateTime(comment.comment_date)"
                     i18n:name="date"></em>.
             </p>
@@ -47,7 +47,7 @@
 
         <div class="field">
             <label for="message" i18n:translate="">Comment</label>
-            <textarea id="message" cols="70" rows="5" name="message:utf8:ustring"
+            <textarea id="message" cols="100" rows="5" name="message:utf8:ustring"
               tal:content="message"></textarea>
             <tal:block content="structure python:here.custom_editor(
                                     editor, curr_lang, 'message')" />

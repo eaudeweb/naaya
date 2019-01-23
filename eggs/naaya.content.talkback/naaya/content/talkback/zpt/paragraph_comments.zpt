@@ -13,7 +13,7 @@ to show a whole tree of comments.
              tal:define="can_edit comment/check_edit_permissions;
                         can_delete comment/check_del_permissions">
             <div class="tb-comment-author">
-                <tal:block content="comment/get_contributor_name"/>
+                <tal:block content="python:comment.get_contributor_info()['display_name']"/>
                 <tal:block content="python:here.utShowFullDateTime(comment.comment_date)"/>
             </div>
             <div class="buttons">

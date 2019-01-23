@@ -64,7 +64,7 @@ def addComment(self, contributor, message,
                                      file, reply_to)
     self._setObject(id, ob)
     ob = self._getOb(id)
-    ob._save_contributor_name()
+    # ob._save_contributor_name()
     ob.handleUpload(file)
 
     return id
@@ -106,7 +106,6 @@ class TalkBackConsultationComment(NyFSFile):
     security = ClassSecurityInfo()
 
     reply_to = None
-    contributor_name = None
 
     def __init__(self, id, contributor, message, file, reply_to):
         self.contributor = contributor
@@ -114,30 +113,6 @@ class TalkBackConsultationComment(NyFSFile):
         self.reply_to = reply_to
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, '', file)
-
-    def _save_contributor_name(self):
-        self.contributor_name = self.get_contributor_name()
-
-    def get_contributor_name(self):
-        # TODO: To be merged with get_contributor_info and all calls replaced
-        if self.contributor_name is not None:
-            return self.contributor_name
-
-        auth_tool = self.getAuthenticationTool()
-        contributor = self.contributor
-        invite_key = contributor.invite
-
-        if invite_key:
-            invite = self.invitations.get_invitation(invite_key)
-            inviter_name = auth_tool.name_from_userid(invite.inviter_userid)
-            return "%s (invited by %s)" % (invite.name, inviter_name)
-
-        elif contributor.source == 'anonymous':
-            return "%s (not authenticated)" % contributor.name
-
-        else:
-            name = auth_tool.name_from_userid(contributor.name)
-            return "%s (%s)" % (name, contributor.name)
 
     def get_contributor_info(self):
         """
@@ -149,7 +124,7 @@ class TalkBackConsultationComment(NyFSFile):
 
         """
         info = {
-            'display_name': self.get_contributor_name(),
+            'display_name': '',
             'name': '',
             'email': '',
             'organisation': '',
@@ -163,20 +138,42 @@ class TalkBackConsultationComment(NyFSFile):
 
         if invite_key:
             invite = self.invitations.get_invitation(invite_key)
-            info['name'] = invite.name
+            invite_name = invite.name
+            inviter_name = auth_tool.name_from_userid(invite.inviter_userid)
+
+            info['display_name'] = u'{} (invited by {})'.format(
+                invite_name, inviter_name)
+            info['name'] = invite_name
             info['email'] = invite.email
             info['invited'] = True
         else:
             if contributor.source == 'anonymous':
-                info['name'] = contributor.name
+                contributor_name = contributor.name
+                contributor_organisation = contributor.organisation
+                info['display_name'] = u'{} {} (not authenticated)'.format(
+                    contributor_name,
+                    u'- {}'.format(contributor_organisation),
+                )
+                info['name'] = contributor_name
                 info['email'] = contributor.email
-                info['organisation'] = contributor.organisation
+                info['organisation'] = contributor_organisation
                 info['anonymous'] = True
             else:
-                user = auth_tool.get_user_with_userid(contributor.name)
+                user_id = contributor.name
+                user = auth_tool.get_user_with_userid(user_id)
+
+                # handle root zope users
                 if user:
-                    info['name'] = auth_tool.getUserFullName(user)
+                    user_name = auth_tool.getUserFullName(user)
+                    info['name'] = user_name
                     info['email'] = auth_tool.getUserEmail(user)
+                    info['display_name'] = u'{} ({})'.format(
+                        user_id,
+                        user_name,
+                    )
+                else:
+                    info['name'] = user_id
+                    info['display_name'] = user_id
 
         return info
 

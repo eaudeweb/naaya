@@ -192,11 +192,12 @@ class CommentsAdmin(SimpleItem):
                     link = 'https://www.eionet.europa.eu/users/' + text[
                         text.find("(") + 1:text.find(")")]
                     try:
-                        formula = 'HYPERLINK("{}", "{}")'.format(
+                        formula = u'HYPERLINK("{}", "{}")'.format(
                             link, text)
                     except UnicodeEncodeError:
-                        formula = 'HYPERLINK("{}", "{}")'.format(
+                        formula = u'HYPERLINK("{}", "{}")'.format(
                             link, unidecode(text))
+
                     ws.write(row, col, xlwt.Formula(formula), link_style)
                 else:
                     ws.row(row).set_cell_text(col, text, normal_style)
@@ -277,7 +278,8 @@ class CommentsAdmin(SimpleItem):
             ('Replies', lambda i: str(len(i['children']))),
             ('In reply to', lambda i: i['comment'].reply_to or ''),
             ('Message', lambda i: plain(i['comment'].message)),
-            ('Contributor', lambda i: i['comment'].get_contributor_name()),
+            ('Contributor',
+             lambda i: i['comment'].get_contributor_info()['display_name']),
             ('Date', lambda i: (i['comment'].comment_date
                                 .strftime('%Y/%m/%d %H:%M'))),
             ('Paragraph url', lambda i: (i['comment'].get_paragraph()
@@ -300,7 +302,8 @@ class CommentsAdmin(SimpleItem):
             fields = [
                 ('Section', lambda c: c.get_section().title_or_id()),
                 ('Message', lambda c: plain(c.message)),
-                ('Contributor', lambda c: c.get_contributor_name()),
+                ('Contributor',
+                 lambda c: c.get_contributor_info()['display_name']),
                 ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ]
             ret = self.generate_custom_excel_output(fields, comments)

@@ -47,8 +47,11 @@ div.talkback-comment_floating_box {
 	overflow: hidden;
 	background-color: white;
 	border: 2px solid green;
-	padding: 10px;
-	z-index: 1;
+	padding: 2em;
+	z-index: 11; /* Need to be above main sections. */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 div.talkback-comment_floating_box iframe {
@@ -185,7 +188,7 @@ div.buttons input{
 div.talkback-section_toc {
 	float:right;
 	clear: right;
-	width: 14em;
+	width: 21em;
 	border: 3px solid #78a095;
 	background-color: #dbe6e3;
 	margin: 1em 0 1em 1em;

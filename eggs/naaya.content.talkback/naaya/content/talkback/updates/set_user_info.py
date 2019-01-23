@@ -14,8 +14,14 @@ class SetUserInfo(UpdateScript):
             count = 0
             for comment in all_comments(consultation):
                 if comment.contributor_name is None:
-                    comment._save_contributor_name()
-                    count += 1
+                    try:
+                        comment._save_contributor_name()
+                        count += 1
+                    except AttributeError:
+                        # _save_contributor_name no longer exists,
+                        # contributor data is retrieved at runtime through
+                        # get_contributor_info
+                        continue
 
             consultation_path = physical_path(consultation)
             if count > 0:
@@ -24,6 +30,7 @@ class SetUserInfo(UpdateScript):
                 self.log.info("%r: nothing to update", consultation_path)
 
         return True
+
 
 def all_comments(consultation):
     for section in consultation.list_sections():

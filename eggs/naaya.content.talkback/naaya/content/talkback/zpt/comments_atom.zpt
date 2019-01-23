@@ -13,7 +13,7 @@
     <updated tal:content="python:atom_date_format(feed_updated)"></updated>
 
     <tal:block repeat="comment options/comments_list">
-    <entry tal:define="author_name comment/get_contributor_name">
+    <entry tal:define="author_name python:comment.get_contributor_info()['display_name']">
         <title tal:content="string:Comment by ${author_name}"></title>
         <author><name tal:content="author_name"></name></author>
         <id tal:content="comment/absolute_url"></id>

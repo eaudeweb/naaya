@@ -20,6 +20,15 @@ class MigrateToContributor(UpdateScript):
             count = 0
             for comment in all_comments(consultation):
                 contributor_current = comment.contributor
+                count_it = False
+
+                # contributor_name is no longer used, data is computed
+                # at runtime and exposed through get_contributor_info,
+                # where the "display_name" key is equivalent to
+                # "contributor_name".
+                if hasattr(comment, 'contributor_name'):
+                    delattr(comment, 'contributor_name')
+                    count_it = True
 
                 if not isinstance(contributor_current, Contributor):
                     source = ''
@@ -55,6 +64,9 @@ class MigrateToContributor(UpdateScript):
                         source=source,
                         invite=invite_key,
                     )
+                    count_it = True
+
+                if count_it:
                     count += 1
 
             consultation_path = physical_path(consultation)

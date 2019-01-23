@@ -5,13 +5,12 @@
                                      template.macros['page']);"
 ><metal:block use-macro="page_macro"><metal:block fill-slot="page-content">
 
-<tal:block define="global curr_lang python:request.get('lang', None) or
-                                      here.gl_get_selected_language();
-                   global editor here/getEditorTool;"
+<tal:block define="global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+                   global editor here/getEditorTool;
+                   global contributor_display_name python:here.get_contributor_info()['display_name'];"
            content="structure editor/includeLibs" />
 
-<h1 tal:content="string:${here/aq_parent/aq_parent/title_or_id} -
-                        comment by ${here/get_contributor_name}" />
+<h1 tal:content="string:${here/aq_parent/aq_parent/title_or_id} - comment by ${contributor_display_name}" />
 
 <form name="frmEdit" method="post" action="save_modifications">
 <div class="field">

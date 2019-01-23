@@ -6,9 +6,7 @@
     <link href="portal_layout/additional_style_css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 </head>
-<body class="tb-embedded" style="overflow: scroll">
-
-<span tal:replace="structure here/messages_box"/>
+<body class="tb-embedded">
 
 <div class="talkback-comments_list"
      tal:condition="python:request.get('prev_comments', 'on') == 'on'">
@@ -18,6 +16,8 @@
 
 <tal:block content="structure python:here.comment_form(
   reply_to=request.get('reply_to', None), embedded=True)" />
+
+<span tal:replace="structure here/messages_box"/>
 
 </body>
 </html>

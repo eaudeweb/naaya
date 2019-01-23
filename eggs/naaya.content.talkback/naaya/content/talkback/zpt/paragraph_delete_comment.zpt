@@ -10,7 +10,7 @@
 <form method="post" tal:attributes="action string:${here/absolute_url}/delete_comment">
     <p>
         Are you sure you want to delete the comment by
-        <em tal:content="options/comment/get_contributor_name" />?
+        <em tal:content="python:options['comment'].get_contributor_info()['display_name']" />?
     </p>
     <input type="hidden" name="back_url" tal:attributes="value back_url" />
     <input type="hidden" name="comment_id" tal:attributes="value options/comment/id" />

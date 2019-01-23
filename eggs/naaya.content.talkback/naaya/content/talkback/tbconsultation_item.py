@@ -634,6 +634,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
 
     def custom_editor(self, editor_tool, lang, dom_id):
         extra_options = {
+            'width': '100%',
             'content_css':
                 self.absolute_url() + '/misc_/NaayaContent/tb-editor.css',
             'theme_advanced_buttons1':
