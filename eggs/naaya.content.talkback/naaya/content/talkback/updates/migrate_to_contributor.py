@@ -58,7 +58,8 @@ class MigrateToContributor(UpdateScript):
                     else:
                         name = value
                         user = auth_tool.get_user_with_userid(value)
-                        email = auth_tool.getUserEmail(user)
+                        if user:
+                            email = auth_tool.getUserEmail(user)
 
                     comment.contributor = Contributor(
                         name=name,
