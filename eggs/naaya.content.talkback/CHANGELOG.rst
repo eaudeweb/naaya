@@ -1,5 +1,18 @@
-1.4.50 (unreleased)
--------------------
+1.5.0 (2019-01-24)
+------------------
+* adding extra fields for anonymous contributors
+  - email
+  - organisation
+* replacing comment.contributor (str) with Contributor namedtuple
+* replacing get_contributor_name with get_contributor_info
+* removing contributor_name attribute, same value is available at runtime
+  through get_contributor_info()['display_name']
+* adding update script for existing consultations
+* improving the commenting form and pop-up
+  - moving error messages to bottom so they're more visible
+  - centered the pop-up window
+[batradav]
+
 1.4.49 (2018-06-28)
 -------------------
 * handle UnicodeEncodeError in xlwt in formulas [dumitval]
