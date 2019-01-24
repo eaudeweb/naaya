@@ -27,8 +27,11 @@ class MigrateToContributor(UpdateScript):
                 # where the "display_name" key is equivalent to
                 # "contributor_name".
                 if hasattr(comment, 'contributor_name'):
-                    delattr(comment, 'contributor_name')
-                    count_it = True
+                    try:
+                        delattr(comment, 'contributor_name')
+                        count_it = True
+                    except AttributeError:
+                        pass
 
                 if not isinstance(contributor_current, Contributor):
                     source = ''
@@ -44,7 +47,7 @@ class MigrateToContributor(UpdateScript):
                         value = contributor_current
 
                     if source == 'invite':
-                        invite = comment.get_invitation(value)
+                        invite = comment.invitations.get_invitation(value)
                         name = invite.name
                         email = invite.email
                         invite_key = value
