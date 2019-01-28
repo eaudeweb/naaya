@@ -1,6 +1,7 @@
 from decimal import Decimal
 
-from BTrees.IIBTree import IISet, union, weightedIntersection, weightedUnion
+from BTrees.IIBTree import IISet, weightedIntersection, weightedUnion
+from BTrees.IIBTree import multiunion
 
 from Products.NaayaCore.GeoMapTool import clusters
 
@@ -12,20 +13,20 @@ def _apply_index_with_range_dict_results(index, low_value=None, high_value=None)
     """
     index_items = index.items(low_value, high_value)
 
-    r_set = None
+    r_set = []
     r_dict = dict()
+
     for k, kset in index_items:
         if isinstance(kset, int):
             r_dict[kset] = k
-            kset = IISet((kset,))
+            r_set.append(kset)
         else:
+            r_set.extend(kset)
             for kitem in kset:
                 r_dict[kitem] = k
-        r_set = union(r_set, kset)
-    if isinstance(r_set, int):
-        r_set = IISet((r_set, ))
-    if r_set is None:
-        r_set = IISet()
+
+    r_set = multiunion(r_set) if r_set else IISet()
+
     return r_set, r_dict
 
 def getObjectPathFromCatalog(catalog_tool, rid):
@@ -85,9 +86,7 @@ def getClusters(catalog_tool, filters):
     rs_final = None
     # OR the filters and apply the index for each one
 
-    print('len filters', len(filters))
     for f in filters:
-        print('Filter', f)
         rs_f = rs
 
         #adjust geo limits in filters to be consistent with discretized tile limits
@@ -97,16 +96,8 @@ def getClusters(catalog_tool, filters):
         #this code is from the search function in the catalog implementation in Zope
         t0 = time()
         for idx_name in f:
-            t00 = time()
-            index = catalog.getIndex(idx_name)
-            print('Get index ({}): {:.4f}'.format(idx_name, time() - t00))
-            t00 = time()
             index = catalog.getIndex(idx_name)
             r = index._apply_index(f)
-            took = time() - t00
-            print('Apply index ({}): {:.4f}'.format(idx_name, took))
-            # if took > 0.5:
-            #     import pdb; pdb.set_trace()
             if r is not None:
                 r, _ = r
                 w, rs_f = weightedIntersection(rs_f, r)
@@ -115,6 +106,7 @@ def getClusters(catalog_tool, filters):
         w, rs_final = weightedUnion(rs_f, rs_final)
 
     r_list = list(rs_final)
+    print(len(r_list))
 
     # transform objects to points
     points = []
