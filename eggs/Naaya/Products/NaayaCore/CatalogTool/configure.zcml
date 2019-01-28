@@ -3,6 +3,9 @@
 
   <naaya:call factory=".CatalogTool.patch_zope_catalog_indexing" />
 
+  <!-- Faster UnIndex searches -->
+  <naaya:call factory=".patch_unindex_apply_index.patch_zcatalog_unindex" />
+
   <subscriber handler=".subscribers.auto_catalog_object" />
   <subscriber handler=".subscribers.auto_uncatalog_object" />
 

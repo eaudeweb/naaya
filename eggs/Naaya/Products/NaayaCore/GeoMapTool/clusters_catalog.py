@@ -96,19 +96,19 @@ def getClusters(catalog_tool, filters):
 
         #this code is from the search function in the catalog implementation in Zope
         t0 = time()
-        for idx_name, query in f.items():
+        for idx_name in f:
+            t00 = time()
+            index = catalog.getIndex(idx_name)
+            print('Get index ({}): {:.4f}'.format(idx_name, time() - t00))
+            t00 = time()
             index = catalog.getIndex(idx_name)
             r = index._apply_index(f)
-        # for i in catalog.indexes.keys():
-        #     index = catalog.getIndex(i)
-        #     _apply_index = getattr(index, "_apply_index", None)
-        #     if _apply_index is None:
-        #         continue
-        #     r = _apply_index(f)
-
+            took = time() - t00
+            print('Apply index ({}): {:.4f}'.format(idx_name, took))
+            # if took > 0.5:
+            #     import pdb; pdb.set_trace()
             if r is not None:
-                import pdb; pdb.set_trace()
-                r, u = r
+                r, _ = r
                 w, rs_f = weightedIntersection(rs_f, r)
         print('Apply indexes: {:.4f}'.format(time() - t0))
 
