@@ -39,6 +39,7 @@ def getObjectFromCatalog(catalog_tool, rid):
     return object
 
 def getClusters(catalog_tool, filters):
+    from time import time
     # the objects are searched for in the tile limits (to get the same clusters every time)
     grid_size = 16 # geopoints' and clusters' density on map / also depends on map frame size
 
@@ -52,7 +53,9 @@ def getClusters(catalog_tool, filters):
     else: # this should not happen
         return [], []
 
+    t0 = time()
     tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(lat_min, lat_max, lon_min, lon_max, grid_size)
+    print('Discretized: {:.4f}'.format(time() - t0))
 
     catalog = catalog_tool._catalog
 
@@ -65,15 +68,26 @@ def getClusters(catalog_tool, filters):
 
     # applying the lat and lon indexes to get the rids
     rs = None
+    t0 = time()
     lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, Decimal(str(tlat_min)), Decimal(str(tlat_max)))
+    print('With range 0: {:.4f}'.format(time() - t0))
+    t0 = time()
     w, rs = weightedIntersection(rs, lat_set)
+    print('Intersection 0: {:.4f}'.format(time() - t0))
 
+    t0 = time()
     lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, Decimal(str(tlon_min)), Decimal(str(tlon_max)))
+    print('With range 1: {:.4f}'.format(time() - t0))
+    t0 = time()
     w, rs = weightedIntersection(rs, lon_set)
+    print('Intersection 1: {:.4f}'.format(time() - t0))
 
     rs_final = None
     # OR the filters and apply the index for each one
+
+    print('len filters', len(filters))
     for f in filters:
+        print('Filter', f)
         rs_f = rs
 
         #adjust geo limits in filters to be consistent with discretized tile limits
@@ -81,16 +95,22 @@ def getClusters(catalog_tool, filters):
         f['geo_latitude']['query'] = (Decimal(str(tlat_min)), Decimal(str(tlat_max)))
 
         #this code is from the search function in the catalog implementation in Zope
-        for i in catalog.indexes.keys():
-            index = catalog.getIndex(i)
-            _apply_index = getattr(index, "_apply_index", None)
-            if _apply_index is None:
-                continue
-            r = _apply_index(f)
+        t0 = time()
+        for idx_name, query in f.items():
+            index = catalog.getIndex(idx_name)
+            r = index._apply_index(f)
+        # for i in catalog.indexes.keys():
+        #     index = catalog.getIndex(i)
+        #     _apply_index = getattr(index, "_apply_index", None)
+        #     if _apply_index is None:
+        #         continue
+        #     r = _apply_index(f)
 
             if r is not None:
+                import pdb; pdb.set_trace()
                 r, u = r
                 w, rs_f = weightedIntersection(rs_f, r)
+        print('Apply indexes: {:.4f}'.format(time() - t0))
 
         w, rs_final = weightedUnion(rs_f, rs_final)
 
