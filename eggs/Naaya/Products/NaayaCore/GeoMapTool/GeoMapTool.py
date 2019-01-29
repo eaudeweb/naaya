@@ -396,47 +396,33 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         catalog_tool = self.getCatalogTool()
 
         # call the improved cluster_catalog function for getting the clusters
-        t0 = time.time()
         centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
-        print('getClusters: {:.4f}'.format(time.time() - t0))
 
         # transform centers to Geo
         centers = map(lambda c: Geo(str(c.lat), str(c.lon)), centers)
-
-        d_lat_min, d_lat_max = Decimal(str(lat_min)), Decimal(str(lat_max))
-        d_lon_min, d_lon_max = Decimal(str(lon_min)), Decimal(str(lon_max))
-
-        _catalog = catalog_tool._catalog
-        idx_lat = _catalog.indexes['geo_latitude']._unindex
-        idx_lon = _catalog.indexes['geo_longitude']._unindex
-        idx_geo_type = _catalog.indexes['geo_type']._unindex
-
-        def get_brain_info(rid, b_lat=None, b_lon=None):
-            info = _catalog.getMetadataForRID(rid)
-            # info.update(_catalog.getIndexDataForRID(rid))
-            info['lat'] = b_lat or idx_lat[rid]
-            info['lon'] = b_lon or idx_lon[rid]
-            info['path'] = _catalog.paths[rid]
-            info['geo_type'] = idx_geo_type[rid]
-            return info
 
         cluster_obs, single_obs = [], []
         for i in range(len(centers)):
             if len(groups[i]) < 10:
                 # from this const on we actually return clusters
-                for rid in groups[i]:
-                    b_lat = idx_lat[rid]
-                    b_lon = idx_lon[rid]
+                for so in groups[i]:
+                    sobject = clusters_catalog.getObjectFromCatalog(
+                        catalog_tool, so)
 
                     # do not display it if it is not in the actual map
-                    if (d_lat_min < b_lat < d_lat_max):
-                        if (d_lon_min < b_lon < d_lon_max):
-                            single_obs.append(get_brain_info(rid, b_lat, b_lon))
+                    if (Decimal(str(lat_min)) < sobject.geo_location.lat <
+                            Decimal(str(lat_max))):
+                        if (Decimal(str(lon_min)) < sobject.geo_location.lon <
+                                Decimal(str(lon_max))):
+                            single_obs.append(sobject)
             else:
-                if (d_lat_min < centers[i].lat < d_lat_max):
-                    if (d_lon_min < centers[i].lon < d_lon_max):
+                if (Decimal(str(lat_min)) < centers[i].lat <
+                        Decimal(str(lat_max))):
+                    if (Decimal(str(lon_min)) < centers[i].lon <
+                            Decimal(str(lon_max))):
                         group_paths = [
-                            _catalog.paths[rid]
+                            clusters_catalog.getObjectPathFromCatalog(
+                                catalog_tool, rid)
                             for rid in groups[i]]
                         cluster_obs.append((centers[i], group_paths))
 
@@ -558,12 +544,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 if res.geo_location is None:
                     continue
                 points.append({
-                    'lat': res['lat'],
-                    'lon': res['lon'],
-                    'id': res['path'],
-                    'label': res['title'],
-                    'icon_name': 'mk_%s' % res['geo_type'],
-                    'tooltip': '' # self.get_marker(res),
+                    'lat': res.geo_location.lat,
+                    'lon': res.geo_location.lon,
+                    'id': path_in_site(res),
+                    'label': res.title_or_id(),
+                    'icon_name': 'mk_%s' % res.geo_type,
+                    'tooltip': self.get_marker(res),
                 })
 
             json_response = json.dumps({'points': points},
@@ -582,11 +568,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """ """
         try:
             points = []
-            t0 = time.time()
             cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
-            print('Query: {:.4f}'.format(time.time() - t0))
 
-            t1 = time.time()
             for center, grouped_ids in cluster_obs:
                 points.append({
                     'lat': center.lat,
@@ -600,37 +583,28 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     'point_ids': grouped_ids,
                 })
 
-            print('Groups: {:.4f}'.format(time.time() - t1))
-
-            t2 = time.time()
             for res in single_obs:
-                if not res['lat'] and not res['lon']:
+                if res.geo_location is None:
                     continue
-                if not res['geo_type']:
+                if not res.geo_type:
                     # TODO: add logging?
                     continue
                 points.append({
-                    'lat': res['lat'],
-                    'lon': res['lon'],
-                    'id': res['path'],
-                    'label': res['title'],
-                    'icon_name': 'mk_%s' % res['geo_type'],
-                    'tooltip': '' # XXX: self.get_marker(res),
+                    'lat': res.geo_location.lat,
+                    'lon': res.geo_location.lon,
+                    'id': path_in_site(res),
+                    'label': res.title_or_id(),
+                    'icon_name': 'mk_%s' % res.geo_type,
+                    'tooltip': self.get_marker(res),
                 })
 
-            print('Points: {:.4f}'.format(time.time() - t2))
-
-            t3 = time.time()
             response_data = {'points': points}
-            print('Response data: {:.4f}'.format(time.time() - t3))
 
         except:
             self.log_current_error()
             response_data = {'error': err_info(), 'points': {}}
 
-        t4 = time.time()
         json_response = json.dumps(response_data, default=json_encode_helper)
-        print('Response data: {:.4f}'.format(time.time() - t4))
 
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return json_response

@@ -1,7 +1,8 @@
 from decimal import Decimal
 
-from BTrees.IIBTree import IISet, weightedIntersection, weightedUnion
+from BTrees.IIBTree import IISet
 from BTrees.IIBTree import multiunion
+from BTrees.IIBTree import intersection
 
 from Products.NaayaCore.GeoMapTool import clusters
 
@@ -40,7 +41,6 @@ def getObjectFromCatalog(catalog_tool, rid):
     return object
 
 def getClusters(catalog_tool, filters):
-    from time import time
     # the objects are searched for in the tile limits (to get the same clusters every time)
     grid_size = 16 # geopoints' and clusters' density on map / also depends on map frame size
 
@@ -54,9 +54,7 @@ def getClusters(catalog_tool, filters):
     else: # this should not happen
         return [], []
 
-    t0 = time()
     tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(lat_min, lat_max, lon_min, lon_max, grid_size)
-    print('Discretized: {:.4f}'.format(time() - t0))
 
     catalog = catalog_tool._catalog
 
@@ -64,49 +62,45 @@ def getClusters(catalog_tool, filters):
     lat_index = catalog.getIndex('geo_latitude')._index
     lon_index = catalog.getIndex('geo_longitude')._index
 
+    # define decimal values
+    d_tlat_min = Decimal(str(tlat_min))
+    d_tlat_max = Decimal(str(tlat_max))
+
+    d_tlon_min = Decimal(str(tlon_min))
+    d_tlon_max = Decimal(str(tlon_max))
+
     # adjust to cover results outside frame, but very close to margins
     # trying to fix cluster flickering near margins
 
     # applying the lat and lon indexes to get the rids
     rs = None
-    t0 = time()
-    lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, Decimal(str(tlat_min)), Decimal(str(tlat_max)))
-    print('With range 0: {:.4f}'.format(time() - t0))
-    t0 = time()
-    w, rs = weightedIntersection(rs, lat_set)
-    print('Intersection 0: {:.4f}'.format(time() - t0))
+    lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, d_tlat_min, d_tlat_max)
+    rs = intersection(rs, lat_set)
 
-    t0 = time()
-    lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, Decimal(str(tlon_min)), Decimal(str(tlon_max)))
-    print('With range 1: {:.4f}'.format(time() - t0))
-    t0 = time()
-    w, rs = weightedIntersection(rs, lon_set)
-    print('Intersection 1: {:.4f}'.format(time() - t0))
+    lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, d_tlon_min, d_tlon_max)
+    rs = intersection(rs, lon_set)
 
-    rs_final = None
+    rs_final = []
     # OR the filters and apply the index for each one
 
     for f in filters:
         rs_f = rs
 
         #adjust geo limits in filters to be consistent with discretized tile limits
-        f['geo_longitude']['query'] = (Decimal(str(tlon_min)), Decimal(str(tlon_max)))
-        f['geo_latitude']['query'] = (Decimal(str(tlat_min)), Decimal(str(tlat_max)))
+        f['geo_longitude']['query'] = (d_tlon_min, d_tlon_max)
+        f['geo_latitude']['query'] = (d_tlat_min, d_tlat_max)
 
         #this code is from the search function in the catalog implementation in Zope
-        t0 = time()
         for idx_name in f:
             index = catalog.getIndex(idx_name)
             r = index._apply_index(f)
             if r is not None:
                 r, _ = r
-                w, rs_f = weightedIntersection(rs_f, r)
-        print('Apply indexes: {:.4f}'.format(time() - t0))
+                rs_f = intersection(rs_f, r)
 
-        w, rs_final = weightedUnion(rs_f, rs_final)
+        rs_final.append(rs_f)
 
-    r_list = list(rs_final)
-    print(len(r_list))
+    r_list = list(multiunion(rs_final))
 
     # transform objects to points
     points = []
@@ -120,4 +114,3 @@ def getClusters(catalog_tool, filters):
         groups[i] = map(lambda p: r_list[p.id], groups[i])
 
     return centers, groups
-
