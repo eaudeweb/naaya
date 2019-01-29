@@ -1,6 +1,8 @@
 from decimal import Decimal
 
-from BTrees.IIBTree import IISet, union, weightedIntersection, weightedUnion
+from BTrees.IIBTree import IISet
+from BTrees.IIBTree import multiunion
+from BTrees.IIBTree import intersection
 
 from Products.NaayaCore.GeoMapTool import clusters
 
@@ -12,20 +14,20 @@ def _apply_index_with_range_dict_results(index, low_value=None, high_value=None)
     """
     index_items = index.items(low_value, high_value)
 
-    r_set = None
+    r_set = []
     r_dict = dict()
+
     for k, kset in index_items:
         if isinstance(kset, int):
             r_dict[kset] = k
-            kset = IISet((kset,))
+            r_set.append(kset)
         else:
+            r_set.extend(kset)
             for kitem in kset:
                 r_dict[kitem] = k
-        r_set = union(r_set, kset)
-    if isinstance(r_set, int):
-        r_set = IISet((r_set, ))
-    if r_set is None:
-        r_set = IISet()
+
+    r_set = multiunion(r_set) if r_set else IISet()
+
     return r_set, r_dict
 
 def getObjectPathFromCatalog(catalog_tool, rid):
@@ -60,41 +62,45 @@ def getClusters(catalog_tool, filters):
     lat_index = catalog.getIndex('geo_latitude')._index
     lon_index = catalog.getIndex('geo_longitude')._index
 
+    # define decimal values
+    d_tlat_min = Decimal(str(tlat_min))
+    d_tlat_max = Decimal(str(tlat_max))
+
+    d_tlon_min = Decimal(str(tlon_min))
+    d_tlon_max = Decimal(str(tlon_max))
+
     # adjust to cover results outside frame, but very close to margins
     # trying to fix cluster flickering near margins
 
     # applying the lat and lon indexes to get the rids
     rs = None
-    lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, Decimal(str(tlat_min)), Decimal(str(tlat_max)))
-    w, rs = weightedIntersection(rs, lat_set)
+    lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, d_tlat_min, d_tlat_max)
+    rs = intersection(rs, lat_set)
 
-    lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, Decimal(str(tlon_min)), Decimal(str(tlon_max)))
-    w, rs = weightedIntersection(rs, lon_set)
+    lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, d_tlon_min, d_tlon_max)
+    rs = intersection(rs, lon_set)
 
-    rs_final = None
+    rs_final = []
     # OR the filters and apply the index for each one
+
     for f in filters:
         rs_f = rs
 
         #adjust geo limits in filters to be consistent with discretized tile limits
-        f['geo_longitude']['query'] = (Decimal(str(tlon_min)), Decimal(str(tlon_max)))
-        f['geo_latitude']['query'] = (Decimal(str(tlat_min)), Decimal(str(tlat_max)))
+        f['geo_longitude']['query'] = (d_tlon_min, d_tlon_max)
+        f['geo_latitude']['query'] = (d_tlat_min, d_tlat_max)
 
         #this code is from the search function in the catalog implementation in Zope
-        for i in catalog.indexes.keys():
-            index = catalog.getIndex(i)
-            _apply_index = getattr(index, "_apply_index", None)
-            if _apply_index is None:
-                continue
-            r = _apply_index(f)
-
+        for idx_name in f:
+            index = catalog.getIndex(idx_name)
+            r = index._apply_index(f)
             if r is not None:
-                r, u = r
-                w, rs_f = weightedIntersection(rs_f, r)
+                r, _ = r
+                rs_f = intersection(rs_f, r)
 
-        w, rs_final = weightedUnion(rs_f, rs_final)
+        rs_final.append(rs_f)
 
-    r_list = list(rs_final)
+    r_list = list(multiunion(rs_final))
 
     # transform objects to points
     points = []
@@ -108,4 +114,3 @@ def getClusters(catalog_tool, filters):
         groups[i] = map(lambda p: r_list[p.id], groups[i])
 
     return centers, groups
-
