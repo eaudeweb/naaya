@@ -1,5 +1,6 @@
-4.3.19 (unreleased)
+4.3.19 (2019-01-29)
 -------------------
+* improved map query speed; overall faster UnIndex._apply_index searches [batradav]
 
 4.3.18 (2018-12-17)
 -------------------
