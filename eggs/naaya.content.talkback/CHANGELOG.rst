@@ -1,6 +1,12 @@
+1.5.3 (unreleased)
+-----------------
+
+1.5.2 (2019-02-20)
+-----------------
+* fix for the comments count for invited commenters [dumitval]
+
 1.5.1 (2019-01-24)
 ------------------
-* fix for the comments count for invited commenters [dumitval]
 * fixing update script [batradav]
 
 1.5.0 (2019-01-24)
