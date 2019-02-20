@@ -105,14 +105,17 @@ class CommentsAdmin(SimpleItem):
 
         contrib_stats = {}
         for comment in self._iter_comments():
+            contributor_name = comment.contributor.name
+            if not contributor_name:
+                contributor_name = comment.get_contributor_info()['name']
             try:
-                contrib_stats[comment.contributor.name]
+                contrib_stats[contributor_name]
             except KeyError:
                 new_user_info = comment.get_contributor_info()
                 new_user_info['count'] = 1
-                contrib_stats[comment.contributor.name] = new_user_info
+                contrib_stats[contributor_name] = new_user_info
             else:
-                contrib_stats[comment.contributor.name]['count'] += 1
+                contrib_stats[contributor_name]['count'] += 1
         contrib_stats = [v for k, v in contrib_stats.items()]
 
         return contrib_stats
