@@ -1,5 +1,6 @@
 1.5.3 (unreleased)
 -----------------
+* improve styling for the comment box [dumitval]
 
 1.5.2 (2019-02-20)
 -----------------

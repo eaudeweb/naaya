@@ -1,197 +1,203 @@
 div.consultation_right_box {
-	float: right;
-	width: 170px;
-	border: 1px solid black;
-	padding: 0.5em;
-	background-color:#FAFAFA;
+    float: right;
+    width: 170px;
+    border: 1px solid black;
+    padding: 0.5em;
+    background-color:#FAFAFA;
 }
 
 a.consultation-button {
-	display: block;
-	border: 1px outset black;
-	padding: 0.3em;
-	background-color: #EDE9E3;
-	text-decoration: none;
-	text-align: center;
-	margin-top: 0.1em;
-	color: #042D5D;
+    display: block;
+    border: 1px outset black;
+    padding: 0.3em;
+    background-color: #EDE9E3;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.1em;
+    color: #042D5D;
 
 }
 
 a.consultation-special-button {
-	display: block;
-	border: 1px outset black;
-	padding: 0.3em;
-	background-color: #D2DFFF;
-	text-decoration: none;
-	text-align: center;
-	margin-top: 0.5em;
-	color: #042D5D;
+    display: block;
+    border: 1px outset black;
+    padding: 0.3em;
+    background-color: #D2DFFF;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.5em;
+    color: #042D5D;
 }
 
 div.consultation_right_box a, div.consultation_right_box a:visited { color: #042D5D; }
 
 fieldset.consultation-comments {
-	width: 80%;
-	border: 1px solid black;
+    width: 80%;
+    border: 1px solid black;
 
 }
 
 span.consultation_day_counter {
-	color: blue;
-	font-weight: bold;
+    color: blue;
+    font-weight: bold;
 }
 
 div.talkback-comment_floating_box {
-	position: absolute;
-	overflow: hidden;
-	background-color: white;
-	border: 2px solid green;
-	padding: 2em;
-	z-index: 11; /* Need to be above main sections. */
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+    position: fixed;
+    overflow: hidden;
+    background-color: white;
+    border: 2px solid green;
+    padding: 2em;
+    z-index: 11; /* Need to be above main sections. */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 80vh;
+    margin-top: 2rem;
 }
 
 div.talkback-comment_floating_box iframe {
-	width: 720px;
-	height: 500px;
-	border: none;
+    width: 720px;
+    height: 100%!important;
+    border: none;
 }
 
 a.tb-iframe-close-bottom, a.tb-iframe-close-top {
-	text-decoration: none;
-	position: absolute;
-	right: 5px;
-	background-color: white;
-	padding: 3px;
+    text-decoration: none;
+    position: absolute;
+    right: 5px;
+    background-color: white;
+    padding: 3px;
 }
 a.tb-iframe-close-top {
-	top: 0;
+    top: 0;
 }
 a.tb-iframe-close-bottom {
-	bottom: 0;
+    bottom: 0;
 }
 
 p.talkback-cannot_comment {
-	margin-top: 1.5em;
+    margin-top: 1.5em;
 }
 .talkback-section-edit div.talkback-paragraph {
-	border: 1px solid #888;
-	background: #f5f5f5;
-	padding: .5em;
+    border: 1px solid #888;
+    background: #f5f5f5;
+    padding: .5em;
 }
 #middle_port div.talkback-section div h1 {
-	background: transparent;
-	border: none;
+    background: transparent;
+    border: none;
 }
 
 .talkback-section h2 {
-	font-size: 130%;
-	margin: 1em 0;
-	font-weight: bold;
+    font-size: 130%;
+    margin: 1em 0;
+    font-weight: bold;
 }
 .talkback-section h3 {
-	font-size: 110%;
-	margin: 1em 0;
-	font-weight: bold;
+    font-size: 110%;
+    margin: 1em 0;
+    font-weight: bold;
 }
 .talkback-section input, .talkback-section textarea {
-	border: 1px solid #ccc;
+    border: 1px solid #ccc;
+}
+.tb-comment-body {
+    width: calc(100% - 1em);
+    overflow: auto;
 }
 .talkback-add_comment_form input,.talkback-add_comment_form textarea {
-	border: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 .talkback-comments_list {
-	margin: 0.5em 0;
+    margin: 0.5em 0;
 }
 .talkback-comments_list ul.tb-comments-tree {
-	padding: 0;
+    padding: 0;
 }
 ul.tb-comments-tree div.tb-comment-head {
-	background-color: #F2F2F2;
-	border: 1px solid #ccc;
-	padding: 0 0.5em;
-	overflow: auto;
+    background-color: #F2F2F2;
+    border: 1px solid #ccc;
+    padding: 0 0.5em;
+    overflow: auto;
 }
 
 ul.tb-comments-tree div.tb-comment {
-	border: 1px solid #ccc;
-	background: #E5E5E5;
-	margin: .5em;
+    border: 1px solid #ccc;
+    background: #E5E5E5;
+    margin: .5em;
 }
 
 ul.tb-comments-tree div.tb-comment-body {
-	margin: 0;
-	padding: .5em;
-	clear: left;
+    margin: 0;
+    padding: .5em;
+    clear: left;
 }
 ul.tb-comments-tree div.tb-comment-author {
-	margin-top: 0.1em;
-	padding: 0.3em 0.5em 0 0;
-	font-size: 85%;
-	font-weight: bold;
-	float: left;
+    margin-top: 0.1em;
+    padding: 0.3em 0.5em 0 0;
+    font-size: 85%;
+    font-weight: bold;
+    float: left;
 }
 ul.tb-comments-tree div.buttons {
-	float: left;
-	font-size: 100%;
+    float: left;
+    font-size: 100%;
 }
 ul.tb-comments-tree div.buttons input {
-	padding: 0.1em 0.3em 0.1em 0.3em;
-	color: #0061A2;
-	font-weight: bold;
+    padding: 0.1em 0.3em 0.1em 0.3em;
+    color: #0061A2;
+    font-weight: bold;
 }
 ul.tb-comments-tree div.buttons form {
-	float: left;
+    float: left;
 }
 div.buttons a{
-	border: 1px solid #ccc;
-	padding: 0.1em 0.3em 0.1em 0.3em;
-	margin: 0;
+    border: 1px solid #ccc;
+    padding: 0.1em 0.3em 0.1em 0.3em;
+    margin: 0;
 }
 div.buttons input{
-	border: 1px solid #ccc;
-	margin: 2px 4px;
-	padding: 0 1px;
-	background-color: white; color: #666;
-	font-weight: bold;
+    border: 1px solid #ccc;
+    margin: 2px 4px;
+    padding: 0 1px;
+    background-color: white; color: #666;
+    font-weight: bold;
 }
 .talkback-add_comment, .button_sect_edit, a.tb-button{
-	margin: 0.5em 0;
-	padding: 3px;
-	font-size: 85%;
-	color: #000;
-	text-decoration: none;
-	display: inline-block;
-	background: #dbe6e3;
-	border: 1px solid #78a095;
+    margin: 0.5em 0;
+    padding: 3px;
+    font-size: 85%;
+    color: #000;
+    text-decoration: none;
+    display: inline-block;
+    background: #dbe6e3;
+    border: 1px solid #78a095;
 }
 .talkback-add_comment:hover, .button_sect_edit:hover {
-	border: 1px solid #eee;
+    border: 1px solid #eee;
 }
 .talkback-add_comment {
-	margin: 0;
+    margin: 0;
 }
 .talkback-add_comment-p {
-	margin: 0.5em 0;
+    margin: 0.5em 0;
 }
 
 .talkback-show_hide_comments a {
-	padding: 0.3em;
-	border: 1px solid #ccc;
-	background: #eee;
-	text-decoration: none;
+    padding: 0.3em;
+    border: 1px solid #ccc;
+    background: #eee;
+    text-decoration: none;
 }
 
 div.talkback-section_toc {
-	float:right;
-	clear: right;
-	width: 21em;
-	border: 3px solid #78a095;
-	background-color: #dbe6e3;
-	margin: 1em 0 1em 1em;
+    float:right;
+    clear: right;
+    width: 21em;
+    border: 3px solid #78a095;
+    background-color: #dbe6e3;
+    margin: 1em 0 1em 1em;
 }
 
 div.talkback-section_toc h6 {
@@ -202,21 +208,21 @@ div.talkback-section_toc h6 {
 }
 
 div.talkback-section_toc ul {
-	list-style: none;
+    list-style: none;
     margin: .6em 1em .6em 1em;
     padding: 0;
 }
 
 div.talkback-section_toc ul li {
-	padding: .1em .5em .1em .5em;
+    padding: .1em .5em .1em .5em;
 }
 
 li.talkback-current_section a {
-	font-style: italic;
+    font-style: italic;
 }
 
 li.talkback-section a {
-	color: #4E7CB0;
+    color: #4E7CB0;
 }
 
 table.talkback-section_list .talkback-section_list-edit_column {
@@ -268,8 +274,8 @@ table.tb-comments-overview {
     width: 100%;
 }
 .search_users {
-	width: 50%;
-	float: right;
-	display:none;
+    width: 50%;
+    float: right;
+    display:none;
 }
 
