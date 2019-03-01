@@ -1,4 +1,7 @@
-1.5.3 (unreleased)
+1.5.4 (unreleased)
+-----------------
+
+1.5.3 (2019-03-01)
 -----------------
 * improve styling for the comment box [dumitval]
 
