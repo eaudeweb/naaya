@@ -7,11 +7,15 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
-     import plugLDAPUserFolder
+    import plugLDAPUserFolder
 from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
-from Products.NaayaCore.managers.import_export import generate_csv, generate_excel
+from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
+    import DISABLED_USER_NAME
+from Products.NaayaCore.managers.import_export import generate_csv
+from Products.NaayaCore.managers.import_export import generate_excel
 from naaya.core.utils import force_to_unicode
 from eea.usersdb.factories import agent_from_uf
+
 
 class MemberSearch(Implicit, Item):
     title = "Interest Group member search"
@@ -22,6 +26,7 @@ class MemberSearch(Implicit, Item):
         self.id = id
 
     security.declarePrivate('get_sources_info')
+
     def get_sources_info(self, acl_tool):
         ret = {}
         for source in acl_tool.getSources():
@@ -47,20 +52,23 @@ class MemberSearch(Implicit, Item):
         return user_list
 
     security.declareProtected(view, 'search_users_html')
+
     def search_users_html(self, search_string=u'', sort_by='',
-            reverse_sort='False', only_admins=False):
+                          reverse_sort='False', only_admins=False):
         """ """
         reverse_sort = reverse_sort != 'False'
         user_list = self._search_users(search_string, sort_by, reverse_sort)
         if only_admins:
             user_list = [user for user in list(user_list)
-                            if 'Administrator' in user['access_level'].split(', ')]
+                         if 'Administrator' in user['access_level'].split(', ')
+                         ]
         return self.user_list_html(search_string=search_string,
                                    sorted_by=sort_by,
                                    reverse_sorted=reverse_sort,
                                    user_list=user_list)
 
     security.declarePrivate('search_local_users')
+
     def search_local_users(self, search_string=u''):
         ret = []
         portal = self.getSite()
@@ -69,13 +77,13 @@ class MemberSearch(Implicit, Item):
         search_string = search_string.lower().strip()
         for user in local_users:
             if (search_string in user.name.lower() or
-                search_string in user.firstname.lower() or
-                search_string in user.lastname.lower()
-                ):
+                    search_string in user.firstname.lower() or
+                    search_string in user.lastname.lower()):
                 ret.append(self.get_local_user_info(user))
         return ret
 
     security.declarePrivate('search_external_users')
+
     def search_external_users(self, search_string=u''):
         ret = []
         portal = self.getSite()
@@ -97,7 +105,7 @@ class MemberSearch(Implicit, Item):
                 agent = agent_from_uf(source.getUserFolder())
                 users = agent.search_user(search_string)
                 users = [user for user in users if
-                            user.get('uid', user.get('id', None)) and
+                         user.get('uid', user.get('id', None)) and
                          user.get('uid', user.get('id')) in userids]
             else:
                 cache = ldap_cache.Cache()
@@ -106,8 +114,8 @@ class MemberSearch(Implicit, Item):
 
                 for user_dn in cache.users:
                     user = cache.get(user_dn)
-                    if user.has_key('uid') and user['uid'] in userids:
-                         users.append({
+                    if 'uid' in user and user['uid'] in userids:
+                        users.append({
                             'id': user['uid'],
                             'first_name': user['givenName'],
                             'last_name': user['sn'],
@@ -115,22 +123,23 @@ class MemberSearch(Implicit, Item):
                             'email': user.get('mail', ''),
                             'organisation': user.get('o', 'N/A'),
                             'postal_address': user.get('postalAddress', 'N/A'),
-                         })
+                            'disabled': user.get('employeeType', False),
+                        })
 
             # precalculate user roles for performance
             user_roles_map = {}
             for user in users:
                 user_id = user.get('uid', user.get('id'))
                 user_roles = self.get_external_user_roles(
-                                source,
-                                user_id,
-                                sources_info,
-                                group_userids_map)
+                    source,
+                    user_id,
+                    sources_info,
+                    group_userids_map)
                 user_roles_map[user_id] = user_roles
 
             user_info = [self.get_external_user_info(
-                            source, user,
-                            user_roles_map[user.get('uid', user.get('id'))])
+                         source, user,
+                         user_roles_map[user.get('uid', user.get('id'))])
                          for user in users]
 
             ret.extend(user_info)
@@ -138,6 +147,7 @@ class MemberSearch(Implicit, Item):
         return ret
 
     security.declarePrivate('get_user_info')
+
     def get_user_info(self, userid):
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -154,48 +164,58 @@ class MemberSearch(Implicit, Item):
                 return self.get_external_user_info(source, user._properties)
 
     security.declarePrivate('get_local_user_info')
+
     def get_local_user_info(self, user):
         user_roles = self.get_local_user_roles(user)
         firstname = force_to_unicode(user.firstname)
         lastname = force_to_unicode(user.lastname)
         name = firstname + u' ' + lastname
         return {
-                'userid': user.name,
-                'firstname': force_to_unicode(user.firstname),
-                'lastname': force_to_unicode(user.lastname),
-                'name': name,
-                'email': user.email,
-                'access_level': self.get_user_access_level(user_roles),
-                'organisation': 'N/A',
-                'postal_address': 'N/A',
-                }
+            'userid': user.name,
+            'firstname': force_to_unicode(user.firstname),
+            'lastname': force_to_unicode(user.lastname),
+            'name': name,
+            'email': user.email,
+            'access_level': self.get_user_access_level(user_roles),
+            'organisation': 'N/A',
+            'postal_address': 'N/A',
+        }
 
     security.declarePrivate('get_external_user_info')
+
     def get_external_user_info(self, source, user, user_roles=None):
         user_id = user.get('uid', user.get('id'))
         # user_roles are precalculated for the member search (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user_id)
+        if user['disabled']:
+            name = DISABLED_USER_NAME
+            email = None
+        else:
+            name = force_to_unicode(user['full_name'])
+            email = user['email']
         return {
-                'userid': user_id,
-                'firstname': force_to_unicode(user['first_name']),
-                'lastname': force_to_unicode(user['last_name']),
-                'name': force_to_unicode(user['full_name']),
-                'email': user['email'],
-                'access_level': self.get_user_access_level(user_roles),
-                'organisation': force_to_unicode(
-                                user.get('organisation', 'N/A')),
-                'postal_address': force_to_unicode(
-                                user.get('postal_address', 'N/A')),
-                }
+            'userid': user_id,
+            'firstname': force_to_unicode(user['first_name']),
+            'lastname': force_to_unicode(user['last_name']),
+            'name': name,
+            'email': email,
+            'access_level': self.get_user_access_level(user_roles),
+            'organisation': force_to_unicode(
+                user.get('organisation', 'N/A')),
+            'postal_address': force_to_unicode(
+                user.get('postal_address', 'N/A')),
+        }
 
     security.declarePrivate('get_local_user_roles')
+
     def get_local_user_roles(self, userob):
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         return acl_tool.getUserRoles(userob)
 
     security.declarePrivate('get_external_user_roles')
+
     def get_external_user_roles(self, source, userid, sources_info,
                                 group_userids_map=None):
         # group_userids_map is precalculated for member search (performance)
@@ -219,6 +239,7 @@ class MemberSearch(Implicit, Item):
         return roles
 
     security.declarePrivate('get_group_userids_map')
+
     def get_group_userids_map(self, source_id, sources_info):
         group_userids_map = {}
         source = sources_info[source_id]['source']
@@ -228,6 +249,7 @@ class MemberSearch(Implicit, Item):
         return group_userids_map
 
     security.declarePrivate('get_user_access_level')
+
     def get_user_access_level(self, roles):
         if len(roles) == 0:
             return u'N/A'
@@ -235,13 +257,15 @@ class MemberSearch(Implicit, Item):
             return u', '.join(roles)
 
     security.declareProtected(view, 'is_member')
+
     def is_member(self):
         """ """
         return self.get_user_access() in ['member', 'admin']
 
     security.declareProtected(view, 'download')
+
     def download(self, RESPONSE, search_string=u'', sort_by='',
-            reverse_sort='False', file_type='CSV'):
+                 reverse_sort='False', file_type='CSV'):
         """returns all the search results in a csv or excel file"""
         reverse_sort = reverse_sort != 'False'
         users = self._search_users(search_string, sort_by, reverse_sort)
@@ -249,8 +273,9 @@ class MemberSearch(Implicit, Item):
         if self.is_member():
             header = ['Name', 'Organisation', 'Postal address', 'Email',
                               'Access level', 'User ID']
-            rows = [[user['name'], user['organisation'], user['postal_address'],
-                     user['email'], user['access_level'], user['userid']]
+            rows = [[user['name'], user['organisation'],
+                     user['postal_address'], user['email'],
+                     user['access_level'], user['userid']]
                     for user in users]
         else:
             header = ['Name', 'Organisation']
@@ -269,7 +294,6 @@ class MemberSearch(Implicit, Item):
             return generate_excel(header, rows)
         else:
             raise ValueError('unknown file format %r' % file_type)
-
 
     index_html = PageTemplateFile('zpt/member_search_index', globals())
     user_list_html = PageTemplateFile('zpt/member_search_list', globals())

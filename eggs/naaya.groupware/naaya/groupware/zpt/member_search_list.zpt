@@ -111,8 +111,11 @@
         <td tal:content="user/organisation"></td>
         <tal:block condition="is_member">
             <td tal:content="user/postal_address"></td>
-            <td><a tal:attributes="href string:mailto:${user/email}"
-                    tal:content="user/email"></a></td>
+            <td tal:condition="user/email">
+              <a tal:attributes="href python:test(user['email'], 'mailto:'+user['email'], None)"
+                    tal:content="user/email"></a>
+            </td>
+            <td tal:condition="not:user/email">N/A</td>
             <td tal:content="user/access_level"></td>
             <td tal:content="user/userid"></td>
         </tal:block>
