@@ -1,4 +1,7 @@
-4.3.20 (unreleased)
+4.3.21 (unreleased)
+-------------------
+
+4.3.20 (2019-03-01)
 -------------------
 * add google api key for batch geolocations [dumitval]
 
