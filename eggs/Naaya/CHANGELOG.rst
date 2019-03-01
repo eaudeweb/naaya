@@ -1,3 +1,7 @@
+4.3.20 (unreleased)
+-------------------
+* add google api key for batch geolocations [dumitval]
+
 4.3.19 (2019-01-29)
 -------------------
 * improved map query speed; overall faster UnIndex._apply_index searches [batradav]

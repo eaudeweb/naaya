@@ -123,7 +123,7 @@ def _unpack_reverse_geocode_data(result):
     return full_address, countries[0]
 
 
-def geocode(address):
+def geocode(address, key=None):
     """
     Geocode a given address using the Google API. Returns a tuple of
     (lat, lon) float values.
@@ -131,7 +131,7 @@ def geocode(address):
     >>> geocode("Kongens Nytorv 6, 1050 Copenhagen K, Denmark")
     (55.68114360, 12.58664570)
     """
-    params = [('address', address), ('sensor', 'false')]
+    params = [('address', address), ('key', key), ('sensor', 'false')]
     url = _build_url(params)
     result = _get_url_data(url)
     location = _unpack_geocode_data(result)['location']
