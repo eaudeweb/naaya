@@ -5,6 +5,7 @@ import urllib2
 
 RETRIES = 3
 
+
 class GeocoderServiceError(Exception):
     pass
 
@@ -14,7 +15,8 @@ class GeocoderOverQuotaLimit(Exception):
 
 
 def _build_url(params):
-    GOOGLE_GEOCODE_BASE_URL = 'http://maps.googleapis.com/maps/api/geocode/json'
+    GOOGLE_GEOCODE_BASE_URL = \
+        'https://maps.googleapis.com/maps/api/geocode/json'
     p = []
     for k, v in params:
         if isinstance(v, unicode):
@@ -57,14 +59,14 @@ def _get_url_data(url):
 def _check_result_is_valid(result):
     if result is None:
         raise GeocoderServiceError('Geocoding service unavailable')
-    elif not result.has_key('status'):
+    elif 'status' not in result:
         raise GeocoderServiceError('Geocoding result parse error')
     elif result['status'] == 'OVER_QUERY_LIMIT':
         raise GeocoderOverQuotaLimit("Geocoding over quota")
     elif result['status'] != 'OK':
         raise GeocoderServiceError('Geocoding status error: %s'
-                % result['status'])
-    elif not result.has_key('results'):
+                                   % result['status'])
+    elif 'results' not in result:
         raise GeocoderServiceError('Geocoding result parse error')
     elif len(result['results']) == 0:
         raise GeocoderServiceError('No geocoding results')
@@ -73,13 +75,13 @@ def _check_result_is_valid(result):
 def _unpack_geocode_data(result):
 
     fresult = result['results'][0]
-    if not fresult.has_key('geometry'):
+    if 'geometry' not in fresult:
         raise GeocoderServiceError('Geocoding result parse error')
-    elif not fresult['geometry'].has_key('location'):
+    elif 'location' not in fresult['geometry']:
         raise GeocoderServiceError('Geocoding result parse error')
     else:
         lresult = fresult['geometry']['location']
-        if not (lresult.has_key('lat') and lresult.has_key('lng')):
+        if not ('lat' in lresult and 'lng' in lresult):
             raise GeocoderServiceError('Geocoding result parse error')
         else:
             ne = fresult['geometry']['viewport']['northeast']
@@ -102,12 +104,12 @@ def _unpack_reverse_geocode_data(result):
 
     fresult = result['results'][0]
 
-    if not fresult.has_key('formatted_address'):
+    if 'formatted_address' not in fresult:
         raise GeocoderServiceError('Geocoding result parse error')
-    if not fresult.has_key('address_components'):
+    if 'address_components' not in fresult:
         raise GeocoderServiceError('Geocoding result parse error')
     for comp in fresult['address_components']:
-        if not comp.has_key('long_name') or not comp.has_key('types'):
+        if 'long_name' not in comp or 'types' not in comp:
             raise GeocoderServiceError('Geocoding result parse error')
 
     full_address = fresult['formatted_address']
