@@ -1,4 +1,7 @@
-1.4.51 (unreleased)
+1.4.52 (unreleased)
+-------------------
+
+1.4.51 (2019-03-01)
 -------------------
 * display 'Former eionet member' for deactivated users in IG member_search
   [dumitval]
