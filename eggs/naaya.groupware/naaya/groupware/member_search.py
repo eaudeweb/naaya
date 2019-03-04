@@ -188,7 +188,7 @@ class MemberSearch(Implicit, Item):
         # user_roles are precalculated for the member search (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user_id)
-        if user['disabled']:
+        if user.get('disabled'):
             name = DISABLED_USER_NAME
             email = None
         else:
