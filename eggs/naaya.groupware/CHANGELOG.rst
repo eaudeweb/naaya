@@ -1,4 +1,7 @@
-1.4.52 (unreleased)
+1.4.53 (unreleased)
+-------------------
+
+1.4.52 (2019-03-04)
 -------------------
 * get_external_user_info: handle users without the disabled property [dumitval]
 
