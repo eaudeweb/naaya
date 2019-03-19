@@ -1,4 +1,7 @@
-1.3.01 (unreleased)
+1.3.02 (unreleased)
+-------------------
+
+1.3.01 (2019-03-19)
 -------------------
 * avoid calling nfp_for_country for each subscription [dumitval]
 
