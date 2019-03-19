@@ -1,4 +1,7 @@
-4.3.21 (unreleased)
+4.3.22 (unreleased)
+-------------------
+
+4.3.21 (2019-03-19)
 -------------------
 * try to get user credentials and bind when calling agent_from_uf [dumitval]
 
