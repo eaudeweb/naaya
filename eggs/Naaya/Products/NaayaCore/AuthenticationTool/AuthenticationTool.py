@@ -1924,7 +1924,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             from eea.usersdb.factories import agent_from_site
         except ImportError:
             return []
-        agent = agent_from_site(self)
+        try:
+            ldap_roles = self.restrictedTraverse('/ldap-roles')
+            user_dn = ldap_roles._config.get('secondary_admin_dn')
+            user_pw = ldap_roles._config.get('secondary_admin_pw')
+            agent = agent_from_site(self, bind=True,
+                                    user_dn=user_dn, user_pw=user_pw)
+        except KeyError:
+            agent = agent_from_site(self)
         ldap_roles = sorted(agent.member_roles_info('user',
                                                     user_id,
                                                     ('description',)))
