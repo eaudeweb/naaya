@@ -1,5 +1,6 @@
 1.3.01 (unreleased)
 -------------------
+* avoid calling nfp_for_country for each subscription [dumitval]
 
 1.3.00 (2018-09-20)
 -------------------

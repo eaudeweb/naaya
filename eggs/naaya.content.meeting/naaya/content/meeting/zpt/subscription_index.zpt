@@ -165,7 +165,7 @@
               <table class="datatable" width="95%">
                   <tr>
                       <th width="30px"
-                        tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
+                        tal:condition="python:here.checkPermissionAdminMeeting() or nfp_country_code">
                           <span i18n:translate="">Select</span>
                           <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSubscriptions', 'uids:list')"/>
                       </th>
@@ -190,7 +190,7 @@
                   <tal:block repeat="subscription here/getSubscriptions">
                   <tr tal:define="accepted subscription/accepted"
                     tal:attributes="class python:test(accepted == 'rejected', 'rejected', '')">
-                      <td tal:condition="python:here.checkPermissionAdminMeeting() or here.nfp_for_country()">
+                      <td tal:condition="python:here.checkPermissionAdminMeeting() or nfp_country_code">
                           <input type="checkbox" name="uids:list"
                               tal:attributes="value subscription/uid|subscription/key"/>
                       </td>
