@@ -1,5 +1,7 @@
 4.3.22 (unreleased)
 -------------------
+* commit the import from Excel at each 50 objects to avoid database
+  conflict errors [dumitval]
 
 4.3.21 (2019-03-19)
 -------------------

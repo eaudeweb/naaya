@@ -174,6 +174,7 @@ class CSVImportTool(Implicit, Item):
         record_number = 0
         obj_ids = []
 
+        count = 0
         try:
             for row in rows:
                 try:
@@ -202,6 +203,11 @@ class CSVImportTool(Implicit, Item):
                         lat = lon = None
                     ob_id = add_object(location_obj, _send_notifications=False,
                                        **properties)
+                    count += 1
+                    if count / 50 * 50 == count:
+                        # commit the transaction at each 50 items to
+                        # avoid database conflict errors
+                        transaction.commit()
                     ob = location_obj._getOb(ob_id)
                     if address:
                         if lat and lon:
