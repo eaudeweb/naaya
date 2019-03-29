@@ -1,5 +1,6 @@
 1.3.37 - (unreleased)
 =======================
+* change permission for assign_local_editor [dumitval]
 
 1.3.36 - (2019-01-04)
 =======================

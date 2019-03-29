@@ -3,15 +3,15 @@
         for="Products.EnviroWindows.interfaces.IEWSite"
         name="admin_assign_role_html"
         handler=".roles.admin_assign_role"
-        permission="zope2.ViewManagementScreens" />
+        permission="zope2.NaayaPublishContent" />
     <naaya:simpleView
         for="naaya.content.contact.interfaces.INyContact"
         name="admin_assign_role_html"
         handler=".roles.admin_assign_role"
-        permission="zope2.ViewManagementScreens" />
+        permission="zope2.NaayaPublishContent" />
     <naaya:simpleView
         for="naaya.content.certificate.interfaces.INyCertificate"
         name="admin_assign_role_html"
         handler=".roles.admin_assign_role"
-        permission="zope2.ViewManagementScreens" />
+        permission="zope2.NaayaPublishContent" />
 </configure>
