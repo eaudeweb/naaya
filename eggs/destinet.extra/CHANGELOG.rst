@@ -1,4 +1,7 @@
-1.3.37 - (unreleased)
+1.3.38 - (unreleased)
+=======================
+
+1.3.37 - (2019-03-29)
 =======================
 * change permission for assign_local_editor [dumitval]
 
