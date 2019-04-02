@@ -1,4 +1,7 @@
-1.4.53 (unreleased)
+1.4.54 (unreleased)
+-------------------
+
+1.4.53 (2019-04-02)
 -------------------
 * fix Size limit exceeded in member_search_html [dumitval]
 
