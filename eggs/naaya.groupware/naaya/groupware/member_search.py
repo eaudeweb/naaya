@@ -102,7 +102,14 @@ class MemberSearch(Implicit, Item):
             userids = set(individual_userids + group_userids)
 
             if search_string.strip():
-                agent = agent_from_uf(source.getUserFolder())
+                try:
+                    ldap_roles = self.restrictedTraverse('/ldap-roles')
+                    user_dn = ldap_roles._config.get('secondary_admin_dn')
+                    user_pw = ldap_roles._config.get('secondary_admin_pw')
+                    agent = agent_from_uf(source.getUserFolder(), bind=True,
+                                          user_dn=user_dn, user_pw=user_pw)
+                except KeyError:
+                    agent = agent_from_uf(source.getUserFolder())
                 users = agent.search_user(search_string)
                 users = [user for user in users if
                          user.get('uid', user.get('id', None)) and

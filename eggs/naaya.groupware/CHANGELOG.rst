@@ -1,5 +1,6 @@
 1.4.53 (unreleased)
 -------------------
+* fix Size limit exceeded in member_search_html [dumitval]
 
 1.4.52 (2019-03-04)
 -------------------
