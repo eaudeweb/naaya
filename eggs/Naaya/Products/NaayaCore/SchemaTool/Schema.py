@@ -6,6 +6,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.constants import *
+from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from naaya.core.zope2util import folder_manage_main_plus
 
 from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
@@ -169,6 +170,10 @@ class Schema(Folder):
         return the data and any errors
         """
 
+        try:
+            skip_geolocation = form.pop('skip_geolocation')
+        except KeyError:
+            skip_geolocation = False
         form_data = {}
         form_errors = {}
 
@@ -202,7 +207,11 @@ class Schema(Folder):
                 widget.validateDatamodel(value)
                 # we pass a doctored dict that looks like what our widget
                 # expects from the form
-                widget_value = widget.parseFormData(value)
+                if isinstance(widget, GeoWidget):
+                    widget_value = widget.parseFormData(value,
+                                                        skip_geolocation)
+                else:
+                    widget_value = widget.parseFormData(value)
                 form_data[field_name] = widget.convertValue(widget_value)
             except WidgetError, e:
                 errors.append(str(e))

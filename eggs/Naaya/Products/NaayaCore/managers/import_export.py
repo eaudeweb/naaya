@@ -179,8 +179,11 @@ class CSVImportTool(Implicit, Item):
             for row in rows:
                 try:
                     record_number += 1
-                    # TODO: extract this block into a separate function
-                    properties = {}
+                    # pass the word that the object is created during
+                    # import from file and facilitate skipping the
+                    # geolocation to avoid a timeout - the geolocation
+                    # is performed further down, using a queue
+                    properties = {'skip_geolocation': True}
                     extra_properties = {}
                     address = None
                     for column, value in zip(header, row):

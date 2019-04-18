@@ -42,6 +42,7 @@ def geolocate_queue(site):
                 lat, lon = geocoding.location_geocode(address.encode('utf-8'))
                 if lat and lon:
                     obj.geo_location = Geo(lat, lon, address)
+                    obj.recatalogNyObject(obj)
                 site.geolocation_queue.remove(site_path)
                 site._p_changed = True
                 LOG.info('coodrdinates %s and %s found for %s' %

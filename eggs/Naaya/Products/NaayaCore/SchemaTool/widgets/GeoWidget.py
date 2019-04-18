@@ -27,7 +27,7 @@ class GeoWidget(Widget):
     multiple_form_values = ('lat', 'lon', 'address')
     default = None
 
-    def parseFormData(self, data):
+    def parseFormData(self, data, skip_geolocation=False):
         if self.isEmptyDatamodel(data):
             return None
 
@@ -45,7 +45,7 @@ class GeoWidget(Widget):
             if not lon:
                 lon = None
             address = data.get('address', '').strip()
-            if address and lat is lon is None:
+            if address and lat is lon is None and not skip_geolocation:
                 try:
                     coordinates = geocoding.location_geocode(address)
                     if coordinates is not None:

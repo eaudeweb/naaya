@@ -1,5 +1,6 @@
 4.3.23 (unreleased)
 -------------------
+* skip the in-sync geolocation on import from Excel [dumitval]
 
 4.3.22 (2019-03-29)
 -------------------
