@@ -1,4 +1,7 @@
-1.3.38 - (unreleased)
+1.3.39 - (unreleased)
+=======================
+
+1.3.38 - (2019-04-18)
 =======================
 * customise several templates to allow extendingthe main-content to
   the right when there are no portlets [dumitval]
