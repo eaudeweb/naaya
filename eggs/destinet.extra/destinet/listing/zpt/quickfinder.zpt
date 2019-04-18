@@ -129,7 +129,7 @@
                     news python:'Naaya News' in here.REQUEST.get('meta_types', []);
                     target_groups python:here.REQUEST.get('target_groups', []);
                     location python:here.REQUEST.get('location')">
-    <div id="center_content" class="main-content">
+    <div id="center_content" tal:attributes="class python:test(len(here.get_right_portlets_locations_objects(here)) > 0 or request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here), 'main-content', 'main-content no-portlets')">
       <script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
 
       <div class="content-actions"
@@ -411,7 +411,7 @@
             <span tal:condition="not:map_only" i18n:translate="">
               Displaying <strong i18n:name="counter" id="record_counter"></strong>&nbsp;location(s).
             </span>&nbsp;
-            <a rel="nofollow" tal:condition="here/checkPermissionEditObjects"
+            <a rel="nofollow" tal:condition="here/checkPermissionAddObjects"
               href="" style="display:none" id="view_as_list" target="view_as_list">View as list</a>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">

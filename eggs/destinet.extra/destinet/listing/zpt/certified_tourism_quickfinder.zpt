@@ -147,7 +147,7 @@
                     logo here/getFolderLogo;
                     portal_map here/getGeoMapTool;
                     target_groups python:here.REQUEST.get('target_groups', [])">
-    <div id="center_content" class="main-content">
+    <div id="center_content" tal:attributes="class python:test(len(here.get_right_portlets_locations_objects(here)) > 0 or request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here), 'main-content', 'main-content no-portlets')">
       <script type="text/javascript" src="++resource++destinet.keywords/keywords.js"></script>
 
       <div class="content-actions"

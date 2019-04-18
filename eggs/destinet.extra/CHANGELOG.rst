@@ -1,5 +1,7 @@
 1.3.38 - (unreleased)
 =======================
+* customise several templates to allow extendingthe main-content to
+  the right when there are no portlets [dumitval]
 
 1.3.37 - (2019-03-29)
 =======================
