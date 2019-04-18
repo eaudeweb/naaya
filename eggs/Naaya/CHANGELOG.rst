@@ -1,4 +1,7 @@
-4.3.23 (unreleased)
+4.3.24 (unreleased)
+-------------------
+
+4.3.23 (2019-04-18)
 -------------------
 * skip the in-sync geolocation on import from Excel [dumitval]
 
