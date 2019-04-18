@@ -164,6 +164,15 @@
               </ul>
             </td>
         </tr>
+        <tr tal:condition="here/expiry_date | nothing">
+            <th i18n:translate="">Expiry date</th>
+            <td tal:content="python:here.utShowDateTime(here.expiry_date)" />
+        </tr>
+
+        <tr tal:condition="here/id_number | nothing">
+            <th i18n:translate="">ID Number</th>
+            <td tal:content="here/id_number" />
+        </tr>
         <tr tal:condition="here/administrative_level | nothing">
             <th i18n:translate="">Operational level</th>
             <td tal:content="python:here.get_node_title('administrative_level', here.administrative_level)"
@@ -196,4 +205,3 @@
     </div>
     </metal:block>
 </metal:block>
-

@@ -1,5 +1,6 @@
 0.0.7 (unreleased)
 ------------------
+* add expiry date and id number to the certificate index [dumitval]
 
 0.0.6 (2018-10-30)
 ------------------
