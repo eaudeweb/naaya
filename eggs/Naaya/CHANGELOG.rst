@@ -1,4 +1,7 @@
-4.3.24 (unreleased)
+4.3.25 (unreleased)
+-------------------
+
+4.3.24 (2019-05-03)
 -------------------
 * fix in local channel get objects for rdf [dumitval]
 
