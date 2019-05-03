@@ -55,9 +55,7 @@ class LocalChannel(SimpleItem, utils):
         (
             {'label': 'Properties', 'action': 'manage_properties_html'},
             {'label': 'View', 'action': 'index_html'},
-        )
-        +
-        SimpleItem.manage_options
+        ) + SimpleItem.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -111,15 +109,14 @@ class LocalChannel(SimpleItem, utils):
                 l_howmany = self.numberofitems
             l_items = self.query_translated_objects(meta_type=self.objmetatype,
                                                     lang=self.language,
-                                                    approved=1,
-                                                    howmany=l_howmany)
+                                                    approved=1)
         now = DateTime()
         return [item for item in l_items
-                if getSecurityManager().checkPermission(view, item) and
-                (getattr(item, 'topitem', None) or
-                 getattr(item, 'expirationdate', now) is None or
-                 getattr(item, 'expirationdate', now) + 1 > DateTime())
-                ]
+                if getSecurityManager().checkPermission(view, item) and (
+                    getattr(item, 'topitem', None) or getattr(
+                        item, 'expirationdate', now) is None or getattr(
+                            item, 'expirationdate', now) + 1 > DateTime())
+                ][0:l_howmany]
 
     security.declareProtected(view, 'index_html')
 
@@ -157,7 +154,7 @@ class LocalChannel(SimpleItem, utils):
                 E.url(self.getImagePath()),
                 E.link(s.absolute_url()),
                 E.description(self.utToUtf8(self.description))
-                )
+            )
             xml.append(image)
         received_items = ''.join([i.syndicateThis() for i in l_items])
         received = '<rdf:RDF %s>%s</rdf:RDF>' % (' '.join(header),
@@ -172,5 +169,6 @@ class LocalChannel(SimpleItem, utils):
                               'manage_properties_html')
     manage_properties_html = PageTemplateFile('zpt/localchannel_properties',
                                               globals())
+
 
 InitializeClass(LocalChannel)
