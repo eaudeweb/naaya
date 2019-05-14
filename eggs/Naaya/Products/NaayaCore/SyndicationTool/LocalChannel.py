@@ -103,10 +103,10 @@ class LocalChannel(SimpleItem, utils):
     def get_objects_for_rdf(self):
         # return the objects to be syndicated
         l_items = []
+        l_howmany = -1
+        if self.numberofitems != 0:
+            l_howmany = self.numberofitems
         if len(self.objmetatype) > 0:
-            l_howmany = -1
-            if self.numberofitems != 0:
-                l_howmany = self.numberofitems
             l_items = self.query_translated_objects(meta_type=self.objmetatype,
                                                     lang=self.language,
                                                     approved=1)
