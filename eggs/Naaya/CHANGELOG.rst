@@ -1,4 +1,7 @@
-4.3.25 (unreleased)
+4.4.1 (unreleased)
+-------------------
+
+4.4.0 (2019-05-14)
 -------------------
 * bugfix in get objects for rdf [dumitval]
 
