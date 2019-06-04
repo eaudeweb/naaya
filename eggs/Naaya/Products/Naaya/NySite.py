@@ -2615,6 +2615,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.repository_url = kwargs.get('repository_url', '')
         self.portal_url = kwargs.get('portal_url', '')
         self.http_proxy = kwargs.get('http_proxy', '')
+        self.recaptcha_provider = kwargs.get('recaptcha_provider', 'google')
         self.recaptcha_public_key = kwargs.get('recaptcha_public_key', '')
         self.recaptcha_private_key = kwargs.get('recaptcha_private_key', '')
         self.switch_language = kwargs.get('switch_language', 0)
@@ -4943,6 +4944,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def get_http_proxy(self):
         return self.buildout_http_proxy() or self.http_proxy
+
+    def get_recaptcha_provider(self):
+        conf = getConfiguration()
+        return getattr(self, 'recaptcha_provider', getattr(
+                conf, 'environment', {}).get('reCAPTCHA_PROVIDER', 'google'))
 
     def buildout_recaptcha_public(self):
         conf = getConfiguration()

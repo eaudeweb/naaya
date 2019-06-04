@@ -64,6 +64,13 @@
             disabled python:test(here.buildout_http_proxy(), 'disabled', None)" />
   </div>
   <div class="field">
+    <label for="recaptcha_provider" i18n:translate="">reCAPTCHA public key</label>
+    <select name="recaptcha_provider" id="recaptcha_provider" tal:define="recaptcha_provider here/get_recaptcha_provider">
+      <option value="google" tal:attributes="selected python: recaptcha_provider == 'google'">Google</option>
+      <option value="ec" tal:attributes="selected python: recaptcha_provider == 'ec'">European Comission</option>
+    </select>
+  </div>
+  <div class="field">
     <label for="recaptcha_public_key" i18n:translate=""><a rel="external" href="http://recaptcha.net" i18n:name="reCAPTCHA">reCAPTCHA</a> public key</label>
     <input type="text" name="recaptcha_public_key" id="recaptcha_public_key" size="53" tal:attributes="value here/get_recaptcha_public_key" />
     <p i18n:translate=""

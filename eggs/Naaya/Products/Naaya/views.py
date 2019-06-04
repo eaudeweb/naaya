@@ -123,31 +123,41 @@ def AdminAPIKeysStatus(context, request):
     }
 
     #reCaptcha
-    recaptcha_private_key = context.get_recaptcha_private_key()
-    valid = False
-    if recaptcha_private_key:
-        valid = True
+    if context.getSite().get_recaptcha_provider() == 'ec':
+        api_keys['recaptcha_provider'] = {
+            'title': 'reCaptcha provider',
+            'description': 'Google or the European Commision',
+            'key': 'provider is set to EC, no keys',
+            'valid': True,
+            'change_link': '/admin_properties_html'
+        }
 
-    api_keys['recaptcha_private_key'] = {
-        'title': 'reCaptcha private key',
-        'description': 'reCaptcha private key for CAPTCHA verification',
-        'key': recaptcha_private_key,
-        'valid': valid,
-        'change_link': '/admin_properties_html'
-    }
+    elif context.getSite().get_recaptcha_provider() == 'google':
+        recaptcha_private_key = context.get_recaptcha_private_key()
+        valid = False
+        if recaptcha_private_key:
+            valid = True
 
-    recaptcha_public_key = context.get_recaptcha_public_key()
-    valid = False
-    if recaptcha_public_key:
-        valid = True
+        api_keys['recaptcha_private_key'] = {
+            'title': 'reCaptcha private key',
+            'description': 'reCaptcha private key for CAPTCHA verification',
+            'key': recaptcha_private_key,
+            'valid': valid,
+            'change_link': '/admin_properties_html'
+        }
 
-    api_keys['recaptcha_public_key'] = {
-        'title': 'reCaptcha public key',
-        'description': 'reCaptcha public key for CAPTCHA verification',
-        'key': recaptcha_public_key,
-        'valid': valid,
-        'change_link': '/admin_properties_html'
-    }
+        recaptcha_public_key = context.get_recaptcha_public_key()
+        valid = False
+        if recaptcha_public_key:
+            valid = True
+
+        api_keys['recaptcha_public_key'] = {
+            'title': 'reCaptcha public key',
+            'description': 'reCaptcha public key for CAPTCHA verification',
+            'key': recaptcha_public_key,
+            'valid': valid,
+            'change_link': '/admin_properties_html'
+        }
 
     options = {
         'here': context,
@@ -161,3 +171,4 @@ class PDBView(BrowserView):
     def __call__(self):
         import pdb; pdb.set_trace()
         return "Done"
+

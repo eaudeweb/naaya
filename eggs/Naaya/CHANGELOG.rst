@@ -1,5 +1,6 @@
 4.4.1 (unreleased)
 -------------------
+* add EC recaptcha provider [dumitval]
 
 4.4.0 (2019-05-14)
 -------------------
