@@ -1,5 +1,6 @@
 4.4.2 (unreleased)
 -------------------
+* improvements for Excel imports [dumitval]
 
 4.4.1 (2019-06-04)
 -------------------

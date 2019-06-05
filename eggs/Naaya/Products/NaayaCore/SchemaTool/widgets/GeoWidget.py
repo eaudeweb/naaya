@@ -44,7 +44,12 @@ class GeoWidget(Widget):
             lon = data.get('lon', None)
             if not lon:
                 lon = None
-            address = data.get('address', '').strip()
+            address = data.get('address', '')
+            if not isinstance(address, basestring):
+                raise WidgetError('Address is not a string for "%s"' %
+                                  self.title)
+            else:
+                address = address.strip()
             if address and lat is lon is None and not skip_geolocation:
                 try:
                     coordinates = geocoding.location_geocode(address)
@@ -83,5 +88,6 @@ class GeoWidget(Widget):
                                        globals())
 
     template = PageTemplateFile('../zpt/property_widget_geo', globals())
+
 
 InitializeClass(GeoWidget)
