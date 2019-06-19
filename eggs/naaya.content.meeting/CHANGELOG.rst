@@ -1,5 +1,7 @@
 1.3.02 (unreleased)
 -------------------
+* get country names from semantic (for now using eea.ldapadmin)
+  [dumitval]
 
 1.3.01 (2019-03-19)
 -------------------

@@ -21,7 +21,7 @@ from Products.NaayaCore.AuthenticationTool.utils import (
     getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber,
     findUsers, listUsersInGroup)
 from subscriptions import Subscriptions
-from countries import country_from_country_code
+from countries import get_country_name
 
 
 class Participants(SimpleItem):
@@ -461,7 +461,7 @@ class Participants(SimpleItem):
             participant_info = [
                 part_info['name'], part_info['uid'], part_info['email'],
                 part_info['organization'],
-                country_from_country_code.get(part_info['country'], ''),
+                get_country_name(part_info['country']),
                 part_info['reimbursed'], part_info['phone'], part_info['role'],
                 part_info['saved_by'], part_info['justification']]
             if meeting.survey_required and survey:
@@ -511,7 +511,7 @@ class Participants(SimpleItem):
                 part_info['uid'], part_info['name'], part_info['email'],
                 part_info['organization'], part_info['role'],
                 '', part_info['phone'], '', '', '', '', '', '', '', '', '', '',
-                country_from_country_code.get(part_info['country'], ''),
+                get_country_name(part_info['country']),
                 '', '', '', part_info['uid'], '']
             rows.append(participant_info)
 
@@ -522,6 +522,7 @@ class Participants(SimpleItem):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s'
                            % filename)
         return generate_csv(header, rows)
+
 
 InitializeClass(Participants)
 

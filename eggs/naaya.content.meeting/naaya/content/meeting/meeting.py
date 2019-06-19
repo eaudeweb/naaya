@@ -67,7 +67,7 @@ from subscriptions import SignupUsersTool
 from lxml import etree
 from lxml.builder import ElementMaker
 
-from countries import country_from_country_code
+from countries import get_country_name, get_countries
 from eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
 
 # module constants
@@ -377,6 +377,7 @@ def on_added_meeting_item(ob, event):
     if parent.meta_type == NyMeeting.meta_type:
         if getattr(parent, 'restrict_items', True):
             _restrict_meeting_item_view(ob)
+
 
 _marker = object()
 
@@ -843,15 +844,11 @@ class NyMeeting(NyContentData, NyFolder):
 
     def get_country(self, country_code):
         """ """
-        if country_code is None:
-            return '-'
-        return country_from_country_code.get(country_code, country_code)
+        return get_country_name(country_code)
 
     def get_countries(self):
         """ """
-        countries = sorted(country_from_country_code.items(),
-                           key=lambda x: x[1])
-        return countries
+        return get_countries()
 
     security.declareProtected(view, 'is_signup')
 
@@ -932,6 +929,7 @@ class NyMeeting(NyContentData, NyFolder):
             if meeting_type in EIONET_MEETINGS:
                 return True
         return False
+
 
 InitializeClass(NyMeeting)
 
