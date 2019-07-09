@@ -1,5 +1,6 @@
 1.4.26 (unreleased)
 --------------------
+* backwards compatibility on download link [dumitval]
 
 1.4.25 (2016-11-18)
 --------------------

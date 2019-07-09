@@ -187,7 +187,7 @@ class LocalizedFileDownload(object):
     """
 
     def __call__(self, context, path, REQUEST):
-        if len(path) == 1:      # /download/filename.pdf
+        if len(path) in [0, 1]:      # /download or /download/filename.pdf
             ver = context.current_version
             if ver is None:
                 raise NotFound
@@ -234,9 +234,10 @@ class LocalizedFileDownload(object):
             return ver.send_data(RESPONSE, as_attachment=False,
                                  REQUEST=REQUEST)
         elif action == 'download':
-            return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
+            return ver.send_data(RESPONSE, set_filename=True, REQUEST=REQUEST)
         else:
             raise NotFound
+
 
 localizedbfile_download = LocalizedFileDownload()
 
@@ -526,6 +527,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(localizedbfile_download)
+
 
 InitializeClass(NyBFile)
 
