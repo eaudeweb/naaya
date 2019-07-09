@@ -1,4 +1,7 @@
-1.4.26 (unreleased)
+1.4.27 (unreleased)
+--------------------
+
+1.4.26 (2019-07-09)
 --------------------
 * backwards compatibility on download link [dumitval]
 
