@@ -1,5 +1,6 @@
 4.4.3 (unrelaesed)
 -------------------
+* remove own implementation of sentry, use eea.sentry [dumitval]
 
 4.4.2 (2019-06-05)
 -------------------

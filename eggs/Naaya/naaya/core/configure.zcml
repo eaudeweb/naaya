@@ -11,12 +11,6 @@
     <subscriber handler="naaya.core.heartbeat.cleanup_unsubmitted_objects" />
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />
 
-    <naaya:call factory=".monitoring.initialize" />
-    <configure zcml:condition="installed ZPublisher.interfaces">
-        <subscriber for="ZPublisher.interfaces.IPubFailure"
-            handler=".monitoring.log_pub_failure" />
-    </configure>
-
     <naaya:call factory=".site_logging.init_site_loggers" />
 
     <browser:resourceDirectory
