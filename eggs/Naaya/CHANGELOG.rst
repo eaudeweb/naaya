@@ -1,5 +1,9 @@
-4.4.4 (unreleased)
+4.4.5 (unreleased)
 -------------------
+
+4.4.4 (2019-09-05)
+-------------------
+* remove any WebEx-related functionality [dumitval]
 
 4.4.3 (2019-08-01)
 -------------------

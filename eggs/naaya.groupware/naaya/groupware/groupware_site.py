@@ -2,7 +2,6 @@ import os
 from copy import copy
 import logging
 from datetime import datetime
-import json
 from urlparse import urlparse
 
 import Globals
@@ -20,23 +19,18 @@ from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaBase.constants import PERMISSION_REQUEST_WEBEX
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile \
     as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import \
     EmailPageTemplateFile
-from Products.NaayaCore.EmailTool.EmailTool import get_bulk_emails
-from Products.NaayaCore.EmailTool.EmailTool import get_bulk_email
-from Products.NaayaCore.EmailTool.EmailTool import save_webex_email
-from naaya.content.meeting.meeting import addNyMeeting
 from naaya.component import bundles
 from naaya.core.utils import cleanup_message
 from naaya.core.zope2util import get_zope_env, path_in_site
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
-except:
+except ImportError:
     rdf_calendar_available = False
 from eea.usersdb.factories import agent_from_site
 
@@ -63,6 +57,7 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
     return ob
+
 
 groupware_bundle = bundles.get("Groupware")
 groupware_bundle.set_parent(bundles.get("Naaya"))
@@ -220,62 +215,6 @@ class GroupwareSite(NySite):
             REQUEST.RESPONSE.redirect('%s/admin_email_html' %
                                       self.absolute_url())
 
-    security.declareProtected(PERMISSION_REQUEST_WEBEX,
-                              'admin_saved_webex_emails')
-
-    def admin_saved_webex_emails(self, REQUEST=None, RESPONSE=None):
-        """ Display all saved saved emails """
-        emails = get_bulk_emails(self, where_to_read='sent-webex')
-        return self.getFormsTool().getContent({'here': self, 'emails': emails},
-                                              'site_admin_webex_mail_listing')
-
-    security.declareProtected(PERMISSION_REQUEST_WEBEX,
-                              'admin_view_webex_email')
-
-    def admin_view_webex_email(self, filename, REQUEST=None, RESPONSE=None):
-        """ Display a specfic saved webex request email """
-
-        if REQUEST and REQUEST.method == 'POST':
-            meeting_info = json.loads(REQUEST.form['webex'])
-            # get the initial requester of the webex meeting
-            requester_auth_user = str(meeting_info['auth_user'])
-            del meeting_info['auth_user']
-
-            # automatically add meeting using info from email
-            # and some default data
-            extra_args = {
-                'geo_location.address':
-                    'Kongens Nytorv 6, 1050 Copenhagen K, Denmark',
-                'geo_location.lat': u'55.681365',
-                'geo_location.lon': u'12.586484',
-                'geo_type': u'symbol326',
-                'sortorder': u'100',
-                'releasedate': datetime.utcnow().strftime("%d/%m/%Y"),
-                'max_participants': '25',
-                'restrict_items': True,
-                'submitted': 1
-            }
-
-            args = dict(meeting_info, **extra_args)
-
-            try:
-                ob_id = addNyMeeting(self.getSite().library,
-                                     contributor=requester_auth_user,
-                                     **args)
-            except Exception:
-                self.setSessionErrorsTrans("Error in adding a new meeting.")
-                REQUEST.RESPONSE.redirect('%s/library' % self.absolute_url())
-            else:
-                self.setSessionInfoTrans('Successfully added meeting')
-
-            REQUEST.RESPONSE.redirect('%s/library/%s' % (self.absolute_url(),
-                                                         ob_id))
-            return
-
-        email = get_bulk_email(self, filename, where_to_read='sent-webex')
-        return self.getFormsTool().getContent({'here': self, 'email': email},
-                                              'site_admin_webex_mail_view')
-
     def _validate_form_date(self, value, all_day):
         if all_day is True:
             try:
@@ -289,147 +228,6 @@ class GroupwareSite(NySite):
                 return False
 
         return date
-
-    def _get_webex_mail_body(self, meeting_info):
-        mail_body = (
-            "%(requester)s is asking for a new meeting to be added.\n"
-            "The new meeting is defined by the following properties:\n\n"
-            "Meeting title: %(title)s\n"
-            "Meeting organizer: %(contact_person)s (%(contact_email)s)\n"
-            "Meeting start date: %(interval.start_date)s\n"
-            "Meeting end date: %(interval.end_date)s\n"
-            % meeting_info)
-        if 'interval.all_day' not in meeting_info:
-            mail_body += ("Meeting start time: %(interval.start_time)s\n"
-                          "Meeting end time: %(interval.end_time)s\n"
-                          % meeting_info)
-        return mail_body
-
-    security.declareProtected(PERMISSION_REQUEST_WEBEX,
-                              'admin_webex_mail_html')
-
-    def admin_webex_mail_html(self, REQUEST=None):
-        """
-        Send email to request a new WebEx meeting booking - all_fields are
-        form-dependant
-        """
-
-        errors = []
-        options = {'errors': errors}
-
-        auth_user = self.REQUEST.AUTHENTICATED_USER
-        meeting_requester = " ".join([auth_user.firstname,
-                                      auth_user.lastname])
-
-        # get list of recipients (comma-separated)
-        mail_recipients = os.environ.get('WEBEX_CONTACTS', None)
-        if not mail_recipients:
-            self.setSessionErrorsTrans("Missing Eionet HelpDesk recipient(s) "
-                                       "email address. Please contact the "
-                                       "platform maintainers to define proper "
-                                       "WEBEX_CONTACTS environment variable.")
-
-        if REQUEST.REQUEST_METHOD == 'POST' and mail_recipients:
-            email_tool = self.getEmailTool()
-            addr_from = email_tool.get_addr_from()
-
-            meeting_title = REQUEST.form.get('meeting_title', '').strip()
-            organizer_name = REQUEST.form.get('organizer_name', '').strip()
-            organizer_email = REQUEST.form.get('organizer_email', '').strip()
-            all_day = REQUEST.form.get('all_day', False)
-            start_date_id = REQUEST.form.get('start_date_id', '').strip()
-            end_date_id = REQUEST.form.get('end_date_id', '').strip()
-            start_timing = REQUEST.form.get('start_timing', '').strip()
-            end_timing = REQUEST.form.get('end_timing', '').strip()
-            other_comments = REQUEST.form.get('other_comments', '').strip()
-
-            start_date = " ".join([start_date_id, start_timing]).strip()
-            end_date = " ".join([end_date_id, end_timing]).strip()
-
-            if not meeting_title:
-                errors.append('meeting_title')
-            if not organizer_name.strip():
-                errors.append('organizer_name')
-            if not organizer_email.strip():
-                errors.append('organizer_email')
-
-            validated_start_date = self._validate_form_date(start_date,
-                                                            all_day)
-            validated_end_date = self._validate_form_date(end_date, all_day)
-            if not validated_start_date:
-                errors.append('start_date_id')
-            if not validated_end_date:
-                errors.append('end_date_id')
-            if validated_start_date and validated_end_date:
-                if validated_start_date > validated_end_date:
-                    errors.append('twisted_dates')
-
-            if errors:
-                self.setSessionErrorsTrans(
-                    "The form contains errors. "
-                    "Please correct them and try again.")
-            else:
-
-                # extract list of email contacts
-                mails = mail_recipients.split(',')
-                # prepare dictionary with useful information
-                meeting_info = {
-                    'auth_user': auth_user.getUserName(),
-                    'requester': meeting_requester,
-                    'title': meeting_title,
-                    'contact_person': organizer_name,
-                    'contact_email': organizer_email,
-                    'interval.start_date':
-                        validated_start_date.strftime("%d/%m/%Y"),
-                    'interval.end_date':
-                        validated_end_date.strftime("%d/%m/%Y"),
-                }
-
-                if not all_day:
-                    meeting_info['interval.start_time'] = (
-                        validated_start_date.strftime("%H:%M"))
-                    meeting_info['interval.end_time'] = (
-                        validated_end_date.strftime("%H:%M"))
-                else:
-                    meeting_info['interval.all_day'] = True
-
-                mail_subject = "New WebEx meeting booking request"
-                mail_body = self._get_webex_mail_body(meeting_info)
-
-                if other_comments:
-                    mail_body = mail_body + ("Observations regarding the "
-                                             "new meeting:\n\n "
-                                             "{0}\n".format(other_comments))
-
-                for mail in mails:
-                    email_tool.sendEmail(mail_body, mail, addr_from,
-                                         mail_subject)
-
-                try:
-                    save_webex_email(self, mails, meeting_requester,
-                                     mail_subject, mail_body,
-                                     where_to_save='sent-webex',
-                                     others=meeting_info)
-                except Exception:
-                    log.exception("Failed saving webex email on disk")
-
-                self.setSessionInfoTrans(
-                    'WebEx meeting request mail sent. (${date})',
-                    date=self.utGetTodayDate())
-
-                options = {'errors': errors}
-                REQUEST.form.clear()
-
-                # keep initial form data
-                REQUEST['organizer_name'] = meeting_requester
-                REQUEST['organizer_email'] = auth_user.mail
-
-        else:
-
-            REQUEST['organizer_name'] = meeting_requester
-            REQUEST['organizer_email'] = auth_user.mail
-
-        return self._admin_webex_mail(**options)
 
     security.declarePrivate('_user_admin_link')
 
@@ -749,10 +547,8 @@ class GroupwareSite(NySite):
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(),
                                       'naaya.groupware.relinquish_membership')
 
-    _admin_webex_mail = nptf('skel/forms/site_admin_webex_mail', globals(),
-                             'naaya.groupware.site_admin_webex_mail')
-
     member_search = MemberSearch(id='member_search')
+
 
 InitializeClass(GroupwareSite)
 

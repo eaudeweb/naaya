@@ -1,5 +1,9 @@
-1.3.03 (unreleased)
+1.3.04 (unreleased)
 -------------------
+
+1.3.03 (2019-09-05)
+-------------------
+* remove any webex related functionality [dumitval]
 
 1.3.02 (2019-06-19)
 -------------------

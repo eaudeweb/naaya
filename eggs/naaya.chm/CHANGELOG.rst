@@ -1,5 +1,9 @@
-3.0.32 (unreleased)
+3.0.33 (unreleased)
 ------------------
+
+3.0.32 (2019-09-05)
+------------------
+* remove any WebEx-related functionality [dumitval]
 
 3.0.31 (2015-12-15)
 ------------------

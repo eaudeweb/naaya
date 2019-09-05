@@ -234,7 +234,6 @@
             <permission name="Naaya - Meeting - Participate in the meeting" />
             <permission name="Naaya - Publish content" />
             <permission name="Naaya - Publish direct" />
-            <permission name="Naaya - Request Webex" />
             <permission name="Naaya - Review TalkBack Consultation" />
             <permission name="Naaya - Review TalkBack after deadline" />
             <permission name="Naaya - Skip Captcha" />
@@ -337,7 +336,6 @@
             <permission name="Naaya - Meeting - Participate in the meeting" />
             <permission name="Naaya - Publish content" />
             <permission name="Naaya - Publish direct" />
-            <permission name="Naaya - Request Webex" />
             <permission name="Naaya - Review TalkBack Consultation" />
             <permission name="Naaya - Review TalkBack after deadline" />
             <permission name="Naaya - Skip Captcha" />

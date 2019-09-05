@@ -1,5 +1,11 @@
-1.4.54 (unreleased)
+1.4.55 (unreleased)
 -------------------
+
+1.4.54 (2019-09-05)
+-------------------
+* remove any WebEx-related functionality [dumitval]
+* bugfix in member_search related to the "Former Eionet member" message
+  [dumitval]
 
 1.4.53 (2019-04-02)
 -------------------

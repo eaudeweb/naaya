@@ -5,9 +5,6 @@
         <form id="site_unauthorized" title="Access denied"/>
         <form id="site_admin_properties" title="Portal properties"/>
         <form id="site_admin_email" title="Portal administration - email settings"/>
-        <form id="site_admin_webex_mail" title="Portal administration - WebEx meeting request"/>
-        <form id="site_admin_webex_mail_listing" title="Portal administration - Sent WebEx meeting requests"/>
-        <form id="site_admin_webex_mail_view" title="Portal administration - Sent WebEx meeting request details"/>
         <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
         <form id="folder_index" title="Folder index customisation for Groupware"/>
         <form id="folder_listing" title="Folder contents customisation for Groupware"/>
@@ -63,8 +60,6 @@
             <link id="member_search" title="Member search" description="" url="/member_search" relative="1" permission="" order="30"/>
             <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
             <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Naaya - Publish content" order="50"/>
-            <link id="webex" title="WebEx planning mail" description="" url="/admin_webex_mail_html" relative="1" permission="Naaya - Skip approval" order="55"/>
-
             <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
             <link id="help" title="Help" description="" url="/help" relative="1" permission="" order="70"/>
         </linkslist>
@@ -125,7 +120,6 @@
             <permission name="Naaya - Meeting - Participate in the meeting" />
             <permission name="Naaya - Publish content" />
             <permission name="Naaya - Publish direct" />
-            <permission name="Naaya - Request Webex" />
             <permission name="Naaya - Review TalkBack Consultation" />
             <permission name="Naaya - Review TalkBack after deadline" />
             <permission name="Naaya - Skip Captcha" />
@@ -213,7 +207,6 @@
             <permission name="Naaya - Meeting - Participate in the meeting" />
             <permission name="Naaya - Publish content" />
             <permission name="Naaya - Publish direct" />
-            <permission name="Naaya - Request Webex" />
             <permission name="Naaya - Review TalkBack Consultation" />
             <permission name="Naaya - Review TalkBack after deadline" />
             <permission name="Naaya - Skip Captcha" />

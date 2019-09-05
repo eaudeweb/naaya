@@ -5,7 +5,6 @@ ENV GOOGLE_AUTH_CLIENT_ID ''
 ENV GOOGLE_AUTH_CLIENT_SECRET ''
 ENV reCAPTCHA_PUBLIC_KEY ''
 ENV reCAPTCHA_PRIVATE_KEY ''
-ENV WEBEX_CONTACTS ''
 
 # Enable epel release
 RUN yum -y updateinfo && yum -y install wget

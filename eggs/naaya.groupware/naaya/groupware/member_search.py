@@ -195,7 +195,7 @@ class MemberSearch(Implicit, Item):
         # user_roles are precalculated for the member search (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user_id)
-        if user.get('disabled'):
+        if user.get('disabled') == 'disabled':
             name = DISABLED_USER_NAME
             email = None
         else:
@@ -304,5 +304,6 @@ class MemberSearch(Implicit, Item):
 
     index_html = PageTemplateFile('zpt/member_search_index', globals())
     user_list_html = PageTemplateFile('zpt/member_search_list', globals())
+
 
 InitializeClass(MemberSearch)
