@@ -1,11 +1,13 @@
 from Products.Naaya.permissions import _register_permissions
 
-PERMISSION_ADD_TALKBACK_CONSULTATION = 'Naaya - Add Naaya TalkBack Consultation objects'
+PERMISSION_ADD_TALKBACK_CONSULTATION = \
+    'Naaya - Add Naaya TalkBack Consultation objects'
 PERMISSION_REVIEW_TALKBACKCONSULTATION = 'Naaya - Review TalkBack Consultation'
 PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE = \
     'Naaya - Review TalkBack after deadline'
 PERMISSION_MANAGE_TALKBACKCONSULTATION = 'Naaya - Manage TalkBack Consultation'
-PERMISSION_INVITE_TO_TALKBACKCONSULTATION = 'Naaya - Invite to TalkBack Consultation'
+PERMISSION_INVITE_TO_TALKBACKCONSULTATION = \
+    'Naaya - Invite to TalkBack Consultation'
 
 permission_data = {
     PERMISSION_ADD_TALKBACK_CONSULTATION: {
@@ -37,6 +39,7 @@ permission_data = {
         """,
     },
 }
+
 
 def register_permissions():
     _register_permissions(permission_data)
