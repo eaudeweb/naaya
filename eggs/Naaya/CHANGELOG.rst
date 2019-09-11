@@ -1,4 +1,7 @@
-4.4.5 (unreleased)
+4.4.6 (unreleased)
+-------------------
+
+4.4.5 (2019-09-11)
 -------------------
 * fix folder listing for users with View on specific location [dumitval]
 
