@@ -933,7 +933,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             if not isinstance(s, unicode):
                 try:
                     return s.decode('utf-8')
-                except:
+                except UnicodeDecodeError:
                     return s.decode('latin-1')
             else:
                 return s
@@ -1135,7 +1135,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return None
 
-    security.declareProtected(view, 'is_disabled')
+    security.declarePublic('is_disabled')
 
     def is_disabled(self, userid):
         """
@@ -1151,7 +1151,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if user is not None:
             return getattr(user, 'status', None) == 'disabled'
 
-    security.declareProtected(view, 'is_deleted')
+    security.declarePublic('is_deleted')
 
     def is_deleted(self, userid):
         """
@@ -1514,7 +1514,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         try:
             return self._getOb(p_source_id)
-        except:
+        except AttributeError:
             return None
 
     def manageAddSource(self, source_path, title='', REQUEST=None):
@@ -1544,7 +1544,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         try:
             self._delObject(id)
-        except:
+        except AttributeError:
             pass
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_sources_html')
@@ -1958,5 +1958,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         'zpt/authentication_send_emails_log', globals())
 
     recover_password = RecoverPassword('recover_password')
+
 
 InitializeClass(AuthenticationTool)

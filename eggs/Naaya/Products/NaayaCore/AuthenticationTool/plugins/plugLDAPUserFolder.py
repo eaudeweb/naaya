@@ -14,7 +14,7 @@ from zope.interface import implements
 try:
     import ldap
     from Products.LDAPUserFolder.LDAPDelegate import filter_format
-except:
+except ImportError:
     pass
 
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
@@ -59,6 +59,7 @@ class ldap_user:
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
 
+
 InitializeClass(ldap_user)
 
 
@@ -100,7 +101,7 @@ class plugLDAPUserFolder(PlugBase):
         try:
             del self.located[user]
             self._p_changed = 1
-        except:
+        except KeyError:
             pass
 
     def sort_list(self, list, n, r):
@@ -485,6 +486,8 @@ class plugLDAPUserFolder(PlugBase):
 
     def getUserFullName(self, p_username, acl_folder):
         # return the full name of the given user id
+        if p_username.startswith('signup:'):
+            return p_username
         try:
             user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
@@ -577,6 +580,7 @@ class plugLDAPUserFolder(PlugBase):
 
     security.declareProtected(manage_users, 'pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
+
 
 InitializeClass(plugLDAPUserFolder)
 
@@ -681,6 +685,7 @@ class LdapSatelliteProvider(Acquisition.Implicit):
 
         current_folder._p_changed = True
 
+
 NySite.acl_satellite = LdapSatelliteProvider()
 
 
@@ -734,11 +739,6 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         else:
             assert isinstance(value, unicode), '%r not unicode' % value
         return value
-
-    try:
-        get_zope_user()
-    except AssertionError:
-        return None
 
     fields = {
         'user_id': user_id,
