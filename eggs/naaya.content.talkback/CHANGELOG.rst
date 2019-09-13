@@ -1,4 +1,7 @@
-1.5.4 (unreleased)
+1.5.5 (unreleased)
+-----------------
+
+1.5.4 (2019-09-13)
 -----------------
 * add permission to manage comments, separated from admin [dumitval]
 
