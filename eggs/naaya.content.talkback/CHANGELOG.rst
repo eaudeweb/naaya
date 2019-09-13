@@ -1,5 +1,6 @@
 1.5.4 (unreleased)
 -----------------
+* add permission to manage comments, separated from admin [dumitval]
 
 1.5.3 (2019-03-01)
 -----------------

@@ -16,6 +16,8 @@
 
 <metal:block fill-slot="body"
   tal:define="perm_manage here/checkPermissionManageTalkBackConsultation;
+              perm_manage_comments python: here.checkPermissionManageComments() or perm_manage;
+              perm_comments python: perm_manage_comments or here.own_comments();
               perm_invite here/checkPermissionInviteToTalkBackConsultation;
               own_comments here/own_comments">
     <div class="floated-buttons">
@@ -28,7 +30,7 @@
 
     <h1 i18n:translate="" tal:content="here/title_or_id" />
 
-    <tal:block condition="python:perm_manage or perm_invite">
+    <tal:block condition="python:perm_manage_comments or perm_invite">
       <div class="graph-container">
           <div class="caption" i18n:translate="">Comments (Trend)</div>
           <div class="graph" id="comments_trend"></div>
@@ -81,7 +83,7 @@
           </li>
       </ul>
     </tal:block>
-    <tal:block condition="python: perm_manage or own_comments">
+    <tal:block condition="python: perm_comments">
         <span tal:condition="python:not here.rstk.we_provide('Excel export')" i18n:translate="">
             Export comments as CSV file.
         </span>
@@ -106,13 +108,13 @@
 
         <p><a tal:attributes="href string:${here/absolute_url}/comments_table_html"
               i18n:translate="">
-                  <tal:block condition="perm_manage">View all comments</tal:block>
-                  <tal:block condition="python: not perm_manage and own_comments">
+                  <tal:block condition="perm_manage_comments">View all comments</tal:block>
+                  <tal:block condition="python: not perm_manage_comments and own_comments">
                       View my comments</tal:block>
             </a></p>
     </tal:block>
 
-    <div id="log-table-holder" tal:condition="python: perm_manage or perm_invite">
+    <div id="log-table-holder" tal:condition="python: perm_manage_comments or perm_invite">
         <table class="datatable display listing" id="actions-on-content-list">
             <caption i18n:translate="">Reviewers that submitted comments</caption>
             <thead>

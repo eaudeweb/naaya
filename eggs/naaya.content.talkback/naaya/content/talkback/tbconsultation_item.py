@@ -68,6 +68,7 @@ from permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
                          PERMISSION_REVIEW_TALKBACKCONSULTATION,
                          PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                         PERMISSION_MANAGE_COMMENTS,
                          PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
 # module constants
@@ -160,7 +161,7 @@ config = {
             'www/NyTalkBackConsultation_marked.gif', globals()),
         'tb-editor.css': ImageFile('www/tb-editor.css', globals()),
     },
-    }
+}
 
 talkbackconsultation_add = NaayaPageTemplateFile(
     'zpt/talkbackconsultation_add', globals(), 'tbconsultation_add')
@@ -212,8 +213,7 @@ def talkbackconsultation_add_html(self, REQUEST=None, RESPONSE=None):
         'action': 'addNyTalkBackConsultation',
         'form_helper': form_helper,
         'submitter_info_html': submitter.info_html(self, REQUEST),
-        },
-        'tbconsultation_add')
+    }, 'tbconsultation_add')
 
 
 def _create_NyTalkBackConsultation_object(parent, id, contributor):
@@ -318,6 +318,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE:
             "Submit comments after deadline",
         PERMISSION_MANAGE_TALKBACKCONSULTATION: "Administer consultation",
+        PERMISSION_MANAGE_COMMENTS: "Administer comments",
         PERMISSION_INVITE_TO_TALKBACKCONSULTATION: "Send invitations",
     })
 
@@ -439,7 +440,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         if isinstance(days, basestring):
             try:
                 days = int(days)
-            except:
+            except ValueError:
                 days = 2
 
         cutoff = DateTime() - days
@@ -616,6 +617,12 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
         """
         return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
+    def checkPermissionManageComments(self):
+        """
+        Check for managing the comments inside TalkBack Consultation.
+        """
+        return self.checkPermission(PERMISSION_MANAGE_COMMENTS)
+
     def checkPermissionInviteToTalkBackConsultation(self):
         """
         Check for inviting others to the TalkBack Consultation.
@@ -703,6 +710,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     __ac_roles__ = ['InvitedReviewer']
 
     admin_comments = CommentsAdmin('admin_comments')
+
 
 InitializeClass(NyTalkBackConsultation)
 manage_addNyTalkBackConsultation_html = PageTemplateFile(

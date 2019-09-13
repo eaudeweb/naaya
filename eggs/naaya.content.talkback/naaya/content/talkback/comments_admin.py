@@ -36,7 +36,6 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 
 from Paragraph import Paragraph
-from permissions import (PERMISSION_MANAGE_TALKBACKCONSULTATION)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
 
@@ -65,6 +64,8 @@ class CommentsAdmin(SimpleItem):
         """ the admin page for comments """
 
         if self.checkPermissionManageTalkBackConsultation():
+            pass
+        elif self.checkPermissionManageComments():
             pass
         elif self.checkPermissionInviteToTalkBackConsultation():
             pass
@@ -120,11 +121,19 @@ class CommentsAdmin(SimpleItem):
 
         return contrib_stats
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                              'get_comments_trend')
+    security.declarePublic('get_comments_trend')
 
     def get_comments_trend(self):
         """ get comments trend """
+        if self.checkPermissionManageTalkBackConsultation():
+            pass
+        elif self.checkPermissionManageComments():
+            pass
+        elif self.own_comments():
+            return {}
+        else:
+            raise Unauthorized
+
         days = {
             self.start_date.Date(): 0,
             self.end_date.Date(): 0
@@ -255,7 +264,8 @@ class CommentsAdmin(SimpleItem):
 
     def all_comments(self):
         perm_manage = self.checkPermissionManageTalkBackConsultation()
-        if perm_manage:
+        perm_manage_comments = self.checkPermissionManageComments()
+        if perm_manage or perm_manage_comments:
             return self._all_comments()
         own_comments = self.own_comments()
         if own_comments:
@@ -265,7 +275,8 @@ class CommentsAdmin(SimpleItem):
     def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
         """ """
         perm_manage = self.checkPermissionManageTalkBackConsultation()
-        if not (perm_manage or self.own_comments):
+        perm_manage_comments = self.checkPermissionManageComments()
+        if not (perm_manage or perm_manage_comments or self.own_comments()):
             raise Unauthorized
 
         html2text = self.getSite().html2text
@@ -336,5 +347,6 @@ class CommentsAdmin(SimpleItem):
             raise Unauthorized
 
         return self._comments_table_html()
+
 
 InitializeClass(CommentsAdmin)
