@@ -1,4 +1,7 @@
-1.5.5 (unreleased)
+1.5.6 (unreleased)
+-----------------
+
+1.5.5 (2019-09-27)
 -----------------
 * open hyperlinks from talkback comments in new window [dumitval]
 
