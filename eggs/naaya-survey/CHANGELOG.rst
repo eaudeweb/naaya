@@ -1,5 +1,6 @@
 1.3.8 (unreleased)
 ===================
+* changes for the Eionet NFP meeting automatic survey [dumitval]
 
 1.3.7 (2017-01-20)
 ===================

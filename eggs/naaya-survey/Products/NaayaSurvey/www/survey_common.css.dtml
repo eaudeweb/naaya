@@ -62,6 +62,10 @@ div.widgetViewMode {
 	color: #468966;
 }
 
+.labelWidget {
+	font-size: 200%;
+}
+
 .widgetEditMode .tooltips{
 	color:#76797C;
 	font-size:90%;
@@ -336,10 +340,6 @@ body .widgetEditMode th {
 
 body .widgetEditMode th:empty {
    background: #fff;
-}
-
-body .widgetEditMode .widget-title {
-   max-width: 450px;
 }
 
 body .widgetEditMode textarea {

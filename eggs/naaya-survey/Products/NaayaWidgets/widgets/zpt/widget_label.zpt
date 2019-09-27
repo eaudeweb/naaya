@@ -17,7 +17,7 @@
 </div>
 
 <!-- Edit mode -->
-<div tal:condition="python:mode == 'edit'" class="widgetEditMode">
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode labelWidget">
 	<strong tal:content="nonEmptyTitle" class="widget-title" />
 	<span tal:replace="structure nonEmptyText">text of the label</span>
 </div>
