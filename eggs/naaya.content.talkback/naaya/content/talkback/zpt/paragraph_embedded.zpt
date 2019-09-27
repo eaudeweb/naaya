@@ -6,8 +6,14 @@
     <link href="portal_layout/additional_style_css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 </head>
+<script type="text/javascript">
+  $(function() {
+      $('div.tb-comment-body a').each(function(){
+        $(this).attr('target', '_blank');
+      })
+  });
+</script>
 <body class="tb-embedded">
-
 <div class="talkback-comments_list"
      tal:condition="python:request.get('prev_comments', 'on') == 'on'">
     <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>

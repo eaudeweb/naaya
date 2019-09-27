@@ -1,5 +1,6 @@
 1.5.5 (unreleased)
 -----------------
+* open hyperlinks from talkback comments in new window [dumitval]
 
 1.5.4 (2019-09-13)
 -----------------
