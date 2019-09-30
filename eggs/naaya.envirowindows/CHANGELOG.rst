@@ -1,5 +1,9 @@
-1.1.16 (unreleased)
+1.1.17 (unreleased)
 -------------------
+
+1.1.16 (2019-09-30)
+-------------------
+
 * admin_contacts should not crash when objects miss certain properties
   [dumitval]
 
