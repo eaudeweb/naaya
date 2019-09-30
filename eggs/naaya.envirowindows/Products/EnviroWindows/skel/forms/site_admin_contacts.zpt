@@ -241,8 +241,8 @@
 				</tr>
 				<tr tal:repeat="brain brains">
 					<tal:block define="contact brain/getObject">
-					<td tal:content="python:test(contact.firstname and contact.lastname, '%s %s' % (contact.firstname, contact.lastname), contact.title_or_id())" />
-					<td tal:content="contact/email" />
+					<td tal:content="python:test(contact.get('firstname') and contact.get('lastname'), '%s %s' % (contact.get('firstname'), contact.get('lastname')), contact.title_or_id())" />
+					<td tal:content="contact/email|nothing" />
 					<td><a tal:attributes="href contact/absolute_url">View contact</a></td>
 					<td><a tal:attributes="href string:${contact/absolute_url}/edit_html">Edit contact</a></td>
 					<td><a tal:attributes="href string:${contact/absolute_url}/export_vcard">Export vCard</a></td>
