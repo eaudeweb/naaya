@@ -62,7 +62,7 @@ EIONET_SURVEYS = {
 
             {'meta_type': 'Naaya Label Widget',
              'title': 'Relevance (agenda and content)',
-             'sortorder': 6},
+             'sortorder': 7},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
              'title': ' Please rank accordingly',
@@ -77,7 +77,7 @@ EIONET_SURVEYS = {
                  'How well did the agenda address EU policy issues and '
                  'processes relevant to Eionet?'
              ],
-             'sortorder': 7,
+             'sortorder': 8,
              'required': True},
 
             {'meta_type': 'Naaya Checkboxes Widget',
@@ -92,26 +92,26 @@ EIONET_SURVEYS = {
                          'Break out discussions: Part B',
                          'Session 5: 2019 Key Priorities - Plenary: Part C',
                          ],
-             'sortorder': 8,
+             'sortorder': 9,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'Please give examples of how you intend to use the '
                       'outcome of this meeting in your daily work as NFP',
-             'sortorder': 9,
+             'sortorder': 10,
              'rows': 5,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'Please list key topics/issues that you would find '
                       'relevant in a future NFP/Eionet meeting',
-             'sortorder': 10,
+             'sortorder': 11,
              'rows': 5,
              'required': True},
 
             {'meta_type': 'Naaya Label Widget',
              'title': 'Performance (chairing and engagement)',
-             'sortorder': 11},
+             'sortorder': 12},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
              'title': 'How would you rate the following elements of the '
@@ -121,7 +121,7 @@ EIONET_SURVEYS = {
              'rows': ['Pre-meeting',
                       'Facilitation/interaction during break-out sessions',
                       'Poster session'],
-             'sortorder': 12,
+             'sortorder': 13,
              'required': True},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
@@ -136,7 +136,7 @@ EIONET_SURVEYS = {
                       'S5: 2019 Key Priorities - Plenary: Part A',
                       'S5: 2019 Key Priorities - Plenary: Part C',
                       ],
-             'sortorder': 13,
+             'sortorder': 14,
              'required': True},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
@@ -149,12 +149,12 @@ EIONET_SURVEYS = {
                       'discussions',
                       'Your contributions to this meeting',
                       ],
-             'sortorder': 14,
+             'sortorder': 15,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'Please elaborate on your ranking above',
-             'sortorder': 15,
+             'sortorder': 16,
              'rows': 5,
              'required': True},
 
@@ -169,26 +169,26 @@ EIONET_SURVEYS = {
                       'Other members of Eionet',
                       'Members of the European Commission',
                       ],
-             'sortorder': 16,
+             'sortorder': 17,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'How would you like networking opportunities to be '
                       'strengthened in future NFP meetings?',
-             'sortorder': 17,
+             'sortorder': 18,
              'rows': 5,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'How would you like to contribute to the success of '
                       'future NFP meetings?',
-             'sortorder': 18,
+             'sortorder': 19,
              'rows': 5,
              'required': True},
 
             {'meta_type': 'Naaya Label Widget',
              'title': 'Preparations and Outcome',
-             'sortorder': 19},
+             'sortorder': 20},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
              'title': 'How would you rate the preparation of the meeting, '
@@ -200,7 +200,7 @@ EIONET_SURVEYS = {
                       'Specification of EEA expectations regarding Eionet '
                       'involvement',
                       ],
-             'sortorder': 20,
+             'sortorder': 21,
              'required': True},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
@@ -212,7 +212,7 @@ EIONET_SURVEYS = {
                       'Efficiency',
                       'Effectiveness',
                       ],
-             'sortorder': 21,
+             'sortorder': 22,
              'required': True},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
@@ -229,58 +229,19 @@ EIONET_SURVEYS = {
                       'Part B',
                       'S5: 2019 Key Priorities - Plenary: Part C',
                       ],
-             'sortorder': 22,
+             'sortorder': 23,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'Please explain what could be improved in future '
                       'meetings',
-             'sortorder': 23,
-             'rows': 5,
-             'required': True},
-
-            {'meta_type': 'Naaya Label Widget',
-             'title': 'Value added',
-             'sortorder': 24},
-
-            {'meta_type': 'Naaya Text Area Widget',
-             'title': 'How would you like EEA/Eionet to work together to '
-                      'implement the work programmes 2019-2020?',
-             'sortorder': 25,
-             'rows': 5,
-             'required': True},
-
-            {'meta_type': 'Naaya Text Area Widget',
-             'title': 'From a national perspective, what do you see as the '
-                      'future challenges for Eionet?',
-             'sortorder': 26,
-             'rows': 5,
-             'required': True},
-
-            {'meta_type': 'Naaya Text Area Widget',
-             'title': 'How would you like to see the role of the NFP develop '
-                      'in the years to come?',
-             'sortorder': 27,
-             'rows': 5,
-             'required': True},
-
-            {'meta_type': 'Naaya Text Area Widget',
-             'title': 'Which main Eionet assets/features would you like to '
-                      'see in the next strategy (2020-2030)?',
-             'sortorder': 28,
-             'rows': 5,
-             'required': True},
-
-            {'meta_type': 'Naaya Text Area Widget',
-             'title': 'Which Eionet features/activities, if any, would you '
-                      'consider outdated/irrelevant for the future of Eionet?',
-             'sortorder': 29,
+             'sortorder': 24,
              'rows': 5,
              'required': True},
 
             {'meta_type': 'Naaya Label Widget',
              'title': 'Meeting organisation',
-             'sortorder': 30},
+             'sortorder': 25},
 
             {'meta_type': 'Naaya Radio Matrix Widget',
              'title': 'How would you rate the following support?',
@@ -290,12 +251,12 @@ EIONET_SURVEYS = {
                       'Travel arrangements provided by BCD',
                       'Social arrangements',
                       ],
-             'sortorder': 31,
+             'sortorder': 26,
              'required': True},
 
             {'meta_type': 'Naaya Text Area Widget',
              'title': 'Please list recommendations for improvements',
-             'sortorder': 32,
+             'sortorder': 27,
              'rows': 5,
              'required': True},
         ]
