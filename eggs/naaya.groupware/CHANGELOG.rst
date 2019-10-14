@@ -1,4 +1,7 @@
-1.4.55 (unreleased)
+1.4.56 (unrelased)
+-------------------
+
+1.4.55 (2019-10-14)
 -------------------
 * changes in the default left portlets + update script [dumitval]
 
