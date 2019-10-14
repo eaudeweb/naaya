@@ -46,22 +46,20 @@
         <portlet id="ig_description" title="IG description" />
         <portlet id="portlet_rdfcalendar" title="Meetings and events" />
         <linkslist id="places" title="Places" portlet="1">
-            <link id="104" title="EEA home" description="" url="https://www.eea.europa.eu/" relative="0" permission="" order="2"/>
-            <link id="105" title="Europa" description="EU website" url="https://www.europa.eu" relative="0" permission="" order="3"/>
-            <link id="106" title="Eionet" description="" url="https://eionet.europa.eu/" relative="0" permission="" order="4"/>
+            <link id="104" title="Eionet Forum - Introduction and help" description="" url="https://forum.eionet.europa.eu/help" relative="0" permission="" order="2"/>
+            <link id="105" title="Eionet portal" description="Eionet portal" url="https://www.eionet.europa.eu/" relative="0" permission="" order="3"/>
+            <link id="106" title="Eionet Planner" description="Eionet Planner" url="https://eionetplanner.eionet.europa.eu/" relative="0" permission="" order="4"/>
+            <link id="107" title="Eionet Helpdesk" description="Eionet Helpdesk" url="https://www.eionet.europa.eu/about/helpdesk" relative="0" permission="" order="4"/>
         </linkslist>
         <linkslist id="top" title="Top navigation links" portlet="">
             <link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>
             <link id="110" title="Admin" description="" url="/admin_centre_html" relative="1" permission="Naaya - Publish content" order="3"/>
         </linkslist>
         <linkslist id="menunav_links" title="Top menu navigation" portlet="1">
-            <link id="about" title="About" description="" url="/about" relative="1" permission="" order="10"/>
             <link id="library" title="Library" description="" url="/library" relative="1" permission="" order="20"/>
             <link id="member_search" title="Member search" description="" url="/member_search" relative="1" permission="" order="30"/>
-            <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
-            <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Naaya - Publish content" order="50"/>
-            <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
-            <link id="help" title="Help" description="" url="/help" relative="1" permission="" order="70"/>
+            <link id="free_search" title="Free text search" description="" url="/search_html" relative="1" permission="" order="40"/>
+            <link id="contact" title="Contact us" description="" url="/about/contact" relative="1" permission="" order="70"/>
         </linkslist>
     </portlets>
     <pluggablecontenttypes>

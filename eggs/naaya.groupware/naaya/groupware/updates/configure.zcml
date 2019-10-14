@@ -40,5 +40,11 @@
       component=".update_standard_template.LogoutDirectlyInStandardTemplate"
       permission="zope2.ViewManagementScreens" />
 
+    <utility
+      name="update_link_lists.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_link_lists.UpdateLinksList"
+      permission="zope2.ViewManagementScreens" />
+
   </configure>
 </configure>

@@ -142,12 +142,12 @@
  <li>View my <a href="/profile_overview">memberships</a></li>
 </ul>
 </div>
-                <h2>Places</h2>
+                <h2>Links</h2>
                 <ul>
+                    <li><a href="https://forum.eionet.europa.eu/help">Eionet Forum - Introduction and help</a></li>
                     <li><a href="https://www.eionet.europa.eu/">Eionet portal</a></li>
-                    <li><a href="https://www.eea.europa.eu/">EEA home</a></li>
-                    <li><a href="https://www.europa.eu" title="EU website">Europa</a></li>
-                    <li><a href="https://forum-test.eionet.europa.eu/">Forum test site</a></li>
+                    <li><a href="https://eionetplanner.eionet.europa.eu/" title="Eionet Planner">Eionet Planner</a></li>
+                    <li><a href="https://www.eionet.europa.eu/about/helpdesk">Eionet Helpdesk</a></li>
                 </ul>
             </div>
 
