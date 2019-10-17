@@ -1,5 +1,6 @@
 1.3.5 (unreleased)
 ------------------
+* improve import/export procedure [dumitval]
 
 1.3.4 (2016-11-22)
 ------------------

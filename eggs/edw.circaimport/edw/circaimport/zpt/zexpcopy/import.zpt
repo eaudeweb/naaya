@@ -43,6 +43,9 @@
                     <br /><br />
                     <label class="question">Select the new location for the content to be imported into:</label>
                     <br /><br />
+                    <label class="question">Import the complete IG?:</label>
+                    <input type="checkbox" name="import_complete_ig" id="import_complete_ig" />
+                    <br /><br />
              		<select id="ig_selection" name="ig">
 			    <option value="-">First select the destination IG</option>
 			    <tal:block repeat="ig options/igs">

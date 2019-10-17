@@ -272,7 +272,10 @@ class ZImportData(BrowserPage):
             zexp_path = self.request.form.get('zexp_path')
             path = self.request.form.get('location')
             ig_id = self.request.form.get('ig')
-            ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
+            if not ig_id or ig_id == '-':
+                ob = ctx.unrestrictedTraverse('/')
+            else:
+                ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
             sender = ctx.applications.mail_from
             to = self.request.AUTHENTICATED_USER.mail
             new_ids = []
@@ -292,6 +295,10 @@ class ZImportData(BrowserPage):
                 subject = 'Error importing IG Data'
                 zexpcopy.send_action_completed_mail(error, sender, to, subject)
             else:
+                if ob.meta_type == 'Groupware site':
+                    imported_path = ob.absolute_url()
+                else:
+                    imported_path = ob.absolute_url() + '/' + new_ids[0]
                 info = (('The import process ended without errors.'
                         ' Data was imported in this folder, please check: %s')
                         % ob.absolute_url())
