@@ -1,4 +1,7 @@
-1.3.5 (unreleased)
+1.3.6 (unreleased)
+------------------
+
+1.3.5 (2019-10-17)
 ------------------
 * improve import/export procedure [dumitval]
 
