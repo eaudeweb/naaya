@@ -1,5 +1,6 @@
 1.3.6 (unreleased)
 ------------------
+* improve import success message for complete ig import [dumitval]
 
 1.3.5 (2019-10-17)
 ------------------

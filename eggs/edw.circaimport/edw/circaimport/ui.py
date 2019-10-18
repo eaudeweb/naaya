@@ -54,7 +54,7 @@ class UIFormatter(logging.Formatter):
         'WARNING': 'orange',
         'ERROR': 'orangered',
         'CRITICAL': 'red'
-        }
+    }
     html = """<span style="color: %s">%s: %s</span>"""
 
     def format(self, record):
@@ -301,7 +301,7 @@ class ZImportData(BrowserPage):
                     imported_path = ob.absolute_url() + '/' + new_ids[0]
                 info = (('The import process ended without errors.'
                         ' Data was imported in this folder, please check: %s')
-                        % ob.absolute_url())
+                        % imported_path)
                 subject = 'IG Data imported successfully'
                 zexpcopy.send_action_completed_mail(info, sender, to, subject)
             return zexpcopy_import_zpt.__of__(ctx)(performed=True, ob=ob,
