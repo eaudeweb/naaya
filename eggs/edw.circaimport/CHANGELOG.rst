@@ -1,4 +1,7 @@
-1.3.6 (unreleased)
+1.3.7 (unreleased)
+------------------
+
+1.3.6 (2019-10-18)
 ------------------
 * improve import success message for complete ig import [dumitval]
 
