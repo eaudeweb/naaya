@@ -1,5 +1,9 @@
-1.4.56 (unrelased)
+1.4.57 (unreleased)
 -------------------
+
+1.4.56 (2019-10-31)
+-------------------
+* changes in the display of disabled users [dumitval]
 
 1.4.55 (2019-10-14)
 -------------------
