@@ -10,7 +10,7 @@ from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
     import plugLDAPUserFolder
 from Products.NaayaCore.AuthenticationTool.plugins import ldap_cache
 from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
-    import DISABLED_USER_NAME
+    import DISABLED_SUFFIX
 from Products.NaayaCore.managers.import_export import generate_csv
 from Products.NaayaCore.managers.import_export import generate_excel
 from naaya.core.utils import force_to_unicode
@@ -196,7 +196,7 @@ class MemberSearch(Implicit, Item):
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user_id)
         if user.get('disabled') == 'disabled':
-            name = DISABLED_USER_NAME
+            name = user_id + DISABLED_SUFFIX
             email = None
         else:
             name = force_to_unicode(user['full_name'])
