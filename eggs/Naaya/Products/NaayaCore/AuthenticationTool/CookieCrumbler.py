@@ -162,6 +162,11 @@ class CookieCrumbler:
 
     def __call__(self, container, req):
         """ The __before_publishing_traverse__ hook. """
+        if self.unrestrictedTraverse('/acl_users').meta_type == \
+                'Pluggable Auth Service':
+            # If the root acl is Pluggable Auth, the CookieCrumbler is
+            # not in use
+            return
         resp = self.REQUEST['RESPONSE']
         try:
             attempt = self.modifyRequest(req, resp)

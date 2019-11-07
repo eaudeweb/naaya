@@ -451,7 +451,7 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 InitializeClass(NyContact)
 
 import vobject
-from vobject.vcard import ParseError
+from vobject.base import ParseError
 _phone_map = {'WORK': 'phone', 'FAX': 'fax', 'CELL': 'cellphone'}
 _phone_pattern = re.compile(r'^TEL;(\w+?)\:')
 def parse_vcard_data(raw_data):

@@ -2,7 +2,7 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
 <subscriber handler=".subscribers.template_added"
-    for=".interfaces.ITemplate zope.app.container.interfaces.IObjectAddedEvent" />
+    for=".interfaces.ITemplate zope.container.interfaces.IObjectAddedEvent" />
 
 <subscriber handler=".subscribers.template_before_remove"
     for=".interfaces.ITemplate OFS.interfaces.IObjectWillBeRemovedEvent" />

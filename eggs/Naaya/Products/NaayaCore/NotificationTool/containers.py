@@ -21,6 +21,7 @@ from interfaces import ISubscriptionTarget
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
+
 class SubscriptionContainer(Persistent):
     """ Holds anonymous and authenticated notifications """
     interface.implements(ISubscriptionContainer)
@@ -44,6 +45,7 @@ class SubscriptionContainer(Persistent):
     def __iter__(self):
         for subscription in self.subscriptions.itervalues():
             yield subscription
+
 
 class AccountSubscription(object):
     interface.implements(ISubscription)
@@ -83,15 +85,17 @@ class AccountSubscription(object):
             return (full_name, email)
 
         # The user is not in Naaya's acl_users, so let's look deeper
-        parent_acl_users = site.restrictedTraverse('/').acl_users
-        if parent_acl_users.meta_type == 'LDAPUserFolder':
-            # TODO: what if parent_acl_users is not an LDAPUserFolder?
-            # Note: EIONET LDAP data is encoded with latin-1
-            ldap_user_data = parent_acl_users.getUserById(self.user_id)
-            if ldap_user_data:
-                full_name = ldap_user_data.cn
-                email = ldap_user_data.mail
-                return (force_to_unicode(full_name), email)
+        sources = site.getAuthenticationTool().getSources()
+        for source in sources:
+            parent_acl_users = source.getUserFolder()
+            if parent_acl_users.meta_type == 'LDAPUserFolder':
+                # TODO: what if parent_acl_users is not an LDAPUserFolder?
+                # Note: EIONET LDAP data is encoded with latin-1
+                ldap_user_data = parent_acl_users.getUserById(self.user_id)
+                if ldap_user_data:
+                    full_name = ldap_user_data.cn
+                    email = ldap_user_data.mail
+                    return (force_to_unicode(full_name), email)
 
         # Didn't find the user anywhere; return a placeholder
         notif_logger.warn('Could not find email for user %r (context: %r)',
@@ -107,6 +111,7 @@ class AccountSubscription(object):
             return u'%s (%s)' % (name, email)
         else:
             return u'%s' % email
+
 
 class AnonymousSubscription(object):
     """
@@ -133,7 +138,7 @@ class AnonymousSubscription(object):
         self.content_types = kw.pop('content_types')
         self.location = kw.pop('location')
         self.key = sha("%s%s" % (time(),
-                                     random.randrange(1, 10000))).hexdigest()
+                       random.randrange(1, 10000))).hexdigest()
         self.__dict__.update(kw)
         self.datetime = datetime.now()
 
@@ -150,6 +155,8 @@ class AnonymousSubscription(object):
         else:
             return u'%s' % self.email
 
-#The key is the old location of the class
-subscription_container_factory = annotation.factory(SubscriptionContainer,
-"Products.NaayaCore.NotificationTool.NotificationTool.SubscriptionContainer")
+
+# The key is the old location of the class
+subscription_container_factory = annotation.factory(
+    SubscriptionContainer,
+    "Products.NaayaCore.NotificationTool.NotificationTool.SubscriptionContainer")

@@ -1,16 +1,16 @@
 <configure xmlns="http://namespaces.zope.org/zope" 
 	xmlns:five="http://namespaces.zope.org/five">
 
-<subscriber for="Products.Naaya.interfaces.INySite zope.app.container.interfaces.IObjectAddedEvent"
+<subscriber for="Products.Naaya.interfaces.INySite zope.container.interfaces.IObjectAddedEvent"
       handler=".events.addedNySite" />
 
-<subscriber for="Products.Naaya.interfaces.INySite zope.app.container.interfaces.IObjectRemovedEvent"
+<subscriber for="Products.Naaya.interfaces.INySite zope.container.interfaces.IObjectRemovedEvent"
       handler=".events.removedNySite" />
 
-<subscriber for="Products.Naaya.interfaces.INySite zope.app.container.interfaces.IObjectMovedEvent"
+<subscriber for="Products.Naaya.interfaces.INySite zope.container.interfaces.IObjectMovedEvent"
       handler=".events.movedNySite" />
 
-<subscriber for="Products.Naaya.interfaces.INyFolder zope.app.container.interfaces.IObjectRemovedEvent"
+<subscriber for="Products.Naaya.interfaces.INyFolder zope.container.interfaces.IObjectRemovedEvent"
       handler=".events.removedNyFolder" />
 
 </configure>

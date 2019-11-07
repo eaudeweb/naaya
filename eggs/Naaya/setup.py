@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='4.4.6',
+      version='5.0.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -46,12 +46,12 @@ setup(name='Naaya',
           'xlrd',
 
           # Zope
+          'zope.deprecation',
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
 
           # Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
-          'edw-extfile >= 2.0.2-edw1',
 
           # Naaya specific
           'naaya.content-compat',

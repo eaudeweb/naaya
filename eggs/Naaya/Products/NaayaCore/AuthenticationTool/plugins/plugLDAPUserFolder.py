@@ -34,7 +34,7 @@ import naaya.cache.cache as naaya_cache
 import ldap_cache
 
 LDAP_ROOT_ID = 'ROOT'
-DISABLED_USER_NAME = 'Former Eionet member'
+DISABLED_SUFFIX = ' (disabled)'
 
 log = logging.getLogger('naaya.core.auth.ldap')
 
@@ -491,13 +491,13 @@ class plugLDAPUserFolder(PlugBase):
         try:
             user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
-            return DISABLED_USER_NAME
+            return p_username + DISABLED_SUFFIX
         else:
             if user_info is not None:
                 if user_info.status != 'disabled':
                     return user_info.full_name.encode(self.default_encoding)
                 else:
-                    return DISABLED_USER_NAME
+                    return p_username + DISABLED_SUFFIX
             else:
                 log.warning("Could not retrieve user info  for %s", p_username)
                 return p_username
