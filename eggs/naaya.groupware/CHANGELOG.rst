@@ -1,4 +1,7 @@
-1.4.57 (unreleased)
+1.4.58 (unreleased)
+-------------------
+
+1.4.57 (2019-11-07)
 -------------------
 * added compatibility with Pluggable Auth Service as root acl [dumitval]
 * update script for standard template to display name of singups in
