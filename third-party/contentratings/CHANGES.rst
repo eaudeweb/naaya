@@ -1,4 +1,7 @@
-1.0-edw9 (unreleased)
+1.0-edw10 (unreleased)
+---------------------
+
+1.0-edw9 (2019-11-07)
 ---------------------
 * compatibility fix with newer version of AccessControl [dumitval]
 
