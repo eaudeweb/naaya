@@ -888,22 +888,35 @@ class NyMeeting(NyContentData, NyFolder):
         handle_traverse_meeting(self, self.REQUEST)
         return self.unrestrictedTraverse(path, default, restricted=True)
 
-    security.declarePublic('get_signup_details')
-
-    def get_signup_details(self):
-        """ Return a json with the signup details"""
+    def _get_signup(self):
+        """ Return the authenticated signup object (if one)"""
         user_id = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if user_id.startswith('signup:'):
             key = user_id.replace('signup:', '')
             signup = self.getParticipants().getSubscriptions().getSignup(key)
-            if signup:
-                signup_details = {
-                    'name': signup.name,
-                    'email': signup.email,
-                    'organization': signup.organization,
-                    'phone': signup.phone
-                }
-                return json.dumps(signup_details)
+            return signup
+
+    security.declareProtected(view, 'get_user_name')
+
+    def get_user_name(self):
+        """ Return the display name based on the Signup:UID """
+        signup = self._get_signup()
+        if signup:
+            return signup.name
+
+    security.declarePublic('get_signup_details')
+
+    def get_signup_details(self):
+        """ Return a json with the signup details"""
+        signup = self._get_signup()
+        if signup:
+            signup_details = {
+                'name': signup.name,
+                'email': signup.email,
+                'organization': signup.organization,
+                'phone': signup.phone
+            }
+            return json.dumps(signup_details)
 
     security.declarePublic('in_eionet')
 

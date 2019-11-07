@@ -1,5 +1,6 @@
 1.3.05 (unreleased)
 -------------------
+* enable displaying the signup name on the logon bar [dumitval]
 
 1.3.04 (2019-10-01)
 -------------------
