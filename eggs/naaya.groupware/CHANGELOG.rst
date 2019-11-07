@@ -1,5 +1,8 @@
 1.4.57 (unreleased)
 -------------------
+* added compatibility with Pluggable Auth Service as root acl [dumitval]
+* update script for standard template to display name of singups in
+  talkback and meetings [dumitval]
 
 1.4.56 (2019-10-31)
 -------------------
