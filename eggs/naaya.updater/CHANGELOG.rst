@@ -1,5 +1,7 @@
 1.2.32 (unreleased)
 -------------------
+* compatibility with zope 2.13 [dumitval]
+* update script to allow migration to Pluggable Auth Service root acl [dumitval]
 
 1.2.31 (2018-09-26)
 -------------------
