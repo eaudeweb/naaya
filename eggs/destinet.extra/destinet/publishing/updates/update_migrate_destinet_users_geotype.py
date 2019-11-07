@@ -26,7 +26,6 @@ class MigrateGeoTypeProperty(UpdateScript):
         mgpt = map_tool.getParentByTitle
         tfs = lambda s:map_tool.getSymbol(s).title
 
-        #import pdb; pdb.set_trace()
         organizations_symbols = [s.id for s in mgsc(mgpt("ORGANIZATIONS").id)]
         market_symbols = [s.id for s in mgsc(mgpt("MARKET PLACE").id)]
         solutions_symbols = [s.id for s in mgsc(mgpt("MARKET SOLUTIONS").id)]
