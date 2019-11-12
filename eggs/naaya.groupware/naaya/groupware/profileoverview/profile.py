@@ -182,13 +182,15 @@ def get_profile(context, request, authenticated_user, zope_app):
     return personal profile.
     """
     requested_user = request.form.get('user', None)
-    if authenticated_user.has_role('Manager') and requested_user:
-        user = zope_app.acl_users.getUser(requested_user)
-        if not user:
-            context.REQUEST.RESPONSE.notFoundError()
-        return user
-    else:
-        return authenticated_user
+    acl = zope_app.acl_users
+    if acl.meta_type == 'Pluggable Auth Service':
+        acl = zope_app.acl_users['ldap-plugin'].acl_users
+    if not (authenticated_user.has_role('Manager') and requested_user):
+        requested_user = authenticated_user.getId()
+    user = acl.getUser(requested_user)
+    if not user:
+        context.REQUEST.RESPONSE.notFoundError()
+    return user
 
 
 def ProfileView(context, request):
