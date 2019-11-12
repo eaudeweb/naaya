@@ -1,4 +1,7 @@
-1.4.58 (unreleased)
+1.4.59 (unreleased)
+-------------------
+
+1.4.58 (2019-11-12)
 -------------------
 * profile_overview fix related to the Pluggable Auth Service [dumitval]
 
