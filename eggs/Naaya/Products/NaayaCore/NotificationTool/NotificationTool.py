@@ -66,6 +66,7 @@ def manage_addNotificationTool(self, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+
 # TODO: remove `Subscription` after all sites have been updated
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
@@ -121,9 +122,9 @@ class NotificationTool(Folder):
         """ Validate add/edit subscription for authorized and anonymous users
 
         """
-        if (kw['notif_type'] not in self.available_notif_types(kw['location'])
-            and not (kw['notif_type'] == 'administrative' and
-                     self.checkPermissionPublishObjects())):
+        if (kw['notif_type'] not in self.available_notif_types(
+            kw['location']) and not (kw['notif_type'] == 'administrative' and
+                                     self.checkPermissionPublishObjects())):
             raise i18n_exception(ValueError,
                                  'Subscribing to ${notif_type} '
                                  'notifications in "${location}" not allowed',
@@ -193,7 +194,7 @@ class NotificationTool(Folder):
                 else:
                     icon = ob.icon
 
-                children = traverse(children_objects, level+1, stop_level)
+                children = traverse(children_objects, level + 1, stop_level)
 
                 if exclude_root:  # Return only the children if this is set
                     return children
@@ -499,7 +500,7 @@ class NotificationTool(Folder):
                     'username': username,
                     'obj': obj,
                     }
-            }
+        }
 
         notif_logger.info('Account modification notification on %s' %
                           self.getSite().getId())
@@ -729,7 +730,7 @@ class NotificationTool(Folder):
 
         return subscriptions
 
-    security.declareProtected(view, 'my_first_subscription')
+    security.declareProtected(view, 'get_location_subscription')
 
     def get_location_subscription(self, location, notif_type=None):
         """
@@ -742,7 +743,7 @@ class NotificationTool(Folder):
                     if subscription['notif_type'] == notif_type:
                         return subscription
                 else:
-                        return subscription
+                    return subscription
 
     security.declareProtected(view, 'subscribe_me')
 
@@ -951,7 +952,7 @@ class NotificationTool(Folder):
         form = REQUEST.form
         notif_types = ['instant', 'daily', 'weekly', 'monthly', 'anonymous']
         for field in notif_types:
-            self.config['enable_'+field] = form.get('enable_'+field, False)
+            self.config['enable_' + field] = form.get('enable_' + field, False)
 
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
@@ -1021,6 +1022,7 @@ class NotificationTool(Folder):
             return generate_excel(header, rows)
         else:
             raise ValueError('unknown file format %r' % file_type)
+
 
 InitializeClass(NotificationTool)
 utils.divert_notifications(False)

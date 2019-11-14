@@ -1,5 +1,15 @@
-1.4.57 (unreleased)
+1.4.59 (unreleased)
 -------------------
+
+1.4.58 (2019-11-12)
+-------------------
+* profile_overview fix related to the Pluggable Auth Service [dumitval]
+
+1.4.57 (2019-11-07)
+-------------------
+* added compatibility with Pluggable Auth Service as root acl [dumitval]
+* update script for standard template to display name of singups in
+  talkback and meetings [dumitval]
 
 1.4.56 (2019-10-31)
 -------------------

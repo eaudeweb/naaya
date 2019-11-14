@@ -42,7 +42,6 @@ class DestinetTestCase(NaayaTestCase):
         nycontactschema.addWidget('category-marketplace', widget_type="GeoType", data_type='str', required=False)
         nycontactschema.addWidget('category-supporting-solutions', widget_type="GeoType", data_type='str', required=False)
 
-        #import pdb; pdb.set_trace()
 
         manage_addDestinetPublisher(self.portal)
         cat = self.portal.getCatalogTool()

@@ -26,6 +26,10 @@ class PlugBase(SimpleItem):
         if l_obj is None:
             return None
         else:
+            if l_obj.meta_type == 'Pluggable Auth Service':
+                # If Pluggable Auth is in use, we need to go a little deeper
+                l_obj = self.unrestrictedTraverse(
+                    '/acl_users/ldap-plugin/' + self.obj_path, None)
             return l_obj
 
     def getLocalRoles(self, p_local_roles):
@@ -144,5 +148,6 @@ class PlugBase(SimpleItem):
     def has_user(self, user_id):
         user_ob = self.getUserFolder().getUser(user_id)
         return user_ob is not None
+
 
 InitializeClass(PlugBase)

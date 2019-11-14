@@ -11,7 +11,9 @@
     <subscriber handler="naaya.core.heartbeat.cleanup_unsubmitted_objects" />
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />
 
-    <naaya:call factory=".site_logging.init_site_loggers" />
+    <subscriber
+        handler=".site_logging.init_site_loggers"
+        for="zope.processlifetime.IProcessStarting" />
 
     <browser:resourceDirectory
         name="naaya.mime_icons"

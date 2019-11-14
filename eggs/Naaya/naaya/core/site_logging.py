@@ -20,7 +20,7 @@ USER_MAN = 'USER_MANAGEMENT'
 ALLOWED_SLUGS = {ACCESS: ("VIEW", "DOWNLOAD", ),
                  USER_MAN: ("ASSIGNED", "UNASSIGNED", ),
                  }
-#LOG_FILENAME = 'site.log'
+LOG_FILENAME = 'site.log'
 LOG_PREFIX = 'splitlog'
 
 
@@ -63,7 +63,8 @@ def get_site_logger(site):
 class MonthBasedFileHandler(logging.StreamHandler):
 
     """
-    A handler class which writes formatted logging records to monthly-separated files.
+    A handler class which writes formatted logging records to monthly-separated
+    files.
 
     Code copied and modified from Standard Library logging.__init__
     """
@@ -107,7 +108,7 @@ class MonthBasedFileHandler(logging.StreamHandler):
         Open the current base file with the (original) mode and encoding.
         Return the resulting stream.
         """
-        if self._last_recorded_month == None:
+        if self._last_recorded_month is None:
             self._last_recorded_month = date.today().strftime("%y-%m")
 
         filename = "%s-%s.log" % (self.baseFilename, self._last_recorded_month)
@@ -159,7 +160,8 @@ def create_site_logger(site):
     if abs_path:
 
         # First, we look to see if the site logs have been migrated
-        is_migrated = bool([n for n in os.listdir(abs_path) if 'splitlog' in n])
+        is_migrated = bool(
+            [n for n in os.listdir(abs_path) if 'splitlog' in n])
         if not is_migrated:
             rewrite_logs(abs_path)
 
@@ -184,7 +186,7 @@ def create_site_logger(site):
     return logger
 
 
-def init_site_loggers():
+def init_site_loggers(event=None):
     """ Called once on App startup """
     import Zope2
     for ob in Zope2.app().objectValues():
@@ -226,7 +228,7 @@ def get_logged_months(site, REQUEST=None, RESPONSE=None):
                      reverse=True)
     today = date.today()
     this_month = today.strftime("%y-%m")
-    if not this_month in matches:
+    if this_month not in matches:
         matches.insert(0, this_month)
     return matches
 
@@ -240,7 +242,6 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
     """
     lines = []
     plain_text_lines = []
-    #show_plain_text = False
     abs_path = get_log_dir(site)
 
     if not abs_path:
@@ -307,7 +308,8 @@ def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
     """
     raise NotImplementedError
 
-    from Products.NaayaCore.managers.import_export import set_response_attachment
+    from Products.NaayaCore.managers.import_export import \
+        set_response_attachment
     from StringIO import StringIO
     abs_path = get_log_dir(site)
     # TODO: redo this
@@ -425,7 +427,7 @@ def rewrite_logs(path):
                     continue
                 date = data['asctime']
                 ident = date[:5]  # date looks like: "12-09-17 17:02:49,451019"
-                if not ident in entries:
+                if ident not in entries:
                     entries[ident] = []
 
                 entries[ident].append(line)

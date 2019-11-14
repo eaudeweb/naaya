@@ -2,7 +2,7 @@ from DateTime import DateTime
 from zope.interface import implements
 from zope.event import notify
 from zope.component import adapter
-from zope.app.container.interfaces import IObjectMovedEvent
+from zope.container.interfaces import IObjectMovedEvent
 import transaction
 
 from interfaces import INyContentObject
@@ -14,7 +14,6 @@ from interfaces import INyContentObjectMovedEvent
 from interfaces import INyContentObjectViewEvent
 from interfaces import INyContentObjectDownloadEvent
 
-from naaya.core.site_logging import get_site_logger
 from naaya.core.zope2util import path_in_site
 
 

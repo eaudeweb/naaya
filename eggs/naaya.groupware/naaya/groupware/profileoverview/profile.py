@@ -5,7 +5,6 @@ try:
 except ImportError:
     import json
 
-from Products.Five.browser import BrowserView
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -17,6 +16,7 @@ CUTOFF_SUBS = 5
 index_pt = PageTemplateFile('zpt/index.pt', globals())
 ajax_roles_pt = PageTemplateFile('zpt/ig_roles_ajax.pt', globals())
 subscriptions_pt = PageTemplateFile('zpt/subscriptions_ajax.pt', globals())
+
 
 def get_plugldap(ig):
     """ Returns plugLDAPUserFolder in IG, None if not found """
@@ -35,7 +35,11 @@ class ProfileClient(object):
     def __init__(self, zope_app, user, **config):
         assert user is not None, "ProfileClient got `user` argument None"
         self.zope_app = zope_app
-        self.ldap_folder = zope_app.acl_users
+        acl_users = zope_app.acl_users
+        if acl_users.meta_type == 'Pluggable Auth Service':
+            self.ldap_folder = acl_users['ldap-plugin'].acl_users
+        else:
+            self.ldap_folder = zope_app.acl_users
         self.user = user
         self.agent = agent_from_uf(self.ldap_folder, **config)
 
@@ -122,7 +126,7 @@ class ProfileClient(object):
 
         """
         ldap_roles = sorted(self.agent.member_roles_info(
-                                   'user', self.user.getId(), ('description',)))
+                            'user', self.user.getId(), ('description',)))
         tree = {}
         direct_address = {}
         for (role_id, attrs) in ldap_roles:
@@ -170,6 +174,7 @@ class ProfileClient(object):
 
         return notifications
 
+
 def get_profile(context, request, authenticated_user, zope_app):
     """
     Return LDAP user profile.
@@ -177,13 +182,16 @@ def get_profile(context, request, authenticated_user, zope_app):
     return personal profile.
     """
     requested_user = request.form.get('user', None)
-    if authenticated_user.has_role('Manager') and requested_user:
-        user = zope_app.acl_users.getUser(requested_user)
-        if not user:
-            context.REQUEST.RESPONSE.notFoundError()
-        return user
-    else:
-        return authenticated_user
+    acl = zope_app.acl_users
+    if acl.meta_type == 'Pluggable Auth Service':
+        acl = zope_app.acl_users['ldap-plugin'].acl_users
+    if not (authenticated_user.has_role('Manager') and requested_user):
+        requested_user = authenticated_user.getId()
+    user = acl.getUser(requested_user)
+    if not user:
+        context.REQUEST.RESPONSE.notFoundError()
+    return user
+
 
 def ProfileView(context, request):
     """
@@ -196,7 +204,8 @@ def ProfileView(context, request):
 
     if not auth_user.has_role('Authenticated'):
         if not is_ajax:
-            referer = '/profile_overview?user=%s' % request.form.get('user', '')
+            referer = '/profile_overview?user=%s' % request.form.get('user',
+                                                                     '')
             qs = urllib.urlencode({'came_from': referer})
             url = '/login/login_form?%s' % qs
             request.response.redirect(url)
@@ -210,7 +219,7 @@ def ProfileView(context, request):
 
     if not is_ajax:
         roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [ r for r in roles_list if not r['children'] ]
+        leaf_roles_list = [r for r in roles_list if not r['children']]
         return index_pt.__of__(context)(roles=leaf_roles_list,
                                         user_id=user.getId())
     elif is_ajax == 'igs':
@@ -253,6 +262,7 @@ def ProfileView(context, request):
                                                 sorted_func=sorted,
                                                 subscriptions=notifications,
                                                 user_id=user.getId())
+
 
 def show_local_roles(context, request):
     """ method for Eionet Full Profile """

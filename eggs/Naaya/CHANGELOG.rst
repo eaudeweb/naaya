@@ -1,5 +1,10 @@
-4.4.6 (unreleased)
+5.0.1 (unreleased)
 -------------------
+
+5.0.0 (2019-11-07)
+-------------------
+* change the display name of disabled users (Groupware) [dumitval]
+* Zope 2.13 compatibility [dumitval]
 
 4.4.5 (2019-09-11)
 -------------------

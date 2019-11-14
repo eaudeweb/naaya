@@ -1,30 +1,33 @@
 import logging
 import transaction
 from App.ImageFile import ImageFile
+from Zope2 import app
 
 import NaayaUpdater
 
 UpdaterID = NaayaUpdater.UPDATERID
 logger = logging.getLogger('naayaUpdater')
 
+
 def initialize(context):
     """ """
-    #add Naaya Updater
+    # add Naaya Updater
     global updater
-    app = context._ProductContext__app
+    application = app()
 
-    if hasattr(app, UpdaterID):
-        updater = getattr(app, UpdaterID)
+    if hasattr(application, UpdaterID):
+        updater = getattr(application, UpdaterID)
     else:
         try:
             updater = NaayaUpdater.NaayaUpdater(id=UpdaterID)
-            app._setObject(UpdaterID, updater)
+            application._setObject(UpdaterID, updater)
             logger.info('Added Naaya Updater')
             transaction.commit()
         except:
             pass
-        updater = getattr(app, UpdaterID)
+        updater = getattr(application, UpdaterID)
     assert updater is not None
+
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),

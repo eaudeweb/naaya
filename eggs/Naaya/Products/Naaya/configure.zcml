@@ -87,7 +87,7 @@
     />
    <subscriber
     handler=".subscribers.site_moved_or_added"
-    for="Products.Naaya.interfaces.INySite zope.app.container.interfaces.IObjectMovedEvent"
+    for="Products.Naaya.interfaces.INySite zope.container.interfaces.IObjectMovedEvent"
     />
 
     <subscriber

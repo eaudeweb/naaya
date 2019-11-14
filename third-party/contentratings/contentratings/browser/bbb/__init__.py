@@ -144,10 +144,10 @@ class UserRatingSetView(object):
             subloc = None
         else:
             try:
-                subloc = ISublocations(self.context.__parent__,
+                subloc = ISublocations(self.context.aq_inner.__parent__,
                             alternative=None)
             except TypeError:
-                subloc = ISublocations(self.context.__parent__)
+                subloc = ISublocations(self.context.aq_inner.__parent__)
 
         if subloc is not None:
             for s in subloc.sublocations():

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.groupware',
-      version='1.4.57',
+      version='1.4.59',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -9,7 +9,7 @@ setup(name='naaya.groupware',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya >= 4.4.6',
+          'Naaya >= 5.0.0',
           'naaya.content.bfile',
           'eea.usersdb >= 1.2.0',
           'collective.autopermission == 1.0b2',
