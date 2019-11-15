@@ -1,5 +1,7 @@
 5.0.1 (unreleased)
 -------------------
+* fixed double try to uncatalog objects when deleted [dumitval]
+* patched Products.LDAPUserFolder to use utf-8 as default [dumitval]
 
 5.0.0 (2019-11-07)
 -------------------

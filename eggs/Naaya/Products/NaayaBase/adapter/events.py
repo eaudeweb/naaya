@@ -7,7 +7,7 @@ from zope.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
 from zope.container.contained import (ObjectMovedEvent,
                                       ObjectRemovedEvent,
                                       ObjectAddedEvent,)
-from OFS.interfaces import IObjectWillBeAddedEvent
+from OFS.interfaces import IObjectWillBeAddedEvent, IObjectWillBeRemovedEvent
 
 #
 # Debug
@@ -88,7 +88,8 @@ def beforeDeleteNyFSFile(obj, event):
 def beforeMoveNyItem(obj, event):
     """A NyItem will be moved."""
 
-    if not IObjectWillBeAddedEvent.providedBy(event):
+    if not (IObjectWillBeAddedEvent.providedBy(event) or
+            IObjectWillBeRemovedEvent.providedBy(event)):
         obj.uncatalogNyObject(obj)
 
 
@@ -108,7 +109,8 @@ def modifiedNyItem(obj, event):
 def beforeMoveNyContainer(obj, event):
     """A NyContainer will be moved."""
 
-    if not IObjectWillBeAddedEvent.providedBy(event):
+    if not (IObjectWillBeAddedEvent.providedBy(event) or
+            IObjectWillBeRemovedEvent.providedBy(event)):
         obj.uncatalogNyObject(obj)
 
 
