@@ -1,10 +1,14 @@
 from zope.interface import Interface, alsoProvides
 from zope.configuration import fields
-from zope.app.i18n import ZopeMessageFactory as _
+try:
+    from zope.app.i18n import ZopeMessageFactory as _
+except ImportError:
+    from zope.i18nmessageid import ZopeMessageFactory as _
 from zope.component import getGlobalSiteManager
 
 from interfaces import IDumpReader
 from main import get_reader
+
 
 class IReaderDirective(Interface):
     """ ZCML Directive that registers a naaya.ldapdump reader """
@@ -13,6 +17,7 @@ class IReaderDirective(Interface):
         description=_("Path to configuration file for this dump"),
         required=True,
     )
+
 
 def register_reader(_context, path, **kwargs):
     reader = get_reader(path)
