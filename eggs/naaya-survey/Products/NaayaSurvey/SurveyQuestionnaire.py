@@ -390,8 +390,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             @type answer: SurveyAnswer
         """
         owner = self.getOwner()
-        respondent = self.REQUEST.AUTHENTICATED_USER
         auth_tool = self.getSite().getAuthenticationTool()
+        respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
+        respondent = auth_tool.get_user_with_userid(respondent_id)
         respondent_name = auth_tool.getUserFullName(respondent)
 
         d = {}
@@ -428,8 +429,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             return
 
         recp_email = None
-        respondent = self.REQUEST.AUTHENTICATED_USER
         auth_tool = self.getSite().getAuthenticationTool()
+        respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
+        respondent = auth_tool.get_user_with_userid(respondent_id)
 
         d = {}
         link_prefix = ''

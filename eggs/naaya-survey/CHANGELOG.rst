@@ -1,5 +1,6 @@
 1.3.9 (unreleased)
 ===================
+* compatibility fix for Pluggable Auth Service [dumitval]
 
 1.3.8 (2019-09-27)
 ===================
