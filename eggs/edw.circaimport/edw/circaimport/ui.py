@@ -230,7 +230,9 @@ class ZExportData(BrowserPage):
             ig_id = self.request.form.get('ig')
             ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
             sender = ctx.applications.mail_from
-            to = self.request.AUTHENTICATED_USER.mail
+            user_id = self.request.AUTHENTICATED_USER.getId()
+            user = ob.getAuthenticationTool().get_user_with_userid(user_id)
+            to = user.mail
             try:
                 zexp_path = zexpcopy.write_zexp(ob)
             except Exception, e:
@@ -277,7 +279,9 @@ class ZImportData(BrowserPage):
             else:
                 ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
             sender = ctx.applications.mail_from
-            to = self.request.AUTHENTICATED_USER.mail
+            user_id = self.request.AUTHENTICATED_USER.getId()
+            user = ob.getAuthenticationTool().get_user_with_userid(user_id)
+            to = user.mail
             new_ids = []
             sp = transaction.savepoint()
             try:
