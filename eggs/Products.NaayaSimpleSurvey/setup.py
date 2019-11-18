@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 
 setup(name='Products.NaayaSimpleSurvey',
-      version='1.1.2',
+      version='1.1.3',
       description="",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
