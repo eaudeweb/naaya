@@ -31,7 +31,11 @@ printing mode(so all page content is included).</p>
 <form id="survey" method="post" action="addNySurveyAnswer" tal:define="drp_opt python:['none', 'Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']">
 
 <label for="survey_contributor" i18n:translate="">Your name:</label>
-<input type="text" name="survey_contributor" id="survey_contributor" tal:attributes="value python:here.getAuthenticationTool().getUserFullName(here.REQUEST.AUTHENTICATED_USER)" />
+<input type="text" name="survey_contributor" id="survey_contributor"
+  tal:define="auth_tool python:here.getAuthenticationTool();
+              user_id python:here.REQUEST.AUTHENTICATED_USER.getId();
+              user_name python: auth_tool.getUserFullName(user_id)"
+  tal:attributes="value user_name" />
 
 <label for="country" i18n:translate="">Country:</label>
 <input id="country" name="country" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['country']" tal:condition="python:here.REQUEST.SESSION.has_key('country')" />

@@ -1,5 +1,6 @@
 1.1.2 (unrelease)
 -----------------
+* compatibility fix for Pluggable Auth Service [dumitval]
 
 1.1.1 (2013.01.23)
 -----------------
