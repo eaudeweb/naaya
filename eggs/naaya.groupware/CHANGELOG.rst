@@ -1,5 +1,6 @@
 1.4.59 (unreleased)
 -------------------
+* request_ig_access fix related to the Pluggable Auth Service [dumitval]
 
 1.4.58 (2019-11-12)
 -------------------

@@ -406,7 +406,8 @@ class GroupwareSite(NySite):
             location_title = self.title_or_id()
             location_url = self.absolute_url()
 
-        user = REQUEST.AUTHENTICATED_USER
+        user_id = REQUEST.AUTHENTICATED_USER.getId()
+        user = self.getAuthenticationTool().get_user_with_userid(user_id)
 
         member_search_link = (
             "%(ig_url)s/member_search?search_string=%(userid)s" % {
