@@ -1,5 +1,6 @@
 5.0.2 (unreleased)
 -------------------
+* fix for Pluggable Auth Service [dumitval]
 
 5.0.1 (2019-11-15)
 -------------------
