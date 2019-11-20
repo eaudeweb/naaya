@@ -71,6 +71,7 @@ class plugLDAPUserFolder(PlugBase):
     object_type = 'LDAPUserFolder'
     meta_type = 'Plugin for user folder'
     group_to_roles_mapping = PersistentDict()
+    backup_encoding = 'utf-8'
 
     @property
     def default_encoding(self):
@@ -185,7 +186,10 @@ class plugLDAPUserFolder(PlugBase):
             cn = cn[0]
         description = role.get('description', '')
         if description:
-            description = description[0].decode(self.default_encoding)
+            try:
+                description = description[0].decode(self.default_encoding)
+            except UnicodeDecodeError:
+                description = description[0].decode(self.backup_encoding)
         return (dn, cn, description)
 
     def getRoles(self, expand=[LDAP_ROOT_ID], role_id=LDAP_ROOT_ID, depth=0):
@@ -482,7 +486,10 @@ class plugLDAPUserFolder(PlugBase):
         except LDAPUserNotFound:
             return ''
         else:
-            return user_info.email.encode(self.default_encoding)
+            try:
+                return user_info.email.encode(self.default_encoding)
+            except UnicodeEncodeError:
+                return user_info.email.encode(self.backup_encoding)
 
     def getUserFullName(self, p_username, acl_folder):
         # return the full name of the given user id
@@ -495,7 +502,12 @@ class plugLDAPUserFolder(PlugBase):
         else:
             if user_info is not None:
                 if user_info.status != 'disabled':
-                    return user_info.full_name.encode(self.default_encoding)
+                    try:
+                        return user_info.full_name.encode(
+                            self.default_encoding)
+                    except UnicodeEncodeError:
+                        return user_info.full_name.encode(
+                            self.backup_encoding)
                 else:
                     return p_username + DISABLED_SUFFIX
             else:
@@ -504,7 +516,10 @@ class plugLDAPUserFolder(PlugBase):
 
     def decode_cn(self, value):
         if isinstance(value, str):
-            value = value.decode(self.default_encoding)
+            try:
+                value = value.decode(self.default_encoding)
+            except UnicodeDecodeError:
+                value = value.decode(self.backup_encoding)
         return value
 
     def get_group_roles_in_site(self, user):
