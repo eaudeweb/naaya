@@ -1,4 +1,7 @@
-5.0.4 (unreleased)
+5.0.5 (unreleased)
+-------------------
+
+5.0.4 (2019-11-20)
 -------------------
 * `update` script for writing role assignments to zope local roles [dumitval]
 * role assignments are now written as zope local roles, too [dumitval]
