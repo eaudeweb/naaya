@@ -1,4 +1,7 @@
-5.0.5 (unreleased)
+5.0.6 (unreleased)
+-------------------
+
+5.0.5 (2019-11-20)
 -------------------
 * handle missing etag in feeds [dumitval]
 * try alternate encoding when ldap default_encoding fails [dumitval]
