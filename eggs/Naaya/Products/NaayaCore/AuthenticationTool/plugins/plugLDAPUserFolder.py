@@ -660,6 +660,7 @@ class LdapSatelliteProvider(Acquisition.Implicit):
             if role not in assigned_roles:
                 roles_to_add.append(role)
         assigned_roles += roles_to_add
+        current_folder.manage_setLocalRoles(group, assigned_roles)
 
         notify(NyAddGroupRoleEvent(current_folder, group, roles_to_add))
 
@@ -680,6 +681,9 @@ class LdapSatelliteProvider(Acquisition.Implicit):
                 raise ValueError('Trying to remove non-existent role')
         if not assigned_roles:
             del local_roles[group]
+            current_folder.manage_delLocalRoles([group])
+        else:
+            current_folder.manage_setLocalRoles(group, assigned_roles)
 
         notify(NyRemoveGroupRoleEvent(current_folder, group, roles))
 

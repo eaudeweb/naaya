@@ -7,6 +7,7 @@ permission_map = {
     'Edit content': 'Naaya - Edit content',
 }
 
+
 class RemovePermissionGroups(UpdateScript):
     title = 'Remove permission groups'
     authors = ['Alex Morega']
@@ -31,6 +32,7 @@ class RemovePermissionGroups(UpdateScript):
 
         return True
 
+
 class RemoveGhostRoles(UpdateScript):
     title = 'Remove roles of deleted users'
     authors = ['Valentin Dumitru']
@@ -40,12 +42,15 @@ class RemoveGhostRoles(UpdateScript):
         acl_users = portal.acl_users
         users_roles = _getUsersRoles(portal)
         for user, roles in users_roles.iteritems():
-            if user not in acl_users.getUserNames() and not _get_user_by_uid(user, portal):
+            if user not in acl_users.getUserNames() and not _get_user_by_uid(
+                    user, portal):
                 for pair in roles:
                     location = portal.utGetObject(pair[1])
                     location.manage_delLocalRoles([user])
-                    self.log.info('%r deleted for user %r for location %r', pair[0], user, pair[1])
+                    self.log.info('%r deleted for user %r for location %r',
+                                  pair[0], user, pair[1])
         return True
+
 
 def _getUsersRoles(portal):
     acl_users = portal.acl_users
@@ -55,11 +60,14 @@ def _getUsersRoles(portal):
         for roles_tuple in folder.get_local_roles():
             local_roles = acl_users.getLocalRoles(roles_tuple[1])
             if len(local_roles) > 0:
-                if users_roles.has_key(str(roles_tuple[0])):
-                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+                if str(roles_tuple[0]) in users_roles:
+                    users_roles[str(roles_tuple[0])].append(
+                        (local_roles, folder.absolute_url(1)))
                 else:
-                    users_roles[str(roles_tuple[0])] = [(local_roles, folder.absolute_url(1))]
+                    users_roles[str(roles_tuple[0])] = [
+                        (local_roles, folder.absolute_url(1))]
     return users_roles
+
 
 def _get_user_by_uid(user_id, portal):
     for source in portal.acl_users.getSources():
@@ -68,11 +76,13 @@ def _get_user_by_uid(user_id, portal):
         if user_obj:
             return user_obj
 
+
 def _recurse(ob, meta_types):
     for sub_ob in ob.objectValues(meta_types):
         yield sub_ob
         for o in _recurse(sub_ob, meta_types):
             yield o
+
 
 class CorrectRolesForImportedUsers(UpdateScript):
     title = 'Correct role assignment for some users (imported with "" as role)'
@@ -83,14 +93,17 @@ class CorrectRolesForImportedUsers(UpdateScript):
         auth_tool = portal.getAuthenticationTool()
         user_roles = auth_tool.getUsersRoles()
         user_with_invalid_roles = [user for user, roles in user_roles.items()
-                if ([u''], '') in roles]
+                                   if ([u''], '') in roles]
         if len(user_with_invalid_roles) > 0:
-            auth_tool.admin_addroles(names=user_with_invalid_roles,
-                    roles=['Contactpersoon coalitie biodiversiteit'])
-            self.log.info('Updated roles for users: %s' % user_with_invalid_roles)
+            auth_tool.admin_addroles(
+                names=user_with_invalid_roles,
+                roles=['Contactpersoon coalitie biodiversiteit'])
+            self.log.info('Updated roles for users: %s' %
+                          user_with_invalid_roles)
         else:
             self.log.info('No user roles to correct')
         return True
+
 
 class AddNyLdapGroupRolesToCatalog(UpdateScript):
     title = 'Catalog ldap groups local roles'
@@ -100,9 +113,41 @@ class AddNyLdapGroupRolesToCatalog(UpdateScript):
     def _update(self, portal):
         cat_tool = portal.getCatalogTool()
         if 'ny_ldap_group_roles' in cat_tool.schema():
-            self.log.info('Portal already has this column in catalog, skipping')
+            self.log.info(
+                'Portal already has this column in catalog, skipping')
         else:
             cat_tool.addColumn('ny_ldap_group_roles')
             cat_tool.refreshCatalog()
             self.log.info('Column added, catalog refreshed.')
+        return True
+
+
+class AddGroupsToLocalRoles(UpdateScript):
+    title = 'Add LDAP groups to local roles'
+    description = 'Add LDAP groups role assignments to zope local roles'
+    authors = ['Valentin Dumitru']
+    creation_date = 'Nov 19, 2019'
+
+    def _update(self, portal):
+        to_update = {}
+        updated = set()
+        auth_tool = portal.getAuthenticationTool()
+        for source in auth_tool.getSources():
+            roles_map = source.get_groups_roles_map()
+            for group, roles in roles_map.items():
+                to_update[group] = {}
+                for role_details in roles:
+                    role = role_details[0]
+                    ob = role_details[1]['ob']
+                    if to_update[group].get(ob):
+                        to_update[group][ob].append(role)
+                    else:
+                        to_update[group][ob] = [role]
+        for group, info in to_update.items():
+            for ob, roles in info.items():
+                ob.manage_setLocalRoles(group, roles)
+                updated.add(ob.absolute_url())
+        for path in updated:
+            self.log.info('Set local roles for object: %s' % path)
+
         return True

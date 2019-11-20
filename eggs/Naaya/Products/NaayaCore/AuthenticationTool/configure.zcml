@@ -40,6 +40,11 @@
          provides="Products.naayaUpdater.interfaces.IUpdateScript"
          component=".updates.AddNyLdapGroupRolesToCatalog"
          permission="zope2.ViewManagementScreens" />
+      <utility
+         name="AddGroupsToLocalRoles.update"
+         provides="Products.naayaUpdater.interfaces.IUpdateScript"
+         component=".updates.AddGroupsToLocalRoles"
+         permission="zope2.ViewManagementScreens" />
    </configure>
 
 </configure>
