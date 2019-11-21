@@ -1,5 +1,6 @@
 5.0.6 (unreleased)
 -------------------
+* decode the user name before sending it to the email renderer [dumitval]
 
 5.0.5 (2019-11-20)
 -------------------

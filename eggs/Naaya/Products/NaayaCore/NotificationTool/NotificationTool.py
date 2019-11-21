@@ -497,7 +497,7 @@ class NotificationTool(Folder):
         email_data = {
             email: {'new_roles': new_roles,
                     'removed_roles': removed_roles,
-                    'username': username,
+                    'username': username.decode('utf-8'),
                     'obj': obj,
                     }
         }
