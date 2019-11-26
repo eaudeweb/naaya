@@ -8,7 +8,7 @@ reporting.
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens
 from Products.ZCatalog.ZCatalog import ZCatalog
 from Products.ZCatalog.Catalog import Catalog
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -63,6 +63,7 @@ def patch_zope_catalog_indexing():
 
         Catalog.catalogObject = patched_catalogObject
 
+
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
     ZMI method that creates an object of this type.
@@ -77,6 +78,7 @@ def manage_addCatalogTool(self, languages=None, REQUEST=None):
     self._getOb(ID_CATALOGTOOL).loadDefaultData(languages)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
 
 class CatalogTool(ZCatalog, utils):
     """
@@ -103,81 +105,135 @@ class CatalogTool(ZCatalog, utils):
         self.title = title
 
     security.declarePrivate('loadDefaultData')
+
     def loadDefaultData(self, languages):
         """
         Creates default indexes and metadata.
         """
         languages = self.utConvertToList(languages)
         # TODO for Zope 2.10: remove try: ... except: pass
-        try: self.addIndex('bobobase_modification_time', 'FieldIndex')
-        except: pass
-        try: self.addIndex('id', 'FieldIndex')
-        except: pass
-        try: self.addIndex('meta_type', 'FieldIndex')
-        except: pass
-        try: self.addIndex('path', 'PathIndex')
-        except: pass
+        try:
+            self.addIndex('bobobase_modification_time', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('id', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('meta_type', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('path', 'PathIndex')
+        except:
+            pass
         if txng_version == 2:
-            try: self.manage_addIndex('PrincipiaSearchSource', 'TextIndexNG3', extra={
-                'default_encoding': 'utf-8',
-                'use_converters':1,
-                'splitter_casefolding': True,
-            })
-            except: pass
-            try: self.manage_addIndex('title', 'TextIndexNG3', extra={
-                'default_encoding': 'utf-8',
-                'splitter_single_chars': 1,
-                'splitter_casefolding': True,
-            })
-            except: pass
+            try:
+                self.manage_addIndex(
+                    'PrincipiaSearchSource', 'TextIndexNG3', extra={
+                        'default_encoding': 'utf-8',
+                        'use_converters': 1,
+                        'splitter_casefolding': True,
+                    })
+            except:
+                pass
+            try:
+                self.manage_addIndex('title', 'TextIndexNG3', extra={
+                    'default_encoding': 'utf-8',
+                    'splitter_single_chars': 1,
+                    'splitter_casefolding': True,
+                })
+            except:
+                pass
         else:
-            try: self.addIndex('PrincipiaSearchSource', 'TextIndex')
-            except: pass
-            try: self.addIndex('title', 'TextIndex')
-            except: pass
-        try: self.addIndex('submitted', 'FieldIndex')
-        except: pass
-        try: self.addIndex('approved', 'FieldIndex')
-        except: pass
-        try: self.addIndex('topitem', 'FieldIndex')
-        except: pass
-        try: self.addIndex('checkout', 'FieldIndex')
-        except: pass
-        try: self.addIndex('validation_status', 'FieldIndex')
-        except: pass
-        for lang in languages: self.add_indexes_for_lang(lang)
-        try: self.addIndex('releasedate', 'DateIndex')
-        except: pass
-        try: self.addIndex('geo_latitude', 'FieldIndex')
-        except: pass
-        try: self.addIndex('geo_longitude', 'FieldIndex')
-        except: pass
-        try: self.addIndex('geo_type', 'FieldIndex')
-        except: pass
+            try:
+                self.addIndex('PrincipiaSearchSource', 'TextIndex')
+            except:
+                pass
+            try:
+                self.addIndex('title', 'TextIndex')
+            except:
+                pass
+        try:
+            self.addIndex('submitted', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('approved', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('topitem', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('checkout', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('validation_status', 'FieldIndex')
+        except:
+            pass
+        for lang in languages:
+            self.add_indexes_for_lang(lang)
+        try:
+            self.addIndex('releasedate', 'DateIndex')
+        except:
+            pass
+        try:
+            self.addIndex('geo_latitude', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('geo_longitude', 'FieldIndex')
+        except:
+            pass
+        try:
+            self.addIndex('geo_type', 'FieldIndex')
+        except:
+            pass
         if txng_version == 2:
-            try: self.addIndex('geo_address', 'TextIndexNG3', extra={
-                'default_encoding': 'utf-8',
-                'splitter_casefolding': True,
-            })
-            except: pass
+            try:
+                self.addIndex('geo_address', 'TextIndexNG3', extra={
+                    'default_encoding': 'utf-8',
+                    'splitter_casefolding': True,
+                })
+            except:
+                pass
         else:
-            try: self.addIndex('geo_address', 'TextIndex')
-            except: pass
-        #create columns
-        try: self.addColumn('id')
-        except: pass
-        try: self.addColumn('title')
-        except: pass
-        try: self.addColumn('meta_type')
-        except: pass
-        try: self.addColumn('bobobase_modification_time')
-        except: pass
-        try: self.addColumn('releasedate')
-        except: pass
-        try: self.addColumn('summary')
-        except: pass
+            try:
+                self.addIndex('geo_address', 'TextIndex')
+            except:
+                pass
+        # create columns
+        try:
+            self.addColumn('id')
+        except:
+            pass
+        try:
+            self.addColumn('title')
+        except:
+            pass
+        try:
+            self.addColumn('meta_type')
+        except:
+            pass
+        try:
+            self.addColumn('bobobase_modification_time')
+        except:
+            pass
+        try:
+            self.addColumn('releasedate')
+        except:
+            pass
+        try:
+            self.addColumn('summary')
+        except:
+            pass
 
     security.declarePrivate('add_index_for_lang')
+
     def add_index_for_lang(self, name, lang):
         """
         Create an I{TextIndexNG3} or I{TextIndex} index for given language:
@@ -189,11 +245,12 @@ class CatalogTool(ZCatalog, utils):
         """
         if txng_version == 2:
             try:
-                self.manage_addIndex('%s_%s' % (name, lang), 'TextIndexNG3', extra={
-                    'default_encoding': 'utf-8',
-                    'splitter_single_chars': 1,
-                    'splitter_casefolding': True,
-                })
+                self.manage_addIndex(
+                    '%s_%s' % (name, lang), 'TextIndexNG3', extra={
+                        'default_encoding': 'utf-8',
+                        'splitter_single_chars': 1,
+                        'splitter_casefolding': True,
+                    })
                 self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
             except:
                 pass
@@ -205,6 +262,7 @@ class CatalogTool(ZCatalog, utils):
                 pass
 
     security.declarePrivate('add_indexes_for_lang')
+
     def add_indexes_for_lang(self, lang):
         """
         For each portal language related indexes are created:
@@ -226,6 +284,7 @@ class CatalogTool(ZCatalog, utils):
             pass
 
     security.declarePrivate('del_index_for_lang')
+
     def del_index_for_lang(self, name, lang):
         """
         Delete an index when a language is removed from the portal.
@@ -235,10 +294,13 @@ class CatalogTool(ZCatalog, utils):
         @param lang: language code
         @type lang: string
         """
-        try: self.delIndex('%s_%s' % (name, lang))
-        except: pass
+        try:
+            self.delIndex('%s_%s' % (name, lang))
+        except:
+            pass
 
     security.declarePrivate('del_indexes_for_lang')
+
     def del_indexes_for_lang(self, lang):
         """
         Delete indexes when a language is removed from the portal.
@@ -254,6 +316,7 @@ class CatalogTool(ZCatalog, utils):
 
     security.declareProtected(view_management_screens, 'manage_maintenance')
     _manage_maintenance = PageTemplateFile('zpt/manage_maintenance', globals())
+
     def manage_maintenance(self, REQUEST):
         """ maintenance tab """
 
@@ -261,7 +324,8 @@ class CatalogTool(ZCatalog, utils):
         path_ob = lambda p: self.unrestrictedTraverse(p)
 
         def generate_report():
-            found_paths = set(ob_path(ob) for ob in walk_folder(self.getSite()))
+            found_paths = set(ob_path(ob) for ob in walk_folder(
+                self.getSite()))
 
             cataloged_paths = set()
             broken_paths = set()
@@ -298,6 +362,7 @@ class CatalogTool(ZCatalog, utils):
         return self._manage_maintenance(REQUEST, **options)
 
     security.declareProtected(view_management_screens, 'manage_do_rebuild')
+
     def manage_do_rebuild(self, REQUEST=None):
         """ maintenance operations for the catalog """
 
@@ -310,7 +375,8 @@ class CatalogTool(ZCatalog, utils):
             add_to_catalog(ob)
 
         if REQUEST:
-            REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_maintenance')
+            REQUEST.RESPONSE.redirect(self.absolute_url() +
+                                      '/manage_maintenance')
 
     def _fix_catalog(self):
         _catalog = self._catalog
@@ -324,7 +390,9 @@ class CatalogTool(ZCatalog, utils):
             del _catalog.__dict__['__len__']
             self._p_changed = True
 
+
 InitializeClass(CatalogTool)
+
 
 def walk_folder(folder):
     for ob in folder.objectValues():
