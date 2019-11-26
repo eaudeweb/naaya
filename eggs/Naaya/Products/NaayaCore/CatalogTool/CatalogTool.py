@@ -298,7 +298,7 @@ class CatalogTool(ZCatalog, utils):
         return self._manage_maintenance(REQUEST, **options)
 
     security.declareProtected(view_management_screens, 'manage_do_rebuild')
-    def manage_do_rebuild(self, REQUEST):
+    def manage_do_rebuild(self, REQUEST=None):
         """ maintenance operations for the catalog """
 
         def add_to_catalog(ob):
@@ -309,7 +309,8 @@ class CatalogTool(ZCatalog, utils):
         for ob in walk_folder(self.getSite()):
             add_to_catalog(ob)
 
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_maintenance')
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_maintenance')
 
     def _fix_catalog(self):
         _catalog = self._catalog
