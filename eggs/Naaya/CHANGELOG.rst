@@ -1,5 +1,8 @@
 5.0.6 (unreleased)
 -------------------
+
+5.0.6 (2019-11-26)
+-------------------
 * allow catalog to be rebuilt from debug [dumitval]
 * decode the user name before sending it to the email renderer [dumitval]
 
