@@ -535,6 +535,10 @@ class SignupUsersTool(BasicUserFolder):
         else:
             return None
 
+    def user_names(self):
+        return self.getAuthenticationTool().user_names()
+
+
 NaayaPageTemplateFile('zpt/subscription_subscribe', globals(),
                       'naaya.content.meeting.subscription_subscribe')
 NaayaPageTemplateFile(

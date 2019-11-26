@@ -1,5 +1,7 @@
 1.3.06 (unreleased)
 -------------------
+* fix for the ZMI local roles lising view [dumitval]
+
 
 1.3.05 (2019-11-07)
 -------------------
