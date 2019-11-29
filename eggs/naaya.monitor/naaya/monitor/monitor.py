@@ -2,7 +2,7 @@ from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Products.Five.browser import BrowserView
-from Zope2 import bobo_application
+import Zope2
 
 from naaya.monitor import blobusage
 
@@ -48,7 +48,7 @@ class NaayaMonitor(Folder):
 def add_monitor_stats():
     ''' '''
     try:
-        monitor = bobo_application().objectValues('Naaya Monitor')[0]
+        monitor = Zope2.app().objectValues('Naaya Monitor')[0]
     except IndexError:
         return
     blobusage.manage_addStatsItem(monitor)
