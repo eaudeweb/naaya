@@ -1,4 +1,7 @@
-1.2 (unreleased)
+1.3 (unreleased)
+=======================
+
+1.2 (2019-11-29)
 =======================
 * fix in accessing the root application [dumitval]
 
