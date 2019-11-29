@@ -69,5 +69,8 @@ setup(name='Naaya',
               'twill',
               'WebOb',
           ]
-      }
+      },
+      entry_points={'console_scripts': [
+          'heartbeat = Products.Naaya.views:heartbeat',
+      ]},
       )

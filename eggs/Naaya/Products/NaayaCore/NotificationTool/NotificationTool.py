@@ -27,6 +27,8 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import (
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import generate_csv
 from Products.NaayaCore.managers.import_export import generate_excel
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import \
+    is_anonymous
 from naaya.core.utils import is_valid_email
 
 from naaya.core.zope2util import path_in_site
@@ -537,7 +539,8 @@ class NotificationTool(Folder):
         addr_from = email_tool.get_addr_from()
         for addr_to, kwargs in messages_by_email.iteritems():
             translate = self.portal_i18n.get_translation
-            kwargs.update({'portal': portal, '_translate': translate})
+            kwargs.update({'portal': portal, '_translate': translate,
+                           'REQUEST': self.REQUEST, 'context': self.getSite()})
             mail_data = template(**kwargs)
             notif_logger.info('.. sending notification to %r', addr_to)
             utils.send_notification(email_tool, addr_from, addr_to,
@@ -703,6 +706,8 @@ class NotificationTool(Folder):
 
         """
         user = REQUEST.AUTHENTICATED_USER
+        if is_anonymous(user):
+            return False
         if not isinstance(user, basestring):
             # with LDAP authentication, user is LDAP user instance
             user = user.getId()

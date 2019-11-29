@@ -1,10 +1,14 @@
+import Zope2
+from zope.globalrequest import setRequest
+from Testing.ZopeTestCase import utils
 from naaya.core.zope2util import getExtConfiguration as getConfiguration
 from Products.Five.browser import BrowserView
 from Products.NaayaBase import akismet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.component import bundles
 
-tmpl = NaayaPageTemplateFile('zpt/site_admin_api_keys', globals(), 'admin_api_keys')
+tmpl = NaayaPageTemplateFile(
+    'zpt/site_admin_api_keys', globals(), 'admin_api_keys')
 
 
 class SetBundleView(BrowserView):
@@ -18,7 +22,7 @@ class SetBundleView(BrowserView):
                 self.request.SESSION.set('message', "Success!")
             else:
                 self.request.SESSION.set('message',
-                        "Bundle name cannot be empty!")
+                                         "Bundle name cannot be empty!")
         return super(SetBundleView, self).__call__(*args, **kw)
 
     def set_bundle(self, bundle_name):
@@ -34,15 +38,16 @@ def AdminAPIKeysStatus(context, request):
     """
     conf = getConfiguration()
 
-    #Akismet
+    # Akismet
     api_keys = {
-        'akismet':{
+        'akismet': {
             'key': '',
             'valid': False
         }
     }
 
-    akismet_api_key = getattr(conf, 'environment', {}).get('AKISMET_API_KEY', '')
+    akismet_api_key = getattr(conf, 'environment', {}).get(
+        'AKISMET_API_KEY', '')
     valid = False
     if akismet_api_key:
         valid = akismet.verify_key(akismet_api_key, context.getSitePath())
@@ -55,7 +60,8 @@ def AdminAPIKeysStatus(context, request):
         'change_link': None
     }
 
-    google_client_id = getattr(conf, 'environment', {}).get('GOOGLE_AUTH_CLIENT_ID', '')
+    google_client_id = getattr(conf, 'environment', {}).get(
+        'GOOGLE_AUTH_CLIENT_ID', '')
     valid = False
     if google_client_id:
         valid = True
@@ -68,7 +74,8 @@ def AdminAPIKeysStatus(context, request):
         'change_link': None
     }
 
-    google_client_secret = getattr(conf, 'environment', {}).get('GOOGLE_AUTH_CLIENT_SECRET', '')
+    google_client_secret = getattr(conf, 'environment', {}).get(
+        'GOOGLE_AUTH_CLIENT_SECRET', '')
     valid = False
     if google_client_secret:
         valid = True
@@ -88,7 +95,8 @@ def AdminAPIKeysStatus(context, request):
 
     api_keys['master_ga_id'] = {
         'title': 'Google Analytics primary tracking code',
-        'description': 'The GA web property of the master profile (the profile of the top-level domain)',
+        'description': 'The GA web property of the master profile '
+                       '(the profile of the top-level domain)',
         'key': master_ga_id,
         'valid': valid,
         'change_link': None
@@ -108,7 +116,7 @@ def AdminAPIKeysStatus(context, request):
         'change_link': None
     }
 
-    #Google Analytics
+    # Google Analytics
     ga_id = getattr(context.portal_statistics, 'ga_id', '')
     valid = False
     if ga_id:
@@ -116,13 +124,14 @@ def AdminAPIKeysStatus(context, request):
 
     api_keys['ga_id'] = {
         'title': 'Google Analytics portal tracking code',
-        'description': 'Allows Google to access your website traffic data and saves data in portal profile of GA.',
+        'description': 'Allows Google to access your website traffic data and '
+                       'saves data in portal profile of GA.',
         'key': ga_id,
         'valid': valid,
         'change_link': '/portal_statistics/admin_verify'
     }
 
-    #reCaptcha
+    # reCaptcha
     if context.getSite().get_recaptcha_provider() == 'ec':
         api_keys['recaptcha_provider'] = {
             'title': 'reCaptcha provider',
@@ -169,6 +178,54 @@ def AdminAPIKeysStatus(context, request):
 
 class PDBView(BrowserView):
     def __call__(self):
-        import pdb; pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         return "Done"
 
+
+def heartbeat():
+    app = Zope2.app()
+    conf = getConfiguration()
+    # there is no fallback, if the env variable is missing, we need a crash
+    hostname = getattr(conf, 'environment', {}).get('HOST_NAME')
+    utils._Z2HOST = hostname
+    app = utils.makerequest(app)
+    request = app.REQUEST
+    for portal in app.objectValues([
+            'Groupware site', 'EnviroWindows Site', 'CHM Site', 'Naaya Site']):
+        portal_id = portal.getId()
+        request._orig_env['HTTP_X_FORWARDED_HOST'] = hostname
+        request._orig_env['HTTP_X_FORWARDED_SERVER'] = hostname
+        request._orig_env['PATH_INFO'] = (
+            '/VirtualHostBase/http/%s:80/VirtualHostRoot/%s' % (
+                hostname, portal_id))
+        request._orig_env['PATH_TRANSLATED'] = (
+            '/VirtualHostBase/http/%s:80/VirtualHostRoot/%s' % (
+                hostname, portal_id))
+        request._steps = [portal_id]
+        request.environ['HTTP_X_FORWARDED_HOST'] = hostname
+        request.environ['HTTP_X_FORWARDED_SERVER'] = hostname
+        request.environ['PATH_INFO'] = (
+            '/VirtualHostBase/http/%s:80/VirtualHostRoot/%s' % (
+                hostname, portal_id))
+        request.environ['PATH_TRANSLATED'] = (
+            '/VirtualHostBase/http/%s:80/VirtualHostRoot/%s' % (
+                hostname, portal_id))
+        portal.REQUEST.other['PARENTS'] = [portal, app]
+        request.other['URL'] = 'http://%s/%s' % (hostname, portal_id)
+        request.other['VIRTUAL_URL'] = 'http://%s/%s' % (
+            hostname, portal_id)
+        request.other['VIRTUAL_URL_PARTS'] = (
+            'http://%s' % hostname, portal_id)
+        request.steps = [portal_id]
+        setRequest(request)
+        portal = portal.__of__(app)
+        portal.heartbeat()
+        for rdfcal in portal.objectValues('RDF Calendar'):
+            for rdfsum in rdfcal.objectValues('RDF Summary'):
+                rdfsum.update()
+    return "Done"
+
+
+def ob_path(ob):
+    return '/'.join(ob.getPhysicalPath())
