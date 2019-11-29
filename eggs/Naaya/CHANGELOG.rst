@@ -1,4 +1,7 @@
-5.0.7 (unreleased)
+5.0.8 (unreleased)
+-------------------
+
+5.0.7 (2019-11-29)
 -------------------
 * change in heartbeat functionality - new cron job, new env variable [dumitval]
 * fix in Notification tool not identifying anonymous user [dumitval]
