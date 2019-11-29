@@ -14,8 +14,8 @@ class NyI18nTranslator(object):
 
     implements(ITranslationDomain)
 
-    def translate(self, msgid, mapping=None, context=None, target_language=None,
-                  default=None):
+    def translate(self, msgid, mapping=None, context=None,
+                  target_language=None, default=None):
         """
             Implementation of ITranslationDomain.translate using portal_i18n
         """
@@ -31,10 +31,11 @@ class NyI18nTranslator(object):
                                                                 context)
         if default is not None:
             raw = tool.get_message_catalog().gettext(msgid, target_language,
-                                             default=default)
+                                                     default=default)
         else:
             raw = tool.get_message_catalog().gettext(msgid, target_language)
         return interpolate(raw, mapping)
+
 
 class NyHTTPCharsets(HTTPCharsets):
 
