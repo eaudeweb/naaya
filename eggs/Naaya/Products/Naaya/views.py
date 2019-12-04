@@ -1,3 +1,4 @@
+import logging
 import Zope2
 from zope.globalrequest import setRequest
 from Testing.ZopeTestCase import utils
@@ -184,6 +185,7 @@ class PDBView(BrowserView):
 
 
 def heartbeat():
+    log = logging.getLogger('Products.Naaya.Heartbeat')
     app = Zope2.app()
     conf = getConfiguration()
     # there is no fallback, if the env variable is missing, we need a crash
@@ -220,7 +222,12 @@ def heartbeat():
         request.steps = [portal_id]
         setRequest(request)
         portal = portal.__of__(app)
-        portal.heartbeat()
+        try:
+            portal.heartbeat()
+        except Exception, e:
+            log.error('%s: %s' % (e, portal_id))
+        else:
+            log.info('%s: OK' % portal_id)
         for rdfcal in portal.objectValues('RDF Calendar'):
             for rdfsum in rdfcal.objectValues('RDF Summary'):
                 rdfsum.update()

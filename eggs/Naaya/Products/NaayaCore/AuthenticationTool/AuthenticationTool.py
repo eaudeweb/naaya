@@ -1131,7 +1131,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             user_folder = source.getUserFolder()
             user = user_folder.getUser(userid)
             if user is not None:
-                return user.__of__(user_folder)
+                return user
 
         return None
 

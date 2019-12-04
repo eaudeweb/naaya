@@ -90,7 +90,7 @@ def list_modified_objects(site, when_start, when_end):
     for brain in brains:
         try:
             yield brain.getObject()
-        except:
+        except Exception:
             notif_logger.error('Found broken brain: %r', brain.getPath())
 
 

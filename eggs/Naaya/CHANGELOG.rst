@@ -1,5 +1,7 @@
 5.0.8 (unreleased)
 -------------------
+* fix improper user identification (causing notifications to not be
+  sent) [dumitval]
 
 5.0.7 (2019-11-29)
 -------------------

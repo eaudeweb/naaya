@@ -39,7 +39,7 @@ from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscriptionTarget
-from containers import SubscriptionContainer  # Keep for backward compatibility
+from containers import SubscriptionContainer  # noqa: F401 DO NOT DELETE
 from containers import AnonymousSubscription, AccountSubscription
 
 from Products.NaayaCore.NotificationTool import utils
@@ -135,12 +135,12 @@ class NotificationTool(Folder):
                                  notif_type=kw['notif_type'])
         try:
             obj = self.getSite().restrictedTraverse(kw['location'])
-        except:
+        except Exception:
             raise i18n_exception(ValueError,
                                  'This path is invalid or protected')
         try:
             subscription_container = ISubscriptionContainer(obj)
-        except:
+        except Exception:
             raise i18n_exception(ValueError, 'Cannot subscribe to this folder')
 
         if kw.get('anonymous', False):
@@ -300,12 +300,12 @@ class NotificationTool(Folder):
     def remove_anonymous_subscription(self, email, location, notif_type, lang):
         try:
             obj = self.getSite().restrictedTraverse(location)
-        except:
+        except Exception:
             raise i18n_exception(ValueError, 'Invalid location')
 
         try:
             subscription_container = ISubscriptionContainer(obj)
-        except:
+        except Exception:
             raise i18n_exception(ValueError, 'Invalid container')
         anonymous_subscriptions = [(n, s) for n, s in
                                    subscription_container.list_with_keys()
