@@ -1,4 +1,7 @@
-5.0.8 (unreleased)
+5.0.9 (unreleased)
+-------------------
+
+5.0.8 (2019-12-04)
 -------------------
 * fix improper user identification (causing notifications to not be
   sent) [dumitval]
