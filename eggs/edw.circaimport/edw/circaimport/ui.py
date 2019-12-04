@@ -85,7 +85,7 @@ class ImportAllFromCirca(BrowserPage):
                     files_ctx = ctx.restrictedTraverse(import_files_path)
                     add_files_and_folders_from_circa_export(
                         files_ctx, filename_files, upload_prefix)
-                except:
+                except Exception:
                     logger.critical(traceback.format_exc())
 
             filename_roles = self.request.form['filename_roles']
@@ -95,7 +95,7 @@ class ImportAllFromCirca(BrowserPage):
                     add_roles_from_circa_export(
                         ctx, os.path.join(upload_prefix, filename_roles),
                         ldap_source_title)
-                except:
+                except Exception:
                     logger.critical(traceback.format_exc())
 
             filename_notifications = self.request.form.get(
@@ -105,7 +105,7 @@ class ImportAllFromCirca(BrowserPage):
                     add_notifications_from_circa_export(
                         ctx, os.path.join(upload_prefix,
                                           filename_notifications))
-                except:
+                except Exception:
                     logger.critical(traceback.format_exc())
 
             filename_acls = self.request.form['filename_acls']
@@ -113,7 +113,7 @@ class ImportAllFromCirca(BrowserPage):
                 try:
                     add_acls_from_circa_export(
                         ctx, os.path.join(upload_prefix, filename_acls))
-                except:
+                except Exception:
                     logger.critical(traceback.format_exc())
 
         finally:
@@ -142,7 +142,7 @@ class ImportFilesFromCirca(BrowserPage):
 
         try:
             add_files_and_folders_from_circa_export(ctx, name, upload_prefix)
-        except:
+        except Exception:
             logger.critical(traceback.format_exc())
 
         return import_files_result_zpt.__of__(ctx)(report=log.getvalue())
@@ -166,7 +166,7 @@ class ImportRolesFromCirca(BrowserPage):
         try:
             add_roles_from_circa_export(
                 ctx, os.path.join(upload_prefix, name), ldap_source_title)
-        except:
+        except Exception:
             logger.critical(traceback.format_exc())
 
         return import_roles_zpt.__of__(ctx)(sources=sources,
@@ -190,7 +190,7 @@ class ImportNotificationsFromCirca(BrowserPage):
         try:
             add_notifications_from_circa_export(
                 ctx, os.path.join(upload_prefix, filename), notif_type)
-        except:
+        except Exception:
             logger.critical(traceback.format_exc())
 
         return import_notifications_zpt.__of__(ctx)(report=log.getvalue())
@@ -211,7 +211,7 @@ class ImportACLsFromCirca(BrowserPage):
 
         try:
             add_acls_from_circa_export(ctx, os.path.join(upload_prefix, name))
-        except:
+        except Exception:
             logger.critical(traceback.format_exc())
 
         return import_acls_zpt.__of__(ctx)(report=log.getvalue())
@@ -271,16 +271,18 @@ class ZImportData(BrowserPage):
         sites.sort(key=operator.itemgetter(0))
         submit = self.request.form.get('submit')
         if submit:
+            user_id = self.request.AUTHENTICATED_USER.getId()
             zexp_path = self.request.form.get('zexp_path')
             path = self.request.form.get('location')
             ig_id = self.request.form.get('ig')
             if not ig_id or ig_id == '-':
                 ob = ctx.unrestrictedTraverse('/')
+                user = ob.acl_users['ldap-plugin'].acl_users.getUser(user_id)
             else:
                 ob = ctx.unrestrictedTraverse('/%s/%s' % (ig_id, path))
+                user = ob.getAuthenticationTool().get_user_with_userid(user_id)
             sender = ctx.applications.mail_from
-            user_id = self.request.AUTHENTICATED_USER.getId()
-            user = ob.getAuthenticationTool().get_user_with_userid(user_id)
+
             to = user.mail
             new_ids = []
             sp = transaction.savepoint()

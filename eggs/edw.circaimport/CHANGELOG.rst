@@ -1,5 +1,6 @@
 1.3.8 (unreleased)
 ------------------
+* bugfix when importing whole ig [dumitval]
 
 1.3.7 (2019-11-18)
 ------------------
