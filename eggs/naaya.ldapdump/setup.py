@@ -6,7 +6,7 @@ if sys.version_info < (2, 5):
     extra_requires.append('pysqlite')
 
 setup(name='naaya.ldapdump',
-      version='1.1.0',
+      version='1.1.1',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
