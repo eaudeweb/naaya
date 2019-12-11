@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import ldap
 from ldap.dn import explode_dn
 
@@ -15,7 +16,7 @@ def setTreeItem(dn, attrs=None):
     last_i = len(elems) - 1
     for i, elem in enumerate(elems):
         key = ','.join(elems[:i+1][::-1])
-        if not tree_pos.has_key(key):
+        if key not in tree_pos:
             if i == last_i and attrs is not None:
                 tree_pos[key] = attrs
             else:
@@ -35,7 +36,7 @@ def getSubtree(dn):
         else:
             tree_pos_dn = '%s,%s' % (elem, tree_pos_dn)
 
-        if tree_pos.has_key(tree_pos_dn):
+        if tree_pos_dn in tree_pos:
             tree_pos = tree_pos[tree_pos_dn]
         else:
             raise ldap.NO_SUCH_OBJECT(tree_pos_dn)
@@ -62,4 +63,4 @@ class LDAPConn(object):
         history.append({'search_s': [baseDN, searchScope]})
 
         assert searchScope == SCOPE_SUBTREE
-        return getSubtree(baseDN).items()
+        return list(getSubtree(baseDN).items())

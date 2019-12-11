@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 from zope.interface import Interface
+
 
 class IDumpReader(Interface):
     """ Utility that can read data from an LDAP dump """

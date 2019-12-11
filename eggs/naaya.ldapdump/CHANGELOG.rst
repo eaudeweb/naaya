@@ -1,5 +1,6 @@
-1.0.10 (unreleased)
+1.1.0 (unreleased)
 ------------------
+* added python3 compatibility [dumitval]
 
 1.0.9 (2019-11-15)
 ------------------

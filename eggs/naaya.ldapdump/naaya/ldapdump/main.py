@@ -1,11 +1,14 @@
+from __future__ import absolute_import
+import itertools
+import logging
+import operator
 import os.path
+from datetime import datetime
+
 import ldap
 import ldapurl
-import logging
 import yaml
-from datetime import datetime
-import itertools
-import operator
+
 try:
     import sqlite3
 except ImportError:
@@ -19,7 +22,7 @@ log.setLevel(logging.DEBUG)
 def get_config(config_path):
     try:
         file = open(config_path)
-    except IOError, e:
+    except IOError as e:
         return {'_root_path': os.path.dirname(__file__),
                 'sqlite': {'path': ''}}
     try:
@@ -101,7 +104,10 @@ class LDAPConnection(object):
                 else:
                     if attr == 'cn':
                         if len(values) > 1:
-                            values = [' '.join(values)]
+                            try:
+                                values = [' '.join(values)]
+                            except TypeError: # Python 3
+                                values = [b' '.join(values)]
                     try:
                         ret[dn][attr] = {
                             'type': 'text',
@@ -155,7 +161,12 @@ def write_values(cursor, results_list):
                             text = ('INSERT INTO LDAPMappingBlobs'
                                     '(dn, attr, value) '
                                     'VALUES (?, ?, ?)')
-                            cursor.execute(text, (dn, attr, buffer(value)))
+                            try:
+                                cursor.execute(text,
+                                               (dn, attr, buffer(value)))
+                            except NameError: # Python 3
+                                cursor.execute(text,
+                                               (dn, attr, memoryview(value)))
                         except:
                             log.exception("Error inserting "
                                           "(dn=%s, attr=%s, value=%s)",
@@ -230,7 +241,7 @@ def get_db_meta(db_path, key):
             text = "SELECT value FROM LDAPMetadata WHERE key=?"
             row = cursor.execute(text, (key,)).fetchone()
             return row[0]
-        except sqlite3.OperationalError, e:
+        except sqlite3.OperationalError as e:
             log.exception("Error getting value for key %s", key)
             raise KeyError(key)
     finally:
@@ -261,7 +272,7 @@ class DumpReader(object):
         attriter = itertools.groupby(cursor, operator.itemgetter(0))
         blobiter = itertools.groupby(blobcursor, operator.itemgetter(0))
         try:
-            blob_dn, blob_iter = blobiter.next()
+            blob_dn, blob_iter = next(blobiter)
         except StopIteration:
             blob_dn = None
 
@@ -271,7 +282,7 @@ class DumpReader(object):
                 tuples.extend([(attr, str(value)) for
                                _dn, attr, value in blob_iter])
                 try:
-                    blob_dn, blob_iter = blobiter.next()
+                    blob_dn, blob_iter = next(blobiter)
                 except StopIteration:
                     blob_dn = None
             yield dn, tuples

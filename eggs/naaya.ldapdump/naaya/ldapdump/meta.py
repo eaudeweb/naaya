@@ -1,13 +1,15 @@
-from zope.interface import Interface, alsoProvides
+from __future__ import absolute_import
+from .interfaces import IDumpReader
+from .main import get_reader
+from zope.component import getGlobalSiteManager
 from zope.configuration import fields
+from zope.interface import Interface, alsoProvides
+
 try:
     from zope.app.i18n import ZopeMessageFactory as _
 except ImportError:
     from zope.i18nmessageid import ZopeMessageFactory as _
-from zope.component import getGlobalSiteManager
 
-from interfaces import IDumpReader
-from main import get_reader
 
 
 class IReaderDirective(Interface):

@@ -1,17 +1,17 @@
 # python imports
-import unittest
+from __future__ import absolute_import
 import os
 import os.path
-from datetime import datetime
-import tempfile
 import shutil
+import tempfile
+import unittest
+from datetime import datetime
 
+from . import fakeldap
+# test imports
+from . import ldap_config
 # program imports
 from naaya.ldapdump import main
-
-# test imports
-import ldap_config
-import fakeldap
 
 realldap = main.ldap
 
