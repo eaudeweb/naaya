@@ -54,6 +54,10 @@
         getattrPatch="yes" />
 
     <naaya:rstkMethod
+        handler=".zope2util.absolute_noreq_url"
+        getattrPatch="yes" />
+
+    <naaya:rstkMethod
         handler=".zope2util.is_valid_email"
         getattrPatch="yes" />
 

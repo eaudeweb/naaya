@@ -30,7 +30,7 @@ from zope.configuration.name import resolve
 from DateTime import DateTime
 
 from Products.Naaya.interfaces import IObjectView
-from naaya.core.utils import force_to_unicode, is_valid_email  # keep!
+from naaya.core.utils import force_to_unicode, is_valid_email  # noqa: F401
 from naaya.core.utils import unescape_html_entities
 from backport import any
 from interfaces import IRstkMethod
@@ -144,8 +144,8 @@ def we_provide(feature):
     if feature == 'Excel import':
         # For excel import we also need xlwt, to generate the template
         try:
-            from xlwt import Workbook
-            from xlrd import open_workbook
+            from xlwt import Workbook  # noqa: F811, F401
+            from xlrd import open_workbook  # noqa: F811, F401
             return True
         except ImportError:
             pass
@@ -180,7 +180,7 @@ def escape_html(text):
     return "".join(html_escape_table.get(c, c) for c in text)
 
 
-def unescape_html_entities(text):
+def unescape_html_entities(text):   # noqa: F811
     """ unescape html entities from the given text """
     return unescape_html_entities(text)
 
@@ -399,6 +399,7 @@ def ensure_tzinfo(dt, default_tz=UnnamedTimeZone(0)):
     else:
         return dt
 
+
 folder_manage_main_plus = DTMLFile('zpt/folder_main_plus', globals())
 """
 The OFS.ObjectManager `manage_main` template, modified to render two
@@ -496,6 +497,16 @@ def ofs_path(obj):
     ``/mysite/about/info``
     """
     return '/'.join(obj.getPhysicalPath())
+
+
+def absolute_noreq_url(obj):
+    """
+    Return a string representation of an object's path, similar to the
+    return of absolute_url, but one that works in case of no request
+    and gets the server name from env
+    """
+    host_name = get_zope_env('HOST_NAME')
+    return 'https://' + host_name + '/'.join(obj.getPhysicalPath())
 
 
 def is_descendant_of(obj, ancestor):
@@ -633,7 +644,7 @@ def _run_job(db, context_path, callback):
     try:
         callback(context)
         transaction.commit()
-    except:
+    except Exception:
         log.exception('Error in worker thread')
         transaction.abort()
 
