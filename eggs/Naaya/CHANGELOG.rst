@@ -1,4 +1,7 @@
-5.0.9 (unreleased)
+5.0.10 (unreleased)
+-------------------
+
+5.0.9 (2020-01-16)
 -------------------
 * fix url in heartbeat based notifications [dumitval]
 * bugfix in notification tool trying to decode a string twice [dumitval]
