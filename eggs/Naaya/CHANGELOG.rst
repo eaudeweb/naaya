@@ -1,5 +1,6 @@
 5.0.9 (unreleased)
 -------------------
+* bugfix in notification tool trying to decode a string twice [dumitval]
 
 5.0.8 (2019-12-04)
 -------------------

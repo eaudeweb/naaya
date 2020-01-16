@@ -493,13 +493,19 @@ class NotificationTool(Folder):
         Send notification that the user received or lost one or more roles
         in the specified location
         """
+        if not isinstance(username, unicode):
+            try:
+                username = username.decode('utf8')
+            except UnicodeDecodeError:
+                username = username.decode('latin1')
+
         # Try to fix encoding for roles entered in other languages
         new_roles = [role.decode('utf8') for role in new_roles]
         removed_roles = [role.decode('utf8') for role in removed_roles]
         email_data = {
             email: {'new_roles': new_roles,
                     'removed_roles': removed_roles,
-                    'username': username.decode('utf-8'),
+                    'username': username,
                     'obj': obj,
                     }
         }
