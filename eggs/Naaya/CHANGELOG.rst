@@ -1,4 +1,7 @@
-5.0.10 (unreleased)
+5.0.11 (unreleased)
+-------------------
+
+5.0.10 (2020-01-17)
 -------------------
 * handle some weird crash when trying to log errors [dumitval]
 
