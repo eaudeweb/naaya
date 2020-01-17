@@ -124,8 +124,11 @@ def get_modified_objects(site, when_start, when_end, log_type=None):
                     yield (log_entry.type,
                            site.unrestrictedTraverse(log_entry.path))
                 except KeyError:
-                    notif_logger.error('Found nonexistent path in %r: %r' %
-                                       (site.getId(), log_entry.path))
+                    try:
+                        notif_logger.error('Found nonexistent path in %r: %r' %
+                                           (site.getId(), log_entry.path))
+                    except Exception:
+                        pass
 
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
