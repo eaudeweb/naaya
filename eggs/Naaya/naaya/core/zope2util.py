@@ -505,8 +505,9 @@ def absolute_noreq_url(obj):
     return of absolute_url, but one that works in case of no request
     and gets the server name from env
     """
-    host_name = get_zope_env('HOST_NAME')
+    host_name = get_zope_env('HEARTBEAT_HOST_NAME')
     if not host_name:
+        log.error('HEARTBEAT_HOST_NAME not present in ENV')
         return obj.absolute_url()
     return 'https://' + host_name + '/'.join(obj.getPhysicalPath())
 

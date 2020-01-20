@@ -1,5 +1,6 @@
 5.0.11 (unreleased)
 -------------------
+* rename environment variable [dumitval]
 
 5.0.10 (2020-01-17)
 -------------------

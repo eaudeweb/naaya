@@ -189,7 +189,7 @@ def heartbeat():
     app = Zope2.app()
     conf = getConfiguration()
     # there is no fallback, if the env variable is missing, we need a crash
-    hostname = getattr(conf, 'environment', {}).get('HOST_NAME')
+    hostname = getattr(conf, 'environment', {}).get('HEARTBEAT_HOST_NAME')
     utils._Z2HOST = hostname
     app = utils.makerequest(app)
     request = app.REQUEST
