@@ -1,4 +1,7 @@
-1.1.9 (unreleased)
+1.1.10 (unreleased)
+------------------
+
+1.1.9 (2020-01-21)
 ------------------
 * bugfix related to the root acl_users [dumitval]
 
