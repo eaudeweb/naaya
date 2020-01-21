@@ -1,5 +1,6 @@
 1.1.9 (unreleased)
 ------------------
+* bugfix related to the root acl_users [dumitval]
 
 1.1.8 (2017-09-27)
 ------------------
