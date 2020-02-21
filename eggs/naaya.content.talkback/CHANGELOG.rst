@@ -1,4 +1,7 @@
-1.5.6 (unreleased)
+1.5.7 (unreleased)
+-----------------
+
+1.5.6 (2020-02-21)
 -----------------
 * merge style improvements from different IGs [dumitval]
 
