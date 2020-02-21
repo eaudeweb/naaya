@@ -12,7 +12,7 @@
         var icon = {};
         icon.url = this.url;
         icon.size = new google.maps.Size(this.w, this.h);   // ex GSize
-        icon.anchor = new google.maps.Point(1, 25);
+        icon.anchor = new google.maps.Point(10, 10);
         icons["mk_" + this.id] = icon;
     });
 
