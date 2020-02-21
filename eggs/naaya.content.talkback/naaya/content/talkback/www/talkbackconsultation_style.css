@@ -279,3 +279,51 @@ table.tb-comments-overview {
     display:none;
 }
 
+.talkbacktable th{
+	text-align: center;
+}
+.talkbacktable td{
+	padding: 0 0.5em;
+}
+.talkbacktable th, .talkbacktable td{
+	background: #F6F6F6;
+	vertical-align: top;
+}
+
+.talkback-box{
+	border: 1px solid black;
+	padding: 0 10px;
+	font-size: small;
+}
+.center{
+	text-align: center;
+}
+
+table.talkback{
+	border-collapse: collapse !important;
+	border: 1px solid black !important;
+}
+
+table.talkback td, table.talkback th{
+	border-right: 1px solid black !important;
+	border-left: 1px solid black !important;
+	border-bottom: 1px solid black !important;
+	border-top: 1px solid black !important;
+	vertical-align: middle;
+}
+
+.box{
+	border: 1px solid black;
+	padding: 4px;
+	margin: auto;
+	width: 80%;
+}
+
+p.note{
+	font-size: smaller;
+}
+
+.talkback-paragraph .img p{
+	text-align: center;
+}
+

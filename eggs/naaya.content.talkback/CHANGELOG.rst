@@ -1,5 +1,6 @@
 1.5.6 (unreleased)
 -----------------
+* merge style improvements from different IGs [dumitval]
 
 1.5.5 (2019-09-27)
 -----------------
