@@ -29,7 +29,7 @@
         handler=".subscribers.post_user_management_action" />
 
     <naaya:simpleView
-         for="Products.Naaya.interfaces.INyFolder"
+         for="Products.NaayaBase.interfaces.INyContainer"
          name="access_overview"
          handler=".inspector.access_overview"
          permission="zope2.View" />
