@@ -1,4 +1,7 @@
-1.4.27 (unreleased)
+1.4.28 (unreleased)
+--------------------
+
+1.4.27 (2020-03-27)
 --------------------
 * compatibility with destinet [dumitval]
 
