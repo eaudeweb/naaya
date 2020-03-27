@@ -1,5 +1,6 @@
 1.4.27 (unreleased)
 --------------------
+* compatibility with destinet [dumitval]
 
 1.4.26 (2019-07-09)
 --------------------

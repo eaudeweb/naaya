@@ -164,6 +164,9 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         elif l_referer == 'bfile_add_html':
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
+        elif l_referer == 'disseminate_file':
+            self.setSession('referer', self.absolute_url())
+            return ob
 
     return ob.getId()
 
