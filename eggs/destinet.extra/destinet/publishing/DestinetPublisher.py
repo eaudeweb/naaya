@@ -23,8 +23,8 @@ from naaya.content.contact.contact_item import NyContact
 from naaya.content.contact import contact_item
 from naaya.content.url.url_item import NyURL, url_add_html
 from naaya.content.url.url_item import addNyURL as original_addNyURL
-from naaya.content.file.file_item import NyFile_extfile, file_add_html
-from naaya.content.file.file_item import addNyFile as original_addNyFile
+from naaya.content.bfile.bfile_item import NyBFile, bfile_add_html
+from naaya.content.bfile.bfile_item import addNyBFile as original_addNyBFile
 from naaya.content.mediafile.mediafile_item import NyMediaFile_extfile
 from naaya.content.mediafile.mediafile_item import mediafile_add_html
 from naaya.content.mediafile.mediafile_item import addNyMediaFile \
@@ -194,13 +194,13 @@ class DestinetPublisher(SimpleItem):
 
     def disseminate_file(self, REQUEST=None, RESPONSE=None):
         """ Disseminate your sust. tourism publications or tools (File) """
-        return file_add_html(self, REQUEST, RESPONSE)
+        return bfile_add_html(self, REQUEST, RESPONSE)
 
-    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyFile")
+    security.declareProtected(PERMISSION_DESTINET_PUBLISH, "addNyBFile")
 
-    def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
+    def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         """
-        Create a File type of object in 'resources' folder adding
+        Create a BFile type of object in 'resources' folder adding
         * extra validation for topics and target-groups
 
         """
@@ -210,7 +210,7 @@ class DestinetPublisher(SimpleItem):
         if not target_groups and not topics:
             # unfortunately we both need _prepare_error_response
             # (on NyContentData) and methods for session (by acquisition)
-            ob = NyFile_extfile('', '').__of__(self)
+            ob = NyBFile('', '').__of__(self)
             form_errors = {
                 'target-groups':
                 ['Please select at least one Target Group or one Topic']}
@@ -219,9 +219,9 @@ class DestinetPublisher(SimpleItem):
                 '%s/disseminate_file' % self.absolute_url())
             return
 
-        response = original_addNyFile(self.restrictedTraverse('resources'),
-                                      '', REQUEST)
-        if isinstance(response, NyFile_extfile):
+        response = original_addNyBFile(self.restrictedTraverse('resources'),
+                                       '', REQUEST)
+        if isinstance(response, NyBFile):
             REQUEST.RESPONSE.redirect(response.absolute_url())
         else:  # we have errors
             REQUEST.RESPONSE.redirect(
@@ -597,5 +597,6 @@ class DestinetPublisher(SimpleItem):
                 owner_tuple = candidate.getOwnerTuple()
                 if owner_tuple and owner_tuple[1] == user:
                     return candidate
+
 
 InitializeClass(DestinetPublisher)

@@ -1,5 +1,6 @@
 1.3.39 - (unreleased)
 =======================
+* replace file item with bfile item in disseminate file [dumitval]
 
 1.3.38 - (2019-04-18)
 =======================
