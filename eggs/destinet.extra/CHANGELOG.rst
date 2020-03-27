@@ -1,4 +1,7 @@
-1.3.39 - (unreleased)
+1.3.40 - (unreleased)
+=======================
+
+1.3.39 - (2020-03-27)
 =======================
 * replace file item with bfile item in disseminate file [dumitval]
 
