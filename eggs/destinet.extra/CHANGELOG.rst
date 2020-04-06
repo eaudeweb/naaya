@@ -1,5 +1,6 @@
 1.3.40 - (unreleased)
 =======================
+* add extended rdf export for contacts in specific path [dumitval]
 
 1.3.39 - (2020-03-27)
 =======================
