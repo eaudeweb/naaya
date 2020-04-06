@@ -1,4 +1,7 @@
-1.3.40 - (unreleased)
+1.3.41 - (unreleased)
+=======================
+
+1.3.40 - (2020-04-06)
 =======================
 * add extended rdf export for contacts in specific path [dumitval]
 
