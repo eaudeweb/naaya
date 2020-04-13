@@ -1,5 +1,10 @@
+from os import path
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.naayaUpdater.updates import UpdateScript
 from Products.naayaUpdater.updates.utils import get_standard_template
+from naaya.groupware import groupware_site
+from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
+from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 
 
 class LogoutDirectlyInStandardTemplate(UpdateScript):
@@ -124,5 +129,100 @@ class SignupName(UpdateScript):
             else:
                 self.log.error('Old and new code not in standard_template')
                 return False
+
+        return True
+
+
+class Eionet_2020(UpdateScript):
+    title = ('Replace standard template with the one for eionet 2020 style')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Mar 04, 2020'
+
+    def _update(self, portal):
+        layout_tool = portal.getLayoutTool()
+        base_path = path.dirname(groupware_site.__file__)
+        default_template = PageTemplateFile(
+            base_path + '/skel/layout/groupware/standard_template.zpt')
+        default_template.read()
+        standard_template = get_standard_template(portal)
+        standard_template.read()
+        if standard_template._text == default_template._text:
+            self.log.debug('Standard template already updated')
+        else:
+            standard_template.write(default_template._text)
+            self.log.debug('Standard_template updated')
+
+        if getattr(layout_tool.groupware, 'eionet_2020', None):
+            self.log.debug('groupware 2020 scheme already present')
+        else:
+            skin_ob = layout_tool.groupware
+            skel_handler = portal.get_skel_handler(base_path)
+            diskpath_prefix = skel_handler.root.layout.diskpath_prefix
+            skel_path = skel_handler.skel_path
+            for skin in skel_handler.root.layout.skins:
+                if skin.id == 'groupware':
+                    break
+            for scheme in skin.schemes:
+                if scheme.id == 'eionet_2020':
+                    if skin_ob._getOb(scheme.id, None):
+                        skin_ob.manage_delObjects([scheme.id])
+                    skin_ob.manage_addScheme(id=scheme.id,
+                                             title=scheme.title)
+                    scheme_ob = skin_ob._getOb(scheme.id)
+                    for style in scheme.styles:
+                        content = portal.futRead(
+                            path.join(skel_path, 'layout', skin.id, scheme.id,
+                                      '%s.css' % style.id),
+                            'r')
+                        if scheme_ob._getOb(style.id, None):
+                            scheme_ob.manage_delObjects([style.id])
+                        scheme_ob.manage_addStyle(
+                            id=style.id, title=style.title, file=content)
+                    for image in scheme.images:
+                        content = portal.futRead(
+                            path.join(skel_path, 'layout', skin.id, scheme.id,
+                                      image.id),
+                            'rb')
+                        if not scheme_ob._getOb(image.id, None):
+                            scheme_ob.manage_addImage(id=image.id, file='',
+                                                      title=image.title)
+                        image_ob = scheme_ob._getOb(image.id)
+                        image_ob.update_data(data=content)
+                        image_ob._p_changed = 1
+
+                    for file in scheme.files:
+                        content = portal.futRead(
+                            path.join(skel_path, 'layout', skin.id, scheme.id,
+                                      file.id),
+                            'rb')
+                        if not scheme_ob._getOb(file.id, None):
+                            scheme_ob.manage_addFile(id=file.id, file='',
+                                                     title=file.title)
+                        file_ob = scheme_ob._getOb(file.id)
+                        content_type = getattr(file, 'content_type', None)
+                        file_ob.update_data(content, content_type)
+                        file_ob._p_changed = 1
+
+                    for diskfile in scheme.diskfiles:
+                        manage_addDiskFile(scheme_ob, pathspec='/'.join([
+                            diskpath_prefix,
+                            'layout',
+                            skin.id,
+                            scheme.id,
+                            diskfile.path]), id=(diskfile.id or ''))
+
+                    for disktemplate in scheme.disktemplates:
+                        manage_addDiskTemplate(
+                            scheme_ob,
+                            pathspec='/'.join([diskpath_prefix,
+                                               'layout',
+                                               skin.id,
+                                               scheme.id,
+                                               disktemplate.path]),
+                            id=(disktemplate.id or ''))
+
+            self.log.debug('groupware 2020 scheme added successfully')
+        layout_tool.manageLayout('groupware', 'eionet_2020')
+        self.log.debug('groupware 2020 scheme set as current scheme')
 
         return True

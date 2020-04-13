@@ -64,8 +64,7 @@
                         <div id="topnav">
                             <form method="get" tal:attributes="action string:${site_url}/search_html">
                                 <div id="search">
-                                    <label for="query"><span i18n:translate="">site search</span></label>
-                                    <input id="query" type="text" name="query:utf8:ustring" accesskey="4" />
+                                    <input id="query" type="text" placeholder="site search" name="query:utf8:ustring" accesskey="4" />
                                     <input id="freesrchbtn" type="image" alt="Go" tal:attributes="src string:${site_url}/misc_/Groupware/button_go.gif" />
                                 </div>
                             </form>
@@ -97,24 +96,20 @@
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
 
-<div class="header-logo">
-            <a href="/">
-              <div id="portal-logo">
-    <img src="https://www.eionet.europa.eu/@@site-logo/logo_eionet.png" alt="Eionet Portal" title="Eionet Portal"></div>
-              
-            <div class="logo-text">
-<div class="page_title" tal:content="here/root_site_title|string:" />
-</div></a>
-          </div>
+                        <div class="header-logo">
+                            <a href="/">
+                                <div id="portal-logo">
+                                    <img src="https://www.eionet.europa.eu/@@site-logo/logo_eionet.png" alt="Eionet Portal" title="Eionet Portal" />
+                                </div>
+                            </a>
+                                <div class="logo-text">
+                                    <a href="/">
+                                        <div class="page_title" tal:content="here/root_site_title|string:" />
+                                    </a>
+                                    <div class="page_subtitle" tal:content="here/site_title" />
+                                </div>
+                        </div>
 
-                        
-
-
-
-
-
-
-                        <div class="page_subtitle" tal:content="here/site_title" />
                     </div>
                     <div id="menunav">
                         <span tal:replace="structure here/languages_box"/>

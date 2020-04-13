@@ -1222,10 +1222,6 @@ td.td-center {
 	background-color: #F6FCE3;
 }
 
-label {
-    vertical-align: 2px;
-}
-
 label:hover {
 		cursor: pointer;
 }

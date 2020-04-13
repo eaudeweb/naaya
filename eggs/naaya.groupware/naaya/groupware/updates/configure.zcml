@@ -47,6 +47,12 @@
       permission="zope2.ViewManagementScreens" />
 
     <utility
+      name="update_eionet_2020.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_standard_template.Eionet_2020"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
       name="update_link_lists.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_link_lists.UpdateLinksList"
