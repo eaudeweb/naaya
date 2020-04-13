@@ -1,4 +1,7 @@
-1.3.10 (unreleased)
+1.3.11 (unreleased)
+------------------
+
+1.3.10 (2020-04-13)
 ===================
 * styling updates for Eionet 2020 style compatibility [dumitval]
 
