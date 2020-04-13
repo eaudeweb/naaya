@@ -1,4 +1,7 @@
-1.3.9 (unreleased)
+1.3.10 (unreleased)
+------------------
+
+1.3.9 (2020-04-13)
 ------------------
 * small template change to work with the new Eionet layout [dumitval]
 
