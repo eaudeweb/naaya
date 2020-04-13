@@ -1,5 +1,6 @@
 1.4.60 (unreleased)
 -------------------
+* introduce eionet_2020 layout [dumitval]
 
 1.4.59 (2019-11-18)
 -------------------
