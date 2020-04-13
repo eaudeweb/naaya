@@ -1,5 +1,6 @@
 1.3.9 (unreleased)
 ------------------
+* small template change to work with the new Eionet layout [dumitval]
 
 1.3.8 (2019-12-04)
 ------------------

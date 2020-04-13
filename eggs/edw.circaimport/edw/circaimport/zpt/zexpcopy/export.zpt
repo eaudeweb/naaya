@@ -28,8 +28,8 @@
 	</tal:block>
 	<tal:block condition="not:options/performed">
 		<form class="exportimport">
-			<label class="question">Select content to be exported</label>
-			<br /><br />
+			<label class="select-text">Select content to be exported</label>
+			<br />
 			<label class="question">Export the complete IG?:</label>
       <input type="checkbox" name="export_complete_ig" id="export_complete_ig" />
 			<br /><br />
