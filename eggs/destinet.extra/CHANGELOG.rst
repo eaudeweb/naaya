@@ -1,5 +1,8 @@
 1.3.41 - (unreleased)
 =======================
+
+1.3.41 - (2020-04-15)
+=======================
 * add md5 hash to the extended RDF export [dumitval]
 
 1.3.40 - (2020-04-06)
