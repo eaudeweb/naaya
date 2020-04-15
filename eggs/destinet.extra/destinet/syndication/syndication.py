@@ -1,5 +1,6 @@
 from lxml import etree
 from lxml.builder import ElementMaker
+from hashlib import md5
 from Products.NaayaCore.managers.utils import html2text, get_nsmap
 from naaya.core.zope2util import path_in_site
 
@@ -35,6 +36,9 @@ def syndicateMore(self, p_url, p_items=[], lang=None):
     Rdf = ElementMaker(namespace=rdf_namespace, nsmap=nsmap)
     Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
     E = ElementMaker(None, nsmap=nsmap)
+    received_items = ''.join([syndicateThisExtended(i) for i in p_items])
+    received = '<rdf:RDF %s>%s</rdf:RDF>' % (' '.join(header), received_items)
+    xml_received = etree.XML(received, etree.XMLParser(strip_cdata=False))
     xml = Rdf.RDF(
         E.channel(
             E.title(s.title),
@@ -43,6 +47,7 @@ def syndicateMore(self, p_url, p_items=[], lang=None):
             Dc.description(s.description),
             Dc.identifier(p_url),
             Dc.date(self.utShowFullDateTimeHTML(self.utGetTodayDate())),
+            Dc.hash(md5(received_items).hexdigest()),
             Dc.publisher(s.publisher),
             Dc.source(s.publisher),
             Dc.subject(s.title),
@@ -66,9 +71,6 @@ def syndicateMore(self, p_url, p_items=[], lang=None):
             E.description(self.utToUtf8(s.description))
         )
         xml.append(image)
-    received_items = ''.join([syndicateThisExtended(i) for i in p_items])
-    received = '<rdf:RDF %s>%s</rdf:RDF>' % (' '.join(header), received_items)
-    xml_received = etree.XML(received, etree.XMLParser(strip_cdata=False))
     xml.extend(xml_received)
     self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
     return etree.tostring(xml, xml_declaration=True, encoding="utf-8")
