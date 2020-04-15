@@ -121,7 +121,7 @@ def syndicateThisExtended(self):
     )
     item = xml[0]
     for k in self.getLocalProperty('coverage', lang).split(','):
-        item.append(Dc.coverage(k.strip()))
+        item.append(Dc.country(k.strip()))
     the_rest = (
         Dc.publisher(l_site.getLocalProperty('publisher', lang)),
         Dc.format(self.format()),

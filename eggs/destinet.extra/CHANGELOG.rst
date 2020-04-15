@@ -1,5 +1,6 @@
 1.3.41 - (unreleased)
 =======================
+* rename coverage to country in extended RDF [dumitval]
 
 1.3.41 - (2020-04-15)
 =======================
