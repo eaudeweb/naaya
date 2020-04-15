@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='destinet.extra',
-      version='1.3.42',
+      version='1.3.43',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
