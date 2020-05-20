@@ -1,5 +1,6 @@
 1.3.43 - (unreleased)
 =======================
+* fix extended rdf for unicode values in id_number [dumitval]
 
 1.3.42 - (2020-04-15)
 =======================

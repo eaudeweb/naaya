@@ -1,6 +1,8 @@
+''' customisations of the Naaya syndication '''
+# pylint: disable=too-many-locals,dangerous-default-value
+from hashlib import md5
 from lxml import etree
 from lxml.builder import ElementMaker
-from hashlib import md5
 from Products.NaayaCore.managers.utils import html2text, get_nsmap
 from naaya.core.zope2util import path_in_site
 
@@ -19,6 +21,12 @@ def index_rdf_extended(context, REQUEST=None, RESPONSE=None):
 
 
 def syndicateMore(self, p_url, p_items=[], lang=None):
+    """syndicateMore.
+
+    :param p_url:
+    :param p_items:
+    :param lang:
+    """
     s = self.getSite()
     if lang is None:
         lang = self.gl_get_selected_language()
@@ -102,6 +110,9 @@ def syndicateThisExtended(self):
     address = getattr(self.geo_location, 'address', '')
     lat = str(getattr(self.geo_location, 'lat', ''))
     lon = str(getattr(self.geo_location, 'lon', ''))
+    id_number = getattr(self, 'id_number', '')
+    if not isinstance(id_number, basestring):
+        id_number = str(id_number)
     xml = Rdf.RDF(
         E.item(
             {'{%s}about' % rdf_namespace: self.absolute_url()},
@@ -115,7 +126,7 @@ def syndicateThisExtended(self):
                 map_tool.getSymbolTitle(getattr(self,
                                                 'category-marketplace'))),
             Dc.expiry_date(display_date(getattr(self, 'expiry_date', None))),
-            Dc.id_number(str(getattr(self, 'id_number', ''))),
+            Dc.id_number(id_number),
             Dc.language(lang)
         )
     )
@@ -132,7 +143,7 @@ def syndicateThisExtended(self):
 
 
 def display_date(expiry_date):
+    """ format the expiry date for display """
     if not expiry_date:
         return ''
-    else:
-        return expiry_date.strftime('%d %B %Y')
+    return expiry_date.strftime('%d %B %Y')
