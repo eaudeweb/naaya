@@ -1,7 +1,8 @@
+''' naaya.groupware installer '''
 from setuptools import setup, find_packages
 
 setup(name='naaya.groupware',
-      version='1.4.61',
+      version='1.4.62',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
