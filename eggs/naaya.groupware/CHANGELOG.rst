@@ -1,5 +1,6 @@
 1.4.61 (unreleased)
 -------------------
+* standard template logo url improvements [dumitval]
 
 1.4.60 (2020-04-13)
 -------------------

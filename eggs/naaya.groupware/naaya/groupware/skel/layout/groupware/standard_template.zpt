@@ -92,14 +92,12 @@
                         <div id="right_logo" tal:define="logo_url here/rightLogoUrl">
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
-                        <div id="logo" tal:define="logo_url here/leftLogoUrl">
-                            <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
-                        </div>
 
-                        <div class="header-logo">
-                            <a href="/">
+                        <div class="header-logo" tal:define="logo_url here/leftLogoUrl">
+                            <a tal:attributes="href python:test(logo_url,None,'/')">
                                 <div id="portal-logo">
-                                    <img src="https://www.eionet.europa.eu/@@site-logo/logo_eionet.png" alt="Eionet Portal" title="Eionet Portal" />
+                                    <img tal:condition="not:logo_url" src="https://www.eionet.europa.eu/@@site-logo/logo_eionet.png" alt="Eionet Portal" title="Eionet Portal" />
+                                    <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                                 </div>
                             </a>
                                 <div class="logo-text">
