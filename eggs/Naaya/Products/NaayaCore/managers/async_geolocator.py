@@ -52,6 +52,10 @@ def geolocate_queue(site):
                 if 'ZERO_RESULTS' in e.args[0]:
                     LOG.info('coodrdinates not found for %s' % address)
                     site.geolocation_queue.remove(site_path)
+                elif 'error_message' in e.args[0]:
+                    LOG.info('Geocoding error %s for %s' % (e.args[0],
+                                                            address))
+                    site.geolocation_queue.remove(site_path)
                 else:
                     LOG.info(e)
                     site.previous_geolocation = datetime.now()

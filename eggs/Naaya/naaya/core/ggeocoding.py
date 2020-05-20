@@ -40,7 +40,11 @@ def _get_url_data(url):
         try:
             response = urllib2.urlopen(url)
         except urllib2.URLError, e:
-            raise GeocoderServiceError('URLError: %s' % e.reason)
+            try:
+                reason = e.reason
+            except AttributeError:
+                reason = ', '.join(e.readlines())
+            raise GeocoderServiceError('URLError: %s' % reason)
 
         try:
             result = json.load(response)
