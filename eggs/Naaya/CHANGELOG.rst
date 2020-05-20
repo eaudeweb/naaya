@@ -1,4 +1,7 @@
-5.0.12 (unreleased)
+5.0.13 (unreleased)
+-------------------
+
+5.0.12 (2020-05-20)
 -------------------
 * improve geocoding error handling [dumitval]
 
