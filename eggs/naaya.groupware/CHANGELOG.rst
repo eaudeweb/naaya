@@ -1,5 +1,6 @@
 1.4.62 (unreleased)
 -------------------
+* add extranet_reporters link getter [dumitval]
 
 1.4.61 (2020-05-20)
 -------------------

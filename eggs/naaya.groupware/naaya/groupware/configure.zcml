@@ -43,6 +43,13 @@
 
   <naaya:simpleView
     for=".interfaces.IGWSite"
+    name="extranet_reporters_link_html"
+    handler=".ui.extranet_reporters_link"
+    permission="zope2.View"
+    />
+
+  <naaya:simpleView
+    for=".interfaces.IGWSite"
     name="organisations_link_html"
     handler=".ui.organisations_link"
     permission="zope2.View"

@@ -1,3 +1,4 @@
+''' user interface module '''
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from profileoverview.profile import ProfileClient
@@ -17,6 +18,7 @@ NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 
 
 def get_user_id(request):
+    ''' return the id of the authenticated user '''
     return request.AUTHENTICATED_USER.getId()
 
 
@@ -41,6 +43,7 @@ def grouped_igs(context):
 
 
 class LocalUsersPage(BrowserPage):
+    ''' list local users '''
     def __call__(self):
         ctx = self.context.aq_inner  # because self subclasses from Explicit
         local_users = {}  # All local users per groupware site
@@ -50,12 +53,12 @@ class LocalUsersPage(BrowserPage):
             local_users=local_users, grouped_igs=grouped_igs(self.context))
 
 
-def nrc_admin_link(context, request):
-    """
-    Check if LDAP user is NFP and return the URL to 'Edit NRC members' section
-    """
-    nrc_url = ''
+def nfp_for_country(context):
+    ''' check if authenticated user is NFP, and if so, return the two letter
+        ISO country code for the respective country (a user cannot be NFP for
+        more than one country) '''
 
+    country = ''
     user = context.REQUEST.AUTHENTICATED_USER
     site_id = context.getSite().getId()
 
@@ -65,14 +68,23 @@ def nrc_admin_link(context, request):
         roles_list = client.roles_list_in_ldap()
         leaf_roles_list = [r for r in roles_list if not r['children']]
 
-        country = ''
         for leaf in leaf_roles_list:
             if 'eionet-nfp-' in leaf['id']:
                 country = leaf['id'].rsplit('-', 1)[-1]
+                break
 
-        if country:
-            nrc_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
-                       (context.getSite().absolute_url(), country))
+    return country
+
+
+def nrc_admin_link(context, request):
+    """
+    Check if LDAP user is NFP and return the URL to 'Edit NRC members' section
+    """
+    nrc_url = ''
+    country = nfp_for_country(context)
+    if country:
+        nrc_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
+                   (context.getSite().absolute_url(), country))
 
     return nrc_url
 
@@ -83,24 +95,24 @@ def awp_admin_link(context, request):
     section
     """
     awp_url = ''
+    country = nfp_for_country(context)
+    if country:
+        awp_url = ("%s/nfp_nrc/awps?nfp=%s" %
+                   (context.getSite().absolute_url(), country))
 
-    user = context.REQUEST.AUTHENTICATED_USER
-    site_id = context.getSite().getId()
+    return awp_url
 
-    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
-        zope_app = context.unrestrictedTraverse('/')
-        client = ProfileClient(zope_app, user)
-        roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [r for r in roles_list if not r['children']]
 
-        country = ''
-        for leaf in leaf_roles_list:
-            if 'eionet-nfp-' in leaf['id']:
-                country = leaf['id'].rsplit('-', 1)[-1]
-
-        if country:
-            awp_url = ("%s/nfp_nrc/awps?nfp=%s" %
-                       (context.getSite().absolute_url(), country))
+def extranet_reporters_link(context, request):
+    """
+    Check if LDAP user is NFP and return the URL to 'List Extranet reporters'
+    section
+    """
+    awp_url = ''
+    country = nfp_for_country(context)
+    if country:
+        awp_url = ("%s/nfp_nrc/extranet_reporters?nfp=%s" %
+                   (context.getSite().absolute_url(), country))
 
     return awp_url
 
@@ -111,24 +123,10 @@ def organisations_link(context, request):
     to 'Edit organisations' section
     """
     organisations_url = ''
-
-    user = context.REQUEST.AUTHENTICATED_USER
-    site_id = context.getSite().getId()
-
-    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
-        zope_app = context.unrestrictedTraverse('/')
-        client = ProfileClient(zope_app, user)
-        roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [r for r in roles_list if not r['children']]
-
-        country = ''
-        for leaf in leaf_roles_list:
-            if 'eionet-nfp-' in leaf['id']:
-                country = leaf['id'].rsplit('-', 1)[-1]
-
-        if country:
-            organisations_url = ("%s/organisations" %
-                                 context.getSite().absolute_url())
+    country = nfp_for_country(context)
+    if country:
+        organisations_url = ("%s/organisations" %
+                             context.getSite().absolute_url())
 
     return organisations_url
 
@@ -138,24 +136,10 @@ def howto_link(context, request):
     Check if LDAP user is NFP and return the URL to the how to video
     """
     howto_url = ''
-
-    user = context.REQUEST.AUTHENTICATED_USER
-    site_id = context.getSite().getId()
-
-    if site_id == 'nfp-eionet' and user.getUserName() != 'Anonymous User':
-        zope_app = context.unrestrictedTraverse('/')
-        client = ProfileClient(zope_app, user)
-        roles_list = client.roles_list_in_ldap()
-        leaf_roles_list = [r for r in roles_list if not r['children']]
-
-        country = ''
-        for leaf in leaf_roles_list:
-            if 'eionet-nfp-' in leaf['id']:
-                country = leaf['id'].rsplit('-', 1)[-1]
-
-        if country:
-            howto_url = ("%s/library/how-to/add-to-nrc" %
-                         context.getSite().absolute_url())
+    country = nfp_for_country(context)
+    if country:
+        howto_url = ("%s/library/how-to/add-to-nrc" %
+                     context.getSite().absolute_url())
 
     return howto_url
 
@@ -223,5 +207,4 @@ def archived_portals_json(context, request):
     jsonp = request.form.get('jsonp', None)
     if jsonp:
         return "%s(%s)" % (jsonp, json.dumps(portals))
-    else:
-        return json.dumps(portals)
+    return json.dumps(portals)
