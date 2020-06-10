@@ -1,19 +1,24 @@
 <configure xmlns:naaya="http://namespaces.zope.org/naaya"
-    xmlns:zope="http://namespaces.zope.org/zope"
+    xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:browser="http://namespaces.zope.org/browser"
     >
+
+    <permission
+        id="destinet.extra.rdfextended"
+        title="Destinet Access extended RDF"
+    />
 
     <naaya:simpleView
         for="naaya.content.contact.interfaces.INyContact"
         name="index_rdf_extended"
         handler=".syndication.index_rdf_extended"
-        permission="zope2.View" />
+        permission="destinet.extra.rdfextended" />
 
     <naaya:simpleView
         for="Products.Naaya.interfaces.INyFolder"
         name="index_rdf_extended"
         handler=".syndication.index_rdf_extended"
-        permission="zope2.View" />
+        permission="destinet.extra.rdfextended" />
 
 </configure>

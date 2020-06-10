@@ -1,5 +1,6 @@
 1.3.44 - (unreleased)
 =======================
+* add specific permission for the extended RDF [dumitval]
 
 1.3.43 - (2020-05-20)
 =======================
