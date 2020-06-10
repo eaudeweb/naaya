@@ -1,4 +1,7 @@
-1.3.44 - (unreleased)
+1.3.45 - (unreleased)
+=======================
+
+1.3.44 - (2020-06-10)
 =======================
 * add specific permission for the extended RDF [dumitval]
 
