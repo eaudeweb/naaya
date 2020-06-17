@@ -1,5 +1,6 @@
 1.4.63 (unreleased)
 -------------------
+* customize site_admin_users to hide local users [dumitval]
 
 1.4.62 (2020-05-26)
 -------------------

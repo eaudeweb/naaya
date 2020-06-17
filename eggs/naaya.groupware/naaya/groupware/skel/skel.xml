@@ -5,6 +5,7 @@
         <form id="site_unauthorized" title="Access denied"/>
         <form id="site_admin_properties" title="Portal properties"/>
         <form id="site_admin_email" title="Portal administration - email settings"/>
+        <form id="site_admin_users" title="Portal administration - users"/>
         <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
         <form id="folder_index" title="Folder index customisation for Groupware"/>
         <form id="folder_listing" title="Folder contents customisation for Groupware"/>
