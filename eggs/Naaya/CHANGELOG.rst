@@ -1,5 +1,6 @@
 5.0.13 (unreleased)
 -------------------
+* admin_sources displays first source if no id provided [dumitval]
 
 5.0.12 (2020-05-20)
 -------------------

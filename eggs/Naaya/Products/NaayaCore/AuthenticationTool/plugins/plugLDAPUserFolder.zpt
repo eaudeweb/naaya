@@ -61,10 +61,12 @@ function toggleSelect()
 </script>
 
     <tal:block define="user_folder python:here.getUserFolder();
-            id python:request.get('id', 0);
+            sources python:here.getAuthenticationTool().getSources();
+            first_source_id python:sources[0].id;
+            source_id python:request.get('id', first_source_id);
             site_path python:here.getSitePath();
             section python:request.get('s', 'manage_all');
-            source_url string:${site_path}/admin_sources_html?id=${id};">
+            source_url string:${site_path}/admin_sources_html?id=${source_id};">
 
     <div class="second_tab_set">
     <ul>

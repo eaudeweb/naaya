@@ -27,7 +27,9 @@
     skey python:request.get('skey', '');
     rkey python:request.get('rkey', '');
     users_roles python:here.getSortedUserRoles(skey, rkey);
-    id python:request.get('id', 0);
+    sources python:here.getAuthenticationTool().getSources();
+    first_source_id python:sources[0].id;
+    id python:request.get('id', first_source_id);
     site_path python:here.getSitePath();
     source_url string:${site_path}/admin_sources_html?id=${id};
     section_url string:${source_url}&s=manage_all;
