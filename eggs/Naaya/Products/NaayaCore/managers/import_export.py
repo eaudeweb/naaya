@@ -1,10 +1,19 @@
 """ Bulk upload contacts, urls, experts """
-
+# pylint: disable=consider-using-enumerate,too-many-statements,too-many-locals
+# pylint: disable=too-many-nested-blocks,too-many-branches
+# pylint: disable=too-many-function-args
+from datetime import datetime
+from StringIO import StringIO
+import urllib
+import csv
+import codecs
+import logging
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import Implicit
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.SimpleItem import Item
+from zope.event import notify
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
@@ -13,16 +22,10 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from StringIO import StringIO
-from naaya.core.zope2util import path_in_site
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from zope.event import notify
-import csv
-import codecs
-import logging
+from naaya.core.zope2util import path_in_site
 import simplejson as json
 import transaction
-import urllib
 import xlrd
 import xlwt
 
@@ -30,19 +33,27 @@ logger = logging.getLogger(__name__)
 
 
 class CSVImportTool(Implicit, Item):
+    """CSVImportTool."""
+
     title = "Import from structured file"
 
     security = ClassSecurityInfo()
     geo_fields = {}
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, ob_id):
+        self.id = ob_id
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'template')
 
     def template(self, meta_type, file_type, as_attachment=False,
                  REQUEST=None):
-        """ """
+        """template.
+
+        :param meta_type:
+        :param file_type:
+        :param as_attachment:
+        :param REQUEST:
+        """
         if REQUEST and not (
                 self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
@@ -80,6 +91,10 @@ class CSVImportTool(Implicit, Item):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
 
     def do_geocoding(self, properties):
+        """do_geocoding.
+
+        :param properties:
+        """
         lat = properties.get(self.geo_fields['lat'], '')
         lon = properties.get(self.geo_fields['lon'], '')
         address = properties.get(self.geo_fields['address'], '')
@@ -94,7 +109,13 @@ class CSVImportTool(Implicit, Item):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
 
     def do_import(self, meta_type, file_type, data, REQUEST=None):
-        """ """
+        """do_import.
+
+        :param meta_type:
+        :param file_type:
+        :param data:
+        :param REQUEST:
+        """
         if REQUEST and not (
                 self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
@@ -114,7 +135,7 @@ class CSVImportTool(Implicit, Item):
         location_obj = self.getParentNode()
 
         # build a list of property names based on the object schema
-        # TODO: extract this loop into a separate function
+        # TO DO: extract this loop into a separate function
         prop_map = {}
         for widget in schema.listWidgets():
             prop_name = widget.prop_name()
@@ -283,17 +304,20 @@ class CSVImportTool(Implicit, Item):
     csv_specifications = PageTemplateFile('../zpt/csv_specifications',
                                           globals())
 
+
 InitializeClass(CSVImportTool)
 
 
 class ExportTool(Implicit, Item):
+    """ExportTool."""
+
     title = "Spreadsheet export"
     CELL_CHAR_LIMIT = 32000
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, ob_id):
+        self.id = ob_id
 
     def _dump_objects(self, meta_type, objects):
         """
@@ -309,7 +333,18 @@ class ExportTool(Implicit, Item):
             raise ValueError('Schema for meta-type "%s" not found' % meta_type)
 
         def getter_factory(prop_name, subname, convert, default=u''):
+            """getter_factory.
+
+            :param prop_name:
+            :param subname:
+            :param convert:
+            :param default:
+            """
             def getter(ob):
+                """getter.
+
+                :param ob:
+                """
                 try:
                     ob_property = getattr(ob.aq_base, prop_name)
 
@@ -327,10 +362,13 @@ class ExportTool(Implicit, Item):
             return getter
 
         def simple_convert(value):
+            """simple_convert.
+
+            :param value:
+            """
             if value is None:
                 return u''
-            else:
-                return unicode(value)
+            return unicode(value)
 
         prop_getters = []
         dump_header = []
@@ -350,6 +388,7 @@ class ExportTool(Implicit, Item):
                 prop_getters.append(getter)
 
         def generate_dump_items():
+            """generate_dump_items."""
             for ob in objects:
                 item = [unicode(get_value(ob)) for get_value in prop_getters]
                 yield item
@@ -361,6 +400,11 @@ class ExportTool(Implicit, Item):
     security.declarePrivate('generate_csv_output')
 
     def generate_csv_output(self, meta_type, objects):
+        """generate_csv_output.
+
+        :param meta_type:
+        :param objects:
+        """
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
         return generate_csv(dump_header, dump_items)
@@ -368,9 +412,19 @@ class ExportTool(Implicit, Item):
     security.declarePrivate('generate_excel_output')
 
     def generate_excel_output(self, meta_type, objects):
+        """generate_excel_output.
+
+        :param meta_type:
+        :param objects:
+        """
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
         def validate_column_size(header, rows_generator):
+            """validate_column_size.
+
+            :param header:
+            :param rows_generator:
+            """
             from itertools import tee
             rows, rows_backup = tee(rows_generator)
             try:
@@ -397,7 +451,13 @@ class ExportTool(Implicit, Item):
 
     def export(self, meta_type, file_type="CSV", as_attachment=False,
                REQUEST=None):
-        """ """
+        """export.
+
+        :param meta_type:
+        :param file_type:
+        :param as_attachment:
+        :param REQUEST:
+        """
         if REQUEST and not (
                 self.getParentNode().checkPermissionPublishObjects()):
             raise Unauthorized
@@ -459,6 +519,7 @@ class ExportTool(Implicit, Item):
     index_html = NaayaPageTemplateFile(
         '../zpt/bulk_export', globals(), 'bulk_export')
 
+
 InitializeClass(ExportTool)
 
 
@@ -470,6 +531,10 @@ def json_encode(ob):
 
 
 def attachment_header(filename):
+    """attachment_header.
+
+    :param filename:
+    """
     assert isinstance(filename, str)
     try:
         filename.decode('ascii')
@@ -481,6 +546,13 @@ def attachment_header(filename):
 
 
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
+    """set_response_attachment.
+
+    :param RESPONSE:
+    :param filename:
+    :param content_type:
+    :param length:
+    """
     RESPONSE.setHeader('Content-Type', content_type)
     if length is not None:
         RESPONSE.setHeader('Content-Length', length)
@@ -490,6 +562,10 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
 
 
 def relative_path_to_site(ob):
+    """relative_path_to_site.
+
+    :param ob:
+    """
     site = ob.getSite()
     site_path = '/'.join(site.getPhysicalPath())
     ob_path = '/'.join(ob.getPhysicalPath())
@@ -507,6 +583,7 @@ class UTF8Recoder(object):
         return self
 
     def next(self):
+        """next."""
         return self.reader.next().encode("utf-8")
 
 
@@ -521,6 +598,7 @@ class UnicodeReader(object):
         self.reader = csv.reader(f, dialect=dialect, **kwds)
 
     def next(self):
+        """next."""
         row = self.reader.next()
         return [unicode(s, "utf-8") for s in row]
 
@@ -531,7 +609,7 @@ class UnicodeReader(object):
 class CSVReader(object):
     """ Manipulate CSV files """
 
-    def __init__(self, file, dialect, encoding):
+    def __init__(self, file_ob, dialect, encoding):
         """ """
         if dialect == 'comma':
             dialect = csv.excel
@@ -539,7 +617,7 @@ class CSVReader(object):
             dialect = csv.excel_tab
         else:
             dialect = csv.excel
-        self.csv = UnicodeReader(file, dialect, encoding)
+        self.csv = UnicodeReader(file_ob, dialect, encoding)
 
     def read(self):
         """ return the content of the file """
@@ -558,6 +636,11 @@ class CSVReader(object):
 
 
 def generate_csv(header, rows):
+    """generate_csv.
+
+    :param header:
+    :param rows:
+    """
 
     output = StringIO()
     csv_writer = csv.writer(output)
@@ -570,6 +653,11 @@ def generate_csv(header, rows):
 
 
 def generate_excel(header, rows):
+    """generate_excel.
+
+    :param header:
+    :param rows:
+    """
     style = xlwt.XFStyle()
     normalfont = xlwt.Font()
     headerfont = xlwt.Font()
@@ -580,12 +668,19 @@ def generate_excel(header, rows):
     ws = wb.add_sheet('Sheet 1')
     row = 0
     for col in range(0, len(header)):
-        ws.row(row).set_cell_text(col, header[col], style)
+        ws.write(row, col, header[col], style)
     style.font = normalfont
     for item in rows:
         row += 1
         for col in range(0, len(item)):
-            ws.row(row).set_cell_text(col, item[col], style)
+            style.num_format_str = 'general'
+            try:
+                col_date = datetime.strptime(item[col], '%d/%m/%Y')
+                excel_1900 = datetime.strptime('01/01/1900', '%d/%m/%Y')
+                style.num_format_str = 'dd/MM/yyyy'
+                ws.write(row, col, (col_date - excel_1900).days + 2, style)
+            except ValueError:
+                ws.write(row, col, item[col], style)
     output = StringIO()
 
     wb.save(output)

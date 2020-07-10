@@ -1,5 +1,7 @@
 5.0.14 (unreleased)
 -------------------
+* fix for Excel export of string properties containing only numbers [dumitval]
+* export date property to native date in Excel [dumitval]
 
 5.0.13 (2020-06-17)
 -------------------

@@ -66,6 +66,12 @@ class DateWidget(Widget):
             value = value.strftime('%d/%m/%Y')
         return value
 
+    def convert_to_user_string(self, value):
+        """ Convert a database value to a user-readable string """
+        if isinstance(value, DateTime):
+            value = value.strftime('%d/%m/%Y')
+        return value
+
     template = PageTemplateFile('../zpt/property_widget_date', globals())
 
 

@@ -42,6 +42,17 @@ class StringWidget(Widget):
             value = str(value)
         return value
 
+    def convert_from_user_string(self, value):
+        """ Convert a user-readable string to a value that can be saved """
+        if isinstance(value, int):
+            value = str(value)
+        elif isinstance(value, float):
+            if int(value) == value:
+                value = str(int(value))
+            else:
+                value = str(value)
+        return value
+
     template = PageTemplateFile('../zpt/property_widget_string', globals())
 
 InitializeClass(StringWidget)
