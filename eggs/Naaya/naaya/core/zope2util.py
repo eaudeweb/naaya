@@ -216,10 +216,10 @@ def google_analytics(context, ga_id=''):
     """
     conf = getExtConfiguration()
     environment = getattr(conf, 'environment', {})
-    master_ga_id = environment.get('GA_ID', '')
+    main_ga_id = environment.get('GA_ID', '')
     ga_domain_name = environment.get('GA_DOMAIN_NAME', '')
 
-    if ga_id == '' and master_ga_id == '':
+    if ga_id == '' and main_ga_id == '':
         # No website ID provided; e.g. not configured in portal_statistics
         return ''
 
@@ -229,8 +229,8 @@ def google_analytics(context, ga_id=''):
 
     gaq = {}
     ga_keys = []
-    if master_ga_id:
-        ga_keys.append(master_ga_id)
+    if main_ga_id:
+        ga_keys.append(main_ga_id)
     if ga_id:
         ga_keys.append(ga_id)
     gaq['ga_ids'] = ga_keys

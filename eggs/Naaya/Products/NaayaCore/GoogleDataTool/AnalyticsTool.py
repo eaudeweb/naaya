@@ -86,7 +86,7 @@ class AnalyticsTool(SimpleItem, utils):
             # if we just want to revoke the access to the analytics
             # account, don't delete the ga_id and verify
             self.ga_id = ''  # Google Analytics web property ID (UA-number)
-            self.gw_verify = ''  # Google Webmaster verification meta tag
+            self.gw_verify = ''  # Google Webmain verification meta tag
 
     # cache
     def _set_cache(self, data, view_name):

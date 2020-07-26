@@ -221,7 +221,7 @@ class LexToken:
 
 class Lexer:
     def __init__(self):
-        self.lexre = None           # Master regular expression
+        self.lexre = None           # Main regular expression
         self.lexdata = None         # Actual input data (as a string)
         self.lexpos = 0             # Current position in input text
         self.lexlen = 0             # Length of the input text
@@ -501,7 +501,7 @@ def lex(module=None,debug=0,optimize=0):
                 if debug:
                     print "lex: Adding rule %s -> '%s'" % (f.__name__,f.__doc__)
 
-            # Okay. The regular expression seemed okay.  Let's append it to the master regular
+            # Okay. The regular expression seemed okay.  Let's append it to the main regular
             # expression we're building
   
             if (regex): regex += "|"
