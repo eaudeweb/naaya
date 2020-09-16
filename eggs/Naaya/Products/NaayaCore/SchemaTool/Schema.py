@@ -5,7 +5,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaCore.constants import *
+from Products.NaayaCore.constants import METATYPE_SCHEMA
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from naaya.core.zope2util import folder_manage_main_plus
 
@@ -31,6 +31,7 @@ def _load_widgets():
         widget_constructors[name] = getattr(i, method_name)
         widget_types_by_metatype[meta_type] = name
     return widget_constructors, widget_types_by_metatype
+
 
 widget_constructors, widget_types_by_metatype = _load_widgets()
 
@@ -100,6 +101,12 @@ class Schema(Folder):
             value = getattr(self.getSite(), '%s_glossary' % name, None)
             if value is None:
                 return
+            elif isinstance(value, str):
+                # on some portals, the glossary id is different and this
+                # value is the id of the actual glossary
+                value = getattr(self.getSite(), value, None)
+                if value is None:
+                    return
             self[prop_name].glossary_id = value.getId()
         set_glossary('keywords')
         set_glossary('coverage')
@@ -260,5 +267,6 @@ class Schema(Folder):
             'data_types': DATA_TYPES,
         }
         return self._manage_extra_footer(**options)
+
 
 InitializeClass(Schema)
