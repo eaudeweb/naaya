@@ -251,7 +251,6 @@
             <permission name="Access contents information" />
             <permission name="Access session data" />
             <permission name="Naaya - Zip export" />
-            <permission name="Naaya - Create user" />
             <permission name="Query Vocabulary" />
             <permission name="Search ZCatalog" />
             <permission name="Use Database Methods" />

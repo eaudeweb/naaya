@@ -291,7 +291,16 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang), self.getLocalProperty('source', lang)])
+        keywords = self._objectkeywords(lang)
+        if not isinstance(keywords, unicode):
+            keywords = keywords.decode('utf-8')
+        details = self.getLocalProperty('details', lang)
+        if not isinstance(details, unicode):
+            details = details.decode('utf-8')
+        source = self.getLocalProperty('source', lang)
+        if not isinstance(source, unicode):
+            source = source.decode('utf-8')
+        return u' '.join([keywords, details, source])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

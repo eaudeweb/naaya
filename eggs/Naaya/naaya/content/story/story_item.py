@@ -245,7 +245,16 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang), self.getLocalProperty('source', lang)])
+        keywords = self._objectkeywords(lang)
+        if not isinstance(keywords, unicode):
+            keywords = keywords.decode('utf-8')
+        body = self.getLocalProperty('body', lang)
+        if not isinstance(body, unicode):
+            body = body.decode('utf-8')
+        source = self.getLocalProperty('source', lang)
+        if not isinstance(source, unicode):
+            source = source.decode('utf-8')
+        return u' '.join([keywords, body, source])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

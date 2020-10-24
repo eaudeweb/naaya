@@ -1,5 +1,7 @@
 5.0.14 (unreleased)
 -------------------
+* decode objectkeywords if necessary [dumitval]
+* remove create users permission on anonymous [dumitval]
 * fix for Excel export of string properties containing only numbers [dumitval]
 * export date property to native date in Excel [dumitval]
 
