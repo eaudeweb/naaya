@@ -1,7 +1,8 @@
+""" Talkback setup """
 from setuptools import setup, find_packages
 
 setup(name='naaya.content.talkback',
-      version='1.5.7',
+      version='1.5.8',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',

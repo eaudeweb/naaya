@@ -1,4 +1,7 @@
-1.5.7 (unreleased)
+1.5.8 (unreleased)
+-----------------
+
+1.5.7 (2020-11-20)
 -----------------
 * redirect to consultation index after successfully authenticating
   as invitee [dumitval]
