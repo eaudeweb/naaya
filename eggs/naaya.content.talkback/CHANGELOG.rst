@@ -1,5 +1,7 @@
 1.5.7 (unreleased)
 -----------------
+* redirect to consultation index after successfully authenticating
+  as invitee [dumitval]
 
 1.5.6 (2020-02-21)
 -----------------

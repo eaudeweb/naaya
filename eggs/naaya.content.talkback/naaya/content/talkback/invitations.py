@@ -21,6 +21,7 @@ from base64 import urlsafe_b64encode
 from random import randrange
 from datetime import date
 import json
+from StringIO import StringIO
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
@@ -46,7 +47,6 @@ import xlrd
 from datetime import datetime
 from Products.NaayaCore.managers import utils
 g_utils = utils.utils()
-from StringIO import StringIO
 
 
 class FormError(Exception):
@@ -98,7 +98,7 @@ class InvitationsContainer(SimpleItem):
                                              name=formdata['name'])
                     return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                                      '/create')
-            except FormError, e:
+            except FormError as e:
                 self.setSessionErrorsTrans('The form contains errors. Please '
                                            'correct them and try again.')
                 formerrors = dict(e.errors)
@@ -186,14 +186,15 @@ class InvitationsContainer(SimpleItem):
                 xls = REQUEST.form.get('input_file')
                 spreadsheet = xlrd.open_workbook(file_contents=xls.read())
                 sheet = spreadsheet.sheet_by_index(0)
-            except Exception, e:
+            except Exception:
                 self.setSessionErrorsTrans('Error reading the spreadsheet.')
             else:
                 assert sheet.ncols == 5, "Expected sheet with 5 columns"
                 header = sheet.row(0)
-                assert ([x.value.strip() for x in header] ==
-                        ['Name', 'Email', 'Organization', 'Notes', 'Message']),\
-                    "Unexpected table header in spreadsheet"
+                assert (
+                    [x.value.strip() for x in header] == [
+                        'Name', 'Email', 'Organization', 'Notes',
+                        'Message']), "Unexpected table header in spreadsheet"
 
                 # on behalf situation
                 on_behalf_uid = REQUEST.form.get('on_behalf', '')
@@ -226,8 +227,9 @@ class InvitationsContainer(SimpleItem):
                         if do_preview:
                             preview = self._send_invitation(preview=True,
                                                             **kwargs)
-                            preview['preview_attribution'] = '%s (invited by %s)' % \
-                                (formdata['name'], inviter_name)
+                            preview['preview_attribution'] = (
+                                '%s (invited by %s)' % (formdata['name'],
+                                                        inviter_name))
                             previews.append(preview)
                         else:
                             self._send_invitation(**kwargs)
@@ -238,15 +240,15 @@ class InvitationsContainer(SimpleItem):
                                                      name=formdata['name'])
                             self.setSessionInfo([existing[0] + '\n' +
                                                 self.getSessionInfo()[0]])
-                    except FormError, e:
+                    except FormError as e:
                         errors.append(('Error creating invitation for line '
                                        '#%d in spreadsheet: %r') %
-                                      ((i+1), [(x[0], x[1].args) for x in
+                                      ((i + 1), [(x[0], x[1].args) for x in
                                        e.errors]))
-                    except Exception, e:
+                    except Exception as e:
                         errors.append(('Error creating invitation for line '
                                        '#%d in spreadsheet: %r')
-                                      % ((i+1), e.args))
+                                      % ((i + 1), e.args))
 
                     if errors:
                         self.setSessionErrorsTrans('; '.join(errors))
@@ -500,14 +502,17 @@ class InvitationsContainer(SimpleItem):
         else:
             invitation = None
             inviter_name = ''
+            options = {
+                'invitation': invitation,
+                'inviter_name': inviter_name,
+                'logout_url': self.absolute_url() + '/welcome?logout=on',
+            }
+            return self._welcome_html(REQUEST, **options)
 
-        options = {
-            'invitation': invitation,
-            'inviter_name': inviter_name,
-            'logout_url': self.absolute_url() + '/welcome?logout=on',
-        }
-
-        return self._welcome_html(REQUEST, **options)
+        msg = 'Welcome, ${name}.'
+        self.setSessionInfoTrans(msg, name=invitation.name)
+        return REQUEST.RESPONSE.redirect(
+            self.get_consultation().absolute_url())
 
     security.declarePrivate('get_current_invitation')
 
@@ -592,6 +597,7 @@ class InvitationsContainer(SimpleItem):
             check_values[key] = archived_email[key]
         return _mail_in_queue(self.getSite(), filename, check_values)
 
+
 InitializeClass(InvitationsContainer)
 
 
@@ -619,6 +625,7 @@ class InvitationUsersTool(BasicUserFolder):
                               ('InvitedReviewer',), [])
         else:
             return None
+
 
 InitializeClass(InvitationUsersTool)
 
