@@ -35,6 +35,7 @@ from naaya.core.zope2util import ofs_path, launch_job
 from naaya.content.mediafile.converters.MediaConverter import get_resolution
 from naaya.content.mediafile.converters.MediaConverter import is_audio
 from naaya.content.mediafile.converters.MediaConverter import is_valid_audio
+from naaya.content.mediafile.converters.MediaConverter import is_valid_media
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from parsers import DEFAULT_PARSER as SubtitleParser
 from permissions import PERMISSION_ADD_MEDIA_FILE
@@ -117,16 +118,18 @@ def _create_NyMediaFile_object(parent, id, contributor):
     return ob
 
 
-def _check_media_file(the_file):
+def _check_media_file(the_file, ob):
     if the_file is None:
         return ['No file was uploaded']
     file_extension = os.path.splitext(getattr(the_file, 'filename', ''))[1]
     if ffmpeg_available:
-        # TODO: check if our file is a valid video file!
-        return []
+        ob.manage_addFile('', the_file)
+        tempfile = ob.getSingleMediaObject()
+        if not is_valid_media(tempfile.get_filename()):
+            return ['Not a supported media file!']
     else:
         if not the_file or (the_file.headers.get("content-type", "")
-                            not in MP4_HEADERS+MP3_HEADERS and
+                            not in MP4_HEADERS + MP3_HEADERS and
                             file_extension not in ['.mp4', 'mp3']):
             return ['The file must be a valid mp4 video file (.mp4)']
     return []
@@ -166,7 +169,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         form_errors.update(submitter_errors)
 
     if not _skip_videofile_check:
-        video_errors = _check_media_file(_file)
+        video_errors = _check_media_file(_file, ob)
         if video_errors:
             form_errors['mediafile'] = video_errors
 
@@ -218,13 +221,13 @@ def importNyMediaFile(self, param, id, attrs, content, properties, discussion,
     # this method is called during the import process
     try:
         param = abs(int(param))
-    except:
+    except Exception:
         param = 0
     if param == 3:
         # just try to delete the object
         try:
             self.manage_delObjects([id])
-        except:
+        except Exception:
             pass
     else:
         ob = self._getOb(id, None)
@@ -233,7 +236,7 @@ def importNyMediaFile(self, param, id, attrs, content, properties, discussion,
                 # delete the object if exists
                 try:
                     self.manage_delObjects([id])
-                except:
+                except Exception:
                     pass
             ob = _create_NyMediaFile_object(
                 self, id,
@@ -347,7 +350,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
             Dc.source(l_site.publisher),
             Dc.creator(l_site.creator),
             Dc.publisher(l_site.publisher)
-            )
+        )
         item.extend(the_rest)
         return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
@@ -355,9 +358,9 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         """
         Returns the B{SINGLE} media file if exists.
         """
-        l = self.objectValues(['ExtFile', 'File', "NyBlobFile"])
-        if len(l) > 0:
-            return l[0]
+        ob = self.objectValues(['ExtFile', 'File', "NyBlobFile"])
+        if len(ob) > 0:
+            return ob[0]
         else:
             return None
 
@@ -476,8 +479,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         if is_valid_audio(filepath) or (
                 filename[1] == '.mp4' and
                 resolution[1] <= 720 and
-                int(resolution[0])/16*16 == resolution[0] and
-                int(resolution[1])/16*16 == resolution[1]):
+                int(resolution[0]) / 16 * 16 == resolution[0] and
+                int(resolution[1]) / 16 * 16 == resolution[1]):
             mediafile._conversion_log = ''
             mediafile._p_changed = True
         else:
@@ -658,7 +661,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
             if not getattr(mediafile, 'aspect_ratio', None):
                 filepath = mediafile.get_filename()
                 width, height = get_resolution(filepath)
-                mediafile.aspect_ratio = width/height
+                mediafile.aspect_ratio = width / height
                 mediafile._p_changed = True
 
         return self.getFormsTool().getContent({'here': self},
@@ -705,6 +708,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         filepath = mediafile.get_filename()
         return is_audio(filepath)
 
+
 InitializeClass(NyMediaFile_extfile)
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add',
@@ -719,7 +723,7 @@ config.update({
         ('mediafile_add_html', mediafile_add_html),
         ('addNyMediaFile', addNyMediaFile),
         ('import_mediafile_item', importNyMediaFile),
-        ],
+    ],
     'add_method': addNyMediaFile,
     'validation': issubclass(NyMediaFile_extfile, NyValidation),
     '_class': NyMediaFile_extfile,

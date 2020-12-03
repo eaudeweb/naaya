@@ -55,7 +55,7 @@ def media2mp4(mediafile):
         logger.exception('MediaConverterError: Exit code %s' % exit_code)
         try:
             shutil.rmtree(tempdir)
-        except Exception, err:
+        except Exception as err:
             logger.exception(err)
 
     process = None
@@ -71,7 +71,7 @@ def _finish(mediafile, tempdir, cvd_path, log):
         #  update the file size based on converted result
         mediafile.size = os.stat(cvd_path).st_size
         mediafile._blob.consumeFile(cvd_path)
-    except Exception, err:
+    except Exception as err:
         logger.exception(err)
 
     log.seek(0)
@@ -82,7 +82,7 @@ def _finish(mediafile, tempdir, cvd_path, log):
     log.close()
     try:
         shutil.rmtree(tempdir)
-    except Exception, err:
+    except Exception as err:
         logger.exception(err)
 
 
@@ -125,7 +125,7 @@ def _get_convertor_tool():
                     '- Video compression not possible')
 
             return tool
-        except OSError, e:
+        except OSError as e:
             if e == '[Errno 2] No such file or directory':
                 continue
 
@@ -140,7 +140,7 @@ def _get_convertor_tool():
 CONVERSION_TOOL = None
 try:
     CONVERSION_TOOL = _get_convertor_tool()
-except MediaConverterError, media_err:
+except MediaConverterError:
     logger.warn("ffmpeg or avconv are not available")
 
 
@@ -189,3 +189,10 @@ def is_valid_audio(video_path):
     for line in txt.splitlines():
         if 'Audio: aac' in line or 'Audio: mp3' in line:
             return True
+
+
+def is_valid_media(video_path):
+    txt = subprocess.Popen([CONVERSION_TOOL, "-v", "error", "-i", video_path,
+                            "-f", "null", "-"],
+                           stderr=subprocess.PIPE).communicate()[1]
+    return not txt

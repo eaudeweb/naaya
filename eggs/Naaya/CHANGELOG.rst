@@ -1,5 +1,6 @@
 5.0.14 (unreleased)
 -------------------
+* check if uploaded media file is valid [dumitval]
 * decode objectkeywords if necessary [dumitval]
 * remove create users permission on anonymous [dumitval]
 * fix for Excel export of string properties containing only numbers [dumitval]
