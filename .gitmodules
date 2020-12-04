@@ -58,3 +58,6 @@
 	path = bundles/NaayaBundles-Privacyforum
 	url = https://github.com/eaudeweb/NaayaBundles-Privacyforum
 	branch = master
+[submodule "buildout/circa-be"]
+	path = buildout/circa-be
+	url = git@github.com:eaudeweb/naaya.buildout.circabe.git
