@@ -159,6 +159,8 @@ class ImportRolesFromCirca(BrowserPage):
             return import_roles_zpt.__of__(ctx)(sources=sources)
 
         name = self.request.form['filename']
+        if not name:
+            name = '%s.ldif' % ctx.getId()
         ldap_source_title = self.request.form['source_title']
 
         log = init_log_stream()
@@ -235,7 +237,7 @@ class ZExportData(BrowserPage):
             to = user.mail
             try:
                 zexp_path = zexpcopy.write_zexp(ob)
-            except Exception, e:
+            except Exception as e:
                 zexp_path = ''
                 error = "Error while exporting %s IG Data: %s" % (ig_id,
                                                                   e.args)
@@ -288,13 +290,13 @@ class ZImportData(BrowserPage):
             sp = transaction.savepoint()
             try:
                 new_ids = zexpcopy.load_zexp(zexp_path, ob)
-            except IOError, e:
+            except IOError as e:
                 sp.rollback()
                 error = (('Can not read file with exported data. '
                           'Did you enter correctly the path you received by '
                           'email after export?. Error was: %s') % e.args)
                 logger.exception(error)
-            except Exception, e:
+            except Exception as e:
                 sp.rollback()
                 error = 'Error importing data from zexp file: %s' % e.args
                 logger.exception(error)

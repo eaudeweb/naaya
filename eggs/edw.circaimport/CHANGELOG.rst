@@ -1,5 +1,7 @@
 1.3.10 (unreleased)
 ------------------
+* add files in another language, if detected [dumitval]
+* try import with default filename (site id) if none given [dumitval]
 
 1.3.9 (2020-04-13)
 ------------------

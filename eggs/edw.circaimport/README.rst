@@ -37,9 +37,9 @@ folder you specified above in ZCML.
 
 When the Zip files are ready, open the Naaya website, navigate to a
 folder where you want to import the files (say ``my/import/folder``) and
-access the url ``/import_from_circa_html`` in that folder::
+access the url ``/import_files_from_circa_html`` in that folder::
 
-    http://forum.eionet.europa.eu/my/import/folder/import_from_circa_html
+    http://forum.eionet.europa.eu/my/import/folder/import_files_from_circa_html
 
 Roles migration
 ---------------

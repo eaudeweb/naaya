@@ -25,8 +25,8 @@ def sanitize_id(doc_id):
         doc_id = 'file_' + doc_id
     if doc_id.endswith('__'):
         doc_id = doc_id + 'file'
-    if (doc_id.startswith('coverage_') or doc_id.startswith('istranslated_')
-            or doc_id.startswith('tags_') or doc_id.startswith(
+    if (doc_id.startswith('coverage_') or doc_id.startswith('istranslated_') or
+            doc_id.startswith('tags_') or doc_id.startswith(
                 'objectkeywords_')):
         doc_id = 'file_' + doc_id
     return doc_id
@@ -85,10 +85,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         return result
 
     def handle_folder(line):
-        title = line.get('TITLE', line['Title'])
-        description = line.get('ABSTRACT', line['Abstract'])
-        userid = parse_userid(line.get('OWNER', line['Owner']))
-        filename = line.get('FILENAME', line['Filename'])
+        title = line.get('TITLE', line.get('Title'))
+        description = line.get('ABSTRACT', line.get('Abstract'))
+        userid = parse_userid(line.get('OWNER', line.get('Owner')))
+        filename = line.get('FILENAME', line.get('Filename'))
         folder_zip_path = filename[:-1].encode('utf-8')
 
         # for zope replace starting underscores
@@ -96,7 +96,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
 
         # use get_date as a backup
         try:
-            date = parse_date(line.get('CREATED', line['Created']))
+            date = parse_date(line.get('CREATED', line.get('Created')))
         except ValueError:
             date = get_date(folder_zip_path)
 
@@ -119,12 +119,12 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         assert parent_path in folders_info['known_folders']
 
         if folder_zope_path in folders_info['known_folders']:
-            created = line.get('CREATED', line['Created'])
-            owner = line.get('OWNER', line['Owner'])
+            created = line.get('CREATED', line.get('Created'))
+            owner = line.get('OWNER', line.get('Owner'))
             folder_info = folders_info['known_folders'][folder_zope_path]
             assert created == folder_info.get('CREATED',
-                                              folder_info['Created'])
-            assert owner == folder_info.get('OWNER', folder_info['Owner'])
+                                              folder_info.get('Created'))
+            assert owner == folder_info.get('OWNER', folder_info.get('Owner'))
             return
         folders_info['known_folders'][folder_zope_path] = line
 
@@ -132,26 +132,27 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                            title, description, date, userid)
 
     def handle_file(line):
-        title = line.get('TITLE', line['Title'])
-        description = line.get('ABSTRACT', line['Abstract'])
-        userid = parse_userid(line.get('OWNER', line['Owner']))
-        keywords = line.get('KEYWORDS', line['Keywords'])
+        title = line.get('TITLE', line.get('Title'))
+        description = line.get('ABSTRACT', line.get('Abstract'))
+        userid = parse_userid(line.get('OWNER', line.get('Owner')))
+        keywords = line.get('KEYWORDS', line.get('Keywords'))
         reference = line.get('REFERENCE', line.get('Reference', ''))
-        status = line.get('STATUS', line['Status'])
-        doc_zip_path = line.get('FILENAME', line['Filename'])
+        status = line.get('STATUS', line.get('Status'))
+        doc_zip_path = line.get('FILENAME', line.get('Filename'))
 
         # for zope replace starting underscores
         doc_zope_path = sanitize_folder_path(doc_zip_path)
 
         # use get_date as a backup
         try:
-            date = parse_date(line.get('UPLOADDATE', line['Uploaddate']))
+            date = parse_date(line.get('UPLOADDATE', line.get('Uploaddate')))
         except ValueError:
             date = get_date(doc_zip_path)
 
         doc_split_path = doc_zope_path.split('/')
         doc_filename = doc_split_path[-1].encode('utf-8')
         doc_langver = doc_split_path[-2]
+        lang = doc_langver[:2].lower()
         doc_dpl_name = str(doc_split_path[-3])
 
         parent_path = '/'.join(doc_split_path[:-3]).encode('utf-8')
@@ -161,12 +162,15 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         doc_id = doc_dpl_name[:-len('.dpl')]
         doc_id = sanitize_id(doc_id)
 
-        full_path = parent_path+'/'+doc_id
-        if not doc_langver.startswith('EN_'):
-            actor.warn('non-english content: %r at %r' %
-                       (doc_langver, full_path))
+        full_path = parent_path + '/' + doc_id
+        langs = actor.context.getSite().gl_get_languages()
+        if lang != 'en' and lang not in langs:
+            actor.warn('non-english (%s) content: %r at %r. '
+                       'Will be imported as English' %
+                       (lang, doc_langver, full_path))
+            lang = 'en'
 
-        ranking = line.get('RANKING', line['Ranking'])
+        ranking = line.get('RANKING', line.get('Ranking'))
         if ranking != 'Public':
             actor.warn('ranking is %r for %r' %
                        (str(ranking), full_path))
@@ -179,12 +183,11 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             reference = ''
 
         if status not in ('Draft', ''):
-            description = (("<p>Status: %s</p>\n" % status)
-                           + description)
+            description = (("<p>Status: %s</p>\n" % status) + description)
 
         if reference:
-            description = (("<p>Reference: %s</p>\n" % reference)
-                           + description)
+            description = (("<p>Reference: %s</p>\n" % reference) +
+                           description)
 
         doc_data_file = open_backup_file(doc_zip_path.encode('latin-1'))
 
@@ -195,17 +198,18 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
                 if matched:
                     url = matched.groups()[0].strip()
             assert (url.startswith('http://') or url.startswith('https://') or
-                    url.startswith('ftp://'), "bad url: %r" % url)
+                    url.startswith('ftp://')), "bad url: %r" % url
             actor.url_entry(parent_path, doc_id,
                             doc_filename, url,
                             title, description, keywords, date, userid)
         else:
             actor.document_entry(parent_path, doc_id,
                                  doc_filename, doc_data_file,
-                                 title, description, keywords, date, userid)
+                                 title, description, keywords, date, userid,
+                                 lang)
 
     for line in read_index(index_file, actor.warn):
-        filename = line.get('FILENAME', line['Filename'])
+        filename = line.get('FILENAME', line.get('Filename'))
         if filename.endswith('/'):
             handle_folder(line)
         else:

@@ -1,6 +1,18 @@
+''' Actors module '''
+
 import logging
-import mimetypes
 logger = logging.getLogger('edw.circaimport.ui')
+
+try:
+    from Products.Naaya.NyFolder import addNyFolder
+    from naaya.core.zope2util import path_in_site
+    from naaya.content.url.url_item import addNyURL
+    from naaya.content.bfile.bfile_item import addNyBFile
+except ImportError:
+    with_naaya = False
+else:
+    with_naaya = True
+
 
 class DemoActor(object):
     def __init__(self):
@@ -8,38 +20,29 @@ class DemoActor(object):
 
     def folder_entry(self, parent_path, folder_id,
                      title, description, date, userid):
-        pass #print 'folder %r (%r, %s)' % (folder_id, userid, date)
+        pass  # print 'folder %r (%r, %s)' % (folder_id, userid, date)
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
                        title, description, keywords, date, userid):
-        pass #print ('document %r (%r, %s)' % (title, userid, date))
+        pass  # print ('document %r (%r, %s)' % (title, userid, date))
         self.count['files'] += 1
 
     def url_entry(self, parent_path, ob_id, filename, url,
                   title, description, keywords, date, userid):
-        pass #print ('url %r (%r, %s)' % (title, userid, date))
+        pass  # print ('url %r (%r, %s)' % (title, userid, date))
         self.count['urls'] += 1
 
     def warn(self, msg):
-        print "WARNING: %s" % msg
+        print("WARNING: %s" % msg)
 
     def finished(self):
-        print 'done:', repr(self.count)
+        print('done:', repr(self.count))
 
-try:
-    from datetime import datetime
-    from Products.Naaya.NyFolder import addNyFolder
-    from naaya.core.zope2util import path_in_site
-    from naaya.content.url.url_item import addNyURL
-    from naaya.content.bfile.bfile_item import addNyBFile, make_blobfile
-except ImportError:
-    with_naaya = False
-else:
-    with_naaya = True
 
 def nydateformat(date):
     return date.strftime('%d/%m/%Y')
+
 
 def get_parent(context, parent_path):
     if parent_path in (None, ''):
@@ -47,11 +50,13 @@ def get_parent(context, parent_path):
     else:
         return context.restrictedTraverse(parent_path)
 
+
 def join_parent_path(parent_path, ob_id):
     if parent_path:
         return parent_path + '/' + ob_id
     else:
         return ob_id
+
 
 class ZopeActor(object):
     def __init__(self, context, default_userid=''):
@@ -79,18 +84,10 @@ class ZopeActor(object):
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
-                       title, description, keywords, date, userid):
+                       title, description, keywords, date, userid, lang='en'):
         from StringIO import StringIO
         assert isinstance(data_file, StringIO)
         data_file.filename = filename
-        content_type, content_encoding = mimetypes.guess_type(filename)
-        if content_type is None:
-            content_type = 'application/octet-stream'
-        bf = make_blobfile(data_file,
-                           content_type=content_type,
-                           removed=False,
-                           timestamp=datetime(date.year, date.month, date.day))
-
         parent = get_parent(self.context, parent_path)
         orig_path = join_parent_path(parent_path, ob_id)
 
@@ -100,7 +97,7 @@ class ZopeActor(object):
             logger.warn('new document version for %r' % orig_path)
             if keywords or description:
                 logger.warn('ignoring keywords=%r, description=%r' %
-                          (keywords, description))
+                            (keywords, description))
 
         else:
             kwargs = {
@@ -111,6 +108,7 @@ class ZopeActor(object):
                 'description': description,
                 'keywords': keywords,
                 '_send_notifications': False,
+                'lang': lang
             }
             assert ob_id not in parent.objectIds()
             the_file_id = addNyBFile(parent, **kwargs)
@@ -120,7 +118,7 @@ class ZopeActor(object):
                 self.rename[orig_path] = the_file_id
             the_file = parent[the_file_id]
 
-        the_file._versions.append(bf)
+        the_file._save_file(data_file, language=lang)
         logger.info("Added file: %r", path_in_site(the_file))
         self.count['files'] += 1
 
