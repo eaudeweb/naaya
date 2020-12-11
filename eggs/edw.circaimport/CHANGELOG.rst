@@ -1,4 +1,7 @@
-1.3.11 (unreleased)
+1.3.12 (unreleased)
+------------------
+
+1.3.11 (2020-12-11)
 ------------------
 * try import with default filename (site id) if none given (files) [dumitval]
 
