@@ -137,6 +137,8 @@ class ImportFilesFromCirca(BrowserPage):
         ctx = self.context.aq_inner  # because self subclasses from Explicit
         # name = ctx.REQUEST.get('name')
         name = self.request.form['filename']
+        if not name:
+            name = '%s.zip' % ctx.getId()
 
         log = init_log_stream()
 

@@ -1,10 +1,11 @@
 1.3.11 (unreleased)
 ------------------
+* try import with default filename (site id) if none given (files) [dumitval]
 
 1.3.10 (2020-12-11)
 ------------------
 * add files in another language, if detected [dumitval]
-* try import with default filename (site id) if none given [dumitval]
+* try import with default filename (site id) if none given (ldif) [dumitval]
 
 1.3.9 (2020-04-13)
 ------------------
