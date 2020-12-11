@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='edw.circaimport',
-      version='1.3.10',
+      version='1.3.11',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       packages=find_packages(),

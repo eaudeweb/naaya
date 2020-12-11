@@ -1,4 +1,7 @@
-1.3.10 (unreleased)
+1.3.11 (unreleased)
+------------------
+
+1.3.10 (2020-12-11)
 ------------------
 * add files in another language, if detected [dumitval]
 * try import with default filename (site id) if none given [dumitval]
