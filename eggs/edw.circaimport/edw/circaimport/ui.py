@@ -138,7 +138,7 @@ class ImportFilesFromCirca(BrowserPage):
         # name = ctx.REQUEST.get('name')
         name = self.request.form['filename']
         if not name:
-            name = '%s.zip' % ctx.getId()
+            name = '%s.zip' % ctx.getSite().getId()
 
         log = init_log_stream()
 
