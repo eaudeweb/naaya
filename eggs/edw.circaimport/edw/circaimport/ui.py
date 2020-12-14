@@ -188,6 +188,8 @@ class ImportNotificationsFromCirca(BrowserPage):
 
         notif_type = self.request.form['notif_type']
         filename = self.request.form['filename']
+        if not filename:
+            filename = '%s.library.usernotification.txt' % ctx.getId()
 
         log = init_log_stream()
 
@@ -210,6 +212,8 @@ class ImportACLsFromCirca(BrowserPage):
             return import_acls_zpt.__of__(ctx)()
 
         name = self.request.form['filename']
+        if not name:
+            name = '%s.itemsacls.txt' % ctx.getId()
 
         log = init_log_stream()
 

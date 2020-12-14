@@ -1,5 +1,7 @@
 1.3.12 (unreleased)
 ------------------
+* try import with default filename (site id) if none given (acls,
+  notifications) [dumitval]
 
 1.3.11 (2020-12-11)
 ------------------

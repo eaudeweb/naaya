@@ -9,6 +9,7 @@ from naaya.core.zope2util import relative_object_path
 
 logger = logging.getLogger('edw.circaimport.ui')
 
+
 def add_files_and_folders_from_circa_export(context, name, root_path):
     """
     Call this method from a Zope ExternalMethod. It assumes a local
@@ -36,15 +37,17 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
     current_user = context.REQUEST.AUTHENTICATED_USER.getId()
 
     actor = ZopeActor(context, current_user)
+
     def _open_on_key_error(name):
         """
-        Patches for when the names are wrong (usually unicode encoding problems)
+        Patches for when the names are wrong
+        (usually unicode encoding problems)
         """
         chain = name.split('/')
         parent_path = '/'.join(chain[:-1])
         matching_path = parent_path + '/' + chain[-1][0]
         matches = [fname for fname in zf.namelist()
-                if fname.startswith(matching_path)]
+                   if fname.startswith(matching_path)]
         assert len(matches) == 1
         return StringIO(zf.read(matches[0]))
 
@@ -66,9 +69,11 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
 
     logger.debug('done importing files and folders')
 
+
 def get_acl_users_sources_titles(site):
     auth_tool = site.getAuthenticationTool()
     return [source.title for source in auth_tool.getSources()]
+
 
 def add_roles_from_circa_export(site, filepath, ldap_source_title):
     logger.debug('start importing roles')
@@ -87,25 +92,29 @@ def add_roles_from_circa_export(site, filepath, ldap_source_title):
 
     for userid, role in user_2_role.items():
         if not ldap_source.has_user(userid):
-            logger.error('No user named %s in source %s', userid, ldap_source_title)
+            logger.error('No user named %s in source %s', userid,
+                         ldap_source_title)
             continue
 
         try:
             ldap_source.addUserRoles(userid, [role])
-        except Exception, e:
-            logger.error("Couldn't add role %s for user %s: %s", role, userid, e)
+        except Exception as e:
+            logger.error("Couldn't add role %s for user %s: %s" %
+                         (role, userid, e))
         else:
             logger.info('Added role %s for user %s', role, userid)
 
     for groupid, role in group_2_role.items():
         try:
             ldap_source.map_group_to_role(groupid, [role])
-        except Exception, e:
-            logger.error("Couldn't add role %s for group %s: %s", role, groupid, e)
+        except Exception as e:
+            logger.error("Couldn't add role %s for group %s: %s" %
+                         (role, groupid, e))
         else:
             logger.info('Added role %s for group %s', role, groupid)
 
     logger.debug('done importing roles')
+
 
 def add_notifications_from_circa_export(site, filepath, notif_type):
     logger.debug('start importing notifications')
@@ -125,7 +134,8 @@ def add_notifications_from_circa_export(site, filepath, notif_type):
 
         for val in values:
             if val['notif_type'] == 3:
-                logger.info('Ignoring (turned off) subscription for user %s at location %s', user_id, val['path'])
+                logger.info('Ignoring (turned off) subscription for user %s at'
+                            ' location %s', user_id, val['path'])
                 continue
 
             val['path'] = val['path'].strip('/')
@@ -142,13 +152,17 @@ def add_notifications_from_circa_export(site, filepath, notif_type):
                 notif_tool.add_account_subscription(user_id,
                                                     location,
                                                     notif_type, 'en')
-            except ValueError, msg:
-                logger.error("Couldn't add subscription for user %s at location %s: %s", user_id, val['path'], msg)
+            except ValueError as msg:
+                logger.error(
+                    "Couldn't add subscription for user %s at location %s: %s",
+                    user_id, val['path'], msg)
                 continue
 
-            logger.info('Added subscription for user %s at location %s', user_id, val['path'])
+            logger.info('Added subscription for user %s at location %s',
+                        user_id, val['path'])
 
     logger.debug('done importing notifications')
+
 
 def add_acls_from_circa_export(site, filepath):
     logger.debug('start importing acls')
@@ -158,6 +172,7 @@ def add_acls_from_circa_export(site, filepath):
     from acl_extract import get_acl_mapping
 
     auth_tool = site.getAuthenticationTool()
+
     def set_acl_for_user(ob, user):
         ldap_source_title = auth_tool.getUserSource(user)
         location = relative_object_path(ob, site)
@@ -180,10 +195,11 @@ def add_acls_from_circa_export(site, filepath):
         permission_object.setRoles(new_roles)
 
     ROLES_MAPPING = {'0': 'Administrator',
-            '1': 'Viewer',
-            '2': 'Contributor',
-            '3': 'Viewer',
-            '4': 'Viewer'}
+                     '1': 'Viewer',
+                     '2': 'Contributor',
+                     '3': 'Viewer',
+                     '4': 'Viewer'}
+
     def compute_roles_mapping(acls):
         """
         Computes the ROLES_MAPPING variable based on:
@@ -194,12 +210,13 @@ def add_acls_from_circa_export(site, filepath):
         """
         non_userids = []
         for values in acls.values():
-            non_userids.extend([val for val in values if not val.endswith('@circa')])
+            non_userids.extend([val for val in values
+                                if not val.endswith('@circa')])
         roles = [val[2:] for val in non_userids if val.startswith('__')]
-        roles = list(set(roles)) # remove duplicates
-        roles = map(int, roles) # convert to integers
+        roles = list(set(roles))  # remove duplicates
+        roles = map(int, roles)  # convert to integers
         max_role = max(roles)
-        max_role = max(max_role, 6) # max role should be at least 6
+        max_role = max(max_role, 6)  # max role should be at least 6
 
         ROLES_MAPPING[str(max_role)] = 'Authenticated'
         ROLES_MAPPING[str(max_role - 1)] = 'Anonymous'
@@ -220,7 +237,8 @@ def add_acls_from_circa_export(site, filepath):
     if not acls:
         logger.info('No matched acls')
         if not_matched:
-            logger.warn('Not matched rows (from the exported file): %s' % not_matched)
+            logger.warn('Not matched rows (from the exported file): %s',
+                        not_matched)
         return
 
     compute_roles_mapping(acls)
@@ -235,7 +253,9 @@ def add_acls_from_circa_export(site, filepath):
             continue
 
         if ob.meta_type != 'Naaya Folder':
-            logger.error("Object %r is not a folder (Naaya can only restrict permissions on folders)", relative_object_path(ob, site))
+            logger.error('Object %r is not a folder '
+                         '(Naaya can only restrict permissions on folders)',
+                         relative_object_path(ob, site))
             continue
 
         # add users acls
@@ -246,15 +266,17 @@ def add_acls_from_circa_export(site, filepath):
             if user is None:
                 logger.error('User not found: %s', user_id)
                 continue
-            #set_acl_for_user(ob, user)
-            logger.warn('(Deactivated) Granted view on path %s for user %s', path, user_id)
+            # set_acl_for_user(ob, user)
+            logger.warn('(Deactivated) Granted view on path %s for user %s',
+                        path, user_id)
 
         # add roles acls
         roles = [val[2:] for val in non_userids if val.startswith('__')]
         roles = list(set(map(get_role, roles)))
         if roles:
-            #set_acl_for_roles(ob, roles)
-            logger.warn('(Deactivated) Granted view on path %s for roles %s', path, roles)
+            # set_acl_for_roles(ob, roles)
+            logger.warn('(Deactivated) Granted view on path %s for roles %s',
+                        path, roles)
 
         # not matched values
         nonvals = [val for val in non_userids if not val.startswith('__')]
@@ -262,6 +284,7 @@ def add_acls_from_circa_export(site, filepath):
             logger.warn('Not matched user or profile for %s' % nonvals)
 
     if not_matched:
-        logger.warn('Not matched rows (from the exported file): %s' % not_matched)
+        logger.warn('Not matched rows (from the exported file): %s' %
+                    not_matched)
 
     logger.debug('done importing acls')
