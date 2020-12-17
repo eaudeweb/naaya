@@ -145,7 +145,10 @@ class Section(Folder):
         sections = self.list_sections()
         i = sections.index(self)
         if i > 0:
-            return sections[i-1]
+            if sections[i - 1].objectValues()[0].body == '<p>Header</p>':
+                return sections[i - 1].get_previous_section()
+            else:
+                return sections[i - 1]
         else:
             return None
 
@@ -154,8 +157,11 @@ class Section(Folder):
     def get_next_section(self):
         sections = self.list_sections()
         i = sections.index(self)
-        if i+1 < len(sections):
-            return sections[i+1]
+        if i + 1 < len(sections):
+            if sections[i + 1].objectValues()[0].body == '<p>Header</p>':
+                return sections[i + 1].get_next_section()
+            else:
+                return sections[i + 1]
         else:
             return None
 
@@ -193,5 +199,6 @@ class Section(Folder):
 
     security.declareProtected(view, 'section_js')
     section_js = ImageFile('www/section.js', globals())
+
 
 InitializeClass(Section)

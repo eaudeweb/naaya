@@ -1,5 +1,6 @@
 1.5.8 (unreleased)
 -----------------
+* allow skipping sections that are marked as header [dumitval]
 
 1.5.7 (2020-11-20)
 -----------------
