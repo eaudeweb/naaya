@@ -7,21 +7,28 @@ from Products.Five.browser import BrowserView
 
 from Products.NaayaCore.managers.utils import genObjectId
 from naaya.groupware.groupware_site import manage_addGroupwareSite
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import \
+    EmailPageTemplateFile
 from naaya.core.zope2util import get_zope_env
 
 
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
-approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt', globals())
-rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt', globals())
+MAIL_ADDRESS_FROM = get_zope_env('MAIL_ADDRESS_FROM',
+                                 'no-reply@eionet.europa.eu')
+approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt',
+                                      globals())
+rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt',
+                                      globals())
+
 
 def make_unicode(s):
     if isinstance(s, unicode):
         return s
     try:
         return s.decode('utf-8')
-    except:
+    except Exception:
         return s.decode('latin-1')
+
 
 class IGWApplication(Interface):
     """Interface for the GWApplication class
@@ -40,6 +47,7 @@ class IGWApplication(Interface):
             - mark application as rejected
             - send notification mail
         """
+
 
 class GWApplication(SimpleItem):
 
@@ -94,12 +102,16 @@ class GWApplication(SimpleItem):
                               kwargs.get('description', ''))
 
         portal.administrator_email = self.application_data.get('useremail', '')
-        portal.mail_address_from = 'no-reply@eionet.europa.eu'
+        portal.mail_address_from = MAIL_ADDRESS_FROM
 
         acl_path = self.acl_users['ldap-plugin'].acl_users.absolute_url(1)
         ac_tool = portal.getAuthenticationTool()
         ac_tool.manageAddSource(acl_path, NETWORK_NAME)
-        ac_tool.getSources()[0].addUserRoles(name=self.userid, roles=['Administrator'], user_location='Users')
+        ac_tool.getSources()[0].addUserRoles(name=self.userid,
+                                             roles=['Administrator'],
+                                             user_location='Users')
+        layout_tool = portal.getLayoutTool()
+        layout_tool.manageLayout('groupware', 'eionet_2020')
 
     def send_approved_email(self, admin_comments):
         data = {'igurl': self.created_url(), 'admin_comments': admin_comments}
@@ -108,7 +120,8 @@ class GWApplication(SimpleItem):
         mail_from = self.mail_from
         mail_subject = mail_data['subject']
         mail_body = mail_data['body_text']
-        self.email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
+        self.email_sender.sendEmail(mail_body, mail_to, mail_from,
+                                    mail_subject)
 
     def send_rejected_email(self, admin_comments):
         data = {'igtitle': self.title, 'admin_comments': admin_comments}
@@ -117,7 +130,8 @@ class GWApplication(SimpleItem):
         mail_from = self.mail_from
         mail_subject = mail_data['subject']
         mail_body = mail_data['body_text']
-        self.email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
+        self.email_sender.sendEmail(mail_body, mail_to, mail_from,
+                                    mail_subject)
 
     def gen_id(self):
         return genObjectId(self.application_data.get('site_title', ''))
@@ -144,12 +158,13 @@ class GWApplication(SimpleItem):
     def pretty_approved_date(self):
         try:
             return self.get_pretty_date(self.get_latest_approval_date())
-        except:
+        except Exception:
             return
 
     @property
     def pretty_rejected_date(self):
         return self.get_pretty_date(self.rejected_on)
+
 
 class GWApplicationIndexView(BrowserView):
     """

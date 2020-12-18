@@ -1,5 +1,7 @@
 1.1.10 (unreleased)
 ------------------
+* set the eionet_2020 layout on new approved portals [dumitval]
+* allow customisation of default mail address from [dumitval]
 
 1.1.9 (2020-01-21)
 ------------------
