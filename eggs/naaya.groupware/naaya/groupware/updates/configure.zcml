@@ -53,6 +53,12 @@
       permission="zope2.ViewManagementScreens" />
 
     <utility
+      name="update_fix_eionet_style.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_standard_template.Fix2020Style"
+      permission="zope2.ViewManagementScreens" />
+
+    <utility
       name="update_link_lists.update"
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_link_lists.UpdateLinksList"

@@ -226,3 +226,43 @@ class Eionet_2020(UpdateScript):
         self.log.debug('groupware 2020 scheme set as current scheme')
 
         return True
+
+
+class Fix2020Style(UpdateScript):
+    title = ('Fix CSS for eionet_2020 style')
+    authors = ['Valentin Dumitru']
+    creation_date = 'Dec 18, 2020'
+
+    def _update(self, portal):
+        old_css = (
+            'form input, form select {\n'
+            'border-radius: 15px !important;\n'
+            'height: 27px !important;\n'
+            'line-height: inherit !important;\n'
+            'padding: 0 10px !important;\n'
+            'border: 1px solid #dddddd !important\n'
+            '}'
+        )
+        new_css = (
+            'form input, form select {\n'
+            'border-radius: 15px !important;\n'
+            'line-height: inherit !important;\n'
+            'padding: 0 10px !important;\n'
+            'border: 1px solid #dddddd !important\n'
+            '}\n'
+            '\n'
+            'form input {\n'
+            'height: 27px !important;\n'
+            '}'
+        )
+
+        style = portal.portal_layout.groupware.eionet_2020.gw_style_css
+        css = style.read()
+        if old_css in css:
+            css = css.replace(old_css, new_css)
+            style.write(css)
+            self.log.debug('Style updated')
+        else:
+            self.log.debug('Style already updated')
+
+        return True

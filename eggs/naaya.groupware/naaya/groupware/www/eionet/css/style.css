@@ -1443,10 +1443,13 @@ body {
 
 form input, form select {
   border-radius: 15px !important;
-  height: 27px !important;
   line-height: inherit !important;
   padding: 0 10px !important;
   border: 1px solid #dddddd !important
+}
+
+form input{
+  height: 27px !important;
 }
 
 form input:focus, form select:focus {
