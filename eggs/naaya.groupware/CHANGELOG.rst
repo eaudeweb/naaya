@@ -1,4 +1,7 @@
-1.4.64 (unreleased)
+1.4.65 (unreleased)
+-------------------
+
+1.4.64 (2020-12-18)
 -------------------
 * fix select height in the 2020 layout + update script [dumitval]
 
