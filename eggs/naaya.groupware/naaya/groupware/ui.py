@@ -16,6 +16,8 @@ envcoord_index_html_zpt = PageTemplateFile('zpt/envcoord_index.zpt', globals())
 
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
+EIONET_BASE_URL = ('https://eionet.europa.eu/'
+                   'eionet-account-tools/eionet_account_tools/')
 
 
 def get_user_id(request):
@@ -85,7 +87,7 @@ def nrc_admin_link(context, request):
     country = nfp_for_country(context)
     if country:
         nrc_url = ("%s/nfp_nrc/nrcs?nfp=%s" %
-                   (context.getSite().absolute_url(), country))
+                   (EIONET_BASE_URL, country))
 
     return nrc_url
 
@@ -99,7 +101,7 @@ def awp_admin_link(context, request):
     country = nfp_for_country(context)
     if country:
         awp_url = ("%s/nfp_nrc/awps?nfp=%s" %
-                   (context.getSite().absolute_url(), country))
+                   (EIONET_BASE_URL, country))
 
     return awp_url
 
@@ -113,7 +115,7 @@ def extranet_reporters_link(context, request):
     country = nfp_for_country(context)
     if country:
         awp_url = ("%s/nfp_nrc/extranet_reporters?nfp=%s" %
-                   (context.getSite().absolute_url(), country))
+                   (EIONET_BASE_URL, country))
 
     return awp_url
 
@@ -126,8 +128,7 @@ def organisations_link(context, request):
     organisations_url = ''
     country = nfp_for_country(context)
     if country:
-        organisations_url = ("%s/organisations" %
-                             context.getSite().absolute_url())
+        organisations_url = ("%s/organisations" % EIONET_BASE_URL)
 
     return organisations_url
 

@@ -1,6 +1,7 @@
 1.4.65 (unreleased)
 -------------------
-* add interface for IEnvCoordApplication and custom index [dumitval]
+* update nfp_nrc location to eionet.europa.eu [dumitval]
+* add interface for IEnvcoord site [dumitval]
 * remove hard dependency to eea.usersdb [dumitval]
 
 1.4.64 (2020-12-18)
