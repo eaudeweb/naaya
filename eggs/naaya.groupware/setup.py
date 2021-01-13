@@ -12,7 +12,6 @@ setup(name='naaya.groupware',
       install_requires=[
           'Naaya >= 5.0.0',
           'naaya.content.bfile',
-          'eea.usersdb >= 1.2.0',
           'collective.autopermission == 1.0b2',
       ]
       )

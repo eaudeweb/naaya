@@ -12,6 +12,7 @@ index_html_zpt = PageTemplateFile('zpt/index.zpt', globals())
 eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
                                                globals())
 archives_index_html_zpt = PageTemplateFile('zpt/archives_index.zpt', globals())
+envcoord_index_html_zpt = PageTemplateFile('zpt/envcoord_index.zpt', globals())
 
 eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
@@ -186,6 +187,16 @@ def eionet_forum_index_html(context, request):
     options = {'is_authenticated': (get_user_id(request) is not None),
                'grouped_igs': grouped_igs(context)}
     return eionet_forum_index_html_zpt.__of__(context)(**options)
+
+
+def envcoord_index_html(context, request):
+    """
+    Render EnvCoord Health Forum's first page
+    """
+    options = {'network_name': NETWORK_NAME,
+               'is_authenticated': (get_user_id(request) is not None),
+               'grouped_igs': grouped_igs(context)}
+    return envcoord_index_html_zpt.__of__(context)(**options)
 
 
 def archived_portals_json(context, request):

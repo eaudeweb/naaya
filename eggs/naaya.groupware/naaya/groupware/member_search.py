@@ -14,7 +14,10 @@ from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
 from Products.NaayaCore.managers.import_export import generate_csv
 from Products.NaayaCore.managers.import_export import generate_excel
 from naaya.core.utils import force_to_unicode
-from eea.usersdb.factories import agent_from_uf
+try:
+    from eea.usersdb.factories import agent_from_uf
+except ImportError:
+    from be.ldapadmin.factories import agent_from_uf
 
 
 class MemberSearch(Implicit, Item):

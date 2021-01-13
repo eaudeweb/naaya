@@ -1,5 +1,7 @@
 1.4.65 (unreleased)
 -------------------
+* add interface for IEnvCoordApplication and custom index [dumitval]
+* remove hard dependency to eea.usersdb [dumitval]
 
 1.4.64 (2020-12-18)
 -------------------

@@ -32,7 +32,10 @@ try:
     rdf_calendar_available = True
 except ImportError:
     rdf_calendar_available = False
-from eea.usersdb.factories import agent_from_site
+try:
+    from eea.usersdb.factories import agent_from_site
+except ImportError:
+    from be.ldapadmin.factories import agent_from_site
 
 from naaya.groupware.member_search import MemberSearch
 from naaya.groupware.interfaces import IGWSite

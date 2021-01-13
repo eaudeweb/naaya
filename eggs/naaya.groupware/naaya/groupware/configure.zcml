@@ -97,6 +97,13 @@
     permission="zope2.View"
     />
 
+  <naaya:simpleView
+    for="naaya.groupware.interfaces.IEnvCoordApplication"
+    name="index_html"
+    handler=".ui.envcoord_index_html"
+    permission="zope2.View"
+    />
+
   <browser:defaultView
     for="naaya.groupware.interfaces.IGroupwareApplication"
     name="index_html"

@@ -8,7 +8,10 @@ except ImportError:
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from eea.usersdb.factories import agent_from_uf
+try:
+    from eea.usersdb.factories import agent_from_uf
+except ImportError:
+    from be.ldapadmin.factories import agent_from_uf
 
 # limit the depth of search for notification subscriptions
 CUTOFF_SUBS = 5
