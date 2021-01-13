@@ -1,4 +1,7 @@
-1.4.65 (unreleased)
+1.4.66 (unreleased)
+-------------------
+
+1.4.65 (2021-01-13)
 -------------------
 * update nfp_nrc location to eionet.europa.eu [dumitval]
 * add interface for IEnvcoord site [dumitval]
