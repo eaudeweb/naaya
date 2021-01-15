@@ -1,4 +1,7 @@
-5.0.14 (unreleased)
+5.0.15 (unreleased)
+-------------------
+
+5.0.14 (2021-01-15)
 -------------------
 * fix for Excel export of Date properties with value None [dumitval]
 * check if uploaded media file is valid [dumitval]
