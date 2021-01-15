@@ -183,7 +183,7 @@ class CSVImportTool(Implicit, Item):
                 else:
                     errors.append(msg)
                     rows = []
-            except UnicodeDecodeError, e:
+            except UnicodeDecodeError:
                 if REQUEST is None:
                     raise
                 else:
@@ -263,9 +263,9 @@ class CSVImportTool(Implicit, Item):
                     location_obj.recatalogNyObject(ob)
                     ob.submitThis()
                     ob.approveThis(_send_notifications=False)
-                except UnicodeDecodeError, e:
+                except UnicodeDecodeError:
                     raise
-                except Exception, e:
+                except Exception as e:
                     self.log_current_error()
                     msg = ('Error while importing from file, '
                            'row ${record_number}: ${error}',
@@ -276,7 +276,7 @@ class CSVImportTool(Implicit, Item):
                     else:
                         errors.append(msg)
 
-        except UnicodeDecodeError, e:
+        except UnicodeDecodeError:
             if REQUEST is None:
                 raise
             else:
@@ -440,7 +440,7 @@ class ExportTool(Implicit, Item):
                                          "cell size limit"
                                          % (object_type, org, oversized_col))
                             raise ValueError(error_msg.encode('utf-8'))
-            except Exception, error:
+            except Exception as error:
                 return error
             else:
                 return generate_excel(header, rows_backup)
@@ -630,7 +630,7 @@ class CSVReader(object):
                     buf[field.encode('utf-8')] = value.encode('utf-8')
                 output.append(buf)
             return (output, '')
-        except Exception, ex:
+        except Exception as ex:
             logger.exception('Read error')
             return (None, ex)
 

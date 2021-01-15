@@ -1,5 +1,6 @@
 5.0.14 (unreleased)
 -------------------
+* fix for Excel export of Date properties with value None [dumitval]
 * check if uploaded media file is valid [dumitval]
 * decode objectkeywords if necessary [dumitval]
 * remove create users permission on anonymous [dumitval]
