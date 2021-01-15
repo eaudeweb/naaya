@@ -58,7 +58,7 @@ class GeoWidget(Widget):
                 except GeocoderServiceError:
                     lat = lon = None
             return Geo(lat, lon, address)
-        except ValueError, e:
+        except ValueError as e:
             raise WidgetError(str(e))
 
     def coord_as_json(self, value):
@@ -82,6 +82,15 @@ class GeoWidget(Widget):
         """
         if value == Geo():
             return None
+        return value
+
+    def convert_from_user_string(self, value):
+        """
+        Mainly convert lat and lon to string, might arrive as float
+        which causes issues on some systems/python versions
+        """
+        if not isinstance(value, basestring):
+            value = str(value)
         return value
 
     hidden_template = PageTemplateFile('../zpt/property_widget_hidden_geo',

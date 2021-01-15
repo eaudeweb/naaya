@@ -1,5 +1,7 @@
 5.0.15 (unreleased)
 -------------------
+* fix Geo location creation when importing float coordinates from excel
+  [valipod]
 
 5.0.14 (2021-01-15)
 -------------------
