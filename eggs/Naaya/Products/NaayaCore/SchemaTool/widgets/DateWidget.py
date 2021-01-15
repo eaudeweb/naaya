@@ -27,7 +27,7 @@ class DateWidget(Widget):
     # Constructor
     _constructors = (addDateWidget,)
 
-    #default = DateTime().strftime('%d/%m/%Y')
+    # default = DateTime().strftime('%d/%m/%Y')
     default = None
 
     def parseFormData(self, value):
@@ -39,24 +39,24 @@ class DateWidget(Widget):
             # anyway, this is for Excel sheets formatted as Date
             try:
                 value = DateTime('30/12/1899') + value
-            except:
+            except Exception:
                 raise WidgetError('Invalid date string for "%s"' % self.title)
         elif len(value.strip().split('-')) == 3:
             try:
                 year, month, day = [int(i) for i in value.strip().split('-')]
                 value = DateTime(year, month, day)
-            except:
+            except Exception:
                 raise WidgetError('Invalid date string for "%s"' % self.title)
         else:
             try:
                 day, month, year = [int(i) for i in value.strip().split('/')]
                 value = DateTime(year, month, day)
-            except:
+            except Exception:
                 try:
                     year, month, day = [int(i) for i in value.strip().split(
                         '/')]
                     value = DateTime(year, month, day)
-                except:
+                except Exception:
                     raise WidgetError(
                         'Invalid date string for "%s"' % self.title)
         return value
@@ -70,7 +70,7 @@ class DateWidget(Widget):
         """ Convert a database value to a user-readable string """
         if isinstance(value, DateTime):
             value = value.strftime('%d/%m/%Y')
-        else:
+        elif not value:
             value = ''
         return value
 
