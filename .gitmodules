@@ -61,3 +61,6 @@
 [submodule "buildout/circa-be"]
 	path = buildout/circa-be
 	url = git@github.com:eaudeweb/naaya.buildout.circabe.git
+[submodule "buildout/ispraforum"]
+	path = buildout/ispraforum
+	url = git@github.com:eaudeweb/naaya.buildout.ispraforum.git
