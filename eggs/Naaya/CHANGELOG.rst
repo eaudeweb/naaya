@@ -1,5 +1,6 @@
 5.0.15 (unreleased)
 -------------------
+* remove email validation by validate_email [dumitval]
 * fix Geo location creation when importing float coordinates from excel
   [valipod]
 
