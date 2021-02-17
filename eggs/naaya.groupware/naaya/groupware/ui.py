@@ -14,7 +14,6 @@ eionet_forum_index_html_zpt = PageTemplateFile('zpt/eionet_forum_index.zpt',
 archives_index_html_zpt = PageTemplateFile('zpt/archives_index.zpt', globals())
 envcoord_index_html_zpt = PageTemplateFile('zpt/envcoord_index.zpt', globals())
 
-eionet_url = get_zope_env('EIONET_LDAP_EXPLORER', '')
 NETWORK_NAME = get_zope_env('NETWORK_NAME', 'Eionet')
 EIONET_BASE_URL = ('https://eionet.europa.eu/'
                    'eionet-account-tools/eionet_account_tools/')
