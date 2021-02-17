@@ -1,4 +1,7 @@
-5.0.15 (unreleased)
+5.0.16 (unreleased)
+-------------------
+
+5.0.15 (2021-02-17)
 -------------------
 * remove email validation by validate_email [dumitval]
 * fix Geo location creation when importing float coordinates from excel
