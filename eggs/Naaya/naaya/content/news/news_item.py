@@ -3,6 +3,8 @@ import os
 import sys
 
 from Globals import InitializeClass
+from PIL import Image
+from StringIO import StringIO
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -226,7 +228,17 @@ class news_item(Implicit, NyContentData):
                 if p_picture.filename != '':
                     l_read = p_picture.read()
                     if l_read != '':
-                        self.smallpicture = l_read
+                        p_picture.seek(0)
+                        p_picture = Image.open(p_picture)
+                        format = p_picture.format
+                        aspect = float(p_picture.size[0]) / float(
+                            p_picture.size[1])
+                        p_picture = p_picture.resize((210, int(210/aspect)),
+                                                     Image.ANTIALIAS)
+                        smallpicture = StringIO()
+                        p_picture.save(smallpicture, format)
+                        smallpicture.seek(0)
+                        self.smallpicture = smallpicture.read()
                         self._p_changed = 1
             else:
                 self.smallpicture = p_picture

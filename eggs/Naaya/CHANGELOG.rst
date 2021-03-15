@@ -1,5 +1,6 @@
 5.0.16 (unreleased)
 -------------------
+* resize news item small picture on upload to 210px width [dumitval]
 
 5.0.15 (2021-02-17)
 -------------------
