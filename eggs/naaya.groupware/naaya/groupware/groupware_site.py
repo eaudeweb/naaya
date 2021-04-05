@@ -539,6 +539,13 @@ class GroupwareSite(NySite):
                 location_obj = self.unrestrictedTraverse(o.path, None)
                 return _inside_meeting(location_obj)
 
+    security.declarePublic('network_name')
+
+    @property
+    def network_name(self):
+        """ """
+        return NETWORK_NAME
+
     request_ig_access_emailpt = EmailPageTemplateFile(
         'zpt/emailpt/request_ig_access.zpt', globals())
     request_rejected_emailpt = EmailPageTemplateFile(

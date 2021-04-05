@@ -51,12 +51,13 @@
 	<metal:block fill-slot="standard-body">
         <metal:block define-slot="standard-body">
             <body>
-            <tal:block define="pss modules/Products.PythonScripts.standard;
-                               proc_came_from python:request.get('URL', '');
-                               proc_query python:pss.url_quote(request.get('QUERY_STRING'));
-                               query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
-                               global came_from python:test(query, proc_came_from + query, proc_came_from);
-                               global network_name here/network_name" />
+            <tal:block tal:define="site_url here/getSitePath;
+                       pss modules/Products.PythonScripts.standard;
+                       proc_came_from python:request.get('URL', '');
+                                 proc_query python:pss.url_quote(request.get('QUERY_STRING'));
+                                 query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
+                                 global came_from python:test(query, proc_came_from + query, proc_came_from)">
+            </tal:block>
             <div id="outer_wrapper" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
                 <div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
                     <div id="toolribbon">
@@ -95,15 +96,8 @@
                         <div class="header-logo" tal:define="logo_url here/leftLogoUrl">
                             <a tal:attributes="href python:test(logo_url,None,'/')">
                                 <div id="portal-logo">
-                                    <img tal:condition="logo_url"
-                                         tal:attributes="src logo_url;
-                                                         alt here/site_title"
-                                         i18n:attributes="alt"/>
-                                    <img tal:condition="not:logo_url"
-                                         tal:attributes="src here/network_logo_url;
-                                                         alt string:${network_name} Portal;
-                                                         title string:${network_name} Portal"
-                                         i18n:attributes="alt" />
+                                    <img tal:condition="not:logo_url" src="/images/logo_ec.png" alt="Eionet Portal" title="Eionet Portal" />
+                                    <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                                 </div>
                             </a>
                                 <div class="logo-text">
@@ -119,14 +113,14 @@
                         <span tal:replace="structure here/languages_box"/>
                         <tal:block replace="structure here/dropdowns.txt|nothing"/>
                     </div>
-          <div id="breadcrumbtrail" on-error="python:here.log_page_error(error)" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
-            <span class="breadcrumbhead" i18n:translate="">You are here: </span>
-            <span tal:condition="python:network_name == 'EIONET'" class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
-            <span class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="python:here.get_gw_site_root().title_or_id()" /></span>
-          <tal:block repeat="crumb crumbs">
-              <span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
-            </tal:block>
-          </div>
+					<div id="breadcrumbtrail" on-error="python:here.log_page_error(error)" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
+						<span class="breadcrumbhead" i18n:translate="">You are here: </span>
+						
+						<span class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="python:here.get_gw_site_root().title_or_id()" /></span>
+						<tal:block repeat="crumb crumbs">
+							<span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
+						</tal:block>
+					</div>
                     <div id="left_port">
                         <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'left')">
                             <tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
@@ -143,10 +137,10 @@
                 </div>
                 <metal:block define-slot="footer">
                     <div id="footer">
-                        <p tal:content="here/network_address" />
+                        <p>Avenue Galilée 5/2, 1210 Bruxelles - Galileelaan 5/2, 1210 Brussel</p>
                         <a tal:attributes="href string:${site_url}/about/contact" i18n:translate="">Contact us</a>
                         <a tal:attributes="href string:${site_url}/about/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
-                        <a tal:condition="python: network_name == 'EIONET'" href="http://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
+                        
                     </div>
                 </metal:block>
             </div>

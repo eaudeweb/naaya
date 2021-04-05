@@ -1,5 +1,7 @@
 1.4.66 (unreleased)
 -------------------
+* update standard template to allow customisation of network logo,
+  address [dumitval]
 
 1.4.65 (2021-01-13)
 -------------------
