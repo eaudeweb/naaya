@@ -237,18 +237,18 @@ class MemberSearch(Implicit, Item):
         individual_ldap_users = sources_info[source.id]['user_roles']
         group_to_role_mapping = sources_info[source.id]['group_map']
         site_id = self.getSite().getId()
-        roles = []
+        roles = set()
         if userid in individual_ldap_users.keys():
             for role in individual_ldap_users[userid]:
                 if role[1].endswith(site_id):
-                    roles.extend(role[0])
+                    roles.update(role[0])
         for groupid in group_to_role_mapping.keys():
             if userid in group_userids_map[groupid]:
                 for role, role_location in group_to_role_mapping[groupid]:
                     if not role_location['is_site']:
                         continue
-                    roles.append(role)
-        return roles
+                    roles.add(role)
+        return list(roles)
 
     security.declarePrivate('get_group_userids_map')
 
