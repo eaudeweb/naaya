@@ -204,6 +204,9 @@ class MemberSearch(Implicit, Item):
         else:
             name = force_to_unicode(user['full_name'])
             email = user['email']
+        org = user.get('organisation', 'N/A')
+        if isinstance(org, list):
+            org = ','.join(org)
         return {
             'userid': user_id,
             'firstname': force_to_unicode(user['first_name']),
@@ -211,8 +214,7 @@ class MemberSearch(Implicit, Item):
             'name': name,
             'email': email,
             'access_level': self.get_user_access_level(user_roles),
-            'organisation': force_to_unicode(
-                user.get('organisation', 'N/A')),
+            'organisation': force_to_unicode(org),
             'postal_address': force_to_unicode(
                 user.get('postal_address', 'N/A')),
         }
