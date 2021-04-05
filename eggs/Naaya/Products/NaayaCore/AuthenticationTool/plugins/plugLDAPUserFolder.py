@@ -407,8 +407,8 @@ class plugLDAPUserFolder(PlugBase):
         result = delegate.search(
             root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
         if result['size'] > 0:
-            group_user_members = result['results'][result['size'] - 1][
-                'uniqueMember']
+            group_user_members = result['results'][result['size'] - 1].get(
+                'uniqueMember', [])
             group_users = []
             for member in group_user_members:
                 if member == '':

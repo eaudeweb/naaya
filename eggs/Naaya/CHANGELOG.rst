@@ -1,4 +1,8 @@
-5.0.16 (unreleased)
+5.0.17 (unreleased)
+-------------------
+* fix pick roles window crash if a role has no members [dumitval]
+
+5.0.16 (2021-03-15)
 -------------------
 * resize news item small picture on upload to 210px width [dumitval]
 
