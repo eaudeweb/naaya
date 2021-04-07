@@ -112,6 +112,9 @@ class GWApplication(SimpleItem):
                                              user_location='Users')
         layout_tool = portal.getLayoutTool()
         layout_tool.manageLayout('groupware', 'eionet_2020')
+        if portal.network_name != 'EIONET':
+            portlets_tool = portal.getPortletsTool()
+            portlets_tool.unassign_portlet('', 'left', 'portlet_places')
 
     def send_approved_email(self, admin_comments):
         data = {'igurl': self.created_url(), 'admin_comments': admin_comments}
