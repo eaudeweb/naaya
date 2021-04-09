@@ -1,4 +1,7 @@
-1.0.5 (unreleased)
+1.0.6 (unreleased)
+------------------
+
+1.0.5 (2021-04-09)
 ------------------
 * remove plain http from everywhere [dumitval]
 
