@@ -28,8 +28,6 @@ from Products.NaayaCore.managers.utils import make_id
 from interfaces import INyYoutube
 from permissions import PERMISSION_ADD_YOUTUBE
 
-from gdata.service import RequestError
-
 DEFAULT_SCHEMA = {
     'youtube_id': dict(
         sortorder=100, widget_type='String', label='YouTube ID', required=True,
@@ -64,8 +62,8 @@ config = {
     '_misc': {
         'NyYoutube.png': ImageFile('www/youtube.png', globals()),
         'NyYoutube_marked.png': ImageFile('www/youtube_marked.png', globals()),
-        },
-    }
+    },
+}
 
 
 def youtube_add_html(self, REQUEST=None, RESPONSE=None):
@@ -384,6 +382,7 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'youtube_edit')
 
+
 InitializeClass(NyYoutube)
 
 manage_addNyYoutube_html = PageTemplateFile('zpt/youtube_manage_add',
@@ -396,7 +395,7 @@ config.update({
         ('manage_addNyYoutube_html', manage_addNyYoutube_html),
         ('youtube_add_html', youtube_add_html),
         ('addNyYoutube', addNyYoutube),
-        ],
+    ],
     'add_method': addNyYoutube,
     'validation': issubclass(NyYoutube, NyValidation),
     '_class': NyYoutube,
@@ -410,7 +409,7 @@ def get_config():
 def checkExistingVideo(video_id):
     try:
         urllib2.urlopen('https://www.youtube.com/oembed?format=json&url='
-                        'http://www.youtube.com/watch?v=%s' % video_id)
+                        'https://www.youtube.com/watch?v=%s' % video_id)
     except urllib2.HTTPError:
         return False
     return True

@@ -1,5 +1,6 @@
 1.0.5 (unreleased)
 ------------------
+* remove plain http from everywhere [dumitval]
 
 1.0.4 (2015-10-19)
 ------------------
