@@ -720,6 +720,8 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
         value = getattr(zope_user, name, '')
         if value is None:
             return ''
+        if isinstance(value, list):
+            value = ','.join(value)
         return value.decode(ldap_encoding)
 
     fields = {
@@ -753,10 +755,8 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
 
         value = cached_record.get(name, u'')
         if isinstance(value, list):
-            for i in value:
-                assert isinstance(i, unicode), '%r not unicode' % i
-        else:
-            assert isinstance(value, unicode), '%r not unicode' % value
+            value = ','.join(value)
+        assert isinstance(value, unicode), '%r not unicode' % value
         return value
 
     fields = {
