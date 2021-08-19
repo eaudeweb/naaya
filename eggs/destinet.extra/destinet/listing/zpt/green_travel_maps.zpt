@@ -109,17 +109,53 @@
 
         $('#certificate').select2();
         if($('#certificate').val()){
-          $('#geo_query').val($('#certificate').val() + ' ' + 'certified gtm');
+          $('#geo_query').val($('#keyword').val() + ' ' + $('#certificate').val() + ' ' + 'certified gtm');
         }
         $('#certificate').change(function(){
           if($(this).val()){
-            $('#geo_query').val($(this).val() + ' ' + 'certified gtm');
+            $('#geo_query').val($(this).val() + ' ' + $('#keyword').val() + ' ' + 'certified gtm');
           } else {
-            $('#geo_query').val('certified gtm');
+            $('#geo_query').val($('#keyword').val() + ' ' + 'certified gtm');
           }
         });
 
+        $('#keyword').select2();
+        if($('#keyword').val()){
+          $('#geo_query').val($('#keyword').val() + ' ' + $('#certificate').val() + ' ' + 'certified gtm');
+        }
+        $('#keyword').change(function(){
+          if($(this).val()){
+            $('#geo_query').val($(this).val() + ' ' + $('#certificate').val() + ' ' + 'certified gtm');
+          } else {
+            $('#geo_query').val($('#certificate').val() + ' ' + 'certified gtm');
+          }
+          refreshMap();
+        });
+
         $('.map-refresh').change(function(){
+          refreshMap();
+        });
+
+        $('#geo_query').select2({
+          allowClear: true,
+          placeholder: 'Enter keyword',
+          tags: true,
+          createTag: function (params) {
+            return {
+              id: params.term,
+              text: params.term,
+              newOption: true
+            }
+          },
+          templateResult: function (data) {
+            var $result = $("<span />");
+
+            $result.text(data.text);
+
+            return $result;
+          }
+        });
+        $('#geo_query').change(function(){
           refreshMap();
         });
 
@@ -266,6 +302,19 @@
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
           <div class="first-row clearfix" id="filter_map">
             <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by Keyword</div>
+              <select name="keyword" id="keyword">
+                <option></option>
+                <option tal:content="item"
+                  tal:attributes="value item"
+                  tal:repeat="item python:
+                    [x.title for x in here.getSite().keywords_glossary.get_all_elements() if x.title.strip()] +
+                    [node.title for node in here.getSite().portal_portlets['user-groups'].get_tree_nodes()
+                        if x.title.strip()]" />
+              </select>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">
                 <select name="coverage" id="coverage" class="map-refresh"
@@ -289,7 +338,6 @@
                           tal:repeat="item certificate_keywords" />
               </select>
             </div>
-
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Zoom to location
@@ -304,6 +352,7 @@
             </div>
           </div>
           <div class="second-row clearfix">
+
             <div class="portalmap_portlet portalmap_filter" style="display: none;">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Filter by Keyword

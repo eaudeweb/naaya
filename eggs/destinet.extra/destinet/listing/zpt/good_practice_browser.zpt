@@ -102,6 +102,27 @@
           }
         });
 
+        $('#geo_query').select2({
+          allowClear: true,
+          placeholder: 'Enter keyword',
+          tags: true,
+          createTag: function (params) {
+            return {
+              id: params.term,
+              text: params.term,
+              newOption: true
+            }
+          },
+          templateResult: function (data) {
+            var $result = $("<span />");
+            $result.text(data.text);
+            return $result;
+          }
+        });
+        $('#geo_query').change(function(){
+          refreshMap();
+        });
+        
         $('.map-refresh').change(function(){
           refreshMap();
         });
@@ -263,6 +284,20 @@
               </div>
             </div>
 
+             <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by Keyword</div>
+              <select name="geo_query" id="geo_query">
+                <option></option>
+                <option tal:content="item"
+                  tal:attributes="value item;
+                                  selected python:test(geo_query, 'selected', None)"
+                  tal:repeat="item python:
+                    [x.title for x in here.getSite().keywords_glossary.get_all_elements() if x.title.strip()] +
+                    [node.title for node in here.getSite().portal_portlets['user-groups'].get_tree_nodes()
+                        if x.title.strip()] + [geo_query]" />
+              </select>
+            </div>
+ 
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
               <div class="country_list">

@@ -1,5 +1,7 @@
 1.3.45 - (unreleased)
 =======================
+* add keyword filtering to green travel maps and good practice browser
+  [dumitval]
 
 1.3.44 - (2020-06-10)
 =======================
