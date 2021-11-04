@@ -1,4 +1,7 @@
-5.0.17 (unreleased)
+5.0.18 (unreleased)
+-------------------
+
+5.0.17 (2021-11-04)
 -------------------
 * only abort processing geolocation queue if 'quota' in error message
   [dumitval]
