@@ -56,10 +56,13 @@ def geolocate_queue(site):
                     LOG.info('Geocoding error %s for %s' % (e.args[0],
                                                             address))
                     site.geolocation_queue.remove(site_path)
-                else:
+                elif 'quota' in e.args[0]:
                     LOG.info(e)
                     site.previous_geolocation = datetime.now()
                     site._p_changed = True
+                    break
+                else:
+                    LOG.info(e)
                     break
         else:
             LOG.info('object already geolocated %s' % site_path)

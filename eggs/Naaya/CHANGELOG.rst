@@ -1,5 +1,7 @@
 5.0.17 (unreleased)
 -------------------
+* only abort processing geolocation queue if 'quota' in error message
+  [dumitval]
 * fix pick roles window crash if a role has no members [dumitval]
 
 5.0.16 (2021-03-15)
