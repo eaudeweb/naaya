@@ -40,7 +40,11 @@ class GWApplications(Folder):
         self.mail_from = mail_from
 
     def get_user(self, uid):
-        users = self.acl_users['ldap-plugin'].acl_users.findUser('uid', uid)
+        try:
+            acl_users = self.acl_users['ldap-plugin'].acl_users
+        except AttributeError:
+            acl_users = self.acl_users
+        users = acl_users.findUser('uid', uid)
         for user in users:
             if user.get('uid') == uid:
                 return user

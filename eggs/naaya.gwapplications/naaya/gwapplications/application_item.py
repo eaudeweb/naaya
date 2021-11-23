@@ -104,7 +104,10 @@ class GWApplication(SimpleItem):
         portal.administrator_email = self.application_data.get('useremail', '')
         portal.mail_address_from = MAIL_ADDRESS_FROM
 
-        acl_path = self.acl_users['ldap-plugin'].acl_users.absolute_url(1)
+        try:
+            acl_path = self.acl_users['ldap-plugin'].acl_users.absolute_url(1)
+        except AttributeError:
+            acl_path = self.acl_users.absolute_url(1)
         ac_tool = portal.getAuthenticationTool()
         ac_tool.manageAddSource(acl_path, NETWORK_NAME)
         ac_tool.getSources()[0].addUserRoles(name=self.userid,

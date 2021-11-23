@@ -1,6 +1,7 @@
 1.1.11 (unreleased)
 ------------------
 * remove places portlet in installations other than EIONET [dumitval]
+* support regular acl_users (not pluggable auth) [dumitval]
 
 1.1.10 (2020-12-18)
 ------------------
