@@ -42,7 +42,7 @@ try:
     import email.charset as email_charset
     import email.header as email_header
     import email.generator as email_generator
-except ImportError, e:
+except ImportError as e:
     import email.Utils as email_utils
     import email.Charset as email_charset
     import email.Header as email_header
@@ -88,12 +88,10 @@ class EmailTool(Folder):
     icon = 'misc_/NaayaCore/EmailTool.gif'
 
     manage_options = (
-        Folder.manage_options[:1]
-        +
+        Folder.manage_options[:1] +
         (
             {'label': 'Settings', 'action': 'manage_settings_html'},
-        )
-        +
+        ) +
         Folder.manage_options[3:]
     )
 
@@ -184,7 +182,7 @@ class EmailTool(Folder):
             try:
                 uf = self.restrictedTraverse('/acl_users')
                 agent = agent_from_uf(uf, bind=True)
-            except Exception, msg:
+            except Exception as msg:
                 log.debug(
                     "Could not get LDAP agent to check email availability: %s",
                     msg
@@ -208,7 +206,7 @@ class EmailTool(Folder):
         try:
             site = self.getSite()
             site_path = '/'.join(site.getPhysicalPath())
-        except:
+        except Exception:
             site = None
             site_path = '[no site]'
 
@@ -264,10 +262,10 @@ class EmailTool(Folder):
                         'Not sending email from %r - no recipients', site_path)
                     return 0
                 else:
-                    send_by_delivery(delivery, p_from, p_to+p_cc, l_message)
+                    send_by_delivery(delivery, p_from, p_to + p_cc, l_message)
             return 1
 
-        except:
+        except Exception:
             mail_logger.error('Did not send email from site: %r to: %r '
                               'because an error occurred',
                               site_path, p_to)
@@ -295,7 +293,7 @@ class EmailTool(Folder):
         site = self.getSite()
         try:
             mail_server_port = int(mail_server_port)
-        except:
+        except Exception:
             mail_server_port = site.mail_server_port
         site.mail_server_name = mail_server_name
         site.mail_server_port = mail_server_port
@@ -309,6 +307,7 @@ class EmailTool(Folder):
     # zmi pages
     security.declareProtected(view_management_screens, 'manage_settings_html')
     manage_settings_html = PageTemplateFile('zpt/email_settings', globals())
+
 
 InitializeClass(EmailTool)
 
@@ -356,13 +355,13 @@ def send_by_delivery(delivery, p_from, p_to, message):
     if p_to:
         try:
             delivery.send(p_from, p_to, message.as_string())
-        except AssertionError, e:
+        except AssertionError as e:
             if (e.args and e.args[0] ==
                     'Message must be instance of email.message.Message'):
                 delivery.send(p_from, p_to, message)
             else:
                 raise
-        except ValueError, e:
+        except ValueError as e:
             if (e.args and e.args[0] ==
                     'Message must be email.message.Message'):
                 delivery.send(p_from, p_to, message)
@@ -633,7 +632,7 @@ class BestEffortSMTPMailer(SMTPMailer):
     def send(self, fromaddr, toaddrs, message):
         try:
             super(BestEffortSMTPMailer, self).send(fromaddr, toaddrs, message)
-        except:
+        except Exception:
             mail_logger.exception("Failed to send email message.")
             # TODO write message to the portal's `error_log`
 
