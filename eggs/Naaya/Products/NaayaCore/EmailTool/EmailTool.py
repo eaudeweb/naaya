@@ -160,7 +160,7 @@ class EmailTool(Folder):
         for e in emails:
             users = agent.search_user_by_email(e)
             for user in users:
-                if user['status'] == 'disabled':
+                if user.get('status') == 'disabled':
                     disabled.append(e)
 
         return list(set(emails) - set(disabled))

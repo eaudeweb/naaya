@@ -1,5 +1,7 @@
 5.0.18 (unreleased)
 -------------------
+* avoid crashing when user has no 'status' property (non Eionet installs)
+  [dumitval]
 
 5.0.17 (2021-11-04)
 -------------------
