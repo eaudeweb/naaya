@@ -56,8 +56,8 @@
                         <tr><th scope="row" class="scope-row">Postal address</th><td tal:content="options/user/postal_address"></td></tr>
 
                         <tr><th scope="row" class="scope-row">User ID</th><td tal:content="options/user/uid"></td></tr>
-                        <tr><th scope="row" class="scope-row">Created</th><td tal:content="options/user/createTimestamp"></td></tr>
-                        <tr><th scope="row" class="scope-row">Modified</th><td tal:content="options/user/modifyTimestamp"></td></tr>
+                        <tr><th scope="row" class="scope-row">Created</th><td tal:content="options/user/createTimestamp|string:Not available"></td></tr>
+                        <tr><th scope="row" class="scope-row">Modified</th><td tal:content="options/user/modifyTimestamp|string:Not available"></td></tr>
 
                     </table>
                     <h3>Member of Roles</h3>

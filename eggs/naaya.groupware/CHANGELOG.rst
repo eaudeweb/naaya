@@ -2,6 +2,7 @@
 -------------------
 * update standard template to allow customisation of network logo,
   address [dumitval]
+* support users not having create and modifyTimestamp [dumitval]
 
 1.4.65 (2021-01-13)
 -------------------
