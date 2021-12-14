@@ -1,4 +1,7 @@
-1.3.12 (unreleased)
+1.3.13 (unreleased)
+------------------
+
+1.3.12 (2021-12-14)
 ------------------
 * further css fixes [dumitval]
 
