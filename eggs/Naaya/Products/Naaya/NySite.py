@@ -1641,12 +1641,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.getPortalI18n().change_selected_language(old_lang)
         if REQUEST:
             referer = REQUEST.get('HTTP_REFERER', None)
-            if not referer:
-                # no referer, redirect to object in path or fallback to portal
-                redirect_to_object = self
-                if REQUEST.get('PARENTS', []):
-                    redirect_to_object = REQUEST['PARENTS'][0]
-                referer = redirect_to_object.absolute_url()
+            # since the changel language link on each site points to the
+            # site root, first try to see if the object in path was
+            # different than the site root (when linking an object and
+            # simultaneously wanting to change the language), else
+            # redirect to referer, with fallback to self
+            if REQUEST.get('PARENTS', []):
+                if REQUEST['PARENTS'][0] != self.getSite():
+                    referer = REQUEST['PARENTS'][0].absolute_url()
+                elif not referer:
+                    referer = self.absolute_url()
 
             REQUEST.RESPONSE.redirect(referer)
 
