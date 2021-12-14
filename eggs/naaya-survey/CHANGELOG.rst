@@ -1,5 +1,6 @@
 1.3.11 (unreleased)
 ------------------
+* relax css in survey edit mode [dumitval]
 
 1.3.10 (2020-04-13)
 ===================
