@@ -1,4 +1,7 @@
-5.0.19 (unreleased)
+5.0.20 (unreleased)
+-------------------
+
+5.0.19 (2021-12-14)
 -------------------
 * gl_changeLanguage try to redirect to linked path before fallback to
   referer [valipod]
