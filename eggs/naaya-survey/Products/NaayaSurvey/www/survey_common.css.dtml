@@ -62,10 +62,6 @@ div.widgetViewMode {
 	color: #468966;
 }
 
-.labelWidget {
-	font-size: 200%;
-}
-
 .widgetEditMode .tooltips{
 	color:#76797C;
 	font-size: 14px;
@@ -76,7 +72,6 @@ div.widgetViewMode {
 }
 
 .widgetEditMode input[type="radio"]{
-    position: relative;
     top: .4em;
 }
 .widgetEditMode input[type="checkbox"]{
