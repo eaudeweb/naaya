@@ -1,4 +1,7 @@
-1.3.11 (unreleased)
+1.3.12 (unreleased)
+------------------
+
+1.3.11 (2021-12-14)
 ------------------
 * relax css in survey edit mode [dumitval]
 
