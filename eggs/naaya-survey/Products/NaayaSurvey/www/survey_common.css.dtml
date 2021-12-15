@@ -52,6 +52,7 @@ div.widgetViewMode {
 .widgetEditMode th{
 	font-weight: bold;
 	text-align: left;
+  max-width: 82ex;
 }
 
 .widgetEditMode .widget-title {
@@ -331,7 +332,7 @@ margin-top: 0 !important;
 
 /* fixing bugs for ticket #9933; author Sonia */
 body .widgetEditMode {
-   max-width: 90%;
+   max-width: 7%;
    margin-bottom: 15px;
 }
 
