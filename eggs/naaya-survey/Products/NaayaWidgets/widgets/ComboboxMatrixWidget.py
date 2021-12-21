@@ -19,25 +19,29 @@
 
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
 from naaya.i18n.LocalPropertyManager import LocalProperty
-from Products.NaayaWidgets.Widget import manage_addWidget
+from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MatrixWidget import MatrixWidget
 
-def addComboboxMatrixWidget(container, id="", title="ComboboxMatrix Widget", REQUEST=None, **kwargs):
+
+def addComboboxMatrixWidget(container, id="", title="ComboboxMatrix Widget",
+                            REQUEST=None, **kwargs):
     """ Contructor for ComboboxMatrix widget"""
-    return manage_addWidget(ComboboxMatrixWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(ComboboxMatrixWidget, container, id, title,
+                            REQUEST, **kwargs)
+
 
 class ComboboxMatrixWidget(MatrixWidget):
     """ ComboboxMatrix Widget """
 
     meta_type = "Naaya Combobox Matrix Widget"
     meta_label = "Combobox matrix"
-    meta_description = "Group of multiple choice questions with multiple answers per row"
+    meta_description = ("Group of multiple choice questions with multiple "
+                        "answers per row")
     meta_sortorder = 502
     icon_filename = 'widgets/www/widget_comboboxmatrix.gif'
 
@@ -73,7 +77,8 @@ class ComboboxMatrixWidget(MatrixWidget):
             return
         unanswered = [x for x in value if not x]
         if unanswered:
-            raise WidgetError('Value required for "%s"' % self.title)
+            raise WidgetError(('Value required for "${title}"',
+                               {'title': self.title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
@@ -92,7 +97,9 @@ class ComboboxMatrixWidget(MatrixWidget):
             res.append('%s: %s' % (title, value))
         return '\n'.join(res)
 
+
 InitializeClass(ComboboxMatrixWidget)
+
 
 def register():
     return ComboboxMatrixWidget

@@ -18,7 +18,6 @@
 # Alin Voinea, Eau de Web
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
@@ -44,7 +43,7 @@ class FileWidget(Widget):
     _properties = Widget._properties + (
         {'id': 'size_max', 'type': 'int', 'mode': 'w',
          'label': 'Max allowed uploaded files size'},
-        )
+    )
 
     # Constructor
     _constructors = (addFileWidget,)
@@ -66,7 +65,8 @@ class FileWidget(Widget):
         # Required
         if not value:
             if self.required:
-                raise WidgetError('Value required for "%s"' % self.title)
+                raise WidgetError(('Value required for "${title}"',
+                                   {'title': self.title}))
             return
         # Max size
         if self.size_max == 0:
@@ -74,20 +74,22 @@ class FileWidget(Widget):
         read_size = len(value.read(self.size_max + 1))
         if self.required and not read_size:
             value.seek(0)
-            raise WidgetError('Value required for "%s". Empty file provided.' %
-                              self.title)
+            raise WidgetError((
+                'Value required for "${title}". Empty file provided.',
+                {'title': self.title}))
         if read_size > self.size_max:
             max_size_str = utils().utShowSize(self.size_max)
             value.seek(0)
-            raise WidgetError('The uploaded file for "%s" is too big, '
-                              'the maximum allowed size is %s bytes' %
-                              (self.title, max_size_str))
+            raise WidgetError(('The uploaded file for "${title}" is too big, '
+                               'the maximum allowed size is ${size} bytes',
+                               {'title': self.title, 'size': max_size_str}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
         if datamodel is None:
             return 'No file'
         return 'File uploaded'
+
 
 InitializeClass(FileWidget)
 

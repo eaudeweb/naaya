@@ -26,17 +26,19 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
-from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
-                                         PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, genRandomId
-from Products.NaayaCore.managers.utils import utils
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
+
 
 class WidgetError(Exception):
     """Widget error"""
     pass
 
-def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
+
+def manage_addWidget(klass, container, id="", title=None, REQUEST=None,
+                     **kwargs):
     """Add widget"""
     if not title:
         title = str(klass)
@@ -45,8 +47,8 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         id = 'w_' + slugify(title)
 
     idSuffix = ''
-    while (id+idSuffix in container.objectIds() or
-           getattr(container, id+idSuffix, None) is not None):
+    while (id + idSuffix in container.objectIds() or
+           getattr(container, id + idSuffix, None) is not None):
         idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
@@ -65,11 +67,12 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
 
+
 class Widget(Folder, LocalPropertyManager):
     """ Abstract class for widget
     """
     meta_type = 'Naaya Widget'
-    meta_sortorder = 100 # used to sort the list of available widget types
+    meta_sortorder = 100  # used to sort the list of available widget types
 
     security = ClassSecurityInfo()
 
@@ -77,17 +80,18 @@ class Widget(Folder, LocalPropertyManager):
     all_meta_types = ()
 
     # ZMI Tabs
-    manage_options=(
-        {'label':'Properties', 'action':'manage_propertiesForm',
-         'help':('OFSP','Properties.stx')},
-        {'label':'Contents', 'action':'manage_main',
-         'help':('OFSP','ObjectManager_Contents.stx')},
-        )
+    manage_options = (
+        {'label': 'Properties', 'action': 'manage_propertiesForm',
+         'help': ('OFSP', 'Properties.stx')},
+        {'label': 'Contents', 'action': 'manage_main',
+         'help': ('OFSP', 'ObjectManager_Contents.stx')},
+    )
 
     # Properties
-    _properties=(
-        {'id':'sortorder', 'type': 'int','mode':'w', 'label': 'Sort order'},
-        {'id':'required', 'type': 'boolean','mode':'w', 'label': 'Required widget'},
+    _properties = (
+        {'id': 'sortorder', 'type': 'int', 'mode': 'w', 'label': 'Sort order'},
+        {'id': 'required', 'type': 'boolean', 'mode': 'w',
+         'label': 'Required widget'},
     )
 
     sortorder = 100
@@ -98,7 +102,8 @@ class Widget(Folder, LocalPropertyManager):
     title = LocalProperty('title')
     tooltips = LocalProperty('tooltips')
 
-    common_render_meth = PageTemplateFile('widgets/zpt/widget_common', globals())
+    common_render_meth = PageTemplateFile('widgets/zpt/widget_common',
+                                          globals())
 
     def __init__(self, id, lang=None, **kwargs):
         Folder.__init__(self, id=id)
@@ -107,23 +112,24 @@ class Widget(Folder, LocalPropertyManager):
         self.saveProperties(lang=lang, **kwargs)
 
     security.declarePublic('getWidgetId')
+
     def getWidgetId(self):
         """ Returns widget id"""
         return self.getId()
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+
     def saveProperties(self, REQUEST=None, **kwargs):
         """ Update widget properties"""
         if REQUEST:
             kwargs.update(REQUEST.form)
         local_properties = self.getLocalProperties()
-        local_properties = filter(None,
-                                  [x.get('id', None) for x in local_properties]
-                              )
+        local_properties = filter(
+            None, [x.get('id', None) for x in local_properties])
         # Update local properties
         lang = kwargs.get('lang', self.get_selected_language())
         for local_property in local_properties:
-            if not kwargs.has_key(local_property):
+            if local_property not in kwargs:
                 continue
             prop_value = kwargs.get(local_property, '')
 
@@ -141,30 +147,32 @@ class Widget(Folder, LocalPropertyManager):
                        if key not in local_properties])
         self.manage_changeProperties(**kwargs)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     def _get_default_value(self, **kwargs):
         return '-'
-    #
     # To be implemented or ovewritten (if needed) by widget concrete classes.
-    #
+
     def isEmptyDatamodel(self, value):
         return value is None
 
     def validateDatamodel(self, value):
         """Validate datamodel"""
         if self.required and self.isEmptyDatamodel(value):
-            raise WidgetError('Value required for "%s"' % self.title)
+            raise WidgetError(('Value required for "${title}"',
+                               {'title': self.title}))
 
     def prepare(self, datamodel, **kwargs):
         """ Prepare value to be stored according with widget type"""
         pass
 
     security.declareProtected(view, 'render')
+
     def render(self, mode, datamodel=None, **kwargs):
         """Render widget according with given mode"""
-        
+
         from naaya.content.bfile.NyBlobFile import NyBlobFile
         if isinstance(datamodel, NyBlobFile):
             datamodel.aq_parent = datamodel.aq_parent.__of__(self.aq_parent)
@@ -174,6 +182,7 @@ class Widget(Folder, LocalPropertyManager):
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
     security.declareProtected(view, 'get_value')
+
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
         if datamodel is None:
@@ -187,27 +196,31 @@ class Widget(Folder, LocalPropertyManager):
     edit = PageTemplateFile('zpt/edit_widget', globals())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+
     def edit_html(self):
         """ """
-        if getattr(self, 'locked', '') and not self.checkPermission('View Management Screens'):
+        if getattr(self, 'locked', '') and not self.checkPermission(
+                'View Management Screens'):
             raise Unauthorized
         local_properties = self.getLocalProperties()
-        local_properties = filter(None,
-                                  [x.get('id', None) for x in local_properties]
-                              )
+        local_properties = filter(
+            None, [x.get('id', None) for x in local_properties])
         lang = self.get_selected_language()
         other_languages = [language for language in self.gl_get_languages()
-            if language != lang]
+                           if language != lang]
         if 'choices' in local_properties:
             choices = self.getLocalAttribute('choices', lang)
             for language in other_languages:
-                other_choices = len(self.getLocalAttribute('choices', language))
+                other_choices = len(self.getLocalAttribute('choices',
+                                                           language))
                 if (len(choices) != other_choices and other_choices):
                     errors = self.getSessionErrors() or []
-                    errors.append('This question has a different '
-                        'number of choices (%s) in %s. Reports cannot be generated '
-                        'until this is corrected.'
-                        % (other_choices, self.gl_get_language_name(language)))
+                    errors.append((
+                        'This question has a different number of choices '
+                        '(${number}) in ${language}. Reports cannot be '
+                        'generated until this is corrected.',
+                        {'number': other_choices,
+                         'language': self.gl_get_language_name(language)}))
                     self.setSessionErrorsTrans(errors)
         return self.edit()
 
@@ -218,7 +231,8 @@ class Widget(Folder, LocalPropertyManager):
     index_html = preview_html
 
     def getNonEmptyAttribute(self, attrName):
-        """ Return the value of the first non empty <attrName> local atribute."""
+        """ Return the value of the first non empty <attrName> local attr"""
         return self.getLocalAttribute(attrName, langFallback=True)
+
 
 InitializeClass(Widget)

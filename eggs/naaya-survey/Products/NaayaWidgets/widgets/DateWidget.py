@@ -19,7 +19,6 @@
 
 # Zope imports
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 
 # Product imports
@@ -27,9 +26,12 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 
 
-def addDateWidget(container, id="", title="Date Widget", REQUEST=None, **kwargs):
+def addDateWidget(container, id="", title="Date Widget", REQUEST=None,
+                  **kwargs):
     """ Contructor for Date widget"""
-    return manage_addWidget(DateWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(DateWidget, container, id, title, REQUEST,
+                            **kwargs)
+
 
 class DateWidget(Widget):
     """Date Widget"""
@@ -54,11 +56,14 @@ class DateWidget(Widget):
         try:
             day, month, year = [int(i) for i in value.strip().split('/')]
             value = DateTime(year, month, day)
-        except:
-            raise WidgetError('Invalid date string for "%s"' % self.title)
+        except Exception:
+            raise WidgetError(('Invalid date string for "${title}"',
+                               {'title': self.title}))
         return value
 
+
 InitializeClass(DateWidget)
+
 
 def register():
     return DateWidget

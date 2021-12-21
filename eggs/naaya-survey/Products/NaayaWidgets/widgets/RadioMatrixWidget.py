@@ -72,7 +72,8 @@ class RadioMatrixWidget(MatrixWidget):
             return
         unanswered = [x for x in value if x is None]
         if unanswered:
-            raise WidgetError('Value required for "%s"' % self.title)
+            raise WidgetError(('Value required for "${title}"',
+                               {'title': self.title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
@@ -86,6 +87,7 @@ class RadioMatrixWidget(MatrixWidget):
                 data = self.choices[answer]
             res.append(data)
         return res
+
 
 InitializeClass(RadioMatrixWidget)
 

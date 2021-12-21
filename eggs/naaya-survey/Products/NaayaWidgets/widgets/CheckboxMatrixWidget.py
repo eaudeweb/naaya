@@ -20,7 +20,6 @@
 
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
@@ -28,16 +27,21 @@ from Products.NaayaWidgets.Widget import manage_addWidget, WidgetError
 
 from MatrixWidget import MatrixWidget
 
-def addCheckboxMatrixWidget(container, id="", title="CheckboxMatrix Widget", REQUEST=None, **kwargs):
+
+def addCheckboxMatrixWidget(container, id="", title="CheckboxMatrix Widget",
+                            REQUEST=None, **kwargs):
     """ Contructor for CheckboxMatrix widget"""
-    return manage_addWidget(CheckboxMatrixWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(CheckboxMatrixWidget, container, id, title,
+                            REQUEST, **kwargs)
+
 
 class CheckboxMatrixWidget(MatrixWidget):
     """ CheckboxMatrix Widget """
 
     meta_type = "Naaya Checkbox Matrix Widget"
     meta_label = "Checkbox matrix"
-    meta_description = "Group of multiple choice questions with multiple answers per row"
+    meta_description = ("Group of multiple choice questions with multiple "
+                        "answers per row")
     meta_sortorder = 501
     icon_filename = 'widgets/www/widget_checkboxmatrix.gif'
 
@@ -48,7 +52,8 @@ class CheckboxMatrixWidget(MatrixWidget):
     render_meth = PageTemplateFile('zpt/widget_checkboxmatrix.zpt', globals())
 
     def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
-        return super(CheckboxMatrixWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
+        return super(CheckboxMatrixWidget, self).getChoices(
+            anyLangNonEmpty=anyLangNonEmpty)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
@@ -66,7 +71,8 @@ class CheckboxMatrixWidget(MatrixWidget):
             return
         unanswered = [x for x in value if not x]
         if unanswered:
-            raise WidgetError('Value required for "%s"' % self.title)
+            raise WidgetError(('Value required for "${title}"',
+                               {'title': self.title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
@@ -85,7 +91,9 @@ class CheckboxMatrixWidget(MatrixWidget):
             res.append('%s: %s' % (title, value))
         return '\n'.join(res)
 
+
 InitializeClass(CheckboxMatrixWidget)
+
 
 def register():
     return CheckboxMatrixWidget

@@ -19,8 +19,6 @@
 
 # Zope imports
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
-from DateTime import DateTime
 
 # Product imports
 from Products.NaayaCore.GeoMapTool.managers import geocoding
@@ -32,6 +30,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
 def addGeoWidget(container, id="", title="Geo Widget", REQUEST=None, **kwargs):
     """ Contructor for Geo widget"""
     return manage_addWidget(GeoWidget, container, id, title, REQUEST, **kwargs)
+
 
 class GeoWidget(Widget):
     """Geo Widget"""
@@ -71,7 +70,8 @@ class GeoWidget(Widget):
         try:
             return Geo(lat, lon, address)
         except ValueError:
-            raise WidgetError('Invalid geo values for "%s"' % self.title)
+            raise WidgetError(('Invalid geo values for "${title}"',
+                               {'title': self.title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
@@ -79,7 +79,9 @@ class GeoWidget(Widget):
             return self._get_default_value()
         return '%r' % (datamodel,)
 
+
 InitializeClass(GeoWidget)
+
 
 def register():
     return GeoWidget

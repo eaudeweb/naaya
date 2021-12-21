@@ -37,7 +37,8 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.core.zope2util import folder_manage_main_plus
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
-from permissions import *
+from permissions import PERMISSION_ADD_ANSWER, PERMISSION_EDIT_ANSWERS
+from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS
 from questionnaire_item import questionnaire_item
 
 from migrations import available_migrations, perform_migration
@@ -56,6 +57,7 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
     RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
                        % urllib.quote(filename))
+
 
 email_templates = {
     'email_to_owner': EmailPageTemplateFile(
@@ -89,7 +91,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         {'label': 'Updates', 'action': 'manage_update_combo_answers_html'},
         {'label': 'Security', 'action': 'manage_access',
          'help': ('OFSP', 'Security.stx')},
-        )
+    )
 
     security = ClassSecurityInfo()
 
@@ -234,11 +236,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                 value = widget.getDatamodel(kwargs)
                 if not draft:
                     widget.validateDatamodel(value)
-            except WidgetError, ex:
+            except WidgetError as ex:
                 if not REQUEST:
                     raise
                 value = None
-                errors.append(translate(ex.message))
+                errors.append(ex.message)
             datamodel[widget.getWidgetId()] = value
         if draft:
             if not self.canAddAnswerDraft():
@@ -340,9 +342,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                     answer.anonymous_editing_key = self.utGenRandomId(16)
                     self.sendNotificationToUnauthenticatedRespondent(answer)
         elif not draft:
-            if (self.notify_respondents == 'ALWAYS'
-                or (self.notify_respondents.startswith('LET_THEM_CHOOSE')
-                    and notify_respondent)):
+            if (self.notify_respondents == 'ALWAYS' or
+                (self.notify_respondents.startswith('LET_THEM_CHOOSE') and
+                    notify_respondent)):
                 self.sendNotificationToRespondent(answer)
         if self.notify_owner:
             self.sendNotificationToOwner(answer)
@@ -511,7 +513,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                                  mail_data['subject'])
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
                 'Notification sent from %s to %s' % (sender_email, recp_email))
-        except:
+        except Exception:
             # possible causes - the recipient doesn't have email
             #                   (e.g. regular Zope user)
             #                 - we can not send the email
@@ -696,7 +698,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             content_type = 'application/pdf'
             filename = '%s Export.pdf' % report.id
         else:
-            raise NotImplemented
+            raise NotImplementedError
 
         if REQUEST is not None:
             filesize = len(ret)
@@ -870,7 +872,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                 new_choices = []
                 old_choices = getattr(answer, question_id)
                 for choices_list in old_choices:
-                    new_choices.append([value+1 for value in choices_list])
+                    new_choices.append([value + 1 for value in choices_list])
                 setattr(answer, question_id, new_choices)
 
         return self._manage_update_combo_answers_html(success=True)
@@ -905,5 +907,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     customize_email_templates = PageTemplateFile('zpt/customize_emailpt',
                                                  globals())
     customize_email_templates.email_templates = email_templates
+
 
 InitializeClass(SurveyQuestionnaire)
