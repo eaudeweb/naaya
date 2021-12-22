@@ -70,8 +70,11 @@ class GeoWidget(Widget):
         try:
             return Geo(lat, lon, address)
         except ValueError:
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError(('Invalid geo values for "${title}"',
-                               {'title': self.title}))
+                               {'title': title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """

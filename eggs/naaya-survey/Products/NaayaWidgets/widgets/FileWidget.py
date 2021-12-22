@@ -65,8 +65,11 @@ class FileWidget(Widget):
         # Required
         if not value:
             if self.required:
+                title = self.title
+                if not isinstance(title, unicode):
+                    title = self.title.decode('utf-8')
                 raise WidgetError(('Value required for "${title}"',
-                                   {'title': self.title}))
+                                   {'title': title}))
             return
         # Max size
         if self.size_max == 0:
@@ -74,15 +77,21 @@ class FileWidget(Widget):
         read_size = len(value.read(self.size_max + 1))
         if self.required and not read_size:
             value.seek(0)
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError((
                 'Value required for "${title}". Empty file provided.',
-                {'title': self.title}))
+                {'title': title}))
         if read_size > self.size_max:
             max_size_str = utils().utShowSize(self.size_max)
             value.seek(0)
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError(('The uploaded file for "${title}" is too big, '
                                'the maximum allowed size is ${size} bytes',
-                               {'title': self.title, 'size': max_size_str}))
+                               {'title': title, 'size': max_size_str}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """

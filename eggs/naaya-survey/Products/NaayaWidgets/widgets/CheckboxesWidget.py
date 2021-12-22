@@ -67,8 +67,11 @@ class CheckboxesWidget(MultipleChoiceWidget):
     def validateDatamodel(self, value):
         """Validate datamodel"""
         if self.required and not value:
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
-                               {'title': self.title}))
+                               {'title': title}))
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """

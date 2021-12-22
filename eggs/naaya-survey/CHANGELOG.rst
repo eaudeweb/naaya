@@ -1,5 +1,6 @@
 1.3.15 (unreleased)
 ------------------
+* decode user data from error messages, if needed [valipod]
 
 1.3.14 (2021-12-21)
 ------------------

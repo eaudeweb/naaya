@@ -161,8 +161,11 @@ class Widget(Folder, LocalPropertyManager):
     def validateDatamodel(self, value):
         """Validate datamodel"""
         if self.required and self.isEmptyDatamodel(value):
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
-                               {'title': self.title}))
+                               {'title': title}))
 
     def prepare(self, datamodel, **kwargs):
         """ Prepare value to be stored according with widget type"""

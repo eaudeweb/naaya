@@ -57,8 +57,11 @@ class DateWidget(Widget):
             day, month, year = [int(i) for i in value.strip().split('/')]
             value = DateTime(year, month, day)
         except Exception:
+            title = self.title
+            if not isinstance(title, unicode):
+                title = self.title.decode('utf-8')
             raise WidgetError(('Invalid date string for "${title}"',
-                               {'title': self.title}))
+                               {'title': title}))
         return value
 
 
