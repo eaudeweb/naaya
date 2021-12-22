@@ -1,4 +1,7 @@
-1.3.15 (unreleased)
+1.3.16 (unreleased)
+------------------
+
+1.3.15 (2021-12-22)
 ------------------
 * decode user data from error messages, if needed [valipod]
 

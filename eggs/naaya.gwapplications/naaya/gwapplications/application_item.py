@@ -114,8 +114,11 @@ class GWApplication(SimpleItem):
                                              roles=['Administrator'],
                                              user_location='Users')
         layout_tool = portal.getLayoutTool()
-        layout_tool.manageLayout('groupware', 'eionet_2020')
-        if portal.network_name != 'EIONET':
+        if NETWORK_NAME in ['infoMAP', 'SINAnet']:
+            layout_tool.manageLayout('groupware', 'ispraforum')
+        else:
+            layout_tool.manageLayout('groupware', 'eionet_2020')
+        if NETWORK_NAME != 'EIONET':
             portlets_tool = portal.getPortletsTool()
             portlets_tool.unassign_portlet('', 'left', 'portlet_places')
 
