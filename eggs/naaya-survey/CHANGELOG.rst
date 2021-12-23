@@ -1,5 +1,11 @@
 1.3.16 (unreleased)
 ------------------
+* add explicit fieldset in main content with 'survey expired' message
+  [valipod]
+* hide 'Survey details' box if survey is expired and user is not admin
+  [valipod]
+* support zope root users sumitting answers
+  [valipod]
 
 1.3.15 (2021-12-22)
 ------------------

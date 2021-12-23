@@ -395,7 +395,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         auth_tool = self.getSite().getAuthenticationTool()
         respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
         respondent = auth_tool.get_user_with_userid(respondent_id)
-        respondent_name = auth_tool.getUserFullName(respondent)
+        if not respondent:
+            # probably a zope root user
+            respondent = self.getSite().aq_parent.acl_users.getUser(
+                respondent_id)
+        respondent_name = auth_tool.getUserFullName(
+            respondent) or respondent_id
 
         d = {}
         if respondent.getUserName().startswith('signup:'):
@@ -434,6 +439,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         auth_tool = self.getSite().getAuthenticationTool()
         respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
         respondent = auth_tool.get_user_with_userid(respondent_id)
+        if not respondent:
+            respondent = self.getSite().aq_parent.acl_users.getUser(
+                respondent_id)
 
         d = {}
         link_prefix = ''
@@ -446,7 +454,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             d['NAME'] = signup.name
             recp_email = signup.email
         else:
-            d['NAME'] = auth_tool.getUserFullName(respondent)
+            d['NAME'] = auth_tool.getUserFullName(respondent) or respondent_id
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = '%s&came_from=%s' % (link_prefix, answer.absolute_url())

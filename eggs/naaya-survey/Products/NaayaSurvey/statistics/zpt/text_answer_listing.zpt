@@ -1,7 +1,6 @@
 <div class="statistic"
 	tal:define="answers options/data;
-							question options/question;
-							auth_tool python:here.getSite().getAuthenticationTool();" >
+							question options/question;" >
 
 <p i18n:translate="" class="noprint">
 If you want to view the entire answer of the respondent, click on the user displayed in the first column.

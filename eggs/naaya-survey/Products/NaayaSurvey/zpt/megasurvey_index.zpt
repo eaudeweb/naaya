@@ -79,23 +79,24 @@
 
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
 
-<div class="survey-box" tal:define="days_left python:here.get_days_left()">
+<div class="survey-box" tal:define="days_left python:here.get_days_left()"
+  tal:condition="python:not here.expired() or here.checkPermissionPublishObjects()">
 	<h3 class="survey-box-title" i18n:translate="">
 		Survey details
 	</h3>
-	
+
 	<div class="survey-box-content">
 		<div class="survey-top-options">
 			<div class="top-buttons">
 				<a tal:condition="here/checkPermissionViewAnswers" href="view_answers_html" i18n:translate="" class="survey-button">View answers</a>
 				<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
-				
+
 				<div class="clear">
 					&nbsp;
 				</div>
 			</div>
-			
-			<div class="survey-misc-details">	
+
+			<div class="survey-misc-details">
 				<div class="survey-detail">
 					<span tal:condition="python:(days_left[0] == 1 and days_left[1] > 0) or here.allow_overtime">
 						<tal:block condition="python: days_left[1] == 1" i18n:translate="">
@@ -129,7 +130,7 @@
 					</span>
 					<span tal:condition="here/expired" i18n:translate="" class="survey-important-detail">Survey's deadline has been reached.</span>
 				</div>
-				
+
 				<tal:block tal:define="my_answers python: here.getMyAnswer(True)" condition="python: my_answers and here.allow_multiple_answers">
 					<div class="survey-detail">
 						<h4 i18n:translate="">
@@ -142,7 +143,7 @@
 						</ul>
 					</div>
 				</tal:block>
-				
+
 				<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts">
 					<div class="survey-detail">
 						<h4 i18n:translate="">Your drafts:</h4>
@@ -153,10 +154,10 @@
 						</ul>
 					</div>
 				</tal:block>
-				
+
 				<div class="survey-detail survey-tips" tal:condition="python: not here.expired() or here.checkPermissionPublishObjects()">
 					<h3 class="survey-tips-title" i18n:translate="">Tips:</h3>
-					
+
 					<div class="survey-tips-content">
 						<p tal:condition="python: editing_draft">
 							<strong i18n:translate="">You are working on a draft version of the answer</strong>
@@ -210,7 +211,18 @@
 	</div>
 </div>
 
-
+<div class="message-error" tal:condition="python: here.expired() and not here.checkPermissionPublishObjects()">
+  <fieldset style="width:70%">
+		<legend i18n:translate="">Warning</legend>
+		<span i18n:translate="">The survey deadline has been reached.</span>
+  </fieldset>
+</div>
+<div class="message-error" tal:condition="python: here.expired() and here.checkPermissionPublishObjects()">
+  <fieldset style="width:70%">
+		<legend i18n:translate="">Warning</legend>
+		<span i18n:translate="">The survey deadline has been reached. Only administrators can see the questions and add answers.</span>
+  </fieldset>
+</div>
 <div class="survey-content"
     tal:define="nonEmptyDescription python: test(here.description, here.description,
                         here.getNonEmptyAttribute('description'));"
