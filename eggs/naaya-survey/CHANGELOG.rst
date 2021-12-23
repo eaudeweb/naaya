@@ -1,4 +1,7 @@
-1.3.16 (unreleased)
+1.3.17 (unreleased)
+------------------
+
+1.3.16 (2021-12-23)
 ------------------
 * add explicit fieldset in main content with 'survey expired' message
   [valipod]
