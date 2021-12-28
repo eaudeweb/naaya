@@ -1,5 +1,9 @@
-1.3.45 - (unreleased)
+1.3.46 - (unreleased)
 =======================
+
+1.3.45 - (2021-12-28)
+=======================
+* fetch etgg application form expiration status [valipod]
 * add keyword filtering to green travel maps and good practice browser
   [dumitval]
 
