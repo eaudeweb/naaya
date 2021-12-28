@@ -1,0 +1,13 @@
+<configure xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+    <naaya:simpleView
+        for="*"
+        name="etgg2030_application_expired"
+        handler=".etgg2030.application_expired"
+        permission="zope.Public" />
+
+</configure>
