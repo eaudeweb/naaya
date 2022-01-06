@@ -166,7 +166,6 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     def index_html(self):
         """ """
-        import ipdb;ipdb.set_trace()
         if (not self.checkPermissionSkipCaptcha() and
                 not self.recaptcha_is_present()):
             raise ValueError("Invalid recaptcha keys")
