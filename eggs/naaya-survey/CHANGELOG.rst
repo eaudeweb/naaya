@@ -1,5 +1,6 @@
 1.3.17 (unreleased)
 ------------------
+* add possibility to deny editing own answers [dumitval]
 
 1.3.16 (2021-12-23)
 ------------------

@@ -166,9 +166,16 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     def index_html(self):
         """ """
+        import ipdb;ipdb.set_trace()
         if (not self.checkPermissionSkipCaptcha() and
                 not self.recaptcha_is_present()):
             raise ValueError("Invalid recaptcha keys")
+        allow_own_answer_edit = getattr(self, 'allow_own_answer_edit', True)
+        own_answer = self.getMyAnswer()
+        if own_answer and not (allow_own_answer_edit or
+                               self.allow_multiple_answers):
+            return self.REQUEST.RESPONSE.redirect(
+                '%s/%s' % (self.absolute_url(), own_answer.getId()))
         return self._index_html()
 
     _index_html = NaayaPageTemplateFile('zpt/megasurvey_index', globals(),

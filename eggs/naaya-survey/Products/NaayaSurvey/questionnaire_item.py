@@ -26,6 +26,7 @@ class questionnaire_item(Implicit, NyProperties):
                         releasedate=DateTime(), expirationdate=DateTime(),
                         notify_owner=True,
                         notify_respondents='LET_THEM_CHOOSE_YES',
+                        allow_own_answer_edit=True,
                         lang=None, **kwargs):
         """
         Save item properties.
@@ -40,6 +41,7 @@ class questionnaire_item(Implicit, NyProperties):
         self.releasedate = releasedate
         self.expirationdate = expirationdate
         self.notify_owner = notify_owner
+        self.allow_own_answer_edit = allow_own_answer_edit
         self.notify_respondents = notify_respondents
         self.allow_overtime = int(kwargs.get('allow_overtime', '0'))
         self.allow_multiple_answers = int(kwargs.get('allow_multiple_answers',

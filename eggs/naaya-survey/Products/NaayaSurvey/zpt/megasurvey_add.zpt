@@ -129,6 +129,17 @@ function fSet(ctrl, value)
 			<option value="1" i18n:translate="">Yes</option>
 		</select>
 	</div>
+	<!-- Allow users to edit own answer -->
+	<div class="field">
+		<label for="allow_own_answer_edit" i18n:translate="">
+			Authenticated users can edit own answer
+			(makes sens only if multiple answers are not allowed)
+		</label>
+		<select id="allow_own_answer_edit" name="allow_own_answer_edit:boolean">
+			<option value="False" i18n:translate="">No</option>
+			<option value="True" i18n:translate="">Yes</option>
+		</select>
+	</div>
 	<!-- Allow drafts -->
 	<div class="field">
 		<label for="allow_drafts" i18n:translate="">
