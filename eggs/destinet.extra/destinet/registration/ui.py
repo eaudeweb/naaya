@@ -77,8 +77,12 @@ def process_create_account(context, request):
             (request.form.get('firstname'), request.form.get('lastname')))
         transaction.commit()
         CookieCrumbler().modifyRequest(request, request.RESPONSE)
-        redirect = request.RESPONSE.redirect(
-            context.absolute_url() + '/login_html')
+        came_from = request.SESSION.get('came_from')
+        if came_from:
+            redirect = request.RESPONSE.redirect(came_from)
+        else:
+            redirect = request.RESPONSE.redirect(
+                context.absolute_url() + '/login_html')
         if redirect != referer:
             # redirects to referer only when something is wrong in
             # the register form

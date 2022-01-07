@@ -1,5 +1,6 @@
 1.3.47 - (unreleased)
 =======================
+* enable customise redirect after user creation [dumitval]
 
 1.3.46 - (2021-12-28)
 =======================
