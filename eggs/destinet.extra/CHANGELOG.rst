@@ -1,4 +1,7 @@
-1.3.47 - (unreleased)
+1.3.48 - (unreleased)
+=======================
+
+1.3.47 - (2022-01-07)
 =======================
 * enable customise redirect after user creation [dumitval]
 
