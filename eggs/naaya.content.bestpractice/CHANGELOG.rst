@@ -1,4 +1,7 @@
-0.0.9 (unreleased)
+0.0.10 (unreleased)
+------------------
+
+0.0.9 (2022-01-21)
 ------------------
 * rename object to Good Practice Destination [dumitval]
 
