@@ -110,14 +110,14 @@
 <tal:block condition="here/twitter|nothing"
            content="structure python: here.prop_display_tr('twitter')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-<tr tal:define="sel_list python:here.portal_schemas.NyBestPracticeBusiness['landscape_type-property'].get_selection_list()" tal:condition="here/landscape_type|nothing">
+<tr tal:define="sel_list python:here.portal_schemas.NyGoodPracticeBusiness['landscape_type-property'].get_selection_list()" tal:condition="here/landscape_type|nothing">
   <th i18n:translate="">Landscape type</th>
     <td i18n:translate=""
       tal:content="python:[x.title for x in sel_list if x.id == here.landscape_type][0]"
       tal:on-error="python:', '.join([x.title for x in sel_list if x.id in here.landscape_type.replace('[u\'', '').replace('[\'', '').replace('\', u\'', ',').replace('\', \'', ',').replace('\']', '').split(',')])" />
 </tr>
 
-<tr tal:define="sel_list python:here.portal_schemas.NyBestPracticeBusiness['topics-property'].get_selection_list()">
+<tr tal:define="sel_list python:here.portal_schemas.NyGoodPracticeBusiness['topics-property'].get_selection_list()">
     <th i18n:translate="">Topics</th>
     <td>
       <ul>
@@ -127,7 +127,7 @@
     </td>
 </tr>
 
-<tr tal:define="sel_list python:here.portal_schemas.NyBestPracticeBusiness['gstc_industry-property'].get_selection_list()"
+<tr tal:define="sel_list python:here.portal_schemas.NyGoodPracticeBusiness['gstc_industry-property'].get_selection_list()"
   tal:condition="here/gstc_industry|nothing" >
     <th i18n:translate="">GSTC Criteria for Industry</th>
     <td>
