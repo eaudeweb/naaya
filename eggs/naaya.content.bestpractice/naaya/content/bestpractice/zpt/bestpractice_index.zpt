@@ -129,7 +129,7 @@
 
 <tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['gstc_criteria-property'].get_selection_list()"
   tal:condition="here/gstc_criteria|nothing" >
-    <th i18n:translate="">GSTC Criteria</th>
+    <th i18n:translate="">GSTC Criteria for Destinations</th>
     <td>
       <ul>
         <li tal:repeat="criteria here/gstc_criteria" i18n:translate=""

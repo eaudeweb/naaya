@@ -1,7 +1,8 @@
-"""Naaya Best Practice"""
+"""Naaya Good Practice Destination"""
 import os
 import sys
 import transaction
+from copy import deepcopy
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -17,11 +18,10 @@ from interfaces import INyBestPractice
 
 from Products.NaayaBase.NyContentType import (
     NyContentData, NY_CONTENT_BASE_SCHEMA)
-from naaya.content.base.constants import *
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -74,8 +74,9 @@ DEFAULT_SCHEMA = {
     'twitter': dict(
         sortorder=250, widget_type='String', label='Twitter profile'),
     'gstc_criteria': dict(
-        sortorder=310, widget_type='SelectMultiple', label='GSTC criteria',
-        list_id='gstc_criteria', required=True),
+        sortorder=310, widget_type='SelectMultiple',
+        label='GSTC Criteria for Destinations', list_id='gstc_criteria',
+        required=True),
     'landscape_type': dict(
         sortorder=320, widget_type='Select', label='Landscape type',
         list_id='landscape_type', required=True),
@@ -87,7 +88,7 @@ DEFAULT_SCHEMA = {
         label='Market place category',
         list_id='certificate_categories', required=True),
 }
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['coverage'].update(glossary_id='countries_glossary',
                                   label='Country',
                                   required=True, localized=False)
@@ -135,7 +136,7 @@ config = {
     'meta_type': 'Naaya Best Practice',
     'on_install': bestpractice_on_install,
     'on_uninstall': bestpractice_on_uninstall,
-    'label': 'Best practice',
+    'label': 'Good Practice Destination',
     'permission': PERMISSION_ADD_BESTPRACTICE,
     'forms': ['bestpractice_add', 'bestpractice_edit', 'bestpractice_index',
               'bestpractice_quickview_zipfile'],
@@ -295,6 +296,7 @@ class NyBestPractice(NyBFile):
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bestpractice_download)
+
 
 InitializeClass(NyBestPractice)
 

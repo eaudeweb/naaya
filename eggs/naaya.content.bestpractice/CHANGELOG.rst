@@ -1,3 +1,7 @@
+0.0.9 (unreleased)
+------------------
+* rename object to Good Practice Destination [dumitval]
+
 0.0.8 (2018-09-28)
 ------------------
 * object index improvements (handle missing properties) [dumitval]
