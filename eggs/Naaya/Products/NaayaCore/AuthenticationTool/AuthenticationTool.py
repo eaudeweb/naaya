@@ -1740,6 +1740,27 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return ret
 
+    security.declareProtected(manage_users, 'reset_portal_permissions')
+
+    def reset_portal_permissions(self):
+        """
+        Deletes all permissions assigned to local or source users or groups
+        """
+        for user, roles in self.getUsersWithRoles().items():
+            for role, location in roles:
+                self.admin_revokerole(user=user, location=location,
+                                      REQUEST=self.REQUEST)
+        for source in self.getSources():
+            for mapping in source.getSortedUserRoles():
+                for location in mapping[3]:
+                    source.revokeUserRoles(user=mapping[0], location=location[1],
+                                           REQUEST=self.REQUEST)
+            for group_id, roles in source.get_groups_roles_map().items():
+                for role in roles:
+                    source.revoke_group_role(
+                        group_id=group_id, role=role[0],
+                        location=role[1]['path'], REQUEST=self.REQUEST)
+
     security.declareProtected(manage_users, 'get_send_emails_log_items')
 
     def get_send_emails_log_items(self):

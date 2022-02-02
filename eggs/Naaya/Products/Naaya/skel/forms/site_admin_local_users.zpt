@@ -19,6 +19,10 @@
             tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
             <span i18n:translate="">Bulk download</span>
           </a>
+          <a class="revoke_roles"
+            tal:attributes="href string:${user_tool/absolute_url}/reset_portal_permissions">
+            <span i18n:translate="">Reset portal role assigments</span>
+          </a>
         </span>
       </div>
     </metal:block>
