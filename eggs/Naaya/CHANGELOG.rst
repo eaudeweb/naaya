@@ -1,4 +1,7 @@
-5.0.20 (unreleased)
+5.0.21 (unreleased)
+-------------------
+
+5.0.20 (2022-02-02)
 -------------------
 * add possibility to remove all user roles per portal
   [valipod refs #145085]
