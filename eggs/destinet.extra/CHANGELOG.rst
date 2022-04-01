@@ -1,4 +1,7 @@
-1.3.48 - (unreleased)
+1.3.49 - (unreleased)
+=======================
+
+1.3.48 - (2022-04-01)
 =======================
 * add GSTC for industry to Good Practice Browser [dumitval]
 
