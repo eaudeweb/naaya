@@ -370,6 +370,15 @@ function destinet_get_form_data() {
         form_data[form_data.length] = '&gstc_criteria%3Alist=' + $('#gstc_criteria').val();
     }
   }
+  if ([undefined, '', null].indexOf($('#gstc_industry').val()) == -1){
+    if ($('#gstc_industry').val() && $('#gstc_industry').val().constructor == Array){
+      $.each($('#gstc_industry').val(), function(index, value){
+        form_data[form_data.length] = '&gstc_industry%3Alist=' + value;
+      });
+    } else {
+        form_data[form_data.length] = '&gstc_industry%3Alist=' + $('#gstc_industry').val();
+    }
+  }
   if ([undefined, '', null].indexOf($('#sustainability').val()) == -1){
     if ($('#sustainability').val() && $('#sustainability').val().constructor == Array){
       $.each($('#sustainability').val(), function(index, value){
@@ -639,3 +648,4 @@ function onclickpoint(lat, lon, point_id, point_tooltip) {
 
 // can be overwritten to get notifications for the mouse over events
 function onmouseoverpoint(lat, lon, point_id, point_tooltip) {}
+

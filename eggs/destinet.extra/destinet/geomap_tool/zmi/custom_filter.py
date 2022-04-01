@@ -7,4 +7,8 @@ for filter in filters:
         filter['credibility'] = kwargs.get('credibility')
     if kwargs.get('certificate_services'):
         filter['certificate_services'] = kwargs.get('certificate_services')
+    if kwargs.get('gstc_criteria'):
+        filter['gstc_criteria'] = kwargs.get('gstc_criteria')
+    if kwargs.get('gstc_industry'):
+        filter['gstc_industry'] = kwargs.get('gstc_industry')
 return filters

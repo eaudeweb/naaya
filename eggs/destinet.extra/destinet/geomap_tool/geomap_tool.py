@@ -129,7 +129,7 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
         try:
             rss.append(entry.toprettyxml())
         except UnicodeDecodeError:
-            print entry
+            print(entry)
     if REQUEST:
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
         REQUEST.RESPONSE.setHeader('Content-Disposition',
@@ -189,6 +189,7 @@ def get_map_results(self, REQUEST=None, options={}, **kw):
         geo_types = geo_types.split(',')
     category = kw.get('category', '')
     gstc_criteria = kw.get('gstc_criteria', '')
+    gstc_industry = kw.get('gstc_industry', '')
     sustainability = kw.get('sustainability', '')
     credibility = kw.get('credibility', '')
     certificate_services = kw.get('certificate_services', [])
@@ -246,6 +247,7 @@ def get_map_results(self, REQUEST=None, options={}, **kw):
         landscape_type=landscape_type, topics=topics,
         first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
         country=country, coverage=coverage, gstc_criteria=gstc_criteria,
+        gstc_industry=gstc_industry,
     )
 
     try:

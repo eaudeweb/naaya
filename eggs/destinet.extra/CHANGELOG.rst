@@ -1,5 +1,6 @@
 1.3.48 - (unreleased)
 =======================
+* add GSTC for industry to Good Practice Browser [dumitval]
 
 1.3.47 - (2022-01-07)
 =======================
