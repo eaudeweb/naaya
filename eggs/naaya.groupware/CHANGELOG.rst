@@ -1,4 +1,7 @@
-1.4.68 (unreleased)
+1.4.69 (unreleased)
+-------------------
+
+1.4.68 (2022-04-08)
 -------------------
 * remove ispraforum mention, it will be added when ready [dumitval]
 
