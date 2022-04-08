@@ -1,5 +1,6 @@
 1.4.67 (unreleased)
 -------------------
+* replace NRC by Eionet [dumitval]
 
 1.4.66 (2021-12-02)
 -------------------
