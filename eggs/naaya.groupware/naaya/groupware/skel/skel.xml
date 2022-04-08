@@ -96,24 +96,15 @@
             <link id="free_search" title="Free text search" description="" url="/search_html" relative="1" permission="" order="40"/>
             <link id="contact" title="Contact us" description="" url="/about/contact" relative="1" permission="" order="70"/>
         </linkslist>
-
-
-
-
-                <linkslist id="menunav_links" title="Top menu navigation" portlet="1">
-                        <link id="about" title="About" description="" url="/about" relative="1" permission="" order="10"/>
-                        <link id="library" title="Library" description="" url="/library" relative="1" permission="" order="20"/>
-                        <link id="member_search" title="Member search" description="" url="/member_search" relative="1" permission="" order="30"/>
-                        <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
-                        <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Naaya - Publish content" order="50"/>
-                        <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
-                        <link id="help" title="Help" description="" url="/help" relative="1" permission="" order="70"/>
-                </linkslist>
-
-
-
-
-
+        <linkslist id="menunav_links_ispra" title="Top menu navigation" portlet="1">
+                <link id="about" title="About" description="" url="/about" relative="1" permission="" order="10"/>
+                <link id="library" title="Library" description="" url="/library" relative="1" permission="" order="20"/>
+                <link id="member_search" title="Member search" description="" url="/member_search" relative="1" permission="" order="30"/>
+                <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
+                <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Naaya - Publish content" order="50"/>
+                <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
+                <link id="help" title="Help" description="" url="/help" relative="1" permission="" order="70"/>
+        </linkslist>
     </portlets>
     <pluggablecontenttypes>
         <pluggablecontenttype meta_type="Naaya Meeting" action="1"/>
