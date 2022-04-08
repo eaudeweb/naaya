@@ -1,5 +1,6 @@
 1.4.68 (unreleased)
 -------------------
+* remove ispraforum mention, it will be added when ready [dumitval]
 
 1.4.67 (2022-04-08)
 -------------------
