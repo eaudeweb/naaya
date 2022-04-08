@@ -1,5 +1,6 @@
 1.1.12 (unreleased)
 ------------------
+remove ispraforum mention, it will be added when ready [dumitval]
 
 1.1.11 (2021-11-23)
 ------------------
