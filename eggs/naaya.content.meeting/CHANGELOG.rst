@@ -1,4 +1,7 @@
-1.3.07 (unreleased)
+1.3.08 (unreleased)
+-------------------
+
+1.3.07 (2022-04-08)
 -------------------
 * replace NRC by Eionet (meeting, webinar) [dumitval]
 
