@@ -1,4 +1,7 @@
-1.4.67 (unreleased)
+1.4.68 (unreleased)
+-------------------
+
+1.4.67 (2022-04-08)
 -------------------
 * replace NRC by Eionet [dumitval]
 
