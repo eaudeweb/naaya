@@ -1,4 +1,5 @@
-EIONET_MEETINGS = ['NRC meeting', 'NRC webinar', 'NFP meeting', 'NFP webinar']
+EIONET_MEETINGS = ['Eionet meeting', 'Eionet webinar',
+                   'NFP meeting', 'NFP webinar']
 EIONET_SURVEYS = {
     'NFP meeting': {
         'id': 'eionet-survey-nfp-meeting',
@@ -261,9 +262,9 @@ EIONET_SURVEYS = {
              'required': True},
         ]
     },
-    'NRC meeting': {
+    'Eionet meeting': {
         'id': 'eionet-survey',
-        'title': 'Eionet NRC meeting evaluation survey',
+        'title': 'Eionet meeting evaluation survey',
         'description': ('Thank you for completing the evaluation form.'
                         'Your opinions are valuable for our efforts to '
                         'strengthen EEA/Eionet cooperation.'),
@@ -385,9 +386,9 @@ EIONET_SURVEYS = {
              'sortorder': 16}
         ]
     },
-    'NRC webinar': {
+    'Eionet webinar': {
         'id': 'eionet-survey-nrc-webinar',
-        'title': 'Eionet NRC webinar evaluation survey',
+        'title': 'Eionet webinar evaluation survey',
         'description': ('Thank you for completing this form. Your comments are'
                         ' useful for strengthening EEA/Eionet cooperation. '
                         'This evaluation form covers the NRC/Eionet webinar in'

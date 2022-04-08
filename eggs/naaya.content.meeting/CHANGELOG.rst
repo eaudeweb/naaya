@@ -1,5 +1,6 @@
 1.3.07 (unreleased)
 -------------------
+* replace NRC by Eionet (meeting, webinar) [dumitval]
 
 1.3.06 (2019-11-26)
 -------------------
