@@ -1,5 +1,8 @@
 5.0.21 (unreleased)
 -------------------
+* remove invalid control 0081 character from objects' addresses
+  before sending that to the Google Geolocation api
+  [valipod]
 
 5.0.20 (2022-02-02)
 -------------------
