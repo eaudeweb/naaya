@@ -1,4 +1,7 @@
-5.0.21 (unreleased)
+5.0.22 (unreleased)
+-------------------
+
+5.0.21 (2022-04-26)
 -------------------
 * remove invalid control 0081 character from objects' addresses
   before sending that to the Google Geolocation api
