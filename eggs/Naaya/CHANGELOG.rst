@@ -1,4 +1,7 @@
-5.0.22 (unreleased)
+5.0.23 (unreleased)
+-------------------
+
+5.0.22 (2022-05-16)
 -------------------
 * update is_valid_email with longer TLDs
   [valipod #149839]
