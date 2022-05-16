@@ -73,12 +73,12 @@ def icon_for_content_type(content_type, approved=True):
     title, image_id = content_type_to_icons.get(content_type, ["BINARY",
                                                                "file"])
     if approved:
-        image_filename = image_id+'.png'
+        image_filename = image_id + '.png'
     else:
         title = 'This %s file is not approved' % title
-        image_filename = image_id+'_marked.png'
+        image_filename = image_id + '_marked.png'
     return {'title': title,
-            'url': '++resource++naaya.mime_icons/'+image_filename}
+            'url': '++resource++naaya.mime_icons/' + image_filename}
 
 
 def get_noaq_attr(obj, attr, default):
@@ -110,6 +110,7 @@ def force_to_unicode(s):
             return s.decode('latin-1')
     else:
         raise ValueError('expected `str` or `unicode`')
+
 
 _cooldown_map = {}
 
@@ -180,14 +181,15 @@ def pretty_size(n_bytes):
     if n_bytes < 1024:
         return '%d bytes' % n_bytes
     elif n_bytes < 1024**2:
-        return '%d KB' % (n_bytes/1024)
+        return '%d KB' % (n_bytes / 1024)
     elif n_bytes < 1024**3:
-        return '%d MB' % (n_bytes/1024**2)
+        return '%d MB' % (n_bytes / 1024**2)
     else:
-        return '%d GB' % (n_bytes/1024**3)
+        return '%d GB' % (n_bytes / 1024**3)
+
 
 VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@"
-                                 "(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",
+                                 "(?:[-a-z0-9]+\.)+[a-z]{2,24}(?:\s|$)",
                                  re.IGNORECASE)
 
 
@@ -256,6 +258,7 @@ def set_default_socket_timeout_to_1min():
     This should be called when starting zope.
     """
     socket.setdefaulttimeout(60)  # in seconds
+
 
 _illegal_unichrs = [
     (0x00, 0x08), (0x0B, 0x1F), (0x7F, 0x84), (0x86, 0x9F),
