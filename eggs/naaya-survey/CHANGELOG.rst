@@ -1,4 +1,7 @@
-1.3.17 (unreleased)
+1.3.18 (unreleased)
+------------------
+
+1.3.17 (2022-09-06)
 ------------------
 * fix getting details of signups (Naaya Meeting)
   [valipod refs #154063]
