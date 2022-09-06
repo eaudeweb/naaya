@@ -1,6 +1,8 @@
 1.3.17 (unreleased)
 ------------------
-* add possibility to deny editing own answers [dumitval]
+* fix getting details of signups (Naaya Meeting)
+  [valipod refs #154063]
+* add possibility to deny editing own answers [valipod]
 
 1.3.16 (2021-12-23)
 ------------------
