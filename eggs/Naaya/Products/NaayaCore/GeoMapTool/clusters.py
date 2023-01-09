@@ -56,8 +56,8 @@ def calc_centers(lat_min, lat_max, lon_min, lon_max, size_x,
 
     for p in points:
         (y, x) = get_tile(size_y, size_x, p.lat, p.lon)
-        assert tx_min <= x < tx_max
-        assert ty_min <= y < ty_max
+        assert tx_min <= x <= tx_max
+        assert ty_min <= y <= ty_max
         group_p = groups.setdefault( (y, x), [] )
         group_p.append(p)
 
