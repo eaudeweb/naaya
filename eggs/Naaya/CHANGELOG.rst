@@ -1,4 +1,7 @@
-5.0.23 (unreleased)
+5.0.24 (unreleased)
+-------------------
+
+5.0.23 (2023-01-09)
 -------------------
 * Fix issue in geomap with 180.0 longitude values
   [valipod]
