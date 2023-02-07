@@ -1,4 +1,7 @@
-5.0.24 (unreleased)
+5.0.25 (unreleased)
+-------------------
+
+5.0.24 (2023-02-07)
 -------------------
 * use id instead of title on zip exports, to avoid name collisions
   [valipod]
