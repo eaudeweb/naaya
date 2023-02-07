@@ -1,5 +1,6 @@
 """Adapters for content view and zip import/export"""
 
+import re
 from Products.Naaya.adapters import NyContentTypeViewAdapter
 from Products.NaayaCore.managers.zip_export_adapters import DefaultZipAdapter
 from naaya.core.utils import pretty_size, icon_for_content_type
@@ -7,6 +8,9 @@ from naaya.core.zope2util import DT2dt, ensure_tzinfo
 import os.path
 
 #from interfaces import INyBFile
+
+
+illegal_fs_char = re.compile(r'[%s]' % re.escape('?[]/=+<>:;",*^\\\0'))
 
 
 class BFileZipAdapter(DefaultZipAdapter):
@@ -18,6 +22,11 @@ class BFileZipAdapter(DefaultZipAdapter):
     @property
     def extension(self):
         return os.path.splitext(self.context.current_version.filename)[1]
+
+    @property
+    def base_filename(self):
+        base_name = self.context.getId()
+        return illegal_fs_char.sub('_', base_name).encode('utf-8')
 
 
 class GenericViewer(object):

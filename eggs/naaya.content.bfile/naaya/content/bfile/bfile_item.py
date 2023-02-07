@@ -290,7 +290,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             yield ver
 
         if language is None:
-            language = self.get_selected_language()
+            try:
+                language = self.get_selected_language()
+            except TypeError:
+                # We don't have REQUEST
+                language = 'en'
 
         if language in self.versions_store:
             for ver in self.versions_store[language]:
