@@ -1,5 +1,7 @@
 1.3.13 (unreleased)
 ------------------
+* add zip_export to console scripts
+  [valipod]
 
 1.3.12 (2020-12-14)
 ------------------

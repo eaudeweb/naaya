@@ -8,5 +8,6 @@ setup(name='edw.circaimport',
       include_package_data=True,
       zip_safe=False,
       entry_points={'console_scripts': ['circaimport = edw.circaimport:demo',
-                                        'tsv2csv = edw.circaimport:tsv2csv']},
+                                        'tsv2csv = edw.circaimport:tsv2csv',
+                                        'zip_export = edw.circaimport:do_export']},
       )
