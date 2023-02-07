@@ -1,5 +1,7 @@
 5.0.24 (unreleased)
 -------------------
+* use id instead of title on zip exports, to avoid name collisions
+  [valipod]
 
 5.0.23 (2023-01-09)
 -------------------
