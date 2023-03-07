@@ -1,0 +1,170 @@
+<span tal:replace="structure here/standard_html_header" />
+<style>
+.gsearch-container {
+  max-width: 550px;
+  margin: 0 auto;
+}
+.gs-webResult {
+  width: auto;
+}
+
+.gsearch-header {
+  text-align: center;
+}
+
+.gsearch-header h1 {
+  text-align: center!important;
+}
+.gsearch-form input[type="text"] {
+    margin: 0 auto;
+    width: 80%;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 1.8rem;
+    border: 1px solid #D0CFCE;
+    outline: none;
+}
+.gsearch-form input[type="submit"] {
+
+    background: white;
+    margin: 0 auto;
+    width: calc(20% - 3px);
+    height: 45px;
+    padding: 0 20px;
+    font-size: 1.5rem;
+    border: 1px solid #D0CFCE;
+    outline: none;
+    margin-left: -4px;
+}
+
+.gsearch-form {
+  display: flex;
+}
+
+/*radio stuff*/
+
+.radio {
+  display: inline-block;
+}
+
+.radio:first-of-type {
+  margin-right: 1rem;
+}
+
+.radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+.radio input[type="radio"] + .radio-label:before {
+  content: '';
+  background: #f4f4f4;
+  border-radius: 100%;
+  border: 1px solid #b4b4b4;
+  display: inline-block;
+  width: 1.4em;
+  height: 1.4em;
+  position: relative;
+  top: -0.2em;
+  margin-right: 5px;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: all 250ms ease;
+  transition: all 250ms ease;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+  background-color: #3197EE;
+  -webkit-box-shadow: inset 0 0 0 4px #f4f4f4;
+          box-shadow: inset 0 0 0 4px #f4f4f4;
+}
+.radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: #3197EE;
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+  -webkit-box-shadow: inset 0 0 0 4px #f4f4f4;
+          box-shadow: inset 0 0 0 4px #f4f4f4;
+  border-color: #b4b4b4;
+  background: #b4b4b4;
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}
+#google_search_in {
+  margin-bottom: 2rem;
+}
+
+.radio-label {
+      vertical-align: middle;
+    line-height: 12px;
+    font-size: 1.5rem;
+}
+
+</style>
+<div class="gsearch-container">
+  <div class="gsearch-header">
+    <h1>Free text search in this portal</h1>
+    <p>
+      This search uses the Google engine to retrieve results from this website.
+      <br /> Also, you can use the internal search <a href="https://destinet.eu/search_html">https://destinet.eu/search_html</a>
+    </p>
+    <div tal:define="folder_path python:context.absolute_url(1)" tal:condition="python:folder_path and folder_path!='portal_map'" id="google_search_in" style="display:none">
+     <div class="radio-container">
+      <h3 style="margin-bottom: 0;">Search in:</h3>
+      <br/>
+      <div class="radio">
+        <input id="entire" type="radio" checked="checked" name="search_in" value="site"> 
+        <label for="entire" class="radio-label">entire site</label>
+      </div>
+      <div class="radio">
+        <input id="this_folder" type="radio" name="search_in" value="folder">
+        <label for="this_folder" class="radio-label"> this folder (<code tal:content="folder_path" />)</label>
+      </div>
+      <br/>
+     </div>
+      <script type="text/javascript" tal:content="python:'var folder_path=%r' % folder_path"></script>
+      <script type="text/javascript" tal:content="python:'var server_name=%r' %
+            request['SERVER_URL'][len('https://'):]"></script>
+      <script type="text/javascript">
+      var submited = false;
+      $(function() {
+        var google_form = $('form[name=google-local-search]');
+
+        q_input = $('input[name=q]', google_form);
+        q_input.val(q_input.val().replace(new RegExp('site\\:\\S*[\\s$]'), ""));
+        google_form.submit(function(evt) {
+          if (!submited) {
+            if ($('input[name=search_in]:checked').val() != 'folder')
+              return;
+            q_input.val(q_input.val() + ' site:' + server_name + '/' + folder_path);
+            submited = true;
+          }
+        });
+        $('div#google_search_in').show();
+      });
+      </script>
+    </div>
+    <!-- Google CSE Search Box Begins  -->
+    <form class="gsearch-form" action="" id="searchbox_010830385418825142702:_ltw7ubb2s0" name="google-local-search">
+      <input type="hidden" name="cx" value="010830385418825142702:_ltw7ubb2s0" />
+      <input type="hidden" name="cof" value="FORID:11" />
+      <input type="text" name="q" size="50" />
+      <input type="submit" name="sa" value="Search" />
+    </form>
+    <script type="text/javascript" src="https://www.google.com/coop/cse/brand?form=searchbox_007383476974624152295%3Agmmhkjht5rc"></script>
+    <!-- Google CSE Search Box Ends -->
+  </div>
+  <!-- Google Search Result Snippet Begins -->
+  <div id="results_"></div>
+  <script type="text/javascript">
+  var googleSearchIframeName = "results_";
+  var googleSearchFormName = "searchbox_";
+  var googleSearchFrameWidth = 550;
+  var googleSearchFrameborder = 0;
+  var googleSearchDomain = "www.google.com";
+  var googleSearchPath = "/cse";
+  </script>
+  <script type="text/javascript" src="https://www.google.com/afsonline/show_afs_search.js"></script>
+  <!-- Google Search Result Snippet Ends -->
+</div>
+<span tal:replace="structure here/standard_html_footer" />
