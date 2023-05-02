@@ -118,8 +118,9 @@ def syndicateThisExtended(self):
             {'{%s}about' % rdf_namespace: self.absolute_url()},
             Dc.title(self.non_empty_title(lang)),
             Dc.identifier(self.identifier()),
-            Dc.description(self.getLocalProperty('description', lang)),
+            Dc.description(self.non_empty_property('description', lang)),
             Dc.address(address),
+            Dc.webpage(self.webpage),
             Dc.lat(lat),
             Dc.lon(lon),
             Dc.marketplace_category(
@@ -131,7 +132,7 @@ def syndicateThisExtended(self):
         )
     )
     item = xml[0]
-    for k in self.getLocalProperty('coverage', lang).split(','):
+    for k in self.coverage.split(','):
         item.append(Dc.country(k.strip()))
     the_rest = (
         Dc.publisher(l_site.getLocalProperty('publisher', lang)),
