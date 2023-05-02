@@ -1,5 +1,7 @@
 1.3.49 - (unreleased)
 =======================
+* serve non-empty description on index_rdf_extended [dumitval]
+* add webpage to index_rdf_extended [dumitval]
 
 1.3.48 - (2022-04-01)
 =======================
