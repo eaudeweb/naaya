@@ -1,4 +1,7 @@
-1.3.49 - (unreleased)
+1.3.50 - (unreleased)
+=======================
+
+1.3.49 - (2023-05-02)
 =======================
 * serve non-empty description on index_rdf_extended [dumitval]
 * add webpage to index_rdf_extended [dumitval]
