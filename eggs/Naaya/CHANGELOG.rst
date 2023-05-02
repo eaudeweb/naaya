@@ -1,4 +1,7 @@
-5.0.25 (unreleased)
+5.0.26 (unreleased)
+-------------------
+
+5.0.25 (2023-05-02)
 -------------------
 * add non_empty_property method [valipod]
 
