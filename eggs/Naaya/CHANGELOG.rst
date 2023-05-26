@@ -1,4 +1,7 @@
-5.0.26 (unreleased)
+5.0.27 (unreleased)
+-------------------
+
+5.0.26 (2023-05-26)
 -------------------
 * allow tinymce to load custom config from the portal_editor instance
   [valipod]
