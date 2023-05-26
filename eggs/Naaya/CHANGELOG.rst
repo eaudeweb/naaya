@@ -1,5 +1,7 @@
 5.0.26 (unreleased)
 -------------------
+* allow tinymce to load custom config from the portal_editor instance
+  [valipod]
 
 5.0.25 (2023-05-02)
 -------------------

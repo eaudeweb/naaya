@@ -39,7 +39,7 @@ def manage_addEditorTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
-def loadConfig(section='tinymce'):
+def loadConfig(section='tinymce', SECTIONS=SECTIONS):
     """ Loads the default configuration from *config.py*.
     The configuration is loaded from the *config.py* file.
     `section` Section to load from config.py. You can use config.py
@@ -180,7 +180,9 @@ class EditorTool(Folder):
         """
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
 
-        if 'config_template' in extra_options:
+        if hasattr(self, 'custom_config'):
+            cfg = loadConfig('tinymce', self.custom_config())
+        elif 'config_template' in extra_options:
             section = extra_options['config_template']
             cfg = loadConfig(section)
         else:

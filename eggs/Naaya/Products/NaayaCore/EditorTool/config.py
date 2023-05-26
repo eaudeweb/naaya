@@ -31,7 +31,6 @@ def _no_image(config):
 
     return config
 
-
 _DEFAULT = {
     'img_popup_w': 900,
     'img_popup_h': 500,
@@ -39,7 +38,9 @@ _DEFAULT = {
     'link_popup_h': 450,
     'width': '70%',
     'height': '20ex',
-    'extended_valid_elements': '*[*],a[id|name|href|target|title|onclick|rel]',
+    'extended_valid_elements': '*[*],a[id|name|href|target|title|onclick|rel|class],script[language|type|src],link[rel|type|media|href]',
+    'valid_children': "+body[style],+body[link],+*[*]",
+    'valid_elements': '*[*]',
     'remove_trailing_brs': False,
     'relative_urls': False,
     'convert_urls': True,
@@ -109,7 +110,10 @@ _DEFAULT = {
                'visualblocks visualchars code fullscreen code insertdatetime '
                'media nonbreaking table contextmenu directionality '
                'template paste textcolor colorpicker textpattern '
-               'codesample toc help emoticons hr'
+               'codesample toc help emoticons hr',
+    'template_replace_values': {
+        'current_skin_path': "/portal_layout/destinet/colorscheme"
+    }
 }
 
 SECTIONS = {
