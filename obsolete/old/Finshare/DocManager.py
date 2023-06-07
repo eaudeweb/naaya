@@ -48,12 +48,12 @@ from Products.Finshare.authentication.CookieCrumbler import CookieCrumbler
 
 manage_addDocManagerForm = PageTemplateFile('zpt/DocManager/DocManager_manage_add', globals())
 
-def manage_addDocManager (self, id, title, description, webmaster, REQUEST=None):
+def manage_addDocManager (self, id, title, description, webmain, REQUEST=None):
     """ add a new DocManager object """
     if id == '':
         id = utils().utGenRandomId()
     ownerinfo = REQUEST.AUTHENTICATED_USER.getUserName()
-    ob = DocManager(id, title, description, webmaster, ownerinfo)
+    ob = DocManager(id, title, description, webmain, ownerinfo)
     ob._addRole(DOCMANAGER_ROLE_ADMINISTRATOR)
     ob._addRole(DOCMANAGER_ROLE_CONTRIBUTOR)
     self._setObject(id, ob)
@@ -103,12 +103,12 @@ class DocManager(CookieCrumbler, Folder, DocBase, DocContentTypes, DocZip):
     addDocFolder = DocFolder.addDocFolder
     
     
-    def __init__(self, id, title, description, webmaster, ownerinfo):
+    def __init__(self, id, title, description, webmain, ownerinfo):
         """ constructor """
         self.id = id
         self.title = title
         self.description = description
-        self.webmaster = webmaster
+        self.webmain = webmain
         self.ownerinfo = ownerinfo
         self.numberresultsperpage = 10
         #DocBase.__dict__['__init__'](self)
@@ -166,13 +166,13 @@ class DocManager(CookieCrumbler, Folder, DocBase, DocContentTypes, DocZip):
     manage_options_style = PageTemplateFile('zpt/DocManager/DocManager_style_zmi', globals())
 
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', webmaster='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', webmain='', REQUEST=None, **kwargs):
         """ update DocManager instance properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         self.title = title
         self.description = description
-        self.webmaster = webmaster
+        self.webmain = webmain
         self._p_changed = 1
         if REQUEST is not None:
             if REQUEST.has_key('destination'):
