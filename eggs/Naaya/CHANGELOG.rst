@@ -1,4 +1,7 @@
-5.0.27 (unreleased)
+5.0.28 (unreleased)
+-------------------
+
+5.0.27 (2023-06-21)
 -------------------
 * allow GeoTypeWidget to receive symbol.id in convert_from_user_string
   [dumitval]
