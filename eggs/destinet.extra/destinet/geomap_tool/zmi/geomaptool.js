@@ -316,6 +316,11 @@ function destinet_get_form_data() {
       form_data[form_data.length] = '&landscape_type%3Alist=' + value;
     })
   }
+  if ($('#agenda2030_sdgs').val() != null){
+    $.each($('#agenda2030_sdgs').val(), function(index, value){
+      form_data[form_data.length] = '&agenda2030_sdgs%3Alist=' + value;
+    })
+  }
   if ([undefined, '', null].indexOf($('#country').val()) == -1){
     if ($('#country').val() && $('#country').val().constructor == Array){
       $.each($('#country').val(), function(index, value){

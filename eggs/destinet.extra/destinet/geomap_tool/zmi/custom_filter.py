@@ -11,4 +11,6 @@ for filter in filters:
         filter['gstc_criteria'] = kwargs.get('gstc_criteria')
     if kwargs.get('gstc_industry'):
         filter['gstc_industry'] = kwargs.get('gstc_industry')
+    if kwargs.get('agenda2030_sdgs'):
+        filter['agenda2030_sdgs'] = kwargs.get('agenda2030_sdgs')
 return filters
