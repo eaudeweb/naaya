@@ -1,4 +1,7 @@
-1.3.14 (unreleased)
+1.3.15 (unreleased)
+------------------
+
+1.3.14 (2023-09-20)
 ------------------
 * add count.txt to zip_export from console
   [valipod refs #257967]
