@@ -57,6 +57,15 @@ def do_export():
     if zipname.startswith('#'):
         zipname = zipname[1:]
     my_container = Zope2.app().unrestrictedTraverse(site_path)
+    catalog = my_container.getSite().getCatalogTool()
+    folders = len(catalog({'path': 'eea-eionet-day/library/',
+                           'meta_type': 'Naaya Folder'}))
+    files = len(catalog({'path': 'eea-eionet-day/library/',
+                         'meta_type': 'Naaya Blob File'}))
+    meetings = len(catalog({'path': 'eea-eionet-day/library/',
+                           'meta_type': 'Naaya Meeting'}))
+    count = "Folders: %s\nFiles: %s\nMeetings: %s" % (folders, files,
+                                                      meetings)
     # zip_path = my_container.getId() + '/'
     export_file = open(save_path + zipname + '.zip', 'w+b')
     zip_file = ZipFile(export_file, mode='w', allowZip64=True)
@@ -68,5 +77,5 @@ def do_export():
         raise NotFound("The object has no zip adapter")
     builder.recurse(my_container, zip_adapter.filename)
     builder.write_index()
-
+    builder.zip_file.writestr('count.txt' , count)
     zip_file.close()
