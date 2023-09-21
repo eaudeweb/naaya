@@ -251,13 +251,13 @@ class ZipExportTool(Implicit, Item):
 
         my_container = self.getParentNode()
         catalog = my_container.getSite().getCatalogTool()
-        folders = len(catalog({'path': 'eea-eionet-day/library/',
+        folders = len(catalog({'path': my_container.absolute_url(1),
                                'meta_type': 'Naaya Folder'}))
-        files = len(catalog({'path': 'eea-eionet-day/library/',
+        files = len(catalog({'path': my_container.absolute_url(1),
                              'meta_type': 'Naaya Blob File'}))
-        meetings = len(catalog({'path': 'eea-eionet-day/library/',
+        meetings = len(catalog({'path': my_container.absolute_url(1),
                                 'meta_type': 'Naaya Meeting'}))
-        urls = len(catalog({'path': 'eea-eionet-day/library/',
+        urls = len(catalog({'path': my_container.absolute_url(1),
                             'meta_type': 'Naaya URL'}))
         count = (
             "Portal catalog count for the following object types:\n\n"
