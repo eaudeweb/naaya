@@ -1,4 +1,7 @@
-1.0.dev0 (unreleased)
+1.0.dev1 (unreleased)
+---------------------
+
+1.0.dev0 (2023-09-20)
 ---------------------
 * change version to 1.0.dev0 for newer setuptools compatibility
   [valipod]
