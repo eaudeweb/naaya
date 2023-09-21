@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='5.0.28',
+      version='5.0.29',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
