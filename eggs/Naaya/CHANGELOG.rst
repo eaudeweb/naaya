@@ -1,5 +1,7 @@
 5.0.28 (unreleased)
 -------------------
+* add file count (from portal catalog) to zip_export file
+  [valipod refs #257967]
 
 5.0.27 (2023-06-21)
 -------------------
