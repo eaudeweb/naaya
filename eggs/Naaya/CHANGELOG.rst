@@ -1,4 +1,7 @@
-5.0.29 (unreleased)
+5.0.30 (unreleased)
+-------------------
+
+5.0.29 (2023-09-21)
 -------------------
 * fix file count
   [valipod refs #257967]
