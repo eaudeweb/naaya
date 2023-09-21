@@ -1,5 +1,7 @@
-1.0-edw10 (unreleased)
+1.0.dev0 (unreleased)
 ---------------------
+* change version to 1.0.dev0 for newer setuptools compatibility
+  [valipod]
 
 1.0-edw9 (2019-11-07)
 ---------------------
