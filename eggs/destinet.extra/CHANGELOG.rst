@@ -1,5 +1,6 @@
 1.3.50 - (unreleased)
 =======================
+* add "My folders" to the login_html page [dumitval]
 
 1.3.49 - (2023-05-02)
 =======================

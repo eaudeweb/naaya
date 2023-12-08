@@ -524,6 +524,9 @@ class DestinetPublisher(SimpleItem):
         if ob == 'events':
             filters['meta_type'] = 'Naaya Event'
             ob_list = cat.search(filters)
+        if ob == 'folders':
+            filters['meta_type'] = 'Naaya Folder'
+            ob_list = cat.search(filters)
         elif ob == 'news':
             filters['meta_type'] = 'Naaya News'
             ob_list = cat.search(filters)
@@ -531,14 +534,13 @@ class DestinetPublisher(SimpleItem):
             ob_list = cat.search({'path': ofs_path(site.topics),
                                   'contributor': user})
         elif ob == 'resources':
-            resource_meta_types = [
+            filters['meta_type'] = [
                 'Naaya Certificate', 'Naaya Blob File', 'Naaya File',
                 'Naaya Media File', 'Naaya URL', 'Naaya Publication']
-            ob_list = cat.search({'meta_type': resource_meta_types,
-                                  'contributor': user})
+            ob_list = cat.search(filters)
         elif ob == 'contacts':
-            ob_list = cat.search({'meta_type': 'Naaya Contact',
-                                  'contributor': user})
+            filters['meta_type'] = 'Naaya Contact'
+            ob_list = cat.search(filters)
         sorted_list = site.utSortObjsListByAttr(ob_list, 'releasedate')
 
         userinfo = [[item.title, item.absolute_url,

@@ -23,7 +23,7 @@
 })();
 $(document).ready(function(){
   $('.userinfo_item .items').show();
-  var ob_types = ['news', 'events', 'resources', 'bestpractice', 'contacts'];
+  var ob_types = ['news', 'events', 'resources', 'bestpractice', 'contacts', 'folders'];
   var no_objects = gettext('No items posted so far');
   var i = 0;
   for (i=0;i<ob_types.length;i++){
