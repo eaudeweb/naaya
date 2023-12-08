@@ -1,4 +1,7 @@
-1.3.50 - (unreleased)
+1.3.51 - (unreleased)
+=======================
+
+1.3.50 - (2023-12-08)
 =======================
 * add "My folders" to the login_html page [dumitval]
 
