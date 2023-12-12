@@ -1,4 +1,7 @@
-1.3.51 - (unreleased)
+1.3.52 - (unreleased)
+=======================
+
+1.3.51 - (2023-12-12)
 =======================
 * show title_or_id on My submissions [refs #22203 valipod]
 
