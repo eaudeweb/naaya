@@ -1,4 +1,7 @@
-5.0.30 (unreleased)
+5.0.31 (unreleased)
+-------------------
+
+5.0.30 (2023-12-12)
 -------------------
 * Add News to the do_export procedure [dumitval]
 
