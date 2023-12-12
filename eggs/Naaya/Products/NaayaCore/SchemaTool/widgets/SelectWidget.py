@@ -24,8 +24,8 @@ class SelectWidget(Widget):
     )
 
     list_id = ''
-    help_text = u'Click on the items from the list below to select/deselect \
-    them.'
+    help_text = (u'Click on the items from the list below to select/deselect '
+                 u'them.')
 
     def get_selection_list(self):
         listing = self.get_list_nodes(self.list_id)

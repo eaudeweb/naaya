@@ -257,11 +257,13 @@ class ZipExportTool(Implicit, Item):
                              'meta_type': 'Naaya Blob File'}))
         meetings = len(catalog({'path': my_container.absolute_url(1),
                                 'meta_type': 'Naaya Meeting'}))
+        news = len(catalog({'path': my_container.absolute_url(1),
+                                'meta_type': 'Naaya News'}))
         urls = len(catalog({'path': my_container.absolute_url(1),
                             'meta_type': 'Naaya URL'}))
         count = (
             "Portal catalog count for the following object types:\n\n"
-            "Folders: %s\nFiles: %s\nMeetings: %s\nURLs: %s\n\n" % (
+            "Folders: %s\nFiles: %s\nMeetings: %s\nNews: %s\nURLs: %s\n\n" % (
                 folders, files, meetings, urls)
         )
         temp_file = tempfile.TemporaryFile()

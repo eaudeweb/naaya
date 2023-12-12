@@ -1,5 +1,6 @@
 5.0.30 (unreleased)
 -------------------
+* Add News to the do_export procedure [dumitval]
 
 5.0.29 (2023-09-21)
 -------------------
