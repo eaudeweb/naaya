@@ -1,0 +1,124 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<tal:block metal:fill-slot="custom_properties"
+	define="languages here/gl_get_languages_mapping;
+			    curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<div class="field">
+	<label for="picture_0"><span i18n:translate="" tal:omit-tag="">Picture 1</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_0')" class="mandatory_field"> *</span></label>
+	<p class="form-errors" tal:define="error python:here.getSession('picture_0-errors', None)" tal:condition="error" tal:content="error">Error message</p>
+	<input type="file" name="picture_0" id="picture_0" tal:attributes="values python:here.getSession('picture_0', '')" />
+</div>
+<div class="field">
+	<img src="getPicture?version=1&count=0" alt="" />
+</div>
+
+<div class="field">
+	<input type="checkbox" name="del_picture_0" id="del_picture_0" tal:attributes="checked python:test(here.getSession('del_picture_0', ''), 'checked', '')" /> <label for="del_picture_0" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+
+<!-- <div class="field">
+	<label class="widget-title" for="picture_0_text"><span i18n:translate="" tal:omit-tag="">Picture 1 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_0_text')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_0_text" name="picture_0_text:utf8:ustring" size="50" tal:attributes="value here/picture_0_text" />
+</div>
+
+<div class="field">
+	<label class="widget-title" for="picture_0_url"><span i18n:translate="" tal:omit-tag="">Picture 1 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_0_url')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_0_url" name="picture_0_url:utf8:ustring" size="50" tal:attributes="value here/picture_0_url" />
+</div> -->
+
+<div class="field">
+	<label class="widget-title" for="picture_1"><span i18n:translate="" tal:omit-tag="">Picture 2</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_1')" class="mandatory_field"> *</span></label>
+	<p class="form-errors" tal:define="error python:here.getSession('picture_1-errors', None)" tal:condition="error" tal:content="error">Error message</p>
+	<input type="file" name="picture_1" id="picture_1" tal:attributes="values python:here.getSession('picture_1', '')" />
+</div>
+<div class="field">
+	<img src="getPicture?version=1&count=1" alt="" />
+</div>
+
+<div class="field">
+	<input type="checkbox" name="del_picture_1" id="del_picture_1" tal:attributes="checked python:test(here.getSession('del_picture_1', ''), 'checked', '')" /> <label for="del_picture_1" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+
+<!-- <div class="field">
+	<label class="widget-title" for="picture_1_text"><span i18n:translate="" tal:omit-tag="">Picture 2 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_1_text')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_1_text" name="picture_1_text:utf8:ustring" size="50" tal:attributes="value here/picture_1_text" />
+</div>
+
+<div class="field">
+	<label class="widget-title" for="picture_1_url"><span i18n:translate="" tal:omit-tag="">Picture 2 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_1_url')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_1_url" name="picture_1_url:utf8:ustring" size="50" tal:attributes="value here/picture_1_url" />
+</div> -->
+
+<div class="field">
+	<label for="picture_2"><span i18n:translate="" tal:omit-tag="">Picture 3</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_2')" class="mandatory_field"> *</span></label>
+	<p class="form-errors" tal:define="error python:here.getSession('picture_2-errors', None)" tal:condition="error" tal:content="error">Error message</p>
+	<input type="file" name="picture_2" id="picture_2" tal:attributes="values python:here.getSession('picture_2', '')" />
+</div>
+<div class="field">
+	<img src="getPicture?version=1&count=2" alt="" />
+</div>
+
+<div class="field">
+	<input type="checkbox" name="del_picture_2" id="del_picture_2" tal:attributes="checked python:test(here.getSession('del_picture_2', ''), 'checked', '')" /> <label for="del_picture_2" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+
+<!-- <div class="field">
+	<label for="picture_2_text"><span i18n:translate="" tal:omit-tag="">Picture 3 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_2_text')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_2_text" name="picture_2_text" size="50" tal:attributes="value here/picture_2_text" />
+</div>
+
+<div class="field">
+	<label for="picture_2_url"><span i18n:translate="" tal:omit-tag="">Picture 3 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_2_url')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_2_url" name="picture_2_url" size="50" tal:attributes="value here/picture_2_url" />
+</div> -->
+
+<div class="field">
+	<label for="picture_3"><span i18n:translate="" tal:omit-tag="">Picture 4</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_3')" class="mandatory_field"> *</span></label>
+	<p class="form-errors" tal:define="error python:here.getSession('picture_3-errors', None)" tal:condition="error" tal:content="error">Error message</p>
+	<input type="file" name="picture_3" id="picture_3" tal:attributes="values python:here.getSession('picture_3', '')" />
+</div>
+<div class="field">
+	<img src="getPicture?version=1&count=3" alt="" />
+</div>
+
+<div class="field">
+	<input type="checkbox" name="del_picture_3" id="del_picture_3" tal:attributes="checked python:test(here.getSession('del_picture_3', ''), 'checked', '')" /> <label for="del_picture_3" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+
+<!-- <div class="field">
+	<label for="picture_3_text"><span i18n:translate="" tal:omit-tag="">Picture 4 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_3_text')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_3_text" name="picture_3_text" size="50" tal:attributes="value here/picture_3_text" />
+</div>
+
+<div class="field">
+	<label for="picture_3_url"><span i18n:translate="" tal:omit-tag="">Picture 4 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_3_url')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_3_url" name="picture_3_url" size="50" tal:attributes="value here/picture_3_url" />
+</div> -->
+
+<div class="field">
+	<label for="picture_4"><span i18n:translate="" tal:omit-tag="">Picture 5</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_4')" class="mandatory_field"> *</span></label>
+	<p class="form-errors" tal:define="error python:here.getSession('picture_4-errors', None)" tal:condition="error" tal:content="error">Error message</p>
+	<input type="file" name="picture_4" id="picture_4" tal:attributes="values python:here.getSession('picture_4', '')" />
+</div>
+<div class="field">
+	<img src="getPicture?version=1&count=4" alt="" />
+</div>
+
+<div class="field">
+	<input type="checkbox" name="del_picture_4" id="del_picture_4" tal:attributes="checked python:test(here.getSession('del_picture_4', ''), 'checked', '')" /> <label for="del_picture_4" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+
+<!-- <div class="field">
+	<label for="picture_4_text"><span i18n:translate="" tal:omit-tag="">Picture 5 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_4_text')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_4_text" name="picture_4_text" size="50" tal:attributes="value here/picture_4_text" />
+</div>
+
+<div class="field">
+	<label for="picture_4_url"><span i18n:translate="" tal:omit-tag="">Picture 5 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_4_url')" class="mandatory_field"> *</span></label>
+	<input type="text" id="picture_4_url" name="picture_4_url" size="50" tal:attributes="value here/picture_4_url" />
+</div> -->
+
+</tal:block>
+</tal:block>
