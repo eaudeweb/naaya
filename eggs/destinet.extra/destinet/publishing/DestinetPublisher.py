@@ -525,7 +525,7 @@ class DestinetPublisher(SimpleItem):
             filters['meta_type'] = 'Naaya Event'
             ob_list = cat.search(filters)
         if ob == 'folders':
-            filters['meta_type'] = 'Naaya Folder'
+            filters['meta_type'] = ['Naaya Folder', 'Naaya Hex Folder']
             ob_list = cat.search(filters)
         elif ob == 'news':
             filters['meta_type'] = 'Naaya News'
@@ -543,9 +543,13 @@ class DestinetPublisher(SimpleItem):
             ob_list = cat.search(filters)
         sorted_list = site.utSortObjsListByAttr(ob_list, 'releasedate')
 
-        userinfo = [[item.title, item.absolute_url,
-                     item.releasedate.strftime('%d %b \'%y')]
-                    for item in sorted_list[:50]]
+        userinfo = []
+        for item in sorted_list[:50]:
+            item_title = item.title
+            if not item_title:
+                item_title = item.getObject().title_or_id()
+            userinfo.append([item_title, item.absolute_url,
+                             item.releasedate.strftime('%d %b \'%y')])
         return json.dumps(userinfo)
 
     security.declarePublic("userinfo")
