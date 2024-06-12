@@ -307,11 +307,11 @@ class DocAuthentication(BasicUserFolder, ObjectManager, session, CookieCrumbler)
             subject = self.notification.register_html.title
         else:
             subject = "finShare notifications"
-        if self.webmaster:
-            webmaster = self.webmaster
+        if self.webmain:
+            webmain = self.webmain
         else:
-            webmaster = "webmaster@finshare.it"
-        n.send_registration(user, email, fname, lname, npass, webmaster, subject, template_text, template_html)
+            webmain = "webmain@finshare.it"
+        n.send_registration(user, email, fname, lname, npass, webmain, subject, template_text, template_html)
         if REQUEST is not None and REQUEST.has_key('destination'): 
             return REQUEST.RESPONSE.redirect(REQUEST['destination'] + '?save=ok')
 
@@ -352,11 +352,11 @@ class DocAuthentication(BasicUserFolder, ObjectManager, session, CookieCrumbler)
             subject = self.notification.sendpassword_html.title
         else:
             subject = "finShare notifications"
-        if self.webmaster:
-            webmaster = self.webmaster
+        if self.webmain:
+            webmain = self.webmain
         else:
-            webmaster = "webmaster@finshare.it"
-        n.send_passwords(account, email, fname, lname, pwd, webmaster, subject, template_text, template_html)
+            webmain = "webmain@finshare.it"
+        n.send_passwords(account, email, fname, lname, pwd, webmain, subject, template_text, template_html)
         if REQUEST is not None and REQUEST.has_key('destination'): 
             return REQUEST.RESPONSE.redirect(REQUEST['destination'] + '?save=ok')
 
