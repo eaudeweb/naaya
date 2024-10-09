@@ -146,6 +146,12 @@
                         <p tal:content="here/network_address" />
                         <a tal:attributes="href string:${site_url}/about/contact" i18n:translate="">Contact us</a>
                         <a tal:attributes="href string:${site_url}/about/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+                        <a tal:attributes="href
+                          string:${site_url}/about/privacy" accesskey="1"
+                        i18n:translate="">Privacy statement (NL-BE)</a>
+                        <a tal:attributes="href
+                          string:${site_url}/about/privacy_fr" accesskey="2"
+                          i18n:translate="">Privacy statement (FR-BE)</a>
                         <a tal:condition="python: network_name == 'EIONET'" href="http://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
                     </div>
                 </metal:block>
