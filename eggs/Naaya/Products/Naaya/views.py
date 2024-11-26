@@ -89,16 +89,16 @@ def AdminAPIKeysStatus(context, request):
         'change_link': None
     }
 
-    master_ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
+    main_ga_id = getattr(conf, 'environment', {}).get('GA_ID', '')
     valid = False
-    if master_ga_id:
+    if main_ga_id:
         valid = True
 
-    api_keys['master_ga_id'] = {
+    api_keys['main_ga_id'] = {
         'title': 'Google Analytics primary tracking code',
-        'description': 'The GA web property of the master profile '
+        'description': 'The GA web property of the main profile '
                        '(the profile of the top-level domain)',
-        'key': master_ga_id,
+        'key': main_ga_id,
         'valid': valid,
         'change_link': None
     }

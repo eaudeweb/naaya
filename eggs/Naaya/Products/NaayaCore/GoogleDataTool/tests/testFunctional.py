@@ -32,7 +32,7 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal')
         soup = BeautifulSoup(self.browser.get_html())
 
-        # check if the GoogleWebmaster meta tag is corectly placed in the
+        # check if the GoogleWebmain meta tag is corectly placed in the
         # <head> section, before the first <body> section.
         head = soup.html.head
         self.failUnless(head.find('meta',

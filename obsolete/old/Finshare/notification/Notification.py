@@ -59,12 +59,12 @@ class Notification:
 
 
     security.declarePrivate('send_registration')
-    def send_registration(self, account, email, fname, lname, password, webmaster, subject, template_text, template_html):
+    def send_registration(self, account, email, fname, lname, password, webmain, subject, template_text, template_html):
         msg_text = self.maketext(
             template_text,
             {'firstname': fname,
              'lastname' : lname,
-             'sender'   : webmaster,
+             'sender'   : webmain,
              'username' : account,
              'password' : password,
              'email'    : email,
@@ -73,16 +73,16 @@ class Notification:
             template_html,
             {'firstname': fname,
              'lastname' : lname,
-             'sender'   : webmaster,
+             'sender'   : webmain,
              'username' : account,
              'password' : password,
              'email'    : email,
              })
-        self.send_email(webmaster, webmaster, subject, msg_text, msg_html)
+        self.send_email(webmain, webmain, subject, msg_text, msg_html)
 
 
     security.declarePrivate('send_feedback')
-    def send_feedback(self, title, comments, fname, lname, email, url, webmaster, template_text, template_html):
+    def send_feedback(self, title, comments, fname, lname, email, url, webmain, template_text, template_html):
         msg_text = self.maketext(
             template_text,
             {'fullname': "%s %s" % (fname, lname),
@@ -97,15 +97,15 @@ class Notification:
              'url' :    url,
              'message' : comments,
              })
-        self.send_email(webmaster, webmaster, title, msg_text, msg_html)
+        self.send_email(webmain, webmain, title, msg_text, msg_html)
 
     security.declarePrivate('send_passwords')
-    def send_passwords(self, account, email, fname, lname, pwd, webmaster, subject, template_text, template_html):
+    def send_passwords(self, account, email, fname, lname, pwd, webmain, subject, template_text, template_html):
         msg_text = self.maketext(
             template_text,
             {'firstname'      : fname,
              'lastname'   : lname,
-             'sender'   : webmaster,
+             'sender'   : webmain,
              'username' : account,
              'password' : pwd,
              })
@@ -113,11 +113,11 @@ class Notification:
             template_html,
             {'firstname'      : fname,
              'lastname'   : lname,
-             'sender'   : webmaster,
+             'sender'   : webmain,
              'username' : account,
              'password' : pwd,
              })
-        self.send_email(email, webmaster, subject, msg_text, msg_html)
+        self.send_email(email, webmain, subject, msg_text, msg_html)
 
 
     security.declarePrivate('send_notifications')
