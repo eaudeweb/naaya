@@ -1,5 +1,6 @@
 5.0.31 (unreleased)
 -------------------
+* Add support for skipping or updating existing objects on import [dumitval]
 
 5.0.30 (2023-12-12)
 -------------------
