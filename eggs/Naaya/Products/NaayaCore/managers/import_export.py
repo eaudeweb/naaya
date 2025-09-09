@@ -61,7 +61,7 @@ class CSVImportTool(Implicit, Item):
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
             raise ValueError('Schema for meta-type "%s" not found' % meta_type)
-        columns = []
+        columns = ['ID']
         for widget in schema.listWidgets():
             if widget.multiple_form_values:
                 for subname in widget.multiple_form_values:
@@ -108,7 +108,7 @@ class CSVImportTool(Implicit, Item):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
 
-    def do_import(self, meta_type, file_type, data, REQUEST=None):
+    def do_import(self, meta_type, file_type, data, overwrite_existing=False, REQUEST=None):
         """do_import.
 
         :param meta_type:
@@ -122,6 +122,7 @@ class CSVImportTool(Implicit, Item):
 
         errors = []
         warnings = []
+        infos = []
         site = self.getSite()
 
         schema = site.getSchemaTool().getSchemaForMetatype(meta_type)
@@ -136,7 +137,9 @@ class CSVImportTool(Implicit, Item):
 
         # build a list of property names based on the object schema
         # TO DO: extract this loop into a separate function
-        prop_map = {}
+        prop_map = {
+            u'ID': {'column': 'id', 'convert': lambda x: x.strip()},
+        }
         for widget in schema.listWidgets():
             prop_name = widget.prop_name()
 
@@ -191,15 +194,22 @@ class CSVImportTool(Implicit, Item):
 
         else:
             raise ValueError('unknown file format %r' % file_type)
+        id_present = header[0] == 'ID'
 
-        record_number = 0
+        added_number = 0
+        edited_number = 0
+        skipped_number = 0
         obj_ids = []
 
         count = 0
         try:
             for row in rows:
+                if id_present and not overwrite_existing and row[0] in location_obj.objectIds():
+                    # skip existing objects
+                    skipped_number += 1
+                    continue
                 try:
-                    record_number += 1
+                    ob_id = ''
                     # pass the word that the object is created during
                     # import from file and facilitate skipping the
                     # geolocation to avoid a timeout - the geolocation
@@ -210,6 +220,8 @@ class CSVImportTool(Implicit, Item):
                     for column, value in zip(header, row):
                         if value == '':
                             continue
+                        if column == 'ID' and value:
+                            ob_id = value.strip()
                         if column not in prop_map:
                             extra_properties[column] = value
                             continue
@@ -225,14 +237,23 @@ class CSVImportTool(Implicit, Item):
                         lon = properties[self.geo_fields['lon']]
                     except (AttributeError, KeyError):
                         lat = lon = None
-                    ob_id = add_object(location_obj, _send_notifications=False,
-                                       **properties)
+                    if not ob_id or ob_id not in location_obj.objectIds():
+                        # only create the object if no ob_id is passed or
+                        # if that id is not parent in the location_obj
+                        ob_id = add_object(location_obj, _send_notifications=False,
+                                           **properties)
+                        ob = location_obj._getOb(ob_id)
+                        added_number += 1
+                    else:
+                        # here overwrite_existing is True
+                        ob = location_obj._getOb(ob_id)
+                        ob.saveProperties(**properties)
+                        edited_number += 1
                     count += 1
                     if count / 50 * 50 == count:
                         # commit the transaction at each 50 items to
                         # avoid database conflict errors
                         transaction.commit()
-                    ob = location_obj._getOb(ob_id)
                     if address:
                         if lat and lon:
                             setattr(
@@ -269,7 +290,7 @@ class CSVImportTool(Implicit, Item):
                     self.log_current_error()
                     msg = ('Error while importing from file, '
                            'row ${record_number}: ${error}',
-                           {'record_number': record_number + 1,
+                           {'record_number': added_number + edited_number + skipped_number + 1,
                             'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
@@ -292,10 +313,23 @@ class CSVImportTool(Implicit, Item):
             else:
                 if warnings:
                     self.setSessionErrorsTrans(warnings)
-                self.setSessionInfoTrans(
-                    '${records} object(s) of type "${title}" '
-                    'successfully imported.',
-                    records=record_number, title=schema.title_or_id())
+                if skipped_number:
+                    infos.append(
+                        '%s object(s) of type "%s" already in folder and skipped.' %
+                        (skipped_number, schema.title_or_id())
+                    )
+                if added_number:
+                    infos.append(
+                        '%s object(s) of type "%s" successfully imported.' %
+                        (added_number, schema.title_or_id())
+                    )
+                if edited_number:
+                    infos.append(
+                        '%s object(s) of type "%s" successfully updated.' %
+                        (edited_number, schema.title_or_id())
+                    )
+                if infos:
+                    self.setSessionInfoTrans(infos)
             return self.index_html(REQUEST, meta_type=meta_type)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
@@ -370,8 +404,9 @@ class ExportTool(Implicit, Item):
                 return u''
             return unicode(value)
 
-        prop_getters = []
-        dump_header = []
+        dump_header = ['ID']
+        # add the getter for the object id
+        prop_getters = [lambda x: x.getId()]
 
         # create columns for schema widgets
         for widget in schema.listWidgets():
