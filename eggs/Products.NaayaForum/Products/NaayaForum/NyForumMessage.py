@@ -2,17 +2,17 @@ from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
-from constants import *
-from NyForumBase import NyForumBase
+from .constants import *
+from .NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 
 try:
     from zope.event import notify as zope_notify
-    from events import NyForumMessageAddEvent, NyForumMessageEditEvent
+    from .events import NyForumMessageAddEvent, NyForumMessageEditEvent
 except ImportError:
     zope_notify = None
 

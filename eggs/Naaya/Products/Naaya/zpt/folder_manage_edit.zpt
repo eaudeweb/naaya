@@ -1,5 +1,5 @@
 <tal:block metal:define-macro="page"
-           metal:extend-macro="here/macro_manage_edit/macros/page">
+           metal:extend-macro="python:here.macro_manage_edit.macros['page']">
 
 <tal:block metal:fill-slot="description">
     Change the properties in the form below and click <strong>Save changes</strong>.

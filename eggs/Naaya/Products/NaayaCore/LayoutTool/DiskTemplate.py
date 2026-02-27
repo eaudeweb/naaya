@@ -5,14 +5,14 @@ and behaves like a read-only PageTemplate object.
 
 from os import path
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import METATYPE_DISKTEMPLATE
-from DiskFile import list_available_pathspecs, resolve
+from .DiskFile import list_available_pathspecs, resolve
 
 manage_addDiskTemplate_html = PageTemplateFile('zpt/disk_template_add',
                                                globals())

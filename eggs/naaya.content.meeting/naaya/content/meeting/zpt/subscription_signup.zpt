@@ -60,8 +60,8 @@
               search_term python:request.get('search_term', '');
               search_role python:request.get('search_role', '');
               auth_tool here/getAuthenticationTool;
-              do_usersearch python:request.has_key('search_user') and not captcha_errors;
-              do_rolesearch python:request.has_key('search_user_with_role') and not captcha_errors">
+              do_usersearch python:'search_user' in request and not captcha_errors;
+              do_rolesearch python:'search_user_with_role' in request and not captcha_errors">
             <label for="search_param" i18n:translate="">Search for</label>
             <select id="search_param" name="search_param">
                 <option value="cn"

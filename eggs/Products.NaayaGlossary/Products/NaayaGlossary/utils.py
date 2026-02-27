@@ -19,7 +19,6 @@
 
 
 #Python imports
-import string
 import codecs
 import re
 from copy import deepcopy
@@ -28,10 +27,14 @@ from copy import deepcopy
 from Products.PythonScripts.standard import url_quote
 
 #product imports
-from constants import *
+from naaya.core.zope2util import modification_time as _modification_time
+from .constants import *
 
 #constants
 class utils:
+
+    def modification_time(self):
+        return _modification_time(self)
 
     def __init__(self):
         self.win_cp1252 = {
@@ -75,10 +78,10 @@ class utils:
 
     def ut_makeId(self, p_name):
         """ generate the ID """
-        transtab=string.maketrans('/ +@','____')
-        p_name = unicode(p_name, 'latin-1')
-        p_name = string.lower(p_name.encode('ascii', 'replace'))
-        return string.translate(p_name,transtab,'?&!;()<=>*#[]{}^~:|\/???$?%?')
+        transtab = str.maketrans('/ +@', '____', '?&!;()<=>*#[]{}^~:|\/???$?%?')
+        p_name = str(p_name, 'latin-1')
+        p_name = p_name.encode('ascii', 'replace').decode('ascii').lower()
+        return p_name.translate(transtab)
 
     def element_list_sorted(self):
         """ return all elements from a Centre root """
@@ -97,21 +100,21 @@ class utils:
         """ check if adding an object """
         res = 0
         if REQUEST:
-            res = REQUEST.has_key('add')
+            res = 'add' in REQUEST
         return res
 
     def utUpdateObjectAction(self, REQUEST=None):
         """ check if updating an object """
         res = 0
         if REQUEST:
-            res = REQUEST.has_key('update')
+            res = 'update' in REQUEST
         return res
 
     def utDeleteObjectAction(self, REQUEST=None):
         """ check if deleting an object """
         res = 0
         if REQUEST:
-            res = REQUEST.has_key('delete')
+            res = 'delete' in REQUEST
         return res
 
     def utConvertToList(self, something):
@@ -161,13 +164,12 @@ class utils:
 
     def utSortListOfDictionariesByKey(self, p_list, p_key, p_order=0):
         """ sort a list of dictionary by key """
-        if p_order==0:   #ascending
-            p_list.sort(lambda x, y, param=p_key: cmp(x[param], y[param]))
-        else:            #desceding
-            p_list.sort(lambda x, y, param=p_key: cmp(y[param], x[param]))
+        p_list.sort(key=lambda x: x.get(p_key, ''), reverse=(p_order != 0))
 
     def utf8_to_latin1(self, s):
-        return s.decode('utf-8').encode('latin-1')
+        if isinstance(s, bytes):
+            s = s.decode('utf-8')
+        return s.encode('latin-1')
 
     def debug(self, error):
         """ """
@@ -189,7 +191,7 @@ class utils:
 
     def joinToList(self, l):
         """Gets a list and returns a comma separated string"""
-        return string.join(l, ',')
+        return ','.join(l)
 
     def addToList(self, l, v):
         """Return a new list, after adding value v"""
@@ -245,16 +247,16 @@ class catalog_utils:
         try:
             ob_path = self.__build_catalog_path(ob)
             catalog.catalog_object(ob, ob_path)
-        except Exception, error:
-            print self.debug(error)
+        except Exception as error:
+            print(self.debug(error))
 
     def cu_uncatalog_object(self, ob):
         """ uncatalog an object """
         catalog = self.getGlossaryCatalog()
         try:
             catalog.uncatalog_object(self.__build_catalog_path(ob))
-        except Exception, error:
-            print self.debug(error)
+        except Exception as error:
+            print(self.debug(error))
 
     def cu_recatalog_object(self, ob):
         """ recatalog an object """
@@ -264,15 +266,15 @@ class catalog_utils:
             if catalog.getrid(ob_path) is not None:
                 catalog.uncatalog_object(ob_path)
             self.cu_catalog_object(ob)
-        except Exception, error:
-            print self.debug(error)
+        except Exception as error:
+            print(self.debug(error))
             
     def cu_getIndexes(self):
         """ return a list with all ZCatalog indexes """
         catalog = self.getGlossaryCatalog()
         return catalog.index_objects()
 
-    def cu_get_cataloged_objects(self, meta_type=None, approved=0, howmany=-1, sort_on='bobobase_modification_time', 
+    def cu_get_cataloged_objects(self, meta_type=None, approved=0, howmany=-1, sort_on='modification_time',
         sort_order='reverse', path=''):
         """ return objects from catalog """
         results = []
@@ -298,7 +300,7 @@ class catalog_utils:
         dict = {}
         for l_object in p_objects:
             dict[l_object.id] = l_object
-        return dict.values()
+        return list(dict.values())
 
     def cu_get_codes_by_name(self, meta_type=None, name=None):
         """ retrieve objects codes given the name """

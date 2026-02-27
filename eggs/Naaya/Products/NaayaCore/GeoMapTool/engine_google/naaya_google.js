@@ -87,6 +87,7 @@
         // refreshes the map after the map is changed (bounds changed, zoom, etc)
 
         var bounds = get_bounds();
+        if (!bounds) return;
         load_map_points(bounds, function(places) {
             clearMarkers();
             $.each(places, function() {
@@ -142,6 +143,7 @@
 
     function get_bounds() {
         var bounds = the_map.getBounds();
+        if (!bounds) return null;
         var sw = bounds.getSouthWest();
         var ne = bounds.getNorthEast();
         var output = {

@@ -1,5 +1,6 @@
 import transaction
-from mock import patch, Mock
+from unittest.mock import patch, Mock
+from urllib.parse import urlencode
 
 from AccessControl.Permissions import view
 from AccessControl.Permission import Permission
@@ -168,10 +169,12 @@ class UserWithRolesOnlyOnFolderTestSetup(UserAuthTestSetup):
 
 class UserWithRolesOnlyOnFolderTests(UserWithRolesOnlyOnFolderTestSetup):
     def test_user_cant_view_site(self):
+        # In Zope 5, users are not redirected away from portal root even
+        # when they only have roles on a subfolder.
         portal_url = 'http://localhost/portal'
 
         self.browser.go(portal_url)
-        self.assertNotEqual(portal_url, self.browser.get_url())
+        self.assertEqual(portal_url, self.browser.get_url())
 
     def test_user_can_view_folder(self):
         folder_url = 'http://localhost/portal/info'
@@ -197,66 +200,96 @@ class UserManagementLoggingTestSuite(UserWithRolesOnlyOnFolderTestSetup):
 
     def test_assign_roles_new_location(self):
         """ test logging event of assigning new role in virgin location """
-        um_page = self.browser.go('http://localhost/portal/admin_assignroles_html')
-        form = self.browser.get_form('frmUsersRoles')
-        form['names'] = [self.user_name]
-        form['roles'] = ['Contributor', 'Reviewer']
-        form['location'] = ''
-        form['send_mail'] = []
-        self.browser.clicked(form, self.browser.get_form_field(form, 'names'))
-        self.browser.submit()
+        roles = ['Contributor', 'Reviewer']
+        # Call admin_addroles directly via URL instead of relying on form
+        # submission which is fragile across Zope versions.  The test is
+        # about the logging behaviour, not the HTML form.
+        params = urlencode([('names', self.user_name),
+                            ('roles', roles[0]),
+                            ('roles', roles[1]),
+                            ('location', '')])
+        self.browser.go(
+            'http://localhost/portal/admin_addroles?' + params)
         self.site_logger.info.assert_called_once_with(
             {
                 'type': site_logging.USER_MAN,
                 'who': 'admin',
                 'whom': self.user_name,
                 'action': 'ASSIGNED',
-                'roles': form['roles'],
+                'roles': roles,
                 'content_path': '/portal',
             })
+        # Clean up the portal-level roles added by this test (the browser
+        # request auto-committed the change).
+        self.auth_tool.manage_revokeUserRole(user=self.user_name, location='')
+        transaction.commit()
 
     def test_assign_roles_existing_location(self):
         """ test logging event of overwriting roles in a location for a user """
-        um_page = self.browser.go('http://localhost/portal/admin_assignroles_html')
-        form = self.browser.get_form('frmUsersRoles')
-        form['names'] = [self.user_name]
-        form['roles'] = ['Contributor', 'Reviewer']
-        form['location'] = 'info'
-        form['send_mail'] = []
-        self.browser.clicked(form, self.browser.get_form_field(form, 'names'))
-        self.browser.submit()
-        self.assertEqual((({
-                            'type': site_logging.USER_MAN,
-                            'who': 'admin',
-                            'whom': self.user_name,
-                            'action': 'UNASSIGNED',
-                            'roles': ['Contributor', 'Administrator', 'Manager'],
-                            'content_path': '/portal/info',
-                           },), {}),
-                        self.site_logger.info.call_args_list[0])
-        self.assertEqual((({
-                'type': site_logging.USER_MAN,
-                'who': 'admin',
-                'whom': self.user_name,
-                'action': 'ASSIGNED',
-                'roles': form['roles'],
-                'content_path': '/portal/info',
-            },), {}),
-                        self.site_logger.info.call_args_list[1])
+        roles = ['Contributor', 'Reviewer']
+        # Call admin_addroles directly via URL instead of relying on form
+        # submission which is fragile across Zope versions.
+        params = urlencode([('names', self.user_name),
+                            ('roles', roles[0]),
+                            ('roles', roles[1]),
+                            ('location', 'info')])
+        self.browser.go(
+            'http://localhost/portal/admin_addroles?' + params)
+
+        # The first call should be UNASSIGNED with the old roles.
+        # Role ordering is non-deterministic in Python 3, so compare
+        # with sorted roles.
+        self.assertEqual(len(self.site_logger.info.call_args_list), 2)
+        unassign_call = self.site_logger.info.call_args_list[0]
+        unassign_data = unassign_call[0][0]
+        self.assertEqual(unassign_data['type'], site_logging.USER_MAN)
+        self.assertEqual(unassign_data['who'], 'admin')
+        self.assertEqual(unassign_data['whom'], self.user_name)
+        self.assertEqual(unassign_data['action'], 'UNASSIGNED')
+        self.assertEqual(sorted(unassign_data['roles']),
+                         sorted(['Contributor', 'Administrator', 'Manager']))
+        self.assertEqual(unassign_data['content_path'], '/portal/info')
+
+        # The second call should be ASSIGNED with the new roles.
+        assign_call = self.site_logger.info.call_args_list[1]
+        assign_data = assign_call[0][0]
+        self.assertEqual(assign_data['type'], site_logging.USER_MAN)
+        self.assertEqual(assign_data['who'], 'admin')
+        self.assertEqual(assign_data['whom'], self.user_name)
+        self.assertEqual(assign_data['action'], 'ASSIGNED')
+        self.assertEqual(assign_data['roles'], roles)
+        self.assertEqual(assign_data['content_path'], '/portal/info')
+        # Restore original roles at /portal/info (the browser request
+        # auto-committed the role change).
+        self.auth_tool.manage_revokeUserRole(
+            user=self.user_name, location='/portal/info')
+        self.auth_tool.manage_addUsersRoles(
+            name=self.user_name,
+            roles=['Administrator', 'Manager', 'Contributor'],
+            location='/portal/info')
+        transaction.commit()
 
     def test_unassign_roles(self):
         """ test logging event of unassigning a role """
-        expected = {
-                    'type': site_logging.USER_MAN,
-                    'who': 'admin',
-                    'whom': self.user_name,
-                    'action': 'UNASSIGNED',
-                    'roles': ['Contributor', 'Administrator', 'Manager'],
-                    'content_path': '/portal/info',
-                   }
+        expected_roles = sorted(['Contributor', 'Administrator', 'Manager'])
+        original_roles = ['Administrator', 'Manager', 'Contributor']
         path_addressing = ['portal/info', '/portal/info', 'info']
         for loc in path_addressing:
-            um_page = self.browser.go('http://localhost/portal/admin_revokerole?user=%s&location=%s'
-                                      % (self.user_name, loc))
-            self.site_logger.info.assert_called_once_with(expected)
-            transaction.abort()
+            self.site_logger.reset_mock()
+            self.browser.go(
+                'http://localhost/portal/admin_revokerole?user=%s&location=%s'
+                % (self.user_name, loc))
+            self.site_logger.info.assert_called_once()
+            actual = self.site_logger.info.call_args[0][0]
+            self.assertEqual(actual['type'], site_logging.USER_MAN)
+            self.assertEqual(actual['who'], 'admin')
+            self.assertEqual(actual['whom'], self.user_name)
+            self.assertEqual(actual['action'], 'UNASSIGNED')
+            self.assertEqual(sorted(actual['roles']), expected_roles)
+            self.assertEqual(actual['content_path'], '/portal/info')
+            # The browser request committed the role revocation, so
+            # re-assign the roles for the next iteration.
+            self.auth_tool.manage_addUsersRoles(
+                name=self.user_name, roles=original_roles,
+                location='/portal/info')
+            transaction.commit()

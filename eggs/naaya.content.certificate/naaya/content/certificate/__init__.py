@@ -1,1 +1,1 @@
-from certificate_item import NyCertificate
+from .certificate_item import NyCertificate

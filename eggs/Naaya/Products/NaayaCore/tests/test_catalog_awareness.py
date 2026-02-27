@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 from zope import interface
 from OFS.SimpleItem import SimpleItem
@@ -11,9 +11,9 @@ from naaya.content.url.url_item import NyURL, addNyURL
 class BasicObject(SimpleItem):
     meta_type = 'Basic Test Object'
 
+@interface.implementer(INyCatalogAware)
 class CatalogAwareObject(BasicObject):
     meta_type = 'Catalog Aware Test Object'
-    interface.implements(INyCatalogAware)
 
 class CatalogAwarenessTest(NaayaTestCase):
     def afterSetUp(self):

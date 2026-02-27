@@ -10,12 +10,11 @@ selecting language for a localized property.
 """
 
 from zope.i18n.interfaces import INegotiator
-from zope.interface import implements
-from ZPublisher.Request import Request
+from zope.interface import implementer
+from .LanguageManagers import normalize_code
+from .constants import COOKIE_ID
 
-from LanguageManagers import normalize_code
-from constants import COOKIE_ID
-
+@implementer(INegotiator)
 class NyNegotiator(object):
     """
     Implementation of i18n negotiator, using cache on Request,
@@ -30,7 +29,6 @@ class NyNegotiator(object):
 
     """
 
-    implements(INegotiator)
 
     def __init__(self):
         """
@@ -51,16 +49,16 @@ class NyNegotiator(object):
 
     def _get_cache_key(self, available, client_langs):
         return (','.join(self.policy) + '/' + ','.join(available) +
-                '/' + repr(client_langs))
+                '/' + repr(sorted(client_langs.items()) if isinstance(client_langs, dict) else client_langs))
 
     def _update_cache(self, cache_key, lang, request):
-        if not request.has_key(self.cookie_id + '_cache'):
+        if not self.cookie_id + '_cache' in request:
             request[self.cookie_id + '_cache'] = {}
         request[self.cookie_id + '_cache'][cache_key] = lang
 
     def _query_cache(self, cache_key, request):
-        if (request.has_key(self.cookie_id + '_cache') and
-            request[self.cookie_id + '_cache'].has_key(cache_key) and
+        if (self.cookie_id + '_cache' in request and
+            cache_key in request[self.cookie_id + '_cache'] and
             request[self.cookie_id + '_cache'][cache_key]):
             return request[self.cookie_id + '_cache'][cache_key]
         else:
@@ -78,7 +76,7 @@ class NyNegotiator(object):
         choose an app-dependant default (e.g. get_default_language() in portal)
 
         """
-        available = map(normalize_code, available)
+        available = list(map(normalize_code, available))
         # here we keep {'xx': 'xx-zz'} for xx-zz, for fallback cases
         secondary = {}
         for x in [av for av in available if av.find("-") > -1]:
@@ -94,7 +92,7 @@ class NyNegotiator(object):
         url = request.form.get(self.cookie_id, '')
         path = request.get(self.cookie_id, '')
 
-        client_langs = {'browser': map(normalize_code, accept_langs),
+        client_langs = {'browser': list(map(normalize_code, accept_langs)),
                         'url': normalize_code(url),
                         'path': normalize_code(path),
                         'cookie': normalize_code(cookie)}

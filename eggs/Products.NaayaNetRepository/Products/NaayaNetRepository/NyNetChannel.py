@@ -21,12 +21,12 @@
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from constants import *
+from .constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyItem import NyItem

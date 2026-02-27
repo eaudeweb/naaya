@@ -5,8 +5,7 @@ import re
 # Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
-import zLOG
-
+import logging
 # Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate
@@ -24,7 +23,7 @@ from Products.NaayaCore.AuthenticationTool.utils import getUserEmail, findUsers
 from naaya.core.utils import is_valid_email
 from naaya.content.meeting import WAITING_ROLE
 from naaya.core.zope2util import path_in_site
-from permissions import PERMISSION_ADMIN_MEETING
+from .permissions import PERMISSION_ADMIN_MEETING
 
 
 def configureEmailNotifications(site):
@@ -93,7 +92,7 @@ class EmailSender(SimpleItem):
                                         p_subject=p_subject,
                                         only_to=only_to,
                                         only_cc=only_cc)
-        except Exception, e:
+        except Exception as e:
             zLOG.LOG('naaya.content.meeting.email', zLOG.WARNING,
                      'Email sending failed for template - %s' % str(e))
             return 0
@@ -114,7 +113,7 @@ class EmailSender(SimpleItem):
                                         p_to=p_to,
                                         p_from=p_from,
                                         p_subject=p_subject)
-        except Exception, e:
+        except Exception as e:
             zLOG.LOG('naaya.content.meeting.email', zLOG.WARNING,
                      'Email sending failed for template %s - %s' %
                      (template_id, str(e)))

@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import StringIO
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 try:
     import xlrd
@@ -27,7 +27,8 @@ class make_id_TestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         if excel_available:
             self.browser.go('http://localhost/portal/myfolder/csv_export/export?meta_type=Naaya%20News&file_type=Excel&as_attachment=True')
-            excel = self.browser.get_html()
+            excel = self.browser.result.content  # raw bytes for xlrd
             wb = xlrd.open_workbook(file_contents=excel)
             ws = wb.sheets()[0]
-            self.assertEqual(ws.cell(1,0).value, 'The News')
+            self.assertEqual(ws.cell(1,0).value, 'mynews')
+            self.assertEqual(ws.cell(1,1).value, 'The News')

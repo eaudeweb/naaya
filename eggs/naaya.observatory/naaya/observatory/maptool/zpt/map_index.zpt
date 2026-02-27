@@ -40,7 +40,7 @@
 <tal:block content="structure python:view.setup_map_engine_html(request)" />
 <script type="text/javascript" tal:attributes="src string:${view/portal_map/absolute_url}/map_i18n_js"></script>
 <script type="text/javascript" src="++resource++naaya.observatory.maptool/js/maptool.js"></script>
-<script tal:content="structure python:'var portal_url=%s;' % view.site.rstk.json_dumps(view.site.absolute_url())"></script>
+<script tal:content="structure python:'var portal_url=%s;' % view.site.rstk['json_dumps'](view.site.absolute_url())"></script>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
     <div id="center_content" style="width: 78%; overflow-x: auto;">

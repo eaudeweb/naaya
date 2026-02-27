@@ -19,7 +19,7 @@ def validate_widgets(registration_schema, form):
             raw_value = form[field_name]
         elif widget.multiple_form_values:
             raw_value = {}
-            for key, value in form.iteritems():
+            for key, value in form.items():
                 if key.startswith(field_name + '.'):
                     raw_value[key[len(field_name) + 1:]] = value
             if not raw_value:
@@ -40,7 +40,7 @@ def validate_widgets(registration_schema, form):
             widget.validateDatamodel(value)
             widget_value = widget.parseFormData(value)
             form_data[field_name] = widget.convertValue(widget_value)
-        except WidgetError, e:
+        except WidgetError as e:
             errors.append(str(e))
             form_data[field_name] = value
 
@@ -64,7 +64,7 @@ def prepare_error_response(context, register_schema, form_errors, req_form):
     if form_errors:
         context.setSessionErrorsTrans('The form contains errors. '
                                       'Please correct them and try again.')
-    for key, value in form_errors.iteritems():
+    for key, value in form_errors.items():
         if value:
             context.setSession('%s-errors' % key, '; '.join(value))
 

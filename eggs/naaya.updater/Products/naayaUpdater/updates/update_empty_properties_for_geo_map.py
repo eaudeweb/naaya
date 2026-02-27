@@ -128,7 +128,7 @@ class UpdateLandscapeType(UpdateScript):
                         self.log.debug('Landscape type set to ["Unspecified"] for %s' %
                             ob.absolute_url())
                         changed = True
-                    if isinstance(ob.landscape_type, basestring):
+                    if isinstance(ob.landscape_type, str):
                         if landscape_localized:
                             if ob.landscape_type == 'protected':
                                 ob.set_localpropvalue('landscape_type', 'en', ['Protected'])

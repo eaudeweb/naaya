@@ -1,5 +1,5 @@
 from OFS.interfaces import IObjectWillBeAddedEvent
-from interfaces import INyForumObjectAddEvent, INyForumObjectEditEvent
+from .interfaces import INyForumObjectAddEvent, INyForumObjectEditEvent
 
 from naaya.core.zope2util import path_in_site
 from Products.NaayaCore.NotificationTool.constants import LOG_TYPES

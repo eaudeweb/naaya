@@ -1,6 +1,6 @@
 import simplejson as json
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -8,8 +8,8 @@ from AccessControl.Permissions import view
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from naaya.core.zope2util import ofs_path
 
-from Widget import WidgetError, manage_addWidget
-from StringWidget import StringWidget
+from .Widget import WidgetError, manage_addWidget
+from .StringWidget import StringWidget
 
 def addGlossaryWidget(container, id="", title="Glossary Widget", REQUEST=None, **kwargs):
     """ Contructor for Glossary widget"""
@@ -59,7 +59,7 @@ class GlossaryWidget(StringWidget):
     display_mode_options = ['single-input', 'values-list']
 
     def _convert_to_form_string(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             return value
         else:
             separator = self.separator

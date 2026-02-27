@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import sys
 
@@ -6,7 +6,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from zExceptions import NotFound
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 from persistent.dict import PersistentDict
 
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -30,7 +30,7 @@ from naaya.content.bfile.NyBlobFile import make_blobfile, trim_filename
 from naaya.content.bfile.utils import file_has_content, tmpl_version, get_view_adapter
 from naaya.content.bfile.interfaces import INyBFile
 
-from permissions import PERMISSION_ADD_LOCALIZED_BFILE
+from .permissions import PERMISSION_ADD_LOCALIZED_BFILE
 
 #ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
 
@@ -172,7 +172,7 @@ def localizedbfile_download(context, path, REQUEST):
         ver = context._versions[language][ver_number]
         if ver.removed:
             raise IndexError
-    except (IndexError, ValueError, KeyError), e:
+    except (IndexError, ValueError, KeyError) as e:
         raise NotFound
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
@@ -186,9 +186,9 @@ def localizedbfile_download(context, path, REQUEST):
     else:
         raise NotFound
 
+@implementer(INyBFile)
 class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
-    implements(INyBFile)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -214,7 +214,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
     @property
     def current_version(self):
         language = self.get_selected_language()
-        hasKey = self._versions.has_key(language)
+        hasKey = language in self._versions
         if hasKey == True:
             _versions = self._versions[language]
             for ver in reversed(_versions):
@@ -245,7 +245,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
 
         ver.removed = True
         ver.removed_by = removed_by
-        ver.removed_at = datetime.utcnow()
+        ver.removed_at = datetime.now(timezone.utc)
         ver.size = None
 
         f = ver.open_write()
@@ -256,7 +256,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         """ """
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.utcnow(),
+                           timestamp=datetime.now(timezone.utc),
                            contributor=contributor)
         _versions = self._versions.pop(language, None)
 
@@ -271,7 +271,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
 
     def _versions_for_tmpl(self, language):
         """ """
-        hasKey = self._versions.has_key(language)
+        hasKey = language in self._versions
         if hasKey == True:
             _versions = self._versions[language]
             versions = [tmpl_version(self, ver, str(n+1))
@@ -305,7 +305,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -351,7 +351,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        hasKey = REQUEST.form.has_key('lang')
+        hasKey = 'lang' in REQUEST.form
         if hasKey == False:
             language = self.get_selected_language()
         else:

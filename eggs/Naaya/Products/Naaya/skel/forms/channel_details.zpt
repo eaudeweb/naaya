@@ -1,6 +1,6 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
-<tal:block condition="python: request.has_key('id_channel')">
+<tal:block condition="python: 'id_channel' in request">
 <tal:block tal:define="ob_channel python:here.getSyndicationTool().get(request['id_channel'])">
 <tal:block tal:condition="python:hasattr(ob_channel, 'url')">
 <h1 i18n:translate="" tal:content="python: ob_channel.title_or_id()" />
@@ -10,10 +10,10 @@
 		<li tal:repeat="item python:ob_channel.getAllChannelItems()">
 			<a tal:attributes="href python:item['link']" tal:content="python:item['title']" />
 			<br />
-			<tal:block tal:condition="python:item.has_key('date')">
+			<tal:block tal:condition="python:'date' in item">
 				[<span i18n:translate="">released on: </span> <span tal:content="python:here.utShowDateTime(here.utGetDate(item['date']))" />]
 			</tal:block>
-			<tal:block tal:condition="python:item.has_key('summary')">
+			<tal:block tal:condition="python:'summary' in item">
 				<br />
 				<span tal:content="structure python:item['summary']" />
 			</tal:block>

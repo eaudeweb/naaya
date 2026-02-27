@@ -20,7 +20,7 @@
 </select>
 <input type="submit" value="Go" />
 </form>
-<tal:block condition="python:request.has_key('concept_id')">
+<tal:block condition="python:'concept_id' in request">
 <tal:block define="	lang string:en;
 					concept_id python:request.get('concept_id', '');
 					detail_list python:here.getConceptDetails(concept_id, lang);

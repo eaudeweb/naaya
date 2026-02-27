@@ -17,7 +17,7 @@
 #
 # Alex Morega, Eau de Web
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -25,7 +25,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaWidgets.widgets.RadioMatrixWidget import RadioMatrixWidget
 from Products.NaayaWidgets.widgets.ComboboxMatrixWidget import ComboboxMatrixWidget
 
-from BaseStatistic import manage_addStatistic, BaseStatistic
+from .BaseStatistic import manage_addStatistic, BaseStatistic
 
 class ComboboxMatrixTabularStatistic(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions,

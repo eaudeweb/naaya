@@ -21,9 +21,9 @@
 #Python imports
 import os
 from os.path import join
-from StringIO import StringIO
-from urllib2 import urlopen
-from urllib import urlencode
+from io import StringIO
+from urllib.request import urlopen
+from urllib.parse import urlencode
 
 import simplejson as json
 
@@ -39,7 +39,7 @@ from Products.Naaya.managers.skel_parser import skel_parser
 from Products.NaayaCore.managers.utils import html_diff, normalize_template
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
     get_template_content, readFile)
-from utils import physical_path, list_folders_with_custom_index
+from .utils import physical_path, list_folders_with_custom_index
 
 default_service_url = 'http://speaker.edw.ro/css_diff?format=json'
 service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)

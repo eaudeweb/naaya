@@ -1,10 +1,10 @@
 #Python imports
 import os
 import logging
-from cStringIO import StringIO
+from io import BytesIO
 import traceback
 
-from zope.interface import implements
+from zope.interface import implementer
 
 #Zope imports
 from DateTime import DateTime
@@ -28,10 +28,10 @@ PRIORITY = dict([(_PRIORITIES[i], i) for i in range(len(_PRIORITIES))])
 
 LOGS_FOLDERNAME = 'update_logs'
 
+@implementer(IUpdateScript)
 class UpdateScript(Item, Acquisition.Implicit):
     """ Update script
     """
-    implements(IUpdateScript)
 
     title = 'Main class for update scripts'
     meta_type = 'Naaya Update Script'
@@ -93,7 +93,7 @@ class UpdateScript(Item, Acquisition.Implicit):
             else:
                 transaction.commit()
 
-        except Exception, e:
+        except Exception as e:
             self.log.error('Update script failed - "%s"' % str(e))
             self.log.error(traceback.format_exc())
             transaction.abort()

@@ -22,7 +22,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from App.ImageFile import ImageFile
 from DateTime import DateTime
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.PythonScripts.PythonScript import manage_addPythonScript
@@ -30,7 +30,7 @@ from ZPublisher.BaseRequest import DefaultPublishTraverse
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 
 # Naaya imports
 from Products.Naaya.NyFolder import NyFolder
@@ -48,7 +48,7 @@ from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import relative_object_path
 from naaya.core.zope2util import get_zope_env
-from interfaces import INyMeeting
+from .interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
@@ -56,18 +56,18 @@ from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE,
                                    PARTICIPANT_ROLE, ADMINISTRATOR_ROLE,
                                    MANAGER_ROLE, OWNER_ROLE)
-from permissions import (PERMISSION_ADD_MEETING,
+from .permissions import (PERMISSION_ADD_MEETING,
                          PERMISSION_PARTICIPATE_IN_MEETING,
                          PERMISSION_ADMIN_MEETING)
-from participants import Participants
+from .participants import Participants
 from email import EmailSender, configureEmailNotifications
-from reports import MeetingReports
-from subscriptions import SignupUsersTool
+from .reports import MeetingReports
+from .subscriptions import SignupUsersTool
 
 from lxml import etree
 from lxml.builder import ElementMaker
 
-from countries import get_country_name, get_countries
+from .countries import get_country_name, get_countries
 from eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
 
 # module constants
@@ -334,8 +334,6 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     permission = Permission('View', (), ob)
     permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ])
 
-    if ob.discussion:
-        ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     # log post date
@@ -382,10 +380,9 @@ def on_added_meeting_item(ob, event):
 _marker = object()
 
 
+@implementer(INyMeeting)
 class NyMeeting(NyContentData, NyFolder):
     """ """
-
-    implements(INyMeeting)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -674,7 +671,7 @@ class NyMeeting(NyContentData, NyFolder):
         username = username or self.REQUEST.AUTHENTICATED_USER.getUserName()
         participants = self.getParticipants()
         a_subscriptions = participants.subscriptions._account_subscriptions
-        subscriptions = a_subscriptions.itervalues()
+        subscriptions = a_subscriptions.values()
         for subscriber in subscriptions:
             if username == subscriber.uid:
                 return subscriber.accepted
@@ -787,7 +784,7 @@ class NyMeeting(NyContentData, NyFolder):
             header + self.description + footer
         cal.vevent.add('transp').value = 'OPAQUE'
 
-        modif_time = DT2dt(self.bobobase_modification_time())
+        modif_time = DT2dt(DateTime(self._p_mtime))
         cal.vevent.add('dtstamp').value = modif_time
 
         interval = getattr(self, 'interval', None)

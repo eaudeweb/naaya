@@ -1,17 +1,15 @@
 from datetime import datetime
 import re
 import sys
-import htmlentitydefs
+import html.entities
 import warnings
 import tempfile
-import urllib
+import urllib.parse
+import urllib.request
 import socket
-import scrubber
+import bleach
 
-if 'any' not in dir(__builtins__):
-    from Products.NaayaCore.backport import any
-    scrubber.any = any
-sanitize = scrubber.Scrubber().scrub
+sanitize = bleach.clean
 
 
 content_type_to_icons = {
@@ -101,15 +99,15 @@ def call_method(obj, attr, default):
 
 
 def force_to_unicode(s):
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
-    elif isinstance(s, str):
+    elif isinstance(s, bytes):
         try:
             return s.decode('utf-8')
         except UnicodeDecodeError:
             return s.decode('latin-1')
     else:
-        raise ValueError('expected `str` or `unicode`')
+        return str(s)
 
 
 _cooldown_map = {}
@@ -144,15 +142,15 @@ def unescape_html_entities(text):
             # character reference
             try:
                 if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
+                    return chr(int(text[3:-1], 16))
                 else:
-                    return unichr(int(text[2:-1]))
+                    return chr(int(text[2:-1]))
             except ValueError:
                 pass
         else:
             # named entity
             try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                text = chr(html.entities.name2codepoint[text[1:-1]])
             except KeyError:
                 pass
         return text  # leave as is
@@ -197,7 +195,7 @@ def is_valid_email(email):
     """
     Validate e-mail address against regular expression
     """
-    if VALID_EMAIL_PATTERN.match(str(email.encode('utf-8'))):
+    if VALID_EMAIL_PATTERN.match(email):
         return True
     return False
 
@@ -236,7 +234,7 @@ def download_to_temp_file(url):
     body.  When the file is closed it will be automatically removed.
     """
     temp_file = tempfile.TemporaryFile()
-    url_file = urllib.urlopen(url)
+    url_file = urllib.request.urlopen(url)
     try:
         while True:
             buf = url_file.read(2**16)
@@ -260,7 +258,7 @@ def set_default_socket_timeout_to_1min():
     socket.setdefaulttimeout(60)  # in seconds
 
 
-_illegal_unichrs = [
+_illegal_chrs = [
     (0x00, 0x08), (0x0B, 0x1F), (0x7F, 0x84), (0x86, 0x9F),
     (0xD800, 0xDFFF), (0xFDD0, 0xFDDF), (0xFFFE, 0xFFFF),
     (0x1FFFE, 0x1FFFF), (0x2FFFE, 0x2FFFF), (0x3FFFE, 0x3FFFF),
@@ -271,8 +269,8 @@ _illegal_unichrs = [
     (0x10FFFE, 0x10FFFF),
 ]
 
-_illegal_ranges = ["%s-%s" % (unichr(low), unichr(high))
-                   for (low, high) in _illegal_unichrs
+_illegal_ranges = ["%s-%s" % (chr(low), chr(high))
+                   for (low, high) in _illegal_chrs
                    if low < sys.maxunicode]
 
 _illegal_xml_re = re.compile(u'[%s]' % u''.join(_illegal_ranges))

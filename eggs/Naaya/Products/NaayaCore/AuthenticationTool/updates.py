@@ -41,7 +41,7 @@ class RemoveGhostRoles(UpdateScript):
     def _update(self, portal):
         acl_users = portal.acl_users
         users_roles = _getUsersRoles(portal)
-        for user, roles in users_roles.iteritems():
+        for user, roles in users_roles.items():
             if user not in acl_users.getUserNames() and not _get_user_by_uid(
                     user, portal):
                 for pair in roles:

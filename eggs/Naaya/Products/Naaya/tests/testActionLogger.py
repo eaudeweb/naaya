@@ -4,7 +4,7 @@ import random
 from zope import interface
 import transaction
 
-from NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from .NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.action_logger import ActionLogger, ActionLogItem
 from Products.Naaya.interfaces import IActionLogger
 from Products.Naaya.NyFolder import addNyFolder

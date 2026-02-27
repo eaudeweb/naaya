@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 class Interval(tuple):
     """ Immutable type representing two datetime intervals and all_day option

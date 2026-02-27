@@ -1,5 +1,5 @@
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
@@ -8,7 +8,7 @@ from Products.NaayaCore.constants import *
 from Products.NaayaCore.FormsTool.interfaces import ITemplate
 from naaya.core.zope2util import get_template_source
 
-from interfaces import INyTemplate
+from .interfaces import INyTemplate
 
 manage_addTemplateForm = PageTemplateFile('zpt/template_add', globals())
 def manage_addTemplate(self, id='', title='', file='', content_type='text/html', REQUEST=None):
@@ -25,9 +25,9 @@ def manage_addTemplate(self, id='', title='', file='', content_type='text/html',
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+@implementer(INyTemplate, ITemplate)
 class Template(ZopePageTemplate):
     """ """
-    implements(INyTemplate, ITemplate)
 
     meta_type = METATYPE_TEMPLATE
     icon = 'misc_/NaayaCore/Template.gif'
@@ -50,7 +50,7 @@ class Template(ZopePageTemplate):
             context['options'] = kwargs
         try:
             response = self.REQUEST.RESPONSE
-            if not response.headers.has_key('content-type'):
+            if not 'content-type' in response.headers:
                 response.setHeader('content-type', self.content_type)
         except AttributeError:
             pass

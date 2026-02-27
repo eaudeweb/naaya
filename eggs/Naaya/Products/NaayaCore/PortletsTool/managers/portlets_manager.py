@@ -42,7 +42,7 @@ class portlets_manager:
         self._p_changed = 1
 
     def delete_right_portlets_locations(self, p_location, p_id):
-        if self.__right_portlets_locations.has_key(p_location):
+        if p_location in self.__right_portlets_locations:
             try: self.__right_portlets_locations[p_location].remove(p_id)
             except: pass
             if len(self.__right_portlets_locations[p_location]) == 0:

@@ -1,17 +1,17 @@
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
-from zope import interface
+from zope.interface import implementer
 from zope import event
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 # product imports
-from constants import *
-from utils import utils, catalog_utils
-from interfaces import INyGlossaryElement
-from events import ItemTranslationChanged
+from .constants import *
+from .utils import utils, catalog_utils
+from .interfaces import INyGlossaryElement
+from .events import ItemTranslationChanged
 
 # constants
 LABEL_OBJECT = 'Glossary element'
@@ -40,17 +40,16 @@ def manage_addGlossaryElement(self, id='', title='', source='', subjects=[],
     element_obj.subjects = self.get_subject_by_codes(subjects)
     element_obj.load_translations_list()
     # imported here to avoid cross-import errors
-    from NyGlossary import set_default_translation
+    from .NyGlossary import set_default_translation
     set_default_translation(element_obj)
 
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
+@implementer(INyGlossaryElement)
 class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     """ NyGlossaryElement """
-
-    interface.implements(INyGlossaryElement)
     meta_type = NAAYAGLOSSARY_ELEMENT_METATYPE
     meta_label = LABEL_OBJECT
     product_name = NAAYAGLOSSARY_PRODUCT_NAME
@@ -63,6 +62,8 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         {'label': 'Undo',            'action': 'manage_UndoForm'},)
 
     security = ClassSecurityInfo()
+    security.declarePublic('title')
+    security.declareObjectPublic()
 
     def __init__(self, id, title, source, subjects, contributor, approved):
         """ constructor """

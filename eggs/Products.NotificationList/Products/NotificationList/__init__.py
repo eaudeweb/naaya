@@ -19,8 +19,8 @@
 
 import sys
 
-import NotificationList
-from constants import *
+from . import NotificationList
+from .constants import *
 
 def invokeNotificationLists(site, obj, event):
     """ Walk down the object tree and invoke all NotificationList objects """

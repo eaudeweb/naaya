@@ -1,5 +1,5 @@
 import random
-from zope.interface import implements, implementer
+from zope.interface import implementer, implementer
 from zope.component import adapter
 from Products.Naaya.tests.NaayaTestCase import ITestSite
 from Products.NaayaCore.interfaces import ICaptcha
@@ -9,12 +9,12 @@ html_template = """\
     <input name="test-captcha-response">
 """
 
+@implementer(ICaptcha)
 class MockCaptchaProvider(object):
     """
     Mock captcha provider that generates random keys and checks if they
     were submitted back properly.
     """
-    implements(ICaptcha)
 
     def __init__(self, site, mock_data):
         self.site = site

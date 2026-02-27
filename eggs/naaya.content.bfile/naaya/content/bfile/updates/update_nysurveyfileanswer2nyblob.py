@@ -4,8 +4,8 @@ naaya.content.bfiles
 
 from Products.naayaUpdater.updates import UpdateScript
 from naaya.content.bfile.NyBlobFile import make_blobfile
-from datetime import datetime
-from StringIO import StringIO
+from datetime import datetime, timezone
+from io import StringIO
 
 
 class UpdateSurveyFileAnswer2NyBlobFile(UpdateScript):
@@ -53,7 +53,7 @@ class UpdateSurveyFileAnswer2NyBlobFile(UpdateScript):
                     bf = make_blobfile(sfile,
                                        title=upload.title,
                                        removed=False,
-                                       timestamp=datetime.utcnow(),
+                                       timestamp=datetime.now(timezone.utc),
                                        contributor='')
 
                     bf.filename = upload.id

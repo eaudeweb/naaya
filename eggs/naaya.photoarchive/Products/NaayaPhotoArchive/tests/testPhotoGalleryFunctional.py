@@ -19,12 +19,12 @@
 # David Batranu, Eau de Web
 
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 from Testing import ZopeTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-import patchTestEnv
+from . import patchTestEnv
 
 
 class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
@@ -152,5 +152,5 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NyPhotoGalleryFunctionalTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NyPhotoGalleryFunctionalTestCase))
     return suite

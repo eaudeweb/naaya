@@ -26,7 +26,7 @@ from copy import deepcopy
 import simplejson as json
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -48,7 +48,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContentType import (NyContentType, NyContentData,
                                               NY_CONTENT_BASE_SCHEMA)
 from Products.NaayaBase.NyProperties import NyProperties
-from constants import *
+from .constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
@@ -60,11 +60,11 @@ from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
 # local imports
-from Section import addSection
-from Section import addSection_html
-from invitations import InvitationsContainer, InvitationUsersTool
-from comments_admin import CommentsAdmin
-from permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
+from .Section import addSection
+from .Section import addSection_html
+from .invitations import InvitationsContainer, InvitationUsersTool
+from .comments_admin import CommentsAdmin
+from .permissions import (PERMISSION_ADD_TALKBACK_CONSULTATION,
                          PERMISSION_REVIEW_TALKBACKCONSULTATION,
                          PERMISSION_REVIEW_TALKBACKCONSULTATION_AFTER_DEADLINE,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION,
@@ -437,7 +437,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     def comments_atom(self, REQUEST=None, days=2):
         """ ATOM feed with consultation comments """
 
-        if isinstance(days, basestring):
+        if isinstance(days, str):
             try:
                 days = int(days)
             except ValueError:

@@ -20,16 +20,15 @@
 
 #product imports
 from DateTime import DateTime
-from Globals import MessageDialog
+from App.Dialogs import MessageDialog
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_ELEMENT_METATYPE
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
 from Products.NaayaGlossary.parsers.tmx_parser import tmx_parser
 #from Products.NaayaGlossary.utils import utils
-#from cStringIO import StringIO
+#from io import BytesIO
 from naaya.core.zope2util import ofs_path
-from types import UnicodeType   #, StringType
+UnicodeType = str
 #from xml.sax import handler     # InputSource    # make_parser,
-import string
 
 def escape(s):
     return s.replace('&', '&amp;').replace('"', '&quot;').\
@@ -59,7 +58,7 @@ class glossary_export:
         if folders == '/':
             folders='all'
         else:
-            folders = string.split(folders, '/')[-1]
+            folders = folders.split('/')[-1]
         r_append('<?xml version="1.0" encoding="UTF-8"?>')
         r_append('<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">')
         r_append(u'<!-- XLIFF Format Copyright \xa9 OASIS Open 2001-2003 -->')
@@ -148,8 +147,10 @@ class glossary_export:
         results_list.extend(self.xliff_footer())
 
         for x in results_list:
-            if type(x) is UnicodeType: results.append(x.encode('utf-8'))
-            else:                      results.append(x)
+            if isinstance(x, bytes):
+                results.append(x.decode('utf-8'))
+            else:
+                results.append(str(x))
 
         if REQUEST is not None:
             self.xliff_http_header(REQUEST.RESPONSE)
@@ -184,8 +185,10 @@ class glossary_export:
 
         results_list.extend(self.tmx_footer())
         for x in results_list:
-            if type(x) is UnicodeType: results.append(x.encode('utf-8'))
-            else:                      results.append(x)
+            if isinstance(x, bytes):
+                results.append(x.decode('utf-8'))
+            else:
+                results.append(str(x))
         return '\r\n'.join(results)
 
     def tmx_header(self, folders):
@@ -195,7 +198,7 @@ class glossary_export:
         if folders == '/':
             folders='all'
         else:
-            folders = string.split(folders, '/')[-1]
+            folders = folders.split('/')[-1]
         self.REQUEST.RESPONSE.setHeader('Content-type', 'application/data; charset=UTF-8')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment; filename="%s_%s.tmx"' % (self.id, folders))
         r_append('<?xml version="1.0" encoding="utf-8"?>')
@@ -231,9 +234,8 @@ class glossary_export:
     def tmx_import(self, file, REQUEST=None):
         """ Imports a TMX file """
 
-        import string
         #from xml.sax import make_parser, handler, InputSource
-        #from cStringIO import StringIO
+        #from io import BytesIO
 
         parser = tmx_parser()
 
@@ -247,7 +249,7 @@ class glossary_export:
         l_list = chandler.TMXContent.keys()
         l_list.sort()
         for k in l_list:
-            folder_id = self.utf8_to_latin1(string.upper(k[:1]))
+            folder_id = self.utf8_to_latin1(k[:1].upper())
             folder = self.unrestrictedTraverse(folder_id, None)
             if folder is None:
                 try:

@@ -2,7 +2,7 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -24,7 +24,7 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from permissions import PERMISSION_ADD_GEOPOINT
+from .permissions import PERMISSION_ADD_GEOPOINT
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -173,24 +173,24 @@ def importNyGeoPoint(self, param, id, attrs, content, properties, discussion, ob
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyGeoPoint_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.longitude = attrs['longitude'].encode('utf-8')
-            ob.latitude = attrs['latitude'].encode('utf-8')
-            ob.address = attrs['address'].encode('utf-8')
-            ob.geo_type = attrs['geo_type'].encode('utf-8')
-            ob.url = attrs['url'].encode('utf-8')
-            ob.pointer = attrs['pointer'].encode('utf-8')
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+            ob = _create_NyGeoPoint_object(self, id, self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.longitude = attrs['longitude']
+            ob.latitude = attrs['latitude']
+            ob.address = attrs['address']
+            ob.geo_type = attrs['geo_type']
+            ob.url = attrs['url']
+            ob.pointer = attrs['pointer']
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -252,7 +252,7 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -281,9 +281,9 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -297,9 +297,9 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = geopoint_item()
@@ -312,12 +312,12 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 

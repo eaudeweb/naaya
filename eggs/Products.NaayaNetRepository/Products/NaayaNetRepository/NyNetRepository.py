@@ -23,16 +23,16 @@ from os.path import join
 #Zope imports
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from constants import *
+from .constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
-import NyNetSite
+from . import NyNetSite
 
 manage_addNyNetRepository_html = PageTemplateFile('zpt/netrepository_manage_add', globals())
 def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):

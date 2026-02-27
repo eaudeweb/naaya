@@ -89,6 +89,6 @@
 		</tal:block>
 
 		</tal:block>
-		<span tal:condition="python:request.SESSION.has_key('report')" tal:replace="python:request.SESSION.delete('report')" />
+		<span tal:condition="python:'report' in request.SESSION" tal:replace="python:request.SESSION.delete('report')" />
 	</tal:block>
 </tal:block>

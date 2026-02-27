@@ -19,7 +19,7 @@
 
 from Products.NaayaContent.NyBlogEntry.NyBlogEntry import addNyBlogEntry
 from Products.Naaya.tests import NaayaTestCase
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for NaayaContent object
@@ -64,5 +64,5 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaContentTestCase))
     return suite

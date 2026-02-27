@@ -3,7 +3,7 @@
 <subscriber for="Products.NaayaPhotoArchive.interfaces.INyPhoto OFS.interfaces.IObjectClonedEvent"
       handler=".events.afterCloneNyPhoto"/>
 
-<subscriber for="Products.NaayaPhotoArchive.interfaces.INyPhoto zope.app.container.interfaces.IObjectAddedEvent"
+<subscriber for="Products.NaayaPhotoArchive.interfaces.INyPhoto zope.lifecycleevent.interfaces.IObjectAddedEvent"
       handler=".events.afterAddNyPhoto"/>
 
 </configure>

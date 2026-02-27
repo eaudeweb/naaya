@@ -19,7 +19,6 @@
 # David Batranu, Eau de Web
 
 #Python imports
-from string import rfind
 try:
     from PIL import Image
 except ImportError:
@@ -28,8 +27,8 @@ except ImportError:
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Globals import InitializeClass
-from NyPhoto import json_encode
+from AccessControl.class_init import InitializeClass
+from .NyPhoto import json_encode
 from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
@@ -44,23 +43,22 @@ from Products.NaayaBase.constants import PERMISSION_ZIP_EXPORT
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import batch_utils, ZZipFile, make_id
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from cStringIO import StringIO
-from constants import DEFAULT_DISPLAYS
-from constants import DEFAULT_QUALITY
-from constants import METALABEL_NYPHOTOFOLDER
-from constants import METATYPE_NYPHOTO
-from constants import METATYPE_NYPHOTOFOLDER
-from constants import METATYPE_NYPHOTOGALLERY
-from constants import NUMBER_OF_RESULTS_PER_LINE
-from constants import NUMBER_OF_RESULTS_PER_PAGE
-from constants import PREFIX_NYPHOTOFOLDER
-from permissions import PERMISSION_ADD_PHOTO
-from photo_archive import photo_archive_base
+from io import BytesIO
+from .constants import DEFAULT_DISPLAYS
+from .constants import DEFAULT_QUALITY
+from .constants import METALABEL_NYPHOTOFOLDER
+from .constants import METATYPE_NYPHOTO
+from .constants import METATYPE_NYPHOTOFOLDER
+from .constants import METATYPE_NYPHOTOGALLERY
+from .constants import NUMBER_OF_RESULTS_PER_LINE
+from .constants import NUMBER_OF_RESULTS_PER_PAGE
+from .constants import PREFIX_NYPHOTOFOLDER
+from .permissions import PERMISSION_ADD_PHOTO
+from .photo_archive import photo_archive_base
 from zope.deprecation import deprecate
-import NyPhoto
+from . import NyPhoto
 import simplejson as json
-import zLOG
-
+import logging
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
@@ -110,7 +108,7 @@ def addNyPhotoFolder(self, id='', REQUEST=None, contributor=None,
     ob = self._getOb(folder_id)
     if getattr(_file, 'filename', None):
         kwargs_ = {}
-        for k, v in schema_raw_data.iteritems():
+        for k, v in schema_raw_data.items():
             if k in ob.inherit_fields:
                 kwargs_[k] = v
             elif '.' in k and k.split('.')[0] in ob.inherit_fields:
@@ -127,7 +125,7 @@ def addNyPhotoFolder(self, id='', REQUEST=None, contributor=None,
             REQUEST.RESPONSE.redirect('%s/photofolder_add_html' % self.absolute_url())
             return
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 1, None
@@ -135,10 +133,6 @@ def addNyPhotoFolder(self, id='', REQUEST=None, contributor=None,
 
     ob.approveThis(approved, approved_by)
     ob.submitThis()
-    if ob.discussion:
-        ob.open_for_comments()
-    else:
-        ob.close_for_comments()
     self.recatalogNyObject(ob)
 
     #redirect if case
@@ -194,24 +188,6 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
         NyContentData.__init__(self)
 
 
-    security.declarePrivate('open_for_comments')
-    def open_for_comments(self):
-        """
-        Enable(open) comments.
-        """
-        NyContainer.open_for_comments(self)
-        for photo in self.getObjects():
-            photo.open_for_comments()
-
-    security.declarePrivate('close_for_comments')
-    def close_for_comments(self):
-        """
-        Disable(close) comments.
-        """
-        NyContainer.close_for_comments(self)
-        for photo in self.getObjects():
-            photo.close_for_comments()
-
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self.getLocalProperty('title', lang)])
@@ -220,7 +196,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     def PUT_factory(self, name, typ, body):
         """ Create Photo objects by default for image types. """
         if typ[:6] == 'image/':
-            if self.glCheckPermissionPublishObjects():
+            if self.checkPermissionSkipApproval():
                 approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
                 approved, approved_by = 1, None
@@ -434,10 +410,6 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         if initial_watermark != self.watermark_text:
             for photo in self.objectValues():
                 photo._delete_watermarked_photos()
@@ -509,7 +481,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                     zf.setcurrentfile(name)
                     content = zf.read()
                     if self.isValidImage(content):
-                        id = name[max(rfind(name,'/'), rfind(name,'\\'), rfind(name,':'))+1:]
+                        id = name[max(name.rfind('/'), name.rfind('\\'), name.rfind(':'))+1:]
                         if title:
                             photo_title = title
                         else:
@@ -518,7 +490,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                             lang=self.gl_get_selected_language(), **schema_raw_data)
             else:
                 err = 'Invalid zip file.'
-        except Exception, error:
+        except Exception as error:
             err = str(error)
         if REQUEST:
             if err != '':
@@ -645,7 +617,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
         try:
             for item in self.objectValues():
                 if hasattr(item, 'topitem'): item.topitem = 0
-                if REQUEST.has_key('topitem_' + item.id):
+                if 'topitem_' + item.id in REQUEST:
                     item.topitem = 1
                 item._p_changed = 1
                 self.recatalogNyObject(item)
@@ -721,7 +693,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             #remove restrictions
             try:
                 self.manage_permission(view, roles=[], acquire=1)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True
@@ -731,7 +703,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                 roles = self.utConvertToList(roles)
                 roles.extend(['Manager', 'Administrator'])
                 self.manage_permission(view, roles=roles, acquire=0)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True

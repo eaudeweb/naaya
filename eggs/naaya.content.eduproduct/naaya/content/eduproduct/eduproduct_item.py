@@ -2,13 +2,13 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -24,9 +24,9 @@ from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 
-from interfaces import INyEduProduct
-from permissions import PERMISSION_ADD_EDU_PRODUCT
-import skel
+from .interfaces import INyEduProduct
+from .permissions import PERMISSION_ADD_EDU_PRODUCT
+from . import skel
 
 DEFAULT_SCHEMA = {
     'product_type': dict(sortorder=100, widget_type='SelectMultiple',
@@ -142,7 +142,7 @@ def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     # process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = (
             1, self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
@@ -150,8 +150,6 @@ def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion:
-        ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     # log post date
@@ -171,11 +169,10 @@ def addNyEduProduct(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
+@implementer(INyEduProduct)
 class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem,
                    NyNonCheckControl, NyValidation, NyContentType):
     """ """
-
-    implements(INyEduProduct)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -234,10 +231,6 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem,
                 _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
@@ -261,10 +254,6 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem,
             schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion:
-                self.open_for_comments()
-            else:
-                self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             # log date

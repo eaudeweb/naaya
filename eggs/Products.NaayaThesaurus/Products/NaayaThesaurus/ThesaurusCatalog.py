@@ -19,13 +19,14 @@
 #Python imports
 
 #Zope imports
-from ZPublisher.HTTPRequest             import record
-from Globals                            import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl                      import ClassSecurityInfo
 from Products.ZCatalog.ZCatalog         import ZCatalog
+from Products.ZCTextIndex.ZCTextIndex   import PLexicon
+from Products.ZCTextIndex.Lexicon       import CaseNormalizer, Splitter, StopWordRemover
 
 #Product imports
-from constants                      import *
+from .constants import *
 from Products.NaayaThesaurus.utils  import th_utils
 
 
@@ -56,16 +57,25 @@ class ThesaurusCatalog(ZCatalog):
         available_indexes = self.indexes()
         available_metadata = self.schema()
 
+        # Ensure Lexicon exists for ZCTextIndex
+        if 'Lexicon' not in self.objectIds():
+            lexicon = PLexicon('Lexicon', 'Default lexicon',
+                               Splitter(), CaseNormalizer(), StopWordRemover())
+            self._setObject('Lexicon', lexicon)
+
         #create indexes
         for index in self._getDefaultIndexes():
             if not (index in available_indexes):
-                if self._getIndexById(index) == 'TextIndexNG3':
-                    p_extras = record()
-                    p_extras.default_encoding = 'utf-8'
-                    p_extras.splitter_single_chars = 1
+                index_type = self._getIndexById(index)
+                if index_type == 'ZCTextIndex':
+                    p_extras = type('Extra', (), {
+                        'doc_attr': index,
+                        'index_type': 'Okapi BM25 Rank',
+                        'lexicon_id': 'Lexicon',
+                    })()
                 else:
                     p_extras = None
-                self.addIndex(index, self._getIndexById(index), p_extras)
+                self.addIndex(index, index_type, p_extras)
             if not (index in available_metadata):
                 self.addColumn(index)
 

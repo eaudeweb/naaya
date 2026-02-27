@@ -1,6 +1,6 @@
 def _get_content_types():
     """ make sure _discover_content_types has been run, and return its output """
-    from meta import NaayaContent
+    from .meta import NaayaContent
     nyct = NaayaContent()
     return {
             'content': nyct.contents,

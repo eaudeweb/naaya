@@ -19,17 +19,17 @@
 
 # Python imports
 import colorsys
-import urllib
-from cStringIO import StringIO
+from urllib.request import urlopen
+from io import BytesIO
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
-import pygooglechart
+from .BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
+from . import pygooglechart
 
 
 class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
@@ -75,7 +75,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         step = float(1 - h) / (len(self.question.getChoices()) + 1)
         for i in range(len(self.question.getChoices()) + 1):
             r, g, b = colorsys.hsv_to_rgb(h, s, v)
-            color = "%02x%02x%02x" % tuple([int(x*255) for x in r, g, b])
+            color = "%02x%02x%02x" % tuple([int(x*255) for x in (r, g, b)])
             colors.append(color)
             h += step
         chart.set_colours(colors)
@@ -112,8 +112,8 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         # write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, style)
         current_row += 1
-        file = urllib.urlopen(chart_url)
-        file_string = StringIO(file.read())
+        file = urlopen(chart_url)
+        file_string = BytesIO(file.read())
         bitmap_props = self.get_bitmap_props(file_string, temp_folder)
         """ insert_bitmap (filename, row, column, delta_x, delta_y) """
         ws.insert_bitmap(bitmap_props['path'], current_row, 1, 0, 5)

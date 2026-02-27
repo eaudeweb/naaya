@@ -1,10 +1,10 @@
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Product imports
-from Widget import Widget, WidgetError, manage_addWidget
+from .Widget import Widget, WidgetError, manage_addWidget
 
 
 def addDateWidget(

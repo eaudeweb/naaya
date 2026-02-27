@@ -1,1 +1,1 @@
-from url_item import NyURL
+from .url_item import NyURL

@@ -72,9 +72,9 @@ def get_content(context, request):
 
     length = int(form.get('length'))
     start = int(form.get('start'))
-    search = form.get('search[value]').decode('utf-8').strip()
+    search = form.get('search[value]', '').strip()
     topics = form.get('topic')
-    if isinstance(topics, basestring):
+    if isinstance(topics, str):
         topics = [topics]
     targets = form.get('columns[3][search][value]') or form.get(
         'target_groups')

@@ -3,13 +3,13 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 import Products
 
@@ -27,8 +27,8 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyBlogEntry
-from permissions import PERMISSION_ADD_BLOG_ENTRY
+from .interfaces import INyBlogEntry
+from .permissions import PERMISSION_ADD_BLOG_ENTRY
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -139,7 +139,7 @@ def addNyBlogEntry(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     #process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
@@ -201,10 +201,9 @@ def importNyBlogEntry(self, param, id, attrs, content, properties, discussion, o
 class blog_entry_item(Implicit, NyContentData):
     """ """
 
+@implementer(INyBlogEntry)
 class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, NyValidation, NyContentType):
     """ """
-
-    implements(INyBlogEntry)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -279,7 +278,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -314,9 +313,9 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -330,9 +329,9 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = blog_entry_item()
@@ -345,12 +344,12 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 

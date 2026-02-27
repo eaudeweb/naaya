@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 import transaction
 

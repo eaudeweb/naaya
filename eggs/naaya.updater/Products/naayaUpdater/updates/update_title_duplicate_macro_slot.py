@@ -8,7 +8,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from utils import physical_path
+from .utils import physical_path
 
 class UpdateSlotTitle(UpdateScript):
     """ Update slot title """

@@ -3,11 +3,11 @@ This module contains the class that handles check-in/check-out operations for a
 single object.
 """
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
 
-from constants import *
+from .constants import *
 
 
 class NyCheckControl:

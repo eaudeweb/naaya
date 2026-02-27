@@ -22,7 +22,7 @@ from Products.NaayaWidgets.widgets.ComboboxWidget import ComboboxWidget
 from Products.NaayaWidgets.widgets.RadioWidget import RadioWidget
 from Products.NaayaWidgets.widgets.CheckboxesWidget import CheckboxesWidget
 
-from BaseStatistic import BaseStatistic
+from .BaseStatistic import BaseStatistic
 
 class BaseMultipleChoiceStatistic(BaseStatistic):
     """Base class for calculating statistics for multiple choice questions"""

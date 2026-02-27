@@ -5,9 +5,9 @@ from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class StatisticsPortlet(object):
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Portal statistics'
 

@@ -2,9 +2,9 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from PIL import Image
-from StringIO import StringIO
+from io import BytesIO
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -14,7 +14,7 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from DateTime import DateTime
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -30,8 +30,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyNews
-from permissions import PERMISSION_ADD_NEWS
+from .interfaces import INyNews
+from .permissions import PERMISSION_ADD_NEWS
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -196,21 +196,21 @@ def importNyNews(self, param, id, attrs, content, properties, discussion, object
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyNews_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.expirationdate = self.utConvertDateTimeObjToString(self.utGetDate(attrs['expirationdate'].encode('utf-8')))
-            ob.topitem = abs(int(attrs['topitem'].encode('utf-8')))
-            ob.smallpicture = self.utBase64Decode(attrs['smallpicture'].encode('utf-8'))
-            ob.bigpicture = self.utBase64Decode(attrs['bigpicture'].encode('utf-8'))
-            ob.resourceurl = attrs['resourceurl'].encode('utf-8')
+            ob = _create_NyNews_object(self, id, self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.expirationdate = self.utConvertDateTimeObjToString(self.utGetDate(attrs['expirationdate']))
+            ob.topitem = abs(int(attrs['topitem']))
+            ob.smallpicture = self.utBase64Decode(attrs['smallpicture'])
+            ob.bigpicture = self.utBase64Decode(attrs['bigpicture'])
+            ob.resourceurl = attrs['resourceurl']
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -234,8 +234,8 @@ class news_item(Implicit, NyContentData):
                         aspect = float(p_picture.size[0]) / float(
                             p_picture.size[1])
                         p_picture = p_picture.resize((210, int(210/aspect)),
-                                                     Image.ANTIALIAS)
-                        smallpicture = StringIO()
+                                                     Image.LANCZOS)
+                        smallpicture = BytesIO()
                         p_picture.save(smallpicture, format)
                         smallpicture.seek(0)
                         self.smallpicture = smallpicture.read()
@@ -273,10 +273,10 @@ class news_item(Implicit, NyContentData):
         self.bigpicture = None
         self._p_changed = 1
 
+@implementer(INyNews)
 class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    implements(INyNews)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -304,13 +304,13 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         keywords = self._objectkeywords(lang)
-        if not isinstance(keywords, unicode):
+        if isinstance(keywords, bytes):
             keywords = keywords.decode('utf-8')
         details = self.getLocalProperty('details', lang)
-        if not isinstance(details, unicode):
+        if isinstance(details, bytes):
             details = details.decode('utf-8')
         source = self.getLocalProperty('source', lang)
-        if not isinstance(source, unicode):
+        if isinstance(source, bytes):
             source = source.decode('utf-8')
         return u' '.join([keywords, details, source])
 
@@ -350,7 +350,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             Dc.publisher(l_site.publisher)
             )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def getSmallPicture(self, version=None, REQUEST=None):
         """ """
@@ -389,7 +389,8 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -427,9 +428,11 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         self.copy_naaya_properties_from(self.version)
         self.smallpicture = self.version.smallpicture
         self.bigpicture = self.version.bigpicture
@@ -445,9 +448,11 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG
+)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = news_item()
@@ -460,12 +465,14 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         else:
             obj = self
 

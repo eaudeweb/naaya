@@ -8,7 +8,7 @@ from AccessControl.unauthorized import Unauthorized
 try:  # Zope >= 2.12
     from App.class_init import InitializeClass
 except ImportError:
-    from Globals import InitializeClass
+    from AccessControl.class_init import InitializeClass
 
 from destinet.registration.core import handle_groups
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -32,7 +32,7 @@ from naaya.content.mediafile.mediafile_item import addNyMediaFile \
 from Products.NaayaContent.NyPublication.NyPublication import NyPublication
 from Products.NaayaContent.NyPublication.NyPublication import \
     addNyPublication as original_addNyPublication
-from constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
+from .constants import (ID_PUBLISHER, METATYPE_PUBLISHER, TITLE_PUBLISHER,
                        PERMISSION_DESTINET_PUBLISH)
 
 NaayaPageTemplateFile('zpt/destinet_disseminate', globals(),

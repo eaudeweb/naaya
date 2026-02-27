@@ -21,7 +21,7 @@
 from Products.NaayaWidgets.widgets.RadioMatrixWidget import RadioMatrixWidget
 from Products.NaayaWidgets.widgets.CheckboxMatrixWidget import CheckboxMatrixWidget
 
-from BaseStatistic import BaseStatistic
+from .BaseStatistic import BaseStatistic
 
 class BaseMatrixStatistic(BaseStatistic):
     """Base class for calculating statistics for matrix questions"""

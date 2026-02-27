@@ -32,6 +32,7 @@ dz Bhutani
 
 el Greek
 en English
+en-US English/United States
 eo Esperanto
 es Spanish
 et Estonian

@@ -1,13 +1,13 @@
 from zope.component import adapts
-from zope.interface import implements
+from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
 from contentratings.storage import UserRatingStorage, EditorialRatingStorage
 from contentratings.interfaces import IRatingStorageMigrator
 
+@implementer(IRatingStorageMigrator)
 class UserRatingMigrator(object):
     """Converts converts an OOBTree based rating store into
     the new UserRating storage"""
-    implements(IRatingStorageMigrator)
     adapts(OOBTree, UserRatingStorage)
 
     def __init__(self, orig, new):

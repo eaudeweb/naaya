@@ -5,7 +5,7 @@ import re
 from naaya.core.zope2util import relative_object_path, ofs_walk
 from Products.Naaya.interfaces import INyFolder
 
-from fixes import fix_exceptions
+from .fixes import fix_exceptions
 
 
 def sanitize_folder_path(folder_zope_path):

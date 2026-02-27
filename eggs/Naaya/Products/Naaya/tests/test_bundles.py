@@ -2,7 +2,7 @@ import unittest
 from naaya.component import bundles
 from naaya.component.testing import ITestUtil, MyClass, clean_up_bundle
 from Products.Naaya.NySite import NySite
-from NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from .NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 
 class BundlePortalTest(unittest.TestCase):
@@ -32,13 +32,13 @@ class BundleFunctionalTest(NaayaFunctionalTestCase):
 
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/manage_bundle')
-        self.failUnless('Access denied' in self.browser.get_html())
+        self.assertTrue('Access denied' in self.browser.get_html())
         self.browser_do_logout()
 
         self.browser_do_login('admin', '')
 
         self.browser.go('http://localhost/portal/manage_bundle')
-        self.failUnless('Please enter the bundle to be set' in
+        self.assertTrue('Please enter the bundle to be set' in
                         self.browser.get_html())
 
         self.browser_do_logout()
@@ -62,7 +62,7 @@ class BundleFunctionalTest(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless("Success!" in html)
+        self.assertTrue("Success!" in html)
 
         form = self.browser.get_form('set-bundle')
         current_bundle = form.get_value('bundle')
@@ -88,7 +88,7 @@ class BundleFunctionalTest(NaayaFunctionalTestCase):
 
         expected_output = 'Bundle name cannot be empty!'
         html = self.browser.get_html()
-        self.failUnless(expected_output in html)
+        self.assertTrue(expected_output in html)
 
         self.browser_do_logout()
 

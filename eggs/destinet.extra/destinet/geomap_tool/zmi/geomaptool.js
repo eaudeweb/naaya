@@ -13,9 +13,11 @@ $(document).ready(function() {
     $('.administrative_list input:checkbox, .topics_list input:checkbox, .landscape_list input:checkbox,.map_legend input:checkbox').attr('checked', this.checked);
   })
   //$('#geo_query').autocomplete(autocomplete_data, { multiple: true });
-  $(window).unload(function() {
+  $(window).on('unload', function() {
     var url = $("#map_url").val();
-    History.pushState(null, null, url);
+    if (window.history && history.pushState) {
+      history.pushState(null, null, url);
+    }
   });
 });
 

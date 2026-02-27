@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.geopoint.geopoint_item import addNyGeoPoint
 from Products.Naaya.tests import NaayaTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo

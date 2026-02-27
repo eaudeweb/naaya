@@ -16,7 +16,7 @@ def i18n_exception(cls, msg, **params):
     The exception can be localized with :func:`localize_exc`.
     """
     formatted_msg = msg
-    for name, value in params.iteritems():
+    for name, value in params.items():
         formatted_msg = formatted_msg.replace('${%s}' % name, value)
 
     exc = cls(formatted_msg)
@@ -39,7 +39,7 @@ def localize_exc(exc, gettext):
         params = {}
 
     msg = gettext(msg)
-    for name, value in params.iteritems():
+    for name, value in params.items():
         msg = msg.replace('${%s}' % name, value)
 
     return msg

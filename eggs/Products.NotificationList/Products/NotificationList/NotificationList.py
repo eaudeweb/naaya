@@ -21,7 +21,7 @@
 from urlparse import urlparse
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -29,7 +29,7 @@ from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyItem import NyItem
-from constants import *
+from .constants import *
 
 def getSiteDomainName(site):
     portal_url = site.portal_url
@@ -163,7 +163,7 @@ class NotificationList(NyItem):
     security.declareProtected(PERMISSION_MANAGE_NOTIFICATION_LIST, 'subscribe_user_list')
     def subscribe_user_list(self, user_names=[], REQUEST=None):
         """ Subscribe a list of users to this notification list """
-        if isinstance(user_names, basestring):
+        if isinstance(user_names, str):
             user_names = [user_names]
 
         for user_name in user_names:
@@ -177,7 +177,7 @@ class NotificationList(NyItem):
     security.declareProtected(PERMISSION_MANAGE_NOTIFICATION_LIST, 'unsubscribe_user_list')
     def unsubscribe_user_list(self, user_names=[], REQUEST=None):
         """ Unsubscribe a list of users from this notification list """
-        if isinstance(user_names, basestring):
+        if isinstance(user_names, str):
             user_names = [user_names]
 
         for user_name in user_names:
@@ -217,7 +217,7 @@ class NotificationList(NyItem):
                 potential_users[user['user_name']] = user
 
         output = []
-        for user in potential_users.itervalues():
+        for user in potential_users.values():
             if user['user_name'] not in self.users:
                 output.append(user)
         return output

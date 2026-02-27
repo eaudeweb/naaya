@@ -4,20 +4,23 @@ file type of object. All types of objects that are file system files
 must extend this class.
 """
 
-from zope.interface import implements
-from Globals import InitializeClass
+import logging
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from OFS.Image import File, Pdata   #, getImageInfo
-from interfaces import INyFSFile
+from .interfaces import INyFSFile
 # from Products.ExtFile.ExtFile import ExtFile
 # from Products.ExtFile.ExtImage import ExtImage
 from naaya.content.bfile.NyBlobFile import NyBlobFile
 
+logger = logging.getLogger('NyFSFile')
+
+@implementer(INyFSFile)
 class NyFSFile(File):
     """
     ExtFile adapter for File objects.
     """
 
-    implements(INyFSFile)
 
     content_type = 'application/octet-stream' # catch-all content type
 
@@ -58,6 +61,7 @@ class NyFSFile(File):
             return
         if filename:
             self._bfile.id = filename
+            self._bfile.filename = filename
         self.data = ''
         if isinstance(data, NyBlobFile):
             self._bfile = data
@@ -72,10 +76,16 @@ class NyFSFile(File):
     def get_data(self, as_string=True):
         if as_string:
             if not hasattr(self, '_bfile'):
-                return self._ext_file.index_html()
+                if hasattr(self, '_ext_file'):
+                    return self._ext_file.index_html()
+                return ''
             if hasattr(self, '_ext_file'):  #not migrated yet?
                 if self._bfile.size == 0:
                     return self._ext_file.index_html()
+            # In Zope 5, index_html() returns a BlobStreamIterator
+            # instead of raw bytes. Use open().read() for direct data access.
+            if hasattr(self._bfile, 'open'):
+                return self._bfile.open().read()
             return self._bfile.index_html()
 
         if hasattr(self, '_ext_file'):  #not migrated yet?
@@ -84,6 +94,8 @@ class NyFSFile(File):
             if self._bfile.size == 0:
                 return self._ext_file
 
+        if not hasattr(self, '_bfile'):
+            return None
         return self._bfile
 
     # Implement File methods

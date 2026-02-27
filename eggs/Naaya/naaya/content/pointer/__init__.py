@@ -1,1 +1,1 @@
-from pointer_item import NyPointer
+from .pointer_item import NyPointer

@@ -1,7 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
@@ -9,7 +9,7 @@ from Products.NaayaCore.constants import METATYPE_SCHEMA
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from naaya.core.zope2util import folder_manage_main_plus
 
-from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
+from .widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
     'String', 'TextArea', 'Date', 'Interval', 'Checkbox', 'URL', 'Select',
@@ -22,7 +22,7 @@ def _load_widgets():
     widget_constructors = {}
     widget_types_by_metatype = {}
     for name in known_widget_types:
-        module_name = 'widgets.%sWidget' % name
+        module_name = 'Products.NaayaCore.SchemaTool.widgets.%sWidget' % name
         method_name = 'add%sWidget' % name
         class_name = '%sWidget' % name
         i = __import__(
@@ -47,7 +47,7 @@ class Schema(Folder):
     meta_types = tuple({
         'name': meta_type,
         'action': widget_constructors[
-            widget_types_by_metatype[meta_type]].func_name,
+            widget_types_by_metatype[meta_type]].__name__,
         'permission': view_management_screens,
     } for meta_type in widget_types_by_metatype)
 
@@ -89,7 +89,7 @@ class Schema(Folder):
         if self.objectIds():
             raise ValueError(
                 'Schema "%s" has already been populated' % self.title_or_id())
-        for name, data in schema_def.iteritems():
+        for name, data in schema_def.items():
             self.addWidget(name, **data)
 
         # manually set the keywords & coverage glossaries (ugly hack)
@@ -130,7 +130,7 @@ class Schema(Folder):
             self, id=propdef_id, title=title)
         widget = self._getOb(widget_id)
 
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             if name == 'data_type' and value not in DATA_TYPES:
                 raise ValueError('Unknown data format "%s"' % value)
             elif name == 'default':
@@ -191,7 +191,7 @@ class Schema(Folder):
                 raw_value = form[field_name]
             elif widget.multiple_form_values:
                 raw_value = {}
-                for key, value in form.iteritems():
+                for key, value in form.items():
                     if key.startswith(field_name + '.'):
                         raw_value[key[len(field_name) + 1:]] = value
                 if not raw_value:
@@ -220,7 +220,7 @@ class Schema(Folder):
                 else:
                     widget_value = widget.parseFormData(value)
                 form_data[field_name] = widget.convertValue(widget_value)
-            except WidgetError, e:
+            except WidgetError as e:
                 errors.append(str(e))
                 form_data[field_name] = value
 

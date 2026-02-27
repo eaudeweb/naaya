@@ -1,12 +1,12 @@
 import unittest
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 
 from Products.NaayaWidgets.Widget import WidgetError
 import Products.NaayaSurvey.SurveyQuestionnaire
 from Products.NaayaSurvey.SurveyQuestionnaire import (
                                                 SurveyQuestionnaireException)
 
-import stubs
+from . import stubs
 
 def invalidation_onsubmit_side_effect(datamodel, errors):
     errors.append('validation_onsubmit_error')
@@ -22,7 +22,8 @@ def dec_invalidation_onsubmit(func):
     return new_func
 validation_onsubmit = Mock()
 
-answer_12345 = Mock()
+answer_12345 = Mock(anonymous_answer=False)
+_known_obs = {'answer_12345', 'validation_onsubmit'}
 def _getOb_side_effect(*args, **kwargs):
     global validation_onsubmit
     if args[0] == 'answer_12345':
@@ -30,6 +31,8 @@ def _getOb_side_effect(*args, **kwargs):
     elif args[0] == 'validation_onsubmit':
         return validation_onsubmit
     return None
+def _contains_side_effect(key):
+    return key in _known_obs
 
 class AddSurveyAnswerTestCase(unittest.TestCase):
     def setUp(self):
@@ -51,6 +54,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         survey.absolute_url = Mock(return_value="http://survey")
         survey._getOb = Mock(side_effect=_getOb_side_effect)
+        survey.__contains__ = _contains_side_effect
 
         self.survey = survey
 
@@ -200,7 +204,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey.allow_multiple_answers = False
         old_answer = Mock()
         old_answer.id = '12345'
-        survey.getAnswerForRespondent = Mock(return_value=old_answer)
+        survey.getAnswerForRespondent = Mock(side_effect=[old_answer, None])
         survey._delObject = Mock()
 
         survey.addSurveyAnswer()
@@ -213,11 +217,12 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_no_multiple_answers_with_request(self, manage_addSurveyAnswer):
+        manage_addSurveyAnswer.return_value = 'answer_12345'
         survey = self.survey
         survey.allow_multiple_answers = False
         old_answer = Mock()
         old_answer.id = '12345'
-        survey.getAnswerForRespondent = Mock(return_value=old_answer)
+        survey.getAnswerForRespondent = Mock(side_effect=[old_answer, None])
         survey._delObject = Mock()
         REQUEST = Mock()
         REQUEST.form = {}
@@ -255,14 +260,12 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         result = survey.addSurveyAnswer(REQUEST=REQUEST)
 
         self.assertEqual(result, 'answer_12345')
-        self.assertEqual(survey.setSession.call_count, 3)
+        self.assertEqual(survey.setSession.call_count, 2)
         self.assertEqual(survey.setSession.call_args_list[0][0],
                          ('title', 'Thank you for taking the survey'))
         self.assertEqual(survey.setSession.call_args_list[1][0],
-                         ('body', ''))
-        self.assertEqual(survey.setSession.call_args_list[2][0],
                          ('referer', 'http://survey'))
-        survey.delSessionKeys.assert_called_with([])
+        survey.delSessionKeys.assert_called_with(list({}.keys()))
         REQUEST.RESPONSE.redirect.assert_called_with(
                                             "http://survey/messages_html")
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,

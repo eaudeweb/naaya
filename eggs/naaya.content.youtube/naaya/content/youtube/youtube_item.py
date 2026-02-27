@@ -1,15 +1,15 @@
 from copy import deepcopy
 import os
 import sys
-import urllib2
-
-from Globals import InitializeClass
+import urllib.request
+import urllib.error
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -25,8 +25,8 @@ from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 
-from interfaces import INyYoutube
-from permissions import PERMISSION_ADD_YOUTUBE
+from .interfaces import INyYoutube
+from .permissions import PERMISSION_ADD_YOUTUBE
 
 DEFAULT_SCHEMA = {
     'youtube_id': dict(
@@ -139,7 +139,7 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
                 'Invalid Youtube ID (inexisting video)']
 
     # check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
+    if REQUEST is not None and not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(recaptcha_response, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
@@ -157,7 +157,7 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     # process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = (1,
                                  self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
@@ -165,8 +165,6 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion:
-        ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     # log post date
@@ -186,11 +184,10 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
+@implementer(INyYoutube)
 class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
                 NyNonCheckControl, NyValidation, NyContentType):
     """ """
-
-    implements(INyYoutube)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -272,10 +269,6 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
                 _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
@@ -340,10 +333,6 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
                         'Invalid Youtube ID (inexisting video)']
 
         if not form_errors:
-            if self.discussion:
-                self.open_for_comments()
-            else:
-                self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             # log date
@@ -408,8 +397,8 @@ def get_config():
 
 def checkExistingVideo(video_id):
     try:
-        urllib2.urlopen('https://www.youtube.com/oembed?format=json&url='
+        urllib.request.urlopen('https://www.youtube.com/oembed?format=json&url='
                         'https://www.youtube.com/watch?v=%s' % video_id)
-    except urllib2.HTTPError:
+    except urllib.error.HTTPError:
         return False
     return True

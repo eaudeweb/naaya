@@ -50,29 +50,29 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
         title_node = doc.createElement("title")
         if item.title:
             title = doc.createTextNode(
-                item.title.encode('utf-8').decode('utf-8'))
+                item.title)
         else:
             title = doc.createTextNode(str(item.getId()))
         title_node.appendChild(title)
         entry.appendChild(title_node)
         summary_node = doc.createElement("summary")
         summary_node.setAttribute("type", "html")
-        description = [item.description.encode('utf-8').decode('utf-8')]
+        description = [item.description]
         description.append(
             "<b>Address</b>: %s" %
-            item.geo_location.address.encode('utf-8').decode('utf-8'))
+            item.geo_location.address)
         if hasattr(item.aq_self, 'webpage'):
             description.append(
                 "<b>Webpage:</b>: %s" %
-                item.webpage.encode('utf-8').decode('utf-8'))
+                item.webpage)
         if hasattr(item.aq_self, 'contact'):
             description.append(
                 "<b>Contact:</b>: %s" %
-                item.contact.encode('utf-8').decode('utf-8'))
+                item.contact)
         if hasattr(item.aq_self, 'source') and item.source:
             description.append(
                 "<b>Source:</b>: %s" %
-                item.source.encode('utf-8').decode('utf-8'))
+                item.source)
         summary_node.appendChild(doc.createTextNode(
             "%s" % ("<br />".join(description))))
         entry.appendChild(summary_node)
@@ -92,19 +92,19 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
         if hasattr(item.aq_self, 'webpage'):
             url_node = doc.createElement("extData:url")
             url = doc.createTextNode(
-                item.webpage.encode('utf-8').decode('utf-8'))
+                item.webpage)
             url_node.appendChild(url)
             entry.appendChild(url_node)
 
         address_node = doc.createElement("extData:address")
         address = doc.createTextNode(
-            getattr(item, 'postaladdress', '').encode('utf-8').decode('utf-8'))
+            getattr(item, 'postaladdress', ''))
         address_node.appendChild(address)
         entry.appendChild(address_node)
 
         certificate_node = doc.createElement("extData:certificate")
         certificate = doc.createTextNode(
-            getattr(item, 'keywords', '').encode('utf-8').decode('utf-8'))
+            getattr(item, 'keywords', ''))
         certificate_node.appendChild(certificate)
         entry.appendChild(certificate_node)
 
@@ -112,7 +112,7 @@ def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
         symbol_title = self.getSymbolTitle(
             getattr(item, 'category-marketplace', ''))
         type = doc.createTextNode(
-            symbol_title.encode('utf-8').decode('utf-8'))
+            symbol_title)
         type_node.appendChild(type)
         entry.appendChild(type_node)
 
@@ -193,7 +193,7 @@ def get_map_results(self, REQUEST=None, options={}, **kw):
     sustainability = kw.get('sustainability', '')
     credibility = kw.get('credibility', '')
     certificate_services = kw.get('certificate_services', [])
-    if isinstance(certificate_services, basestring):
+    if isinstance(certificate_services, str):
         certificate_services = certificate_services.split(',')
     administrative_level = kw.get('administrative_level', [])
     if administrative_level == '':

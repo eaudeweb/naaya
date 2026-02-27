@@ -1,5 +1,7 @@
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
+import urllib.request
+import urllib.error
 import simplejson as json
 import logging
 
@@ -151,12 +153,12 @@ class OpenLayersMapEngine(SimpleItem):
     naaya_openlayers_css = ImageFile('naaya_openlayers.css', globals())
 
     def _geocode_nominatim_request(self, address):
-        opener = urllib2.build_opener()
+        opener = urllib.request.build_opener()
         opener.addheaders = [('User-agent', NOMINATIM_USER_AGENT)]
 
         query = {'q': address, 'format': 'json'}
 
-        f = opener.open(NOMINATIM_URL + urllib.urlencode(query.items()))
+        f = opener.open(NOMINATIM_URL + urllib.parse.urlencode(query.items()))
 
         try:
             return f.read()

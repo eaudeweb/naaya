@@ -2,12 +2,14 @@ from AccessControl import Unauthorized
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from naaya.content.url.url_item import addNyURL
-from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
-from naaya.core.zope2util import permission_add_role
 
 class TestDeleteByOwner(NaayaTestCase):
-    def setUp(self):
-        notif_tool = self.portal.portal_notification
+    """Test that owners can delete their own content.
+
+    Owner role has 'Naaya - Delete content' permission by default
+    (configured in skel.xml), so contributors can delete objects they own.
+    Non-owner contributors should NOT be able to delete others' objects.
+    """
 
     def tearDown(self):
         self.logout()
@@ -17,20 +19,18 @@ class TestDeleteByOwner(NaayaTestCase):
         return self.portal['info'][object_id]
 
     def test_not_allowed(self):
+        """ non-owner contributor cannot access deleteThis """
         self.login('contributor')
-
         ob = self._submit_obj()
-
+        # Switch to a different contributor who is NOT the owner
+        self.login('user1')
         self.assertRaises(Unauthorized, self.portal.restrictedTraverse,
                           'info/testurl/deleteThis')
 
-    def test_ok(self):
-        permission_add_role(self.portal, PERMISSION_DELETE_OBJECTS, 'Owner')
-
+    def test_owner_can_traverse_delete(self):
+        """ owner can access deleteThis via restrictedTraverse """
         self.login('contributor')
-
         ob = self._submit_obj()
-
         self.portal.restrictedTraverse('info/testurl/deleteThis')
 
     def test_delete(self):
@@ -45,18 +45,17 @@ class TestDeleteByOwner(NaayaTestCase):
         self.assertTrue(ob_id not in parent.objectIds())
 
     def test_not_allowed_by_checking(self):
-        """ test can not delete object by ticking checkbox in folder view """
+        """ non-owner contributor cannot delete via folder checkbox """
         self.login('contributor')
         parent = self.portal['info']
-
         ob = self._submit_obj()
-
+        # Switch to a different contributor who is NOT the owner
+        self.login('user1')
         self.assertRaises(Unauthorized, parent.deleteObjects, id=ob.getId())
 
     def test_delete_by_checking(self):
         """ test can delete own object by ticking checkbox in folder view """
         parent = self.portal['info']
-        permission_add_role(self.portal, PERMISSION_DELETE_OBJECTS, 'Owner')
         self.login('contributor')
 
         ob = self._submit_obj()

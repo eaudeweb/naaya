@@ -4,7 +4,7 @@
 
 <h1>Basic properties</h1>
 
-<div class="system-msg" tal:condition="python:request.has_key('save') and request['save']=='ok'">
+<div class="system-msg" tal:condition="python:'save' in request and request['save']=='ok'">
 	Saved changes. (<span tal:replace="here/ZopeTime" />)
 </div>
 

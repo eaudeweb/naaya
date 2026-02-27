@@ -111,7 +111,7 @@ def syndicateThisExtended(self):
     lat = str(getattr(self.geo_location, 'lat', ''))
     lon = str(getattr(self.geo_location, 'lon', ''))
     id_number = getattr(self, 'id_number', '')
-    if not isinstance(id_number, basestring):
+    if not isinstance(id_number, str):
         id_number = str(id_number)
     xml = Rdf.RDF(
         E.item(

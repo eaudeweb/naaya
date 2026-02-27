@@ -1,6 +1,6 @@
 from AccessControl import ClassSecurityInfo
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from naaya.groupware.groupware_site import GroupwareSite
 from Products.NaayaCore.managers.utils import utils
 

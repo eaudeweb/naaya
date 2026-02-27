@@ -18,12 +18,10 @@
 
 
 #Zope imports
-import Globals
-
-
+# import Globals removed
 #product name
 NAAYATHESAURUS_PRODUCT_NAME =        'Naaya Thesaurus'
-NAAYATHESAURUS_PATH =                Globals.package_home(globals())
+NAAYATHESAURUS_PATH =                os.path.dirname(os.path.abspath(__file__))
 
 #permissions
 PERMISSION_ADD_NAAYATHESAURUS =      'Add Naaya Thesaurus'
@@ -60,16 +58,16 @@ NAAYATHESAURUS_CATALOG_ID =     'catalog'
 THESAURUS_INDEXES = {'meta_type'        :'FieldIndex',
                      'langcode'         :'FieldIndex',
                      'theme_id'         :'FieldIndex',
-                     'theme_name'       :'TextIndexNG3',
+                     'theme_name'       :'ZCTextIndex',
                      'concept_id'       :'FieldIndex',
                      'relation_id'      :'FieldIndex',
                      'relation_type'    :'FieldIndex',
-                     'concept_name'     :'TextIndexNG3',
+                     'concept_name'     :'ZCTextIndex',
                      'source_id'        :'FieldIndex',
-                     'source_name'      :'TextIndexNG3',
-                     'alt_name'         :'TextIndexNG3',
-                     'scope_note'       :'TextIndexNG3',
-                     'definition'       :'TextIndexNG3'}
+                     'source_name'      :'ZCTextIndex',
+                     'alt_name'         :'ZCTextIndex',
+                     'scope_note'       :'ZCTextIndex',
+                     'definition'       :'ZCTextIndex'}
 
 #relation types
 RELATION_TYPES = {'1':'Broader', '2':'Narrower', '3':'Related'}

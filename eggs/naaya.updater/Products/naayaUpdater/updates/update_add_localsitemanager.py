@@ -1,5 +1,7 @@
 from AccessControl import ClassSecurityInfo
-from zope.app.component import interfaces, site
+from zope.component.interfaces import ISite, IPossibleSite
+from zope.site import LocalSiteManager
+from zope.site.site import SiteManagerContainer
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.Naaya.interfaces import IActionLogger
@@ -27,18 +29,18 @@ class UpdateAddLocalSiteManager(UpdateScript):
             else:
                 self.log.debug('Already has action logger')
 
-        if interfaces.ISite.providedBy(portal) is True:
+        if ISite.providedBy(portal) is True:
             self.log.debug("Already has site manager")
             add_action_logger(portal.getSiteManager())
             return True
 
-        if interfaces.IPossibleSite.providedBy(portal) is False:
+        if IPossibleSite.providedBy(portal) is False:
             self.log.error('Failed to add manager to %s'
                            % portal.absolute_url())
             return False
 
-        sm = site.LocalSiteManager(portal)
-        site.SiteManagerContainer.setSiteManager.im_func(portal, sm)
+        sm = LocalSiteManager(portal)
+        SiteManagerContainer.setSiteManager.__func__(portal, sm)
         portal.setSiteManager(sm)
         self.log.debug('Added site manager to %s' % portal.absolute_url())
         add_action_logger(sm)

@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from BeautifulSoup import BeautifulSoup
+from unittest import TestSuite, TestLoader
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -22,14 +22,14 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/info/event_add_html')
-        self.failUnless('<h1>Submit Event</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit Event</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -45,29 +45,32 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         ids = set()
         for e in event_types:
             try:
-                labels.add(e.get_labels()[0].text)
+                label = e.get_labels()[0].text
             except IndexError:
                 continue
+            if not label:  # skip empty <option>
+                continue
+            labels.add(label)
             ids.add(e.name)
-        self.failUnlessEqual(labels, set(['Conference', 'Other', 'Meeting', 'Event']))
-        self.failUnlessEqual(ids, set(['conference', 'other', 'meeting', 'event']))
+        self.assertEqual(labels, set(['Conference', 'Other', 'Meeting', 'Event']))
+        self.assertEqual(ids, set(['conference', 'other', 'meeting', 'event']))
 
         form['event_type:utf8:ustring'] = ['conference']
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.failUnlessEqual(self.portal.info.test_event.event_type, 'conference')
+        self.assertEqual(self.portal.info.test_event.event_type, 'conference')
         self.portal.info.test_event.approveThis()
 
         self.browser.go('http://localhost/portal/info/test_event')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_event.*</h1>', html, re.DOTALL))
-        self.failUnless('test_event_description' in html)
-        self.failUnless('test_event_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
-        self.failUnless('test_event_details' in html)
+        self.assertTrue(re.search(r'<h1>.*test_event.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_event_description' in html)
+        self.assertTrue('test_event_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
+        self.assertTrue('test_event_details' in html)
 
         self.browser_do_logout()
 
@@ -81,8 +84,8 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -90,13 +93,13 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myevent/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My event')
+        self.assertEqual(form['title:utf8:ustring'], 'My event')
 
         form['title:utf8:ustring'] = 'new_event_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myevent.title, 'new_event_title')
+        self.assertEqual(self.portal.myfolder.myevent.title, 'new_event_title')
 
         self.browser.go('http://localhost/portal/myfolder/myevent/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -104,8 +107,8 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myevent.title, 'new_event_title')
-        self.failUnlessEqual(self.portal.myfolder.myevent.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.myevent.title, 'new_event_title')
+        self.assertEqual(self.portal.myfolder.myevent.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -119,8 +122,8 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -129,12 +132,12 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myevent/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My event')
+        self.assertEqual(form['title:utf8:ustring'], 'My event')
         form['title:utf8:ustring'] = 'new_event_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myevent.title,
+        self.assertEqual(self.portal.myfolder.myevent.title,
                              'new_event_title')
 
         self.browser_do_logout()
@@ -144,7 +147,7 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -170,9 +173,9 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     def test_start_version(self):
         from naaya.content.event.event_item import event_item
         self.browser_do_login('admin', '')
-        self.failUnlessEqual(self.portal.info.ver_event.version, None)
+        self.assertEqual(self.portal.info.ver_event.version, None)
         self.browser.go('http://localhost/portal/info/ver_event/startVersion')
-        self.failUnless(isinstance(self.portal.info.ver_event.version, event_item))
+        self.assertTrue(isinstance(self.portal.info.ver_event.version, event_item))
         self.browser_do_logout()
 
     def test_edit_version(self):
@@ -185,9 +188,9 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         ver_event = self.portal.info.ver_event
-        self.failUnlessEqual(ver_event.title, 'ver_event')
+        self.assertEqual(ver_event.title, 'ver_event')
         # we can't do ver_event.version.title because version objects don't have the _languages property
-        self.failUnlessEqual(ver_event.version.getLocalProperty('title', 'en'), 'ver_event_newtitle')
+        self.assertEqual(ver_event.version.getLocalProperty('title', 'en'), 'ver_event_newtitle')
 
         self.browser_do_logout()
 
@@ -201,6 +204,6 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'ver_event_version')
+        self.assertEqual(form['title:utf8:ustring'], 'ver_event_version')
 
         self.browser_do_logout()

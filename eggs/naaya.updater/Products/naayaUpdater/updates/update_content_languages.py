@@ -58,7 +58,7 @@ class UpdateContentLanguages(UpdateScript):
             for brain in brains:
                 try:
                     ob = brain.getObject()
-                except Exception, err:
+                except Exception as err:
                     logger.debug(
                         'WARNING: brain: %s, brain id: %s, getPath: %s, err: %s',
                         brain.absolute_url(), brain.data_record_id_,

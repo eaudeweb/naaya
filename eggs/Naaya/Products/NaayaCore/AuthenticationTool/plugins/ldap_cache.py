@@ -1,6 +1,6 @@
 import logging
 from time import time
-import cPickle as pickle
+import pickle
 from zope.component import queryUtility
 
 log = logging.getLogger('naaya.core.auth.ldap')
@@ -51,7 +51,7 @@ class Cache(object):
             return
 
         timestamp = dump_reader.latest_timestamp()
-        if not (timestamp > self.timestamp):
+        if self.timestamp is not None and not (timestamp > self.timestamp):
             return
 
         log.debug("fetching ldap user dump, timestamp is %s ...", timestamp)
@@ -69,7 +69,7 @@ class Cache(object):
         """
         try:
             self.update()
-        except Exception, e:
+        except Exception as e:
             log.exception("Update failed for empty cache (%s)" % e)
             # behave as cache miss
             if default is _raise_if_not_found:

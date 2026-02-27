@@ -5,13 +5,13 @@ from contextlib import contextmanager
 import json
 import optparse
 
-from javadb import java_vm, db_connection
-from geonetwork_schema import list_settings, list_metadata
+from .javadb import java_vm, db_connection
+from .geonetwork_schema import list_settings, list_metadata
 from repoze.configuration import execute as execute_config
 
-from geonetwork_schema import gen_metadata
-from xml_parser import get_title, get_points_of_contact, get_distribution_info
-from unicode_csv import UnicodeWriter
+from .geonetwork_schema import gen_metadata
+from .xml_parser import get_title, get_points_of_contact, get_distribution_info
+from .unicode_csv import UnicodeWriter
 
 def config_directive(declaration):
     declaration.expect(dict, names=['report_points_of_contact', 'report_distribution_info',
@@ -34,7 +34,7 @@ def config_directive(declaration):
     declaration.action(callback)
 
 def print_settings(settings, level=0):
-    print '    '*level + repr(settings)
+    print('    '*level + repr(settings))
     for s in settings.values():
         print_settings(s, level+1)
 
@@ -62,7 +62,7 @@ def dump_harvesting_data(context, db_statement):
         'documents': list(list_metadata(db_statement)),
         'sources': list(list_sources(db_statement)),
     }
-    print json.dumps(output, sort_keys=True, indent=4)
+    print(json.dumps(output, sort_keys=True, indent=4))
 
 @contextmanager
 def output_file(context, registry_name):
@@ -107,11 +107,11 @@ def dump_points_of_contact_report(context, db_statement):
     role_icon = context.registry['role_icon']
     email_icon = context.registry['email_icon']
     jstree = []
-    for org, v in organisations.iteritems():
+    for org, v in organisations.items():
         doc_tree = []
-        for title, v2 in v.iteritems():
+        for title, v2 in v.items():
             role_tree = []
-            for role, emails in v2.iteritems():
+            for role, emails in v2.items():
                 email_tree = []
                 for email in emails:
                     email_tree.append({'data': {'title': email, 'icon': email_icon, 'attributes': {'href': 'mailto:'+email}}})

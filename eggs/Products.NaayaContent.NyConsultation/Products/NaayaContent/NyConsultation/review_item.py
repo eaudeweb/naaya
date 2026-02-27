@@ -18,14 +18,14 @@
 # David Batranu, Eau de Web
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
-from constants import *
+from .constants import *
 
 def addConsultationReviewItem(self, contributor, contributor_name, file, kwargs):
     """ """
@@ -76,7 +76,7 @@ class ConsultationReviewItem(NyFSFile):
         """ """
         rate_lists = self.getRateLists()
         for r in rate_lists:
-            if REQUEST.has_key(r.id):
+            if r.id in REQUEST:
                 self.ratings[r.title] = REQUEST[r.id]
                 self.votes += 1
         self._p_changed = 1

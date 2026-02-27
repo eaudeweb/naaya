@@ -89,7 +89,7 @@ class LocalizerToNaayaI18n(UpdateScript):
                     found = message_cat.gettext(msgid, lang, '')
                     if lang != 'note':
                         trans_cnt += 1
-                        if isinstance(trans[lang], unicode):
+                        if isinstance(trans[lang], str):
                             translation = trans[lang]
                         elif isinstance(trans[lang], str):
                             translation = force_to_unicode(trans[lang])

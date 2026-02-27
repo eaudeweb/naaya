@@ -1,9 +1,9 @@
 from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailSender import build_email
-from containers import AccountSubscription, AnonymousSubscription
+from .containers import AccountSubscription, AnonymousSubscription
 from datetime import timedelta
-from interfaces import ISubscriptionContainer
-import constants
+from .interfaces import ISubscriptionContainer
+from . import constants
 import logging
 import warnings
 
@@ -85,7 +85,7 @@ def list_modified_objects(site, when_start, when_end):
     DT_when_start = DateTime_from_datetime(when_start)
     DT_when_end = DateTime_from_datetime(when_end)
     catalog = site.getCatalogTool()
-    brains = catalog(bobobase_modification_time={
+    brains = catalog(modification_time={
         'query': (DT_when_start, DT_when_end), 'range': 'min:max'})
     for brain in brains:
         try:

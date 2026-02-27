@@ -1,7 +1,7 @@
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Image import File, cookId
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -28,7 +28,7 @@ def addSurveyAttachment(container, id='', title='', description='', coverage='',
 
     #process parameters
     if contributor is None: contributor = container.REQUEST.AUTHENTICATED_USER.getUserName()
-    if container.glCheckPermissionPublishObjects():
+    if container.checkPermissionSkipApproval():
         approved, approved_by = 1, container.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
@@ -54,7 +54,6 @@ def addSurveyAttachment(container, id='', title='', description='', coverage='',
     ob.approveThis(approved, approved_by)
     ob.handleUpload(source, file, url, lang)
     ob.createversion(container.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
-    if discussion: ob.open_for_comments()
     container.recatalogNyObject(ob)
     #log post date
     auth_tool = container.getAuthenticationTool()

@@ -1,12 +1,34 @@
 import os
 from App.ImageFile import ImageFile
 
+# Zope 2 → 5 compat: restore test() builtin for python: TALES expressions.
+# In Zope 2, test(cond, true_val, false_val) was available in all templates.
+# Zope 5 / Chameleon removed it.  ~528 .zpt files rely on it, so we inject
+# it back into the safe-builtins dict rather than converting every template.
+try:
+    from AccessControl import safe_builtins
+
+    def _compat_test(*args):
+        """test(c1, v1[, c2, v2, ...][, default]) — Zope 2 ternary helper."""
+        i = 0
+        while i < len(args) - 1:
+            if args[i]:
+                return args[i + 1]
+            i += 2
+        if i < len(args):
+            return args[i]
+        return None
+
+    safe_builtins['test'] = _compat_test
+except Exception:
+    pass
+
 def initialize(context):
     """ """
-    from constants import PERMISSION_ADD_SITE, PERMISSION_ADD_FOLDER
+    from .constants import PERMISSION_ADD_SITE, PERMISSION_ADD_FOLDER
     from naaya.content.base import discover
-    import NySite
-    import NyFolder
+    from . import NySite
+    from . import NyFolder
     #register classes
     context.registerClass(
         NySite.NySite,
@@ -141,11 +163,11 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
 
     See NaayaForum for an example.
     """
-    import zLOG
+    import logging
     from AccessControl import ClassSecurityInfo
-    from Globals import InitializeClass
-    import NyFolder
-    import NyFolderBase
+    from AccessControl.class_init import InitializeClass
+    from . import NyFolder
+    from . import NyFolderBase
 
     security = ClassSecurityInfo()
     NyFolderBase.NyFolderBase.security = security
@@ -171,8 +193,7 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
     add_meth, add_perm = add_method
     NyFolderBase.NyFolderBase._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)
-    zLOG.LOG(module.__name__, zLOG.INFO,
-             'Dynamic module "%s" registered' % klass.__name__)
+    logging.getLogger(module.__name__).warning('Dynamic module "%s" registered' % klass.__name__)
 
     InitializeClass(NyFolder.NyFolder)
 

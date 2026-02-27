@@ -194,7 +194,7 @@
 
                         <!-- Revoke roles -->
                           <td class="user-role-revoke">
-                            <ul taL:condition="user_roles">
+                            <ul tal:condition="user_roles">
                               <tal:block repeat="role user_roles">
                                 <li>
                                   <a class="revoke-role" i18n:attributes="title" title="Revoke role"

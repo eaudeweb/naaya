@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.news.news_item import addNyNews
 from Products.Naaya.tests import NaayaTestCase
 

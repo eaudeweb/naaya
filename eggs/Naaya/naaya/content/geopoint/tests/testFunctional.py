@@ -1,7 +1,7 @@
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from copy import deepcopy
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
@@ -29,7 +29,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/geopoint_add_html')
-        self.failUnless('<h1>Submit GeoPoint</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit GeoPoint</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
@@ -39,7 +39,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
             'geo_type:utf8:ustring', 'url:utf8:ustring', 'pointer:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -56,22 +56,22 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         geopoint = self.portal.myfolder.test_geopoint
-        self.failUnlessEqual(geopoint.title, 'test_geopoint')
-        self.failUnlessEqual(geopoint.geo_location,
+        self.assertEqual(geopoint.title, 'test_geopoint')
+        self.assertEqual(geopoint.geo_location,
             Geo('12.587142', '55.681004',
             'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'))
-        self.failUnlessEqual(geopoint.url, 'http://www.eea.europa.eu')
+        self.assertEqual(geopoint.url, 'http://www.eea.europa.eu')
         geopoint.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_geopoint')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_geopoint.*</h1>', html, re.DOTALL))
-        self.failUnless('test_geopoint_description' in html)
-        self.failUnless('test_geopoint_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
+        self.assertTrue(re.search(r'<h1>.*test_geopoint.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_geopoint_description' in html)
+        self.assertTrue('test_geopoint_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
 
         self.browser_do_logout()
 
@@ -85,8 +85,8 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -94,13 +94,13 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygeopoint/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My geopoint')
+        self.assertEqual(form['title:utf8:ustring'], 'My geopoint')
 
         form['title:utf8:ustring'] = 'new_geopoint_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
+        self.assertEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
 
         self.browser.go('http://localhost/portal/myfolder/mygeopoint/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -108,8 +108,8 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
-        self.failUnlessEqual(self.portal.myfolder.mygeopoint.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
+        self.assertEqual(self.portal.myfolder.mygeopoint.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -123,8 +123,8 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -133,7 +133,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -161,9 +161,9 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     def test_start_version(self):
         from naaya.content.geopoint.geopoint_item import geopoint_item
         self.browser_do_login('admin', '')
-        self.failUnlessEqual(self.portal.info.ver_geopoint.version, None)
+        self.assertEqual(self.portal.info.ver_geopoint.version, None)
         self.browser.go('http://localhost/portal/info/ver_geopoint/startVersion')
-        self.failUnless(isinstance(self.portal.info.ver_geopoint.version, geopoint_item))
+        self.assertTrue(isinstance(self.portal.info.ver_geopoint.version, geopoint_item))
         self.browser_do_logout()
 
     def test_edit_version(self):
@@ -176,9 +176,9 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         ver_geopoint = self.portal.info.ver_geopoint
-        self.failUnlessEqual(ver_geopoint.title, 'ver_geopoint')
+        self.assertEqual(ver_geopoint.title, 'ver_geopoint')
         # we can't do ver_geopoint.version.title because version objects don't have the _languages property
-        self.failUnlessEqual(ver_geopoint.version.getLocalProperty('title', 'en'), 'ver_geopoint_newtitle')
+        self.assertEqual(ver_geopoint.version.getLocalProperty('title', 'en'), 'ver_geopoint_newtitle')
 
         self.browser_do_logout()
 
@@ -192,6 +192,6 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'ver_geopoint_version')
+        self.assertEqual(form['title:utf8:ustring'], 'ver_geopoint_version')
 
         self.browser_do_logout()

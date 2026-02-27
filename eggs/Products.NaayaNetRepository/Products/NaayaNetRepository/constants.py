@@ -20,12 +20,11 @@
 #Python imports
 
 #Zope imports
-import Globals
-
+# import Globals removed
 #Product imports
 
 NAAYANETREPOSITORY_PRODUCT_NAME = 'NaayaNetRepository'
-NAAYANETREPOSITORY_PRODUCT_PATH = Globals.package_home(globals())
+NAAYANETREPOSITORY_PRODUCT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 PERMISSION_ADD_NETREPOSITORY = 'Add Naaya NetRepository'
 

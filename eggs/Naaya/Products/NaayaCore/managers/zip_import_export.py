@@ -1,17 +1,17 @@
-from StringIO import StringIO
+from io import BytesIO, StringIO
 from zipfile import ZipFile, ZipInfo
 import tempfile
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import Implicit
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.SimpleItem import Item
 from Products.NaayaCore.events import ZipImportEvent
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZPublisher.Iterators import IStreamIterator
 from zope.event import notify
 import transaction
-from zope import interface
+from zope.interface import implementer
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import (PERMISSION_ZIP_EXPORT)
@@ -20,13 +20,13 @@ from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import relative_object_path, get_site_manager
 from naaya.content.file.file_item import addNyFile
 
-from interfaces import IZipExportObject
+from .interfaces import IZipExportObject
 
 try:
     from naaya.content.bfile.bfile_item import addNyBFile
 
     def add_blob_file(location_obj, name, data):
-        f = StringIO(data)
+        f = BytesIO(data)
         f.filename = name
         if '.' in name:
             name = name.rsplit('.', 1)[0]
@@ -62,17 +62,18 @@ def read_zipfile_contents(data):
     """
     try:
         zf = ZipFile(data)
-    except Exception, e:
+    except Exception as e:
         raise ValueError(('Error reading Zip file', ))
 
     file_paths = set()
     folder_tree = []
 
     def add_to_folder_tree(folder_path):
-        try:
-            folder_path = folder_path.decode('utf-8')
-        except UnicodeDecodeError:
-            folder_path = folder_path.decode('CP437')
+        if isinstance(folder_path, bytes):
+            try:
+                folder_path = folder_path.decode('utf-8')
+            except UnicodeDecodeError:
+                folder_path = folder_path.decode('CP437')
         node = folder_tree
         for path_element in folder_path.split('/'):
             for name, contents in node:
@@ -100,13 +101,11 @@ def read_zipfile_contents(data):
     def iterate_zipfile_files():
         for file_path in file_paths:
             file_data = zf.read(file_path)
-            try:
-                file_path = file_path.decode('utf-8')
-            except UnicodeDecodeError:
-                file_path = file_path.decode('CP437')
-            except Exception:
-                # try to go forward with the file_path as it is
-                pass
+            if isinstance(file_path, bytes):
+                try:
+                    file_path = file_path.decode('utf-8')
+                except UnicodeDecodeError:
+                    file_path = file_path.decode('CP437')
             yield file_path, file_data
 
     return folder_tree, iterate_zipfile_files()
@@ -134,7 +133,7 @@ def create_folders(container, folder_tree, report_path, skip_existing=False):
         kid_report_path = lambda p: report_path('%s/%s' % (kid_id, p))
         kid_folder_map = create_folders(kid_folder, kid_tree, kid_report_path,
                                         skip_existing)
-        for sub_kid_name, folder in kid_folder_map.iteritems():
+        for sub_kid_name, folder in kid_folder_map.items():
             folder_map['%s/%s' % (kid_name, sub_kid_name)] = folder
 
     return folder_map
@@ -155,7 +154,7 @@ class ZipImportTool(Implicit, Item):
 
         errors = []
         container = self.getParentNode()
-        overwrite = REQUEST.get('overwrite')
+        overwrite = REQUEST.get('overwrite') if REQUEST else None
 
         # test if file uploaded is Zip archive
         if data.filename.split('.')[-1] != 'zip':
@@ -164,7 +163,7 @@ class ZipImportTool(Implicit, Item):
         else:
             try:
                 folder_tree, zip_files = read_zipfile_contents(data)
-            except ValueError, e:
+            except ValueError as e:
                 errors.append(e)
             else:
                 created_file_paths = set()
@@ -178,7 +177,8 @@ class ZipImportTool(Implicit, Item):
                     else:
                         file_container_path, file_name = '', file_path
 
-                    file_name = file_name.encode('utf-8')
+                    if isinstance(file_name, bytes):
+                        file_name = file_name.decode('utf-8')
                     assert file_container_path in folder_map
                     try:
                         file_container = folder_map[file_container_path]
@@ -189,7 +189,7 @@ class ZipImportTool(Implicit, Item):
                         file_ob_id = add_file(file_container, file_name,
                                               file_data)
                         file_ob = file_container[file_ob_id]
-                    except Exception, e:
+                    except Exception as e:
                         errors.append((
                             (u"Error while creating file ${file_path}: "
                              "${error}"),
@@ -264,7 +264,7 @@ class ZipExportTool(Implicit, Item):
         count = (
             "Portal catalog count for the following object types:\n\n"
             "Folders: %s\nFiles: %s\nMeetings: %s\nNews: %s\nURLs: %s\n\n" % (
-                folders, files, meetings, urls)
+                folders, files, meetings, news, urls)
         )
         temp_file = tempfile.TemporaryFile()
         zip_file = ZipFile(temp_file, mode='w', allowZip64=True)
@@ -315,7 +315,7 @@ class RecursiveZipBuilder(object):
             try:
                 self.add_object_to_zip(sub_obj, parent_path)
 
-            except Exception, e:
+            except Exception as e:
                 if self.error_container is None:
                     raise
                 self.error_container.append(e)
@@ -337,14 +337,11 @@ class RecursiveZipBuilder(object):
             return
         target_path = parent_path + filename
 
-        if isinstance(target_path, unicode):
-            # we could convert target_path to utf-8, but that would just mask
-            # a bug elsewhere; better to raise an exception so we fix the
-            # original cause.
-            raise ValueError("All paths must be byte strings!")
+        if isinstance(target_path, bytes):
+            target_path = target_path.decode('utf-8')
 
         data = target.data
-        if isinstance(data, unicode):
+        if isinstance(data, str):
             data = data.encode('utf-8')
 
         t = target.timestamp
@@ -363,7 +360,7 @@ class RecursiveZipBuilder(object):
 
         self.zip_file.writestr(zipinfo, data)
 
-        index_row = (target.title.encode('utf-8'),
+        index_row = (target.title,
                      target.meta_label, target_path)
         self.index_txt.write('\t'.join(index_row) + '\n')
 
@@ -371,22 +368,17 @@ class RecursiveZipBuilder(object):
             self.recurse(obj, target_path)
 
 
+@implementer(IStreamIterator)
 class FileIterator(object):
     """
     A file-like object that can be streamed by ZServer.
     Copied from ``ZPublisher.Iterators.filestream_iterator`` and modified.
     """
 
-    if issubclass(IStreamIterator, interface.Interface):
-        interface.implements(IStreamIterator)
-    else:
-        # old-stye zope interface (before ZCA)
-        __implements__ = (IStreamIterator,)
-
     def __init__(self, data_file):
         self._data_file = data_file
 
-    def next(self):
+    def __next__(self):
         data = self._data_file.read(2**16)
         if not data:
             self._data_file.close()

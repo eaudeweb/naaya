@@ -1,5 +1,5 @@
 
-import Globals
+import os
 
 
 NAAYACONTENT_PRODUCT_NAME = 'NaayaContent'

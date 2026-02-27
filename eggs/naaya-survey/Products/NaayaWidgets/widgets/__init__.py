@@ -26,10 +26,13 @@ from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 def _get_available_widgets():
     """ Return available widgets in current dir."""
     current_dir = os.path.dirname(__file__)
-    modules = [i.split('.')[0] for i in glob.glob1(current_dir, "*.py")]
+    modules = [i.split('.')[0] for i in glob.glob1(current_dir, "*.py")
+               if i != '__init__.py']
     widgets = []
+    package = __name__  # 'Products.NaayaWidgets.widgets'
     for module in modules:
-        widget = __import__(module, globals(),  locals())
+        widget = __import__(package + '.' + module, globals(), locals(),
+                            [module])
         if not hasattr(widget, 'register'):
             continue
         widget = widget.register()
@@ -37,7 +40,7 @@ def _get_available_widgets():
     return widgets
 
 AVAILABLE_WIDGETS = _get_available_widgets()
-AVAILABLE_WIDGETS.sort(lambda x, y: cmp(x.meta_sortorder, y.meta_sortorder)) # predictible order
+AVAILABLE_WIDGETS.sort(key=lambda x: x.meta_sortorder)  # predictable order
 AVAILABLE_WIDGETS = tuple(AVAILABLE_WIDGETS) # make it readonly and suitable for isinstance
 
 def register_widget(context, widget):

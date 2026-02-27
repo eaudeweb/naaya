@@ -18,7 +18,7 @@
 # Alex Morega, Eau de Web
 # Mihai Tabara, Eau de Web
 
-from cStringIO import StringIO
+from io import BytesIO
 import csv
 import codecs
 from DateTime import DateTime
@@ -31,11 +31,11 @@ except ImportError:
 
 import xlwt
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 
-from Paragraph import Paragraph
+from .Paragraph import Paragraph
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
 

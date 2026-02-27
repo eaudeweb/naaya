@@ -1,7 +1,7 @@
 import os
 import logging
-from zope.interface import implements
-from interfaces import IFilesystemTemplateWriter
+from zope.interface import implementer
+from .interfaces import IFilesystemTemplateWriter
 
 
 log = logging.getLogger(__name__)
@@ -28,8 +28,8 @@ def register_templates_in_directory(templates_path, bundle_name):
                   count, templates_path, bundle_name)
 
 
+@implementer(IFilesystemTemplateWriter)
 class FilesystemTemplateWriter(object):
-    implements(IFilesystemTemplateWriter)
 
     def __init__(self, templates_path):
         self.templates_path = templates_path
@@ -38,7 +38,7 @@ class FilesystemTemplateWriter(object):
         if not os.path.isdir(self.templates_path):
             os.makedirs(self.templates_path)
 
-        if isinstance(content, unicode):
+        if isinstance(content, str):
             content = content.encode('utf-8')
         f = open(os.path.join(self.templates_path, name+'.zpt'), 'wb')
         f.write(content)

@@ -7,11 +7,11 @@ in different formats and a class to store available languages in a portal.
 import os.path
 import re
 
-from zope.interface import implements
+from zope.interface import implementer
 from Persistence import Persistent
 from persistent.list import PersistentList
 
-from interfaces import INyLanguageManagement
+from .interfaces import INyLanguageManagement
 
 
 def normalize_code(code):
@@ -36,11 +36,12 @@ def get_languages_list():
     languages = {}
     cwd = __file__.rsplit(os.path.sep, 1)[0]
     filename = os.path.join(cwd, 'languages.txt')
-    for line in open(filename).readlines():
-        line = line.strip()
-        if line and line[0] != '#':
-            code, name = line.split(' ', 1)
-            languages[normalize_code(code)] = name
+    with open(filename) as f:
+        for line in f:
+            line = line.strip()
+            if line and line[0] != '#':
+                code, name = line.split(' ', 1)
+                languages[normalize_code(code)] = name
 
     return languages
 
@@ -52,8 +53,7 @@ def get_languages():
 
     """
     languages = get_languages_list()
-    language_codes = languages.keys()
-    language_codes.sort()
+    language_codes = sorted(languages.keys())
     return[ {'code': x, 'name': languages[x]} for x in language_codes ]
 
 def get_iso639_name(code):
@@ -68,6 +68,7 @@ def get_iso639_name(code):
     return get_languages_list().get(code, '???')
 
 
+@implementer(INyLanguageManagement)
 class NyPortalLanguageManager(Persistent):
     """
     Portal_i18n has an instance of this type, accessible by *get_lang_manager()*
@@ -76,7 +77,6 @@ class NyPortalLanguageManager(Persistent):
     languages, default language and manage display order.
 
     """
-    implements(INyLanguageManagement)
 
     # by default, the display order is the creation order, default lang first
     custom_display_order = None
@@ -146,7 +146,7 @@ class NyPortalLanguageManager(Persistent):
             # we have a "move operation" request
             if self.custom_display_order is None:
                 self.custom_display_order = PersistentList(creation_order)
-            switch = map(int, operation.split("-"))
+            switch = list(map(int, operation.split("-")))
             assert((switch[0]-switch[1])**2 == 1)
             acc = self.custom_display_order.pop(switch[0])
             self.custom_display_order.insert(switch[1], acc)

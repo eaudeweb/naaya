@@ -19,7 +19,7 @@ class UserInfoTest(NaayaTestCase):
 
         try:
             UserInfo(**USER_INFO_FIXTURE)
-        except Exception, e:
+        except Exception as e:
             self.fail("Exception raised: %r (%s)" % (e, e))
 
     def test_mandatory_fields(self):
@@ -37,17 +37,8 @@ class UserInfoTest(NaayaTestCase):
         del missing_email['email']
         self.assertRaises(AssertionError, UserInfo, **missing_email)
 
-    def test_field_types(self):
-        from Products.NaayaCore.AuthenticationTool.AuthenticationTool \
-                import UserInfo
-
-        str_first_name = copy(USER_INFO_FIXTURE)
-        str_first_name['first_name'] = 'non-unicode'
-        self.assertRaises(AssertionError, UserInfo, **str_first_name)
-
-        unicode_id = copy(USER_INFO_FIXTURE)
-        unicode_id['user_id'] = u"unicode_id"
-        self.assertRaises(AssertionError, UserInfo, **unicode_id)
+    # test_field_types removed: tested Python 2 str/unicode distinction
+    # that doesn't exist in Python 3 (str IS unicode)
 
     def test_user_info_from_user(self):
         user_info = self.portal.acl_users.get_local_user_info('contributor')

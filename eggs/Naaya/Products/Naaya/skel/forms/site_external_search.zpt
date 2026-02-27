@@ -64,7 +64,7 @@
 <input type="submit" value="Search" />
 </form>
 
-<span tal:condition="python:request.has_key('query')">
+<span tal:condition="python:'query' in request">
 
 <tal:block define="results python:here.externalSearch(servers, langs, query, skey, rkey, start);
 	age here/getItemsAge; number_of_results here/getNumberOfResults;

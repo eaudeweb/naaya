@@ -19,7 +19,7 @@
 # Alex Morega, Eau de Web
 
 import re
-from BeautifulSoup import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Tag
 
 # FIXME: if tags in the source code are uppercase, the parser will not
 # recognise them.
@@ -39,7 +39,7 @@ def check_blank(content):
     """
     Checks if a node of content contains only whitespace
     """
-    if not re.sub(r'&nbsp;|<\s*br\s*/\s*>|\s', '', unicode(content)):
+    if not re.sub(r'&nbsp;|<\s*br\s*/\s*>|\s', '', str(content)):
         return True
 
     if isinstance(content, Tag) and content.name not in big_tags:
@@ -59,12 +59,12 @@ def check_heading(content):
 def parse(content):
     output = []
 
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, "lxml")
     current_paragraph = ''
 
     def add_paragraph(content):
         output.append(
-            Paragraph(unicode(content),
+            Paragraph(str(content),
                     check_blank(content),
                     check_heading(content)))
 
@@ -83,7 +83,7 @@ def parse(content):
 
         else:
             # this is not a tag, so it must be plain text; store it.
-            current_paragraph += unicode(current_element)
+            current_paragraph += str(current_element)
 
     # make sure we don't miss text at the end of the document
     if current_paragraph:

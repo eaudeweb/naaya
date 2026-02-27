@@ -1,4 +1,4 @@
-from interfaces import IRoleLogger
+from .interfaces import IRoleLogger
 
 def handle_add_local_role(event):
     IRoleLogger(event.context).addLocalRolesInfo(event.name, event.roles)

@@ -1,14 +1,13 @@
-import xmlrpclib
-import string
-import httplib
-from base64 import encodestring
+import xmlrpc.client as xmlrpclib
+import http.client as httplib
+from base64 import encodebytes as encodestring
 
 class BasicAuthTransport(xmlrpclib.Transport):
     def __init__(self, username=None, password=None):
         self.username = username
         self.password = password
         self.verbose = None
-        self.has_ssl = httplib.__dict__.has_key("HTTPConnection")
+        self.has_ssl = "HTTPConnection" in httplib.__dict__
 
     def request(self, host, handler, request_body, verbose=None):
         # issue XML-RPC request
@@ -31,8 +30,8 @@ class BasicAuthTransport(xmlrpclib.Transport):
 
         # basic auth
         if self.username is not None and self.password is not None:
-            h.putheader("AUTHORIZATION", "Basic %s" % string.replace(
-                    encodestring("%s:%s" % (self.username, self.password)),
+            h.putheader("AUTHORIZATION", "Basic %s" %
+                    encodestring(("%s:%s" % (self.username, self.password)).encode()).decode().replace(
                     "\012", ""))
         h.endheaders()
 
@@ -61,8 +60,7 @@ class ProxiedTransport(xmlrpclib.Transport):
 
     def make_connection(self, host):
         self.realhost = host
-        import httplib
-        return httplib.HTTP(self.proxy)
+        return httplib.HTTPConnection(self.proxy)
 
     def send_request(self, connection, handler, request_body):
         connection.putrequest("POST", 'http://%s%s' % (self.realhost, handler))

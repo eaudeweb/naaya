@@ -21,7 +21,7 @@
 #Python imports
 
 #Zope imports
-import Globals
+import os
 from naaya.content.base.constants import (
     NAAYACONTENT_PRODUCT_NAME,
     DEFAULT_SORTORDER,

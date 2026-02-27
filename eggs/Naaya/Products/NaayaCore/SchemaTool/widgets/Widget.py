@@ -1,7 +1,7 @@
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
 
@@ -12,13 +12,13 @@ from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from naaya.core.custom_types import Interval
 from naaya.core.zope2util import get_template_source
 
-from geo import Geo
+from .geo import Geo
 
 WIDGET_ID_SUFFIX = '-property'
 
 DATA_TYPES = {
     'int': int,
-    'str': unicode,
+    'str': str,
     'float': float,
     'bool': bool,
     'date': DateTime,
@@ -295,7 +295,7 @@ class Widget(Folder):
         Convert a database value to a user-readable string
         this method must return a `unicode` value
         """
-        return unicode(value)
+        return str(value)
 
     def convert_formvalue_to_pythonvalue(self, value):
         return value

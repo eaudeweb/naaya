@@ -4,11 +4,27 @@ import simplejson as json
 class Geo(tuple):
     """ Immutable type representing individual geographical points """
 
+    __allow_access_to_unprotected_subobjects__ = True
+
+    def __getnewargs__(self):
+        return (self.lat, self.lon, self.address)
+
     def __new__(cls, lat=None, lon=None, address=''):
+        # Handle broken unpickling: default tuple.__getnewargs__ passes
+        # the whole (lat, lon, address) tuple as a single 'lat' argument
+        if isinstance(lat, tuple) and lon is None and address == '':
+            if len(lat) == 3:
+                lat, lon, address = lat
+            elif len(lat) == 2:
+                lat, lon = lat
+
         if lat is lon is None:
             pass
         elif None in (lat, lon):
-            raise ValueError('latitude and longitude must both have values or be blank')
+            import logging
+            logging.getLogger('Geo').warning(
+                'Partial geo data: lat=%r, lon=%r, address=%r', lat, lon, address)
+            lat = lon = None
         else:
             def normalize_coord(value, name):
                 try: return D(value)
@@ -16,13 +32,11 @@ class Geo(tuple):
             lat = normalize_coord(lat, 'latitude')
             lon = normalize_coord(lon, 'longitude')
 
-        try:
-            address = address.decode('utf-8')
-        except UnicodeEncodeError:
-            pass
+        if isinstance(address, bytes):
+            address = address.decode('utf-8', 'replace')
 
         try:
-            address = unicode(address)
+            address = str(address)
         except:
             raise ValueError('Bad value for address')
 

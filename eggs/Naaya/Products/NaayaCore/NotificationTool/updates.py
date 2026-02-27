@@ -1,12 +1,12 @@
 from AccessControl import ClassSecurityInfo
 from persistent.list import PersistentList
 
-from interfaces import ISubscriptionContainer
-from containers import SubscriptionContainer, AccountSubscription
+from .interfaces import ISubscriptionContainer
+from .containers import SubscriptionContainer, AccountSubscription
 
 from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.zope2util import path_in_site, relative_object_path
-from utils import match_account_subscription
+from .utils import match_account_subscription
 
 class RemoveNotifUseridSpaces(UpdateScript):
     title = 'Remove spaces from notification subscription user_ids'

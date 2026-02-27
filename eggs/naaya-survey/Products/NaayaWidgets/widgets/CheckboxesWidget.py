@@ -19,11 +19,11 @@
 # Cristian Ciupitu, Eau de Web
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
-from MultipleChoiceWidget import MultipleChoiceWidget
+from .MultipleChoiceWidget import MultipleChoiceWidget
 
 
 def addCheckboxesWidget(container, id="", title="Checkboxes Widget",
@@ -68,7 +68,7 @@ class CheckboxesWidget(MultipleChoiceWidget):
         """Validate datamodel"""
         if self.required and not value:
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
                                {'title': title}))

@@ -10,7 +10,7 @@ setup(name='naaya.content.bfile',
       zip_safe=False,
       install_requires=[
           'Naaya >= 3.4.17',
-          'ZODB3 >= 3.8',
+          'ZODB',
           'zope.proxy >= 3.4',
           'plone.i18n',
       ]

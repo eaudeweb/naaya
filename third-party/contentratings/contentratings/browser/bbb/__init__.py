@@ -1,6 +1,6 @@
 # Everything here is intended for BBB only, do not use these views
 
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.location.interfaces import ISublocations
 from zope.i18nmessageid import MessageFactory
 try:
@@ -16,7 +16,7 @@ from contentratings.interfaces import _
 
 #from contentratings.browser.interfaces import IEditorialRatingView
 # TODO warning disabled, it's not likely to be fixed anytime soon
-from interfaces import IEditorialRatingView
+from ..interfaces import IEditorialRatingView
 
 
 try:
@@ -25,10 +25,9 @@ try:
 except ImportError:
     ZOPE3 = True
 
+@implementer(IEditorialRatingView)
 class EditorialRatingView(object):
     """A view for getting the rating information"""
-
-    implements(IEditorialRatingView)
 
     def __init__(self, context, request):
         self.context = context

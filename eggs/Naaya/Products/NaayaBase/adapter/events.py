@@ -15,8 +15,8 @@ from OFS.interfaces import IObjectWillBeAddedEvent, IObjectWillBeRemovedEvent
 
 
 def printEvent(obj, evt):
-    print "================"
-    print [obj], [evt]
+    print("================")
+    print([obj], [evt])
 #
 # NyFSFile
 #

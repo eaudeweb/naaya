@@ -1,5 +1,5 @@
-from datetime import datetime
-from StringIO import StringIO
+from datetime import datetime, timezone
+from io import StringIO
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from naaya.content.localizedbfile.localizedbfile_item import addNyLocalizedBFile
@@ -35,16 +35,16 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         myfile.filename = 'my.jpg'
         myfile.headers = {'content-type': 'image/jpeg'}
 
-        now_pre = datetime.utcnow()
+        now_pre = datetime.now(timezone.utc)
         self.add_localizedbfile(id='mylocalizedbfile', title='My Localized bfile', uploaded_file=myfile, lang='en')
-        now_post = datetime.utcnow()
+        now_post = datetime.now(timezone.utc)
 
         mylocalizedbfile = self.portal.myfolder.mylocalizedbfile
         language = 'en'
         self.assertTrue(mylocalizedbfile.id, 'mylocalizedbfile')
         self.assertTrue(mylocalizedbfile.title, 'My Localized bfile')
         #no french version for this file
-        self.assertFalse(mylocalizedbfile._versions.has_key('fr'))
+        self.assertFalse('fr' in mylocalizedbfile._versions)
         self.assertEqual(len(mylocalizedbfile._versions), 1)
         self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][0])
 
@@ -63,7 +63,7 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         mylocalizedbfile._save_file(myfrfile, 'fr',
                                  contributor='contributor')
         self.assertEqual(len(mylocalizedbfile._versions), 2)
-        self.assertTrue(mylocalizedbfile._versions.has_key('fr'))
+        self.assertTrue('fr' in mylocalizedbfile._versions)
         fr_file = mylocalizedbfile._versions['fr'][0]
         self.assertEqual(fr_file.open().read(), 'hello data from France!')
         self.assertEqual(fr_file.filename, 'my-fr.jpg')

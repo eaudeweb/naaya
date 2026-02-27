@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -15,7 +15,7 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmVerify')
         expected_controls = set(['ga_id', 'gw_verify'])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
                         'Missing form controls: %s' % repr(expected_controls -
                                                            found_controls))
 
@@ -26,16 +26,16 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('Saved changes.' in html)
+        self.assertTrue('Saved changes.' in html)
         self.browser_do_logout()
 
         self.browser.go('http://localhost/portal')
-        soup = BeautifulSoup(self.browser.get_html())
+        soup = BeautifulSoup(self.browser.get_html(), "lxml")
 
         # check if the GoogleWebmaster meta tag is corectly placed in the
         # <head> section, before the first <body> section.
         head = soup.html.head
-        self.failUnless(head.find('meta',
+        self.assertTrue(head.find('meta',
                                   attrs={'name': 'google-site-verification',
                                          'content': 'test-code'}))
 

@@ -2,7 +2,7 @@
 
 #Python imports
 import logging
-from StringIO import StringIO
+from io import StringIO
 
 #Zope imports
 from zope.annotation import IAnnotations
@@ -354,7 +354,7 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
         if portal.is_pluggable_item_installed('Naaya Extended File'):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya Extended File')
-            except Exception, err:
+            except Exception as err:
                 self.log.warn('You need to manually uninstall '
                               'Naaya Extended File in Control Panel')
                 self.log.error(err)
@@ -365,7 +365,7 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
         if not portal.is_pluggable_item_installed('Naaya Localized Blob File'):
             try:
                 portal.manage_install_pluggableitem('Naaya Localized Blob File')
-            except Exception, err:
+            except Exception as err:
                 self.log.warn('You need to manually install '
                               'Naaya Localized Blob File in Control Panel')
                 self.log.error(err)

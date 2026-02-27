@@ -16,7 +16,7 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.NaayaPhotoArchive.NyPhotoGallery import NyPhotoGallery, addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import NyPhotoFolder
 from Products.Naaya.tests import NaayaTestCase
@@ -44,7 +44,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         """ Add and search album """
         gallery = self._add_gallery()
         if not gallery:
-            raise AttributeError, gallery
+            raise AttributeError(gallery)
         gallery.addNyPhotoFolder(id='myalbum', title='My Album', lang='en')
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Photo Folder'])
         for x in meta:
@@ -107,5 +107,5 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaContentTestCase))
     return suite

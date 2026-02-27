@@ -22,7 +22,7 @@
 import string
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
+from io import BytesIO
 
 #Zope imports
 
@@ -67,7 +67,7 @@ class config_handler(ContentHandler):
             stackObj = saxstack_struct('urls', obj)
             self.stack.append(stackObj)
         elif name == 'entry':
-            obj = entry_struct(attrs['meta_type'].encode('utf-8'), attrs['property'].encode('utf-8'))
+            obj = entry_struct(attrs['meta_type'], attrs['property'])
             stackObj = saxstack_struct('entry', obj)
             self.stack.append(stackObj)
 
@@ -100,9 +100,12 @@ class config_parser:
         l_parser = make_parser()
         l_parser.setContentHandler(l_handler)
         l_inpsrc = InputSource()
-        l_inpsrc.setByteStream(StringIO(p_content))
+        if isinstance(p_content, str):
+            l_inpsrc.setByteStream(BytesIO(p_content.encode('utf-8')))
+        else:
+            l_inpsrc.setByteStream(BytesIO(p_content))
         try:
             l_parser.parse(l_inpsrc)
             return (l_handler, '')
-        except Exception, error:
+        except Exception as error:
             return (None, error)

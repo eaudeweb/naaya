@@ -4,12 +4,12 @@ using Naaya XML format.
 """
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
-from constants import *
-from managers.import_parser import import_parser
+from .constants import *
+from .managers.import_parser import import_parser
 
 class NyImportExport:
     """
@@ -51,7 +51,7 @@ class NyImportExport:
                 for object in import_handler.root.objects:
                     self.import_data(object)
             else:
-                raise Exception, EXCEPTION_PARSINGFILE % ('', error)
+                raise Exception(EXCEPTION_PARSINGFILE % ('', error))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
 
     security.declareProtected(view_management_screens, 'exportdata')
@@ -111,7 +111,7 @@ class NyImportExport:
         B{This method must be implemented.}
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'exportdata_custom'
+        raise EXCEPTION_NOTIMPLEMENTED('exportdata_custom')
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_importexport_html')

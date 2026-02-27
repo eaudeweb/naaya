@@ -4,7 +4,7 @@ from lxml.cssselect import CSSSelector
 import re
 
 import transaction
-from zope.app.component.site import threadSiteSubscriber
+from zope.site.site import threadSiteSubscriber
 
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase

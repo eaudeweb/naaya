@@ -108,8 +108,8 @@
     <div id="search_results_parent">
         <br />
     <tal:block define="
-                       is_user_search python:request.has_key('search_user');
-                       is_role_search python:request.has_key('search_role');
+                       is_user_search python:'search_user' in request;
+                       is_role_search python:'search_role' in request;
                        search_param python:request.get('params', '');
                        search_term python:request.get('term', '');
                        role python:request.get('role', '');

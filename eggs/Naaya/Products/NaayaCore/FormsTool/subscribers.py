@@ -3,7 +3,7 @@ If a PageTemplate that implements ITemplate is added to the portal_forms's OFS
 then register that template instance to the local site manager.
 The same idea applies for the rest of the CRUD.
 """
-from interfaces import ITemplate
+from .interfaces import ITemplate
 
 def template_added(context, event):
     """ Register only for `portal_forms` here """

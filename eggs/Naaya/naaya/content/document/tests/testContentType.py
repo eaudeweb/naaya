@@ -1,5 +1,5 @@
 import re;
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 from DateTime.DateTime import DateTime
 
@@ -79,13 +79,13 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
     def test_create_edit_document(self):
         doc = self.do_make_document()
-        self.failUnlessEqual(doc.title, 'my new document')
-        self.failUnlessEqual(doc.description, 'a nice document')
-        self.failUnlessEqual(doc.body, 'lots of text')
-        self.failUnlessEqual(doc.sortorder, 13)
-        self.failUnlessEqual(doc.coverage, 'nation-wide')
-        self.failUnlessEqual(doc.keywords, 'key1, key2')
-        self.failUnlessEqual(doc.releasedate, DateTime('15/03/2008'))
+        self.assertEqual(doc.title, 'my new document')
+        self.assertEqual(doc.description, 'a nice document')
+        self.assertEqual(doc.body, 'lots of text')
+        self.assertEqual(doc.sortorder, 13)
+        self.assertEqual(doc.coverage, 'nation-wide')
+        self.assertEqual(doc.keywords, 'key1, key2')
+        self.assertEqual(doc.releasedate, DateTime('15/03/2008'))
 
     def test_edit_document(self):
         doc = self.do_make_document()
@@ -98,14 +98,14 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             'keywords': 'key3',
             'releasedate': '15/06/2008',
         }, _all_values=False)
-        self.failUnlessEqual(doc.title, 'my old document')
-        self.failUnlessEqual(doc.description, 'an old document')
-        self.failUnlessEqual(doc.body, 'old text')
-        self.failUnlessEqual(doc.sortorder, 15)
-        self.failUnlessEqual(doc.coverage, 'local')
-        self.failUnlessEqual(doc.keywords, 'key3')
+        self.assertEqual(doc.title, 'my old document')
+        self.assertEqual(doc.description, 'an old document')
+        self.assertEqual(doc.body, 'old text')
+        self.assertEqual(doc.sortorder, 15)
+        self.assertEqual(doc.coverage, 'local')
+        self.assertEqual(doc.keywords, 'key3')
         #TODO: FIX IT
-        #self.failUnlessEqual(doc.releasedate, DateTime('15/06/2008'))
+        #self.assertEqual(doc.releasedate, DateTime('15/06/2008'))
 
     def test_document_multilingual(self):
         doc = self.do_make_document()
@@ -120,21 +120,21 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         }, _lang='fr', _all_values=False)
 
         # localized properties
-        self.failUnlessEqual(doc.title, 'my new document')
-        self.failUnlessEqual(doc.getLocalProperty('title', 'fr'), u'le nouveau document \u03bb')
-        self.failUnlessEqual(doc.description, 'a nice document')
-        self.failUnlessEqual(doc.getLocalProperty('description', 'fr'), u'ancien document \u03bb')
-        self.failUnlessEqual(doc.body, 'lots of text')
-        self.failUnlessEqual(doc.getLocalProperty('body', 'fr'), u'beaucoup de text \u00f8')
-        self.failUnlessEqual(doc.coverage, 'nation-wide')
-        self.failUnlessEqual(doc.getLocalProperty('coverage', 'fr'), u'nationel \u00f8')
-        self.failUnlessEqual(doc.keywords, 'key1, key2')
-        self.failUnlessEqual(doc.getLocalProperty('keywords', 'fr'), u'k\u00e9y3')
+        self.assertEqual(doc.title, 'my new document')
+        self.assertEqual(doc.getLocalProperty('title', 'fr'), u'le nouveau document \u03bb')
+        self.assertEqual(doc.description, 'a nice document')
+        self.assertEqual(doc.getLocalProperty('description', 'fr'), u'ancien document \u03bb')
+        self.assertEqual(doc.body, 'lots of text')
+        self.assertEqual(doc.getLocalProperty('body', 'fr'), u'beaucoup de text \u00f8')
+        self.assertEqual(doc.coverage, 'nation-wide')
+        self.assertEqual(doc.getLocalProperty('coverage', 'fr'), u'nationel \u00f8')
+        self.assertEqual(doc.keywords, 'key1, key2')
+        self.assertEqual(doc.getLocalProperty('keywords', 'fr'), u'k\u00e9y3')
 
         # non-localized properties
-        self.failUnlessEqual(doc.sortorder, 13)
+        self.assertEqual(doc.sortorder, 13)
         #TODO: FIX IT
-        #self.failUnlessEqual(doc.releasedate, DateTime('15/06/2008'))
+        #self.assertEqual(doc.releasedate, DateTime('15/06/2008'))
 
     def test_index_html(self):
         doc = self.do_make_document()
@@ -143,12 +143,12 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/' + doc.id)
         page = self.browser.get_html()
 
-        self.failUnless(doc.title in page)
-        self.failUnless(doc.description in page)
-        self.failUnless(doc.body in page)
-        self.failUnless(doc.coverage in page)
-        self.failUnless(doc.keywords in page)
-        self.failUnless(doc.releasedate.strftime('%d/%m/%Y') in page)
+        self.assertTrue(doc.title in page)
+        self.assertTrue(doc.description in page)
+        self.assertTrue(doc.body in page)
+        self.assertTrue(doc.coverage in page)
+        self.assertTrue(doc.keywords in page)
+        self.assertTrue(doc.releasedate.strftime('%d/%m/%Y') in page)
 
         doc.aq_parent.manage_delObjects([doc.id])
         transaction.commit()
@@ -162,29 +162,29 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         page = self.browser.get_html()
         self.browser_do_logout()
 
-        tag = re.search(r'<input[^>]*name="title:utf8:ustring"[^>]*value="([^"]*)[^>]*/>', page)
-        self.failUnless(tag, 'Missing <input.../> tag for "title"')
-        self.failUnlessEqual(tag.group(1), doc.title)
+        tag = re.search(r'<input(?=[^>]*name="title:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        self.assertTrue(tag, 'Missing <input.../> tag for "title"')
+        self.assertEqual(tag.group(1), doc.title)
 
         tag = re.search(r'<textarea[^>]*name="description:utf8:ustring"[^>]*>([^<]*)<', page)
-        self.failUnless(tag, 'Missing <textarea.../> tag for "description"')
-        self.failUnlessEqual(tag.group(1), doc.description)
+        self.assertTrue(tag, 'Missing <textarea.../> tag for "description"')
+        self.assertEqual(tag.group(1), doc.description)
 
         tag = re.search(r'<textarea[^>]*name="body:utf8:ustring"[^>]*>([^<]*)<', page)
-        self.failUnless(tag, 'Missing <textarea.../> tag for "body"')
-        self.failUnlessEqual(tag.group(1), doc.body)
+        self.assertTrue(tag, 'Missing <textarea.../> tag for "body"')
+        self.assertEqual(tag.group(1), doc.body)
 
-        tag = re.search(r'<input[^>]*name="coverage:utf8:ustring"[^>]*value="([^"]*)[^>]*/>', page)
-        self.failUnless(tag, 'Missing <input.../> tag for "coverage"')
-        self.failUnlessEqual(tag.group(1), doc.coverage)
+        tag = re.search(r'<input(?=[^>]*name="coverage:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        self.assertTrue(tag, 'Missing <input.../> tag for "coverage"')
+        self.assertEqual(tag.group(1), doc.coverage)
 
-        tag = re.search(r'<input[^>]*name="keywords:utf8:ustring"[^>]*value="([^"]*)[^>]*/>', page)
-        self.failUnless(tag, 'Missing <input.../> tag for "keywords"')
-        self.failUnlessEqual(tag.group(1), doc.keywords)
+        tag = re.search(r'<input(?=[^>]*name="keywords:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        self.assertTrue(tag, 'Missing <input.../> tag for "keywords"')
+        self.assertEqual(tag.group(1), doc.keywords)
 
-        tag = re.search(r'<input[^>]*name="releasedate"[^>]*value="([^"]*)[^>]*/>', page)
-        self.failUnless(tag, 'Missing <input.../> tag for "releasedate"')
-        self.failUnlessEqual(tag.group(1), doc.releasedate.strftime('%d/%m/%Y'))
+        tag = re.search(r'<input(?=[^>]*name="releasedate")(?=[^>]*value="([^"]*)").*?/?>', page)
+        self.assertTrue(tag, 'Missing <input.../> tag for "releasedate"')
+        self.assertEqual(tag.group(1), doc.releasedate.strftime('%d/%m/%Y'))
 
         doc.aq_parent.manage_delObjects([doc.id])
         transaction.commit()

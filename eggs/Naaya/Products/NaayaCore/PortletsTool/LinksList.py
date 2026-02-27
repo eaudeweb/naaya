@@ -1,6 +1,6 @@
 
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
@@ -9,7 +9,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product related imports
 from Products.NaayaCore.interfaces import ILinksList
 from Products.NaayaCore.constants import *
-from managers.links_manager import links_manager
+from .managers.links_manager import links_manager
 
 manage_addLinksListForm = PageTemplateFile('zpt/linkslist_add', globals())
 def manage_addLinksList(self, id='', title='', portlet='', REQUEST=None):
@@ -23,10 +23,10 @@ def manage_addLinksList(self, id='', title='', portlet='', REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+@implementer(ILinksList)
 class LinksList(SimpleItem, links_manager):
     """ """
 
-    implements(ILinksList)
 
     meta_type = METATYPE_LINKSLIST
     icon = 'misc_/NaayaCore/LinksList.gif'

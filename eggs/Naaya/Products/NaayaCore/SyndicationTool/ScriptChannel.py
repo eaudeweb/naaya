@@ -1,6 +1,6 @@
 
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PythonScripts.PythonScript import PythonScript
@@ -45,10 +45,10 @@ def manage_addScriptChannel(self, id='', title='', description='',
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
+@implementer(IScriptChannel)
 class ScriptChannel(PythonScript, utils):
     """ """
 
-    implements(IScriptChannel)
 
     meta_type = METATYPE_SCRIPTCHANNEL
     icon = 'misc_/NaayaCore/ScriptChannel.gif'
@@ -78,7 +78,7 @@ class ScriptChannel(PythonScript, utils):
         self.numberofitems = numberofitems
 
     def ZPythonScript_setTitle(self, title):
-        if isinstance(title, str):
+        if isinstance(title, bytes):
             title = title.decode('utf-8')
         self.title = title
         self.ZCacheable_invalidate()
@@ -87,7 +87,7 @@ class ScriptChannel(PythonScript, utils):
 
     def syndicateThis(self):
         xml = rss_item_for_channel(self)
-        return etree.tostring(xml, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(xml, xml_declaration=False, encoding="unicode")
 
     security.declareProtected(view_management_screens, 'manageProperties')
 

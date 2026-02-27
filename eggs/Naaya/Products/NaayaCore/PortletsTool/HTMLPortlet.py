@@ -1,5 +1,5 @@
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 import Products
@@ -8,7 +8,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-from managers.portlets_templates import *
+from .managers.portlets_templates import *
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 manage_addHTMLPortlet_html = PageTemplateFile('zpt/htmlportlet_manage_add', globals())
@@ -61,7 +61,7 @@ class HTMLPortlet(LocalPropertyManager, Folder):
 
     def __call__(self, context={}, *args):
         """ """
-        if not context.has_key('args'):
+        if not 'args' in context:
             context['args'] = args
         context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
         wrappedTemplate = self.template.__of__(self)

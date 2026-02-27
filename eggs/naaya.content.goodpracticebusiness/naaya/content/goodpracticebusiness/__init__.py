@@ -1,1 +1,1 @@
-from goodpracticebusiness_item import NyGoodPracticeBusiness
+from .goodpracticebusiness_item import NyGoodPracticeBusiness

@@ -2,7 +2,7 @@ from time import time
 from datetime import datetime, timedelta
 from copy import deepcopy
 
-from nose.plugins.skip import SkipTest
+from unittest import SkipTest
 
 from zope.component import getGlobalSiteManager, queryUtility
 from zope.interface import alsoProvides
@@ -18,7 +18,7 @@ except ImportError:
 else:
     ldapdump_is_available = True
 
-import mock_ldap
+from . import mock_ldap
 
 gsm = getGlobalSiteManager()
 
@@ -75,7 +75,7 @@ class MockCacheReader(object):
 
     def get_dump(self):
         self._called.append('dump')
-        return self._data.iteritems()
+        return self._data.items()
 
 class LDAPCacheTest(NaayaTestCase):
     def setUp(self):
@@ -123,7 +123,7 @@ class LDAPCacheTest(NaayaTestCase):
 
         assert cache.get(userone_dn)['cn'] == "One User"
         self.assertRaises(KeyError, cache.get, 'nosuchuser')
-        assert cache.get('nosuchuser', 'placeholder') is 'placeholder'
+        assert cache.get('nosuchuser', 'placeholder') == 'placeholder'
 
 class LDAPPluginTest(NaayaTestCase):
     def setUp(self):

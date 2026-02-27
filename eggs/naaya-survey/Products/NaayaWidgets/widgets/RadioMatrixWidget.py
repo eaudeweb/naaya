@@ -20,12 +20,12 @@
 
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 # Product imports
 from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
-from MatrixWidget import MatrixWidget
+from .MatrixWidget import MatrixWidget
 
 
 def addRadioMatrixWidget(container, id="", title="RadioMatrix Widget",
@@ -73,7 +73,7 @@ class RadioMatrixWidget(MatrixWidget):
         unanswered = [x for x in value if x is None]
         if unanswered:
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
                                {'title': title}))

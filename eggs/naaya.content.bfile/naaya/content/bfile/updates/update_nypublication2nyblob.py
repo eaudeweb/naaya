@@ -1,7 +1,7 @@
 """ Migrate storage of publications from extfile to bfile """
 
 from Products.naayaUpdater.updates import UpdateScript
-from StringIO import StringIO
+from io import StringIO
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
 

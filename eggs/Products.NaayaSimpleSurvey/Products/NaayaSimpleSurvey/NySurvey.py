@@ -1,12 +1,12 @@
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 #Product imports
-from constants import *
-from NySurveyTemplate import manage_addNySurveyTemplate_html, addNySurveyTemplate
+from .constants import *
+from .NySurveyTemplate import manage_addNySurveyTemplate_html, addNySurveyTemplate
 
 manage_addNySurvey_html = PageTemplateFile('zpt/survey_manage_add', globals())
 

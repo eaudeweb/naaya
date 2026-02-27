@@ -310,7 +310,7 @@ def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
 
     from Products.NaayaCore.managers.import_export import \
         set_response_attachment
-    from StringIO import StringIO
+    from io import StringIO
     abs_path = get_log_dir(site)
     # TODO: redo this
     log_filepath = os.path.join(abs_path, LOG_FILENAME)

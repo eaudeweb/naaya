@@ -1,4 +1,4 @@
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
@@ -7,9 +7,9 @@ from BTrees.OOBTree import OOBTree
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 
 from Products.NaayaCore.managers.utils import utils
-from Profile import manage_addProfile
-from ProfileSheet import manage_addProfileSheet
-from constants import (ID_PROFILESTOOL, METATYPE_PROFILESTOOL,
+from .Profile import manage_addProfile
+from .ProfileSheet import manage_addProfileSheet
+from .constants import (ID_PROFILESTOOL, METATYPE_PROFILESTOOL,
                        TITLE_PROFILESTOOL, METATYPE_PROFILE)
 
 def manage_addProfilesTool(self, REQUEST=None):
@@ -70,7 +70,7 @@ class _ProfilesToolMixin(utils):
 
         """
 
-        for k, v in self.profiles_meta.iteritems():
+        for k, v in self.profiles_meta.items():
             title = v['title']
             properties = v['properties']
             for x in v['instances']:

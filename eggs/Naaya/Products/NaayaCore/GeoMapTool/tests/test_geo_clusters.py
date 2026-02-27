@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 import random
 
 from Products.Naaya.tests import NaayaTestCase
@@ -6,7 +6,7 @@ from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.GeoMapTool.clusters import get_discretized_limits
-from test_kml_parser import load_file
+from .test_kml_parser import load_file
 
 class RequestStub(object):
     # simulates HTTP Request with filled form-data
@@ -36,7 +36,8 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
     def beforeTearDown(self):
         ids = [ob_dict['id'] for ob_dict in self.ob_dicts]
-        self.portal.geo_clusters_test.manage_delObjects(ids)
+        if ids:
+            self.portal.geo_clusters_test.manage_delObjects(ids)
 
         self.portal.manage_delObjects(['geo_clusters_test'])
 
@@ -104,7 +105,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         cluster_obs, single_obs = self.portal.portal_map.search_geo_clusters(REQUEST=r)
         # some random points may fall into our cluster
         # greaterequal is best to evaluate for assertion
-        self.assertTrue(cluster_obs[0][1]>=self.cluster_count)
+        self.assertTrue(len(cluster_obs[0][1])>=self.cluster_count)
 
 
     def test_margin(self):

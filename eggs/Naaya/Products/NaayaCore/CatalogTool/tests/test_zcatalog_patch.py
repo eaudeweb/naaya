@@ -1,6 +1,6 @@
 
 # Zope imports
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.component import adapts, queryAdapter, getGlobalSiteManager
 from OFS.SimpleItem import SimpleItem
 from Products.PluginIndexes.FieldIndex.FieldIndex import FieldIndex
@@ -27,12 +27,12 @@ def register_index_adapter(adapter):
             finally:
                 gsm.unregisterAdapter(adapter, (_ISpecialTestObject,),
                                       INyCatalogIndexing)
-        wrapper.func_name = func.func_name
+        wrapper.__name__ = func.__name__
         return wrapper
     return decorator
 
+@implementer(_ISpecialTestObject)
 class _MockObject(SimpleItem):
-    implements(_ISpecialTestObject)
 
     def __init__(self, **kw):
         for (k, v) in kw.items():

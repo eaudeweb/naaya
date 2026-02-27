@@ -1,6 +1,6 @@
 
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
@@ -43,10 +43,10 @@ def manage_addLocalChannel(self, id='', title='', description='',
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
+@implementer(ILocalChannel)
 class LocalChannel(SimpleItem, utils):
     """ """
 
-    implements(ILocalChannel)
 
     meta_type = METATYPE_LOCALCHANNEL
     icon = 'misc_/NaayaCore/LocalChannel.gif'
@@ -75,7 +75,7 @@ class LocalChannel(SimpleItem, utils):
 
     def syndicateThis(self):
         xml = rss_item_for_channel(self)
-        return etree.tostring(xml, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(xml, xml_declaration=False, encoding="unicode")
 
     security.declareProtected(view_management_screens, 'manageProperties')
 

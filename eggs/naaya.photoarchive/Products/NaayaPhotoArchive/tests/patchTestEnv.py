@@ -6,7 +6,7 @@ def patch_NyPhoto_view():
     know about the IStreamIterator interface """
     from Products.NaayaPhotoArchive.NyPhoto import NyPhoto
     from Products.ExtFile.ExtFile import stream_iterator
-    from StringIO import StringIO
+    from io import StringIO
 
     old_view = NyPhoto.view
 

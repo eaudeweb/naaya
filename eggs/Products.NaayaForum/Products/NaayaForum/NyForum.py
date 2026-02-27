@@ -1,17 +1,17 @@
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
-from zope import interface
+from zope.interface import implementer
 
 import naaya.sql
-from constants import *
-from NyForumBase import NyForumBase
+from .constants import *
+from .NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils, make_id
-from NyForumTopic import (manage_addNyForumTopic_html, topic_add_html,
+from .NyForumTopic import (manage_addNyForumTopic_html, topic_add_html,
                           addNyForumTopic)
-from feeds import messages_feed
+from .feeds import messages_feed
 from Products.NaayaBase.constants import (MESSAGE_SAVEDCHANGES,
                                           PERMISSION_SKIP_CAPTCHA)
 from Products.NaayaBase.NyRoleManager import NyRoleManager
@@ -20,7 +20,7 @@ from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.i18n.LocalPropertyManager import LocalProperty, LocalPropertyManager
 
-from interfaces import INyForum
+from .interfaces import INyForum
 
 STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR(80) UNIQUE',
@@ -44,10 +44,10 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
         return self.manage_main(self, REQUEST, update_menu=1)
     REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
+@implementer(INyForum)
 class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
                 LocalPropertyManager):
     """ """
-    interface.implements(INyForum)
 
     meta_type = METATYPE_NYFORUM
     meta_label = LABEL_NYFORUM
@@ -171,6 +171,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
                     #check file size
                     id = self.utSlugify(id)
                     if len(file.read()) <= self.file_max_size or self.file_max_size == 0:
+                        file.seek(0)
                         ob.manage_addFile(id=id, file=file)
 
     def can_be_seen(self):

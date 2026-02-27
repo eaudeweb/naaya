@@ -7,13 +7,13 @@ types.
 
 import re
 from copy import deepcopy
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from os.path import join, dirname
 import simplejson as json
 
 from AccessControl import ClassSecurityInfo
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 
 from Products.NaayaCore.constants import ID_EDITORTOOL, TITLE_EDITORTOOL
@@ -258,7 +258,7 @@ class EditorTool(Folder):
                     uploaded = imageContainer.uploadImage(file, None)
                     return uploaded.absolute_url()
         else:
-            print 'no image to upload'
+            print('no image to upload')
 
     def enumerateImages(self, source, page=0, query=None, REQUEST=None):
         """ Retrieve the list of images depending on the source.
@@ -419,8 +419,6 @@ InitializeClass(EditorTool)
 
 
 def to_utf8(string):
-    try:
-        string.decode('utf-8')
-        return string
-    except UnicodeEncodeError:
-        return string.encode('utf-8')
+    if isinstance(string, bytes):
+        return string.decode('utf-8')
+    return string

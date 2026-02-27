@@ -2,9 +2,9 @@
 This module contains the base class of Naaya Forum.
 """
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
-from constants import *
+from .constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyBase import NyBase
 

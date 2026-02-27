@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from datetime import date, timedelta
 
 import transaction
@@ -169,5 +169,5 @@ class SurveyTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(SurveyTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(SurveyTestCase))
     return suite

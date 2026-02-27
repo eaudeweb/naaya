@@ -6,7 +6,7 @@ It allows to customize the way different fields behave.
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
@@ -83,10 +83,10 @@ class SchemaTool(Folder):
 
     def _list_default_schemas(self):
         schemas = {}
-        for meta_type, content in _other_schema_products.iteritems():
+        for meta_type, content in _other_schema_products.items():
             schemas[meta_type] = content
 
-        for meta_type, content_type in self.get_pluggable_content().iteritems():
+        for meta_type, content_type in self.get_pluggable_content().items():
             if content_type.get('default_schema', None) is None:
                 # this content type has not been ported to Schema
                 continue
@@ -251,9 +251,9 @@ class SchemaTool(Folder):
         """ """
         skey = 1
         rkey = 1
-        if REQUEST.has_key('show_lowest_rated'):
+        if 'show_lowest_rated' in REQUEST:
             rkey = 0
-        elif REQUEST.has_key('show_most_rated'):
+        elif 'show_most_rated' in REQUEST:
             skey=2
         max_range = int(REQUEST.get('number_of_objects', 10))
         if skey == 1 and rkey == 1:

@@ -1,5 +1,5 @@
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import StringIO
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase

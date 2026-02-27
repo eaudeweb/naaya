@@ -6,7 +6,7 @@
 	You can modify width/height for each one of them.
 </p>
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
 	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
 </div>
 

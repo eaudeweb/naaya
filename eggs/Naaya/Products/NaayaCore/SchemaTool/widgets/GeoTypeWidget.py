@@ -1,6 +1,6 @@
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, manage_addWidget
+from .Widget import Widget, manage_addWidget
 
 
 def addGeoTypeWidget(container, id="", title="Select Widget", REQUEST=None,

@@ -23,13 +23,13 @@
 from App.ImageFile import ImageFile
 
 #Product imports
-from constants import *
-from permissions import (PERMISSION_ADD_PHOTOGALLERY,
+from .constants import *
+from .permissions import (PERMISSION_ADD_PHOTOGALLERY,
                          PERMISSION_ADD_PHOTOFOLDER,
                          PERMISSION_ADD_PHOTO)
-import NyPhotoGallery
-import NyPhotoFolder
-import NyPhoto
+from . import NyPhotoGallery
+from . import NyPhotoFolder
+from . import NyPhoto
 
 from Products.Naaya import register_content
 from Products.NaayaCore.SchemaTool.SchemaTool import register_schema_product

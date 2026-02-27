@@ -1,5 +1,5 @@
 from naaya.content.contact import contact_item
-from subscribers import get_category_location
+from .subscribers import get_category_location
 from Products.Naaya.NyFolder import NyFolder
 
 

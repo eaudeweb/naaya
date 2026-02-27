@@ -1,13 +1,13 @@
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -25,8 +25,8 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyURL
-from permissions import PERMISSION_ADD_URL
+from .interfaces import INyURL
+from .permissions import PERMISSION_ADD_URL
 
 # module constants
 PROPERTIES_OBJECT = {
@@ -193,23 +193,23 @@ def importNyURL(self, param, id, attrs, content, properties, discussion,
 
             ob = _create_NyURL_object(
                 self, id,
-                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+                self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
 
             for property, langs in properties.items():
                 [ob._setLocalPropValue(property, lang, langs[lang]) for
                     lang in langs if langs[lang] != '']
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                         attrs['validation_comment'].encode('utf-8'),
-                         attrs['validation_by'].encode('utf-8'),
-                         attrs['validation_date'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
+            ob.checkThis(attrs['validation_status'],
+                         attrs['validation_comment'],
+                         attrs['validation_by'],
+                         attrs['validation_date'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -219,11 +219,11 @@ class url_item(Implicit, NyContentData):
     redirect = True
 
 
+@implementer(INyURL)
 class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
             NyContentType):
     """ """
 
-    implements(INyURL)
 
     meta_type = config['meta_type']
     meta_label = config['label']

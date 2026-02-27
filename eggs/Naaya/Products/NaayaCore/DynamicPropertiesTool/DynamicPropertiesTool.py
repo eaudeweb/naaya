@@ -8,13 +8,13 @@
 
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
-import DynamicPropertiesItem
+from . import DynamicPropertiesItem
 
 def manage_addDynamicPropertiesTool(self, REQUEST=None):
     """ """

@@ -20,9 +20,9 @@ from Products.NaayaCore.LayoutTool.DiskFile import allow_path
 from naaya.core.zope2util import force_to_unicode
 from naaya.core.StaticServe import StaticServeFromFolder
 from _mysql_exceptions import OperationalError
-from MySQLConnector import MySQLConnector
-import queries
-import utils
+from .MySQLConnector import MySQLConnector
+from . import queries
+from . import utils
 
 TARGET_DIR = os.path.join(CLIENT_HOME, '..', 'country_profile')
 try:
@@ -96,7 +96,7 @@ class CountryProfile(SimpleItem):
         """Save mysql connection data"""
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             params = dict(REQUEST.form)
@@ -164,7 +164,7 @@ class CountryProfile(SimpleItem):
         #Generate an hash from arguments
         kw_hash = hash(tuple(sorted(kw.items())))
         data_hash = hash(tuple(sorted([(k, tuple(v))
-            for k, v in data.iteritems()])))
+            for k, v in data.items()])))
         args_hash = str(kw_hash) + str(data_hash)
 
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
@@ -237,7 +237,7 @@ class CountryProfile(SimpleItem):
         #Generate an hash from arguments
         kw_hash = hash(tuple(sorted(kw.items())))
         data_hash = hash(tuple(sorted([(k, tuple(v))
-            for k, v in data.iteritems()])))
+            for k, v in data.items()])))
         args_hash = str(kw_hash) + str(data_hash)
 
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
@@ -343,11 +343,11 @@ class CountryProfile(SimpleItem):
 
 
 
-        if kw.has_key('bar_spacing'):
+        if 'bar_spacing' in kw:
             chart.set_bar_spacing(kw['bar_spacing'])
-        if kw.has_key('group_spacing'):
+        if 'group_spacing' in kw:
             chart.set_group_spacing(kw['group_spacing'])
-        if kw.has_key('bar_width'):
+        if 'bar_width' in kw:
             chart.set_bar_width(kw['bar_width'])
 
         #Generate an hash from arguments
@@ -355,7 +355,7 @@ class CountryProfile(SimpleItem):
         for i in range(members_cnt):
             data['y'][i] = tuple(data['y'][i])
         data_hash = hash(tuple(sorted([(k, tuple(v))
-            for k, v in data.iteritems()])))
+            for k, v in data.items()])))
         args_hash = str(kw_hash) + str(data_hash)
 
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
@@ -404,7 +404,7 @@ class CountryProfile(SimpleItem):
         for year in data['x']:
             i = 0
             for source in sources:
-                if not data_map.has_key((year, source)):
+                if not (year, source in data_map):
                     data['y'][i].append(0)
                 else:
                     data['y'][i].append(data_map[(year, source)])
@@ -454,7 +454,7 @@ class CountryProfile(SimpleItem):
         if hasattr(queries, name):
 
             query_args = {} #variable namespacing
-            for k, v in REQUEST.form.iteritems():
+            for k, v in REQUEST.form.items():
                 if '-' in k:
                     k = k.split('-')[1]
                 query_args[k] = v
@@ -464,7 +464,7 @@ class CountryProfile(SimpleItem):
                 i = 0
                 for row in rows:
                     data.append({})
-                    for field, value in row.iteritems():
+                    for field, value in row.items():
                         if field == fval:
                             data[i]['val'] = value
                         if field == flabel:

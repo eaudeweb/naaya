@@ -37,7 +37,7 @@ class UpdateGeotaggedContent(UpdateScript):
 
         update_portlets_data(portal, self.log)
 
-        for ob_path, delta_list in zpt_patches.iteritems():
+        for ob_path, delta_list in zpt_patches.items():
             try:
                 obj = portal.unrestrictedTraverse(ob_path)
             except:
@@ -75,7 +75,7 @@ def update_portlets_data(portal, log):
         portal_portlets.assign_portlet('', 'left', portlet_id, True)
 
     for folder_path, portlet_ids in portal.__dict__.get(
-      '_portlets_manager__right_portlets_locations', {}).iteritems():
+      '_portlets_manager__right_portlets_locations', {}).items():
         if folder_path.startswith(site_prefix):
             fixed_folder_path = folder_path[len(site_prefix):]
             log.debug('location "%s" starts with site prefix; changing to  "%s"'

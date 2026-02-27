@@ -20,12 +20,12 @@
 
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 # Product imports
 from Products.NaayaWidgets.Widget import manage_addWidget, WidgetError
 
-from MatrixWidget import MatrixWidget
+from .MatrixWidget import MatrixWidget
 
 
 def addCheckboxMatrixWidget(container, id="", title="CheckboxMatrix Widget",
@@ -72,7 +72,7 @@ class CheckboxMatrixWidget(MatrixWidget):
         unanswered = [x for x in value if not x]
         if unanswered:
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
                                {'title': title}))

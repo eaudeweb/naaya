@@ -1,20 +1,19 @@
 import os
-from StringIO import StringIO
+from io import StringIO
 import math
 
 from PIL import Image
 
-import zLOG
-
+import logging
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
-from observatory import TYPE_VALUES, RATING_VALUES
+from .observatory import TYPE_VALUES, RATING_VALUES
 
 def query_reverse_geocode(lat, lon):
     """ calls reverse_geocode and logs the error """
     try:
         return reverse_geocode(lat, lon)
-    except GeocoderServiceError, e:
+    except GeocoderServiceError as e:
         zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
         return '', ''
 

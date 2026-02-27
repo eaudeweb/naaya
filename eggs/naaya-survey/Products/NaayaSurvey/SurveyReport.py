@@ -19,17 +19,17 @@
 
 # Python imports
 import sys
-from urllib import urlencode
+from urllib.parse import urlencode
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from DocumentTemplate.sequence import sort
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zLOG import LOG, DEBUG
+import logging
+logger = logging.getLogger('NaayaSurvey.SurveyReport')
 
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
@@ -37,8 +37,8 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
 from Products.NaayaCore.managers.utils import slugify, genRandomId, genObjectId
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
-import statistics
-from statistics.BaseStatistic import manage_addStatistic
+from . import statistics
+from .statistics.BaseStatistic import manage_addStatistic
 
 STATISTICS = dict([(statistic.meta_type, statistic) for statistic in statistics.AVAILABLE_STATISTICS])
 
@@ -115,7 +115,7 @@ class SurveyReport(Folder, LocalPropertyManager):
         if REQUEST:
             kwargs.update(REQUEST.form)
         local_properties = self.getLocalProperties()
-        local_properties = filter(None, [x.get('id', None) for x in local_properties])
+        local_properties = list(filter(None, [x.get('id', None) for x in local_properties]))
         # Update local properties
         lang = kwargs.get('lang', self.get_selected_language())
         for local_property in local_properties:
@@ -139,7 +139,7 @@ class SurveyReport(Folder, LocalPropertyManager):
     security.declarePublic('getSortedStatistics')
     def getSortedStatistics(self, sort_by='sortorder'):
         """Return the statistics in sorted order"""
-        return sort(self.getStatistics(), ((sort_by, 'cmp', 'asc'), ))
+        return sorted(self.getStatistics(), key=lambda x: getattr(x, sort_by, 0))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'deleteStatistics')
     def addStatistic(self, REQUEST, question=None, meta_type=None):
@@ -168,9 +168,8 @@ class SurveyReport(Folder, LocalPropertyManager):
         except TypeError:
             if not REQUEST:
                 raise
-            err = sys.exc_info()
-            LOG('NaayaSurvey.statistics.manage_addStatistic', DEBUG,
-                'Error creating statistic %s for question %s' % (statistic_cls, question.absolute_url()), error=err)
+            logger.debug(
+                'Error creating statistic %s for question %s', statistic_cls, question.absolute_url())
             self.setSessionErrorsTrans('"${meta_label}" can\'t be used for question "${title}"',
                 meta_label=statistic_cls.meta_label, title=question.title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)

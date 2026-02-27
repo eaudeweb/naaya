@@ -16,10 +16,10 @@ except ImportError:
     from Products.NaayaContent.discover import get_pluggable_content
 
 from naaya.content.meeting.meeting import NyMeeting
-from permissions import PERMISSION_PARTICIPATE_IN_MEETING
+from .permissions import PERMISSION_PARTICIPATE_IN_MEETING
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE,
                                    PARTICIPANT_ROLE, ADMINISTRATOR_ROLE)
-from meeting import add_observer_role
+from .meeting import add_observer_role
 
 
 def interval_from_raw_time(start_date, end_date, raw_time):
@@ -252,11 +252,11 @@ class ConvertMeetingDates(UpdateScript):
 
                 try:
                     i = interval_from_raw_time(start_date, end_date, time)
-                except Exception, e:
+                except Exception as e:
                     self.log.error('Can not create Interval: %s' % str(e))
                     try:
                         i = Interval(start_date, '', end_date, '', True)
-                    except Exception, e_inner:
+                    except Exception as e_inner:
                         today = datetime.now().strftime('%d/%m/%Y')
                         i = Interval(today, '', today, '', True)
                         self.log.error(

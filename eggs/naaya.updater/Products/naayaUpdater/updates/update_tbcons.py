@@ -76,7 +76,7 @@ class UpdateTalkBackCons(UpdateScript):
             added_text = "<p><em>%s:</em></p>" % contributor_name
             com.message = added_text + com.message
             self.log.debug("Marked comment %s as being on behalf of %s" % (com.absolute_url(1), contributor_name))
-        if com.__dict__.has_key('title'):
+        if 'title' in com.__dict__:
             del com.__dict__['title']
             self.log.debug("Deleted 'title' from %s" % com.absolute_url(1))
         self.del_attr(com, 'contributor_name')

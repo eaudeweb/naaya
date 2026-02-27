@@ -1,9 +1,9 @@
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from copy import deepcopy
-from StringIO import StringIO
-from BeautifulSoup import BeautifulSoup
-from mock import patch
+from io import StringIO
+from bs4 import BeautifulSoup
+from unittest.mock import patch
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -25,19 +25,20 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.manage_uninstall_pluggableitem('Naaya Media File')
         import transaction; transaction.commit()
 
+    @patch('naaya.content.mediafile.mediafile_item.ffmpeg_available', False)
     @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
     def test_add(self, mock_can_convert):
         mock_can_convert.return_value = False
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/mediafile_add_html')
-        self.failUnless('<h1>Submit Media File</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit Media File</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'discussion:boolean', 'file',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -51,26 +52,26 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.myfolder.test_create_mediafile.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_create_mediafile')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_create_mediafile.*</h1>', html, re.DOTALL))
-        self.failUnless('test_mediafile_description' in html)
-        self.failUnless('test_mediafile_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
+        self.assertTrue(re.search(r'<h1>.*test_create_mediafile.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_mediafile_description' in html)
+        self.assertTrue('test_mediafile_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
 
         media_id = self.portal.myfolder.test_create_mediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid.mp4')
+        self.assertEqual(media_id, 'testvid.mp4')
         self.browser.go('http://localhost/portal/myfolder/test_create_mediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
+        self.assertEqual(headers.get('content-type', None), 'video/mp4')
 
         # apparently the test publisher doesn't serve our mp4 file correctly.
-        #self.failUnlessEqual(html, 'the_MP4_data')
+        #self.assertEqual(html, 'the_MP4_data')
 
         self.browser_do_logout()
 
@@ -84,19 +85,22 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
-        self.failUnless('No file was uploaded' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
+        self.assertTrue('No file was uploaded' in html)
 
+    @patch('naaya.content.mediafile.mediafile_item.ffmpeg_available', False)
     @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
-    def test_edit(self, mock_can_convert):
+    @patch('naaya.content.mediafile.mediafile_item.NyMediaFile_extfile.mediaBroken',
+           new_callable=lambda: property(lambda self: True))
+    def test_edit(self, mock_broken, mock_can_convert):
         mock_can_convert.return_value = False
         self.browser_do_login('admin', '')
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My media file')
+        self.assertEqual(form['title:utf8:ustring'], 'My media file')
 
         form['title:utf8:ustring'] = 'new_mediafile_title'
         form.find_control('file').add_file(StringIO('the_MP4_data_B'),
@@ -105,19 +109,19 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit Media File</h1>' in html)
+        self.assertTrue('<h1>Edit Media File</h1>' in html)
 
-        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+        self.assertEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
         self.portal.myfolder.mymediafile.approveThis()
 
         media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid_B.mp4')
+        self.assertEqual(media_id, 'testvid_B.mp4')
         self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
+        self.assertEqual(headers.get('content-type', None), 'video/mp4')
         # apparently the test publisher doesn't serve our mp4 file correctly.
-        #self.failUnlessEqual(html, 'the_MP4_data_B')
+        #self.assertEqual(html, 'the_MP4_data_B')
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -126,19 +130,19 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
             filename='testvid_C.mp4', content_type='video/mp4')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
-        self.failUnless('Saved changes' in self.browser.get_html())
+        self.assertTrue('Saved changes' in self.browser.get_html())
 
         media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
-        self.failUnlessEqual(media_id, 'testvid_B.mp4') # the file is not renamed - is this correct?
+        self.assertEqual(media_id, 'testvid_B.mp4') # the file is not renamed - is this correct?
         self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-type', None), 'video/mp4')
+        self.assertEqual(headers.get('content-type', None), 'video/mp4')
         # apparently the test publisher doesn't serve our mp4 file correctly.
-        #self.failUnlessEqual(html, 'the_MP4_data_C')
+        #self.assertEqual(html, 'the_MP4_data_C')
 
-        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
-        self.failUnlessEqual(self.portal.myfolder.mymediafile.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+        self.assertEqual(self.portal.myfolder.mymediafile.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -152,8 +156,8 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -164,12 +168,12 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmEdit')
         # TODO: title control should be 'title:utf8:ustring'
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My media file')
+        self.assertEqual(form['title:utf8:ustring'], 'My media file')
         form['title:utf8:ustring'] = 'new_mediafile_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+        self.assertEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
 
         self.browser_do_logout()
 
@@ -178,7 +182,7 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)

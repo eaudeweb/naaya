@@ -1,6 +1,6 @@
 from Products.Naaya.permissions import _register_permissions
 
-from constants import (PERMISSION_ADD_FORUM,
+from .constants import (PERMISSION_ADD_FORUM,
                         PERMISSION_MODIFY_FORUMTOPIC,
                         PERMISSION_ADD_FORUMMESSAGE,
                         PERMISSION_MODIFY_FORUMMESSAGE,

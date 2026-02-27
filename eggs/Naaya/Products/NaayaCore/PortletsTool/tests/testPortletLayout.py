@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from copy import deepcopy
 import re
 
@@ -24,46 +24,46 @@ class PortletArrangementUnitTestCase(ZopeTestCase.TestCase):
         pp = self.portal_portlets
         ids = pp.get_portlet_ids_for
 
-        self.failUnlessEqual(ids('', 'left'), ['my_left_portlet'])
-        self.failUnlessEqual(ids('', 'right'), [])
-        self.failUnlessEqual(ids('', 'center'), [])
+        self.assertEqual(ids('', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('', 'right'), [])
+        self.assertEqual(ids('', 'center'), [])
 
-        self.failUnlessEqual(ids('fol1', 'left'), ['my_left_portlet'])
-        self.failUnlessEqual(ids('fol1', 'right'), [])
-        self.failUnlessEqual(ids('fol1', 'center'), [])
+        self.assertEqual(ids('fol1', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('fol1', 'right'), [])
+        self.assertEqual(ids('fol1', 'center'), [])
 
-        self.failUnlessEqual(ids('fol2', 'left'), ['my_left_portlet'])
-        self.failUnlessEqual(ids('fol2', 'right'), ['my_right_portlet'])
-        self.failUnlessEqual(ids('fol2', 'center'), [])
+        self.assertEqual(ids('fol2', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('fol2', 'right'), ['my_right_portlet'])
+        self.assertEqual(ids('fol2', 'center'), [])
 
-        self.failUnlessEqual(ids('fol3', 'left'), ['my_left_portlet'])
-        self.failUnlessEqual(ids('fol3', 'right'), [])
-        self.failUnlessEqual(ids('fol3', 'center'), ['my_center_portlet'])
+        self.assertEqual(ids('fol3', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('fol3', 'right'), [])
+        self.assertEqual(ids('fol3', 'center'), ['my_center_portlet'])
 
     def test_remove(self):
         pp = self.portal_portlets
         ids = pp.get_portlet_ids_for
 
         pp.unassign_portlet('fol2', 'right', 'my_right_portlet')
-        self.failUnlessEqual(pp.get_portlet_ids_for('fol2', 'right'), [])
+        self.assertEqual(pp.get_portlet_ids_for('fol2', 'right'), [])
 
         try:
             pp.unassign_portlet('fol2', 'right', 'my_right_portlet')
             self.fail('Should have raised ValueError')
-        except ValueError, e:
-            self.failUnless('No portlet named "my_right_portlet" '
+        except ValueError as e:
+            self.assertTrue('No portlet named "my_right_portlet" '
                 'among "right" portlets at "fol2"' in str(e))
 
     def test_inheritance(self):
         pp = self.portal_portlets
         ids = pp.get_portlet_ids_for
 
-        self.failUnlessEqual(ids('fol1', 'left'), ['my_left_portlet'])
-        self.failUnlessEqual(ids('fol1/subfol', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('fol1', 'left'), ['my_left_portlet'])
+        self.assertEqual(ids('fol1/subfol', 'left'), ['my_left_portlet'])
 
         pp.assign_portlet('fol1', 'right', '49238', inherit=False)
-        self.failUnlessEqual(ids('fol1', 'right'), ['49238'])
-        self.failUnlessEqual(ids('fol1/subfol', 'right'), [])
+        self.assertEqual(ids('fol1', 'right'), ['49238'])
+        self.assertEqual(ids('fol1/subfol', 'right'), [])
 
     def test_duplicate(self):
         pp = self.portal_portlets
@@ -72,15 +72,15 @@ class PortletArrangementUnitTestCase(ZopeTestCase.TestCase):
         try:
             pp.assign_portlet('fol2', 'right', 'my_right_portlet')
             self.fail('Should have raised ValueError')
-        except ValueError, e:
-            self.failUnless('Portlet "my_right_portlet" already assigned '
+        except ValueError as e:
+            self.assertTrue('Portlet "my_right_portlet" already assigned '
                 'to "right" at "fol2"')
 
         try:
             pp.assign_portlet('fol2', 'right', 'my_right_portlet', inherit=False)
             self.fail('Should have raised ValueError')
-        except ValueError, e:
-            self.failUnless('Portlet "my_right_portlet" already assigned '
+        except ValueError as e:
+            self.assertTrue('Portlet "my_right_portlet" already assigned '
                 'to "right" at "fol2"')
 
     def test_homepage(self):
@@ -88,7 +88,7 @@ class PortletArrangementUnitTestCase(ZopeTestCase.TestCase):
         ids = pp.get_portlet_ids_for
 
         pp.assign_portlet('', 'center', '2134', inherit=False)
-        self.failUnlessEqual(ids('', 'center'), ['2134'])
+        self.assertEqual(ids('', 'center'), ['2134'])
 
 class FunctionalSetupMixin(object):
     def afterSetUp(self):
@@ -118,58 +118,58 @@ class PortletArrangementTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
         return self.browser.get_html()
 
     def test_rightPortlets(self):
-        self.failIf('Test Portlet' in self._get('portal'))
-        self.failIf('Test Portlet' in self._get('portal/fol'))
-        self.failIf('Test Portlet' in self._get('portal/fol/sub'))
+        self.assertFalse('Test Portlet' in self._get('portal'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol/sub'))
 
         self.portal.portal_portlets.assign_portlet('', 'right', 'prt1')
         self.portal.portal_portlets.assign_portlet('fol', 'right', 'prt2')
         transaction.commit()
 
-        self.failUnless('Test Portlet 1' in self._get('portal'))
-        self.failIf('Test Portlet 2' in self._get('portal'))
+        self.assertTrue('Test Portlet 1' in self._get('portal'))
+        self.assertFalse('Test Portlet 2' in self._get('portal'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol/sub'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol/sub'))
 
     def test_leftPortlets(self):
-        self.failIf('Test Portlet' in self._get('portal'))
-        self.failIf('Test Portlet' in self._get('portal/fol'))
-        self.failIf('Test Portlet' in self._get('portal/fol/sub'))
+        self.assertFalse('Test Portlet' in self._get('portal'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol/sub'))
 
         self.portal.portal_portlets.assign_portlet('', 'left', 'prt1')
         self.portal.portal_portlets.assign_portlet('fol', 'left', 'prt2')
         transaction.commit()
 
-        self.failUnless('Test Portlet 1' in self._get('portal'))
-        self.failIf('Test Portlet 2' in self._get('portal'))
+        self.assertTrue('Test Portlet 1' in self._get('portal'))
+        self.assertFalse('Test Portlet 2' in self._get('portal'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol/sub'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol/sub'))
 
     def test_centerPortlets(self):
-        self.failIf('Test Portlet' in self._get('portal'))
-        self.failIf('Test Portlet' in self._get('portal/fol'))
-        self.failIf('Test Portlet' in self._get('portal/fol/sub'))
+        self.assertFalse('Test Portlet' in self._get('portal'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol'))
+        self.assertFalse('Test Portlet' in self._get('portal/fol/sub'))
 
         self.portal.portal_portlets.assign_portlet('', 'center', 'prt1')
         self.portal.portal_portlets.assign_portlet('fol', 'center', 'prt2')
         transaction.commit()
 
-        self.failUnless('Test Portlet 1' in self._get('portal'))
-        self.failIf('Test Portlet 2' in self._get('portal'))
+        self.assertTrue('Test Portlet 1' in self._get('portal'))
+        self.assertFalse('Test Portlet 2' in self._get('portal'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol'))
 
-        self.failUnless('Test Portlet 1' in self._get('portal/fol/sub'))
-        self.failUnless('Test Portlet 2' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 1' in self._get('portal/fol/sub'))
+        self.assertTrue('Test Portlet 2' in self._get('portal/fol/sub'))
 
     def test_default_portlets(self):
         homepage = self._get('portal')
@@ -177,24 +177,24 @@ class PortletArrangementTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
         info = self._get('portal/info')
 
         if self.portal.getSyndicationTool().latestnews_rdf.get_objects_for_rdf():
-            self.failUnless('Latest news' in homepage)
-        self.failIf('Latest news' in folder)
-        self.failIf('Latest news' in info)
+            self.assertTrue('Latest news' in homepage)
+        self.assertFalse('Latest news' in folder)
+        self.assertFalse('Latest news' in info)
 
         if self.portal.getSyndicationTool().upcomingevents_rdf.get_objects_for_rdf():
-            self.failUnless('Upcoming events' in homepage)
-        self.failIf('Upcoming events' in folder)
-        self.failIf('Upcoming events' in info)
+            self.assertTrue('Upcoming events' in homepage)
+        self.assertFalse('Upcoming events' in folder)
+        self.assertFalse('Upcoming events' in info)
 
         if self.portal.getSyndicationTool().latestuploads_rdf.get_objects_for_rdf():
-            self.failUnless('Latest uploads' in homepage)
-        self.failIf('Latest uploads' in folder)
-        self.failIf('Latest uploads' in info)
+            self.assertTrue('Latest uploads' in homepage)
+        self.assertFalse('Latest uploads' in folder)
+        self.assertFalse('Latest uploads' in info)
 
         # test "Main sections"
-        self.failUnless('Folderr' in homepage)
-        self.failUnless('Folderr' in folder)
-        self.failUnless('Folderr' in info)
+        self.assertTrue('Folderr' in homepage)
+        self.assertTrue('Folderr' in folder)
+        self.assertTrue('Folderr' in info)
 
 class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCase):
 
@@ -210,12 +210,12 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         form['position'] = ['center']
         self.browser.submit()
 
-        self.failUnless('Successfully assigned portlet "Test Portlet 1" '
+        self.assertTrue('Successfully assigned portlet "Test Portlet 1" '
             'at "fol"' in self.browser.get_html())
 
         portlet_layout = self.portal.portal_portlets._portlet_layout
-        self.failUnless(('fol', 'center') in portlet_layout)
-        self.failUnlessEqual(portlet_layout[('fol', 'center')],
+        self.assertTrue(('fol', 'center') in portlet_layout)
+        self.assertEqual(portlet_layout[('fol', 'center')],
             [{'id': 'prt1', 'inherit': True}])
 
         self.browser_do_logout()
@@ -233,12 +233,12 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         form['inherit:boolean'] = []
         self.browser.submit()
 
-        self.failUnless('Successfully assigned portlet "Test Portlet 1" '
+        self.assertTrue('Successfully assigned portlet "Test Portlet 1" '
             'at "fol"' in self.browser.get_html())
 
         portlet_layout = self.portal.portal_portlets._portlet_layout
-        self.failUnless(('fol', 'center') in portlet_layout)
-        self.failUnlessEqual(portlet_layout[('fol', 'center')],
+        self.assertTrue(('fol', 'center') in portlet_layout)
+        self.assertEqual(portlet_layout[('fol', 'center')],
             [{'id': 'prt1', 'inherit': False}])
 
         self.browser_do_logout()
@@ -254,10 +254,10 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
 
         position_items = set(item.name
             for item in form.find_control('position').items)
-        self.failUnlessEqual(position_items, set(['left', 'center', 'right']))
+        self.assertEqual(position_items, set(['left', 'center', 'right']))
         portlet_id_items = set(item.name
             for item in form.find_control('portlet_id').items)
-        self.failUnless(set(['prt1', 'prt2']).issubset(portlet_id_items))
+        self.assertTrue(set(['prt1', 'prt2']).issubset(portlet_id_items))
 
         self.browser_do_logout()
 
@@ -266,7 +266,7 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         transaction.commit()
 
         self.browser.go('http://localhost/portal/fol')
-        self.failUnless('Test Portlet 2' in self.browser.get_html())
+        self.assertTrue('Test Portlet 2' in self.browser.get_html())
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/portal_portlets/admin_layout')
@@ -286,9 +286,9 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
 
         self.browser.clicked(form, form.find_control('action'))
         self.browser.submit()
-        self.failUnless('Successfully removed portlet "Test Portlet 2" '
+        self.assertTrue('Successfully removed portlet "Test Portlet 2" '
             'from "fol"' in self.browser.get_html())
         self.browser_do_logout()
 
         self.browser.go('http://localhost/portal/fol')
-        self.failIf('Test Portlet 2' in self.browser.get_html())
+        self.assertFalse('Test Portlet 2' in self.browser.get_html())

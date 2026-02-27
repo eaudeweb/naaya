@@ -20,7 +20,7 @@
 
 #Python imports
 import traceback
-from BeautifulSoup import BeautifulStoneSoup
+from html import unescape as _html_unescape
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -51,7 +51,7 @@ class UpdateLocalizerStrings(UpdateScript):
                     unescaped_trans = self.unescape(trans)
                     unescaped_translations[lang_code] = unescaped_trans
                     self.log.debug('Unescaped "%s" to "%s"' % (repr(trans), repr(unescaped_trans)))
-                except Exception, e:
+                except Exception as e:
                     unescaped_translations[lang_code] = trans
                     self.log.debug('Could not unescape "%s" (%s)' % (repr(trans), str(e)))
                     self.log.error(traceback.format_exc())
@@ -62,10 +62,8 @@ class UpdateLocalizerStrings(UpdateScript):
         return True
 
     def unescape(self, s):
-        ENITITES = BeautifulStoneSoup.HTML_ENTITIES
-        unescaped = BeautifulStoneSoup(s, convertEntities=ENITITES)
         try:
-            unescaped = [unicode(str(x), 'utf-8') for x in unescaped]
-            return ''.join(unescaped)
+            unescaped = _html_unescape(s)
+            return unescaped
         except:
             return s

@@ -3,11 +3,11 @@ from zope import interface, component
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-from interfaces import INySite
+from .interfaces import INySite
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class AdministrationPortlet(object):
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Administration'
 

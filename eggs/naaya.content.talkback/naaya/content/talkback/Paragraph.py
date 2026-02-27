@@ -25,7 +25,7 @@ from collections import defaultdict
 
 # Zope imports
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view
 from DateTime import DateTime
@@ -33,14 +33,14 @@ from DateTime import DateTime
 # Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from comment_item import addComment, TalkBackConsultationComment
-from comment_item import cleanup_message
-from comment_item import Contributor
+from .comment_item import addComment, TalkBackConsultationComment
+from .comment_item import cleanup_message
+from .comment_item import Contributor
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
-from constants import METATYPE_TALKBACKCONSULTATION_COMMENT
+from .constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
+from .constants import METATYPE_TALKBACKCONSULTATION_COMMENT
 from Products.NaayaCore.managers.utils import html2text
-from permissions import (PERMISSION_REVIEW_TALKBACKCONSULTATION,
+from .permissions import (PERMISSION_REVIEW_TALKBACKCONSULTATION,
                          PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
 

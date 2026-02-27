@@ -1,4 +1,4 @@
-<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
+<metal:block metal:define-macro="page" metal:extend-macro="python:here.standard_template_macro()">
 <metal:block fill-slot="meta">
 	<meta tal:define="description here/description;
 					  content python:here.html2text(description);"

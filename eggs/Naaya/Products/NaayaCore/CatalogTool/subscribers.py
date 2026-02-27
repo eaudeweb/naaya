@@ -2,7 +2,7 @@ from zope.component import adapter
 from zope.container.interfaces import (IObjectAddedEvent,
                                        IObjectRemovedEvent)
 
-from interfaces import INyCatalogAware
+from .interfaces import INyCatalogAware
 
 
 def physical_path(obj):

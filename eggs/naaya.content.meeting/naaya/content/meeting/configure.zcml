@@ -24,7 +24,7 @@
 
   <zope:subscriber
       for="naaya.content.base.interfaces.INyContentObject
-           zope.app.container.interfaces.IObjectAddedEvent"
+           zope.lifecycleevent.interfaces.IObjectAddedEvent"
       handler=".meeting.on_added_meeting_item"
       />
 

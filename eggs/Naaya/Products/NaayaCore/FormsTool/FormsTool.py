@@ -21,7 +21,7 @@ using diff tools.
 import os
 import logging
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -37,8 +37,8 @@ from Products.NaayaCore.LayoutTool.Template import (
 
 from Products.NaayaCore.managers.utils import html_diff
 
-from interfaces import ITemplate, IFilesystemTemplateWriter
-from NaayaTemplate import NaayaPageTemplateFile
+from .interfaces import ITemplate, IFilesystemTemplateWriter
+from .NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import fsbundles
 from naaya.core.zope2util import get_template_source
 

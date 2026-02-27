@@ -1,7 +1,7 @@
 import string
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
+from io import BytesIO
 
 class profilemeta_struct:
     def __init__(self):
@@ -67,5 +67,5 @@ class profilemeta_parser:
         try:
             l_parser.parse(l_inpsrc)
             return (l_handler, '')
-        except Exception, error:
+        except Exception as error:
             return (None, error)

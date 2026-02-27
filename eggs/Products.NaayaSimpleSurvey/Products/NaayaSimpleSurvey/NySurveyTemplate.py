@@ -1,14 +1,14 @@
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 
 #Product imports
-from constants import *
-from NySurveyAnswer import manage_addNySurveyAnswer_html, addNySurveyAnswer, answer_add_html
+from .constants import *
+from .NySurveyAnswer import manage_addNySurveyAnswer_html, addNySurveyAnswer, answer_add_html
 
 manage_addNySurveyTemplate_html = PageTemplateFile('zpt/template_manage_add', globals())
 
@@ -59,69 +59,69 @@ class NySurveyTemplate(Folder):
         for k, v in kwargs.items():
             REQUEST.SESSION.set(k, v)
 
-        if not kwargs.has_key('a113'): kwargs['a113'] = ''
-        if not kwargs.has_key('a114'): kwargs['a114'] = ''
-        if not kwargs.has_key('a115'): kwargs['a115'] = ''
-        if not kwargs.has_key('a123'): kwargs['a123'] = ''
-        if not kwargs.has_key('a131'): kwargs['a131'] = ''
-        if not kwargs.has_key('a211'): kwargs['a211'] = ''
-        if not kwargs.has_key('a212'): kwargs['a212'] = ''
-        if not kwargs.has_key('a213'): kwargs['a213'] = ''
-        if not kwargs.has_key('a214'): kwargs['a214'] = ''
-        if not kwargs.has_key('a217'): kwargs['a217'] = ''
-        if not kwargs.has_key('a218'): kwargs['a218'] = ''
-        if not kwargs.has_key('a219'): kwargs['a219'] = ''
-        if not kwargs.has_key('a221'): kwargs['a221'] = ''
-        if not kwargs.has_key('a222'): kwargs['a222'] = ''
-        if not kwargs.has_key('a231'): kwargs['a231'] = ''
-        if not kwargs.has_key('a241'): kwargs['a241'] = ''
-        if not kwargs.has_key('a242'): kwargs['a242'] = ''
-        if not kwargs.has_key('a243'): kwargs['a243'] = ''
-        if not kwargs.has_key('a244'): kwargs['a244'] = ''
-        if not kwargs.has_key('a251'): kwargs['a251'] = ''
-        if not kwargs.has_key('a252'): kwargs['a252'] = ''
-        if not kwargs.has_key('a311'): kwargs['a311'] = ''
-        if not kwargs.has_key('a312'): kwargs['a312'] = ''
-        if not kwargs.has_key('a314'): kwargs['a314'] = ''
-        if not kwargs.has_key('a315'): kwargs['a315'] = ''
-        if not kwargs.has_key('a321'): kwargs['a321'] = ''
-        if not kwargs.has_key('a322'): kwargs['a322'] = ''
-        if not kwargs.has_key('a323'): kwargs['a323'] = ''
-        if not kwargs.has_key('a324'): kwargs['a324'] = ''
-        if not kwargs.has_key('a352'): kwargs['a352'] = ''
-        if not kwargs.has_key('a411'): kwargs['a411'] = ''
-        if not kwargs.has_key('a414'): kwargs['a414'] = ''
-        if not kwargs.has_key('a412'): kwargs['a412'] = ''
-        if not kwargs.has_key('a431'): kwargs['a431'] = ''
-        if not kwargs.has_key('a461'): kwargs['a461'] = ''
-        if not kwargs.has_key('a462'): kwargs['a462'] = ''
-        if not kwargs.has_key('a512'): kwargs['a512'] = ''
-        if not kwargs.has_key('a514'): kwargs['a514'] = ''
-        if not kwargs.has_key('a931'): kwargs['a931'] = ''
-        if not kwargs.has_key('a932'): kwargs['a932'] = ''
-        if not kwargs.has_key('a941'): kwargs['a941'] = ''
-        if not kwargs.has_key('a942'): kwargs['a942'] = ''
-        if not kwargs.has_key('a943'): kwargs['a943'] = ''
-        if not kwargs.has_key('a1014'): kwargs['a1014'] = ''
-        if not kwargs.has_key('a1015'): kwargs['a1015'] = ''
-        if not kwargs.has_key('a1018'): kwargs['a1018'] = ''
-        if not kwargs.has_key('a1019'): kwargs['a1019'] = ''
-        if not kwargs.has_key('b111'): kwargs['b111'] = ''
-        if not kwargs.has_key('b112'): kwargs['b112'] = ''
-        if not kwargs.has_key('b212'): kwargs['b212'] = ''
-        if not kwargs.has_key('b222'): kwargs['b222'] = ''
-        if not kwargs.has_key('b241'): kwargs['b241'] = ''
-        if not kwargs.has_key('b251'): kwargs['b251'] = ''
-        if not kwargs.has_key('b261'): kwargs['b261'] = ''
-        if not kwargs.has_key('b311'): kwargs['b311'] = ''
-        if not kwargs.has_key('b314'): kwargs['b314'] = ''
-        if not kwargs.has_key('b315'): kwargs['b315'] = ''
-        if not kwargs.has_key('b316'): kwargs['b316'] = ''
-        if not kwargs.has_key('b412'): kwargs['b412'] = ''
-        if not kwargs.has_key('c121'): kwargs['c121'] = ''
-        if not kwargs.has_key('c131'): kwargs['c131'] = ''
-        if not kwargs.has_key('c132'): kwargs['c132'] = ''
-        if not kwargs.has_key('c133'): kwargs['c133'] = ''
+        if not 'a113' in kwargs: kwargs['a113'] = ''
+        if not 'a114' in kwargs: kwargs['a114'] = ''
+        if not 'a115' in kwargs: kwargs['a115'] = ''
+        if not 'a123' in kwargs: kwargs['a123'] = ''
+        if not 'a131' in kwargs: kwargs['a131'] = ''
+        if not 'a211' in kwargs: kwargs['a211'] = ''
+        if not 'a212' in kwargs: kwargs['a212'] = ''
+        if not 'a213' in kwargs: kwargs['a213'] = ''
+        if not 'a214' in kwargs: kwargs['a214'] = ''
+        if not 'a217' in kwargs: kwargs['a217'] = ''
+        if not 'a218' in kwargs: kwargs['a218'] = ''
+        if not 'a219' in kwargs: kwargs['a219'] = ''
+        if not 'a221' in kwargs: kwargs['a221'] = ''
+        if not 'a222' in kwargs: kwargs['a222'] = ''
+        if not 'a231' in kwargs: kwargs['a231'] = ''
+        if not 'a241' in kwargs: kwargs['a241'] = ''
+        if not 'a242' in kwargs: kwargs['a242'] = ''
+        if not 'a243' in kwargs: kwargs['a243'] = ''
+        if not 'a244' in kwargs: kwargs['a244'] = ''
+        if not 'a251' in kwargs: kwargs['a251'] = ''
+        if not 'a252' in kwargs: kwargs['a252'] = ''
+        if not 'a311' in kwargs: kwargs['a311'] = ''
+        if not 'a312' in kwargs: kwargs['a312'] = ''
+        if not 'a314' in kwargs: kwargs['a314'] = ''
+        if not 'a315' in kwargs: kwargs['a315'] = ''
+        if not 'a321' in kwargs: kwargs['a321'] = ''
+        if not 'a322' in kwargs: kwargs['a322'] = ''
+        if not 'a323' in kwargs: kwargs['a323'] = ''
+        if not 'a324' in kwargs: kwargs['a324'] = ''
+        if not 'a352' in kwargs: kwargs['a352'] = ''
+        if not 'a411' in kwargs: kwargs['a411'] = ''
+        if not 'a414' in kwargs: kwargs['a414'] = ''
+        if not 'a412' in kwargs: kwargs['a412'] = ''
+        if not 'a431' in kwargs: kwargs['a431'] = ''
+        if not 'a461' in kwargs: kwargs['a461'] = ''
+        if not 'a462' in kwargs: kwargs['a462'] = ''
+        if not 'a512' in kwargs: kwargs['a512'] = ''
+        if not 'a514' in kwargs: kwargs['a514'] = ''
+        if not 'a931' in kwargs: kwargs['a931'] = ''
+        if not 'a932' in kwargs: kwargs['a932'] = ''
+        if not 'a941' in kwargs: kwargs['a941'] = ''
+        if not 'a942' in kwargs: kwargs['a942'] = ''
+        if not 'a943' in kwargs: kwargs['a943'] = ''
+        if not 'a1014' in kwargs: kwargs['a1014'] = ''
+        if not 'a1015' in kwargs: kwargs['a1015'] = ''
+        if not 'a1018' in kwargs: kwargs['a1018'] = ''
+        if not 'a1019' in kwargs: kwargs['a1019'] = ''
+        if not 'b111' in kwargs: kwargs['b111'] = ''
+        if not 'b112' in kwargs: kwargs['b112'] = ''
+        if not 'b212' in kwargs: kwargs['b212'] = ''
+        if not 'b222' in kwargs: kwargs['b222'] = ''
+        if not 'b241' in kwargs: kwargs['b241'] = ''
+        if not 'b251' in kwargs: kwargs['b251'] = ''
+        if not 'b261' in kwargs: kwargs['b261'] = ''
+        if not 'b311' in kwargs: kwargs['b311'] = ''
+        if not 'b314' in kwargs: kwargs['b314'] = ''
+        if not 'b315' in kwargs: kwargs['b315'] = ''
+        if not 'b316' in kwargs: kwargs['b316'] = ''
+        if not 'b412' in kwargs: kwargs['b412'] = ''
+        if not 'c121' in kwargs: kwargs['c121'] = ''
+        if not 'c131' in kwargs: kwargs['c131'] = ''
+        if not 'c132' in kwargs: kwargs['c132'] = ''
+        if not 'c133' in kwargs: kwargs['c133'] = ''
 
         #check if the user didn't already answer
         if self.check_if_answered(REQUEST):
@@ -211,26 +211,26 @@ class NySurveyTemplate(Folder):
         for answer in self.get_template_answers():
             for answer_attr in answer.get_attrs():
                 if getattr(answer, answer_attr, '') == 'N':
-                    if not res.has_key(answer_attr + '_N'):
+                    if not answer_attr + '_N' in res:
                         res[answer_attr + '_N'] = []
                     res[answer_attr + '_N'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Mi':
-                    if not res.has_key(answer_attr + '_Mi'):
+                    if not answer_attr + '_Mi' in res:
                         res[answer_attr + '_Mi'] = []
                     res[answer_attr + '_Mi'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Me':
-                    if not res.has_key(answer_attr + '_Me'):
+                    if not answer_attr + '_Me' in res:
                         res[answer_attr + '_Me'] = []
                     res[answer_attr + '_Me'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Ma':
-                    if not res.has_key(answer_attr + '_Ma'):
+                    if not answer_attr + '_Ma' in res:
                         res[answer_attr + '_Ma'] = []
                     res[answer_attr + '_Ma'].append(answer)
 
         ret = {}
         for key, value in res.items():
             z_key = key.split('_')[0]
-            if not ret.has_key(z_key):
+            if not z_key in ret:
                 ret[z_key] = {'N': 0, 'Mi': 0, 'Me': 0, 'Ma': 0}
             if key.endswith('N'):
                 ret[z_key]['N'] = (len(value)*100)/answer_count
@@ -264,26 +264,26 @@ class NySurveyTemplate(Folder):
         for answer in self.get_template_answers():
             for answer_attr in answer.get_attrs():
                 if getattr(answer, answer_attr, '') == 'N':
-                    if not res.has_key(answer_attr + '_N'):
+                    if not answer_attr + '_N' in res:
                         res[answer_attr + '_N'] = []
                     res[answer_attr + '_N'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Mi':
-                    if not res.has_key(answer_attr + '_Mi'):
+                    if not answer_attr + '_Mi' in res:
                         res[answer_attr + '_Mi'] = []
                     res[answer_attr + '_Mi'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Me':
-                    if not res.has_key(answer_attr + '_Me'):
+                    if not answer_attr + '_Me' in res:
                         res[answer_attr + '_Me'] = []
                     res[answer_attr + '_Me'].append(answer)
                 if getattr(answer, answer_attr, '') == 'Ma':
-                    if not res.has_key(answer_attr + '_Ma'):
+                    if not answer_attr + '_Ma' in res:
                         res[answer_attr + '_Ma'] = []
                     res[answer_attr + '_Ma'].append(answer)
 
         ret = {}
         for key, value in res.items():
             z_key = key.split('_')[0]
-            if not ret.has_key(z_key):
+            if not z_key in ret:
                 ret[z_key] = {'N': 0, 'Mi': 0, 'Me': 0, 'Ma': 0}
             if key.endswith('N'):
                 ret[z_key]['N'] = len(value)

@@ -3,11 +3,11 @@ This module contains global constants.
 """
 
 
-import Globals
+import os
 
 
 NAAYA_PRODUCT_NAME = 'Naaya'
-NAAYA_PRODUCT_PATH = Globals.package_home(globals())
+NAAYA_PRODUCT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 PERMISSION_ADD_SITE = 'Naaya - Add Naaya Site objects'
 PERMISSION_ADD_FOLDER = 'Naaya - Add Naaya Folder objects'

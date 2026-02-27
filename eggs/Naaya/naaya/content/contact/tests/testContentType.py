@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.contact.contact_item import addNyContact as addNaayaContent
 from naaya.content.contact.contact_item import NyContact as NaayaContent
 from Products.Naaya.tests import NaayaTestCase

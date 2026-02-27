@@ -1,13 +1,13 @@
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PageTemplates.PageTemplate import PageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from naaya.component import bundles
 
-from interfaces import ITemplate, INaayaPageTemplateFile
+from .interfaces import ITemplate, INaayaPageTemplateFile
 
+@implementer(INaayaPageTemplateFile, ITemplate)
 class NaayaPageTemplateFile(PageTemplateFile):
-    implements(INaayaPageTemplateFile, ITemplate)
 
     def __init__(self, filename, _globals, name, bundle_name="Naaya"):
         PageTemplateFile.__init__(self, filename, _globals, __name__=name)
@@ -26,7 +26,7 @@ class NaayaPageTemplateFile(PageTemplateFile):
 
         try:
             site = parent.getSite()
-        except AttributeError, e:
+        except AttributeError as e:
             sm = bundles.get(self._bundle_name)
         else:
             sm = site.getSiteManager()

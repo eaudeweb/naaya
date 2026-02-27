@@ -3,7 +3,8 @@
 # Python imports
 import time
 from datetime import datetime
-from StringIO import StringIO
+from io import StringIO
+from lxml import etree
 
 # Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -11,6 +12,35 @@ from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 # Project imports
 from naaya.i18n.ImportExport import TranslationsImportExport
 from naaya.i18n.NyMessageCatalog import NyMessageCatalog
+
+
+def xml_equal(xml1, xml2):
+    """Compare two XML strings structurally (ignoring attribute order)."""
+    tree1 = etree.fromstring(xml1.encode('utf-8') if isinstance(xml1, str) else xml1)
+    tree2 = etree.fromstring(xml2.encode('utf-8') if isinstance(xml2, str) else xml2)
+    return _elements_equal(tree1, tree2)
+
+
+def _element_sort_key(e):
+    return (e.tag, e.get('tuid', ''), e.get('id', ''),
+            e.get('{http://www.w3.org/XML/1998/namespace}lang', e.get('lang', '')),
+            (e.text or '').strip())
+
+
+def _elements_equal(e1, e2):
+    if e1.tag != e2.tag:
+        return False
+    if (e1.text or '').strip() != (e2.text or '').strip():
+        return False
+    if (e1.tail or '').strip() != (e2.tail or '').strip():
+        return False
+    if dict(e1.attrib) != dict(e2.attrib):
+        return False
+    if len(e1) != len(e2):
+        return False
+    children1 = sorted(e1, key=_element_sort_key)
+    children2 = sorted(e2, key=_element_sort_key)
+    return all(_elements_equal(c1, c2) for c1, c2 in zip(children1, children2))
 
 expected_po_en = lambda: ("""msgid ""
 msgstr "Project-Id-Version: naaya.i18n\\n"
@@ -112,11 +142,13 @@ class ImportExportTestSuite(NaayaTestCase):
 
     def test_export_xliff(self):
         exported = self.tool.export_xliff('de')
-        self.assertEqual(exported, expected_xliff_de())
+        self.assertTrue(xml_equal(exported, expected_xliff_de()),
+                        'XLIFF export mismatch')
 
     def test_export_tmx(self):
         exported = self.tool.export_tmx()
-        self.assertEqual(exported, expected_tmx())
+        self.assertTrue(xml_equal(exported, expected_tmx()),
+                        'TMX export mismatch')
 
     def test_export_import(self):
         exported = self.tool.export_po('de')

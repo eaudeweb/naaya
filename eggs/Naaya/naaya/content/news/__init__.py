@@ -1,1 +1,1 @@
-from news_item import NyNews
+from .news_item import NyNews

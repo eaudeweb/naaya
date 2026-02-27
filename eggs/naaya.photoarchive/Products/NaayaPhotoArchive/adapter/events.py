@@ -21,8 +21,8 @@
 """
 from zope import event as zope_event
 from OFS.event import ObjectWillBeMovedEvent, ObjectClonedEvent
-from zope.app.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
-from zope.app.container.contained import ObjectMovedEvent, ObjectRemovedEvent, ObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent, IObjectAddedEvent
+from zope.lifecycleevent import ObjectMovedEvent, ObjectRemovedEvent, ObjectAddedEvent
 from OFS.interfaces import IObjectWillBeAddedEvent
 
 #

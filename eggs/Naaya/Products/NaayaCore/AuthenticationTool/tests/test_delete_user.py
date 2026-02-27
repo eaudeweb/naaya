@@ -13,4 +13,4 @@ class RoleTest(NaayaTestCase):
         assert self.portal.info.__ac_local_roles__['user1'] == ['Administrator']
         acl_users.manage_delUsers('user1')
         assert 'user1' not in acl_users.getUserNames()
-        assert not self.portal.info.__ac_local_roles__.has_key('user1')
+        assert not 'user1' in self.portal.info.__ac_local_roles__

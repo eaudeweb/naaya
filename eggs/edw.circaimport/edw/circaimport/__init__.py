@@ -1,5 +1,5 @@
 import sys
-from StringIO import StringIO
+from io import StringIO
 from zipfile import ZipFile
 import datetime
 import Zope2
@@ -8,11 +8,11 @@ from naaya.core.zope2util import get_site_manager
 from Products.NaayaCore.managers.zip_import_export import RecursiveZipBuilder
 from Products.NaayaCore.managers.interfaces import IZipExportObject
 
-import backupdata
+from . import backupdata
 
 
 def demo():
-    from actors import DemoActor
+    from .actors import DemoActor
     actor = DemoActor()
 
     if len(sys.argv) > 1 and sys.argv[1] == '-i':

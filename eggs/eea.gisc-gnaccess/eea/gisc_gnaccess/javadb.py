@@ -49,8 +49,8 @@ def db_connection(context):
 
 def show_tables(db_statement):
     for line in db_statement("SHOW TABLES", db_statement):
-        print line
+        print(line)
 
 def describe_table(name, db_statement):
     for line in db_statement("DESCRIBE %s" % name, db_statement):
-        print line
+        print(line)

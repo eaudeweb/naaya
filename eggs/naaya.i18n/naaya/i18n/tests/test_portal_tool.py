@@ -46,8 +46,8 @@ class TestNySiteApi(NaayaTestCase):
         self.assertTrue(isinstance(known_langs, list))
         self.assertTrue(len(known_langs) > 20) # length of languages.txt
         self.assertTrue(isinstance(known_langs[0], dict))
-        self.assertTrue(known_langs[0].has_key('code'))
-        self.assertTrue(known_langs[0].has_key('name'))
+        self.assertTrue('code' in known_langs[0])
+        self.assertTrue('name' in known_langs[0])
         # test sorted by code
         for i in range(len(known_langs)-1):
             self.assertTrue(known_langs[i]['code'] <= known_langs[i+1]['code'])
@@ -98,9 +98,9 @@ class TestNySiteApi(NaayaTestCase):
         self.assertEqual(self.portal.gl_get_selected_language(),
                          DEFAULT_PORTAL_LANGUAGE_CODE)
         self.portal.gl_changeLanguage('de')
-        self.assertTrue(self.portal.REQUEST.RESPONSE.cookies.has_key(cookie_id))
+        self.assertTrue(cookie_id in self.portal.REQUEST.RESPONSE.cookies)
         cookie = self.portal.REQUEST.RESPONSE.cookies[cookie_id]
-        self.assertEqual(cookie['path'], '/portal')
+        self.assertEqual(cookie.get('path') or cookie.get('Path'), '/portal')
         self.assertEqual(cookie['value'], 'de')
 
     def test_add_site_language(self):

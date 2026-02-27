@@ -38,12 +38,12 @@ printing mode(so all page content is included).</p>
   tal:attributes="value user_name" />
 
 <label for="country" i18n:translate="">Country:</label>
-<input id="country" name="country" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['country']" tal:condition="python:here.REQUEST.SESSION.has_key('country')" />
-<input id="country" name="country" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('country')" />
+<input id="country" name="country" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['country']" tal:condition="python:'country' in here.REQUEST.SESSION" />
+<input id="country" name="country" type="text" size="20" tal:condition="not:python:'country' in here.REQUEST.SESSION" />
 
 <label for="agency" i18n:translate="">Name of the Agency:</label>
-<input id="agency" name="agency" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['agency']" tal:condition="python:here.REQUEST.SESSION.has_key('agency')" />
-<input id="agency" name="agency" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('agency')" />
+<input id="agency" name="agency" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['agency']" tal:condition="python:'agency' in here.REQUEST.SESSION" />
+<input id="agency" name="agency" type="text" size="20" tal:condition="not:python:'agency' in here.REQUEST.SESSION" />
 <br />
 <br />
 

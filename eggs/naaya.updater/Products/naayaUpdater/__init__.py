@@ -3,7 +3,7 @@ import transaction
 from App.ImageFile import ImageFile
 from Zope2 import app
 
-import NaayaUpdater
+from . import NaayaUpdater
 
 UpdaterID = NaayaUpdater.UPDATERID
 logger = logging.getLogger('naayaUpdater')

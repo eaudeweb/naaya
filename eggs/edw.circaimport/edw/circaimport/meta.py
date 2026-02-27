@@ -1,6 +1,7 @@
 from zope.interface import Interface
 from zope.configuration import fields
-from zope.app.i18n import ZopeMessageFactory as _
+from zope.i18nmessageid import MessageFactory
+_ = MessageFactory('zope')
 
 import logging
 
@@ -15,5 +16,5 @@ class IRootPathDirective(Interface):
 
 def register_root_path(_context, path, **kwargs):
     log.info("CIRCA import folder: %r", path)
-    import ui
+    from . import ui
     ui.upload_prefix = path

@@ -3,14 +3,14 @@
 
 """ CookieCrumbler """
 
-from base64 import encodestring, decodestring
-from urllib import quote, unquote
+from base64 import encodebytes as encodestring, decodebytes as decodestring
+from urllib.parse import quote, unquote
 
 from Acquisition import aq_inner, aq_parent
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from ZPublisher.HTTPRequest import HTTPRequest
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 try:
     from zExceptions import Redirect
@@ -97,9 +97,9 @@ class CookieCrumbler:
         cookie login is disabled for this request, raises
         CookieCrumblerDisabled.
         """
-        if (req.__class__ is not HTTPRequest
+        if (not isinstance(req, HTTPRequest)
             or not req['REQUEST_METHOD'] in ('HEAD', 'GET', 'PUT', 'POST')
-            or req.environ.has_key('WEBDAV_SOURCE_PORT')):
+            or 'WEBDAV_SOURCE_PORT' in req.environ):
             raise CookieCrumblerDisabled
 
         # attempt may contain information about an earlier attempt to
@@ -113,12 +113,13 @@ class CookieCrumbler:
                 # created it.  The user must be using basic auth.
                 raise CookieCrumblerDisabled
 
-            if req.has_key(self.pw_cookie) and req.has_key(self.name_cookie):
+            if self.pw_cookie in req and self.name_cookie in req:
                 # Attempt to log in and set cookies.
                 attempt = ATTEMPT_LOGIN
                 name = req[self.name_cookie]
                 pw = req[self.pw_cookie]
-                ac = encodestring('%s:%s' % (name, pw)).rstrip()
+                ac = encodestring(
+                    ('%s:%s' % (name, pw)).encode()).decode().rstrip()
                 req._auth = 'Basic %s' % ac
                 resp._auth = 1
                 if req.get(self.persist_cookie, 0):
@@ -137,13 +138,13 @@ class CookieCrumbler:
                 self.delRequestVar(req, self.name_cookie)
                 self.delRequestVar(req, self.pw_cookie)
 
-            elif req.has_key(self.auth_cookie):
+            elif self.auth_cookie in req:
                 # Attempt to resume a session if the cookie is valid.
                 # Copy __ac to the auth header.
                 ac = unquote(req[self.auth_cookie])
                 if ac and ac != 'deleted':
                     try:
-                        decodestring(ac)
+                        decodestring(ac.encode())
                     except:
                         # Not a valid auth header.
                         pass
@@ -201,7 +202,8 @@ class CookieCrumbler:
 
     security.declarePublic('credentialsChanged')
     def credentialsChanged(self, name, pw):
-        ac = encodestring('%s:%s' % (name, pw)).rstrip()
+        ac = encodestring(
+            ('%s:%s' % (name, pw)).encode()).decode().rstrip()
         method = self.getCookieMethod( 'setAuthCookie'
                                        , self.defaultSetAuthCookie )
         resp = self.REQUEST['RESPONSE']
@@ -221,19 +223,19 @@ class CookieCrumbler:
     def unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()
         if url is not None:
-            raise Redirect, url
+            raise Redirect(url)
         # Fall through to the standard unauthorized() call.
         resp.unauthorized()
 
     def _unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()

@@ -489,10 +489,10 @@ function submit_form_action(action){
             <span i18n:translate="" tal:define="folder_title here/title_or_id">
                 You are using the <strong i18n:name="delete_folder">Delete Folder</strong>
                 button while you have checked items inside it.
-                <br i18n:name="br" /> <br i18n:name="br" />
+                <br /> <br />
                 For security reasons, we ask you to uncheck all items, and then use this button
                 if you want to delete the entire <strong><span i18n:name="folder_title" tal:replace="folder_title"/></strong> folder.
-                <br i18n:name="br" /><br i18n:name="br" />
+                <br /><br />
                 If you instead want to delete the checked items, then use the <strong i18n:name="delete">Delete</strong> button next to Cut/Copy.
             </span>
        </p>
@@ -505,11 +505,11 @@ function submit_form_action(action){
             <span i18n:translate="" tal:define="folder_title here/title_or_id">
                 The <strong>entire <span style="color:red;"><span i18n:name="folder_title"
                 tal:replace="folder_title"/></span> folder</strong> and all its contents will be deleted.
-                <br i18n:name="br" />
-                <br i18n:name="br" />
+                <br />
+                <br />
                 If you want to delete specific checked items, use the <strong i18n:name="delete" i18n:translate="">Delete</strong> button next to Cut, Copy.
-                <br i18n:name="br" /><br i18n:name="br" />
-                Are you sure you want to delete <span i18n:name="folder_title" tal:replace="folder_title" /> and all its contents?
+                <br /><br />
+                Are you sure you want to delete <span i18n:name="folder_title2" tal:replace="folder_title" /> and all its contents?
             </span>
        </p>
 </div>

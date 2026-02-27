@@ -1,14 +1,14 @@
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 import Products
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-import Style
-import DiskFile
-import DiskTemplate
+from . import Style
+from . import DiskFile
+from . import DiskTemplate
 
 manage_addSchemeForm = PageTemplateFile('zpt/scheme_add', globals())
 def manage_addScheme(self, id='', title='', REQUEST=None):

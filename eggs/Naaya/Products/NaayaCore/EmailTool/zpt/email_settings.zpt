@@ -3,7 +3,7 @@
 
 <p class="page-title">Email settings</p>
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
   Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
 </div>
 

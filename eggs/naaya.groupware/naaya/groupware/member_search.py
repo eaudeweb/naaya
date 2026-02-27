@@ -2,7 +2,7 @@ from operator import itemgetter
 
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -299,7 +299,7 @@ class MemberSearch(Implicit, Item):
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=%s.csv' % self.id)
             return generate_csv(header, rows)
-        elif file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+        elif file_type == 'Excel' and self.rstk['we_provide']('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=%s.xls' % self.id)

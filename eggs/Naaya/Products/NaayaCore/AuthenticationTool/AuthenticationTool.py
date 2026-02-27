@@ -5,13 +5,14 @@ user roles, role permissions and searching.
 
 """
 
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo, Unauthorized, allow_class
 from AccessControl.Permissions import view, manage_users
-from AccessControl.User import BasicUserFolder
-from AccessControl.User import SimpleUser
+from AccessControl.users import SimpleUser
+from OFS.userfolder import BasicUserFolder
 from App.ImageFile import ImageFile
 from DateTime import DateTime
-from Globals import InitializeClass, PersistentMapping
+from AccessControl.class_init import InitializeClass
+from persistent.mapping import PersistentMapping
 from OFS.ObjectManager import ObjectManager
 from OFS.PropertyManager import PropertyManager
 from Products.Naaya.interfaces import INySite
@@ -31,16 +32,16 @@ from Products.NaayaCore.managers.utils import InvalidStringError
 from Products.NaayaCore.managers.utils import file_utils, utils
 from Products.NaayaCore.managers.utils import string2object, object2string
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Role import Role
-from StringIO import StringIO
-from User import User
+from .Role import Role
+from io import StringIO
+from .User import User
 from copy import copy
 from naaya.core.exceptions import ValidationError, i18n_exception
 from naaya.core.utils import force_to_unicode
 from naaya.core.utils import is_valid_email
 from naaya.core.zope2util import relative_object_path, get_zope_env
 from persistent.list import PersistentList
-from plugins_tool import plugins_tool
+from .plugins_tool import plugins_tool
 from warnings import warn
 from zope.event import notify
 import csv
@@ -134,13 +135,13 @@ class UserInfo(object):
         # we may want to comment this out for speed reasons
         assert isinstance(fields.get('user_id', None), str), (
             "user_id %r must be str" % fields['user_id'])
-        for key, value in fields.iteritems():
+        for key, value in fields.items():
             if key in ['user_id', '_get_zope_user', '_source', 'jpegPhoto']:
                 continue
             if key == 'full_name':
                 if isinstance(value, list):
                     value = ' '.join(value)
-            assert isinstance(value, unicode), (
+            assert isinstance(value, str), (
                 "value %r (for %r, user %r) not unicode" %
                 (value, key, fields['user_id']))
 
@@ -159,6 +160,10 @@ class UserInfo(object):
 
 class LocalUserInfo(UserInfo):
     """ UserInfo subclass for local users """
+
+
+allow_class(UserInfo)
+allow_class(LocalUserInfo)
 
 
 class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
@@ -310,7 +315,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         # Delete local roles (from folder property)
         users_roles = self.getUsersRoles()
-        for user, roles in users_roles.iteritems():
+        for user, roles in users_roles.items():
             if user not in names:
                 continue
             for pair in roles:
@@ -549,7 +554,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         user = self.get_user_with_userid(user_id)
         roles = set()
-        if path in ("/", ""):
+        if path in ("/", "") and user is not None:
             roles.update(set(self.getUserRoles(user)))
 
         # when user is not local, also has the roles here for site obj
@@ -584,7 +589,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         filter_role = form_data.get('role', '')
         filter_location = form_data.get('location', '_all_')
 
-        assert isinstance(query, basestring)
+        assert isinstance(query, str)
         query = query.strip()
         query = self.utToUtf8(query).lower()
 
@@ -598,7 +603,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return (user_info.user_id.lower().find(query) != -1 or
                     user_info.full_name.lower().find(query) != -1 or
                     user_info.email.lower().find(query) != -1)
-        users_info = filter(match_user, users_info)
+        users_info = list(filter(match_user, users_info))
 
         # gather source title for remaining users
         for user_info in users_info:
@@ -842,13 +847,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for source in self.getSources():
                 if not hasattr(source, 'get_groups_roles_map'):
                     continue
-                for group, roles in source.get_groups_roles_map().iteritems():
+                for group, roles in source.get_groups_roles_map().items():
                     if source.user_in_group(user, group):
                         r_dict = {}
                         for role in roles:
                             r_dict.setdefault(role[1]['path'], [])
                             r_dict[role[1]['path']].append(role[0])
-                        for path, roles in r_dict.iteritems():
+                        for path, roles in r_dict.items():
                             ra((roles, path))
 
         return r
@@ -930,13 +935,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             roles = [roles]
 
         def handle_unicode(s):
-            if not isinstance(s, unicode):
+            if isinstance(s, bytes):
                 try:
                     return s.decode('utf-8')
                 except UnicodeDecodeError:
                     return s.decode('latin-1')
-            else:
-                return s
+            return str(s) if not isinstance(s, str) else s
         local_users = self.getUsersWithRoles()
         # dictionary that will hold local users
         local_result = {}
@@ -1007,7 +1011,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
          - otherwise returns 'n/a'
         """
 
-        if not isinstance(user, basestring):
+        if not isinstance(user, str):
             warn("Passign user objects to `getUserSource` is highly suspect.")
             user = str(user)
 
@@ -1124,7 +1128,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if userid is None:
             return None
 
-        if userid in self.user_names():
+        if userid in self.data:
             return self.getUser(userid)
 
         for source in self.getSources():
@@ -1246,7 +1250,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         try:
             user_info = self.get_user_info(cuser_id)
-        except KeyError, ke:
+        except KeyError as ke:
             log.warn(str(ke))
             return
 
@@ -1270,7 +1274,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         try:
             user_info = self.get_user_info(user_id)
-        except KeyError, ke:
+        except KeyError as ke:
             log.warn(str(ke))
             return
 
@@ -1506,7 +1510,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         returns a list with all registered external sources
         """
-        return map(self._getOb, map(lambda x: x['id'], self._objects))
+        return list(map(self._getOb, map(lambda x: x['id'], self._objects)))
 
     def getSourceObj(self, p_source_id):
         """
@@ -1898,9 +1902,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                            firstname, lastname, email)
                     successfully_imported += 1
 
-                except UnicodeDecodeError, e:
+                except UnicodeDecodeError as e:
                     raise
-                except Exception, e:
+                except Exception as e:
                     self.log_current_error()
                     msg = ('Error while importing from CSV, '
                            'row ${record_number}: ${error}',
@@ -1910,7 +1914,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     else:
                         errors.append(msg)
 
-        except UnicodeDecodeError, e:
+        except UnicodeDecodeError as e:
             if REQUEST is None:
                 raise
             else:

@@ -1,5 +1,5 @@
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 import Products
@@ -9,7 +9,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope import interface
 
 from Products.NaayaCore.constants import *
-from managers.portlets_templates import *
+from .managers.portlets_templates import *
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 manage_addPortlet_html = PageTemplateFile('zpt/portlet_manage_add', globals())
@@ -69,7 +69,7 @@ class Portlet(Folder, ZopePageTemplate):
             if result is not None:
                 #return from cache
                 return result
-        if not context.has_key('args'):
+        if not 'args' in context:
             context['args'] = args
         context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
         result = self.pt_render(extra_context=context)

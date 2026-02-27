@@ -10,7 +10,7 @@ class TestTranslationUtility(NaayaTestCase):
 
 
     def test_utility_requirement(self):
-        self.assertTrue(self.portal.REQUEST.has_key('PARENTS'))
+        self.assertTrue('PARENTS' in self.portal.REQUEST)
         traverse_objects = self.portal.REQUEST['PARENTS']
         self.assertTrue(isinstance(traverse_objects, list))
         self.assertTrue(traverse_objects[0].getSite is not None)

@@ -1,14 +1,15 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.EmailTool import EmailTool
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
-    data = StringIO(open(filename, 'rb').read())
+    from io import BytesIO
+    import os as _os
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
+    with open(filename, 'rb') as f:
+        data = BytesIO(f.read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -144,17 +145,16 @@ class NyZipImport(NaayaTestCase):
                          ' - one_folder/three_file\n'
                          ' - one_folder/two_file')
 
-        expected_recipients = ['site.admin@example.com',# administrator_email
-                               'someone@somehost', # folder_maintainer
-                               'contrib@example.com'] # subscriber
+        expected_recipients = {'site.admin@example.com',  # administrator_email
+                               'someone@somehost',  # folder_maintainer
+                               'contrib@example.com'}  # subscriber
 
         expected_sender = 'from.zope@example.com'
 
+        actual_recipients = {m[1][0] for m in diverted_mail}
+        self.assertEqual(expected_recipients, actual_recipients)
         mail = diverted_mail[0]
         self.assertTrue(expected_body in mail[0])
-        self.assertEqual(expected_recipients[0], diverted_mail[0][1][0])
-        self.assertEqual(expected_recipients[1], diverted_mail[1][1][0])
-        self.assertEqual(expected_recipients[2], diverted_mail[2][1][0])
         self.assertEqual(expected_sender, mail[3])
         self.assertEqual(expected_subject, mail[4])
         EmailTool.divert_mail(False)

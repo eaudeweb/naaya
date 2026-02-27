@@ -3,15 +3,16 @@
 # pylint: disable=too-many-nested-blocks,too-many-branches
 # pylint: disable=too-many-function-args
 from datetime import datetime
-from StringIO import StringIO
-import urllib
+from io import StringIO
+import urllib.parse
+import urllib.request
 import csv
 import codecs
 import logging
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import Implicit
 from DateTime import DateTime
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.SimpleItem import Item
 from zope.event import notify
 from Products.NaayaBase.NyContentType import NyContentData
@@ -178,19 +179,22 @@ class CSVImportTool(Implicit, Item):
         elif file_type == 'CSV':
             rows = UnicodeReader(data)
             try:
-                header = rows.next()
+                header = next(rows)
             except StopIteration:
                 msg = 'Invalid CSV file'
                 if REQUEST is None:
                     raise ValueError(msg)
                 else:
                     errors.append(msg)
+                    header = ['']
                     rows = []
             except UnicodeDecodeError:
                 if REQUEST is None:
                     raise
                 else:
                     errors.append('CSV file is not utf-8 encoded')
+                    header = ['']
+                    rows = []
 
         else:
             raise ValueError('unknown file format %r' % file_type)
@@ -232,6 +236,11 @@ class CSVImportTool(Implicit, Item):
                         address = properties[self.geo_fields['address']]
                     except (AttributeError, KeyError):
                         address = ''
+                    # Geocode address to lat/lon if missing
+                    try:
+                        self.do_geocoding(properties)
+                    except Exception:
+                        pass
                     try:
                         lat = properties[self.geo_fields['lat']]
                         lon = properties[self.geo_fields['lon']]
@@ -402,7 +411,7 @@ class ExportTool(Implicit, Item):
             """
             if value is None:
                 return u''
-            return unicode(value)
+            return str(value)
 
         dump_header = ['ID']
         # add the getter for the object id
@@ -425,7 +434,7 @@ class ExportTool(Implicit, Item):
         def generate_dump_items():
             """generate_dump_items."""
             for ob in objects:
-                item = [unicode(get_value(ob)) for get_value in prop_getters]
+                item = [str(get_value(ob)) for get_value in prop_getters]
                 yield item
 
         dump_items = generate_dump_items()
@@ -474,7 +483,7 @@ class ExportTool(Implicit, Item):
                                          "a column (%s) exceeding the Excel "
                                          "cell size limit"
                                          % (object_type, org, oversized_col))
-                            raise ValueError(error_msg.encode('utf-8'))
+                            raise ValueError(error_msg)
             except Exception as error:
                 return error
             else:
@@ -572,11 +581,11 @@ def attachment_header(filename):
     """
     assert isinstance(filename, str)
     try:
-        filename.decode('ascii')
-    except UnicodeDecodeError:
-        value = "filename*=UTF-8''%s" % urllib.quote(filename)
+        filename.encode('ascii')
+    except UnicodeEncodeError:
+        value = "filename*=UTF-8''%s" % urllib.parse.quote(filename)
     else:
-        value = "filename=%s" % urllib.quote(filename)
+        value = "filename=%s" % urllib.parse.quote(filename)
     return "attachment; " + value
 
 
@@ -607,35 +616,26 @@ def relative_path_to_site(ob):
     return ob_path[len(site_path):]
 
 
-class UTF8Recoder(object):
-    """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
-    """
-    def __init__(self, f, encoding):
-        self.reader = codecs.getreader(encoding)(f)
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        """next."""
-        return self.reader.next().encode("utf-8")
-
-
 class UnicodeReader(object):
     """
-    A CSV reader which will iterate over lines in the CSV file "f",
-    which is encoded in the given encoding.
+    Python 3 replacement for the old Python 2 CSV Unicode workaround.
+    In Python 3, csv.reader handles Unicode natively.
     """
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
-        f = UTF8Recoder(f, encoding)
+        import io
+        if isinstance(f, (io.RawIOBase, io.BufferedIOBase)):
+            f = io.TextIOWrapper(f, encoding=encoding)
+        elif hasattr(f, 'read') and not isinstance(f, io.TextIOBase):
+            # FileUpload or other binary file-like objects — read all
+            # bytes and wrap in TextIOWrapper for proper encoding detection.
+            f = io.TextIOWrapper(io.BytesIO(f.read()), encoding=encoding)
         self.reader = csv.reader(f, dialect=dialect, **kwds)
 
-    def next(self):
-        """next."""
-        row = self.reader.next()
-        return [unicode(s, "utf-8") for s in row]
+    def __next__(self):
+        return next(self.reader)
+
+    next = __next__  # backward compat
 
     def __iter__(self):
         return self
@@ -652,17 +652,21 @@ class CSVReader(object):
             dialect = csv.excel_tab
         else:
             dialect = csv.excel
-        self.csv = UnicodeReader(file_ob, dialect, encoding)
+        # In Python 3, csv module handles Unicode natively
+        import io
+        if isinstance(file_ob, (io.RawIOBase, io.BufferedIOBase)):
+            file_ob = io.TextIOWrapper(file_ob, encoding=encoding)
+        self.reader = csv.reader(file_ob, dialect=dialect)
 
     def read(self):
         """ return the content of the file """
         try:
-            header = self.csv.next()
+            header = next(self.reader)
             output = []
-            for values in self.csv:
+            for values in self.reader:
                 buf = {}
                 for field, value in zip(header, values):
-                    buf[field.encode('utf-8')] = value.encode('utf-8')
+                    buf[field] = value
                 output.append(buf)
             return (output, '')
         except Exception as ex:
@@ -682,7 +686,7 @@ def generate_csv(header, rows):
 
     csv_writer.writerow(header)
     for item in rows:
-        csv_writer.writerow([value.encode('utf-8') for value in item])
+        csv_writer.writerow(item)
 
     return output.getvalue()
 
@@ -716,7 +720,8 @@ def generate_excel(header, rows):
                 ws.write(row, col, (col_date - excel_1900).days + 2, style)
             except ValueError:
                 ws.write(row, col, item[col], style)
-    output = StringIO()
+    from io import BytesIO
+    output = BytesIO()
 
     wb.save(output)
     return output.getvalue()

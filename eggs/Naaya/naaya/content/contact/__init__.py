@@ -1,1 +1,1 @@
-from contact_item import NyContact
+from .contact_item import NyContact

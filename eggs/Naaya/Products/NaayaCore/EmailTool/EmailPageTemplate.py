@@ -1,16 +1,18 @@
 import re
 import os.path
 
-from Globals import package_home
-from Globals import InitializeClass
+import os as _os
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.pagetemplate.pagetemplate import PageTemplate as Z3_PageTemplate
+from zope.pagetemplate.pagetemplate import PageTemplateEngine
 from zope.tales.tales import Context
 
 from zope.i18n import interpolate
+from App.Common import package_home
 from naaya.core.zope2util import get_template_source
 
 def manage_addEmailPageTemplate(self, id, text):
@@ -29,6 +31,32 @@ class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
     def __init__(self, id, text):
         self.id = id
         self._text = text
+
+    def _cook(self):
+        """Override to use the default zope.tales engine instead of Chameleon.
+
+        Zope 5 registers Products.PageTemplates.engine.Program as the
+        IPageTemplateEngine utility (Chameleon-based), which is incompatible
+        with EmailPageTemplate's custom tags and i18n context. Force the
+        standard zope.tales engine.
+        """
+        import sys
+        pt_engine = self.pt_getEngine()
+        source_file = self.pt_source_file()
+        self._v_errors = ()
+        try:
+            self._v_program, self._v_macros = PageTemplateEngine.cook(
+                source_file, self._text, pt_engine, self.content_type)
+        except BaseException:
+            etype, e = sys.exc_info()[:2]
+            try:
+                self._v_errors = [
+                    "Compilation failed",
+                    "{}.{}: {}".format(etype.__module__, etype.__name__, e)
+                ]
+            finally:
+                del e
+        self._v_cooked = 1
 
     def render_email(self, **kwargs):
         text = self.pt_render({'options': kwargs})

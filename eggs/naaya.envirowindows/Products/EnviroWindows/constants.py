@@ -16,16 +16,14 @@
 # Miruna Badescu
 
 #Python imports
+import os
 
 #Zope imports
 
 #Product imports
-import Globals
-
-
 #portal related
 ENVIROWINDOWS_PRODUCT_NAME =    'EnviroWindows'
-ENVIROWINDOWS_PRODUCT_PATH =    Globals.package_home(globals())
+ENVIROWINDOWS_PRODUCT_PATH =    os.path.dirname(os.path.abspath(__file__))
 PERMISSION_ADD_EWSITE =         'EnviroWindows - Add EnviroWindows Site objects'
 METATYPE_ENVIROWINDOWSSITE =    'EnviroWindows Site'
 

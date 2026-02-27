@@ -1,7 +1,7 @@
 #Zope imports
 from OFS.SimpleItem import SimpleItem
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl.Permissions import view
 from AccessControl import ClassSecurityInfo
 

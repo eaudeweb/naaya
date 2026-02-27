@@ -1,14 +1,15 @@
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapts
 
 from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-from interfaces import IGWSite
+from .interfaces import IGWSite
 
+@implementer(INyPortlet)
 class NavigationPortlet(object):
-    implements(INyPortlet)
+
     adapts(INySite)
 
     title = 'Navigation'
@@ -24,8 +25,9 @@ class NavigationPortlet(object):
                                      'naaya.groupware.navigation_portlet')
 
 
+@implementer(INyPortlet)
 class AdministrationPortlet(object):
-    implements(INyPortlet)
+
     adapts(IGWSite)
 
     title = 'Administration'

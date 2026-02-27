@@ -23,7 +23,7 @@ import os
 import sys
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
 from App.ImageFile import ImageFile
@@ -41,8 +41,8 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from publication_item import publication_item
-from permissions import PERMISSION_ADD_PUBLICATION
+from .publication_item import publication_item
+from .permissions import PERMISSION_ADD_PUBLICATION
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
@@ -186,7 +186,7 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
                                             _override_releasedate=_releasedate)
 
     # check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
+    if REQUEST is not None and not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(recaptcha_response, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
@@ -204,7 +204,7 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     # process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = (
             1, self.REQUEST.AUTHENTICATED_USER.getUserName())
     else:
@@ -213,11 +213,9 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.submitThis()
     ob.handleUpload(_source, _file, _url)
 
-    if ob.discussion:
-        ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    self.notifyFolderMaintainer(self, ob)
+    self.getNotificationTool().notify_maintainer(ob, self)
     # log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -361,10 +359,6 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
                 _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
@@ -412,10 +406,6 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
                 self.saveUpload(source=_source, file=_file, url=_url,
                                 lang=_lang)
 
-            if self.discussion:
-                self.open_for_comments()
-            else:
-                self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             # log date

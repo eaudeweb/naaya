@@ -1,15 +1,15 @@
 
-from zope.interface import implements
+from zope.interface import implementer
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 from Products.NaayaCore.interfaces import IDynamicPropertiesItem
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
-from managers.dynamic_properties_tool import dynamic_properties_tool
+from .managers.dynamic_properties_tool import dynamic_properties_tool
 
 manage_addDynamicPropertiesItemForm = PageTemplateFile('zpt/dynamicpropertiesitem_add', globals())
 def manage_addDynamicPropertiesItem(self, id='', title='', REQUEST=None):
@@ -19,10 +19,10 @@ def manage_addDynamicPropertiesItem(self, id='', title='', REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+@implementer(IDynamicPropertiesItem)
 class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
     """ DynamicPropertiesItem class """
 
-    implements(IDynamicPropertiesItem)
 
     meta_type = METATYPE_DYNAMICPROPERTIESITEM
     icon = 'misc_/NaayaCore/DynamicPropertiesItem.gif'

@@ -29,7 +29,7 @@ def list_settings(db_statement):
             entry.value = line[3]
             entries[entry_id] = entry
 
-    for entry_id, entry in entries.iteritems():
+    for entry_id, entry in entries.items():
         if entry_id is None:
             entry.name = entry.value = "ROOT"
         else:

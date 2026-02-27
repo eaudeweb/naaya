@@ -1,11 +1,11 @@
 
-from StringIO import StringIO
+from io import BytesIO
 import re
 import PIL.Image
 import PIL.ImageDraw
 
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from naaya.core.backport import namedtuple
@@ -43,8 +43,10 @@ class symbol_item:
         if picture not in ('', None):
             if hasattr(picture, 'filename'):
                 if picture.filename != '':
+                    if hasattr(picture, 'seek'):
+                        picture.seek(0)
                     content = picture.read()
-                    if content != '':
+                    if content not in ('', b''):
                         self.picture = content
             else:
                 self.picture = picture
@@ -62,12 +64,18 @@ class symbol_item:
         if self.picture is None:
             return ImageSize(16, 16) # guess a plausible value
 
-        image = PIL.Image.open(StringIO(self.picture))
+        picture = self.picture
+        if isinstance(picture, str):
+            picture = picture.encode('latin-1')
+        image = PIL.Image.open(BytesIO(picture))
         return ImageSize(*image.size)
 
     def getPicture(self, options={}):
         if self.color is None:
-            return self.picture
+            picture = self.picture
+            if isinstance(picture, str):
+                picture = picture.encode('latin-1')
+            return picture
 
         else:
             size = int(options.get('size', CIRCLE_IMAGE_SIZE))
@@ -337,8 +345,8 @@ def colored_circle(size, color, halo=False):
     else:
         draw.ellipse((1, 1, size*2-2, size*2-2), fill=parse_color(color))
 
-    image = image_2x.resize((size, size), PIL.Image.ANTIALIAS)
-    data = StringIO()
+    image = image_2x.resize((size, size), PIL.Image.LANCZOS)
+    data = BytesIO()
     image.save(data, "PNG")
     return data.getvalue()
 

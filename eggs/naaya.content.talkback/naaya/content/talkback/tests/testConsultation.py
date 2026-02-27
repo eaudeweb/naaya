@@ -18,11 +18,11 @@
 # Alex Morega, Eau de Web
 
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from datetime import date, timedelta
 from DateTime import DateTime
-from StringIO import StringIO
-from BeautifulSoup import BeautifulSoup
+from io import StringIO
+from bs4 import BeautifulSoup
 from copy import deepcopy
 
 import transaction
@@ -145,7 +145,7 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -377,6 +377,6 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(ConsultationBasicTestCase))
-    suite.addTest(makeSuite(CommentSubmissionTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(ConsultationBasicTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(CommentSubmissionTestCase))
     return suite

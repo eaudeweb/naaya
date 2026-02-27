@@ -1,4 +1,4 @@
-import LinkChecker
+from . import LinkChecker
 from App.ImageFile import ImageFile
 
 def initialize(context):

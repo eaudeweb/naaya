@@ -3,10 +3,10 @@ This module contains an implementation for NyCheckControl, to be used by content
 types that don't support check-in/check-out.
 """
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from constants import *
+from .constants import *
 
 class NyNonCheckControl:
     """

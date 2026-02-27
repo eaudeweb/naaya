@@ -31,10 +31,10 @@ class UpdateConvertToUnicode(UpdateScript):
 
     def convert_attribute(self, obj, attr, enc='utf-8'):
         attribute = getattr(obj, attr)
-        if isinstance(attribute, unicode):
+        if isinstance(attribute, str):
             #self.log.debug('Skipping (%s is unicode) %s' % (attr, obj.absolute_url(1)))
             return
         else:
-            setattr(obj, attr, unicode(attribute, enc))
+            setattr(obj, attr, str(attribute, enc))
             self.log.debug('Updated (%s) %s' % (attr, obj.absolute_url(1)))
             obj._p_changed = 1

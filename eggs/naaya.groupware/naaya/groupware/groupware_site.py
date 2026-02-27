@@ -2,17 +2,17 @@ import os
 from copy import copy
 import logging
 from datetime import datetime
-from urlparse import urlparse
+from urllib.parse import urlparse
 
-import Globals
+# import Globals removed
 from DateTime import DateTime
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from zExceptions import BadRequest
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
@@ -72,9 +72,10 @@ ACTION_LOG_TYPES = {
 }
 
 
+@implementer(IGWSite)
 class GroupwareSite(NySite):
     """ """
-    implements(IGWSite)
+
     meta_type = METATYPE_GROUPWARESITE
     # icon = 'misc_/GroupwareSite/site.gif'
 
@@ -82,7 +83,7 @@ class GroupwareSite(NySite):
         NySite.manage_options
     )
 
-    product_paths = NySite.product_paths + [Globals.package_home(globals())]
+    product_paths = NySite.product_paths + [os.path.dirname(os.path.abspath(__file__))]
     security = ClassSecurityInfo()
     display_subobject_count = "on"
     portal_is_archived = False
@@ -116,7 +117,7 @@ class GroupwareSite(NySite):
         self.manage_delObjects('info')
 
         # load groupware skel
-        self.loadSkeleton(Globals.package_home(globals()))
+        self.loadSkeleton(os.path.dirname(os.path.abspath(__file__)))
 
         if rdf_calendar_available:
             manage_addRDFCalendar(self, id="portal_rdfcalendar",

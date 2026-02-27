@@ -106,7 +106,7 @@ def _get_convertor_tool():
             process = subprocess.Popen([tool, "-h"],
                                        shell=False, stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT)
-            stdout = process.stdout.read()
+            stdout = process.stdout.read().decode('utf-8', errors='replace')
             process.wait()
 
             if process.returncode != 0:
@@ -157,6 +157,8 @@ def can_convert():
 def get_resolution(video_path):
     txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
                            stderr=subprocess.PIPE).communicate()[1]
+    if isinstance(txt, bytes):
+        txt = txt.decode('utf-8', errors='replace')
 
     for line in txt.splitlines():
         if 'Video: ' in line:
@@ -172,6 +174,8 @@ def get_resolution(video_path):
 def is_audio(video_path):
     txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
                            stderr=subprocess.PIPE).communicate()[1]
+    if isinstance(txt, bytes):
+        txt = txt.decode('utf-8', errors='replace')
     for line in txt.splitlines():
         if 'Video: ' in line:
             return False
@@ -183,6 +187,8 @@ def is_audio(video_path):
 def is_valid_audio(video_path):
     txt = subprocess.Popen([CONVERSION_TOOL, '-i', video_path],
                            stderr=subprocess.PIPE).communicate()[1]
+    if isinstance(txt, bytes):
+        txt = txt.decode('utf-8', errors='replace')
     for line in txt.splitlines():
         if 'Video: ' in line:
             return False

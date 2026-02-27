@@ -2,7 +2,7 @@ import operator
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from DateTime import DateTime
 from naaya.core.zope2util import physical_path
-from constants import METATYPE_NYFORUMMESSAGE, METATYPE_NYFORUMTOPIC
+from .constants import METATYPE_NYFORUMMESSAGE, METATYPE_NYFORUMTOPIC
 
 _tmpl_feed_atom = NaayaPageTemplateFile('zpt/feed_atom', globals(),
                                         'naaya.forum.feed_atom')

@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya import NyFolder
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.NaayaContent.NyPublication import NyPublication
 
 class TestNyPublication(NaayaTestCase):
@@ -26,7 +26,7 @@ class TestNyPublication(NaayaTestCase):
 
     def test_addNyPublication_no_requiredattrs(self):
         self.login("contributor")
-        self.failUnlessRaises(ValueError, lambda: NyPublication.addNyPublication(self.app.portal.test_folder))
+        self.assertRaises(ValueError, lambda: NyPublication.addNyPublication(self.app.portal.test_folder))
         self.assertFalse(hasattr(self.app.portal.test_folder, "testPublication"))
         self.logout()
 
@@ -79,7 +79,7 @@ class TestNyPublication(NaayaTestCase):
             if pub.getLocalProperty("title", "ar") == "test2":
                 test2 = pub
         self.assertTrue(test2 != None, "Publication not found via CatalogedObjectsCheckView")
-        self.assertEqual(test2.id(), "test2")
+        self.assertEqual(test2.getId(), "test2")
         self.assertEqual(test2.getLocalProperty("title", "ar"), "test2")
         self.assertEqual(test2.getLocalProperty("description", "ar"), "description")
         self.assertEqual(test2.getLocalProperty("coverage", "ar"), "coverage")
@@ -138,5 +138,5 @@ class TestNyPublication(NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(TestNyPublication))
+    suite.addTest(TestLoader().loadTestsFromTestCase(TestNyPublication))
     return suite

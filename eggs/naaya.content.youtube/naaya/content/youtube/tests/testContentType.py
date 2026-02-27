@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.youtube.youtube_item import addNyYoutube as addNaayaContent
 from naaya.content.youtube.youtube_item import NyYoutube as NaayaContent
 from Products.Naaya.tests import NaayaTestCase

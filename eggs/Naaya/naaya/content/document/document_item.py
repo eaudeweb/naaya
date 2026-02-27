@@ -1,8 +1,8 @@
 import os
 import sys
-from StringIO import StringIO
+from io import StringIO
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -12,8 +12,8 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
-from interfaces import INyDocument, INyContentDocumentExport
+from zope.interface import implementer
+from .interfaces import INyDocument, INyContentDocumentExport
 
 from Products.NaayaBase.NyContentType import (NyContentType,
                                               NY_CONTENT_BASE_SCHEMA)
@@ -31,7 +31,7 @@ from Products.NaayaCore.managers.import_export import set_response_attachment
 from naaya.core import submitter
 from naaya.core.zope2util import get_site_manager
 
-from permissions import PERMISSION_ADD_DOCUMENT
+from .permissions import PERMISSION_ADD_DOCUMENT
 
 #global module constants
 ID_PLACEHOLDER = 'placeholder_for_id'
@@ -147,7 +147,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
-        if REQUEST.has_key('submitted'): ob.submitThis()
+        if 'submitted' in REQUEST: ob.submitThis()
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if (l_referer == 'document_manage_add' or
            l_referer.find('document_manage_add') != -1):
@@ -175,26 +175,26 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion,
                 except: pass
 
             contributor = self.utEmptyToNone(
-                                attrs['contributor'].encode('utf-8'))
+                                attrs['contributor'])
             if contributor is None:
                 contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             ob = _create_NyDocument_object(self, id, contributor)
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang])
                   for lang in langs if langs[lang]!='' ]
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                attrs['validation_comment'].encode('utf-8'),
-                attrs['validation_by'].encode('utf-8'),
-                attrs['validation_date'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
+            ob.checkThis(attrs['validation_status'],
+                attrs['validation_comment'],
+                attrs['validation_by'],
+                attrs['validation_date'])
             ob.submitThis()
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
@@ -204,11 +204,11 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion,
 class document_item(Implicit, NyContentData):
     """ """
 
+@implementer(INyDocument, INyContentDocumentExport)
 class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                  NyValidation, NyContentType):
     """ """
 
-    implements(INyDocument, INyContentDocumentExport)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -282,7 +282,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -372,9 +373,11 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -389,9 +392,11 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG
+)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = document_item()
@@ -405,13 +410,15 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if self.hasVersion():
             obj = self.version
             if (self.checkout_user !=
                 self.REQUEST.AUTHENTICATED_USER.getUserName()):
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         else:
             obj = self
 
@@ -515,8 +522,8 @@ def do_export(context, REQUEST):
             "to download this document")
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     data = target.data
-    if isinstance(data, unicode):
-        data = data.encode('utf-8')
+    if isinstance(data, str):
+        data = data
     output = StringIO()
     output.write(data)
     set_response_attachment(REQUEST.RESPONSE, target.filename,

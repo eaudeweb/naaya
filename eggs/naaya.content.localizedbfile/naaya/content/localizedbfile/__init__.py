@@ -1,1 +1,1 @@
-from localizedbfile_item import NyLocalizedBFile
+from .localizedbfile_item import NyLocalizedBFile

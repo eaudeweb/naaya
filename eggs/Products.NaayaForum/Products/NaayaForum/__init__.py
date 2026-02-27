@@ -1,9 +1,9 @@
 from App.ImageFile import ImageFile
 
-from constants import *
-import NyForum
-import NyForumTopic
-import NyForumMessage
+from .constants import *
+from . import NyForum
+from . import NyForumTopic
+from . import NyForumMessage
 
 from Products.Naaya import register_content
 # Register as a folder content type

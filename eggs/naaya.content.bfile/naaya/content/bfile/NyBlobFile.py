@@ -1,6 +1,6 @@
 """Storage and provider of blob files"""
 
-# from zope.interface import implements
+# from zope.interface import implementer
 from ZODB.POSException import POSKeyError
 from plone.i18n.normalizer.interfaces import IUserPreferredFileNameNormalizer
 from AccessControl import ClassSecurityInfo
@@ -14,16 +14,17 @@ from ZODB.interfaces import BlobError
 from ZPublisher.HTTPRangeSupport import parseRange, expandRanges
 from ZPublisher.Iterators import IStreamIterator
 from ZPublisher.Iterators import filestream_iterator
-from interfaces import INyBlobFile
+from .interfaces import INyBlobFile
 from os import fstat
-from webdav.common import rfc1123_date
-from zope.interface import implements
+from zope.datetime import rfc1123_date
+from zope.interface import implementer
 from zope.interface.interfaces import IInterface
 import mimetypes
 import os
-import urllib
+import urllib.parse
+import urllib.request
 
-from utils import strip_leading_underscores
+from .utils import strip_leading_underscores
 
 COPY_BLOCK_SIZE = 65536  # 64KB
 
@@ -36,22 +37,20 @@ def contentDispositionHeader(disposition, charset='utf-8', language=None,
     utf-8 for consistency with the rest of Archetypes.
     """
 
-    from email.Message import Message as emailMessage
+    from email.message import Message as emailMessage
 
     for key, value in kw.items():
         # stringify the value
-        if isinstance(value, unicode):
-            value = value.encode(charset)
+        if isinstance(value, bytes):
+            value = value.decode(charset)
         else:
             value = str(value)
-            # raise an error if the charset doesn't match
-            unicode(value, charset, 'strict')
-        # if any value contains 8-bit chars, make it an
+        # if any value contains non-ascii chars, make it an
         # encoding 3-tuple for special treatment by
         # Message.add_header() (actually _formatparam())
         try:
-            unicode(value, 'us-ascii', 'strict')
-        except UnicodeDecodeError:
+            value.encode('us-ascii', 'strict')
+        except UnicodeEncodeError:
             value = (charset, language, value)
 
     m = emailMessage()
@@ -150,13 +149,11 @@ def openBlob(blob, mode='r'):
         return blob.open(mode)
 
 
+@implementer(IStreamIterator)
 class BlobStreamIterator(object):
     """ a streamiterator for blobs enabling to directly serve them
         in an extra ZServer thread """
-    if IInterface.providedBy(IStreamIterator):  # is this zope 2.12?
-        implements(IStreamIterator)
-    else:
-        __implements__ = (IStreamIterator,)
+    # Interface registration handled by @implementer decorator above
 
     def __init__(self, blob, mode='r', streamsize=1 << 16, start=0, end=None):
         self.blob = openBlob(blob, mode)
@@ -165,7 +162,7 @@ class BlobStreamIterator(object):
         self.end = end
         self.seek(start, 0)
 
-    def next(self):
+    def __next__(self):
         """ return next chunk of data from the blob, taking the optionally
             given range into consideration """
         if self.end is None:
@@ -198,18 +195,18 @@ class BlobStreamIterator(object):
         return self.blob.tell()
 
 
+@implementer(INyBlobFile)
 class NyBlobFile(Item, Persistent, Cacheable, Implicit):
     """Naaya persistence of file using ZODB blobs"""
 
-    implements(INyBlobFile)
     meta_type = "NyBlobFile"
     security = ClassSecurityInfo()
 
     def __init__(self, **kwargs):
-        super(NyBlobFile, self).__init__(**kwargs)
+        super(NyBlobFile, self).__init__()
         kwargs.setdefault('filename', None)
         kwargs.setdefault('content_type', 'application/octet-stream')
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
         self._blob = Blob()
 
@@ -249,7 +246,7 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         if as_attachment:
             header_value = "attachment"
             if set_filename:
-                utf8_fname = urllib.quote(self.filename)
+                utf8_fname = urllib.parse.quote(self.filename)
                 header_value += ";filename*=UTF-8''%s" % utf8_fname
             RESPONSE.setHeader('Content-Disposition', header_value)
 
@@ -311,8 +308,8 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
 
         filename = self.getFilename()
         if filename is not None:
-            if not isinstance(filename, unicode):
-                filename = unicode(filename, charset, errors="ignore")
+            if not isinstance(filename, str):
+                filename = str(filename, charset, errors="ignore")
             filename = IUserPreferredFileNameNormalizer(REQUEST).normalize(
                 filename)
             header_value = contentDispositionHeader(
@@ -350,8 +347,10 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         if content_type:
             self.content_type = content_type
 
-        if isinstance(data, basestring):
+        if isinstance(data, (bytes, str)):
             blob = self.open_write()
+            if isinstance(data, str):
+                data = data.encode('utf-8')
             blob.write(data)
             blob.seek(0)
             blob.close()
@@ -374,7 +373,7 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
 def make_blobfile(the_file, **kwargs):
     filename = strip_leading_underscores(trim_filename(the_file.filename))
 
-    content_type = mimetypes.guess_type(the_file.filename)[0]
+    content_type = mimetypes.guess_type(filename)[0]
     if content_type is None:
         content_type = getattr(the_file, 'headers', {}).get(
             'content-type', 'application/octet-stream')
@@ -395,6 +394,8 @@ def make_blobfile(the_file, **kwargs):
         data = the_file.read(COPY_BLOCK_SIZE)
         if not data:
             break
+        if isinstance(data, str):
+            data = data.encode('utf-8')
         bf_stream.write(data)
         size += len(data)
     bf_stream.close()
@@ -408,4 +409,6 @@ def trim_filename(filename):
     Internet Explorer sends us the complete file path, not just the
     file's name, so we need to strip that.
     """
+    if isinstance(filename, bytes):
+        filename = filename.decode('utf-8')
     return filename.rsplit('\\', 1)[-1]

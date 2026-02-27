@@ -17,7 +17,7 @@
 #
 # Andrei Laza, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 import Products.Naaya
 from Products.NaayaContent.NyPublication.NyPublication import addNyPublication
@@ -60,13 +60,13 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.assertEqual(meta.sortorder, 100)
         
         #delete NyPublication
-        self._portal().info.manage_delObjects([meta.id()])
-        self._portal().info.manage_delObjects([meta_fr.id()])
+        self._portal().info.manage_delObjects([meta.getId()])
+        self._portal().info.manage_delObjects([meta_fr.getId()])
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Publication'])
         self.assertEqual(meta, [])
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaContentTestCase))
     return suite

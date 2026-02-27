@@ -4,20 +4,16 @@ Provides an interface for administration views in Naaya.
 """
 import re
 import locale
-from urllib import quote
-from base64 import encodestring, decodestring
+import functools
+from urllib.parse import quote
+from base64 import encodebytes, decodebytes
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Acquisition import Implicit
-try:
-    # Zope 2.12
-    from App.class_init import InitializeClass
-except ImportError:
-    # Zope <= 2.11
-    from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
-from constants import PERMISSION_TRANSLATE_PAGES
-from LanguageManagers import get_languages
+from .constants import PERMISSION_TRANSLATE_PAGES
+from .LanguageManagers import get_languages
 
 
 def message_encode(message):
@@ -28,10 +24,10 @@ def message_encode(message):
     encodings, HTML entities, etc..
 
     """
-    if isinstance(message, unicode):
+    if isinstance(message, str):
         message = message.encode('utf-8')
 
-    return encodestring(message)
+    return encodebytes(message)
 
 def message_decode(message):
     """
@@ -41,8 +37,10 @@ def message_decode(message):
     encodings, HTML entities, etc..
 
     """
-    message = decodestring(message)
-    return unicode(message, 'utf-8')
+    if isinstance(message, str):
+        message = message.encode('ascii')
+    message = decodebytes(message)
+    return str(message, 'utf-8')
 
 
 class AdminI18n(Implicit):
@@ -104,7 +102,7 @@ class AdminI18n(Implicit):
             if not default:
                 default = m
             if regex.search(default.lower()):
-                if isinstance(m, unicode):
+                if isinstance(m, str):
                     m = m.encode('utf-8')
                 e = [m]
                 i = 1
@@ -127,7 +125,7 @@ class AdminI18n(Implicit):
                     locale.setlocale(locale.LC_ALL, 'en')
                 except locale.Error:
                     locale.setlocale(locale.LC_ALL, '')
-            t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
+            t.sort(key=functools.cmp_to_key(lambda x, y: locale.strcoll(x[0], y[0])))
             locale.setlocale(locale.LC_ALL, default_locale)
         else:
             #sort by translation status

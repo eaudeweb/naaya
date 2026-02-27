@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from BeautifulSoup import BeautifulSoup
+from unittest import TestSuite, TestLoader
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -22,14 +22,14 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/pointer_add_html')
-        self.failUnless('<h1>Submit Pointer</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit Pointer</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'pointer:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -42,14 +42,14 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.myfolder.test_pointer.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_pointer')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_pointer.*</h1>', html, re.DOTALL))
-        self.failUnless('test_pointer_description' in html)
+        self.assertTrue(re.search(r'<h1>.*test_pointer.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_pointer_description' in html)
 
         self.browser.go('http://localhost/portal/myfolder/pointer_add_html')
         form = self.browser.get_form('frmAdd')
@@ -63,7 +63,7 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         self.browser.go('http://localhost/portal/myfolder/slash_pointer')
-        self.failUnlessEqual(self.browser.get_url(),
+        self.assertEqual(self.browser.get_url(),
                              'http://localhost/portal/info')
         self.browser_do_logout()
 
@@ -77,8 +77,8 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -86,15 +86,15 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My pointer')
+        self.assertEqual(form['title:utf8:ustring'], 'My pointer')
 
         form['title:utf8:ustring'] = 'new_pointer_title'
         form['pointer:utf8:ustring'] = 'portal'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')
-        self.failUnlessEqual(self.portal.myfolder.mypointer.pointer, 'portal')
+        self.assertEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')
+        self.assertEqual(self.portal.myfolder.mypointer.pointer, 'portal')
 
         # try out redirecting
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
@@ -105,7 +105,7 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/mypointer')
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/info')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info')
 
         self.browser_do_logout()
 
@@ -120,8 +120,8 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -130,12 +130,12 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mypointer/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My pointer')
+        self.assertEqual(form['title:utf8:ustring'], 'My pointer')
         form['title:utf8:ustring'] = 'new_pointer_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')
+        self.assertEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')
 
         self.browser_do_logout()
 
@@ -144,7 +144,7 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)

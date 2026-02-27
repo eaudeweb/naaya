@@ -2,7 +2,7 @@ import base64
 from webob import Request
 import transaction
 
-from NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from .NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 
 class PageLoadTests(NaayaFunctionalTestCase):
@@ -22,11 +22,12 @@ class PageLoadTests(NaayaFunctionalTestCase):
 
     def assert_page_ok(self, url, user_id=None):
         request = Request.blank(url)
+        request.environ['HTTP_HOST'] = 'localhost'
         if user_id is not None:
             if user_id != 'admin':
                 raise ValueError("I only know about the admin account, "
                                  "who is %r?" % user_id)
-            request.authorization = 'Basic %s' % base64.b64encode('admin:')
+            request.authorization = 'Basic %s' % base64.b64encode(b'admin:').decode('ascii')
         response = request.get_response(self.wsgi_request)
         assert response.status == '200 OK', repr(response)
 

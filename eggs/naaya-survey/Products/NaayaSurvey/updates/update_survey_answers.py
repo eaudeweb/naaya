@@ -17,6 +17,7 @@
 #
 # Cristian Ciupitu, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
+from DateTime import DateTime
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from Products.NaayaSurvey.SurveyAnswer import SurveyAnswer
 
@@ -37,7 +38,7 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         for answer in self._list_updates():
-            answer.modification_time = answer.bobobase_modification_time()
+            answer.modification_time = DateTime(answer._p_mtime)
             logger.debug('Updated %s' % (answer.absolute_url(1), ))
 
 def register(uid):

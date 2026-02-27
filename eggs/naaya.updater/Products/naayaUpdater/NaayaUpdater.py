@@ -10,29 +10,29 @@ be registered with
 
 from naaya.core.backport import namedtuple
 
+import os
 from os.path import join, isfile
 from datetime import datetime
 
 from persistent.list import PersistentList
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import queryUtility
 
-import Globals
+# import Globals removed
 from OFS.Folder import Folder
 
-from interfaces import IUpdater, IUpdateScript
-import utils
+from .interfaces import IUpdater, IUpdateScript
+from . import utils
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
-NAAYAUPDATER_PRODUCT_PATH = Globals.package_home(globals())
+NAAYAUPDATER_PRODUCT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 LogEntry = namedtuple("LogEntry", ('update_id, datetime, user, portals'))
 
+@implementer(IUpdater)
 class NaayaUpdater(Folder):
     """ NaayaUpdater class """
-
-    implements(IUpdater)
 
     meta_type = 'Naaya Updater'
     icon = 'misc_/naayaUpdater/updater.jpg'

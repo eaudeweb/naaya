@@ -1,4 +1,4 @@
-from urllib2 import urlopen
+from urllib.request import urlopen
 from lxml import etree
 
 class WiseHarvester(object):

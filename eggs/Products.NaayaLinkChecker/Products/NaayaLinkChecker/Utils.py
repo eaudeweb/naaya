@@ -1,6 +1,6 @@
 # Python imports
-from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, CData
-from Queue import Queue
+from bs4 import BeautifulSoup
+from queue import Queue
 import re
 import string
 from random import choice
@@ -145,11 +145,11 @@ def get_links_from_html(html):
         @rtype: iterator
         @return: the list of URLs from html after filtering them
     """
-    soup = BeautifulSoup(html, convertEntities=BeautifulStoneSoup.XHTML_ENTITIES)
+    soup = BeautifulSoup(html, 'html.parser')
     for tag, attr in (('a', 'href'), ('script', 'src'), ('img', 'src')):
-        for t in soup.findAll(tag, {attr: True}):
+        for t in soup.find_all(tag, {attr: True}):
             yield t.get(attr)
-    for text in soup.findAll(text=lambda x: x is not None and not x.startswith('<!--')):
+    for text in soup.find_all(string=lambda x: x is not None and not x.startswith('<!--')):
         for x in get_links_from_text(text):
             yield x
 

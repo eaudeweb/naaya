@@ -89,7 +89,7 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
             else:
                 get_key = key
             if key == 'updated':
-                item['updated'] = ob.bobobase_modification_time().strftime(date_format)
+                item['updated'] = DateTime(ob._p_mtime).strftime(date_format)
             else:
                 value = cgetattr(ob, get_key, u'')
                 if value is None:

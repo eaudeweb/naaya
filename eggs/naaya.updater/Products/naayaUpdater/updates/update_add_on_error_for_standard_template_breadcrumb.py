@@ -6,7 +6,7 @@ from AccessControl import ClassSecurityInfo
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from utils import pat, physical_path, get_standard_template
+from .utils import pat, physical_path, get_standard_template
 
 class UpdateAddOnerrorForStandardTemplateBreadcrumb(UpdateScript):
     """ Add on error for standard template breadcrumb """

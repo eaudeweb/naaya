@@ -6,7 +6,7 @@ reporting.
 
 """
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Products.ZCatalog.ZCatalog import ZCatalog
@@ -18,14 +18,80 @@ from OFS.Uninstalled import BrokenClass
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 try:
-    import Products.TextIndexNG3
-    txng_version = 2
+    from Products.ZCTextIndex.ZCTextIndex import PLexicon
+    from Products.ZCTextIndex.Lexicon import (
+        CaseNormalizer, Splitter, StopWordRemover,
+    )
+    _has_zctextindex = True
 except ImportError:
-    txng_version = 0
+    _has_zctextindex = False
 
-from interfaces import INyCatalogAware, INyCatalogIndexing
+def _ensure_lexicon(catalog):
+    """Create a PLexicon in the catalog if not already present."""
+    if _has_zctextindex and 'Lexicon' not in catalog.objectIds():
+        lexicon = PLexicon('Lexicon', 'Default lexicon',
+                           Splitter(), CaseNormalizer(), StopWordRemover())
+        catalog._setObject('Lexicon', lexicon)
+
+
+def _add_zctextindex(catalog, index_name):
+    """Add a ZCTextIndex to the catalog."""
+    _ensure_lexicon(catalog)
+    extra = type('Extra', (), {
+        'doc_attr': index_name,
+        'index_type': 'Okapi BM25 Rank',
+        'lexicon_id': 'Lexicon',
+    })()
+    catalog.addIndex(index_name, 'ZCTextIndex', extra=extra)
+
+
+from .interfaces import INyCatalogAware, INyCatalogIndexing
 from naaya.core.interfaces import INyObjectContainer
 from Products.NaayaBase.interfaces import INyContainer, INyCommentable
+
+
+# Python 3 BTree compatibility: OOBTree can't mix str/int keys.
+# After Py2→Py3 migration, ZODB objects have inconsistent types for
+# the same attribute (e.g. validation_status: int 0 vs str '0').
+# Patch UnIndex to convert the entry type when a mismatch occurs.
+from Products.PluginIndexes.unindex import UnIndex as _UnIndex
+
+_orig_insertForward = _UnIndex.insertForwardIndexEntry
+_orig_removeForward = _UnIndex.removeForwardIndexEntry
+
+
+def _coerce_entry(entry):
+    """Try converting str↔int to match the other type."""
+    if isinstance(entry, str):
+        try:
+            return int(entry)
+        except (ValueError, TypeError):
+            return None
+    elif isinstance(entry, (int, bool)):
+        return str(entry)
+    return None
+
+
+def _safe_insertForwardIndexEntry(self, entry, documentId):
+    try:
+        return _orig_insertForward(self, entry, documentId)
+    except TypeError:
+        alt = _coerce_entry(entry)
+        if alt is not None:
+            return _orig_insertForward(self, alt, documentId)
+
+
+def _safe_removeForwardIndexEntry(self, entry, documentId):
+    try:
+        return _orig_removeForward(self, entry, documentId)
+    except TypeError:
+        alt = _coerce_entry(entry)
+        if alt is not None:
+            return _orig_removeForward(self, alt, documentId)
+
+
+_UnIndex.insertForwardIndexEntry = _safe_insertForwardIndexEntry
+_UnIndex.removeForwardIndexEntry = _safe_removeForwardIndexEntry
 
 
 # Patch for Products.ZCatalog.Catalog, recordify method must
@@ -113,7 +179,7 @@ class CatalogTool(ZCatalog, utils):
         languages = self.utConvertToList(languages)
         # TODO for Zope 2.10: remove try: ... except: pass
         try:
-            self.addIndex('bobobase_modification_time', 'FieldIndex')
+            self.addIndex('modification_time', 'FieldIndex')
         except:
             pass
         try:
@@ -128,33 +194,14 @@ class CatalogTool(ZCatalog, utils):
             self.addIndex('path', 'PathIndex')
         except:
             pass
-        if txng_version == 2:
-            try:
-                self.manage_addIndex(
-                    'PrincipiaSearchSource', 'TextIndexNG3', extra={
-                        'default_encoding': 'utf-8',
-                        'use_converters': 1,
-                        'splitter_casefolding': True,
-                    })
-            except:
-                pass
-            try:
-                self.manage_addIndex('title', 'TextIndexNG3', extra={
-                    'default_encoding': 'utf-8',
-                    'splitter_single_chars': 1,
-                    'splitter_casefolding': True,
-                })
-            except:
-                pass
-        else:
-            try:
-                self.addIndex('PrincipiaSearchSource', 'TextIndex')
-            except:
-                pass
-            try:
-                self.addIndex('title', 'TextIndex')
-            except:
-                pass
+        try:
+            _add_zctextindex(self, 'PrincipiaSearchSource')
+        except:
+            pass
+        try:
+            _add_zctextindex(self, 'title')
+        except:
+            pass
         try:
             self.addIndex('submitted', 'FieldIndex')
         except:
@@ -193,19 +240,10 @@ class CatalogTool(ZCatalog, utils):
             self.addIndex('geo_type', 'FieldIndex')
         except:
             pass
-        if txng_version == 2:
-            try:
-                self.addIndex('geo_address', 'TextIndexNG3', extra={
-                    'default_encoding': 'utf-8',
-                    'splitter_casefolding': True,
-                })
-            except:
-                pass
-        else:
-            try:
-                self.addIndex('geo_address', 'TextIndex')
-            except:
-                pass
+        try:
+            _add_zctextindex(self, 'geo_address')
+        except:
+            pass
         # create columns
         try:
             self.addColumn('id')
@@ -220,7 +258,7 @@ class CatalogTool(ZCatalog, utils):
         except:
             pass
         try:
-            self.addColumn('bobobase_modification_time')
+            self.addColumn('modification_time')
         except:
             pass
         try:
@@ -236,30 +274,19 @@ class CatalogTool(ZCatalog, utils):
 
     def add_index_for_lang(self, name, lang):
         """
-        Create an I{TextIndexNG3} or I{TextIndex} index for given language:
+        Create a ZCTextIndex index for given language:
         - B{I{name}_I{lang}}
         @param name: index name
         @type name: string
         @param lang: language code
         @type lang: string
         """
-        if txng_version == 2:
-            try:
-                self.manage_addIndex(
-                    '%s_%s' % (name, lang), 'TextIndexNG3', extra={
-                        'default_encoding': 'utf-8',
-                        'splitter_single_chars': 1,
-                        'splitter_casefolding': True,
-                    })
-                self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
-            except:
-                pass
-        else:
-            try:
-                self.addIndex('%s_%s' % (name, lang), 'TextIndex')
-                self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
-            except:
-                pass
+        index_name = '%s_%s' % (name, lang)
+        try:
+            _add_zctextindex(self, index_name)
+            self.reindexIndex(index_name, self.REQUEST)
+        except:
+            pass
 
     security.declarePrivate('add_indexes_for_lang')
 
@@ -366,13 +393,26 @@ class CatalogTool(ZCatalog, utils):
     def manage_do_rebuild(self, REQUEST=None):
         """ maintenance operations for the catalog """
 
+        import logging
+        logger = logging.getLogger('CatalogTool')
+        errors = []
+
         def add_to_catalog(ob):
-            self.catalog_object(ob, '/'.join(ob.getPhysicalPath()))
+            try:
+                self.catalog_object(ob, '/'.join(ob.getPhysicalPath()))
+            except Exception as e:
+                path = '/'.join(ob.getPhysicalPath())
+                logger.error("Error indexing %s: %s", path, e)
+                errors.append(path)
 
         self.manage_catalogClear()
         self._fix_catalog()
         for ob in walk_folder(self.getSite()):
             add_to_catalog(ob)
+
+        if errors:
+            logger.warning("Catalog rebuild: %d objects failed to index: %s",
+                           len(errors), ', '.join(errors))
 
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url() +
@@ -394,9 +434,41 @@ class CatalogTool(ZCatalog, utils):
 InitializeClass(CatalogTool)
 
 
+import logging
+_walk_logger = logging.getLogger('CatalogTool.walk')
+
+
+def _check_broken_children(ob):
+    """Log broken sub-objects inside containers (e.g. ExtFile inside NyMediaFile)."""
+    try:
+        children = ob.objectValues()
+    except Exception:
+        return
+    for child in children:
+        if isinstance(child, BrokenClass):
+            try:
+                path = '/'.join(child.getPhysicalPath())
+            except Exception:
+                path = '/'.join(ob.getPhysicalPath()) + '/' + getattr(child, 'id', '???')
+            _walk_logger.warning(
+                'Broken child object: %s  class=%s.%s',
+                path, child.__class__.__module__, child.__class__.__name__)
+
+
 def walk_folder(folder):
     for ob in folder.objectValues():
+        if isinstance(ob, BrokenClass):
+            try:
+                path = '/'.join(ob.getPhysicalPath())
+            except Exception:
+                path = getattr(ob, 'id', '???')
+            _walk_logger.warning(
+                'Broken object: %s  class=%s.%s',
+                path, ob.__class__.__module__, ob.__class__.__name__)
+            continue
+
         if INyCatalogAware.providedBy(ob):
+            _check_broken_children(ob)
             yield ob
 
         if INyObjectContainer.providedBy(ob) or INyContainer.providedBy(ob):

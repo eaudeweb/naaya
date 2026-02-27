@@ -70,7 +70,7 @@ def calc_centers(lat_min, lat_max, lon_min, lon_max, size_x,
         group_p = groups.setdefault((y, x), [])
         group_p.append(p)
 
-    final_groups = groups.values()
+    final_groups = list(groups.values())
     for group in final_groups:
         lat = sum(p.lat for p in group) / len(group)
         lon = sum(p.lon for p in group) / len(group)

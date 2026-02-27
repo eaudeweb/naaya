@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 import transaction
 from AccessControl import getSecurityManager
@@ -86,39 +86,40 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
 
+        # Check View permission checkboxes via HTML parsing
         self.browser.go(self.testfolder.absolute_url(1) +
                         '/manage_permissionForm?permission_to_manage=View')
-        form = self.browser.get_form(1)
-        field = self.browser.get_form_field(form, 'roles:list')
-        for item in field.items:
-            if item.name == 'Contributor':
-                self.assertTrue(item._selected)
+        soup = BeautifulSoup(self.browser.get_html(), 'lxml')
+        for cb in soup.find_all('input', attrs={'name': 'roles:list'}):
+            if cb.get('value') == 'Contributor':
+                self.assertTrue(cb.has_attr('checked'))
             else:
-                self.assertFalse(item._selected)
+                self.assertFalse(cb.has_attr('checked'))
 
-        self.browser.go(self.testfolder.absolute_url(1) + 
+        # Check View History permission checkboxes
+        self.browser.go(self.testfolder.absolute_url(1) +
                         '/manage_permissionForm?permission_to_manage=View%20History')
-        form = self.browser.get_form(1)
-        field = self.browser.get_form_field(form, 'roles:list')
-        for item in field.items:
-            if item.name == 'Contributor' or item.name == 'Reviewer':
-                self.assertTrue(item._selected)
+        soup = BeautifulSoup(self.browser.get_html(), 'lxml')
+        for cb in soup.find_all('input', attrs={'name': 'roles:list'}):
+            if cb.get('value') in ('Contributor', 'Reviewer'):
+                self.assertTrue(cb.has_attr('checked'))
             else:
-                self.assertFalse(item._selected)
+                self.assertFalse(cb.has_attr('checked'))
 
         self.browser_do_logout()
 
     def test_get_permissions(self):
         self.browser_do_login('admin', '')
 
-        self.browser.go(self.testfolder.absolute_url(1) +
-                        '/manage_permissionForm?permission_to_manage=View')
-        form = self.browser.get_form(1)
-        form['roles:list'] = ('Contributor',)
-        self.browser.submit()
+        # Submit permission change via direct URL call
+        self.browser.go(self.testfolder.absolute_url() +
+                        '/manage_permission'
+                        '?permission_to_manage=View'
+                        '&roles%3Alist=Contributor')
 
-        self.assertEqual(self.testfolder.ny_access.getPermissionMapping()['View'],
-                         ['Contributor'])
+        self.assertEqual(
+            list(self.testfolder.ny_access.getPermissionMapping()['View']),
+            ['Contributor'])
 
         self.browser_do_logout()
 
@@ -174,7 +175,7 @@ class NyAccess2LevelTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
 
         self.browser.go(self.testfolder.absolute_url(1) + '/ny_access')
-        soup = BeautifulSoup(self.browser.get_html())
+        soup = BeautifulSoup(self.browser.get_html(), "lxml")
         form = self.browser.get_form('save-permissions')
 
         # perm1 test
@@ -231,7 +232,7 @@ class NyAccess2LevelTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         form = self.browser.get_form('save-permissions')
-        soup = BeautifulSoup(self.browser.get_html())
+        soup = BeautifulSoup(self.browser.get_html(), "lxml")
 
         # perm1 test
         field_name = 'acquires' + self.perm1

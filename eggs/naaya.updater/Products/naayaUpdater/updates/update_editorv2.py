@@ -58,7 +58,7 @@ class UpdateExample(UpdateScript):
                 try:
                     catalog.catalog_object(ob)
                     self.log.debug("Cataloged object %s" % ob.absolute_url(1))
-                except Exception, err:
+                except Exception as err:
                     self.log.debug("Error occurred while cataloging %s (%s)" % (ob.absolute_url(1), err))
 
             if isinstance(ob, Folder):
@@ -69,10 +69,10 @@ class UpdateExample(UpdateScript):
             try:
                 portal.manage_delObjects(['portal_editor'])
                 self.log.debug("Removed editor tool.")
-            except Exception, err:
+            except Exception as err:
                 self.log.debug("Error occurred while trying to delete editor tool. (%s)" % err)
         try:
             manage_addEditorTool(portal)
             self.log.debug("Added editor tool.")
-        except Exception, err:
+        except Exception as err:
                 self.log.debug('Error occurred while trying to add editor tool. (%s)' % err)

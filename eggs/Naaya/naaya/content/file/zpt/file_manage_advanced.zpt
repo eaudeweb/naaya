@@ -5,7 +5,7 @@
 	You should not use this form if you're not aware about it's consequences 
 </p>
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
 	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 

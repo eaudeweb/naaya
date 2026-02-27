@@ -1,5 +1,5 @@
 from os import path
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 import transaction
 
@@ -10,7 +10,8 @@ from Products.NaayaCore.LayoutTool.DiskFile import (DiskFile, resolve,
 
 from Products import Naaya as Naaya_module
 naaya_module_path = path.dirname(Naaya_module.__file__)
-logo_data = open(naaya_module_path + '/skel/layout/left_logo.gif').read()
+with open(naaya_module_path + '/skel/layout/left_logo.gif', 'rb') as _f:
+    logo_data = _f.read()
 
 class DiskFileTest(NaayaTestCase):
     def test_resolve(self):
@@ -40,5 +41,5 @@ class DiskFileBrowserTest(NaayaFunctionalTestCase):
     def test_get(self):
         self.browser.go('http://localhost/portal/'
                         'portal_layout/skin/test-logo.gif')
-        self.assertEqual(self.browser.get_html(), logo_data, "bad content")
+        self.assertEqual(self.browser.result.content, logo_data, "bad content")
         self.assertEqual(self.browser_get_header('content-type'), 'image/gif')

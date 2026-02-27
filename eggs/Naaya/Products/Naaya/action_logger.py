@@ -27,14 +27,13 @@ from BTrees.IOBTree import IOBTree
 from Persistence import Persistent
 from DateTime import DateTime
 
-from zope import interface
-from interfaces import IActionLogItem, IActionLogger
+from zope.interface import implementer
+from .interfaces import IActionLogItem, IActionLogger
 
+@implementer(IActionLogger)
 class ActionLogger(Persistent):
     """ ``IActionLogItem`` container. This is used in `Products.Naaya.NySite`
     site manager."""
-
-    interface.implements(IActionLogger)
 
     def __init__(self):
         super(ActionLogger, self).__init__()
@@ -43,8 +42,8 @@ class ActionLogger(Persistent):
     def append(self, log):
         """ Add an ``IActionLog``"""
 
-        assert IActionLogItem in interface.providedBy(log), (
-            "%s must implementation of IActionLogItem" % log)
+        assert IActionLogItem.providedBy(log), (
+            "%s must be an implementation of IActionLogItem" % log)
         try:
             new_id = self.container.maxKey() + 1
         except ValueError:
@@ -62,11 +61,11 @@ class ActionLogger(Persistent):
         """ Return container items filtered by type"""
         if type is None:
             return self.container.items()
-        return filter(lambda (log_id, log): log.type == type,
-                            self.container.items())
+        return [(log_id, log) for log_id, log in self.container.items()
+                if log.type == type]
 
     def __iter__(self):
-        return self.container.iteritems()
+        return iter(self.container.items())
 
     def __getitem__(self, key):
         return self.container[key]
@@ -77,10 +76,9 @@ class ActionLogger(Persistent):
     def __len__(self):
         return len(self.container)
 
+@implementer(IActionLogItem)
 class ActionLogItem(Persistent):
     """ Action log base class"""
-
-    interface.implements(IActionLogItem)
 
     def __init__(self, type=None, created_datetime=None, **kw):
         """ Type attribute is used to filter types of logs. """

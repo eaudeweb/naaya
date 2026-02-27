@@ -4,17 +4,16 @@ folder type of object. All types of objects that are file system containers
 must extend this class.
 """
 
-from Globals import InitializeClass
+from io import BytesIO
+from AccessControl.class_init import InitializeClass
 from Products.NaayaBase.NyContainer import NyContainer
-from StringIO import StringIO
-import zLOG
+import logging
 
 BLOBFILE_INSTALLED = True
 try:
     from naaya.content.bfile.NyBlobFile import make_blobfile
 except ImportError:
-    zLOG.LOG("NyFSContainer", zLOG.WARNING,
-             "naaya.content.bfile is not installed => all files will be stored in ZODB")
+    logging.getLogger("NyFSContainer").warning("naaya.content.bfile is not installed => all files will be stored in ZODB")
     BLOBFILE_INSTALLED = False
 
 class NyFSContainer(NyContainer):
@@ -31,12 +30,12 @@ class NyFSContainer(NyContainer):
         # if self.is_ext:
         #     return manage_addExtFile(self, id=id, file=file)
         if self.is_blobfile:
-            if isinstance(file, basestring):
+            if isinstance(file, str):
                 if not bool(id):
-                    raise ValueError, "Please specify id of file passed as string"
+                    raise ValueError("Please specify id of file passed as string")
 
-                f = StringIO()
-                f.write(file)
+                f = BytesIO()
+                f.write(file.encode('utf-8') if isinstance(file, str) else file)
                 f.seek(0)
                 f.filename = id
                 file = f
@@ -87,6 +86,8 @@ class NyFSContainer(NyContainer):
         attached_file = self._get_attached_file(sid)
         if not attached_file:
             return 0
+        if not hasattr(attached_file, 'get_size'):
+            return 0
         return attached_file.get_size()
 
     # XXX Backward compatible
@@ -100,6 +101,10 @@ class NyFSContainer(NyContainer):
         if as_string:
             if not attached_file:
                 return ''
+            # In Zope 5, index_html() returns a BlobStreamIterator
+            # instead of raw bytes. Use open().read() for direct data access.
+            if hasattr(attached_file, 'open'):
+                return attached_file.open().read()
             result = attached_file.index_html()
             return result
         return attached_file

@@ -37,15 +37,15 @@ in *Naaya*.
 
 from datetime import datetime, timedelta
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapter
 
 from Products.Naaya.interfaces import INySite
 from naaya.core.utils import cooldown
-from interfaces import IHeartbeat
+from .interfaces import IHeartbeat
 
+@implementer(IHeartbeat)
 class Heartbeat(object):
-    implements(IHeartbeat)
     def __init__(self):
         self.when = datetime.now()
 

@@ -1,25 +1,25 @@
 from warnings import warn
-from nose.plugins.skip import SkipTest
+from unittest import SkipTest
 import transaction
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NySite import manage_addNySite
-import ldap_config
-import mock_ldap
+from . import ldap_config
+from . import mock_ldap
 
 
 class AuthenticationUnitTest(NaayaTestCase):
     """ unit tests for AuthenticationTool """
 
     def test_check_username(self):
-        self.assertNotEquals(check_username('user1'), None)
-        self.assertNotEquals(check_username('Us3r2'), None)
-        self.assertNotEquals(check_username('USER3'), None)
-        self.assertNotEquals(check_username('1337'), None)
-        self.assertEquals(check_username('USER~'), None)
-        self.assertEquals(check_username('!user'), None)
-        self.assertEquals(check_username('&*%^@$'), None)
+        self.assertNotEqual(check_username('user1'), None)
+        self.assertNotEqual(check_username('Us3r2'), None)
+        self.assertNotEqual(check_username('USER3'), None)
+        self.assertNotEqual(check_username('1337'), None)
+        self.assertEqual(check_username('USER~'), None)
+        self.assertEqual(check_username('!user'), None)
+        self.assertEqual(check_username('&*%^@$'), None)
 
     def test_getUsersRoles(self):
         acl_users = self.portal.acl_users
@@ -60,7 +60,7 @@ class LDAPUnitTest(NaayaFunctionalTestCase):
     def setUp(self):
         super(LDAPUnitTest, self).setUp()
         if not mock_ldap.is_available:
-            from nose.plugins.skip import SkipTest
+            from unittest import SkipTest
             raise SkipTest
 
         mock_ldap.quick_setup(self.app, self.portal)

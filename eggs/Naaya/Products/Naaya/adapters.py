@@ -1,3 +1,4 @@
+from DateTime import DateTime
 from naaya.core.zope2util import DT2dt
 from naaya.core.utils import pretty_size, icon_for_content_type
 
@@ -27,6 +28,8 @@ def _get_icon_url(ob):
 
 
 class GenericViewAdapter(object):
+    __allow_access_to_unprotected_subobjects__ = True
+
     def __init__(self, ob):
         self.ob = ob
 
@@ -34,7 +37,11 @@ class GenericViewAdapter(object):
         return False, False
 
     def get_modification_date(self):
-        return DT2dt(getattr(self.ob.aq_base, 'last_modification', self.ob.bobobase_modification_time()))
+        try:
+            return DT2dt(getattr(self.ob.aq_base, 'last_modification', DateTime(self.ob._p_mtime)))
+        except AttributeError:
+            from DateTime import DateTime
+            return DT2dt(DateTime())
 
     def get_info_text(self):
         return ""

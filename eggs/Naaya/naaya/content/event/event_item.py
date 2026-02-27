@@ -4,7 +4,8 @@ import datetime
 
 import vobject
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
+from DateTime import DateTime
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -13,7 +14,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
@@ -31,8 +32,8 @@ from naaya.core.zope2util import DT2dt
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyEvent
-from permissions import PERMISSION_ADD_EVENT
+from .interfaces import INyEvent
+from .permissions import PERMISSION_ADD_EVENT
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -218,32 +219,32 @@ def importNyEvent(self, param, id, attrs, content, properties, discussion,
 
             ob = _create_NyEvent_object(
                 self, id,
-                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.location_url = attrs['location_url'].encode('utf-8')
+                self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.location_url = attrs['location_url']
             ob.start_date = self.utConvertDateTimeObjToString(
-                self.utGetDate(attrs['start_date'].encode('utf-8')))
+                self.utGetDate(attrs['start_date']))
             ob.end_date = self.utConvertDateTimeObjToString(
-                self.utGetDate(attrs['end_date'].encode('utf-8')))
-            ob.agenda_url = attrs['agenda_url'].encode('utf-8')
-            ob.event_url = attrs['event_url'].encode('utf-8')
-            ob.topitem = abs(int(attrs['topitem'].encode('utf-8')))
-            ob.event_type = attrs['event_type'].encode('utf-8')
-            ob.contact_person = attrs['contact_person'].encode('utf-8')
-            ob.contact_email = attrs['contact_email'].encode('utf-8')
-            ob.contact_phone = attrs['contact_phone'].encode('utf-8')
-            ob.contact_fax = attrs['contact_fax'].encode('utf-8')
+                self.utGetDate(attrs['end_date']))
+            ob.agenda_url = attrs['agenda_url']
+            ob.event_url = attrs['event_url']
+            ob.topitem = abs(int(attrs['topitem']))
+            ob.event_type = attrs['event_type']
+            ob.contact_person = attrs['contact_person']
+            ob.contact_email = attrs['contact_email']
+            ob.contact_phone = attrs['contact_phone']
+            ob.contact_fax = attrs['contact_fax']
 
             for property, langs in properties.items():
                 [ob._setLocalPropValue(property, lang, langs[lang]) for
                     lang in langs if langs[lang] != '']
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -252,10 +253,10 @@ class event_item(Implicit, NyContentData):
     """ """
 
 
+@implementer(INyEvent)
 class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    implements(INyEvent)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -358,7 +359,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             the_rest.append(
                 Ev.enddate(self.utShowFullDateTimeHTML(self.end_date)))
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     # zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -528,7 +529,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         cal.vevent.add('summary').value = self.title_or_id()
         cal.vevent.add('transp').value = 'OPAQUE'
 
-        modif_time = DT2dt(self.bobobase_modification_time())
+        modif_time = DT2dt(DateTime(self._p_mtime))
         cal.vevent.add('dtstamp').value = modif_time
 
         if self.start_date is not None:

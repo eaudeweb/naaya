@@ -6,18 +6,18 @@ Only the types of objects for which their class extends the I{NyCommentable}
 can be commented.
 """
 
-from StringIO import StringIO
+from io import StringIO
 from warnings import warn
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapter
 from zope.event import notify
 from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
                                             IObjectMovedEvent)
 from naaya.core.zope2util import getExtConfiguration as getConfiguration
-from zope.component.interfaces import IObjectEvent
+from zope.interface.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
@@ -25,11 +25,11 @@ from OFS.Folder import Folder
 
 from Products.NaayaBase.events import NyCommentAddEvent
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from constants import *
+from .constants import *
 from Products.NaayaCore.managers.utils import utils
-import interfaces
-import akismet
-from akismet import AkismetError
+from . import interfaces
+from . import akismet
+from .akismet import AkismetError
 from unidecode import unidecode
 from naaya.core.utils import cleanup_message, is_ajax, str2bool
 from naaya.core.zope2util import json_response, ofs_path
@@ -78,9 +78,9 @@ def uncatalog_comments(obj):
                 obj.getSite().log_current_error()
 
 
+@implementer(interfaces.INyComment)
 class NyComment(SimpleItem):
 
-    implements(interfaces.INyComment)
     meta_type = 'Naaya Comment'
     security = ClassSecurityInfo()
 
@@ -196,12 +196,12 @@ class comment_item(utils):
 InitializeClass(comment_item)
 
 
+@implementer(interfaces.INyCommentable)
 class NyCommentable:
     """
     Class that handles the validation operation for a single object.
     """
 
-    implements(interfaces.INyCommentable)
     security = ClassSecurityInfo()
 
     def _get_comments_container(self):
@@ -290,10 +290,10 @@ class NyCommentable:
         if discussion is not None:
             for c in discussion.comments:
                 self._comment_add(c.id,
-                                  c.title.encode('utf-8'),
-                                  c.body.encode('utf-8'),
-                                  c.author.encode('utf-8'),
-                                  c.releasedate.encode('utf-8'))
+                                  c.title,
+                                  c.body,
+                                  c.author,
+                                  c.releasedate)
 
     def _is_spam(self, text):
         """

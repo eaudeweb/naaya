@@ -3,8 +3,8 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
-from NyBlobFile import make_blobfile, trim_filename
+from AccessControl.class_init import InitializeClass
+from .NyBlobFile import make_blobfile, trim_filename
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
@@ -17,8 +17,8 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from Products.NaayaCore.managers.utils import make_id, toAscii
-from datetime import datetime
-from interfaces import INyBFile
+from datetime import datetime, timezone
+from .interfaces import INyBFile
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.content.bfile.utils import file_has_content, tmpl_version
@@ -26,12 +26,11 @@ from naaya.content.bfile.utils import get_view_adapter
 from naaya.core import submitter
 from naaya.core.zope2util import CaptureTraverse
 from naaya.core.zope2util import abort_transaction_keep_session
-from permissions import PERMISSION_ADD_BFILE
+from .permissions import PERMISSION_ADD_BFILE
 from persistent.dict import PersistentDict
-from webdav.Lockable import ResourceLockedError
-from zExceptions import NotFound, BadRequest
+from zExceptions import NotFound, BadRequest, ResourceLockedError
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 import os
 import sys
 
@@ -105,7 +104,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         filename = trim_filename(getattr(_uploaded_file, 'filename', ''))
         base_filename = filename.rsplit('.', 1)[0]  # strip extension
         if base_filename:
-            schema_raw_data['title'] = title = base_filename.decode('utf-8')
+            schema_raw_data['title'] = title = base_filename
     id = toAscii(id)
     id = make_id(self, id=id, title=title, prefix='file')
     if contributor is None:
@@ -113,7 +112,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     try:
         ob = _create_NyBFile_object(self, id, contributor)
-    except BadRequest, err:
+    except BadRequest as err:
         self.setSessionErrorsTrans([err])
         REQUEST.RESPONSE.redirect('%s/bfile_add_html' %
                                   self.absolute_url())
@@ -214,7 +213,7 @@ class LocalizedFileDownload(object):
         ver = None
         for i in range(ver_number):
             try:
-                ver = versions.next()
+                ver = next(versions)
             except StopIteration:
                 raise NotFound("Version not found, number too big")
             if i == ver_number - 1:
@@ -245,10 +244,10 @@ class LocalizedFileDownload(object):
 localizedbfile_download = LocalizedFileDownload()
 
 
+@implementer(INyBFile)
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
               NyValidation, NyContentType):
     """ """
-    implements(INyBFile)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -340,7 +339,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         """ """
         bf = make_blobfile(the_file,
                            removed=False,
-                           timestamp=datetime.now(),
+                           timestamp=datetime.now(timezone.utc),
                            contributor=contributor)
 
         if language is None:
@@ -371,11 +370,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
 
         ver.removed = True
         ver.removed_by = removed_by
-        ver.removed_at = datetime.now()
+        ver.removed_at = datetime.now(timezone.utc)
         ver.size = None
 
         f = ver.open_write()
-        f.write('')
+        f.write(b'')
         f.close()
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
@@ -472,7 +471,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         """
         versions = [tmpl_version(self, ver, str(n + 1), language) for n, ver in
                     enumerate(self.all_versions(language))]
-        versions = filter(lambda x: not x['removed'], versions)
+        versions = list(filter(lambda x: not x['removed'], versions))
         if versions:
             versions[-1]['is_current'] = True
 

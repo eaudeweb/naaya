@@ -1,5 +1,5 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from StringIO import StringIO
+from io import BytesIO
 from Testing import ZopeTestCase
 from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
 import transaction
@@ -34,30 +34,30 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         bf = NyBlobFile()
         self.assertEqual(bf.content_type, 'application/octet-stream')
         self.assertEqual(bf.filename, None)
-        self.assertEqual(bf.open().read(), '')
+        self.assertEqual(bf.open().read(), b'')
 
         # create NyBlobFile with properties and content
         bf2 = NyBlobFile(filename='my_file.txt', content_type='text/plain')
         f = bf2.open_write()
-        f.write('hello world')
+        f.write(b'hello world')
         f.close()
         self.assertEqual(bf2.content_type, 'text/plain')
         self.assertEqual(bf2.filename, 'my_file.txt')
-        self.assertEqual(bf2.open().read(), 'hello world')
+        self.assertEqual(bf2.open().read(), b'hello world')
 
         # change properties and content
         f = bf2.open_write()
-        f.write('other content')
+        f.write(b'other content')
         f.close()
         bf2.filename = 'other_file.txt'
         bf2.content_type = 'text/html'
         self.assertEqual(bf2.content_type, 'text/html')
         self.assertEqual(bf2.filename, 'other_file.txt')
-        self.assertEqual(bf2.open().read(), 'other content')
+        self.assertEqual(bf2.open().read(), b'other content')
 
     def test_factory(self):
-        data = 'some test data'
-        f = StringIO(data)
+        data = b'some test data'
+        f = BytesIO(data)
         f.filename = 'my.txt'
         f.headers = {'content-type': 'text/plain'}
 
@@ -69,14 +69,14 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(bf.somerandomkw, 'thevalue')
 
     def test_guess_mimetype(self):
-        f = StringIO('some test image')
+        f = BytesIO(b'some test image')
         f.filename = 'photo.jpg'
         bf = make_blobfile(f)
         self.assertEqual(bf.content_type, 'image/jpeg')
 
     def test_factory_ie6_filename(self):
-        data = 'some test data'
-        f = StringIO(data)
+        data = b'some test data'
+        f = BytesIO(data)
         f.filename = r'C:\\Documents and Settings\\uzer\\Desktop\\data.txt'
         f.headers = {'content-type': 'text/plain'}
 
@@ -88,8 +88,8 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(bf.somerandomkw, 'thevalue')
 
     def test_send_data(self):
-        data = 'some test data'
-        f = StringIO(data)
+        data = b'some test data'
+        f = BytesIO(data)
         f.filename = 'my.txt'
         f.headers = {'content-type': 'text/plain'}
 
@@ -102,12 +102,12 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         response = MockResponse()
         ret = bf.send_data(response)
         self.assertEqual(response.headers, ok_headers)
-        self.assertEqual(ret, 'some test data')
+        self.assertEqual(ret, b'some test data')
 
         ok_headers['Content-Disposition'] = "attachment"
         ret = bf.send_data(response, set_filename=False)
         self.assertEqual(response.headers, ok_headers)
-        self.assertEqual(ret, 'some test data')
+        self.assertEqual(ret, b'some test data')
 
         self.assertEqual(response.headers.get('X-Sendfile'), None)
         request = MockRequest()
@@ -123,7 +123,7 @@ class NyBlobFileTransactionsTestCase(NaayaTestCase):
     def afterSetUp(self):
         self.portal.info.contact._theblob = NyBlobFile(filename='a.txt')
         f = self.portal.info.contact._theblob.open_write()
-        f.write('some content')
+        f.write(b'some content')
         f.close()
         transaction.commit()
 
@@ -136,7 +136,7 @@ class NyBlobFileTransactionsTestCase(NaayaTestCase):
         bf.filename = 'b.txt'
         bf.content_type = 'text/plain'
         f = bf.open_write()
-        f.write('some other content')
+        f.write(b'some other content')
         f.close()
 
         # commit the transaction and deactivate the parent object
@@ -153,7 +153,7 @@ class NyBlobFileTransactionsTestCase(NaayaTestCase):
         bf.filename = 'b.txt'
         bf.content_type = 'text/plain'
         f = bf.open_write()
-        f.write('some other content')
+        f.write(b'some other content')
         f.close()
 
         # abort the transaction and keep using our `bf` reference

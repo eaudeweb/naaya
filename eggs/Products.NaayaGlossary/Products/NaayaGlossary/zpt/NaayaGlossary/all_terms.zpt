@@ -1,4 +1,4 @@
-<tal:block define="at_name python:request.has_key('at_name')">
+<tal:block define="at_name python:'at_name' in request">
 
 	<tal:block condition="at_name">
 		<p>

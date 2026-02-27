@@ -2,30 +2,28 @@ import logging
 from datetime import datetime
 from time import time
 import random
-try:
-    from hashlib.sha1 import new as sha
-except ImportError:
-    from sha import sha
+from hashlib import sha1 as sha
 
 from AccessControl.Permissions import view
-from zope import interface, annotation, component
+from zope import annotation, component
+from zope.interface import implementer
 from persistent import Persistent
 from persistent.dict import PersistentDict
 
 
 from naaya.core.utils import force_to_unicode
 
-from interfaces import ISubscriptionContainer
-from interfaces import ISubscription
-from interfaces import ISubscriptionTarget
+from .interfaces import ISubscriptionContainer
+from .interfaces import ISubscription
+from .interfaces import ISubscriptionTarget
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
 
+@implementer(ISubscriptionContainer)
+@component.adapter(ISubscriptionTarget)
 class SubscriptionContainer(Persistent):
     """ Holds anonymous and authenticated notifications """
-    interface.implements(ISubscriptionContainer)
-    component.adapts(ISubscriptionTarget)
 
     def __init__(self):
         self.subscriptions = PersistentDict()
@@ -39,16 +37,16 @@ class SubscriptionContainer(Persistent):
         del self.subscriptions[n]
 
     def list_with_keys(self):
-        for n, subscription in self.subscriptions.iteritems():
+        for n, subscription in self.subscriptions.items():
             yield n, subscription
 
     def __iter__(self):
-        for subscription in self.subscriptions.itervalues():
+        for subscription in self.subscriptions.values():
             yield subscription
 
 
+@implementer(ISubscription)
 class AccountSubscription(object):
-    interface.implements(ISubscription)
 
     def __init__(self, user_id, notif_type, lang, content_types=[]):
         self.user_id = user_id
@@ -74,11 +72,15 @@ class AccountSubscription(object):
         user_obj = auth_tool.getUser(self.user_id)
         if user_obj is not None:
             try:
-                full_name = u'%s %s' % (
-                    auth_tool.getUserFirstName(user_obj).decode('utf-8'),
-                    auth_tool.getUserLastName(user_obj).decode('utf-8'))
-            except UnicodeEncodeError:
-                full_name = u'%s %s' % (
+                first = auth_tool.getUserFirstName(user_obj)
+                last = auth_tool.getUserLastName(user_obj)
+                if isinstance(first, bytes):
+                    first = first.decode('utf-8')
+                if isinstance(last, bytes):
+                    last = last.decode('utf-8')
+                full_name = '%s %s' % (first, last)
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                full_name = '%s %s' % (
                     auth_tool.getUserFirstName(user_obj),
                     auth_tool.getUserLastName(user_obj))
             email = auth_tool.getUserEmail(user_obj)
@@ -113,11 +115,11 @@ class AccountSubscription(object):
             return u'%s' % email
 
 
+@implementer(ISubscription)
 class AnonymousSubscription(object):
     """
     Non authentificated user subscriptions
     """
-    interface.implements(ISubscription)
 
     first_name = None
     last_name = None
@@ -137,8 +139,8 @@ class AnonymousSubscription(object):
         self.lang = kw.pop('lang')
         self.content_types = kw.pop('content_types')
         self.location = kw.pop('location')
-        self.key = sha("%s%s" % (time(),
-                       random.randrange(1, 10000))).hexdigest()
+        self.key = sha(("%s%s" % (time(),
+                       random.randrange(1, 10000))).encode()).hexdigest()
         self.__dict__.update(kw)
         self.datetime = datetime.now()
 

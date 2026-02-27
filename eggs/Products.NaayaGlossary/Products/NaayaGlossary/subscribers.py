@@ -3,7 +3,7 @@ from datetime import timedelta
 from zope import component
 from naaya.core.utils import cooldown
 from naaya.core.zope2util import ofs_path
-from constants import NAAYAGLOSSARY_CENTRE_METATYPE
+from .constants import NAAYAGLOSSARY_CENTRE_METATYPE
 
 log = logging.getLogger('Products.NaayaGlossary.subscribers')
 

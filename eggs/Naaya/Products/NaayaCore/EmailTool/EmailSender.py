@@ -1,12 +1,12 @@
 import os
 import os.path
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import email
 import smtplib
 import time
 from threading import Thread, Lock
-from sha import sha
+from hashlib import sha1 as sha
 from optparse import OptionParser
 
 class EmailSenderThread(Thread):
@@ -122,7 +122,10 @@ class EmailSender(object):
 def save_email(tmp_folder, sender_folder, email_content):
     """ saves the content to a file in the send folder """
     # generate file name as a checksum
-    fname = sha(email_content).hexdigest()
+    if isinstance(email_content, str):
+        fname = sha(email_content.encode('utf-8')).hexdigest()
+    else:
+        fname = sha(email_content).hexdigest()
 
     # save it in the tmp and then move it to send folder
     tmp_path = os.path.join(tmp_folder, fname)
@@ -139,12 +142,13 @@ def build_email(from_addr, to_addrs, subject,
 
     if isinstance(to_addrs, list):
         to_addrs = ', '.join(to_addrs)
-    if isinstance(subject, unicode):
-        subject = subject.encode('utf-8')
-    if isinstance(html_content, unicode):
-        html_content = html_content.encode('utf-8')
-    if isinstance(text_content, unicode):
-        text_content = text_content.encode('utf-8')
+    # In Python 3, email.mime expects str, not bytes
+    if isinstance(subject, bytes):
+        subject = subject.decode('utf-8')
+    if isinstance(html_content, bytes):
+        html_content = html_content.decode('utf-8')
+    if isinstance(text_content, bytes):
+        text_content = text_content.decode('utf-8')
 
     msg = MIMEMultipart('alternative')
     msg['From'] = from_addr
@@ -154,11 +158,11 @@ def build_email(from_addr, to_addrs, subject,
             time.gmtime())
 
     # the plain text section
-    part1 = MIMEText(text_content, 'plain')
+    part1 = MIMEText(text_content, 'plain', 'utf-8')
     msg.attach(part1)
 
     if html_content is not None:
-        part2 = MIMEText(html_content, 'html')
+        part2 = MIMEText(html_content, 'html', 'utf-8')
         msg.attach(part2)
 
     #return the message content

@@ -1,13 +1,13 @@
 
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.interfaces import IRemoteChannelFacade
 from Products.NaayaCore.constants import *
-from RemoteChannel import RemoteChannel
+from .RemoteChannel import RemoteChannel
 
 manage_addRemoteChannelFacadeForm = PageTemplateFile('zpt/remotechannelfacade_manage_add', globals())
 def manage_addRemoteChannelFacade(self, id='', title='', url='', providername='',
@@ -24,10 +24,10 @@ def manage_addRemoteChannelFacade(self, id='', title='', url='', providername=''
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+@implementer(IRemoteChannelFacade)
 class RemoteChannelFacade(RemoteChannel):
     """ """
 
-    implements(IRemoteChannelFacade)
 
     meta_type = METATYPE_REMOTECHANNELFACADE
     icon = 'misc_/NaayaCore/RemoteChannelFacade.gif'
@@ -55,7 +55,7 @@ class RemoteChannelFacade(RemoteChannel):
                 error = ''
                 try:
                     self.generateContent()
-                except Exception, l_error:
+                except Exception as l_error:
                     error = l_error
             return str(error)
 

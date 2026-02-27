@@ -1,9 +1,10 @@
 from zope.component import getAdapter, adapts, getMultiAdapter
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.traversing.interfaces import ITraversable
 from Acquisition import ExplicitAcquisitionWrapper
 from contentratings.interfaces import IUserRating, IEditorialRating
 
+@implementer(ITraversable)
 class user_rating(object):
     """Traversal adapter to lookup the view for a named IUserRating category.
     To demonstrate we need to make some categories and a view for those.
@@ -58,7 +59,6 @@ class user_rating(object):
         ComponentLookupError: (<zope.app.container.sample.SampleContainer object at ...>, <InterfaceClass contentratings.interfaces.IUserRating>, 'bogus')
 
     """
-    implements(ITraversable)
     adapts(Interface)
     IFACE = IUserRating
 

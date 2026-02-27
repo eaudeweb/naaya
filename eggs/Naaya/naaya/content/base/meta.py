@@ -1,16 +1,17 @@
 import os
 
-import zLOG
+import logging
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Application import Application
 from OFS.misc_ import Misc_
 from zope.interface import Interface
-from zope.interface import implements
+from zope.interface import implementer
 from zope.configuration.fields import GlobalObject
-from zope.app.i18n import ZopeMessageFactory as _
+from zope.i18nmessageid import MessageFactory
+_ = MessageFactory('zope')
 
-from constants import *
+from .constants import *
 from Products.Naaya.NyFolderBase import NyFolderBase
 from Products.NaayaCore.SchemaTool.SchemaTool import lookup_schema_product
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -30,9 +31,9 @@ class INaayaContentDirective(Interface):
         required=True,
     )
 
+@implementer(INaayaContent)
 class NaayaContent(object):
     """ NaayaContent abstract type """
-    implements(INaayaContent)
     _contents = {}
     _misc = {}
     _constants = {}
@@ -75,11 +76,11 @@ def register_naaya_content(_context, factory, **kwargs):
     _misc.update(config.get('_misc', {}))
 
     # register _misc into Zope
-    if not Application.misc_.__dict__.has_key('NaayaContent'):
-        Application.misc_.__dict__['NaayaContent'] = Misc_('NaayaContent',
-                _misc)
+    if not hasattr(Application.misc_, 'NaayaContent'):
+        setattr(Application.misc_, 'NaayaContent', Misc_('NaayaContent',
+                _misc))
     else:
-        Application.misc_.__dict__['NaayaContent'].__dict__['_d'].update(_misc)
+        getattr(Application.misc_, 'NaayaContent').__dict__['_d'].update(_misc)
 
     # used by site_header
     _constants['METATYPE_FOLDER'] = 'Naaya Folder'
@@ -101,8 +102,7 @@ def register_naaya_content(_context, factory, **kwargs):
 
     InitializeClass(NyFolderBase)
     # log success
-    zLOG.LOG('naaya.content', zLOG.DEBUG,
-            'Pluggable content type "%s" registered' % config['meta_type'])
+    logging.getLogger('naaya.content').warning('Pluggable content type "%s" registered' % config['meta_type'])
 
 def get_schema_name(portal, meta_type):
     if meta_type == 'Naaya Folder':

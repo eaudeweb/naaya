@@ -1,6 +1,6 @@
 import time
 import unittest
-from mock import patch, MagicMock
+from unittest.mock import patch, MagicMock
 
 
 from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
@@ -10,6 +10,9 @@ class EmailValidatorTest(unittest.TestCase):
         self.maxW = maxW
         EmailValidator.THREAD_IDLE_SEC = 0.1
         self.email_validator = EmailValidator("checked_emails", maxWorkers=self.maxW)
+        if not hasattr(self, '_all_validators'):
+            self._all_validators = []
+        self._all_validators.append(self.email_validator)
         now = time.time()
         obj = MagicMock()
         # init the cache with one value already resolved to invalid
@@ -22,6 +25,15 @@ class EmailValidatorTest(unittest.TestCase):
                                 (False, now - (EmailValidator.VERIFY_EMAIL_GOODADDRESS_TTL + 1)),
                             }
         self.email_validator.bind(obj)
+
+    def tearDown(self):
+        # Wait for all worker threads to finish so the test runner
+        # does not report "left new threads behind".
+        for ev in self._all_validators:
+            for th_info in list(ev._workers.values()):
+                th = th_info.get('th')
+                if th is not None:
+                    th.join(timeout=2)
 
     def test_validate_from_cache(self):
         r = self.email_validator.validate_from_cache('alreadyBad@edw.ro')
@@ -70,4 +82,3 @@ class EmailValidatorTest(unittest.TestCase):
         self.email_validator.enqueue(email)
         time.sleep(0.1)
         self.assertTrue(self.email_validator.validate_from_cache(email))
-

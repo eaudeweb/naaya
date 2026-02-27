@@ -1,10 +1,10 @@
 from os.path import join
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from managers.profilemeta_parser import profilemeta_parser
-from ProfileSheet import manage_addProfileSheet
+from .ProfileSheet import manage_addProfileSheet
 
 class ProfileMeta(object):
     """ """
@@ -40,7 +40,7 @@ class ProfileMeta(object):
                 profiles_tool = self.getProfilesTool()
                 entry_title = 'Profile at %s' % instance_identifier
                 #add entry in profiles tool
-                if not profiles_tool.profiles_meta.has_key(self.meta_type):
+                if not self.meta_type in profiles_tool.profiles_meta:
                     profiles_tool.profiles_meta[self.meta_type] = {
                         'title': entry_title,
                         'properties': [],
@@ -61,7 +61,7 @@ class ProfileMeta(object):
                         for p in profilemeta_handler.root.properties:
                             sheet_ob.manage_addProperty(p.id, p.value, p.type)
         else:
-            raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
+            raise Exception(EXCEPTION_PARSINGFILE % (profilemeta_path, error))
 
     security.declarePrivate('loadProfileMeta')
     def loadProfileMeta(self):

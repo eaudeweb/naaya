@@ -1,7 +1,7 @@
 <tal:block define=" record_code python:request.get('code', '');
 					subjects here/get_subjects_list">
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
 	Saved changes. (<span tal:replace="here/ZopeTime" />)
 </div>
 

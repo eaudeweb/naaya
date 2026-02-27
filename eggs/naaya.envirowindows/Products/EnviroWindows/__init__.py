@@ -19,14 +19,14 @@
 import os.path
 
 #Zope imports
-import Globals
+# import Globals removed
 from App.ImageFile import ImageFile
 
 #Product imports
-from constants import *
-import EnviroWindowsSite
+from .constants import *
+from . import EnviroWindowsSite
 from Products.NaayaCore.managers.utils import file_utils
-from managers.config_parser import config_parser
+from .managers.config_parser import config_parser
 
 
 def initialize(context):
@@ -139,7 +139,7 @@ config_handler, error = config_parser().parse(file_utils().futRead(os.path.join(
 if config_handler is not None:
     if config_handler.root.urls is not None:
         for item in config_handler.root.urls.entries:
-            if not content_urls.has_key(item.meta_type):
+            if not item.meta_type in content_urls:
                 content_urls[item.meta_type] = []
             content_urls[item.meta_type].append(item.property)
 

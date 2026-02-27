@@ -6,7 +6,7 @@ The framework has a built in mechanism for validating content. Only the types
 of objects for which their class extends the I{NyValidation} can be validated.
 """
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 class NyValidation:

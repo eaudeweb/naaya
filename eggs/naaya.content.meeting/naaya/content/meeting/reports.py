@@ -44,7 +44,7 @@ class MeetingReports(SimpleItem):
                     participants[uid] = []
                 participants[uid].append(meeting_ob)
 
-        for uid, meetings_part in participants.iteritems():
+        for uid, meetings_part in participants.items():
             meeting_nodes = []
             for meeting_ob in meetings_part:
                 title = meeting_ob.title_or_id()
@@ -87,9 +87,9 @@ class MeetingReports(SimpleItem):
                     organizations[organization][i] = []
                 organizations[organization][i].append(uid)
 
-        for organization, values in organizations.iteritems():
+        for organization, values in organizations.items():
             meeting_nodes = []
-            for i, uids in values.iteritems():
+            for i, uids in values.items():
                 meeting = meeting_obs[i]
 
                 user_nodes = []

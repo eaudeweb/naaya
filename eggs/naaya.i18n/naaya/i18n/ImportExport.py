@@ -5,12 +5,7 @@ Module containing a wrapper of import/export methods for Message Catalog.
 # Python imports
 import time
 from datetime import datetime
-try:
-    # python 2.6
-    from hashlib import md5
-except ImportError:
-    # python 2.4
-    from md5 import new as md5
+from hashlib import md5
 from lxml import etree
 import codecs
 import re
@@ -102,17 +97,16 @@ class TranslationsImportExport(object):
         else:
             for k, v in self._catalog.messages():
                 # don't export bad messages
-                if not isinstance(k, unicode):
+                if isinstance(k, bytes):
                     try:
-                        k.decode('ascii')
+                        k = k.decode('ascii')
                     except UnicodeDecodeError:
                         continue
                 d[k] = v.get(lang, '')
 
         # Generate the file
         # Generate sorted msgids to simplify diffs
-        dkeys = d.keys()
-        dkeys.sort(key=lambda key: (isinstance(key,unicode) and key.encode('utf-8') or key))
+        dkeys = sorted(d.keys(), key=lambda key: str(key) if not isinstance(key, str) else key)
         for k in dkeys:
             r.append('msgid "%s"' % self.backslash_escape(k))
             v = d[k]
@@ -121,8 +115,8 @@ class TranslationsImportExport(object):
 
         r2 = []
         for x in r:
-            if isinstance(x, unicode):
-                r2.append(x.encode(charset))
+            if isinstance(x, bytes):
+                r2.append(x.decode(charset))
             else:
                 r2.append(x)
 
@@ -161,15 +155,14 @@ class TranslationsImportExport(object):
                     d[msgkey] = msgkey
 
         # Generate sorted msgids to simplify diffs
-        dkeys = d.keys()
-        dkeys.sort()
+        dkeys = sorted(d.keys())
         for msgkey in dkeys:
             approved = "yes"
             if msgkey in unapproved:
                 approved = "no"
-            #if isinstance(d[msgkey], unicode):
+            #if isinstance(d[msgkey], str):
             #    d[msgkey] = d[msgkey].encode('utf-8')
-            #if isinstance(msgkey, unicode):
+            #if isinstance(msgkey, str):
             #    msgkey = msgkey.encode('utf-8')
 
             tr_unit = etree.SubElement(body, "trans-unit",
@@ -184,7 +177,7 @@ class TranslationsImportExport(object):
             target.text = d[msgkey]
 
         return etree.tostring(root, xml_declaration=True, encoding='utf-8',
-                              pretty_print=True)
+                              pretty_print=True).decode('utf-8')
 
     def export_tmx(self):
         """
@@ -236,7 +229,7 @@ class TranslationsImportExport(object):
                     seg = etree.SubElement(tuv, "seg")
                     seg.text = msgkey
         return etree.tostring(root, xml_declaration=True, encoding=charset,
-                              pretty_print=True)
+                              pretty_print=True).decode(charset)
 
 
     ### Import methods ###
@@ -291,10 +284,13 @@ class TranslationsImportExport(object):
                 raise Error('Undefined state in parsing .po file')
 
         for (msgid, msgstr) in data.items():
-            self._catalog.edit_message(
-                               self.backslash_unescape(msgid).decode(encoding),
-                               lang,
-                               self.backslash_unescape(msgstr).decode(encoding))
+            unescaped_id = self.backslash_unescape(msgid)
+            unescaped_str = self.backslash_unescape(msgstr)
+            if isinstance(unescaped_id, bytes):
+                unescaped_id = unescaped_id.decode(encoding)
+            if isinstance(unescaped_str, bytes):
+                unescaped_str = unescaped_str.decode(encoding)
+            self._catalog.edit_message(unescaped_id, lang, unescaped_str)
 
     def spreadsheet_export(self, lang, dialect, encoding='utf-8'):
         """ Exports the content of the message catalog to a spreadsheet format """
@@ -307,16 +303,15 @@ class TranslationsImportExport(object):
         translations = {}
         orglang = self._catalog._default_language
         for msgkey, transunit in self._catalog.messages():
-            if isinstance(msgkey, unicode):
-                msgkey = msgkey.encode(encoding)
+            if isinstance(msgkey, bytes):
+                msgkey = msgkey.decode('utf-8')
             try:
                 translations[msgkey] = transunit[lang]
             except KeyError:
                 translations[msgkey] = ""
 
         #sort translations
-        tkeys = translations.keys()
-        tkeys.sort()
+        tkeys = sorted(translations.keys())
 
         #build headers
         output = [('source', 'target')]
@@ -325,14 +320,10 @@ class TranslationsImportExport(object):
         #build content
         for msgkey in tkeys:
             translation = translations[msgkey]
-            if isinstance(msgkey, unicode):
-                msgkey = msgkey.encode(encoding)
-            else:
-                msgkey = unicode(msgkey, 'utf-8').encode(encoding)
-            if isinstance(translation, unicode):
-                translation = translation.encode(encoding)
-            else:
-                translation = unicode(translation, 'utf-8').encode(encoding)
+            if isinstance(msgkey, bytes):
+                msgkey = msgkey.decode('utf-8')
+            if isinstance(translation, bytes):
+                translation = translation.decode('utf-8')
 
             output_app((msgkey, translation))
 

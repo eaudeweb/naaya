@@ -2,8 +2,9 @@ import os
 import unittest
 import tempfile
 import shutil
+import warnings
 
-from mock import patch
+from unittest.mock import patch
 import transaction
 from Testing.ZopeTestCase import Functional
 from zope.interface import alsoProvides
@@ -32,17 +33,20 @@ def divert_mail():
     return mail_log, delivery_patch.stop
 
 def wrap_with_request(app):
-    from StringIO import StringIO
+    from io import BytesIO
     from ZPublisher.HTTPRequest import HTTPRequest
     from ZPublisher.HTTPResponse import HTTPResponse
     from Acquisition import Implicit
 
-    class FakeRootObject(Implicit): pass
+    class FakeRootObject(Implicit):
+        def bobobase_modification_time(self):
+            from DateTime import DateTime
+            return DateTime()
 
     fake_root = FakeRootObject()
     fake_root.app = app
 
-    stdin = StringIO()
+    stdin = BytesIO()
     environ = {'REQUEST_METHOD': 'GET',
                'SERVER_NAME': 'nohost',
                'SERVER_PORT': '80'}
@@ -76,21 +80,190 @@ def capture_events(*required):
                 return func(*args, **kwargs)
             finally:
                 gsm.unregisterHandler(events.append, required)
-        wrapper.func_name = func.func_name
+        wrapper.__name__ = func.__name__
         return wrapper
     return decorator
 
+class NaayaTestLayer:
+    """zope.testrunner layer that boots Zope and creates a test portal.
+
+    Replaces the nose NaayaPortalTestPlugin for use with zope.testrunner.
+    """
+    _tzope = None          # ZopeTestEnvironment (set by naaya-nose main)
+    _cleanup_portal = None
+    _cleanup_test = None
+    _portal_id = None
+
+    @classmethod
+    def setUp(cls):
+        """Layer-level setup: create portal (once per layer)."""
+        # Suppress ResourceWarnings from third-party code (ZODB blob
+        # storage, zipfile) that we cannot fix.
+        warnings.filterwarnings('ignore', category=ResourceWarning,
+                                module=r'ZODB\.blob')
+        warnings.filterwarnings('ignore', category=ResourceWarning,
+                                module=r'zipfile')
+
+        tzope = cls._tzope
+        if tzope is None:
+            raise RuntimeError(
+                "NaayaTestLayer._tzope not set. "
+                "Call NaayaTestLayer.initialize(tzope) before running tests.")
+
+        try:
+            from Products.ExtFile import ExtFile
+            ExtFile.REPOSITORY_PATH = ['var', 'testing']
+        except ImportError:
+            pass
+
+        cleanup, portal_db = tzope.db_layer()
+        app = portal_db.open().root()['Application']
+        app.acl_users._doAddUser('admin', '', ['Manager', 'Administrator'], [])
+
+        # Create temp_folder with session_data for SESSION support.
+        # Normally provided by the <zodb_db temporary> mount point, but
+        # the test DemoStorage doesn't have it.
+        if 'temp_folder' not in app.objectIds():
+            from OFS.Folder import Folder
+            from Products.Transience.Transience import TransientObjectContainer
+            app._setObject('temp_folder', Folder('temp_folder'))
+            app.temp_folder._setObject(
+                'session_data',
+                TransientObjectContainer('session_data',
+                                         title='Session Data Container',
+                                         timeout_mins=20))
+
+        # Set up session infrastructure: browser_id_manager +
+        # session_data_manager so REQUEST.SESSION works in WSGI requests.
+        if 'browser_id_manager' not in app.objectIds():
+            from Products.Sessions.BrowserIdManager import BrowserIdManager
+            from Products.Sessions.SessionDataManager import SessionDataManager
+            app._setObject('browser_id_manager', BrowserIdManager('browser_id_manager'))
+            app._setObject('session_data_manager',
+                           SessionDataManager('session_data_manager',
+                                              title='Session Data Manager',
+                                              path='/temp_folder/session_data',
+                                              requestName='SESSION'))
+
+        transaction.commit()
+
+        fake_root = wrap_with_request(app)
+        wrapped_app = fake_root.app
+        admin_user = wrapped_app.acl_users.getUserById('admin')
+        fake_root.REQUEST.AUTHENTICATED_USER = admin_user
+
+        from Products.Naaya.NySite import manage_addNySite
+        cls._portal_id = 'portal'
+        manage_addNySite(wrapped_app, cls._portal_id, 'Naaya Test Site')
+
+        portal = getattr(wrapped_app, cls._portal_id)
+        alsoProvides(portal, ITestSite)
+        portal.mail_address_from = 'from.zope@example.com'
+        portal.administrator_email = 'site.admin@example.com'
+
+        acl_users = portal.acl_users
+        acl_users._doAddUser('test_user_1_', 'secret', ['Manager'],
+                             '', '', '', '')
+        acl_users._doAddUser('site_admin', 'site_admin', ['Administrator'], '',
+                             'Site', 'Admin', 'site_admin@example.com')
+        acl_users._doAddUser('contributor', 'contributor', ['Contributor'], '',
+                             'Contributor', 'Test', 'contrib@example.com')
+        acl_users._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
+                             'Reviewer', 'Test', 'reviewer@example.com')
+        acl_users._doAddUser('user1', 'user1', ['Contributor'], '',
+                             'User', 'One', 'user1@example.com')
+        acl_users._doAddUser('user2', 'user2', ['Contributor'], '',
+                             'User', 'Two', 'user2@example.com')
+        acl_users._doAddUser('user3', 'user3', ['Contributor'], '',
+                             'User', 'Three', 'user3@example.com')
+
+        transaction.commit()
+        cls._cleanup_portal = cleanup
+
+        cls._old_tmp = tempfile.tempdir
+        tempfile.tempdir = tempfile.mkdtemp()
+
+    @classmethod
+    def tearDown(cls):
+        """Layer-level teardown."""
+        if cls._cleanup_portal is not None:
+            cls._cleanup_portal()
+            cls._cleanup_portal = None
+
+        try:
+            from App.config import getConfiguration
+            instance_home = getConfiguration().instancehome
+        except Exception:
+            instance_home = os.environ.get('INSTANCE_HOME', '')
+        repository = os.path.join(instance_home, 'var', 'testing')
+        if os.path.isdir(repository):
+            shutil.rmtree(repository)
+
+        shutil.rmtree(tempfile.tempdir, True)
+        tempfile.tempdir = cls._old_tmp
+
+    @classmethod
+    def testSetUp(cls):
+        """Per-test setup: DemoStorage wrapper.
+
+        Stores per-test state on the layer class.  NaayaTestCase._callSetUp()
+        copies them to the test instance before setUp() runs.
+        """
+        tzope = cls._tzope
+        cls._mail_log, cls._restore_mail = divert_mail()
+        cleanup, test_db = tzope.db_layer()
+
+        cls._db_connection = test_db.open()
+        app = cls._db_connection.root()['Application']
+        fake_root = wrap_with_request(app)
+        wrapped_app = fake_root.app
+
+        cls._current_app = wrapped_app
+        cls._current_portal = wrapped_app[cls._portal_id]
+        cls._current_fake_request = fake_root.REQUEST
+
+        cls._cleanup_test = cleanup
+
+    @classmethod
+    def testTearDown(cls):
+        """Per-test teardown."""
+        if cls._restore_mail is not None:
+            cls._restore_mail()
+            cls._restore_mail = None
+        if cls._cleanup_test is not None:
+            transaction.abort()
+            cls._cleanup_test()
+            cls._cleanup_test = None
+        # Reset the security manager so that functional tests that log in
+        # via twill (ZPublisher sets it) don't leak into the next test.
+        from AccessControl.SecurityManagement import noSecurityManager
+        noSecurityManager()
+
+    @classmethod
+    def initialize(cls, tzope):
+        """Store the Zope test environment for later use by setUp."""
+        cls._tzope = tzope
+
+
 class NaayaTestCase(unittest.TestCase):
 
-    _naaya_plugin = 'NaayaPortalTestPlugin'
-    _naaya_test_enabled = False
+    layer = NaayaTestLayer
 
-    def run(self, result=None):
-        if self._naaya_test_enabled:
-            super(NaayaTestCase, self).run(result)
-        else:
-            from nose import SkipTest
-            raise SkipTest("NaayaPortalTestPlugin needed for %s" % type(self))
+    def _callSetUp(self):
+        """Called by unittest.TestCase.run() after testSetUp() but before setUp().
+
+        This injects per-test attributes (portal, app, etc.) from the layer
+        so they are available even in tests that bypass NaayaTestCase.setUp().
+        """
+        layer = type(self).layer
+        self.app = layer._current_app
+        self.portal = layer._current_portal
+        self.fake_request = layer._current_fake_request
+        self.mail_log = layer._mail_log
+        self.wsgi_request = layer._tzope.wsgi_app
+        populate_threading_local(self.portal, self.portal.REQUEST)
+        self.portal.REQUEST['PARENTS'] = [self.portal, self.app]
+        self.setUp()
 
     def setUp(self):
         #Cleanup all action logs before starting
@@ -134,15 +307,12 @@ class NaayaTestCase(unittest.TestCase):
     def printLogErrors(self, min_severity=0):
         """Print out the log output on the console.
         """
-        import zLOG
-        if hasattr(zLOG, 'old_log_write'):
-            return
-        def log_write(subsystem, severity, summary, detail, error,
-                      PROBLEM=zLOG.PROBLEM, min_severity=min_severity):
-            if severity >= min_severity:
-                print "%s(%s): %s %s" % (subsystem, severity, summary, detail)
-        zLOG.old_log_write = zLOG.log_write
-        zLOG.log_write = log_write
+        import logging
+        logger = logging.getLogger('event')
+        logger.setLevel(min_severity)
+        handler = logging.StreamHandler()
+        handler.setLevel(min_severity)
+        logger.addHandler(handler)
 
     def install_content_type(self, meta_type):
         self.portal.manage_install_pluggableitem(meta_type)
@@ -161,13 +331,16 @@ class NaayaTestCase(unittest.TestCase):
 
         from wsgiref.simple_server import make_server
         server = make_server(host, port, no_hop_by_hop(self.wsgi_request))
-        print 'serving pages on http://%s:%d/; press ^C to stop' % (host, port)
+        print('serving pages on http://%s:%d/; press ^C to stop' % (host, port))
         server.serve_forever()
 
 class FunctionalTestCase(NaayaTestCase, Functional): # not really, but good enough for us
     pass
 
-from nose.plugins import Plugin
+try:
+    from nose.plugins import Plugin
+except ImportError:
+    Plugin = object
 
 class NaayaPortalTestPlugin(Plugin):
     """
@@ -176,7 +349,8 @@ class NaayaPortalTestPlugin(Plugin):
     name = 'naaya-portal'
 
     def __init__(self, tzope):
-        Plugin.__init__(self)
+        if Plugin is not object:
+            Plugin.__init__(self)
         self.tzope = tzope
         self.cleanup_portal_layer = None
         self.cleanup_test_layer = None
@@ -213,8 +387,11 @@ class NaayaPortalTestPlugin(Plugin):
                              'User', 'Three', 'user3@example.com')
 
     def begin(self):
-        from Products.ExtFile import ExtFile
-        ExtFile.REPOSITORY_PATH = ['var', 'testing']
+        try:
+            from Products.ExtFile import ExtFile
+            ExtFile.REPOSITORY_PATH = ['var', 'testing']
+        except ImportError:
+            pass
 
         cleanup, portal_db_layer = self.tzope.db_layer()
 
@@ -242,7 +419,12 @@ class NaayaPortalTestPlugin(Plugin):
         self.cleanup_portal_layer()
         self.cleanup_portal_layer = None
 
-        repository = os.path.join(INSTANCE_HOME, 'var', 'testing')
+        try:
+            from App.config import getConfiguration
+            instance_home = getConfiguration().instancehome
+        except Exception:
+            instance_home = os.environ.get('INSTANCE_HOME', '')
+        repository = os.path.join(instance_home, 'var', 'testing')
         if os.path.isdir(repository):
             shutil.rmtree(repository)
 

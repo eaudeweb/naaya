@@ -1,25 +1,25 @@
 from DateTime import DateTime
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 from zope.component import adapter
 from zope.container.interfaces import IObjectMovedEvent
 import transaction
 
-from interfaces import INyContentObject
-from interfaces import INyContentObjectAddEvent
-from interfaces import INyContentObjectEditEvent
-from interfaces import INyContentObjectApproveEvent
-from interfaces import INyContentObjectUnapproveEvent
-from interfaces import INyContentObjectMovedEvent
-from interfaces import INyContentObjectViewEvent
-from interfaces import INyContentObjectDownloadEvent
+from .interfaces import INyContentObject
+from .interfaces import INyContentObjectAddEvent
+from .interfaces import INyContentObjectEditEvent
+from .interfaces import INyContentObjectApproveEvent
+from .interfaces import INyContentObjectUnapproveEvent
+from .interfaces import INyContentObjectMovedEvent
+from .interfaces import INyContentObjectViewEvent
+from .interfaces import INyContentObjectDownloadEvent
 
 from naaya.core.zope2util import path_in_site
 
 
+@implementer(INyContentObjectAddEvent)
 class NyContentObjectAddEvent(object):
     """ Naaya content object has been created """
-    implements(INyContentObjectAddEvent)
 
     def __init__(self, context, contributor, schema_data):
         self.context = context
@@ -27,18 +27,18 @@ class NyContentObjectAddEvent(object):
         self.schema = schema_data
 
 
+@implementer(INyContentObjectEditEvent)
 class NyContentObjectEditEvent(object):
     """ Naaya content object has been edited """
-    implements(INyContentObjectEditEvent)
 
     def __init__(self, context, contributor):
         self.context = context
         self.contributor = contributor
 
 
+@implementer(INyContentObjectApproveEvent)
 class NyContentObjectApproveEvent(object):
     """ Naaya content object has been approved """
-    implements(INyContentObjectApproveEvent)
 
     def __init__(self, context, contributor, **kw):
         self.__dict__.update(kw)
@@ -46,9 +46,9 @@ class NyContentObjectApproveEvent(object):
         self.contributor = contributor
 
 
+@implementer(INyContentObjectUnapproveEvent)
 class NyContentObjectUnapproveEvent(object):
     """ Naaya content object has been unapproved """
-    implements(INyContentObjectUnapproveEvent)
 
     def __init__(self, context, contributor, **kw):
         self.__dict__.update(kw)
@@ -56,9 +56,9 @@ class NyContentObjectUnapproveEvent(object):
         self.contributor = contributor
 
 
+@implementer(INyContentObjectMovedEvent)
 class NyContentObjectMovedEvent(object):
     """ Naaya content object has been moved/renamed """
-    implements(INyContentObjectMovedEvent)
 
     def __init__(self, context, zope_event, old_site_path, new_site_path):
         self.context = context
@@ -67,18 +67,18 @@ class NyContentObjectMovedEvent(object):
         self.new_site_path = new_site_path
 
 
+@implementer(INyContentObjectViewEvent)
 class NyContentObjectViewEvent(object):
     """ Naaya content object has been opened """
-    implements(INyContentObjectViewEvent)
 
     def __init__(self, context, user_id):
         self.context = context
         self.user_id = user_id
 
 
+@implementer(INyContentObjectDownloadEvent)
 class NyContentObjectDownloadEvent(object):
     """ Naaya content object has been downloaded """
-    implements(INyContentObjectDownloadEvent)
 
     def __init__(self, context, user_id):
         self.context = context

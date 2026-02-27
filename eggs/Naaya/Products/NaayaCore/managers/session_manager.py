@@ -18,16 +18,20 @@ class session_manager(object):
         if 'SESSION' in self.REQUEST.other:
             # this occurs when testing
             return True
-        elif self.session_data_manager.hasSessionData():
-            return True
-        else:
-            return False
+        try:
+            if self.session_data_manager.hasSessionData():
+                return True
+        except (TypeError, AttributeError):
+            # Session data container may be unavailable (e.g. temp_folder
+            # missing session_data after restart)
+            pass
+        return False
 
     def __isSession(self, key):
         """Test if exists a variable with the given key in SESSION"""
         if not self._sessionExists():
             return 0
-        return self.REQUEST.SESSION.has_key(key)
+        return key in self.REQUEST.SESSION
 
     def __getSession(self, key, default):
         """Get a key value from SESSION; if that key doesn't exist then return default value"""
@@ -59,7 +63,7 @@ class session_manager(object):
         return self.__delSession(key)
 
     def delSessionKeys(self, keys):
-        map(self.__delSession, keys)
+        list(map(self.__delSession, keys))
 
     def isSession(self, key):
         return self.__isSession(key)
@@ -97,7 +101,7 @@ class session_manager(object):
 
         translate = self.getPortalI18n().get_translation
 
-        if isinstance(messages, (str, unicode)):
+        if isinstance(messages, (str,)):
             return [translate(messages, **kwargs), ]
         elif isinstance(messages, (list, tuple)): # This is the 3rd example
             translated_messages = []
@@ -109,7 +113,7 @@ class session_manager(object):
                     except IndexError:
                         interpolation_params = {}
                     trans_message = translate(message_str, **interpolation_params)
-                elif isinstance(message, (str, unicode)):
+                elif isinstance(message, (str,)):
                     trans_message = translate(message)
                 else:
                     trans_message = translate(str(message))

@@ -36,15 +36,15 @@ def get_notifications_mapping(dbprintedfd):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print 'Usage: python %s <path-to-file.csv>' % sys.argv[0]
+        print('Usage: python %s <path-to-file.csv>' % sys.argv[0])
         sys.exit(1)
 
     try:
         dbfile = open(sys.argv[1], 'rb')
         notifications, not_matched = get_notifications_mapping(dbfile)
         dbfile.close()
-    except ValueError, e:
-        print 'Usage: python %s <path-to-file.csv>' % sys.argv[0]
+    except ValueError as e:
+        print('Usage: python %s <path-to-file.csv>' % sys.argv[0])
         sys.exit(1)
 
     pprint(not_matched)

@@ -1,5 +1,5 @@
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -22,14 +22,14 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/info/contact_add_html')
-        self.failUnless('<h1>Submit Contact</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit Contact</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -40,15 +40,15 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.info.test_contact.approveThis()
 
         self.browser.go('http://localhost/portal/info/test_contact')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_contact.*</h1>', html, re.DOTALL))
-        self.failUnless('test_contact_description' in html)
-        self.failUnless('test_contact_coverage' in html)
+        self.assertTrue(re.search(r'<h1>.*test_contact.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_contact_description' in html)
+        self.assertTrue('test_contact_coverage' in html)
 
         self.browser_do_logout()
 
@@ -62,8 +62,8 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -71,13 +71,13 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mycontact/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My contact')
+        self.assertEqual(form['title:utf8:ustring'], 'My contact')
 
         form['title:utf8:ustring'] = 'new_contact_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
+        self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
 
         self.browser.go('http://localhost/portal/myfolder/mycontact/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -85,8 +85,8 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
-        self.failUnlessEqual(self.portal.myfolder.mycontact.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
+        self.assertEqual(self.portal.myfolder.mycontact.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -100,8 +100,8 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -110,12 +110,12 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mycontact/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My contact')
+        self.assertEqual(form['title:utf8:ustring'], 'My contact')
         form['title:utf8:ustring'] = 'new_contact_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
+        self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
 
         self.browser_do_logout()
 
@@ -124,7 +124,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -152,9 +152,9 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     def test_start_version(self):
         from naaya.content.contact.contact_item import contact_item
         self.browser_do_login('admin', '')
-        self.failUnlessEqual(self.portal.info.ver_contact.version, None)
+        self.assertEqual(self.portal.info.ver_contact.version, None)
         self.browser.go('http://localhost/portal/info/ver_contact/startVersion')
-        self.failUnless(isinstance(self.portal.info.ver_contact.version, contact_item))
+        self.assertTrue(isinstance(self.portal.info.ver_contact.version, contact_item))
         self.browser_do_logout()
 
     def test_edit_version(self):
@@ -167,9 +167,9 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         ver_contact = self.portal.info.ver_contact
-        self.failUnlessEqual(ver_contact.title, 'ver_contact')
+        self.assertEqual(ver_contact.title, 'ver_contact')
         # we can't do ver_contact.version.title because version objects don't have the _languages property
-        self.failUnlessEqual(ver_contact.version.getLocalProperty('title', 'en'), 'ver_contact_newtitle')
+        self.assertEqual(ver_contact.version.getLocalProperty('title', 'en'), 'ver_contact_newtitle')
 
         self.browser_do_logout()
 
@@ -183,6 +183,6 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'ver_contact_version')
+        self.assertEqual(form['title:utf8:ustring'], 'ver_contact_version')
 
         self.browser_do_logout()

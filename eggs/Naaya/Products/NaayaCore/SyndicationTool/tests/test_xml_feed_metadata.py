@@ -1,5 +1,5 @@
 from lxml import etree
-from StringIO import StringIO
+from io import BytesIO
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
 class Test_xml_feed_metadata(NaayaTestCase):
@@ -21,7 +21,7 @@ class Test_xml_feed_metadata(NaayaTestCase):
         def xpath(tag, parent):
             return parent.xpath('./%s'%tag, namespaces=namespaces)
 
-        tree = etree.parse(StringIO(xml_str))
+        tree = etree.parse(BytesIO(xml_str))
         channel = tree.xpath('/rdf:RDF/a:channel', namespaces=namespaces)[0]
         title = xpath('a:title', channel)[0]
         link = xpath('a:link', channel)[0]

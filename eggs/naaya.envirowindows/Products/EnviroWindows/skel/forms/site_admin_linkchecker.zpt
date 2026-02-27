@@ -7,11 +7,11 @@
 	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. You can consult the last broken links log and manually run the checker now. Manually running the URL checker will not produce a log, just display the results in this page.
 </p>
 
-<tal:block tal:condition="python:request.has_key('run')">
+<tal:block tal:condition="python:'run' in request">
 	<br />
 	<span tal:replace="structure python:here.getLinkChecker().index_html()" />
 </tal:block>
-<tal:block tal:condition="python:not request.has_key('run')">
+<tal:block tal:condition="python:not 'run' in request">
 <h2 i18n:translate="">Check URLs now</h2>
 
 <p>

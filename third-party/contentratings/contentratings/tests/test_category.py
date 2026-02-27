@@ -1,5 +1,5 @@
 import unittest
-from zope.interface import Interface, Attribute, directlyProvides, implements
+from zope.interface import Interface, Attribute, directlyProvides, implementer
 from zope.testing.doctestunit import DocFileSuite
 from zope.app.testing import ztapi, placelesssetup
 from zope.annotation.interfaces import IAnnotations
@@ -31,9 +31,9 @@ class ITestRatingType(Interface):
 # Mark our rating interface as a rating type
 directlyProvides(ITestRatingType, IRatingType)
 
+@implementer(ITestRatingType, IRatingStorage)
 class DummyStorage(object):
     """A storage with no pre-defined attributes"""
-    implements(ITestRatingType, IRatingStorage)
 
     rating = None
     dummy_attr = None

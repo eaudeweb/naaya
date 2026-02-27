@@ -18,7 +18,7 @@
 # Alex Morega, Eau de Web
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 # Product imports
 from Products.NaayaCore.GeoMapTool.managers import geocoding
@@ -71,7 +71,7 @@ class GeoWidget(Widget):
             return Geo(lat, lon, address)
         except ValueError:
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('Invalid geo values for "${title}"',
                                {'title': title}))

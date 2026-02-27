@@ -38,8 +38,8 @@ class KMLHandler(handler.ContentHandler):
             self.current_element=''
 
     def endDocument(self):
-        self.all_placemarks = filter(lambda pl: pl.has_key('latitude'),
-                                     self.all_placemarks)
+        self.all_placemarks = list(filter(lambda pl: 'latitude' in pl,
+                                          self.all_placemarks))
 
     def get_placemarks(self):
         return self.all_placemarks

@@ -38,9 +38,9 @@ def admin_assign_role(context, REQUEST):
         return _admin_assign_role.__of__(context)(REQUEST, **options)
 
     if 'assign_role' in REQUEST:
-        if isinstance(object_paths, basestring):
+        if isinstance(object_paths, str):
             object_paths = [object_paths]
-        if isinstance(new_users, basestring):
+        if isinstance(new_users, str):
             new_users = [new_users]
         if not object_paths:
             messages.append(

@@ -14,7 +14,6 @@ setup(name='naaya.flowplayer',
       url='http://naaya.eaudeweb.ro',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['naaya'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

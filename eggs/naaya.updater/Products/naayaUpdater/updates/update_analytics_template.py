@@ -46,7 +46,7 @@ class UpdateAnalyticsTemplate(UpdateScript):
             return True
 
         (ga_id_an, ga_id_std) = self.get_uid(analytics_tool, std_tpl_tal)
-        if ga_id_an is ga_id_std is '':
+        if ga_id_an == ga_id_std == '':
             self.log.debug('No ID found, probably Google Analytics not in use')
             ga_id = ''
         elif ga_id_an != '' and ga_id_std != '' and ga_id_std != ga_id_std:
@@ -89,7 +89,7 @@ class UpdateAnalyticsTemplate(UpdateScript):
         try:
             portal.REQUEST.PARENTS[0] = portal
             html = frm.__of__(portal)()
-        except Exception, e:
+        except Exception as e:
             self.log.debug("Can not test, can not render site_index")
             return True
         else:

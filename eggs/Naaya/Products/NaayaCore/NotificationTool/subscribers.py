@@ -3,9 +3,9 @@ from datetime import timedelta
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from naaya.core.zope2util import path_in_site
 
-import constants
-import utils
-from interfaces import ISubscriptionContainer
+from . import constants
+from . import utils
+from .interfaces import ISubscriptionContainer
 
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
@@ -19,7 +19,7 @@ def check_skip_notifications(subscriber):
         """
 
         if (hasattr(event.context, 'REQUEST') and
-            hasattr(event.context.REQUEST, 'SESSION') and
+            getattr(event.context.REQUEST, 'SESSION', None) is not None and
             event.context.REQUEST.SESSION.get('skip_notifications', False) is
             True):
             return

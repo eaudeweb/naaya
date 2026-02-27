@@ -26,7 +26,7 @@ class ReportUnusedFiles(BrowserView):
                     except:
                         continue
                     if o2.__class__ == obj.__class__:
-                        print path
+                        print(path)
                         out.append(path)
 
         with open('/tmp/files.txt', 'w') as f:

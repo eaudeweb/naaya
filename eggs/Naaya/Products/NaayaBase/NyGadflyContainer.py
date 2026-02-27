@@ -7,7 +7,7 @@ from OFS.Folder import Folder
 from OFS.Folder import manage_addFolder
 from Products.ZGadflyDA.DA import manage_addZGadflyConnection
 from AccessControl.Permissions import view_management_screens
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, ERROR
 from Products.ZGadflyDA.db import data_dir
@@ -27,8 +27,8 @@ def manage_addNyGadflyContainer(self, id='.container', REQUEST=None, **kwargs):
     if not os.path.isdir(dir):
         try:
             os.makedirs(dir)
-        except OSError, error:
-            LOG(LOG_KEY, ERROR, error)
+        except OSError as error:
+            logging.getLogger(LOG_KEY).error(error)
             raise
     # Add gadfly connection
     manage_addZGadflyConnection(ob, id=CONNECTION_ID, title='', 
@@ -67,8 +67,8 @@ class NyGadflyContainer(Folder):
         conn = self._getOb(CONNECTION_ID)
         try:
             res = conn.manage_test(query)
-        except Exception, err:
-            LOG(LOG_KEY, ERROR, err)
+        except Exception as err:
+            logging.getLogger(LOG_KEY).error(err)
             res = ''
         return res
     
@@ -133,7 +133,7 @@ class NyGadflyContainer(Folder):
         try:
             return res.dictionaries()
         except AttributeError:
-            LOG(LOG_KEY, ERROR, 'Could not retrieve statistics from table %s' % self._table_name)
+            logging.getLogger(LOG_KEY).error('Could not retrieve statistics from table %s' % self._table_name)
             self.log_current_error()
             return []
 

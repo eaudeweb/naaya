@@ -21,7 +21,7 @@
 # Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 # Product imports
 from naaya.i18n.LocalPropertyManager import LocalProperty

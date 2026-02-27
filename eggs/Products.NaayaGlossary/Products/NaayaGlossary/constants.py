@@ -19,12 +19,10 @@
 
 
 #Zope imports
-import Globals
-
-
+import os
 #product name
 NAAYAGLOSSARY_PRODUCT_NAME =        'Naaya Glossary'
-NAAYAGLOSSARY_PATH =                Globals.package_home(globals())
+NAAYAGLOSSARY_PATH =                os.path.dirname(os.path.abspath(__file__))
 
 #permissions
 PERMISSION_ADD_NAAYAGLOSSARY =      'Add Naaya Glossary'

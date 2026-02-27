@@ -358,7 +358,7 @@ class NyFolderBase(Folder, NyPermissions):
             try:
                 self.manage_pasteObjects(None, REQUEST)
             except Unauthorized:
-                errors = self.getSessionErrors()
+                errors = self.getSessionErrors() or []
                 errors.append(
                     'You are not allowed to paste objects in this context.')
                 self.setSessionErrorsTrans(errors)
@@ -385,7 +385,7 @@ class NyFolderBase(Folder, NyPermissions):
         else:
             try:
                 self.manage_delObjects(id_list)
-            except Exception, err:
+            except Exception as err:
                 self.setSessionErrorsTrans(err)
                 logger.exception(err)
             else:

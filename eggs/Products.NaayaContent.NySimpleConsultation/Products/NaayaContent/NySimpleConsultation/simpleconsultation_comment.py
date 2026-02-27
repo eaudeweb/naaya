@@ -18,7 +18,7 @@
 # David Batranu, Eau de Web
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 

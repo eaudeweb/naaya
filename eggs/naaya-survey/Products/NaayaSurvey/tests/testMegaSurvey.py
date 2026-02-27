@@ -1,6 +1,6 @@
 # Pythons imports
 import unittest
-from mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock
 
 # Zope imports
 from Testing import ZopeTestCase
@@ -17,7 +17,7 @@ from Products.NaayaSurvey.SurveyReport import SurveyReport
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
 
 # stub imports
-import stubs
+from . import stubs
 
 ZopeTestCase.installProduct('NaayaWidgets')
 ZopeTestCase.installProduct('NaayaSurvey')
@@ -41,7 +41,7 @@ class MegaSurveyTestCase(NaayaTestCase):
             id = self.survey.addWidget(title=title, meta_type=widget_class.meta_type)
             w = self.survey._getOb(id, None)
             self.assertNotEqual(w, None)
-            self.assert_(isinstance(w, widget_class))
+            self.assertTrue(isinstance(w, widget_class))
             self.assertEqual(w.getLocalAttribute('title', self.portal.gl_get_selected_language()), title)
 
     def testAddReport(self):
@@ -50,7 +50,7 @@ class MegaSurveyTestCase(NaayaTestCase):
         id = self.survey.addReport(title=title)
         report = self.survey._getOb(id, None)
         self.assertNotEqual(report, None)
-        self.assert_(isinstance(report, SurveyReport))
+        self.assertTrue(isinstance(report, SurveyReport))
         self.assertEqual(report.getLocalAttribute('title', self.portal.gl_get_selected_language()), title)
 
     def testGenerateFullReport(self):
@@ -59,7 +59,7 @@ class MegaSurveyTestCase(NaayaTestCase):
         id = self.survey.generateFullReport(title=title)
         report = self.survey._getOb(id, None)
         self.assertNotEqual(report, None)
-        self.assert_(isinstance(report, SurveyReport))
+        self.assertTrue(isinstance(report, SurveyReport))
         self.assertEqual(report.getLocalAttribute('title', self.portal.gl_get_selected_language()), title)
         self.assertEqual(len(report.getStatistics()), 0) # 0 questions -> 0 statistics
 
@@ -78,7 +78,7 @@ class MegaSurveyTestCase(NaayaTestCase):
             wId = self.survey.addWidget(REQUEST=req, title=title, meta_type=widget_class.meta_type)
             w = self.survey._getOb(wId, None)
             self.assertNotEqual(w, None)
-            self.assert_(isinstance(w, widget_class))
+            self.assertTrue(isinstance(w, widget_class))
             self.assertEqual(self.portal.gl_get_selected_language(), 'en')
             self.assertEqual(w.getLocalAttribute('title'), '')
             self.assertEqual(w.getLocalAttribute('title', 'en'), '')

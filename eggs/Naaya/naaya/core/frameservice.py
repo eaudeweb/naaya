@@ -1,4 +1,4 @@
-from zope2util import json_response
+from .zope2util import json_response
 
 
 def frame_view(context, request):
@@ -32,7 +32,7 @@ def frame_view(context, request):
         if sources:
             try:
                 from eea.usersdb.factories import agent_from_uf
-            except ImportError, e:
+            except ImportError as e:
                 pass
             else:
                 agent = agent_from_uf(sources[0].getUserFolder())

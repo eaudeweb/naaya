@@ -23,8 +23,8 @@ except:
     from App.ImageFile import ImageFile
     
 #Product imports
-import NyThesaurus
-from constants import *
+from . import NyThesaurus
+from .constants import *
 
 
 def initialize(context):

@@ -1,5 +1,5 @@
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import BytesIO
 
 import transaction
 
@@ -23,7 +23,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
                         file_max_size='15',
                         )
         forum = self.portal.forum_id
-        myfile = StringIO('some test data')
+        myfile = BytesIO(b'some test data')
         myfile.filename = 'the_file.txt'
         addNyForumTopic(forum,
                         id='topic_id',
@@ -75,7 +75,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
                 'file_max_size:int',
             ])
             found_controls = set(c.name for c in form.controls)
-            self.failUnless(expected_controls.issubset(found_controls),
+            self.assertTrue(expected_controls.issubset(found_controls),
                 'Missing form controls: %s' % repr(expected_controls - found_controls))
 
             topic = self.portal.forum_id
@@ -110,12 +110,12 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'attachment',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
         form['title:utf8:ustring'] = 'Test Add subject'
         form['category:utf8:ustring'] = ['Test category 2']
         form['description:utf8:ustring'] = 'Test Add Description'
-        mytestfile = StringIO('some test data')
+        mytestfile = BytesIO(b'some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -137,7 +137,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
-        self.failUnlessEqual(html, 'some test data')
+        self.assertEqual(html, 'some test data')
 
         # Check hit counter
         topiclink = 'http://localhost/portal/forum_id/%s' % topic.id
@@ -158,7 +158,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'Test subject (Large file)'
         form['category:utf8:ustring'] = ['Test category']
         form['description:utf8:ustring'] = 'Test Description (Large file)'
-        mytestfile = StringIO('some very large test data')
+        mytestfile = BytesIO(b'some very large test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -168,10 +168,10 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The attachment is larger than permitted' in html)
+        self.assertTrue('The attachment is larger than permitted' in html)
         #Check that the filled values are saved
         self.assertEqual(form['title:utf8:ustring'], 'Test subject (Large file)')
-        self.assertEqual(form['category:utf8:ustring'], ['Test category'])
+        self.assertEqual(form['category:utf8:ustring'], 'Test category')
         self.assertEqual(form['description:utf8:ustring'], 'Test Description (Large file)')
 
         self.browser_do_logout()
@@ -191,7 +191,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'category:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
         form['title:utf8:ustring'] = 'Test subject 2'
         form['category:utf8:ustring'] = ['Test category 2']
@@ -219,7 +219,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_id/edit_html')
 
         form = self.browser.get_form('addAttachment')
-        mytestfile = StringIO('some very large test data')
+        mytestfile = BytesIO(b'some very large test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -229,7 +229,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The attachment is larger than permitted' in html)
+        self.assertTrue('The attachment is larger than permitted' in html)
 
       #logout
         self.browser_do_logout()
@@ -245,12 +245,12 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'attachment',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         form['title:utf8:ustring'] = 'Message title 2'
         form['description:utf8:ustring'] = 'Message description 2'
-        mytestfile = StringIO('some test data')
+        mytestfile = BytesIO(b'some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -271,7 +271,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
-        self.failUnlessEqual(html, 'some test data')
+        self.assertEqual(html, 'some test data')
 
         self.browser_do_logout()
 
@@ -282,7 +282,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmAdd')
         form['title:utf8:ustring'] = 'Message title 2'
         form['description:utf8:ustring'] = 'Message description 2'
-        mytestfile = StringIO('some very very big test data')
+        mytestfile = BytesIO(b'some very very big test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -294,7 +294,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
         #Check if the error message is returned
         html = self.browser.get_html()
-        self.failUnless('The attachment is larger than permitted' in html)
+        self.assertTrue('The attachment is larger than permitted' in html)
 
         #Check that the filled values are saved
         form = self.browser.get_form('frmAdd')
@@ -334,7 +334,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'description:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         form['title:utf8:ustring'] = 'Message title modified'
@@ -355,7 +355,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_id/message_id/edit_html')
         form = self.browser.get_form('frmAddAttachment')
 
-        mytestfile = StringIO('some very very big test data')
+        mytestfile = BytesIO(b'some very very big test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
@@ -367,11 +367,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
         #Check if the error message is returned
         html = self.browser.get_html()
-        self.failUnless('The attachment is larger than permitted' in html)
+        self.assertTrue('The attachment is larger than permitted' in html)
 
         self.browser_do_logout()
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NyForumFunctionalTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NyForumFunctionalTestCase))
     return suite

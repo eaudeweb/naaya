@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from StringIO import StringIO
-from datetime import datetime
+from io import BytesIO
+from datetime import datetime, timezone
 from naaya.content.bfile.NyBlobFile import NyBlobFile
 from naaya.content.bfile.bfile_item import LocalizedFileDownload
 from naaya.content.bfile.bfile_item import NyBFile
@@ -61,7 +61,7 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertEqual(mybfile.current_version, None)
 
     def test_add_with_file(self):
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = 'my.jpg'
         myfile.headers = {'content-type': 'image/jpeg'}
 
@@ -83,14 +83,14 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(path1 == path2)
 
         ver = mybfile.current_version
-        self.assertTrue(now_pre <= pytz.utc.localize(ver.timestamp) <= now_post)
-        self.assertEqual(ver.open().read(), 'hello data!')
+        self.assertTrue(now_pre <= ver.timestamp <= now_post)
+        self.assertEqual(ver.open().read(), b'hello data!')
         self.assertEqual(ver.filename, 'my.jpg')
         self.assertEqual(ver.size, 11)
         self.assertEqual(ver.content_type, 'image/jpeg')
 
     def test_add_with_file_with_fake_content_type(self):
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = 'my.pdf'
         myfile.headers = {'content-type': 'image/jpeg'}
 
@@ -101,12 +101,12 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertEqual(ver.content_type, 'application/pdf')
 
     def test_change_file(self):
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = 'my.txt'
         self.add_bfile(id='mybfile', title='My bfile', uploaded_file=myfile)
         mybfile = self.portal.myfolder.mybfile
 
-        myfile2 = StringIO('new data')
+        myfile2 = BytesIO(b'new data')
         myfile2.filename = 'other.txt'
         mybfile._save_file(myfile2,
                            contributor='contributor')
@@ -116,22 +116,22 @@ class NyBFileTestCase(NaayaTestCase):
         cv = mybfile.current_version
         self.assertEqual(cv.filename, 'other.txt')
         self.assertEqual(cv.size, 8)
-        self.assertEqual(cv.open().read(), 'new data')
+        self.assertEqual(cv.open().read(), b'new data')
 
     def test_remove_version(self):
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = 'my.txt'
         self.add_bfile(id='mybfile', title='My bfile', uploaded_file=myfile)
         mybfile = self.portal.myfolder.mybfile
 
-        myfile2 = StringIO('new data')
+        myfile2 = BytesIO(b'new data')
         myfile2.filename = 'other.txt'
         mybfile._save_file(myfile2, contributor='contributor')
 
         lang = mybfile.get_selected_language()
         mybfile.remove_version(1)
         rm_ver = mybfile._versions_i18n[lang][1]
-        self.assertEqual(rm_ver.open().read(), '')
+        self.assertEqual(rm_ver.open().read(), b'')
         self.assertEqual(rm_ver.size, None)
         self.assertEqual(rm_ver.removed, True)
         vstore = mybfile._versions_i18n[lang]
@@ -139,7 +139,7 @@ class NyBFileTestCase(NaayaTestCase):
         path2 = vstore[0].__of__(mybfile).getPhysicalPath()
         self.assertTrue(path1 == path2)
 
-        myfile3 = StringIO('even newer data')
+        myfile3 = BytesIO(b'even newer data')
         myfile3.filename = 'other.txt'
         mybfile._save_file(myfile3,
                            contributor='contributor')
@@ -157,7 +157,7 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(mybfile.current_version is None)
 
     def test_add_no_title(self):
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = 'my_file_for_title.txt'
 
         myfolder = self.portal.myfolder
@@ -171,7 +171,7 @@ class NyBFileTestCase(NaayaTestCase):
 
     def test_add_utf8_filename(self):
         name = u'A\xa7A\xb6A\xa9A\xae_\x86\x90a\x83\x91a\x86\x93a\x99\xaa1.txt'
-        myfile = StringIO('hello data!')
+        myfile = BytesIO(b'hello data!')
         myfile.filename = name.encode('utf-8')
 
         myfolder = self.portal.myfolder
@@ -181,11 +181,11 @@ class NyBFileTestCase(NaayaTestCase):
 
     def make_blobfile(self,
                       filename='bf.txt',
-                      content='hello world',
+                      content=b'hello world',
                       content_type='text/plain'):
         bf = NyBlobFile(
             filename=filename, content_type=content_type,
-            timestamp=datetime.utcnow(), contributor='tester')
+            timestamp=datetime.now(timezone.utc), contributor='tester')
         bf.removed = False
         bf.size = len(content)
         f = bf.open_write()
@@ -210,12 +210,12 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile._versions = PersistentList()
         mybfile._versions.append(bf)
 
-        myfile2 = StringIO('new data')
+        myfile2 = BytesIO(b'new data')
         myfile2.filename = 'other.txt'
         mybfile._save_file(myfile2, contributor='contributor')
 
         assert len(list(mybfile.all_versions())) == 2
-        assert mybfile.current_version.raw_data() == 'new data'
+        assert mybfile.current_version.raw_data() == b'new data'
 
         assert mybfile.current_version_download_url() == \
             'http://nohost/portal/myfolder/mybfile/download/en/2/other.txt'
@@ -232,10 +232,10 @@ class NyBFileTestCase(NaayaTestCase):
         request.form = {'action': 'download'}
         request.RESPONSE = MockResponse()
 
-        assert downloader(mybfile, ['bf.txt'], request) == "hello world"
-        assert downloader(mybfile, ['1', 'bf.txt'], request) ==  "hello world"
+        assert downloader(mybfile, ['bf.txt'], request) == b"hello world"
+        assert downloader(mybfile, ['1', 'bf.txt'], request) == b"hello world"
         assert downloader(mybfile, ['en', '1', 'bf.txt'], request) ==\
-            'hello world'
+            b'hello world'
         assert downloader(mybfile, ['fr', '1', 'bf.txt'], request) ==\
-            'hello world'
+            b'hello world'
 

@@ -1,7 +1,7 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
   <metal:block fill-slot="second-title"
     tal:define="sources python:here.getAuthenticationTool().getSources();
-                first_source_id python:sources[0].id;
+                first_source_id python:sources[0].id if sources else '';
                 source_obj python:here.getAuthenticationTool().getSourceObj(request.get('id', first_source_id))">
     <tal:block tal:content="python: source_obj is not None and source_obj.title_or_id() or ''"></tal:block>
   </metal:block>
@@ -15,7 +15,7 @@
   <metal:block fill-slot="content">
     <metal:block define-macro="content"
     tal:define="sources python:here.getAuthenticationTool().getSources();
-                first_source_id python:sources[0].id;
+                first_source_id python:sources[0].id if sources else '';
                 source_id python:request.get('id', first_source_id);
                 source_obj python:here.getAuthenticationTool().getSourceObj(source_id)">
       <tal:block tal:condition="python:source_obj is not None">

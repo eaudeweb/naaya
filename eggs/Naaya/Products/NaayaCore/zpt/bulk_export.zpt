@@ -30,7 +30,7 @@
     <option tal:define="sel python:options.get('meta_type', None);
                         schema_tool python:here.getSite().getSchemaTool();
                         schemas python:schema_tool.listSchemas(installed=True)"
-            tal:repeat="schema python:schemas.iteritems()"
+            tal:repeat="schema python:schemas.items()"
             tal:attributes="value python:schema[0];
                             selected python:test(schema[0] == sel,
                                                  'selected', None)"

@@ -1,2 +1,2 @@
-from srtparser import SRTParser
+from .srtparser import SRTParser
 DEFAULT_PARSER = SRTParser

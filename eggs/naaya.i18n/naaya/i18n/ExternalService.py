@@ -3,8 +3,9 @@ try:
     import simplejson as json
 except ImportError:
     import json
-import urllib2
-from urllib import urlencode
+import urllib.request
+import urllib.error
+from urllib.parse import urlencode
 import re
 
 
@@ -28,7 +29,7 @@ def external_translate(message, target_lang):
         if mappings is not []:
             message = mappings_pat.sub(DUMMY_TEXT, message)
 
-        op = urllib2.build_opener()
+        op = urllib.request.build_opener()
         op.addheaders = [('User-agent', 'Mozilla/5.0')]
         handler = op.open(REQUEST_URI,
                           urlencode({'client': 't', 'text': message,

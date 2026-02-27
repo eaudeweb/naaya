@@ -1,7 +1,7 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from naaya.core.zope2util import ofs_path
 
-import helpers
+from . import helpers
 
 def search(glossary, **kwargs):
     catalog = glossary.getGlossaryCatalog()

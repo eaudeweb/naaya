@@ -18,13 +18,13 @@
 # Cristian Ciupitu, Eau de Web
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseStatistic import manage_addStatistic
-from BaseMatrixStatistic import BaseMatrixStatistic
+from .BaseStatistic import manage_addStatistic
+from .BaseMatrixStatistic import BaseMatrixStatistic
 
 class MatrixTabularStatistic(BaseMatrixStatistic):
     """Table with the count and percent of answered and unanswered questions,

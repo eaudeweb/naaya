@@ -23,7 +23,7 @@ from os import path
 # Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 # Naaya imports
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -108,7 +108,7 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
             r, g, b, a = img.split()
             im = Image.merge("RGB", (r, g, b))
         file_name = genRandomId(p_length=8)+'.bmp'
-        im = im.resize((width, height), Image.ANTIALIAS)
+        im = im.resize((width, height), Image.LANCZOS)
         im = ImageOps.expand(im, 1, 0)
         im.save(path.join(temp_folder, file_name), 'BMP')
         return path.join(temp_folder, file_name)

@@ -21,7 +21,7 @@
 import string
 
 # Zope imports
-from Globals                                    import DTMLFile, InitializeClass
+from App.special_dtml import DTMLFile, InitializeClass
 from AccessControl                              import ClassSecurityInfo
 from OFS.SimpleItem                             import SimpleItem
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile

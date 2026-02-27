@@ -14,16 +14,20 @@ import simplejson as json
 import operator
 from warnings import warn
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from App.ImageFile import ImageFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 
-from zope.interface import implements
-from zopyx.txng3.core.parsers.english import QueryParserError
-from interfaces import IGeoMapTool
+from zope.interface import implementer
+try:
+    from zopyx.txng3.core.parsers.english import QueryParserError
+except ImportError:
+    class QueryParserError(Exception):
+        pass
+from .interfaces import IGeoMapTool
 
 from Products.NaayaBase.constants import *
 import Products.NaayaBase.NyContentType
@@ -38,8 +42,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site, get_template_source
 from naaya.core import ggeocoding
 
-from managers.symbols_tool import symbols_tool
-from managers.kml_gen import kml_generator
+from .managers.symbols_tool import symbols_tool
+from .managers.kml_gen import kml_generator
 
 all_engines = {}
 
@@ -72,12 +76,12 @@ def err_info():
     return traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
 
 
+@implementer(IGeoMapTool)
 class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     """
     Class that implements the tool.
     """
 
-    implements(IGeoMapTool)
 
     # center map in Europe
     _cluster_pngs = [ImageFile('images/cluster_about_10.png', globals()),
@@ -314,7 +318,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 dict_rids[rid] = 1
                 rids.append(rid)
 
-        return map(lambda rid: catalog_tool.getobject(rid), rids)
+        return list(map(lambda rid: catalog_tool.getobject(rid), rids))
 
     def _sort_geo_objects(self, objects, sort_on, sort_order):
         key_func = None
@@ -399,7 +403,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
 
         # transform centers to Geo
-        centers = map(lambda c: Geo(str(c.lat), str(c.lon)), centers)
+        centers = list(map(lambda c: Geo(str(c.lat), str(c.lon)), centers))
 
         cluster_obs, single_obs = [], []
         for i in range(len(centers)):
@@ -455,15 +459,18 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'lon_min': -180.0,
             'lon_max': 180.0,
         }
-        for name, default_value in coord_defaults.iteritems():
+        for name, default_value in coord_defaults.items():
             if criteria[name] in (None, ''):
                 criteria[name] = default_value
             else:
                 criteria[name] = float(criteria[name])
 
         if 'geo_query' in criteria:
-            criteria['query'] = criteria['geo_query']
-            del criteria['geo_query']
+            geo_query = criteria.pop('geo_query')
+            # Clean query: may be a list of strings from form data
+            if isinstance(geo_query, list):
+                geo_query = ' '.join(q for q in geo_query if q.strip())
+            criteria['query'] = geo_query.strip() if geo_query else ''
 
         if 'geo_types' in criteria:
             if isinstance(criteria['geo_types'], str):
@@ -790,7 +797,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         try:
             self.addSymbol(id, title, description, parent,
                            color, picture, sortorder)
-        except ValueError, e:
+        except ValueError as e:
             if REQUEST is None:
                 raise
             self.setSessionErrorsTrans(e)
@@ -816,7 +823,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         try:
             self.updateSymbol(id, title, description, parent,
                               color, picture, sortorder)
-        except ValueError, e:
+        except ValueError as e:
             if REQUEST is None:
                 raise
             self.setSessionErrorsTrans(e)
@@ -1100,30 +1107,29 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
             title_node = doc.createElement("title")
             if item.title:
-                title = doc.createTextNode(
-                    item.title.encode('utf-8').decode('utf-8'))
+                title = doc.createTextNode(item.title)
             else:
                 title = doc.createTextNode(str(item.getId()))
             title_node.appendChild(title)
             entry.appendChild(title_node)
             summary_node = doc.createElement("summary")
             summary_node.setAttribute("type", "html")
-            description = [item.description.encode('utf-8').decode('utf-8')]
+            description = [item.description]
             description.append(
                 "<b>Address</b>: %s" %
-                item.geo_location.address.encode('utf-8').decode('utf-8'))
+                item.geo_location.address)
             if hasattr(item.aq_self, 'webpage'):
                 description.append(
                     "<b>Webpage:</b>: %s" %
-                    item.webpage.encode('utf-8').decode('utf-8'))
+                    item.webpage)
             if hasattr(item.aq_self, 'contact'):
                 description.append(
                     "<b>Contact:</b>: %s" %
-                    item.contact.encode('utf-8').decode('utf-8'))
+                    item.contact)
             if hasattr(item.aq_self, 'source') and item.source:
                 description.append(
                     "<b>Source:</b>: %s" %
-                    item.source.encode('utf-8').decode('utf-8'))
+                    item.source)
             summary_node.appendChild(doc.createTextNode(
                 "%s" % ("<br />".join(description))))
             entry.appendChild(summary_node)
@@ -1143,7 +1149,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             try:
                 rss.append(entry.toprettyxml())
             except UnicodeDecodeError:
-                print entry
+                print(entry)
         if REQUEST:
             REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
             REQUEST.RESPONSE.setHeader('Content-Disposition',
@@ -1242,7 +1248,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options = {
             'all_engines': sorted([
                 {'name': name, 'label': engine.title}
-                for name, engine in all_engines.iteritems()],
+                for name, engine in all_engines.items()],
                 key=operator.itemgetter('name')),
             'engine_config_html': self.get_map_engine().config_html(),
         }
@@ -1371,7 +1377,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def _google_geocode(self, address):
         try:
             result = ggeocoding.geocode2(address)
-        except ggeocoding.GeocoderServiceError, e:
+        except ggeocoding.GeocoderServiceError as e:
             return {'error': e.message}
         else:
             # allow for returning multiple results

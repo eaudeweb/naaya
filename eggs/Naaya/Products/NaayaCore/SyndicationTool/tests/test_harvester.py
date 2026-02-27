@@ -1,12 +1,12 @@
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 from zope import component, interface
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
 from Products.NaayaCore.SyndicationTool.RemoteChannel import manage_addRemoteChannel
 from Products.NaayaBase.interfaces import INyFeedHarvester
 
+@interface.implementer(INyFeedHarvester)
 class CustomHarvester(object):
-    interface.implements(INyFeedHarvester)
     def harvest_feed(self, feed):
         return {
             'feed': Mock(),

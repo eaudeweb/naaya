@@ -19,7 +19,7 @@
 # Batranu David, Eau de Web
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -27,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaWidgets.widgets.StringWidget import StringWidget
 from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
 
-from BaseStatistic import BaseStatistic, manage_addStatistic
+from .BaseStatistic import BaseStatistic, manage_addStatistic
 
 class TextAnswerListing(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions.
@@ -98,7 +98,7 @@ class TextAnswerListing(BaseStatistic):
             if not response:
                 all_responses = answer.get(question.id, '')
                 if isinstance(all_responses, dict):
-                    all_responses = filter(None, all_responses.values())
+                    all_responses = list(filter(None, all_responses.values()))
                     if len(all_responses) > 0:
                         response = all_responses[0]
 

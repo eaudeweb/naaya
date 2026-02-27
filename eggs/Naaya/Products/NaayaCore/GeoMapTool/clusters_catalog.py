@@ -93,6 +93,9 @@ def getClusters(catalog_tool, filters):
         #this code is from the search function in the catalog implementation in Zope
         for idx_name in f:
             index = catalog.getIndex(idx_name)
+            if not hasattr(index, '_apply_index'):
+                # Skip broken indexes (e.g. TextIndex removed in Zope 5)
+                continue
             r = index._apply_index(f)
             if r is not None:
                 r, _ = r
@@ -111,6 +114,6 @@ def getClusters(catalog_tool, filters):
 
     # transform group points to rids
     for i in range(len(groups)):
-        groups[i] = map(lambda p: r_list[p.id], groups[i])
+        groups[i] = list(map(lambda p: r_list[p.id], groups[i]))
 
     return centers, groups

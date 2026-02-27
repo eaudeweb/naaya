@@ -1,10 +1,10 @@
-from urlparse import urlparse
+from urllib.parse import urlparse
 import re
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
-from StringWidget import StringWidget
-from Widget import manage_addWidget
+from .StringWidget import StringWidget
+from .Widget import manage_addWidget
 
 def addURLWidget(container, id="", title="URL Widget", REQUEST=None,
         **kwargs):

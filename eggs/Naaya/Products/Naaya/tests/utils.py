@@ -2,6 +2,10 @@
 Testing utilities
 """
 
+import os
+from io import BytesIO
+from App.Common import package_home
+
 replaced_objects = []
 
 def replace(namespace, name, test_value):
@@ -36,6 +40,6 @@ def load_test_file(filename, globals_):
     """ Load data from a test file """
     home = package_home(globals_)
     filename = os.path.sep.join([home, filename])
-    data = StringIO(open(filename, 'rb').read())
+    data = BytesIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data

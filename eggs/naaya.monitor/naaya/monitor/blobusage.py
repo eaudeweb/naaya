@@ -25,7 +25,7 @@ def blobstorage_stats(app):
             for brain in bfile_brains:
                 try:
                     bfile = brain.getObject()
-                except Exception, e:
+                except Exception as e:
                     continue  # bad brain?
                 else:
                     stats[s_id]['objects'] += 1

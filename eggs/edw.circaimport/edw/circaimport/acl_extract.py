@@ -22,7 +22,7 @@ def get_acl_mapping(fd):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print 'Usage: python %s <path-to-file>' % sys.argv[0]
+        print('Usage: python %s <path-to-file>' % sys.argv[0])
         sys.exit(1)
 
     try:
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         acls, not_matched = get_acl_mapping(fd)
         fd.close()
     except ValueError:
-        print 'Usage: python %s <path-to-file>' % sys.argv[0]
+        print('Usage: python %s <path-to-file>' % sys.argv[0])
         sys.exit(1)
 
     pprint(not_matched)

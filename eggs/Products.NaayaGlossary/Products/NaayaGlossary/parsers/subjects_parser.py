@@ -20,7 +20,7 @@
 
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
+from io import BytesIO, StringIO
 
 class subjects_struct:
     """ """
@@ -54,9 +54,11 @@ class subjects_parser:
         parser = make_parser()
         parser.setContentHandler(handler)
         inpsrc = InputSource()
-        inpsrc.setByteStream(StringIO(content))
+        if isinstance(content, str):
+            content = content.encode('utf-8')
+        inpsrc.setByteStream(BytesIO(content))
         try:
             parser.parse(inpsrc)
             return (handler, '')
-        except Exception, error:
+        except Exception as error:
             return (None, error)

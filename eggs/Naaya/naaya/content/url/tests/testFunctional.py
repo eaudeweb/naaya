@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from BeautifulSoup import BeautifulSoup
+from unittest import TestSuite, TestLoader
+from bs4 import BeautifulSoup
 from DateTime import DateTime
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -23,14 +23,14 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/url_add_html')
-        self.failUnless('<h1>Submit URL</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit URL</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'locator:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.assertEqual(form['sortorder:utf8:ustring'], '100')
@@ -46,17 +46,17 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.myfolder.test_url.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_url')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_url.*</h1>', html, re.DOTALL))
-        self.failUnless('test_url_description' in html)
-        self.failUnless('test_url_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
-        self.failUnless('http://www.eaudeweb.ro' in html)
+        self.assertTrue(re.search(r'<h1>.*test_url.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_url_description' in html)
+        self.assertTrue('test_url_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
+        self.assertTrue('http://www.eaudeweb.ro' in html)
 
         self.browser_do_logout()
 
@@ -70,8 +70,8 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -79,13 +79,13 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My url')
+        self.assertEqual(form['title:utf8:ustring'], 'My url')
 
         form['title:utf8:ustring'] = 'new_url_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myurl.title, 'new_url_title')
+        self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')
 
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -94,21 +94,21 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myurl.title, 'new_url_title')
-        self.failUnlessEqual(self.portal.myfolder.myurl.locator, 'http://www.eaudeweb.ro')
-        self.failUnlessEqual(self.portal.myfolder.myurl.getLocalProperty('title', 'fr'), 'french_title')
-        self.failUnlessEqual(self.portal.myfolder.myurl.getLocalProperty('locator', 'fr'), 'http://www.eaudeweb.ro/?lang=fr')
+        self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')
+        self.assertEqual(self.portal.myfolder.myurl.locator, 'http://www.eaudeweb.ro')
+        self.assertEqual(self.portal.myfolder.myurl.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.myurl.getLocalProperty('locator', 'fr'), 'http://www.eaudeweb.ro/?lang=fr')
 
         # try out redirecting
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html')
         form = self.browser.get_form('frmEdit')
         form['redirect:boolean'] = ['on']
-        form['locator:utf8:ustring'] = 'http://localhost/info'
+        form['locator:utf8:ustring'] = 'http://localhost/portal/info'
         self.browser.clicked(form, form.find_control('title:utf8:ustring'))
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/myurl')
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/info')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info')
 
         self.browser_do_logout()
 
@@ -123,8 +123,8 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -133,12 +133,12 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myurl/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My url')
+        self.assertEqual(form['title:utf8:ustring'], 'My url')
         form['title:utf8:ustring'] = 'new_url_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myurl.title, 'new_url_title')
+        self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')
 
         self.browser_do_logout()
 
@@ -147,7 +147,7 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)

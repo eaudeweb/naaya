@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from BeautifulSoup import BeautifulSoup
+from unittest import TestSuite, TestLoader
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -21,14 +21,14 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/info/news_add_html')
-        self.failUnless('<h1>Submit News</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit News</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -40,17 +40,17 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.info.test_news.approveThis()
 
         self.browser.go('http://localhost/portal/info/test_news')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_news.*</h1>', html, re.DOTALL))
-        self.failUnless('test_news_description' in html)
-        self.failUnless('test_news_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
-        self.failUnless('test_news_details' in html)
+        self.assertTrue(re.search(r'<h1>.*test_news.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_news_description' in html)
+        self.assertTrue('test_news_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
+        self.assertTrue('test_news_details' in html)
 
         self.browser_do_logout()
 
@@ -64,8 +64,8 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -73,13 +73,13 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mynews/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My news')
+        self.assertEqual(form['title:utf8:ustring'], 'My news')
 
         form['title:utf8:ustring'] = 'new_news_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mynews.title, 'new_news_title')
+        self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
 
         self.browser.go('http://localhost/portal/myfolder/mynews/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -87,8 +87,8 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mynews.title, 'new_news_title')
-        self.failUnlessEqual(self.portal.myfolder.mynews.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
+        self.assertEqual(self.portal.myfolder.mynews.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -102,8 +102,8 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -112,12 +112,12 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mynews/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My news')
+        self.assertEqual(form['title:utf8:ustring'], 'My news')
         form['title:utf8:ustring'] = 'new_news_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mynews.title, 'new_news_title')
+        self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
 
         self.browser_do_logout()
 
@@ -126,7 +126,7 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -151,9 +151,9 @@ class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     def test_start_version(self):
         from naaya.content.news.news_item import news_item
         self.browser_do_login('admin', '')
-        self.failUnlessEqual(self.portal.info.ver_news.version, None)
+        self.assertEqual(self.portal.info.ver_news.version, None)
         self.browser.go('http://localhost/portal/info/ver_news/startVersion')
-        self.failUnless(isinstance(self.portal.info.ver_news.version, news_item))
+        self.assertTrue(isinstance(self.portal.info.ver_news.version, news_item))
         self.browser_do_logout()
 
     def test_edit_version(self):
@@ -166,9 +166,9 @@ class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         ver_news = self.portal.info.ver_news
-        self.failUnlessEqual(ver_news.title, 'ver_news')
+        self.assertEqual(ver_news.title, 'ver_news')
         # we can't do ver_news.version.title because version objects don't have the _languages property
-        self.failUnlessEqual(ver_news.version.getLocalProperty('title', 'en'), 'ver_news_newtitle')
+        self.assertEqual(ver_news.version.getLocalProperty('title', 'en'), 'ver_news_newtitle')
 
         self.browser_do_logout()
 
@@ -182,6 +182,6 @@ class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'ver_news_version')
+        self.assertEqual(form['title:utf8:ustring'], 'ver_news_version')
 
         self.browser_do_logout()

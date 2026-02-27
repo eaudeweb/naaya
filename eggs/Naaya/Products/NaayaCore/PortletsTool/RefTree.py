@@ -1,6 +1,6 @@
 import simplejson as json
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
@@ -8,7 +8,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, \
+from .RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, \
                         localizer_patcher
 from Products.NaayaCore.managers.utils import make_id
 
@@ -140,6 +140,7 @@ class RefTree(LocalPropertyManager, Folder):
     #api
     def get_tree_object(self): return self #What is this?
     def get_tree_path(self, p=0): return self.absolute_url(p) #????
+    security.declarePublic('get_tree_nodes')
     def get_tree_nodes(self, sort_by='weight'):
         """ Get all tree nodes """
         return self.utSortObjsListByAttr(
@@ -247,7 +248,7 @@ class RefTree(LocalPropertyManager, Folder):
 
         # pass three: sort the nodes on each branch
         get_weight = lambda n: getattr(n['ob'], 'weight', None)
-        for node in out_nodes.itervalues():
+        for node in out_nodes.values():
             node['children'].sort(key=get_weight)
 
         return out_nodes[None]

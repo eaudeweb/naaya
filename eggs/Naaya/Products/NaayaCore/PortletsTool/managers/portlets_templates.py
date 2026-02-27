@@ -60,7 +60,7 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="channel python:here.getSy
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item items">
-			<a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" />
+			<a tal:attributes="href python:test('link' in item, item['link'], '')" tal:content="python:item['title']" />
 		</li>
 	</ul>
 	<div style="text-align: right;">
@@ -83,7 +83,7 @@ REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE = '''<tal:block define="channel pyt
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item items">
-			<a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" />
+			<a tal:attributes="href python:test('link' in item, item['link'], '')" tal:content="python:item['title']" />
 		</li>
 	</ul>
 	<div style="text-align: right;">
@@ -185,7 +185,7 @@ CHANNEL_AGGREGATOR_PORTLET_TEMPLATE = '''<tal:block define="title python:here.ge
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<tal:block tal:repeat="channel items">
-			<li tal:repeat="item channel" ><a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" /></li>
+			<li tal:repeat="item channel" ><a tal:attributes="href python:test('link' in item, item['link'], '')" tal:content="python:item['title']" /></li>
 		</tal:block>
 	</ul>
 	<div style="text-align: right;">

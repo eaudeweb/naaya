@@ -67,8 +67,10 @@ def read_po(filehandler, overwrite_with_empty=False):
                 if match is None:
                     raise ValueError("Error reading msgstr at line %d", cnt)
                 else:
-                    msgid = backslash_unescape(msgid).decode(encoding)
-                    msgstr = backslash_unescape(match.groups()[0]).decode(encoding)
+                    unescaped_id = backslash_unescape(msgid)
+                    unescaped_str = backslash_unescape(match.groups()[0])
+                    msgid = unescaped_id.decode(encoding) if isinstance(unescaped_id, bytes) else unescaped_id
+                    msgstr = unescaped_str.decode(encoding) if isinstance(unescaped_str, bytes) else unescaped_str
                     # ignore empty translations
                     if msgstr or overwrite_with_empty:
                         data[msgid] = msgstr

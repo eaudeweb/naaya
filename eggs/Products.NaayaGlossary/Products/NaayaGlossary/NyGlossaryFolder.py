@@ -1,18 +1,18 @@
 import Products
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
-from zope import interface
+from zope.interface import implementer
 from zope import event
 
-import NyGlossaryElement
-from constants import *
-from utils import utils, catalog_utils
+from . import NyGlossaryElement
+from .constants import *
+from .utils import utils, catalog_utils
 from Products.NaayaGlossary.parsers.import_parsers import glossary_export
-from interfaces import INyGlossaryFolder
-from events import ItemTranslationChanged
+from .interfaces import INyGlossaryFolder
+from .events import ItemTranslationChanged
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 LABEL_OBJECT = 'Glossary folder'
@@ -32,17 +32,16 @@ def manage_addGlossaryFolder(self, id, title='', subjects=[], source='',
     fld_obj.subjects = self.get_subject_by_codes(subjects)
     fld_obj.load_translations_list()
     # imported here to avoid cross-import errors
-    from NyGlossary import set_default_translation
+    from .NyGlossary import set_default_translation
     set_default_translation(fld_obj)
 
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
+@implementer(INyGlossaryFolder)
 class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     """ NyGlossaryFolder """
-
-    interface.implements(INyGlossaryFolder)
     meta_type = NAAYAGLOSSARY_FOLDER_METATYPE
     meta_label = LABEL_OBJECT
     product_name = NAAYAGLOSSARY_PRODUCT_NAME

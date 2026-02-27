@@ -4,7 +4,7 @@
 <h1>Application for administration or contributor rights</h1>
 <h2>Step 2: Provide personal information</h2>
 
-<span tal:condition="python:request.has_key('acc') and not here.is_logged(request)">
+<span tal:condition="python:'acc' in request and not here.is_logged(request)">
 	Invalid username or password
 </span>
 
@@ -38,7 +38,7 @@
 </div>
 </tal:block>
 <div class="nonexisting_acc">
-<tal:block tal:condition="python:request.has_key('acc') and here.is_logged(request)">
+<tal:block tal:condition="python:'acc' in request and here.is_logged(request)">
 <form method="post" name="frm_account" action="requestlocations_html">
 	<div>
 		You are logged in as: <span tal:content="python:request.AUTHENTICATED_USER.getUserName()" />

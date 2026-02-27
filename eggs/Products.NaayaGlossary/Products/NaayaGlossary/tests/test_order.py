@@ -1,12 +1,12 @@
 """ Ordering of the Glossary """
 import transaction
-import urllib
+import urllib.parse
 try:
     import simplejson as json
 except ImportError:
     import json
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-import helpers
+from . import helpers
 
 class TestOrdering(NaayaFunctionalTestCase):
     def afterSetUp(self):
@@ -36,7 +36,7 @@ class TestOrdering(NaayaFunctionalTestCase):
         """ Set bucket2 in front of bucket1 """
         self.browser_do_login('admin', '')
         br = self.browser._browser #mechanize.Browser
-        data = urllib.urlencode({
+        data = urllib.parse.urlencode({
             'data': """{
     "attributes": {
         "id": "my_glossary",

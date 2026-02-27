@@ -191,13 +191,13 @@ def get_user_and_group_mapping(path):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print 'Usage: python %s <path-to-file.tgz>' % sys.argv[0]
+        print('Usage: python %s <path-to-file.tgz>' % sys.argv[0])
         sys.exit(1)
 
     try:
         user_2_role, group_2_role = get_user_and_group_mapping(sys.argv[1])
     except ValueError:
-        print 'Usage: python %s <path-to-file.tgz>' % sys.argv[0]
+        print('Usage: python %s <path-to-file.tgz>' % sys.argv[0])
         sys.exit(1)
 
     pprint(user_2_role)

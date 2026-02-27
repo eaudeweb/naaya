@@ -17,7 +17,7 @@ class MySQLConnector(object):
         """
 
         if not self._db:
-            raise Exception, self._Exception['db']
+            raise Exception(self._Exception['db'])
         self._db.close()
 
     def query(self, q, debug=False):
@@ -26,9 +26,9 @@ class MySQLConnector(object):
 
         """
         if debug:
-            print q
+            print(q)
         if not self._db:
-            raise Exception, self._Exception['db']
+            raise Exception(self._Exception['db'])
         cursor = self._db.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(q)
         if cursor.description == None:

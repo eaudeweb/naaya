@@ -25,8 +25,8 @@ class BFileZipAdapter(DefaultZipAdapter):
 
     @property
     def base_filename(self):
-        base_name = self.context.getId()
-        return illegal_fs_char.sub('_', base_name).encode('utf-8')
+        base_name = self.context.title_or_id()
+        return illegal_fs_char.sub('_', base_name)
 
 
 class GenericViewer(object):

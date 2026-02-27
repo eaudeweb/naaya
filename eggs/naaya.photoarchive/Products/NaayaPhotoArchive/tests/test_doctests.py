@@ -20,7 +20,7 @@
 """
 import doctest
 import unittest
-from Globals import package_home
+import os
 from Testing.ZopeTestCase import FunctionalDocFileSuite as Suite
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 
@@ -30,7 +30,7 @@ OPTIONFLAGS = (doctest.REPORT_ONLY_FIRST_FAILURE |
 
 class CustomFunctionalTestCase(FunctionalTestCase):
     
-    home = package_home(globals())
+    home = os.path.dirname(os.path.abspath(__file__))
     
 def test_suite():
     """ Suite

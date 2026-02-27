@@ -5,36 +5,30 @@ translation available in naaya.i18n.
 
 """
 import re
-from urllib import quote
+from urllib.parse import quote
 import logging
 
 from zope.i18n import interpolate
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
-try:
-    # Zope 2.12
-    from App.special_dtml import DTMLFile
-    from App.class_init import InitializeClass
-except ImportError:
-    # Zope <= 2.11
-    from Globals import DTMLFile
-    from Globals import InitializeClass
+from App.special_dtml import DTMLFile
+from AccessControl.class_init import InitializeClass
 from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import (MESSAGE_SAVEDCHANGES,
                                           PERMISSION_PUBLISH_OBJECTS)
 
-from constants import (ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N,
+from .constants import (ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N,
                        PERMISSION_TRANSLATE_PAGES)
-from LanguageManagers import NyPortalLanguageManager
-from LanguageManagers import normalize_code, get_iso639_name
-from NyMessageCatalog import NyMessageCatalog
-from NyNegotiator import NyNegotiator
-from ImportExport import TranslationsImportExport
-from patches import populate_threading_local
-from admin_i18n import AdminI18n, message_encode, message_decode
-from ExternalService import external_translate
+from .LanguageManagers import NyPortalLanguageManager
+from .LanguageManagers import normalize_code, get_iso639_name
+from .NyMessageCatalog import NyMessageCatalog
+from .NyNegotiator import NyNegotiator
+from .ImportExport import TranslationsImportExport
+from .patches import populate_threading_local
+from .admin_i18n import AdminI18n, message_encode, message_decode
+from .ExternalService import external_translate
 from naaya.core.zope2util import physical_path
 
 
@@ -375,7 +369,7 @@ class NaayaI18n(SimpleItem):
         # The languages
         for language in languages:
             code = language['code']
-            language['name'] = self.get_translation(unicode(language['name']))
+            language['name'] = self.get_translation(str(language['name']))
             language['url'] = get_url(REQUEST.URL, batch_start, batch_size,
                 regex, code, empty, msg=message_encoded)
         namespace['languages'] = languages
@@ -646,11 +640,11 @@ class NaayaI18n(SimpleItem):
         try:
             export_tool.spreadsheet_import(file, target_lang, dialect)
             self.setSessionInfoTrans('Translations successfully imported.')
-        except KeyError, e:
+        except KeyError as e:
             self.setSessionErrorsTrans('File format does not match selected format.')
-        except UnicodeDecodeError, e:
+        except UnicodeDecodeError as e:
             self.setSessionErrorsTrans('File needs to be utf-8 encoded.')
-        except Exception, e:
+        except Exception as e:
             self.setSessionErrorsTrans('Error importing translations.')
 
         return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())

@@ -80,6 +80,14 @@
       </tr>
     </tal:block>
   </tal:block>
+  <tal:block condition="not:current_any_lang_version">
+      <tr>
+          <th i18n:translate="">Download</th>
+          <td>
+              <em i18n:translate="">No file uploaded</em>
+          </td>
+      </tr>
+  </tal:block>
   <metal:block use-macro="site_object_index/macros/contributor_tr" />
   <tal:block condition="here/coverage"
       content="structure python: here.prop_display_tr('coverage')" />

@@ -1,11 +1,11 @@
-from mock import Mock
+from unittest.mock import Mock
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
 def prepare_glossary_with_data(portal):
     try:
         from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
     except ImportError:
-        from nose import SkipTest
+        from unittest import SkipTest
         raise SkipTest
 
     manage_addGlossaryCentre(portal, 'my_glossary')

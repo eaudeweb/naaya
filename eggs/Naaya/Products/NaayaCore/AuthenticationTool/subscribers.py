@@ -39,11 +39,11 @@ def post_user_management_action(event):
         else:
             email = auth_tool.getUsersEmails([event.user_id])[0]
             full_name = auth_tool.getUsersFullNames([event.user_id])[0]
-            if not isinstance(full_name, unicode):
+            if isinstance(full_name, bytes):
                 try:
-                    full_name = full_name.decode('utf8')
+                    full_name = full_name.decode('utf-8')
                 except UnicodeDecodeError:
-                    full_name = full_name.decode('latin1')
+                    full_name = full_name.decode('latin-1')
 
             notif_tool.notify_account_modification(
                 email, event.context, new_roles=event.assigned,

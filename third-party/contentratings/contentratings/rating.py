@@ -1,6 +1,6 @@
 from datetime import datetime
 from persistent import Persistent
-from zope.interface import implements
+from zope.interface import implementer
 from zope.deferredimport import deprecatedFrom
 from contentratings.interfaces import IRating
 
@@ -12,11 +12,11 @@ deprecatedFrom('Rating categories should be created using the category '
                'differently.',
                'contentratings.bbb', 'UserRating', 'EditorialRating')
 
+@implementer(IRating)
 class NPRating(float):
     """A non-persistent IRating object, for storages which store
     outside the ZODB, or which have no desire to annotate/mutate
     ratings."""
-    implements(IRating)
 
     # No security on this
     __allow_access_to_unprotected_subobjects__ = True
@@ -37,9 +37,9 @@ class NPRating(float):
 
 # We can't inherit float and Persistent, because of conflicting C bases, so
 # we duck-type
+@implementer(IRating)
 class Rating(Persistent):
     """Behaves like a float with some extra attributes"""
-    implements(IRating)
 
     # No security on this
     __allow_access_to_unprotected_subobjects__ = True
@@ -49,8 +49,8 @@ class Rating(Persistent):
         self.userid = userid
         self.timestamp = datetime.utcnow()
 
-    __repr__ = NPRating.__repr__.im_func
-    __str__ = NPRating.__str__.im_func
+    __repr__ = NPRating.__repr__
+    __str__ = NPRating.__str__
 
     def __add__(self, other):
         """Make sure we can add ratings"""

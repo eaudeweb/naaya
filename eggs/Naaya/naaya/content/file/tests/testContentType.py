@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.file.file_item import addNyFile
 from Products.Naaya.tests import NaayaTestCase
 

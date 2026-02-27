@@ -6,7 +6,7 @@ from AccessControl import ClassSecurityInfo
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from utils import physical_path
+from .utils import physical_path
 
 class UpdateCountContentType(UpdateScript):
     """ Update example script  """

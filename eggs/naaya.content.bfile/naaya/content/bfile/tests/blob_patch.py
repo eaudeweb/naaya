@@ -5,7 +5,7 @@ patch ZopeTestCase to use blob storage
 import tempfile
 import shutil
 
-import Globals
+import os
 from ZODB.blob import BlobStorage
 
 def patch_testing_db():

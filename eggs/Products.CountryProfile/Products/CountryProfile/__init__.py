@@ -1,4 +1,4 @@
-import CountryProfile
+from . import CountryProfile
 from App.ImageFile import ImageFile
 
 def initialize(context):

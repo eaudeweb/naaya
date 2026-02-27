@@ -21,11 +21,11 @@
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
-from MultipleChoiceWidget import MultipleChoiceWidget
+from .MultipleChoiceWidget import MultipleChoiceWidget
 
 def addRadioWidget(container, id="", title="Radio Widget", REQUEST=None, **kwargs):
     """ Contructor for Radio widget"""

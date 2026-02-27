@@ -1,10 +1,9 @@
 <!-- Add here all common utils macros for Naaya Sites -->
 
 <tal:comment condition="nothing">
-<!--
 Paginator
----------
-- Uses NaayaCore.managers.paginator.ObjectPaginator to render list of objects on pages.
+
+Uses NaayaCore.managers.paginator.ObjectPaginator to render list of objects on pages.
 
 Required variables:
 - objects: List of objects to apply paginator;
@@ -14,7 +13,6 @@ Required variables:
 Optional:
 - paginator: define paginator in upper template;
 - label: Text to use before x - y of z, like: Results: 5 - 10 of 300
--->
 </tal:comment>
 
 <metal:block define-macro="paginator" tal:define="
@@ -25,7 +23,7 @@ Optional:
 	query python:dict(request.form);
 	page python:query.pop('page', 0);
 	query_string python:here.utUrlLibEncode(query);
-	query_string python:test(query_string, '?' + query_string + '&amp;page=', '?page=');
+	query_string python:('?' + query_string + '&amp;page=' if query_string else '?page=');
 	paginator paginator|python:here.getObjectPaginator(objects, num_per_page, orphans);
 	curr_page python:paginator.validate_page_number(page);
 	left python:paginator.left(curr_page);
@@ -73,12 +71,10 @@ Optional:
 </metal:block>
 
 <tal:comment condition="nothing">
-<!--
 AJAX Tree
----------
+
 Uses jsTree (http://www.jstree.com/)
 You can find the configuration in jquery.tree.init.js
--->
 </tal:comment>
 
 <metal:block define-macro="ajaxtree">

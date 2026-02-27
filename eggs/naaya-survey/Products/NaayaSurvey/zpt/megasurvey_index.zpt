@@ -243,7 +243,7 @@
 						<tal:block tal:define="download_url attachment/getDownloadUrl">
 							<a tal:define="size python:attachment.utShowSizeKb(attachment.size());
 							content_type attachment/content_type;
-							icon python:here.rstk.icon_for_content_type(content_type);
+							icon python:here.rstk['icon_for_content_type'](content_type);
 							title python:icon['title'];
 							url python:icon['url']"
 							tal:attributes="href download_url">

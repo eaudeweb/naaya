@@ -3,12 +3,12 @@ __author__ = """Alin Voinea"""
 
 from Products.Naaya.adapters import FolderMetaTypes
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from StringIO import StringIO
+from io import StringIO
 from naaya.content.bfile import bfile_item
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from persistent.list import PersistentList
 from zope.annotation import IAnnotations
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 
 
@@ -133,7 +133,7 @@ class Import(object):
         for version in value:
             bf = make_blobfile(version,
                                removed=False,
-                               timestamp=datetime.utcnow(),
+                               timestamp=datetime.now(timezone.utc),
                                contributor='')
 
             vstorage = getattr(self.context, '_versions', None)
@@ -325,7 +325,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         if portal.is_pluggable_item_installed('Naaya File'):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya File')
-            except Exception, err:
+            except Exception as err:
                 self.log.warn('You need to manually uninstall Naaya File '
                               'in Control Panel')
                 self.log.error(err)
@@ -336,7 +336,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         if not portal.is_pluggable_item_installed('Naaya Blob File'):
             try:
                 portal.manage_install_pluggableitem('Naaya Blob File')
-            except Exception, err:
+            except Exception as err:
                 self.log.warn('You need to manually install Naaya Blob File '
                               'in Control Panel')
                 self.log.error(err)

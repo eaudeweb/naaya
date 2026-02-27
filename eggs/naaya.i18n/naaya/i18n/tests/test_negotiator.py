@@ -98,5 +98,5 @@ class NegotiatorFunctionalTestSuite(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/es')
         doc = fromstring(re.sub(r'\s+', ' ', self.browser.get_html()))
-        self.assertTrue(doc.attrib.has_key('lang'))
+        self.assertTrue('lang' in doc.attrib)
         self.assertEqual(doc.attrib['lang'], 'es')

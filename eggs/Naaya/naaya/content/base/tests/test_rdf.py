@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 import webob
 import transaction
 import lxml.etree
@@ -23,12 +23,13 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
 
     def assert_is_rdf(self, res):
         self.assertEqual(res.content_type, 'application/rdf+xml')
-        self.assertTrue('<rdf:RDF' in res.body)
+        self.assertTrue(b'<rdf:RDF' in res.body)
 
     def _get(self, accept='application/rdf+xml',
                    url='/portal/myfolder/mydoc',
                    query={}):
-        req = webob.Request.blank(url)
+        req = webob.Request.blank(url, base_url='http://localhost')
+        req.environ['HTTP_HOST'] = 'localhost'
         if accept is not None:
             req.accept = accept
         req.GET.update(query)

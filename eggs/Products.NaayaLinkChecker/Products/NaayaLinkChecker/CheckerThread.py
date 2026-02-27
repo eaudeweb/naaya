@@ -1,11 +1,12 @@
-from httplib import InvalidURL
-from Queue import Empty
+from http.client import InvalidURL
+from queue import Empty
 import socket
+import ssl
 from threading import Thread
 import time
 from types import *
 
-from MyURLopener import MyURLopener
+import urllib.request
 
 class CheckerThread(Thread):
     """Thread for checking URLs.
@@ -46,23 +47,24 @@ class CheckerThread(Thread):
 
 
 def check_link(url, proxy=''):
-    file = MyURLopener()
-    if proxy != '':
-        file.proxies['http'] = proxy
-    socket.setdefaulttimeout(20)
+    handlers = []
+    if proxy:
+        handlers.append(urllib.request.ProxyHandler({'http': proxy, 'https': proxy}))
+    opener = urllib.request.build_opener(*handlers)
+    opener.addheaders = [('User-Agent', 'Naaya Link Checker')]
     try:
-        file.open(url)
-        file.close()
+        resp = opener.open(url, timeout=20)
+        resp.close()
         return 'OK'
-    except IOError, e:
-        if e.errno == 'socket error' and e.strerror.args == ('timed out',):
+    except IOError as e:
+        if getattr(e, 'reason', None) and 'timed out' in str(e.reason):
             return "Timeout"
         return "I/O error: %r %s" % (e, e)
     except socket.timeout:
         return "Attempted connect timed out."
-    except socket.sslerror, err:
-        return "SSL error: " + err
+    except ssl.SSLError as err:
+        return "SSL error: " + str(err)
     except InvalidURL:
         return "Invalid URL"
-    except Exception, e:
-        return "Link checker internal error: " + err
+    except Exception as e:
+        return "Link checker internal error: " + str(e)

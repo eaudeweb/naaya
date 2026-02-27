@@ -95,7 +95,7 @@ class CommentsFeedTest(NaayaTestCase):
 
         entry2 = dom.getElementsByTagName('entry')[0]
         summary2 = entry2.getElementsByTagName('summary')[0]
-        print summary2.toxml()
+        print(summary2.toxml())
         assert (summary2.toxml() ==
                 '<summary type="html">so &lt;p&gt;&lt;b&gt;hello&lt;i&gt;'
                 'world&lt;/b&gt;!&lt;/i&gt;</summary>')

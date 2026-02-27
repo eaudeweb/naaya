@@ -5,10 +5,10 @@ from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class CountryPortlet(object):
     """Display this portlet based on country"""
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Country profile'
     template = PageTemplateFile('zpt/portlets/country_profile', globals())
@@ -33,10 +33,10 @@ class CountryPortlet(object):
         return tmpl(macro=macro, cprofile=country_profile, ccode=country_code)
 
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class CountryComparisions(object):
     """Display this portlet under themes folder"""
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Country comparisons'
     template = PageTemplateFile('zpt/portlets/country_comparisions', globals())
@@ -60,10 +60,10 @@ class CountryComparisions(object):
         return tmpl(macro=macro, cprofile=country_profile, records=records)
 
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class YearComparisions(object):
     """Display this portlet under themes folder"""
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Year comparisons'
     template = PageTemplateFile('zpt/portlets/year_comparisions', globals())
@@ -87,10 +87,10 @@ class YearComparisions(object):
         return tmpl(macro=macro, cprofile=country_profile, records=records)
 
 
+@interface.implementer(INyPortlet)
+@component.adapter(INySite)
 class SourceComparisions(object):
     """Display this portlet under themes folder"""
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
 
     title = 'Data source comparisons'
     template = PageTemplateFile('zpt/portlets/source_comparisions', globals())

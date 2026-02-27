@@ -3,7 +3,7 @@ from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl.requestmethod import postonly
 from datetime import datetime
 from DateTime import DateTime
@@ -15,12 +15,12 @@ from Products.NaayaCore.managers.import_export import generate_excel
 # Meeting imports
 from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
                                    ADMINISTRATOR_ROLE, OWNER_ROLE)
-from permissions import PERMISSION_ADMIN_MEETING
+from .permissions import PERMISSION_ADMIN_MEETING
 from Products.NaayaCore.AuthenticationTool.utils import (
     getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber,
     findUsers, listUsersInGroup)
-from subscriptions import Subscriptions
-from countries import get_country_name
+from .subscriptions import Subscriptions
+from .countries import get_country_name
 
 
 class Participants(SimpleItem):
@@ -384,7 +384,7 @@ class Participants(SimpleItem):
                'country': country, 'reimbursed': reimbursed,
                'saved_by': saved_by, 'justification': justification}
         for k, v in ret.items():
-            if not isinstance(v, basestring):
+            if not isinstance(v, str):
                 ret[k] = u''
         return ret
 
@@ -436,7 +436,7 @@ class Participants(SimpleItem):
 
     def download(self, REQUEST=None, RESPONSE=None):
         """exports the participants listing in an excel file"""
-        assert self.rstk.we_provide('Excel export')
+        assert self.rstk['we_provide']('Excel export')
 
         header = ['Name', 'User ID', 'Email', 'Organisation',
                   'Represented country', 'Reimbursed participation', 'Phone',
@@ -471,7 +471,7 @@ class Participants(SimpleItem):
                                                            question[0])
                     if survey_answer is None:
                         survey_answer = '-'
-                    if isinstance(survey_answer, basestring):
+                    if isinstance(survey_answer, str):
                         survey_answers.append(survey_answer)
                     elif isinstance(survey_answer, DateTime):
                         survey_answers.append(survey_answer.strftime(

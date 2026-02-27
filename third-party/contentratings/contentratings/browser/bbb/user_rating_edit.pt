@@ -32,7 +32,7 @@
 			name="ratingimage"
 			style="border: 0; padding: 0 2px;"
 			tal:repeat="star stars"
-			tal:attributes="src python:(rating &lt; star) and blank_star_icon or star_icon;
+			tal:attributes="src python:(rating_or_zero &lt; star) and blank_star_icon or star_icon;
 							title string:Click to change;
 							onmouseover string:highlight(${star});
 							onmouseout string:highlight(${rating_or_zero});

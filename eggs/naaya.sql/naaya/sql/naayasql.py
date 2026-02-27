@@ -5,16 +5,21 @@ try:
     import sqlite3
 except ImportError:
     from pysqlite2 import dbapi2 as sqlite3
-import sha
+import hashlib
 import string
 from random import choice
 
 # Zope imports
-from Globals import Persistent
+from Persistence import Persistent
 
 # CLIENT_HOME is a Zope2 specific constant
 # usually referring to var/zope-instance, we want to create
 # a similar directory sibling to it
+try:
+    from App.config import getConfiguration
+    CLIENT_HOME = getConfiguration().clienthome
+except Exception:
+    CLIENT_HOME = os.environ.get('CLIENT_HOME', '.')
 DBS_FOLDER_PATH = os.path.join(CLIENT_HOME, "..", "naaya.sql")
 
 class DbMissing(Exception):
@@ -60,10 +65,10 @@ def new_db():
                                                        x + '-journal')))
     unique = False
     while not unique:
-        id = ''.join([choice(string.letters) for i in range(10)])
+        id = ''.join([choice(string.ascii_letters) for i in range(10)])
         unique = not exists(id)
     if not os.path.exists(DBS_FOLDER_PATH):
-        mkdir(DBS_FOLDER_PATH, 0755)
+        mkdir(DBS_FOLDER_PATH, 0o755)
     path = os.path.join(DBS_FOLDER_PATH, id)
     connection = sqlite3.connect(path)
     connection.close()

@@ -8,20 +8,15 @@ in a PersistentMapping.
 import logging
 import re
 
-try:
-    # zope 2.12
-    from Persistence import PersistentMapping
-except ImportError:
-    # zope <= 2.11
-    from Globals import PersistentMapping
+from persistent.mapping import PersistentMapping
 from Persistence import Persistent
-from zope.interface import implements
+from zope.interface import implementer
 from zope.event import notify
 
 from naaya.core.utils import force_to_unicode
 
-from interfaces import INyTranslationCatalog
-from events import MessageAddEvent
+from .interfaces import INyTranslationCatalog
+from .events import MessageAddEvent
 
 
 def collapse_whitespace(text):
@@ -33,10 +28,10 @@ def collapse_whitespace(text):
     return re.sub(r'\s+', ' ', text)
 
 
+@implementer(INyTranslationCatalog)
 class NyMessageCatalog(Persistent):
     """Stores messages and their translations"""
 
-    implements(INyTranslationCatalog)
 
 
     def __init__(self, id, title, languages=('en', )):
@@ -71,18 +66,18 @@ class NyMessageCatalog(Persistent):
         if lang not in self.get_languages():
             return
         # Add-by-edit functionality
-        if not self._messages.has_key(msgid):
+        if not msgid in self._messages:
             self.gettext(msgid, lang)
         self._messages[msgid][lang] = collapse_whitespace(translation)
 
     def del_message(self, msgid):
         """Deletes message and its translations from catalog"""
-        if self._messages.has_key(msgid):
+        if msgid in self._messages:
             del self._messages[msgid]
 
     def gettext(self, msgid, lang=None, default=None):
         """Returns the corresponding translation of msgid in Catalog."""
-        if not isinstance(msgid, basestring):
+        if not isinstance(msgid, str):
             raise TypeError('Only strings can be translated.')
         # saving everything unicode, utf-8
         elif isinstance(msgid, str):
@@ -102,11 +97,11 @@ class NyMessageCatalog(Persistent):
             return default
 
         # Add it if it's not in the dictionary
-        if not self._messages.has_key(msgid):
+        if not msgid in self._messages:
             self._messages[msgid] = PersistentMapping()
             notify(MessageAddEvent(self, msgid, lang, default))
 
-        if not self._messages[msgid].has_key(self._default_language):
+        if not self._default_language in self._messages[msgid]:
             default_translation = collapse_whitespace(default)
             self._messages[msgid][self._default_language] = default_translation
 

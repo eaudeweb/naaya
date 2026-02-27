@@ -1,5 +1,5 @@
 
-from unittest import TestCase, TestSuite, makeSuite
+from unittest import TestCase, TestSuite, TestLoader
 import os.path
 import os
 import email

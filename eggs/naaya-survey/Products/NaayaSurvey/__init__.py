@@ -24,14 +24,14 @@ from App.ImageFile import ImageFile
 from Products.Naaya import register_content
 
 # pkg imports
-import MegaSurvey
-from permissions import *
-import SurveyAnswer
-import SurveyAttachment
-import SurveyReport
+from . import MegaSurvey
+from .permissions import *
+from . import SurveyAnswer
+from . import SurveyAttachment
+from . import SurveyReport
 
 
-import statistics
+from . import statistics
 
 def initialize(context):
     """ """

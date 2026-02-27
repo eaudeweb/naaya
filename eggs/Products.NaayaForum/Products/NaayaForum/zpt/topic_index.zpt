@@ -40,7 +40,7 @@
 			<tal:block define="notif_tool here/getNotificationTool;
 						notif_url notif_tool/absolute_url;
 						subscripions_url string:${notif_url}/my_subscriptions_html;
-						location python: here.rstk.path_in_site(here);">
+						location python: here.rstk['path_in_site'](here);">
 				<a tal:attributes="href string:${subscripions_url}?location=${location}"
 					class="buttons notifications-link"
 					title="Subscribe to notifications"

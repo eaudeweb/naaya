@@ -5,7 +5,7 @@ Initialization of destinet.publishing package:
 
 from App.ImageFile import ImageFile
 
-from DestinetPublisher import DestinetPublisher, manage_addDestinetPublisher
+from .DestinetPublisher import DestinetPublisher, manage_addDestinetPublisher
 
 
 def initialize(context):

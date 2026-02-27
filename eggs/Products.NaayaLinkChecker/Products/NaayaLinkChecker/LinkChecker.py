@@ -1,18 +1,19 @@
 #Python imports
-from sets import Set
 import time
-import urlparse
-import urllib
+import urllib.parse
 
 #Zope imports
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.FindSupport import FindSupport
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zLOG import LOG, INFO, DEBUG
+import logging
+
+logger = logging.getLogger('NaayaLinkChecker')
 
 #Product's related imports
 from Products.NaayaLinkChecker.Utils import *
@@ -71,7 +72,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.batch_size = int(batch_size)
         self.ip_address = ip_address
         if REQUEST is not None:
-            if REQUEST.has_key('use_catalog'):
+            if 'use_catalog' in REQUEST:
                 self.use_catalog = 1
                 self.catalog_name = catalog_name
             else:
@@ -230,15 +231,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     try:
                         try:
                             links = list(get_links_from_html(value))
-                        except UnicodeError, err:
-                            LOG('NaayaLinkChecker', DEBUG, 'an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
-                            if isinstance(value, str):
+                        except UnicodeError as err:
+                            logger.debug('an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
+                            if isinstance(value, bytes):
                                 safe_value = value.decode('utf-8', 'ignore')
                             else:
-                                safe_value = value.encode('ascii', 'ignore')
+                                safe_value = value
                             links = list(get_links_from_html(safe_value))
-                    except Exception, err: # invalid html, unicode errors etc.
-                        LOG('NaayaLinkChecker', DEBUG, 'an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
+                    except Exception as err: # invalid html, unicode errors etc.
+                        logger.debug('an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
                         links = get_links_from_text(value)
                     all_links.extend((strip_hash(x), property, lang)
                                       for x in links)
@@ -247,8 +248,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('verifyIP')
     def verifyIP(self, REQUEST=None):
         """ verify IP """
-        if not REQUEST or not REQUEST.has_key('REMOTE_ADDR'):
-            raise AttributeError, "No REQUEST"
+        if not REQUEST or not 'REMOTE_ADDR' in REQUEST:
+            raise AttributeError("No REQUEST")
         if REQUEST['REMOTE_ADDR'] != self.ip_address.strip():
             raise Unauthorized
 
@@ -292,7 +293,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('checkLinks')
     def checkLinks(self, urlsinfo, urlsnumber):
         #build a list with all links
-        external_links = Set()
+        external_links = set()
         internal_links = []
         for ob_url, val in urlsinfo.items():
             for v in val:
@@ -300,23 +301,23 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 if is_absolute_url(link):
                     external_links.add(link)
                 else:
-                    url = urlparse.urljoin(ob_url, link)
-                    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-                    internal_links.append((link, urllib.unquote(path)))
+                    url = urllib.parse.urljoin(ob_url, link)
+                    scheme, netloc, path, query, fragment = urllib.parse.urlsplit(url)
+                    internal_links.append((link, urllib.parse.unquote(path)))
         external_links = iter2Queue(external_links)
         #start threads
-        LOG('NaayaLinkChecker', INFO, 'Starting %u link checking threads' % THREAD_COUNT)
+        logger.info('Starting %u link checking threads' % THREAD_COUNT)
         logresults = {}
         threads = []
         for thread in range(THREAD_COUNT):
             th = CheckerThread(external_links, logresults, proxy=self.proxy)
-            th.setName(thread)
+            th.name = thread
             threads.append(th)
             results = th.start()
         self.checkInternalLinks(internal_links, logresults)
         for thread in threads:
             thread.join()
-        LOG('NaayaLinkChecker', INFO, 'Link checking threads stopped')
+        logger.info('Link checking threads stopped')
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
 
     security.declarePrivate('checkInternalLinks')
@@ -337,7 +338,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """ """
         log = []
         for ob_url, links in links_dict.items():
-            ob = self.unrestrictedTraverse(urlparse.urlsplit(ob_url)[2])
+            ob = self.unrestrictedTraverse(urllib.parse.urlsplit(ob_url)[2])
             buf = []
             for link in links:
                 err = logresults.get(link[0], 'NOT CHECKED')
@@ -369,7 +370,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declareProtected(view_management_screens, 'hasMetaType')
     def hasMetaType(self, meta_type):
         """Is this meta_type in our list"""
-        return self.objectMetaType.has_key(meta_type)
+        return meta_type in self.objectMetaType
 
     security.declareProtected(view_management_screens, 'getObjectMetaTypes')
     def getObjectMetaTypes(self):
@@ -403,7 +404,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def getFailPercentage(self, link):
         """Returns the link fail percentage based on the last 5 logs"""
         logs = self.getLogEntries()
-        logs.sort(lambda x, y: cmp(y.bobobase_modification_time(), x.bobobase_modification_time()))
+        logs.sort(key=lambda x: x._p_mtime, reverse=True)
         logs = logs[:5]
         failed = 0
         for log in logs:

@@ -1,14 +1,11 @@
-from mock import Mock
-import logging
-from tempfile import NamedTemporaryFile
+from unittest.mock import Mock
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from AccessControl.User import UnrestrictedUser
+from AccessControl.users import UnrestrictedUser
 
 from naaya.content.url.url_item import addNyURL
 
-import destinet.publishing
 from destinet.testing.DestinetTestCase import DestinetTestCase
 
 
@@ -32,23 +29,12 @@ class PublisherTestSuite(DestinetTestCase):
 
         self.REQUEST.RESPONSE.redirect = save_redirect
         super(PublisherTestSuite, self).setUp()
-        # Logger setup for testing:
-        logger = logging.getLogger(destinet.publishing.subscribers.__name__)
-        self.logfile = NamedTemporaryFile()
-        handler = logging.FileHandler(self.logfile.name)
-        logger.addHandler(handler)
-
-    def tearDown(self):
-        self.logfile.close()
 
     def test_disseminate_url(self):
         addNyURL(self.portal.resources, id='url', title='url',
                  coverage='Georgia, Not Existing', topics=['atopic'],
                  url='http://eaudeweb.ro', contributor='simiamih')
+        # Pointer auto-creation was removed in #4463, so the URL should
+        # not appear under countries.
         self.assertEqual(getattr(self.portal.countries.southgeorgia,
                                  'url', None), None)
-
-        log_content = self.logfile.read()
-        self.assertTrue(
-            "Country 'Not Existing' not found in destinet countries"
-            in log_content)

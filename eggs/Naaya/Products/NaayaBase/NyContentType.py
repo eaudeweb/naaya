@@ -5,9 +5,9 @@ import logging
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zope.interface import implements
+from zope.interface import implementer
 from zope.annotation.interfaces import IAttributeAnnotatable
 from zope.event import notify
 from DateTime import DateTime
@@ -58,6 +58,8 @@ class SchemaFormHelper(object):
     Helper object for rendering forms: lists widgets, fills in values, and
     displays form errors
     """
+
+    __allow_access_to_unprotected_subobjects__ = True
 
     def __init__(self, schema, context, value_callback=None):
         self.schema = schema
@@ -122,7 +124,10 @@ class SchemaFormHelper(object):
 
     def del_schema_session_values(self):
         schema_prop_names = self.schema.listPropNames()
-        for key in self.context.REQUEST.SESSION.keys():
+        session = getattr(self.context.REQUEST, 'SESSION', None)
+        if session is None:
+            return
+        for key in session.keys():
             # We remove anything that ends in '-errors', not just schema
             # errors. This is not ideal, but content types sometimes expect
             # their own non-schema errors to be removed by us.
@@ -143,13 +148,13 @@ def get_schema_helper_for_metatype(context, meta_type, value_callback=None):
     return SchemaFormHelper(schema, context, value_callback)
 
 
+@implementer(INyContentObject, IAttributeAnnotatable)
 class NyContentType(object):
     """
     Base class for NyZzz classes - wrapper for NyContentData instances
     that handle editing, displaying, etc.
     """
 
-    implements(INyContentObject, IAttributeAnnotatable)
 
     security = ClassSecurityInfo()
 
@@ -239,7 +244,7 @@ class NyContentType(object):
     def _prepare_error_response(self, REQUEST, form_errors, REQUEST_form):
         self.setSessionErrorsTrans(
             'The form contains errors. Please correct them and try again.')
-        for key, value in form_errors.iteritems():
+        for key, value in form_errors.items():
             if value:
                 self.setSession('%s-errors' % key, '; '.join(value))
         schema = self._get_schema()
@@ -382,7 +387,7 @@ class NyContentType(object):
         parents = parents_in_site_path(self)
         if len(parents) > 1:
             parents.pop(0)  # do not include site
-        return " &raquo; ".join(parents)
+        return " \u00bb ".join(parents)
 
 
 InitializeClass(NyContentType)
@@ -418,6 +423,12 @@ class NyContentData(NyProperties):
     (so 'self' is actually a NyZzz instance) or we aquire it (because we're a
     descendant of a NyZzz instance).
     """
+
+    # Allow unrestricted attribute access so that version data objects
+    # (contact_item, document_item, etc.) can be used as 'here' in ZPT
+    # templates and have their acquired attributes (site_title, etc.)
+    # accessible through TALES path expressions in Zope 5.
+    __allow_access_to_unprotected_subobjects__ = True
 
     security = ClassSecurityInfo()
 
@@ -579,7 +590,7 @@ class NyContentData(NyProperties):
             _lang = self.gl_get_selected_language()
         schema = self._get_schema()
 
-        for prop_name, prop_value in kwargs.iteritems():
+        for prop_name, prop_value in kwargs.items():
             widget = schema.getWidget(prop_name)
             prop_type = widget.getDataType()
             if prop_type is not None:
@@ -673,8 +684,8 @@ class NyContentData(NyProperties):
     security.declareProtected(view, 'title_utf8')
 
     def title_utf8(self):
-        if not isinstance(self.title, basestring):
-            return self.title
-        return self.title.encode('utf-8')
+        if isinstance(self.title, bytes):
+            return self.title.decode('utf-8')
+        return self.title
 
 InitializeClass(NyContentData)

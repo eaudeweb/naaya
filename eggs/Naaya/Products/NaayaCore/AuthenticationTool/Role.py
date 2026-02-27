@@ -1,5 +1,5 @@
-from AccessControl.Role import RoleManager
-from Globals import InitializeClass
+from AccessControl.rolemanager import RoleManager
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.NaayaBase.constants import *
@@ -34,9 +34,9 @@ class Role(RoleManager, utils):
             return REQUEST.RESPONSE.redirect('manage_roles_html')
 
         if not role:
-            raise ValidationError, 'You must specify a role name'
+            raise ValidationError('You must specify a role name')
         if role in self.__ac_roles__:
-            raise ValidationError, 'The role %r is already defined' % role
+            raise ValidationError('The role %r is already defined' % role)
 
         self.getSite()._addRole(role)
 
@@ -46,7 +46,7 @@ class Role(RoleManager, utils):
     def delRole(self, roles=[], REQUEST=None):
         """ delete role"""
         if not roles:
-            raise ValidationError, 'You must specify a role name'
+            raise ValidationError('You must specify a role name')
         roles = self.utConvertToList(roles)
         self._delRole(roles)
         if REQUEST is not None:

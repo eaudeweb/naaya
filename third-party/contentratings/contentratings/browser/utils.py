@@ -1,5 +1,5 @@
 import random
-from zope.interface import implements
+from zope.interface import implementer
 from contentratings.browser.interfaces import IAnonymousSession
 
 class AnonSessionUtil(object):
@@ -52,7 +52,7 @@ class AnonSessionUtil(object):
             # browsers.  Users who delete this cookie can rate again,
             # but the same is true with SESSION if the user removes
             # the cookie and restarts the browser.
-            sid =''.join(random.choice('ABCDEF0123456789') for x in xrange(32))
+            sid =''.join(random.choice('ABCDEF0123456789') for x in range(32))
             request.response.setCookie(
                 "contentratings",
                 sid,

@@ -2,7 +2,7 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -11,7 +11,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -26,8 +26,8 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyCaseStudy
-from permissions import PERMISSION_ADD_CASE_STUDY
+from .interfaces import INyCaseStudy
+from .permissions import PERMISSION_ADD_CASE_STUDY
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -95,7 +95,7 @@ DEFAULT_SCHEMA['releasedate'].update(visible=False)
 DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
-from skel import CASE_STUDY_LISTS as LISTS
+from .skel import CASE_STUDY_LISTS as LISTS
 
 def setupContentType(site):
     ptool = site.getPortletsTool()
@@ -281,10 +281,9 @@ def importNyCaseStudy(self, param, id, attrs, content, properties, discussion, o
 class case_study_item(Implicit, NyContentData):
     """ """
 
+@implementer(INyCaseStudy)
 class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
-
-    implements(INyCaseStudy)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -327,7 +326,7 @@ class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyConte
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -357,9 +356,9 @@ class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyConte
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -373,9 +372,9 @@ class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyConte
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = case_study_item()
@@ -388,12 +387,12 @@ class NyCaseStudy(case_study_item, NyAttributes, NyItem, NyCheckControl, NyConte
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 

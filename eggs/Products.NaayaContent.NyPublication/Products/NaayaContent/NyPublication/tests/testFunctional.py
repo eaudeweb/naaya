@@ -36,17 +36,17 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/publication_add_html')
-        self.failUnless('<h1>Submit Publication</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit Publication</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'locator:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.failUnlessEqual(form['sortorder:utf8:ustring'], '100')
+        self.assertEqual(form['sortorder:utf8:ustring'], '100')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         form['title:utf8:ustring'] = 'test_publication'
@@ -58,18 +58,18 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Thank you for your submission</h1>' in html)
+        self.assertTrue('<h1>Thank you for your submission</h1>' in html)
 
         self.portal.myfolder.test_publication.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_publication')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_publication.*</h1>', html, re.DOTALL))
-        self.failUnless('test_publication_description' in html)
-        self.failUnless('test_publication_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
-        self.failUnless('http://www.eaudeweb.ro' in html)
-        self.failUnless('test_publication_original' in html)
+        self.assertTrue(re.search(r'<h1>.*test_publication.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_publication_description' in html)
+        self.assertTrue('test_publication_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
+        self.assertTrue('http://www.eaudeweb.ro' in html)
+        self.assertTrue('test_publication_original' in html)
 
         self.browser_do_logout()
 
@@ -83,8 +83,8 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -92,13 +92,13 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         self.browser.go('http://localhost/portal/myfolder/mypublication/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My publication')
+        self.assertEqual(form['title:utf8:ustring'], 'My publication')
 
         form['title:utf8:ustring'] = 'new_publication_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
+        self.assertEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
 
         self.browser.go('http://localhost/portal/myfolder/mypublication/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -107,10 +107,10 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
-        self.failUnlessEqual(self.portal.myfolder.mypublication.locator, 'http://www.eaudeweb.ro')
-        self.failUnlessEqual(self.portal.myfolder.mypublication.getLocalProperty('title', 'fr'), 'french_title')
-        self.failUnlessEqual(self.portal.myfolder.mypublication.getLocalProperty('locator', 'fr'), 'http://www.eaudeweb.ro/?lang=fr')
+        self.assertEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
+        self.assertEqual(self.portal.myfolder.mypublication.locator, 'http://www.eaudeweb.ro')
+        self.assertEqual(self.portal.myfolder.mypublication.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mypublication.getLocalProperty('locator', 'fr'), 'http://www.eaudeweb.ro/?lang=fr')
 
         self.browser_do_logout()
 
@@ -125,8 +125,8 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -135,12 +135,12 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
 
         self.browser.go('http://localhost/portal/myfolder/mypublication/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My publication')
+        self.assertEqual(form['title:utf8:ustring'], 'My publication')
         form['title:utf8:ustring'] = 'new_publication_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
+        self.assertEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
 
         self.browser_do_logout()
 

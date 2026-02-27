@@ -20,8 +20,8 @@
 
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
-from types import StringType
+from io import BytesIO, StringIO
+StringType = str
 
 #constants
 _FILE_ATTRS = ['original', 'source-language', 'datatype', 'date',
@@ -157,7 +157,7 @@ class xliff_parser:
         parser.setFeature(handler.feature_external_ges, 0)
 
         inpsrc = InputSource()
-        inpsrc.setByteStream(StringIO(xml_string))
+        inpsrc.setByteStream(BytesIO(xml_string))
         try:
             parser.parse(inpsrc)
             return chandler
@@ -179,10 +179,10 @@ class xliff_parser:
 
         try:
             if type(file) is StringType:
-                inputsrc.setByteStream(StringIO(file))
+                inputsrc.setByteStream(BytesIO(file))
             else:
                 filecontent = file.read()
-                inputsrc.setByteStream(StringIO(filecontent))
+                inputsrc.setByteStream(BytesIO(filecontent))
             parser.parse(inputsrc)
             return chandler
         except:

@@ -1,6 +1,6 @@
-from zope.interface import implements
+from zope.interface import implementer
 
-from interfaces import (INyForumObjectAddEvent,
+from .interfaces import (INyForumObjectAddEvent,
                         INyForumTopicAddEvent,
                         INyForumMessageAddEvent,
                         INyForumObjectEditEvent,
@@ -12,20 +12,26 @@ class BasicEvent(object):
         self.context = context
         self.contributor = contributor
 
+@implementer(INyForumObjectAddEvent)
 class NyForumObjectAddEvent(BasicEvent):
-    implements(INyForumObjectAddEvent)
+    pass
 
+@implementer(INyForumTopicAddEvent)
 class NyForumTopicAddEvent(NyForumObjectAddEvent):
-    implements(INyForumTopicAddEvent)
+    pass
 
+@implementer(INyForumMessageAddEvent)
 class NyForumMessageAddEvent(NyForumObjectAddEvent):
-    implements(INyForumMessageAddEvent)
+    pass
 
+@implementer(INyForumObjectEditEvent)
 class NyForumObjectEditEvent(BasicEvent):
-    implements(INyForumObjectEditEvent)
+    pass
 
+@implementer(INyForumTopicEditEvent)
 class NyForumTopicEditEvent(NyForumObjectEditEvent):
-    implements(INyForumTopicEditEvent)
+    pass
 
+@implementer(INyForumMessageEditEvent)
 class NyForumMessageEditEvent(NyForumObjectEditEvent):
-    implements(INyForumMessageEditEvent)
+    pass

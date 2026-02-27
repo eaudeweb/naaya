@@ -2,9 +2,9 @@ from copy import deepcopy
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from PIL import Image
-from StringIO import StringIO
+from io import StringIO
 from App.FactoryDispatcher import FactoryDispatcher
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
@@ -15,7 +15,7 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from DateTime import DateTime
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.Naaya.adapters import FolderMetaTypes
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
@@ -31,8 +31,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from interfaces import INyHexfolder
-from permissions import PERMISSION_ADD_HEXFOLDER
+from .interfaces import INyHexfolder
+from .permissions import PERMISSION_ADD_HEXFOLDER
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -305,10 +305,9 @@ class hexfolder_item(Implicit, NyContentData):
         setattr(self, "picture_%s" % count, None)
         self._p_changed = 1
 
+@implementer(INyHexfolder)
 class NyHexfolder(hexfolder_item, NyFolder):
     """ """
-
-    implements(INyHexfolder)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -353,7 +352,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -399,12 +398,12 @@ class NyHexfolder(hexfolder_item, NyFolder):
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 

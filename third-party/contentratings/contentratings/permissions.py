@@ -9,7 +9,7 @@ try:
     import Products
     from AccessControl.Permission import _registeredPermissions
     from AccessControl.Permission import pname
-    from Globals import ApplicationDefaultPermissions
+    from OFS.Application import ApplicationDefaultPermissions
 
     def setDefaultRoles(permission, roles):
         '''

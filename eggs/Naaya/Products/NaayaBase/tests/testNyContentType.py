@@ -46,25 +46,25 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         obj = NyDummy()
 
         obj._change_schema_properties(my_str='asdf')
-        self.failUnlessEqual(obj.my_str, 'asdf')
+        self.assertEqual(obj.my_str, 'asdf')
 
         obj._change_schema_properties(my_local_str='yes')
         obj._change_schema_properties(my_local_str='oui', _lang='fr')
-        self.failUnlessEqual(obj.my_local_str, 'yes')
-        self.failUnlessEqual(obj.getLocalProperty('my_local_str', 'fr'), 'oui')
+        self.assertEqual(obj.my_local_str, 'yes')
+        self.assertEqual(obj.getLocalProperty('my_local_str', 'fr'), 'oui')
 
     def test_getattr_inheritance(self):
         obj = NyDummy()
         obj._change_schema_properties(my_str='lala_str', my_local_str='lala_local_str')
 
-        self.failUnlessEqual(obj.my_str, 'lala_str')
-        self.failUnlessEqual(obj.my_local_str, 'lala_local_str')
+        self.assertEqual(obj.my_str, 'lala_str')
+        self.assertEqual(obj.my_local_str, 'lala_local_str')
 
         # Note: my_local_str_en is provided by Localizer's LocalPropertyManager
         # class (not by NyContentData), so if we get the correct value,
         # our __getattr__ inheritance works properly
-        self.failUnlessEqual(obj.my_local_str_en, 'lala_local_str')
-        self.failUnlessRaises(AttributeError, lambda: obj.xzzx)
+        self.assertEqual(obj.my_local_str_en, 'lala_local_str')
+        self.assertRaises(AttributeError, lambda: obj.xzzx)
 
     def test_special_properties(self):
         """
@@ -77,8 +77,8 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         obj._change_schema_properties(title='tomorrow')
         obj._change_schema_properties(title='demain', _lang='fr')
 
-        self.failUnlessEqual(obj.title, 'tomorrow')
-        self.failUnlessEqual(obj.getLocalProperty('title', 'fr'), 'demain')
+        self.assertEqual(obj.title, 'tomorrow')
+        self.assertEqual(obj.getLocalProperty('title', 'fr'), 'demain')
 
         # check that things work well even if title is not a local property
         obj._schema = _create_test_schema()
@@ -87,7 +87,7 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         obj._change_schema_properties(title='tomorrow')
         obj._change_schema_properties(title='demain', _lang='fr')
 
-        self.failUnlessEqual(obj.title, 'demain')
+        self.assertEqual(obj.title, 'demain')
 
     def test_copy_schema_properties(self):
         obj = NyDummy()
@@ -99,18 +99,18 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         obj2 = dummy_item()
         obj2.copy_naaya_properties_from(obj)
 
-        self.failUnlessEqual(obj2.title, 'title_val')
-        self.failUnlessEqual(obj2.my_str, 'my_str_val')
-        self.failUnlessEqual(obj2.my_local_str, 'my_local_str_val')
-        self.failUnlessEqual(obj2.getLocalProperty('my_local_str', 'fr'),
+        self.assertEqual(obj2.title, 'title_val')
+        self.assertEqual(obj2.my_str, 'my_str_val')
+        self.assertEqual(obj2.my_local_str, 'my_local_str_val')
+        self.assertEqual(obj2.getLocalProperty('my_local_str', 'fr'),
                              'my_local_str_fr_val')
-        self.failUnlessEqual(obj2.my_int, 13)
+        self.assertEqual(obj2.my_int, 13)
 
     def test_change_schema_properties(self):
         obj = NyDummy()
         obj._change_schema_properties(my_int="12")
-        self.failUnlessEqual(obj.my_int, 12)
-        self.failUnlessRaises(ValueError, 
+        self.assertEqual(obj.my_int, 12)
+        self.assertRaises(ValueError, 
                               lambda: obj._change_schema_properties(my_int="3.14"))
 
     def test_dump_data(self):

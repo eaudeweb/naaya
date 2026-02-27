@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import unittest
-from mock import patch
+from unittest.mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
@@ -9,11 +9,15 @@ from naaya.i18n.interfaces import INyTranslationCatalog
 
 class _TranslationCatalog(unittest.TestCase):
 
-    catalog_factory = None # TBC
+    catalog_factory = None # TBC — subclasses must override
+
+    def setUp(self):
+        if self.catalog_factory is None:
+            self.skipTest("abstract base class")
 
     def test_clean_catalog_from_setup(self):
         catalog = self.catalog_factory(languages=('en', 'de'))
-        self.assertRaises(StopIteration, catalog.messages().next)
+        self.assertRaises(StopIteration, lambda: next(catalog.messages()))
 
 
     def test_clean_translation(self):
@@ -68,7 +72,7 @@ class _TranslationCatalog(unittest.TestCase):
         all_msgs = catalog.messages()
         try:
             while True:
-                all_msgs.next()
+                next(all_msgs)
                 i += 1
         except StopIteration:
             pass
@@ -78,7 +82,7 @@ class _TranslationCatalog(unittest.TestCase):
         catalog = self.catalog_factory(languages=('en', 'de'))
         catalog.gettext('cat', 'fr')
         # fr doesn't exist, don't add msgid 'cat'
-        self.assertRaises(StopIteration, catalog.messages().next)
+        self.assertRaises(StopIteration, lambda: next(catalog.messages()))
 
     def test_language_get(self):
         catalog = self.catalog_factory(languages=('en', 'de'))
@@ -111,7 +115,7 @@ class NyMessageCatalogTest(NaayaTestCase, _TranslationCatalog):
         catalog.clear()
         for lang in catalog.get_languages():
             catalog.del_language(lang)
-        if kw.has_key('languages'):
+        if 'languages' in kw:
             for lang in kw['languages']:
                 catalog.add_language(lang)
         return catalog
@@ -132,7 +136,7 @@ else:
             catalog.clear()
             for lang in catalog.get_languages():
                 catalog.del_language(lang)
-            if kw.has_key('languages'):
+            if 'languages' in kw:
                 for lang in kw['languages']:
                     catalog.add_language(lang)
             return catalog

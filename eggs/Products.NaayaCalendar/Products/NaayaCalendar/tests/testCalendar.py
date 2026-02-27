@@ -17,7 +17,7 @@
 # Authors:
 #
 # Cornel Nitu, Eau de Web
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.Naaya.tests import NaayaTestCase
 
 from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
@@ -84,5 +84,5 @@ class NaayaCalendarTestCase(NaayaTestCase.NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaCalendarTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaCalendarTestCase))
     return suite

@@ -23,8 +23,8 @@
 from App.ImageFile import ImageFile
 
 #Product imports
-from constants import *
-import NyNetRepository
+from .constants import *
+from . import NyNetRepository
 
 def initialize(context):
     """ """

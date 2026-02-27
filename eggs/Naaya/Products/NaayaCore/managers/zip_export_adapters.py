@@ -1,12 +1,13 @@
 import re
-from zope.interface import implements
-from interfaces import IZipExportObject
+from zope.interface import implementer
+from .interfaces import IZipExportObject
 
 
 # characters not allowed in filesystem names
 illegal_fs_char = re.compile(r'[%s]' % re.escape('?[]/=+<>:;",*^\\\0'))
 
 
+@implementer(IZipExportObject)
 class DefaultZipAdapter(object):
     """
     Basic implementation of IZipExportObject. Useful to aviod boilerplate code
@@ -18,7 +19,6 @@ class DefaultZipAdapter(object):
     `extension`. Subclasses should consider providing a fixed value for
     `extension`.
     """
-    implements(IZipExportObject)
 
     data = ''
     export_as_folder = False
@@ -29,8 +29,8 @@ class DefaultZipAdapter(object):
 
     @property
     def base_filename(self):
-        base_name = self.context.getId()
-        return illegal_fs_char.sub('_', base_name).encode('utf-8')
+        base_name = self.context.title_or_id()
+        return illegal_fs_char.sub('_', base_name)
 
     @property
     def filename(self):
@@ -132,12 +132,6 @@ class FileZipAdapter(DefaultZipAdapter):
     @property
     def data(self):
         return self.context.get_data()
-
-    @property
-    def filename(self):
-        filename = self.context.utToUtf8(self.context.downloadfilename())
-        filename = self.context.utSlugify(filename)
-        return filename
 
 
 class ContactZipAdapter(DefaultZipAdapter):

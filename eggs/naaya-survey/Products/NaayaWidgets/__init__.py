@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 
-import widgets
+from . import widgets
 
 def initialize(context):
     widgets.initialize(context)

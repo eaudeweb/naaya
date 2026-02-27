@@ -2,8 +2,8 @@ import os
 import tempfile
 import shutil
 import unittest
-from mock import patch
-import Globals
+from unittest.mock import patch
+import os
 import os.path
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
@@ -19,16 +19,16 @@ class EmailTestCase(FunctionalTestCase):
 
         smtp_log = self.mail_log
 
-        self.failUnlessEqual(len(smtp_log), 3)
-        self.failUnlessEqual(smtp_log[0][0], 'init')
-        self.failUnlessEqual(smtp_log[1][0], 'sendmail')
-        self.failUnlessEqual(smtp_log[2][0], 'quit')
+        self.assertEqual(len(smtp_log), 3)
+        self.assertEqual(smtp_log[0][0], 'init')
+        self.assertEqual(smtp_log[1][0], 'sendmail')
+        self.assertEqual(smtp_log[2][0], 'quit')
 
-        self.failUnlessEqual(smtp_log[1][1]['from'], 'test_from@example.com')
-        self.failUnlessEqual(smtp_log[1][1]['to'], ['test_to@example.com'])
-        self.failUnless('Subject: test_subject\n' in smtp_log[1][1]['message'])
-        self.failUnless('test_content' in smtp_log[1][1]['message'])
-        self.failUnless('Content-Type: text/plain;' in
+        self.assertEqual(smtp_log[1][1]['from'], 'test_from@example.com')
+        self.assertEqual(smtp_log[1][1]['to'], ['test_to@example.com'])
+        self.assertTrue('Subject: test_subject\n' in smtp_log[1][1]['message'])
+        self.assertTrue('test_content' in smtp_log[1][1]['message'])
+        self.assertTrue('Content-Type: text/plain;' in
                         smtp_log[1][1]['message'])
 
     def test_mail_from(self):
@@ -40,9 +40,9 @@ class EmailTestCase(FunctionalTestCase):
         self.assertEqual(len(smtp_log), 3)
         to = smtp_log[1][1]['to']
 
-        self.failUnlessEqual(len(to), 2)
-        self.failUnless('test_to_1@example.com' in to)
-        self.failUnless('test_to_2@example.com' in to)
+        self.assertEqual(len(to), 2)
+        self.assertTrue('test_to_1@example.com' in to)
+        self.assertTrue('test_to_2@example.com' in to)
 
 class EmailSaveTestCase(unittest.TestCase):
     def setUp(self):
@@ -78,11 +78,11 @@ class EmailSaveTestCase(unittest.TestCase):
         emails = get_bulk_emails(self.portal)
 
         self.assertEqual(len(emails), 1)
-        self.failUnless('content' in emails[0])
-        self.failUnless('date' in emails[0])
-        self.failUnless('subject' in emails[0])
-        self.failUnless('sender' in emails[0])
-        self.failUnless('recipients' in emails[0])
+        self.assertTrue('content' in emails[0])
+        self.assertTrue('date' in emails[0])
+        self.assertTrue('subject' in emails[0])
+        self.assertTrue('sender' in emails[0])
+        self.assertTrue('recipients' in emails[0])
 
         self.assertEqual(emails[0]['content'], '<br/>Hello World!</p><p>')
         self.assertEqual(emails[0]['subject'], 'Hello!')
@@ -127,7 +127,8 @@ class EmailToolTestCase(unittest.TestCase):
             'onlyInEmails': 'X',
         }]
         r = export_email_list_xcel(None, cols)
-        expected = open(os.path.join(
-            Globals.package_home(globals()), 'data/emailList.xls'),
-            'r').read()
+        with open(os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'data/emailList.xls'),
+                'rb') as _f:
+            expected = _f.read()
         self.assertEqual(r, expected)

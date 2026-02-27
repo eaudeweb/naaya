@@ -3,16 +3,16 @@ Bundles are extra component registries that can be mixed and matched.
 Conceptually based on the `z3c.baseregistry` package.
 """
 from zope.component import globalregistry, getGlobalSiteManager
-from zope.interface import implements
-from interfaces import IBundle, ICustomize
+from zope.interface import implementer
+from .interfaces import IBundle, ICustomize
 
+@implementer(IBundle)
 class Bundle(globalregistry.BaseGlobalComponents):
     """
     A Naaya bundle of components. Bundle implements the
     `zope.component.interfaces.IComponents` interface, so it handles component
     registration and lookup.
     """
-    implements(IBundle)
 
     def __init__(self, *args, **kwargs):
         super(Bundle, self).__init__(*args, **kwargs)

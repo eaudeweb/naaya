@@ -1,6 +1,6 @@
 import os
 import re
-from StringIO import StringIO
+from io import StringIO
 import urllib
 
 import transaction

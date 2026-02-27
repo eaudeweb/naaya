@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
-from Globals import MessageDialog, InitializeClass
+from AccessControl.class_init import InitializeClass
+from App.Dialogs import MessageDialog
 from OFS.Folder import Folder
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import file_utils
@@ -19,26 +20,25 @@ from Products.NaayaGlossary.parsers.subjects_parser import subjects_parser
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.ZCatalog.ZCatalog import ZCatalog
-from ZPublisher.HTTPRequest import record
-from cStringIO import StringIO
+
+from io import BytesIO, StringIO
 from copy import copy
-from interfaces import INyGlossaryItem, IItemTranslationChanged
+from .interfaces import INyGlossaryItem, IItemTranslationChanged
 from naaya.core.folderutils import sort_folder
 from naaya.core.utils import download_to_temp_file
 from naaya.core.zope2util import ofs_walk, ofs_path, relative_object_path
 from os.path import join
-from parsers.xliff_parser import xliff_parser
+from .parsers.xliff_parser import xliff_parser
 from persistent.mapping import PersistentMapping
-from utils import utils, catalog_utils
+from .utils import utils, catalog_utils
 from zipfile import ZipFile
-from zope.app.container.interfaces import IObjectAddedEvent
-from zope.app.container.interfaces import IObjectRemovedEvent
-import NyGlossaryFolder
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
+from . import NyGlossaryFolder
 import Products
 import logging
 import lxml.etree
 import simplejson as json
-import string
 import transaction
 
 log = logging.getLogger('Products.NaayaGlossary')
@@ -171,7 +171,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         except:
             pass
         try:
-            catalog_obj.addIndex('bobobase_modification_time', 'FieldIndex')
+            catalog_obj.addIndex('modification_time', 'FieldIndex')
         except:
             pass
         try:
@@ -186,10 +186,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             catalog_obj.addIndex('path', 'PathIndex')
         except:
             pass
-        title_index_extra = record()
-        title_index_extra.default_encoding = 'utf-8'
         try:
-            catalog_obj.addIndex('title', 'TextIndexNG3', title_index_extra)
+            _add_catalog_language_index(catalog_obj, 'title')
         except:
             pass
 
@@ -207,7 +205,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         except:
             pass
         try:
-            catalog_obj.addColumn('bobobase_modification_time')
+            catalog_obj.addColumn('modification_time')
         except:
             pass
         try:
@@ -383,7 +381,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                REQUEST=None):
         """ manage subjects for NyGlossary """
         if self.utAddObjectAction(REQUEST):
-            if (string.strip(code) == '' or string.strip(name) == '' and
+            if (code.strip() == '' or name.strip() == '' and
                     REQUEST):
                 return REQUEST.RESPONSE.redirect('themes_html?tab=0')
             else:
@@ -394,7 +392,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     if REQUEST:
                         return REQUEST.RESPONSE.redirect('themes_html?tab=0')
         elif self.utUpdateObjectAction(REQUEST):
-            if (string.strip(code) == '' or string.strip(name) == '' and
+            if (code.strip() == '' or name.strip() == '' and
                     REQUEST):
                 return REQUEST.RESPONSE.redirect('themes_html?tab=0')
             else:
@@ -414,7 +412,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     def addTheme(self, code='', name='', REQUEST=None):
         """ Add a new theme with the given code and name """
-        code, name = string.strip(code), string.strip(name)
+        code, name = code.strip(), name.strip()
         if not name and REQUEST:
             return REQUEST.RESPONSE.redirect('index_themes_html')
         if not code:
@@ -446,7 +444,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def updateTheme(self, old_code='', code='', name='', lang_codes=[],
                     translations=[], REQUEST=None):
         """ Change theme name or code """
-        code, name = string.strip(code), string.strip(name)
+        code, name = code.strip(), name.strip()
         if not code or not name and REQUEST:
             return REQUEST.RESPONSE.redirect('index_themes_html')
         if code == old_code:
@@ -673,7 +671,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                   old_english_name='', REQUEST=None):
         """ manage languages for NyGlossary """
         if self.utAddObjectAction(REQUEST):
-            if string.strip(lang) == '' or string.strip(english_name) == '':
+            if lang.strip() == '' or english_name.strip() == '':
                 if REQUEST:
                     return REQUEST.RESPONSE.redirect('languages_html')
             else:
@@ -696,7 +694,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     def addLanguage(self, english_name='', lang='', REQUEST=None):
         """ """
-        if string.strip(lang) == '' or string.strip(english_name) == '':
+        if lang.strip() == '' or english_name.strip() == '':
             if REQUEST:
                 self.setSessionErrorsTrans(
                     "Please specify language name and code.")
@@ -866,6 +864,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE], sort_on='id',
             sort_order='', path=path)
 
+    security.declarePublic('get_all_elements')
     def get_all_elements(self, sort_on='id'):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(
@@ -968,8 +967,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ Save the new order of the tree and return a json reponse """
         try:
             tree_data = json.loads(REQUEST.form.get('data'))
-            assert (tree_data['attributes']['id'] == self.getId(),
-                    "This is not the same glossary")
+            assert tree_data['attributes']['id'] == self.getId(), \
+                    "This is not the same glossary"
             folder_ids = []
             for folder in tree_data['children']:
                 folder_id = folder['attributes']['id']
@@ -981,7 +980,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     element_ids.append(element['attributes']['id'])
                 sort_folder(folder_ob, element_ids)
             sort_folder(self, folder_ids)
-        except Exception, e:
+        except Exception as e:
             return 'ERROR: %s' % e
         return 'OK'
 
@@ -1011,7 +1010,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         obj = mapTiny()
 
         for ids, translation in body_info.items():
-            print "Processing", ids
+            print("Processing", ids)
             # ids is (u'voluntary-sector', u'V')
             # translation is {'approved': u'1',
             #                 'context': u'V',
@@ -1019,14 +1018,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             #                 'note': u'voluntary sector',
             #                 'source': u'voluntary sector',
             #                 'target': u'voluntary sector'}
-            elem_id = ids[0].encode('utf-8')    # := 'voluntary-sector'
+            elem_id = ids[0]    # := 'voluntary-sector'
 
             if elem_id != '':
                 l_context_name = translation['context-name']    # := 'V'
                 if l_context_name:
-                    folder_id = ids[1].encode('utf-8')          # := 'V'
+                    folder_id = ids[1]          # := 'V'
                 else:
-                    folder_id = string.upper(elem_id[:1])
+                    folder_id = elem_id[:1].upper()
                 folder = self._getOb(folder_id, None)
                 if folder is None:
                     try:
@@ -1055,7 +1054,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     obj.translations[target_language] = translation['target']
 
                 if obj.entry != '':
-                    elem_ob = folder._getOb(obj.entry.encode('utf-8'), None)
+                    elem_ob = folder._getOb(obj.entry, None)
                     if elem_ob is not None:
                         for k, v in obj.translations.items():
                             elem_ob.set_translations_list(k, v)
@@ -1067,7 +1066,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                             folder.manage_addGlossaryElement(
                                 elem_id, obj.entry, '', elem_subjects, '',
                                 self.utConvertToInt(
-                                    translation['approved'].encode('utf-8')))
+                                    translation['approved']))
                         except Exception:
                             pass
                         elem_ob = folder._getOb(elem_id, None)
@@ -1239,7 +1238,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         It's not aware of themes and their mapping.
         """
 
-        dump_file = StringIO()
+        dump_file = BytesIO()
         dump_zip = ZipFile(dump_file, 'w')
 
         dump_zip.writestr('glossary/translations.xml', self.xml_dump_export())
@@ -1289,7 +1288,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if new_parent_anchors != self.parent_anchors:  # avoid a transaction
             self.parent_anchors = new_parent_anchors
 
-        for lang_code, language in metadata['languages'].iteritems():
+        for lang_code, language in metadata['languages'].items():
             if language not in self.get_english_names():
                 log.info(log_prefix + 'Adding language %s (%s)',
                          language, lang_code)
@@ -1299,7 +1298,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             if self.get_description(lang_code) != new_description:
                 self.set_description(new_description, lang_code)
 
-        from subscribers import EventCounter
+        from .subscribers import EventCounter
         p = ofs_path(self)
         new_items = EventCounter((INyGlossaryItem, IObjectAddedEvent), p)
         new_trans = EventCounter((INyGlossaryItem, IItemTranslationChanged), p)
@@ -1309,7 +1308,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         del_items.start()
         try:
             translations_xml = dump_zip.read('glossary/translations.xml')
-            self.xml_dump_import(StringIO(translations_xml),
+            self.xml_dump_import(StringIO(translations_xml.decode('utf-8')),
                                  remove_items=remove_items)
 
             log.info(log_prefix + '%d new, %d removed; %d new translations',
@@ -1400,9 +1399,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         from os.path import join
         from Products.PythonScripts.PythonScript import manage_addPythonScript
 
-        file_content = open(join(NAAYAGLOSSARY_PATH, 'rdfs',
-                                 'glossary_skos.spy'),
-                            'r').read()
+        with open(join(NAAYAGLOSSARY_PATH, 'rdfs',
+                      'glossary_skos.spy'), 'r') as _f:
+            file_content = _f.read()
         manage_addPythonScript(self, 'glossary_skos.rdf')
         self._getOb('glossary_skos.rdf').write(file_content)
 
@@ -1566,7 +1565,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     if l is not None:
                         if l not in dict_lang_tree:
                             dict_lang_tree[l] = []
-                        if isinstance(t, unicode):
+                        if isinstance(t, str):
                             t = t.encode('utf-8')
                         dict_lang_tree[l].append(t)
         for x in self._unicode_map(lang):
@@ -1709,7 +1708,15 @@ class mapTiny:
 def _add_catalog_language_index(catalog, index_id):
     if index_id in catalog.indexes():
         catalog.delIndex(index_id)
-    index_extra = record()
-    index_extra.default_encoding = 'utf-8'
-    index_extra.splitter_casefolding = 1
-    catalog.manage_addIndex(index_id, 'TextIndexNG3', index_extra)
+    from Products.ZCTextIndex.ZCTextIndex import PLexicon
+    from Products.ZCTextIndex.Lexicon import CaseNormalizer, Splitter, StopWordRemover
+    if 'Lexicon' not in catalog.objectIds():
+        lexicon = PLexicon('Lexicon', 'Default lexicon',
+                           Splitter(), CaseNormalizer(), StopWordRemover())
+        catalog._setObject('Lexicon', lexicon)
+    extra = type('Extra', (), {
+        'doc_attr': index_id,
+        'index_type': 'Okapi BM25 Rank',
+        'lexicon_id': 'Lexicon',
+    })()
+    catalog.addIndex(index_id, 'ZCTextIndex', extra=extra)

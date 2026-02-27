@@ -24,7 +24,7 @@ import re
 from os.path import join
 
 #Zope imports
-import zLOG
+import logging
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
@@ -50,7 +50,7 @@ class UpdateForms(UpdateScript):
         return True
 
     def get_report(self, forms, portals='', exclude=False, REQUEST=None):
-        if not REQUEST.has_key('show_report'): # TODO: remove this
+        if not 'show_report' in REQUEST: # TODO: remove this
             return
 
         report = {}
@@ -83,7 +83,7 @@ class UpdateForms(UpdateScript):
             for form_id in forms_list:
                 try:
                     form_fs = portal_forms._default_form(form_id)
-                except KeyError, exc_error:
+                except KeyError as exc_error:
                     zLOG.LOG('Naaya Updater', zLOG.ERROR, '%s: %s' % (portal.id, exc_error))
                     continue
                 form_zmi = portal_forms._getOb(form_id)
@@ -125,8 +125,8 @@ class UpdateForms(UpdateScript):
                     form_ob = formstool_ob._getOb(form_id, None)
                 form_ob.pt_edit(text=fs_content, content_type='')
                 form_ob._p_changed = 1
-            except Exception, error:
-                print error
+            except Exception as error:
+                print(error)
         for form_path in fdel:
             portal = get_portal(self, form_path[:form_path.find('portal_forms')])
             form_id = form_path[form_path.find('portal_forms')+13:]

@@ -1,5 +1,5 @@
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -25,14 +25,14 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/info/youtube_add_html')
-        self.failUnless('<h1>Embed YouTube video</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Embed YouTube video</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
             'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -43,14 +43,14 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.info.test_youtube.approveThis()
 
         self.browser.go('http://localhost/portal/info/test_youtube')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_youtube.*</h1>', html, re.DOTALL))
-        self.failUnless('test_youtube_description' in html)
+        self.assertTrue(re.search(r'<h1>.*test_youtube.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_youtube_description' in html)
 
         self.browser_do_logout()
 
@@ -64,8 +64,8 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -77,8 +77,8 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Invalid Youtube ID (inexisting video)' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Invalid Youtube ID (inexisting video)' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -86,13 +86,13 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myyoutube/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My Youtube Video')
+        self.assertEqual(form['title:utf8:ustring'], 'My Youtube Video')
 
         form['title:utf8:ustring'] = 'new_youtube_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
+        self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
 
         self.browser.go('http://localhost/portal/myfolder/myyoutube/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -100,8 +100,8 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
-        self.failUnlessEqual(self.portal.myfolder.myyoutube.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
+        self.assertEqual(self.portal.myfolder.myyoutube.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -115,8 +115,8 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -125,12 +125,12 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myyoutube/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My Youtube Video')
+        self.assertEqual(form['title:utf8:ustring'], 'My Youtube Video')
         form['title:utf8:ustring'] = 'new_youtube_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
+        self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
 
         self.browser_do_logout()
 
@@ -139,7 +139,7 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)

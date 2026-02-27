@@ -1,18 +1,19 @@
 import time
 import os
-from StringIO import StringIO
-from unittest import TestSuite, makeSuite
+from io import BytesIO
+from unittest import TestSuite, TestLoader
 from naaya.content.mediafile.mediafile_item import addNyMediaFile
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
-from Globals import package_home
-from mock import patch
+import os as _os
+from unittest.mock import patch
 from naaya.content.mediafile.converters.MediaConverter import can_convert
 
 
 class NaayaContentTestCase(FunctionalTestCase):
     def loadFile(self, filename):
-        filename = os.path.sep.join([package_home(globals()), filename])
-        data = StringIO(open(filename, 'rb').read())
+        filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
+        with open(filename, 'rb') as f:
+            data = BytesIO(f.read())
         data.filename = os.path.basename(filename)
         return data
 
@@ -28,9 +29,9 @@ class NaayaContentTestCase(FunctionalTestCase):
         while not doc.mediaReady():
             time.sleep(1)
         broken = doc.mediaBroken()
-        self.failIf(broken, broken)
+        self.assertFalse(broken, broken)
         self.assertNotEqual(self.loadFile('data/square.mp4').read(), doc.get_data())
-        self.failUnless(doc.get_size()>=4000)
+        self.assertTrue(doc.get_size()>=4000)
 
     @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
     def test_upload(self, mock_can_convert):

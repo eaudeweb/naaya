@@ -1,5 +1,6 @@
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view
+from DateTime import DateTime
 
 from naaya.core.zope2util import permission_add_role, sha_hexdigest
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
@@ -114,7 +115,7 @@ class RemoveNyContentProps(UpdateScript):
                     value = getattr(ob, prop)
                     if isinstance(value, LocalAttribute):
                         continue
-                    if (not ob._local_properties.has_key(prop) or
+                    if (not prop in ob._local_properties or
                             ob._local_properties[prop] == {}):
                         for lang in portal.gl_get_languages():
                             ob.set_localpropvalue(prop, lang, value)
@@ -141,9 +142,9 @@ class AddLastModificationProperty(UpdateScript):
         meta_types = schema_tool.listSchemas().keys()
         for ob in portal.getCatalogedObjectsA(meta_type=meta_types):
             if not hasattr(ob, 'last_modification'):
-                ob.last_modification = ob.bobobase_modification_time()
+                ob.last_modification = DateTime(ob._p_mtime)
                 self.log.debug('Added last modification "%s" for %s' %
-                    (portal.utShowFullDateTime(ob.bobobase_modification_time()),
+                    (portal.utShowFullDateTime(DateTime(ob._p_mtime)),
                         ob.absolute_url()))
         return True
 
@@ -263,7 +264,7 @@ class DeleteInvalidPointers(UpdateScript):
             pointer = pointer_item.pointer
             if pointer.startswith('/'):
                 pointer = pointer[1:]
-            obj = portal.unrestrictedTraverse(pointer.encode('utf-8'), None)
+            obj = portal.unrestrictedTraverse(pointer, None)
             if obj is None:
                 self.log.debug('Pointer %s deleted' %
                     pointer_item.absolute_url())

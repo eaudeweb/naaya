@@ -1,6 +1,6 @@
 from zope.event import notify
 from OFS.SimpleItem import SimpleItem
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
@@ -15,7 +15,6 @@ class PlugBase(SimpleItem):
 
     def __init__(self, id, source_obj, title):
         """ """
-        super(PlugBase, self).__init__(id)
         self.id = id
         self.obj_path = source_obj.absolute_url(1)
         self.title = title
@@ -26,7 +25,7 @@ class PlugBase(SimpleItem):
         if l_obj is None:
             return None
         else:
-            if l_obj.meta_type == 'Pluggable Auth Service':
+            if getattr(l_obj, 'meta_type', '') == 'Pluggable Auth Service':
                 # If Pluggable Auth is in use, we need to go a little deeper
                 l_obj = self.unrestrictedTraverse(
                     '/acl_users/ldap-plugin/' + self.obj_path, None)
@@ -141,7 +140,7 @@ class PlugBase(SimpleItem):
         acl = self.getUserFolder()
         roles = self.getUsersRoles(acl)
         if name in roles.keys():
-            roles = [(name + '||' + x[1]).encode('utf-8') for x in roles[name]]
+            roles = [(name + '||' + x[1]) for x in roles[name]]
             self.revokeUserRoles(roles)
             return True
 

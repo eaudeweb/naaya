@@ -224,7 +224,7 @@ def heartbeat():
         portal = portal.__of__(app)
         try:
             portal.heartbeat()
-        except Exception, e:
+        except Exception as e:
             log.error('%s: %s' % (e, portal_id))
         else:
             log.info('%s: OK' % portal_id)

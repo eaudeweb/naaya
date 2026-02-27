@@ -23,7 +23,7 @@ import calendar
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
@@ -32,8 +32,8 @@ import Products
 from DateTime import DateTime
 
 # product imports
-from DateFunctions import DateFunctions
-from Utils import Utils, evalPredicate
+from .DateFunctions import DateFunctions
+from .Utils import Utils, evalPredicate
 
 manage_addEventCalendar_html = PageTemplateFile('zpt/add', globals())
 

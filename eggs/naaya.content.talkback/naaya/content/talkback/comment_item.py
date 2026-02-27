@@ -42,7 +42,7 @@ def cleanup_message(message):
     return sanitize(trim(message)).strip()
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
@@ -51,8 +51,8 @@ from DateTime import DateTime
 # Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyFSFile import NyFSFile
-from constants import *
-from permissions import PERMISSION_REVIEW_TALKBACKCONSULTATION
+from .constants import *
+from .permissions import PERMISSION_REVIEW_TALKBACKCONSULTATION
 
 
 def addComment(self, contributor, message,

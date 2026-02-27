@@ -1,4 +1,5 @@
-import urllib
+import urllib.parse
+import urllib.request
 import mimeparse
 
 from zope.component import adapts
@@ -6,6 +7,7 @@ from zope.publisher.interfaces import IRequest
 from ZPublisher.BaseRequest import DefaultPublishTraverse
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
+from DateTime import DateTime
 
 from naaya.content.base.interfaces import INyContentObject
 from naaya.content.base.interfaces import INyRdfView
@@ -51,7 +53,7 @@ def object_type_uri(obj):
     else:
         type_name = 'other'
 
-    return 'http://naaya.eaudeweb.ro/rdf/type/' + urllib.quote(type_name, '')
+    return 'http://naaya.eaudeweb.ro/rdf/type/' + urllib.parse.quote(type_name, '')
 
 class DefaultRdfView(Implicit):
     def __init__(self, context):
@@ -61,5 +63,11 @@ class DefaultRdfView(Implicit):
 
     def __call__(self, REQUEST):
         REQUEST.RESPONSE.setHeader('Content-Type', "application/rdf+xml")
-        options = {'object_type_uri': object_type_uri(self.context)}
-        return self.basic_rdf.__of__(self.context)(REQUEST, **options)
+        ctx = self.context
+        mtime = DateTime(ctx._p_mtime) if ctx._p_mtime else DateTime()
+        options = {
+            'object_type_uri': object_type_uri(ctx),
+            'modification_time': mtime.HTML4(),
+            'release_date': ctx.releasedate.HTML4(),
+        }
+        return self.basic_rdf.__of__(ctx)(**options)

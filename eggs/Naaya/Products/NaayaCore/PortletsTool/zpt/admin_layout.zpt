@@ -112,14 +112,13 @@ $(function(){
                tal:omit-tag="not:folder_url"
                i18n:translate=""></a>
             &nbsp;
-            <small tal:define="path python:test(folder_path, '/'+folder_path,
-                                                             'home page')"
+            <small tal:define="path python:('/'+folder_path if folder_path else 'home page')"
                    tal:content="path"></small>
         </td>
         <td title="Click and drag to change ordering" i18n:attributes="title"
             tal:content="item/position"
             tal:attributes="class string:sort-handle portlet_arrange_${item/position}" />
-        <td tal:define="label python:test(item['inherit'], 'yes', 'no')"
+        <td tal:define="label python:('yes' if item['inherit'] else 'no')"
             tal:content="structure python:rstk['button_form'](
                 label=label,
                 formdata=dict(action='ToggleInherit', **button_options),

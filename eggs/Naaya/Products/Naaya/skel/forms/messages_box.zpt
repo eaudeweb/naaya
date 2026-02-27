@@ -22,7 +22,7 @@
 
 <span tal:content="python:here.delSessionInfo()" tal:omit-tag="" />
 
-<tal:block condition="python: request.SESSION.get('skip_notifications', False)">
+<tal:block condition="python: (getattr(request, 'SESSION', None) or {}).get('skip_notifications', False)">
 <div class="message-skip-notifications">
 	<span i18n:translate="">Notifications are temporally disabled for the actions
 	performed by your user. If you create, edit, delete or move objects,

@@ -20,7 +20,7 @@
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 

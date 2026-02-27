@@ -3,7 +3,8 @@ import logging
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from DateTime import DateTime
-from Globals import InitializeClass, DTMLFile
+from AccessControl.class_init import InitializeClass
+from App.special_dtml import DTMLFile
 from App.ImageFile import ImageFile
 from AccessControl.Permission import Permission
 
@@ -15,9 +16,9 @@ from Products.NaayaCore.managers.import_export import generate_csv
 from Products.NaayaCore.managers.import_export import generate_excel
 
 from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
-from BaseSurveyTemplate import BaseSurveyTemplate
-from SurveyQuestionnaire import SurveyQuestionnaire
-from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
+from .BaseSurveyTemplate import BaseSurveyTemplate
+from .SurveyQuestionnaire import SurveyQuestionnaire
+from .permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
                          PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT,
                          PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS,
                          PERMISSION_VIEW_REPORTS)
@@ -125,10 +126,10 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
         def stringify(value):
-            if not isinstance(value, basestring):
-                value = unicode(value)
+            if not isinstance(value, str):
+                value = str(value)
             if isinstance(value, str):
-                return unicode(value, 'utf-8')
+                return str(value, 'utf-8')
             return value
 
         def all_stringify(row):
@@ -150,7 +151,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=%s.csv' % self.id)
             return generate_csv(header, rows)
-        if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+        if file_type == 'Excel' and self.rstk['we_provide']('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
             RESPONSE.setHeader('Content-Disposition',
                                'attachment; filename=%s.xls' % self.id)

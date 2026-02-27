@@ -18,11 +18,11 @@ def gdbm2csv(dbpath, csvpath):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print 'Usage: python %s <in-file.gdbm> <out-file.csv>' % sys.argv[0]
+        print('Usage: python %s <in-file.gdbm> <out-file.csv>' % sys.argv[0])
         sys.exit(1)
 
     try:
         gdbm2csv(sys.argv[1], sys.argv[2])
     except ValueError:
-        print 'Usage: python %s <in-file.gdbm> <out-file.csv>' % sys.argv[0]
+        print('Usage: python %s <in-file.gdbm> <out-file.csv>' % sys.argv[0])
         sys.exit(1)

@@ -22,7 +22,7 @@ import os
 import sys
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -46,9 +46,9 @@ from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.LayoutTool.LayoutTool import AdditionalStyle
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from naaya.content.exfile.exfile_item import addNyExFile
-from simpleconsultation_comment import addSimpleConsultationComment
+from .simpleconsultation_comment import addSimpleConsultationComment
 from naaya.core.zope2util import permission_add_role
-from permissions import (PERMISSION_ADD_SIMPLE_CONSULTATION,
+from .permissions import (PERMISSION_ADD_SIMPLE_CONSULTATION,
                          PERMISSION_REVIEW_SIMPLECONSULTATION,
                          PERMISSION_MANAGE_SIMPLECONSULTATION)
 
@@ -121,7 +121,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        if self.glCheckPermissionPublishObjects():
+        if self.checkPermissionSkipApproval():
             approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         else:
             approved, approved_by = 0, None
@@ -140,7 +140,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
         ob.updateRequestRoleStatus(public_registration, lang)
         ob.checkReviewerRole()
         self.recatalogNyObject(ob)
-        self.notifyFolderMaintainer(self, ob)
+        self.getNotificationTool().notify_maintainer(ob, self)
         #log post date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
@@ -159,7 +159,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
                 allow_file=allow_file, public_registration=public_registration, lang=lang)
             REQUEST.RESPONSE.redirect('%s/simpleconsultation_add_html' % self.absolute_url())
         else:
-            raise Exception, '%s' % ', '.join(r)
+            raise Exception('%s' % ', '.join(r))
 
 class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyContainer, NyCheckControl, NyValidation, utils):
     """ """

@@ -21,9 +21,9 @@ class CSVReaderTest(unittest.TestCase):
         tiers = []
         animals = []
         for mapping in data:
-            self.assertEqual(set(mapping.keys()), set(['Tier', 'Animal']))
-            tiers.append(mapping['Tier'].decode('utf-8'))
-            animals.append(mapping['Animal'].decode('utf-8'))
+            self.assertEqual(set(mapping.keys()), {'Tier', 'Animal'})
+            tiers.append(mapping['Tier'])
+            animals.append(mapping['Animal'])
         self.assertEqual(len(tiers), 3)
         self.assertEqual(len(animals), 3)
         self.assertEqual(set(animals), set([u'Male Dog', u'Kitten',

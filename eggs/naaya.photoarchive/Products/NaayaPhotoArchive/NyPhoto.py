@@ -29,7 +29,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view as view_permission
 from AccessControl.Permissions import view_management_screens   #, ftp_access
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Image import getImageInfo, Pdata
 from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -46,14 +46,14 @@ from Products.NaayaPhotoArchive.constants import LISTING_DISPLAYS
 from Products.NaayaPhotoArchive.constants import METATYPE_NYPHOTO
 from Products.NaayaPhotoArchive.constants import PREFIX_NYPHOTO
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from cStringIO import StringIO
+from io import BytesIO
 from decimal import Decimal
-from interfaces import INyPhoto
+from .interfaces import INyPhoto
 from math import atan, degrees
-from photo_archive import photo_archive_base
-from webdav.Lockable import ResourceLockedError
+from .photo_archive import photo_archive_base
+from zExceptions import ResourceLockedError
 from zope.deprecation import deprecate
-from zope.interface import implements
+from zope.interface import implementer
 import os
 import re
 import simplejson as json
@@ -134,7 +134,7 @@ def addNyPhoto(self, id='', REQUEST=None, contributor=None,
     if form_errors:
         raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 1, None
@@ -143,10 +143,6 @@ def addNyPhoto(self, id='', REQUEST=None, contributor=None,
     #extra settings
     ob.update_data(_file)
     ob.submitThis()
-    if ob.discussion:
-        ob.open_for_comments()
-    else:
-        ob.close_for_comments()
     self.recatalogNyObject(ob)
 
     #redirect if case
@@ -156,10 +152,9 @@ def addNyPhoto(self, id='', REQUEST=None, contributor=None,
     return ob.getId()
 
 
+@implementer(INyPhoto)
 class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, NyContentType):
     """ """
-
-    implements(INyPhoto)
 
     meta_type = METATYPE_NYPHOTO
     icon = '++resource++naaya.photoarchive/NyPhoto.gif'
@@ -241,7 +236,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         elif getattr(data, 'index_html', None):
             data = data.index_html()
 
-        if not isinstance(data, str):   #dealing with a blobstreamiterator or StringIO
+        if not isinstance(data, (str, bytes)):   #dealing with a blobstreamiterator
             data = data.read()
 
         if purge:
@@ -302,10 +297,11 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         self.REQUEST.environ['HTTP_IF_MODIFIED_SINCE'] = ""     # needed to ensure index_html() of blob returns content
         original_id = self._getDisplayId()
         data = self.get_data(original_id)
-        if not isinstance(data, basestring):
+        if not isinstance(data, (str, bytes)):
             data = data.read()
-
-        string_image = StringIO(str(data))
+        if isinstance(data, str):
+            data = data.encode('latin-1')
+        string_image = BytesIO(data)
         if display == 'Original':
             return string_image
 
@@ -320,11 +316,10 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             width, height = self.__get_aspect_ratio_size(width, height)
 
         # Resize image
-        newimg = StringIO()
+        newimg = BytesIO()
         img = Image.open(string_image)
         fmt = img.format
-        try: img = img.resize((width, height), Image.ANTIALIAS)
-        except AttributeError: img = img.resize((width, height))
+        img = img.resize((width, height), Image.LANCZOS)
 
         # Crop if needed
         if crop:
@@ -382,7 +377,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         text = self.aq_parent.watermark_text
         FONT = os.path.join(os.path.dirname(__file__), 'fonts', 'VeraSeBd.ttf')
         img = Image.open(datafile)
-        newimg = StringIO()
+        newimg = BytesIO()
         fmt = img.format
         watermark = Image.new("RGBA", (img.size[0], img.size[1]))
         draw = ImageDraw.ImageDraw(watermark, "RGBA")
@@ -410,11 +405,13 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     def _transpose(self, method):
         original_id = self._getDisplayId()
-        newimg = StringIO()
+        newimg = BytesIO()
         data = self.get_data(original_id)
-        if not isinstance(data, basestring):
+        if not isinstance(data, (str, bytes)):
             data = data.read()
-        string_img = StringIO(str(data))
+        if isinstance(data, str):
+            data = data.encode('latin-1')
+        string_img = BytesIO(data)
         img = Image.open(string_img)
         quality = int(self._photo_quality(string_img))
         fmt = img.format
@@ -541,9 +538,9 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         """ """
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -570,10 +567,6 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         if getattr(_file, 'filename', ''):
             self.saveUpload(_file, _lang)
 
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         self._p_changed = 1
 
         self.recatalogNyObject(self)
@@ -585,9 +578,9 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def saveUpload(self, file='', lang=None, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
@@ -609,8 +602,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     security.declareProtected(view_permission, 'view')
     def view(self, REQUEST, display='', **kwargs):
         """ """
-        if not self.displays.has_key(display):
-            if not LISTING_DISPLAYS.has_key(display):
+        if not display in self.displays:
+            if not display in LISTING_DISPLAYS:
                 if self.check_view_photo_permission('Original'):
                     display = 'Original'
                 elif display == 'Original':

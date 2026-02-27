@@ -20,10 +20,11 @@ The zope server shouldn't server static content directly. Until another method
 """
 import os
 import mimetypes
-from Globals import package_home
+import os as _os
 from zipfile import ZipFile
 
-from zope2util import CaptureTraverse
+from App.Common import package_home
+from .zope2util import CaptureTraverse
 
 
 class StaticServeFromZip(object):

@@ -11,7 +11,7 @@ import logging
 import simplejson as json
 from naaya.core.backport import namedtuple
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
@@ -37,10 +37,10 @@ from naaya.core.zope2util import ofs_path
 from naaya.core.zope2util import folder_manage_main_plus
 from naaya.core.exceptions import i18n_exception
 
-from interfaces import ISubscriptionContainer
-from interfaces import ISubscriptionTarget
-from containers import SubscriptionContainer  # noqa: F401 DO NOT DELETE
-from containers import AnonymousSubscription, AccountSubscription
+from .interfaces import ISubscriptionContainer
+from .interfaces import ISubscriptionTarget
+from .containers import SubscriptionContainer  # noqa: F401 DO NOT DELETE
+from .containers import AnonymousSubscription, AccountSubscription
 
 from Products.NaayaCore.NotificationTool import utils
 
@@ -493,15 +493,19 @@ class NotificationTool(Folder):
         Send notification that the user received or lost one or more roles
         in the specified location
         """
-        if not isinstance(username, unicode):
+        if isinstance(username, bytes):
             try:
-                username = username.decode('utf8')
+                username = username.decode('utf-8')
             except UnicodeDecodeError:
-                username = username.decode('latin1')
+                username = username.decode('latin-1')
+        elif not isinstance(username, str):
+            username = str(username)
 
-        # Try to fix encoding for roles entered in other languages
-        new_roles = [role.decode('utf8') for role in new_roles]
-        removed_roles = [role.decode('utf8') for role in removed_roles]
+        # Ensure roles are str (Python 3: they already are)
+        new_roles = [r if isinstance(r, str) else r.decode('utf8')
+                     for r in new_roles]
+        removed_roles = [r if isinstance(r, str) else r.decode('utf8')
+                         for r in removed_roles]
         email_data = {
             email: {'new_roles': new_roles,
                     'removed_roles': removed_roles,
@@ -543,7 +547,7 @@ class NotificationTool(Folder):
         portal = self.getSite()
         email_tool = portal.getEmailTool()
         addr_from = email_tool.get_addr_from()
-        for addr_to, kwargs in messages_by_email.iteritems():
+        for addr_to, kwargs in messages_by_email.items():
             translate = self.portal_i18n.get_translation
             kwargs.update({'portal': portal, '_translate': translate,
                            'REQUEST': self.REQUEST, 'context': self.getSite()})
@@ -714,7 +718,7 @@ class NotificationTool(Folder):
         user = REQUEST.AUTHENTICATED_USER
         if is_anonymous(user):
             return False
-        if not isinstance(user, basestring):
+        if not isinstance(user, str):
             # with LDAP authentication, user is LDAP user instance
             user = user.getId()
         acl_tool = self.getAuthenticationTool()
@@ -765,7 +769,7 @@ class NotificationTool(Folder):
         # they should be ignored, no filtering in administrative notifications
         if notif_type == 'administrative':
             content_types = []
-        if isinstance(content_types, basestring):
+        if isinstance(content_types, str):
             content_types = [content_types]
         if lang is None:
             lang = self.gl_get_selected_language()
@@ -801,8 +805,8 @@ class NotificationTool(Folder):
                     notif_type=notif_type, location=location,
                     content_types=content_types,
                     email=REQUEST.form.get('email'))
-        except ValueError, msg:
-            self.setSessionErrors([unicode(msg)])
+        except ValueError as msg:
+            self.setSessionErrors([str(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/my_subscriptions_html')
 
@@ -826,8 +830,8 @@ class NotificationTool(Folder):
                 'notifications for changes in "${location}".',
                 notif_type=notif_type,
                 location=location or self.getSite().title)
-        except ValueError, msg:
-            self.setSessionErrors([unicode(msg)])
+        except ValueError as msg:
+            self.setSessionErrors([str(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/my_subscriptions_html')
 
@@ -918,7 +922,7 @@ class NotificationTool(Folder):
         try:
             self.add_account_subscription(user_id.strip(), location,
                                           notif_type, lang, content_types)
-        except ValueError, msg:
+        except ValueError as msg:
             self.setSessionErrorsTrans(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 

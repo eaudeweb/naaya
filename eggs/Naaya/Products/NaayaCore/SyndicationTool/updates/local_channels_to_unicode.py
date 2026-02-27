@@ -7,14 +7,14 @@ class LocalChannels2Unicode(UpdateScript):
 
     def _update(self, portal):
         def non_ascii_but_not_unicode(value):
-            if not isinstance(value, basestring):
+            if not isinstance(value, str):
                 return False
 
-            if isinstance(value, unicode):
+            if isinstance(value, str):
                 return False
 
             try:
-                unicode(value)
+                str(value)
             except UnicodeDecodeError:
                 return True
             else:
@@ -35,7 +35,7 @@ class LocalChannels2Unicode(UpdateScript):
                             item.absolute_url(), attrs_to_migrate)
             for attr in attrs_to_migrate:
                 try:
-                    new_val = unicode(getattr(item, attr), encoding="utf-8")
+                    new_val = str(getattr(item, attr), encoding="utf-8")
                 except UnicodeDecodeError:
                     self.log.error('Error on attribute %s', attr)
                     raise

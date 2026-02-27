@@ -1,1 +1,1 @@
-from bestpractice_item import NyBestPractice
+from .bestpractice_item import NyBestPractice

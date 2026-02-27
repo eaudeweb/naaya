@@ -2,9 +2,9 @@
 from App.ImageFile import ImageFile
 
 #Product imports
-import NySurvey
-import NySurveyTemplate
-import NySurveyAnswer
+from . import NySurvey
+from . import NySurveyTemplate
+from . import NySurveyAnswer
 
 
 def initialize(context):

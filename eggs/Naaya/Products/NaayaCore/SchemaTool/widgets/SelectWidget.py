@@ -1,8 +1,8 @@
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, WidgetError, manage_addWidget
+from .Widget import Widget, WidgetError, manage_addWidget
 
 def addSelectWidget(container, id="", title="Select Widget", REQUEST=None, **kwargs):
     """ Contructor for Select widget"""

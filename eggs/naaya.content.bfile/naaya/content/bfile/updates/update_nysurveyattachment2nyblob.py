@@ -5,7 +5,7 @@ naaya.content.bfiles
 from Products.naayaUpdater.updates import UpdateScript
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from datetime import datetime
-from StringIO import StringIO
+from io import StringIO
 
 
 class UpdateSurveyAttachment2NyBlobFile(UpdateScript):

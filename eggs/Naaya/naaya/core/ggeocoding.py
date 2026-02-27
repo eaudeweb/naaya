@@ -1,7 +1,9 @@
 import simplejson as json
 import time
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
+import urllib.request
+import urllib.error
 
 RETRIES = 3
 
@@ -19,12 +21,9 @@ def _build_url(params):
         'https://maps.googleapis.com/maps/api/geocode/json'
     p = []
     for k, v in params:
-        if isinstance(v, unicode):
-            p.append((k, v.encode('utf-8')))
-        else:
-            p.append((k, v))
+        p.append((k, v))
 
-    return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.urlencode(p)
+    return GOOGLE_GEOCODE_BASE_URL + '?' + urllib.parse.urlencode(p)
 
 
 def _get_url_data(url):
@@ -38,8 +37,8 @@ def _get_url_data(url):
 
     while attempts < RETRIES:
         try:
-            response = urllib2.urlopen(url)
-        except urllib2.URLError, e:
+            response = urllib.request.urlopen(url)
+        except urllib.error.URLError as e:
             try:
                 reason = e.reason
             except AttributeError:

@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-from cStringIO import StringIO
+from io import BytesIO, StringIO
 import lxml.etree
 import transaction
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
-import helpers
+from . import helpers
 
 def read_file(name):
     from os import path
@@ -108,7 +108,7 @@ class XmlImportTest(NaayaTestCase):
 class ExportTest(NaayaTestCase):
     def test_export_empty(self):
         glossary = helpers.make_glossary(self.portal)
-        xliff = lxml.etree.parse(StringIO(glossary.xliff_export()))
+        xliff = lxml.etree.parse(BytesIO(glossary.xliff_export().encode('utf-8')))
         self.assertEqual(len(xliff.xpath('/xliff/file/body')), 1)
 
     def test_export_folders(self):
@@ -116,7 +116,7 @@ class ExportTest(NaayaTestCase):
         bucket = helpers.add_folder(glossary, '1', 'Bucket')
         water = helpers.add_element(bucket, '2', 'Water')
 
-        xliff = lxml.etree.parse(StringIO(glossary.xliff_export()))
+        xliff = lxml.etree.parse(BytesIO(glossary.xliff_export().encode('utf-8')))
         body = xliff.xpath('/xliff/file/body')[0]
 
         self.assertEqual(len(body.xpath('./trans-unit')), 1)
@@ -133,7 +133,7 @@ class ExportTest(NaayaTestCase):
         water = helpers.add_element(bucket, '2', 'Water', {'German': "Wasser"})
 
         xliff_src = glossary.xliff_export(language="German")
-        xliff = lxml.etree.parse(StringIO(xliff_src))
+        xliff = lxml.etree.parse(BytesIO(xliff_src.encode('utf-8')))
         body = xliff.xpath('/xliff/file/body')[0]
         unit = body.xpath('./trans-unit')[0]
 
@@ -149,7 +149,7 @@ class ExportTest(NaayaTestCase):
         vodka = helpers.add_element(glass, '2', "Vodka", {'Russian': u"Водка"})
 
         xliff_src = glossary.xliff_export(language="Russian")
-        xliff = lxml.etree.parse(StringIO(xliff_src))
+        xliff = lxml.etree.parse(BytesIO(xliff_src.encode('utf-8')))
         unit = xliff.xpath('/xliff/file/body/trans-unit')[0]
 
         self.assertEqual(unit.xpath('./source')[0].text, "Vodka")
@@ -162,7 +162,7 @@ class ExportTest(NaayaTestCase):
 
         xliff_src = glossary.xliff_export(language="English",
                                           empty_folders=True)
-        xliff = lxml.etree.parse(StringIO(xliff_src))
+        xliff = lxml.etree.parse(BytesIO(xliff_src.encode('utf-8')))
         body = xliff.xpath('/xliff/file/body')[0]
 
         self.assertEqual(len(body.xpath('./trans-unit')), 1)
@@ -185,7 +185,7 @@ class DumpExportImportTest(NaayaTestCase):
         return glossary
 
     def _perform_test_import(self, glossary):
-        dump_file = StringIO(self._make_server_glossary().dump_export())
+        dump_file = BytesIO(self._make_server_glossary().dump_export())
         glossary.dump_import(dump_file, remove_items=True)
 
     def test_new_folder(self):
@@ -287,7 +287,7 @@ class DumpExportImportTest(NaayaTestCase):
         dump_file = self._export_for_unicode_test()
         glossary = helpers.make_glossary(self.portal)
 
-        glossary.dump_import(StringIO(dump_file), remove_items=True)
+        glossary.dump_import(BytesIO(dump_file), remove_items=True)
 
         self.assertEqual(glossary['1'].Russian, u"Стекло")
         self.assertEqual(glossary['1']['2'].Russian, u"Водка")
@@ -296,10 +296,10 @@ class DumpExportImportTest(NaayaTestCase):
     def test_no_change(self):
         dump_file = self._make_server_glossary().dump_export()
         glossary = helpers.make_glossary(self.portal)
-        glossary.dump_import(StringIO(dump_file), remove_items=True)
+        glossary.dump_import(BytesIO(dump_file), remove_items=True)
         transaction.commit()
 
-        glossary.dump_import(StringIO(dump_file), remove_items=True)
+        glossary.dump_import(BytesIO(dump_file), remove_items=True)
 
         connection = glossary._p_jar
         # assert no commit to DB since no change was required by second import
@@ -311,7 +311,7 @@ class DumpExportImportTest(NaayaTestCase):
         dump_file = src_glossary.dump_export()
 
         glossary = helpers.make_glossary(self.portal)
-        glossary.dump_import(StringIO(dump_file), remove_items=True)
+        glossary.dump_import(BytesIO(dump_file), remove_items=True)
 
         self.assertEqual(glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE]),
                          ['1'])
@@ -324,18 +324,18 @@ class DumpExportImportTest(NaayaTestCase):
         glossary = helpers.make_glossary(self.portal)
         self.assertFalse(glossary.parent_anchors)
 
-        glossary.dump_import(StringIO(server_glossary.dump_export()))
+        glossary.dump_import(BytesIO(server_glossary.dump_export()))
 
         self.assertTrue(glossary.parent_anchors)
 
     def test_update_titles(self):
         server_glossary = self._make_server_glossary()
         glossary = helpers.make_glossary(self.portal)
-        glossary.dump_import(StringIO(server_glossary.dump_export()))
+        glossary.dump_import(BytesIO(server_glossary.dump_export()))
         server_glossary['1'].title = "New bucket"
         server_glossary['1']['2'].title = "New water"
 
-        glossary.dump_import(StringIO(server_glossary.dump_export()))
+        glossary.dump_import(BytesIO(server_glossary.dump_export()))
         self.assertEqual(glossary['1'].title, "New bucket")
         self.assertEqual(glossary['1']['2'].title, "New water")
 
@@ -345,7 +345,7 @@ class DumpExportImportTest(NaayaTestCase):
         server_glossary.set_description(u"Hallo Welt!", lang='de')
         glossary = helpers.make_glossary(self.portal)
 
-        glossary.dump_import(StringIO(server_glossary.dump_export()))
+        glossary.dump_import(BytesIO(server_glossary.dump_export()))
 
         self.assertEqual(glossary.get_description(), u"Hello world!")
         self.assertEqual(glossary.get_description(lang='de'), u"Hallo Welt!")

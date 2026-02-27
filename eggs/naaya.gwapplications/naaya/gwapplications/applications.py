@@ -1,13 +1,13 @@
 from persistent.mapping import PersistentMapping
-from zope.interface import Interface, implements
+from zope.interface import Interface, implementer
 from OFS.Folder import Folder
-from application_item import IGWApplication, GWApplication
+from .application_item import IGWApplication, GWApplication
 from Products.Five.browser import BrowserView
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.EmailTool.EmailTool import EmailTool
 from Products.NaayaCore.EmailTool.EmailPageTemplate import \
     EmailPageTemplateFile
-from application_item import make_unicode
+from .application_item import make_unicode
 
 from naaya.groupware.constants import GROUPWARE_META_ID
 
@@ -21,9 +21,9 @@ class IGWApplications(Interface):
     """
 
 
+@implementer(IGWApplications)
 class GWApplications(Folder):
 
-    implements(IGWApplications)
     email_sender = EmailTool('email_sender', 'Applications email sender')
     email_sender.mail_server_name = 'postfix'
     email_sender.mail_server_port = '25'

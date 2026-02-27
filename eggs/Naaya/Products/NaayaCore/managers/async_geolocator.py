@@ -39,7 +39,7 @@ def geolocate_queue(site):
                 # Google also restricts requests per second, so we need
                 # to be careful for this, too
                 time.sleep(2)
-                lat, lon = geocoding.location_geocode(address.encode('utf-8'))
+                lat, lon = geocoding.location_geocode(address)
                 if lat and lon:
                     obj.geo_location = Geo(lat, lon, address)
                     obj.recatalogNyObject(obj)
@@ -48,7 +48,7 @@ def geolocate_queue(site):
                 LOG.info('coodrdinates %s and %s found for %s' %
                          (lat, lon, address))
                 transaction.commit()
-            except GeocoderServiceError, e:
+            except GeocoderServiceError as e:
                 if 'ZERO_RESULTS' in e.args[0]:
                     LOG.info('coodrdinates not found for %s' % address)
                     site.geolocation_queue.remove(site_path)

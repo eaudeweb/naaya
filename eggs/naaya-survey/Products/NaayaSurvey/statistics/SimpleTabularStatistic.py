@@ -20,14 +20,14 @@
 import xlwt
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 
-from BaseStatistic import BaseStatistic, manage_addStatistic
+from .BaseStatistic import BaseStatistic, manage_addStatistic
 
 class SimpleTabularStatistic(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions.

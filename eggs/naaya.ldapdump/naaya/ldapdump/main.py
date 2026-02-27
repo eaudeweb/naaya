@@ -26,7 +26,7 @@ def get_config(config_path):
         return {'_root_path': os.path.dirname(__file__),
                 'sqlite': {'path': ''}}
     try:
-        config = yaml.load(file)
+        config = yaml.load(file, Loader=yaml.SafeLoader)
         config['_root_path'] = os.path.abspath(os.path.dirname(config_path))
         return config
     finally:

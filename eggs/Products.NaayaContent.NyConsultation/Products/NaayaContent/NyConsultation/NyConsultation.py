@@ -22,7 +22,7 @@ import os
 import sys
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -45,13 +45,13 @@ from Products.NaayaBase.NyProperties import NyProperties
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from naaya.content.exfile.exfile_item import addNyExFile
 from Products.NaayaBase.NyAccess import NyAccess
-from question_item import question_item
-from review_item import addConsultationReviewItem
-from RateList import manage_addRateList
-from constants import *
+from .question_item import question_item
+from .review_item import addConsultationReviewItem
+from .RateList import manage_addRateList
+from .constants import *
 from naaya.core.zope2util import permission_add_role
 
-from permissions import PERMISSION_ADD_CONSULTATION
+from .permissions import PERMISSION_ADD_CONSULTATION
 
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
@@ -122,7 +122,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        if self.glCheckPermissionPublishObjects():
+        if self.checkPermissionSkipApproval():
             approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         else:
             approved, approved_by = 0, None
@@ -141,7 +141,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
         ob.updateRequestRoleStatus(public_registration, lang)
         ob.checkReviewerRole()
         self.recatalogNyObject(ob)
-        self.notifyFolderMaintainer(self, ob)
+        self.getNotificationTool().notify_maintainer(ob, self)
         #log post date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
@@ -160,7 +160,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
                 allow_file=allow_file, line_comments=line_comments, public_registration=public_registration, lang=lang)
             REQUEST.RESPONSE.redirect('%s/consultation_add_html' % self.absolute_url())
         else:
-            raise Exception, '%s' % ', '.join(r)
+            raise Exception('%s' % ', '.join(r))
 
 class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyContainer, NyCheckControl, NyValidation, utils):
     """ """
@@ -561,7 +561,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         try: sortorder = int(sortorder)
         except: sortorder = 100
 
-        if not self.questions.has_key(id): id = id
+        if not id in self.questions: id = id
         else: id = id + self.utGenRandomId()
 
         self.questions[id] = question_item(question_body, lang, sortorder)

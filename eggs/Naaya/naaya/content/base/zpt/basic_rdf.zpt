@@ -23,11 +23,11 @@
 
     <dcterms:modified
       rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
-      tal:content="python:here.bobobase_modification_time().HTML4()" />
+      tal:content="options/modification_time" />
 
     <dcterms:available
       rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
-      tal:content="python:here.releasedate.HTML4()" />
+      tal:content="options/release_date" />
 
     <rdf:type tal:attributes="rdf:resource options/object_type_uri" />
 

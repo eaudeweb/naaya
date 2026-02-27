@@ -1,5 +1,5 @@
-from mock import patch
-from unittest import TestSuite, makeSuite
+from unittest.mock import patch
+from unittest import TestSuite, TestLoader
 import transaction
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -78,7 +78,9 @@ class RoleTest(NaayaFunctionalTestCase):
 
     @patch('Products.NaayaCore.AuthenticationTool.AuthenticationTool.get_zope_env')
     @patch('naaya.core.zope2util.get_zope_env')
-    def test_mark_new_users_off(self, get_zope_env_atool, get_zope_env_zope2util):
+    @patch('Products.Naaya.NySite.get_zope_env')
+    def test_mark_new_users_off(self, get_zope_env_nysite, get_zope_env_atool, get_zope_env_zope2util):
+        get_zope_env_nysite.return_value = 'eionet'
         get_zope_env_atool.return_value = 'eionet'
         get_zope_env_zope2util.return_value = 'eionet'
         p = self.portal

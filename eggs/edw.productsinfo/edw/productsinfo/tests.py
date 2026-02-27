@@ -1,8 +1,7 @@
 import unittest
 
+import doctest
 import transaction
-import zope.app.component
-from zope.testing import doctest
 from Testing import ZopeTestCase
 
 from AccessControl.SecurityManagement import newSecurityManager

@@ -10,8 +10,9 @@
   </class>
 
   <include package="contentratings" />
-  <five:implements class=".NyContentType.NyContentType"
-    interface="contentratings.interfaces.IUserRatable" />
+  <class class=".NyContentType.NyContentType">
+    <implements interface="contentratings.interfaces.IUserRatable" />
+  </class>
 
   <adapter
     for=".NyRoleManager.NyRoleManager"

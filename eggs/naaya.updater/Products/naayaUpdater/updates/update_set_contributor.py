@@ -19,7 +19,7 @@ class SetContributor(UpdateScript):
                 if item.meta_type not in ['Naaya Forum', 'Naaya Mega Survey']:
                     continue
             elif item.contributor is not None:
-                if isinstance(item.contributor, unicode):
+                if isinstance(item.contributor, str):
                     item.contributor = str(item.contributor)
                     self.log.debug('%s contributor changed from unicode to str'
                         % item.absolute_url())

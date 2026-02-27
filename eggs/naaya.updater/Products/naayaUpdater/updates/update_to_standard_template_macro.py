@@ -9,7 +9,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from utils import physical_path, list_folders_with_custom_index
+from .utils import physical_path, list_folders_with_custom_index
 
 class UpdateToStandardTemplateMacro(UpdateScript):
     """ Update custom indexes to use standard template macro """

@@ -20,19 +20,18 @@
 
 # Python imports
 import sys
-from urllib import urlencode
+from urllib.parse import urlencode
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from AccessControl.Permissions import view
-from DocumentTemplate.sequence import sort
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import zLOG
-
+import logging
+logger = logging.getLogger('NaayaSurvey.BaseSurveyTemplate')
 # Naaya imports
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
@@ -46,18 +45,18 @@ from Products.NaayaWidgets.widgets.StringWidget import StringWidget
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 # reports
-from SurveyAttachment import SurveyAttachment, addSurveyAttachment
-from SurveyReport import SurveyReport, manage_addSurveyReport
-from statistics.BaseStatistic import manage_addStatistic
-from statistics.SimpleTabularStatistic import SimpleTabularStatistic
-from statistics.MultipleChoiceTabularStatistic import MultipleChoiceTabularStatistic
-from statistics.MultipleChoiceCssBarChartStatistic import MultipleChoiceCssBarChartStatistic
-from statistics.MultipleChoiceGoogleBarChartStatistic import MultipleChoiceGoogleBarChartStatistic
-from statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartStatistic
-from statistics.MatrixTabularStatistic import MatrixTabularStatistic
-from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
-from statistics.ComboboxMatrixTabularStatistic import ComboboxMatrixTabularStatistic
-from statistics.TextAnswerListing import TextAnswerListing
+from .SurveyAttachment import SurveyAttachment, addSurveyAttachment
+from .SurveyReport import SurveyReport, manage_addSurveyReport
+from .statistics.BaseStatistic import manage_addStatistic
+from .statistics.SimpleTabularStatistic import SimpleTabularStatistic
+from .statistics.MultipleChoiceTabularStatistic import MultipleChoiceTabularStatistic
+from .statistics.MultipleChoiceCssBarChartStatistic import MultipleChoiceCssBarChartStatistic
+from .statistics.MultipleChoiceGoogleBarChartStatistic import MultipleChoiceGoogleBarChartStatistic
+from .statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartStatistic
+from .statistics.MatrixTabularStatistic import MatrixTabularStatistic
+from .statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
+from .statistics.ComboboxMatrixTabularStatistic import ComboboxMatrixTabularStatistic
+from .statistics.TextAnswerListing import TextAnswerListing
 
 WIDGETS = dict([(widget.meta_type, widget) for widget in AVAILABLE_WIDGETS])
 
@@ -137,7 +136,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         if REQUEST:
             kwargs.update(REQUEST.form)
         lang = kwargs.get('lang', self.get_selected_language())
-        local_properties = filter(None, [x.get('id', None) for x in self.getLocalProperties()])
+        local_properties = list(filter(None, [x.get('id', None) for x in self.getLocalProperties()]))
         # Update localized properties
         for local_property in local_properties:
             prop_value = kwargs.get(local_property, '')
@@ -172,10 +171,10 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     def getWidgetTypesAsMatrix(self, cols=3):
         """ Return widget types as a matrix with cols columns"""
         widget_types = self.getWidgetTypes()
-        rows = len(widget_types) / cols
+        rows = len(widget_types) // cols
         rows += len(widget_types) % cols and 1
         return [[
-            x for i, x in enumerate(widget_types) if i / cols == j]
+            x for i, x in enumerate(widget_types) if i // cols == j]
             for j in range(rows)
         ]
 
@@ -194,7 +193,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     security.declareProtected(view, 'getSortedWidgets')
     def getSortedWidgets(self, sort_by='sortorder'):
         """ Return sorted widget"""
-        return sort(self.getWidgets(), ( (sort_by, 'cmp', 'asc'), ))
+        return sorted(self.getWidgets(), key=lambda x: getattr(x, sort_by, 0))
 
     security.declareProtected(view, 'getNonEmptyAttribute')
     def getNonEmptyAttribute(self, attr):
@@ -251,14 +250,10 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                         report.manage_delObjects(statistic_ids)
                 self.manage_delObjects(ids)
             except Unauthorized:
-                err = sys.exc_info()
-                zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
-                         'Could not delete items', error=err)
+                logger.error('Could not delete items', exc_info=True)
                 self.setSessionErrorsTrans('You are not authorized to delete selected items.')
             except:
-                err = sys.exc_info()
-                zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
-                         'Could not delete items', error=err)
+                logger.error('Could not delete items', exc_info=True)
                 self.setSessionErrorsTrans('Error while deleting data.')
             else:
                 self.setSessionInfoTrans('Item(s) deleted.')
@@ -307,7 +302,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     security.declareProtected(view, 'getSortedReports')
     def getSortedReports(self, sort_by='title'):
         """ """
-        return sort(self.getReports(), ( (sort_by, 'cmp', 'asc'), ))
+        return sorted(self.getReports(), key=lambda x: getattr(x, sort_by, ''))
 
     security.declarePrivate('addReport')
     def addReport(self, title='', REQUEST=None, **kwargs):
@@ -383,7 +378,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     security.declareProtected(view, 'getReports')
     def getSortedAttachments(self, sort_by='title'):
         """ """
-        return sort(self.getAttachments(), ( (sort_by, 'cmp', 'asc'), ))
+        return sorted(self.getAttachments(), key=lambda x: getattr(x, sort_by, ''))
 
     security.declarePrivate('addAttachment')
     def addAttachment(self, title='', REQUEST=None, **kwargs):

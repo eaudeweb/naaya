@@ -7,7 +7,7 @@ from persistent import Persistent
 from BTrees.OOBTree import OOBTree as BTree
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import \
@@ -72,7 +72,7 @@ class RecoverPassword(SimpleItem):
         cutoff_time = datetime.now() - timedelta(hours=1)
         token_map = self._get_token_map()
         tokens_to_remove = set()
-        for token, data in token_map.iteritems():
+        for token, data in token_map.items():
             if data.create_time < cutoff_time:
                 tokens_to_remove.add(token)
 

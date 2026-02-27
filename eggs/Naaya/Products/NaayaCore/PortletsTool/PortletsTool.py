@@ -3,33 +3,33 @@ This is the container for portlets (sections in a page), Ref trees,
 lists of links (used for menus) and others.
 
 """
-from md5 import new as new_md5
+from hashlib import md5 as new_md5
 import simplejson as json
 from copy import copy
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from zope import component
-from ZPublisher import NotFound
+from zExceptions import NotFound
 from App.ImageFile import ImageFile
 
 from Products.NaayaCore.constants import *
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import utils
-from managers.portlets_templates import *
-from Portlet import manage_addPortlet_html, addPortlet
-from HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
-from LinksList import manage_addLinksListForm, manage_addLinksList
-from RefList import manage_addRefListForm, manage_addRefList
-from RefTree import manage_addRefTreeForm, manage_addRefTree
+from .managers.portlets_templates import *
+from .Portlet import manage_addPortlet_html, addPortlet
+from .HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
+from .LinksList import manage_addLinksListForm, manage_addLinksList
+from .RefList import manage_addRefListForm, manage_addRefList
+from .RefTree import manage_addRefTreeForm, manage_addRefTree
 from naaya.core.zope2util import folder_manage_main_plus
 from naaya.core.utils import force_to_unicode
 
-from interfaces import INyPortlet
+from .interfaces import INyPortlet
 
 portlet_template_names = {
     'left': 'portlet_left_macro',
@@ -301,7 +301,7 @@ class PortletsTool(Folder, utils):
                     break
             else:
                 raise KeyError
-        except KeyError, e:
+        except KeyError as e:
             raise ValueError('No portlet named "%s" among "%s" portlets at "%s"'
                 % (portlet_id, position, folder_path))
 
@@ -382,7 +382,7 @@ class PortletsTool(Folder, utils):
                 location = ''
             try:
                 self.assign_portlet(location, position, portlet_id, inherit)
-            except ValueError, e:
+            except ValueError as e:
                 if 'already assigned' in str(e):
                     self.setSessionErrorsTrans('Portlet "${title}" already assigned to "${position}" at "${location}"',
                         title=portlet.title_or_id(), position=position, location=(location or "[site root]"))
@@ -473,12 +473,12 @@ class PortletsTool(Folder, utils):
         for portlet_id in old_data('left_portlets_ids'):
             add_portlet_if_exists(portlet_id, '', 'left', True, oldstyle=True)
 
-        for location, portlet_ids in old_data('right_portlets_locations').iteritems():
+        for location, portlet_ids in old_data('right_portlets_locations').items():
             for portlet_id in portlet_ids:
                 add_portlet_if_exists(portlet_id, location, 'right', True, oldstyle=True)
 
         _portlet_layout = getattr(self, '_portlet_layout', {})
-        for key in sorted(_portlet_layout.iterkeys(), key=lambda i: (i[1],i[0])):
+        for key in sorted(_portlet_layout.keys(), key=lambda i: (i[1],i[0])):
             for portlet_data in _portlet_layout[key]:
                 add_portlet_if_exists(portlet_data['id'], key[0], key[1],
                     portlet_data['inherit'])
@@ -503,12 +503,12 @@ class PortletsTool(Folder, utils):
 
     def sort_portlets(self, REQUEST, portlet_order):
         """ Ajax method that changes order of portlets in a group """
-        if isinstance(portlet_order, basestring):
+        if isinstance(portlet_order, str):
             portlet_order = [portlet_order]
         all_assignments = self._enumerate_portlet_assignments()
 
         _portlet_layout = getattr(self, '_portlet_layout', {})
-        for key, assignments in all_assignments.iteritems():
+        for key, assignments in all_assignments.items():
             entry_by_hash = dict((entry['hashkey'], entry)
                                  for entry in assignments)
             ordered_entries = []
@@ -579,6 +579,7 @@ InitializeClass(PortletsTool)
 
 class LegacyPortletWrapper(object):
     security = ClassSecurityInfo()
+    __allow_access_to_unprotected_subobjects__ = True
 
     def __init__(self, portlet, portlet_id):
         self.portlet_id = portlet_id
@@ -615,19 +616,19 @@ def simplehash(data):
     """ generate a hex hashkey for a simple dict """
     h = new_md5()
     for key, value in sorted(data.items()):
-        h.update('%s=%s,' % (repr(key), repr(value)))
+        h.update(('%s=%s,' % (repr(key), repr(value))).encode('utf-8'))
     return h.hexdigest()
 
 def ordered_portlets(assignments):
     """ sort the portlet assignments by path """
     position_names = ('left', 'right', 'center')
     positions = dict( (name, dict()) for name in position_names )
-    for key, value in assignments.iteritems():
+    for key, value in assignments.items():
         location, position = key
         positions[position][location] = value
     output = []
     for name in position_names:
         position = positions[name]
-        for location in sorted(position.iterkeys()):
+        for location in sorted(position.keys()):
             output.append( (name, position[location]) )
     return output

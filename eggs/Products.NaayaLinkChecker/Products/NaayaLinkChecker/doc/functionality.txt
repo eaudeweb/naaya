@@ -9,8 +9,8 @@ Setup Link checker
 
     >>> checker.manage_addMetaType('Naaya Document')
     >>> checker.manage_addMetaType('Naaya URL')
-    >>> checker.getObjectMetaTypes()
-    ['Naaya URL', 'Naaya Document']
+    >>> sorted(checker.getObjectMetaTypes())
+    ['Naaya Document', 'Naaya URL']
     >>> checker.manage_addProperty('Naaya Document', 'description', True)
     >>> checker.manage_addProperty('Naaya Document', 'body', True)
     >>> checker.manage_addProperty('Naaya URL', 'locator', True, True)
@@ -44,32 +44,33 @@ Let's run our link checker. The manualCheck method should return a tuple like th
        'portal/info/doc1',
        'misc_/NaayaContent/NyDocument.gif',
        [
-            (u'this-is-a-broken-link', '404: Not Found', 'description', 'en'),
-            (u'this-is-a-broken-link', '404: Not Found', 'body', 'en')
+            ('this-is-a-broken-link', '404: Not Found', 'description', 'en'),
+            ('this-is-a-broken-link', '404: Not Found', 'body', 'en')
         ])
     ],
     8,
 )
 
     >>> info = checker.manualCheck()
-    >>> url_info = info[0][0]
-    >>> doc_info = info[0][1]
+    >>> results_by_id = {entry[0]: entry for entry in info[0]}
+    >>> url_info = results_by_id['url1']
     >>> url_info[0]
     'url1'
     >>> url_props = url_info[4]
     >>> locator = url_props[0]
     >>> locator[0]
-    u'http://a-broken-link'
+    'http://a-broken-link'
     >>> locator[2]
     'locator'
+    >>> doc_info = results_by_id['doc1']
     >>> doc_props = doc_info[4]
     >>> description = doc_props[0]
     >>> body = doc_props[1]
     >>> description[0]
-    u'this-is-a-broken-link'
+    'this-is-a-broken-link'
     >>> description[2]
     'description'
     >>> body[0]
-    u'this-is-a-broken-link'
+    'this-is-a-broken-link'
     >>> body[2]
     'body'

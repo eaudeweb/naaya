@@ -17,7 +17,7 @@
 #
 # Alex Morega, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from datetime import date, timedelta
 
 import transaction
@@ -119,5 +119,5 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(CommentsAdminTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(CommentsAdminTestCase))
     return suite

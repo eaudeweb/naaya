@@ -69,10 +69,14 @@ class NyFolderishVersioning:
             vdata1 = vdata1.index_html()
         if getattr(vdata2, 'index_html', None):
             vdata2 = vdata2.index_html()
-        if not isinstance(vdata1, str):
-            vdata1 = str(vdata1)
-        if not isinstance(vdata2, str):
-            vdata2 = str(vdata2)
+        if isinstance(vdata1, str):
+            vdata1 = vdata1.encode('utf-8')
+        elif not isinstance(vdata1, bytes):
+            vdata1 = str(vdata1).encode('utf-8')
+        if isinstance(vdata2, str):
+            vdata2 = vdata2.encode('utf-8')
+        elif not isinstance(vdata2, bytes):
+            vdata2 = str(vdata2).encode('utf-8')
         return crc32(vdata1) != crc32(vdata2)
     #
     # Public interface

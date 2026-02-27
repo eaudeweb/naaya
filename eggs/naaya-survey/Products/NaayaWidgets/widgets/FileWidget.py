@@ -18,7 +18,7 @@
 # Alin Voinea, Eau de Web
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaCore.managers.utils import utils
@@ -66,7 +66,7 @@ class FileWidget(Widget):
         if not value:
             if self.required:
                 title = self.title
-                if not isinstance(title, unicode):
+                if isinstance(title, bytes):
                     title = self.title.decode('utf-8')
                 raise WidgetError(('Value required for "${title}"',
                                    {'title': title}))
@@ -78,7 +78,7 @@ class FileWidget(Widget):
         if self.required and not read_size:
             value.seek(0)
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError((
                 'Value required for "${title}". Empty file provided.',
@@ -87,7 +87,7 @@ class FileWidget(Widget):
             max_size_str = utils().utShowSize(self.size_max)
             value.seek(0)
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('The uploaded file for "${title}" is too big, '
                                'the maximum allowed size is ${size} bytes',

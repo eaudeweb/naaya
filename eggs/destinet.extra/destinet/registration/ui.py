@@ -69,7 +69,18 @@ def process_create_account(context, request):
         real_comment = request.form.get('comments')
         if not real_comment:
             request.form['comments'] = " "
-        site.processRequestRoleForm(request)
+        form = request.form
+        site.processRequestRoleForm(
+            username=form.get('username', ''),
+            password=form.get('password', ''),
+            confirm=form.get('confirm', ''),
+            firstname=form.get('firstname', ''),
+            lastname=form.get('lastname', ''),
+            email=form.get('email', ''),
+            organisation=form.get('organisation', ''),
+            location=form.get('location', ''),
+            comments=form.get('comments', ''),
+            REQUEST=request)
         request.form[context.name_cookie] = request.form.get('username')
         request.form[context.pw_cookie] = request.form.get('password')
         request.SESSION.set(

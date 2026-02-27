@@ -67,7 +67,7 @@
                 <td colspan="2" tal:define="translation python:item.get_translation_by_language(lang)">
                     <a tal:attributes="href string:${item/absolute_url}; title translation" tal:content="item/title_or_id" />
                 </td>
-                <td><span tal:replace="python:here.getPrettyDateTime(item.bobobase_modification_time())" /></td>
+                <td><span tal:replace="python:here.getPrettyDateTime(item.modification_time())" /></td>
                 <td><a class="button" tal:attributes="href string:${item/absolute_url}/approveElement">approve</a></td>
             </tr>
             <tal:block repeat="lang item/get_english_names">

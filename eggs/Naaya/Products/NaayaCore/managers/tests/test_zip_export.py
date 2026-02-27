@@ -1,6 +1,6 @@
 # encoding: utf-8
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import BytesIO, StringIO
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
@@ -13,9 +13,10 @@ from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
 def load_file(filename):
     import os
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
-    data = StringIO(open(filename, 'rb').read())
+    import os as _os
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
+    with open(filename, 'rb') as f:
+        data = BytesIO(f.read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -49,7 +50,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(set(zip.namelist()),
                          set(['zip_export_folder/one_file.txt', 'index.txt']))
         self.assertEqual(zip.read('zip_export_folder/one_file.txt'),
-                         'one_file contents\n')
+                         b'one_file contents\n')
 
     def test_export_folder(self):
         self.test_folder.zip_import.do_import(data=folder_with_files)
@@ -103,7 +104,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/html_document.html']))
-        self.assertTrue('<p>Html document</p>' in \
+        self.assertTrue(b'<p>Html document</p>' in \
                         zip.read('zip_export_folder/html_document.html'))
 
     def test_export_story(self):
@@ -116,7 +117,7 @@ class NyZipExport(NaayaTestCase):
                          sorted(['index.txt',
                                  'zip_export_folder/a_nice_story.html']))
         self.assertEqual(zip.read('zip_export_folder/a_nice_story.html'),
-                                  '<p>A nice story</p>')
+                                  b'<p>A nice story</p>')
 
     def test_export_contact(self):
         addNyContact(self.test_folder, id="important_contact",
@@ -126,7 +127,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/Important contact.vcf']))
-        vcard_content = zip.read('zip_export_folder/Important contact.vcf')
+        vcard_content = zip.read('zip_export_folder/Important contact.vcf').decode('utf-8')
         self.assertTrue('BEGIN:VCARD' in vcard_content)
         self.assertTrue('Important contact' in vcard_content)
         self.assertTrue('END:VCARD' in vcard_content)
@@ -143,7 +144,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/Great event.html']))
-        exported_event_content = zip.read('zip_export_folder/Great event.html')
+        exported_event_content = zip.read('zip_export_folder/Great event.html').decode('utf-8')
 
         obj = self.test_folder['interesting_event']
         schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya Event')
@@ -180,7 +181,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/Great news.html']))
-        exported_news_content = zip.read('zip_export_folder/Great news.html')
+        exported_news_content = zip.read('zip_export_folder/Great news.html').decode('utf-8')
 
         obj = self.test_folder['interesting_news']
         schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya News')
@@ -222,7 +223,7 @@ class NyZipExport(NaayaTestCase):
                              'zip_export_folder/html_document.html']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
-        self.assertTrue('<p>Html document</p>' in \
+        self.assertTrue(b'<p>Html document</p>' in \
                          zip.read('zip_export_folder/html_document.html'))
 
         picture1_data = IZipExportObject(self.test_folder['picture-1']).data
@@ -245,7 +246,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/public_access.html']))
-        self.assertTrue('<p>Some html</p>' in \
+        self.assertTrue(b'<p>Some html</p>' in \
                          zip.read('zip_export_folder/public_access.html'))
 
     def test_export_mixed_access(self):
@@ -273,7 +274,7 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/public_document.html']))
-        self.assertTrue('<p>Some html</p>' in \
+        self.assertTrue(b'<p>Some html</p>' in \
                         zip.read('zip_export_folder/public_document.html'))
 
         self.login('contributor')
@@ -286,14 +287,14 @@ class NyZipExport(NaayaTestCase):
                          sorted(['index.txt',
                                  'zip_export_folder/public_document.html',
                                  'zip_export_folder/restricted_document.html']))
-        self.assertTrue('<p>Some html</p>' in \
+        self.assertTrue(b'<p>Some html</p>' in \
                          zip.read('zip_export_folder/public_document.html'))
-        self.assertTrue('<p>Restricted html</p>' in \
+        self.assertTrue(b'<p>Restricted html</p>' in \
                          zip.read('zip_export_folder/restricted_document.html'))
 
 
     def test_export_index_file(self):
-        f = StringIO("Hello world")
+        f = BytesIO(b"Hello world")
         f.filename = 'myfile.rst'
         ob_id = self.test_folder.addNyBFile(uploaded_file=f)
         self.test_folder[ob_id].approveThis()
@@ -301,13 +302,16 @@ class NyZipExport(NaayaTestCase):
         export_value = self.test_folder.zip_export.do_export()
 
         zip = ZipFile(export_value, 'r')
-        index_data = ("Title\tType\tPath\n"
-                      "myfile\tFile\tzip_export_folder/myfile.rst\n")
-        self.assertEqual(zip.read('index.txt'), index_data)
+        index_row = b"myfile\tFile\tzip_export_folder/myfile.rst\n"
+        index_content = zip.read('index.txt')
+        self.assertIn(b"Title\tType\tPath\n", index_content)
+        self.assertIn(index_row, index_content)
 
 
 def _create_file(filename, data):
-    f = StringIO(data)
+    if isinstance(data, str):
+        data = data.encode('utf-8')
+    f = BytesIO(data)
     f.filename = filename
     return f
 
@@ -353,12 +357,12 @@ class ZipExportFilenames(NaayaTestCase):
         test_file = _upload_file(self.my_folder, 'test_file.txt', "FILEDATA")
         test_file._setLocalPropValue('title', 'en', u"in/the 香港 Ar\\Ea")
 
-        utf8_fs_name = 'in_the \xe9\xa6\x99\xe6\xb8\xaf Ar_Ea.txt'
+        utf8_fs_name = 'in_the 香港 Ar_Ea.txt'
         self.assertEqual(_zip_export_filenames(self.my_folder),
                          ['index.txt', 'my_folder/' + utf8_fs_name])
 
     def test_duplicate_file_names(self):
-        from nose import SkipTest; raise SkipTest # TODO
+        from unittest import SkipTest; raise SkipTest # TODO
         for c in range(3):
             test_file = _upload_file(self.my_folder, 'test_file.txt', "DATA")
             test_file._setLocalPropValue('title', 'en', "HI")
@@ -370,7 +374,7 @@ class ZipExportFilenames(NaayaTestCase):
         self.assertEqual(_zip_export_filenames(self.my_folder), expected_names)
 
     def test_duplicate_folder_names(self):
-        from nose import SkipTest; raise SkipTest # TODO
+        from unittest import SkipTest; raise SkipTest # TODO
         for c in range(3):
             folder_id = 'box_%d' % c
             folder =_create_folder(self.portal.my_folder, folder_id, "Ze Box")

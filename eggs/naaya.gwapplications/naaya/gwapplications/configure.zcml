@@ -6,7 +6,7 @@
     xmlns:five="http://namespaces.zope.org/five">
 
   <browser:page
-      for="zope.app.container.interfaces.IAdding"
+      for="zope.browser.interfaces.IAdding"
       name="add_gwapplications_html"
       template="zpt/manage_add_applications.zpt"
       class=".applications.GWApplicationsAddView"

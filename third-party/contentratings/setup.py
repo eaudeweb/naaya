@@ -5,9 +5,9 @@ version = '1.0.dev1'
 
 
 def read(*rnames):
-    text = open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-    text = unicode(text, 'utf-8').encode('ascii', 'xmlcharrefreplace')
-    return text
+    with open(os.path.join(os.path.dirname(__file__), *rnames),
+              encoding='utf-8') as f:
+        return f.read()
 
 
 description = read('README.txt') + '\n\n' + \

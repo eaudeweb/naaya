@@ -2,7 +2,8 @@ from zope.interface import Interface
 from zope.configuration.fields import GlobalObject, GlobalInterface, Bool
 from zope.schema import TextLine
 from zope.security.zcml import Permission
-from zope.app.i18n import ZopeMessageFactory as _
+from zope.i18nmessageid import MessageFactory
+_ = MessageFactory('zope')
 from Products.Five.browser import BrowserView, metaconfigure
 from naaya.component import bundles
 from naaya.core.interfaces import IRstkMethod
@@ -50,7 +51,7 @@ def simple_view_directive(_context, handler, for_, name,
                           permission=_default_permission):
     class SimpleView(BrowserView):
         def __call__(self, **kwargs):
-            context = self.aq_parent
+            context = self.context
             return handler(context, self.request, **kwargs)
 
     metaconfigure.page(_context, name, permission, for_, class_=SimpleView)

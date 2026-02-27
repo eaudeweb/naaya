@@ -17,7 +17,7 @@
 #
 # Alex Morega, Eau de Web
 
-from unittest import TestSuite, makeSuite, TestCase
+from unittest import TestSuite, TestLoader, TestCase
 from mock import Mock, MagicMock
 from datetime import date, timedelta
 
@@ -29,7 +29,7 @@ from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 from naaya.content.talkback.invitations import InvitationsContainer
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
-import Globals
+# import Globals removed
 import os
 
 
@@ -389,14 +389,14 @@ class InvitationsContainerTestCase(TestCase):
         # This is a little extreme - we test xlwt/xlrd this way...
         # What if the lib changes, the xcel version does,
         # any small change in the binary xcel file produced could affect our test.
-        expected = open(os.path.join(Globals.package_home(globals()),
+        expected = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             'data/invitationList.xls'),'r').read()
         self.assertEqual(r, expected)
 
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(InvitationTestCase))
-    suite.addTest(makeSuite(InviteeCommentTestCase))
-    suite.addTest(makeSuite(InvitationsContainerTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(InvitationTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(InviteeCommentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(InvitationsContainerTestCase))
     return suite

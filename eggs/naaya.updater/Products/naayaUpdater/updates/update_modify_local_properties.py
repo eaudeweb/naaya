@@ -23,7 +23,7 @@ class ModifyLocalProperties(UpdateScript):
             languages = portal.gl_get_languages()
 
             for ob in portal.getCatalogedObjectsA():
-                if ob.__dict__.has_key(prop_name):
+                if prop_name in ob.__dict__:
                     local_values = {}
                     for lang in languages:
                         local_values[lang] = ob.getLocalProperty(prop_name, lang)

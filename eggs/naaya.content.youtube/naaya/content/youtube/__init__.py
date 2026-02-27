@@ -1,1 +1,1 @@
-from youtube_item import NyYoutube
+from .youtube_item import NyYoutube

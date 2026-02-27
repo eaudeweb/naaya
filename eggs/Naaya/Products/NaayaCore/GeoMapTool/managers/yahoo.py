@@ -1,6 +1,6 @@
 import xml.dom.minidom
-from urllib import urlencode
-from urllib2 import urlopen
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 class Yahoo:
 
@@ -30,7 +30,7 @@ class Yahoo:
     def get_zoom_level(self, string, default=15):
         try:
             return self._get_zoom_level(string, default)
-        except Exception, err:
+        except Exception as err:
             return default
 
     def _get_zoom_level(self, string, default=15):

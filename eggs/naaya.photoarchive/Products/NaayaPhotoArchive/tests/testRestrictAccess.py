@@ -17,7 +17,7 @@
 #
 # Alex Morega, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 import transaction
 
@@ -25,9 +25,9 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
+    from io import StringIO
+    pass  # package_home import removed (unused)
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
     data = StringIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
@@ -91,5 +91,5 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(PhotoRestrictAccessTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(PhotoRestrictAccessTestCase))
     return suite

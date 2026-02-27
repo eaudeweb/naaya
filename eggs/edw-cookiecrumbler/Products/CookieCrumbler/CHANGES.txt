@@ -1,0 +1,75 @@
+
+Version 1.2
+
+- Cookies set on an HTTPS connection are now marked as secure, meaning
+  they will not be transmitted over HTTP.
+
+- CookieCrumbler now lets you disable or modify the Cache-Control
+  header to work around MSIE's irrational handling of the Cache-Control
+  header.  See MS knowledge base article #316431.
+
+- The credentialsChanged() method was generating an incorrect cookie.
+  Thanks to Richard Jones for finding this elusive bug.
+
+- Made compatible with Zope 2.7 by raising Redirect exception instances
+  rather than a string.
+
+
+Version 1.1
+
+- CookieCrumblers are now folders that hold login forms.  This makes
+  it easier to use CookieCrumblers in sites that disallow anonymous
+  access.  You now only need to grant the "View" permission to anonymous
+  users in the context of the cookie crumbler.
+
+
+Version 1.0
+
+- Added unit tests.
+
+- You can now specify what page authenticated users should see when
+  Unauthorized errors occur.
+
+- Login redirection now restores the query string.
+
+- Reformatted CookieCrumbler.py to match the version in CMFCore.  This
+  will make it easier to keep the two copies in sync.
+
+- Changed the meta_type to not conflict with the version in CMFCore.
+
+- Fixed CookieCrumbler to emit "Basic" and not "basic" auth as per HTTP
+  spec (CMF Collector #14). This fixes some WebDAV locking problems with
+  (rightfully) picky clients, like ExternalEditor.
+
+- A "Cache-Control: no-cache" header is now sent along in responses
+  that employ cookie auth to avoid potential security issues with
+  public caches serving stored "authorized" pages.
+
+
+Version 0.5
+
+- Cookie crumblers were causing an authentication error on logout.
+  Corrected.
+
+- Cookie paths weren't being set correctly when local paths were turned
+  on.  Actually, the enabling of local paths was reversed from what the
+  checkbox label implied, doubling the confusion.
+
+- Made sure inner cookie crumblers can override the logout form.
+
+
+Version 0.4
+
+- CookieCrumblers in nested folders are now possible.  You can just drop
+  in a cookie crumbler anywhere to change the login form for that area of
+  the site.  In fact, now you don't have to create a user folder just
+  to change the login process.
+
+- There is now a workaround for the problem with cookies being set even
+  though the user entered an incorrect password.  RESPONSE.unauthorized()
+  now cancels the cookie response header.  The new login_form and
+  logged_in form both try to invoke unauthorized(), so make sure you
+  install the new forms.
+
+- Merged WebDAV source port fix from CMFCore
+

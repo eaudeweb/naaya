@@ -3,21 +3,22 @@ import string
 from random import choice
 import re
 from copy import deepcopy
-import md5
+import hashlib
 import base64
-import urllib
+import urllib.parse
+import urllib.request
 import time
 import codecs
 from zipfile import *
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 import csv
 import tempfile
 import os
 import pickle
-from email.Utils import encode_rfc2231
-from urllib import urlencode
-from StringIO import StringIO
+from email.utils import encode_rfc2231
+from urllib.parse import urlencode
+from io import StringIO
 from unidecode import unidecode
 from warnings import warn
 
@@ -174,7 +175,7 @@ def make_id(parent, temp_parent=None, id='', title='', prefix='',
 
     # If an id was passwed and we want to not change it by slugifying
     if id and keep_id:
-        assert(isinstance(id, basestring))
+        assert(isinstance(id, str))
         gen_id = id
     else:
         gen_id = slugify(id or title or prefix, removelist=removelist)
@@ -248,8 +249,8 @@ def html2text(html, trim_length=512, ellipsis=False):
     a false value (e.g. zero, None), then search for the nearest word
     boundary to the left, trim there, and insert an ellipsis ("...").
     """
-    soup = BeautifulSoup(html)
-    text = unescape_html_entities(''.join(soup.findAll(text=True))).strip()
+    soup = BeautifulSoup(html, "lxml")
+    text = unescape_html_entities(''.join(soup.findAll(string=True))).strip()
     if trim_length and trim_length < len(text):
         text = text[:trim_length]
         if ellipsis:
@@ -260,14 +261,14 @@ def html2text(html, trim_length=512, ellipsis=False):
 
 def normalize_template(src):
     src = (src.strip().replace('\r', '') + '\n')
-    if isinstance(src, unicode):
-        src = src.encode('utf-8')
+    if isinstance(src, bytes):
+        src = src.decode('utf-8')
     return src
 
 
 def html_diff(source, target):
     import difflib
-    from cStringIO import StringIO
+    from io import StringIO
     lines = lambda s: StringIO(normalize_template(s)).readlines()
     output = StringIO()
     output.write('<div style="font-family: monospace;">')
@@ -304,16 +305,16 @@ class list_utils:
         """Gets a comma separated string and returns a list"""
         if s is None:
             return []
-        if not isinstance(s, (list, tuple, basestring)):
+        if not isinstance(s, (list, tuple, str)):
             raise ValueError("Invalid list %r" % s)
-        if isinstance(s, basestring):
+        if isinstance(s, str):
             s = s.split(separator)
         s = [x.strip() for x in s]
         return [x for x in s if x]
 
     def joinToList(self, l):
         """Gets a list and returns a comma separated string"""
-        return string.join(l, ',')
+        return ','.join(l)
 
     def addToList(self, l, v):
         """Return a new list, after adding value v"""
@@ -404,11 +405,13 @@ class file_utils:
 
     def futRead(self, p_path, p_flag='r'):
         """ """
-        return open(p_path, p_flag).read()
+        with open(p_path, p_flag) as f:
+            return f.read()
 
     def futReadEnc(self, p_path, p_flag='r', p_encode='utf-8'):
         """ """
-        return codecs.open(p_path, p_flag, p_encode).read()
+        with codecs.open(p_path, p_flag, p_encode) as f:
+            return f.read()
 
 
 class batch_utils:
@@ -500,7 +503,7 @@ class utils:
         list_text = text.split(' ')
         res = []
         for word in list_text:
-            word = [word[i:i + nchars] for i in xrange(0, len(word), nchars)]
+            word = [word[i:i + nchars] for i in range(0, len(word), nchars)]
             word = insert.join(word)
             res.append(word)
         return ' '.join(res)
@@ -552,7 +555,9 @@ class utils:
         """ Generate an UID based on current time and a random string """
         if p_string == '':
             p_string = '%s%s' % (time.time(), self.utGenRandomId())
-        return md5.new(p_string).hexdigest()
+        if isinstance(p_string, str):
+            p_string = p_string.encode('utf-8')
+        return hashlib.md5(p_string).hexdigest()
 
     def utCleanupId(self, p_id=''):
         """DEPRECATED! Use utSlugify(s)
@@ -567,18 +572,14 @@ class utils:
 
     def utCleanupProfileId(self, p_id=''):
         """ """
-        if isinstance(p_id, unicode):
-            x = p_id.encode('utf-8')
-        else:
-            x = str(p_id)
-        TRANSMAP = string.maketrans('@', '_')
-        return x.translate(TRANSMAP)
+        x = str(p_id) if not isinstance(p_id, str) else p_id
+        return x.replace('@', '_')
 
     def utValidateId(self, p_id=''):
         """."""
         try:
             checkValidId(self, p_id)
-        except Exception, error:
+        except Exception as error:
             if str(error) != "('Empty or invalid id specified', '')":
                 return [str(error)]
         return None
@@ -631,50 +632,33 @@ class utils:
 
         def sort_key(obj):
             attr = getattr(obj, p_attr, None)
-            if isinstance(attr, basestring):
+            if isinstance(attr, str):
                 if lower:
-                    return force_to_unicode(attr).lower()
+                    return (0, force_to_unicode(attr).lower())
                 else:
-                    return force_to_unicode(attr)
+                    return (0, force_to_unicode(attr))
+            elif attr is None:
+                return (1, '')
             else:
-                return attr
+                return (0, str(attr))
         return sorted(p_list, key=sort_key, reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
-        """Sort a list of objects by an item values"""
-        l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,) * l_len),
-                     xrange(l_len), p_list)
-        l_temp.sort()
-        if p_desc:
-            l_temp.reverse()
-        return map(operator.getitem, l_temp, (-1,) * l_len)
+        """Sort a list of dicts by a key value"""
+        return sorted(p_list, key=lambda x: x[p_key], reverse=bool(p_desc))
 
     def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
-        """Sort a list of objects by an attribute values"""
-        l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: getattr(x, y)(), p_list,
-                               (p_method,) * l_len),
-                     xrange(l_len), p_list)
-        l_temp.sort()
-        if p_desc:
-            l_temp.reverse()
-        return map(operator.getitem, l_temp, (-1,) * l_len)
+        """Sort a list of objects by a method's return value"""
+        return sorted(p_list, key=lambda x: getattr(x, p_method)(),
+                      reverse=bool(p_desc))
 
     def utFilterObjsListByAttr(self, p_list, p_attr, p_value):
         """Filter a list of objects by an attribute value"""
-        l_len = len(p_list)
-        l_temp = map(None, map(getattr, p_list, (p_attr,) * l_len),
-                     (p_value,) * l_len, p_list)
-        l_temp = filter(lambda x: x[0] == x[1], l_temp)
-        return map(operator.getitem, l_temp, (-1,) * len(l_temp))
+        return [obj for obj in p_list if getattr(obj, p_attr, None) == p_value]
 
     def utSortListOfDictionariesByKey(self, p_list, p_key, p_order):
         """ Sort a list of dictionary by key """
-        if p_order:
-            p_list.sort(lambda x, y, param=p_key: cmp(y[param], x[param]))
-        else:
-            p_list.sort(lambda x, y, param=p_key: cmp(x[param], y[param]))
+        p_list.sort(key=lambda x: x[p_key], reverse=bool(p_order))
 
     def utGetRefererIp(self, REQUEST=None):
         l_request_ip = 'unknown'
@@ -703,6 +687,8 @@ class utils:
 
     def utStrEscapeHTMLTags(self, p_string):
         """ escape HTML tags from string """
+        if isinstance(p_string, bytes):
+            p_string = p_string.decode('utf-8', errors='replace')
         strip_html_pattern = re.compile(r'<[^>]*>')
         plaintext = strip_html_pattern.sub('', p_string)
         return plaintext
@@ -717,7 +703,7 @@ class utils:
 
     def utStripString(self, p_string):
         """ strip a given string """
-        return string.strip(self.utToUtf8(p_string))
+        return self.utToUtf8(p_string).strip()
 
     def utNoneToEmpty(self, value):
         """ """
@@ -766,9 +752,9 @@ class utils:
     def utStringEscape(self, p_string):
         """ Escape a string/unicode
         """
-        if isinstance(p_string, unicode):
-            p_string = p_string.encode('unicode_escape')
-        return p_string.encode('string_escape')
+        if isinstance(p_string, bytes):
+            p_string = p_string.decode('utf-8', 'replace')
+        return p_string.encode('unicode_escape').decode('ascii')
 
     def utUrlEncode(self, p_string, qtype=0):
         """Encode a string using url_quote"""
@@ -781,16 +767,15 @@ class utils:
         return [self.utUrlEncode(l) for l in list]
 
     def utToUtf8(self, p_string):
-        # convert to utf-8
-        if isinstance(p_string, unicode):
-            return p_string.encode('utf-8')
-        else:
-            return str(p_string)
+        # convert to utf-8 string
+        if isinstance(p_string, bytes):
+            return p_string.decode('utf-8')
+        return str(p_string)
 
     def utToUnicode(self, p_string):
         # convert to unicode
-        if not isinstance(p_string, unicode):
-            return unicode(p_string, 'utf-8')
+        if not isinstance(p_string, str):
+            return str(p_string, 'utf-8')
         else:
             return p_string
 
@@ -798,8 +783,9 @@ class utils:
         """ accepts only strings """
         if p_string is None:
             return '-'
-        uni = unicode(p_string, 'latin-1')
-        return uni.encode('utf-8')
+        if isinstance(p_string, bytes):
+            return p_string.decode('latin-1')
+        return p_string
 
     def utTextareaEncode(self, p_string):
         """Encode a string (from a textarea control):
@@ -811,7 +797,7 @@ class utils:
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
-        if isinstance(p_string, unicode):
+        if isinstance(p_string, str):
             l_tmp = self.utToUtf8(p_string)
         else:
             l_tmp = str(p_string)
@@ -874,7 +860,7 @@ class utils:
 
     def utUnquote(self, value):
         # transform escapes in single characters
-        return urllib.unquote(value)
+        return urllib.parse.unquote(value)
 
     def utGetTodayDate(self):
         """Returns today date in a DateTime object"""
@@ -1088,7 +1074,7 @@ class utils:
             sz = sz + float(o.get_size())
             timetuple = time.localtime()[:6]
             filename = name + '/' + self.utToUtf8(o.id)
-            if isinstance(filename, unicode):
+            if isinstance(filename, str):
                 filename = filename.encode('utf-8')
             zfi = ZipInfo(filename)
             zfi.date_time = timetuple
@@ -1369,7 +1355,7 @@ class vcard_file:
         self.data = data
 
     def getZipData(self):
-        if isinstance(self.data, unicode):
+        if isinstance(self.data, str):
             return self.data.deocde('utf-8')
         else:
             return self.data
@@ -1444,14 +1430,21 @@ def rss_channel_for_channel(channel, lang):
 
 
 def import_non_local(name, custom_name=None):
-    import imp
+    import importlib
     import sys
 
     custom_name = custom_name or name
 
-    f, pathname, desc = imp.find_module(name, sys.path[1:])
-    module = imp.load_module(custom_name, f, pathname, desc)
-    if f:
-        f.close()
+    # Temporarily remove the first entry from sys.path so we import the
+    # stdlib (or other non-local) module rather than a local one with the
+    # same name.
+    saved = sys.path[0]
+    sys.path.pop(0)
+    try:
+        module = importlib.import_module(name)
+        if custom_name != name:
+            sys.modules[custom_name] = module
+    finally:
+        sys.path.insert(0, saved)
 
     return module

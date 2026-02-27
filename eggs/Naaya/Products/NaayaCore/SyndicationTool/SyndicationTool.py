@@ -1,31 +1,32 @@
 """
 This tool is an aggregator for different channels (RDF, local).
 """
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request
 from datetime import timedelta
 
-from Globals import InitializeClass, DTMLFile
+from AccessControl.class_init import InitializeClass
+from App.special_dtml import DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from ZPublisher import NotFound
+from zExceptions import NotFound
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope import component
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils, html2text
-from managers.namespaces_tool import namespaces_tool
-from managers.channeltypes_manager import channeltypes_manager
+from .managers.namespaces_tool import namespaces_tool
+from .managers.channeltypes_manager import channeltypes_manager
 from Products.Naaya.interfaces import INySite, IHeartbeat
 from naaya.core.utils import cooldown
 from naaya.core.zope2util import ofs_path
 
-import LocalChannel
-import RemoteChannel
-import ScriptChannel
-import RemoteChannelFacade
-import ChannelAggregator
+from . import LocalChannel
+from . import RemoteChannel
+from . import ScriptChannel
+from . import RemoteChannelFacade
+from . import ChannelAggregator
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -135,8 +136,9 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         http://diveintomark.org/archives/2004/05/28/howto-atom-id - article
         about constructing id
         """
-        scheme, netloc, path, query, fragment = urlparse.urlsplit(permalink)
-        location, port = urllib.splitport(netloc)
+        parsed = urllib.parse.urlsplit(permalink)
+        location = parsed.hostname or parsed.netloc
+        path = parsed.path
         uid = "tag:%s,%s:%s" % (location, datetime.strftime('%Y-%m-%d'), path)
         return uid
 
@@ -306,7 +308,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         if channel:
             return channel
         else:
-            raise NotFound, "Channel not found"
+            raise NotFound("Channel not found")
 
 
 InitializeClass(SyndicationTool)

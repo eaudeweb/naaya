@@ -5,7 +5,7 @@ Naaya Site
 
 import os.path
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view_management_screens, view
@@ -14,9 +14,9 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-from managers.combosync_tool import combosync_tool
-import Skin
-from Style import Style
+from .managers.combosync_tool import combosync_tool
+from . import Skin
+from .Style import Style
 from naaya.core.zope2util import folder_manage_main_plus
 
 def manage_addLayoutTool(self, REQUEST=None):
@@ -114,7 +114,7 @@ class LayoutTool(Folder, combosync_tool):
         ny_content = self.get_pluggable_content()
         res = []
         for v in ny_content.values():
-            if v.has_key('additional_style') and v['additional_style']:
+            if 'additional_style' in v and v['additional_style']:
                 style = v['additional_style']
                 if callable(style):
                     style = style()
@@ -192,8 +192,8 @@ class AdditionalStyle(object):
 
     def __call__(self):
         mtime = os.stat(self.css_path).st_mtime
-        if mtime > self.last_mtime:
-            f = open(self.css_path, 'rb')
+        if self.last_mtime is None or mtime > self.last_mtime:
+            f = open(self.css_path, 'r')
             self.content = self._patch_content(f.read())
             f.close()
             self.last_mtime = mtime

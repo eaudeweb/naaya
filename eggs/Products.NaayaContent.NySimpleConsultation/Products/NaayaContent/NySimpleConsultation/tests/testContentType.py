@@ -18,7 +18,7 @@
 # Alin Voinea, Eau de Web
 # Batranu David, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.NaayaContent.NySimpleConsultation.NySimpleConsultation import \
 addNySimpleConsultation
 from Products.Naaya.NyFolder import addNyFolder
@@ -219,7 +219,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
         #add exfile
         from os import path
-        from StringIO import StringIO
+        from io import StringIO
         f=open(path.join(path.dirname(__file__), 'test.txt'), 'rb')
         exf = StringIO(f.read())
         f.close()
@@ -233,5 +233,5 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaContentTestCase))
     return suite

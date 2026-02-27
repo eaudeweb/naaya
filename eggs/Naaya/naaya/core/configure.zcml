@@ -63,7 +63,7 @@
 
     <naaya:rstkMethod
         name="url_quote"
-        handler="urllib.quote"
+        handler="urllib.parse.quote"
         getattrPatch="yes" />
 
     <naaya:rstkMethod

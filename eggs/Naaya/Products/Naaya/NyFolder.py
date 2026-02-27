@@ -1,10 +1,11 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
+from DateTime import DateTime
 from AccessControl.Permissions import manage_users
 from AccessControl.unauthorized import Unauthorized
 from App.FactoryDispatcher import FactoryDispatcher
-from Globals import InitializeClass
-from NyFolderBase import NyFolderBase
+from AccessControl.class_init import InitializeClass
+from .NyFolderBase import NyFolderBase
 from Products.Naaya.adapters import FolderMetaTypes
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCommonView import NyCommonView
@@ -23,18 +24,19 @@ from Products.NaayaBase.constants import PERMISSION_VALIDATE_OBJECTS
 from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
 from Products.NaayaCore.managers.utils import utils, batch_utils, make_id
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from __builtin__ import CLIENT_HOME
-from constants import DEFAULT_SORTORDER
-from constants import LABEL_NYFOLDER
-from constants import MESSAGE_ROLEADDED
-from constants import MESSAGE_ROLEREVOKED
-from constants import MESSAGE_USERADDED
-from constants import MESSAGE_USERMODIFIED
-from constants import METATYPE_FOLDER
-from constants import PERMISSION_ADD_FOLDER
-from constants import PREFIX_FOLDER
+from App.config import getConfiguration as _getConfiguration
+CLIENT_HOME = _getConfiguration().clienthome
+from .constants import DEFAULT_SORTORDER
+from .constants import LABEL_NYFOLDER
+from .constants import MESSAGE_ROLEADDED
+from .constants import MESSAGE_ROLEREVOKED
+from .constants import MESSAGE_USERADDED
+from .constants import MESSAGE_USERMODIFIED
+from .constants import METATYPE_FOLDER
+from .constants import PERMISSION_ADD_FOLDER
+from .constants import PREFIX_FOLDER
 from copy import copy, deepcopy
-from interfaces import INyFolder
+from .interfaces import INyFolder
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.utils import force_to_unicode
@@ -42,7 +44,7 @@ from naaya.core.zope2util import get_template_source
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from zope import event
 from zope.deprecation import deprecate
-from zope.interface import implements
+from zope.interface import implementer
 import Products
 
 
@@ -208,34 +210,29 @@ def importNyFolder(
                     self.manage_delObjects([id])
                 except:
                     pass
-            publicinterface = abs(
-                int(attrs['publicinterface'].encode('utf-8')))
-            meta_types = attrs['folder_meta_types'].encode('utf-8')
+            publicinterface = abs(int(attrs['publicinterface']))
+            meta_types = attrs['folder_meta_types']
             if meta_types == '':
                 meta_types = ''
             else:
                 meta_types = meta_types.split(',')
             # create the object
             addNyFolder(self, id=id,
-                        sortorder=attrs['sortorder'].encode('utf-8'),
+                        sortorder=attrs['sortorder'],
                         publicinterface=publicinterface,
-                        maintainer_email=attrs[
-                            'maintainer_email'].encode('utf-8'),
+                        maintainer_email=attrs['maintainer_email'],
                         folder_meta_types=meta_types,
                         contributor=self.utEmptyToNone(
-                            attrs['contributor'].encode('utf-8')),
-                        discussion=abs(int(
-                            attrs['discussion'].encode('utf-8'))))
+                            attrs['contributor']),
+                        discussion=abs(int(attrs['discussion'])))
             ob = self._getOb(id)
             for property, langs in properties.items():
                 for lang in langs:
                     ob._setLocalPropValue(property, lang, langs[lang])
-            ob.approveThis(approved=abs(int(
-                attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             if publicinterface:
                 l_index = ob._getOb('index', None)
                 if l_index is not None:
@@ -247,13 +244,13 @@ def importNyFolder(
             ob.import_data(object)
 
 
+@implementer(INyFolder)
 class NyFolder(
         NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProperties,
         NyImportExport, NyContainer, utils, NyContentType, NyContentData):
 
     """ """
 
-    implements(INyFolder)
 
     meta_type = METATYPE_FOLDER
     meta_label = LABEL_NYFOLDER
@@ -580,10 +577,10 @@ class NyFolder(
     def getSubfoldersWithPendingItems(self):
         # returns a list with all subfolders that contains pending(draft)
         # objects
-        return filter(lambda x: x.hasPendingContent(),
-                      self.getCatalogedObjects(
-                          [METATYPE_FOLDER], 0,
-                          path='/'.join(self.getPhysicalPath())))
+        return list(filter(lambda x: x.hasPendingContent(),
+                         self.getCatalogedObjects(
+                             [METATYPE_FOLDER], 0,
+                             path='/'.join(self.getPhysicalPath()))))
 
     security.declareProtected(manage_users, 'admin_getusers')
 
@@ -782,7 +779,7 @@ class NyFolder(
         try:
             self.getAuthenticationTool().manage_addUser(
                 name, password, confirm, [], [], firstname, lastname, email)
-        except Exception, error:
+        except Exception as error:
             self.setSessionErrorsTrans(error)
             return RESPONSE.redirect("%s/administration_users_html?mode=add"
                                      % self.absolute_url())
@@ -821,7 +818,7 @@ class NyFolder(
             self.getAuthenticationTool().manage_changeUser(
                 name, password, confirm, roles, domains, firstname, lastname,
                 email, lastupdated)
-        except Exception, error:
+        except Exception as error:
             self.setSessionErrorsTrans(error)
             return RESPONSE.redirect(
                 "%s/administration_users_html?mode=edit&name=%s" %
@@ -871,7 +868,7 @@ class NyFolder(
             try:
                 self.getAuthenticationTool().manage_addUsersRoles(
                     name, roles, location)
-            except Exception, error:
+            except Exception as error:
                 err = str(error)
             else:
                 success = True
@@ -1157,7 +1154,7 @@ class NyFolder(
                 int(status), comment,
                 self.REQUEST.AUTHENTICATED_USER.getUserName())
             self.recatalogNyObject(ob)
-        except Exception, error:
+        except Exception as error:
             err = error
         else:
             success = True
@@ -1182,7 +1179,7 @@ class NyFolder(
             # remove restrictions
             try:
                 self.manage_permission(view, roles=[], acquire=1)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True
@@ -1196,7 +1193,7 @@ class NyFolder(
                     roles = self.utConvertToList(roles)
                 roles.extend(['Manager', 'Administrator', 'Owner'])
                 self.manage_permission(view, roles=roles, acquire=0)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True
@@ -1322,7 +1319,7 @@ class NyFolder(
             for c in chars:
                 words = [word.encode(
                     'utf-8') for word in lexicon.getWordsForRightTruncation(
-                        unicode(c, 'utf-8'))]
+                        str(c, 'utf-8'))]
                 words_score.extend(
                     [(len(index_obj.getDocumentsForWord(w)), w)
                      for w in words
@@ -1458,7 +1455,7 @@ class NyFolder(
 
     def HEAD(self, REQUEST=None):
         """ """
-        modified = self.bobobase_modification_time()
+        modified = DateTime(self._p_mtime)
         return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
     # zmi pages

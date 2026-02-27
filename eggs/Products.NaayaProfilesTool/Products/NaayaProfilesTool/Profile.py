@@ -3,10 +3,10 @@ for custom fields for users such as addresses and phone numbers
 
 """
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from constants import METATYPE_PROFILE, METATYPE_PROFILESHEET
+from .constants import METATYPE_PROFILE, METATYPE_PROFILESHEET
 from Products.NaayaCore.managers.utils import utils
 
 def manage_addProfile(self, id, title='', REQUEST=None):

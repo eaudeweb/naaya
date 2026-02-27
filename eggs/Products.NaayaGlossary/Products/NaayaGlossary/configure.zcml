@@ -4,7 +4,7 @@
 
   <subscriber
     for=".interfaces.INyGlossaryItem
-         zope.app.container.interfaces.IObjectAddedEvent"
+         zope.lifecycleevent.interfaces.IObjectAddedEvent"
     handler=".subscribers.add_item_to_glossary_catalog" />
 
   <subscriber
@@ -14,7 +14,7 @@
 
   <subscriber
     for=".interfaces.INyGlossaryItem
-         zope.app.container.interfaces.IObjectRemovedEvent"
+         zope.lifecycleevent.interfaces.IObjectRemovedEvent"
     handler=".subscribers.remove_item_from_glossary_catalog" />
 
   <subscriber

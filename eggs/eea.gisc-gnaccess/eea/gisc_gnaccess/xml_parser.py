@@ -56,7 +56,7 @@ def get_multiple_char_data(data, main_path, **kwpaths):
         if i < len(main_path) and name == main_path[i]:
             main_matched.append(name)
         elif i == len(main_path):
-            for k, path in kwpaths.iteritems():
+            for k, path in kwpaths.items():
                 j = len(local_matched[k])
                 if j < len(path) and name == path[j]:
                     local_matched[k].append(name)
@@ -67,12 +67,12 @@ def get_multiple_char_data(data, main_path, **kwpaths):
             if len(main_matched) > 0 and name == main_matched[-1]:
                 main_matched.pop()
         else:
-            for k, path in kwpaths.iteritems():
+            for k, path in kwpaths.items():
                 if len(local_matched[k]) != 0 and name == local_matched[k][-1]:
                     local_matched[k].pop()
     def char_data(data):
         if len(main_matched) == len(main_path):
-            for k, path in kwpaths.iteritems():
+            for k, path in kwpaths.items():
                 if len(local_matched[k]) == len(path):
                     if k not in values[-1]:
                         values[-1][k] = data

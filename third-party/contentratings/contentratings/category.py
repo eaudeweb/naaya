@@ -1,9 +1,17 @@
 from persistent import Persistent
-from zope.interface import implements, Interface, alsoProvides
+from zope.interface import implementer, Interface, alsoProvides
 from zope.component import adapts, queryMultiAdapter, getMultiAdapter
 from zope.annotation.interfaces import IAnnotations, IAnnotatable
-from zope.app.interface import queryType
-from zope.app.container.contained import contained
+from zope.interface import providedBy
+from zope.container.contained import contained
+
+
+def queryType(object, interface):
+    """Look up the type interface for an object (replaces zope.app.interface)"""
+    for iface in providedBy(object):
+        if interface.providedBy(iface):
+            return iface
+    return None
 from zope.event import notify
 from zope.tales.engine import Engine
 from BTrees.OOBTree import OOBTree
@@ -39,9 +47,9 @@ def expression_property(name):
             delattr(self, cache_name)
     return property(_get, _set)
 
+@implementer(IRatingCategory)
 class RatingsCategoryFactory(Persistent):
     """Contains all settings for a rating category"""
-    implements(IRatingCategory)
     storage = UserRatingStorage
     # compiled expressions
 
@@ -102,7 +110,7 @@ def expression_runner(name):
                 if isinstance(res, Exception):
                     # raise any excpetions returned by the expression
                     raise res
-            except AttributeError, e:
+            except AttributeError as e:
                 # prevent uninformative errors during property lookup,
                 # by wrapping AttributeErrors
                 raise RuntimeError(e)
@@ -110,11 +118,11 @@ def expression_runner(name):
         return True
     return runner
 
+@implementer(IRatingManager)
 class RatingCategoryAdapter(object):
     """A multiadapter which takes the rating settings, the rating
     storage, and the context and implements basic ratings
     functionality"""
-    implements(IRatingManager)
     adapts(IRatingCategory, Interface)
 
     def __init__(self, category, context):
@@ -221,7 +229,7 @@ class RatingCategoryAdapter(object):
             assert self.can_read
             return getattr(self.storage, name)
         else:
-            raise AttributeError, name
+            raise AttributeError(name)
 
     def __setattr__(self, name, value):
         """If name is part of our storage interface, set the

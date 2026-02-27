@@ -1,15 +1,15 @@
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-import Scheme
-import Template
-import Style
-import DiskFile
-import DiskTemplate
+from . import Scheme
+from . import Template
+from . import Style
+from . import DiskFile
+from . import DiskTemplate
 
 
 manage_addSkinForm = PageTemplateFile('zpt/skin_add', globals())

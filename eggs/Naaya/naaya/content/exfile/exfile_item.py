@@ -6,7 +6,7 @@ from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
 from OFS.Image import cookId
 from zope.contenttype import guess_content_type
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -15,8 +15,8 @@ from OFS.Folder import Folder
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
-from interfaces import INyExFile
+from zope.interface import implementer
+from .interfaces import INyExFile
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -33,7 +33,7 @@ from Products.NaayaCore.managers.utils import uniqueId, slugify, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from permissions import PERMISSION_ADD_EXTENDED_FILE
+from .permissions import PERMISSION_ADD_EXTENDED_FILE
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -192,27 +192,27 @@ def importNyExFile(self, param, id, attrs, content, properties, discussion, obje
                 except: pass
 
             ob = _create_NyExFile_object(self, id,
-                contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8'))
+                contributor=self.utEmptyToNone(attrs['contributor'])
             )
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                attrs['validation_comment'].encode('utf-8'),
-                attrs['validation_by'].encode('utf-8'),
-                attrs['validation_date'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
+            ob.checkThis(attrs['validation_status'],
+                attrs['validation_comment'],
+                attrs['validation_by'],
+                attrs['validation_date'])
             #import file items
             for object in objects:
-                lang = object.attrs['lang'].encode('utf-8')
+                lang = object.attrs['lang']
                 ob.handleUpload('file',
-                    self.utBase64Decode(object.attrs['file'].encode('utf-8')), '',
+                    self.utBase64Decode(object.attrs['file']), '',
                     lang)
-                ob.set_precondition(object.attrs['precondition'].encode('utf-8'), lang)
+                ob.set_precondition(object.attrs['precondition'], lang)
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -263,9 +263,9 @@ class file_item(NyFSFile, NyFolderishVersioning):
         data, ctype, size, filename = self._get_upload_file(source, file, url, parent)
         self.update_data(data, ctype, size, filename)
 
+@implementer(INyExFile)
 class exfile_item(NyContentData, Folder):
     """ """
-    implements(INyExFile)
 
     meta_type = config['meta_type']
 
@@ -429,7 +429,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
             Dc.publisher(l_site.publisher)
             )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def _fileitemkeywords(self, lang):
         """ """
@@ -465,7 +465,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     def toUnicode(self, p_string):
         #convert to unicode
-        if not isinstance(p_string, unicode): return unicode(p_string, 'utf-8', errors='ignore')
+        if not isinstance(p_string, str): return str(p_string, 'utf-8', errors='ignore')
         else: return p_string
 
     security.declarePublic('showVersionData')
@@ -507,9 +507,11 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV"
+)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -542,9 +544,11 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         version = self._getOb('version')
         self.copy_naaya_properties_from(version)
         self.copyFileItems(version, self)
@@ -561,9 +565,11 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG
+)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         version = exfile_item(self.id)
@@ -579,9 +585,11 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     def discardVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         self.checkout = 0
         self.checkout_user = None
         self.manage_delObjects(['version'])
@@ -593,12 +601,14 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if self.hasVersion():
             obj = self._getOb('version')
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         else:
             obj = self
 
@@ -662,9 +672,11 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
             username = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV"
+)
 
         if lang is None:
             lang = self.gl_get_selected_language()
@@ -675,7 +687,8 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
             version_ob = self._getOb('version')
             #this object has been checked out; save changes into the version object
             if self.checkout_user != username:
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
             context = version_ob
 
         # Create version
@@ -744,7 +757,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         filename = lang_doc._get_data_name()
         if not filename:
             return context.title_or_id()
-        if isinstance(filename, basestring):
+        if isinstance(filename, str):
             return filename
         return filename[-1]
 

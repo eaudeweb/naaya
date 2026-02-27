@@ -4,10 +4,9 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 
 def captcha_in_html(html):
-    if 'recaptcha_challenge_field' in html:
-        return True
-    else:
-        return False
+    return ('recaptcha_challenge_field' in html or
+            'g-recaptcha' in html or
+            'test-captcha-response' in html)
 
 def nameandemail_in_html(html):
     if 'Your name' in html and 'Your e-mail address' in html:

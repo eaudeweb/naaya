@@ -4,11 +4,11 @@ Initialization of naaya.i18n package:
  * register NaayaI18n class in context
 """
 
-import Globals # fixes Zope cross import when Zope not initialized
+import os # fixes Zope cross import when Zope not initialized
 from App.ImageFile import ImageFile
 
-from portal_tool import NaayaI18n, manage_addNaayaI18n
-import patches
+from .portal_tool import NaayaI18n, manage_addNaayaI18n
+from . import patches
 
 
 def initialize(context):

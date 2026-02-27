@@ -220,7 +220,7 @@ class catalog_tool(object):
 
     #Monkey patch
     def getCatalogedMapObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
-        from AccessControl.User import nobody
+        from AccessControl.users import nobody
         from AccessControl.SecurityManagement import newSecurityManager
         auth_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         newSecurityManager(None, nobody)

@@ -5,7 +5,7 @@ This module contains the base class of Naaya architecture.
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from zope.event import notify
 
@@ -13,8 +13,9 @@ from naaya.content.base.events import (NyContentObjectApproveEvent,
                                        NyContentObjectUnapproveEvent)
 
 from naaya.core.utils import replace_illegal_xml
-from NyCheckControl import NyCheckControl
-from NyDublinCore import NyDublinCore
+from naaya.core.zope2util import modification_time as _modification_time
+from .NyCheckControl import NyCheckControl
+from .NyDublinCore import NyDublinCore
 from Products.NaayaCore.managers.utils import get_nsmap
 
 from lxml import etree
@@ -25,6 +26,9 @@ class NyBase(NyDublinCore):
     The base class of Naaya architecture. It implements basic functionality
     common to all classes.
     """
+
+    def modification_time(self):
+        return _modification_time(self)
 
     def __init__(self):
         """
@@ -279,7 +283,7 @@ class NyBase(NyDublinCore):
                 Dc.source(l_site.getLocalProperty('publisher', lang)),
                )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     #Handlers for export in xml format
     security.declarePublic('export_this')

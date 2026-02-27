@@ -18,7 +18,7 @@
 # Alin Voinea, Eau de Web
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from constants import ARCHIVE_PROPERTIES
+from .constants import ARCHIVE_PROPERTIES
 
 class photo_archive_base(object):
     def copyObjects(self, REQUEST=None, **kwargs):

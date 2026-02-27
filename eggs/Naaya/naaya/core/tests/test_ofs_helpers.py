@@ -1,5 +1,5 @@
 import unittest
-from mock import Mock
+from unittest.mock import Mock
 from zope import interface
 from OFS.SimpleItem import SimpleItem
 from OFS.Folder import Folder

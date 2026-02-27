@@ -257,7 +257,7 @@
         <script tal:content="structure python:'var country = %s;' % country"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
-        <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(portal_map.absolute_url())"></script>
+        <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk['json_dumps'](portal_map.absolute_url())"></script>
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
           <div class="first-row clearfix" id="filter_map">
@@ -294,7 +294,7 @@
                   tal:repeat="item python:
                     [x.title for x in here.getSite().keywords_glossary.get_all_elements() if x.title.strip()] +
                     [node.title for node in here.getSite().portal_portlets['user-groups'].get_tree_nodes()
-                        if x.title.strip()] + [geo_query]" />
+                        if node.title.strip()] + [geo_query]" />
               </select>
             </div>
  

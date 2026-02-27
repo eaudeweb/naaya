@@ -21,8 +21,8 @@
 from App.ImageFile import ImageFile
 
 #Product imports
-import NyGlossary
-from constants import *
+from . import NyGlossary
+from .constants import *
 
 
 def initialize(context):

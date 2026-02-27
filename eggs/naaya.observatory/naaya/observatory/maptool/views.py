@@ -15,10 +15,10 @@ from Products.NaayaCore.GeoMapTool.clusters_catalog import (
 from Products.NaayaCore.GeoMapTool.clusters import (
         get_discretized_limits, Point, kmeans)
 
-from session import SessionManager
-from observatory import RATING_VALUES, TYPE_VALUES
-from utils import query_reverse_geocode, map_icon, map_distance, short_string
-from clusters_catalog import filter_rids, get_index_dict
+from .session import SessionManager
+from .observatory import RATING_VALUES, TYPE_VALUES
+from .utils import query_reverse_geocode, map_icon, map_distance, short_string
+from .clusters_catalog import filter_rids, get_index_dict
 
 
 class MapView(SessionManager):
@@ -68,7 +68,7 @@ class MapView(SessionManager):
                 return sum(ratings) / float(len(ratings))
 
             all_clusters = []
-            for type, points in points_by_type.iteritems():
+            for type, points in points_by_type.items():
                 centers, groups = kmeans(lat_min, lat_max,
                                                   lon_min, lon_max,
                                                   points, grid_size)
@@ -140,7 +140,7 @@ class MapView(SessionManager):
         lon_dict = get_index_dict('longitude', catalog, tlon_min, tlon_max)
         rating_dict = get_index_dict('rating', catalog)
         tc_end_apply_idxs = time()
-        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
+        print('apply indexes', tc_end_apply_idxs - tc_start_apply_idxs)
 
         map_filters = {'latitude': {'query': (tlat_min, tlat_max),
                                     'range': 'min:max'},
@@ -158,7 +158,7 @@ class MapView(SessionManager):
                                  tlon_min, tlon_max, grid_size)
         points = [point_data(cluster, r_list) for cluster in clusters]
         tc_end = time()
-        print 'clusters', tc_end - tc_start
+        print('clusters', tc_end - tc_start)
         return json.dumps({'points': points})
 
     def get_geotype_icons(self):
@@ -268,7 +268,7 @@ class MapView(SessionManager):
         lat_dict = get_index_dict('latitude', catalog, lat_min, lat_max)
         lon_dict = get_index_dict('longitude', catalog, lon_min, lon_max)
         tc_end_apply_idxs = time()
-        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
+        print('apply indexes', tc_end_apply_idxs - tc_start_apply_idxs)
 
         ret = True
         for rid in r_list:
@@ -277,7 +277,7 @@ class MapView(SessionManager):
                 ret = False
                 break
         tc_end = time()
-        print 'check user can add pin', tc_end - tc_start
+        print('check user can add pin', tc_end - tc_start)
         return ret
 
     _pin_add = ViewPageTemplateFile('zpt/pin_add.zpt', globals())
@@ -308,7 +308,7 @@ class MapView(SessionManager):
         type_dict = get_index_dict('type', catalog)
         rating_dict = get_index_dict('rating', catalog)
         tc_end_apply_idxs = time()
-        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
+        print('apply indexes', tc_end_apply_idxs - tc_start_apply_idxs)
 
         statistics = {}
         for type in TYPE_VALUES:

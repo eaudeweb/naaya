@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from decimal import Decimal
 
 from Products.Naaya.tests import NaayaTestCase
@@ -6,7 +6,7 @@ from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.NaayaCore.GeoMapTool import GeoMapTool
 from Products.Naaya.NyFolder import addNyFolder
-from test_kml_parser import load_file
+from .test_kml_parser import load_file
 
 class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     symbols = ['Capital', 'City', 'News_type', 'Document_type', 'Story_type',
@@ -176,22 +176,22 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.setDefaultSearchableContent()
 
     def test_indexes_in_catalog(self):
-        indexes = filter(lambda x: x.id == 'geo_latitude',
-                self.portal.portal_catalog.getIndexObjects())
-        self.failUnless(len(indexes) == 1)
+        indexes = list(filter(lambda x: x.id == 'geo_latitude',
+                self.portal.portal_catalog.getIndexObjects()))
+        self.assertTrue(len(indexes) == 1)
 
-        indexes = filter(lambda x: x.id == 'geo_longitude',
-                self.portal.portal_catalog.getIndexObjects())
-        self.failUnless(len(indexes) == 1)
+        indexes = list(filter(lambda x: x.id == 'geo_longitude',
+                self.portal.portal_catalog.getIndexObjects()))
+        self.assertTrue(len(indexes) == 1)
 
-        indexes = filter(lambda x: x.id == 'geo_address',
-                self.portal.portal_catalog.getIndexObjects())
-        self.failUnless(len(indexes) == 1)
+        indexes = list(filter(lambda x: x.id == 'geo_address',
+                self.portal.portal_catalog.getIndexObjects()))
+        self.assertTrue(len(indexes) == 1)
 
     def test_objects_in_folder(self):
         for ob_dict in self.objects:
             ob = self.portal.geo_location_test._getOb(ob_dict['data']['id'])
-            self.failIf(ob == None)
+            self.assertFalse(ob == None)
 
     def test_geo_index(self):
         catalog_tool = self.portal.getCatalogTool()
@@ -201,85 +201,85 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             query['geo_longitude'] = Decimal(ob_dict['data']['geo_location.lon'])
             query['geo_address'] = ob_dict['data']['geo_location.address']
             matching_items = catalog_tool(query)
-            self.failUnless(len(matching_items) == 1)
+            self.assertTrue(len(matching_items) == 1)
 
     def test_geo_search(self):
         objects = self.portal.portal_map.search_geo_objects(geo_types=[''],
                 lat_min=40., lat_max=43., lon_min=20., lon_max=30.,
                 lat_center=41.5, lon_center=25.)
 
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('42.7'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('23.333333'))
-        self.failUnless(objects[0].geo_location.address == 'Sofia Bulgaria')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('42.7'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('23.333333'))
+        self.assertTrue(objects[0].geo_location.address == 'Sofia Bulgaria')
 
     def test_geo_search_with_query(self):
         objects = self.portal.portal_map.search_geo_objects(geo_types=[''], query='Sofia',
                 lat_min=40., lat_max=43., lon_min=20., lon_max=30.,
                 lat_center=41.5, lon_center=25.)
 
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('42.7'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('23.333333'))
-        self.failUnless(objects[0].geo_location.address == 'Sofia Bulgaria')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('42.7'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('23.333333'))
+        self.assertTrue(objects[0].geo_location.address == 'Sofia Bulgaria')
 
     def test_geo_search_geo_types(self):
         objects = self.portal.portal_map.search_geo_objects(geo_types=[''])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('42.7'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('23.333333'))
-        self.failUnless(objects[0].geo_location.address == 'Sofia Bulgaria')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('42.7'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('23.333333'))
+        self.assertTrue(objects[0].geo_location.address == 'Sofia Bulgaria')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['Capital'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('44.4325'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('26.103889'))
-        self.failUnless(objects[0].geo_location.address == 'Bucharest Romania')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('44.4325'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('26.103889'))
+        self.assertTrue(objects[0].geo_location.address == 'Bucharest Romania')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['City'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('44.173333'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('28.638333'))
-        self.failUnless(objects[0].geo_location.address == 'Constanta Romania')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('44.173333'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('28.638333'))
+        self.assertTrue(objects[0].geo_location.address == 'Constanta Romania')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['News_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('45.0'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('22.5'))
-        self.failUnless(objects[0].geo_location.address == 'Testing news')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('45.0'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('22.5'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing news')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['Document_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('30.2'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('15.3'))
-        self.failUnless(objects[0].geo_location.address == 'Testing document')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('30.2'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('15.3'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing document')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['Story_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('23.0'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('15.9'))
-        self.failUnless(objects[0].geo_location.address == 'Testing story')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('23.0'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('15.9'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing story')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['Pointer_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('33.3'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('19.0'))
-        self.failUnless(objects[0].geo_location.address == 'Testing pointer')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('33.3'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('19.0'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing pointer')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['URL_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('31.3'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('22.0'))
-        self.failUnless(objects[0].geo_location.address == 'Testing URL')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('31.3'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('22.0'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing URL')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['Event_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('35.3'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('15.0'))
-        self.failUnless(objects[0].geo_location.address == 'Testing event')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('35.3'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('15.0'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing event')
 
         objects = self.portal.portal_map.search_geo_objects(geo_types=['File_type'])
-        self.failUnless(len(objects) == 1)
-        self.failUnless(objects[0].geo_location.lat == Decimal('23.3'))
-        self.failUnless(objects[0].geo_location.lon == Decimal('29.0'))
-        self.failUnless(objects[0].geo_location.address == 'Testing file')
+        self.assertTrue(len(objects) == 1)
+        self.assertTrue(objects[0].geo_location.lat == Decimal('23.3'))
+        self.assertTrue(objects[0].geo_location.lon == Decimal('29.0'))
+        self.assertTrue(objects[0].geo_location.address == 'Testing file')

@@ -4,7 +4,7 @@ This module contains the classes for parsing export Naaya XML files.
 
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 
 
@@ -71,9 +71,9 @@ class import_handler(ContentHandler):
             stackObj = saxstack_struct('export', obj)
             self.stack.append(stackObj)
         elif name == 'ob':
-            obj = object_struct(attrs['id'].encode('utf-8'),
-                                attrs['meta_type'].encode('utf-8'),
-                                attrs['param'].encode('utf-8'),
+            obj = object_struct(attrs['id'],
+                                attrs['meta_type'],
+                                attrs['param'],
                                 attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
@@ -82,29 +82,29 @@ class import_handler(ContentHandler):
             stackObj = saxstack_struct('discussion', obj)
             self.stack.append(stackObj)
         elif name == 'comment':
-            obj = comment_struct(attrs['id'].encode('utf-8'),
+            obj = comment_struct(attrs['id'],
                                  attrs['title'], attrs['body'],
                                  attrs['author'], attrs['date'])
             stackObj = saxstack_struct('comment', obj)
             self.stack.append(stackObj)
         elif name == 'img':
-            obj = object_struct(attrs['id'].encode('utf-8'),
+            obj = object_struct(attrs['id'],
                                 'Image',
-                                attrs['param'].encode('utf-8'),
+                                attrs['param'],
                                 attrs)
             stackObj = saxstack_struct('img', obj)
             self.stack.append(stackObj)
         elif name == 'file':
-            obj = object_struct(attrs['id'].encode('utf-8'),
+            obj = object_struct(attrs['id'],
                                 'File',
-                                attrs['param'].encode('utf-8'),
+                                attrs['param'],
                                 attrs)
             stackObj = saxstack_struct('file', obj)
             self.stack.append(stackObj)
         elif name == 'template':
-            obj = object_struct(attrs['id'].encode('utf-8'),
+            obj = object_struct(attrs['id'],
                                 'Page Template',
-                                attrs['param'].encode('utf-8'),
+                                attrs['param'],
                                 attrs)
             stackObj = saxstack_struct('template', obj)
             self.stack.append(stackObj)
@@ -112,10 +112,9 @@ class import_handler(ContentHandler):
             obj = item_struct(attrs)
             stackObj = saxstack_struct('item', obj)
             self.stack.append(stackObj)
-        elif attrs.has_key('lang'):
+        elif 'lang' in attrs:
             #multilingual property
-            name = name.encode('utf-8')
-            obj = property_struct(name, attrs['lang'].encode('utf-8'))
+            obj = property_struct(name, attrs['lang'])
             stackObj = saxstack_struct('name', obj)
             self.stack.append(stackObj)
         else:
@@ -128,7 +127,7 @@ class import_handler(ContentHandler):
             self.root = self.stack[-1].obj
             self.stack.pop()
         elif name == 'ob':
-            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
+            self.stack[-1].obj.content = self.stack[-1].content
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'discussion':
@@ -144,11 +143,11 @@ class import_handler(ContentHandler):
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'template':
-            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
+            self.stack[-1].obj.content = self.stack[-1].content
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'item':
-            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
+            self.stack[-1].obj.content = self.stack[-1].content
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif isinstance(self.stack[-1].obj, property_struct):
@@ -157,7 +156,7 @@ class import_handler(ContentHandler):
             content = self.stack[-1].content
             self.stack.pop()
             ob = self.stack[-1].obj
-            if not ob.properties.has_key(name):
+            if not name in ob.properties:
                 ob.properties[name] = {}
             ob.properties[name][lang] = content
         else:
@@ -193,5 +192,5 @@ class import_parser:
         try:
             l_parser.parse(l_inpsrc)
             return (l_handler, '')
-        except Exception, error:
+        except Exception as error:
             return (None, error)

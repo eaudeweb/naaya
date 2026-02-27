@@ -30,7 +30,7 @@ import AccessControl.User
 from OFS.Folder                                 import Folder
 from AccessControl                              import ClassSecurityInfo
 from Products.ZCatalog.ZCatalog                 import ZCatalog
-from Globals                                    import MessageDialog, InitializeClass
+from OFS.MessageDialog import MessageDialog, InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
 from Products.PythonScripts.PythonScript        import manage_addPythonScript
@@ -223,7 +223,7 @@ class NyThesaurus(Folder):
     def getThesaurusTree(self, lang):
         #returns the thesaurus according with the given language
         self.__clear_alphabets_cache_for_lang(lang)
-        if not self.__alphabets_cache.has_key(lang):
+        if not lang in self.__alphabets_cache:
             self.__build_alphabets_for_lang(lang)
         return self.__alphabets_cache[lang]
 
@@ -261,12 +261,12 @@ class NyThesaurus(Folder):
                         l = x[0].encode('utf-8')
                         break
                 if l is not None:
-                    if not dict_lang_tree.has_key(l): dict_lang_tree[l] = []
+                    if not l in dict_lang_tree: dict_lang_tree[l] = []
                     if type(t) == type(u''): t = t.encode('utf-8')
                     dict_lang_tree[l].append((t, term_brain.concept_id))
 
         for x in self._unicode_map(lang):
-            if dict_lang_tree.has_key(x[0].encode('utf-8')):
+            if x[0].encode('utf-8' in dict_lang_tree):
                 l_sorted = th_utils().utSortListByLocale(dict_lang_tree[x[0].encode('utf-8')], 0, lang)
                 self.__alphabets_cache[lang].append((x[0].encode('utf-8'), copy(l_sorted)))
         self._p_changed = 1

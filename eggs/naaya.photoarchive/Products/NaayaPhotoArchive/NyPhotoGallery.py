@@ -19,7 +19,7 @@
 # Alex Morega, Eau de Web
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens, view
@@ -32,12 +32,12 @@ from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 # Self imports
-from constants import *
-from permissions import PERMISSION_ADD_PHOTOFOLDER
+from .constants import *
+from .permissions import PERMISSION_ADD_PHOTOFOLDER
 from Products.NaayaBase.constants import *
-from NyPhotoFolder import addNyPhotoFolder as m_addNyPhotoFolder
-from NyPhotoFolder import photofolder_add_html
-from photo_archive import photo_archive_base
+from .NyPhotoFolder import addNyPhotoFolder as m_addNyPhotoFolder
+from .NyPhotoFolder import photofolder_add_html
+from .photo_archive import photo_archive_base
 
 
 DEFAULT_SCHEMA = {
@@ -89,16 +89,12 @@ def addNyPhotoGallery(self, id='', REQUEST=None, contributor=None,
             REQUEST.RESPONSE.redirect('%s/gallery_add_html' % self.absolute_url())
             return
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 1, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
-    if ob.discussion:
-        ob.open_for_comments()
-    else:
-        ob.close_for_comments()
     self.recatalogNyObject(ob)
 
     #redirect if case
@@ -161,10 +157,6 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-        if self.discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
         self._p_changed = 1
 
         if REQUEST:
@@ -230,7 +222,7 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
             #remove restrictions
             try:
                 self.manage_permission(view, roles=[], acquire=1)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True
@@ -240,7 +232,7 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
                 roles = self.utConvertToList(roles)
                 roles.extend(['Manager', 'Administrator'])
                 self.manage_permission(view, roles=roles, acquire=0)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True

@@ -1,7 +1,7 @@
 try:
     from App.class_init import InitializeClass
 except ImportError:
-    from Globals import InitializeClass
+    from AccessControl.class_init import InitializeClass
 
 from zope.publisher.browser import BrowserPage
 
@@ -25,7 +25,7 @@ class allocate_keywords_html(BrowserPage):
         except KeyError:
             self.context.setSessionErrorsTrans('No keywords were selected!')
             return self.request.RESPONSE.redirect(context.absolute_url())
-        if isinstance(ids, basestring):
+        if isinstance(ids, str):
             ids = [ids]
 
         items, schemas, keywords = [], [], []

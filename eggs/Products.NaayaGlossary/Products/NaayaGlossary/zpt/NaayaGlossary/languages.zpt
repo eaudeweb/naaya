@@ -4,7 +4,7 @@
 
 <h1>Languages list</h1>
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
 	Saved changes. (<span tal:replace="here/ZopeTime" />)
 </div>
 

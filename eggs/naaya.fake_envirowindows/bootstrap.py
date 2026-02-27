@@ -160,10 +160,10 @@ try:
     if not hasattr(pkg_resources, '_distribute'):
         raise ImportError
 except ImportError:
-    ez_code = urllib2.urlopen(
+    ez_code = urllib.request.urlopen(
         options.setup_source).read().replace('\r\n', '\n')
     ez = {}
-    exec ez_code in ez
+    exec(ez_code, ez)
     setup_args = dict(to_dir=eggs_dir, download_delay=0)
     if options.download_base:
         setup_args['download_base'] = options.download_base

@@ -1,8 +1,8 @@
 # Python
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 import re
-from BeautifulSoup import BeautifulSoup
-from nose.plugins.skip import SkipTest
+from bs4 import BeautifulSoup
+from unittest import SkipTest
 
 # Zope
 import transaction
@@ -95,7 +95,7 @@ class FolderListingInfo:
 
     def makeSoup(self, browser, url, name):
         browser.go(url)
-        return BeautifulSoup(browser.get_html())
+        return BeautifulSoup(browser.get_html(), "lxml")
 
 
 
@@ -311,7 +311,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
         checkboxes = soup.findAll('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
@@ -347,7 +347,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
         checkboxes = soup.findAll('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
@@ -362,6 +362,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         form = self.browser.get_form('objectItems')
         self.browser.clicked(form, self.browser.get_form_field(form, 'pasteObjects:method'))
         self.browser.submit()
+
 
         # folder is in parent and in parent 2
         self.assertTrue(hasattr(self.parent, self.folder_name))
@@ -389,7 +390,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
         checkboxes = soup.findAll('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
@@ -444,7 +445,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         #go to parent folder. Ckeck if the `Owner` role has permission to copy&cut folders.
         self.browser.go(self.portal.info.absolute_url(1))
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
         checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
                                                     'value': 'test_folder'})
         self.assertEqual(len(checkboxes), 1)
@@ -491,7 +492,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         #go to parent folder. Ckeck if the `Owner` role has permission to copy&cut folders.
         self.browser.go(self.portal.info.absolute_url(1))
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
         checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
                                                     'value': 'test_folder'})
         self.assertEqual(len(checkboxes), 1)

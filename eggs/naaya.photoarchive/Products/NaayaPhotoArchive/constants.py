@@ -18,14 +18,14 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+import os
 
 #Zope imports
-import Globals
-
+# import Globals removed
 #Product imports
 
 NAAYAPHOTOARCHIVE_PRODUCT_NAME = 'NaayaPhotoArchive'
-NAAYAPHOTOARCHIVE_PRODUCT_PATH = Globals.package_home(globals())
+NAAYAPHOTOARCHIVE_PRODUCT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 METATYPE_NYPHOTOGALLERY = 'Naaya Photo Gallery'
 METALABEL_NYPHOTOGALLERY = 'Photo Gallery'

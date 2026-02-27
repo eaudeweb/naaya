@@ -90,6 +90,15 @@
     permission="zope2.View"
     />
 
+  <!-- Also register for root Application so gw_macro.zpt can access
+       zope_root/gw_meta_info from login_form context -->
+  <naaya:simpleView
+    for="OFS.interfaces.IApplication"
+    name="gw_meta_info"
+    handler=".ui.gw_meta_info"
+    permission="zope2.View"
+    />
+
   <naaya:simpleView
     for="naaya.groupware.interfaces.IEionetForumApplication"
     name="index_html"

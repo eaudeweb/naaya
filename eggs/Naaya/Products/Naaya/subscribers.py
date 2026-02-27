@@ -68,11 +68,37 @@ def site_moved_or_added(site, event):
 def zope_started(event):
     """ Handling IProcessStarting Event """
     zlog = logging.getLogger("Zope")
-    from asyncore import socket_map
-    for server in socket_map.values():
-        if server.addr:
-            host, port = server.addr
-            if host in ('127.0.0.1', '0.0.0.0'):
-                host = 'localhost'
-            zlog.info("Instance available on http://%s:%d", host, port)
-            return
+    try:
+        from asyncore import socket_map
+        for server in socket_map.values():
+            if server.addr:
+                host, port = server.addr
+                if host in ('127.0.0.1', '0.0.0.0'):
+                    host = 'localhost'
+                zlog.info("Instance available on http://%s:%d", host, port)
+                return
+    except ImportError:
+        # asyncore removed in Python 3.12; Zope 5 uses WSGI/waitress
+        import Zope2.Startup.run
+        import configparser
+        import os
+        conf_path = os.environ.get('WSGI_INI')
+        if not conf_path:
+            # Derive wsgi.ini path from zope.conf location
+            import Zope2
+            zconf = getattr(Zope2, '_config', None)
+            if zconf:
+                conf_path = os.path.join(
+                    os.path.dirname(zconf.configfile), 'wsgi.ini')
+        if conf_path and os.path.exists(conf_path):
+            cp = configparser.ConfigParser()
+            cp.read(conf_path)
+            for key in ('fast-listen', 'listen'):
+                if cp.has_option('server:main', key):
+                    addr = cp.get('server:main', key)
+                    host, _, port = addr.rpartition(':')
+                    if host in ('127.0.0.1', '0.0.0.0'):
+                        host = 'localhost'
+                    zlog.info("Instance available on http://%s:%s",
+                              host, port)
+                    return

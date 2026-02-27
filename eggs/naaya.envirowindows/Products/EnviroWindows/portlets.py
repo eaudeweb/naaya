@@ -1,13 +1,14 @@
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapts
 
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-from interfaces import IEWSite
+from .interfaces import IEWSite
 
+@implementer(INyPortlet)
 class ObjectListingPortlet(object):
-    implements(INyPortlet)
+
     adapts(IEWSite)
 
     title = 'List contained objects'
@@ -22,8 +23,9 @@ class ObjectListingPortlet(object):
                                      'naaya.envirowindows.folder.listing_portlet')
 
 
+@implementer(INyPortlet)
 class AdministrationPortlet(object):
-    implements(INyPortlet)
+
     adapts(IEWSite)
 
     title = 'Administration'

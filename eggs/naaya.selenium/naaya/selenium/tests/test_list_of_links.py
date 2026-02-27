@@ -286,7 +286,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
 
     def selenium_verify_output_empty(self, out_str, list_data):
         selen = self.selenium
-        in_str = unicode(list_data['tid'].lower())
+        in_str = str(list_data['tid'].lower())
         if not selen.is_text_present("Saved changes"):
             self.assertTrue(selen.is_text_present('warning'),
                             'error adding a link to a list of links')

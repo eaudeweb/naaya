@@ -27,7 +27,7 @@ class IntervalWidgetTestCase(NaayaTestCase.NaayaTestCase):
         self.assertEqual('25/03/2011',
                          val('//input[@name="interval.start_date"]'))
         checkbox = '//input[@name="interval.all_day:boolean"]'
-        self.assertFalse(dom.xpath(checkbox)[0].attrib.has_key('checked'))
+        self.assertFalse('checked' in dom.xpath(checkbox)[0].attrib)
 
     def test_parse_data(self):
         output = self.widget.parseFormData({'start_date': '30/11/2010',
@@ -47,7 +47,7 @@ class IntervalWidgetTestCase(NaayaTestCase.NaayaTestCase):
                                        'end_date': '01/12/2010',
                                        'end_time': '0a:00'})
             self.fail('should raise exception')
-        except WidgetError, e:
+        except WidgetError as e:
             self.assertTrue("Bad value ('01/12/2010', '0a:00') for End Time"
                             in str(e))
 
@@ -69,7 +69,7 @@ class IntervalWidgetTestCase(NaayaTestCase.NaayaTestCase):
                                'end_time': bi[3],
                                'all_day': bi[4]})
 
-        # shouldn't raise error, all day is True, hours ignored
+        # shouldn't raise error(all day is True, hours ignored)
         self.widget.parseFormData({'start_date': '30/11/2010',
                                        'start_time': '8:00',
                                        'end_date': '01/12/2010',

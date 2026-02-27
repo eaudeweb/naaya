@@ -8,11 +8,12 @@ U{http://feedparser.org/}.
 
 import feedparser
 from copy import deepcopy
-import urllib2
+import urllib.request
+import urllib.error
 
 from zope.component import getUtility
 
-from interfaces import INyFeedHarvester
+from .interfaces import INyFeedHarvester
 from naaya.core.utils import unescape_html_entities
 
 
@@ -206,7 +207,7 @@ class NyFeed:
         """
 
         value = item.get(key, None)
-        if isinstance(value, unicode):
+        if isinstance(value, str):
             value = value
         return value
 
@@ -232,7 +233,7 @@ class NyFeed:
 
         # Default parser
         if http_proxy:
-            proxy = urllib2.ProxyHandler({"http": http_proxy})
+            proxy = urllib.request.ProxyHandler({"http": http_proxy})
             p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag,
                                  modified=self.__feed_modified,
                                  handlers=[proxy])
@@ -242,7 +243,7 @@ class NyFeed:
 
         if p.get('bozo', 0) == 1:
             # some error occurred
-            if 'status' in p:
+            if hasattr(p, 'status'):
                 if p.status == 304:
                     # the feed was not modified; do nothing
                     self.__feed_status = p.status
@@ -255,7 +256,7 @@ class NyFeed:
                         etag = p.etag
                     else:
                         etag = None
-                    if 'modified' in p:
+                    if hasattr(p, 'modified'):
                         modified = p.modified
                     else:
                         modified = None
@@ -270,7 +271,7 @@ class NyFeed:
                         etag = p.etag
                     else:
                         etag = None
-                    if 'modified' in p:
+                    if hasattr(p, 'modified'):
                         modified = p.modified
                     else:
                         modified = None
@@ -287,7 +288,7 @@ class NyFeed:
                 self.__set_feed(bozo_exception=error)
         else:
             # no error; check for status
-            if 'status' in p:
+            if hasattr(p, 'status'):
                 if p.status == 301:
                     # the feed was permanently moved to a new location
                     # update the new location and also store feed stuff
@@ -296,7 +297,7 @@ class NyFeed:
                         etag = p.etag
                     else:
                         etag = None
-                    if 'modified' in p:
+                    if hasattr(p, 'modified'):
                         modified = p.modified
                     else:
                         modified = None
@@ -311,7 +312,7 @@ class NyFeed:
                         etag = p.etag
                     else:
                         etag = None
-                    if 'modified' in p:
+                    if hasattr(p, 'modified'):
                         modified = p.modified
                     else:
                         modified = None
@@ -330,7 +331,7 @@ class NyFeed:
                         etag = p.etag
                     else:
                         etag = None
-                    if 'modified' in p:
+                    if hasattr(p, 'modified'):
                         modified = p.modified
                     else:
                         modified = None

@@ -2,7 +2,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
@@ -19,8 +19,8 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from cStringIO import StringIO
-from interfaces import INyContact
+from io import BytesIO as StringIO
+from .interfaces import INyContact
 from naaya.content.base.constants import MUST_BE_DATETIME
 from naaya.content.base.constants import MUST_BE_NONEMPTY
 from naaya.content.base.constants import MUST_BE_POSITIV_INT
@@ -28,9 +28,9 @@ from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
-from permissions import PERMISSION_ADD_CONTACT
+from .permissions import PERMISSION_ADD_CONTACT
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 import os
 import re
 import sys
@@ -204,36 +204,36 @@ def importNyContact(self, param, id, attrs, content, properties, discussion, obj
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyContact_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.firstname = attrs['firstname'].encode('utf-8')
-            ob.lastname = attrs['lastname'].encode('utf-8')
-            ob.department = attrs['department'].encode('utf-8')
-            ob.organisation = attrs['organisation'].encode('utf-8')
-            ob.postaladdress = attrs['postaladdress'].encode('utf-8')
-            ob.phone = attrs['phone'].encode('utf-8')
-            ob.fax = attrs['fax'].encode('utf-8')
-            ob.cellphone = attrs['cellphone'].encode('utf-8')
-            ob.email = attrs['email'].encode('utf-8')
-            ob.webpage = attrs['webpage'].encode('utf-8')
+            ob = _create_NyContact_object(self, id, self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.firstname = attrs['firstname']
+            ob.lastname = attrs['lastname']
+            ob.department = attrs['department']
+            ob.organisation = attrs['organisation']
+            ob.postaladdress = attrs['postaladdress']
+            ob.phone = attrs['phone']
+            ob.fax = attrs['fax']
+            ob.cellphone = attrs['cellphone']
+            ob.email = attrs['email']
+            ob.webpage = attrs['webpage']
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
 class contact_item(Implicit, NyContentData):
     """ """
 
+@implementer(INyContact)
 class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    implements(INyContact)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -331,7 +331,7 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -361,9 +361,9 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG)
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
@@ -377,9 +377,9 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = contact_item()
@@ -392,12 +392,12 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         else:
             obj = self
 

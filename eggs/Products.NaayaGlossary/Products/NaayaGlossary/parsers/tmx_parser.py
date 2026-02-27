@@ -20,8 +20,8 @@
 # python import
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from types import StringType
-from cStringIO import StringIO
+StringType = str
+from io import BytesIO, StringIO
 
 # product imports
 from Products.NaayaGlossary.utils import utils
@@ -87,7 +87,7 @@ class HandleTMXParsing(handler.ContentHandler, utils):
     def start_tuv(self, tag, attrs):
         """ Translation Unit Variant """
         self.language = []
-        if attrs.has_key("xml:lang"):
+        if "xml:lang" in attrs:
            self.language.append(attrs["xml:lang"])
 
     def end_tuv(self,tag):
@@ -132,19 +132,19 @@ class tmx_parser:
         inputsrc = InputSource()
 
         if type(file) is StringType:
-            inputsrc.setByteStream(StringIO(file))
+            inputsrc.setByteStream(BytesIO(file))
         else:
             filecontent = file.read()
-            inputsrc.setByteStream(StringIO(filecontent))
+            inputsrc.setByteStream(BytesIO(filecontent))
         parser.parse(inputsrc)
         return chandler
         
         try:
             if type(file) is StringType:
-                inputsrc.setByteStream(StringIO(file))
+                inputsrc.setByteStream(BytesIO(file))
             else:
                 filecontent = file.read()
-                inputsrc.setByteStream(StringIO(filecontent))
+                inputsrc.setByteStream(BytesIO(filecontent))
             parser.parse(inputsrc)
             return chandler
         except:

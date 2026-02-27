@@ -1,11 +1,11 @@
-from unittest import TestSuite, makeSuite
-from HTMLParser import HTMLParser
+from unittest import TestSuite, TestLoader
+from html.parser import HTMLParser
 
 import transaction
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from test_kml_parser import load_file
+from .test_kml_parser import load_file
 
 class Parser(HTMLParser):
     def __init__(self):
@@ -85,7 +85,7 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/portal_map/admin_maplocations_html')
         parser = Parser()
         parser.feed(self.browser.get_html())
-        self.assert_(not parser.found_letter_listing)
+        self.assertTrue(not parser.found_letter_listing)
 
         catalog_tool = self.portal.getCatalogTool()
         catalog_tool.addIndex('full_title', 'FieldIndex', {'indexed_attrs': ['title']})
@@ -95,25 +95,25 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/portal_map/admin_maplocations_html')
         parser = Parser()
         parser.feed(self.browser.get_html())
-        self.assert_(parser.found_letter_listing)
+        self.assertTrue(parser.found_letter_listing)
         all_num_rows = parser.num_rows
 
         self.browser.go('http://localhost/portal/portal_map/admin_maplocations_html?first_letter=A')
         parser = Parser()
         parser.feed(self.browser.get_html())
-        self.assert_(parser.found_letter_listing)
+        self.assertTrue(parser.found_letter_listing)
         a_num_rows = parser.num_rows
 
         self.browser.go('http://localhost/portal/portal_map/admin_maplocations_html?first_letter=B')
         parser = Parser()
         parser.feed(self.browser.get_html())
-        self.assert_(parser.found_letter_listing)
+        self.assertTrue(parser.found_letter_listing)
         b_num_rows = parser.num_rows
 
         self.browser.go('http://localhost/portal/portal_map/admin_maplocations_html?first_letter=T')
         parser = Parser()
         parser.feed(self.browser.get_html())
-        self.assert_(parser.found_letter_listing)
+        self.assertTrue(parser.found_letter_listing)
         t_num_rows = parser.num_rows
 
         self.assertEqual(all_num_rows - 1, a_num_rows)

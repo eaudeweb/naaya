@@ -9,8 +9,8 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from utils import physical_path
-from update_add_portlets_onerror_to_custom_indexes import add_onerror_to_portlets_in_tal
+from .utils import physical_path
+from .update_add_portlets_onerror_to_custom_indexes import add_onerror_to_portlets_in_tal
 
 class UpdateAddPortletsOnerrorToStandardTemplate(UpdateScript):
     """ Add on error to portlets in standard template """

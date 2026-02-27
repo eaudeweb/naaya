@@ -18,7 +18,7 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests import NaayaTestCase
@@ -187,6 +187,6 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    suite.addTest(makeSuite(TestSimpleParsing))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NaayaContentTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(TestSimpleParsing))
     return suite

@@ -19,15 +19,15 @@
 
 # Zope imports
 import os.path
-from cStringIO import StringIO
+from io import BytesIO
 from PIL import Image
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
+from .BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
 
 class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
     """Barchart ...

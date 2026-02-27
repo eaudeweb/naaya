@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure here/manage_tabs" />
 
-<div class="system-msg" tal:condition="python:request.has_key('save')">
+<div class="system-msg" tal:condition="python:'save' in request">
 	Saved changes. (<span tal:replace="here/ZopeTime" />)
 </div>
 

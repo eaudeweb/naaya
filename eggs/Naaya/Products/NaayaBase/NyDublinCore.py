@@ -3,9 +3,9 @@ This module contains the class that provides Dublin Core elements.
 """
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
-from constants import *
+from .constants import *
 
 class NyDublinCore:
     """

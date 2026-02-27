@@ -19,7 +19,7 @@ class EmailPageTemplateUnitTest(unittest.TestCase):
         templ = EmailPageTemplate(id='templ', text=test_template)
 
         # make sure the page template is Persistent
-        self.failUnless(issubclass(EmailPageTemplate, Item))
+        self.assertTrue(issubclass(EmailPageTemplate, Item))
 
         render1 = templ.render_email(number=13, item=u"THING")
         self.assertEqual(render1, {
@@ -32,7 +32,7 @@ class EmailPageTemplateUnitTest(unittest.TestCase):
         try:
             templ.render_email()
             self.fail('Should have raised ValueError')
-        except ValueError, e:
+        except ValueError as e:
             self.assertTrue('Section "body_text" not found' in str(e))
 
     def test_i18n(self):

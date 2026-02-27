@@ -6,7 +6,7 @@
 
 <span tal:replace="structure here/th_messages_box" />
 
-<div class="system-msg" tal:condition="python:request.has_key('msg') and request['msg']=='err'">
+<div class="system-msg" tal:condition="python:'msg' in request and request['msg']=='err'">
 	Parsing error. The file could not be parsed.
 </div>
 

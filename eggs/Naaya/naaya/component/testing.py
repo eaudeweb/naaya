@@ -1,7 +1,7 @@
 from zope import interface
 from zope.component import getGlobalSiteManager
-from interfaces import IBundle
-import bundles
+from .interfaces import IBundle
+from . import bundles
 
 
 
@@ -9,9 +9,9 @@ class ITestUtil(interface.Interface):
     """ Blank interface, so we have something to register. """
 
 
+@interface.implementer(ITestUtil)
 class MyClass(object):
     """ Simple class that implements `ITestUtil`. """
-    interface.implements(ITestUtil)
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)

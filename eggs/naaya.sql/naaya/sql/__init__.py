@@ -1,1 +1,1 @@
-from naayasql import *
+from .naayasql import *

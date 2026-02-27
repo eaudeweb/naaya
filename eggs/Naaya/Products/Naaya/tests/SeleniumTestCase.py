@@ -6,7 +6,7 @@ from threading import Thread
 from nose.plugins import Plugin
 from webob.dec import wsgify
 
-from NaayaTestCase import NaayaTestCase
+from .NaayaTestCase import NaayaTestCase
 
 HTTP_PORT = 15380
 SELENIUM_GRID_PORT = 5555
@@ -139,7 +139,7 @@ class SeleniumTestCase(NaayaTestCase):
 
     def run(self, result=None):
         if not hasattr(self, 'selenium'):
-            from nose import SkipTest
+            from unittest import SkipTest
             raise SkipTest("%s needs selenium" % type(self))
         super(SeleniumTestCase, self).run(result)
 
@@ -215,7 +215,7 @@ class NaayaSeleniumTestPlugin(Plugin):
 
             try:
                 my_selenium.start()
-            except socket.error, e:
+            except socket.error as e:
                 assert False, "Could no connect to selenium: %s" % e
             # only set self.selenium if no exception was thrown so far
             self.selenium = my_selenium

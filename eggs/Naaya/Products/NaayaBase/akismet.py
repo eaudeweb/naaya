@@ -12,8 +12,8 @@ __history__ = """
 0.1 - 20051201 - Initial release.  Everything pretty much works.  Probably.
 """
 
-import httplib
-from urllib import urlencode
+import http.client as httplib
+from urllib.parse import urlencode
 
 USERAGENT = ""
 AKISMET_URL = "rest.akismet.com"

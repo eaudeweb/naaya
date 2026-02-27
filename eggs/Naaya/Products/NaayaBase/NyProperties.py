@@ -7,7 +7,7 @@ Handle dynamic properties for a specific object
 
 """
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from naaya.i18n.LocalPropertyManager import (

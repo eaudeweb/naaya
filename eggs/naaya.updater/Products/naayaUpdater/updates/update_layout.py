@@ -126,8 +126,8 @@ class UpdateLayout(UpdateScript):
                     else:
                         form_zmi.pt_edit(text=form_fs, content_type='')
                         form_zmi._p_changed = 1
-                except Exception, error:
-                    print error
+                except Exception as error:
+                    print(error)
         if form_fs and not form_zmi:
             try:
                 layouttool_ob = portal.getLayoutTool()
@@ -149,8 +149,8 @@ class UpdateLayout(UpdateScript):
                     image_ob = scheme_ob._getOb(file_id)
                     image_ob.update_data(data=form_fs)
                     image_ob._p_changed=1
-            except Exception, error:
-                print error
+            except Exception as error:
+                print(error)
 
     security.declarePrivate('list_fs_skinfiles')
     def list_fs_skinfiles(self, portal, skin_id, schemes=False):

@@ -1,8 +1,8 @@
 import re
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import StringIO
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Testing import ZopeTestCase
 from OFS.SimpleItem import SimpleItem
 
@@ -92,7 +92,9 @@ class SlugifyTestCase(ZopeTestCase.TestCase):
         self.assert_slug(u'ab\xe9c\xfc\xe7\xe8de', 'abecucede')
 
     def test_utf8(self):
-        self.assert_slug(u'ab\xc3\xa9c\xc3\xbc\xc3\xa7\xc3\xa8de', 'aba-c-ca1-4assa-de')
+        # In Python 3, \xc3\xa9 etc. are real Unicode codepoints (not UTF-8
+        # bytes misinterpreted as latin-1). Transliteration differs slightly.
+        self.assert_slug(u'ab\xc3\xa9c\xc3\xbc\xc3\xa7\xc3\xa8de', 'aba-c-ca-1-4assa-de')
 
     def test_arabic(self):
         self.assert_slug((u'\u0640\u0622\u0622\u0640\u0627\u0627\u0628\u0640\u0628\u0640'

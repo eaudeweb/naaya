@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Products.Naaya.tests import NaayaTestCase, NaayaFunctionalTestCase
 
 
@@ -14,15 +14,15 @@ class WidgetTestCase(NaayaTestCase.NaayaTestCase):
 
     def test_add_propdef(self):
         self.schema.addWidget('mypr', label='mypr', widget_type='String')
-        self.failUnless('mypr-property' in self.schema.objectIds())
-        self.failUnless(self.schema.getWidget('mypr').id == 'mypr-property')
-        self.failUnlessEqual(self.schema.getWidget('mypr').meta_type, 'Naaya Schema String Widget')
+        self.assertTrue('mypr-property' in self.schema.objectIds())
+        self.assertTrue(self.schema.getWidget('mypr').id == 'mypr-property')
+        self.assertEqual(self.schema.getWidget('mypr').meta_type, 'Naaya Schema String Widget')
 
         for widget_name in ['String', 'Text Area', 'Date', 'Checkbox']:
             widget_id = widget_name.replace(' ', '')
             prop_name ='mypr_%s' % widget_id
             self.schema.addWidget(prop_name, label=prop_name, widget_type=widget_id)
-            self.failUnlessEqual(self.schema.getWidget(prop_name).meta_type,
+            self.assertEqual(self.schema.getWidget(prop_name).meta_type,
                 'Naaya Schema %s Widget' % widget_name)
 
     def test_change_properties(self):
@@ -30,20 +30,20 @@ class WidgetTestCase(NaayaTestCase.NaayaTestCase):
         mypr = self.schema.getWidget('mypr')
 
         properties = dict( (p['id'], p) for p in mypr._properties )
-        self.failUnless('localized' in properties)
-        self.failUnlessEqual(properties['localized']['type'], 'boolean')
-        self.failUnlessEqual(properties['data_type']['type'], 'string')
-        self.failUnlessEqual(properties['visible']['type'], 'boolean')
+        self.assertTrue('localized' in properties)
+        self.assertEqual(properties['localized']['type'], 'boolean')
+        self.assertEqual(properties['data_type']['type'], 'string')
+        self.assertEqual(properties['visible']['type'], 'boolean')
 
-        self.failUnlessEqual(mypr.required, False)
-        self.failUnlessEqual(mypr.localized, False)
-        self.failUnlessEqual(type(mypr.localized), bool)
+        self.assertEqual(mypr.required, False)
+        self.assertEqual(mypr.localized, False)
+        self.assertEqual(type(mypr.localized), bool)
 
         # TODO: test change label
         mypr.manage_changeProperties(required='True', localized='True')
 
-        self.failUnlessEqual(mypr.required, True)
-        self.failUnlessEqual(mypr.localized, True)
+        self.assertEqual(mypr.required, True)
+        self.assertEqual(mypr.localized, True)
 
 class WidgetDefaultDefinitionTestCase(NaayaTestCase.NaayaTestCase):
     """ testing code that queries the default definition of a property """
@@ -60,9 +60,9 @@ class WidgetDefaultDefinitionTestCase(NaayaTestCase.NaayaTestCase):
         keywords = self.doc_schema.getWidget('keywords')
         newpr = self.doc_schema.getWidget('newpr')
         from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
-        self.failUnless(sortorder.get_default_definition() is NY_CONTENT_BASE_SCHEMA['sortorder'])
-        self.failUnless(keywords.get_default_definition() is NY_CONTENT_BASE_SCHEMA['keywords'])
-        self.failUnless(newpr.get_default_definition() is None)
+        self.assertTrue(sortorder.get_default_definition() is NY_CONTENT_BASE_SCHEMA['sortorder'])
+        self.assertTrue(keywords.get_default_definition() is NY_CONTENT_BASE_SCHEMA['keywords'])
+        self.assertTrue(newpr.get_default_definition() is None)
 
     def test_mandatory_property(self):
         sortorder = self.doc_schema.getWidget('sortorder')
@@ -73,7 +73,7 @@ class WidgetDefaultDefinitionTestCase(NaayaTestCase.NaayaTestCase):
             widget.saveProperties(title=widget.title, visible=widget.visible,
                 sortorder=widget.sortorder, required=required)
 
-        self.failUnlessRaises(ValueError, set_required, sortorder, False)
+        self.assertRaises(ValueError, set_required, sortorder, False)
         try: set_required(keywords, False)
         except: self.fail('making "keywords" non-mandatory should be possible')
         try: set_required(newpr, False)

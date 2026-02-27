@@ -19,9 +19,9 @@
 # David Batranu, Eau de Web
 
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 import zipfile
-from StringIO import StringIO
+from io import StringIO
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -29,13 +29,13 @@ from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
 from Products.NaayaPhotoArchive.NyPhoto import addNyPhoto
 
-import patchTestEnv
+from . import patchTestEnv
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
+    from io import StringIO
+    pass  # package_home import removed (unused)
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
     data = StringIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
@@ -305,5 +305,5 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NyPhotoFolderFunctionalTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NyPhotoFolderFunctionalTestCase))
     return suite

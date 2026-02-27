@@ -58,7 +58,7 @@
 	</tr>
 	<tr tal:repeat="item python:paginator.get_page(page)">
 		<td width="1%">
-			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 			     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 		</td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
@@ -107,7 +107,7 @@
 	</tr>
 	<tr tal:repeat="item python:paginator.get_page(page)">
 		<td width="1%">
-			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			<img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
 			     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 		</td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />

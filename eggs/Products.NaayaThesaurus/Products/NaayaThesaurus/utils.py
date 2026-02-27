@@ -61,7 +61,7 @@ class th_utils(utils):
         if not p_locale:
             #normal sorting
             l_len = len(p_list)
-            l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
+            l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), range(l_len), p_list)
             l_temp.sort()
             if p_desc: l_temp.reverse()
             return map(operator.getitem, l_temp, (-1,)*l_len)
@@ -81,7 +81,7 @@ class th_utils(utils):
 
                 #sorting
                 l_len = len(p_list)
-                l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
+                l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), range(l_len), p_list)
                 l_temp.sort(lambda x, y: locale.strcoll(x[0], y[0]))
                 if p_desc: l_temp.reverse()
 
@@ -100,7 +100,7 @@ class th_utils(utils):
             l_append = l_list.append
             for x in p_list:
                 l_append(x[0])
-            l_temp = map(None, l_list, xrange(l_len), p_list)
+            l_temp = map(None, l_list, range(l_len), p_list)
             l_temp.sort()
             if p_desc: l_temp.reverse()
             return map(operator.getitem, l_temp, (-1,)*l_len)
@@ -123,8 +123,8 @@ class th_utils(utils):
                 l_list = []
                 l_append = l_list.append
                 for x in p_list:
-                    l_append(unicode(x[0], 'utf8'))
-                l_temp = map(None, l_list, xrange(l_len), p_list)
+                    l_append(str(x[0], 'utf8'))
+                l_temp = map(None, l_list, range(l_len), p_list)
                 l_temp.sort(lambda x, y: locale.strcoll(x[0], y[0]))
                 if p_desc: l_temp.reverse()
 

@@ -2,7 +2,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaBase.NyCheckControl import NyCheckControl
@@ -22,7 +22,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from converters.MediaConverter import media2mp4, can_convert
+from .converters.MediaConverter import media2mp4, can_convert
 from lxml import etree
 from lxml.builder import ElementMaker
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -37,15 +37,15 @@ from naaya.content.mediafile.converters.MediaConverter import is_audio
 from naaya.content.mediafile.converters.MediaConverter import is_valid_audio
 from naaya.content.mediafile.converters.MediaConverter import is_valid_media
 from naaya.i18n.LocalPropertyManager import LocalProperty
-from parsers import DEFAULT_PARSER as SubtitleParser
-from permissions import PERMISSION_ADD_MEDIA_FILE
-from webdav.Lockable import ResourceLockedError
+from .parsers import DEFAULT_PARSER as SubtitleParser
+from .permissions import PERMISSION_ADD_MEDIA_FILE
+from zExceptions import ResourceLockedError
 from zope.event import notify
 import Products
 import os
 import ntpath
 import sys
-import zLOG
+import logging
 
 # module constants
 DEFAULT_SCHEMA = {
@@ -57,8 +57,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
 ffmpeg_available = can_convert() and NyFSContainer.is_blobfile
 if not ffmpeg_available:
-    zLOG.LOG("NyMediaFile", zLOG.WARNING,
-             "Video conversion will not be supported.")
+    logging.getLogger("NyMediaFile").warning("Video conversion will not be supported.")
 
 MP4_HEADERS = ["video/mp4"]
 MP3_HEADERS = ["audio/mp4", "audio/mpeg"]
@@ -240,23 +239,23 @@ def importNyMediaFile(self, param, id, attrs, content, properties, discussion,
                     pass
             ob = _create_NyMediaFile_object(
                 self, id,
-                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+                self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
 
             for property, langs in properties.items():
                 [ob._setLocalPropValue(property, lang, langs[lang]) for
                  lang in langs if langs[lang] != '']
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                         attrs['validation_comment'].encode('utf-8'),
-                         attrs['validation_by'].encode('utf-8'),
-                         attrs['validation_date'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
+            ob.checkThis(attrs['validation_status'],
+                         attrs['validation_comment'],
+                         attrs['validation_by'],
+                         attrs['validation_date'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
         for object in objects:
@@ -352,7 +351,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
             Dc.publisher(l_site.publisher)
         )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def getSingleMediaObject(self):
         """
@@ -462,7 +461,9 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         if file.filename == '':
             return
 
-        self.manage_delObjects(self.objectIds())
+        ids = self.objectIds()
+        if ids:
+            self.manage_delObjects(ids)
 
         ctype = file.headers.get("content-type")
         filename = ntpath.basename(getattr(file, 'filename', ''))
@@ -471,6 +472,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
             file.filename = filename[0] + ".mp4"
             file.headers["content-type"] = MP4_HEADERS[0]
         mid = self.manage_addFile('', file)
+        if not ffmpeg_available:
+            return
         mediafile = self.getSingleMediaObject()
         filepath = mediafile.get_filename()
         resolution = get_resolution(filepath)

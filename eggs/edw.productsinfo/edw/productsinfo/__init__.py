@@ -7,7 +7,7 @@ except ImportError:
     # Other context
     from zope.interface import Interface as ISite
 
-import md5
+import hashlib
 import logging
 import transaction
 from datetime import datetime

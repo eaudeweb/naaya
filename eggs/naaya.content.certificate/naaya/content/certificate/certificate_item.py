@@ -7,7 +7,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
@@ -21,7 +21,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from interfaces import INyCertificate
+from .interfaces import INyCertificate
 from naaya.content.base.constants import MUST_BE_DATETIME
 from naaya.content.base.constants import MUST_BE_NONEMPTY
 from naaya.content.base.constants import MUST_BE_POSITIV_INT
@@ -32,9 +32,9 @@ from naaya.content.certificate.skel import REF_TREES
 from naaya.core import submitter
 from naaya.core.utils import is_valid_email
 from naaya.core.zope2util import abort_transaction_keep_session
-from permissions import PERMISSION_ADD_CERTIFICATE
+from .permissions import PERMISSION_ADD_CERTIFICATE
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 
 # module constants
 PROPERTIES_OBJECT = {
@@ -110,10 +110,33 @@ def certificate_on_install(site):
             cat.addIndex(index, 'KeywordIndex')
             reindex.append(index)
     for index in UPDATE_INDEXES:
-        if cat._catalog.indexes[index['id']].meta_type != index['type']:
-            cat.delIndex(index['id'])
-            cat.addIndex(index['id'], index['type'], extra=index['extra'])
-            reindex.append(index['id'])
+        idx_id = index['id']
+        idx_type = index['type']
+        try:
+            current_type = cat._catalog.indexes[idx_id].meta_type
+        except (KeyError, AttributeError):
+            current_type = None
+        if current_type != idx_type:
+            if idx_id in cat.indexes():
+                cat.delIndex(idx_id)
+            if idx_type == 'ZCTextIndex':
+                from Products.ZCTextIndex.ZCTextIndex import PLexicon
+                from Products.ZCTextIndex.Lexicon import (
+                    CaseNormalizer, Splitter, StopWordRemover)
+                if 'Lexicon' not in cat.objectIds():
+                    lexicon = PLexicon('Lexicon', 'Default lexicon',
+                                       Splitter(), CaseNormalizer(),
+                                       StopWordRemover())
+                    cat._setObject('Lexicon', lexicon)
+                extra = type('Extra', (), {
+                    'doc_attr': idx_id,
+                    'index_type': 'Okapi BM25 Rank',
+                    'lexicon_id': 'Lexicon',
+                })()
+                cat.addIndex(idx_id, idx_type, extra=extra)
+            else:
+                cat.addIndex(idx_id, idx_type, extra=index.get('extra'))
+            reindex.append(idx_id)
     cat.manage_reindexIndex(reindex)
     ptool = site.getPortletsTool()
     for tree in REF_TREES:
@@ -328,6 +351,7 @@ def importNyCertificate(self, param, id, attrs, content, properties,
             self.recatalogNyObject(ob)
 
 
+@implementer(INyCertificate)
 class certificate_item(Implicit, NyContentData):
     """ """
 
@@ -335,8 +359,6 @@ class certificate_item(Implicit, NyContentData):
 class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
                     NyContentType):
     """ """
-
-    implements(INyCertificate)
 
     meta_type = config['meta_type']
     meta_label = config['label']

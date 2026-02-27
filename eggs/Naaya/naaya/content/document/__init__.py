@@ -1,1 +1,1 @@
-from document_item import NyDocument
+from .document_item import NyDocument

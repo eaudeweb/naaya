@@ -21,12 +21,12 @@
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from constants import *
+from .constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
@@ -34,7 +34,7 @@ from Products.NaayaBase.NyFeed import NyFeed
 from Products.Naaya.constants import *
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
-import NyNetChannel
+from . import NyNetChannel
 
 manage_addNyNetSite_html = PageTemplateFile('zpt/netsite_manage_add', globals())
 def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUEST=None):
@@ -180,11 +180,11 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
             for x in self.get_feed_items():
                 id = PREFIX_NYNETCHANNEL + self.utGenRandomId(6)
                 language, type, description, lang = None, None, '', None
-                if x.has_key('dc_description'): description = x['dc_description']
-                if x.has_key('language'): language = x['language'].encode('utf-8')
-                elif x.has_key('dc_language'): language = x['dc_language'].encode('utf-8')
-                if x.has_key('type'): type = x['type'].encode('utf-8')
-                elif x.has_key('dc_type'): type = x['dc_type'].encode('utf-8')
+                if 'dc_description' in x: description = x['dc_description']
+                if 'language' in x: language = x['language'].encode('utf-8')
+                elif 'dc_language' in x: language = x['dc_language'].encode('utf-8')
+                if 'type' in x: type = x['type'].encode('utf-8')
+                elif 'dc_type' in x: type = x['dc_type'].encode('utf-8')
                 #choose which language for the content
                 #channel language if channel language is in the list of languages
                 #selected language otherwise

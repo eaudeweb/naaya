@@ -1,11 +1,11 @@
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 #Product imports
-from constants import *
+from .constants import *
 
 manage_addNySurveyAnswer_html = PageTemplateFile('zpt/answer_manage_add', globals())
 answer_add_html = PageTemplateFile('zpt/answer_add_html', globals())

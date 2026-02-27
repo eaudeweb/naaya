@@ -6,11 +6,10 @@
 #
 # $Id: User.py 1484 2004-04-16 11:00:57Z finrocvs $
 
-from string import find
 import time
 
-from AccessControl.User import SimpleUser
-from Globals import Persistent
+from AccessControl.users import SimpleUser
+from Persistence import Persistent
 from zope.event import notify
 
 from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
@@ -67,7 +66,7 @@ class User(SimpleUser, Persistent):
     def getUserName(self):
         """Return the username of a user"""
         try:
-            if find(self.REQUEST.HTTP_REFERER, 'login_html') != -1:
+            if self.REQUEST.HTTP_REFERER.find('login_html') != -1:
                 self.history = time.strftime('%d %b %Y %H:%M:%S')
         except:
             pass

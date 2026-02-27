@@ -2,7 +2,7 @@ import os.path
 import logging
 import traceback
 import operator
-from StringIO import StringIO
+from io import StringIO
 
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

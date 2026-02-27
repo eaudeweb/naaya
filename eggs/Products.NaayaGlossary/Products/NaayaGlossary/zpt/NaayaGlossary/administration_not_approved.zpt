@@ -20,7 +20,7 @@
 			</li>
 		</td>
 		<td width="*">
-			&nbsp;<span tal:replace="here/bobobase_modification_time" />&nbsp;
+			&nbsp;<span tal:replace="here/modification_time" />&nbsp;
 		</td>
 	</tr>
 

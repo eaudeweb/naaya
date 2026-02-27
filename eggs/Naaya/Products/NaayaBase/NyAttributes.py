@@ -30,7 +30,7 @@ class NyAttributes:
         # this is for performance reasons
         # it should be updated if/when adding new computed attributes
         if not(name and name[0] in 'oict'):
-            raise AttributeError, name
+            raise AttributeError(name)
 
         if name.startswith('objectkeywords_'):
             parts = name.split('_')
@@ -48,4 +48,4 @@ class NyAttributes:
             parts = name.split('_')
             func, lang = parts[0], parts[1]
             return self._tags(lang)
-        raise AttributeError, name
+        raise AttributeError(name)

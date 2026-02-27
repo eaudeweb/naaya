@@ -27,6 +27,7 @@
 #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+from functools import reduce
 from math import ceil, floor
 
 class InvalidPage(Exception):
@@ -182,7 +183,7 @@ class ExPaginator(Paginator):
     def page(self, number, softlimit=False):
         try:
             return super(ExPaginator, self).page(number)
-        except InvalidPage, e:
+        except InvalidPage as e:
             number = self._ensure_int(number, e)
             if number > self.num_pages and softlimit:
                 return self.page(self.num_pages, softlimit=False)
@@ -341,14 +342,14 @@ class DiggPaginator(ExPaginator):
             self.num_pages, self.body, self.tail, self.padding, self.margin
 
         # put active page in middle of main range
-        main_range = map(int, [
+        main_range = list(map(int, [
             floor(number-body/2.0)+1,  # +1 = shift odd body to right
-            floor(number+body/2.0)])
+            floor(number+body/2.0)]))
         # adjust bounds
         if main_range[0] < 1:
-            main_range = map(abs(main_range[0]-1).__add__, main_range)
+            main_range = list(map(abs(main_range[0]-1).__add__, main_range))
         if main_range[1] > num_pages:
-            main_range = map((num_pages-main_range[1]).__add__, main_range)
+            main_range = list(map((num_pages-main_range[1]).__add__, main_range))
 
         # Determine leading and trailing ranges; if possible and appropriate,
         # combine them with the main range, in which case the resulting main
@@ -395,9 +396,9 @@ class DiggPaginator(ExPaginator):
 
         # make the result of our calculations available as custom ranges
         # on the ``Page`` instance.
-        page.main_range = range(main_range[0], main_range[1]+1)
-        page.leading_range = leading
-        page.trailing_range = trailing
+        page.main_range = list(range(main_range[0], main_range[1]+1))
+        page.leading_range = list(leading)
+        page.trailing_range = list(trailing)
         page.page_range = reduce(lambda x, y: x+((x and y) and [False])+y,
             [page.leading_range, page.main_range, page.trailing_range])
 
@@ -415,12 +416,14 @@ class DiggPage(Page):
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 class NaayaPaginator(DiggPaginator, Implicit):
     security = ClassSecurityInfo()
+    security.declareObjectPublic()
+    __allow_access_to_unprotected_subobjects__ = True
 
     security.declareProtected(view, 'page')
     def page(self, number, *args, **kwargs):
@@ -432,6 +435,7 @@ InitializeClass(NaayaPaginator)
 
 class NaayaPage(DiggPage, Implicit):
     security = ClassSecurityInfo()
+    security.declareObjectPublic()
 
     security.declareProtected(view, 'pagination')
     pagination = NaayaPageTemplateFile('zpt/pagination', globals(),

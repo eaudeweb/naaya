@@ -23,26 +23,25 @@ except ImportError:
     import json
 import os
 import logging
-from StringIO import StringIO
+from io import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED, BadZipfile
 
 # Zope imports
 from zExceptions import BadRequest
 from ZPublisher.HTTPRequest import FileUpload
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
-from zope.interface import implements
-import zLOG
-
+from zope.interface import implementer
+import logging
 from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 
 # Product imports
-from constants import *
-from interfaces import IEWSite
+from .constants import *
+from .interfaces import IEWSite
 from Products.NaayaBase.constants import *
 from Products.Naaya.constants import *
 from Products.NaayaCore.constants import *
@@ -68,7 +67,7 @@ def manage_addEnviroWindowsSite(self, id='', title='', lang=None,
                                 REQUEST=None):
     """ """
     ut = utils()
-    id = ut.utCleanupId(id)
+    id = ut.utSlugify(id)
     if not id:
         id = PREFIX_SITE + ut.utGenRandomId(6)
     self._setObject(id, EnviroWindowsSite(id, title=title, lang=lang))
@@ -80,9 +79,10 @@ ew_bundle = bundles.get("EW")
 ew_bundle.set_parent(bundles.get("Naaya"))
 
 
+@implementer(IEWSite)
 class EnviroWindowsSite(NySite):
     """ """
-    implements(IEWSite)
+
     meta_type = METATYPE_ENVIROWINDOWSSITE
     icon = 'misc_/EnviroWindows/Site.gif'
 
@@ -165,8 +165,9 @@ class EnviroWindowsSite(NySite):
         manage_addPythonScript(rdfcalendar_ob, 'local_events')
         local_events_ob = rdfcalendar_ob._getOb('local_events')
         local_events_ob._params = 'year=None, month=None, day=None'
-        local_events_ob.write(open(os.path.dirname(__file__) +
-                                   '/skel/others/local_events.py', 'r').read())
+        with open(os.path.dirname(__file__) +
+                 '/skel/others/local_events.py', 'r') as _f:
+            local_events_ob.write(_f.read())
 
         # Adding custom SchemaTool properties
         schema_tool = self.getSchemaTool()
@@ -415,7 +416,7 @@ class EnviroWindowsSite(NySite):
             expert.subtopics = buf
             expert.maintopics = self.utConvertToList(expert.maintopics)
             expert._p_changed = 1
-        print 'done'
+        print('done')
 
     security.declareProtected(view_management_screens, 'updateProjects')
 
@@ -430,7 +431,7 @@ class EnviroWindowsSite(NySite):
             project.focus = buf
             project.priority_area = self.utConvertToList(project.priority_area)
             project._p_changed = 1
-        print 'done'
+        print('done')
 
 #################################
 # Apply for contribution rigths #
@@ -644,7 +645,7 @@ class EnviroWindowsSite(NySite):
         allowed_fields = ['username', 'name', 'firstname', 'lastname', 'email',
                           'password', 'confirm', 'organisation',
                           'comments', 'location']
-        kwargs = dict((k, v) for k, v in kwargs.iteritems()
+        kwargs = dict((k, v) for k, v in kwargs.items()
                       if k in allowed_fields)
         if not self.checkPermissionSkipCaptcha():
             recaptcha_response = kwargs.get('g-recaptcha-response')
@@ -712,7 +713,7 @@ class EnviroWindowsSite(NySite):
                 self.getAuthenticationTool().manage_addUser(
                     username, password, confirm, [], [], firstname, lastname,
                     email, strict=1)
-            except Exception, error:
+            except Exception as error:
                 err.append(error)
         if err:
             self.setSessionErrorsTrans(_err)
@@ -957,7 +958,7 @@ class EnviroWindowsSite(NySite):
 
         try:
             errors = self._zipUploadDocuments(folder, upload_file)
-        except ZipUploadError, error:
+        except ZipUploadError as error:
             self.zip_redirect(path, error, RESPONSE)
         else:
             self.zip_redirect(path, errors, RESPONSE)
@@ -973,11 +974,11 @@ class EnviroWindowsSite(NySite):
         """
         try:
             zip_file = ZipFile(upload_file)
-        except BadZipfile, error:
+        except BadZipfile as error:
             raise ZipUploadError(error)
-        except IOError, error:
+        except IOError as error:
             raise ZipUploadError("Invalid archive: %s" % error)
-        except Exception, error:
+        except Exception as error:
             raise ZipUploadError(error)
 
         namelist = zip_file.namelist()
@@ -993,7 +994,7 @@ class EnviroWindowsSite(NySite):
             # Handle CRC error
             try:
                 file_data = zip_file.read(filename)
-            except BadZipfile, error:
+            except BadZipfile as error:
                 errors.append("Could not add file %s: %s" % (filename, error))
                 continue
 
@@ -1007,7 +1008,7 @@ class EnviroWindowsSite(NySite):
             try:
                 folder.addNyExFile(title=filename, file=file_obj,
                                    sortorder=100)
-            except BadRequest, error:
+            except BadRequest as error:
                 errors.append("Could not add file %s: %s" % (filename, error))
                 continue
 

@@ -1,5 +1,5 @@
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
@@ -7,7 +7,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product related imports
 from Products.NaayaCore.constants import *
-from managers.ref_manager import ref_manager
+from .managers.ref_manager import ref_manager
 
 manage_addRefListForm = PageTemplateFile('zpt/reflist_add', globals())
 def manage_addRefList(self, id='', title='', description='', REQUEST=None):

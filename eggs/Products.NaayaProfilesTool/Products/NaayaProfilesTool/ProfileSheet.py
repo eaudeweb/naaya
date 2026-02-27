@@ -1,11 +1,11 @@
 """ This module contains the class that implements the profile sheet. """
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.NaayaCore.managers.utils import utils
-from constants import METATYPE_PROFILESHEET
+from .constants import METATYPE_PROFILESHEET
 
 def manage_addProfileSheet(self, id, title='', instance_identifier='', REQUEST=None):
     """ """

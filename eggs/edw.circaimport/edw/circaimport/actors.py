@@ -85,7 +85,7 @@ class ZopeActor(object):
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
                        title, description, keywords, date, userid, lang='en'):
-        from StringIO import StringIO
+        from io import StringIO
         assert isinstance(data_file, StringIO)
         data_file.filename = filename
         parent = get_parent(self.context, parent_path)

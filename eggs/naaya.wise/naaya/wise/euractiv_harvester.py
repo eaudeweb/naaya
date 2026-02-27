@@ -1,6 +1,6 @@
 from lxml.cssselect import CSSSelector
 from lxml.html import fromstring
-from urllib2 import urlopen
+from urllib.request import urlopen
 from datetime import datetime
 import time
 

@@ -1,7 +1,7 @@
 from App.ImageFile import ImageFile
 from Products.NaayaCore.constants import PERMISSION_ADD_NAAYACORE_TOOL
 
-import ProfilesTool
+from . import ProfilesTool
 
 import Products.NaayaCore
 Products.NaayaCore.misc_.update({

@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya import NyFolder
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from naaya.content.url import url_item
 
 class TestNyURL(NaayaTestCase):
@@ -26,7 +26,7 @@ class TestNyURL(NaayaTestCase):
 
     def test_addNyURL_no_requiredattrs(self):
         self.login("contributor")
-        self.failUnlessRaises(ValueError, lambda: url_item.addNyURL(self.app.portal.test_folder))
+        self.assertRaises(ValueError, lambda: url_item.addNyURL(self.app.portal.test_folder))
         self.assertFalse(hasattr(self.app.portal.test_folder, "testURL"))
         self.logout()
 

@@ -1,6 +1,6 @@
 import logging
 import re
-from backport import json
+from .backport import json
 from datetime import datetime
 
 class JSONFormatter(logging.Formatter):

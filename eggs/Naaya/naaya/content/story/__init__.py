@@ -1,1 +1,1 @@
-from story_item import NyStory
+from .story_item import NyStory

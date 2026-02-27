@@ -5,7 +5,7 @@ import traceback
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator

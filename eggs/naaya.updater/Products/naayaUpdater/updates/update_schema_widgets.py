@@ -26,7 +26,7 @@ class UpdateSchemaWidgets(UpdateScript):
             except KeyError:
                 continue
 
-            if schemas.has_key(schema.id):
+            if schema.id in schemas:
                 schemas[schema.id].append(widget)
             else:
                 schemas[schema.id] = [widget]
@@ -72,7 +72,7 @@ class UpdateSchemaWidgets(UpdateScript):
                 if widget.data_type == 'bool':
                     value = bool(value)
                 elif isinstance(value, str):
-                    value = unicode(value, 'utf-8')
+                    value = str(value, 'utf-8')
                 setattr(ob, widget.prop_name(), value)
             ob.recatalogNyObject(ob)
             self.log.info('Updated %r', ob.absolute_url(1))

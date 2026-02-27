@@ -149,7 +149,7 @@
 </metal:block>
 
 <metal:block define-macro="light"
-       extend-macro="here/standard_template_macro">
+       extend-macro="python:here.standard_template_macro()">
   <metal:block fill-slot="head">
     <tal:block define="global no_left_portlets python:True;
                global no_right_portlets python:True;

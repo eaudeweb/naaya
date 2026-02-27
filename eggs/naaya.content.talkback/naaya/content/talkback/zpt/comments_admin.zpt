@@ -84,13 +84,13 @@
       </ul>
     </tal:block>
     <tal:block condition="python: perm_comments">
-        <span tal:condition="python:not here.rstk.we_provide('Excel export')" i18n:translate="">
+        <span tal:condition="python:not here.rstk['we_provide']('Excel export')" i18n:translate="">
             Export comments as CSV file.
         </span>
 
         <form name="csv_export" action="." method="post">
 
-            <div class="field-inline" tal:condition="python:here.rstk.we_provide('Excel export')">
+            <div class="field-inline" tal:condition="python:here.rstk['we_provide']('Excel export')">
                 <label for="file_type"
                        i18n:translate="">Export all comments as</label>
                 <select id="file_type" name="file_type">

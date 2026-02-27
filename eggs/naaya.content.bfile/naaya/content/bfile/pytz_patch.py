@@ -26,8 +26,8 @@ def patch():
     generic_tz = __get_generic_timezones()
     
     # add to various collections
-    pytz.generic_timezones = list(generic_tz.iterkeys())
-    pytz.generic_timezones_set = set(generic_tz.iterkeys())
+    pytz.generic_timezones = list(generic_tz.keys())
+    pytz.generic_timezones_set = set(generic_tz.keys())
     pytz.all_timezones.extend(generic_tz)
     pytz.all_timezones_set = set(pytz.all_timezones) # has to be recreated
     
@@ -52,7 +52,7 @@ def __get_generic_timezones():
     """Returns dictionary mapping names of our generic
     GMT timezones to their offsets from UTC in minutes.
     """
-    span = range(-12, 14 + 1)
+    span = list(range(-12, 14 + 1))
     span.remove(0) # pytz alrady has GMT
     return dict(('GMT%(sign)s%(offset)s' % {
                     'sign': '+' if i > 0 else '-',

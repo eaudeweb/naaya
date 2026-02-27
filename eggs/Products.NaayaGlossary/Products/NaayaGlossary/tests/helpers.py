@@ -16,14 +16,14 @@ def make_glossary(ctx, id='my_glossary', langs=[]):
 def add_folder(parent, id, title, translations={}):
     parent.manage_addGlossaryFolder(id, title)
     ob = parent[id]
-    for language, value in translations.iteritems():
+    for language, value in translations.items():
         ob.set_translations_list(language, value)
     return ob
 
 def add_element(parent, id, title, translations={}):
     parent.manage_addGlossaryElement(id, title)
     ob = parent[id]
-    for language, value in translations.iteritems():
+    for language, value in translations.items():
         ob.set_translations_list(language, value)
     return ob
 
@@ -32,8 +32,6 @@ def add_language(glossary, lang, english_name):
     glossary.updateObjectsByLang(english_name)
 
     catalog_obj = glossary.getGlossaryCatalog()
-    from ZPublisher.HTTPRequest import record
-    index_extra = record()
-    index_extra.default_encoding = 'utf-8'
-    catalog_obj.manage_addIndex(glossary.cookCatalogIndex(english_name),
-                                'TextIndexNG3',index_extra)
+    from Products.NaayaGlossary.NyGlossary import _add_catalog_language_index
+    _add_catalog_language_index(catalog_obj,
+                                glossary.cookCatalogIndex(english_name))

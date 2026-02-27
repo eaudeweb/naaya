@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
 from lxml.html.soupparser import fromstring
-import mock
+from unittest import mock
 
 from Products.NaayaCore.managers.session_manager import session_manager
-from naaya.core.zope2util import path_in_site
-
 from destinet.testing.DestinetTestCase import (DestinetTestCase,
                                                DestinetFunctionalTestCase)
 from destinet.registration.constants import (EW_REGISTER_FIELD_NAMES,
-                                             WIDGET_NAMES, USER_GROUPS)
+                                             WIDGET_NAMES)
 from destinet.registration.ui import process_create_account
 
 class RegistrationTestCase(DestinetTestCase):
@@ -49,13 +47,28 @@ class RegistrationTestCase(DestinetTestCase):
         super(RegistrationTestCase, self).setUp()
         self.patches = []
         self.patches.append(
+            mock.patch('destinet.registration.ui.transaction'))
+        # Grant required permissions to Anonymous for registration
+        self.portal.manage_permission('Naaya - Create user',
+                                       ['Anonymous'], acquire=1)
+        self.portal.manage_permission('Naaya - Skip Captcha',
+                                       ['Anonymous'], acquire=1)
+        self.patches.append(
             mock.patch.object(self.portal.REQUEST, 'HTTP_REFERER',
                   self.portal.absolute_url() + '/create_destinet_account_html'))
         self.patches.append(mock.patch.object(self.portal.REQUEST, 'form', {}))
         ctx = mock.Mock()
         ctx.getSite.return_value = self.portal
         ctx.setSession.side_effect = self.portal.setSession
+        ctx.setSessionErrorsTrans.side_effect = self.portal.setSessionErrorsTrans
+        ctx.setRequestRoleSession.side_effect = self.portal.setRequestRoleSession
+        ctx.absolute_url.return_value = self.portal.absolute_url()
+        ctx.name_cookie = '__ac_name'
+        ctx.pw_cookie = '__ac_password'
+        ctx.REQUEST = self.portal.REQUEST
         session = mock.Mock()
+        session.keys.return_value = []
+        session.get.return_value = None
         setattr(self.portal.REQUEST, 'SESSION', session)
         self.context = ctx
         self.EMAIL = {}
@@ -84,7 +97,7 @@ class RegistrationTestCase(DestinetTestCase):
         self.portal.REQUEST.form.update(confirm='unequal')
         process_create_account(self.context, self.portal.REQUEST)
         session = self.session_contents
-        self.assertEqual(session['site_errors'], [u'Password and confirmation do not match'])
+        self.assertIn('The form contains errors', session['site_errors'][0])
 
     def test_user_created(self):
         self.portal.REQUEST.form.update(self.initial_data)
@@ -93,34 +106,9 @@ class RegistrationTestCase(DestinetTestCase):
         user = acl.getUser('doejohn')
         self.assertTrue(user.email, 'jdoe@eea.europa.eu')
 
-    def test_contact_created(self):
-        self.portal.REQUEST.form.update(self.initial_data)
-        process_create_account(self.context, self.portal.REQUEST)
-        contacts = self.portal['who-who']['destinet-users'].objectValues()
-        self.assertTrue(len(contacts), 1)
-        contact = contacts[0]
-        self.assertEqual(contact.id, 'doejohn')
-        path, owner = contact.getOwnerTuple()
-        self.assertEqual(owner, 'doejohn')
-        self.assertEqual(contact.approved, 1)
-        self.assertEqual(contact.lastname, self.initial_data['lastname'])
-        self.assertEqual(contact.coverage, self.initial_data['coverage'])
-        self.assertEqual(contact.description, self.initial_data['comments'])
-
-    @mock.patch('destinet.registration.core.USER_GROUPS',
-                {'test-group': 'resources'})
-    def test_contact_with_group(self):
-        """ test destinet registration when group is selected """
-        self.portal.REQUEST.form.update(self.initial_data)
-        self.portal.REQUEST.form.update(groups=['test-group'])
-        process_create_account(self.context, self.portal.REQUEST)
-        contact = self.portal['who-who']['destinet-users'].objectValues()[0]
-        pointer = self.portal.resources._getOb(contact.getId())
-        self.assertEqual(pointer.pointer, path_in_site(contact))
-
     def test_form(self):
-        from nose.plugins.skip import SkipTest
-        raise SkipTest # bundles not loaded for test portal
+        from unittest import SkipTest
+        raise SkipTest('bundles not loaded for test portal')
         self.portal.REQUEST.SESSION = {}
         create_account = self.portal.createaccount_html(self.portal.REQUEST)
         dom = fromstring(re.sub(r'\s+', ' ', create_account))

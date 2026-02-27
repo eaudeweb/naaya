@@ -3,7 +3,7 @@ Mock LDAP server and helper functions.
 
 Use like this::
 
-    from nose.plugins.skip import SkipTest
+    from unittest import SkipTest
     from Products.NaayaCore.AuthenticationTool.tests import mock_ldap
     from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
     import transaction
@@ -27,12 +27,12 @@ try:
     import dataflake.ldapconnection
     import Products.LDAPUserFolder
     import Products.LDAPUserFolder # import twice? why?
-except ImportError, e:
+except ImportError as e:
     is_available = False
 else:
     is_available = True
 
-import ldap_config
+from . import ldap_config
 
 def add_ldap_user_folder(app):
     from Products.LDAPUserFolder import manage_addLDAPUserFolder

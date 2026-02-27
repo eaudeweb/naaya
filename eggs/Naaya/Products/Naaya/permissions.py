@@ -1,5 +1,5 @@
 from textwrap import dedent
-from constants import PERMISSION_ADD_FOLDER
+from .constants import PERMISSION_ADD_FOLDER
 from Products.NaayaBase.constants import (PERMISSION_SKIP_APPROVAL,
                                           PERMISSION_ZIP_EXPORT)
 
@@ -112,7 +112,7 @@ def register_naaya_permission(zope_perm, title, description=""):
     }
 
 def _register_permissions(permission_data):
-    for zope_perm, info in permission_data.iteritems():
+    for zope_perm, info in permission_data.items():
         register_naaya_permission(zope_perm,
                                   info['title'],
                                   dedent(info['description']))

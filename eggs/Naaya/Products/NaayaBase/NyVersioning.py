@@ -5,7 +5,7 @@ This module contains the class that handles versioning for a single object.
 from binascii import crc32
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
@@ -63,7 +63,7 @@ class NyVersioning(utils):
         @param p_version_uid: version unique identifier
         """
 
-        if self.__versions.has_key(p_version_uid):
+        if p_version_uid in self.__versions:
             del self.__versions[p_version_uid]
         self._p_changed = 1
 
@@ -171,7 +171,7 @@ class NyVersioning(utils):
         B{This method must be implemented.}
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersion'
+        raise EXCEPTION_NOTIMPLEMENTED('objectDataForVersion')
 
     def objectDataForVersionCompare(self):
         """
@@ -182,7 +182,7 @@ class NyVersioning(utils):
         B{This method must be implemented.}
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersionCompare'
+        raise EXCEPTION_NOTIMPLEMENTED('objectDataForVersionCompare')
 
     def objectVersionDataForVersionCompare(self, p_version_data):
         """
@@ -195,7 +195,7 @@ class NyVersioning(utils):
         @param p_version_data: version data
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'objectVersionDataForVersionCompare'
+        raise EXCEPTION_NOTIMPLEMENTED('objectVersionDataForVersionCompare')
 
     def versionForObjectData(self, p_version_data=None):
         """
@@ -206,7 +206,7 @@ class NyVersioning(utils):
         @param p_version_data: version data
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'versionForObjectData'
+        raise EXCEPTION_NOTIMPLEMENTED('versionForObjectData')
 
     def showVersionData(self, vid=None):
         """
@@ -217,7 +217,7 @@ class NyVersioning(utils):
         @param vid: version unique identifier
         """
 
-        raise EXCEPTION_NOTIMPLEMENTED, 'showVersionData'
+        raise EXCEPTION_NOTIMPLEMENTED('showVersionData')
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_versions_html')

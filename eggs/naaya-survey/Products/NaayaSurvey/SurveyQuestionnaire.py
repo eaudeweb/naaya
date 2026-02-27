@@ -1,5 +1,5 @@
 import sys
-import urllib
+from urllib.parse import quote as urllib_quote
 import tempfile
 import shutil
 import os.path
@@ -12,11 +12,12 @@ from tempfile import NamedTemporaryFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 from DateTime import DateTime
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Traversable import path2url
-from ZPublisher import NotFound
+from zExceptions import NotFound
 from ZPublisher.HTTPRequest import FileUpload
-from zLOG import LOG, ERROR, DEBUG
+import logging
+logger = logging.getLogger('NaayaSurvey.SurveyQuestionnaire')
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.PythonScripts.PythonScript import manage_addPythonScript
@@ -36,12 +37,12 @@ from Products.NaayaWidgets.Widget import WidgetError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.core.zope2util import folder_manage_main_plus
 
-from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
-from permissions import PERMISSION_ADD_ANSWER, PERMISSION_EDIT_ANSWERS
-from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS
-from questionnaire_item import questionnaire_item
+from .SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
+from .permissions import PERMISSION_ADD_ANSWER, PERMISSION_EDIT_ANSWERS
+from .permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS
+from .questionnaire_item import questionnaire_item
 
-from migrations import available_migrations, perform_migration
+from .migrations import available_migrations, perform_migration
 
 
 class SurveyQuestionnaireException(Exception):
@@ -56,7 +57,7 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Pragma', 'public')
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
     RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
-                       % urllib.quote(filename))
+                       % urllib_quote(filename))
 
 
 email_templates = {
@@ -240,7 +241,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                 if not REQUEST:
                     raise
                 value = None
-                errors.append(ex.message)
+                errors.append(str(ex))
             datamodel[widget.getWidgetId()] = value
         if draft:
             if not self.canAddAnswerDraft():
@@ -299,8 +300,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
             self._delObject(answer_id)
-            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                'Deleted previous answer %s while editing' % answer_id)
+            logger.debug(
+                'Deleted previous answer %s while editing', answer_id)
 
         if not self.allow_multiple_answers:
             # look for all old answers and remove them
@@ -312,8 +313,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                     break
                 else:
                     self._delObject(old_answer.id)
-                    LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                        'Deleted previous answer %s' %
+                    logger.debug(
+                        'Deleted previous answer %s',
                         old_answer.absolute_url())
 
         # If we are in edit mode, keep the answer_id from the "old answer"
@@ -350,7 +351,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             self.sendNotificationToOwner(answer)
 
         if REQUEST:
-            self.delSessionKeys(datamodel.keys())
+            self.delSessionKeys(list(datamodel.keys()))
             if not draft:
                 if self.aq_parent.meta_type == 'Naaya Meeting':
                     self.setSessionInfoTrans('Thank you for taking the survey')
@@ -372,15 +373,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     def deleteAnswer(self, answer_id, REQUEST=None):
         """ """
         self._delObject(answer_id)
-        LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-            'Deleting answer %s' % answer_id)
+        logger.debug('Deleting answer %s', answer_id)
 
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def getOwner(self):
         """ get the owner of the object in the form of an LDAP user """
-        for user_id in self.__ac_local_roles__:
+        for user_id in (self.__ac_local_roles__ or {}):
             if 'Owner' in self.__ac_local_roles__[user_id]:
                 auth_tool = self.getSite().getAuthenticationTool()
                 return auth_tool.get_user_with_userid(user_id)
@@ -399,19 +399,24 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             @type answer: SurveyAnswer
         """
         owner = self.getOwner()
+        if owner is None:
+            return
         auth_tool = self.getSite().getAuthenticationTool()
         respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
-        respondent = auth_tool.get_user_with_userid(respondent_id)
-        if not respondent:
-            # either a zope root user or a signup (invited user)
-            respondent = self.getSite().aq_parent.acl_users.getUser(
-                respondent_id)
-        if respondent:
-            respondent_name = auth_tool.getUserFullName(
-                respondent) or respondent_id
+        respondent = None
+        respondent_name = 'Anonymous User'
+        if respondent_id:
+            respondent = auth_tool.get_user_with_userid(respondent_id)
+            if not respondent:
+                # either a zope root user or a signup (invited user)
+                respondent = self.getSite().aq_parent.acl_users.getUser(
+                    respondent_id)
+            if respondent:
+                respondent_name = auth_tool.getUserFullName(
+                    respondent) or respondent_id
 
         d = {}
-        if respondent_id.startswith('signup:'):
+        if respondent_id and respondent_id.startswith('signup:'):
             signup_uid = respondent_id.replace('signup:', '')
             subscriptions = self.aq_parent.getParticipants().getSubscriptions()
             signup = subscriptions.getSignup(signup_uid)
@@ -527,17 +532,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                                  recp_email,
                                  sender_email,
                                  mail_data['subject'])
-            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                'Notification sent from %s to %s' % (sender_email, recp_email))
+            logger.debug(
+                'Notification sent from %s to %s', sender_email, recp_email)
         except Exception:
             # possible causes - the recipient doesn't have email
             #                   (e.g. regular Zope user)
             #                 - we can not send the email
             # these aren't fatal errors, so we'll just log the error
-            err = sys.exc_info()
-            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR,
-                'Could not send email notification for survey %s' %
-                (self.absolute_url(),), error=err)
+            logger.error(
+                'Could not send email notification for survey %s',
+                self.absolute_url(), exc_info=True)
 
     #
     # Answer read methods

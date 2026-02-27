@@ -6,10 +6,11 @@ from random import randrange
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Persistence import Persistent
 from BTrees.OOBTree import OOBTree
-from AccessControl.User import BasicUserFolder, SimpleUser
+from AccessControl.users import SimpleUser
+from OFS.userfolder import BasicUserFolder
 from AccessControl.Permissions import view
 
 # Naaya imports
@@ -18,7 +19,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 # meeting imports
 from naaya.content.meeting import PARTICIPANT_ROLE
 from naaya.core.utils import is_valid_email
-from permissions import PERMISSION_ADMIN_MEETING
+from .permissions import PERMISSION_ADMIN_MEETING
 from Products.NaayaCore.AuthenticationTool.utils import (
     getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber)
 
@@ -165,7 +166,7 @@ class Subscriptions(SimpleItem):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        return self._signups.itervalues()
+        return self._signups.values()
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignup')
 
@@ -418,14 +419,14 @@ class Subscriptions(SimpleItem):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        return self._account_subscriptions.itervalues()
+        return self._account_subscriptions.values()
 
     def getSubscriptions(self):
         """ """
         if not self.checkPermissionParticipateInMeeting():
             raise Unauthorized
-        subscriptions = (list(self._signups.itervalues()) +
-                         list(self._account_subscriptions.itervalues()))
+        subscriptions = (list(self._signups.values()) +
+                         list(self._account_subscriptions.values()))
         statuses = {'new': 0,
                     'accepted': 1,
                     'rejected': 2
@@ -558,4 +559,4 @@ NaayaPageTemplateFile('zpt/subscription_not_allowed', globals(),
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
-    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in xrange(15)))
+    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in range(15)))

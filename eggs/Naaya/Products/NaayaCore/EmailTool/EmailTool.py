@@ -6,7 +6,7 @@ templates, e-mail sending and logging of all e-mail traffic.
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens   # , view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
 from Products.NaayaCore.constants import ID_EMAILTOOL
@@ -19,17 +19,17 @@ from Products.NaayaCore.managers import utils
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from datetime import datetime, timedelta
 from email import message_from_file
-from email.MIMEText import MIMEText
+from email.mime.text import MIMEText
 from email.utils import make_msgid
 from naaya.core.permissions import naaya_admin
 from naaya.core.site_logging import get_log_dir
 from naaya.core.utils import force_to_unicode
-from urlparse import urlparse
+from urllib.parse import urlparse
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.deprecation import deprecate
 from zope.sendmail.interfaces import IMailDelivery
 from zope.sendmail.mailer import SMTPMailer
-import EmailTemplate
+from . import EmailTemplate
 import json
 import logging
 import os
@@ -191,12 +191,12 @@ class EmailTool(Folder):
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',')]
 
-        p_to = filter(None, p_to)  # filter out blank recipients
+        p_to = list(filter(None, p_to))  # filter out blank recipients
 
         if not isinstance(p_cc, list):
             p_cc = [e.strip() for e in p_cc.split(',')]
 
-        p_cc = filter(None, p_cc)  # filter out blank recipients
+        p_cc = list(filter(None, p_cc))  # filter out blank recipients
 
         # try to filter disabled users
         if agent:
@@ -370,10 +370,10 @@ def send_by_delivery(delivery, p_from, p_to, message):
 
 
 def create_message(text, addr_to, addr_from, subject, addr_cc=[]):
-    if isinstance(addr_to, basestring):
+    if isinstance(addr_to, str):
         addr_to = (addr_to,)
     addr_to = ', '.join(addr_to)
-    if isinstance(addr_cc, basestring):
+    if isinstance(addr_cc, str):
         addr_cc = (addr_cc,)
     addr_cc = ', '.join(addr_cc)
     subject = force_to_unicode(subject)
@@ -415,24 +415,25 @@ def save_bulk_email(site, addr_to, addr_from, subject, content,
         unique = '%d.%d.%s.%d' % (timestamp, os.getpid(), site.getId(),
                                   random.randrange(randmax))
         filename = join(save_path, unique)
-        message_file = os.open(filename,
-                               os.O_CREAT | os.O_EXCL | os.O_WRONLY,
-                               0600)
-        generator = email_generator.Generator(os.fdopen(message_file, 'w'))
+        message_fd = os.open(filename,
+                             os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+                             0o600)
+        with os.fdopen(message_fd, 'w') as message_file:
+            generator = email_generator.Generator(message_file)
 
-        # Add multiple 'To' headers if there is more one receipent
-        if len(addr_to) > 1:
-            email_message = create_message(content, addr_to[0], addr_from,
-                                           subject)
-            for mail in addr_to[1:]:
-                email_message['To'] = mail
-        else:
-            email_message = create_message(content, addr_to, addr_from,
-                                           subject)
-        for mail in addr_cc:
-            email_message['Cc'] = mail
-        # Save email in specified file
-        generator.flatten(email_message)
+            # Add multiple 'To' headers if there is more one receipent
+            if len(addr_to) > 1:
+                email_message = create_message(content, addr_to[0], addr_from,
+                                               subject)
+                for mail in addr_to[1:]:
+                    email_message['To'] = mail
+            else:
+                email_message = create_message(content, addr_to, addr_from,
+                                               subject)
+            for mail in addr_cc:
+                email_message['Cc'] = mail
+            # Save email in specified file
+            generator.flatten(email_message)
     else:
         mail_logger.warning("The bulk email could not be saved on the disk."
                             " Missing configuration for SITES_LOG_PATH?")
@@ -498,7 +499,7 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk',
 
     r = {
         'subject': mail.get('Subject', '(no-subject)'),
-        'content': mail.get_payload(decode=True).replace(
+        'content': mail.get_payload(decode=True).decode('utf-8').replace(
             '\n\n', '</p><p>').replace('\n', '<br/>'),
         'recipients': mail.get_all('To'),
         'cc_recipients': mail.get_all('Cc'),
@@ -527,8 +528,10 @@ def _prepare_xcel_data(email, site, check_status):
             email[k] = _separator.join(v)
         elif isinstance(v, datetime):
             email[k] = g_utils.utShowFullDateTime(v)
-        else:
+        elif isinstance(v, bytes):
             email[k] = v.decode('utf-8')
+        else:
+            email[k] = str(v)
         # xcel limit for cell content
         if len(email[k]) > _max_cell:
             email[k] = email[k][:_max_cell]
@@ -654,29 +657,31 @@ def delivery_for_site(site=None):
 
 class _ImmediateDelivery(object):
     """
-    Hack a queued message delivery to send the message immediately, and not
-    wait for transaction finish; useful when sending error messages.
+    Send an email immediately using a separate transaction, without waiting
+    for the main Zope request transaction to commit.
+    Useful when sending error messages.
     """
     def __init__(self, delivery):
         self._d = delivery
 
     def send(self, fromaddr, toaddrs, message):
-        try:
-            message_id = self._d.newMessageId()
-        except AttributeError:      # repose.sendmail compatibility
-            message_id = make_msgid('repoze.sendmail')
-        email_message = create_plain_message(message)
-        email_message['Message-Id'] = '<%s>' % message_id
-        # make data_manager think it's being called by a transaction
-        try:
-            data_manager = self._d.createDataManager(fromaddr, toaddrs,
-                                                     email_message)
-        except TypeError:
-            # backwards compat with zope.sendmail and repoze.sendmail < 2.0
-            message_bytes = 'Message-Id: <%s>\n%s' % (message_id, message)
-            data_manager = self._d.createDataManager(fromaddr, toaddrs,
-                                                     message_bytes)
-        data_manager.tpc_finish(None)
+        import transaction as transaction_mod
+        from email.message import Message
+        from email.parser import Parser
+
+        if isinstance(message, str):
+            message = Parser().parsestr(message)
+        elif not isinstance(message, Message):
+            message = create_plain_message(message)
+
+        if message['Message-Id'] is None:
+            message['Message-Id'] = make_msgid('naaya')
+
+        dm = self._d.createDataManager(fromaddr, toaddrs, message)
+        txn_manager = transaction_mod.TransactionManager()
+        txn = txn_manager.begin()
+        dm.join_transaction(txn)
+        txn.commit()
 
 
 def configure_mail_queue():
@@ -718,7 +723,7 @@ def _mail_in_queue(site, filename, check_values):
                         re.split(", |,\n\t|,\n", queued_email[k][0]))
                     if queued_recipients != set(v):
                         break
-                elif isinstance(v, basestring):
+                elif isinstance(v, str):
                     if _strip_code(queued_email.get(k)).replace(
                             '\n', '<br/>') != _strip_code(v):
                         break

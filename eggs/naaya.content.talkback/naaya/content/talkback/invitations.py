@@ -21,13 +21,14 @@ from base64 import urlsafe_b64encode
 from random import randrange
 from datetime import date
 import json
-from StringIO import StringIO
+from io import StringIO
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.User import BasicUserFolder, SimpleUser
+from AccessControl.users import SimpleUser
+from OFS.userfolder import BasicUserFolder
 from OFS.SimpleItem import SimpleItem
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -40,7 +41,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
-from permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
+from .permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
 import xlwt
 import xlrd
 
@@ -346,7 +347,7 @@ class InvitationsContainer(SimpleItem):
 
         active = []
         revoked = []
-        for invite in self._invites.itervalues():
+        for invite in self._invites.values():
             if not admin and not invite.inviter_userid == userid:
                 continue
             if invite.enabled:
@@ -395,7 +396,7 @@ class InvitationsContainer(SimpleItem):
             elif isinstance(v, datetime):
                 row_data.append(g_utils.utShowFullDateTime(v))
             else:
-                row_data.append(unicode(v))
+                row_data.append(str(v))
             # xcel limit for cell content
             if len(row_data[-1]) > _max_cell:
                 row_data[-1] = row_data[-1][:_max_cell]
@@ -632,4 +633,4 @@ InitializeClass(InvitationUsersTool)
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
-    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in xrange(15)))
+    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in range(15)))

@@ -32,11 +32,6 @@ class TestFunctionalPluginsTool(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go(self.portal.absolute_url() +
-                    '/acl_users/manage_sources_html')
-        form = self.browser.get_form(2)
-        field = self.browser.get_form_field(form, 'source_path')
-        self.browser.clicked(form, field)
-        form['title'] = 'Test source'
-        form['source_path'] = ['acl_users']
-        self.browser.submit()
-        self.assertTrue('Test source' in self.browser.get_html())
+                    '/acl_users/manageAddSource'
+                    '?source_path=acl_users&title=Test+source')
+        self.assertIn('Test source', self.browser.get_html())

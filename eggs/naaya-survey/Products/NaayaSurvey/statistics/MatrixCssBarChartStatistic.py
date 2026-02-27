@@ -20,17 +20,17 @@
 # Python imports
 import colorsys
 import os.path
-from cStringIO import StringIO
+from io import BytesIO
 from PIL import Image
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseStatistic import manage_addStatistic
-from BaseMatrixStatistic import BaseMatrixStatistic
+from .BaseStatistic import manage_addStatistic
+from .BaseMatrixStatistic import BaseMatrixStatistic
 
 class MatrixCssBarChartStatistic(BaseMatrixStatistic):
     """Table with the count and percent of answered and unanswered questions,
@@ -59,7 +59,7 @@ class MatrixCssBarChartStatistic(BaseMatrixStatistic):
         colors = []
         for i in range(numcolors):
             r, g, b = colorsys.hsv_to_rgb(h, s, v)
-            color = "%02x%02x%02x" % tuple([int(x*255) for x in h, s, v])
+            color = "%02x%02x%02x" % tuple([int(x*255) for x in (h, s, v)])
             colors.append(color)
             h += step
         return colors

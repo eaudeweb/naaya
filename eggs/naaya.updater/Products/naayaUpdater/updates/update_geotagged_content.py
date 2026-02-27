@@ -29,10 +29,11 @@ from Products.naayaUpdater.updates import UpdateScript
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 try:
-    import Products.TextIndexNG3
-    txng_version = 2
+    from Products.ZCTextIndex.ZCTextIndex import PLexicon
+    from Products.ZCTextIndex.Lexicon import CaseNormalizer, Splitter, StopWordRemover
+    _has_zctextindex = True
 except ImportError:
-    txng_version = 0
+    _has_zctextindex = False
 
 
 class UpdateGeotaggedContent(UpdateScript):
@@ -136,7 +137,7 @@ class UpdateGeotaggedContent(UpdateScript):
                     return str(value)
                 else:
                     return None
-            elif isinstance(value, basestring):
+            elif isinstance(value, str):
                 try:
                     if Decimal(value):
                         return value
@@ -196,11 +197,23 @@ def add_indexes(catalog, log):
 
     indexes = catalog.indexes()
     if 'geo_address' not in indexes:
-        if txng_version == 2:
-            try: catalog.addIndex('geo_address', 'TextIndexNG3', extra={'default_encoding': 'utf-8'})
-            except: pass
+        if _has_zctextindex:
+            try:
+                if 'Lexicon' not in catalog.objectIds():
+                    lexicon = PLexicon('Lexicon', 'Default lexicon',
+                                       Splitter(), CaseNormalizer(),
+                                       StopWordRemover())
+                    catalog._setObject('Lexicon', lexicon)
+                extra = type('Extra', (), {
+                    'doc_attr': 'geo_address',
+                    'index_type': 'Okapi BM25 Rank',
+                    'lexicon_id': 'Lexicon',
+                })()
+                catalog.addIndex('geo_address', 'ZCTextIndex', extra=extra)
+            except:
+                pass
         else:
-            try: catalog.addIndex('geo_address', 'TextIndex')
+            try: catalog.addIndex('geo_address', 'FieldIndex')
             except: pass
     else:
         log.debug('skipping index (already in catalog) geo_address')

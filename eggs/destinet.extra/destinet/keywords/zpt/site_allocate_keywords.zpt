@@ -82,7 +82,7 @@
                         </div>
                         <div class="glossary-widget-tree"></div>
                     </div>
-                    <script tal:define="js_options python:here.rstk.json_dumps({
+                    <script tal:define="js_options python:here.rstk['json_dumps']({
                                             'input_id': 'bulk_keywords',
                                             'widget_url': meta.absolute_url() + '/keywords-property',
                                             'lang': curr_lang,
@@ -138,7 +138,7 @@
                         </td>
 
                         <td>
-                            <img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+                            <img tal:define="icon python:here.rstk['get_object_view_info'](item)['icon']"
                                 tal:attributes="src icon/url; title icon/title; alt icon/title" tal:condition="python: type == 'folder'" />
 
                             <img tal:attributes="src string:getSymbolPicture?id=${item/geo_type};
@@ -175,7 +175,7 @@
                                     <div class="glossary-widget-tree"></div>
                                 </div>
 
-                                <script tal:define="js_options python:here.rstk.json_dumps({
+                                <script tal:define="js_options python:here.rstk['json_dumps']({
                                           'input_id': prop_id,
                                           'widget_url': widget.absolute_url(),
                                           'lang': curr_lang,

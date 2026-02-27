@@ -74,8 +74,8 @@ class BundleRegistrationTest(unittest.TestCase):
         from zope.app.component.site import LocalSiteManager
         from naaya.component.interfaces import ICustomize
 
+        @interface.implementer(ICustomize)
         class MyClassCustomizer(object):
-            interface.implements(ICustomize)
 
             def __init__(self, target):
                 self.target = target

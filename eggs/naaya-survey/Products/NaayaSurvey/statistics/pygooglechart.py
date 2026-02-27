@@ -30,15 +30,8 @@ import re
 import warnings
 import copy
 
-try:
-    # we're on Python3
-    from urllib.request import urlopen
-    from urllib.parse import quote
-
-except ImportError:
-    # we're on Python2.x
-    from urllib2 import urlopen
-    from urllib import quote
+from urllib.request import urlopen
+from urllib.parse import quote
 
 
 # Helper variables and functions

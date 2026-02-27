@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 import glob
-import Globals
-
-curent_dir = Globals.package_home(globals())
-PRODUCT_UPDATES = ['.'.join((__name__, i.split('.')[0])) for i in glob.glob1(curent_dir, "*.py")]
+import os
+curent_dir = os.path.dirname(os.path.abspath(__file__))
+PRODUCT_UPDATES = ['.'.join((__name__, i.split('.')[0])) for i in glob.glob1(curent_dir, "*.py")
+                   if i != '__init__.py']

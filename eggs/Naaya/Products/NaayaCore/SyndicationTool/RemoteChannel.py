@@ -1,11 +1,12 @@
 
-from zope.interface import implements
-from Globals import InitializeClass
+from zope.interface import implementer
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import urllib2
+import urllib.request
+import urllib.error
 
 from Products.NaayaCore.interfaces import IRemoteChannel
 from Products.NaayaCore.constants import *
@@ -30,10 +31,10 @@ def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', 
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+@implementer(IRemoteChannel)
 class RemoteChannel(SimpleItem, NyFeed, utils):
     """ """
 
-    implements(IRemoteChannel)
 
     meta_type = METATYPE_REMOTECHANNEL
     icon = 'misc_/NaayaCore/RemoteChannel.gif'
@@ -172,7 +173,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     def get_language_from_domain(self):
         """ """
         # get main domain name
-        rq = urllib2.Request(self.url)
+        rq = urllib.request.Request(self.url)
         host = rq.get_host()
         idx = host.rfind('.')
         main_domain = host[idx+1:]

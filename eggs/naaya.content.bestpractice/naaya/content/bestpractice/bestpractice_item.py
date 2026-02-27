@@ -7,14 +7,14 @@ from copy import deepcopy
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from persistent.list import PersistentList
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.core.zope2util import CaptureTraverse
-from interfaces import INyBestPractice
+from .interfaces import INyBestPractice
 
 from Products.NaayaBase.NyContentType import (
     NyContentData, NY_CONTENT_BASE_SCHEMA)
@@ -32,7 +32,7 @@ from naaya.content.bfile.bfile_item import localizedbfile_download as \
     bestpractice_download
 from naaya.content.bfile.bfile_item import NyBFile
 
-from permissions import PERMISSION_ADD_BESTPRACTICE
+from .permissions import PERMISSION_ADD_BESTPRACTICE
 from naaya.content.bestpractice.skel import REF_TREES, KEYWORD_INDEXES
 
 # module constants
@@ -250,9 +250,9 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 
+@implementer(INyBestPractice)
 class NyBestPractice(NyBFile):
     """ """
-    implements(INyBestPractice)
 
     meta_type = config['meta_type']
     meta_label = config['label']

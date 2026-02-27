@@ -19,17 +19,17 @@
 # David Batranu, Eau de Web
 
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-import patchTestEnv
+from . import patchTestEnv
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
+    from io import StringIO
+    pass  # package_home import removed (unused)
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
     data = StringIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
@@ -189,13 +189,13 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         picture = Image.open(picture)
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/view?display=Gallery')
-        gallery_picture = StringIO.StringIO(self.browser.get_html())
+        gallery_picture = StringIO(self.browser.get_html())
         gallery_picture.seek(0)
         gallery_picture = Image.open(gallery_picture)
         self.failUnlessEqual(gallery_picture.tostring(), picture.resize((200, 200)).tostring())
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/view?display=Album')
-        album_picture = StringIO.StringIO(self.browser.get_html())
+        album_picture = StringIO(self.browser.get_html())
         album_picture.seek(0)
         album_picture = Image.open(album_picture)
         self.failUnlessEqual(album_picture.tostring(), picture.resize((100, 100)).tostring())
@@ -212,7 +212,7 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         for format in picture_formats:
             self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/?display=%s&view%%3Amethod=View' % format['size'])
-            pic = StringIO.StringIO(self.browser.get_html())
+            pic = StringIO(self.browser.get_html())
             pic.seek(0)
             pic = Image.open(pic)
             self.failUnlessEqual(pic.tostring(), picture.resize((format['width'], format['height'])).tostring())
@@ -220,5 +220,5 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NyPhotoFunctionalTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NyPhotoFunctionalTestCase))
     return suite

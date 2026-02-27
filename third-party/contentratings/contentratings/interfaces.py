@@ -1,7 +1,14 @@
 from zope.interface import Interface, Attribute, directlyProvides
 from zope.interface.interfaces import IInterface
 from zope.annotation.interfaces import IAnnotatable
-from zope.app.component.vocabulary import InterfacesVocabulary
+try:
+    from zope.app.component.vocabulary import InterfacesVocabulary
+except ImportError:
+    from zope.schema.vocabulary import SimpleVocabulary
+    class InterfacesVocabulary(SimpleVocabulary):
+        interface = None
+        def __init__(self, context=None):
+            super().__init__([])
 
 from zope.schema import Float
 from zope.schema import Int

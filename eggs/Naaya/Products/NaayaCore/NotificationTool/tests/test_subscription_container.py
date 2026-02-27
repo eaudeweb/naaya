@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaCore.NotificationTool.interfaces import (
@@ -40,7 +40,7 @@ class SubscriptionTest(NaayaTestCase):
         self.assertTrue(subs[2] is sub3)
 
         enum = dict(sc.list_with_keys())
-        self.assertEqual(enum.keys(), [1, 2, 3])
+        self.assertEqual(list(enum.keys()), [1, 2, 3])
         self.assertTrue(enum[1] is sub1)
         self.assertTrue(enum[2] is sub2)
         self.assertTrue(enum[3] is sub3)

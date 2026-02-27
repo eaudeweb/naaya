@@ -1,5 +1,7 @@
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
+import urllib.request
+import urllib.error
 import simplejson
 import unittest
 
@@ -193,7 +195,7 @@ class ImmutableDict(dict):
         raise NotImplementedError("dict is immutable")
 
     def __hash__(self):
-        return hash(tuple(self.iteritems()))
+        return hash(tuple(self.items()))
 
 
 class Memoize:
@@ -233,11 +235,11 @@ class ServiceError(Exception):
 
 def _detect_lang(text):
     # build url
-    params = [('v', '1.0'), ('q', text.encode('utf-8'))]
-    url = _GOOGLE_DETECT_LANGUAGE_BASE_URL + '?' + urllib.urlencode(params)
+    params = [('v', '1.0'), ('q', text)]
+    url = _GOOGLE_DETECT_LANGUAGE_BASE_URL + '?' + urllib.parse.urlencode(params)
 
     # call
-    page = urllib2.urlopen(url)
+    page = urllib.request.urlopen(url)
 
     # unpack the data
     result = simplejson.load(page)
@@ -252,11 +254,11 @@ def _translate(text, dest_lang, src_lang):
     # build url
     params = [('v', '1.0'),
               ('langpair', '%s|%s' % (src_lang, dest_lang)),
-              ('q', text.encode('utf-8'))]
-    url = _GOOGLE_TRANSLATE_BASE_URL + '?' + urllib.urlencode(params)
+              ('q', text)]
+    url = _GOOGLE_TRANSLATE_BASE_URL + '?' + urllib.parse.urlencode(params)
 
     # call
-    page = urllib2.urlopen(url)
+    page = urllib.request.urlopen(url)
 
     # unpack the data
     result = simplejson.load(page)
@@ -302,12 +304,11 @@ def translate(text, dest_lang, src_lang=None):
 
 
 def translate_url(url, dest_lang, src_lang):
-    url = url.encode('utf-8')
     params = [('hl', dest_lang),
               ('sl', src_lang),
               ('tl', dest_lang),
               ('u', url)]
-    url = _GOOGLE_TRANSLATE_WEBPAGE_URL + '?' + urllib.urlencode(params)
+    url = _GOOGLE_TRANSLATE_WEBPAGE_URL + '?' + urllib.parse.urlencode(params)
     return url
 
 

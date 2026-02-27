@@ -4,7 +4,7 @@
 	Please fill the form below with the right information and click <b>Save changes</b>. 
 </p>
 
-<div class="system-msg" tal:condition="python:request.has_key('save')"> 
+<div class="system-msg" tal:condition="python:'save' in request"> 
 	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br /> 
 </div> 
 
@@ -38,7 +38,7 @@
 	Click 'Test connection' to run the query.
 </p> 
 
-<div class="system-msg" tal:condition="python:request.has_key('msg')"> 
+<div class="system-msg" tal:condition="python:'msg' in request"> 
 	<span tal:replace="python:request.get('msg', '')" />
 </div>
 

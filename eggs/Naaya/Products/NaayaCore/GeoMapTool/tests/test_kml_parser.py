@@ -1,4 +1,4 @@
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from Testing import ZopeTestCase
 
 from Products.NaayaCore.GeoMapTool.managers.kml_parser import parse_kml
@@ -6,10 +6,10 @@ from Products.NaayaCore.GeoMapTool.managers.kml_parser import parse_kml
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
-    data = StringIO(open(filename, 'rb').read())
+    from io import BytesIO
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
+    with open(filename, 'rb') as f:
+        data = BytesIO(f.read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -41,9 +41,9 @@ class KMLParserTestCase(ZopeTestCase.TestCase):
                           }]
         parsed_data = parse_kml(kml_file)
 
-        self.failUnless(parsed_data, 'KML parser returned no data')
+        self.assertTrue(parsed_data, 'KML parser returned no data')
 
         for location in parsed_data:
             index = parsed_data.index(location)
             for key in location.keys():
-                self.failUnlessEqual(location[key], expected_data[index][key])
+                self.assertEqual(location[key], expected_data[index][key])

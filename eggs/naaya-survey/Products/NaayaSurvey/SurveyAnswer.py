@@ -1,6 +1,6 @@
 from DateTime import DateTime
-from datetime import datetime
-from StringIO import StringIO
+from datetime import datetime, timezone
+from io import StringIO
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
@@ -16,8 +16,8 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyProperties import NyProperties
 
-from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS
-from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
+from .permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS
+from .interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
 gUtil = utils()
 
@@ -60,10 +60,9 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
     return id
 
 
+@interface.implementer(INySurveyAnswer)
 class SurveyAnswer(Folder, NyProperties):
     """ Class used to store survey answers"""
-
-    interface.implements(INySurveyAnswer)
 
     meta_type = "Naaya Survey Answer"
     meta_label = "Survey Answer"
@@ -134,7 +133,7 @@ class SurveyAnswer(Folder, NyProperties):
         bf = make_blobfile(sfile,
                            title=attached_file.filename,
                            removed=False,
-                           timestamp=datetime.utcnow(),
+                           timestamp=datetime.now(timezone.utc),
                            contributor='')
         bf.content_type = content_type
         bf.filename = id
@@ -206,7 +205,7 @@ class SurveyAnswer(Folder, NyProperties):
         for widget in widgets:
             value = widget.get_value(datamodel=datamodel.get(widget.id, None),
                                      **kwargs)
-            if isinstance(value, basestring) or isinstance(value, DateTime):
+            if isinstance(value, str) or isinstance(value, DateTime):
                 res.append(value)
             else:
                 # This is a Matrix widget
@@ -308,9 +307,9 @@ class SurveyAnswer(Folder, NyProperties):
             return True
 
 
+@interface.implementer(INySurveyAnswerAddEvent)
 class NySurveyAnswerAddEvent(object):
     """ """
-    interface.implements(INySurveyAnswerAddEvent)
 
     def __init__(self, context):
         self.context = context

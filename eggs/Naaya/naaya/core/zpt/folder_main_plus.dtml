@@ -96,12 +96,12 @@ function toggleSelect() {
    ><strong>Size</strong><dtml-else>Size</dtml-if></a></div>
   </td>
   <td width="19%" align="left"><div class="list-item"><a 
-   href="./manage_main?skey=bobobase_modification_time<dtml-if 
-   "skey == 'bobobase_modification_time' and not rkey"
-   >&amp;rkey=bobobase_modification_time</dtml-if>"
+   href="./manage_main?skey=modification_time<dtml-if 
+   "skey == 'modification_time' and not rkey"
+   >&amp;rkey=modification_time</dtml-if>"
    onMouseOver="window.status='Sort objects by modification time'; return true"
    onMouseOut="window.status=''; return true"><dtml-if 
-   "skey == 'bobobase_modification_time' or rkey == 'bobobase_modification_time'"
+   "skey == 'modification_time' or rkey == 'modification_time'"
    ><strong>Last Modified</strong><dtml-else>Last Modified</dtml-if></a></div>
   </td>
   <dtml-if hasOrderSupport>
@@ -195,7 +195,7 @@ function toggleSelect() {
 
   <td>
   <div class="list-item">
-  <dtml-var bobobase_modification_time fmt="%Y-%m-%d %H:%M">
+  <dtml-var expr="modification_time()" fmt="%Y-%m-%d %H:%M">
   </div>
   </td>
   </dtml-with>

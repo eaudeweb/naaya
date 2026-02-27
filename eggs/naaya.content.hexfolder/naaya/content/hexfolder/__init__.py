@@ -1,1 +1,1 @@
-from hexfolder_item import NyHexfolder
+from .hexfolder_item import NyHexfolder

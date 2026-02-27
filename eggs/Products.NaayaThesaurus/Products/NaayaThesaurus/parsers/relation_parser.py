@@ -19,7 +19,7 @@
 
 from xml.sax.handler import ContentHandler
 from xml.sax import *
-from cStringIO import StringIO
+from io import BytesIO
 from types import StringType
 
 class relation_handler(ContentHandler):

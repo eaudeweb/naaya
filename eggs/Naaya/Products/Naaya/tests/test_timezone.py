@@ -2,7 +2,7 @@ import unittest
 import os
 import time
 from datetime import datetime
-from mock import patch
+from unittest.mock import patch
 
 from naaya.core.zope2util import dt2DT
 import pytz
@@ -35,37 +35,37 @@ class TestGetTimezone(unittest.TestCase):
         self.config.environment['TZ'] = 'Europe/Bucharest'
         tzinfo = self.portal.get_tzinfo()
         date_here = winter.astimezone(tzinfo)
-        self.failUnlessEqual(date_here.date(), winter.date())
-        self.failUnlessEqual(date_here.hour, 12)
+        self.assertEqual(date_here.date(), winter.date())
+        self.assertEqual(date_here.hour, 12)
 
     def test_get_timezone2_os_environ(self):
         # 2. From os.environ
         os.environ['TZ'] = 'Europe/Bucharest'
         tzinfo = self.portal.get_tzinfo()
         date_here = winter.astimezone(tzinfo)
-        self.failUnlessEqual(date_here.date(), winter.date())
-        self.failUnlessEqual(date_here.hour, 12)
+        self.assertEqual(date_here.date(), winter.date())
+        self.assertEqual(date_here.hour, 12)
 
     def test_get_timezone3_time_tzname(self):
         # 3. From time.tzname
         # We can't assume a certain timezone for the machine running this script
         expected = time.tzname
         timezone = self.portal.get_timezone()
-        self.failUnlessEqual(timezone, expected[0])
+        self.assertEqual(timezone, expected[0])
 
     @patch.object(time, 'tzname')
     def test_get_timezone4_time_fallback(self, mock_method):
         # 4. Hardcoded fallback
         time.tzname = ()
         timezone = self.portal.get_timezone()
-        self.failUnlessEqual(timezone, 'Europe/Copenhagen')
+        self.assertEqual(timezone, 'Europe/Copenhagen')
 
     def test_dst(self):
         self.config.environment['TZ'] = 'Europe/Bucharest'
         tzinfo = self.portal.get_tzinfo()
         date_nodst = winter.astimezone(tzinfo)
         date_dst = summer.astimezone(tzinfo)
-        self.failUnlessEqual(date_nodst.date(), winter.date())
-        self.failUnlessEqual(date_dst.date(), summer.date())
-        self.failUnlessEqual(date_nodst.hour, 12 )
-        self.failUnlessEqual(date_dst.hour, 12 + 1)
+        self.assertEqual(date_nodst.date(), winter.date())
+        self.assertEqual(date_dst.date(), summer.date())
+        self.assertEqual(date_nodst.hour, 12 )
+        self.assertEqual(date_dst.hour, 12 + 1)

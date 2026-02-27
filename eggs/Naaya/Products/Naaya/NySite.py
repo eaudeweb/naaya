@@ -4,16 +4,17 @@ except ImportError:
     import json
 
 from AccessControl import ClassSecurityInfo, Unauthorized
+from DateTime import DateTime
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import change_permissions
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
 from naaya.core.zope2util import getExtConfiguration as getConfiguration
 from naaya.core.zope2util import get_zope_env
-from Globals import DTMLFile
-from Globals import InitializeClass
-from NyFolder import folder_add_html, addNyFolder, importNyFolder
-from NyFolderBase import NyFolderBase
+from App.special_dtml import DTMLFile
+from AccessControl.class_init import InitializeClass
+from .NyFolder import folder_add_html, addNyFolder, importNyFolder
+from .NyFolderBase import NyFolderBase
 from OFS.Folder import Folder
 from Persistence.mapping import PersistentMapping
 from Products.Naaya.constants import DEFAULT_MAILSERVERNAME
@@ -118,12 +119,12 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
-from action_logger import ActionLogger
+from .action_logger import ActionLogger
 from datetime import datetime, timedelta
-from events import NyPluggableItemInstalled, SkelLoad
-from interfaces import INySite, IActionLogger
-from managers.networkportals_manager import networkportals_manager
-from managers.skel_parser import skel_handler_for_path
+from .events import NyPluggableItemInstalled, SkelLoad
+from .interfaces import INySite, IActionLogger
+from .managers.networkportals_manager import networkportals_manager
+from .managers.skel_parser import skel_handler_for_path
 from naaya.component import bundles
 from naaya.content.base.constants import MUST_BE_CAPTCHA
 from naaya.content.base.constants import MUST_BE_DATETIME
@@ -144,13 +145,13 @@ from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
 from naaya.i18n.portal_tool import manage_addNaayaI18n
 from os.path import join
-from urlparse import urlparse
+from urllib.parse import urlparse
 from zipfile import ZipFile
 from zope import component
-from zope.app.component.site import LocalSiteManager, SiteManagerContainer
+from zope.site.site import LocalSiteManager, SiteManagerContainer
 from zope.deprecation import deprecate
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 import logging
 import naaya.content.base
 import operator
@@ -159,8 +160,9 @@ import pytz
 import sys
 import time
 import transaction
-import urllib
-import zLOG
+import urllib.parse
+import urllib.request
+import logging
 
 log = logging.getLogger(__name__)
 
@@ -204,6 +206,7 @@ def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
+@implementer(INySite)
 class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
              Folder, NyBase, NyPermissions, NyImportExport, utils,
              list_utils, file_utils, catalog_tool, search_tool,
@@ -211,7 +214,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
              networkportals_manager, NyFolderBase):
     """ """
 
-    implements(INySite)
 
     meta_type = METATYPE_NYSITE
     icon = 'misc_/Naaya/Site.gif'
@@ -263,7 +265,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         # This was done because Zope2 setSiteManager does not set the ISite
         # interface which is needed to do component lookup in site managers.
-        SiteManagerContainer.setSiteManager.im_func(self, sm)
+        SiteManagerContainer.setSiteManager(self, sm)
         self.setSiteManager(sm)
         sm.__name__ = 'database'
 
@@ -500,7 +502,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                 'rb')
                             if not images_folder._getOb(image.id, None):
                                 images_folder.manage_addImage(
-                                    id=image.id, file='', title=image.title)
+                                    id=image.id, file=b'', title=image.title)
                             image_ob = images_folder._getOb(image.id)
                             image_ob.update_data(data=content)
                             image_ob._p_changed = 1
@@ -622,21 +624,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 try:
                     content = self.futRead(
                         join(skel_path, 'layout', 'left_logo.gif'), 'rb')
-                except IOError, err:
-                    zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
+                except IOError as err:
+                    logging.getLogger('NySite.loadSkeleton').warning(err)
                 else:
                     image_ob = layouttool_ob._getOb('left_logo.gif', None)
                     if image_ob is None:
                         layouttool_ob.manage_addImage(
-                            id='left_logo.gif', file='', title='Site logo')
+                            id='left_logo.gif', file=b'', title='Site logo')
                         image_ob = layouttool_ob._getOb('left_logo.gif')
                     image_ob.update_data(data=content)
                     image_ob._p_changed = 1
                 try:
                     content = self.futRead(
                         join(skel_path, 'layout', 'right_logo.gif'), 'rb')
-                except IOError, err:
-                    zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, err)
+                except IOError as err:
+                    logging.getLogger('NySite.loadSkeleton').warning(err)
                 else:
                     image_ob = layouttool_ob._getOb('right_logo.gif', None)
                     if image_ob is None:
@@ -824,10 +826,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if skel_handler.root.others is not None:
                 if skel_handler.root.others.robots is not None:
                     content = self.futRead(
-                        join(skel_path, 'others', 'robots.txt'), 'r')
+                        join(skel_path, 'others', 'robots.txt'), 'rb')
                     file_ob = self._getOb('robots.txt', None)
                     if file_ob is None:
-                        self.manage_addFile(id='robots.txt', file='', title='')
+                        self.manage_addFile(id='robots.txt', file=b'', title='')
                         file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
                     file_ob._p_changed = 1
@@ -850,7 +852,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.setDefaultSearchableContent()
         # load site skeleton - default content
         import_handler, error = import_parser().parse(
-            self.futRead(join(skel_path, 'skel.nyexp'), 'r'))
+            self.futRead(join(skel_path, 'skel.nyexp'), 'rb'))
         if import_handler is not None:
             for object in import_handler.root.objects:
                 self.import_data(object)
@@ -913,7 +915,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         Set the default meta types to be considered in searches.
         """
-        l = self.get_pluggable_installed_meta_types()
+        l = list(self.get_pluggable_installed_meta_types())
         l.append(METATYPE_FOLDER)
         self.setSearchableContent(l)
 
@@ -938,27 +940,27 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def import_data_custom(self, node, object):
         # import some special type of object
         if object.meta_type == 'Image':
-            id = object.attrs['id'].encode('utf-8')
-            node.manage_addImage(id=id, file='')
+            id = object.attrs['id']
+            node.manage_addImage(id=id, file=b'')
             image_ob = node._getOb(id)
             image_ob.update_data(data=self.utBase64Decode(
-                object.attrs['content'].encode('utf-8')))
+                object.attrs['content']))
             image_ob._p_changed = 1
         elif object.meta_type == 'File':
-            id = object.attrs['id'].encode('utf-8')
-            node.manage_addFile(id=id, file='')
+            id = object.attrs['id']
+            node.manage_addFile(id=id, file=b'')
             file_ob = node._getOb(id)
             file_ob.update_data(data=self.utBase64Decode(
-                object.attrs['content'].encode('utf-8')))
+                object.attrs['content']))
             file_ob._p_changed = 1
         elif object.meta_type == 'Page Template':
-            id = object.attrs['id'].encode('utf-8')
-            title = object.attrs['title'].encode('utf-8')
+            id = object.attrs['id']
+            title = object.attrs['title']
             manage_addPageTemplate(node, id=id, title=title, text='')
             pt_obj = node._getOb(id)
             pt_obj.pt_edit(text=object.content, content_type='')
         else:
-            print 'Import an object of type [%s]' % object.meta_type
+            print('Import an object of type [%s]' % object.meta_type)
 
     # api
     security.declarePublic('get_site_uid')
@@ -1669,7 +1671,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 continue
             try:
                 object_add_meth(language_code)
-            except Exception, exc_error:
+            except Exception as exc_error:
                 zLOG.LOG('NySite', zLOG.DEBUG,
                          ('Could not add language %s for object %s: %s' %
                           (language_code, x.absolute_url(1), exc_error)))
@@ -1694,7 +1696,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             for language in languages:
                 try:
                     object_del_meth(language)
-                except Exception, exc_error:
+                except Exception as exc_error:
                     zLOG.LOG('NySite', zLOG.DEBUG,
                              'Could not delete language %s for object %s: %s'
                              % (language, x.getId(), exc_error))
@@ -2017,7 +2019,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.getAuthenticationTool().manage_changeUser(
                 auth_user, password, confirm, user.roles, user.domains,
                 firstname, lastname, email)
-        except ValidationError, e:
+        except ValidationError as e:
             err = [e]
         else:
             err = None
@@ -2041,7 +2043,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         try:
             res = self.getAuthenticationTool().manage_confirmUser(key)
-        except Exception, err:
+        except Exception as err:
             title = err
             body = 'Please make sure that you clicked on the \
             correct link for activating your account as \
@@ -2117,8 +2119,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     name=username, password=password, confirm=confirm,
                     roles=[], domains=[], firstname=firstname,
                     lastname=lastname, email=email, strict=0)
-            except Exception, error:
-                err = unicode(error)
+            except Exception as error:
+                err = str(error)
             else:
                 err = ''
             if err:
@@ -2198,7 +2200,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         mail_from = getattr(conf, 'environment', {}).get('ERROR_FROM_EMAIL',
                                                          'error@%s' % netloc)
 
-        auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_user_obj = getattr(REQUEST, 'AUTHENTICATED_USER', None)
+        auth_user = auth_user_obj.getUserName() if auth_user_obj else 'Anonymous'
 
         self.notifyOnErrorsEmail(p_to=self.get_notify_on_errors_email(),
                                  p_from=mail_from,
@@ -2286,8 +2289,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         Handle an external call: performs the search in the given languages.
         """
-        if isinstance(query, unicode):
-            query = query.encode('utf-8')
+        if isinstance(query, bytes):
+            query = query.decode('utf-8')
         r = []
         ra = r.append
         index = 0
@@ -2308,13 +2311,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     if description:
                         # strip all HTML tags from the description and take
                         # just the first 200 characters
-                        desc = self.html2text(description.encode('utf-8',
-                                                                 'ignore'),
+                        desc = self.html2text(description,
                                               trim_length=200)
                         desc = self.utStripMSWordUTF8(desc)
-                        # Remove non-ascii unknown chars
-                        desc = desc.decode('utf-8', 'ignore').encode('utf-8',
-                                                                     'ignore')
                         item['description'] = desc
                 except:
                     pass
@@ -2322,7 +2321,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     title = ob.getLocalProperty('title', lang)
                     if not title:
                         # get title; if it is empty return the id instead
-                        title = title.encode('utf-8')
                         if len(title) == 0:
                             title = ob.getId()
                     title = self.utStripMSWordUTF8(title)
@@ -2330,8 +2328,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 except:
                     # save id as title
                     item['title'] = ob.getId()
-                t = unicode(str(ob.bobobase_modification_time()),
-                            'latin-1').encode('utf-8')
+                t = str(DateTime(ob._p_mtime))
                 item['time'] = t
                 ra(item)
                 index += 1
@@ -2422,8 +2419,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     meta_types, query, lang, path, releasedate=releasedate,
                     releasedate_range=releasedate_range)
                 brains_list.extend(lang_brains)
-            except Exception, e:
-                return {'object_list': None, 'error': unicode(e)}
+            except Exception as e:
+                return {'object_list': None, 'error': str(e)}
         brains_list = self.utEliminateDuplicateBrains(brains_list)
         object_list = self.safe_getobjects(brains_list)
 
@@ -2431,8 +2428,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         object_list = [k for k in object_list if k.can_be_seen()]
 
         # sort results
-        if skey == 'bobobase_modification_time':
-            object_list = self.utSortObjsListByMethod(object_list, skey, rkey)
+        if skey in ('bobobase_modification_time', 'modification_time'):
+            object_list = sorted(object_list,
+                                 key=lambda x: x._p_mtime,
+                                 reverse=bool(rkey))
         elif skey in ['meta_type', 'title']:
             object_list = self.utSortObjsListByAttr(object_list, skey, rkey)
         return {'object_list': object_list, 'error': None}
@@ -2736,7 +2735,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             userinfo = self.getAuthenticationTool().manage_addUser(
                 name, password, confirm, [], [], firstname, lastname, email,
                 strict)
-        except ValidationError, error:
+        except ValidationError as error:
             err = error
         else:
             success = True
@@ -2767,7 +2766,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         try:
             self.getAuthenticationTool().manage_changeUser(
                 name, password, confirm, [], [], firstname, lastname, email)
-        except ValidationError, error:
+        except ValidationError as error:
             err = error
             success = False
 
@@ -2808,7 +2807,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         success = False
         try:
             self.getAuthenticationTool().addRole(role)
-        except ValidationError, error:
+        except ValidationError as error:
             err = error
         else:
             success = True
@@ -2831,8 +2830,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_editrole_html(self, role, REQUEST):
         """ """
-        permission_list = self.get_naaya_permissions_in_site().values()
-        permission_list.sort(key=operator.itemgetter('title'))
+        permission_list = sorted(
+            self.get_naaya_permissions_in_site().values(),
+            key=operator.itemgetter('title'))
 
         zope_perm_for_role = {}
         for perm in permission_list:
@@ -2925,7 +2925,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     history[name] = auth_tool.getLocationUserRoles(name,
                                                                    location)
                     auth_tool.manage_addUsersRoles(name, roles, location)
-            except ValidationError, error:
+            except ValidationError as error:
                 err = error
             else:
                 success = True
@@ -3894,8 +3894,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        permission_list = self.get_naaya_permissions_in_site().values()
-        permission_list.sort(key=operator.itemgetter('title'))
+        permission_list = sorted(
+            self.get_naaya_permissions_in_site().values(),
+            key=operator.itemgetter('title'))
 
         tmpl = self.getFormsTool().getForm('site_admin_linkslist').__of__(self)
         options = {
@@ -4254,7 +4255,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     # sending emails
     def sendConfirmationEmail(self, name, confirm_key, mto):
         # Send confirmation email
-        param = urllib.urlencode({'key': confirm_key})
+        param = urllib.parse.urlencode({'key': confirm_key})
         portal_url = self.portal_url or self.absolute_url()
         link = portal_url + '/confirm_user?' + param
         info = {'NAME': name,
@@ -4524,7 +4525,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             today = self.utGetTodayDate()
             self.getCatalogTool()   # TODO: is this needed?
             for x in self.getCatalogedUnsubmittedObjects():
-                if x.bobobase_modification_time() + 1 < today:
+                if DateTime(x._p_mtime) + 1 < today:
                     # delete only unsubmitted objects older than 1 day
                     x.getParentNode().manage_delObjects([x.id])
             return ("Clean up unsubmitted objects ended successfully on site "
@@ -4639,7 +4640,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def HEAD(self, REQUEST=None):
         """ """
-        modified = self.bobobase_modification_time()
+        modified = DateTime(self._p_mtime)
         return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
     # zmi pages
@@ -4814,15 +4815,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         cols = zip(headers, keys)
         return export_email_list_xcel(self, cols, ids)
 
+    security.declarePublic('standard_template_macro')
+
     def standard_template_macro(self, macro='page'):
         """
         Get a macro from the standard template of the current portal
         layout.
         """
         template = self.getLayoutTool().get_standard_template()
-        if macro not in template.macros:
-            macro = 'page'
-        return template.macros[macro]
+        try:
+            return template.macros[macro]
+        except KeyError:
+            return template.macros['page']
 
     security.declareProtected(view, 'sitemap_xml')
 

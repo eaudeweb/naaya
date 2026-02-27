@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
 import transaction
 
@@ -20,7 +20,7 @@ class NotificationsTestCase(NaayaTestCase):
         addNyForum(self.portal, id='tforum', title='My Forum')
         tforum = self.portal['tforum']
         addNyForumTopic(tforum, id='ttopic', title='My Topic')
-        addNyForumMessage(tforum['ttopic'], id='tmessage', title='My Message')
+        addNyForumMessage(tforum['ttopic'], id='msg_tmessage', title='My Message')
         notif_tool = self.portal.getNotificationTool()
         notif_tool.config['enable_instant'] = True
         notif_tool.config['enable_weekly'] = True
@@ -50,7 +50,7 @@ class NotificationsTestCase(NaayaTestCase):
         # check instant notifications
         self.assertEqual(len(self._notifications), 1,
                          'No instant notification was sent')
-        self.assertTrue('Change notification' in self._notifications[0][2])
+        self.assertTrue('Instant notification' in self._notifications[0][2])
         self.assertTrue('My New Topic' in self._notifications[0][3])
         self._notifications[:] = []
 
@@ -83,7 +83,7 @@ class NotificationsTestCase(NaayaTestCase):
         # check instant notifications
         self.assertEqual(len(self._notifications), 1,
                          'No instant notification was sent')
-        self.assertTrue('Change notification' in self._notifications[0][2])
+        self.assertTrue('Instant notification' in self._notifications[0][2])
         self.assertTrue('My New Message' in self._notifications[0][3])
         self._notifications[:] = []
 
@@ -115,12 +115,12 @@ class NotificationsTestCase(NaayaTestCase):
         self.assertEqual(len(self._notifications), 1)
         self._notifications[:] = []
 
-        message = topic['tmessage']
+        message = topic['msg_tmessage']
         message.saveProperties(title=message.title, description='qwer')
 
         self.assertEqual(len(self._notifications), 1)
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NotificationsTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NotificationsTestCase))
     return suite

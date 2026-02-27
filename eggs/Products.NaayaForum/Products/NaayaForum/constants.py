@@ -3,14 +3,11 @@ This module contains global constants.
 """
 
 #Python imports
-
-#Zope imports
-import Globals
-
+import os
 #Product imports
 
 NAAYAFORUM_PRODUCT_NAME = 'NaayaForum'
-NAAYAFORUM_PRODUCT_PATH = Globals.package_home(globals())
+NAAYAFORUM_PRODUCT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 PERMISSION_ADD_FORUM = 'Add Naaya Forum'
 PERMISSION_MODIFY_FORUMTOPIC = 'Add/Edit/Delete Naaya Forum Topic'

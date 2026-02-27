@@ -36,7 +36,7 @@ enables the entire python library to support timeouts on TCP sockets.
 As an example, if you wanted to SMTP connections to have a 20 second
 timeout:
 
-    import timeoutsocket
+    from . import timeoutsocket
     import smtplib
     timeoutsocket.setDefaultSocketTimeout(20)
 
@@ -72,7 +72,7 @@ Each of these objects adds two methods to manage the timeout value:
 As an example, one might use the timeout feature to create httplib
 connections that will timeout after 30 seconds:
 
-    import timeoutsocket
+    from . import timeoutsocket
     import httplib
     H = httplib.HTTP("www.python.org")
     H.sock.set_timeout(30)
@@ -91,7 +91,7 @@ __author__  = "Timothy O'Malley <timo@alum.mit.edu>"
 #
 # Imports
 #
-import select, string
+import select
 import socket
 if not hasattr(socket, "_no_timeoutsocket"):
     _socket = socket.socket
@@ -189,7 +189,7 @@ class TimeoutSocket:
         errcode = 0
         try:
             self.connect(addr)
-        except Error, why:
+        except Error as why:
             errcode = why[0]
         return errcode
     # end connect_ex
@@ -209,7 +209,7 @@ class TimeoutSocket:
             sock.connect(addr)
             sock.setblocking(blocking)
             return
-        except Error, why:
+        except Error as why:
             # Set the socket's blocking mode back
             sock.setblocking(blocking)
             
@@ -255,7 +255,7 @@ class TimeoutSocket:
             timeoutnewsock = self.__class__(newsock, timeout)
             timeoutnewsock.setblocking(blocking)
             return (timeoutnewsock, addr)
-        except Error, why:
+        except Error as why:
             # Set the socket's blocking mode back
             sock.setblocking(blocking)
 
@@ -366,7 +366,7 @@ class TimeoutFile:
         _sock = self._sock
         _bufsize = self._bufsize
         while 1:
-            idx = string.find(_sock._inqueue, "\n")
+            idx = _sock._inqueue.find("\n")
             if idx >= 0:
                 break
             datalen = len(_sock._inqueue)
@@ -396,7 +396,7 @@ class TimeoutFile:
         result = []
         data = self.read()
         while data:
-            idx = string.find(data, "\n")
+            idx = data.find("\n")
             if idx >= 0:
                 idx = idx + 1
                 result.append( data[:idx] )

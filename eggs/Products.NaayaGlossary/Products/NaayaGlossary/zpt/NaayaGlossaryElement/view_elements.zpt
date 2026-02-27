@@ -5,7 +5,7 @@
 		<legend><strong><a tal:attributes="href here/absolute_url" tal:content="here/title" /></strong></legend>
 
 		<table border="0" cellpadding="3" cellspacing="0" width="100%">
-			<tal:block condition="python:request.has_key('at_translations')">
+			<tal:block condition="python:'at_translations' in request">
 				<tr>
 					<td style="background-color: #0198CD; color:white;" colspan="2">Name translations</td>
 				</tr>
@@ -27,7 +27,7 @@
 				</tal:block>
 			</tal:block>
 
-			<tal:block condition="python:request.has_key('at_definition')">
+			<tal:block condition="python:'at_definition' in request">
 				<tr>
 					<td style="background-color: #0198CD; color:white;" colspan="2">Definition translations</td>
 				</tr>
@@ -49,7 +49,7 @@
 				</tal:block>
 			</tal:block>
 
-			<tal:block condition="python:request.has_key('at_subjects')">
+			<tal:block condition="python:'at_subjects' in request">
 				<tr>
 					<td style="background-color: #0198CD; color:white;" colspan="2">Themes</td>
 				</tr>
@@ -69,7 +69,7 @@
 				</tal:block>
 			</tal:block>
 
-			<tal:block condition="python:request.has_key('at_source')">
+			<tal:block condition="python:'at_source' in request">
 				<tr>
 					<td style="background-color: #0198CD; color:white;" colspan="2"><span>Source</span></td>
 				</tr>
@@ -78,7 +78,7 @@
 				</tr>
 			</tal:block>
 
-			<tal:block condition="python:request.has_key('at_status')">
+			<tal:block condition="python:'at_status' in request">
 				<tr>
 					<td style="background-color: #0198CD; color:white;" colspan="2"><span>Status</span></td>
 				</tr>

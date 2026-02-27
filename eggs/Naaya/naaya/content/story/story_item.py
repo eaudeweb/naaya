@@ -1,7 +1,7 @@
 import os
 import sys
 
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -11,7 +11,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -26,8 +26,8 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 
-from interfaces import INyStory
-from permissions import PERMISSION_ADD_STORY
+from .interfaces import INyStory
+from .permissions import PERMISSION_ADD_STORY
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -129,14 +129,14 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ob.setFrontPicture(_frontpicture)
 
-    if kwargs.has_key('submitted'): ob.submitThis()
+    if 'submitted' in kwargs: ob.submitThis()
     self.recatalogNyObject(ob)
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
-        if REQUEST.has_key('submitted'): ob.submitThis()
+        if 'submitted' in REQUEST: ob.submitThis()
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'story_manage_add' or l_referer.find('story_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
@@ -161,19 +161,19 @@ def importNyStory(self, param, id, attrs, content, properties, discussion, objec
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyStory_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.topitem = abs(int(attrs['topitem'].encode('utf-8')))
-            ob.resourceurl = attrs['resourceurl'].encode('utf-8')
-            ob.frontpicture = self.utBase64Decode(attrs['frontpicture'].encode('utf-8'))
+            ob = _create_NyStory_object(self, id, self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.topitem = abs(int(attrs['topitem']))
+            ob.resourceurl = attrs['resourceurl']
+            ob.frontpicture = self.utBase64Decode(attrs['frontpicture'])
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.submitThis()
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
@@ -206,10 +206,10 @@ class story_item(Implicit, NyContentData):
         self.frontpicture = None
         self._p_changed = 1
 
+@implementer(INyStory)
 class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentType):
     """ """
 
-    implements(INyStory)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -246,13 +246,13 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         keywords = self._objectkeywords(lang)
-        if not isinstance(keywords, unicode):
+        if isinstance(keywords, bytes):
             keywords = keywords.decode('utf-8')
         body = self.getLocalProperty('body', lang)
-        if not isinstance(body, unicode):
+        if isinstance(body, bytes):
             body = body.decode('utf-8')
         source = self.getLocalProperty('source', lang)
-        if not isinstance(source, unicode):
+        if isinstance(source, bytes):
             source = source.decode('utf-8')
         return u' '.join([keywords, body, source])
 
@@ -291,7 +291,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             Dc.publisher(l_site.publisher)
             )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def getFrontPicture(self, version=None, REQUEST=None):
         """ """
@@ -311,7 +311,8 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
@@ -394,9 +395,11 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         self.copy_naaya_properties_from(self.version)
         self.frontpicture = self.version.frontpicture
         self.checkout = 0
@@ -411,9 +414,11 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG
+)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = story_item()
@@ -426,12 +431,14 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         else:
             obj = self
 

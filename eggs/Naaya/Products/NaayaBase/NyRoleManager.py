@@ -1,15 +1,15 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from AccessControl.Role import RoleManager
+from AccessControl.rolemanager import RoleManager
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.Permissions import change_permissions
 from zope.annotation.interfaces import IAnnotations
 from zope.event import notify
 
-from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
+from .events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 class NyRoleManager(RoleManager):
     """ Notifies on local role modifications """
@@ -22,21 +22,21 @@ class NyRoleManager(RoleManager):
         """ Override Role.manage_addLocalRoles """
 
         notify(NyAddLocalRoleEvent(self, userid, roles))
-        return super(NyRoleManager, self).manage_addLocalRoles(userid, roles, REQUEST)
+        return super(NyRoleManager, self).manage_addLocalRoles(userid, roles)
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_setLocalRoles(self, userid, roles, REQUEST=None):
         """ Override Role.manage_setLocalRoles """
 
         notify(NySetLocalRoleEvent(self, userid, roles))
-        return super(NyRoleManager, self).manage_setLocalRoles(userid, roles, REQUEST)
+        return super(NyRoleManager, self).manage_setLocalRoles(userid, roles)
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_delLocalRoles(self, userids, REQUEST=None):
         """ Override Role.manage_delLocalRoles """
 
         notify(NyDelLocalRoleEvent(self, userids))
-        return super(NyRoleManager, self).manage_delLocalRoles(userids, REQUEST)
+        return super(NyRoleManager, self).manage_delLocalRoles(userids)
 
 InitializeClass(NyRoleManager)
 
@@ -84,7 +84,7 @@ class RoleLogger(object):
         if userid not in state:
             state[userid] = PersistentList()
 
-        current_date = datetime.utcnow()
+        current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         state[userid].append(PersistentDict({
             'roles': roles,
@@ -95,7 +95,7 @@ class RoleLogger(object):
     def setLocalRolesInfo(self, userid, roles):
         state = self._getStorage4LocalRolesInfo()
 
-        current_date = datetime.utcnow()
+        current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         state[userid] = PersistentList()
         state[userid].append(PersistentDict({
@@ -156,7 +156,7 @@ class RoleLogger(object):
         if userid not in state:
             state[userid] = PersistentList()
 
-        current_date = datetime.utcnow()
+        current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         dict = {
             'roles': PersistentList(roles),
@@ -168,7 +168,7 @@ class RoleLogger(object):
     def setUserRolesInfo(self, userid, roles):
         state = self._getStorage4UserRolesInfo()
 
-        current_date = datetime.utcnow()
+        current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         state[userid] = PersistentList()
         dict = {
@@ -234,7 +234,7 @@ class RoleLogger(object):
         if group not in state:
             state[group] = PersistentList()
 
-        current_date = datetime.utcnow()
+        current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         dict = {
             'roles': PersistentList(roles),

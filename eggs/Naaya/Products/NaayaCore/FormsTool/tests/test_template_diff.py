@@ -1,4 +1,4 @@
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.component import queryMultiAdapter, adapts
 from zope.component import getGlobalSiteManager
 
@@ -10,8 +10,8 @@ from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 class ITemplateDemo(Interface):
     """"""
 
+@implementer(ITemplateDemo, ITemplate)
 class TemplateDemo(object):
-    implements(ITemplateDemo, ITemplate)
 
     def __init__(self, source):
         self.source = source

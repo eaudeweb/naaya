@@ -9,9 +9,10 @@ import transaction
 import datetime
 import os
 import sys
-import sha
+import hashlib
 import types
-import urllib
+import urllib.parse
+import urllib.request
 from unidecode import unidecode
 import simplejson as json
 from decimal import Decimal
@@ -22,21 +23,37 @@ from Acquisition import Implicit, aq_base
 from App.config import getConfiguration
 from OFS.interfaces import IItem, IObjectManager
 from OFS.SimpleItem import SimpleItem
-from Globals import InitializeClass
-from Globals import DTMLFile
+from AccessControl.class_init import InitializeClass
+from App.special_dtml import DTMLFile
 from ZPublisher.HTTPRequest import FileUpload
-from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+from zope.pagetemplate.pagetemplatefile import PageTemplateFile \
+    as _Z3PageTemplateFile
+from Products.PageTemplates.Expressions import getEngine
 from zope.configuration.name import resolve
 from DateTime import DateTime
 
 from Products.Naaya.interfaces import IObjectView
 from naaya.core.utils import force_to_unicode, is_valid_email  # noqa: F401
 from naaya.core.utils import unescape_html_entities
-from backport import any
-from interfaces import IRstkMethod
+from .backport import any
+from .interfaces import IRstkMethod
 
 
 log = logging.getLogger(__name__)
+
+
+class PageTemplateFile(_Z3PageTemplateFile):
+    """PageTemplateFile that uses the Zope expression engine.
+
+    zope.pagetemplate's default engine (zope.tales.engine.Engine) is a plain
+    ExpressionEngine which is incompatible with Chameleon's Program.cook()
+    (it only wraps expression types in MappedExprType for ZopeBaseEngine
+    instances). Override pt_getEngine to return the Zope 5 engine so
+    Chameleon can properly compile TALES path expressions.
+    """
+    def pt_getEngine(self):
+        return getEngine()
+
 
 html_escape_table = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
@@ -45,7 +62,8 @@ html_escape_table = {
 
 def getExtConfiguration():
     CONFIG = getConfiguration()
-    CONFIG.environment.update(os.environ)
+    if hasattr(CONFIG, 'environment'):
+        CONFIG.environment.update(os.environ)
     return CONFIG
 
 
@@ -167,12 +185,12 @@ def catch_unauthorized():
 
 def url_quote(text):
     """URL encode text"""
-    return urllib.quote_plus(text)
+    return urllib.parse.quote_plus(text)
 
 
 def url_unquote(text):
     """URL decode text"""
-    return urllib.unquote_plus(text)
+    return urllib.parse.unquote_plus(text)
 
 
 def escape_html(text):
@@ -384,10 +402,19 @@ def dt2DT(date):
     return DateTime(*args)
 
 
+def modification_time(obj):
+    """Return the ZODB modification time of *obj* as a DateTime.
+
+    Replaces Zope 2 ``bobobase_modification_time()``, which was
+    removed in Zope 5.
+    """
+    return DateTime(obj._p_mtime)
+
+
 def DT2dt(date):
     """ Convert Zope's DateTime to Pythons's datetime """
     # seconds (parts[6]) is a float, so we map to int
-    args = map(int, date.parts()[:6])
+    args = list(map(int, date.parts()[:6]))
     args.append(0)
     args.append(UnnamedTimeZone(int(date.tzoffset() / 60)))
     return datetime.datetime(*args)
@@ -572,8 +599,9 @@ def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
 
 
 def simple_paginate(items, per_page=4):
+    items = list(items)
     output = []
-    for offset in xrange(0, len(items), per_page):
+    for offset in range(0, len(items), per_page):
         output.append(items[offset:offset + per_page])
     return output
 
@@ -612,7 +640,7 @@ def iter_file_data(f):
 
 
 def sha_hexdigest(f):
-    sha_hash = sha.new()
+    sha_hash = hashlib.sha1()
     for buf in iter_file_data(f):
         sha_hash.update(buf)
     return sha_hash.hexdigest()

@@ -1,7 +1,7 @@
 """ SubRip parser
 """
 import re, sys
-from parser import Parser
+from .parser import Parser
 
 class SRTParser(Parser):
     """ Parse subtitle text of type srt
@@ -19,7 +19,7 @@ class SRTParser(Parser):
             try:
                 title, time, subtitle = self._compile_text(block)
                 start, stop = self._compile_time(time)
-            except AttributeError, IndexError:
+            except AttributeError as IndexError:
                 #Invalid block, drop it.
                 continue
             res.append({
@@ -55,4 +55,4 @@ if __name__ == "__main__":
     input.close()
     
     parser = SRTParser(text)
-    print parser.parse()
+    print(parser.parse())

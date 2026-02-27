@@ -1,8 +1,8 @@
 ''' user interface module '''
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from profileoverview.profile import ProfileClient
-from constants import GROUPWARE_META_ID
+from .profileoverview.profile import ProfileClient
+from .constants import GROUPWARE_META_ID
 
 from naaya.core.backport import json
 from naaya.core.zope2util import get_zope_env

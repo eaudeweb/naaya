@@ -22,7 +22,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from AccessControl.Permissions import view
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
@@ -124,8 +124,8 @@ class Widget(Folder, LocalPropertyManager):
         if REQUEST:
             kwargs.update(REQUEST.form)
         local_properties = self.getLocalProperties()
-        local_properties = filter(
-            None, [x.get('id', None) for x in local_properties])
+        local_properties = list(filter(
+            None, [x.get('id', None) for x in local_properties]))
         # Update local properties
         lang = kwargs.get('lang', self.get_selected_language())
         for local_property in local_properties:
@@ -134,7 +134,7 @@ class Widget(Folder, LocalPropertyManager):
             prop_value = kwargs.get(local_property, '')
 
             # Strip empty values:
-            if type(prop_value) in (str, unicode):
+            if isinstance(prop_value, str):
                 prop_value = prop_value.strip()
             # Filter/strip empty values
             if type(prop_value) in (list, tuple):
@@ -162,8 +162,8 @@ class Widget(Folder, LocalPropertyManager):
         """Validate datamodel"""
         if self.required and self.isEmptyDatamodel(value):
             title = self.title
-            if not isinstance(title, unicode):
-                title = self.title.decode('utf-8')
+            if isinstance(title, bytes):
+                title = title.decode('utf-8')
             raise WidgetError(('Value required for "${title}"',
                                {'title': title}))
 
@@ -206,8 +206,8 @@ class Widget(Folder, LocalPropertyManager):
                 'View Management Screens'):
             raise Unauthorized
         local_properties = self.getLocalProperties()
-        local_properties = filter(
-            None, [x.get('id', None) for x in local_properties])
+        local_properties = list(filter(
+            None, [x.get('id', None) for x in local_properties]))
         lang = self.get_selected_language()
         other_languages = [language for language in self.gl_get_languages()
                            if language != lang]
@@ -231,7 +231,7 @@ class Widget(Folder, LocalPropertyManager):
     preview_html = PageTemplateFile('zpt/preview_widget', globals())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
-    index_html = preview_html
+    index_html = PageTemplateFile('zpt/preview_widget', globals())
 
     def getNonEmptyAttribute(self, attrName):
         """ Return the value of the first non empty <attrName> local attr"""

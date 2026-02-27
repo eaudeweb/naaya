@@ -2,10 +2,11 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 def load_file(filename):
     import os
-    from StringIO import StringIO
-    from Globals import package_home
-    filename = os.path.sep.join([package_home(globals()), filename])
-    data = StringIO(open(filename, 'rb').read())
+    from io import BytesIO
+    import os as _os
+    filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
+    with open(filename, 'rb') as f:
+        data = BytesIO(f.read())
     data.filename = os.path.basename(filename)
     return data
 

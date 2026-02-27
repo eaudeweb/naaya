@@ -5,7 +5,7 @@ import mimetypes
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
 from OFS.Image import cookId
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -15,8 +15,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
-from zope.interface import implements
-from interfaces import INyFile
+from zope.interface import implementer
+from .interfaces import INyFile
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -31,7 +31,7 @@ from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
-from permissions import PERMISSION_ADD_FILE
+from .permissions import PERMISSION_ADD_FILE
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -128,8 +128,12 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    if hasattr(_file, 'read') and not _file.read() and not _url:
-        form_errors['file'] = ['File upload or URL is mandatory']
+    if hasattr(_file, 'read'):
+        _file_content = _file.read()
+        if hasattr(_file, 'seek'):
+            _file.seek(0)
+        if not _file_content and not _url:
+            form_errors['file'] = ['File upload or URL is mandatory']
 
     if REQUEST is not None:
         submitter_errors = submitter.info_check(self, REQUEST, ob)
@@ -192,25 +196,25 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
                 except: pass
 
             ob = _create_NyFile_object(self, id, '',
-                file=self.utBase64Decode(attrs['file'].encode('utf-8')),
-                precondition=attrs['precondition'].encode('utf-8'),
-                contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8'))
+                file=self.utBase64Decode(attrs['file']),
+                precondition=attrs['precondition'],
+                contributor=self.utEmptyToNone(attrs['contributor'])
             )
 
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.content_type = attrs['content_type'].encode('utf-8')
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.content_type = attrs['content_type']
             ob._p_changed = 1
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.checkThis(attrs['validation_status'].encode('utf-8'),
-                attrs['validation_comment'].encode('utf-8'),
-                attrs['validation_by'].encode('utf-8'),
-                attrs['validation_date'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
+            ob.checkThis(attrs['validation_status'],
+                attrs['validation_comment'],
+                attrs['validation_by'],
+                attrs['validation_date'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -277,10 +281,10 @@ class file_item(NyContentData, NyFSFile):
         data, ctype, size, filename = self._get_upload_file(source, file, url)
         self.update_data(data, ctype, size, filename)
 
+@implementer(INyFile)
 class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    implements(INyFile)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -338,7 +342,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
             Dc.publisher(l_site.publisher)
             )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     security.declarePublic('showVersionData')
     def showVersionData(self, vid=None, REQUEST=None, RESPONSE=None):
@@ -369,9 +373,11 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV"
+)
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -411,9 +417,11 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION(EXCEPTION_NOVERSION_MSG
+)
         self.copy_naaya_properties_from(self.version)
         self.precondition = self.version.precondition
         self.checkout = 0
@@ -428,9 +436,11 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION(EXCEPTION_STARTEDVERSION_MSG
+)
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = file_item(self.id, self.title, '', self.precondition)
@@ -449,12 +459,14 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
 
         if self.hasVersion():
             obj = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         else:
             obj = self
 
@@ -507,9 +519,11 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
             username = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
         if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
         if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV"
+)
 
         if lang is None:
             lang = self.gl_get_selected_language()
@@ -520,7 +534,8 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != username:
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
+)
             context = self.version
 
         if version:
@@ -575,6 +590,8 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         filename = context._get_data_name()
         if not filename:
             return context.title_or_id()
+        if isinstance(filename, str):
+            return filename
         return filename[-1]
 
     security.declareProtected(view, 'download')

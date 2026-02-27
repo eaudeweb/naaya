@@ -1,6 +1,6 @@
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, manage_addWidget
+from .Widget import Widget, manage_addWidget
 
 def addSelectMultipleWidget(container, id="", title="Multiple Select Widget", REQUEST=None, **kwargs):
     """ Contructor for Multiple Select widget"""

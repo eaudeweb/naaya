@@ -4,7 +4,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # Products imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaWidgets.Widget import Widget
 

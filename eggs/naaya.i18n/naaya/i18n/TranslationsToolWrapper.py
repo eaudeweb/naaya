@@ -10,7 +10,7 @@ from zope.i18n.interfaces import ITranslationDomain
 from zope.component import queryUtility
 from zope.deprecation import deprecate
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Acquisition import Implicit
 
 
@@ -29,8 +29,6 @@ class TranslationsToolWrapper(Implicit):
         return self.portal_i18n.get_translation(msg, **kwargs)
 
     security.declarePublic('gettext')
-    @deprecate(("Portal Translations/gettext is deprecated, use "
-        "portal.getPortalI18n().get_translation(msg, **kwargs)"))
     def gettext(self, message, lang=None, add=1, default=None):
         if not lang:
             lang = self.portal_i18n.get_selected_language()

@@ -1,4 +1,4 @@
-from mock import Mock
+from unittest.mock import Mock
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder

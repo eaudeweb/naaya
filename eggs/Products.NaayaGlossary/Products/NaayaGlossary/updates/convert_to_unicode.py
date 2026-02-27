@@ -14,14 +14,14 @@ class ConvertToUnicode(UpdateScript):
 
     def convert_values_to_unicode(self, element, languages):
         title = getattr(element, 'title', u'')
-        if not isinstance(title, unicode):
+        if not isinstance(title, str):
             self.log.debug('%s title: %s',
                     element.absolute_url(), title)
             element.title = force_to_unicode(title)
 
         for language in languages:
             value = getattr(element, language, u'')
-            if isinstance(value, unicode):
+            if isinstance(value, str):
                 continue
             self.log.debug('%s %s: %s',
                     element.absolute_url(), language, value)
@@ -30,7 +30,7 @@ class ConvertToUnicode(UpdateScript):
         for language in languages:
             def_attr = 'def_' + language
             value = getattr(element, def_attr, u'')
-            if isinstance(value, unicode):
+            if isinstance(value, str):
                 continue
             self.log.debug('%s %s: %s',
                     element.absolute_url(), def_attr, value)

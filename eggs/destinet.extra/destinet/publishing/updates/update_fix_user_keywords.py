@@ -268,9 +268,7 @@ def fix_title(obj):
     """
     for lang in obj._local_properties['title']:
         v = obj.getLocalAttribute('title', lang)
-        try:
-            unicode(v)
-        except UnicodeDecodeError:
+        if isinstance(v, bytes):
             v = v.decode('utf-8')
             obj.set_localpropvalue('title', lang, v)
 

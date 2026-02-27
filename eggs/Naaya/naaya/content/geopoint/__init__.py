@@ -1,1 +1,1 @@
-from geopoint_item import NyGeoPoint
+from .geopoint_item import NyGeoPoint

@@ -3,23 +3,23 @@ This module contains the class that implements the Naaya simple item type of obj
 All types of objects that are not containers must extend this class.
 """
 
-from zope.interface import implements
+from zope.interface import implementer
 from OFS.SimpleItem import SimpleItem
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from interfaces import INyItem
-from NyBase import NyBase
-from NyPermissions import NyPermissions
-from NyComments import NyCommentable
-from NyDublinCore import NyDublinCore
+from .interfaces import INyItem
+from .NyBase import NyBase
+from .NyPermissions import NyPermissions
+from .NyComments import NyCommentable
+from .NyDublinCore import NyDublinCore
 
+@implementer(INyItem)
 class NyItem(SimpleItem, NyCommentable, NyBase, NyPermissions, NyDublinCore):
     """
     Class that implements the Naaya simple item type of object.
     """
 
-    implements(INyItem)
 
     manage_options = (
         SimpleItem.manage_options

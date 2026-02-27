@@ -7,13 +7,13 @@
                 <form method="get" action="">
                     <input type="submit" i18n:translate="" name="show_highest_rated"
                         value="Highest rated objects" i18n:attributes="value"
-                        tal:attributes="disabled python:request.has_key('show_highest_rated')"/>
+                        tal:attributes="disabled python:'show_highest_rated' in request"/>
                     <input type="submit" i18n:translate="" name="show_lowest_rated"
                         value="Lowest rated objects" i18n:attributes="value"
-                        tal:attributes="disabled python:request.has_key('show_lowest_rated')"/>
+                        tal:attributes="disabled python:'show_lowest_rated' in request"/>
                     <input type="submit" i18n:translate="" name="show_most_rated"
                         value="Most rated objects" i18n:attributes="value"
-                        tal:attributes="disabled python:request.has_key('show_most_rated')"/>
+                        tal:attributes="disabled python:'show_most_rated' in request"/>
                     <span i18n:translate>Maximum number of objects shown:</span>
                     <input type="text" size="5" name="number_of_objects"
                         tal:attributes="value python:request.get('number_of_objects', 10)"/>

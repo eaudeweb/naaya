@@ -56,7 +56,7 @@ except ImportError:
         # Parse and validate the field names.  Validation serves two purposes,
         # generating informative error messages and preventing template
         # injection attacks.
-        if isinstance(field_names, basestring):
+        if isinstance(field_names, str):
             # names separated by whitespace and/or commas
             field_names = field_names.replace(',', ' ').split()
         field_names = tuple(map(str, field_names))
@@ -130,16 +130,16 @@ except ImportError:
         for i, name in enumerate(field_names):
             template += '        %s = _property(_itemgetter(%d))\n' % (name, i)
         if verbose:
-            print template
+            print(template)
 
         # Execute the template string in a temporary namespace
         namespace = dict(_itemgetter=_itemgetter,
                          __name__='namedtuple_%s' % typename,
                          _property=property, _tuple=tuple)
         try:
-            exec template in namespace
-        except SyntaxError, e:
-            raise SyntaxError(e.message + ':\n' + template)
+            exec(template, namespace)
+        except SyntaxError as e:
+            raise SyntaxError(str(e) + ':\n' + template)
         result = namespace[typename]
 
         # For pickling to work, the __module__ variable needs to be set to the

@@ -6,4 +6,4 @@ ADMINISTRATOR_ROLE = 'Administrator'
 MANAGER_ROLE = 'Manager'
 OWNER_ROLE = 'Owner'
 
-from meeting import NyMeeting
+from .meeting import NyMeeting

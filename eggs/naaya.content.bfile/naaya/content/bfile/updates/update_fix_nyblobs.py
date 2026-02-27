@@ -2,7 +2,7 @@
 __author__ = """Tiberiu Ichim"""
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from StringIO import StringIO
+from io import StringIO
 from os.path import join, isfile, isdir, exists
 import hashlib
 import logging

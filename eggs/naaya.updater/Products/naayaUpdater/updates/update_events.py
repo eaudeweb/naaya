@@ -1,5 +1,5 @@
 from Products.naayaUpdater.updates import UpdateScript
-from utils import physical_path
+from .utils import physical_path
 
 class UpdateBrokenEvents(UpdateScript):
     """ Update broken NaayaEvent objects """

@@ -34,8 +34,8 @@
 			<em tal:condition="python:not item.validation_date" i18n:translate="">never</em>
 		</div>
 		<div style="float:right;">
-			<input type="submit" value="Save changes" i18:attributes="value" />
-			<input type="reset" value="Reset" i18:attributes="value" />
+			<input type="submit" value="Save changes" i18n:attributes="value" />
+			<input type="reset" value="Reset" i18n:attributes="value" />
 		</div>
 		<div>
 			<input type="radio" name="status" tal:attributes="checked python:item.validation_status==0" value="0" />

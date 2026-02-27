@@ -2,7 +2,7 @@ def _decode(val, encoding_schema='utf-8'):
     if val is None:
         return ''
 
-    if isinstance(val, unicode):
+    if isinstance(val, str):
         return val
 
     return val.decode(encoding_schema)
@@ -81,7 +81,7 @@ def findUsers(site, search_param, search_term):
         if search_param == 'uid':
             return search_term in uid
         elif search_param == 'cn':
-            return search_term.encode('utf-8') in cn.encode('utf-8')
+            return search_term in cn
         else:
             return False
 
@@ -108,7 +108,7 @@ def findUsers(site, search_param, search_term):
             attrs = ['employeeType'] + acl_folder.getSchemaConfig().keys()
             users = acl_folder.findUser(
                 search_param=search_param,
-                search_term=search_term.encode('utf-8'),
+                search_term=search_term,
                 attrs=attrs)
             for user in users:
                 if user.get('employeeType') == 'disabled':

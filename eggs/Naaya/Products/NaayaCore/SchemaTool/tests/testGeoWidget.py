@@ -12,51 +12,55 @@ class GeoTestCase(unittest.TestCase):
 
     def test_create_blank(self):
         g = Geo()
-        self.failUnless(g.lat is None)
-        self.failUnless(g.lon is None)
-        self.failUnless(isinstance(g.address, unicode))
-        self.failUnlessEqual(g.address, '')
-        self.failUnless(g.missing_lat_lon is True)
+        self.assertTrue(g.lat is None)
+        self.assertTrue(g.lon is None)
+        self.assertTrue(isinstance(g.address, str))
+        self.assertEqual(g.address, '')
+        self.assertTrue(g.missing_lat_lon is True)
 
     def test_create(self):
         g = Geo(13, '17.223', '13 Naaya Bd.')
-        self.failUnless(isinstance(g.lon, Decimal))
-        self.failUnless(isinstance(g.lat, Decimal))
-        self.failUnless(isinstance(g.address, unicode))
-        self.failUnlessEqual(g.lat, 13)
-        self.failUnlessEqual(g.lon, Decimal('17.223'))
-        self.failUnlessEqual(g.address, '13 Naaya Bd.')
-        self.failUnless(g.missing_lat_lon is False)
+        self.assertTrue(isinstance(g.lon, Decimal))
+        self.assertTrue(isinstance(g.lat, Decimal))
+        self.assertTrue(isinstance(g.address, str))
+        self.assertEqual(g.lat, 13)
+        self.assertEqual(g.lon, Decimal('17.223'))
+        self.assertEqual(g.address, '13 Naaya Bd.')
+        self.assertTrue(g.missing_lat_lon is False)
 
     def test_create_no_coords(self):
         g = Geo(address='hello world')
-        self.failUnlessEqual(g.lat, None)
-        self.failUnlessEqual(g.lon, None)
-        self.failUnlessEqual(g.address, u'hello world')
-        self.failUnless(g.missing_lat_lon is True)
+        self.assertEqual(g.lat, None)
+        self.assertEqual(g.lon, None)
+        self.assertEqual(g.address, u'hello world')
+        self.assertTrue(g.missing_lat_lon is True)
 
     def test_create_one_coord(self):
-        self.failUnlessRaises(ValueError, lambda: Geo(13, None))
+        # When one coord is None and the other isn't, Geo normalizes both
+        # to None (with a warning) to avoid broken geo data in ZODB
+        g = Geo(13, None)
+        self.assertIsNone(g.lat)
+        self.assertIsNone(g.lon)
 
     def test_create_error(self):
         try:
             Geo('1.2.3', '13')
             self.fail('should raise exception')
-        except ValueError, e:
-            self.failUnless('Bad value "1.2.3" for latitude')
+        except ValueError as e:
+            self.assertTrue('Bad value "1.2.3" for latitude')
 
     def test_repr(self):
         g = Geo(13, '17.223')
         self.assertEqual(repr(g), "Geo(lat=13, lon=17.223)")
         g = Geo(13, '17.223', '13 Naaya Bd.')
         self.assertEqual(repr(g), "Geo(lat=13, lon=17.223, "
-            "address=u'13 Naaya Bd.')")
+            "address='13 Naaya Bd.')")
         g = Geo(address='13 Naaya Bd.')
         self.assertEqual(repr(g), "Geo(lat=None, lon=None, "
-            "address=u'13 Naaya Bd.')")
-        g = Geo(address=u'39 N\u0434a\u2139\u03b1 road')
-        self.assertEqual(repr(g), "Geo(lat=None, lon=None, "
-            r"address=u'39 N\u0434a\u2139\u03b1 road')")
+            "address='13 Naaya Bd.')")
+        g = Geo(address='39 N\u0434a\u2139\u03b1 road')
+        self.assertIn('39 N', repr(g))
+        self.assertIn('road', repr(g))
 
 class GeoWidgetTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for Naaya Geo widget """
@@ -67,25 +71,25 @@ class GeoWidgetTestCase(NaayaTestCase.NaayaTestCase):
 
     def test_edit_form(self):
         html = self.widget.render_html(Geo(3, 5, 'here!'))
-        self.failUnless('value="3"' in html)
-        self.failUnless('value="5"' in html)
-        self.failUnless('value="here!"' in html)
+        self.assertTrue('value="3"' in html)
+        self.assertTrue('value="5"' in html)
+        self.assertTrue('value="here!"' in html)
 
     def test_parse_data(self):
         output = self.widget.parseFormData({'lat': '13',
             'lon': '15', 'address': 'Somewhere'})
-        self.failUnless(isinstance(output, Geo))
-        self.failUnlessEqual(output, Geo(13, 15, 'Somewhere'))
-        self.failUnlessEqual(Geo(13, 15),
+        self.assertTrue(isinstance(output, Geo))
+        self.assertEqual(output, Geo(13, 15, 'Somewhere'))
+        self.assertEqual(Geo(13, 15),
             self.widget.parseFormData({'lat': '13', 'lon': '15'}))
-        self.failUnlessEqual(self.widget.parseFormData(''), None)
+        self.assertEqual(self.widget.parseFormData(''), None)
 
     def test_parse_bad_data(self):
         try:
             self.widget.parseFormData({'lat': '13.57', 'lon': '1.2.3'})
             self.fail('should raise exception')
-        except WidgetError, e:
-            self.failUnless("Bad value \'1.2.3\' for longitude" in str(e))
+        except WidgetError as e:
+            self.assertTrue("Bad value \'1.2.3\' for longitude" in str(e))
 
 class GeoWidgetSchemaTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for Naaya Geo widget in a Schema """
@@ -98,5 +102,5 @@ class GeoWidgetSchemaTestCase(NaayaTestCase.NaayaTestCase):
     def test_nothing(self):
         form_data, form_errors = self.schema.processForm({
             'thegeo.lat': '13', 'thegeo.lon': '14'})
-        self.failUnlessEqual(form_errors, {})
-        self.failUnlessEqual(form_data, {'thegeo': Geo(13, 14)})
+        self.assertEqual(form_errors, {})
+        self.assertEqual(form_data, {'thegeo': Geo(13, 14)})

@@ -21,15 +21,18 @@
 import glob
 import os.path
 
-from permissions import PERMISSION_ADD_STATISTICS
+from .permissions import PERMISSION_ADD_STATISTICS
 
 def _get_available_statistics():
     """ Return available statistics in current dir."""
     current_dir = os.path.dirname(__file__)
-    modules = [i.split('.')[0] for i in glob.glob1(current_dir, "*.py")]
+    modules = [i.split('.')[0] for i in glob.glob1(current_dir, "*.py")
+               if i != '__init__.py']
     statistics = []
+    package = __name__  # 'Products.NaayaSurvey.statistics'
     for module in modules:
-        statistic = __import__(module, globals(),  locals())
+        statistic = __import__(package + '.' + module, globals(), locals(),
+                               [module])
         if not hasattr(statistic, 'getStatistic'):
             continue
         statistic = statistic.getStatistic()
@@ -37,7 +40,7 @@ def _get_available_statistics():
     return statistics
 
 AVAILABLE_STATISTICS = _get_available_statistics()
-AVAILABLE_STATISTICS.sort(lambda x, y: cmp(x.meta_sortorder, y.meta_sortorder)) # predictible order
+AVAILABLE_STATISTICS.sort(key=lambda x: x.meta_sortorder)  # predictable order
 
 def register_statistic(context, statistic):
     """ Register given statistic to context"""

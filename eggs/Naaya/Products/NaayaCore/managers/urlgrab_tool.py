@@ -2,7 +2,7 @@ import urllib
 
 
 
-class urlgrab_tool(urllib.FancyURLopener):
+class urlgrab_tool(urllib.request.FancyURLopener):
     """ Create sub-class in order to overide error 206.  This error means a
        partial file is being sent, which is ok in this case.  Do nothing with this error.
     """

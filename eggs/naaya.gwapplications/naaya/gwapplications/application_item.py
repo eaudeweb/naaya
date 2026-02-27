@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from zope.interface import Interface, implements
+from zope.interface import Interface, implementer
 from zope.event import notify
 from OFS.SimpleItem import SimpleItem
 from Products.Five.browser import BrowserView
@@ -22,7 +22,7 @@ rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt',
 
 
 def make_unicode(s):
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
     try:
         return s.decode('utf-8')
@@ -49,9 +49,8 @@ class IGWApplication(Interface):
         """
 
 
+@implementer(IGWApplication)
 class GWApplication(SimpleItem):
-
-    implements(IGWApplication)
 
     approved_on = []
     rejected_on = None
@@ -65,14 +64,14 @@ class GWApplication(SimpleItem):
         self.approved = False
         self.rejected = False
         self.created_path = ""
-        self.date_created = datetime.utcnow()
+        self.date_created = datetime.now(timezone.utc)
         self.approved_on = []
         self.rejected_on = None
 
     def approve(self, **kwargs):
         self.approved = True
         self.rejected = False
-        self.approved_on.append(datetime.utcnow())
+        self.approved_on.append(datetime.now(timezone.utc))
         portal = self.create_portal(**kwargs)
         self.customize_portal(portal, **kwargs)
         self.created_path = portal.absolute_url(1)
@@ -82,7 +81,7 @@ class GWApplication(SimpleItem):
     def reject(self, **kwargs):
         self.rejected = True
         self.approved = False
-        self.rejected_on = datetime.utcnow()
+        self.rejected_on = datetime.now(timezone.utc)
         self.send_rejected_email(kwargs['admin_comments'])
 
     def created_url(self):
@@ -195,8 +194,8 @@ class IApplicationApproved(Interface):
     """ Event - application has been approved """
 
 
+@implementer(IApplicationApproved)
 class ApplicationApproved(object):
-    implements(IApplicationApproved)
 
     def __init__(self, application):
         self.application = application

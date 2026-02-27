@@ -2,7 +2,7 @@ from zope.component import getAdapter
 from Products.NaayaCore.managers.utils import html_diff
 from naaya.core.zope2util import get_template_source
 
-from interfaces import ITemplateSource
+from .interfaces import ITemplateSource
 
 class TemplateDiff(object):
     def __init__(self, template1, template2):

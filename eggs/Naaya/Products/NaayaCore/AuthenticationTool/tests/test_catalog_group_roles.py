@@ -19,7 +19,7 @@ class GroupRolesCatalogTest(NaayaTestCase):
         self.source.__class__ = plugLDAPUserFolder
 
     def tearDown(self):
-        self.auth_tool.manageDeleteSource(self.id)
+        self.auth_tool.manageDeleteSource(self.source_id)
 
     def _validate_role(self):
         mappings = self.source.get_groups_roles_map()
@@ -36,10 +36,10 @@ class GroupRolesCatalogTest(NaayaTestCase):
         self.satellite.add_group_roles('eea', ['Viewer'])
         brain = cat_tool({'path': self.info_folder.absolute_url(1),
                           'title': 'Information'})[0]
-        self.assertTrue(brain.has_key('ny_ldap_group_roles'))
+        self.assertTrue('ny_ldap_group_roles' in brain)
         self.assertEqual(brain.ny_ldap_group_roles, {'eea': ['Viewer']})
         self.satellite.remove_group_roles('eea', ['Viewer'])
-        self.assertTrue(brain.has_key('ny_ldap_group_roles'))
+        self.assertTrue('ny_ldap_group_roles' in brain)
         self.assertEqual(brain.ny_ldap_group_roles, {})
         cat_tool.delColumn('ny_ldap_group_roles')
 

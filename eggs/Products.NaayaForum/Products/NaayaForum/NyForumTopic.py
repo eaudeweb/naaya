@@ -1,23 +1,23 @@
 from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from zope import interface
+from zope.interface import implementer
 
-from constants import *
-from NyForumBase import NyForumBase
+from .constants import *
+from .NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
-from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
+from .NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-from interfaces import INyForumTopic
-from feeds import messages_feed
+from .interfaces import INyForumTopic
+from .feeds import messages_feed
 from naaya.core.zope2util import path_in_site
 
 try:
     from zope.event import notify as zope_notify
-    from events import NyForumTopicAddEvent, NyForumTopicEditEvent
+    from .events import NyForumTopicAddEvent, NyForumTopicEditEvent
 except ImportError:
     zope_notify = None
 
@@ -53,9 +53,9 @@ def addNyForumTopic(self, id='', title='', category='', description='',
         elif referer in ['topic_add_html', 'addNyForumTopic']:
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
+@implementer(INyForumTopic)
 class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     """ """
-    interface.implements(INyForumTopic)
 
     meta_type = METATYPE_NYFORUMTOPIC
     meta_label = LABEL_NYFORUMTOPIC
@@ -123,7 +123,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
             except AttributeError:
                 self.setSessionInfo(['This message has been deleted by the owner or by a forum administrator.'])
                 return self
-        raise KeyError, key
+        raise KeyError(key)
 
     #api
     def get_topic_object(self): return self
@@ -314,7 +314,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
             #remove restrictions
             try:
                 self.manage_permission(view, roles=[], acquire=1)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True
@@ -324,7 +324,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
                 roles = self.utConvertToList(roles)
                 roles.extend(['Manager', 'Administrator'])
                 self.manage_permission(view, roles=roles, acquire=0)
-            except Exception, error:
+            except Exception as error:
                 err = error
             else:
                 success = True

@@ -1,5 +1,5 @@
-from unittest import TestSuite, makeSuite
-from StringIO import StringIO
+from unittest import TestSuite, TestLoader
+from io import BytesIO
 
 import transaction
 
@@ -21,7 +21,7 @@ class ForumBasicTestCase(NaayaFunctionalTestCase):
                         file_max_size='15',
                         )
         forum = self.portal.forum_id
-        myfile = StringIO('some test data')
+        myfile = BytesIO(b'some test data')
         myfile.filename = 'the_file.txt'
         addNyForumTopic(forum,
                         id='topic_id',
@@ -60,5 +60,5 @@ class ForumBasicTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(ForumBasicTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(ForumBasicTestCase))
     return suite

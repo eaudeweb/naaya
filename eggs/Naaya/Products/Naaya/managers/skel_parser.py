@@ -113,8 +113,7 @@ class skel_parser(object):
         new.skel_element_path = tag_path
         attrs = dict(node.attributes)
         for attribute in attrs.keys():
-            # attribute value must be ascii!
-            attr_value = attrs[attribute].value.encode("ascii")
+            attr_value = attrs[attribute].value
             setattr(new, attribute, attr_value)
 
         for c in node.childNodes:
@@ -147,7 +146,7 @@ class skel_parser(object):
         """ """
         try:
             dom = minidom.parseString(p_content).childNodes[0]
-        except Exception, error:
+        except Exception as error:
             return (None, error)
         # initializations
         skel_handler = SkelTree()

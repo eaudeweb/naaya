@@ -1,6 +1,6 @@
 import re
-import mock
-from datetime import time, date, datetime, timedelta
+import unittest.mock as mock
+from datetime import time, date, datetime, timedelta, timezone
 
 import transaction
 
@@ -35,6 +35,18 @@ class BaseNotificationsTest(NaayaTestCase):
         self.patches.append(mock.patch(
             'Products.NaayaCore.NotificationTool.utils.get_modified_objects',
             get_modified_objects))
+
+        # Patch get_zope_env so HEARTBEAT_HOST_NAME returns '' in tests,
+        # causing absolute_noreq_url to fall back to obj.absolute_url()
+        from naaya.core import zope2util as _zope2util
+        _orig_get_zope_env = _zope2util.get_zope_env
+        def _mock_get_zope_env(var, default=''):
+            if var == 'HEARTBEAT_HOST_NAME':
+                return ''
+            return _orig_get_zope_env(var, default)
+        self.patches.append(mock.patch(
+            'naaya.core.zope2util.get_zope_env',
+            side_effect=_mock_get_zope_env))
 
         transaction.commit()
 
@@ -524,8 +536,8 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         p = mock.patch(
             'Products.NaayaCore.NotificationTool.NotificationTool'
             '.NotificationTool._send_newsletter', testing_send_newsletter)
-        self.patches.append(p)  # This needs to be exited
-        p.__enter__()
+        self.patches.append(p)
+        p.start()
         transaction.commit()
 
     def fetch_test_newsletters(self):
@@ -544,7 +556,7 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         # daily notifications are disabled; send nothing
         today = date(2009, 8, 3)
         notif_tool._cron_heartbeat(datetime.combine(today, time(7, 15)))
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # enable daily notifications
         notif_tool.config['enable_daily'] = True
@@ -552,7 +564,7 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         # no previous timestamp; should send daily newsletter
         today_7_15 = datetime.combine(today, time(7, 15))
         notif_tool._cron_heartbeat(today_7_15)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('daily', today_7_15 - timedelta(days=1),
                                    today_7_15)]))
 
@@ -561,19 +573,19 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         del notif_tool.timestamps['daily']
         today_15_26 = datetime.combine(today, time(15, 26))
         notif_tool._cron_heartbeat(today_15_26)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('daily', today_15_26 - timedelta(days=1),
                                    today_15_26)]))
 
         # previous timestamp is too close; should send nothing
         notif_tool._cron_heartbeat(datetime.combine(today, time(18, 10)))
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # after next regular time; should send newsletter
         tomorrow_10_15 = datetime.combine(today + timedelta(days=1),
                                           time(10, 15))
         notif_tool._cron_heartbeat(tomorrow_10_15)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('daily', today_15_26, tomorrow_10_15)]))
 
     def test_weekly(self):
@@ -587,14 +599,14 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         # weekly notifications are disabled; send nothing
         monday = datetime(2009, 8, 3, 15, 35)  # monday, 15:35
         notif_tool._cron_heartbeat(monday)
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # enable weekly notifications
         notif_tool.config['enable_weekly'] = True
 
         # no previous timestamp; should send weekly newsletter
         notif_tool._cron_heartbeat(monday)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('weekly', monday - timedelta(weeks=1),
                                    monday)]))
 
@@ -603,19 +615,19 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         del notif_tool.timestamps['weekly']
         friday = datetime(2009, 8, 7, 14, 20)  # friday, 14:20
         notif_tool._cron_heartbeat(friday)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('weekly', friday - timedelta(weeks=1),
                                    friday)]))
 
         # previous timestamp is too close; should send nothing
         notif_tool._cron_heartbeat(monday + timedelta(weeks=1))
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # after next regular time; should send newsletter
         next_friday = friday + timedelta(weeks=1, hours=-3)
         # a bit less than one week
         notif_tool._cron_heartbeat(next_friday)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('weekly', friday, next_friday)]))
 
     def test_monthly(self):
@@ -629,14 +641,14 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         # monthly notifications are disabled; send nothing
         today = datetime(2009, 8, 3, 14, 20)
         notif_tool._cron_heartbeat(today)
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # enable monthly notifications
         notif_tool.config['enable_monthly'] = True
 
         # no previous timestamp; should send monthly newsletter
         notif_tool._cron_heartbeat(today)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('monthly', today - timedelta(days=31),
                                    today)]))
 
@@ -645,19 +657,19 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         del notif_tool.timestamps['monthly']
         this_month = datetime(2009, 8, 28, 14, 20)
         notif_tool._cron_heartbeat(this_month)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('monthly', this_month - timedelta(days=31),
                                    this_month)]))
 
         # previous timestamp is too close; should send nothing
         notif_tool._cron_heartbeat(today + timedelta(days=30))
-        self.failUnlessEqual(self.fetch_test_newsletters(), set())
+        self.assertEqual(self.fetch_test_newsletters(), set())
 
         # after next regular time; should send newsletter
         one_month_later = this_month + timedelta(days=26)
         # a bit less than one month
         notif_tool._cron_heartbeat(one_month_later)
-        self.failUnlessEqual(self.fetch_test_newsletters(),
+        self.assertEqual(self.fetch_test_newsletters(),
                              set([('monthly', this_month, one_month_later)]))
 
 
@@ -668,7 +680,7 @@ class NotificationsUiApiTest(BaseNotificationsTest):
         try:
             args[0](*args[1:])
             self.fail('Should have raised exception "%s"' % str(exc))
-        except exc, e:
+        except exc as e:
             self.assertTrue(str(msg) in str(e),
                             'Exception raised but message is wrong: '
                             '%s not in %s' % (repr(msg), repr(str(e))))
@@ -765,7 +777,7 @@ class NotificationsUtilsTest(BaseNotificationsTest):
                              path='fol2')
 
         modified_obj_list = list(get_modified_objects(self.portal,
-                                 (datetime.utcnow() - timedelta(minutes=1)),
-                                 (datetime.utcnow() + timedelta(minutes=1))))
+                                 (datetime.now(timezone.utc) - timedelta(minutes=1)),
+                                 (datetime.now(timezone.utc) + timedelta(minutes=1))))
 
         self.assertEqual(len(modified_obj_list), 3)

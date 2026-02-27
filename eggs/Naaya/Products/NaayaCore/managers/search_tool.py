@@ -1,7 +1,7 @@
-import xmlrpclib
+import xmlrpc.client as xmlrpclib
 from DateTime import DateTime
 
-from xmlrpc_tool import ProxiedTransport
+from .xmlrpc_tool import ProxiedTransport
 
 class search_tool:
     """ """
@@ -34,7 +34,7 @@ class search_tool:
             return 0
         items_old = 0
         for item in search_list:
-            items_old = items_old + self.internal_get_item_age(item.bobobase_modification_time(), age)
+            items_old = items_old + self.internal_get_item_age(DateTime(item._p_mtime), age)
         return (items_old*100)/len(search_list)
 
     def internal_get_item_age(self, item, age):

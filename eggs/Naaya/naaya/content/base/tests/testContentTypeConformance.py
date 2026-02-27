@@ -1,5 +1,5 @@
-from urllib import quote
-from StringIO import StringIO
+from urllib.parse import quote
+from io import StringIO
 from random import random
 from Testing import ZopeTestCase
 import transaction
@@ -43,12 +43,12 @@ def _list_content_types():
 content_types = list(_list_content_types())
 
 def _fill_specific_form_fields(form, type_name):
-        if type_name == 'NyURL':
+        if type_name == 'url_item':
             form['redirect:boolean'] = []
-        elif type_name == 'NyGeoPoint':
+        elif type_name == 'geopoint_item':
             form['geo_location.lon:utf8:ustring'] = '12.587142'
             form['geo_location.lat:utf8:ustring'] = '55.681004'
-        elif type_name == 'NyMediaFile':
+        elif type_name == 'mediafile_item':
             form.find_control('file').add_file(StringIO('the_MP4_data'),
                 filename='testvid.mp4', content_type='video/mp4')
         elif type_name == 'event_item':
@@ -69,8 +69,8 @@ class ContentTypeConformanceTestCase(ZopeTestCase.TestCase):
         for content_type in content_types:
             if content_type['module'] not in SCHEMA_TESTABLES:
                 continue
-            self.failUnlessEqual(content_type['_class'].__getattr__.im_func,
-                NyContentData.__getattr__.im_func,
+            self.assertEqual(content_type['_class'].__getattr__,
+                NyContentData.__getattr__,
                 '__getattr__ method of "%s" is wrong' % content_type['meta_type'])
 
 
@@ -121,7 +121,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # add an object
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            self.failUnless('xzzx:utf8:ustring' in (c.name for c in form.controls),
+            self.assertTrue('xzzx:utf8:ustring' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when adding' % type_name)
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             form['title:utf8:ustring'] = 'some title %d' % n
@@ -131,18 +131,18 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # make sure the value was set
             obj = self.portal.xz_folder['some-title-%d' % n]
-            self.failUnlessEqual(getattr(obj, 'xzzx', None), 'the XzZx one true value',
+            self.assertEqual(getattr(obj, 'xzzx', None), 'the XzZx one true value',
                 'bad/missing "xzzx" value for %s' % type_name)
 
             # edit the object
             self.browser.go('http://localhost/portal/xz_folder/some-title-%d/edit_html' % n)
             form = self.browser.get_form('frmEdit')
-            self.failUnless('xzzx:utf8:ustring' in (c.name for c in form.controls),
+            self.assertTrue('xzzx:utf8:ustring' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when editing' % type_name)
             self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
             self.browser.submit()
             form = self.browser.get_form('frmEdit')
-            self.failUnlessEqual(form['xzzx:utf8:ustring'], 'the XzZx one true value',
+            self.assertEqual(form['xzzx:utf8:ustring'], 'the XzZx one true value',
                 'bad "xzzx" value in edit form for %s' % type_name)
             form['xzzx:utf8:ustring'] = 'the XzZx other true value'
             self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
@@ -150,7 +150,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # make sure the value was changed
             obj = self.portal.xz_folder['some-title-%d' % n]
-            self.failUnlessEqual(getattr(obj, 'xzzx', None), 'the XzZx other true value',
+            self.assertEqual(getattr(obj, 'xzzx', None), 'the XzZx other true value',
                 'bad/missing "xzzx" 2nd value for %s' % type_name)
 
             # clean up
@@ -177,14 +177,14 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.submit()
 
             html = self.browser.get_html()
-            self.failUnless('frmAdd' in html)
-            self.failUnless('Value required for "Title"' in html
+            self.assertTrue('frmAdd' in html)
+            self.assertTrue('Value required for "Title"' in html
                 or 'The Title field must have a value.' in html)
             form = self.browser.get_form('frmAdd')
-            self.failUnlessEqual(form['keywords:utf8:ustring'], 'no save me',
+            self.assertEqual(form['keywords:utf8:ustring'], 'no save me',
                 'The "add" form did not remember our data (%s)' % type_name)
 
-            self.failIf('test-form-title' in self.portal.xz_folder.objectIds(),
+            self.assertFalse('test-form-title' in self.portal.xz_folder.objectIds(),
                 'Object should not have been created! (%s)' % type_name)
 
             # create the real object so we can try editing it
@@ -197,26 +197,26 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # make sure the object was created
             ob = self.portal.xz_folder['test-form-title']
-            self.failUnlessEqual(ob.meta_type, content_type['meta_type'])
+            self.assertEqual(ob.meta_type, content_type['meta_type'])
 
             # try to edit the object, expect form errors
             self.browser.go('http://localhost/portal/xz_folder/test-form-title/edit_html')
             form = self.browser.get_form('frmEdit')
-            self.failUnlessEqual(form['title:utf8:ustring'], 'test form title')
+            self.assertEqual(form['title:utf8:ustring'], 'test form title')
             form['title:utf8:ustring'] = ''
             form['keywords:utf8:ustring'] = 'no save me'
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
 
             # see if the form contains errors, and the data we just entered.
-            self.failUnless('The form contains errors' in html)
-            self.failUnless('Value required for "Title"' in html
+            self.assertTrue('The form contains errors' in html)
+            self.assertTrue('Value required for "Title"' in html
                 or 'The Title field must have a value.' in html)
             form = self.browser.get_form('frmEdit')
-            #self.failUnlessEqual(form['keywords:utf8:ustring'], 'no save me',
+            #self.assertEqual(form['keywords:utf8:ustring'], 'no save me',
             #    'The "edit" form did not remember our data (%s)' % type_name)
 
-            self.failUnlessEqual(self.portal.xz_folder['test-form-title'].keywords, '',
+            self.assertEqual(self.portal.xz_folder['test-form-title'].keywords, '',
                 'The object\'s "keywords" value should have been empty (%s)' % type_name)
 
             # delete the object, so we can create another one with the same ID later on
@@ -241,23 +241,23 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # make sure the object was created
             ob = self.portal.xz_folder['ze-title']
-            self.failUnlessEqual(ob.meta_type, content_type['meta_type'])
+            self.assertEqual(ob.meta_type, content_type['meta_type'])
 
             # try to edit the object in another language
             self.browser.go('http://localhost/portal/xz_folder/ze-title/edit_html?lang=fr')
             form = self.browser.get_form('frmEdit')
-            self.failUnlessEqual(form['title:utf8:ustring'], '',
+            self.assertEqual(form['title:utf8:ustring'], '',
                 'Unexpected value in form: "%s" (should be "") (%s)'
                     % (form['title:utf8:ustring'], type_name))
             form['title:utf8:ustring'] = 'le title'
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
-            self.failIf('The form contains errors' in self.browser.get_html())
+            self.assertFalse('The form contains errors' in self.browser.get_html())
 
             obj = self.portal.xz_folder['ze-title']
-            self.failUnlessEqual(obj.getLocalProperty('title', 'en'), 'ze title',
+            self.assertEqual(obj.getLocalProperty('title', 'en'), 'ze title',
                 'The object\'s english "title" value is wrong (%s)' % type_name)
-            self.failUnlessEqual(obj.getLocalProperty('title', 'fr'), 'le title',
+            self.assertEqual(obj.getLocalProperty('title', 'fr'), 'le title',
                 'The object\'s french "title" value is wrong (%s)' % type_name)
 
             # do the "switch to language" operation - move content from 'en' to 'fr'
@@ -267,9 +267,9 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.submit()
 
             obj = self.portal.xz_folder['ze-title']
-            self.failUnlessEqual(obj.getLocalProperty('title', 'en'), '',
+            self.assertEqual(obj.getLocalProperty('title', 'en'), '',
                 'The new english "title" value is wrong (%s)' % type_name)
-            self.failUnlessEqual(obj.getLocalProperty('title', 'fr'), 'ze title',
+            self.assertEqual(obj.getLocalProperty('title', 'fr'), 'ze title',
                 'The new french "title" value is wrong (%s)' % type_name)
 
             # delete the object, so we can create another one with the same ID later on

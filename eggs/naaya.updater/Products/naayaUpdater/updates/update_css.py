@@ -2,7 +2,7 @@
 
 import os
 import re
-from StringIO import StringIO
+from io import StringIO
 
 from AccessControl import ClassSecurityInfo
 from App.ImageFile import ImageFile

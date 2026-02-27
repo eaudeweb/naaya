@@ -6,7 +6,7 @@ import logging
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from zope.deprecation import deprecate
 
 from naaya.i18n.constants import PERMISSION_TRANSLATE_PAGES
@@ -27,7 +27,7 @@ class NyPermissions(object):
         """ Returns the name of the user that owns the object."""
         o = None
         o = self.owner_info()
-        if hasattr(o, "has_key") and o.has_key('id'):
+        if hasattr(o, "has_key") and 'id' in o:
             o = o['id']
         return o
 
@@ -65,7 +65,7 @@ class NyPermissions(object):
             #check pluggable content
             pc = self.get_pluggable_content()
             for k in self.get_pluggable_installed_meta_types():
-                if not pc.has_key(k):
+                if not k in pc:
                     log.warning("%s appears as installed, although source files not on disk" % k)
                 else:
                     p = p or self.checkPermission(pc[k]['permission'])

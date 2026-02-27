@@ -1,8 +1,8 @@
 import re
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from copy import deepcopy
-from StringIO import StringIO
-from BeautifulSoup import BeautifulSoup
+from io import StringIO
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -26,7 +26,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/exfile_add_html')
-        self.failUnless('<h1>Submit ExFile</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit ExFile</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
@@ -34,7 +34,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
             'source', 'url', 'file',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -48,23 +48,23 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.myfolder['testcreateexfile.txt'].approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/testcreateexfile.txt')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_create_exfile.*</h1>', html, re.DOTALL))
-        self.failUnless('test_exfile_description' in html)
-        self.failUnless('test_exfile_coverage' in html)
-        self.failUnless('keyw1, keyw2' in html)
+        self.assertTrue(re.search(r'<h1>.*test_create_exfile.*</h1>', html, re.DOTALL))
+        self.assertTrue('test_exfile_description' in html)
+        self.assertTrue('test_exfile_coverage' in html)
+        self.assertTrue('keyw1, keyw2' in html)
 
         self.browser.go('http://localhost/portal/myfolder/testcreateexfile.txt/download')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-disposition', None),
+        self.assertEqual(headers.get('content-disposition', None),
             'attachment;filename=testcreateexfile.txt')
-        self.failUnlessEqual(html, 'added_en_data')
+        self.assertEqual(html, 'added_en_data')
 
         self.browser_do_logout()
 
@@ -78,8 +78,8 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -87,7 +87,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myexfile/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My file')
+        self.assertEqual(form['title:utf8:ustring'], 'My file')
 
         form['title:utf8:ustring'] = 'new_exfile_title'
         form.find_control('file').add_file(StringIO('edit_en_data'),
@@ -96,17 +96,17 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit File</h1>' in html)
+        self.assertTrue('<h1>Edit File</h1>' in html)
 
-        self.failUnlessEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
+        self.assertEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
         self.portal.myfolder.myexfile.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/myexfile/download')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-disposition', None),
+        self.assertEqual(headers.get('content-disposition', None),
             'attachment;filename=edit_en_file.txt')
-        self.failUnlessEqual(html, 'edit_en_data')
+        self.assertEqual(html, 'edit_en_data')
 
         self.browser.go('http://localhost/portal/myfolder/myexfile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -119,19 +119,19 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myexfile/download')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-disposition', None),
+        self.assertEqual(headers.get('content-disposition', None),
             'attachment;filename=edit_en_file.txt')
-        self.failUnlessEqual(html, 'edit_en_data')
+        self.assertEqual(html, 'edit_en_data')
 
         self.browser.go('http://localhost/portal/myfolder/myexfile/download?lang=fr')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
-        self.failUnlessEqual(headers.get('content-disposition', None),
+        self.assertEqual(headers.get('content-disposition', None),
             'attachment;filename=edit_fr_file.txt')
-        self.failUnlessEqual(html, 'edit_fr_data')
+        self.assertEqual(html, 'edit_fr_data')
 
-        self.failUnlessEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
-        self.failUnlessEqual(self.portal.myfolder.myexfile.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
+        self.assertEqual(self.portal.myfolder.myexfile.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -145,8 +145,8 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -155,12 +155,12 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myexfile/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My file')
+        self.assertEqual(form['title:utf8:ustring'], 'My file')
         form['title:utf8:ustring'] = 'new_exfile_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
+        self.assertEqual(self.portal.myfolder.myexfile.title, 'new_exfile_title')
 
         self.browser_do_logout()
 
@@ -169,7 +169,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)

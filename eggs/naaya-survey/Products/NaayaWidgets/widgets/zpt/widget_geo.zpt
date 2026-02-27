@@ -21,7 +21,7 @@
                        lat datamodel/lat|nothing;
                        lon datamodel/lon|nothing;
                        address datamodel/address|nothing;
-                       coord_json python:here.rstk.json_dumps({
+                       coord_json python:here.rstk['json_dumps']({
                                     'lat': lat, 'lon': lon});">
     <p i18n:translate="" tal:condition="lat">
         Latitude: <tal:block i18n:name="" content="lat" />
@@ -127,7 +127,7 @@
                style="display: none;" />
     </div>
 
-    <script tal:define="val python:here.rstk.json_dumps(widget_id)"
+    <script tal:define="val python:here.rstk['json_dumps'](widget_id)"
             tal:content="structure string:
                     var prop_name = ${val};
                     var coord_value = ${json_opt_value};

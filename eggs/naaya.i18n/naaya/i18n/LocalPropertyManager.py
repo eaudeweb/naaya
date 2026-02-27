@@ -3,13 +3,13 @@
 from time import time
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from ExtensionClass import Base
 from zope.deprecation import deprecate
 
-from patches import get_request, get_i18n_context
-from NyNegotiator import NyNegotiator
-from LanguageManagers import get_iso639_name
+from .patches import get_request, get_i18n_context
+from .NyNegotiator import NyNegotiator
+from .LanguageManagers import get_iso639_name
 
 class LocalAttribute(Base):
     """
@@ -90,7 +90,7 @@ class LocalPropertyManager(object):
             self.set_localproperty(id, 'string', lang, value)
         elif value != old_value:
             properties = self._local_properties.copy()
-            if not properties.has_key(id):
+            if not id in properties:
                 properties[id] = {}
 
             properties[id][lang] = (value, time())
@@ -200,8 +200,8 @@ class LocalPropertyManager(object):
             id, lang = name[:index], name[index+1:]
             property = self._local_properties[id]
         except:
-            raise AttributeError, "%s instance has no attribute '%s'" \
-                                  % (self.__class__.__name__, name)
+            raise AttributeError("%s instance has no attribute '%s'"
+                                  % (self.__class__.__name__, name))
 
         return self.getLocalAttribute(id, lang)
 

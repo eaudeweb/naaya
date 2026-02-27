@@ -26,17 +26,14 @@ class Utils:
 
     def sortedDictByKey(self, p_dic):
         """ return sorted list of a dictionary values by its keys """
-        l_keys = p_dic.keys()
-        l_keys.sort()
+        l_keys = sorted(p_dic.keys())
         return [p_dic[key] for key in l_keys]
 
     def sortedKeysOfDict(self, p_dic):
         """ return the sorted list of a dictionary keys """
         if len(p_dic) == 0:
             return []
-        l_keys = p_dic.keys()
-        l_keys.sort()
-        return l_keys
+        return sorted(p_dic.keys())
 
     def utGenerateList(self, p_index, p_list):
         """ creates a list according to a given index """
@@ -54,7 +51,7 @@ class Utils:
         elif value == '':
             return []
         else:
-            return filter(lambda x: x != '', value.split('\r\n'))
+            return list(filter(lambda x: x != '', value.split('\r\n')))
 
     def utConvertListToLines(self, values):
         """ takes a list of values and returns a value for

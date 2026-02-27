@@ -1,5 +1,5 @@
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from Products.PluginIndexes.DateIndex.DateIndex import manage_addDateIndex

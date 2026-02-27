@@ -1,1 +1,1 @@
-from event_item import NyEvent
+from .event_item import NyEvent

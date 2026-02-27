@@ -18,7 +18,7 @@
 # Cristian Ciupitu, Eau de Web
 
 # Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from DateTime import DateTime
 
 # Product imports
@@ -58,7 +58,7 @@ class DateWidget(Widget):
             value = DateTime(year, month, day)
         except Exception:
             title = self.title
-            if not isinstance(title, unicode):
+            if isinstance(title, bytes):
                 title = self.title.decode('utf-8')
             raise WidgetError(('Invalid date string for "${title}"',
                                {'title': title}))

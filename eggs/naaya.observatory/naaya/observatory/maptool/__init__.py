@@ -1,6 +1,6 @@
 from Products.Naaya.constants import JS_MESSAGES
 
-import observatory
+from . import observatory
 
 OBS_JS_MESSAGES = [
     'Type country name',

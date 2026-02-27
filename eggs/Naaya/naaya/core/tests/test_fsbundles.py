@@ -23,7 +23,7 @@ class FilesystemBundlesTest(unittest.TestCase):
 
     def _write_template(self, name, data):
         tmpl_path = os.path.join(self.bundle_path, 'templates', name + '.zpt')
-        f = open(tmpl_path, 'wb')
+        f = open(tmpl_path, 'w')
         f.write(data)
         f.close()
 
@@ -51,7 +51,7 @@ class FilesystemBundlesTest(unittest.TestCase):
     def test_parent_bundle_from_cfg_file(self):
         self.bundle_names.append("CHM-Foo")
         self.bundle_names.append("Bar")
-        f = open(os.path.join(self.bundle_path, 'bundle.cfg'), 'wb')
+        f = open(os.path.join(self.bundle_path, 'bundle.cfg'), 'w')
         f.write("[bundle]\nparent-bundle = Bar\n")
         f.close()
 
@@ -93,7 +93,7 @@ class FilesystemBundlesTest(unittest.TestCase):
 
 
     def test_reloading_removed_templates(self):
-        from nose import SkipTest
+        from unittest import SkipTest
         raise SkipTest("Reloading does not detect removed templates yet.")
 
 
@@ -134,10 +134,10 @@ class BundleFactoryTest(unittest.TestCase):
         factory = get_filesystem_bundle_factory(self.site)
         bundle = factory()
         cfg_path = os.path.join(self.tmp, 'FooSites-bar.bundle', 'bundle.cfg')
-        f = open(cfg_path, 'rb')
-        data = list(f)
+        f = open(cfg_path, 'r')
+        data = f.read()
         f.close()
-        self.assertTrue('parent-bundle = Foo\n') in data
+        self.assertIn('parent-bundle = Foo', data)
 
     def test_create_preexisting_bundle(self):
         from naaya.core.fsbundles import get_filesystem_bundle_factory

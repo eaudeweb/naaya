@@ -120,7 +120,7 @@ class UpdateRemoveObsoletes(UpdateScript):
             else:
                 transaction.commit()
 
-        except Exception, e:
+        except Exception as e:
             self.log.error('Update script failed - "%s"' % str(e))
             self.log.error(traceback.format_exc())
             transaction.abort()

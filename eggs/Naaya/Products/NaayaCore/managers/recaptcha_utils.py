@@ -9,8 +9,10 @@ access to reCAPTCHA.
 # Python imports
 import requests
 from xml.sax.saxutils import escape
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
+import urllib.request
+import urllib.error
 import simplejson as json
 
 GOOGLE_API_JS = "https://www.google.com/recaptcha/api.js"
@@ -142,13 +144,13 @@ def google_submit(recaptcha_response_field,
         return RecaptchaResponse(is_valid=False,
                                  error_code='incorrect-captcha-sol')
 
-    params = urllib.urlencode({
+    params = urllib.parse.urlencode({
         'secret': private_key,
         'remoteip': remoteip,
         'response': recaptcha_response_field,
     })
 
-    request = urllib2.Request(
+    request = urllib.request.Request(
         url=GOOGLE_VERIFY,
         data=params,
         headers={
@@ -157,7 +159,7 @@ def google_submit(recaptcha_response_field,
         }
     )
 
-    httpresp = json.load(urllib2.urlopen(request))
+    httpresp = json.load(urllib.request.urlopen(request))
 
     return_code = httpresp['success']
 
@@ -185,12 +187,12 @@ def ec_submit(data):
 
 from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.interfaces import ICaptcha
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapts
 
 
+@implementer(ICaptcha)
 class CaptchaProvider(object):
-    implements(ICaptcha)
     adapts(INySite)
 
     def __init__(self, site):

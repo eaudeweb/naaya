@@ -20,7 +20,7 @@
 #Python imports
 
 #Zope imports
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
@@ -28,7 +28,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product related imports
 #from Products.Report.tools.constants import *
-from rate_manager import rate_manager
+from .rate_manager import rate_manager
 
 manage_addRateListForm = PageTemplateFile('zpt/ratelist_add', globals())
 def manage_addRateList(self, id='', title='', description='', REQUEST=None):

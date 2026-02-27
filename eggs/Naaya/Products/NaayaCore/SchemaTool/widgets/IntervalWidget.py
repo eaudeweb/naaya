@@ -1,10 +1,10 @@
 from datetime import datetime
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, WidgetError, manage_addWidget
+from .Widget import Widget, WidgetError, manage_addWidget
 from naaya.core.custom_types import Interval
 from naaya.core.exceptions import i18n_exception
 
@@ -33,13 +33,13 @@ class IntervalWidget(Widget):
         if date is None:
             return date
         try:
-            ds = map(int, date.split("/"))
+            ds = list(map(int, date.split("/")))
             if all_day is True:
                 return datetime(ds[2], ds[1], ds[0])
             else:
-                (h, m) = map(int, time.split(":"))
+                (h, m) = list(map(int, time.split(":")))
                 return datetime(ds[2], ds[1], ds[0], h, m)
-        except Exception, e:
+        except Exception as e:
             raise i18n_exception(WidgetError,
                                  'Bad value (${date}, ${time}) for ${who}',
                                  date=repr(date), time=repr(time), who=name)
@@ -88,7 +88,7 @@ class IntervalWidget(Widget):
                                           "End Time")
 
             return Interval(start_date, end_date, all_day)
-        except ValueError, e:
+        except ValueError as e:
             raise i18n_exception(WidgetError, str(e))
 
     def isEmptyDatamodel(self, value):

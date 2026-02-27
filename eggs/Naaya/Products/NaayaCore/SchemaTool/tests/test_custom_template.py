@@ -13,13 +13,14 @@ class CustomTemplateTest(NaayaFunctionalTestCase):
         portal_forms = self.portal['portal_forms']
         assert 'widget_tempate_for_test' in portal_forms.objectIds()
 
-        orig_zpt = open(path.join(path.dirname(__file__), '..', 'zpt',
-                                  'property_widget_string.zpt'), 'rb')
-        orig_zpt_text = orig_zpt.read()
-        orig_zpt.close()
+        with open(path.join(path.dirname(__file__), '..', 'zpt',
+                           'property_widget_string.zpt'), 'rb') as orig_zpt:
+            orig_zpt_text = orig_zpt.read()
 
-        self.assertEqual(portal_forms['widget_tempate_for_test']._text.strip(),
-                         orig_zpt_text.strip())
+        form_text = portal_forms['widget_tempate_for_test']._text
+        if isinstance(form_text, str):
+            form_text = form_text.encode('utf-8')
+        self.assertEqual(form_text.strip(), orig_zpt_text.strip())
 
     def _set_custom_tmpl(self):
         url_schema = self.portal['portal_schemas']['NyURL']
@@ -56,7 +57,7 @@ class CustomTemplateTest(NaayaFunctionalTestCase):
     def test_custom_tmpl_edit(self):
         from naaya.content.url.url_item import addNyURL
         addNyURL(self.portal['info'], id='test_url', title="Teh URLz",
-                 sortorder=100)
+                 sortorder=100, contributor='contributor')
         self._set_custom_tmpl()
         transaction.commit()
 
@@ -70,4 +71,4 @@ class CustomTemplateTest(NaayaFunctionalTestCase):
             "errors None,"
             "prop_id title,"
             "]]]]")
-        assert correct_value in self.browser.get_html(), self.browser.get_html()
+        assert correct_value in self.browser.get_html()

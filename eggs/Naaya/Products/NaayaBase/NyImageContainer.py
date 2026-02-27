@@ -1,13 +1,14 @@
 """Container for storing images used in HTML documents"""
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Image import manage_addImage, cookId
 from OFS.ObjectManager import checkValidId
-from cgi import escape
+from html import escape
 from naaya.core.zope2util import sha_hexdigest
 from Products.NaayaCore.managers.utils import make_id
-import urllib
+import urllib.parse
+import urllib.request
 import Acquisition
 
 
@@ -43,9 +44,7 @@ class NyImageContainer(Acquisition.Implicit):
 
         id, title = cookId(None, None, file)
         # first, determine if this is a utf-8 text and not ascii
-        try:
-            id.decode('ascii')
-        except UnicodeError:
+        if isinstance(id, bytes):
             id = id.decode('utf-8')
 
         orig_id = id

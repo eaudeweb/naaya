@@ -74,7 +74,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
                                 reftree_ob = portlets_tool._getOb(prop.id)
                                 values = prop.values.replace("\r", '')
                                 selection_items = filter(None,
-                                    [unicode(x).strip()
+                                    [str(x).strip()
                                      for x in values.split("\n")])
                                 for item in selection_items:
                                     reftree_ob.manage_addRefTreeNode(str(item),

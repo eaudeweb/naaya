@@ -1,6 +1,6 @@
 import re
-from unittest import TestSuite, makeSuite
-from BeautifulSoup import BeautifulSoup
+from unittest import TestSuite, TestLoader
+from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -111,7 +111,7 @@ class NyBlogEntryFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder')
         html = self.browser.get_html()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "lxml")
 
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
@@ -124,5 +124,5 @@ class NyBlogEntryFunctionalTestCase(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(NyBlogEntryFunctionalTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(NyBlogEntryFunctionalTestCase))
     return suite

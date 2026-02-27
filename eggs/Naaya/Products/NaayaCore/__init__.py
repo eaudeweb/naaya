@@ -1,10 +1,10 @@
 from App.ImageFile import ImageFile
 
 import Products.Naaya
-from constants import *
+from .constants import *
 
 try:
-    import GeoMapTool
+    from . import GeoMapTool
     geo_installed = True
 except ImportError:
     geo_installed = False
@@ -14,20 +14,20 @@ def initialize(context):
 
     # don't think about importing these top-level like this because
     # they mess up modules' paths
-    from CatalogTool import CatalogTool
-    from EmailTool import EmailTool
-    from SyndicationTool import SyndicationTool
-    from AuthenticationTool import AuthenticationTool
-    from PropertiesTool import PropertiesTool
-    from DynamicPropertiesTool import DynamicPropertiesTool
-    from PortletsTool import PortletsTool
-    from FormsTool import FormsTool
-    from LayoutTool import LayoutTool
-    from NotificationTool import NotificationTool
-    from EditorTool import EditorTool
-    from SchemaTool import SchemaTool
-    from GoogleDataTool import AnalyticsTool
-    from GeoMapTool import GeoMapTool
+    from .CatalogTool import CatalogTool
+    from .EmailTool import EmailTool
+    from .SyndicationTool import SyndicationTool
+    from .AuthenticationTool import AuthenticationTool
+    from .PropertiesTool import PropertiesTool
+    from .DynamicPropertiesTool import DynamicPropertiesTool
+    from .PortletsTool import PortletsTool
+    from .FormsTool import FormsTool
+    from .LayoutTool import LayoutTool
+    from .NotificationTool import NotificationTool
+    from .EditorTool import EditorTool
+    from .SchemaTool import SchemaTool
+    from .GoogleDataTool import AnalyticsTool
+    from .GeoMapTool import GeoMapTool
 
     context.registerClass(
         PropertiesTool.PropertiesTool,

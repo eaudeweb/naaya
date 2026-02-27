@@ -1,9 +1,9 @@
 # Python imports
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 from os.path import join, dirname
 
 # Zope imports
-import Globals
+import os
 
 # Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -13,7 +13,8 @@ class SkelTestCase(NaayaTestCase):
 
     def test_parser(self):
         TAG_MAPPING['testnode'] = {'type': 'list'}
-        skel_content = open(join(dirname(__file__), 'skel.xml'), 'r').read()
+        with open(join(dirname(__file__), 'skel.xml'), 'r') as f:
+            skel_content = f.read()
         sk, error = skel_parser().parse('Garbage content')
         self.assertNotEqual(error, '')
         self.assertEqual(sk, None)

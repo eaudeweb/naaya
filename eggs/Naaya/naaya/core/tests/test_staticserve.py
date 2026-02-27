@@ -1,7 +1,7 @@
 import os
-from unittest import TestSuite, makeSuite
+from unittest import TestSuite, TestLoader
 
-from Globals import package_home
+import os as _os
 
 from naaya.core.StaticServe import StaticServeFromFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -16,7 +16,7 @@ class StaticServeFromFolderTest(NaayaFunctionalTestCase):
         del NyDocument.test_static_serve
 
     def test_a_html(self):
-        file_path = os.path.join(package_home(globals()), 'static_serve/a.html')
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static_serve/a.html')
         fd = open(file_path)
         read_data = fd.read()
         fd.close()

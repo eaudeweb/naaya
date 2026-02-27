@@ -3,7 +3,7 @@
   xmlns:naaya="http://namespaces.zope.org/naaya"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <include package="collective.autopermission" />
+  <!-- collective.autopermission not needed in Zope 5 -->
   <permission
     id="naaya.ViewUserRoles"
     title="View user roles"

@@ -1,6 +1,6 @@
 
 # Zope imports
-from zope.interface import implements
+from zope.interface import implementer
 from zope.i18n.interfaces import (ITranslationDomain,
                                   IModifiableUserPreferredLanguages)
 from zope.i18n import interpolate
@@ -21,9 +21,9 @@ from Products.Localizer.patches import get_request
 from Products.Localizer.utils import lang_negotiator
 
 
-class LocalizerWrapper(Persistent):
-    implements(INyTranslationCatalog, INyLanguageManagement,
+@implementer(INyTranslationCatalog, INyLanguageManagement,
                IModifiableUserPreferredLanguages, ITranslationDomain)
+class LocalizerWrapper(Persistent):
 
     def __init__(self, portal):
         self.cat = portal._getOb(ID_TRANSLATIONSTOOL)
@@ -77,7 +77,7 @@ class LocalizerWrapper(Persistent):
 
         # lang deletion also removes translations **not present in Localizer**
         for msgid in self.cat._messages.keys():
-            if self.cat._messages[msgid].has_key(lang):
+            if lang in self.cat._messages[msgid]:
                 del self.cat._messages[msgid][lang]
 
     def clear(self):

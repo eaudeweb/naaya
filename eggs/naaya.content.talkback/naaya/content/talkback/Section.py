@@ -20,19 +20,19 @@
 
 # Zope imports
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from App.ImageFile import ImageFile
 
 # Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from parser import parse
-from Paragraph import addParagraph
+from .parser import parse
+from .Paragraph import addParagraph
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
-from constants import METATYPE_TALKBACKCONSULTATION_SECTION
-from constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
-from permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
+from .constants import METATYPE_TALKBACKCONSULTATION_SECTION
+from .constants import METATYPE_TALKBACKCONSULTATION_PARAGRAPH
+from .permissions import PERMISSION_MANAGE_TALKBACKCONSULTATION
 
 
 addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),

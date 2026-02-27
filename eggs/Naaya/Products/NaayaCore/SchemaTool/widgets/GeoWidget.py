@@ -1,8 +1,8 @@
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, WidgetError, manage_addWidget
-from geo import Geo, geo_as_json
+from .Widget import Widget, WidgetError, manage_addWidget
+from .geo import Geo, geo_as_json
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from naaya.core.ggeocoding import GeocoderServiceError
 
@@ -45,7 +45,7 @@ class GeoWidget(Widget):
             if not lon:
                 lon = None
             address = data.get('address', '')
-            if not isinstance(address, basestring):
+            if not isinstance(address, str):
                 raise WidgetError('Address is not a string for "%s"' %
                                   self.title)
             else:
@@ -89,7 +89,7 @@ class GeoWidget(Widget):
         Mainly convert lat and lon to string, might arrive as float
         which causes issues on some systems/python versions
         """
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             value = str(value)
         return value
 

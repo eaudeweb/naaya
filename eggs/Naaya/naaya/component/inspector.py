@@ -6,7 +6,7 @@ It registers for INySite.
 from zope.component import getGlobalSiteManager, queryMultiAdapter
 from Products.Five.browser import BrowserView
 
-from interfaces import IDiff, IBundleReloader
+from .interfaces import IDiff, IBundleReloader
 
 class InspectorView(BrowserView):
     # site manager related functions

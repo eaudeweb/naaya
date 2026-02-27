@@ -1,7 +1,7 @@
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, manage_addWidget
+from .Widget import Widget, manage_addWidget
 from naaya.core.zope2util import path_in_site
 
 def addPointerWidget(container, id="", title="Pointer Widget", REQUEST=None, **kwargs):

@@ -1,7 +1,8 @@
 import zope.component
 from DateTime import DateTime
-import urllib
-from interfaces import IBFileContentViewer
+import urllib.parse
+import urllib.request
+from .interfaces import IBFileContentViewer
 from naaya.core.utils import (pretty_size,
                               force_to_unicode,
                               icon_for_content_type)
@@ -17,7 +18,7 @@ def get_view_adapter(version):
     name = version.content_type
     try:
         return zope.component.getAdapter(version, IBFileContentViewer, name)
-    except zope.component.interfaces.ComponentLookupError:
+    except zope.component.ComponentLookupError:
         name = name.split('/')[0] + '/*'
         return zope.component.queryAdapter(version, IBFileContentViewer, name)
 
@@ -40,7 +41,7 @@ def tmpl_version(context, version, ver_id, language=None):
                (context.absolute_url(),
                 language,
                 ver_id,
-                urllib.quote(strip_leading_underscores(version.filename),
+                urllib.parse.quote(strip_leading_underscores(version.filename),
                              safe='')))
         icon_url = (icon_for_content_type(version.content_type)['url'])
 

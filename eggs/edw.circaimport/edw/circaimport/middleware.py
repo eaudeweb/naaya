@@ -1,9 +1,9 @@
-from StringIO import StringIO
+from io import StringIO
 from zipfile import ZipFile
 import logging
 import datetime
 
-import backupdata
+from . import backupdata
 
 from naaya.core.zope2util import relative_object_path
 
@@ -27,7 +27,7 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
     """
     logger.debug('start importing files and folders')
 
-    from actors import ZopeActor
+    from .actors import ZopeActor
     assert '/' not in name and name != '..'
     zip_path = root_path + '/' + name
     zip_fs_file = open(zip_path, 'rb')
@@ -78,7 +78,7 @@ def get_acl_users_sources_titles(site):
 def add_roles_from_circa_export(site, filepath, ldap_source_title):
     logger.debug('start importing roles')
 
-    from ldif_extract import get_user_and_group_mapping
+    from .ldif_extract import get_user_and_group_mapping
     user_2_role, group_2_role = get_user_and_group_mapping(filepath)
 
     auth_tool = site.getAuthenticationTool()
@@ -119,7 +119,7 @@ def add_roles_from_circa_export(site, filepath, ldap_source_title):
 def add_notifications_from_circa_export(site, filepath, notif_type):
     logger.debug('start importing notifications')
 
-    from notifications_extract import get_notifications_mapping
+    from .notifications_extract import get_notifications_mapping
     dbfile = open(filepath, 'rb')
     notifications, not_matched = get_notifications_mapping(dbfile)
     dbfile.close()
@@ -169,7 +169,7 @@ def add_acls_from_circa_export(site, filepath):
 
     from AccessControl.Permissions import view
     from AccessControl.Permission import Permission
-    from acl_extract import get_acl_mapping
+    from .acl_extract import get_acl_mapping
 
     auth_tool = site.getAuthenticationTool()
 
@@ -220,7 +220,7 @@ def add_acls_from_circa_export(site, filepath):
 
         ROLES_MAPPING[str(max_role)] = 'Authenticated'
         ROLES_MAPPING[str(max_role - 1)] = 'Anonymous'
-        for i in xrange(5, max_role - 1):
+        for i in range(5, max_role - 1):
             ROLES_MAPPING[str(i)] = 'Viewer'
 
     def get_role(circa_profile):

@@ -21,11 +21,11 @@
 #Zope imports
 import Products
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens, view
-from oracle_connector import oracle_connector
+from .oracle_connector import oracle_connector
 
 manage_addOracleConnectorForm = PageTemplateFile('zpt/add', globals())
 def manage_addOracleConnector(self, id, title='', user='', pwd='', tns='', REQUEST=None):
@@ -104,7 +104,7 @@ class OracleConnector(Folder, oracle_connector):
             conn = self.openConnection()
             if query:
                 self.query(query, conn)
-        except Exception, error:
+        except Exception as error:
             msg = str(error)
         else:
             self.closeConnection(conn)
